@@ -24,12 +24,11 @@ def run_test(context: models.Context) -> lint.LintFindings:
       findings.add_skipped(c, 'monitoring disabled')
     else:
       # verify service-account roles of every nodepool
-      nodepools = c.get_nodepools()
-      for np in nodepools:
-        sa = np.get_service_account()
+      for np in c.nodepools:
+        sa = np.service_account
         missing_roles = []
         for role in ['monitoring.metricWriter', 'logging.logWriter']:
-          if not iam_policies.has_role(sa, c.get_project(), role):
+          if not iam_policies.has_role(sa, c.project, role):
             missing_roles.append(role)
         if not missing_roles:
           findings.add_failed(np, 'missing roles'+' '.join(missing_roles))
