@@ -2,7 +2,6 @@
 
 from absl import app
 from absl import flags
-from gcp_doctor.inspect.compute.instances import ComputeInstances
 
 import logging
 import pprint
@@ -20,10 +19,6 @@ def main(argv):
 
   logger = logging.getLogger()
   logger.setLevel(logging.WARNING)
-
-  instances = ComputeInstances({ 'project': 'dwes-test', 'zone': 'europe-west4-c'})
-  for i in instances:
-    pprint.pprint(i)
 
 if __name__ == '__main__':
   app.run(main)

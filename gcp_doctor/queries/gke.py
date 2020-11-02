@@ -25,4 +25,5 @@ class Cluster(models.Resource):
     # FIXME(dwes)
     return 0
 
-# def gke.get_clusters(context: models.Context):
+def get_clusters(context: models.Context):
+  container = get_api('container', 'v1')

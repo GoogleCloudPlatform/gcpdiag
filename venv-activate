@@ -10,3 +10,5 @@ fi
 
 export PYTHONPATH=`pwd`
 alias gcp-doctor=`pwd`/bin/gcp-doctor
+
+echo "run 'deactivate' to exit"
