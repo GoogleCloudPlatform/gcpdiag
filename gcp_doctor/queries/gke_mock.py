@@ -1,4 +1,5 @@
 # Lint as: python3
+"""Mock functionality of gke.py for testing."""
 
 from gcp_doctor.queries import gke
 
