@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
+"""gcp-doctor main script."""
 
-from absl import app
-from absl import flags
+# pylint: disable=invalid-name
 
 import logging
-import pprint
+
+from absl import app, flags
 
 FLAGS = flags.FLAGS
 #flags.DEFINE_string("name", None, "Your name.")
@@ -14,11 +15,13 @@ FLAGS = flags.FLAGS
 ## Required flag.
 #flags.mark_flag_as_required("name")
 
+
 def main(argv):
   del argv  # Unused.
 
   logger = logging.getLogger()
   logger.setLevel(logging.WARNING)
+
 
 if __name__ == '__main__':
   app.run(main)

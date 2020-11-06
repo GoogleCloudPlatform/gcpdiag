@@ -8,8 +8,7 @@ logging.logWriter.
 
 from gcp_doctor import models
 from gcp_doctor.lint import lint
-from gcp_doctor.queries import gke
-from gcp_doctor.queries import iam
+from gcp_doctor.queries import gke, iam
 
 
 def run_test(context: models.Context) -> lint.LintFindings:
@@ -31,7 +30,7 @@ def run_test(context: models.Context) -> lint.LintFindings:
           if not iam_policies.has_role(sa, c.project, role):
             missing_roles.append(role)
         if not missing_roles:
-          findings.add_failed(np, 'missing roles'+' '.join(missing_roles))
+          findings.add_failed(np, 'missing roles' + ' '.join(missing_roles))
         else:
           findings.add_ok(np)
   return findings
