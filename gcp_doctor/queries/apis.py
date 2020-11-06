@@ -1,10 +1,12 @@
 # Lint as: python3
 """Build and cache GCP APIs"""
 
-from googleapiclient.discovery import build
 import functools
 
+from googleapiclient.discovery import build
+
+
 @functools.lru_cache(maxsize=None)
-def get_api(serviceName, version):
-  api = build(serviceName, version, cache_discovery=False)
+def get_api(service_name, version):
+  api = build(service_name, version, cache_discovery=False)
   return api

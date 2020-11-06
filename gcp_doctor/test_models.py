@@ -1,13 +1,12 @@
 # Lint as: python3
 """Unit tests for test.py."""
 
-from gcp_doctor import models
 import pytest
+
+from gcp_doctor import models
 
 
 def test_context_mandatory_project_list():
-  with pytest.raises(TypeError):
-    models.Context()
   with pytest.raises(ValueError):
     models.Context(project_list=[])
 
@@ -24,17 +23,16 @@ def test_context_to_string():
   c = models.Context(project_list=['project1', 'project2'], regions_list=[])
   assert str(c) == 'projects: project1,project2'
 
-  c = models.Context(
-      project_list=['project1', 'project2'], regions_list=['us-central1'])
+  c = models.Context(project_list=['project1', 'project2'],
+                     regions_list=['us-central1'])
   assert str(c) == 'projects: project1,project2, regions: us-central1'
 
-  c = models.Context(
-      project_list=['project1', 'project2'], labels_list=['labelX'])
+  c = models.Context(project_list=['project1', 'project2'],
+                     labels_list=['labelX'])
   assert str(c) == 'projects: project1,project2, labels: labelX'
 
-  c = models.Context(
-      project_list=['project1', 'project2'],
-      regions_list=['us-central1'],
-      labels_list=['labelX'])
+  c = models.Context(project_list=['project1', 'project2'],
+                     regions_list=['us-central1'],
+                     labels_list=['labelX'])
   assert str(
       c) == 'projects: project1,project2, regions: us-central1, labels: labelX'

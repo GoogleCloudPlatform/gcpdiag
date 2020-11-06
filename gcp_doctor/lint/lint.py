@@ -1,10 +1,8 @@
 # Lint as: python3
 """lint command: find potential issues in GCP projects."""
 
-import enum
-
 import dataclasses
-from gcp_doctor import models
+import enum
 
 
 class LintTestClass(enum.Enum):
@@ -22,13 +20,9 @@ class LintTest:
 
 class LintFindings:
   """Identifies a lint finding (issue)."""
-  context: models.Context
-  test: LintTest
   findings: list
 
-  def __init__(self, context: models.Context, test: LintTest):
-    self.context = context
-    self.test = test
+  def __init__(self):
     self.findings = []
 
   def __iter__(self):

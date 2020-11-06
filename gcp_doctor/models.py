@@ -1,9 +1,8 @@
 # Lint as: python3
 """Data structures representing generic objects in GCP."""
 
-import abc
-from typing import Iterable, List, Optional
 import dataclasses
+from typing import Iterable, List, Optional
 
 from gcp_doctor import utils
 
@@ -51,14 +50,15 @@ class Context:
     return string
 
 
+# note: this should be an abstract class, but it doesn't work with mypi
+# due to this bug: https://github.com/python/mypy/issues/5374
 @dataclasses.dataclass
-class Resource(abc.ABC):
+class Resource:
   """Represents a single resource in GCP."""
   project_id: str
 
-  @abc.abstractmethod
   def get_full_path(self):
-    pass
+    return f'project/{self.project_id}/UNKNOWN'
 
   def get_short_path(self) -> str:
     return self.get_full_path()
