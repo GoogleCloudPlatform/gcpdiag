@@ -7,6 +7,7 @@ name = "pypi"
 absl-py = "==0.11.0"
 dataclasses = "==0.6"
 six = "==1.15.0"
+google-api-python-client = "*"
 
 [dev-packages]
 pytest = "*"
@@ -15,3 +16,4 @@ pre-commit = "*"
 importlib-metadata = "*"
 importlib-resources = "*"
 yapf = "*"
+coverage = "*"

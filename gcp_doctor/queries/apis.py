@@ -5,6 +5,8 @@ import functools
 
 from googleapiclient.discovery import build
 
+RETRIES = 2
+
 
 @functools.lru_cache(maxsize=None)
 def get_api(service_name, version):

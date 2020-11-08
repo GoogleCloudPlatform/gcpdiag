@@ -13,4 +13,5 @@ PIPENV_PYTHON="$PYENV_ROOT/shims/python"
 export PYENV_ROOT PIPENV_PYTHON
 pip install pipenv
 pipenv install --dev
-pipenv run pytest
+pipenv run make test
+pipenv run make coverage-report
