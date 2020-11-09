@@ -9,6 +9,6 @@ RETRIES = 2
 
 
 @functools.lru_cache(maxsize=None)
-def get_api(service_name, version):
+def get_api(service_name: str, version: str):
   api = build(service_name, version, cache_discovery=False)
   return api

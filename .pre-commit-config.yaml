@@ -19,6 +19,11 @@ repos:
           - id: pyupgrade
             args: [--py36-plus]
 
+    # - repo: https://github.com/asottile/dead
+    #   rev: v1.3.0
+    #   hooks:
+    #       - id: dead
+
     - repo: https://github.com/pre-commit/mirrors-mypy
       rev: v0.790
       hooks:
@@ -39,3 +44,9 @@ repos:
       rev: pylint-2.6.0
       hooks:
           - id: pylint
+
+    - repo: https://github.com/antonbabenko/pre-commit-terraform
+      rev: v1.44.0
+      hooks:
+          - id: terraform_fmt
+          - id: terraform_validate
