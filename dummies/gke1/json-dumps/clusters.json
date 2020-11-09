@@ -1,0 +1,259 @@
+{
+  "clusters": [
+    {
+      "name": "gke2",
+      "initialNodeCount": 1,
+      "nodeConfig": {
+        "machineType": "n1-standard-1",
+        "diskSizeGb": 100,
+        "oauthScopes": [
+          "https://www.googleapis.com/auth/devstorage.read_only",
+          "https://www.googleapis.com/auth/logging.write",
+          "https://www.googleapis.com/auth/monitoring",
+          "https://www.googleapis.com/auth/service.management.readonly",
+          "https://www.googleapis.com/auth/servicecontrol",
+          "https://www.googleapis.com/auth/trace.append"
+        ],
+        "metadata": {
+          "disable-legacy-endpoints": "true"
+        },
+        "imageType": "COS",
+        "serviceAccount": "default",
+        "diskType": "pd-standard",
+        "shieldedInstanceConfig": {
+          "enableIntegrityMonitoring": true
+        }
+      },
+      "masterAuth": {
+        "clusterCaCertificate": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURLekNDQWhPZ0F3SUJBZ0lSQU9FUGRwSFlsM2x0bVpPajRKYU80ZkF3RFFZSktvWklodmNOQVFFTEJRQXcKTHpFdE1Dc0dBMVVFQXhNa1pXRmxNRFU0TldFdE0yVXdZeTAwTXpNeUxUbGlaV1F0WWpNMk5HWTNaREV3T1RSaQpNQjRYRFRJd01URXdPVEUxTXpreU5Wb1hEVEkxTVRFd09ERTJNemt5TlZvd0x6RXRNQ3NHQTFVRUF4TWtaV0ZsCk1EVTROV0V0TTJVd1l5MDBNek15TFRsaVpXUXRZak0yTkdZM1pERXdPVFJpTUlJQklqQU5CZ2txaGtpRzl3MEIKQVFFRkFBT0NBUThBTUlJQkNnS0NBUUVBdkNZb3BxUTVYN2M5d254SzlaWWJ2cTVrTzlxaDBvNmpMRG5PZlMxWgpBVEM2N1VXTW5YMjdTMHl1WWpkVHpXSHNwQmlOS0gyKzEzRmdYbUhjYjEwem5lNm5DcXRrcVJhd3VWTnZtSDJkCi96bGVzTjBKRjgrbXZUcWdVWE5zanFCTDB5K3VyY3AycVRpbTArcWcvWWtIM2FONVJzbHFNVUdzU3p5dkRTSDcKVnY4aHIvL2gvaUxBdzRlbGt6YTFpUWxmSG15RmxXejlWN1JwMUFMTlZYUUE0aSs0SXRzamp3RHBSM1oycjFqQgpGczZPb2pkWi9rZGlTTTZ2bmpJWUsyTmNpUHdNRHI2ZVdVUjRaYlpnN1A1M0wrY0NCdTA3d0gvVDF4ekhlNUM0CmtoblVReFJJNDNJV2hWTm8xVURQM1V3cVd0ajFvbmEzMVBMWWxjT3BqcDFHOFFJREFRQUJvMEl3UURBT0JnTlYKSFE4QkFmOEVCQU1DQWdRd0R3WURWUjBUQVFIL0JBVXdBd0VCL3pBZEJnTlZIUTRFRmdRVUwxb1kreFhvUFZTdApGbHkwNXJtT0dJRTNhQll3RFFZSktvWklodmNOQVFFTEJRQURnZ0VCQUhqRXFCMzRIdENNNXI5TUo1STFsTS9oCnZIUlNtQVFjWC9uT1JJa3YzQUNJZ010djJJU3VneGM4cXN5NXBmdWlzaXA3THBCSGt3OTBKRGNjaTlwcG1UeEMKdXoxaDlnS2NnSDc0ZlhmSW5wK1ZpUkxPbUNFOG1HbTFqc3loUjVWK2tscXF4Wi94ZEtJWkN6NXZHWXRGM1hjeQovWDNPcWxpd0k4RktJSFp1TGk5OWhoY1JCMHRmTkZKT3NqM2NneUNGcDZvbXg1VHBBck9NNWxwdGJSM0RzWVVzCkFYS3V1OTdSK1FseTR4WjFQOCs3RHE4UHM5YlloVFFEajVvMXoyb2FSNXQzNFE5N3BEaEhvdkQyeXNMRkVWcngKdVAxQ1ZaWm5uSUwyQjIvd0tYb21tR3pMTlVqM2hrU21WdlZWOE9VcERjWDYvN0l6Yi92SDYva2w3NGpMbGdrPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
+      },
+      "loggingService": "logging.googleapis.com/kubernetes",
+      "monitoringService": "monitoring.googleapis.com/kubernetes",
+      "network": "default",
+      "clusterIpv4Cidr": "10.112.0.0/14",
+      "addonsConfig": {
+        "kubernetesDashboard": {
+          "disabled": true
+        },
+        "networkPolicyConfig": {
+          "disabled": true
+        }
+      },
+      "subnetwork": "default",
+      "nodePools": [
+        {
+          "name": "default-pool",
+          "config": {
+            "machineType": "n1-standard-1",
+            "diskSizeGb": 100,
+            "oauthScopes": [
+              "https://www.googleapis.com/auth/devstorage.read_only",
+              "https://www.googleapis.com/auth/logging.write",
+              "https://www.googleapis.com/auth/monitoring",
+              "https://www.googleapis.com/auth/service.management.readonly",
+              "https://www.googleapis.com/auth/servicecontrol",
+              "https://www.googleapis.com/auth/trace.append"
+            ],
+            "metadata": {
+              "disable-legacy-endpoints": "true"
+            },
+            "imageType": "COS",
+            "serviceAccount": "default",
+            "diskType": "pd-standard",
+            "shieldedInstanceConfig": {
+              "enableIntegrityMonitoring": true
+            }
+          },
+          "initialNodeCount": 1,
+          "management": {
+            "autoUpgrade": true,
+            "autoRepair": true
+          },
+          "podIpv4CidrSize": 24,
+          "locations": [
+            "europe-west1-d",
+            "europe-west1-b",
+            "europe-west1-c"
+          ],
+          "selfLink": "https://container.googleapis.com/v1/projects/gcpd-gke-1-9b90/locations/europe-west1/clusters/gke2/nodePools/default-pool",
+          "version": "1.16.13-gke.401",
+          "instanceGroupUrls": [
+            "https://www.googleapis.com/compute/v1/projects/gcpd-gke-1-9b90/zones/europe-west1-d/instanceGroupManagers/gke-gke2-default-pool-0c5e3305-grp",
+            "https://www.googleapis.com/compute/v1/projects/gcpd-gke-1-9b90/zones/europe-west1-b/instanceGroupManagers/gke-gke2-default-pool-0490054e-grp",
+            "https://www.googleapis.com/compute/v1/projects/gcpd-gke-1-9b90/zones/europe-west1-c/instanceGroupManagers/gke-gke2-default-pool-5912dd2f-grp"
+          ],
+          "status": "RUNNING",
+          "upgradeSettings": {
+            "maxSurge": 1
+          }
+        }
+      ],
+      "locations": [
+        "europe-west1-d",
+        "europe-west1-b",
+        "europe-west1-c"
+      ],
+      "labelFingerprint": "a9dc16a7",
+      "legacyAbac": {},
+      "ipAllocationPolicy": {
+        "useRoutes": true
+      },
+      "masterAuthorizedNetworksConfig": {},
+      "maintenancePolicy": {
+        "resourceVersion": "e3b0c442"
+      },
+      "binaryAuthorization": {},
+      "autoscaling": {},
+      "networkConfig": {
+        "network": "projects/gcpd-gke-1-9b90/global/networks/default",
+        "subnetwork": "projects/gcpd-gke-1-9b90/regions/europe-west1/subnetworks/default"
+      },
+      "databaseEncryption": {
+        "state": "DECRYPTED"
+      },
+      "shieldedNodes": {},
+      "selfLink": "https://container.googleapis.com/v1/projects/gcpd-gke-1-9b90/locations/europe-west1/clusters/gke2",
+      "zone": "europe-west1",
+      "endpoint": "34.77.207.225",
+      "initialClusterVersion": "1.16.13-gke.401",
+      "currentMasterVersion": "1.16.13-gke.401",
+      "currentNodeVersion": "1.16.13-gke.401",
+      "createTime": "2020-11-09T16:39:25+00:00",
+      "status": "RUNNING",
+      "nodeIpv4CidrSize": 24,
+      "servicesIpv4Cidr": "10.115.240.0/20",
+      "instanceGroupUrls": [
+        "https://www.googleapis.com/compute/v1/projects/gcpd-gke-1-9b90/zones/europe-west1-d/instanceGroupManagers/gke-gke2-default-pool-0c5e3305-grp",
+        "https://www.googleapis.com/compute/v1/projects/gcpd-gke-1-9b90/zones/europe-west1-b/instanceGroupManagers/gke-gke2-default-pool-0490054e-grp",
+        "https://www.googleapis.com/compute/v1/projects/gcpd-gke-1-9b90/zones/europe-west1-c/instanceGroupManagers/gke-gke2-default-pool-5912dd2f-grp"
+      ],
+      "currentNodeCount": 3,
+      "location": "europe-west1"
+    },
+    {
+      "name": "gke1",
+      "initialNodeCount": 1,
+      "nodeConfig": {
+        "machineType": "n1-standard-1",
+        "diskSizeGb": 100,
+        "oauthScopes": [
+          "https://www.googleapis.com/auth/devstorage.read_only",
+          "https://www.googleapis.com/auth/logging.write",
+          "https://www.googleapis.com/auth/monitoring",
+          "https://www.googleapis.com/auth/service.management.readonly",
+          "https://www.googleapis.com/auth/servicecontrol",
+          "https://www.googleapis.com/auth/trace.append"
+        ],
+        "metadata": {
+          "disable-legacy-endpoints": "true"
+        },
+        "imageType": "COS",
+        "serviceAccount": "default",
+        "diskType": "pd-standard",
+        "shieldedInstanceConfig": {
+          "enableIntegrityMonitoring": true
+        }
+      },
+      "masterAuth": {
+        "clusterCaCertificate": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURLakNDQWhLZ0F3SUJBZ0lRV0VFZjhSbDAvZHQ3aE81ODZDMjIvekFOQmdrcWhraUc5dzBCQVFzRkFEQXYKTVMwd0t3WURWUVFERXlRNVpUZ3dZelEwTXkwek5tUXpMVFEwTWpNdFlUWmtaUzAzWXpnM1l6aG1aREExT1RjdwpIaGNOTWpBeE1UQTVNVFUxTlRJNFdoY05NalV4TVRBNE1UWTFOVEk0V2pBdk1TMHdLd1lEVlFRREV5UTVaVGd3Cll6UTBNeTB6Tm1RekxUUTBNak10WVRaa1pTMDNZemczWXpobVpEQTFPVGN3Z2dFaU1BMEdDU3FHU0liM0RRRUIKQVFVQUE0SUJEd0F3Z2dFS0FvSUJBUUN2bG5MWkpleXgxUkNBMkFnUFhuangrNlpiN0lPYkUxcUpIWnV3aTVVNgpodCs4SGtUM1NrdHVXeXFYUDAzbDNiclROYjJWQ0VMclJvNFBVcDdYWFd6YzIxRVdMNnMxQTlSQ3NVSVlPcDhqCitrNVlnbjZ1bE9Bb2ZFakJKaWZzbW16YUhzY1NTcVY4NzlxTVViYlh2eEJ3b1haNmdjWEVBTGVJT294VXJOTjYKdzllMnVDWmRzSzNuQk1OQUcrbUU5dSt4Wi9EeTZjUXVETjZkdVF3Mlg5ZEYxTHF4WXdpZ1FIOGRGaElSVkYzSQpkRURPaks0d2pIN1FqZlMvS3RMdi9WMTRnK3crS0JpMzduQU00NUlmL2xNc1M3N04vSHRidjNIQ3VFNGFTRDlZCjZFTWUvL1lEekV3UHg1RE1CRnMrMnRud3lvVm1ZcklNTmREdE5kUmRSeGdYQWdNQkFBR2pRakJBTUE0R0ExVWQKRHdFQi93UUVBd0lDQkRBUEJnTlZIUk1CQWY4RUJUQURBUUgvTUIwR0ExVWREZ1FXQkJRb1c2b014aFg3aU5lNApVTTh0VVc0WU9mVEVuREFOQmdrcWhraUc5dzBCQVFzRkFBT0NBUUVBQmNRRzhlaHlMZCtXR3UwSEE1ZkhrcnRWCm90OTROM29qNXFaT0ltTUdaSy9DMVBuTW5MVEVkVkh1cTE3MDlramM2dW9FQUhIekZZL0RkUnY2TVpid3Z3eUwKM3ZmVXpqaDFtSDhQZGJmVmlkUFZ2V2ZqT3ZxN2pac2FzK1piVTFXYURVT0VLUzlyVDAvamlXSUtubCt2Z0E5KwowdVhjS2sxcTJvN0p1a1VHTFg2UzNBaGRRMVFNMUZFR1Fya0ZCZStIN1JrZ3hLeFJZZTF4djE0RXVvNjQ2K09BCjlkL3NGNlgzbkpTYmFTSEZPS0s0Q2FtQWFQYkNSOHhSeTBpVGpWMllKMWxpT3cxcGZVbm1mSXpxK3VEUHI5SloKMEJLam5YdU0wN1B3WEx0ckxHekdDZTgvN3lPdVlRanBFT0Y3TitYVHdCbmxTand3LzBUZUZSS3p5VTN6QlE9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="
+      },
+      "loggingService": "logging.googleapis.com/kubernetes",
+      "monitoringService": "monitoring.googleapis.com/kubernetes",
+      "network": "default",
+      "clusterIpv4Cidr": "10.0.0.0/14",
+      "addonsConfig": {
+        "kubernetesDashboard": {
+          "disabled": true
+        },
+        "networkPolicyConfig": {
+          "disabled": true
+        }
+      },
+      "subnetwork": "default",
+      "nodePools": [
+        {
+          "name": "default-pool",
+          "config": {
+            "machineType": "n1-standard-1",
+            "diskSizeGb": 100,
+            "oauthScopes": [
+              "https://www.googleapis.com/auth/devstorage.read_only",
+              "https://www.googleapis.com/auth/logging.write",
+              "https://www.googleapis.com/auth/monitoring",
+              "https://www.googleapis.com/auth/service.management.readonly",
+              "https://www.googleapis.com/auth/servicecontrol",
+              "https://www.googleapis.com/auth/trace.append"
+            ],
+            "metadata": {
+              "disable-legacy-endpoints": "true"
+            },
+            "imageType": "COS",
+            "serviceAccount": "default",
+            "diskType": "pd-standard",
+            "shieldedInstanceConfig": {
+              "enableIntegrityMonitoring": true
+            }
+          },
+          "initialNodeCount": 1,
+          "management": {
+            "autoUpgrade": true,
+            "autoRepair": true
+          },
+          "podIpv4CidrSize": 24,
+          "locations": [
+            "europe-west4-a"
+          ],
+          "selfLink": "https://container.googleapis.com/v1/projects/gcpd-gke-1-9b90/zones/europe-west4-a/clusters/gke1/nodePools/default-pool",
+          "version": "1.16.13-gke.401",
+          "instanceGroupUrls": [
+            "https://www.googleapis.com/compute/v1/projects/gcpd-gke-1-9b90/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-0b2dfd71-grp"
+          ],
+          "status": "PROVISIONING",
+          "upgradeSettings": {
+            "maxSurge": 1
+          }
+        }
+      ],
+      "locations": [
+        "europe-west4-a"
+      ],
+      "resourceLabels": {
+        "foo": "bar"
+      },
+      "labelFingerprint": "780e2898",
+      "legacyAbac": {},
+      "ipAllocationPolicy": {
+        "useRoutes": true
+      },
+      "masterAuthorizedNetworksConfig": {},
+      "maintenancePolicy": {
+        "resourceVersion": "e3b0c442"
+      },
+      "binaryAuthorization": {},
+      "autoscaling": {},
+      "networkConfig": {
+        "network": "projects/gcpd-gke-1-9b90/global/networks/default",
+        "subnetwork": "projects/gcpd-gke-1-9b90/regions/europe-west4/subnetworks/default"
+      },
+      "databaseEncryption": {
+        "state": "DECRYPTED"
+      },
+      "shieldedNodes": {},
+      "selfLink": "https://container.googleapis.com/v1/projects/gcpd-gke-1-9b90/zones/europe-west4-a/clusters/gke1",
+      "zone": "europe-west4-a",
+      "endpoint": "34.90.178.244",
+      "initialClusterVersion": "1.16.13-gke.401",
+      "currentMasterVersion": "1.16.13-gke.401",
+      "currentNodeVersion": "1.16.13-gke.401",
+      "createTime": "2020-11-09T16:55:28+00:00",
+      "status": "PROVISIONING",
+      "nodeIpv4CidrSize": 24,
+      "servicesIpv4Cidr": "10.3.240.0/20",
+      "instanceGroupUrls": [
+        "https://www.googleapis.com/compute/v1/projects/gcpd-gke-1-9b90/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-0b2dfd71-grp"
+      ],
+      "currentNodeCount": 1,
+      "location": "europe-west4-a"
+    }
+  ]
+}
