@@ -1,0 +1,8 @@
+VERSION=0.2
+IMAGE=us-docker.pkg.dev/gcp-doctor-repo/dev/gcp-doctor-pipenv
+
+build:
+	docker build -t $(IMAGE):$(VERSION) .
+
+push:
+	docker push $(IMAGE):$(VERSION)
