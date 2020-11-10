@@ -3,14 +3,8 @@
 set -e
 set -x
 
-PATH="$HOME:.local/bin:$PATH"
-
+PATH="${KOKORO_ARTIFACTS_DIR}/git/gcp-doctor/bin:$HOME/.local/bin:$PATH"
 cd "${KOKORO_ARTIFACTS_DIR}/git/gcp-doctor"
 
-pyenv global 3.6.1
-PYENV_ROOT="$(pyenv root)"
-PIPENV_PYTHON="$PYENV_ROOT/shims/python"
-export PYENV_ROOT PIPENV_PYTHON
-pip install pipenv
-pipenv install --dev
-pipenv run pre-commit
+pipenv-dockerized run pipenv install --dev
+pipenv-dockerized run pre-commit run --all-files

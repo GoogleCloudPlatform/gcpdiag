@@ -1,0 +1,20 @@
+#!/bin/sh
+
+IMAGE="us-docker.pkg.dev/gcp-doctor-repo/dev/gcp-doctor-pipenv:0.2"
+
+USE_TTY=""
+CWD=$(pwd)
+[ -t 0 ] && USE_TTY="-it"
+
+[ -d .venv-docker ] || mkdir .venv-docker
+exec docker run $USE_TTY \
+  --rm \
+  -e "HOME=$HOME" \
+  -e "SHELL=/bin/bash" \
+  -v "$CWD:$CWD" \
+  -v "$HOME/.cache/pre-commit:$HOME/.cache/pre-commit" \
+  -v "$HOME/.config/gcloud:$HOME/.config/gcloud" \
+  -v "$HOME/.local:$HOME/.local" \
+  -v "$CWD/.venv-docker:$CWD/.venv" \
+  -w "$CWD" \
+  $IMAGE pipenv "$@"
