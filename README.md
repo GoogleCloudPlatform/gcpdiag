@@ -18,9 +18,11 @@ We use the following tools in this project:
 -   Kokoro: Google internal CI/CD for code outside of Google3
 -   pipenv: Manage Python virtual environments
 -   [pre-commit](https://pre-commit.com): Manage git presubmit hooks (we also
-    use this as presubmit check.
+    use this as presubmit check in Kokoro).
 -   pytest: Testing framework
 -   yapf: Code formatting
+-   docker: test running environment (for Kokoro jobs)
+-   terraform: Test projects setup ("dummies" used in testing)
 
 ## Development setup
 
