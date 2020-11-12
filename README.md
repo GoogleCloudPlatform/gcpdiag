@@ -2,15 +2,16 @@
 
 Important links:
 
--   **Mail group**: [go/gcp-doctor-team](http://go/gcp-doctor-team)
--   **Chat room**:
-    [go/gcp-doctor-chat](https://mail.google.com/mail/u/0/chat/#chat/space/AAAAN1xhYE0)
+-   **Mail group**: [g/gcp-doctor-team](http://go/gcp-doctor-team)
+-   **Chat room**: [go/gcp-doctor-chat](go/gcp-doctor-chat)
+-   **Bugs**: [go/gcp-doctor-bugs](http://go/gcp-doctor-bugs)
 -   **Git repo**: [go/gcp-doctor-git](http://go/gcp-doctor-git)
 -   **Gerrit code review**: [go/gcp-doctor-review](http://go/gcp-doctor-review)
 -   **Kokoro jobs**: [go/gcp-doctor-kokoro](http://go/gcp-doctor-kokoro)
 -   **Documents**:
     -   [Proposal](http://gcp-doctor-proposal)
     -   [Design doc](http://gcp-doctor-design) (architecture, etc., must read!)
+    -   [Test ideas](http://go/gcp-doctor-test-ideas)
 
 We use the following tools in this project:
 
