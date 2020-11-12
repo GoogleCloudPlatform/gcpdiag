@@ -2,15 +2,16 @@
 
 Important links:
 
--   **Mail group**: [g/gcp-doctor-team](http://go/gcp-doctor-team)
--   **Chat room**: [go/gcp-doctor-chat](go/gcp-doctor-chat)
+-   **Mail group**: [g/gcp-doctor-team](http://g/gcp-doctor-team)
+-   **Chat room**: [go/gcp-doctor-chat](http://go/gcp-doctor-chat)
 -   **Bugs**: [go/gcp-doctor-bugs](http://go/gcp-doctor-bugs)
 -   **Git repo**: [go/gcp-doctor-git](http://go/gcp-doctor-git)
 -   **Gerrit code review**: [go/gcp-doctor-review](http://go/gcp-doctor-review)
 -   **Kokoro jobs**: [go/gcp-doctor-kokoro](http://go/gcp-doctor-kokoro)
 -   **Documents**:
-    -   [Proposal](http://gcp-doctor-proposal)
-    -   [Design doc](http://gcp-doctor-design) (architecture, etc., must read!)
+    -   [Proposal](http://go/gcp-doctor-proposal)
+    -   [Design doc](http://go/gcp-doctor-design) (architecture, etc., must
+        read!)
     -   [Test ideas](http://go/gcp-doctor-test-ideas)
 
 We use the following tools in this project:
@@ -64,9 +65,9 @@ We use the following tools in this project:
 We use Gerrit + Kokoro to implement a code review process and automated testing
 of all code before it is merged.
 
-[Gerrit](go/gerrit) models the same workflow as CLs in Piper, but using git.
-This is a bit different than git pull requests, because the code is pushed to
-the same central repository under a special reference (sort of a branch), and
+[Gerrit](http://go/gerrit) models the same workflow as CLs in Piper, but using
+git. This is a bit different than git pull requests, because the code is pushed
+to the same central repository under a special reference (sort of a branch), and
 then merged when the code review process is completed. Doing the Gerrit
 [codelab](https://g3doc.corp.google.com/company/teams/gerritcodereview/users/intro-codelab.md)
 is recommended.
