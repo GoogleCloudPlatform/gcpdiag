@@ -2,15 +2,16 @@
 
 Important links:
 
--   **Mail group**: [(internal)]((internal))
--   **Chat room**:
-    [(internal)](https://mail.google.com/mail/u/0/chat/#chat/space/AAAAN1xhYE0)
+-   **Mail group**: [g/gcp-doctor-team]((internal))
+-   **Chat room**: [(internal)]((internal))
+-   **Bugs**: [(internal)]((internal))
 -   **Git repo**: [(internal)]((internal))
 -   **Gerrit code review**: [(internal)]((internal))
 -   **Kokoro jobs**: [(internal)]((internal))
 -   **Documents**:
     -   [Proposal](http://gcp-doctor-proposal)
     -   [Design doc](http://gcp-doctor-design) (architecture, etc., must read!)
+    -   [Test ideas]((internal))
 
 We use the following tools in this project:
 
