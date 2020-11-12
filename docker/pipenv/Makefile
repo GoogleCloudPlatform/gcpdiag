@@ -1,4 +1,4 @@
-VERSION=0.2
+VERSION=0.3
 IMAGE=us-docker.pkg.dev/gcp-doctor-repo/dev/gcp-doctor-pipenv
 
 build:
