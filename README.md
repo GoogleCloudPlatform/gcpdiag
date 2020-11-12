@@ -2,15 +2,16 @@
 
 Important links:
 
--   **Mail group**: [g/gcp-doctor-team]((internal))
+-   **Mail group**: [g/gcp-doctor-team](http://g/gcp-doctor-team)
 -   **Chat room**: [(internal)]((internal))
 -   **Bugs**: [(internal)]((internal))
 -   **Git repo**: [(internal)]((internal))
 -   **Gerrit code review**: [(internal)]((internal))
 -   **Kokoro jobs**: [(internal)]((internal))
 -   **Documents**:
-    -   [Proposal](http://gcp-doctor-proposal)
-    -   [Design doc](http://gcp-doctor-design) (architecture, etc., must read!)
+    -   [Proposal]((internal))
+    -   [Design doc]((internal)) (architecture, etc., must
+        read!)
     -   [Test ideas]((internal))
 
 We use the following tools in this project:
@@ -64,9 +65,9 @@ We use the following tools in this project:
 We use Gerrit + Kokoro to implement a code review process and automated testing
 of all code before it is merged.
 
-[Gerrit]((internal)) models the same workflow as CLs in Piper, but using git.
-This is a bit different than git pull requests, because the code is pushed to
-the same central repository under a special reference (sort of a branch), and
+[Gerrit]((internal)) models the same workflow as CLs in Piper, but using
+git. This is a bit different than git pull requests, because the code is pushed
+to the same central repository under a special reference (sort of a branch), and
 then merged when the code review process is completed. Doing the Gerrit
 [codelab]((internal).md)
 is recommended.
