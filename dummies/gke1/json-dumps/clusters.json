@@ -163,7 +163,7 @@
         "europe-west1-b",
         "europe-west1-c"
       ],
-      "loggingService": "logging.googleapis.com/kubernetes",
+      "loggingService": "none",
       "maintenancePolicy": {
         "resourceVersion": "e3b0c442"
       },
@@ -171,7 +171,7 @@
         "clusterCaCertificate": "REDACTED"
       },
       "masterAuthorizedNetworksConfig": {},
-      "monitoringService": "monitoring.googleapis.com/kubernetes",
+      "monitoringService": "none",
       "name": "gke2",
       "network": "default",
       "networkConfig": {
