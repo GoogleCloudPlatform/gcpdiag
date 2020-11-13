@@ -1,6 +1,7 @@
 __pycache__
 .coverage
 .venv
+.venv-docker
 .terraform
 .terraform.tfstate.lock.info
 terraform.tfstate

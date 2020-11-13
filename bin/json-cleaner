@@ -1,0 +1,47 @@
+#!/usr/bin/env python3
+"""Development script to strip out any sensitive data from GCP API responses."""
+
+# pylint: disable=invalid-name
+
+import json
+import sys
+
+clean_maps = {
+    'clusters': {
+        '.clusters.[].endpoint': '192.168.1.1',
+        '.clusters.[].masterAuth.clusterCaCertificate': 'REDACTED',
+    }
+}
+
+
+def traverse_and_remove(path: str, data, clean_map: dict):
+  if path in clean_map:
+    return clean_map[path]
+
+  if isinstance(data, dict):
+    for key in list(data.keys()):
+      key_path = path + '.' + key
+      data[key] = traverse_and_remove(key_path, data[key], clean_map)
+  elif isinstance(data, list):
+    for i in range(len(data)):
+      data[i] = traverse_and_remove(path + '.[]', data[i], clean_map)
+  return data
+
+
+def main():
+  data = json.load(sys.stdin)
+
+  if len(sys.argv) != 2:
+    print('usage: json-cleaner RESOURCE_TYPE')
+    sys.exit(1)
+  if sys.argv[1] not in clean_maps:
+    print('first argument must be one of: ' +
+          ', '.join(sorted(clean_maps.keys())))
+  else:
+    print(
+        json.dumps(traverse_and_remove('', data, clean_maps[sys.argv[1]]),
+                   indent=2,
+                   sort_keys=True))
+
+
+main()

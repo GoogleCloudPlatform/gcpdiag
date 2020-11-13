@@ -16,6 +16,7 @@ class TestCluster:
   """Test gke.Cluster."""
 
   def test_get_path_zonal(self):
+    """get_full_path and get_short_path should return correct results with zonal clusters."""
     context = models.Context(projects=[DUMMY_PROJECT_NAME])
     clusters = gke.get_clusters(context)
     assert DUMMY_CLUSTER1_NAME in clusters
@@ -24,6 +25,7 @@ class TestCluster:
     assert c.get_short_path() == f'{DUMMY_PROJECT_NAME}/gke1'
 
   def test_get_path_regional(self):
+    """get_full_path and get_short_path should return correct results with regional clusters."""
     context = models.Context(projects=[DUMMY_PROJECT_NAME])
     clusters = gke.get_clusters(context)
     assert DUMMY_CLUSTER2_NAME in clusters.keys()

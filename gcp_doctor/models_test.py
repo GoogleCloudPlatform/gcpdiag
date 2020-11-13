@@ -7,16 +7,19 @@ from gcp_doctor import models
 
 
 def test_context_mandatory_projects():
+  """Context constructor with empty project list should raise an exception."""
   with pytest.raises(ValueError):
     models.Context(projects=[])
 
 
 def test_context_region_exception():
+  """Context constructor with non-list regions should raise an exception."""
   with pytest.raises(ValueError):
     models.Context(projects=['project1'], regions='us-central1-b')
 
 
 def test_context_to_string():
+  """Verify stringification of Context with and without regions/labels."""
   c = models.Context(projects=['project1', 'project2'])
   assert str(c) == 'projects: project1,project2'
 
