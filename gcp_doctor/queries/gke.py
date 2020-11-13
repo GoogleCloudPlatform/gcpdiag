@@ -39,6 +39,9 @@ class Cluster(models.Resource):
   def get_short_path(self) -> str:
     return self.project_id + '/' + self._resource_data['name']
 
+  def is_logging_enabled(self) -> bool:
+    return self._resource_data['loggingService'] != 'none'
+
 
 def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
   """Get a list of Cluster matching the given context."""
