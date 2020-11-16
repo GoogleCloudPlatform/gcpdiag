@@ -7,10 +7,10 @@ import pathlib
 # pylint: disable=unused-argument
 
 CLUSTERS_LIST_DUMMY = pathlib.Path(
-    __file__).parents[2] / 'dummies/gke1/json-dumps/clusters.json'
+    __file__).parents[2] / 'test-data/gke1/json-dumps/clusters.json'
 
 
-class ContainerApiMocked:
+class ContainerApiStub:
   """Mock object to simulate container api calls."""
 
   def projects(self):
@@ -30,5 +30,5 @@ class ContainerApiMocked:
       return json.load(json_file)
 
 
-def get_api_mocked(service_name: str, version: str):
-  return ContainerApiMocked()
+def get_api_stub(service_name: str, version: str):
+  return ContainerApiStub()

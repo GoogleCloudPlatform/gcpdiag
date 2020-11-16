@@ -24,7 +24,8 @@ We use the following tools in this project:
 -   pytest: Testing framework
 -   yapf: Code formatting
 -   docker: test running environment (for Kokoro jobs)
--   terraform: Test projects setup ("dummies" used in testing)
+-   terraform: Test projects setup (json-dumps used in testing with stubs that
+    respond with these json contents)
 
 ## Development setup
 
