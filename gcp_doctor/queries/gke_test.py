@@ -4,14 +4,14 @@
 from unittest import mock
 
 from gcp_doctor import models
-from gcp_doctor.queries import gke, gke_mock
+from gcp_doctor.queries import gke, gke_stub
 
 DUMMY_PROJECT_NAME = 'gcpd-gke-1-9b90'
 DUMMY_CLUSTER1_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clusters/gke1'
 DUMMY_CLUSTER2_NAME = f'projects/{DUMMY_PROJECT_NAME}/locations/europe-west1/clusters/gke2'
 
 
-@mock.patch('gcp_doctor.queries.apis.get_api', new=gke_mock.get_api_mocked)
+@mock.patch('gcp_doctor.queries.apis.get_api', new=gke_stub.get_api_stub)
 class TestCluster:
   """Test gke.Cluster."""
 
