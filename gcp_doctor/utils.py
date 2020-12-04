@@ -4,7 +4,7 @@
 import json
 import re
 
-import googleapiclient.errors
+from googleapiclient import errors
 
 
 def is_region(name: str) -> bool:
@@ -12,9 +12,10 @@ def is_region(name: str) -> bool:
 
 
 # see also: https://github.com/googleapis/google-api-python-client/issues/662
-def http_error_message(err: googleapiclient.errors.HttpError) -> str:
+def http_error_message(err: errors.HttpError) -> str:
   content = json.loads(err.content)
-  if isinstance(content, dict):
-    if 'error' in content and 'message' in content['error']:
-      return content['error']['message']
-  return str(err)
+  if isinstance(content,
+                dict) and 'error' in content and 'message' in content['error']:
+    return content['error']['message']
+  else:
+    return str(err)
