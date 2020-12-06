@@ -29,11 +29,19 @@ def test_context_to_string():
   c = models.Context(projects=['project1', 'project2'], regions=['us-central1'])
   assert str(c) == 'projects: project1,project2, regions: us-central1'
 
-  c = models.Context(projects=['project1', 'project2'], labels={'X': 'Y'})
-  assert str(c) == 'projects: project1,project2, labels: X=Y'
+  c = models.Context(projects=['project1', 'project2'],
+                     labels=[{
+                         'A': 'B',
+                         'X': 'Y'
+                     }, {
+                         'foo': 'bar'
+                     }])
+  assert str(c) == 'projects: project1,project2, labels: {A=B,X=Y},{foo=bar}'
 
   c = models.Context(projects=['project1', 'project2'],
                      regions=['us-central1'],
-                     labels={'X': 'Y'})
+                     labels=[{
+                         'X': 'Y'
+                     }])
   assert str(
-      c) == 'projects: project1,project2, regions: us-central1, labels: X=Y'
+      c) == 'projects: project1,project2, regions: us-central1, labels: {X=Y}'
