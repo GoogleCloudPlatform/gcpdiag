@@ -67,8 +67,8 @@ def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
         c = Cluster(project_id=project_id, resource_data=resp_c)
         clusters[c.get_full_path()] = c
     except googleapiclient.errors.HttpError as err:
-      # TODO(dwes): implement proper exception classes
       errstr = utils.http_error_message(err)
+      # TODO(dwes): implement proper exception classes
       raise ValueError(
           f'can\'t list clusters for project {project_id}: {errstr}') from err
   return clusters
