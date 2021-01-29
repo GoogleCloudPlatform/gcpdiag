@@ -1,0 +1,43 @@
+{
+  "bindings": [
+    {
+      "members": [
+        "serviceAccount:gkeserviceaccount@gcpd-gke-1-9b90.iam.gserviceaccount.com"
+      ],
+      "role": "projects/gcpd-gke-1-9b90/roles/gke_custom_role"
+    },
+    {
+      "members": [
+        "serviceAccount:service-18404348413@compute-system.iam.gserviceaccount.com"
+      ],
+      "role": "roles/compute.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-18404348413@container-engine-robot.iam.gserviceaccount.com"
+      ],
+      "role": "roles/container.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-18404348413@containerregistry.iam.gserviceaccount.com"
+      ],
+      "role": "roles/containerregistry.ServiceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:18404348413-compute@developer.gserviceaccount.com",
+        "serviceAccount:18404348413@cloudservices.gserviceaccount.com"
+      ],
+      "role": "roles/editor"
+    },
+    {
+      "members": [
+        "user:testuser@example.com"
+      ],
+      "role": "roles/owner"
+    }
+  ],
+  "etag": "BwW59XShH4Y=",
+  "version": 1
+}

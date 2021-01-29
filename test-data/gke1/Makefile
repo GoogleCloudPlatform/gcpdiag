@@ -1,10 +1,58 @@
 PROJECT_ID  := $(shell terraform output project_id)
-CURL_GET     = ../../bin/curl-get-wrap.sh
+PROJECT_NR  := 18404348413
+CURL         = ../../bin/curl-wrap.sh
 JSON_CLEANER = ../../bin/json-cleaner
+
+# Execute all lines in a single bash session.
+#.ONESHELL:
+#SHELL=/bin/bash
+#.SHELLFLAGS=-e
 
 all: json-dumps/clusters.json
 
 json-dumps/clusters.json:
-	$(CURL_GET) -fsS \
-		https://container.googleapis.com/v1/projects/$(PROJECT_ID)/locations/-/clusters \
+	$(CURL) -fsS \
+		'https://container.googleapis.com/v1/projects/$(PROJECT_ID)/locations/-/clusters' \
 		| $(JSON_CLEANER) clusters >$@
+
+json-dumps/iam-policy.json:
+	$(CURL) -fsS \
+		'https://cloudresourcemanager.googleapis.com/v1/projects/$(PROJECT_ID):getIamPolicy' \
+		-X POST  --header "Content-Type:text/json" \
+		-d "" \
+		| $(JSON_CLEANER) other >$@
+
+json-dumps/iam-roles-predefined-1.json:
+	$(CURL) -fsS \
+		'https://iam.googleapis.com/v1/roles?view=FULL&pageSize=500' >$@
+
+json-dumps/iam-roles-predefined-2.json: json-dumps/iam-roles-predefined-1.json
+	$(CURL) -fsS \
+		'https://iam.googleapis.com/v1/roles?view=FULL&pageSize=500&pageToken=$(shell jq -r <json-dumps/iam-roles-predefined-1.json '.nextPageToken')' >$@
+
+json-dumps/iam-roles-custom.json: json-dumps/iam-roles-custom.json
+	$(CURL) -fsS \
+		'https://iam.googleapis.com/v1/projects/$(PROJECT_ID)/roles?view=FULL&pageSize=500' >$@
+
+# Note: this throws an error. See also: b/175212189
+#  "code": 403,
+#  "message": "Your application has authenticated using end user credentials
+#  from the Google Cloud SDK or Google Cloud Shell which are not supported by
+#  the policytroubleshooter.googleapis.com. We recommend configuring the
+#  billing/quota_project setting in gcloud or using a service account through
+#  the auth/impersonate_service_account setting. For more information about
+#  service accounts and how to use them in your application, see
+#  https://cloud.google.com/docs/authentication/.",
+json-dumps/iam-troubleshoot-ok.json:
+	$(CURL) -fsS \
+               https://policytroubleshooter.googleapis.com/v1/iam:troubleshoot \
+                -X POST  --header "Content-Type:text/json" \
+               -d @- <<DATA
+	{
+	  "accessTuple": {
+	      "principal": "$(PROJECT_NR)-compute@developer.gserviceaccount.com",
+	      "fullResourceName": "//container.googleapis.com/projects/$(PROJECT_ID)/clusters/gke1",
+	      "permission": "logging.logEntries.create"
+	  }
+	}
+	DATA

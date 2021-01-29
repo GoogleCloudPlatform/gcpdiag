@@ -1,0 +1,41 @@
+{
+  "roles": [
+    {
+      "name": "projects/gcpd-gke-1-9b90/roles/gke_custom_role",
+      "title": "GKE Custom Role",
+      "description": "A description",
+      "includedPermissions": [
+        "cloudnotifications.activities.list",
+        "logging.logEntries.create",
+        "monitoring.alertPolicies.get",
+        "monitoring.alertPolicies.list",
+        "monitoring.dashboards.get",
+        "monitoring.dashboards.list",
+        "monitoring.groups.get",
+        "monitoring.groups.list",
+        "monitoring.metricDescriptors.create",
+        "monitoring.metricDescriptors.get",
+        "monitoring.metricDescriptors.list",
+        "monitoring.monitoredResourceDescriptors.get",
+        "monitoring.monitoredResourceDescriptors.list",
+        "monitoring.notificationChannelDescriptors.get",
+        "monitoring.notificationChannelDescriptors.list",
+        "monitoring.notificationChannels.get",
+        "monitoring.notificationChannels.list",
+        "monitoring.publicWidgets.get",
+        "monitoring.publicWidgets.list",
+        "monitoring.services.get",
+        "monitoring.services.list",
+        "monitoring.slos.get",
+        "monitoring.slos.list",
+        "monitoring.timeSeries.create",
+        "monitoring.timeSeries.list",
+        "monitoring.uptimeCheckConfigs.get",
+        "monitoring.uptimeCheckConfigs.list",
+        "stackdriver.resourceMetadata.write"
+      ],
+      "stage": "GA",
+      "etag": "BwW54c4vZVk="
+    }
+  ]
+}

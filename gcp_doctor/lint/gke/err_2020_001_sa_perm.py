@@ -14,7 +14,6 @@ from gcp_doctor.queries import gke, iam
 def run_test(context: models.Context) -> lint.LintFindings:
   """Run lint test in this context and report findings."""
   findings = lint.LintFindings()
-  iam_policies = iam.get_iam_policies(context)
 
   # find all clusters with monitoring enabled
   clusters = gke.get_clusters(context)
@@ -22,13 +21,17 @@ def run_test(context: models.Context) -> lint.LintFindings:
     if not c.has_monitoring_enabled():
       findings.add_skipped(c, 'monitoring disabled')
     else:
-      # verify service-account roles of every nodepool
+      iam_policy = iam.ProjectPolicy(c.project)
+      # verify service-account permissions for every nodepool
       for np in c.nodepools:
         sa = np.service_account
-        missing_roles = []
-        for role in ['monitoring.metricWriter', 'logging.logWriter']:
-          if not iam_policies.has_role(sa, c.project, role):
-            missing_roles.append(role)
+        missing_roles = [
+            role for role in [
+                'monitoring.viewer', 'monitoring.metricWriter',
+                'logging.logWriter'
+            ]
+            if not iam_policy.has_role_permissions(f'serviceAccount:{sa}', role)
+        ]
         if not missing_roles:
           findings.add_failed(np, 'missing roles' + ' '.join(missing_roles))
         else:
