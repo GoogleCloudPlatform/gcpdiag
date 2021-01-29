@@ -1,12 +1,15 @@
 # Lint as: python3
-"""Mock functionality of gke.py for testing."""
+"""Stub API calls used in gke.py for testing.
+
+Instead of doing real API calls, we return test JSON data.
+"""
 
 import json
 import pathlib
 
 # pylint: disable=unused-argument
 
-CLUSTERS_LIST_DUMMY = pathlib.Path(
+CLUSTERS_LIST_JSON = pathlib.Path(
     __file__).parents[2] / 'test-data/gke1/json-dumps/clusters.json'
 
 
@@ -26,7 +29,7 @@ class ContainerApiStub:
     return self
 
   def execute(self, num_retries=0):
-    with open(CLUSTERS_LIST_DUMMY) as json_file:
+    with open(CLUSTERS_LIST_JSON) as json_file:
       return json.load(json_file)
 
 

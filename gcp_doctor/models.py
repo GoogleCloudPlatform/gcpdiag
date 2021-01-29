@@ -119,6 +119,9 @@ class Resource(abc.ABC):
     """Project id (not project number)."""
     return self._project_id
 
+  # FIXME(dwes): should we have get_full_name and return what is documented
+  # here? https://cloud.google.com/iam/docs/full-resource-names
+
   @abc.abstractmethod
   def get_full_path(self):
     """Returns the full path of this resource.
