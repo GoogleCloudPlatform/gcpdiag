@@ -40,18 +40,18 @@ class TestCluster:
     assert str(c) == DUMMY_CLUSTER2_NAME
     assert c.get_short_path() == f'{DUMMY_PROJECT_NAME}/gke2'
 
-  def test_is_logging_enabled_true(self):
-    """is_logging_enabled should return true for GKE cluster with logging enabled."""
+  def test_has_logging_enabled_false(self):
+    """has_logging_enabled should return false for GKE cluster with logging disabled."""
     context = models.Context(projects=[DUMMY_PROJECT_NAME])
     clusters = gke.get_clusters(context)
     assert DUMMY_CLUSTER1_NAME in clusters.keys()
     c = clusters[DUMMY_CLUSTER1_NAME]
-    assert c.is_logging_enabled()
+    assert not c.has_logging_enabled()
 
-  def test_is_logging_enabled_false(self):
-    """is_logging_enabled should return false for GKE cluster with logging disabled."""
+  def test_has_logging_enabled_true(self):
+    """has_logging_enabled should return true for GKE cluster with logging enabled."""
     context = models.Context(projects=[DUMMY_PROJECT_NAME])
     clusters = gke.get_clusters(context)
     assert DUMMY_CLUSTER2_NAME in clusters.keys()
     c = clusters[DUMMY_CLUSTER2_NAME]
-    assert not c.is_logging_enabled()
+    assert c.has_logging_enabled()

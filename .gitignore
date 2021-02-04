@@ -1,7 +1,8 @@
+*.pyc
 __pycache__
 .coverage
 .venv
-.venv-docker
+.pipenv-dockerized
 .terraform
 .terraform.tfstate.lock.info
 terraform.tfstate

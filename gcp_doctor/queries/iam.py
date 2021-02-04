@@ -2,9 +2,8 @@
 """Queries related to GCP Kubernetes Engine clusters."""
 
 import functools
+import logging
 from typing import Any, ClassVar, Dict, List, Mapping
-
-from absl import logging
 
 from gcp_doctor.queries import apis
 
@@ -15,10 +14,10 @@ def _fetch_roles(parent: str) -> Mapping[str, Any]:
   iam_api = apis.get_api('iam', 'v1')
   if parent == '':
     roles_api = iam_api.roles()
-    logging.debug('fetching IAM roles: predefined')
+    logging.info('fetching IAM roles: predefined')
   else:
     roles_api = iam_api.projects().roles()
-    logging.debug('fetching IAM roles: %s', parent)
+    logging.info('fetching IAM roles: %s', parent)
   request = roles_api.list(parent=parent, view='FULL')
   while True:
     response = request.execute()
@@ -35,6 +34,10 @@ def _fetch_roles(parent: str) -> Mapping[str, Any]:
 class ProjectPolicy:
   """Represents the IAM policy of a single project.
 
+  Note that you should use the get_project_policy() method so that the
+  objects are cached and you don't re-fetch the project policy.
+
+  See also the API documentation:
   https://cloud.google.com/resource-manager/reference/rest/v1/projects/getIamPolicy
   """
   _project_id: str
@@ -47,7 +50,7 @@ class ProjectPolicy:
 
   def _init_policy(self):
     if not self._policy_initialized:
-      logging.debug('fetching IAM policy of project %s', self._project_id)
+      logging.info('fetching IAM policy of project %s', self._project_id)
       crm_api = apis.get_api('cloudresourcemanager', 'v1')
       request = crm_api.projects().getIamPolicy(resource=self._project_id)
       response = request.execute()
@@ -97,7 +100,6 @@ class ProjectPolicy:
         permissions = self._get_role_permissions(role)
         permissions_dict = {k: 1 for k in permissions}
         member_policy['permissions'] = permissions_dict
-        logging.debug('permissions of %s: %s', member, ','.join(permissions))
 
   def get_member_permissions(self, member: str) -> List[str]:
     """Return permisions for an member (either a user or serviceAccount).
@@ -140,3 +142,9 @@ class ProjectPolicy:
 
   def __init__(self, project_id):
     self._project_id = project_id
+
+
+@functools.lru_cache(maxsize=None)
+def get_project_policy(project_id):
+  """Return the ProjectPolicy object for a project, caching the result."""
+  return ProjectPolicy(project_id)

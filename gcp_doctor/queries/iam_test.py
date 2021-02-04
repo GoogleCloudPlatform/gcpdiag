@@ -6,7 +6,7 @@ from unittest import mock
 from gcp_doctor.queries import iam, iam_stub
 
 TEST_PROJECT_NAME = 'gcpd-gke-1-9b90'
-TEST_SERVICE_ACCOUNT = 'serviceAccount:gkeserviceaccount@gcpd-gke-1-9b90.iam.gserviceaccount.com'
+TEST_SERVICE_ACCOUNT = 'serviceAccount:gke2sa@gcpd-gke-1-9b90.iam.gserviceaccount.com'
 TEST_SERVICE_ACCOUNT_PERMISSIONS = [
     'cloudnotifications.activities.list', 'logging.logEntries.create',
     'monitoring.alertPolicies.get', 'monitoring.alertPolicies.list',
@@ -38,13 +38,13 @@ class TestProjectPolicy:
         TEST_SERVICE_ACCOUNT) == TEST_SERVICE_ACCOUNT_PERMISSIONS
 
   def test_has_permission(self):
-    policy = iam.ProjectPolicy(TEST_PROJECT_NAME)
+    policy = iam.get_project_policy(TEST_PROJECT_NAME)
     assert policy.has_permission(TEST_SERVICE_ACCOUNT, 'monitoring.groups.get')
     assert not policy.has_permission(TEST_SERVICE_ACCOUNT,
                                      'monitoring.groups.create')
 
   def test_has_role_permissions(self):
-    policy = iam.ProjectPolicy(TEST_PROJECT_NAME)
+    policy = iam.get_project_policy(TEST_PROJECT_NAME)
     assert policy.has_role_permissions(TEST_SERVICE_ACCOUNT,
                                        'roles/monitoring.viewer')
     assert not policy.has_role_permissions(TEST_SERVICE_ACCOUNT,

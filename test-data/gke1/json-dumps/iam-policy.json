@@ -2,9 +2,15 @@
   "bindings": [
     {
       "members": [
-        "serviceAccount:gkeserviceaccount@gcpd-gke-1-9b90.iam.gserviceaccount.com"
+        "serviceAccount:gke2sa@gcpd-gke-1-9b90.iam.gserviceaccount.com"
       ],
-      "role": "projects/gcpd-gke-1-9b90/roles/gke_custom_role"
+      "role": "projects/gcpd-gke-1-9b90/roles/gke2_custom_role"
+    },
+    {
+      "members": [
+        "serviceAccount:gke3sa@gcpd-gke-1-9b90.iam.gserviceaccount.com"
+      ],
+      "role": "projects/gcpd-gke-1-9b90/roles/gke3_custom_role"
     },
     {
       "members": [
@@ -38,6 +44,6 @@
       "role": "roles/owner"
     }
   ],
-  "etag": "BwW59XShH4Y=",
+  "etag": "BwW6mfZeQy4=",
   "version": 1
 }

@@ -1,24 +1,8 @@
-resource "google_project_service" "container" {
-  project = google_project.project.project_id
-  service = "container.googleapis.com"
-}
-
-resource "google_container_cluster" "gke1" {
-  project            = google_project.project.project_id
-  depends_on         = [google_project_service.container]
-  name               = "gke1"
-  location           = "europe-west4-a"
-  initial_node_count = 1
-  resource_labels = {
-    foo = "bar"
-  }
-}
-
 # This custom role is used to test iam.py's code that deals
 # with verifying permissions including custom roles.
-resource "google_project_iam_custom_role" "gke_custom_role" {
+resource "google_project_iam_custom_role" "gke2_custom_role" {
   project     = google_project.project.project_id
-  role_id     = "gke_custom_role"
+  role_id     = "gke2_custom_role"
   title       = "GKE Custom Role"
   description = "A description"
   permissions = [
@@ -67,19 +51,20 @@ resource "google_project_iam_custom_role" "gke_custom_role" {
   ]
 }
 
-resource "google_service_account" "gke_sa" {
+resource "google_service_account" "gke2_sa" {
   project      = google_project.project.project_id
-  account_id   = "gkeserviceaccount"
+  account_id   = "gke2sa"
   display_name = "GKE Service Account"
 }
 
 
-resource "google_project_iam_member" "gke_sa" {
+resource "google_project_iam_member" "gke2_sa" {
   project = google_project.project.project_id
-  role    = google_project_iam_custom_role.gke_custom_role.name
-  member  = "serviceAccount:${google_service_account.gke_sa.email}"
+  role    = google_project_iam_custom_role.gke2_custom_role.name
+  member  = "serviceAccount:${google_service_account.gke2_sa.email}"
 }
 
+# GKE cluster with monitoring enabled and service account using a custom role
 resource "google_container_cluster" "gke2" {
   provider           = google-beta
   project            = google_project.project.project_id
@@ -87,11 +72,8 @@ resource "google_container_cluster" "gke2" {
   name               = "gke2"
   location           = "europe-west1"
   initial_node_count = 1
-  cluster_telemetry {
-    type = "DISABLED"
-  }
   node_config {
-    service_account = google_service_account.gke_sa.email
+    service_account = google_service_account.gke2_sa.email
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
