@@ -15,6 +15,7 @@ IAM_POLICY_JSON = PREFIX_GKE1 / 'iam-policy.json'
 IAM_ROLES_PRE1_JSON = PREFIX_GKE1 / 'iam-roles-predefined-1.json.gz'
 IAM_ROLES_PRE2_JSON = PREFIX_GKE1 / 'iam-roles-predefined-2.json.gz'
 IAM_ROLES_CUST_JSON = PREFIX_GKE1 / 'iam-roles-custom.json'
+PROJECT_JSON = PREFIX_GKE1 / 'project.json'
 
 
 class IamApiStub:
@@ -70,17 +71,31 @@ class CrmApiStub:
   # example API call:
   # crm_api.projects().getIamPolicy(resource=self._project_id).execute()
 
+  def __init__(self, mock_state='init'):
+    self.mock_state = mock_state
+
   def projects(self):
     return self
 
   # pylint: disable=invalid-name
+  def get(self, projectId):
+    del projectId
+    return CrmApiStub(mock_state='get_project')
+
+  # pylint: disable=invalid-name
   def getIamPolicy(self, resource):
     del resource
-    return self
+    return CrmApiStub(mock_state='get_iam_policy')
 
   def execute(self):
-    with open(IAM_POLICY_JSON) as json_file:
-      return json.load(json_file)
+    if self.mock_state == 'get_iam_policy':
+      with open(IAM_POLICY_JSON) as json_file:
+        return json.load(json_file)
+    elif self.mock_state == 'get_project':
+      with open(PROJECT_JSON) as json_file:
+        return json.load(json_file)
+    else:
+      raise ValueError("can't call this method here")
 
 
 def get_api_stub(service_name: str, version: str):

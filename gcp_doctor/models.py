@@ -6,6 +6,7 @@ import dataclasses
 from typing import Iterable, List, Mapping, Optional
 
 from gcp_doctor import utils
+from gcp_doctor.queries import project
 
 
 def _mapping_str(mapping: Mapping[str, str]) -> str:
@@ -79,6 +80,9 @@ class Context:
           _mapping_str(label_set) for label_set in self.labels) + '}'
     return string
 
+  def __hash__(self):
+    return self.__str__().__hash__()
+
   def match_project_resource(self, location: Optional[str],
                              labels: Optional[Mapping[str, str]]) -> bool:
     """Return true if a resource in a project matches with this context."""
@@ -118,6 +122,10 @@ class Resource(abc.ABC):
   def project_id(self) -> str:
     """Project id (not project number)."""
     return self._project_id
+
+  @property
+  def project_nr(self) -> int:
+    return project.get_project_nr(self.project_id)
 
   # FIXME: should we have get_full_name and return what is documented
   # here? https://cloud.google.com/iam/docs/full-resource-names

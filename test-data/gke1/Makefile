@@ -8,12 +8,21 @@ JSON_CLEANER = ../../bin/json-cleaner
 #SHELL=/bin/bash
 #.SHELLFLAGS=-e
 
-all: json-dumps/clusters.json
+all:	json-dumps/clusters.json \
+	json-dumps/iam-policy.json \
+	json-dumps/iam-roles-custom.json \
+	json-dumps/iam-roles-predefined-1.json.gz \
+	json-dumps/iam-roles-predefined-2.json.gz \
+ 	json-dumps/project.json
 
 json-dumps/clusters.json:
 	$(CURL) -fsS \
 		'https://container.googleapis.com/v1/projects/$(PROJECT_ID)/locations/-/clusters' \
 		| $(JSON_CLEANER) clusters >$@
+
+json-dumps/project.json:
+	$(CURL) -fsS \
+		'https://cloudresourcemanager.googleapis.com/v1/projects/$(PROJECT_ID)' >$@
 
 json-dumps/iam-policy.json:
 	$(CURL) -fsS \
@@ -22,15 +31,15 @@ json-dumps/iam-policy.json:
 		-d "" \
 		| $(JSON_CLEANER) other >$@
 
-json-dumps/iam-roles-predefined-1.json:
+json-dumps/iam-roles-predefined-1.json.gz:
 	$(CURL) -fsS \
-		'https://iam.googleapis.com/v1/roles?view=FULL&pageSize=500' >$@
+		'https://iam.googleapis.com/v1/roles?view=FULL&pageSize=500' | gzip -c >$@
 
-json-dumps/iam-roles-predefined-2.json: json-dumps/iam-roles-predefined-1.json
+json-dumps/iam-roles-predefined-2.json.gz: json-dumps/iam-roles-predefined-1.json.gz
 	$(CURL) -fsS \
-		'https://iam.googleapis.com/v1/roles?view=FULL&pageSize=500&pageToken=$(shell jq -r <json-dumps/iam-roles-predefined-1.json '.nextPageToken')' >$@
+		'https://iam.googleapis.com/v1/roles?view=FULL&pageSize=500&pageToken=$(shell zcat json-dumps/iam-roles-predefined-1.json.gz | jq -r '.nextPageToken')' | gzip -c >$@
 
-json-dumps/iam-roles-custom.json: json-dumps/iam-roles-custom.json
+json-dumps/iam-roles-custom.json:
 	$(CURL) -fsS \
 		'https://iam.googleapis.com/v1/projects/$(PROJECT_ID)/roles?view=FULL&pageSize=500' >$@
 
@@ -43,16 +52,16 @@ json-dumps/iam-roles-custom.json: json-dumps/iam-roles-custom.json
 #  the auth/impersonate_service_account setting. For more information about
 #  service accounts and how to use them in your application, see
 #  https://cloud.google.com/docs/authentication/.",
-json-dumps/iam-troubleshoot-ok.json:
-	$(CURL) -fsS \
-               https://policytroubleshooter.googleapis.com/v1/iam:troubleshoot \
-                -X POST  --header "Content-Type:text/json" \
-               -d @- <<DATA
-	{
-	  "accessTuple": {
-	      "principal": "$(PROJECT_NR)-compute@developer.gserviceaccount.com",
-	      "fullResourceName": "//container.googleapis.com/projects/$(PROJECT_ID)/clusters/gke1",
-	      "permission": "logging.logEntries.create"
-	  }
-	}
-	DATA
+#json-dumps/iam-troubleshoot-ok.json:
+#	$(CURL) -fsS \
+#               https://policytroubleshooter.googleapis.com/v1/iam:troubleshoot \
+#                -X POST  --header "Content-Type:text/json" \
+#               -d @- <<DATA
+#	{
+#	  "accessTuple": {
+#	      "principal": "$(PROJECT_NR)-compute@developer.gserviceaccount.com",
+#	      "fullResourceName": "//container.googleapis.com/projects/$(PROJECT_ID)/clusters/gke1",
+#	      "permission": "logging.logEntries.create"
+#	  }
+#	}
+#	DATA

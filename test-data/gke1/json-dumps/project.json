@@ -1,0 +1,11 @@
+{
+  "projectNumber": "18404348413",
+  "projectId": "gcpd-gke-1-9b90",
+  "lifecycleState": "ACTIVE",
+  "name": "gcp-doctor test - gke1",
+  "createTime": "2020-11-09T12:24:48.019Z",
+  "parent": {
+    "type": "organization",
+    "id": "98915863894"
+  }
+}

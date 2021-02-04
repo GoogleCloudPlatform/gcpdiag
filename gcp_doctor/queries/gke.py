@@ -1,12 +1,49 @@
 # Lint as: python3
 """Queries related to GCP Kubernetes Engine clusters."""
 
-from typing import Dict, Mapping
+import functools
+import logging
+import re
+from typing import Dict, Iterable, List, Mapping
 
 import googleapiclient.errors
 
 from gcp_doctor import models, utils
 from gcp_doctor.queries import apis
+
+
+class NodePool(models.Resource):
+  """Represents a GKE node pool."""
+
+  def __init__(self, project_id, resource_data):
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+
+  def get_full_path(self) -> str:
+    # https://container.googleapis.com/v1/projects/gcpd-gke-1-9b90/
+    #   locations/europe-west1/clusters/gke2/nodePools/default-pool
+    m = re.match(r'https://container.googleapis.com/v1/(.*)',
+                 self._resource_data.get('selfLink', ''))
+    if not m:
+      raise RuntimeError('can\'t parse selfLink of nodepool resource')
+    return m.group(1)
+
+  def get_short_path(self) -> str:
+    path = self.get_full_path()
+    path = re.sub(r'^projects/', '', path)
+    path = re.sub(r'/locations/', '/', path)
+    path = re.sub(r'/zones/', '/', path)
+    path = re.sub(r'/clusters/', '/', path)
+    path = re.sub(r'/nodePools/', '/', path)
+    return path
+
+  @property
+  def service_account(self) -> str:
+    sa = self._resource_data.get('config', {}).get('serviceAccount', None)
+    if sa == 'default':
+      return f'{self.project_nr}-compute@developer.gserviceaccount.com'
+    else:
+      return sa
 
 
 class Cluster(models.Resource):
@@ -39,15 +76,24 @@ class Cluster(models.Resource):
   def get_short_path(self) -> str:
     return self.project_id + '/' + self._resource_data['name']
 
-  def is_logging_enabled(self) -> bool:
+  def has_logging_enabled(self) -> bool:
     return self._resource_data['loggingService'] != 'none'
 
+  @property
+  def nodepools(self) -> Iterable[NodePool]:
+    nodepools: List[NodePool] = []
+    for n in self._resource_data.get('nodePools', []):
+      nodepools.append(NodePool(self.project_id, n))
+    return nodepools
 
+
+@functools.lru_cache(maxsize=None)
 def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
   """Get a list of Cluster matching the given context."""
   clusters: Dict[str, Cluster] = {}
   container_api = apis.get_api('container', 'v1')
   for project_id in context.projects:
+    logging.info('fetching list of GKE clusters in project %s', project_id)
     query = container_api.projects().locations().clusters().list(
         parent=f'projects/{project_id}/locations/-')
     try:

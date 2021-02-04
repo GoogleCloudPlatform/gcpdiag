@@ -1,15 +1,18 @@
 #!/bin/bash
 
-IMAGE="us-docker.pkg.dev/gcp-doctor-repo/dev/gcp-doctor-pipenv:0.3"
+IMAGE="us-docker.pkg.dev/gcp-doctor-repo/dev/gcp-doctor-pipenv:0.4"
 
 USE_TTY=""
 CWD=$(pwd)
 [ -t 0 ] && USE_TTY="-it"
 
-mkdir -p "$HOME/.cache/pre-commit"
+#mkdir -p "$HOME/.cache/pre-commit"
+#mkdir -p "$HOME/.cache/pipenv"
+#mkdir -p "$HOME/.local/share/virtualenv"
 mkdir -p "$HOME/.config/gcloud"
-mkdir -p "$HOME/.local/share/virtualenv"
-mkdir -p .venv-docker
+mkdir -p .pipenv-dockerized/venv
+mkdir -p .pipenv-dockerized/home
+mkdir -p .venv
 exec docker run $USE_TTY \
   --rm \
   -u "$(id -u):$(id -g)" \
@@ -19,9 +22,8 @@ exec docker run $USE_TTY \
   -e "LANG=$LANG" \
   -e "SHELL=/bin/bash" \
   -v "$CWD:$CWD" \
-  -v "$HOME/.cache/pre-commit:$HOME/.cache/pre-commit" \
   -v "$HOME/.config/gcloud:$HOME/.config/gcloud" \
-  -v "$HOME/.local/share/virtualenv:$HOME/.local/share/virtualenv" \
-  -v "$CWD/.venv-docker:$CWD/.venv" \
+  -v "$CWD/.pipenv-dockerized/home:$HOME" \
+  -v "$CWD/.pipenv-dockerized/venv:$CWD/.venv" \
   -w "$CWD" \
   $IMAGE pipenv "$@"
