@@ -3,25 +3,51 @@
 
 # pylint: disable=invalid-name
 
-import logging
+import importlib
+import os
+import sys
 
-from absl import app, flags
-
-FLAGS = flags.FLAGS
-#flags.DEFINE_string("name", None, "Your name.")
-#flags.DEFINE_integer("num_times", 1,
-#                     "Number of times to print greeting.")
-#
-## Required flag.
-#flags.mark_flag_as_required("name")
+VERSION = '0.1'
 
 
 def main(argv):
-  del argv  # Unused.
+  # A very simple command-line parser to determine what subcommand is called.
+  # Proper argument parsing will be done in the subcommands.
 
-  logger = logging.getLogger()
-  logger.setLevel(logging.WARNING)
+  # Extend the module search path assuming that the modules are relative to this
+  # script in ..
+  sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+  if len(argv) == 1 or argv[1] == '--help' or argv[1] == 'help':
+    print_help()
+  elif argv[1] == 'version' or argv[1] == '--version':
+    print('gcp-doctor ' + VERSION)
+    print('Copyright 2021 Google LLC')
+  elif argv[1] == 'lint':
+    lint_command = importlib.import_module('gcp_doctor.lint.command')
+    # Replace argv[0:1] with only argv[0] so that argparse works correctly.
+    sys.argv.pop(0)
+    sys.argv[0] = 'gcp-doctor lint'
+    lint_command.run(argv)
+  else:
+    print(f'ERROR: unknown command {argv[1]}. Use --help for help.',
+          file=sys.stderr)
+    sys.exit(1)
+
+
+def print_help():
+  print("""gcp-doctor - Diagnostics for Google Cloud Platform
+
+Usage:
+        gcp-doctor COMMAND [OPTIONS]
+
+Commands:
+        help     Print this help text.
+        lint     Run diagnostics on GCP projects.
+        version  Print gcp-doctor version.
+
+See: gcp-doctor COMMAND --help for command-specific usage.""")
 
 
 if __name__ == '__main__':
-  app.run(main)
+  main(sys.argv)

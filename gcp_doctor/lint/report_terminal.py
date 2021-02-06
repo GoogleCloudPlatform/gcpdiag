@@ -9,7 +9,7 @@ import blessings
 
 from gcp_doctor import lint, models
 
-OUTPUT_WIDTH = 60
+OUTPUT_WIDTH = 68
 
 
 class _LintReportTerminalLoggingHandler(logging.Handler):
@@ -80,6 +80,7 @@ class LintReportTerminal(lint.LintReport):
     self.terminal_finish_line('  - ' +
                               resource.get_short_path().ljust(OUTPUT_WIDTH) +
                               ' [SKIP]')
+    self.terminal_finish_line(f'    {reason}')
 
   @abc.abstractmethod
   def add_ok(self, test: lint.LintTest, context: models.Context,
@@ -94,4 +95,4 @@ class LintReportTerminal(lint.LintReport):
     self.terminal_finish_line('  - ' +
                               resource.get_short_path().ljust(OUTPUT_WIDTH) +
                               ' [' + self.term.red('FAIL') + ']')
-    self.terminal_finish_line(f'   ({reason})')
+    self.terminal_finish_line(f'    {reason}')

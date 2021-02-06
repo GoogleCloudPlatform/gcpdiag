@@ -10,6 +10,7 @@ DUMMY_PROJECT_NAME = 'gcpd-gke-1-9b90'
 DUMMY_CLUSTER1_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clusters/gke1'
 DUMMY_CLUSTER1_LABELS = {'foo': 'bar'}
 DUMMY_CLUSTER2_NAME = f'projects/{DUMMY_PROJECT_NAME}/locations/europe-west1/clusters/gke2'
+DUMMY_CLUSTER2_SHORT_NAME = f'{DUMMY_PROJECT_NAME}/europe-west1/gke2'
 
 
 @mock.patch('gcp_doctor.queries.apis.get_api', new=gke_stub.get_api_stub)
@@ -38,7 +39,7 @@ class TestCluster:
     c = clusters[DUMMY_CLUSTER2_NAME]
     assert c.get_full_path() == DUMMY_CLUSTER2_NAME
     assert str(c) == DUMMY_CLUSTER2_NAME
-    assert c.get_short_path() == f'{DUMMY_PROJECT_NAME}/gke2'
+    assert c.get_short_path() == DUMMY_CLUSTER2_SHORT_NAME
 
   def test_has_logging_enabled_false(self):
     """has_logging_enabled should return false for GKE cluster with logging disabled."""

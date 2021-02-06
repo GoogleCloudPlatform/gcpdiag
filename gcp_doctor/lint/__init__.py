@@ -153,18 +153,3 @@ class LintTestRepository:
       test_report = report.test_start(test, context)
       test.run_test_f(context, test_report)
       report.test_end(test, context)
-
-
-#def lint_test_from_module_file(module_file: str) -> LintTest:
-#  """Determine Lint Test parameters based on the module file path."""
-#  m = re.search(r"""
-#       /([^/]+)/    # last directory, e.g.: /gke/
-#       ([a-z]+)_    # class prefix, e.g.: 'err_'
-#       ([^/\.]+)    # filename without dot, e.g.: 2020_001_sa_perm
-#       \.[^/]+$     # suffix, e.g.: .py
-#    """, re.VERBOSE)
-#  if not m:
-#    raise ValueError(f'can\'t determine test parameters from filename: {module_file}')
-#  lastdir, prefix, filename = m.group(1, 2, 3)
-#  return LintTest(product=lastdir,
-#
