@@ -74,7 +74,12 @@ class Cluster(models.Resource):
               f'zones/{self.location}/clusters/{self.name}')
 
   def get_short_path(self) -> str:
-    return self.project_id + '/' + self._resource_data['name']
+    path = self.get_full_path()
+    path = re.sub(r'^projects/', '', path)
+    path = re.sub(r'/locations/', '/', path)
+    path = re.sub(r'/zones/', '/', path)
+    path = re.sub(r'/clusters/', '/', path)
+    return path
 
   def has_logging_enabled(self) -> bool:
     return self._resource_data['loggingService'] != 'none'
