@@ -7,21 +7,18 @@ import importlib
 import os
 import sys
 
-VERSION = '0.1'
-
 
 def main(argv):
   # A very simple command-line parser to determine what subcommand is called.
   # Proper argument parsing will be done in the subcommands.
 
-  # Extend the module search path assuming that the modules are relative to this
-  # script in ..
   sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
   if len(argv) == 1 or argv[1] == '--help' or argv[1] == 'help':
     print_help()
   elif argv[1] == 'version' or argv[1] == '--version':
-    print('gcp-doctor ' + VERSION)
+    config = importlib.import_module('gcp_doctor.config')
+    print('gcp-doctor ' + config.VERSION)
     print('Copyright 2021 Google LLC')
   elif argv[1] == 'lint':
     lint_command = importlib.import_module('gcp_doctor.lint.command')

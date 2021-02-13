@@ -8,7 +8,7 @@ from typing import Dict, Iterable, List, Mapping
 
 import googleapiclient.errors
 
-from gcp_doctor import models, utils
+from gcp_doctor import config, models, utils
 from gcp_doctor.queries import apis
 
 
@@ -102,7 +102,7 @@ def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
     query = container_api.projects().locations().clusters().list(
         parent=f'projects/{project_id}/locations/-')
     try:
-      resp = query.execute(num_retries=apis.RETRIES)
+      resp = query.execute(num_retries=config.API_RETRIES)
       if 'clusters' not in resp:
         raise RuntimeError(
             'clusters field missing in projects.locations.clusters.list response'

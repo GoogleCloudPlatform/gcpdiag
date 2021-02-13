@@ -39,11 +39,11 @@ class Test:
     report.test_end(test, context)
     # yapf: disable
     assert (output.getvalue() == (
-        '[test/TST/9999_999]: short description\n'
-        '  - gcpd-gke-1-9b90/europe-west1/gke2/default-pool                       [ OK ]\n'
-        '  - gcpd-gke-1-9b90/europe-west1/gke3/default-pool                       [FAIL]\n'
+        '*  test/TST/9999_999: short description\n'
+        '   - gcpd-gke-1-9b90/europe-west1/gke2/default-pool                       [ OK ]\n'
+        '   - gcpd-gke-1-9b90/europe-west1/gke3/default-pool                       [FAIL]\n'
         # pylint: disable=line-too-long
-        '    missing roles: roles/monitoring.viewer, roles/monitoring.metricWriter, roles/logging.logWriter\n'
-        '  - gcpd-gke-1-9b90/europe-west4-a/gke1                                  [SKIP]\n'
-        '    monitoring disabled\n\n'
+        '     missing roles: roles/monitoring.viewer, roles/monitoring.metricWriter, roles/logging.logWriter\n'
+        '   - gcpd-gke-1-9b90/europe-west4-a/gke1                                  [SKIP]\n'
+        '     monitoring disabled\n\n'
     ))
