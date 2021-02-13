@@ -5,11 +5,19 @@ import functools
 import logging
 from typing import Any, ClassVar, Dict, List, Mapping
 
+from gcp_doctor import cache, config
 from gcp_doctor.queries import apis
 
 
 @functools.lru_cache(maxsize=None)
 def _fetch_roles(parent: str) -> Mapping[str, Any]:
+  # Try fetching predefined roles from disk cache.
+  if parent == '':
+    with cache.get_cache() as diskcache:
+      cached_roles = diskcache.get('iam_predefined_roles')
+      if cached_roles:
+        return cached_roles
+
   roles: Dict[str, Any] = {}
   iam_api = apis.get_api('iam', 'v1')
   if parent == '':
@@ -20,7 +28,7 @@ def _fetch_roles(parent: str) -> Mapping[str, Any]:
     logging.info('fetching IAM roles: %s', parent)
   request = roles_api.list(parent=parent, view='FULL')
   while True:
-    response = request.execute()
+    response = request.execute(num_retries=config.API_RETRIES)
     for role in response.get('roles', []):
       name = str(role['name'])
       roles[name] = role
@@ -28,6 +36,14 @@ def _fetch_roles(parent: str) -> Mapping[str, Any]:
                                   previous_response=response)
     if request is None:
       break
+
+  # Store predefined roles in disk cache.
+  if parent == '':
+    with cache.get_cache() as diskcache:
+      diskcache.set('iam_predefined_roles',
+                    roles,
+                    expire=config.STATIC_DOCUMENTS_EXPIRY_SECONDS)
+
   return roles
 
 

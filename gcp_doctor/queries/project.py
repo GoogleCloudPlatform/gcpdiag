@@ -3,6 +3,7 @@
 
 import functools
 
+from gcp_doctor import config
 from gcp_doctor.queries import apis
 
 
@@ -10,7 +11,7 @@ from gcp_doctor.queries import apis
 def get_project_nr(project_id: str) -> int:
   crm_api = apis.get_api('cloudresourcemanager', 'v1')
   request = crm_api.projects().get(projectId=project_id)
-  response = request.execute()
+  response = request.execute(num_retries=config.API_RETRIES)
   if response and 'projectNumber' in response:
     return response['projectNumber']
   else:
