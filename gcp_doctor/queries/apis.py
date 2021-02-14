@@ -2,6 +2,7 @@
 """Build and cache GCP APIs"""
 
 import functools
+import logging
 import os
 import sys
 
@@ -31,7 +32,8 @@ def _get_credentials():
         scopes=['https://www.googleapis.com/auth/cloud-platform'],
         redirect_uri='urn:ietf:wg:oauth:2.0:oob')
     auth_url, _ = flow.authorization_url(prompt='consent')
-    print('Go to the following link in your browser:\n', file=sys.stderr)
+    print('Go to the following URL in your browser to authenticate:\n',
+          file=sys.stderr)
     print('  ' + auth_url, file=sys.stderr)
     print('\nEnter verification code: ', file=sys.stderr, end='')
     code = input()
@@ -55,6 +57,9 @@ def _request_builder(http, *args, **kwargs):
 def login():
   """Force GCP login (this otherwise happens on the first get_api call)."""
   _get_credentials()
+  if os.getenv('GOOGLE_AUTH_TOKEN'):
+    logging.warning(
+        'Using IAM authorization token from GOOGLE_AUTH_TOKEN env. variable.')
 
 
 @functools.lru_cache(maxsize=None)

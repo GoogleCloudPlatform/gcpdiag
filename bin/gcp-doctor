@@ -33,7 +33,7 @@ def main(argv):
 
 
 def print_help():
-  print("""gcp-doctor - Diagnostics for Google Cloud Platform
+  print("""gcp-doctor 🩺 - Diagnostics for Google Cloud Platform
 
 Usage:
         gcp-doctor COMMAND [OPTIONS]

@@ -3,13 +3,23 @@
 
 import abc
 import logging
+import os
 import sys
+from typing import Optional
 
 import blessings
 
 from gcp_doctor import config, lint, models
 
 OUTPUT_WIDTH = 68
+
+
+def _emoji_wrap(char):
+  if os.getenv('CLOUD_SHELL'):
+    # emoji not displayed as double width in Cloud Shell (bug?)
+    return char + ' '
+  else:
+    return char
 
 
 class _LintReportTerminalLoggingHandler(logging.Handler):
@@ -23,15 +33,20 @@ class _LintReportTerminalLoggingHandler(logging.Handler):
     return record.getMessage()
 
   def emit(self, record):
-    msg = '   ... ' + self.format(record) + ' '
-    # make sure we don't go beyond the terminal width
-    if self.report.term.width:
-      term_overflow = len(msg) - self.report.term.width
-      if term_overflow > 0:
-        msg = msg[:-term_overflow]
-    if record.levelno <= logging.INFO:
+    if record.levelno == logging.INFO:
+      msg = '   ... ' + self.format(record) + ' '
+      # make sure we don't go beyond the terminal width
+      if self.report.term.width:
+        term_overflow = len(msg) - self.report.term.width
+        if term_overflow > 0:
+          msg = msg[:-term_overflow]
       self.report.terminal_update_line(msg)
     else:
+      msg = f'[{record.levelname}] ' + self.format(record) + ' '
+      # workaround for bug:
+      # https://github.com/googleapis/google-api-python-client/issues/1116
+      if 'Invalid JSON content from response' in msg:
+        return
       self.report.terminal_finish_line(msg)
 
 
@@ -40,17 +55,21 @@ class LintReportTerminal(lint.LintReport):
 
   def __init__(self, file=sys.stdout):
     self.file = file
+    self.line_unfinished = False
     if file == sys.stdout:
       self.term = blessings.Terminal()
     else:
       self.term = blessings.Terminal()
 
-  def lint_start(self, context):
+  def banner(self):
     if self.term.does_styling:
-      print('gcp-doctor 🩺 ' + config.VERSION)
+      print(
+          self.term.bold('gcp-doctor ' + _emoji_wrap('🩺') + ' ' +
+                         config.VERSION) + '\n')
     else:
-      print('gcp-doctor ' + config.VERSION)
+      print('gcp-doctor ' + config.VERSION + '\n')
 
+  def lint_start(self, context):
     print(f'Starting lint tests ({context})...\n')
 
   def terminal_update_line(self, text: str):
@@ -60,13 +79,24 @@ class LintReportTerminal(lint.LintReport):
             end='',
             flush=True,
             file=self.file)
+      self.line_unfinished = True
     else:
       # If it's a stream, do not output anything, assuming that the
       # interesting output will be passed via terminal_finish_line
       pass
 
+  def terminal_erase_line(self):
+    """Remove the current content on the line."""
+    if self.line_unfinished and self.term.width:
+      print(self.term.move_x(0) + self.term.clear_eol(),
+            flush=True,
+            end='',
+            file=self.file)
+    self.line_unfinished = False
+
   def terminal_finish_line(self, text: str):
     """Write a line to the terminal, replacing any current line content, and add a line feed."""
+    self.line_unfinished = False
     if self.term.width:
       self.terminal_update_line(text)
       print(file=self.file)
@@ -80,24 +110,29 @@ class LintReportTerminal(lint.LintReport):
     test_interface = super().test_start(test, context)
     bullet = ''
     if self.term.does_styling:
-      bullet = '🔎 '
+      bullet = _emoji_wrap('🔎') + ' '
     else:
       bullet = '*  '
     self.terminal_finish_line(
         bullet +
         self.term.yellow(f'{test.product}/{test.test_class}/{test.test_id}') +
-        ': ' + self.term.italic(f'{test.short_desc}'))
+        ': ' + f'{test.short_desc}')
     return test_interface
 
   def test_end(self, test: lint.LintTest, context: models.Context):
     super().test_end(test, context)
+    self.terminal_erase_line()
     print(file=self.file)
 
   def add_skipped(self, test: lint.LintTest, context: models.Context,
-                  resource: models.Resource, reason: str):
-    self.terminal_finish_line('   - ' +
-                              resource.get_short_path().ljust(OUTPUT_WIDTH) +
-                              ' [SKIP]')
+                  resource: Optional[models.Resource], reason: str):
+    if resource:
+      self.terminal_finish_line('   - ' +
+                                resource.get_short_path().ljust(OUTPUT_WIDTH) +
+                                ' [SKIP]')
+    else:
+      self.terminal_finish_line(
+          '   - All resources (error)'.ljust(OUTPUT_WIDTH) + ' [SKIP]')
     self.terminal_finish_line(f'     {reason}')
 
   @abc.abstractmethod

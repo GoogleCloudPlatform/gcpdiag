@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "4a3a1ba0a5ef2de04c77de93b225035fee12ae06ff2dff3297b79b2dafedeb2e"
+            "sha256": "b5c6a847b05999ca0b6fd56c45cb56f6efbd89e46c44b28c4b3b91d36f98a98a"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -14,6 +14,14 @@
         ]
     },
     "default": {
+        "appdirs": {
+            "hashes": [
+                "sha256:7d5d0167b2b1ba821647616af46a749d1c653740dd0d2415100fe26e27afdf41",
+                "sha256:a841dacd6b99318a741b166adb07e19ee71a274450e68237b4650ca1055ab128"
+            ],
+            "index": "pypi",
+            "version": "==1.4.4"
+        },
         "blessings": {
             "hashes": [
                 "sha256:98e5854d805f50a5b58ac2333411b0482516a8210f23f43308baeb58d77c157d",
@@ -265,6 +273,7 @@
                 "sha256:7d5d0167b2b1ba821647616af46a749d1c653740dd0d2415100fe26e27afdf41",
                 "sha256:a841dacd6b99318a741b166adb07e19ee71a274450e68237b4650ca1055ab128"
             ],
+            "index": "pypi",
             "version": "==1.4.4"
         },
         "attrs": {
@@ -364,14 +373,6 @@
             ],
             "index": "pypi",
             "version": "==3.4.0"
-        },
-        "importlib-resources": {
-            "hashes": [
-                "sha256:885b8eae589179f661c909d699a546cf10d83692553e34dca1bf5eb06f7f6217",
-                "sha256:bfdad047bce441405a49cf8eb48ddce5e56c696e185f59147a8b79e75e9e6380"
-            ],
-            "index": "pypi",
-            "version": "==5.1.0"
         },
         "iniconfig": {
             "hashes": [

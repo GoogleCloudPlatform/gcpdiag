@@ -10,7 +10,7 @@ import logging
 import pkgutil
 import re
 from collections.abc import Callable
-from typing import List
+from typing import List, Optional
 
 from gcp_doctor import models
 
@@ -47,7 +47,7 @@ class LintReport:
 
   @abc.abstractmethod
   def add_skipped(self, test: LintTest, context: models.Context,
-                  resource: models.Resource, reason: str):
+                  resource: Optional[models.Resource], reason: str):
     pass
 
   @abc.abstractmethod
@@ -70,7 +70,7 @@ class LintReportTestInterface:
     self.test = test
     self.context = context
 
-  def add_skipped(self, resource: models.Resource, reason: str):
+  def add_skipped(self, resource: Optional[models.Resource], reason: str):
     self.report.add_skipped(self.test, self.context, resource, reason)
 
   def add_ok(self, resource: models.Resource):
@@ -151,5 +151,8 @@ class LintTestRepository:
     # TODO(dwes): sort the tests
     for test in self.tests:
       test_report = report.test_start(test, context)
-      test.run_test_f(context, test_report)
+      try:
+        test.run_test_f(context, test_report)
+      except (ValueError) as e:
+        report.add_skipped(test, context, None, str(e))
       report.test_end(test, context)
