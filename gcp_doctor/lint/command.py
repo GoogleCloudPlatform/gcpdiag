@@ -32,6 +32,7 @@ def run(argv):
   logger.setLevel(logging.INFO)
 
   # Run the tests.
+  report.banner()
   apis.login()
   report.lint_start(context)
   repo.run_tests(context, report)

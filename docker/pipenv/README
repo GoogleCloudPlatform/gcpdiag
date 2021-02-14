@@ -2,10 +2,10 @@
 
 - Created project
 - Enabled "Artifact Registry" API
-- Created Docker repository "dev", multi-region US
+- Created Docker repository "public", multi-region US
 - Added 'Artifact Registry Reader' access to 'allUsers'
 - Configured docker:
 
   ```
-  gcloud beta auth configure-docker us-docker.pkg.dev
+  gcloud beta auth configure-docker us-docker.pkg.public
   ```

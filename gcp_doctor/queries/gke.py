@@ -104,9 +104,7 @@ def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
     try:
       resp = query.execute(num_retries=config.API_RETRIES)
       if 'clusters' not in resp:
-        raise RuntimeError(
-            'clusters field missing in projects.locations.clusters.list response'
-        )
+        return clusters
       for resp_c in resp['clusters']:
         # verify that we some minimal data that we expect
         if 'name' not in resp_c or 'location' not in resp_c:
