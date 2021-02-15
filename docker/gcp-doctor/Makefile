@@ -20,11 +20,7 @@ push:
 # much faster than running 'docker pull' everytime (and also avoids the bad
 # practice of using generic docker image tags like 'default')
 update-default:
-	$(BIN_DIR)/curl-wrap.sh -X POST --data '$(VERSION)' \
-	  -H "Content-Type: text/plain" \
-	  "https://storage.googleapis.com/upload/storage/v1/b/$(BUCKET_NAME)/o?uploadType=media&name=$(OBJECT_NAME_DEFAULT_VERSION)"
+	echo "$(VERSION)" | gsutil  -h "Cache-Control: max-age=300" cp - "gs://$(BUCKET_NAME)/$(OBJECT_NAME_DEFAULT_VERSION)"
 
 upload-wrapper:
-	$(BIN_DIR)/curl-wrap.sh -X POST --data-binary @$(BIN_DIR)/gcp-doctor-dockerized \
-	  -H "Content-Type: text/plain" \
-	  "https://storage.googleapis.com/upload/storage/v1/b/$(BUCKET_NAME)/o?uploadType=media&name=gcp-doctor.sh"
+	gsutil  -h "Cache-Control: max-age=300" cp $(BIN_DIR)/gcp-doctor-dockerized "gs://$(BUCKET_NAME)/gcp-doctor.sh"

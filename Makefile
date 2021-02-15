@@ -1,4 +1,4 @@
-VERSION=0.3
+VERSION=0.6
 DIST_NAME=gcp-doctor-$(VERSION)
 
 test:
