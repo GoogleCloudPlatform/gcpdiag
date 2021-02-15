@@ -5,6 +5,7 @@ import abc
 import logging
 import os
 import sys
+import textwrap
 from typing import Optional
 
 import blessings
@@ -33,7 +34,7 @@ class _LintReportTerminalLoggingHandler(logging.Handler):
     return record.getMessage()
 
   def emit(self, record):
-    if record.levelno == logging.INFO:
+    if record.levelno == logging.INFO and self.report.log_info_for_progress_only:
       msg = '   ... ' + self.format(record) + ' '
       # make sure we don't go beyond the terminal width
       if self.report.term.width:
@@ -47,19 +48,27 @@ class _LintReportTerminalLoggingHandler(logging.Handler):
       # https://github.com/googleapis/google-api-python-client/issues/1116
       if 'Invalid JSON content from response' in msg:
         return
-      self.report.terminal_finish_line(msg)
+      self.report.terminal_print_line(msg)
 
 
 class LintReportTerminal(lint.LintReport):
   """LintReport implementation that outputs to the terminal."""
 
-  def __init__(self, file=sys.stdout):
+  def __init__(self, file=sys.stdout, log_info_for_progress_only=True):
     self.file = file
     self.line_unfinished = False
+    self.log_info_for_progress_only = log_info_for_progress_only
+    self.per_test_data = {}
     if file == sys.stdout:
       self.term = blessings.Terminal()
     else:
       self.term = blessings.Terminal()
+
+  def _wrap_indent(self, text, prefix):
+    width = self.term.width or 80
+    if width > 80:
+      width = 80
+    return textwrap.indent(textwrap.fill(text, width - len(prefix)), prefix)
 
   def banner(self):
     if self.term.does_styling:
@@ -82,7 +91,7 @@ class LintReportTerminal(lint.LintReport):
       self.line_unfinished = True
     else:
       # If it's a stream, do not output anything, assuming that the
-      # interesting output will be passed via terminal_finish_line
+      # interesting output will be passed via terminal_print_line
       pass
 
   def terminal_erase_line(self):
@@ -94,14 +103,14 @@ class LintReportTerminal(lint.LintReport):
             file=self.file)
     self.line_unfinished = False
 
-  def terminal_finish_line(self, text: str):
+  def terminal_print_line(self, text: str = ''):
     """Write a line to the terminal, replacing any current line content, and add a line feed."""
-    self.line_unfinished = False
-    if self.term.width:
+    if self.line_unfinished and self.term.width:
       self.terminal_update_line(text)
       print(file=self.file)
     else:
       print(text, file=self.file)
+    self.line_unfinished = False
 
   def get_logging_handler(self):
     return _LintReportTerminalLoggingHandler(self)
@@ -113,7 +122,7 @@ class LintReportTerminal(lint.LintReport):
       bullet = _emoji_wrap('🔎') + ' '
     else:
       bullet = '*  '
-    self.terminal_finish_line(
+    self.terminal_print_line(
         bullet +
         self.term.yellow(f'{test.product}/{test.test_class}/{test.test_id}') +
         ': ' + f'{test.short_desc}')
@@ -122,30 +131,42 @@ class LintReportTerminal(lint.LintReport):
   def test_end(self, test: lint.LintTest, context: models.Context):
     super().test_end(test, context)
     self.terminal_erase_line()
-    print(file=self.file)
+    self.terminal_print_line()
+
+    # If the test failed, add more information about the test.
+    if test in self.per_test_data and self.per_test_data[test]['failed_count']:
+      width = self.term.width or 80
+      if width > 80:
+        width = 80
+      self.terminal_print_line(
+          self.term.italic(self._wrap_indent(test.long_desc, '   ')))
+      self.terminal_print_line()
 
   def add_skipped(self, test: lint.LintTest, context: models.Context,
                   resource: Optional[models.Resource], reason: str):
     if resource:
-      self.terminal_finish_line('   - ' +
-                                resource.get_short_path().ljust(OUTPUT_WIDTH) +
-                                ' [SKIP]')
+      self.terminal_print_line('   - ' +
+                               resource.get_short_path().ljust(OUTPUT_WIDTH) +
+                               ' [SKIP]')
     else:
-      self.terminal_finish_line(
-          '   - All resources (error)'.ljust(OUTPUT_WIDTH) + ' [SKIP]')
-    self.terminal_finish_line(f'     {reason}')
+      self.terminal_print_line('   - ' +
+                               'All resources (error)'.ljust(OUTPUT_WIDTH) +
+                               ' [SKIP]')
+    self.terminal_print_line(textwrap.indent(reason, '     '))
 
   @abc.abstractmethod
   def add_ok(self, test: lint.LintTest, context: models.Context,
              resource: models.Resource):
-    self.terminal_finish_line('   - ' +
-                              resource.get_short_path().ljust(OUTPUT_WIDTH) +
-                              ' [' + self.term.green(' OK ') + ']')
+    self.terminal_print_line('   - ' +
+                             resource.get_short_path().ljust(OUTPUT_WIDTH) +
+                             ' [' + self.term.green(' OK ') + ']')
 
   @abc.abstractmethod
   def add_failed(self, test: lint.LintTest, context: models.Context,
                  resource: models.Resource, reason: str):
-    self.terminal_finish_line('   - ' +
-                              resource.get_short_path().ljust(OUTPUT_WIDTH) +
-                              ' [' + self.term.red('FAIL') + ']')
-    self.terminal_finish_line(f'     {reason}')
+    test_data = self.per_test_data.setdefault(test, {'failed_count': 0})
+    test_data['failed_count'] += 1
+    self.terminal_print_line('   - ' +
+                             resource.get_short_path().ljust(OUTPUT_WIDTH) +
+                             ' [' + self.term.red('FAIL') + ']')
+    self.terminal_print_line(textwrap.indent(reason, '     '))

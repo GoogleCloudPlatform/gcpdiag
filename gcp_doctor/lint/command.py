@@ -15,21 +15,31 @@ def run(argv):
       description='Run diagnostics in GCP projects.')
   parser.add_argument('--project',
                       action='append',
+                      metavar='P',
                       required=True,
                       help='Project ID (can be specified multiple times)')
+  parser.add_argument('-v',
+                      '--verbose',
+                      action='count',
+                      default=0,
+                      help='Increase log verbosity')
   args = parser.parse_args()
 
   # Initialize Context, Repository, and Tests
   context = models.Context(projects=args.project)
   repo = lint.LintTestRepository()
   repo.load_tests(gke.__path__, gke.__name__)
-  report = report_terminal.LintReportTerminal()
+  report = report_terminal.LintReportTerminal(
+      log_info_for_progress_only=(args.verbose == 0))
 
   # Logging setup.
   logging_handler = report.get_logging_handler()
   logger = logging.getLogger()
   logger.addHandler(logging_handler)
-  logger.setLevel(logging.INFO)
+  if args.verbose >= 2:
+    logger.setLevel(logging.DEBUG)
+  else:
+    logger.setLevel(logging.INFO)
 
   # Run the tests.
   report.banner()

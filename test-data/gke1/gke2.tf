@@ -72,6 +72,9 @@ resource "google_container_cluster" "gke2" {
   name               = "gke2"
   location           = "europe-west1"
   initial_node_count = 1
+  cluster_telemetry {
+    type = "SYSTEM_ONLY"
+  }
   node_config {
     service_account = google_service_account.gke2_sa.email
     oauth_scopes = [

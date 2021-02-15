@@ -33,6 +33,9 @@ class LintTest:
   long_desc: str
   run_test_f: Callable
 
+  def __hash__(self):
+    return str(self.product + self.test_class.value + self.test_id).__hash__()
+
 
 class LintReport:
   """Used by the test modules to report test results to the user."""

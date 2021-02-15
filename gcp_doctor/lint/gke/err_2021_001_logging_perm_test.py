@@ -6,7 +6,7 @@ from unittest import mock
 
 from gcp_doctor import lint, models
 from gcp_doctor.lint import report_terminal
-from gcp_doctor.lint.gke import err_2020_001_sa_perm
+from gcp_doctor.lint.gke import err_2021_001_logging_perm
 from gcp_doctor.queries import gke_stub, iam_stub
 
 DUMMY_PROJECT_NAME = 'gcpd-gke-1-9b90'
@@ -29,21 +29,22 @@ class Test:
     output = io.StringIO()
     report = report_terminal.LintReportTerminal(file=output)
     test = lint.LintTest(product='test',
-                         test_class='TST',
+                         test_class=lint.LintTestClass.ERR,
                          test_id='9999_999',
                          short_desc='short description',
                          long_desc='long description',
-                         run_test_f=err_2020_001_sa_perm.run_test)
+                         run_test_f=err_2021_001_logging_perm.run_test)
     test_report = report.test_start(test, context)
     test.run_test_f(context, test_report)
     report.test_end(test, context)
     # yapf: disable
     assert (output.getvalue() == (
-        '*  test/TST/9999_999: short description\n'
+        '*  test/ERR/9999_999: short description\n'
         '   - gcpd-gke-1-9b90/europe-west1/gke2/default-pool                       [ OK ]\n'
         '   - gcpd-gke-1-9b90/europe-west1/gke3/default-pool                       [FAIL]\n'
-        # pylint: disable=line-too-long
-        '     missing roles: roles/monitoring.viewer, roles/monitoring.metricWriter, roles/logging.logWriter\n'
+        '     service account: gke3sa@gcpd-gke-1-9b90.iam.gserviceaccount.com\n'
+        '     missing role: roles/logging.logWriter\n'
         '   - gcpd-gke-1-9b90/europe-west4-a/gke1                                  [SKIP]\n'
-        '     monitoring disabled\n\n'
+        '     logging disabled\n\n'
+        '   long description\n\n'
     ))

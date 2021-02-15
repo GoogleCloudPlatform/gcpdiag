@@ -1,10 +1,10 @@
+.coverage
+dist
+.pipenv-dockerized
 *.pyc
 __pycache__
-.coverage
-.venv
-.pipenv-dockerized
 .terraform
-.terraform.tfstate.lock.info
 terraform.tfstate
 terraform.tfstate.backup
-*.tar.gz
+.terraform.tfstate.lock.info
+.venv
