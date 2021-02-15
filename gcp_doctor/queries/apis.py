@@ -19,13 +19,34 @@ _credentials = None
 def _get_credentials():
   global _credentials
 
-  # Get credentials from the disk cache.
+  # Try the credentials in memory (_credentials)
+  if _credentials and not _credentials.expired:
+    return _credentials
+
+  # Try the credentials from the disk cache.
   if not _credentials:
     with cache.get_cache() as diskcache:
       _credentials = diskcache.get('credentials')
+      if _credentials and not _credentials.expired:
+        logging.debug('Using credentials from diskcache.')
+        return _credentials
 
-  # If we don't have credentials, trigger auth flow.
+  # Try application default credentials.
+  #
+  # Note: this is disabled for now because:
+  # - it gives an annoying warning: "No project ID could be determined."
+  # - we can't detect properly whether the credentials have expired (!)
+  #
+  #try:
+  #  _credentials, _ = google.auth.default()
+  #  logging.debug('Using application-default credentials.')
+  #  return _credentials
+  #except google.auth.DefaultCredentialsError:
+  #  pass
+
+  # Start the auth flow otherwise.
   if not _credentials or _credentials.expired:
+    logging.debug('No valid credentials found. Initiating auth flow.')
     client_secrets = files('gcp_doctor.queries').joinpath('client_secrets.json')
     flow = Flow.from_client_secrets_file(
         client_secrets,

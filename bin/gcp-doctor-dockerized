@@ -1,12 +1,18 @@
 #!/bin/bash
+set -e
 IMAGE="us-docker.pkg.dev/gcp-doctor-repo/release/gcp-doctor"
 VERSION=$(curl -sf https://storage.googleapis.com/gcp-doctor/default-version)
 CWD=$(pwd)
 [ -t 0 ] && USE_TTY="-it" || USE_TTY=""
 mkdir -p "$HOME/.cache/gcp-doctor-dockerized"
-if [ -f "$HOME/.docker/config.json" ] &&
-  grep us-docker.pkg.dev "$HOME/.docker/config.json" >/dev/null; then :; else
-    gcloud auth configure-docker us-docker.pkg.dev
+# If we don't have the image yet, make sure that the user is logged in
+# otherwise the docker pull will fail (without telling what the problem is)
+if ! docker inspect -f 'present' "$IMAGE:$VERSION" >/dev/null 2>&1; then
+  gcloud auth configure-docker "us-docker.pkg.dev" >/dev/null 2>&1
+  GCLOUD_ACCOUNT=$(gcloud config get-value account)
+  if [[ -z "$GCLOUD_ACCOUNT" ]] || [[ $(gcloud auth describe "$GCLOUD_ACCOUNT" --format="value(valid)") != "True" ]]; then
+    gcloud auth login
+  fi
 fi
 exec docker run "$USE_TTY" \
   --rm \
