@@ -16,7 +16,10 @@ diskcache = "*"
 [dev-packages]
 pytest = "*"
 pre-commit = "*"
-# importlib-xxx are needed for pre-commit on Python 3.6
 importlib-metadata = "*"
 yapf = "*"
 coverage = "*"
+
+# for vim:
+# pip install 'python-language-server[yapf,pyflakes,mccabe]'
+# pip install pylint

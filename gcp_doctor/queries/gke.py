@@ -84,6 +84,9 @@ class Cluster(models.Resource):
   def has_logging_enabled(self) -> bool:
     return self._resource_data['loggingService'] != 'none'
 
+  def has_monitoring_enabled(self) -> bool:
+    return self._resource_data['monitoringService'] != 'none'
+
   @property
   def nodepools(self) -> Iterable[NodePool]:
     nodepools: List[NodePool] = []

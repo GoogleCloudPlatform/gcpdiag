@@ -19,13 +19,12 @@ def _fetch_roles(parent: str) -> Mapping[str, Any]:
         return cached_roles
 
   roles: Dict[str, Any] = {}
+  logging.info('fetching IAM roles: %s', parent or 'predefined')
   iam_api = apis.get_api('iam', 'v1')
   if parent == '':
     roles_api = iam_api.roles()
-    logging.info('fetching IAM roles: predefined')
   else:
     roles_api = iam_api.projects().roles()
-    logging.info('fetching IAM roles: %s', parent)
   request = roles_api.list(parent=parent, view='FULL')
   while True:
     response = request.execute(num_retries=config.API_RETRIES)
