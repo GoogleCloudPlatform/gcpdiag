@@ -45,6 +45,10 @@ class NodePool(models.Resource):
     else:
       return sa
 
+  @property
+  def version(self) -> str:
+    return self._resource_data['version']
+
 
 class Cluster(models.Resource):
   """Represents a GKE cluster.
@@ -64,6 +68,10 @@ class Cluster(models.Resource):
   @property
   def location(self) -> str:
     return self._resource_data['location']
+
+  @property
+  def master_version(self) -> str:
+    return self._resource_data['currentMasterVersion']
 
   def get_full_path(self) -> str:
     if utils.is_region(self._resource_data['location']):
@@ -97,7 +105,7 @@ class Cluster(models.Resource):
 
 @functools.lru_cache(maxsize=None)
 def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
-  """Get a list of Cluster matching the given context."""
+  """Get a list of Cluster matching the given context, indexed by cluster name."""
   clusters: Dict[str, Cluster] = {}
   container_api = apis.get_api('container', 'v1')
   for project_id in context.projects:
@@ -124,3 +132,30 @@ def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
       raise ValueError(
           f'can\'t list clusters for project {project_id}: {errstr}') from err
   return clusters
+
+
+@functools.lru_cache(maxsize=None)
+def _get_server_config(project_id: str, location: str):
+  container_api = apis.get_api('container', 'v1')
+  name = f'projects/{project_id}/locations/{location}'
+  request = container_api.projects().locations().getServerConfig(name=name)
+  try:
+    resp = request.execute(num_retries=config.API_RETRIES)
+    return resp
+  except googleapiclient.errors.HttpError as err:
+    errstr = utils.http_error_message(err)
+    raise ValueError(
+        f'can\'t get gke version list for project {project_id}: {errstr}'
+    ) from err
+
+
+def get_valid_master_versions(project_id: str, location: str) -> List[str]:
+  """Get a list of valid GKE master versions."""
+  server_config = _get_server_config(project_id, location)
+  return server_config['validMasterVersions']
+
+
+def get_valid_node_versions(project_id: str, location: str) -> List[str]:
+  """Get a list of valid GKE master versions."""
+  server_config = _get_server_config(project_id, location)
+  return server_config['validNodeVersions']
