@@ -18,6 +18,7 @@ from gcp_doctor import models
 class LintTestClass(enum.Enum):
   ERR = 'ERR'
   BP = 'BP'
+  WARN = 'WARN'
 
   def __str__(self):
     return str(self.value)
@@ -49,18 +50,29 @@ class LintReport:
     pass
 
   @abc.abstractmethod
-  def add_skipped(self, test: LintTest, context: models.Context,
-                  resource: Optional[models.Resource], reason: str):
+  def add_skipped(self,
+                  test: LintTest,
+                  context: models.Context,
+                  resource: Optional[models.Resource],
+                  reason: str,
+                  short_info: str = None):
     pass
 
   @abc.abstractmethod
-  def add_ok(self, test: LintTest, context: models.Context,
-             resource: models.Resource):
+  def add_ok(self,
+             test: LintTest,
+             context: models.Context,
+             resource: models.Resource,
+             short_info: str = None):
     pass
 
   @abc.abstractmethod
-  def add_failed(self, test: LintTest, context: models.Context,
-                 resource: models.Resource, reason: str):
+  def add_failed(self,
+                 test: LintTest,
+                 context: models.Context,
+                 resource: models.Resource,
+                 reason: str,
+                 short_info: str = None):
     pass
 
 
@@ -73,14 +85,22 @@ class LintReportTestInterface:
     self.test = test
     self.context = context
 
-  def add_skipped(self, resource: Optional[models.Resource], reason: str):
-    self.report.add_skipped(self.test, self.context, resource, reason)
+  def add_skipped(self,
+                  resource: Optional[models.Resource],
+                  reason: str,
+                  short_info: str = None):
+    self.report.add_skipped(self.test, self.context, resource, reason,
+                            short_info)
 
-  def add_ok(self, resource: models.Resource):
-    self.report.add_ok(self.test, self.context, resource)
+  def add_ok(self, resource: models.Resource, short_info: str = ''):
+    self.report.add_ok(self.test, self.context, resource, short_info)
 
-  def add_failed(self, resource: models.Resource, reason: str):
-    self.report.add_failed(self.test, self.context, resource, reason)
+  def add_failed(self,
+                 resource: models.Resource,
+                 reason: str,
+                 short_info: str = None):
+    self.report.add_failed(self.test, self.context, resource, reason,
+                           short_info)
 
 
 class LintTestRepository:

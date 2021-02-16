@@ -142,31 +142,54 @@ class LintReportTerminal(lint.LintReport):
           self.term.italic(self._wrap_indent(test.long_desc, '   ')))
       self.terminal_print_line()
 
-  def add_skipped(self, test: lint.LintTest, context: models.Context,
-                  resource: Optional[models.Resource], reason: str):
+  def add_skipped(self,
+                  test: lint.LintTest,
+                  context: models.Context,
+                  resource: Optional[models.Resource],
+                  reason: str,
+                  short_info: str = None):
+    if short_info:
+      short_info = ' ' + short_info
+    else:
+      short_info = ''
     if resource:
       self.terminal_print_line('   - ' +
                                resource.get_short_path().ljust(OUTPUT_WIDTH) +
-                               ' [SKIP]')
+                               ' [SKIP]' + short_info)
     else:
       self.terminal_print_line('   - ' +
                                'All resources (error)'.ljust(OUTPUT_WIDTH) +
-                               ' [SKIP]')
+                               ' [SKIP]' + short_info)
     self.terminal_print_line(textwrap.indent(reason, '     '))
 
   @abc.abstractmethod
-  def add_ok(self, test: lint.LintTest, context: models.Context,
-             resource: models.Resource):
+  def add_ok(self,
+             test: lint.LintTest,
+             context: models.Context,
+             resource: models.Resource,
+             short_info: str = None):
+    if short_info:
+      short_info = ' ' + short_info
+    else:
+      short_info = ''
     self.terminal_print_line('   - ' +
                              resource.get_short_path().ljust(OUTPUT_WIDTH) +
-                             ' [' + self.term.green(' OK ') + ']')
+                             ' [' + self.term.green(' OK ') + ']' + short_info)
 
   @abc.abstractmethod
-  def add_failed(self, test: lint.LintTest, context: models.Context,
-                 resource: models.Resource, reason: str):
+  def add_failed(self,
+                 test: lint.LintTest,
+                 context: models.Context,
+                 resource: models.Resource,
+                 reason: str,
+                 short_info: str = None):
     test_data = self.per_test_data.setdefault(test, {'failed_count': 0})
     test_data['failed_count'] += 1
+    if short_info:
+      short_info = ' ' + short_info
+    else:
+      short_info = ''
     self.terminal_print_line('   - ' +
                              resource.get_short_path().ljust(OUTPUT_WIDTH) +
-                             ' [' + self.term.red('FAIL') + ']')
+                             ' [' + self.term.red('FAIL') + ']' + short_info)
     self.terminal_print_line(textwrap.indent(reason, '     '))

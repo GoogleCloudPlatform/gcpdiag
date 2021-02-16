@@ -2,6 +2,8 @@ PROJECT_ID  := $(shell terraform output project_id)
 PROJECT_NR  := 18404348413
 CURL         = ../../bin/curl-wrap.sh
 JSON_CLEANER = ../../bin/json-cleaner
+REGION_1     = europe-west1
+ZONE_1       = europe-west4-a
 
 # Execute all lines in a single bash session.
 #.ONESHELL:
@@ -42,6 +44,14 @@ json-dumps/iam-roles-predefined-2.json.gz: json-dumps/iam-roles-predefined-1.jso
 json-dumps/iam-roles-custom.json:
 	$(CURL) -fsS \
 		'https://iam.googleapis.com/v1/projects/$(PROJECT_ID)/roles?view=FULL&pageSize=500' >$@
+
+json-dumps/server-config-region-1.json:
+	$(CURL) -fsS \
+		'https://container.googleapis.com/v1/projects/$(PROJECT_ID)/locations/$(REGION_1)/serverConfig' >$@
+
+json-dumps/server-config-zone-1.json:
+	$(CURL) -fsS \
+		'https://container.googleapis.com/v1/projects/$(PROJECT_ID)/zones/$(ZONE_1)/serverconfig' >$@
 
 # Note: this throws an error. See also: b/175212189
 #  "code": 403,

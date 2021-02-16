@@ -20,7 +20,7 @@ push:
 # much faster than running 'docker pull' everytime (and also avoids the bad
 # practice of using generic docker image tags like 'default')
 update-default:
-	echo "$(VERSION)" | gsutil  -h "Cache-Control: max-age=300" cp - "gs://$(BUCKET_NAME)/$(OBJECT_NAME_DEFAULT_VERSION)"
+	echo "$(VERSION)" | gsutil -h "Content-Type: text/plain" -h "Cache-Control: max-age=300" cp - "gs://$(BUCKET_NAME)/$(OBJECT_NAME_DEFAULT_VERSION)"
 
 upload-wrapper:
-	gsutil  -h "Cache-Control: max-age=300" cp $(BIN_DIR)/gcp-doctor-dockerized "gs://$(BUCKET_NAME)/gcp-doctor.sh"
+	gsutil -h "Content-Type: text/plain" -h "Cache-Control: max-age=300" cp $(BIN_DIR)/gcp-doctor-dockerized "gs://$(BUCKET_NAME)/gcp-doctor.sh"
