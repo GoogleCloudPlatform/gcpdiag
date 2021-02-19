@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+"""Generate a list of lint tests formatted in markdown for easy integration in
+the gcp-doctor homepage."""
+
+# pylint: disable=invalid-name
+# pylint: disable=line-too-long
+
+import importlib
+import os
+import sys
+
+
+def main():
+  # A very simple command-line parser to determine what subcommand is called.
+  # Proper argument parsing will be done in the subcommands.
+
+  sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+  lint = importlib.import_module('gcp_doctor.lint')
+  gce = importlib.import_module('gcp_doctor.lint.gce')
+  gke = importlib.import_module('gcp_doctor.lint.gke')
+  repo = lint.LintTestRepository()
+  repo.load_tests(gce.__path__, gce.__name__)
+  repo.load_tests(gke.__path__, gke.__name__)
+
+  print(
+      'Product | Class | ID       | Short description                                            | Long description'
+  )
+  print(
+      '------- | ----- | -------- | ------------------------------------------------------------ | --------------------'
+  )
+  for t in repo.tests:
+    long_desc = ' '.join(t.long_desc.splitlines())
+    print(
+        f'{t.product:7} | {t.test_class:5} | {t.test_id:8} | {t.short_desc:60} | {long_desc} '
+    )
+
+
+if __name__ == '__main__':
+  main()
