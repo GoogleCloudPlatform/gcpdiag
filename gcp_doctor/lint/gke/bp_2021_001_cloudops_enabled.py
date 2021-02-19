@@ -12,6 +12,8 @@ from gcp_doctor.queries import gke
 
 def run_test(context: models.Context, report: lint.LintReportTestInterface):
   clusters = gke.get_clusters(context)
+  if not clusters:
+    report.add_skipped(None, 'no clusters found')
   for _, c in sorted(clusters.items()):
     disabled = []
     if not c.has_logging_enabled():

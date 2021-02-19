@@ -14,6 +14,8 @@ ROLE = 'roles/monitoring.metricWriter'
 def run_test(context: models.Context, report: lint.LintReportTestInterface):
   # Find all clusters with monitoring enabled.
   clusters = gke.get_clusters(context)
+  if not clusters:
+    report.add_skipped(None, 'no clusters found')
   for _, c in sorted(clusters.items()):
     if not c.has_monitoring_enabled():
       report.add_skipped(c, 'monitoring disabled')
