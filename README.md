@@ -44,14 +44,14 @@ We use the following tools in this project:
 -   Install `pipenv`
 
     ```
-    apt install pipenv`
+    apt install pipenv
     ```
 
 -   Start a shell with pipenv and run pre-commit install the pre-commit hooks:
 
     ```
     pipenv shell
-    pre-commit install
+    pipenv install --dev
     ```
 
 -   You can run tests and gcp-doctor in the pipenv shell, so that all required
