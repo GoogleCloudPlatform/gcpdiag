@@ -1,7 +1,9 @@
 {
-    "python.linting.enabled": true,
-    "python.linting.pylintPath": "pylint",
     "editor.formatOnSave": true,
+    "files.insertFinalNewline": true,
+    "files.trimTrailingWhitespace": true,
     "python.formatting.provider": "yapf",
+    "python.linting.enabled": true,
     "python.linting.pylintEnabled": true,
+    "python.linting.pylintPath": "pylint",
 }
