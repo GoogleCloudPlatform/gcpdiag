@@ -1,5 +1,5 @@
 # Lint as: python3
-"""Build and cache GCP APIs"""
+"""Build and cache GCP APIs + handle authentication."""
 
 import functools
 import logging
@@ -7,9 +7,11 @@ import os
 import sys
 
 import googleapiclient.http
-from google_auth_oauthlib.flow import Flow
-from googleapiclient.discovery import build
-from importlib_resources import files
+import importlib_resources
+from google.auth import exceptions
+from google.auth.transport import requests
+from google_auth_oauthlib import flow
+from googleapiclient import discovery
 
 from gcp_doctor import cache
 
@@ -19,52 +21,48 @@ _credentials = None
 def _get_credentials():
   global _credentials
 
-  # Try the credentials in memory (_credentials)
-  if _credentials and not _credentials.expired:
-    return _credentials
-
-  # Try the credentials from the disk cache.
+  # If we have no credentials in memory, fetch from the disk cache.
   if not _credentials:
     with cache.get_cache() as diskcache:
       _credentials = diskcache.get('credentials')
-      if _credentials and not _credentials.expired:
-        logging.debug('Using credentials from diskcache.')
-        return _credentials
 
-  # Try application default credentials.
-  #
-  # Note: this is disabled for now because:
-  # - it gives an annoying warning: "No project ID could be determined."
-  # - we can't detect properly whether the credentials have expired (!)
-  #
-  #try:
-  #  _credentials, _ = google.auth.default()
-  #  logging.debug('Using application-default credentials.')
-  #  return _credentials
-  #except google.auth.DefaultCredentialsError:
-  #  pass
+  # Try to refresh the credentials.
+  if _credentials and _credentials.expired and _credentials.refresh_token:
+    try:
+      logging.debug('refreshing credentials')
+      _credentials.refresh(requests.Request())
+      # Store the refreshed credentials.
+      with cache.get_cache() as diskcache:
+        diskcache.set('credentials', _credentials)
+    except exceptions.RefreshError as e:
+      logging.warning("couldn't refresh token: %s", e)
 
-  # Start the auth flow otherwise.
-  if not _credentials or _credentials.expired:
+  # Login using browser and verification code.
+  if not _credentials or not _credentials.valid:
     logging.debug('No valid credentials found. Initiating auth flow.')
-    client_secrets = files('gcp_doctor.queries').joinpath('client_secrets.json')
-    flow = Flow.from_client_secrets_file(
+    client_secrets = importlib_resources.files('gcp_doctor.queries').joinpath(
+        'client_secrets.json')
+    oauth_flow = flow.Flow.from_client_secrets_file(
         client_secrets,
-        scopes=['https://www.googleapis.com/auth/cloud-platform'],
+        scopes=[
+            'https://www.googleapis.com/auth/cloud-platform',
+            'https://www.googleapis.com/auth/accounts.reauth'
+        ],
         redirect_uri='urn:ietf:wg:oauth:2.0:oob')
-    auth_url, _ = flow.authorization_url(prompt='consent')
+    auth_url, _ = oauth_flow.authorization_url(prompt='consent')
     print('Go to the following URL in your browser to authenticate:\n',
           file=sys.stderr)
     print('  ' + auth_url, file=sys.stderr)
     print('\nEnter verification code: ', file=sys.stderr, end='')
     code = input()
     print(file=sys.stderr)
-    flow.fetch_token(code=code)
-    _credentials = flow.credentials
+    oauth_flow.fetch_token(code=code)
+    _credentials = oauth_flow.credentials
 
     # Store the credentials in the disk cache.
     with cache.get_cache() as diskcache:
       diskcache.set('credentials', _credentials)
+
   return _credentials
 
 
@@ -86,9 +84,9 @@ def login():
 @functools.lru_cache(maxsize=None)
 def get_api(service_name: str, version: str):
   credentials = _get_credentials()
-  api = build(service_name,
-              version,
-              cache_discovery=False,
-              credentials=credentials,
-              requestBuilder=_request_builder)
+  api = discovery.build(service_name,
+                        version,
+                        cache_discovery=False,
+                        credentials=credentials,
+                        requestBuilder=_request_builder)
   return api
