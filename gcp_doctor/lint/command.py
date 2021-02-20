@@ -5,7 +5,7 @@ import argparse
 import logging
 
 from gcp_doctor import lint, models
-from gcp_doctor.lint import gke, report_terminal
+from gcp_doctor.lint import gce, gke, report_terminal
 from gcp_doctor.queries import apis
 
 
@@ -28,6 +28,7 @@ def run(argv):
   # Initialize Context, Repository, and Tests
   context = models.Context(projects=args.project)
   repo = lint.LintTestRepository()
+  repo.load_tests(gce.__path__, gce.__name__)
   repo.load_tests(gke.__path__, gke.__name__)
   report = report_terminal.LintReportTerminal(
       log_info_for_progress_only=(args.verbose == 0))
