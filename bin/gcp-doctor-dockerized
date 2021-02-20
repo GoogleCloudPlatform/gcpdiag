@@ -8,7 +8,14 @@ mkdir -p "$HOME/.cache/gcp-doctor-dockerized"
 # If we don't have the image yet, make sure that the user is logged in
 # otherwise the docker pull will fail (without telling what the problem is)
 if ! docker inspect -f 'present' "$IMAGE:$VERSION" >/dev/null 2>&1; then
-  gcloud auth configure-docker "us-docker.pkg.dev" >/dev/null 2>&1
+  echo
+  echo "###  A new docker image needs to be downloaded and that requires  ###"
+  echo "###  Google account credentials. If you get a permission denied   ###"
+  echo "###  error, please run the following command and try again:       ###"
+  echo "###                                                               ###"
+  echo "###      gcloud auth login                                        ###"
+  echo
+  yes | gcloud auth configure-docker us-docker.pkg.dev >/dev/null 2>&1
   GCLOUD_ACCOUNT=$(gcloud config get-value account)
   if [[ -z "$GCLOUD_ACCOUNT" ]] || [[ $(gcloud auth describe "$GCLOUD_ACCOUNT" --format="value(valid)") != "True" ]]; then
     gcloud auth login
