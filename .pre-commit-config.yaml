@@ -44,4 +44,7 @@ repos:
       rev: v1.44.0
       hooks:
           - id: terraform_fmt
-          - id: terraform_validate
+          # disabled because currently getting an error in kokoro:
+          # - Failed to instantiate provider "registry.terraform.io/hashicorp/google" to
+          # obtain schema: unknown provider "registry.terraform.io/hashicorp/google"
+          #- id: terraform_validate

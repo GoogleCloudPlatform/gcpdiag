@@ -156,11 +156,11 @@ class LintReportTerminal(lint.LintReport):
       self.terminal_print_line('   - ' +
                                resource.get_short_path().ljust(OUTPUT_WIDTH) +
                                ' [SKIP]' + short_info)
+      self.terminal_print_line(textwrap.indent(reason, '     '))
     else:
-      self.terminal_print_line('   - ' +
-                               'All resources (error)'.ljust(OUTPUT_WIDTH) +
+      self.terminal_print_line('   ' +
+                               ('(' + reason + ')').ljust(OUTPUT_WIDTH + 2) +
                                ' [SKIP]' + short_info)
-    self.terminal_print_line(textwrap.indent(reason, '     '))
 
   @abc.abstractmethod
   def add_ok(self,
