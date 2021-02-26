@@ -1,0 +1,19 @@
+{
+  "name": "projects/testproject/locations/us-central1/keyRings/usckr/cryptoKeys/kms-key-disabled",
+  "primary": {
+    "name": "projects/testproject/locations/us-central1/keyRings/usckr/cryptoKeys/kms-key-disabled/cryptoKeyVersions/2",
+    "state": "DISABLED",
+    "createTime": "2021-02-21T16:19:08.796116258Z",
+    "protectionLevel": "SOFTWARE",
+    "algorithm": "GOOGLE_SYMMETRIC_ENCRYPTION",
+    "generateTime": "2021-02-21T16:19:08.796116258Z"
+  },
+  "purpose": "ENCRYPT_DECRYPT",
+  "createTime": "2021-01-04T15:32:50.749517603Z",
+  "nextRotationTime": "2021-04-03T23:00:00Z",
+  "rotationPeriod": "7776000s",
+  "versionTemplate": {
+    "protectionLevel": "SOFTWARE",
+    "algorithm": "GOOGLE_SYMMETRIC_ENCRYPTION"
+  }
+}

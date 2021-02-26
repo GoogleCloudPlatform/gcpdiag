@@ -13,6 +13,7 @@ from collections.abc import Callable
 from typing import List, Optional
 
 from gcp_doctor import models
+from gcp_doctor.utils import GcpApiError
 
 
 class LintTestClass(enum.Enum):
@@ -178,4 +179,6 @@ class LintTestRepository:
         test.run_test_f(context, test_report)
       except (ValueError) as e:
         report.add_skipped(test, context, None, str(e))
+      except (GcpApiError) as api_error:
+        report.add_skipped(test, context, None, str(api_error))
       report.test_end(test, context)
