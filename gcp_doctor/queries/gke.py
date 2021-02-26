@@ -73,6 +73,10 @@ class Cluster(models.Resource):
   def master_version(self) -> str:
     return self._resource_data['currentMasterVersion']
 
+  @property
+  def app_layer_sec_key(self) -> str:
+    return self._resource_data['databaseEncryption'].get('keyName')
+
   def get_full_path(self) -> str:
     if utils.is_region(self._resource_data['location']):
       return (f'projects/{self.project_id}/'
@@ -94,6 +98,10 @@ class Cluster(models.Resource):
 
   def has_monitoring_enabled(self) -> bool:
     return self._resource_data['monitoringService'] != 'none'
+
+  def has_app_layer_enc_enabled(self) -> bool:
+    # state := 'DECRYPTED' | 'ENCRYPTED', keyName := 'full_path_to_key_resouce'
+    return self._resource_data['databaseEncryption'].get('state') == 'ENCRYPTED'
 
   @property
   def nodepools(self) -> Iterable[NodePool]:
