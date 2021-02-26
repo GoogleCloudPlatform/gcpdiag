@@ -5,7 +5,7 @@ test:
 	coverage run --include='gcp_doctor/*' -m pytest
 
 coverage-report:
-	coverage report -m
+	coverage report -m --omit="*/*_test.py"
 
 version:
 	@echo $(VERSION)
