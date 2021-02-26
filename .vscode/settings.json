@@ -1,5 +1,10 @@
 {
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": true
+    },
     "editor.formatOnSave": true,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
     "files.insertFinalNewline": true,
     "files.trimTrailingWhitespace": true,
     "python.formatting.provider": "yapf",
