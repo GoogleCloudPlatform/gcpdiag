@@ -56,3 +56,15 @@ class TestCluster:
     assert DUMMY_CLUSTER2_NAME in clusters.keys()
     c = clusters[DUMMY_CLUSTER2_NAME]
     assert c.has_logging_enabled()
+
+  def test_has_default_service_account(self):
+    """has_default_service_account should return true for GKE node-pools with
+    the default GCE SA."""
+    context = models.Context(projects=[DUMMY_PROJECT_NAME])
+    clusters = gke.get_clusters(context)
+    # 'default-pool' has the default SA
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    assert c.nodepools[0].has_default_service_account()
+    # 'default-pool' doesn't have the default SA
+    c = clusters[DUMMY_CLUSTER2_NAME]
+    assert not c.nodepools[0].has_default_service_account()

@@ -19,6 +19,9 @@ class NodePool(models.Resource):
     super().__init__(project_id=project_id)
     self._resource_data = resource_data
 
+  def _get_service_account(self) -> str:
+    return self._resource_data.get('config', {}).get('serviceAccount', None)
+
   def get_full_path(self) -> str:
     # https://container.googleapis.com/v1/projects/gcpd-gke-1-9b90/
     #   locations/europe-west1/clusters/gke2/nodePools/default-pool
@@ -37,9 +40,13 @@ class NodePool(models.Resource):
     path = re.sub(r'/nodePools/', '/', path)
     return path
 
+  def has_default_service_account(self) -> bool:
+    sa = self._get_service_account()
+    return sa == 'default'
+
   @property
   def service_account(self) -> str:
-    sa = self._resource_data.get('config', {}).get('serviceAccount', None)
+    sa = self._get_service_account()
     if sa == 'default':
       return f'{self.project_nr}-compute@developer.gserviceaccount.com'
     else:
