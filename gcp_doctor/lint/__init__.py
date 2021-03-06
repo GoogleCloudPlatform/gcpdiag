@@ -19,6 +19,7 @@ from gcp_doctor.utils import GcpApiError
 class LintTestClass(enum.Enum):
   ERR = 'ERR'
   BP = 'BP'
+  SEC = 'SEC'
   WARN = 'WARN'
 
   def __str__(self):
