@@ -9,7 +9,7 @@ from typing import Dict, List, Mapping, Optional
 import googleapiclient.errors
 
 from gcp_doctor import config, models, utils
-from gcp_doctor.queries import apis
+from gcp_doctor.queries import apis, project
 
 
 class Instance(models.Resource):
@@ -23,6 +23,35 @@ class Instance(models.Resource):
   @property
   def name(self) -> str:
     return self._resource_data['name']
+
+  @property
+  def metadata(self) -> List:
+    metadata = self._resource_data.get('metadata')
+    if metadata:
+      if 'items' in metadata:
+        return metadata['items']
+    return []
+
+  def is_serial_port_logging_enabled(self) -> bool:
+    instance_serial_logging_enabled = False
+    instance_serial_logging_disabled = False
+    project_serial_logging_enabled = False
+    for m_item in self.metadata:
+      if m_item.get('key') == 'serial-port-logging-enable':
+        logging_state = m_item.get('value').upper()
+        if logging_state == 'TRUE':
+          instance_serial_logging_enabled = True
+        if logging_state == 'FALSE':
+          instance_serial_logging_disabled = True
+        break
+
+    i_project = project.get_project(self.project_id)
+    if str(i_project.gce_metadata.get(
+        'serial-port-logging-enable')).upper() == 'TRUE':
+      project_serial_logging_enabled = True
+
+    return instance_serial_logging_enabled or (
+        project_serial_logging_enabled and not instance_serial_logging_disabled)
 
   def get_full_path(self) -> str:
     result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
