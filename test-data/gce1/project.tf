@@ -19,3 +19,22 @@ resource "google_project_service" "compute" {
   project = google_project.project.project_id
   service = "compute.googleapis.com"
 }
+
+resource "google_project_service" "container" {
+  project = google_project.project.project_id
+  service = "container.googleapis.com"
+}
+
+data "google_compute_default_service_account" "default" {
+  project = google_project.project.project_id
+}
+
+data "google_compute_image" "cos" {
+  family  = "cos-85-lts"
+  project = "cos-cloud"
+}
+
+
+output "project_id" {
+  value = google_project.project.project_id
+}

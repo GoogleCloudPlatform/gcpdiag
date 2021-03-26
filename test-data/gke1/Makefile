@@ -1,4 +1,4 @@
-PROJECT_ID  := $(shell terraform output project_id)
+PROJECT_ID  := $(shell terraform output project_id | sed -e 's|"||g')
 PROJECT_NR  := 18404348413
 CURL         = ../../bin/curl-wrap.sh
 JSON_CLEANER = ../../bin/json-cleaner
