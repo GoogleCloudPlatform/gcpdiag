@@ -4,7 +4,7 @@
 import functools
 import logging
 import re
-from typing import Dict, Mapping, Optional
+from typing import Dict, List, Mapping, Optional
 
 import googleapiclient.errors
 
