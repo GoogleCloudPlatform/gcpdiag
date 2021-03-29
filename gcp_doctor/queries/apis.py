@@ -35,7 +35,7 @@ def _get_credentials():
       with cache.get_cache() as diskcache:
         diskcache.set('credentials', _credentials)
     except exceptions.RefreshError as e:
-      logging.warning("couldn't refresh token: %s", e)
+      logging.debug("couldn't refresh token: %s", e)
 
   # Login using browser and verification code.
   if not _credentials or not _credentials.valid:

@@ -1,0 +1,262 @@
+{
+  "id": "projects/gcpd-gce1-4exv/zones/europe-west4-a/instances",
+  "items": [
+    {
+      "canIpForward": false,
+      "cpuPlatform": "Intel Skylake",
+      "creationTimestamp": "2021-03-26T10:04:37.967-07:00",
+      "deletionProtection": false,
+      "disks": [
+        {
+          "autoDelete": true,
+          "boot": true,
+          "deviceName": "persistent-disk-0",
+          "diskSizeGb": "10",
+          "guestOsFeatures": [
+            {
+              "type": "UEFI_COMPATIBLE"
+            },
+            {
+              "type": "SEV_CAPABLE"
+            },
+            {
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
+            }
+          ],
+          "index": 0,
+          "interface": "SCSI",
+          "kind": "compute#attachedDisk",
+          "licenses": [
+            "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos-pcid",
+            "https://www.googleapis.com/compute/v1/projects/cos-cloud-shielded/global/licenses/shielded-cos",
+            "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos"
+          ],
+          "mode": "READ_WRITE",
+          "shieldedInstanceInitialState": {
+            "dbs": [
+              {
+                "content": "REDACTED",
+                "fileType": "X509"
+              }
+            ],
+            "dbxs": [
+              {
+                "content": "REDACTED",
+                "fileType": "X509"
+              },
+              {
+                "content": "REDACTED",
+                "fileType": "X509"
+              },
+              {
+                "content": "REDACTED",
+                "fileType": "X509"
+              },
+              {
+                "content": "REDACTED",
+                "fileType": "X509"
+              }
+            ],
+            "keks": [
+              {
+                "content": "REDACTED",
+                "fileType": "X509"
+              }
+            ],
+            "pk": {
+              "content": "REDACTED",
+              "fileType": "X509"
+            }
+          },
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/zones/europe-west4-a/disks/gce1",
+          "type": "PERSISTENT"
+        }
+      ],
+      "fingerprint": "cq_CPheJY1g=",
+      "id": "5095970208757295818",
+      "kind": "compute#instance",
+      "labelFingerprint": "1TQLkowq0ZY=",
+      "labels": {
+        "foo": "bar"
+      },
+      "lastStartTimestamp": "2021-03-29T05:17:57.784-07:00",
+      "lastStopTimestamp": "2021-03-26T13:24:48.106-07:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/zones/europe-west4-a/machineTypes/f1-micro",
+      "metadata": {
+        "fingerprint": "N9vwLAgcV6k=",
+        "kind": "compute#metadata"
+      },
+      "name": "gce1",
+      "networkInterfaces": [
+        {
+          "fingerprint": "6uTITPPcdA0=",
+          "kind": "compute#networkInterface",
+          "name": "nic0",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/global/networks/default",
+          "networkIP": "10.164.0.3",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/regions/europe-west4/subnetworks/default"
+        }
+      ],
+      "scheduling": {
+        "automaticRestart": false,
+        "onHostMaintenance": "TERMINATE",
+        "preemptible": true
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/zones/europe-west4-a/instances/gce1",
+      "serviceAccounts": [
+        {
+          "email": "50670056743-compute@developer.gserviceaccount.com",
+          "scopes": [
+            "https://www.googleapis.com/auth/devstorage.read_only",
+            "https://www.googleapis.com/auth/logging.write",
+            "https://www.googleapis.com/auth/monitoring.write",
+            "https://www.googleapis.com/auth/service.management.readonly",
+            "https://www.googleapis.com/auth/servicecontrol"
+          ]
+        }
+      ],
+      "shieldedInstanceConfig": {
+        "enableIntegrityMonitoring": true,
+        "enableSecureBoot": false,
+        "enableVtpm": true
+      },
+      "shieldedInstanceIntegrityPolicy": {
+        "updateAutoLearnPolicy": true
+      },
+      "startRestricted": false,
+      "status": "RUNNING",
+      "tags": {
+        "fingerprint": "42WmSpB8rSM="
+      },
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/zones/europe-west4-a"
+    },
+    {
+      "canIpForward": false,
+      "cpuPlatform": "Intel Skylake",
+      "creationTimestamp": "2021-03-26T10:05:40.537-07:00",
+      "deletionProtection": false,
+      "disks": [
+        {
+          "autoDelete": true,
+          "boot": true,
+          "deviceName": "persistent-disk-0",
+          "diskSizeGb": "10",
+          "guestOsFeatures": [
+            {
+              "type": "UEFI_COMPATIBLE"
+            },
+            {
+              "type": "SEV_CAPABLE"
+            },
+            {
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
+            }
+          ],
+          "index": 0,
+          "interface": "SCSI",
+          "kind": "compute#attachedDisk",
+          "licenses": [
+            "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos-pcid",
+            "https://www.googleapis.com/compute/v1/projects/cos-cloud-shielded/global/licenses/shielded-cos",
+            "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos"
+          ],
+          "mode": "READ_WRITE",
+          "shieldedInstanceInitialState": {
+            "dbs": [
+              {
+                "content": "REDACTED",
+                "fileType": "X509"
+              }
+            ],
+            "dbxs": [
+              {
+                "content": "REDACTED",
+                "fileType": "X509"
+              },
+              {
+                "content": "REDACTED",
+                "fileType": "X509"
+              },
+              {
+                "content": "REDACTED",
+                "fileType": "X509"
+              },
+              {
+                "content": "REDACTED",
+                "fileType": "X509"
+              }
+            ],
+            "keks": [
+              {
+                "content": "REDACTED",
+                "fileType": "X509"
+              }
+            ],
+            "pk": {
+              "content": "REDACTED",
+              "fileType": "X509"
+            }
+          },
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/zones/europe-west4-a/disks/gce2",
+          "type": "PERSISTENT"
+        }
+      ],
+      "fingerprint": "xmNVG2inR7g=",
+      "id": "7608219626705758859",
+      "kind": "compute#instance",
+      "labelFingerprint": "42WmSpB8rSM=",
+      "lastStartTimestamp": "2021-03-29T05:17:58.169-07:00",
+      "lastStopTimestamp": "2021-03-27T10:07:10.260-07:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/zones/europe-west4-a/machineTypes/f1-micro",
+      "metadata": {
+        "fingerprint": "N9vwLAgcV6k=",
+        "kind": "compute#metadata"
+      },
+      "name": "gce2",
+      "networkInterfaces": [
+        {
+          "fingerprint": "iR4Ox6tC0i4=",
+          "kind": "compute#networkInterface",
+          "name": "nic0",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/global/networks/default",
+          "networkIP": "10.164.0.4",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/regions/europe-west4/subnetworks/default"
+        }
+      ],
+      "scheduling": {
+        "automaticRestart": false,
+        "onHostMaintenance": "TERMINATE",
+        "preemptible": true
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/zones/europe-west4-a/instances/gce2",
+      "serviceAccounts": [
+        {
+          "email": "50670056743-compute@developer.gserviceaccount.com",
+          "scopes": [
+            "https://www.googleapis.com/auth/devstorage.read_only",
+            "https://www.googleapis.com/auth/logging.write",
+            "https://www.googleapis.com/auth/monitoring.write",
+            "https://www.googleapis.com/auth/service.management.readonly",
+            "https://www.googleapis.com/auth/servicecontrol"
+          ]
+        }
+      ],
+      "shieldedInstanceConfig": {
+        "enableIntegrityMonitoring": true,
+        "enableSecureBoot": false,
+        "enableVtpm": true
+      },
+      "shieldedInstanceIntegrityPolicy": {
+        "updateAutoLearnPolicy": true
+      },
+      "startRestricted": false,
+      "status": "RUNNING",
+      "tags": {
+        "fingerprint": "42WmSpB8rSM="
+      },
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/zones/europe-west4-a"
+    }
+  ],
+  "kind": "compute#instanceList",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/zones/europe-west4-a/instances"
+}

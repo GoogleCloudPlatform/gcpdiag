@@ -4,7 +4,7 @@
 import functools
 import logging
 import re
-from typing import Dict, List, Mapping, Optional
+from typing import Dict, Mapping, Optional
 
 import googleapiclient.errors
 
@@ -76,14 +76,6 @@ class Instance(models.Resource):
       saccts = self._resource_data['serviceAccounts']
       if isinstance(saccts, list) and len(saccts) >= 1:
         return saccts[0]['email']
-    return None
-
-  @property
-  def service_account_scopes(self) -> Optional[List[str]]:
-    if 'serviceAccounts' in self._resource_data:
-      saccts = self._resource_data['serviceAccounts']
-      if isinstance(saccts, list) and len(saccts) >= 1:
-        return saccts[0]['scopes']
     return None
 
 
