@@ -1,16 +1,6 @@
-data "google_compute_image" "cos" {
-  family  = "cos-85-lts"
-  project = "cos-cloud"
-}
-
-data "google_compute_default_service_account" "default" {
-  project = google_project.project.project_id
-}
-
 resource "google_compute_instance" "default" {
-  count          = 1200
   project        = google_project.project.project_id
-  name           = "gce1-${count.index}"
+  name           = "gce2"
   machine_type   = "f1-micro"
   zone           = "europe-west4-a"
   desired_status = "RUNNING"

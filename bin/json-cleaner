@@ -12,6 +12,17 @@ clean_maps = {
         '.clusters.[].endpoint': '192.168.1.1',
         '.clusters.[].masterAuth.clusterCaCertificate': 'REDACTED',
     },
+    'instances': {
+        # not really sensitive, but we don't care about it...
+        '.items.[].disks.[].shieldedInstanceInitialState.dbs.[].content':
+            'REDACTED',
+        '.items.[].disks.[].shieldedInstanceInitialState.dbxs.[].content':
+            'REDACTED',
+        '.items.[].disks.[].shieldedInstanceInitialState.keks.[].content':
+            'REDACTED',
+        '.items.[].disks.[].shieldedInstanceInitialState.pk.content':
+            'REDACTED',
+    },
     'other': {}
 }
 
