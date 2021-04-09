@@ -9,6 +9,8 @@ build:
 	rm -rf dist
 	mkdir dist
 	cd dist && tar -xf ../../../dist/gcp-doctor-$(VERSION).tar.gz --strip 1
+	# compatibility with old docker image:
+	cd dist && mkdir bin && ln -s ../gcp-doctor bin/gcp-doctor
 	chmod -R a+rX dist
 	docker build -t $(IMAGE):$(VERSION) .
 	rm -rf dist
