@@ -2,12 +2,13 @@
 """Build and cache GCP APIs + handle authentication."""
 
 import functools
+import json
 import logging
 import os
+import pkgutil
 import sys
 
 import googleapiclient.http
-import importlib_resources
 from google.auth import exceptions
 from google.auth.transport import requests
 from google_auth_oauthlib import flow
@@ -40,10 +41,10 @@ def _get_credentials():
   # Login using browser and verification code.
   if not _credentials or not _credentials.valid:
     logging.debug('No valid credentials found. Initiating auth flow.')
-    client_secrets = importlib_resources.files('gcp_doctor.queries').joinpath(
-        'client_secrets.json')
-    oauth_flow = flow.Flow.from_client_secrets_file(
-        client_secrets,
+    client_config = json.loads(
+        pkgutil.get_data('gcp_doctor.queries', 'client_secrets.json'))
+    oauth_flow = flow.Flow.from_client_config(
+        client_config,
         scopes=[
             'https://www.googleapis.com/auth/cloud-platform',
             'https://www.googleapis.com/auth/accounts.reauth'

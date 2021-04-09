@@ -58,8 +58,8 @@ class ProjectPolicy:
   _project_id: str
   _policy: Dict[str, Any]
   _policy_initialized: bool = False
-  _predefined_roles: ClassVar[Mapping[str, Mapping[str, Any]]]
-  _predefined_roles_initialized: ClassVar[bool] = False
+  _PREDEFINED_ROLES: ClassVar[Mapping[str, Mapping[str, Any]]]
+  _PREDEFINED_ROLES_INITIALIZED: ClassVar[bool] = False
   _custom_roles: Mapping[str, Mapping[str, Any]]
   _custom_roles_initialized: bool = False
 
@@ -83,9 +83,9 @@ class ProjectPolicy:
           self._policy['by_member'][member]['roles'][binding['role']] = 1
 
   def _init_roles(self):
-    if not ProjectPolicy._predefined_roles_initialized:
-      ProjectPolicy._predefined_roles = _fetch_roles('')
-      ProjectPolicy._predefined_roles_initialized = True
+    if not ProjectPolicy._PREDEFINED_ROLES_INITIALIZED:
+      ProjectPolicy._PREDEFINED_ROLES = _fetch_roles('')
+      ProjectPolicy._PREDEFINED_ROLES_INITIALIZED = True
     if not self._custom_roles_initialized:
       self._custom_roles = _fetch_roles('projects/' + self._project_id)
       self._custom_roles_initialized = True
@@ -94,8 +94,8 @@ class ProjectPolicy:
     self._init_roles()
     if role in self._custom_roles:
       return self._custom_roles[role].get('includedPermissions', [])
-    if role in ProjectPolicy._predefined_roles:
-      permissions: List[str] = ProjectPolicy._predefined_roles[role].get(
+    if role in ProjectPolicy._PREDEFINED_ROLES:
+      permissions: List[str] = ProjectPolicy._PREDEFINED_ROLES[role].get(
           'includedPermissions', [])
       return permissions
     raise ValueError('unknown role: ' + role)

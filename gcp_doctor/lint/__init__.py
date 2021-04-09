@@ -105,6 +105,20 @@ class LintReportTestInterface:
                            short_info)
 
 
+# workaround for https://github.com/pyinstaller/pyinstaller/issues/1905
+def iter_namespace(ns_pkg):
+  prefix = ns_pkg.__name__ + '.'
+  for p in pkgutil.iter_modules(ns_pkg.__path__, prefix):
+    yield p[1]
+  toc = set()
+  for importer in pkgutil.iter_importers(ns_pkg.__name__.partition('.')[0]):
+    if hasattr(importer, 'toc'):
+      toc |= importer.toc
+  for name in toc:
+    if name.startswith(prefix):
+      yield name
+
+
 class LintTestRepository:
   """Repository of Lint tests which is also used to run the tests."""
   tests: List[LintTest]
@@ -115,8 +129,8 @@ class LintTestRepository:
   def register_test(self, test: LintTest):
     self.tests.append(test)
 
-  def load_tests(self, path_prefix, name_prefix):
-    for _, name, _ in pkgutil.iter_modules(path_prefix, name_prefix + '.'):
+  def load_tests(self, pkg):
+    for name in iter_namespace(pkg):
       # Skip code tests
       if name.endswith('_test'):
         continue
