@@ -6,6 +6,9 @@ import re
 
 from googleapiclient import errors
 
+from gcp_doctor import config
+from gcp_doctor.queries import apis
+
 DOMAIN_RES_NAME_MATCH = r'(http(s)?:)?//([a-z0-9][-a-z0-9]{1,61}[a-z0-9]\.)+[a-z]{2,}/'
 RES_NAME_KEY = r'[a-z][-a-z0-9]*'
 RES_NAME_VALUE = r'[a-z0-9][-a-z0-9]*'
@@ -95,3 +98,24 @@ def http_error_message(err: errors.HttpError) -> str:
     return content['error']['message']
   else:
     return str(err)
+
+
+def report_usage_if_running_at_google(command, details=None):
+  """For Google-internal use: report usage statistics."""
+  try:
+    # Try the import first, because this will fail faster than checking the
+    # user (which is we check later that it is in the google.com domain).
+    # pylint: disable=import-outside-toplevel
+    from gcp_doctor_google_internal import cta_client
+
+    # Only do this for google.com users.
+    email = apis.get_user_email()
+    match_google = re.match('(.*)@google.com$', email)
+    if match_google:
+      user = match_google.group(1)
+      if not details:
+        details = {}
+      details['version'] = config.VERSION
+      cta_client.submit(user, 'gcp-doctor', command, details)
+  except RuntimeError:
+    pass
