@@ -7,8 +7,10 @@ import logging
 import os
 import pkgutil
 import sys
+from typing import Dict
 
 import googleapiclient.http
+import httplib2
 from google.auth import exceptions
 from google.auth.transport import requests
 from google_auth_oauthlib import flow
@@ -46,8 +48,10 @@ def _get_credentials():
     oauth_flow = flow.Flow.from_client_config(
         client_config,
         scopes=[
+            'openid',
             'https://www.googleapis.com/auth/cloud-platform',
-            'https://www.googleapis.com/auth/accounts.reauth'
+            'https://www.googleapis.com/auth/accounts.reauth',
+            'https://www.googleapis.com/auth/userinfo.email',
         ],
         redirect_uri='urn:ietf:wg:oauth:2.0:oob')
     auth_url, _ = oauth_flow.authorization_url(prompt='consent')
@@ -80,6 +84,20 @@ def login():
   if os.getenv('GOOGLE_AUTH_TOKEN'):
     logging.warning(
         'Using IAM authorization token from GOOGLE_AUTH_TOKEN env. variable.')
+
+
+def get_user_email() -> str:
+  credentials = _get_credentials()
+  http = httplib2.Http()
+  headers: Dict[str, str] = {}
+  credentials.apply(headers)
+  resp, content = http.request('https://www.googleapis.com/userinfo/v2/me',
+                               'GET',
+                               headers=headers)
+  if resp['status'] != '200':
+    raise RuntimeError(f"can't determine user email. status={resp['status']}")
+  data = json.loads(content)
+  return data['email']
 
 
 @functools.lru_cache(maxsize=None)

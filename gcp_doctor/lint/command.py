@@ -4,7 +4,7 @@
 import argparse
 import logging
 
-from gcp_doctor import lint, models
+from gcp_doctor import lint, models, utils
 from gcp_doctor.lint import gce, gke, report_terminal
 from gcp_doctor.queries import apis
 
@@ -47,3 +47,6 @@ def run(argv):
   apis.login()
   report.lint_start(context)
   repo.run_tests(context, report)
+
+  # (google internal) report usage information
+  utils.report_usage_if_running_at_google('lint')
