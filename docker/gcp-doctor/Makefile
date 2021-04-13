@@ -1,5 +1,5 @@
 BIN_DIR=../../bin
-VERSION:=$(shell cd ../.. && make version)
+VERSION:=0.10-test
 IMAGE=us-docker.pkg.dev/gcp-doctor-repo/google-internal/gcp-doctor
 BUCKET_NAME=gcp-doctor
 
@@ -35,4 +35,11 @@ update-default:
 	echo -e "DOCKER_IMAGE=$(IMAGE)\nDOCKER_IMAGE_VERSION=$(VERSION)\nWRAPPER_VERSION=$(WRAPPER_VERSION)" | gsutil -h "Content-Type: text/plain" -h "Cache-Control: max-age=300" cp - "gs://$(BUCKET_NAME)/$(OBJECT_NAME_RELEASE_VERSION)"
 
 upload-wrapper:
-	gsutil -h "Content-Type: text/plain" -h "Cache-Control: max-age=300" cp $(BIN_DIR)/gcp-doctor-dockerized "gs://$(BUCKET_NAME)/gcp-doctor.sh"
+	# only update docker wrapper script if this version is newer ($(WRAPPER_VERSION))
+	@CUR_WRAPPER_VERSION=$$(curl -sf https://storage.googleapis.com/gcp-doctor/release-version | grep WRAPPER_VERSION | sed -e 's/.*=//'); \
+	  if [ "$$CUR_WRAPPER_VERSION" != "$(WRAPPER_VERSION)" ]; then \
+	    echo "uploading new wrapper."; \
+	    gsutil -h "Content-Type: text/plain" -h "Cache-Control: max-age=300" cp $(BIN_DIR)/gcp-doctor-dockerized "gs://$(BUCKET_NAME)/gcp-doctor.sh"; \
+	  else \
+	    echo "wrapper unchanged."; \
+	  fi
