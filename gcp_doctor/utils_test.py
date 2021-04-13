@@ -1,5 +1,6 @@
 # Lint as: python3
 """Test code in utils.py."""
+import httplib2
 import pytest
 from googleapiclient import errors
 
@@ -20,7 +21,9 @@ class TestGcpApiError():
   def test_exception(self):
     """GcpApiError correctly formats an error from a Google API JSON string."""
     with pytest.raises(utils.GcpApiError) as api_error:
-      mocked_error = errors.HttpError(content=JSON_ERROR_CONTENT, resp=None)
+      resp = httplib2.Response({})
+      resp.reason = 'foobar'
+      mocked_error = errors.HttpError(content=JSON_ERROR_CONTENT, resp=resp)
       raise utils.GcpApiError(mocked_error)
     assert 'country is required' in str(api_error.value)
 
@@ -33,7 +36,9 @@ def test_is_region():
 
 def test_http_error_message():
   """http_error_message extracts properly an error from a Google API JSON string."""
-  error = errors.HttpError(content=JSON_ERROR_CONTENT, resp=None)
+  resp = httplib2.Response({})
+  resp.reason = 'foobar'
+  error = errors.HttpError(content=JSON_ERROR_CONTENT, resp=resp)
   result = utils.http_error_message(error)
   expected = 'country is required'
   assert result == expected
