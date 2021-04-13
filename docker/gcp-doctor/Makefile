@@ -1,18 +1,28 @@
 BIN_DIR=../../bin
 VERSION:=$(shell cd ../.. && make version)
-IMAGE=us-docker.pkg.dev/gcp-doctor-repo/release/gcp-doctor
+IMAGE=us-docker.pkg.dev/gcp-doctor-repo/google-internal/gcp-doctor
 BUCKET_NAME=gcp-doctor
-OBJECT_NAME_DEFAULT_VERSION=default-version
+
+# "default-version" was the old name where we only put the version in the file
+# we changed to "release-version" with a new format: KEY=VALUE pairs (shell
+# script-sourceable)
+OBJECT_NAME_RELEASE_VERSION=release-version
+WRAPPER_VERSION=0.4
 
 build:
 	make -C ../.. dist
 	rm -rf dist
 	mkdir dist
 	cd dist && tar -xf ../../../dist/gcp-doctor-$(VERSION).tar.gz --strip 1
+	# also copy google-internal modules, considering that this is published
+	# ona google-internal repo (accessible only for google.com
+	# organization)
+	mkdir -p dist/gcp_doctor_google_internal
+	cp ../../gcp_doctor_google_internal/{cta_client,metric_pb2}.py dist/gcp_doctor_google_internal
 	# compatibility with old docker image:
 	cd dist && mkdir bin && ln -s ../gcp-doctor bin/gcp-doctor
 	chmod -R a+rX dist
-	docker build -t $(IMAGE):$(VERSION) .
+	docker build --pull -t $(IMAGE):$(VERSION) .
 	rm -rf dist
 
 push:
@@ -22,7 +32,7 @@ push:
 # much faster than running 'docker pull' everytime (and also avoids the bad
 # practice of using generic docker image tags like 'default')
 update-default:
-	echo "$(VERSION)" | gsutil -h "Content-Type: text/plain" -h "Cache-Control: max-age=300" cp - "gs://$(BUCKET_NAME)/$(OBJECT_NAME_DEFAULT_VERSION)"
+	echo -e "DOCKER_IMAGE=$(IMAGE)\nDOCKER_IMAGE_VERSION=$(VERSION)\nWRAPPER_VERSION=$(WRAPPER_VERSION)" | gsutil -h "Content-Type: text/plain" -h "Cache-Control: max-age=300" cp - "gs://$(BUCKET_NAME)/$(OBJECT_NAME_RELEASE_VERSION)"
 
 upload-wrapper:
 	gsutil -h "Content-Type: text/plain" -h "Cache-Control: max-age=300" cp $(BIN_DIR)/gcp-doctor-dockerized "gs://$(BUCKET_NAME)/gcp-doctor.sh"
