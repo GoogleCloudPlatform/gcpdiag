@@ -20,6 +20,7 @@ importlib-metadata = "*"
 yapf = "*"
 coverage = "*"
 bump2version = "*"
+pyinstaller = "*"
 
 # for vim:
 # pip install 'python-language-server[yapf,pyflakes,mccabe]'
