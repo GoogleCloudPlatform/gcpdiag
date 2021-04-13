@@ -1,13 +1,29 @@
 #!/bin/bash
 set -e
-IMAGE="us-docker.pkg.dev/gcp-doctor-repo/release/gcp-doctor"
-VERSION=$(curl -sf https://storage.googleapis.com/gcp-doctor/default-version)
+THIS_WRAPPER_VERSION=0.4
+source <(curl -sf https://storage.googleapis.com/gcp-doctor/release-version|grep -Ei '^\w*=[0-9a-z/\._-]*$')
+if [[ $THIS_WRAPPER_VERSION != $WRAPPER_VERSION ]]; then
+  echo
+  echo "## ERROR:"
+  echo "## This gcp-doctor wrapper script is obsolete ($THIS_WRAPPER_VERSION, newest: $WRAPPER_VERSION)."
+  echo "## Please update the wrapper script to the latest version as follows:"
+  echo
+  echo "curl https://storage.googleapis.com/gcp-doctor/gcp-doctor.sh >gcp-doctor"
+  echo "chmod +x gcp-doctor"
+  echo
+  exit 1
+fi
+
 CWD=$(pwd)
 [ -t 0 ] && USE_TTY="-it" || USE_TTY=""
-mkdir -p "$HOME/.cache/gcp-doctor-dockerized"
+# Note: for some reason sometimes docker creates the container-path in the host
+# and this can result in ~/.cache/gcp-doctor being owned by root. Workaround
+# this issue by creating ~/.cache/gcp-doctor as well first, so that the
+# ownership is correct.
+mkdir -p "$HOME/.cache/gcp-doctor" "$HOME/.cache/gcp-doctor-dockerized"
 # If we don't have the image yet, make sure that the user is logged in
 # otherwise the docker pull will fail (without telling what the problem is)
-if ! docker inspect -f 'present' "$IMAGE:$VERSION" >/dev/null 2>&1; then
+if ! docker inspect -f 'present' "$DOCKER_IMAGE:$DOCKER_IMAGE_VERSION" >/dev/null 2>&1; then
   echo
   echo "###  A new docker image needs to be downloaded and that requires  ###"
   echo "###  Google account credentials. If you get a permission denied   ###"
@@ -30,4 +46,4 @@ exec docker run "$USE_TTY" \
   -e HOME -e LANG -e GOOGLE_AUTH_TOKEN -e CLOUD_SHELL \
   -v "$HOME/.cache/gcp-doctor-dockerized:$HOME/.cache/gcp-doctor" \
   -v "$CWD:$CWD" -w "$CWD" \
-  "$IMAGE:$VERSION" /opt/gcp-doctor/bin/gcp-doctor "$@"
+  "$DOCKER_IMAGE:$DOCKER_IMAGE_VERSION" /opt/gcp-doctor/bin/gcp-doctor "$@"
