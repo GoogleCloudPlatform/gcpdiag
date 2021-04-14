@@ -10,7 +10,7 @@ OBJECT_NAME_RELEASE_VERSION=release-version
 WRAPPER_VERSION=0.4
 
 build:
-	make -C ../.. dist
+	make -C ../.. tarfile
 	rm -rf dist
 	mkdir dist
 	cd dist && tar -xf ../../../dist/gcp-doctor-$(VERSION).tar.gz --strip 1

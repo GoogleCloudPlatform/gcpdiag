@@ -12,23 +12,15 @@ version:
 	@echo $(VERSION)
 
 build:
+	rm -f dist/gcp-doctor
 	pyinstaller --workpath=.pyinstaller.build pyinstaller.spec
+	mv dist/gcp-doctor dist/gcp-doctor-$(VERSION)
+	ln -s gcp-doctor-$(VERSION) dist/gcp-doctor
 
 bump-version:
 	bumpversion --commit minor
 
-publish-test: build
-	# make sure that the version has "-test" in it
-	@if [[ ! "$(VERSION)" =~ -test ]]; then \
-	  echo "$(VERSION) doesn't look like a test version."; \
-	  exit 1; fi
-	# x20
-	cp dist/gcp-doctor /google/data/rw/teams/gcp-doctor/test/gcp-doctor-$(VERSION)
-	# docker
-	make -C docker/gcp-doctor build
-	make -C docker/gcp-doctor push
-
-dist:
+tarfile:
 	# TODO: replace with something based on setuptools?
 	rm -rf dist-tmp
 	mkdir -p dist-tmp/$(DIST_NAME)
@@ -50,6 +42,16 @@ kokoro-bump-release:
 	# push tag
 	git push --tags
 
+kokoro-publish-test: build
+	# make sure that the version has "-test" in it
+	@if [[ ! "$(VERSION)" =~ -test ]]; then \
+	  echo "$(VERSION) doesn't look like a test version."; \
+	  exit 1; fi
+	# docker (doesn't work yet)
+	# make -C docker/gcp-doctor build
+	# make -C docker/gcp-doctor push
+	# x20 will be copied by kokoro using "post_build"
+
 kokoro-publish-release: kokoro-bump-release build
 	# x20
 	cp dist/gcp-doctor /google/data/rw/teams/gcp-doctor/release/gcp-doctor-$(VERSION)
@@ -67,4 +69,4 @@ kokoro-update-default:
 	make -C docker/gcp-doctor upload-wrapper
 	make -C docker/gcp-doctor update-default
 
-.PHONY: test coverage-report version build bump-version publish-test dist
+.PHONY: test coverage-report version build bump-version publish-test tarfile
