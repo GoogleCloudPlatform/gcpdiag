@@ -12,7 +12,6 @@ version:
 	@echo $(VERSION)
 
 build:
-	mkdir -p dist
 	pyinstaller --workpath=.pyinstaller.build pyinstaller.spec
 
 bump-version:
