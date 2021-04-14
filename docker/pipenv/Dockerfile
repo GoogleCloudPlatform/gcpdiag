@@ -4,15 +4,17 @@ FROM python:3.8-slim-buster
 RUN pip install pipenv
 
 # Debian packages.
+# binutils is for pyinstaller
 RUN apt-get update && \
     apt-get -y install \
         bash \
         curl \
         git \
+        binutils \
         make
 
 # terraform
-RUN curl https://releases.hashicorp.com/terraform/0.14.6/terraform_0.14.6_linux_amd64.zip | \
+RUN curl https://releases.hashicorp.com/terraform/0.14.10/terraform_0.14.10_linux_amd64.zip | \
     gunzip - >/usr/bin/terraform && \
     chmod +x /usr/bin/terraform
 
