@@ -41,7 +41,9 @@ kokoro-bump-release:
 	git config user.email "noreply+kokoro@google.com"
 	git config user.name "Kokoro release job"
 	# remove "test" from the version and create a git tag
-	bumpversion --tag release
+	bumpversion --verbose --tag release
+	git diff
+	cat Makefile
 	# push tag
 	#git push --tags
 
