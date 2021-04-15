@@ -2,6 +2,7 @@
 """Queries related to GCP Kubernetes Engine clusters."""
 
 import functools
+import ipaddress
 import logging
 import re
 from typing import Dict, Iterable, List, Mapping
@@ -56,6 +57,10 @@ class NodePool(models.Resource):
   def version(self) -> str:
     return self._resource_data['version']
 
+  @property
+  def pod_ipv4_cidr_size(self) -> int:
+    return self._resource_data['podIpv4CidrSize']
+
 
 class Cluster(models.Resource):
   """Represents a GKE cluster.
@@ -75,6 +80,15 @@ class Cluster(models.Resource):
   @property
   def location(self) -> str:
     return self._resource_data['location']
+
+  @property
+  def pod_ipv4_cidr(self) -> ipaddress.IPv4Address:
+    cidr = self._resource_data['clusterIpv4Cidr']
+    return ipaddress.ip_network(cidr)
+
+  @property
+  def current_node_count(self) -> int:
+    return self._resource_data['currentNodeCount']
 
   @property
   def master_version(self) -> str:

@@ -1,6 +1,7 @@
 # Lint as: python3
 """Test code in gke.py."""
 
+import ipaddress
 from unittest import mock
 
 from gcp_doctor import models
@@ -68,3 +69,35 @@ class TestCluster:
     # 'default-pool' doesn't have the default SA
     c = clusters[DUMMY_CLUSTER2_NAME]
     assert not c.nodepools[0].has_default_service_account()
+
+  def test_pod_ipv4_cidr(self):
+    """returns correct pod CIDR"""
+    context = models.Context(projects=[DUMMY_PROJECT_NAME])
+    clusters = gke.get_clusters(context)
+    # cluster 1
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    assert c.pod_ipv4_cidr.compare_networks(
+        ipaddress.ip_network('192.168.1.0/24')) == 0
+    # cluster 2
+    c = clusters[DUMMY_CLUSTER2_NAME]
+    assert c.pod_ipv4_cidr.compare_networks(
+        ipaddress.ip_network('10.112.0.0/14')) == 0
+
+  def test_current_node_count(self):
+    """returns correct number of nodes running"""
+    context = models.Context(projects=[DUMMY_PROJECT_NAME])
+    clusters = gke.get_clusters(context)
+    # cluster 1
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    assert c.current_node_count == 1
+    # cluster 2
+    c = clusters[DUMMY_CLUSTER2_NAME]
+    assert c.current_node_count == 3
+
+  def test_np_pod_ipv4_cidr_size(self):
+    """resturn correct pod CIDR size per allocated to node pool."""
+    context = models.Context(projects=[DUMMY_PROJECT_NAME])
+    clusters = gke.get_clusters(context)
+    # cluster 1
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    assert c.nodepools[0].pod_ipv4_cidr_size == 24
