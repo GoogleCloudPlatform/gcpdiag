@@ -37,6 +37,9 @@ tarfile:
 ### Kokoro-specific (do not run interactively) ###
 
 kokoro-bump-release:
+	set
+	git config user.email "noreply+kokoro@google.com"
+	git config user.name "Kokoro release job"
 	# remove "test" from the version and create a git tag
 	bumpversion --tag release
 	# push tag
