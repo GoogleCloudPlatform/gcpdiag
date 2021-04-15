@@ -11,3 +11,5 @@ pipenv-dockerized run make test
 pipenv-dockerized run make coverage-report
 pipenv-dockerized run make kokoro-bump-release
 pipenv-dockerized run make kokoro-build
+
+echo "build: $KOKORO_BUILD_NUMBER"
