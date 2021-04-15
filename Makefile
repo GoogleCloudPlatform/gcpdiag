@@ -40,7 +40,7 @@ kokoro-bump-release:
 	# remove "test" from the version and create a git tag
 	bumpversion --tag release
 	# push tag
-	git push --tags
+	#git push --tags
 
 kokoro-publish-test: build
 	# make sure that the version has "-test" in it
@@ -53,14 +53,6 @@ kokoro-publish-test: build
 	# x20 will be copied by kokoro using "post_build"
 
 kokoro-publish-release: kokoro-bump-release build
-	# x20
-	cp dist/gcp-doctor /google/data/rw/teams/gcp-doctor/release/gcp-doctor-$(VERSION)
-	# docker
-	make -C docker/gcp-doctor build
-	make -C docker/gcp-doctor push
-	# increase the minor version so that future test releases use the next version
-	bumpversion --commit minor
-	git push
 
 kokoro-update-default:
 	# x20
