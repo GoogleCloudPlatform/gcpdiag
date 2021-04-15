@@ -10,4 +10,5 @@ pipenv-dockerized run pipenv install --dev
 pipenv-dockerized run make test
 pipenv-dockerized run make coverage-report
 pipenv-dockerized run make kokoro-publish-test
-ls -lR
+echo $KOKORO_KEYSTORE_DIR
+ls -lR $KOKORO_KEYSTORE_DIR
