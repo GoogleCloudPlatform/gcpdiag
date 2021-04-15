@@ -14,8 +14,6 @@ version:
 build:
 	rm -f dist/gcp-doctor
 	pyinstaller --workpath=.pyinstaller.build pyinstaller.spec
-	mv dist/gcp-doctor dist/gcp-doctor-$(VERSION)
-	ln -s gcp-doctor-$(VERSION) dist/gcp-doctor
 
 bump-version:
 	bumpversion --commit minor
@@ -36,28 +34,32 @@ tarfile:
 
 ### Kokoro-specific (do not run interactively) ###
 
-kokoro-bump-release:
-	set
+kokoro-verify-user:
+	@if [[ "$$USER"" != "kbuilder ]]; then \
+	  echo "this must be run by kokoro (kbuilder)" >&2; \
+	  exit 1; fi
+
+kokoro-bump-release: kokoro-verify-user
 	git config user.email "noreply+kokoro@google.com"
 	git config user.name "Kokoro release job"
 	# remove "test" from the version and create a git tag
 	bumpversion --verbose --tag release
-	git diff
-	cat Makefile
 	# push tag
 	#git push --tags
 
-kokoro-publish-test: build
-	# make sure that the version has "-test" in it
-	@if [[ ! "$(VERSION)" =~ -test ]]; then \
-	  echo "$(VERSION) doesn't look like a test version."; \
-	  exit 1; fi
+kokoro-build: build
+	# create the directory structure that we want in x20
+	mkdir dist/v$(VERSION)
+	mv dist/gcp-doctor dist/v$(VERSION)
+	ln -s v$(VERSION) dist/latest
+	# make sure that the files are not group-writable, because
+	# otherwise all (internal) would be allowed, and this
+	# is not permitted (more than 500 users)
+	chmod -R go-w dist
 	# docker (doesn't work yet)
 	# make -C docker/gcp-doctor build
 	# make -C docker/gcp-doctor push
 	# x20 will be copied by kokoro using "post_build"
-
-kokoro-publish-release: kokoro-bump-release build
 
 kokoro-update-default:
 	# x20
