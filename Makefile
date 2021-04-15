@@ -35,7 +35,7 @@ tarfile:
 ### Kokoro-specific (do not run interactively) ###
 
 kokoro-verify-user:
-	@if [[ "$$USER"" != "kbuilder ]]; then \
+	@if [[ "$$USER" != "kbuilder" ]]; then \
 	  echo "this must be run by kokoro (kbuilder)" >&2; \
 	  exit 1; fi
 
