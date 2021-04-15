@@ -27,4 +27,7 @@ chmod -R go-w dist
 #mkdir dist/testdir
 #echo "BLABLA" >dist/testdir/blabla
 
-ls -lR dist
+ls -lR ${KOKORO_ARTIFACTS_DIR}
+
+sync
+sleep 30
