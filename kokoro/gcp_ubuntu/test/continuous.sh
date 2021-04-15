@@ -13,3 +13,10 @@ pipenv-dockerized run make kokoro-publish-test
 #
 #echo $KOKORO_KEYSTORE_DIR
 #ls -lR $KOKORO_KEYSTORE_DIR
+echo "FOOBAR" >dist/gcp-doctor-0.8
+echo "FOOBAR" >dist/gcp-doctor-0.8-test
+echo "BAZBAZ" >dist/gcp-doctor-0.9-test
+chmod +x dist/gcp-doctor-0.9-test
+ln -s gcp-doctor-0.9-test dist/gcp-doctor-0.9-symlink
+
+ls -lR dist
