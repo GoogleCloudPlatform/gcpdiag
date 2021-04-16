@@ -6,6 +6,8 @@ set -x
 PATH="${KOKORO_ARTIFACTS_DIR}/git/gcp-doctor/bin:$HOME/.local/bin:$PATH"
 cd "${KOKORO_ARTIFACTS_DIR}/git/gcp-doctor"
 
+sudo apt-get install git-remote-google
+
 pipenv-dockerized run pipenv install --dev
 pipenv-dockerized run make test
 pipenv-dockerized run make coverage-report
