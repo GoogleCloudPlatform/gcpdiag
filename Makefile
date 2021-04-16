@@ -44,11 +44,6 @@ kokoro-bump-release: kokoro-verify-user
 	git config user.name "Kokoro release job"
 	# remove "test" from the version and create a git tag
 	bumpversion --verbose --tag release
-	# push tag
-	git push --tags
-	# increment test version
-	bumpversion --commit minor
-	git push
 
 kokoro-build: build
 	# create the directory structure that we want in x20
