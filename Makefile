@@ -45,7 +45,10 @@ kokoro-bump-release: kokoro-verify-user
 	# remove "test" from the version and create a git tag
 	bumpversion --verbose --tag release
 	# push tag
-	#git push --tags
+	git push --tags
+	# increment test version
+	bumpversion --commit minor
+	git push
 
 kokoro-build: build
 	# create the directory structure that we want in x20
@@ -56,10 +59,6 @@ kokoro-build: build
 	# otherwise all mdb/gcp-doctor-users would be allowed, and this
 	# is not permitted (more than 500 users)
 	chmod -R go-w dist
-	# docker (doesn't work yet)
-	# make -C docker/gcp-doctor build
-	# make -C docker/gcp-doctor push
-	# x20 will be copied by kokoro using "post_build"
 
 kokoro-update-default:
 	# x20
