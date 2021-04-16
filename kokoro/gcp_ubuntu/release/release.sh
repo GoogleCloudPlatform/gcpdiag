@@ -10,4 +10,7 @@ pipenv-dockerized run pipenv install --dev
 pipenv-dockerized run make test
 pipenv-dockerized run make coverage-report
 pipenv-dockerized run make kokoro-bump-release
+git push --tags
 pipenv-dockerized run make kokoro-build
+pipenv-dockerized run bump-version
+git push
