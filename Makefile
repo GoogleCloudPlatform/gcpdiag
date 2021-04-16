@@ -1,4 +1,4 @@
-VERSION=0.10-test
+VERSION=0.11-test
 DIST_NAME=gcp-doctor-$(VERSION)
 SHELL=/bin/bash
 
@@ -33,21 +33,23 @@ tarfile:
 	rm -rf dist-tmp
 
 release:
-	bumpversion --tag --tag-message "Release v{new_version}" release
+	# Make sure we are using the latest submitted code.
+	git fetch
+	git checkout origin/master
+	# Remove '-test' in the version.
+	# Note: this will fail if we have already a release tag, in which case
+	# you should first increase the minor version with a code review.
+	bumpversion --commit --tag --tag-message "Release v{new_version}" release
+	# push to the release branch and tag the release
+	git push origin release
 	git push --tags
+	# trigger a release build
+	make -C gcp_doctor_google_internal trigger-release
+	# increment the version (and add back '-test')
+	bumpversion --commit minor
+	git push origin HEAD:refs/for/master
 
 ### Kokoro-specific (do not run interactively) ###
-
-kokoro-verify-user:
-	@if [[ "$$USER" != "kbuilder" ]]; then \
-	  echo "this must be run by kokoro (kbuilder)" >&2; \
-	  exit 1; fi
-
-kokoro-bump-release: kokoro-verify-user
-	git config user.email "noreply+kokoro@google.com"
-	git config user.name "Kokoro release job"
-	# remove "test" from the version and create a git tag
-	bumpversion --verbose --tag release
 
 kokoro-build: build
 	# create the directory structure that we want in x20
@@ -59,11 +61,4 @@ kokoro-build: build
 	# is not permitted (more than 500 users)
 	chmod -R go-w dist
 
-kokoro-update-default:
-	# x20
-	ln -sf ../releases/gcp-doctor-$(VERSION) /google/data/rw/teams/gcp-doctor/bin/gcp-doctor
-	# docker
-	make -C docker/gcp-doctor upload-wrapper
-	make -C docker/gcp-doctor update-default
-
-.PHONY: test coverage-report version build bump-version publish-test tarfile
+.PHONY: test coverage-report version build bump-version tarfile release kokoro-build
