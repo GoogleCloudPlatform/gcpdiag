@@ -9,6 +9,7 @@ SHELL=/bin/bash
 # script-sourceable)
 OBJECT_NAME_RELEASE_VERSION=release-version
 WRAPPER_VERSION=0.4
+VERSION_FILE_URL=https://storage.googleapis.com/gcp-doctor/$(OBJECT_NAME_RELEASE_VERSION)
 
 build:
 	make -C ../.. tarfile
@@ -37,7 +38,7 @@ update-default:
 
 upload-wrapper:
 	# only update docker wrapper script if this version is newer ($(WRAPPER_VERSION))
-	@CUR_WRAPPER_VERSION=$$(curl -sf https://storage.googleapis.com/gcp-doctor/release-version | grep WRAPPER_VERSION | sed -e 's/.*=//'); \
+	@CUR_WRAPPER_VERSION=$$(curl -sf $(VERSION_FILE_URL) | grep WRAPPER_VERSION | sed -e 's/.*=//'); \
 	  if [ "$$CUR_WRAPPER_VERSION" != "$(WRAPPER_VERSION)" ]; then \
 	    echo "uploading new wrapper."; \
 	    gsutil -h "Content-Type: text/plain" -h "Cache-Control: max-age=300" cp $(BIN_DIR)/gcp-doctor-dockerized "gs://$(BUCKET_NAME)/gcp-doctor.sh"; \

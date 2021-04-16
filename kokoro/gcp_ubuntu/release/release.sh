@@ -15,3 +15,7 @@ docker login -u _json_key --password-stdin https://us-docker.pkg.dev \
   <"$KOKORO_KEYSTORE_DIR/75985_gcp-doctor-repo-kokoro"
 make -C docker/gcp-doctor build
 make -C docker/gcp-doctor push
+
+gcloud auth activate-service-account kokoro@gcp-doctor-repo.iam.gserviceaccount.com \
+  --key-file="$KOKORO_KEYSTORE_DIR/75985_gcp-doctor-repo-kokoro"
+make -C docker/gcp-doctor update-default
