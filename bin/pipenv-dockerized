@@ -21,6 +21,7 @@ exec docker run $USE_TTY \
   -e "HOME=$HOME" \
   -e "LANG=$LANG" \
   -e "SHELL=/bin/bash" \
+  -e "KOKORO_BUILD_NUMBER=$KOKORO_BUILD_NUMBER" \
   -v "$CWD:$CWD" \
   -v "$HOME/.config/gcloud:$HOME/.config/gcloud" \
   -v "$CWD/.pipenv-dockerized/home:$HOME" \
