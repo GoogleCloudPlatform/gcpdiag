@@ -1,4 +1,4 @@
-VERSION=0.11
+VERSION=0.12-test
 DIST_NAME=gcp-doctor-$(VERSION)
 SHELL=/bin/bash
 
@@ -41,6 +41,7 @@ release:
 	# you should first increase the minor version with a code review.
 	bumpversion --commit --tag --tag-message "Release v{new_version}" release
 	# push to the release branch and tag the release
+	git merge -s ours origin/release
 	git push origin HEAD:release
 	git push --tags
 	# trigger a release build
