@@ -41,7 +41,7 @@ release:
 	# you should first increase the minor version with a code review.
 	bumpversion --commit --tag --tag-message "Release v{new_version}" release
 	# push to the release branch and tag the release
-	git push origin release
+	git push origin HEAD:release
 	git push --tags
 	# trigger a release build
 	make -C gcp_doctor_google_internal trigger-release

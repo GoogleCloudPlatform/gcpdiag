@@ -11,4 +11,7 @@ pipenv-dockerized run make test
 pipenv-dockerized run make coverage-report
 pipenv-dockerized run make kokoro-build
 
-ls -lR $KOKORO_KEYSTORE_DIR
+docker login -u _json_key --password-stdin https://us-docker.pkg.dev \
+  <"$KOKORO_KEYSTORE_DIR/75985_gcp-doctor-repo-kokoro"
+make -C docker/gcp-doctor build
+make -C docker/gcp-doctor push
