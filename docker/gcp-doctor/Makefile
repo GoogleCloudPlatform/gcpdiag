@@ -1,5 +1,5 @@
 BIN_DIR=../../bin
-VERSION=0.14
+VERSION=0.15-test
 IMAGE=us-docker.pkg.dev/gcp-doctor-repo/google-internal/gcp-doctor
 BUCKET_NAME=gcp-doctor
 SHELL=/bin/bash
