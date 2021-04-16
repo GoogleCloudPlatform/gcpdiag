@@ -32,6 +32,10 @@ tarfile:
 	tar -C dist-tmp -czf dist/gcp-doctor-$(VERSION).tar.gz --owner=0 --group=0 gcp-doctor-$(VERSION)
 	rm -rf dist-tmp
 
+release:
+	bumpversion --tag --tag-message "Release v{new_version}" release
+	git push --tags
+
 ### Kokoro-specific (do not run interactively) ###
 
 kokoro-verify-user:
