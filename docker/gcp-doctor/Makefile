@@ -1,7 +1,8 @@
 BIN_DIR=../../bin
-VERSION=0.11
+VERSION=0.12-test
 IMAGE=us-docker.pkg.dev/gcp-doctor-repo/google-internal/gcp-doctor
 BUCKET_NAME=gcp-doctor
+SHELL=/bin/bash
 
 # "default-version" was the old name where we only put the version in the file
 # we changed to "release-version" with a new format: KEY=VALUE pairs (shell
