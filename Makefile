@@ -44,8 +44,6 @@ release:
 	git merge -s ours origin/release
 	git push origin HEAD:release
 	git push --tags
-	# trigger a release build
-	make -C gcp_doctor_google_internal trigger-release
 	# increment the version (and add back '-test')
 	bumpversion --commit minor
 	git push origin HEAD:refs/for/master
