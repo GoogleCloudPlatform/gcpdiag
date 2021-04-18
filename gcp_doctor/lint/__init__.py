@@ -39,6 +39,9 @@ class LintTest:
   def __hash__(self):
     return str(self.product + self.test_class.value + self.test_id).__hash__()
 
+  def __str__(self):
+    return self.product + '/' + self.test_class.value + '/' + self.test_id
+
 
 class LintReport:
   """Used by the test modules to report test results to the user."""
@@ -187,7 +190,7 @@ class LintTestRepository:
       self.register_test(test)
 
   def run_tests(self, context: models.Context, report: LintReport):
-    # TODO: sort the tests
+    self.tests.sort(key=str)
     for test in self.tests:
       test_report = report.test_start(test, context)
       try:
