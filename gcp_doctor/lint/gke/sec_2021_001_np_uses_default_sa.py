@@ -15,7 +15,7 @@ from gcp_doctor.queries import gke
 ROLE = 'roles/logging.logWriter'
 
 
-def run_test(context: models.Context, report: lint.LintReportTestInterface):
+def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   # Find all clusters.
   clusters = gke.get_clusters(context)
   if not clusters:

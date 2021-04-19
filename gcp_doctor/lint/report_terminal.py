@@ -58,7 +58,7 @@ class LintReportTerminal(lint.LintReport):
     self.file = file
     self.line_unfinished = False
     self.log_info_for_progress_only = log_info_for_progress_only
-    self.per_test_data = {}
+    self.per_rule_data = {}
     if file == sys.stdout:
       self.term = blessings.Terminal()
     else:
@@ -79,7 +79,7 @@ class LintReportTerminal(lint.LintReport):
       print('gcp-doctor ' + config.VERSION + '\n')
 
   def lint_start(self, context):
-    print(f'Starting lint tests ({context})...\n')
+    print(f'Starting lint inspection ({context})...\n')
 
   def terminal_update_line(self, text: str):
     """Update the current line on the terminal."""
@@ -115,8 +115,8 @@ class LintReportTerminal(lint.LintReport):
   def get_logging_handler(self):
     return _LintReportTerminalLoggingHandler(self)
 
-  def test_start(self, test: lint.LintTest, context: models.Context):
-    test_interface = super().test_start(test, context)
+  def rule_start(self, rule: lint.LintRule, context: models.Context):
+    rule_interface = super().rule_start(rule, context)
     bullet = ''
     if self.term.does_styling:
       bullet = _emoji_wrap('🔎') + ' '
@@ -124,26 +124,26 @@ class LintReportTerminal(lint.LintReport):
       bullet = '*  '
     self.terminal_print_line(
         bullet +
-        self.term.yellow(f'{test.product}/{test.test_class}/{test.test_id}') +
-        ': ' + f'{test.short_desc}')
-    return test_interface
+        self.term.yellow(f'{rule.product}/{rule.rule_class}/{rule.rule_id}') +
+        ': ' + f'{rule.short_desc}')
+    return rule_interface
 
-  def test_end(self, test: lint.LintTest, context: models.Context):
-    super().test_end(test, context)
+  def rule_end(self, rule: lint.LintRule, context: models.Context):
+    super().rule_end(rule, context)
     self.terminal_erase_line()
     self.terminal_print_line()
 
-    # If the test failed, add more information about the test.
-    if test in self.per_test_data and self.per_test_data[test]['failed_count']:
+    # If the rule failed, add more information about the rule.
+    if rule in self.per_rule_data and self.per_rule_data[rule]['failed_count']:
       width = self.term.width or 80
       if width > 80:
         width = 80
       self.terminal_print_line(
-          self.term.italic(self._wrap_indent(test.long_desc, '   ')))
+          self.term.italic(self._wrap_indent(rule.long_desc, '   ')))
       self.terminal_print_line()
 
   def add_skipped(self,
-                  test: lint.LintTest,
+                  rule: lint.LintRule,
                   context: models.Context,
                   resource: Optional[models.Resource],
                   reason: str,
@@ -164,7 +164,7 @@ class LintReportTerminal(lint.LintReport):
 
   @abc.abstractmethod
   def add_ok(self,
-             test: lint.LintTest,
+             rule: lint.LintRule,
              context: models.Context,
              resource: models.Resource,
              short_info: str = None):
@@ -178,13 +178,13 @@ class LintReportTerminal(lint.LintReport):
 
   @abc.abstractmethod
   def add_failed(self,
-                 test: lint.LintTest,
+                 rule: lint.LintRule,
                  context: models.Context,
                  resource: models.Resource,
                  reason: str,
                  short_info: str = None):
-    test_data = self.per_test_data.setdefault(test, {'failed_count': 0})
-    test_data['failed_count'] += 1
+    rule_data = self.per_rule_data.setdefault(rule, {'failed_count': 0})
+    rule_data['failed_count'] += 1
     if short_info:
       short_info = ' ' + short_info
     else:

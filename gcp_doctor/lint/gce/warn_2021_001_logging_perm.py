@@ -14,7 +14,7 @@ from gcp_doctor.queries import gce, iam
 ROLE = 'roles/logging.logWriter'
 
 
-def run_test(context: models.Context, report: lint.LintReportTestInterface):
+def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   instances = gce.get_instances(context)
   instances_count = 0
   for i in sorted(instances.values(), key=op.attrgetter('project_id', 'name')):

@@ -27,7 +27,7 @@ def cluster_max_size(cluster) -> int:
   return cluster_max_nodes
 
 
-def run_test(context: models.Context, report: lint.LintReportTestInterface):
+def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   clusters = gke.get_clusters(context)
   if not clusters:
     report.add_skipped(None, 'no clusters found')
