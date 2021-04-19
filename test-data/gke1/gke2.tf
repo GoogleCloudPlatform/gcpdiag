@@ -47,7 +47,8 @@ resource "google_project_iam_custom_role" "gke2_custom_role" {
     "logging.logEntries.create",
 
     #"stackdriver.resourceMetadata.writer"
-    "stackdriver.resourceMetadata.write"
+    "stackdriver.resourceMetadata.write",
+    "opsconfigmonitoring.resourceMetadata.list"
   ]
 }
 

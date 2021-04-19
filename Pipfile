@@ -21,6 +21,7 @@ yapf = "*"
 coverage = "*"
 bump2version = "*"
 pyinstaller = "*"
+pytest-forked = "*"
 
 # for vim:
 # pip install 'python-language-server[yapf,pyflakes,mccabe]'
