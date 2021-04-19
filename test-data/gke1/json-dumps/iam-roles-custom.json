@@ -32,10 +32,11 @@
         "monitoring.timeSeries.list",
         "monitoring.uptimeCheckConfigs.get",
         "monitoring.uptimeCheckConfigs.list",
+        "opsconfigmonitoring.resourceMetadata.list",
         "stackdriver.resourceMetadata.write"
       ],
       "stage": "GA",
-      "etag": "BwW6mdcd/Kk="
+      "etag": "BwXAVSZiOkU="
     },
     {
       "name": "projects/gcpd-gke-1-9b90/roles/gke3_custom_role",
