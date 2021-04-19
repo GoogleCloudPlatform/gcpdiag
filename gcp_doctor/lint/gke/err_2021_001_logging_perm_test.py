@@ -24,19 +24,19 @@ def get_api_stub(service_name: str, version: str):
 @mock.patch('gcp_doctor.queries.apis.get_api', new=get_api_stub)
 class Test:
 
-  def test_run_test(self):
+  def test_run_rule(self):
     context = models.Context(projects=[DUMMY_PROJECT_NAME])
     output = io.StringIO()
     report = report_terminal.LintReportTerminal(file=output)
-    test = lint.LintTest(product='test',
-                         test_class=lint.LintTestClass.ERR,
-                         test_id='9999_999',
+    rule = lint.LintRule(product='test',
+                         rule_class=lint.LintRuleClass.ERR,
+                         rule_id='9999_999',
                          short_desc='short description',
                          long_desc='long description',
-                         run_test_f=err_2021_001_logging_perm.run_test)
-    test_report = report.test_start(test, context)
-    test.run_test_f(context, test_report)
-    report.test_end(test, context)
+                         run_rule_f=err_2021_001_logging_perm.run_rule)
+    lint_report = report.rule_start(rule, context)
+    rule.run_rule_f(context, lint_report)
+    report.rule_end(rule, context)
     # yapf: disable
     assert (output.getvalue() == (
         '*  test/ERR/9999_999: short description\n'

@@ -11,7 +11,7 @@ from gcp_doctor.queries import gke, iam
 ROLE = 'roles/monitoring.metricWriter'
 
 
-def run_test(context: models.Context, report: lint.LintReportTestInterface):
+def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   # Find all clusters with monitoring enabled.
   clusters = gke.get_clusters(context)
   if not clusters:

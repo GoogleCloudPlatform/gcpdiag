@@ -27,9 +27,9 @@ def run(argv):
 
   # Initialize Context, Repository, and Tests
   context = models.Context(projects=args.project)
-  repo = lint.LintTestRepository()
-  repo.load_tests(gce)
-  repo.load_tests(gke)
+  repo = lint.LintRuleRepository()
+  repo.load_rules(gce)
+  repo.load_rules(gke)
   report = report_terminal.LintReportTerminal(
       log_info_for_progress_only=(args.verbose == 0))
 
@@ -46,7 +46,7 @@ def run(argv):
   report.banner()
   apis.login()
   report.lint_start(context)
-  repo.run_tests(context, report)
+  repo.run_rules(context, report)
 
   # (google internal) report usage information
   utils.report_usage_if_running_at_google('lint')
