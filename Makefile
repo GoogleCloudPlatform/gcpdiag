@@ -5,6 +5,9 @@ SHELL=/bin/bash
 test:
 	coverage run --include='gcp_doctor/*' -m pytest --forked
 
+snapshots:
+	pytest --snapshot-update
+
 coverage-report:
 	coverage report -m --omit="*/*_test.py,*/*_stub.py"
 

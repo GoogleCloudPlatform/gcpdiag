@@ -45,6 +45,14 @@ class NodePool(models.Resource):
     sa = self._get_service_account()
     return sa == 'default'
 
+  def has_workload_identity_enabled(self) -> bool:
+    # Empty ({}) workloadMetadataConfig means that 'Metadata concealment'
+    # (predecessor of Workload Identity) is enabled. That doesn't protect the
+    # default SA's token
+    # https://cloud.google.com/kubernetes-engine/docs/how-to/protecting-cluster-metadata#concealment
+    return 'config' in self._resource_data and bool(
+        self._resource_data['config'].get('workloadMetadataConfig'))
+
   @property
   def service_account(self) -> str:
     sa = self._get_service_account()
@@ -114,15 +122,15 @@ class Cluster(models.Resource):
     path = re.sub(r'/clusters/', '/', path)
     return path
 
+  def has_app_layer_enc_enabled(self) -> bool:
+    # state := 'DECRYPTED' | 'ENCRYPTED', keyName := 'full_path_to_key_resouce'
+    return self._resource_data['databaseEncryption'].get('state') == 'ENCRYPTED'
+
   def has_logging_enabled(self) -> bool:
     return self._resource_data['loggingService'] != 'none'
 
   def has_monitoring_enabled(self) -> bool:
     return self._resource_data['monitoringService'] != 'none'
-
-  def has_app_layer_enc_enabled(self) -> bool:
-    # state := 'DECRYPTED' | 'ENCRYPTED', keyName := 'full_path_to_key_resouce'
-    return self._resource_data['databaseEncryption'].get('state') == 'ENCRYPTED'
 
   @property
   def nodepools(self) -> Iterable[NodePool]:

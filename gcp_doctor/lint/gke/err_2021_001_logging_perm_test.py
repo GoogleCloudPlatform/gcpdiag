@@ -24,7 +24,7 @@ def get_api_stub(service_name: str, version: str):
 @mock.patch('gcp_doctor.queries.apis.get_api', new=get_api_stub)
 class Test:
 
-  def test_run_rule(self):
+  def test_run_rule(self, snapshot):
     context = models.Context(projects=[DUMMY_PROJECT_NAME])
     output = io.StringIO()
     report = report_terminal.LintReportTerminal(file=output)
@@ -37,14 +37,4 @@ class Test:
     lint_report = report.rule_start(rule, context)
     rule.run_rule_f(context, lint_report)
     report.rule_end(rule, context)
-    # yapf: disable
-    assert (output.getvalue() == (
-        '*  test/ERR/9999_999: short description\n'
-        '   - gcpd-gke-1-9b90/europe-west1/gke2/default-pool                       [ OK ]\n'
-        '   - gcpd-gke-1-9b90/europe-west1/gke3/default-pool                       [FAIL]\n'
-        '     service account: gke3sa@gcpd-gke-1-9b90.iam.gserviceaccount.com\n'
-        '     missing role: roles/logging.logWriter\n'
-        '   - gcpd-gke-1-9b90/europe-west4-a/gke1                                  [SKIP]\n'
-        '     logging disabled\n\n'
-        '   long description\n\n'
-    ))
+    snapshot.assert_match(output.getvalue(), 'output.txt')
