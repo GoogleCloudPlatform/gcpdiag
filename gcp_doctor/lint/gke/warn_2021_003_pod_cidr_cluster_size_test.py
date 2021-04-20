@@ -24,7 +24,7 @@ def get_api_stub(service_name: str, version: str):
 @mock.patch('gcp_doctor.queries.apis.get_api', new=get_api_stub)
 class Test:
 
-  def test_run_rule(self):
+  def test_run_rule(self, snapshot):
     context = models.Context(projects=[DUMMY_PROJECT_NAME])
     output = io.StringIO()
     report = report_terminal.LintReportTerminal(file=output)
@@ -38,20 +38,4 @@ class Test:
     lint_report = report.rule_start(rule, context)
     rule.run_rule_f(context, lint_report)
     report.rule_end(rule, context)
-    # yapf: disable
-    expected_result = (
-        '*  test/ERR/9999_999: short description',
-        '   - gcpd-gke-1-9b90/europe-west1/gke2'+
-        '                                    [ OK ] 3/1024 nodes used.',
-        '   - gcpd-gke-1-9b90/europe-west1/gke3'+
-        '                                    [ OK ] 3/1024 nodes used.',
-        '   - gcpd-gke-1-9b90/europe-west4-a/gke1'
-
-        '                                  [FAIL] 1/1 nodes used.',
-        '     Pod CIDR: 192.168.1.0/24. Test threshold: 1 (90%).',
-        '',
-        '   long description',
-        '',
-        '',
-    )
-    assert output.getvalue() == '\n'.join(expected_result)
+    snapshot.assert_match(output.getvalue(), 'output.txt')

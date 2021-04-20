@@ -21,9 +21,10 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not clusters:
     report.add_skipped(None, 'no clusters found')
   for _, c in sorted(clusters.items()):
-    # Verify service-account for every nodepool.
+    # Verify service-account for every standard nodepool.
     for np in c.nodepools:
-      if np.has_default_service_account():
+      if not np.has_workload_identity_enabled(
+      ) and np.has_default_service_account():
         report.add_failed(np, 'node pool uses the default GCE service account')
       else:
         report.add_ok(np)
