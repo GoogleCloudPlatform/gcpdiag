@@ -1,5 +1,5 @@
 # Lint as: python3
-"""GKE node pool uses default service account.
+"""GKE nodes w/o workload identity don't use the GCE default service account.
 
 The GCE default service account has more permissions than are required to run
 your Kubernetes Engine cluster. You should create and use a minimally privileged
@@ -23,8 +23,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   for _, c in sorted(clusters.items()):
     # Verify service-account for every standard nodepool.
     for np in c.nodepools:
-      if not np.has_workload_identity_enabled(
-      ) and np.has_default_service_account():
-        report.add_failed(np, 'node pool uses the default GCE service account')
+      if np.has_workload_identity_enabled():
+        report.add_skipped(np, 'workload identity enabled')
+      elif np.has_default_service_account():
+        report.add_failed(np, 'node pool uses the GCE default service account')
       else:
         report.add_ok(np)
