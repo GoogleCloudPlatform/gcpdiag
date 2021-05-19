@@ -118,6 +118,9 @@ class Resource(abc.ABC):
   def __str__(self):
     return self.get_full_path()
 
+  def __hash__(self):
+    return self.__str__().__hash__()
+
   @property
   def project_id(self) -> str:
     """Project id (not project number)."""

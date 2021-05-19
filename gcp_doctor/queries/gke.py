@@ -16,8 +16,9 @@ from gcp_doctor.queries import apis
 class NodePool(models.Resource):
   """Represents a GKE node pool."""
 
-  def __init__(self, project_id, resource_data):
-    super().__init__(project_id=project_id)
+  def __init__(self, cluster, resource_data):
+    super().__init__(project_id=cluster.project_id)
+    self._cluster = cluster
     self._resource_data = resource_data
 
   def _get_service_account(self) -> str:
@@ -69,6 +70,23 @@ class NodePool(models.Resource):
   def pod_ipv4_cidr_size(self) -> int:
     return self._resource_data['podIpv4CidrSize']
 
+  @property
+  def cluster(self) -> 'Cluster':
+    return self._cluster
+
+  # TODO(dwes): replace instance_group_names with instance_groups as soon as we
+  # have a model for instance groups in gce.py
+  @property
+  def instance_group_names(self) -> List[str]:
+    result = []
+    for url in self._resource_data.get('instanceGroupUrls', []):
+      m = re.search(r'/instanceGroupManagers/([^/]+)$', url)
+      if not m:
+        raise RuntimeError(
+            'can\'t parse selfLink of nodepool instanceGroupUrls: %s' % url)
+      result.append(m.group(1))
+    return result
+
 
 class Cluster(models.Resource):
   """Represents a GKE cluster.
@@ -80,6 +98,7 @@ class Cluster(models.Resource):
   def __init__(self, project_id, resource_data):
     super().__init__(project_id=project_id)
     self._resource_data = resource_data
+    self._nodepools = None
 
   @property
   def name(self) -> str:
@@ -134,10 +153,11 @@ class Cluster(models.Resource):
 
   @property
   def nodepools(self) -> Iterable[NodePool]:
-    nodepools: List[NodePool] = []
-    for n in self._resource_data.get('nodePools', []):
-      nodepools.append(NodePool(self.project_id, n))
-    return nodepools
+    if self._nodepools is None:
+      self._nodepools = []
+      for n in self._resource_data.get('nodePools', []):
+        self._nodepools.append(NodePool(self, n))
+    return self._nodepools
 
 
 @functools.lru_cache(maxsize=None)
