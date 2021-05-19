@@ -78,6 +78,20 @@ class Instance(models.Resource):
         return saccts[0]['email']
     return None
 
+  @functools.lru_cache(maxsize=None)
+  def _get_metadata_dict(self) -> Mapping[str, str]:
+    metadata = dict()
+    if 'metadata' in self._resource_data and 'items' in self._resource_data[
+        'metadata']:
+      for item in self._resource_data['metadata']['items']:
+        if 'key' in item and 'value' in item:
+          metadata[item['key']] = item['value']
+    return metadata
+
+  def get_metadata(self, key: str) -> str:
+    metadata_dict = self._get_metadata_dict()
+    return metadata_dict[key]
+
 
 @functools.lru_cache(maxsize=None)
 def get_instances(context: models.Context) -> Mapping[str, Instance]:
