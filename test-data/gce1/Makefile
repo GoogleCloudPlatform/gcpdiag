@@ -28,3 +28,18 @@ json-dumps/instances-empty.json:
 	$(CURL) -fsS \
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_EMPTY)/instances' \
 		| $(JSON_CLEANER) instances >$@
+
+define MONITORING_QUERY
+{ \
+  "query": "fetch gce_instance::compute.googleapis.com/instance/uptime_total \
+  | within 10m \
+  | group_by [resource.zone, metric.instance_name] \
+  | group_by 5m, [.mean, .count] \
+  " \
+}
+endef
+json-dumps/monitoring-query.json:
+	$(CURL) -fsS \
+		'https://monitoring.googleapis.com/v3/projects/$(PROJECT_ID)/timeSeries:query' \
+		--header "Content-Type: application/json" -X POST \
+		--data '$(MONITORING_QUERY)' >$@
