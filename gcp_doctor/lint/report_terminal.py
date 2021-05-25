@@ -54,10 +54,17 @@ class _LintReportTerminalLoggingHandler(logging.Handler):
 class LintReportTerminal(lint.LintReport):
   """LintReport implementation that outputs to the terminal."""
 
-  def __init__(self, file=sys.stdout, log_info_for_progress_only=True):
+  def __init__(self,
+               file=sys.stdout,
+               log_info_for_progress_only=True,
+               show_ok=True,
+               show_skipped=False):
     self.file = file
     self.line_unfinished = False
+    self.rule_has_results = False
     self.log_info_for_progress_only = log_info_for_progress_only
+    self.show_ok = show_ok
+    self.show_skipped = show_skipped
     self.per_rule_data = {}
     if file == sys.stdout:
       self.term = blessings.Terminal()
@@ -126,12 +133,14 @@ class LintReportTerminal(lint.LintReport):
         bullet +
         self.term.yellow(f'{rule.product}/{rule.rule_class}/{rule.rule_id}') +
         ': ' + f'{rule.short_desc}')
+    self.rule_has_results = False
     return rule_interface
 
   def rule_end(self, rule: lint.LintRule, context: models.Context):
     super().rule_end(rule, context)
     self.terminal_erase_line()
-    self.terminal_print_line()
+    if self.rule_has_results:
+      self.terminal_print_line()
 
     # If the rule failed, add more information about the rule.
     if rule in self.per_rule_data and self.per_rule_data[rule]['failed_count']:
@@ -148,6 +157,10 @@ class LintReportTerminal(lint.LintReport):
                   resource: Optional[models.Resource],
                   reason: str,
                   short_info: str = None):
+    if not self.show_skipped:
+      return
+
+    self.rule_has_results = True
     if short_info:
       short_info = ' ' + short_info
     else:
@@ -168,6 +181,11 @@ class LintReportTerminal(lint.LintReport):
              context: models.Context,
              resource: models.Resource,
              short_info: str = None):
+
+    if not self.show_ok:
+      return
+
+    self.rule_has_results = True
     if short_info:
       short_info = ' ' + short_info
     else:
@@ -183,6 +201,7 @@ class LintReportTerminal(lint.LintReport):
                  resource: models.Resource,
                  reason: str,
                  short_info: str = None):
+    self.rule_has_results = True
     rule_data = self.per_rule_data.setdefault(rule, {'failed_count': 0})
     rule_data['failed_count'] += 1
     if short_info:

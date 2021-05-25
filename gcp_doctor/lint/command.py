@@ -13,16 +13,39 @@ def run(argv):
   del argv
   parser = argparse.ArgumentParser(
       description='Run diagnostics in GCP projects.')
+
   parser.add_argument('--project',
                       action='append',
                       metavar='P',
                       required=True,
                       help='Project ID (can be specified multiple times)')
+
+  parser.add_argument('--show-skipped',
+                      help='Show skipped rules',
+                      action='store_true',
+                      default=False)
+
+  parser.add_argument('--hide-skipped',
+                      help=argparse.SUPPRESS,
+                      action='store_false',
+                      dest='show_skipped')
+
+  parser.add_argument('--hide-ok',
+                      help='Show skipped rules',
+                      action='store_true',
+                      default=False)
+
+  parser.add_argument('--show-ok',
+                      help=argparse.SUPPRESS,
+                      action='store_false',
+                      dest='hide_skipped')
+
   parser.add_argument('-v',
                       '--verbose',
                       action='count',
                       default=0,
                       help='Increase log verbosity')
+
   args = parser.parse_args()
 
   # Initialize Context, Repository, and Tests
@@ -31,7 +54,9 @@ def run(argv):
   repo.load_rules(gce)
   repo.load_rules(gke)
   report = report_terminal.LintReportTerminal(
-      log_info_for_progress_only=(args.verbose == 0))
+      log_info_for_progress_only=(args.verbose == 0),
+      show_ok=not args.hide_ok,
+      show_skipped=args.show_skipped)
 
   # Logging setup.
   logging_handler = report.get_logging_handler()
