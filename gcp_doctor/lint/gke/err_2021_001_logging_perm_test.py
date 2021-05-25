@@ -27,7 +27,7 @@ class Test:
   def test_run_rule(self, snapshot):
     context = models.Context(projects=[DUMMY_PROJECT_NAME])
     output = io.StringIO()
-    report = report_terminal.LintReportTerminal(file=output)
+    report = report_terminal.LintReportTerminal(file=output, show_skipped=True)
     rule = lint.LintRule(product='test',
                          rule_class=lint.LintRuleClass.ERR,
                          rule_id='9999_999',
