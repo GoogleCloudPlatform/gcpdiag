@@ -65,9 +65,10 @@ class TimeSeriesCollection(collections.abc.Mapping):
     return repr(self._data)
 
   def add_api_response(self, resource_data):
-    """The monitoring API returns paginated results, so we need to be able to add results
+    """Add results to an existing TimeSeriesCollection object.
 
-    to an existing TimeSeriesCollection object.
+    The monitoring API returns paginated results, so we need to be able to add
+    results to an existing TimeSeriesCollection object.
     """
 
     if 'timeSeriesData' not in resource_data:
@@ -158,6 +159,5 @@ def query(context: models.Context, query_str: str) -> TimeSeriesCollection:
         logging.debug('query run time: %s, pages: %d', end_time - start_time,
                       pages)
     except googleapiclient.errors.HttpError as err:
-      errstr = utils.http_error_message(err)
-      raise ValueError(f'can\'t query project {project_id}: {errstr}') from err
+      raise utils.GcpApiError(err) from err
   return time_series

@@ -19,9 +19,9 @@ def main():
   lint = importlib.import_module('gcp_doctor.lint')
   gce = importlib.import_module('gcp_doctor.lint.gce')
   gke = importlib.import_module('gcp_doctor.lint.gke')
-  repo = lint.LintTestRepository()
-  repo.load_tests(gce.__path__, gce.__name__)
-  repo.load_tests(gke.__path__, gke.__name__)
+  repo = lint.LintRuleRepository()
+  repo.load_rules(gce)
+  repo.load_rules(gke)
 
   print(
       'Product | Class | ID       | Short description                                            | Long description'
@@ -29,10 +29,10 @@ def main():
   print(
       '------- | ----- | -------- | ------------------------------------------------------------ | --------------------'
   )
-  for t in repo.tests:
+  for t in repo.rules:
     long_desc = ' '.join(t.long_desc.splitlines())
     print(
-        f'{t.product:7} | {t.test_class:5} | {t.test_id:8} | {t.short_desc:60} | {long_desc} '
+        f'{t.product:7} | {t.rule_class:5} | {t.rule_id:8} | {t.short_desc:60} | {long_desc} '
     )
 
 
