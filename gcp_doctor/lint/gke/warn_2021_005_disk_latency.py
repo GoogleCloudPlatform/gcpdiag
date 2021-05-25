@@ -8,20 +8,6 @@ used for multiple things: the operating system, docker images, container
 filesystems (usually including /tmp, etc.), and EmptyDir volumes.
 """
 
-# To add to the online description of the rule:
-#
-# To find the pod names with the containers that are restarting, you can use this
-# MQL query in Metrics explorer:
-#
-#     fetch k8s_container
-#     | metric 'kubernetes.io/container/restart_count'
-#     | filter (resource.namespace_name == 'kube-system' ||
-#               resource.namespace_name == 'istio-system')
-#     | align delta(1h)
-#     | every 1h
-#     | group_by [resource.pod_name], .sum
-#     | filter val() > 0
-
 from typing import Any, Dict
 
 from gcp_doctor import lint, models
