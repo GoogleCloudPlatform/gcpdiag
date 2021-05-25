@@ -29,12 +29,17 @@ from gcp_doctor.queries import gke, monitoring
 # TODO(dwes): this should be configurable, maybe with a --within command-line
 #             argument.
 WITHIN_DAYS = 3
+# SLO: at least 99.8% of minutes are good (3 minutes in a day)
+SLO_BAD_MINUTES = 3
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   clusters = gke.get_clusters(context)
   if not clusters:
     report.add_skipped(None, 'no clusters found')
+
+  within_str = 'within %dd, d\'%s\'' % (WITHIN_DAYS,
+                                        monitoring.period_aligned_now(60))
 
   # Fetch the metrics for all clusters.
   query_results = monitoring.query(
@@ -44,16 +49,11 @@ fetch k8s_container
 | filter (resource.namespace_name == 'kube-system' ||
           resource.namespace_name == 'istio-system') &&
          metadata.system.top_level_controller_type != 'Node'
-| within {WITHIN_DAYS}d
-# "bad minute" definition: number of restarts >= 1
-# note: we use 5 minutes to mitigate this issue:
-# https://yaqs.corp.google.com/eng/q/4852936461747486720
-| align delta(5m)
+| {within_str}
+| align delta(1m)
 | filter val() >= 1
 | group_by 1d, .count
-# SLO: every system container has at at leat 99.5% good minutes every day
-#      (max. 7 bad minutes -- 2 bad 5 minutes, see above)
-| filter val() > 2
+| filter val() > {SLO_BAD_MINUTES}
 | group_by [resource.project_id,
     cluster_name: resource.cluster_name,
     location: resource.location,

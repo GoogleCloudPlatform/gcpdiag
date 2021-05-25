@@ -54,12 +54,14 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   #
   # Note: we only group_by instance_id because of performance reasons (it gets
   # much slower if you group_by multiple labels)
+  within_str = 'within %dd, d\'%s\'' % (WITHIN_DAYS,
+                                        monitoring.period_aligned_now(60))
   query_results = monitoring.query(
       context, f"""
 fetch gce_instance
   | {{ metric 'compute.googleapis.com/guest/disk/operation_time' ;
       metric 'compute.googleapis.com/guest/disk/operation_count' }}
-  | within {WITHIN_DAYS}d
+  | {within_str}
   | group_by [resource.instance_id], .sum()
   | every 1m
   | ratio

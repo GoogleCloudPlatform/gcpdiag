@@ -4,6 +4,7 @@
 import collections.abc
 import datetime
 import logging
+import time
 from typing import Any, List, Mapping
 
 import googleapiclient.errors
@@ -28,6 +29,19 @@ def _gcp_typed_values_to_python_list(
     else:
       raise RuntimeError('TypedValue type not supported: %s' % (val.keys()))
   return out_list
+
+
+def period_aligned_now(period_seconds: int) -> str:
+  """Return a MQL date string for the current timestamp aligned to the given period.
+
+  This will return "now - now%period" in a MQL-parseable date string and is useful
+  to get stable results. See also here for an explanation:
+  https://yaqs.corp.google.com/eng/q/4852936461747486720#a1
+  """
+
+  now = time.time()
+  now -= now % period_seconds
+  return time.strftime('%Y/%m/%d-%H:%M:%S+00:00', time.gmtime(now))
 
 
 class TimeSeriesCollection(collections.abc.Mapping):

@@ -5,7 +5,7 @@ import functools
 import ipaddress
 import logging
 import re
-from typing import Dict, Iterable, List, Mapping
+from typing import Dict, Iterable, List, Mapping, Optional
 
 import googleapiclient.errors
 
@@ -120,6 +120,13 @@ class Cluster(models.Resource):
   @property
   def master_version(self) -> str:
     return self._resource_data['currentMasterVersion']
+
+  @property
+  def release_channel(self) -> Optional[str]:
+    try:
+      return self._resource_data['releaseChannel']['channel']
+    except KeyError:
+      return None
 
   @property
   def app_layer_sec_key(self) -> str:

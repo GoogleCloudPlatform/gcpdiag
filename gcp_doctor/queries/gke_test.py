@@ -32,6 +32,15 @@ class TestCluster:
     clusters = gke.get_clusters(context)
     assert DUMMY_CLUSTER1_NAME in clusters and len(clusters) == 1
 
+  def test_cluster_properties(self):
+    """verify cluster property methods."""
+    context = models.Context(projects=[DUMMY_PROJECT_NAME])
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    assert c.name == 'gke1'
+    assert c.master_version == '1.18.16-gke.502'
+    assert c.release_channel == 'REGULAR'
+
   def test_get_path_regional(self):
     """get_full_path and get_short_path should return correct results with regional clusters."""
     context = models.Context(projects=[DUMMY_PROJECT_NAME])
