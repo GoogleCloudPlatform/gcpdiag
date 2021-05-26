@@ -32,17 +32,19 @@ WITHIN_DAYS = 3
 # SLO: at least 99.8% of minutes are good (3 minutes in a day)
 SLO_BAD_MINUTES = 3
 
+_prefetched_query_results: monitoring.TimeSeriesCollection
 
-def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
+
+def prefetch_rule(context: models.Context):
   clusters = gke.get_clusters(context)
   if not clusters:
-    report.add_skipped(None, 'no clusters found')
-
-  within_str = 'within %dd, d\'%s\'' % (WITHIN_DAYS,
-                                        monitoring.period_aligned_now(60))
+    return
 
   # Fetch the metrics for all clusters.
-  query_results = monitoring.query(
+  global _prefetched_query_results
+  within_str = 'within %dd, d\'%s\'' % (WITHIN_DAYS,
+                                        monitoring.period_aligned_now(60))
+  _prefetched_query_results = monitoring.query(
       context, f"""
 fetch k8s_container
 | metric 'kubernetes.io/container/restart_count'
@@ -60,9 +62,17 @@ fetch k8s_container
     controller: metadata.system.top_level_controller_name], [ .count ]
   """)
 
+
+def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
+  clusters = gke.get_clusters(context)
+  if not clusters:
+    report.add_skipped(None, 'no clusters found')
+    return
+
   # Organize the metrics per-cluster.
   per_cluster_results: Dict[tuple, Dict[str, int]] = dict()
-  for ts in query_results.values():
+  global _prefetched_query_results
+  for ts in _prefetched_query_results.values():
     cluster_key = (ts['labels']['resource.project_id'],
                    ts['labels']['location'], ts['labels']['cluster_name'])
     cluster_values = per_cluster_results.setdefault(cluster_key, dict())

@@ -9,6 +9,7 @@ import pkgutil
 import sys
 from typing import Dict
 
+import google_auth_httplib2
 import googleapiclient.http
 import httplib2
 from google.auth import exceptions
@@ -71,13 +72,6 @@ def _get_credentials():
   return _credentials
 
 
-def _request_builder(http, *args, **kwargs):
-  if os.getenv('GOOGLE_AUTH_TOKEN'):
-    headers = kwargs.get('headers', {})
-    headers['x-goog-iam-authorization-token'] = os.getenv('GOOGLE_AUTH_TOKEN')
-  return googleapiclient.http.HttpRequest(http, *args, **kwargs)
-
-
 def login():
   """Force GCP login (this otherwise happens on the first get_api call)."""
   _get_credentials()
@@ -103,6 +97,18 @@ def get_user_email() -> str:
 @functools.lru_cache(maxsize=None)
 def get_api(service_name: str, version: str):
   credentials = _get_credentials()
+
+  def _request_builder(http, *args, **kwargs):
+    del http
+    if os.getenv('GOOGLE_AUTH_TOKEN'):
+      headers = kwargs.get('headers', {})
+      headers['x-goog-iam-authorization-token'] = os.getenv('GOOGLE_AUTH_TOKEN')
+    # thread safety: create a new AuthorizedHttp object for every request
+    # https://github.com/googleapis/google-api-python-client/blob/master/docs/thread_safety.md
+    new_http = google_auth_httplib2.AuthorizedHttp(credentials,
+                                                   http=httplib2.Http())
+    return googleapiclient.http.HttpRequest(new_http, *args, **kwargs)
+
   api = discovery.build(service_name,
                         version,
                         cache_discovery=False,

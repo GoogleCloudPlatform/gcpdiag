@@ -2,6 +2,7 @@
 """lint command: find potential issues in GCP projects."""
 
 import abc
+import concurrent.futures
 import dataclasses
 import enum
 import importlib
@@ -14,6 +15,8 @@ from typing import List, Optional
 
 from gcp_doctor import models
 from gcp_doctor.utils import GcpApiError
+
+MAX_WORKERS = 5
 
 
 class LintRuleClass(enum.Enum):
@@ -35,6 +38,8 @@ class LintRule:
   short_desc: str
   long_desc: str
   run_rule_f: Callable
+  prefetch_rule_f: Optional[Callable] = None
+  prefetch_rule_future: Optional[concurrent.futures.Future] = None
 
   def __hash__(self):
     return str(self.product + self.rule_class.value + self.rule_id).__hash__()
@@ -163,6 +168,13 @@ class LintRuleRepository:
       if not run_rule_f:
         raise RuntimeError(f'module {module} doesn\'t have a run_rule function')
 
+      # Get a reference to the prefetch_rule() function.
+      prefetch_rule_f = None
+      for f_name, f in inspect.getmembers(module, inspect.isfunction):
+        if f_name == 'prefetch_rule':
+          prefetch_rule_f = f
+          break
+
       # Get module docstring.
       doc = inspect.getdoc(module)
       if not doc:
@@ -184,19 +196,35 @@ class LintRuleRepository:
                       rule_class=LintRuleClass(rule_class.upper()),
                       rule_id=rule_id,
                       run_rule_f=run_rule_f,
+                      prefetch_rule_f=prefetch_rule_f,
                       short_desc=short_desc,
                       long_desc=long_desc)
 
       self.register_rule(rule)
 
   def run_rules(self, context: models.Context, report: LintReport):
-    self.rules.sort(key=str)
-    for rule in self.rules:
-      rule_report = report.rule_start(rule, context)
-      try:
-        rule.run_rule_f(context, rule_report)
-      except (ValueError) as e:
-        report.add_skipped(rule, context, None, str(e))
-      except (GcpApiError) as api_error:
-        report.add_skipped(rule, context, None, str(api_error))
-      report.rule_end(rule, context)
+    # Run the "prefetch_rule" functions with multiple worker threads to speed up
+    # execution of the "run_rule" executions later.
+    with concurrent.futures.ThreadPoolExecutor(
+        max_workers=MAX_WORKERS) as prefetch_executor:
+      for rule in self.rules:
+        if rule.prefetch_rule_f:
+          rule.prefetch_rule_future = prefetch_executor.submit(
+              rule.prefetch_rule_f, context)
+
+      self.rules.sort(key=str)
+      for rule in self.rules:
+        rule_report = report.rule_start(rule, context)
+
+        if rule.prefetch_rule_future and rule.prefetch_rule_future.running():
+          # Make sure that the prefetch has finished executing.
+          logging.info('waiting for query results')
+          rule.prefetch_rule_future.result()
+
+        try:
+          rule.run_rule_f(context, rule_report)
+        except (ValueError) as e:
+          report.add_skipped(rule, context, None, str(e))
+        except (GcpApiError) as api_error:
+          report.add_skipped(rule, context, None, str(api_error))
+        report.rule_end(rule, context)

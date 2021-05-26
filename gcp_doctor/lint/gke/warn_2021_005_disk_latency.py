@@ -22,11 +22,40 @@ SLO_BAD_MINUTES_RATIO = 0.005
 # If we have less than this minutes measured, skip
 SLO_VALID_MINUTES = 12 * 60
 
+_prefetched_query_results: monitoring.TimeSeriesCollection
+
+
+def prefetch_rule(context: models.Context):
+  # Fetch the metrics for all nodes.
+  #
+  # Note: we only group_by instance_id because of performance reasons (it gets
+  # much slower if you group_by multiple labels)
+  clusters = gke.get_clusters(context)
+  if not clusters:
+    return
+
+  within_str = 'within %dd, d\'%s\'' % (WITHIN_DAYS,
+                                        monitoring.period_aligned_now(60))
+  global _prefetched_query_results
+  _prefetched_query_results = monitoring.query(
+      context, f"""
+fetch gce_instance
+  | {{ metric 'compute.googleapis.com/guest/disk/operation_time' ;
+      metric 'compute.googleapis.com/guest/disk/operation_count' }}
+  | {within_str}
+  | group_by [resource.instance_id], .sum()
+  | every 1m
+  | ratio
+  | value(val() > cast_units({SLO_LATENCY_MS}, "ms"))
+  | group_by 1d, [ .count_true, .count ]
+  """)
+
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   clusters = gke.get_clusters(context)
   if not clusters:
     report.add_skipped(None, 'no clusters found')
+    return
 
   # Create a mapping from instance id to cluster so that we can link back the
   # instance metrics to the clusters.
@@ -50,28 +79,10 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     cluster_id = (c.project_id, c.location, c.name)
     cluster_id_to_cluster[cluster_id] = c
 
-  # Fetch the metrics for all nodes.
-  #
-  # Note: we only group_by instance_id because of performance reasons (it gets
-  # much slower if you group_by multiple labels)
-  within_str = 'within %dd, d\'%s\'' % (WITHIN_DAYS,
-                                        monitoring.period_aligned_now(60))
-  query_results = monitoring.query(
-      context, f"""
-fetch gce_instance
-  | {{ metric 'compute.googleapis.com/guest/disk/operation_time' ;
-      metric 'compute.googleapis.com/guest/disk/operation_count' }}
-  | {within_str}
-  | group_by [resource.instance_id], .sum()
-  | every 1m
-  | ratio
-  | value(val() > cast_units({SLO_LATENCY_MS}, "ms"))
-  | group_by 1d, [ .count_true, .count ]
-  """)
-
   # Organize data per-cluster.
   per_cluster_results: Dict[gke.Cluster, Dict[str, Any]] = dict()
-  for ts in query_results.values():
+  global _prefetched_query_results
+  for ts in _prefetched_query_results.values():
     instance_id = ts['labels']['resource.instance_id']
     try:
       cluster_id = instance_id_to_cluster_id[instance_id]
