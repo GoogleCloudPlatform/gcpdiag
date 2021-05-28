@@ -236,9 +236,9 @@ class LintRuleRepository:
       for rule in self.rules:
         rule_report = report.rule_start(rule, context)
 
-        if rule.prefetch_rule_future and rule.prefetch_rule_future.running():
-          # Make sure that the prefetch has finished executing.
-          logging.info('waiting for query results')
+        if rule.prefetch_rule_future:
+          if rule.prefetch_rule_future.running():
+            logging.info('waiting for query results')
           rule.prefetch_rule_future.result()
 
         try:
