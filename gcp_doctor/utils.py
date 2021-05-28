@@ -117,5 +117,6 @@ def report_usage_if_running_at_google(command, details=None):
         details = {}
       details['version'] = config.VERSION
       cta_client.submit(user, 'gcp-doctor', command, details)
+    print('How good were the results? https://forms.gle/jG1dUdkxhP2s5ced6')
   except RuntimeError:
     pass

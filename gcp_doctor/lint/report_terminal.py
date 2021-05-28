@@ -1,7 +1,6 @@
 # Lint as: python3
 """LintReport implementation that outputs to the terminal."""
 
-import abc
 import logging
 import os
 import sys
@@ -59,6 +58,7 @@ class LintReportTerminal(lint.LintReport):
                log_info_for_progress_only=True,
                show_ok=True,
                show_skipped=False):
+    super().__init__()
     self.file = file
     self.line_unfinished = False
     self.rule_has_results = False
@@ -157,9 +157,9 @@ class LintReportTerminal(lint.LintReport):
                   resource: Optional[models.Resource],
                   reason: str,
                   short_info: str = None):
+    super().add_skipped(rule, context, resource, reason, short_info)
     if not self.show_skipped:
       return
-
     self.rule_has_results = True
     if short_info:
       short_info = ' ' + short_info
@@ -175,16 +175,14 @@ class LintReportTerminal(lint.LintReport):
                                ('(' + reason + ')').ljust(OUTPUT_WIDTH + 2) +
                                ' [SKIP]' + short_info)
 
-  @abc.abstractmethod
   def add_ok(self,
              rule: lint.LintRule,
              context: models.Context,
              resource: models.Resource,
              short_info: str = None):
-
+    super().add_ok(rule, context, resource, short_info)
     if not self.show_ok:
       return
-
     self.rule_has_results = True
     if short_info:
       short_info = ' ' + short_info
@@ -194,13 +192,13 @@ class LintReportTerminal(lint.LintReport):
                              resource.get_short_path().ljust(OUTPUT_WIDTH) +
                              ' [' + self.term.green(' OK ') + ']' + short_info)
 
-  @abc.abstractmethod
   def add_failed(self,
                  rule: lint.LintRule,
                  context: models.Context,
                  resource: models.Resource,
                  reason: str,
                  short_info: str = None):
+    super().add_failed(rule, context, resource, reason, short_info)
     self.rule_has_results = True
     rule_data = self.per_rule_data.setdefault(rule, {'failed_count': 0})
     rule_data['failed_count'] += 1
@@ -212,3 +210,17 @@ class LintReportTerminal(lint.LintReport):
                              resource.get_short_path().ljust(OUTPUT_WIDTH) +
                              ' [' + self.term.red('FAIL') + ']' + short_info)
     self.terminal_print_line(textwrap.indent(reason, '     '))
+
+  def finish(self, context: models.Context):
+    exit_code = super().finish(context)
+    totals = {
+        'skipped': 0,
+        'ok': 0,
+        'failed': 0,
+    }
+    for rule in self.rules_report.values():
+      totals[rule['overall_status']] += 1
+    print(
+        f"Rules summary: {totals['skipped']} skipped, {totals['ok']} ok, {totals['failed']} failed"
+    )
+    return exit_code
