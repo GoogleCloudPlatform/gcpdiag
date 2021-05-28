@@ -3,13 +3,14 @@
 
 import argparse
 import logging
+import sys
 
 from gcp_doctor import lint, models, utils
 from gcp_doctor.lint import gce, gke, report_terminal
 from gcp_doctor.queries import apis
 
 
-def run(argv):
+def run(argv) -> int:
   del argv
   parser = argparse.ArgumentParser(
       description='Run diagnostics in GCP projects.')
@@ -48,7 +49,7 @@ def run(argv):
 
   args = parser.parse_args()
 
-  # Initialize Context, Repository, and Tests
+  # Initialize Context, Repository, and Tests.
   context = models.Context(projects=args.project)
   repo = lint.LintRuleRepository()
   repo.load_rules(gce)
@@ -71,7 +72,13 @@ def run(argv):
   report.banner()
   apis.login()
   report.lint_start(context)
-  repo.run_rules(context, report)
+  exit_code = repo.run_rules(context, report)
 
-  # (google internal) report usage information
-  utils.report_usage_if_running_at_google('lint')
+  # (google internal) Report usage information.
+  details = {
+      str(k): v['overall_status'] for k, v in report.rules_report.items()
+  }
+  utils.report_usage_if_running_at_google('lint', details)
+
+  # Exit 0 if there are no failed rules.
+  sys.exit(exit_code)

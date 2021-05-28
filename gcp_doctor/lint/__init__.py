@@ -11,7 +11,7 @@ import logging
 import pkgutil
 import re
 from collections.abc import Callable
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 from gcp_doctor import models
 from gcp_doctor.utils import GcpApiError
@@ -51,6 +51,11 @@ class LintRule:
 class LintReport:
   """Represent a lint report, which can be terminal-based, or (in the future) JSON."""
 
+  rules_report: Dict[LintRule, Dict[str, Any]]
+
+  def __init__(self):
+    self.rules_report = dict()
+
   def rule_start(self, rule: LintRule, context: models.Context):
     """Called when a rule run is started with a context."""
     return LintReportRuleInterface(self, rule, context)
@@ -66,7 +71,7 @@ class LintReport:
                   resource: Optional[models.Resource],
                   reason: str,
                   short_info: str = None):
-    pass
+    self.rules_report.setdefault(rule, {'overall_status': 'skipped'})
 
   @abc.abstractmethod
   def add_ok(self,
@@ -74,7 +79,9 @@ class LintReport:
              context: models.Context,
              resource: models.Resource,
              short_info: str = None):
-    pass
+    rreport = self.rules_report.setdefault(rule, {'overall_status': 'ok'})
+    if rreport['overall_status'] == 'skipped':
+      rreport['overall_status'] = 'ok'
 
   @abc.abstractmethod
   def add_failed(self,
@@ -83,7 +90,20 @@ class LintReport:
                  resource: models.Resource,
                  reason: str,
                  short_info: str = None):
-    pass
+    rreport = self.rules_report.setdefault(rule, {'overall_status': 'ok'})
+    if rreport['overall_status'] in ['skipped', 'ok']:
+      rreport['overall_status'] = 'failed'
+
+  def finish(self, context: models.Context) -> int:
+    """Report that the execution of the lint rules has finished.
+
+    The return value is the recommended exit value for the main script.
+    """
+    del context
+    # did any rule fail? Then exit with 1, otherwise 0.
+    if any(r['overall_status'] == 'failed' for r in self.rules_report.values()):
+      return 1
+    return 0
 
 
 class LintReportRuleInterface:
@@ -202,7 +222,7 @@ class LintRuleRepository:
 
       self.register_rule(rule)
 
-  def run_rules(self, context: models.Context, report: LintReport):
+  def run_rules(self, context: models.Context, report: LintReport) -> int:
     # Run the "prefetch_rule" functions with multiple worker threads to speed up
     # execution of the "run_rule" executions later.
     with concurrent.futures.ThreadPoolExecutor(
@@ -228,3 +248,4 @@ class LintRuleRepository:
         except (GcpApiError) as api_error:
           report.add_skipped(rule, context, None, str(api_error))
         report.rule_end(rule, context)
+    return report.finish(context)
