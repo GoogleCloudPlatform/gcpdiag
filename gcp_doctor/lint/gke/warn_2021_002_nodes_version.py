@@ -16,6 +16,10 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not clusters:
     report.add_skipped(None, 'no clusters found')
   for _, c in sorted(clusters.items()):
+    if c.release_channel:
+      report.add_skipped(c, 'release channel: ' + c.release_channel)
+      continue
+
     valid_node_versions = gke.get_valid_node_versions(c.project_id, c.location)
     for np in c.nodepools:
       if np.version not in valid_node_versions:
