@@ -20,7 +20,7 @@ SLO_LATENCY_MS = 100
 # SLO: at least 99.5% of minutes are good (7 minutes in a day)
 SLO_BAD_MINUTES_RATIO = 0.005
 # If we have less than this minutes measured, skip
-SLO_VALID_MINUTES = 12 * 60
+SLO_VALID_MINUTES_PER_DAY = 12 * 60
 
 _prefetched_query_results: monitoring.TimeSeriesCollection
 
@@ -104,7 +104,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     for day_value in ts['values']:
       total_minutes_bad += day_value[0]
       total_minutes += day_value[1]
-      if day_value[1] > SLO_VALID_MINUTES:
+      if day_value[1] > SLO_VALID_MINUTES_PER_DAY:
         cluster_results['valid'] = 1
         if day_value[0] / day_value[1] > SLO_BAD_MINUTES_RATIO:
           slo_missed = 1
