@@ -21,6 +21,10 @@ class Instance(models.Resource):
     self._resource_data = resource_data
 
   @property
+  def id(self) -> str:
+    return self._resource_data['id']
+
+  @property
   def name(self) -> str:
     return self._resource_data['name']
 
