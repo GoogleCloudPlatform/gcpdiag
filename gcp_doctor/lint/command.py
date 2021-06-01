@@ -32,7 +32,7 @@ def run(argv) -> int:
                       dest='show_skipped')
 
   parser.add_argument('--hide-ok',
-                      help='Show skipped rules',
+                      help='Hide rules with result OK',
                       action='store_true',
                       default=False)
 
