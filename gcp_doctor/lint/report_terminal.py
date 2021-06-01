@@ -220,6 +220,8 @@ class LintReportTerminal(lint.LintReport):
     }
     for rule in self.rules_report.values():
       totals[rule['overall_status']] += 1
+    if not self.rule_has_results:
+      self.terminal_print_line()
     print(
         f"Rules summary: {totals['skipped']} skipped, {totals['ok']} ok, {totals['failed']} failed"
     )
