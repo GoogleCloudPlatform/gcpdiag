@@ -115,7 +115,7 @@ class Cluster(models.Resource):
 
   @property
   def current_node_count(self) -> int:
-    return self._resource_data['currentNodeCount']
+    return self._resource_data.get('currentNodeCount', 0)
 
   @property
   def master_version(self) -> str:
