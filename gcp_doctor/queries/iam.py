@@ -111,10 +111,11 @@ class ProjectPolicy:
     member_policy = self._policy['by_member'][member]
     if 'permissions' not in member_policy and 'roles' in member_policy:
       # lazy-initialize exploded roles in 'permissions'
+      permissions_dict = {}
       for role in member_policy['roles']:
-        permissions = self._get_role_permissions(role)
-        permissions_dict = {k: 1 for k in permissions}
-        member_policy['permissions'] = permissions_dict
+        for p in self._get_role_permissions(role):
+          permissions_dict[p] = 1
+      member_policy['permissions'] = permissions_dict
 
   def get_member_permissions(self, member: str) -> List[str]:
     """Return permisions for an member (either a user or serviceAccount).
