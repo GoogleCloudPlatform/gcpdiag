@@ -1,7 +1,6 @@
 # Lint as: python3
 """Queries related to GCP Kubernetes Engine clusters."""
 
-import functools
 import ipaddress
 import logging
 import re
@@ -9,7 +8,7 @@ from typing import Dict, Iterable, List, Mapping, Optional
 
 import googleapiclient.errors
 
-from gcp_doctor import config, models, utils
+from gcp_doctor import cache, config, models, utils
 from gcp_doctor.queries import apis
 
 
@@ -167,7 +166,7 @@ class Cluster(models.Resource):
     return self._nodepools
 
 
-@functools.lru_cache(maxsize=None)
+@cache.cached_api_call
 def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
   """Get a list of Cluster matching the given context, indexed by cluster name."""
   clusters: Dict[str, Cluster] = {}
@@ -198,7 +197,7 @@ def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
   return clusters
 
 
-@functools.lru_cache(maxsize=None)
+@cache.cached_api_call
 def _get_server_config(project_id: str, location: str):
   container_api = apis.get_api('container', 'v1')
   name = f'projects/{project_id}/locations/{location}'
