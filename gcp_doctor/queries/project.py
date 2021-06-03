@@ -1,7 +1,6 @@
 # Lint as: python3
 """Queries related to GCP Projects."""
 
-import functools
 import logging
 import re
 from typing import Dict, Mapping
@@ -63,22 +62,12 @@ class Project():
     path = self._id + '/' + self.name
     return path
 
-  def __init__(self, project_id):
-    gce_api = apis.get_api('compute', 'v1')
-    query = gce_api.projects().get(project=project_id)
-    logging.info('fetching data for project %s', project_id)
-
-    try:
-      response = query.execute(num_retries=config.API_RETRIES)
-    except googleapiclient.errors.HttpError as err:
-      raise GcpApiError(err) from err
-
+  def __init__(self, project_id, resource_data):
     self._id = project_id
-    self._resource_data = response
+    self._resource_data = resource_data
 
 
-# Project IDs and numbers can't be changed, so use the disk cache.
-@diskcache.memoize()
+@cache.cached_api_call(expire=config.STATIC_DOCUMENTS_EXPIRY_SECONDS)
 def get_project_nr(project_id: str) -> int:
   logging.info('retrieving project nr. of project %s', project_id)
   crm_api = apis.get_api('cloudresourcemanager', 'v1')
@@ -90,6 +79,13 @@ def get_project_nr(project_id: str) -> int:
     raise ValueError(f'unknown project: {project_id}')
 
 
-@functools.lru_cache(maxsize=None)
+@cache.cached_api_call(in_memory=True)
 def get_project(project_id: str) -> Project:
-  return Project(project_id=project_id)
+  gce_api = apis.get_api('compute', 'v1')
+  query = gce_api.projects().get(project=project_id)
+  logging.info('fetching data for project %s', project_id)
+  try:
+    response = query.execute(num_retries=config.API_RETRIES)
+  except googleapiclient.errors.HttpError as err:
+    raise GcpApiError(err) from err
+  return Project(project_id=project_id, resource_data=response)

@@ -1,30 +1,51 @@
 # Lint as: python3
 """Queries related to GCP Kubernetes Engine clusters."""
 
-import functools
 import logging
-from typing import Any, ClassVar, Dict, List, Mapping
+from typing import Any, Dict, List, Mapping
 
 from gcp_doctor import cache, config
 from gcp_doctor.queries import apis
 
+_predefined_roles: Dict[str, Any] = {}
+_predefined_roles_initialized: bool = False
 
-@functools.lru_cache(maxsize=None)
-def _fetch_roles(parent: str) -> Mapping[str, Any]:
-  # Try fetching predefined roles from disk cache.
-  if parent == '':
-    with cache.get_cache() as diskcache:
-      cached_roles = diskcache.get('iam_predefined_roles')
-      if cached_roles:
-        return cached_roles
 
-  roles: Dict[str, Any] = {}
-  logging.info('fetching IAM roles: %s', parent or 'predefined')
+def _get_predefined_roles() -> Mapping[str, Any]:
+  """Get the list of predefined roles and keep it in memory."""
+  global _predefined_roles
+  global _predefined_roles_initialized
+  if not _predefined_roles_initialized:
+    _predefined_roles = _fetch_predefined_roles()
+    _predefined_roles_initialized = True
+  return _predefined_roles
+
+
+@cache.cached_api_call(expire=config.STATIC_DOCUMENTS_EXPIRY_SECONDS)
+def _fetch_predefined_roles() -> Mapping[str, Any]:
+  logging.info('fetching IAM roles: predefined')
   iam_api = apis.get_api('iam', 'v1')
-  if parent == '':
-    roles_api = iam_api.roles()
-  else:
-    roles_api = iam_api.projects().roles()
+  roles_api = iam_api.roles()
+  request = roles_api.list(parent='', view='FULL')
+  roles: Dict[str, Any] = {}
+  while True:
+    response = request.execute(num_retries=config.API_RETRIES)
+    for role in response.get('roles', []):
+      name = str(role['name'])
+      roles[name] = role
+    request = roles_api.list_next(previous_request=request,
+                                  previous_response=response)
+    if request is None:
+      break
+  return roles
+
+
+# Note: caching is done with get_project_policy
+def _fetch_roles(parent: str) -> Mapping[str, Any]:
+  roles: Dict[str, Any] = {}
+  logging.info('fetching IAM roles: %s', parent)
+  iam_api = apis.get_api('iam', 'v1')
+  roles_api = iam_api.projects().roles()
   request = roles_api.list(parent=parent, view='FULL')
   while True:
     response = request.execute(num_retries=config.API_RETRIES)
@@ -35,15 +56,27 @@ def _fetch_roles(parent: str) -> Mapping[str, Any]:
                                   previous_response=response)
     if request is None:
       break
-
-  # Store predefined roles in disk cache.
-  if parent == '':
-    with cache.get_cache() as diskcache:
-      diskcache.set('iam_predefined_roles',
-                    roles,
-                    expire=config.STATIC_DOCUMENTS_EXPIRY_SECONDS)
-
   return roles
+
+
+# Note: caching is done with get_project_policy
+def _fetch_policy(project_id: str):
+  logging.info('fetching IAM policy of project %s', project_id)
+  crm_api = apis.get_api('cloudresourcemanager', 'v1')
+  request = crm_api.projects().getIamPolicy(resource=project_id)
+  response = request.execute()
+  policy: Dict[str, Any] = {
+      'by_member': {},
+  }
+  if not 'bindings' in response:
+    return
+  for binding in response['bindings']:
+    if not 'role' in binding or not 'members' in binding:
+      continue
+    for member in binding['members']:
+      policy['by_member'].setdefault(member, {'roles': {}})
+      policy['by_member'][member]['roles'][binding['role']] = 1
+  return policy
 
 
 class ProjectPolicy:
@@ -57,45 +90,14 @@ class ProjectPolicy:
   """
   _project_id: str
   _policy: Dict[str, Any]
-  _policy_initialized: bool = False
-  _PREDEFINED_ROLES: ClassVar[Mapping[str, Mapping[str, Any]]]
-  _PREDEFINED_ROLES_INITIALIZED: ClassVar[bool] = False
   _custom_roles: Mapping[str, Mapping[str, Any]]
-  _custom_roles_initialized: bool = False
-
-  def _init_policy(self):
-    if not self._policy_initialized:
-      logging.info('fetching IAM policy of project %s', self._project_id)
-      crm_api = apis.get_api('cloudresourcemanager', 'v1')
-      request = crm_api.projects().getIamPolicy(resource=self._project_id)
-      response = request.execute()
-      self._policy_initialized = True
-      self._policy = {
-          'by_member': {},
-      }
-      if not 'bindings' in response:
-        return
-      for binding in response['bindings']:
-        if not 'role' in binding or not 'members' in binding:
-          continue
-        for member in binding['members']:
-          self._policy['by_member'].setdefault(member, {'roles': {}})
-          self._policy['by_member'][member]['roles'][binding['role']] = 1
-
-  def _init_roles(self):
-    if not ProjectPolicy._PREDEFINED_ROLES_INITIALIZED:
-      ProjectPolicy._PREDEFINED_ROLES = _fetch_roles('')
-      ProjectPolicy._PREDEFINED_ROLES_INITIALIZED = True
-    if not self._custom_roles_initialized:
-      self._custom_roles = _fetch_roles('projects/' + self._project_id)
-      self._custom_roles_initialized = True
 
   def _get_role_permissions(self, role: str) -> List[str]:
-    self._init_roles()
     if role in self._custom_roles:
       return self._custom_roles[role].get('includedPermissions', [])
-    if role in ProjectPolicy._PREDEFINED_ROLES:
-      permissions: List[str] = ProjectPolicy._PREDEFINED_ROLES[role].get(
+    predefined_roles = _fetch_predefined_roles()
+    if role in predefined_roles:
+      permissions: List[str] = predefined_roles[role].get(
           'includedPermissions', [])
       return permissions
     raise ValueError('unknown role: ' + role)
@@ -105,7 +107,6 @@ class ProjectPolicy:
         'serviceAccount:'):
       raise ValueError('member must start with user: or serviceAccount:')
 
-    self._init_policy()
     if member not in self._policy['by_member']:
       return
     member_policy = self._policy['by_member'][member]
@@ -158,9 +159,11 @@ class ProjectPolicy:
 
   def __init__(self, project_id):
     self._project_id = project_id
+    self._custom_roles = _fetch_roles('projects/' + self._project_id)
+    self._policy = _fetch_policy(project_id)
 
 
-@functools.lru_cache(maxsize=None)
+@cache.cached_api_call(in_memory=True)
 def get_project_policy(project_id):
   """Return the ProjectPolicy object for a project, caching the result."""
   return ProjectPolicy(project_id)
