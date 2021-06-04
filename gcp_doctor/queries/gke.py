@@ -149,7 +149,8 @@ class Cluster(models.Resource):
 
   def has_app_layer_enc_enabled(self) -> bool:
     # state := 'DECRYPTED' | 'ENCRYPTED', keyName := 'full_path_to_key_resouce'
-    return self._resource_data['databaseEncryption'].get('state') == 'ENCRYPTED'
+    return 'databaseEncryption' in self._resource_data and \
+           self._resource_data['databaseEncryption'].get('state') == 'ENCRYPTED'
 
   def has_logging_enabled(self) -> bool:
     return self._resource_data['loggingService'] != 'none'
