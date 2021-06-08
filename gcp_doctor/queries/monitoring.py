@@ -166,12 +166,22 @@ def query(context: models.Context, query_str: str) -> TimeSeriesCollection:
         pages += 1
         response = request.execute()
         time_series.add_api_response(response)
-        #if 'nextPageToken' in response and response['nextPageToken']:
-        request = mon_api.projects().timeSeries().query_next(
-            previous_request=request, previous_response=response)
-        end_time = datetime.datetime.now()
-        logging.debug('query run time: %s, pages: %d', end_time - start_time,
-                      pages)
+        # Workaround for
+        # https://github.com/googleapis/google-api-python-client/issues/1403
+        if 'nextPageToken' in response and response['nextPageToken']:
+          request = mon_api.projects().timeSeries().query(
+              name='projects/' + project_id,
+              body={
+                  'query': query_str,
+                  'pageToken': response['nextPageToken']
+              })
+        else:
+          break
+        #request = mon_api.projects().timeSeries().query_next(
+        #    previous_request=request, previous_response=response)
+      end_time = datetime.datetime.now()
+      logging.debug('query run time: %s, pages: %d', end_time - start_time,
+                    pages)
     except googleapiclient.errors.HttpError as err:
       raise utils.GcpApiError(err) from err
   return time_series
