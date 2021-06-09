@@ -64,7 +64,9 @@ def _make_key(func, args, kwargs):
 @contextlib.contextmanager
 def _acquire_timeout(lock, timeout):
   result = lock.acquire(timeout=timeout)
-  yield result
+  if not result:
+    raise RuntimeError('Couldn\'t aquire lock. API call taking too long?')
+  yield
   if result:
     lock.release()
 
@@ -97,7 +99,6 @@ def cached_api_call(expire=None, in_memory=False):
       lock = lockdict[key]
       with _acquire_timeout(lock, config.CACHE_LOCK_TIMEOUT):
         if in_memory:
-          logging.debug('memory-caching function %s', func.__name__)
           return lru_cached_func(*args, **kwargs)
         else:
           api_cache = get_cache()
