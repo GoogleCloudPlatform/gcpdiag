@@ -21,19 +21,22 @@ FULL_RES_NAME_MATCH = DOMAIN_RES_NAME_MATCH + REL_RES_NAME_MATCH
 class GcpApiError(Exception):
   """Exception raised for GCP API/HTTP errors.
 
-  Attributes:
-      response -- API/HTTP response
+  Attributes: response -- API/HTTP response
   """
 
   def __init__(self, response='An error occured during the GCP API call'):
     self.response = response
     # see also: https://github.com/googleapis/google-api-python-client/issues/662
-    content = json.loads(response.content)
-    if isinstance(
-        content, dict) and 'error' in content and 'message' in content['error']:
-      self.message = content['error']['message']
-    else:
-      self.message = str(response)
+    try:
+      content = json.loads(response.content)
+      if isinstance(
+          content,
+          dict) and 'error' in content and 'message' in content['error']:
+        self.message = content['error']['message']
+      else:
+        self.message = str(response)
+    except json.decoder.JSONDecodeError:
+      self.message = content
     super().__init__(self.message)
 
   def __str__(self):
