@@ -36,7 +36,7 @@ class GcpApiError(Exception):
       else:
         self.message = str(response)
     except json.decoder.JSONDecodeError:
-      self.message = content
+      self.message = response.content
     super().__init__(self.message)
 
   def __str__(self):
