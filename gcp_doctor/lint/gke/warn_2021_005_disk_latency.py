@@ -43,6 +43,7 @@ fetch gce_instance
   | {{ metric 'compute.googleapis.com/guest/disk/operation_time' ;
       metric 'compute.googleapis.com/guest/disk/operation_count' }}
   | {within_str}
+  | filter metric.device_name = 'sda'
   | group_by [resource.instance_id], .sum()
   | every 1m
   | ratio
@@ -125,5 +126,5 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
           f'disk latency >{SLO_LATENCY_MS}ms (1 min. avg., within {WITHIN_DAYS} days): \n. '
           + '\n. '.join([
               f'{i[0]} ({i[2]} out of {i[1]} minutes bad)'
-              for i in per_cluster_results[c]['bad_instances']
+              for i in sorted(per_cluster_results[c]['bad_instances'])
           ]))
