@@ -151,12 +151,9 @@ class LintReportTerminal(lint.LintReport):
           self.term.italic(self._wrap_indent(rule.long_desc, '   ')))
       self.terminal_print_line()
 
-  def add_skipped(self,
-                  rule: lint.LintRule,
-                  context: models.Context,
-                  resource: Optional[models.Resource],
-                  reason: str,
-                  short_info: str = None):
+  def add_skipped(self, rule: lint.LintRule, context: models.Context,
+                  resource: Optional[models.Resource], reason: str,
+                  short_info: Optional[str]):
     super().add_skipped(rule, context, resource, reason, short_info)
     if not self.show_skipped:
       return
@@ -175,11 +172,8 @@ class LintReportTerminal(lint.LintReport):
                                ('(' + reason + ')').ljust(OUTPUT_WIDTH + 2) +
                                ' [SKIP]' + short_info)
 
-  def add_ok(self,
-             rule: lint.LintRule,
-             context: models.Context,
-             resource: models.Resource,
-             short_info: str = None):
+  def add_ok(self, rule: lint.LintRule, context: models.Context,
+             resource: models.Resource, short_info: Optional[str]):
     super().add_ok(rule, context, resource, short_info)
     if not self.show_ok:
       return
@@ -192,12 +186,9 @@ class LintReportTerminal(lint.LintReport):
                              resource.get_short_path().ljust(OUTPUT_WIDTH) +
                              ' [' + self.term.green(' OK ') + ']' + short_info)
 
-  def add_failed(self,
-                 rule: lint.LintRule,
-                 context: models.Context,
-                 resource: models.Resource,
-                 reason: str,
-                 short_info: str = None):
+  def add_failed(self, rule: lint.LintRule, context: models.Context,
+                 resource: models.Resource, reason: Optional[str],
+                 short_info: Optional[str]):
     super().add_failed(rule, context, resource, reason, short_info)
     self.rule_has_results = True
     rule_data = self.per_rule_data.setdefault(rule, {'failed_count': 0})
@@ -209,7 +200,8 @@ class LintReportTerminal(lint.LintReport):
     self.terminal_print_line('   - ' +
                              resource.get_short_path().ljust(OUTPUT_WIDTH) +
                              ' [' + self.term.red('FAIL') + ']' + short_info)
-    self.terminal_print_line(textwrap.indent(reason, '     '))
+    if reason:
+      self.terminal_print_line(textwrap.indent(reason, '     '))
 
   def finish(self, context: models.Context):
     exit_code = super().finish(context)

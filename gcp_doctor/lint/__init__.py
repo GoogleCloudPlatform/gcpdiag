@@ -65,31 +65,22 @@ class LintReport:
     pass
 
   @abc.abstractmethod
-  def add_skipped(self,
-                  rule: LintRule,
-                  context: models.Context,
-                  resource: Optional[models.Resource],
-                  reason: str,
-                  short_info: str = None):
+  def add_skipped(self, rule: LintRule, context: models.Context,
+                  resource: Optional[models.Resource], reason: str,
+                  short_info: Optional[str]):
     self.rules_report.setdefault(rule, {'overall_status': 'skipped'})
 
   @abc.abstractmethod
-  def add_ok(self,
-             rule: LintRule,
-             context: models.Context,
-             resource: models.Resource,
-             short_info: str = None):
+  def add_ok(self, rule: LintRule, context: models.Context,
+             resource: models.Resource, short_info: Optional[str]):
     rreport = self.rules_report.setdefault(rule, {'overall_status': 'ok'})
     if rreport['overall_status'] == 'skipped':
       rreport['overall_status'] = 'ok'
 
   @abc.abstractmethod
-  def add_failed(self,
-                 rule: LintRule,
-                 context: models.Context,
-                 resource: models.Resource,
-                 reason: str,
-                 short_info: str = None):
+  def add_failed(self, rule: LintRule, context: models.Context,
+                 resource: models.Resource, reason: Optional[str],
+                 short_info: Optional[str]):
     rreport = self.rules_report.setdefault(rule, {'overall_status': 'ok'})
     if rreport['overall_status'] in ['skipped', 'ok']:
       rreport['overall_status'] = 'failed'
@@ -127,7 +118,7 @@ class LintReportRuleInterface:
 
   def add_failed(self,
                  resource: models.Resource,
-                 reason: str,
+                 reason: str = None,
                  short_info: str = None):
     self.report.add_failed(self.rule, self.context, resource, reason,
                            short_info)
@@ -244,8 +235,8 @@ class LintRuleRepository:
         try:
           rule.run_rule_f(context, rule_report)
         except (ValueError) as e:
-          report.add_skipped(rule, context, None, str(e))
+          report.add_skipped(rule, context, None, str(e), None)
         except (GcpApiError) as api_error:
-          report.add_skipped(rule, context, None, str(api_error))
+          report.add_skipped(rule, context, None, str(api_error), None)
         report.rule_end(rule, context)
     return report.finish(context)
