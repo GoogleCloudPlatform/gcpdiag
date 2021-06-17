@@ -53,6 +53,30 @@ json-dumps/server-config-zone-1.json:
 	$(CURL) -fsS \
 		'https://container.googleapis.com/v1/projects/$(PROJECT_ID)/zones/$(ZONE_1)/serverconfig' >$@
 
+# If you need to recreate the JSON: adapt the timestamp and make sure that there are some entries found.
+define LOGGING_ENTRIES_BODY
+{
+	"resourceNames": ["projects/$(PROJECT_ID)"],
+	"orderBy": "timestamp desc",
+	"filter": "
+		timestamp > \"2021-06-17T10:00:00+00:00\" AND
+		timestamp < \"2021-06-18T10:00:00+00:00\" AND
+		resource.type=\"gce_instance_group_manager\" AND
+		protoPayload.methodName=\"beta.compute.instanceGroupManagers.createInstances\" AND
+		operation.last=\"true\" AND
+		log_name=\"projects/$(PROJECT_ID)/logs/cloudaudit.googleapis.com%2Factivity\"
+	"
+}
+endef
+export LOGGING_ENTRIES_BODY
+
+json-dumps/logging-entries-1.json:
+	$(CURL) --trace trace.log \
+		'https://logging.googleapis.com/v2/entries:list' \
+		--header "Content-Type:text/json" \
+		-d "$$LOGGING_ENTRIES_BODY" >$@
+
+
 # Note: this throws an error. See also: b/175212189
 #  "code": 403,
 #  "message": "Your application has authenticated using end user credentials

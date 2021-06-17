@@ -7,7 +7,7 @@ import appdirs
 VERSION = '0.25-test'
 
 # Default number of retries for API Calls.
-API_RETRIES = 2
+API_RETRIES = 10
 
 # Cache directory for diskcache.
 CACHE_DIR = appdirs.user_cache_dir('gcp-doctor')

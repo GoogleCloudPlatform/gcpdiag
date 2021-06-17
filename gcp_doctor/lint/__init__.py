@@ -14,6 +14,7 @@ from collections.abc import Callable
 from typing import Any, Dict, List, Optional
 
 from gcp_doctor import models
+from gcp_doctor.queries import logs
 from gcp_doctor.utils import GcpApiError
 
 MAX_WORKERS = 5
@@ -38,6 +39,7 @@ class LintRule:
   short_desc: str
   long_desc: str
   run_rule_f: Callable
+  prepare_rule_f: Optional[Callable] = None
   prefetch_rule_f: Optional[Callable] = None
   prefetch_rule_future: Optional[concurrent.futures.Future] = None
 
@@ -162,8 +164,7 @@ class LintRuleRepository:
            (\d+_\d+)    # id: 2020_001
         """, name, re.VERBOSE)
       if not m:
-        logging.warning('can\'t determine rule attributes from module name: %s',
-                        name)
+        # Assume this is not a rule (e.g. could be a "utility" module)
         continue
       product, rule_class, rule_id = m.group(1, 2, 3)
 
@@ -178,6 +179,13 @@ class LintRuleRepository:
           break
       if not run_rule_f:
         raise RuntimeError(f'module {module} doesn\'t have a run_rule function')
+
+      # Get a reference to the prepare_rule() function.
+      prepare_rule_f = None
+      for f_name, f in inspect.getmembers(module, inspect.isfunction):
+        if f_name == 'prepare_rule':
+          prepare_rule_f = f
+          break
 
       # Get a reference to the prefetch_rule() function.
       prefetch_rule_f = None
@@ -207,6 +215,7 @@ class LintRuleRepository:
                       rule_class=LintRuleClass(rule_class.upper()),
                       rule_id=rule_id,
                       run_rule_f=run_rule_f,
+                      prepare_rule_f=prepare_rule_f,
                       prefetch_rule_f=prefetch_rule_f,
                       short_desc=short_desc,
                       long_desc=long_desc)
@@ -214,15 +223,28 @@ class LintRuleRepository:
       self.register_rule(rule)
 
   def run_rules(self, context: models.Context, report: LintReport) -> int:
-    # Run the "prefetch_rule" functions with multiple worker threads to speed up
-    # execution of the "run_rule" executions later.
+    # Run the "prepare_rule" functions first, in a single thread.
+    for rule in self.rules:
+      if rule.prepare_rule_f:
+        rule.prepare_rule_f(context)
+
+    # Start multiple threads for logs fetching and prefetch functions.
     with concurrent.futures.ThreadPoolExecutor(
         max_workers=MAX_WORKERS) as prefetch_executor:
+      # Start fetching any logs queries that were defined in prepare_rule
+      # functions.
+      logs.execute_queries(prefetch_executor)
+
+      # Run the "prefetch_rule" functions with multiple worker threads to speed up
+      # execution of the "run_rule" executions later.
       for rule in self.rules:
         if rule.prefetch_rule_f:
           rule.prefetch_rule_future = prefetch_executor.submit(
               rule.prefetch_rule_f, context)
 
+      # While the prefetch_rule functions are still being executed in multiple
+      # threads, start executing the rules, but block and wait in case the
+      # prefetch for a specific rule is still running.
       self.rules.sort(key=str)
       for rule in self.rules:
         rule_report = report.rule_start(rule, context)
