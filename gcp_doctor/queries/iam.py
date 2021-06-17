@@ -2,9 +2,12 @@
 """Queries related to GCP Kubernetes Engine clusters."""
 
 import logging
+import re
 from typing import Any, Dict, List, Mapping
 
-from gcp_doctor import cache, config
+import googleapiclient.errors
+
+from gcp_doctor import cache, config, models, utils
 from gcp_doctor.queries import apis
 
 _predefined_roles: Dict[str, Any] = {}
@@ -119,7 +122,7 @@ class ProjectPolicy:
       member_policy['permissions'] = permissions_dict
 
   def get_member_permissions(self, member: str) -> List[str]:
-    """Return permisions for an member (either a user or serviceAccount).
+    """Return permissions for an member (either a user or serviceAccount).
 
     The "member" can be a user or a service account and must be specified with
     the IAM member syntax, i.e. using the prefixes `user:` or `serviceAccount:`.
@@ -167,3 +170,79 @@ class ProjectPolicy:
 def get_project_policy(project_id):
   """Return the ProjectPolicy object for a project, caching the result."""
   return ProjectPolicy(project_id)
+
+
+class ServiceAccount(models.Resource):
+  """ Class represents the service account.
+
+  Add more fields as needed from the declaration:
+  https://cloud.google.com/iam/docs/reference/rest/v1/projects.serviceAccounts#ServiceAccount
+  """
+  _resource_data: dict
+
+  def __init__(self, project_id, resource_data):
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+
+  @property
+  def name(self) -> str:
+    return self._resource_data['name']
+
+  @property
+  def email(self) -> str:
+    return self._resource_data['email']
+
+  @property
+  def disabled(self) -> bool:
+    return self._resource_data.get('disabled', False)
+
+  def get_full_path(self) -> str:
+    # example: "name":
+    # "projects/skanzhelev-gke-dev/serviceAccounts/test-service-account-1
+    #                               @skanzhelev-gke-dev.iam.gserviceaccount.com"
+    return self.name
+
+
+def get_short_path(self) -> str:
+  path = self.get_full_path()
+  path = re.sub(r'^projects/', '', path)
+  path = re.sub(r'/serviceAccounts/', '/', path)
+  return path
+
+
+@cache.cached_api_call(in_memory=True)
+def get_service_accounts(
+    context: models.Context) -> Mapping[str, ServiceAccount]:
+  """Get a list of Service Accounts matching the given context, key is e-mail.
+
+  https://cloud.google.com/iam/docs/reference/rest/v1/projects.serviceAccounts/list
+  """
+  accounts: Dict[str, ServiceAccount] = {}
+  iam_api = apis.get_api('iam', 'v1')
+  for project_id in context.projects:
+    logging.info('fetching list of Service Accounts in project %s', project_id)
+    request = iam_api.projects().serviceAccounts().list(
+        name=f'projects/{project_id}')
+    try:
+      while request:
+        resp = request.execute(num_retries=config.API_RETRIES)
+        if 'accounts' not in resp:
+          return accounts
+        for resp_sa in resp['accounts']:
+          # verify that we some minimal data that we expect
+          if 'name' not in resp_sa or 'email' not in resp_sa:
+            raise RuntimeError(
+                'missing data in projects.serviceAccounts.list response')
+          sa = ServiceAccount(project_id=project_id, resource_data=resp_sa)
+          accounts[resp_sa['email']] = sa
+          logging.info('found service account %s: %s in project %s',
+                       resp_sa['name'], sa, project_id)
+          request = iam_api.projects().serviceAccounts().list_next(
+              previous_request=request, previous_response=resp)
+    except googleapiclient.errors.HttpError as err:
+      errstr = utils.http_error_message(err)
+      # TODO: implement proper exception classes
+      raise ValueError(
+          f'can\'t list service accounts for project {project_id}: {errstr}'
+      ) from err
+  return accounts

@@ -216,10 +216,29 @@ def _get_server_config(project_id: str, location: str):
 def get_valid_master_versions(project_id: str, location: str) -> List[str]:
   """Get a list of valid GKE master versions."""
   server_config = _get_server_config(project_id, location)
-  return server_config['validMasterVersions']
+  versions: List[str] = []
+
+  # channel versions may extend the list of all available versions.\
+  # Especially for the Rapid channel - many new versions only available in Rapid
+  # channel and not as a static version to make sure nobody stuck on that
+  # version for an extended period of time.
+  for c in server_config['channels']:
+    versions += c['validVersions']
+
+  versions += server_config['validMasterVersions']
+
+  return versions
 
 
 def get_valid_node_versions(project_id: str, location: str) -> List[str]:
   """Get a list of valid GKE master versions."""
   server_config = _get_server_config(project_id, location)
-  return server_config['validNodeVersions']
+  versions: List[str] = []
+
+  # See explanaition in get_valid_master_versions
+  for c in server_config['channels']:
+    versions += c['validVersions']
+
+  versions += server_config['validNodeVersions']
+
+  return versions

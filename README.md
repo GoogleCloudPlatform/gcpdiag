@@ -60,7 +60,7 @@ We use the following tools in this project:
     ```
     pipenv shell
     pytest
-    bin/gcp-doctor
+    ./gcp-doctor
     ```
 
 ## Code Review and Automated Testing
