@@ -1,0 +1,226 @@
+{
+  "entries": [
+    {
+      "protoPayload": {
+        "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+        "authenticationInfo": {
+          "principalEmail": "service-18404348413@container-engine-robot.iam.gserviceaccount.com"
+        },
+        "requestMetadata": {
+          "callerIp": "2002:a61:218f::",
+          "callerSuppliedUserAgent": "google-api-go-client/0.5 GoogleContainerEngine/v1"
+        },
+        "serviceName": "compute.googleapis.com",
+        "methodName": "beta.compute.instanceGroupManagers.createInstances",
+        "resourceName": "projects/gcpd-gke-1-9b90/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-e5e20a34-grp",
+        "request": {
+          "@type": "type.googleapis.com/compute.instanceGroupManagers.createInstances"
+        }
+      },
+      "insertId": "-kj2rfhc3lm",
+      "resource": {
+        "type": "gce_instance_group_manager",
+        "labels": {
+          "project_id": "gcpd-gke-1-9b90",
+          "instance_group_manager_name": "gke-gke1-default-pool-e5e20a34-grp",
+          "location": "europe-west4-a",
+          "instance_group_manager_id": "3129553323868845727"
+        }
+      },
+      "timestamp": "2021-06-18T08:22:23.197383Z",
+      "severity": "NOTICE",
+      "logName": "projects/gcpd-gke-1-9b90/logs/cloudaudit.googleapis.com%2Factivity",
+      "operation": {
+        "id": "operation-1624004538690-5c50605a46c49-2ec14789-7ca02bb4",
+        "producer": "compute.googleapis.com",
+        "last": true
+      },
+      "receiveTimestamp": "2021-06-18T08:22:23.555265124Z"
+    },
+    {
+      "protoPayload": {
+        "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+        "authenticationInfo": {
+          "principalEmail": "service-18404348413@container-engine-robot.iam.gserviceaccount.com"
+        },
+        "requestMetadata": {
+          "callerIp": "2002:a17:906:881::",
+          "callerSuppliedUserAgent": "google-api-go-client/0.5 GoogleContainerEngine/v1"
+        },
+        "serviceName": "compute.googleapis.com",
+        "methodName": "beta.compute.instanceGroupManagers.createInstances",
+        "resourceName": "projects/gcpd-gke-1-9b90/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-e5e20a34-grp",
+        "request": {
+          "@type": "type.googleapis.com/compute.instanceGroupManagers.createInstances"
+        }
+      },
+      "insertId": "-z7zj3nc22m",
+      "resource": {
+        "type": "gce_instance_group_manager",
+        "labels": {
+          "instance_group_manager_id": "3129553323868845727",
+          "location": "europe-west4-a",
+          "project_id": "gcpd-gke-1-9b90",
+          "instance_group_manager_name": "gke-gke1-default-pool-e5e20a34-grp"
+        }
+      },
+      "timestamp": "2021-06-18T01:17:21.912544Z",
+      "severity": "NOTICE",
+      "logName": "projects/gcpd-gke-1-9b90/logs/cloudaudit.googleapis.com%2Factivity",
+      "operation": {
+        "id": "operation-1623979037581-5c50015a86230-99ff7627-45b8da76",
+        "producer": "compute.googleapis.com",
+        "last": true
+      },
+      "receiveTimestamp": "2021-06-18T01:17:22.134022417Z"
+    },
+    {
+      "protoPayload": {
+        "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+        "authenticationInfo": {
+          "principalEmail": "service-18404348413@container-engine-robot.iam.gserviceaccount.com"
+        },
+        "requestMetadata": {
+          "callerIp": "2002:a98:9693::",
+          "callerSuppliedUserAgent": "google-api-go-client/0.5 GoogleContainerEngine/v1"
+        },
+        "serviceName": "compute.googleapis.com",
+        "methodName": "beta.compute.instanceGroupManagers.createInstances",
+        "resourceName": "projects/gcpd-gke-1-9b90/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-e5e20a34-grp",
+        "request": {
+          "@type": "type.googleapis.com/compute.instanceGroupManagers.createInstances"
+        }
+      },
+      "insertId": "3c8jk9c98y",
+      "resource": {
+        "type": "gce_instance_group_manager",
+        "labels": {
+          "instance_group_manager_id": "3129553323868845727",
+          "instance_group_manager_name": "gke-gke1-default-pool-e5e20a34-grp",
+          "location": "europe-west4-a",
+          "project_id": "gcpd-gke-1-9b90"
+        }
+      },
+      "timestamp": "2021-06-17T19:35:09.837284Z",
+      "severity": "NOTICE",
+      "logName": "projects/gcpd-gke-1-9b90/logs/cloudaudit.googleapis.com%2Factivity",
+      "operation": {
+        "id": "operation-1623958505445-5c4fb4dd8d6af-f723dbcd-f6afe613",
+        "producer": "compute.googleapis.com",
+        "last": true
+      },
+      "receiveTimestamp": "2021-06-17T19:35:10.764328665Z"
+    },
+    {
+      "protoPayload": {
+        "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+        "authenticationInfo": {
+          "principalEmail": "service-18404348413@container-engine-robot.iam.gserviceaccount.com"
+        },
+        "requestMetadata": {
+          "callerIp": "2002:a05:640c:1d10::",
+          "callerSuppliedUserAgent": "google-api-go-client/0.5 GoogleContainerEngine/v1"
+        },
+        "serviceName": "compute.googleapis.com",
+        "methodName": "beta.compute.instanceGroupManagers.createInstances",
+        "resourceName": "projects/gcpd-gke-1-9b90/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-e5e20a34-grp",
+        "request": {
+          "@type": "type.googleapis.com/compute.instanceGroupManagers.createInstances"
+        }
+      },
+      "insertId": "pjj9nhcc2y",
+      "resource": {
+        "type": "gce_instance_group_manager",
+        "labels": {
+          "instance_group_manager_name": "gke-gke1-default-pool-e5e20a34-grp",
+          "location": "europe-west4-a",
+          "instance_group_manager_id": "3129553323868845727",
+          "project_id": "gcpd-gke-1-9b90"
+        }
+      },
+      "timestamp": "2021-06-17T15:02:10.289710Z",
+      "severity": "NOTICE",
+      "logName": "projects/gcpd-gke-1-9b90/logs/cloudaudit.googleapis.com%2Factivity",
+      "operation": {
+        "id": "operation-1623942124814-5c4f77d7c40a2-afa3cfb0-acc4f3c0",
+        "producer": "compute.googleapis.com",
+        "last": true
+      },
+      "receiveTimestamp": "2021-06-17T15:02:10.459060837Z"
+    },
+    {
+      "protoPayload": {
+        "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+        "authenticationInfo": {
+          "principalEmail": "service-18404348413@container-engine-robot.iam.gserviceaccount.com"
+        },
+        "requestMetadata": {
+          "callerIp": "2002:a88:6941::",
+          "callerSuppliedUserAgent": "google-api-go-client/0.5 GoogleContainerEngine/v1"
+        },
+        "serviceName": "compute.googleapis.com",
+        "methodName": "beta.compute.instanceGroupManagers.createInstances",
+        "resourceName": "projects/gcpd-gke-1-9b90/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-e5e20a34-grp",
+        "request": {
+          "@type": "type.googleapis.com/compute.instanceGroupManagers.createInstances"
+        }
+      },
+      "insertId": "-tocejxb5s",
+      "resource": {
+        "type": "gce_instance_group_manager",
+        "labels": {
+          "location": "europe-west4-a",
+          "instance_group_manager_id": "3129553323868845727",
+          "project_id": "gcpd-gke-1-9b90",
+          "instance_group_manager_name": "gke-gke1-default-pool-e5e20a34-grp"
+        }
+      },
+      "timestamp": "2021-06-17T12:14:41.146590Z",
+      "severity": "NOTICE",
+      "logName": "projects/gcpd-gke-1-9b90/logs/cloudaudit.googleapis.com%2Factivity",
+      "operation": {
+        "id": "operation-1623932074346-5c4f5266e496d-63cfab62-8ace6aab",
+        "producer": "compute.googleapis.com",
+        "last": true
+      },
+      "receiveTimestamp": "2021-06-17T12:14:42.196748787Z"
+    },
+    {
+      "protoPayload": {
+        "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+        "authenticationInfo": {
+          "principalEmail": "service-18404348413@container-engine-robot.iam.gserviceaccount.com"
+        },
+        "requestMetadata": {
+          "callerIp": "2002:a61:86c4::",
+          "callerSuppliedUserAgent": "google-api-go-client/0.5 GoogleContainerEngine/v1"
+        },
+        "serviceName": "compute.googleapis.com",
+        "methodName": "beta.compute.instanceGroupManagers.createInstances",
+        "resourceName": "projects/gcpd-gke-1-9b90/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-e5e20a34-grp",
+        "request": {
+          "@type": "type.googleapis.com/compute.instanceGroupManagers.createInstances"
+        }
+      },
+      "insertId": "-hqnw82c9z6",
+      "resource": {
+        "type": "gce_instance_group_manager",
+        "labels": {
+          "project_id": "gcpd-gke-1-9b90",
+          "instance_group_manager_id": "3129553323868845727",
+          "location": "europe-west4-a",
+          "instance_group_manager_name": "gke-gke1-default-pool-e5e20a34-grp"
+        }
+      },
+      "timestamp": "2021-06-17T10:14:10.905843Z",
+      "severity": "NOTICE",
+      "logName": "projects/gcpd-gke-1-9b90/logs/cloudaudit.googleapis.com%2Factivity",
+      "operation": {
+        "id": "operation-1623924846057-5c4f3779759ce-6ba5a09e-9e211869",
+        "producer": "compute.googleapis.com",
+        "last": true
+      },
+      "receiveTimestamp": "2021-06-17T10:14:11.110526879Z"
+    }
+  ]
+}

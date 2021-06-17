@@ -119,7 +119,13 @@ class Resource(abc.ABC):
     return self.get_full_path()
 
   def __hash__(self):
-    return self.__str__().__hash__()
+    return self.get_full_path().__hash__()
+
+  def __eq__(self, other):
+    if self.__class__ == other.__class__:
+      return self.get_full_path() == other.get_full_path()
+    else:
+      return False
 
   @property
   def project_id(self) -> str:

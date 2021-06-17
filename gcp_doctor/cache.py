@@ -8,6 +8,8 @@ import functools
 import hashlib
 import logging
 import pickle
+import shutil
+import tempfile
 import threading
 
 import diskcache
@@ -37,6 +39,7 @@ def _close_cache():
 
 
 def get_cache() -> diskcache.Cache:
+  """Get a Diskcache.Cache object that can be used to cache data."""
   global _cache
   if not _cache:
     _cache = diskcache.Cache(config.CACHE_DIR, tag_index=True)
@@ -46,6 +49,23 @@ def get_cache() -> diskcache.Cache:
     # Cleanup the cache at program exit.
     atexit.register(_close_cache)
   return _cache
+
+
+def get_tmp_deque(prefix='tmp-deque-') -> diskcache.Deque:
+  """Get a Diskcache.Deque object useful to temporily store data (like logs).
+
+  arguments:
+    prefix: prefix to be added to the temporary directory (default: tmp-deque)
+  """
+  tempdir = tempfile.mkdtemp(prefix=prefix, dir=config.CACHE_DIR)
+  deque = diskcache.Deque(directory=tempdir)
+
+  def clean_tmp_deque():
+    logging.debug('deleting dequeue tempdir: %s', tempdir)
+    shutil.rmtree(tempdir, ignore_errors=True)
+
+  atexit.register(clean_tmp_deque)
+  return deque
 
 
 # Write our own implementation instead of using private function

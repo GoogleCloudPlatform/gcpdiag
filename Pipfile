@@ -12,6 +12,7 @@ blessings = "*"
 importlib-resources = "*"
 appdirs = "*"
 diskcache = "*"
+ratelimit = "*"
 
 [dev-packages]
 pytest = "*"
