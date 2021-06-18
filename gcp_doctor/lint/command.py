@@ -62,6 +62,8 @@ def run(argv) -> int:
   # Logging setup.
   logging_handler = report.get_logging_handler()
   logger = logging.getLogger()
+  # Make sure we are only using our own handler
+  logger.handlers = []
   logger.addHandler(logging_handler)
   if args.verbose >= 2:
     logger.setLevel(logging.DEBUG)
