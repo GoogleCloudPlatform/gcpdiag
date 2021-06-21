@@ -7,7 +7,7 @@ import sys
 
 from gcp_doctor import lint, models, utils
 from gcp_doctor.lint import gce, gke, report_terminal
-from gcp_doctor.queries import apis
+from gcp_doctor.queries import apis, project
 
 
 def run(argv) -> int:
@@ -58,6 +58,16 @@ def run(argv) -> int:
       log_info_for_progress_only=(args.verbose == 0),
       show_ok=not args.hide_ok,
       show_skipped=args.show_skipped)
+
+  # Verify that we have access.
+  for project_id in context.projects:
+    try:
+      project.get_project(project_id)
+    except utils.GcpApiError:
+      print(
+          f"ERROR: can't access project: {project_id}. Please verify that you have Viewer access.",
+          file=sys.stdout)
+      sys.exit(1)
 
   # Logging setup.
   logging_handler = report.get_logging_handler()
