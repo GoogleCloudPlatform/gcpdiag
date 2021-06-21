@@ -13,6 +13,7 @@ importlib-resources = "*"
 appdirs = "*"
 diskcache = "*"
 ratelimit = "*"
+python-dateutil = "*"
 
 [dev-packages]
 pytest = "*"

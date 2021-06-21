@@ -26,8 +26,9 @@ import concurrent.futures
 import dataclasses
 import datetime
 import logging
-from typing import Dict, Optional, Sequence, Set, Tuple
+from typing import Any, Dict, Mapping, Optional, Sequence, Set, Tuple
 
+import dateutil.parser
 import ratelimit
 
 from gcp_doctor import cache, config
@@ -96,9 +97,14 @@ def _execute_query_job(logging_api, job: _LogsQueryJob):
   # Convert "within" relative time to an absolute timestamp.
   start_time = datetime.datetime.now(
       datetime.timezone.utc) - datetime.timedelta(days=config.WITHIN_DAYS)
-  filter_lines = ['timestamp > "%s"' % start_time.isoformat(timespec='seconds')]
-  filter_lines.append('resource.type = "%s"' % job.resource_type)
-  filter_lines.append('logName = "%s"' % job.log_name)
+  filter_lines = ['timestamp>"%s"' % start_time.isoformat(timespec='seconds')]
+  filter_lines.append('resource.type="%s"' % job.resource_type)
+  if job.log_name.startswith('log_id('):
+    # Special case: log_id(logname)
+    # https://cloud.google.com/logging/docs/view/logging-query-language#functions
+    filter_lines.append(job.log_name)
+  else:
+    filter_lines.append('logName="%s"' % job.log_name)
   if len(job.filters) == 1:
     filter_lines.append('(' + next(iter(job.filters)) + ')')
   else:
@@ -161,3 +167,10 @@ def execute_queries(executor: concurrent.futures.Executor):
   logging_api = apis.get_api('logging', 'v2')
   for job in jobs_executing.values():
     job.future = executor.submit(_execute_query_job, logging_api, job)
+
+
+def log_entry_timestamp_str(log_entry: Mapping[str, Any]):
+  # Use receiveTimestamp so that we don't have any time synchronization issues
+  # (i.e. don't trust the timestamp field)
+  t = dateutil.parser.parse(log_entry['receiveTimestamp'])
+  return t.astimezone().isoformat(sep=' ', timespec='seconds')
