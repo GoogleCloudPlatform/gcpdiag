@@ -3,13 +3,10 @@ DIST_NAME=gcp-doctor-$(VERSION)
 SHELL=/bin/bash
 
 test:
-	coverage run --include='gcp_doctor/*' -m pytest --forked
+	pytest --cov-config=.coveragerc --cov=gcp_doctor --forked
 
 snapshots:
 	pytest --snapshot-update
-
-coverage-report:
-	coverage report -m --omit="*/*_test.py,*/*_stub.py"
 
 version:
 	@echo $(VERSION)
