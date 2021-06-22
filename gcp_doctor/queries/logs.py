@@ -30,7 +30,7 @@ from typing import Dict, Optional, Sequence, Set, Tuple
 
 import ratelimit
 
-from gcp_doctor import cache
+from gcp_doctor import cache, config
 from gcp_doctor.queries import apis
 
 WITHIN_DAYS = 3
@@ -94,7 +94,7 @@ def query(project_id: str, resource_type: str, log_name: str,
                   period=LOGGING_RATELIMIT_PERIOD_SECONDS)
 def _ratelimited_execute(req):
   """Wrapper to req.execute() with rate limiting to avoid hitting quotas."""
-  return req.execute()
+  return req.execute(num_retries=config.API_RETRIES)
 
 
 def _execute_query_job(logging_api, job: _LogsQueryJob):
