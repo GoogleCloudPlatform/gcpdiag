@@ -6,7 +6,7 @@ import logging
 import re
 from typing import Any, Callable, Dict, Tuple
 
-from gcp_doctor import lint, models
+from gcp_doctor import models
 from gcp_doctor.queries import gce, gke, logs
 
 
@@ -25,7 +25,6 @@ def gke_logs_query(context: models.Context, resource_type: str, log_name: str,
                                              resource_type=resource_type,
                                              log_name=log_name_expanded,
                                              filter_str=filter_str)
-
   return logs_by_project
 
 
@@ -84,12 +83,6 @@ def _gke_node_of_log_entry(context, log_entry):
     logging.warning('log entry without project_id label: %s', log_entry)
     raise _CantMapLogEntry() from KeyError
 
-  # Initialize _clusters_by_name.
-  if not context in _clusters_by_name:
-    clusters = gke.get_clusters(context)
-    for c in clusters.values():
-      _clusters_by_name[c][(c.project_id, c.location, c.name)] = c
-
   if 'node_name' in labels:
     # GKE node log
     try:
@@ -108,21 +101,22 @@ def _gke_node_of_log_entry(context, log_entry):
       return _clusters_by_instance_id[context][labels['instance_id']]
     except KeyError as err:
       raise _CantMapLogEntry from err
+  else:
+    raise _CantMapLogEntry()
 
 
 def gke_logs_find_bad_nodes(context: models.Context,
-                            report: lint.LintReportRuleInterface,
                             logs_by_project: Dict[str, logs.LogsQuery],
-                            filter_f: Callable, failure_message: str):
-  clusters = gke.get_clusters(context)
-  if not clusters:
-    report.add_skipped(None, 'no clusters found')
+                            filter_f: Callable):
+  """Go through logs and find GKE node-level issues.
 
+  Returns dict with clusters as key and node list of "bad nodes" as
+  value."""
   _initialize_clusters_by_name(context)
   _initialize_clusters_by_instance_id(context)
 
   # Process the log entries.
-  problem_nodes_by_cluster = collections.defaultdict(set)
+  bad_nodes_by_cluster = collections.defaultdict(set)
   for query in logs_by_project.values():
     for log_entry in query.entries:
       # Retrieved logs are not guaranteed to only contain what we defined as
@@ -132,15 +126,7 @@ def gke_logs_find_bad_nodes(context: models.Context,
 
       try:
         (c, node_name) = _gke_node_of_log_entry(context, log_entry)
-        problem_nodes_by_cluster[c].add(node_name)
+        bad_nodes_by_cluster[c].add(node_name)
       except _CantMapLogEntry:
         continue
-
-  # Create the report.
-  for _, c in sorted(clusters.items()):
-    if c in problem_nodes_by_cluster:
-      report.add_failed(
-          c, failure_message + '. Nodes:\n. ' +
-          '\n. '.join(problem_nodes_by_cluster[c]))
-    else:
-      report.add_ok(c)
+  return bad_nodes_by_cluster

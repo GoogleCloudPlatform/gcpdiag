@@ -10,7 +10,9 @@ The following log line is searched: "Failed to connect to apiserver"
 
 from gcp_doctor import lint, models
 from gcp_doctor.lint.gke import util
+from gcp_doctor.queries import gke
 
+MATCH_STR = 'Failed to connect to apiserver'
 logs_by_project: dict
 
 
@@ -20,23 +22,31 @@ def prepare_rule(context: models.Context):
       context,
       resource_type='k8s_node',
       log_name='projects/{{project_id}}/logs/kubelet',
-      filter_str='jsonPayload.MESSAGE:"bootstrap.go" AND ' +
-      'jsonPayload.MESSAGE:"Failed to connect to apiserver"')
+      filter_str='jsonPayload.MESSAGE:"bootstrap.go" AND ' + \
+          f'jsonPayload.MESSAGE:"{MATCH_STR}"')
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-  # Note: filter_str above is not enough, because logs.query() doesn't guarantee
-  # that only matching log lines will be returned. filter_str is only used to
-  # restrict the number of transfered logs, but since multiple queries are
-  # combined, we need to filter out what isn't "ours".
-  def filter_f(log_entry):
-    return 'jsonPayload' in log_entry and \
-        'MESSAGE' in log_entry['jsonPayload'] and \
-        'bootstrap.go' in log_entry['jsonPayload']['MESSAGE'] and \
-        'Failed to connect to apiserver' in log_entry['jsonPayload']['MESSAGE']
+  # Any work to do?
+  clusters = gke.get_clusters(context)
+  if not clusters:
+    report.add_skipped(None, 'no clusters found')
 
-  util.gke_logs_find_bad_nodes(context=context,
-                               report=report,
-                               logs_by_project=logs_by_project,
-                               filter_f=filter_f,
-                               failure_message='Connectivity issues detected')
+  # Search the logs.
+  def filter_f(log_entry):
+    try:
+      return MATCH_STR in log_entry['jsonPayload']['MESSAGE']
+    except KeyError:
+      return False
+
+  bad_nodes_by_cluster = util.gke_logs_find_bad_nodes(
+      context=context, logs_by_project=logs_by_project, filter_f=filter_f)
+
+  # Create the report.
+  for _, c in sorted(clusters.items()):
+    if c in bad_nodes_by_cluster:
+      report.add_failed(
+          c, 'Connectivity issues detected. Nodes:\n. ' +
+          '\n. '.join(bad_nodes_by_cluster[c]))
+    else:
+      report.add_ok(c)
