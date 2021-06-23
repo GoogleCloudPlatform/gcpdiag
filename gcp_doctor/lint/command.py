@@ -5,7 +5,7 @@ import argparse
 import logging
 import sys
 
-from gcp_doctor import lint, models, utils
+from gcp_doctor import config, lint, models, utils
 from gcp_doctor.lint import gce, gke, report_terminal
 from gcp_doctor.queries import apis, project
 
@@ -47,7 +47,18 @@ def run(argv) -> int:
                       default=0,
                       help='Increase log verbosity')
 
+  parser.add_argument(
+      '--within-days',
+      metavar='D',
+      type=int,
+      help=
+      f'How far back to search logs and metrics (default: {config.WITHIN_DAYS})',
+      default=config.WITHIN_DAYS)
+
   args = parser.parse_args()
+
+  # Initialize configuration
+  config.WITHIN_DAYS = args.within_days
 
   # Initialize Context, Repository, and Tests.
   context = models.Context(projects=args.project)
