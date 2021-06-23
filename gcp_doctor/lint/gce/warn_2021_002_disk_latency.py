@@ -17,7 +17,7 @@ from gcp_doctor.queries import gce, monitoring
 WITHIN_DAYS = 3
 SLO_LATENCY_MS = 100
 # SLO: at least 99.5% of minutes are good (7 minutes in a day)
-SLO_BAD_MINUTES_RATIO = 0.001
+SLO_BAD_MINUTES_RATIO = 0.005
 # If we have less than this minutes measured, skip
 SLO_VALID_MINUTES_PER_DAY = 12 * 60
 
