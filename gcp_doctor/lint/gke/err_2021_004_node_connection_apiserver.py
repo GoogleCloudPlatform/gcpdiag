@@ -22,8 +22,7 @@ def prepare_rule(context: models.Context):
       context,
       resource_type='k8s_node',
       log_name='projects/{{project_id}}/logs/kubelet',
-      filter_str='jsonPayload.MESSAGE:"bootstrap.go" AND ' + \
-          f'jsonPayload.MESSAGE:"{MATCH_STR}"')
+      filter_str=f'jsonPayload.MESSAGE:"{MATCH_STR}"')
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
