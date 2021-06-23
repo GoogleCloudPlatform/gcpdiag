@@ -33,14 +33,6 @@ import ratelimit
 from gcp_doctor import cache, config
 from gcp_doctor.queries import apis
 
-WITHIN_DAYS = 3
-LOGGING_PAGE_SIZE = 500
-LOGGING_FETCH_MAX_ENTRIES = 10000
-LOGGING_FETCH_MAX_TIME_SECONDS = 120
-# https://cloud.google.com/logging/quotas:
-LOGGING_RATELIMIT_REQUESTS = 60
-LOGGING_RATELIMIT_PERIOD_SECONDS = 60
-
 
 @dataclasses.dataclass
 class _LogsQueryJob:
@@ -93,8 +85,8 @@ def query(project_id: str, resource_type: str, log_name: str,
 
 
 @ratelimit.sleep_and_retry
-@ratelimit.limits(calls=LOGGING_RATELIMIT_REQUESTS,
-                  period=LOGGING_RATELIMIT_PERIOD_SECONDS)
+@ratelimit.limits(calls=config.LOGGING_RATELIMIT_REQUESTS,
+                  period=config.LOGGING_RATELIMIT_PERIOD_SECONDS)
 def _ratelimited_execute(req):
   """Wrapper to req.execute() with rate limiting to avoid hitting quotas."""
   return req.execute(num_retries=config.API_RETRIES)
@@ -103,7 +95,7 @@ def _ratelimited_execute(req):
 def _execute_query_job(logging_api, job: _LogsQueryJob):
   # Convert "within" relative time to an absolute timestamp.
   start_time = datetime.datetime.now(
-      datetime.timezone.utc) - datetime.timedelta(days=WITHIN_DAYS)
+      datetime.timezone.utc) - datetime.timedelta(days=config.WITHIN_DAYS)
   filter_lines = ['timestamp > "%s"' % start_time.isoformat(timespec='seconds')]
   filter_lines.append('resource.type = "%s"' % job.resource_type)
   filter_lines.append('logName = "%s"' % job.log_name)
@@ -123,7 +115,7 @@ def _execute_query_job(logging_api, job: _LogsQueryJob):
           'resourceNames': [f'projects/{job.project_id}'],
           'filter': filter_str,
           'orderBy': 'timestamp desc',
-          'pageSize': LOGGING_PAGE_SIZE
+          'pageSize': config.LOGGING_PAGE_SIZE
       })
   fetched_entries_count = 0
   query_pages = 0
@@ -137,14 +129,14 @@ def _execute_query_job(logging_api, job: _LogsQueryJob):
         deque.appendleft(e)
 
     # Verify that we aren't above limits, exit otherwise.
-    if fetched_entries_count > LOGGING_FETCH_MAX_ENTRIES:
+    if fetched_entries_count > config.LOGGING_FETCH_MAX_ENTRIES:
       logging.warning(
           'maximum number of log entries (%d) reached (project: %s, query: %s).',
-          LOGGING_FETCH_MAX_ENTRIES, job.project_id,
+          config.LOGGING_FETCH_MAX_ENTRIES, job.project_id,
           filter_str.replace('\n', ' AND '))
       return deque
     if datetime.datetime.now() - query_start_time > datetime.timedelta(
-        seconds=LOGGING_FETCH_MAX_TIME_SECONDS):
+        seconds=config.LOGGING_FETCH_MAX_TIME_SECONDS):
       logging.warning(
           'maximum query runtime for log query reached (project: %s, query: %s).',
           job.project_id, filter_str.replace('\n', ' AND '))
