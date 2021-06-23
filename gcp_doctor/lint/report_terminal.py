@@ -117,6 +117,8 @@ class LintReportTerminal(lint.LintReport):
       print(file=self.file)
     else:
       print(text, file=self.file)
+      # flush the output, so that we can more easily grep, tee, etc.
+      sys.stdout.flush()
     self.line_unfinished = False
 
   def get_logging_handler(self):
