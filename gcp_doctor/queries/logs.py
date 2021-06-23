@@ -36,6 +36,7 @@ from gcp_doctor.queries import apis
 WITHIN_DAYS = 3
 LOGGING_PAGE_SIZE = 500
 LOGGING_FETCH_MAX_ENTRIES = 10000
+LOGGING_FETCH_MAX_TIME_SECONDS = 120
 # https://cloud.google.com/logging/quotas:
 LOGGING_RATELIMIT_REQUESTS = 60
 LOGGING_RATELIMIT_PERIOD_SECONDS = 60
@@ -65,7 +66,9 @@ class LogsQuery:
           'log query wasn\'t executed. did you forget to call execute_queries()?'
       )
     elif self.job.future.running():
-      logging.info('waiting for logs query results')
+      logging.info(
+          'waiting for logs query results (project: %s, resource type: %s)',
+          self.job.project_id, self.job.resource_type)
     return self.job.future.result()
 
 
@@ -113,7 +116,6 @@ def _execute_query_job(logging_api, job: _LogsQueryJob):
   filter_str = '\n'.join(filter_lines)
   logging.info('searching logs in project %s (resource type: %s)',
                job.project_id, job.resource_type)
-  logging.debug('logs search filter: %s', filter_str.replace('\n', ' AND '))
   # Fetch all logs and put the results in temporary storage (diskcache.Deque)
   deque = cache.get_tmp_deque('tmp-logs-')
   req = logging_api.entries().list(
@@ -133,14 +135,29 @@ def _execute_query_job(logging_api, job: _LogsQueryJob):
       for e in res['entries']:
         fetched_entries_count += 1
         deque.appendleft(e)
+
+    # Verify that we aren't above limits, exit otherwise.
     if fetched_entries_count > LOGGING_FETCH_MAX_ENTRIES:
-      logging.warning('maximum number of log entries (%d) reached.')
+      logging.warning(
+          'maximum number of log entries (%d) reached (project: %s, query: %s).',
+          LOGGING_FETCH_MAX_ENTRIES, job.project_id,
+          filter_str.replace('\n', ' AND '))
+      return deque
+    if datetime.datetime.now() - query_start_time > datetime.timedelta(
+        seconds=LOGGING_FETCH_MAX_TIME_SECONDS):
+      logging.warning(
+          'maximum query runtime for log query reached (project: %s, query: %s).',
+          job.project_id, filter_str.replace('\n', ' AND '))
       return deque
     req = logging_api.entries().list_next(req, res)
+    if req is not None:
+      logging.info('still fetching logs data (project: %s, resource type: %s)',
+                   job.project_id, job.resource_type)
 
   query_end_time = datetime.datetime.now()
-  logging.debug('logging query run time: %s, pages: %d',
-                query_end_time - query_start_time, query_pages)
+  logging.debug('logging query run time: %s, pages: %d, query: %s',
+                query_end_time - query_start_time, query_pages,
+                filter_str.replace('\n', ' AND '))
 
   return deque
 
