@@ -25,7 +25,7 @@ class TestInstance:
   def test_get_instances(self):
     context = models.Context(projects=[DUMMY_PROJECT_NAME])
     instances = gce.get_instances(context)
-    assert len(instances) == 3
+    assert len(instances) == 6
     assert DUMMY_INSTANCE1_ID in instances
     assert instances[DUMMY_INSTANCE1_ID].get_full_path(
     ) == f'projects/{DUMMY_PROJECT_NAME}/zones/{DUMMY_ZONE}/instances/{DUMMY_INSTANCE1_NAME}'
@@ -60,7 +60,7 @@ class TestInstance:
     context = models.Context(projects=[DUMMY_PROJECT_NAME],
                              labels=[DUMMY_INSTANCE3_LABELS])
     instances = gce.get_instances(context)
-    assert len(instances) == 1
+    assert len(instances) == 4
     for n in instances.values():
       assert n.is_gke_node()
 

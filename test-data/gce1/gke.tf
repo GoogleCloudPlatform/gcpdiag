@@ -5,7 +5,7 @@ resource "google_container_cluster" "gke1" {
   depends_on         = [google_project_service.container]
   name               = "gke1"
   location           = "europe-west1-b"
-  initial_node_count = 1
+  initial_node_count = 4
   node_config {
     machine_type = "e2-small"
   }
