@@ -7,8 +7,10 @@ ZONE_EMPTY   = europe-west4-b
 
 all:	json-dumps/zones.json \
 	json-dumps/instances-$(ZONE_1).json \
+	json-dumps/instances-$(ZONE_1)-2.json \
 	json-dumps/instances-$(ZONE_2).json \
-	json-dumps/instances-empty.json
+	json-dumps/instances-empty.json \
+	json-dumps/monitoring-query.json
 
 json-dumps/zones.json:
 	$(CURL) -fsS \
@@ -16,13 +18,19 @@ json-dumps/zones.json:
 
 json-dumps/instances-$(ZONE_1).json:
 	$(CURL) -fsS \
-		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_1)/instances' \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_1)/instances?maxResults=3' \
+		| $(JSON_CLEANER) instances >$@
+
+json-dumps/instances-$(ZONE_1)-2.json:
+	$(CURL) -fsS \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_1)/instances?maxResults=3&pageToken=$(shell cat json-dumps/instances-$(ZONE_1).json | jq -r '.nextPageToken')' \
 		| $(JSON_CLEANER) instances >$@
 
 json-dumps/instances-$(ZONE_2).json:
 	$(CURL) -fsS \
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_2)/instances' \
 		| $(JSON_CLEANER) instances >$@
+
 
 json-dumps/instances-empty.json:
 	$(CURL) -fsS \

@@ -3,7 +3,7 @@
 
 import logging
 import re
-from typing import Dict, List, Mapping, Optional
+from typing import Callable, Dict, Iterable, List, Mapping, Optional, Set
 
 import googleapiclient.errors
 
@@ -93,21 +93,89 @@ class Instance(models.Resource):
     return self._metadata_dict[key]
 
 
+class ManagedInstanceGroup(models.Resource):
+  """Represents a GCE managed instance group."""
+  _resource_data: dict
+
+  def __init__(self, project_id, resource_data):
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+
+
+@cache.cached_api_call(in_memory=True)
+def get_gce_zones(project_id: str) -> Set[str]:
+  try:
+    gce_api = apis.get_api('compute', 'v1')
+    logging.info('listing gce zones of project %s', project_id)
+    request = gce_api.zones().list(project=project_id)
+    response = request.execute(num_retries=config.API_RETRIES)
+    if not response or 'items' not in response:
+      return set()
+    return {item['name'] for item in response['items'] if 'name' in item}
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
+
+
+def batch_fetch_all(api, requests: Iterable, next_function: Callable,
+                    log_text: str):
+  try:
+    items = []
+    additional_pages_to_fetch = []
+    pending_requests = list(requests)
+
+    def fetch_all_cb(request_id, response, exception):
+      if exception:
+        logging.error('exception when %s: %s', log_text, exception)
+        return
+      if not response or 'items' not in response:
+        return
+      items.extend(response['items'])
+      if 'nextPageToken' in response and response['nextPageToken']:
+        additional_pages_to_fetch.append(
+            (pending_requests[int(request_id)], response))
+
+    page = 1
+    while pending_requests:
+      batch = api.new_batch_http_request()
+      for i, req in enumerate(pending_requests):
+        batch.add(req, callback=fetch_all_cb, request_id=str(i))
+      if page <= 1:
+        logging.info(log_text)
+      else:
+        logging.info('%s (page: %d)', log_text, page)
+      batch.execute()
+
+      # Do we need to fetch any additional pages?
+      pending_requests = []
+      for p in additional_pages_to_fetch:
+        req = next_function(p[0], p[1])
+        if req:
+          pending_requests.append(req)
+      additional_pages_to_fetch = []
+      page += 1
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
+
+  return items
+
+
 @cache.cached_api_call
 def get_instances(context: models.Context) -> Mapping[str, Instance]:
   """Get a list of Instance matching the given context, indexed by instance id."""
-  # TODO(dwes): somehow reduce complexity
-  instances: Dict[str, Instance] = {}
-  pages_to_fetch = []
 
-  def instances_list_callback(request, response, exception):
-    del request
-    if exception:
-      logging.error('exception when listing instances: %s', exception)
-      return
-    if not response or 'items' not in response:
-      return
-    for i in response['items']:
+  instances: Dict[str, Instance] = {}
+  gce_api = apis.get_api('compute', 'v1')
+  for project_id in context.projects:
+    requests = [
+        gce_api.instances().list(project=project_id, zone=zone)
+        for zone in get_gce_zones(project_id)
+    ]
+    items = batch_fetch_all(
+        api=gce_api,
+        requests=requests,
+        next_function=gce_api.instances().list_next,
+        log_text=f'listing gce instances of project {project_id}')
+    for i in items:
       result = re.match(
           r'https://www.googleapis.com/compute/v1/projects/([^/]+)/zones/([^/]+)/',
           i['selfLink'])
@@ -121,50 +189,4 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
       if not context.match_project_resource(location=zone, labels=labels):
         continue
       instances[i['id']] = Instance(project_id=project_id, resource_data=i)
-    if 'nextPageToken' in response and response['nextPageToken']:
-      pages_to_fetch.append((zone, response['nextPageToken']))
-
-  gce_api = apis.get_api('compute', 'v1')
-  for project_id in context.projects:
-    try:
-      logging.info('listing gce zones of project %s', project_id)
-      request = gce_api.zones().list(project=project_id)
-      response = request.execute(num_retries=config.API_RETRIES)
-      if not response or 'items' not in response:
-        continue
-      logging.info('listing gce instances of project %s', project_id)
-      batch = gce_api.new_batch_http_request()
-      for zone in response['items']:
-        if not 'name' in zone:
-          continue
-        # If the context filters by regions, make sure that we query only those
-        # regions.
-        if context.regions:
-          if not any(1 for r in context.regions if zone['name'].startswith(r)):
-            continue
-        batch.add(gce_api.instances().list(project=project_id,
-                                           zone=zone['name']),
-                  callback=instances_list_callback)
-      batch.execute()
-
-      # Continue fetching pages, until there are no more left.
-      page = 1
-      while pages_to_fetch:
-        page += 1
-        logging.info('listing gce instances of project %s (page: %d)',
-                     project_id, page)
-        batch = gce_api.new_batch_http_request()
-        pages_to_fetch_now = pages_to_fetch
-        pages_to_fetch = []
-        for p in pages_to_fetch_now:
-          batch.add(gce_api.instances().list(project=project_id,
-                                             zone=p[0],
-                                             pageToken=p[1]),
-                    callback=instances_list_callback)
-        batch.execute()
-
-    except googleapiclient.errors.HttpError as err:
-      errstr = utils.http_error_message(err)
-      raise ValueError(
-          f'can\'t list instances for project {project_id}: {errstr}') from err
   return instances

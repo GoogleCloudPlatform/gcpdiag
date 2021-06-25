@@ -3,7 +3,7 @@ DIST_NAME=gcp-doctor-$(VERSION)
 SHELL=/bin/bash
 
 test:
-	pytest --cov-config=.coveragerc --cov=gcp_doctor --forked
+	pytest -o log_level=DEBUG --cov-config=.coveragerc --cov=gcp_doctor --forked
 
 snapshots:
 	pytest --snapshot-update
