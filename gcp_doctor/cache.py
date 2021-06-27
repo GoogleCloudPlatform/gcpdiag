@@ -11,6 +11,7 @@ import pickle
 import shutil
 import tempfile
 import threading
+from typing import List
 
 import diskcache
 
@@ -51,6 +52,16 @@ def get_cache() -> diskcache.Cache:
   return _cache
 
 
+deque_tmpdirs: List[str] = []
+
+
+def _clean_tmp_deque():
+  global deque_tmpdirs
+  for d in deque_tmpdirs:
+    logging.debug('deleting dequeue tempdir: %s', d)
+    shutil.rmtree(d, ignore_errors=True)
+
+
 def get_tmp_deque(prefix='tmp-deque-') -> diskcache.Deque:
   """Get a Diskcache.Deque object useful to temporily store data (like logs).
 
@@ -58,13 +69,11 @@ def get_tmp_deque(prefix='tmp-deque-') -> diskcache.Deque:
     prefix: prefix to be added to the temporary directory (default: tmp-deque)
   """
   tempdir = tempfile.mkdtemp(prefix=prefix, dir=config.CACHE_DIR)
+  global deque_tmpdirs
+  if not deque_tmpdirs:
+    atexit.register(_clean_tmp_deque)
+  deque_tmpdirs.append(tempdir)
   deque = diskcache.Deque(directory=tempdir)
-
-  def clean_tmp_deque():
-    logging.debug('deleting dequeue tempdir: %s', tempdir)
-    shutil.rmtree(tempdir, ignore_errors=True)
-
-  atexit.register(clean_tmp_deque)
   return deque
 
 
