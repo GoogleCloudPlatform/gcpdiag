@@ -40,7 +40,7 @@ def prepare_rule(context: models.Context):
     gce_logs_by_project[project_id] = logs.query(
         project_id=project_id,
         resource_type='gce_instance',
-        log_name='log_id(cloudaudit.googleapis.com/activity)',
+        log_name='log_id("cloudaudit.googleapis.com/activity")',
         filter_str='severity=ERROR AND '
         'protoPayload.methodName="v1.compute.instances.insert" AND '
         'protoPayload.status.message="LIMIT_EXCEEDED"')
