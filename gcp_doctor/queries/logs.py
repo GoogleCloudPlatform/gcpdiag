@@ -141,16 +141,18 @@ def _execute_query_job(logging_api, job: _LogsQueryJob):
           config.LOGGING_FETCH_MAX_ENTRIES, job.project_id,
           filter_str.replace('\n', ' AND '))
       return deque
-    if datetime.datetime.now() - query_start_time > datetime.timedelta(
-        seconds=config.LOGGING_FETCH_MAX_TIME_SECONDS):
+    run_time = (datetime.datetime.now() - query_start_time).total_seconds()
+    if run_time >= config.LOGGING_FETCH_MAX_TIME_SECONDS:
       logging.warning(
           'maximum query runtime for log query reached (project: %s, query: %s).',
           job.project_id, filter_str.replace('\n', ' AND '))
       return deque
     req = logging_api.entries().list_next(req, res)
     if req is not None:
-      logging.info('still fetching logs data (project: %s, resource type: %s)',
-                   job.project_id, job.resource_type)
+      logging.info(
+          'still fetching logs (project: %s, resource type: %s, max wait: %ds)',
+          job.project_id, job.resource_type,
+          config.LOGGING_FETCH_MAX_TIME_SECONDS - run_time)
 
   query_end_time = datetime.datetime.now()
   logging.debug('logging query run time: %s, pages: %d, query: %s',
