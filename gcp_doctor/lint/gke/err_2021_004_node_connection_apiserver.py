@@ -10,19 +10,21 @@ The following log line is searched: "Failed to connect to apiserver"
 
 from gcp_doctor import lint, models
 from gcp_doctor.lint.gke import util
-from gcp_doctor.queries import gke
+from gcp_doctor.queries import gke, logs
 
 MATCH_STR = 'Failed to connect to apiserver'
-logs_by_project: dict
+logs_by_project = dict()
 
 
 def prepare_rule(context: models.Context):
   global logs_by_project
-  logs_by_project = util.gke_logs_query(
-      context,
-      resource_type='k8s_node',
-      log_name='projects/{{project_id}}/logs/kubelet',
-      filter_str=f'jsonPayload.MESSAGE:"{MATCH_STR}"')
+  clusters = gke.get_clusters(context)
+  for project_id in {c.project_id for c in clusters.values()}:
+    logs_by_project[project_id] = logs.query(
+        project_id=project_id,
+        resource_type='k8s_node',
+        log_name='log_id("kubelet")',
+        filter_str=f'jsonPayload.MESSAGE:"{MATCH_STR}"')
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
