@@ -235,8 +235,8 @@ def get_service_accounts(
                 'missing data in projects.serviceAccounts.list response')
           sa = ServiceAccount(project_id=project_id, resource_data=resp_sa)
           accounts[resp_sa['email']] = sa
-          logging.info('found service account %s: %s in project %s',
-                       resp_sa['name'], sa, project_id)
+          logging.debug('found service account %s: %s in project %s',
+                        resp_sa['name'], sa, project_id)
           request = iam_api.projects().serviceAccounts().list_next(
               previous_request=request, previous_response=resp)
     except googleapiclient.errors.HttpError as err:
