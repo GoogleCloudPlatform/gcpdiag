@@ -34,7 +34,7 @@ class _LintReportTerminalLoggingHandler(logging.Handler):
 
   def emit(self, record):
     if record.levelno == logging.INFO and self.report.log_info_for_progress_only:
-      msg = '   ... ' + self.format(record) + ' '
+      msg = '   ... ' + self.format(record)
       # make sure we don't go beyond the terminal width
       if self.report.term.width:
         term_overflow = len(msg) - self.report.term.width
