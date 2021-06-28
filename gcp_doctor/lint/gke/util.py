@@ -3,29 +3,10 @@
 
 import collections
 import logging
-import re
-from typing import Any, Callable, Dict, Tuple
+from typing import Callable, Dict, Tuple
 
 from gcp_doctor import models
 from gcp_doctor.queries import gce, gke, logs
-
-
-def gke_logs_query(context: models.Context, resource_type: str, log_name: str,
-                   filter_str: str) -> Dict[str, Any]:
-
-  logs_by_project = dict()
-  clusters = gke.get_clusters(context)
-  project_ids = {c.project_id for c in clusters.values()}
-
-  for project_id in project_ids:
-    # Log names often have the project_id in them (for some reason...), so support
-    # here a syntax to interpolate the project_id in them: '{{project_id}}'
-    log_name_expanded = re.sub('{{project_id}}', project_id, log_name)
-    logs_by_project[project_id] = logs.query(project_id=project_id,
-                                             resource_type=resource_type,
-                                             log_name=log_name_expanded,
-                                             filter_str=filter_str)
-  return logs_by_project
 
 
 class _CantMapLogEntry(BaseException):
