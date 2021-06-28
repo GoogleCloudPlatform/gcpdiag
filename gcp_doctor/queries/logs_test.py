@@ -45,9 +45,9 @@ class TestLogs:
       logs.execute_queries(executor)
     # verify the filter that is used
     assert re.match(
-        r'timestamp > "\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d\+00:00"\n'
-        r'resource.type = "gce_instance"\n'
-        r'logName = "fake.log"\n'
+        r'timestamp>"\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d\+00:00"\n'
+        r'resource.type="gce_instance"\n'
+        r'logName="fake.log"\n'
         r'\(\(filter1\) OR \(filter2\)\)', logs_stub.logging_body['filter'])
     # also verify other parameters of the job
     assert logs_stub.logging_body['orderBy'] == 'timestamp desc'
