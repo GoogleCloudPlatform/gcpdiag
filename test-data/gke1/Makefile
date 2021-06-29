@@ -4,23 +4,56 @@ CURL         = ../../bin/curl-wrap.sh
 JSON_CLEANER = ../../bin/json-cleaner
 REGION_1     = europe-west1
 ZONE_1       = europe-west4-a
+ZONE_EMPTY   = europe-west4-b
 
 # Execute all lines in a single bash session.
 #.ONESHELL:
 #SHELL=/bin/bash
 #.SHELLFLAGS=-e
 
-all:	json-dumps/clusters.json \
+all:	\
+	json-dumps/container-clusters.json \
+	json-dumps/container-server-config-$(REGION_1).json \
+	json-dumps/container-server-config-$(ZONE_1).json \
+	json-dumps/compute-instances-$(ZONE_1).json \
+	json-dumps/compute-instances-empty.json \
+	json-dumps/compute-migs-$(ZONE_1).json \
+	json-dumps/compute-migs-empty.json \
+	json-dumps/compute-zones.json \
 	json-dumps/iam-policy.json \
 	json-dumps/iam-roles-custom.json \
 	json-dumps/iam-roles-predefined-1.json.gz \
 	json-dumps/iam-roles-predefined-2.json.gz \
  	json-dumps/project.json
 
-json-dumps/clusters.json:
+# compute.googleapis.com
+
+json-dumps/compute-zones.json:
 	$(CURL) -fsS \
-		'https://container.googleapis.com/v1/projects/$(PROJECT_ID)/locations/-/clusters' \
-		| $(JSON_CLEANER) clusters >$@
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones' >$@
+
+json-dumps/compute-instances-$(ZONE_1).json:
+	$(CURL) -fsS \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_1)/instances' \
+		| $(JSON_CLEANER) instances >$@
+
+json-dumps/compute-migs-$(ZONE_1).json:
+	$(CURL) -fsS \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_1)/instanceGroupManagers' \
+		 >$@
+
+json-dumps/compute-instances-empty.json:
+	$(CURL) -fsS \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_EMPTY)/instances' \
+		| $(JSON_CLEANER) instances >$@
+
+json-dumps/compute-migs-empty.json:
+	$(CURL) -fsS \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_EMPTY)/instanceGroupManagers' \
+		| $(JSON_CLEANER) instances >$@
+
+
+# cloudresourcemanager.googleapis.com
 
 json-dumps/project.json:
 	$(CURL) -fsS \
@@ -32,6 +65,8 @@ json-dumps/iam-policy.json:
 		-X POST  --header "Content-Type:text/json" \
 		-d "" \
 		| $(JSON_CLEANER) other >$@
+
+# iam.googleapis.com
 
 json-dumps/iam-roles-predefined-1.json.gz:
 	$(CURL) -fsS \
@@ -45,11 +80,18 @@ json-dumps/iam-roles-custom.json:
 	$(CURL) -fsS \
 		'https://iam.googleapis.com/v1/projects/$(PROJECT_ID)/roles?view=FULL&pageSize=500' >$@
 
-json-dumps/server-config-region-1.json:
+# container.googleapis.com
+
+json-dumps/clusters.json:
+	$(CURL) -fsS \
+		'https://container.googleapis.com/v1/projects/$(PROJECT_ID)/locations/-/clusters' \
+		| $(JSON_CLEANER) clusters >$@
+
+json-dumps/container-server-config-$(REGION_1).json:
 	$(CURL) -fsS \
 		'https://container.googleapis.com/v1/projects/$(PROJECT_ID)/locations/$(REGION_1)/serverConfig' >$@
 
-json-dumps/server-config-zone-1.json:
+json-dumps/container-server-config-$(ZONE_1).json:
 	$(CURL) -fsS \
 		'https://container.googleapis.com/v1/projects/$(PROJECT_ID)/zones/$(ZONE_1)/serverconfig' >$@
 

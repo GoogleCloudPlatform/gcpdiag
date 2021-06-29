@@ -9,7 +9,7 @@ from typing import Dict, Iterable, List, Mapping, Optional
 import googleapiclient.errors
 
 from gcp_doctor import cache, config, models, utils
-from gcp_doctor.queries import apis
+from gcp_doctor.queries import apis, gce
 
 
 class NodePool(models.Resource):
@@ -19,6 +19,7 @@ class NodePool(models.Resource):
     super().__init__(project_id=cluster.project_id)
     self._cluster = cluster
     self._resource_data = resource_data
+    self._migs = None
 
   def _get_service_account(self) -> str:
     return self._resource_data.get('config', {}).get('serviceAccount', None)
@@ -73,18 +74,22 @@ class NodePool(models.Resource):
   def cluster(self) -> 'Cluster':
     return self._cluster
 
-  # TODO: replace instance_group_names with instance_groups as soon as we
-  # have a model for instance groups in gce.py
   @property
-  def instance_group_names(self) -> List[str]:
-    result = []
-    for url in self._resource_data.get('instanceGroupUrls', []):
-      m = re.search(r'/instanceGroupManagers/([^/]+)$', url)
-      if not m:
-        raise RuntimeError(
-            'can\'t parse selfLink of nodepool instanceGroupUrls: %s' % url)
-      result.append(m.group(1))
-    return result
+  def instance_groups(self) -> List[gce.ManagedInstanceGroup]:
+    if self._migs is None:
+      project_migs_by_selflink = dict()
+      for m in gce.get_managed_instance_groups(
+          models.Context(projects=[self.project_id])).values():
+        project_migs_by_selflink[m.self_link] = m
+
+      self._migs = []
+      for url in self._resource_data.get('instanceGroupUrls', []):
+        try:
+          self._migs.append(project_migs_by_selflink[url])
+        except KeyError:
+          continue
+
+    return self._migs
 
 
 class Cluster(models.Resource):

@@ -116,3 +116,12 @@ class TestCluster:
     clusters = gke.get_clusters(context)
     c = clusters[DUMMY_CLUSTER1_NAME]
     assert not c.nodepools[0].has_workload_identity_enabled()
+
+  def test_nodepool_instance_groups(self):
+    context = models.Context(projects=[DUMMY_PROJECT_NAME])
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    migs = c.nodepools[0].instance_groups
+    assert len(migs) == 1
+    m = next(iter(migs))
+    assert m.is_gke()

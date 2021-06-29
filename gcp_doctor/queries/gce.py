@@ -101,6 +101,34 @@ class ManagedInstanceGroup(models.Resource):
     super().__init__(project_id=project_id)
     self._resource_data = resource_data
 
+  def is_gke(self) -> bool:
+    """Is this managed instance group part of a GKE cluster?
+
+    Note that the results are based on heuristics (the mig name),
+    which is not ideal.
+    """
+    return self.name.startswith('gke-')
+
+  @property
+  def self_link(self) -> str:
+    return self._resource_data['selfLink']
+
+  @property
+  def name(self) -> str:
+    return self._resource_data['name']
+
+  def get_full_path(self) -> str:
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
+                      self._resource_data['selfLink'])
+    if result:
+      return result.group(1)
+    else:
+      return '>> ' + self._resource_data['selfLink']
+
+  def get_short_path(self) -> str:
+    path = self.project_id + '/' + self.name
+    return path
+
 
 @cache.cached_api_call(in_memory=True)
 def get_gce_zones(project_id: str) -> Set[str]:
@@ -190,3 +218,38 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
         continue
       instances[i['id']] = Instance(project_id=project_id, resource_data=i)
   return instances
+
+
+@cache.cached_api_call
+def get_managed_instance_groups(
+    context: models.Context) -> Mapping[int, ManagedInstanceGroup]:
+  """Get a list of ManagedInstanceGroups matching the given context, indexed by mig id."""
+
+  migs: Dict[int, ManagedInstanceGroup] = {}
+  gce_api = apis.get_api('compute', 'v1')
+  for project_id in context.projects:
+    requests = [
+        gce_api.instanceGroupManagers().list(project=project_id, zone=zone)
+        for zone in get_gce_zones(project_id)
+    ]
+    items = batch_fetch_all(
+        api=gce_api,
+        requests=requests,
+        next_function=gce_api.instances().list_next,
+        log_text=f'listing managed instance groups of project {project_id}')
+    for i in items:
+      result = re.match(
+          r'https://www.googleapis.com/compute/v1/projects/([^/]+)/zones/([^/]+)/',
+          i['selfLink'])
+      if not result:
+        logging.error('mig %s selfLink didn\'t match regexp: %s', i['name'],
+                      i['selfLink'])
+        continue
+      project_id = result.group(1)
+      zone = result.group(2)
+      labels = i.get('labels', {})
+      if not context.match_project_resource(location=zone, labels=labels):
+        continue
+      migs[i['id']] = ManagedInstanceGroup(project_id=project_id,
+                                           resource_data=i)
+  return migs

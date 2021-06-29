@@ -74,9 +74,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     cluster_migs = collections.defaultdict(set)
     for c in clusters.values():
       for np in c.nodepools:
-        for mig_name in np.instance_group_names:
-          cluster_by_mig[mig_name] = c
-          cluster_migs[c].add(mig_name)
+        for mig in np.instance_groups:
+          cluster_by_mig[mig.name] = c
+          cluster_migs[c].add(mig.name)
   except KeyError:
     pass
 
