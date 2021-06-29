@@ -1,0 +1,64 @@
+{
+  "id": "projects/gcpd-gce1-4exv/zones/europe-west1-b/instanceGroupManagers",
+  "items": [
+    {
+      "id": "5798081062520772397",
+      "creationTimestamp": "2021-06-25T07:35:46.375-07:00",
+      "name": "gke-gke1-default-pool-564e261a-grp",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/zones/europe-west1-b",
+      "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/global/instanceTemplates/gke-gke1-default-pool-564e261a",
+      "versions": [
+        {
+          "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/global/instanceTemplates/gke-gke1-default-pool-564e261a",
+          "targetSize": {
+            "calculated": 4
+          }
+        }
+      ],
+      "instanceGroup": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/zones/europe-west1-b/instanceGroups/gke-gke1-default-pool-564e261a-grp",
+      "baseInstanceName": "gke-gke1-default-pool-564e261a",
+      "fingerprint": "Qjzn2OicNpU=",
+      "currentActions": {
+        "none": 4,
+        "creating": 0,
+        "creatingWithoutRetries": 0,
+        "verifying": 0,
+        "recreating": 0,
+        "deleting": 0,
+        "abandoning": 0,
+        "restarting": 0,
+        "refreshing": 0
+      },
+      "status": {
+        "isStable": true,
+        "versionTarget": {
+          "isReached": true
+        },
+        "stateful": {
+          "hasStatefulConfig": false,
+          "perInstanceConfigs": {
+            "allEffective": true
+          }
+        }
+      },
+      "targetSize": 4,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/zones/europe-west1-b/instanceGroupManagers/gke-gke1-default-pool-564e261a-grp",
+      "updatePolicy": {
+        "type": "OPPORTUNISTIC",
+        "minimalAction": "REPLACE",
+        "maxSurge": {
+          "fixed": 1,
+          "calculated": 1
+        },
+        "maxUnavailable": {
+          "fixed": 1,
+          "calculated": 1
+        },
+        "replacementMethod": "SUBSTITUTE"
+      },
+      "kind": "compute#instanceGroupManager"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/zones/europe-west1-b/instanceGroupManagers",
+  "kind": "compute#instanceGroupManagerList"
+}

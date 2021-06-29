@@ -1,5 +1,5 @@
 # Lint as: python3
-"""Test code in gke.py."""
+"""Test code in gce.py."""
 
 from unittest import mock
 
@@ -19,8 +19,8 @@ DUMMY_INSTANCE3_LABELS = {'gcp_doctor_test': 'gke'}
 
 
 @mock.patch('gcp_doctor.queries.apis.get_api', new=gce_stub.get_api_stub)
-class TestInstance:
-  """Test gce.Instance."""
+class TestGce:
+  """Test code in gce.py"""
 
   def test_get_instances(self):
     context = models.Context(projects=[DUMMY_PROJECT_NAME])
@@ -71,3 +71,26 @@ class TestInstance:
     assert instances[
         DUMMY_INSTANCE1_ID].service_account == \
           f'{DUMMY_PROJECT_NR}-compute@developer.gserviceaccount.com'
+
+  def test_get_managed_instance_groups(self):
+    context = models.Context(projects=[DUMMY_PROJECT_NAME],
+                             regions=['europe-west4'])
+    migs = gce.get_managed_instance_groups(context)
+    assert len(migs) == 1
+    m = next(iter(migs.values()))
+    assert m.name == 'mig'
+    assert m.is_gke() is False
+
+  def test_get_managed_instance_groups_gke(self):
+    context = models.Context(projects=[DUMMY_PROJECT_NAME],
+                             regions=['europe-west1'])
+    migs = gce.get_managed_instance_groups(context)
+    assert len(migs) == 1
+    m = next(iter(migs.values()))
+    assert m.is_gke() is True
+
+  def test_get_managed_instance_groups_empty_result(self):
+    context = models.Context(projects=[DUMMY_PROJECT_NAME],
+                             labels=[DUMMY_INSTANCE1_LABELS])
+    migs = gce.get_managed_instance_groups(context)
+    assert len(migs) == 0
