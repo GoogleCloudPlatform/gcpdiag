@@ -96,10 +96,12 @@ class Instance(models.Resource):
 class ManagedInstanceGroup(models.Resource):
   """Represents a GCE managed instance group."""
   _resource_data: dict
+  _region: Optional[str]
 
   def __init__(self, project_id, resource_data):
     super().__init__(project_id=project_id)
     self._resource_data = resource_data
+    self._region = None
 
   def is_gke(self) -> bool:
     """Is this managed instance group part of a GKE cluster?
@@ -107,7 +109,9 @@ class ManagedInstanceGroup(models.Resource):
     Note that the results are based on heuristics (the mig name),
     which is not ideal.
     """
-    return self.name.startswith('gke-')
+
+    # gke- is normal GKE, gk3- is GKE autopilot
+    return self.name.startswith('gke-') or self.name.startswith('gk3-')
 
   @property
   def self_link(self) -> str:
@@ -116,6 +120,28 @@ class ManagedInstanceGroup(models.Resource):
   @property
   def name(self) -> str:
     return self._resource_data['name']
+
+  @property
+  def region(self) -> str:
+    if self._region is None:
+      if 'region' in self._resource_data:
+        m = re.search(r'/regions/([^/]+)$', self._resource_data['region'])
+        if not m:
+          raise RuntimeError('can\'t determine region of mig %s (%s)' %
+                             (self.name, self._resource_data['region']))
+        self._region = m.group(1)
+      elif 'zone' in self._resource_data:
+        m = re.search(r'/zones/([^/]+)$', self._resource_data['zone'])
+        if not m:
+          raise RuntimeError('can\'t determine region of mig %s (%s)' %
+                             (self.name, self._resource_data['region']))
+        zone = m.group(1)
+        self._region = utils.zone_region(zone)
+      else:
+        raise RuntimeError(
+            'can\'t determine region of mig %s, both region and zone aren\'t set!'
+        )
+    return self._region
 
   def get_full_path(self) -> str:
     result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
@@ -128,6 +154,12 @@ class ManagedInstanceGroup(models.Resource):
   def get_short_path(self) -> str:
     path = self.project_id + '/' + self.name
     return path
+
+  def is_instance_member(self, project_id: str, region: str,
+                         instance_name: str):
+    """Given the project_id, region and instance name, is it a member of this MIG?"""
+    return self.project_id == project_id and self.region == region and \
+        instance_name.startswith(self._resource_data['baseInstanceName'])
 
 
 @cache.cached_api_call(in_memory=True)
@@ -239,16 +271,16 @@ def get_managed_instance_groups(
         log_text=f'listing managed instance groups of project {project_id}')
     for i in items:
       result = re.match(
-          r'https://www.googleapis.com/compute/v1/projects/([^/]+)/zones/([^/]+)/',
+          r'https://www.googleapis.com/compute/v1/projects/([^/]+)/(?:regions|zones)/([^/]+)/',
           i['selfLink'])
       if not result:
         logging.error('mig %s selfLink didn\'t match regexp: %s', i['name'],
                       i['selfLink'])
         continue
       project_id = result.group(1)
-      zone = result.group(2)
+      location = result.group(2)
       labels = i.get('labels', {})
-      if not context.match_project_resource(location=zone, labels=labels):
+      if not context.match_project_resource(location=location, labels=labels):
         continue
       migs[i['id']] = ManagedInstanceGroup(project_id=project_id,
                                            resource_data=i)

@@ -15,6 +15,7 @@ RES_NAME_VALUE = r'[a-z0-9][-a-z0-9]*'
 REL_RES_NAME_MATCH = r'({key}/{value}/)*{key}/{value}'.format(
     key=RES_NAME_KEY, value=RES_NAME_VALUE)
 REGION_NAME_MATCH = r'^\w+-\w+$'
+ZONE_NAME_MATCH = r'^(\w+-\w+)-\w+$'
 FULL_RES_NAME_MATCH = DOMAIN_RES_NAME_MATCH + REL_RES_NAME_MATCH
 
 
@@ -78,6 +79,14 @@ def get_project_by_res_name(res_name: str) -> str:
 
 def is_region(name: str) -> bool:
   return bool(re.match(REGION_NAME_MATCH, name))
+
+
+def zone_region(zone: str) -> str:
+  """Get region name of a zone."""
+  m = re.match(ZONE_NAME_MATCH, zone)
+  if not m:
+    raise ValueError('can\'t parse zone name: <%s>' % zone)
+  return m.group(1)
 
 
 def is_full_res_name(res_name: str) -> bool:
