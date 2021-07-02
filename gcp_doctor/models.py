@@ -116,14 +116,14 @@ class Resource(abc.ABC):
     self._project_id = project_id
 
   def __str__(self):
-    return self.get_full_path()
+    return self.full_path
 
   def __hash__(self):
-    return self.get_full_path().__hash__()
+    return self.full_path.__hash__()
 
   def __eq__(self, other):
     if self.__class__ == other.__class__:
-      return self.get_full_path() == other.get_full_path()
+      return self.full_path == other.full_path
     else:
       return False
 
@@ -136,22 +136,24 @@ class Resource(abc.ABC):
   def project_nr(self) -> int:
     return project.get_project_nr(self.project_id)
 
-  # FIXME: should we have get_full_name and return what is documented
+  # TODO: should we have full_name() and return what is documented
   # here? https://cloud.google.com/iam/docs/full-resource-names
 
+  @property
   @abc.abstractmethod
-  def get_full_path(self):
+  def full_path(self) -> str:
     """Returns the full path of this resource.
 
     Example: 'projects/gcpd-gke-1-9b90/zones/europe-west4-a/clusters/gke1'
     """
     pass
 
-  def get_short_path(self) -> str:
+  @property
+  def short_path(self) -> str:
     """Returns the short name for this resource.
 
     Note that it isn't clear from this name what kind of resource it is.
 
     Example: 'gcpd-gke-1-9b90/gke1'
     """
-    return self.get_full_path()
+    return self.full_path

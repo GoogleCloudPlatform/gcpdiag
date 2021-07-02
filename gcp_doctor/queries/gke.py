@@ -24,7 +24,8 @@ class NodePool(models.Resource):
   def _get_service_account(self) -> str:
     return self._resource_data.get('config', {}).get('serviceAccount', None)
 
-  def get_full_path(self) -> str:
+  @property
+  def full_path(self) -> str:
     # https://container.googleapis.com/v1/projects/gcpd-gke-1-9b90/
     #   locations/europe-west1/clusters/gke2/nodePools/default-pool
     m = re.match(r'https://container.googleapis.com/v1/(.*)',
@@ -33,8 +34,9 @@ class NodePool(models.Resource):
       raise RuntimeError('can\'t parse selfLink of nodepool resource')
     return m.group(1)
 
-  def get_short_path(self) -> str:
-    path = self.get_full_path()
+  @property
+  def short_path(self) -> str:
+    path = self.full_path
     path = re.sub(r'^projects/', '', path)
     path = re.sub(r'/locations/', '/', path)
     path = re.sub(r'/zones/', '/', path)
@@ -105,6 +107,24 @@ class Cluster(models.Resource):
     self._nodepools = None
 
   @property
+  def full_path(self) -> str:
+    if utils.is_region(self._resource_data['location']):
+      return (f'projects/{self.project_id}/'
+              f'locations/{self.location}/clusters/{self.name}')
+    else:
+      return (f'projects/{self.project_id}/'
+              f'zones/{self.location}/clusters/{self.name}')
+
+  @property
+  def short_path(self) -> str:
+    path = self.full_path
+    path = re.sub(r'^projects/', '', path)
+    path = re.sub(r'/locations/', '/', path)
+    path = re.sub(r'/zones/', '/', path)
+    path = re.sub(r'/clusters/', '/', path)
+    return path
+
+  @property
   def name(self) -> str:
     return self._resource_data['name']
 
@@ -135,22 +155,6 @@ class Cluster(models.Resource):
   @property
   def app_layer_sec_key(self) -> str:
     return self._resource_data['databaseEncryption'].get('keyName')
-
-  def get_full_path(self) -> str:
-    if utils.is_region(self._resource_data['location']):
-      return (f'projects/{self.project_id}/'
-              f'locations/{self.location}/clusters/{self.name}')
-    else:
-      return (f'projects/{self.project_id}/'
-              f'zones/{self.location}/clusters/{self.name}')
-
-  def get_short_path(self) -> str:
-    path = self.get_full_path()
-    path = re.sub(r'^projects/', '', path)
-    path = re.sub(r'/locations/', '/', path)
-    path = re.sub(r'/zones/', '/', path)
-    path = re.sub(r'/clusters/', '/', path)
-    return path
 
   def has_app_layer_enc_enabled(self) -> bool:
     # state := 'DECRYPTED' | 'ENCRYPTED', keyName := 'full_path_to_key_resouce'
@@ -194,7 +198,7 @@ def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
             location=resp_c['location'], labels=resp_c.get('resourceLabels')):
           continue
         c = Cluster(project_id=project_id, resource_data=resp_c)
-        clusters[c.get_full_path()] = c
+        clusters[c.full_path] = c
     except googleapiclient.errors.HttpError as err:
       errstr = utils.http_error_message(err)
       # TODO: implement proper exception classes

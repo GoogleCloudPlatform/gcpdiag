@@ -27,10 +27,10 @@ class TestGce:
     instances = gce.get_instances(context)
     assert len(instances) == 6
     assert DUMMY_INSTANCE1_ID in instances
-    assert instances[DUMMY_INSTANCE1_ID].get_full_path(
-    ) == f'projects/{DUMMY_PROJECT_NAME}/zones/{DUMMY_ZONE}/instances/{DUMMY_INSTANCE1_NAME}'
-    assert instances[DUMMY_INSTANCE1_ID].get_short_path(
-    ) == f'{DUMMY_PROJECT_NAME}/{DUMMY_INSTANCE1_NAME}'
+    assert instances[DUMMY_INSTANCE1_ID].full_path == \
+        f'projects/{DUMMY_PROJECT_NAME}/zones/{DUMMY_ZONE}/instances/{DUMMY_INSTANCE1_NAME}'
+    assert instances[DUMMY_INSTANCE1_ID].short_path == \
+        f'{DUMMY_PROJECT_NAME}/{DUMMY_INSTANCE1_NAME}'
 
   def test_get_instances_by_region_returns_instance(self):
     context = models.Context(projects=[DUMMY_PROJECT_NAME],

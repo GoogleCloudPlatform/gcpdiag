@@ -166,7 +166,7 @@ class LintReportTerminal(lint.LintReport):
       short_info = ''
     if resource:
       self.terminal_print_line('   - ' +
-                               resource.get_short_path().ljust(OUTPUT_WIDTH) +
+                               resource.short_path.ljust(OUTPUT_WIDTH) +
                                ' [SKIP]' + short_info)
       self.terminal_print_line(textwrap.indent(reason, '     '))
     else:
@@ -184,8 +184,7 @@ class LintReportTerminal(lint.LintReport):
       short_info = ' ' + short_info
     else:
       short_info = ''
-    self.terminal_print_line('   - ' +
-                             resource.get_short_path().ljust(OUTPUT_WIDTH) +
+    self.terminal_print_line('   - ' + resource.short_path.ljust(OUTPUT_WIDTH) +
                              ' [' + self.term.green(' OK ') + ']' + short_info)
 
   def add_failed(self, rule: lint.LintRule, context: models.Context,
@@ -199,8 +198,7 @@ class LintReportTerminal(lint.LintReport):
       short_info = ' ' + short_info
     else:
       short_info = ''
-    self.terminal_print_line('   - ' +
-                             resource.get_short_path().ljust(OUTPUT_WIDTH) +
+    self.terminal_print_line('   - ' + resource.short_path.ljust(OUTPUT_WIDTH) +
                              ' [' + self.term.red('FAIL') + ']' + short_info)
     if reason:
       self.terminal_print_line(textwrap.indent(reason, '     '))

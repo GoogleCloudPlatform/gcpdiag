@@ -29,6 +29,21 @@ class Instance(models.Resource):
     return self._resource_data['name']
 
   @property
+  def full_path(self) -> str:
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
+                      self._resource_data['selfLink'])
+    if result:
+      return result.group(1)
+    else:
+      return '>> ' + self._resource_data['selfLink']
+
+  @property
+  def short_path(self) -> str:
+    # Note: instance names must be unique per project, so no need to add the zone.
+    path = self.project_id + '/' + self.name
+    return path
+
+  @property
   def metadata(self) -> List:
     metadata = self._resource_data.get('metadata')
     if metadata:
@@ -56,19 +71,6 @@ class Instance(models.Resource):
 
     return instance_serial_logging_enabled or (
         project_serial_logging_enabled and not instance_serial_logging_disabled)
-
-  def get_full_path(self) -> str:
-    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
-                      self._resource_data['selfLink'])
-    if result:
-      return result.group(1)
-    else:
-      return '>> ' + self._resource_data['selfLink']
-
-  def get_short_path(self) -> str:
-    # Note: instance names must be unique per project, so no need to add the zone.
-    path = self.project_id + '/' + self.name
-    return path
 
   def is_gke_node(self) -> bool:
     return 'labels' in self._resource_data and \
@@ -102,6 +104,20 @@ class ManagedInstanceGroup(models.Resource):
     super().__init__(project_id=project_id)
     self._resource_data = resource_data
     self._region = None
+
+  @property
+  def full_path(self) -> str:
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
+                      self._resource_data['selfLink'])
+    if result:
+      return result.group(1)
+    else:
+      return '>> ' + self._resource_data['selfLink']
+
+  @property
+  def short_path(self) -> str:
+    path = self.project_id + '/' + self.name
+    return path
 
   def is_gke(self) -> bool:
     """Is this managed instance group part of a GKE cluster?
@@ -142,18 +158,6 @@ class ManagedInstanceGroup(models.Resource):
             'can\'t determine region of mig %s, both region and zone aren\'t set!'
         )
     return self._region
-
-  def get_full_path(self) -> str:
-    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
-                      self._resource_data['selfLink'])
-    if result:
-      return result.group(1)
-    else:
-      return '>> ' + self._resource_data['selfLink']
-
-  def get_short_path(self) -> str:
-    path = self.project_id + '/' + self.name
-    return path
 
   def is_instance_member(self, project_id: str, region: str,
                          instance_name: str):
