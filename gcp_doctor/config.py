@@ -28,3 +28,6 @@ LOGGING_FETCH_MAX_TIME_SECONDS = 120
 # https://cloud.google.com/logging/quotas:
 LOGGING_RATELIMIT_REQUESTS = 60
 LOGGING_RATELIMIT_PERIOD_SECONDS = 60
+
+# Prefetch worker threads
+MAX_WORKERS = 10

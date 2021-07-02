@@ -13,11 +13,9 @@ import re
 from collections.abc import Callable
 from typing import Any, Dict, List, Optional
 
-from gcp_doctor import models
+from gcp_doctor import config, models
 from gcp_doctor.queries import logs
 from gcp_doctor.utils import GcpApiError
-
-MAX_WORKERS = 5
 
 
 class LintRuleClass(enum.Enum):
@@ -230,7 +228,7 @@ class LintRuleRepository:
 
     # Start multiple threads for logs fetching and prefetch functions.
     with concurrent.futures.ThreadPoolExecutor(
-        max_workers=MAX_WORKERS) as prefetch_executor:
+        max_workers=config.MAX_WORKERS) as prefetch_executor:
       # Start fetching any logs queries that were defined in prepare_rule
       # functions.
       logs.execute_queries(prefetch_executor)
