@@ -25,6 +25,10 @@ class GcpApiError(Exception):
   Attributes: response -- API/HTTP response
   """
 
+  @property
+  def status(self) -> int:
+    return self.response.resp.status
+
   def __init__(self, response='An error occured during the GCP API call'):
     self.response = response
     # see also: https://github.com/googleapis/google-api-python-client/issues/662
@@ -38,6 +42,8 @@ class GcpApiError(Exception):
         self.message = str(response)
     except json.decoder.JSONDecodeError:
       self.message = response.content
+    if isinstance(self.message, bytes):
+      self.message = self.message.decode('utf-8')
     super().__init__(self.message)
 
   def __str__(self):

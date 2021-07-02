@@ -158,7 +158,7 @@ def query(context: models.Context, query_str: str) -> TimeSeriesCollection:
                                                       project_id,
                                                       body={'query': query_str})
 
-      logging.info('executing monitoring query in project %s', project_id)
+      logging.info('executing monitoring query (project: %s)', project_id)
       logging.debug('query: %s', query_str)
       pages = 0
       start_time = datetime.datetime.now()
@@ -168,9 +168,18 @@ def query(context: models.Context, query_str: str) -> TimeSeriesCollection:
         time_series.add_api_response(response)
         request = mon_api.projects().timeSeries().query_next(
             previous_request=request, previous_response=response)
+        if request:
+          logging.info('still executing monitoring query (project: %s)',
+                       project_id)
       end_time = datetime.datetime.now()
       logging.debug('query run time: %s, pages: %d', end_time - start_time,
                     pages)
     except googleapiclient.errors.HttpError as err:
-      raise utils.GcpApiError(err) from err
+      gcp_err = utils.GcpApiError(err)
+      # Ignore 502 because we get that when the monitoring query times out.
+      if gcp_err.status in [502]:
+        logging.warning('error executing monitoring query: %s',
+                        str(gcp_err.message))
+      else:
+        raise utils.GcpApiError(err) from err
   return time_series
