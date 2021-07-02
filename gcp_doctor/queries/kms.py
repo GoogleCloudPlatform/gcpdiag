@@ -17,7 +17,8 @@ class CryptoKey(models.Resource):
   https://cloud.google.com/kms/docs/reference/rest/v1/projects.locations.keyRings.cryptoKeys
   """
 
-  def get_full_path(self) -> str:
+  @property
+  def full_path(self) -> str:
     return self._resource_data['name']
 
   @property

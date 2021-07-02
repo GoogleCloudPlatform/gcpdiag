@@ -24,8 +24,9 @@ class Project():
   _metadata: Dict[str, str]
   _resource_data: dict
 
-  def __str__(self):
-    return self.get_full_path()
+  def __init__(self, project_id, resource_data):
+    self._id = project_id
+    self._resource_data = resource_data
 
   @property
   def number(self) -> int:
@@ -41,6 +42,20 @@ class Project():
     return self._resource_data['name']
 
   @property
+  def full_path(self) -> str:
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
+                      self._resource_data['selfLink'])
+    if result:
+      return result.group(1)
+    else:
+      return '>> ' + self._resource_data['selfLink']
+
+  @property
+  def short_path(self) -> str:
+    path = self._id + '/' + self.name
+    return path
+
+  @property
   def gce_metadata(self) -> Mapping[str, str]:
     mapped_metadata: Dict[str, str] = {}
 
@@ -49,22 +64,6 @@ class Project():
       for m_item in metadata['items']:
         mapped_metadata[m_item.get('key')] = m_item.get('value')
     return mapped_metadata
-
-  def get_full_path(self) -> str:
-    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
-                      self._resource_data['selfLink'])
-    if result:
-      return result.group(1)
-    else:
-      return '>> ' + self._resource_data['selfLink']
-
-  def get_short_path(self) -> str:
-    path = self._id + '/' + self.name
-    return path
-
-  def __init__(self, project_id, resource_data):
-    self._id = project_id
-    self._resource_data = resource_data
 
 
 @cache.cached_api_call(expire=config.STATIC_DOCUMENTS_EXPIRY_SECONDS)

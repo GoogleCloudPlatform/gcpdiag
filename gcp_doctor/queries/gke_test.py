@@ -42,14 +42,14 @@ class TestCluster:
     assert c.release_channel == 'REGULAR'
 
   def test_get_path_regional(self):
-    """get_full_path and get_short_path should return correct results with regional clusters."""
+    """full_path and short_path should return correct results with regional clusters."""
     context = models.Context(projects=[DUMMY_PROJECT_NAME])
     clusters = gke.get_clusters(context)
     assert DUMMY_CLUSTER2_NAME in clusters.keys()
     c = clusters[DUMMY_CLUSTER2_NAME]
-    assert c.get_full_path() == DUMMY_CLUSTER2_NAME
+    assert c.full_path == DUMMY_CLUSTER2_NAME
     assert str(c) == DUMMY_CLUSTER2_NAME
-    assert c.get_short_path() == DUMMY_CLUSTER2_SHORT_NAME
+    assert c.short_path == DUMMY_CLUSTER2_SHORT_NAME
 
   def test_has_logging_enabled_false(self):
     """has_logging_enabled should return false for GKE cluster with logging disabled."""

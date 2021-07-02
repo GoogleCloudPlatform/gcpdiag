@@ -196,18 +196,19 @@ class ServiceAccount(models.Resource):
   def disabled(self) -> bool:
     return self._resource_data.get('disabled', False)
 
-  def get_full_path(self) -> str:
+  @property
+  def full_path(self) -> str:
     # example: "name":
     # "projects/skanzhelev-gke-dev/serviceAccounts/test-service-account-1
     #                               @skanzhelev-gke-dev.iam.gserviceaccount.com"
     return self.name
 
-
-def get_short_path(self) -> str:
-  path = self.get_full_path()
-  path = re.sub(r'^projects/', '', path)
-  path = re.sub(r'/serviceAccounts/', '/', path)
-  return path
+  @property
+  def short_path(self) -> str:
+    path = self.full_path
+    path = re.sub(r'^projects/', '', path)
+    path = re.sub(r'/serviceAccounts/', '/', path)
+    return path
 
 
 @cache.cached_api_call(in_memory=True)
