@@ -7,7 +7,7 @@ from typing import Callable, Dict, Iterable, List, Mapping, Optional, Set
 
 import googleapiclient.errors
 
-from gcp_doctor import cache, config, models, utils
+from gcp_doctor import caching, config, models, utils
 from gcp_doctor.queries import apis, project
 
 
@@ -166,7 +166,7 @@ class ManagedInstanceGroup(models.Resource):
         instance_name.startswith(self._resource_data['baseInstanceName'])
 
 
-@cache.cached_api_call(in_memory=True)
+@caching.cached_api_call(in_memory=True)
 def get_gce_zones(project_id: str) -> Set[str]:
   try:
     gce_api = apis.get_api('compute', 'v1')
@@ -223,7 +223,7 @@ def batch_fetch_all(api, requests: Iterable, next_function: Callable,
   return items
 
 
-@cache.cached_api_call
+@caching.cached_api_call
 def get_instances(context: models.Context) -> Mapping[str, Instance]:
   """Get a list of Instance matching the given context, indexed by instance id."""
 
@@ -256,7 +256,7 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
   return instances
 
 
-@cache.cached_api_call
+@caching.cached_api_call
 def get_managed_instance_groups(
     context: models.Context) -> Mapping[int, ManagedInstanceGroup]:
   """Get a list of ManagedInstanceGroups matching the given context, indexed by mig id."""

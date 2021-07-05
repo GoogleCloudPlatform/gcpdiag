@@ -31,7 +31,7 @@ from typing import Any, Dict, Mapping, Optional, Sequence, Set, Tuple
 import dateutil.parser
 import ratelimit
 
-from gcp_doctor import cache, config
+from gcp_doctor import caching, config
 from gcp_doctor.queries import apis
 
 
@@ -115,7 +115,7 @@ def _execute_query_job(logging_api, job: _LogsQueryJob):
   logging.info('searching logs in project %s (resource type: %s)',
                job.project_id, job.resource_type)
   # Fetch all logs and put the results in temporary storage (diskcache.Deque)
-  deque = cache.get_tmp_deque('tmp-logs-')
+  deque = caching.get_tmp_deque('tmp-logs-')
   req = logging_api.entries().list(
       body={
           'resourceNames': [f'projects/{job.project_id}'],

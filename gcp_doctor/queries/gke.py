@@ -8,7 +8,7 @@ from typing import Dict, Iterable, List, Mapping, Optional
 
 import googleapiclient.errors
 
-from gcp_doctor import cache, config, models, utils
+from gcp_doctor import caching, config, models, utils
 from gcp_doctor.queries import apis, gce
 
 
@@ -176,7 +176,7 @@ class Cluster(models.Resource):
     return self._nodepools
 
 
-@cache.cached_api_call
+@caching.cached_api_call
 def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
   """Get a list of Cluster matching the given context, indexed by cluster name."""
   clusters: Dict[str, Cluster] = {}
@@ -207,7 +207,7 @@ def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
   return clusters
 
 
-@cache.cached_api_call
+@caching.cached_api_call
 def _get_server_config(project_id: str, location: str):
   container_api = apis.get_api('container', 'v1')
   name = f'projects/{project_id}/locations/{location}'
