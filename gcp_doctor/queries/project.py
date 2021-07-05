@@ -7,11 +7,11 @@ from typing import Dict, Mapping
 
 import googleapiclient.errors
 
-from gcp_doctor import cache, config
+from gcp_doctor import caching, config
 from gcp_doctor.queries import apis
 from gcp_doctor.utils import GcpApiError
 
-diskcache = cache.get_cache()
+diskcache = caching.get_cache()
 
 
 class Project():
@@ -66,7 +66,7 @@ class Project():
     return mapped_metadata
 
 
-@cache.cached_api_call(expire=config.STATIC_DOCUMENTS_EXPIRY_SECONDS)
+@caching.cached_api_call(expire=config.STATIC_DOCUMENTS_EXPIRY_SECONDS)
 def get_project_nr(project_id: str) -> int:
   logging.info('retrieving project nr. of project %s', project_id)
   crm_api = apis.get_api('cloudresourcemanager', 'v1')
@@ -78,7 +78,7 @@ def get_project_nr(project_id: str) -> int:
     raise ValueError(f'unknown project: {project_id}')
 
 
-@cache.cached_api_call(in_memory=True)
+@caching.cached_api_call(in_memory=True)
 def get_project(project_id: str) -> Project:
   gce_api = apis.get_api('compute', 'v1')
   query = gce_api.projects().get(project=project_id)

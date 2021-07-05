@@ -5,7 +5,7 @@ import logging
 
 import googleapiclient.errors
 
-from gcp_doctor import cache, config, models, utils
+from gcp_doctor import caching, config, models, utils
 from gcp_doctor.queries import apis
 from gcp_doctor.utils import GcpApiError
 
@@ -36,7 +36,7 @@ class CryptoKey(models.Resource):
     self._resource_data = resource_data
 
 
-@cache.cached_api_call
+@caching.cached_api_call
 def get_crypto_key(key_name: str) -> CryptoKey:
   """Get a Crypto Key object by its resource name, caching the result."""
 

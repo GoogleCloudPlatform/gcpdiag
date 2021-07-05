@@ -1,7 +1,6 @@
 # Lint as: python3
 """Build and cache GCP APIs + handle authentication."""
 
-import functools
 import json
 import logging
 import os
@@ -17,7 +16,7 @@ from google.auth.transport import requests
 from google_auth_oauthlib import flow
 from googleapiclient import discovery
 
-from gcp_doctor import cache
+from gcp_doctor import caching
 
 _credentials = None
 
@@ -27,7 +26,7 @@ def _get_credentials():
 
   # If we have no credentials in memory, fetch from the disk cache.
   if not _credentials:
-    with cache.get_cache() as diskcache:
+    with caching.get_cache() as diskcache:
       _credentials = diskcache.get('credentials')
 
   # Try to refresh the credentials.
@@ -36,7 +35,7 @@ def _get_credentials():
       logging.debug('refreshing credentials')
       _credentials.refresh(requests.Request())
       # Store the refreshed credentials.
-      with cache.get_cache() as diskcache:
+      with caching.get_cache() as diskcache:
         diskcache.set('credentials', _credentials)
     except exceptions.RefreshError as e:
       logging.debug("couldn't refresh token: %s", e)
@@ -66,7 +65,7 @@ def _get_credentials():
     _credentials = oauth_flow.credentials
 
     # Store the credentials in the disk cache.
-    with cache.get_cache() as diskcache:
+    with caching.get_cache() as diskcache:
       diskcache.set('credentials', _credentials)
 
   return _credentials
@@ -94,7 +93,7 @@ def get_user_email() -> str:
   return data['email']
 
 
-@functools.lru_cache(maxsize=None)
+@caching.cached_api_call(in_memory=True)
 def get_api(service_name: str, version: str):
   credentials = _get_credentials()
 

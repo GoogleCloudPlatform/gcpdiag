@@ -7,7 +7,7 @@ from typing import Any, Dict, List, Mapping
 
 import googleapiclient.errors
 
-from gcp_doctor import cache, config, models, utils
+from gcp_doctor import caching, config, models, utils
 from gcp_doctor.queries import apis
 
 _predefined_roles: Dict[str, Any] = {}
@@ -24,7 +24,7 @@ def _get_predefined_roles() -> Mapping[str, Any]:
   return _predefined_roles
 
 
-@cache.cached_api_call(expire=config.STATIC_DOCUMENTS_EXPIRY_SECONDS)
+@caching.cached_api_call(expire=config.STATIC_DOCUMENTS_EXPIRY_SECONDS)
 def _fetch_predefined_roles() -> Mapping[str, Any]:
   logging.info('fetching IAM roles: predefined')
   iam_api = apis.get_api('iam', 'v1')
@@ -166,7 +166,7 @@ class ProjectPolicy:
     self._policy = _fetch_policy(project_id)
 
 
-@cache.cached_api_call(in_memory=True)
+@caching.cached_api_call(in_memory=True)
 def get_project_policy(project_id):
   """Return the ProjectPolicy object for a project, caching the result."""
   return ProjectPolicy(project_id)
@@ -211,7 +211,7 @@ class ServiceAccount(models.Resource):
     return path
 
 
-@cache.cached_api_call(in_memory=True)
+@caching.cached_api_call(in_memory=True)
 def get_service_accounts(
     context: models.Context) -> Mapping[str, ServiceAccount]:
   """Get a list of Service Accounts matching the given context, key is e-mail.

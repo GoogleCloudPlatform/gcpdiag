@@ -10,7 +10,7 @@ from gcp_doctor.queries import iam, iam_stub
 
 def get_cache_stub():
   """Use a temporary directory instead of the user cache for testing.
-  This is used to avoid using the cached IAM roles from teh disk cache."""
+  This is used to avoid using the cached IAM roles from the disk cache."""
   return diskcache.Cache()
 
 
@@ -50,7 +50,7 @@ TEST_SERVICE_ACCOUNT_PERMISSIONS = [
 
 
 @mock.patch('gcp_doctor.queries.apis.get_api', new=iam_stub.get_api_stub)
-@mock.patch('gcp_doctor.cache.get_cache', new=get_cache_stub)
+@mock.patch('gcp_doctor.caching.get_cache', new=get_cache_stub)
 class TestProjectPolicy:
   """Test gke.ProjectPolicy"""
 
