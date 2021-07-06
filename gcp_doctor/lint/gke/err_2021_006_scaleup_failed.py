@@ -1,5 +1,5 @@
 # Lint as: python3
-"""GKE Autoscaler is not reporting scaleup failures.
+"""GKE Autoscaler isn't reporting scaleup failures.
 
 If the GKE autoscaler reported a problem when trying to add nodes
 to a cluster, it could mean that you don't have enough resources
@@ -42,8 +42,7 @@ def prepare_rule(context: models.Context):
         resource_type='gce_instance',
         log_name='log_id("cloudaudit.googleapis.com/activity")',
         filter_str='severity=ERROR AND '
-        'protoPayload.methodName="v1.compute.instances.insert" AND '
-        'protoPayload.status.message="LIMIT_EXCEEDED"')
+        'protoPayload.methodName="v1.compute.instances.insert"')
     # Note: we don't filter by callerSuppliedUserAgent because this will be
     # removed anyway because of search job aggregation.
     #AND '
@@ -83,14 +82,13 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   # Collect errors by mig name.
   mig_errors = dict()
 
-  # Process gce_instance logs and search for LIMIT_EXCEEDED errors
+  # Process gce_instance logs and search for VM creation errors
   for query in gce_logs_by_project.values():
     for log_entry in query.entries:
       try:
         # Filter out non-relevant log entries.
         if log_entry['severity']!='ERROR' or \
           log_entry['protoPayload']['methodName']!='v1.compute.instances.insert' or \
-          log_entry['protoPayload']['status']['message']!='LIMIT_EXCEEDED' or \
           log_entry['protoPayload']['requestMetadata']['callerSuppliedUserAgent']!= \
           'GCE Managed Instance Group for GKE':
           continue
@@ -106,7 +104,10 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
                    cluster_by_mig.keys()))
         if not mig:
           continue
-        mig_errors[mig[0]] = 'LIMIT_EXCEEDED, possibly IP exhaustion'
+        if log_entry['protoPayload']['status']['message'] == 'LIMIT_EXCEEDED':
+          mig_errors[mig[0]] = 'LIMIT_EXCEEDED, possibly IP exhaustion'
+        else:
+          mig_errors[mig[0]] = log_entry['protoPayload']['status']['message']
       except KeyError:
         pass
 
