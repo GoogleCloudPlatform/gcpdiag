@@ -10,12 +10,9 @@ filesystems (usually including /tmp, etc.), and EmptyDir volumes.
 
 from typing import Any, Dict
 
-from gcp_doctor import lint, models
+from gcp_doctor import config, lint, models
 from gcp_doctor.queries import gce, gke, monitoring
 
-# TODO: this should be configurable, maybe with a --within command-line
-#             argument.
-WITHIN_DAYS = 3
 SLO_LATENCY_MS = 100
 # SLO: at least 99.5% of minutes are good (7 minutes in a day)
 SLO_BAD_MINUTES_RATIO = 0.005
@@ -34,7 +31,7 @@ def prefetch_rule(context: models.Context):
   if not clusters:
     return
 
-  within_str = 'within %dd, d\'%s\'' % (WITHIN_DAYS,
+  within_str = 'within %dd, d\'%s\'' % (config.WITHIN_DAYS,
                                         monitoring.period_aligned_now(60))
   global _prefetched_query_results
   _prefetched_query_results = monitoring.query(
@@ -123,7 +120,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     else:
       report.add_failed(
           c,
-          f'disk latency >{SLO_LATENCY_MS}ms (1 min. avg., within {WITHIN_DAYS} days): \n. '
+          f'disk latency >{SLO_LATENCY_MS}ms (1 min. avg., within {config.WITHIN_DAYS} days): \n. '
           + '\n. '.join([
               f'{i[0]} ({i[2]} out of {i[1]} minutes bad)'
               for i in sorted(per_cluster_results[c]['bad_instances'])
