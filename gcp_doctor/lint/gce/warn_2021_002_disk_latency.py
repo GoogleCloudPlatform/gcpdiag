@@ -9,12 +9,9 @@ disk (changing the type or making it larger).
 
 import operator as op
 
-from gcp_doctor import lint, models
+from gcp_doctor import config, lint, models
 from gcp_doctor.queries import gce, monitoring
 
-# TODO(dwes): this should be configurable, maybe with a --within command-line
-#             argument.
-WITHIN_DAYS = 3
 SLO_LATENCY_MS = 100
 # SLO: at least 99.5% of minutes are good (7 minutes in a day)
 SLO_BAD_MINUTES_RATIO = 0.005
@@ -30,7 +27,7 @@ def prefetch_rule(context: models.Context):
   if not instances:
     return
 
-  within_str = 'within %dd, d\'%s\'' % (WITHIN_DAYS,
+  within_str = 'within %dd, d\'%s\'' % (config.WITHIN_DAYS,
                                         monitoring.period_aligned_now(60))
   global _prefetched_query_results
   _prefetched_query_results = monitoring.query(

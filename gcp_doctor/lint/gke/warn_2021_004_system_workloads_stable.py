@@ -23,12 +23,9 @@ last 24 hours.
 
 from typing import Dict
 
-from gcp_doctor import lint, models
+from gcp_doctor import config, lint, models
 from gcp_doctor.queries import gke, monitoring
 
-# TODO(dwes): this should be configurable, maybe with a --within command-line
-#             argument.
-WITHIN_DAYS = 3
 # SLO: at least 99.8% of minutes are good (3 minutes in a day)
 SLO_BAD_MINUTES = 3
 
@@ -42,7 +39,7 @@ def prefetch_rule(context: models.Context):
 
   # Fetch the metrics for all clusters.
   global _prefetched_query_results
-  within_str = 'within %dd, d\'%s\'' % (WITHIN_DAYS,
+  within_str = 'within %dd, d\'%s\'' % (config.WITHIN_DAYS,
                                         monitoring.period_aligned_now(60))
   _prefetched_query_results = monitoring.query(
       context, f"""
