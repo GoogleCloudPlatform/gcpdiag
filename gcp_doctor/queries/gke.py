@@ -44,6 +44,10 @@ class NodePool(models.Resource):
     path = re.sub(r'/nodePools/', '/', path)
     return path
 
+  @property
+  def name(self) -> str:
+    return self._resource_data['name']
+
   def has_default_service_account(self) -> bool:
     sa = self._get_service_account()
     return sa == 'default'
