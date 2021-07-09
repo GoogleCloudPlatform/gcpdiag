@@ -3,8 +3,8 @@
 
 GKE includes some system workloads running in the user-managed nodes which are
 essential for the correct operation of the cluster. We verify that restart count
-of containers in the kube-system and istio-proxy namespace stayed stable in the
-last 24 hours.
+of containers in one of the system namespaces (kube-system, istio-system,
+custom-metrics) stayed stable in the last 24 hours.
 """
 
 # To add to the online description of the rule:
@@ -46,7 +46,8 @@ def prefetch_rule(context: models.Context):
 fetch k8s_container
 | metric 'kubernetes.io/container/restart_count'
 | filter (resource.namespace_name == 'kube-system' ||
-          resource.namespace_name == 'istio-system') &&
+          resource.namespace_name == 'istio-system' ||
+          resource.namespace_name == 'custom-metrics') &&
          metadata.system.top_level_controller_type != 'Node'
 | {within_str}
 | align delta(1m)
