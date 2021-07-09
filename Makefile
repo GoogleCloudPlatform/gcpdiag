@@ -1,4 +1,4 @@
-VERSION=0.33-test
+VERSION=0.33
 DIST_NAME=gcp-doctor-$(VERSION)
 SHELL=/bin/bash
 
