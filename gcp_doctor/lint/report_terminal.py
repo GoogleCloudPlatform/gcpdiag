@@ -70,6 +70,9 @@ class LintReportTerminal(lint.LintReport):
       self.term = blessings.Terminal()
     else:
       self.term = blessings.Terminal()
+    # make sure we always output UTF-8, even if the terminal falls back to ascii
+    if sys.version_info >= (3, 7):
+      sys.stdout.reconfigure(encoding='utf-8')
 
   def _wrap_indent(self, text, prefix):
     width = self.term.width or 80
