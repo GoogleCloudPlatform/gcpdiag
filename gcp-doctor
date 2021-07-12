@@ -13,6 +13,10 @@ def main(argv):
   # A very simple command-line parser to determine what subcommand is called.
   # Proper argument parsing will be done in the subcommands.
 
+  # make sure we always output UTF-8, even if the terminal falls back to ascii
+  if sys.version_info >= (3, 7):
+    sys.stdout.reconfigure(encoding='utf-8')
+
   if len(argv) == 1 or argv[1] == '--help' or argv[1] == 'help':
     print_help()
   elif argv[1] == 'version' or argv[1] == '--version':
