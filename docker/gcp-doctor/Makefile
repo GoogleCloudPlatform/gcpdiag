@@ -1,6 +1,11 @@
 BIN_DIR=../../bin
 VERSION=0.35-test
-IMAGE=us-docker.pkg.dev/gcp-doctor-repo/google-internal/gcp-doctor
+ifneq (,$(findstring test,$(VERSION)))
+REPO_NAME=test
+else
+REPO_NAME=release
+endif
+IMAGE=us-docker.pkg.dev/gcp-doctor-repo/$(REPO_NAME)/gcp-doctor
 BUCKET_NAME=gcp-doctor
 SHELL=/bin/bash
 
@@ -16,11 +21,6 @@ build:
 	rm -rf dist
 	mkdir dist
 	cd dist && tar -xf ../../../dist/gcp-doctor-$(VERSION).tar.gz --strip 1
-	# also copy google-internal modules, considering that this is published
-	# ona google-internal repo (accessible only for google.com
-	# organization)
-	mkdir -p dist/gcp_doctor_google_internal
-	cp ../../gcp_doctor_google_internal/{cta_client,metric_pb2}.py dist/gcp_doctor_google_internal
 	# compatibility with old docker image:
 	cd dist && mkdir bin && ln -s ../gcp-doctor bin/gcp-doctor
 	chmod -R a+rX dist
