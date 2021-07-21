@@ -1,5 +1,5 @@
 BIN_DIR=../../bin
-VERSION=0.35-test
+VERSION=0.35
 ifneq (,$(findstring test,$(VERSION)))
 REPO_NAME=test
 else
