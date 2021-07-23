@@ -19,6 +19,7 @@ all:	\
 	json-dumps/compute-instances-empty.json \
 	json-dumps/compute-migs-$(ZONE_1).json \
 	json-dumps/compute-migs-empty.json \
+	json-dumps/compute-project.json \
 	json-dumps/compute-zones.json \
 	json-dumps/iam-policy.json \
 	json-dumps/iam-roles-custom.json \
@@ -52,12 +53,16 @@ json-dumps/compute-migs-empty.json:
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_EMPTY)/instanceGroupManagers' \
 		| $(JSON_CLEANER) instances >$@
 
+json-dumps/compute-project.json:
+	$(CURL) -fsS \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)' >$@
+
 
 # cloudresourcemanager.googleapis.com
 
 json-dumps/project.json:
 	$(CURL) -fsS \
-		'https://cloudresourcemanager.googleapis.com/v1/projects/$(PROJECT_ID)' >$@
+		'https://cloudresourcemanager.googleapis.com/v3/projects/$(PROJECT_ID)' >$@
 
 json-dumps/iam-policy.json:
 	$(CURL) -fsS \

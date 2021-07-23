@@ -21,7 +21,7 @@ import sys
 
 from gcp_doctor import config, lint, models, utils
 from gcp_doctor.lint import gce, gke, report_terminal
-from gcp_doctor.queries import apis, project
+from gcp_doctor.queries import apis, crm
 
 
 def run(argv) -> int:
@@ -87,7 +87,7 @@ def run(argv) -> int:
   # Verify that we have access.
   for project_id in context.projects:
     try:
-      project.get_project(project_id)
+      crm.get_project(project_id)
     except utils.GcpApiError:
       print(
           f"ERROR: can't access project: {project_id}. Please verify that you have Viewer access.",

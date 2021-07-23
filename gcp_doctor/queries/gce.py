@@ -17,12 +17,12 @@
 
 import logging
 import re
-from typing import Callable, Dict, Iterable, List, Mapping, Optional, Set
+from typing import Callable, Dict, Iterable, Mapping, Optional, Set
 
 import googleapiclient.errors
 
 from gcp_doctor import caching, config, models, utils
-from gcp_doctor.queries import apis, project
+from gcp_doctor.queries import apis
 
 
 class Instance(models.Resource):
@@ -57,34 +57,9 @@ class Instance(models.Resource):
     path = self.project_id + '/' + self.name
     return path
 
-  @property
-  def metadata(self) -> List:
-    metadata = self._resource_data.get('metadata')
-    if metadata:
-      if 'items' in metadata:
-        return metadata['items']
-    return []
-
   def is_serial_port_logging_enabled(self) -> bool:
-    instance_serial_logging_enabled = False
-    instance_serial_logging_disabled = False
-    project_serial_logging_enabled = False
-    for m_item in self.metadata:
-      if m_item.get('key') == 'serial-port-logging-enable':
-        logging_state = m_item.get('value').upper()
-        if logging_state == 'TRUE':
-          instance_serial_logging_enabled = True
-        if logging_state == 'FALSE':
-          instance_serial_logging_disabled = True
-        break
-
-    i_project = project.get_project(self.project_id)
-    if str(i_project.gce_metadata.get(
-        'serial-port-logging-enable')).upper() == 'TRUE':
-      project_serial_logging_enabled = True
-
-    return instance_serial_logging_enabled or (
-        project_serial_logging_enabled and not instance_serial_logging_disabled)
+    value = self.get_metadata('serial-port-logging-enable')
+    return bool(value and value.upper() == 'TRUE')
 
   def is_gke_node(self) -> bool:
     return 'labels' in self._resource_data and \
@@ -106,7 +81,8 @@ class Instance(models.Resource):
         for item in self._resource_data['metadata']['items']:
           if 'key' in item and 'value' in item:
             self._metadata_dict[item['key']] = item['value']
-    return self._metadata_dict[key]
+    project_metadata = get_project_metadata(self.project_id)
+    return self._metadata_dict.get(key, project_metadata.get(key))
 
 
 class ManagedInstanceGroup(models.Resource):
@@ -303,3 +279,21 @@ def get_managed_instance_groups(
       migs[i['id']] = ManagedInstanceGroup(project_id=project_id,
                                            resource_data=i)
   return migs
+
+
+@caching.cached_api_call
+def get_project_metadata(project_id) -> Mapping[str, str]:
+  gce_api = apis.get_api('compute', 'v1')
+  logging.info('fetching metadata of project %s', project_id)
+  query = gce_api.projects().get(project=project_id)
+  try:
+    response = query.execute(num_retries=config.API_RETRIES)
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
+
+  mapped_metadata: Dict[str, str] = {}
+  metadata = response.get('commonInstanceMetadata')
+  if metadata and 'items' in metadata:
+    for m_item in metadata['items']:
+      mapped_metadata[m_item.get('key')] = m_item.get('value')
+  return mapped_metadata

@@ -42,4 +42,7 @@ resource "google_compute_instance" "default" {
       "https://www.googleapis.com/auth/servicecontrol"
     ]
   }
+  metadata = {
+    serial-port-logging-enable = "false"
+  }
 }

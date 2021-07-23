@@ -23,7 +23,7 @@ from typing import Dict, Iterable, List, Mapping, Optional
 import googleapiclient.errors
 
 from gcp_doctor import caching, config, models, utils
-from gcp_doctor.queries import apis, gce
+from gcp_doctor.queries import apis, crm, gce
 
 
 class NodePool(models.Resource):
@@ -78,7 +78,8 @@ class NodePool(models.Resource):
   def service_account(self) -> str:
     sa = self._get_service_account()
     if sa == 'default':
-      return f'{self.project_nr}-compute@developer.gserviceaccount.com'
+      project_nr = crm.get_project(self.project_id).number
+      return f'{project_nr}-compute@developer.gserviceaccount.com'
     else:
       return sa
 
