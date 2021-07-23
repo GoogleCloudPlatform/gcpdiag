@@ -41,6 +41,12 @@ resource "google_project_service" "container" {
   service = "container.googleapis.com"
 }
 
+resource "google_compute_project_metadata_item" "serial_logging" {
+  project = google_project.project.project_id
+  key     = "serial-port-logging-enable"
+  value   = "true"
+}
+
 data "google_compute_default_service_account" "default" {
   project = google_project.project.project_id
 }

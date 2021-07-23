@@ -23,6 +23,9 @@ clean_maps = {
         '.items.[].disks.[].shieldedInstanceInitialState.pk.content':
             'REDACTED',
     },
+    'compute-project': {
+        '.commonInstanceMetadata.items.sshKeys': 'REDACTED'
+    },
     'other': {}
 }
 
@@ -36,8 +39,15 @@ def traverse_and_clean(path: str, data, clean_map: dict):
       key_path = path + '.' + key
       data[key] = traverse_and_clean(key_path, data[key], clean_map)
   elif isinstance(data, list):
+
     for i in range(len(data)):
-      data[i] = traverse_and_clean(path + '.[]', data[i], clean_map)
+      # special case: "key", "value" list -> lookup as dict
+      if isinstance(data[i], dict) and 'key' in data[i] and 'value' in data[i]:
+        key_path = path + '.' + data[i]['key']
+        if key_path in clean_map:
+          data[i]['value'] = clean_map[key_path]
+      else:
+        data[i] = traverse_and_clean(path + '.[]', data[i], clean_map)
   elif isinstance(data, str):
     # obfuscate real email addresses
     data = re.sub(r'[a-z]+@google.com', 'testuser@example.com', data)

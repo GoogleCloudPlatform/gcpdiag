@@ -13,6 +13,7 @@ all:	\
 	json-dumps/compute-migs-$(ZONE_1).json \
 	json-dumps/compute-migs-$(ZONE_2).json \
 	json-dumps/compute-migs-empty.json \
+	json-dumps/compute-project.json \
 	json-dumps/compute-zones.json \
 	json-dumps/monitoring-query.json
 
@@ -21,9 +22,9 @@ json-dumps/compute-instances-$(ZONE_1).json:
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_1)/instances?maxResults=3' \
 		| $(JSON_CLEANER) instances >$@
 
-json-dumps/compute-instances-$(ZONE_1)-2.json:
+json-dumps/compute-instances-$(ZONE_1)-2.json: json-dumps/compute-instances-$(ZONE_1).json
 	$(CURL) -fsS \
-		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_1)/instances?maxResults=3&pageToken=$(shell cat json-dumps/instances-$(ZONE_1).json | jq -r '.nextPageToken')' \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_1)/instances?maxResults=3&pageToken=$(shell cat json-dumps/compute-instances-$(ZONE_1).json | jq -r '.nextPageToken')' \
 		| $(JSON_CLEANER) instances >$@
 
 json-dumps/compute-instances-$(ZONE_2).json:
@@ -51,6 +52,11 @@ json-dumps/compute-migs-empty.json:
 	$(CURL) -fsS \
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_EMPTY)/instanceGroupManagers' \
 		| $(JSON_CLEANER) instances >$@
+
+json-dumps/compute-project.json:
+	$(CURL) -fsS \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)' \
+		| $(JSON_CLEANER) compute-project >$@
 
 json-dumps/compute-zones.json:
 	$(CURL) -fsS \

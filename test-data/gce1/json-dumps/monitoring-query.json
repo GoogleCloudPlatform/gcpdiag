@@ -30,6 +30,86 @@
           "stringValue": "europe-west4-a"
         },
         {
+          "stringValue": "mig-tcnm"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 2071746
+            },
+            {
+              "int64Value": "4"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2021-07-23T08:27:07.010750Z",
+            "endTime": "2021-07-23T08:27:07.010750Z"
+          }
+        },
+        {
+          "values": [
+            {
+              "doubleValue": 2071476
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2021-07-23T08:22:07.010750Z",
+            "endTime": "2021-07-23T08:22:07.010750Z"
+          }
+        }
+      ]
+    },
+    {
+      "labelValues": [
+        {
+          "stringValue": "europe-west4-a"
+        },
+        {
+          "stringValue": "mig-6dlt"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 2071745
+            },
+            {
+              "int64Value": "4"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2021-07-23T08:27:07.010750Z",
+            "endTime": "2021-07-23T08:27:07.010750Z"
+          }
+        },
+        {
+          "values": [
+            {
+              "doubleValue": 2071475
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2021-07-23T08:22:07.010750Z",
+            "endTime": "2021-07-23T08:22:07.010750Z"
+          }
+        }
+      ]
+    },
+    {
+      "labelValues": [
+        {
+          "stringValue": "europe-west4-a"
+        },
+        {
           "stringValue": "gce2"
         }
       ],
@@ -37,29 +117,29 @@
         {
           "values": [
             {
-              "doubleValue": 11187
+              "doubleValue": 207
             },
             {
               "int64Value": "4"
             }
           ],
           "timeInterval": {
-            "startTime": "2021-05-19T15:45:31.414435Z",
-            "endTime": "2021-05-19T15:45:31.414435Z"
+            "startTime": "2021-07-23T08:27:07.010750Z",
+            "endTime": "2021-07-23T08:27:07.010750Z"
           }
         },
         {
           "values": [
             {
-              "doubleValue": 10917
+              "doubleValue": 28.5
             },
             {
-              "int64Value": "5"
+              "int64Value": "2"
             }
           ],
           "timeInterval": {
-            "startTime": "2021-05-19T15:40:31.414435Z",
-            "endTime": "2021-05-19T15:40:31.414435Z"
+            "startTime": "2021-07-23T08:22:07.010750Z",
+            "endTime": "2021-07-23T08:22:07.010750Z"
           }
         }
       ]
@@ -77,29 +157,29 @@
         {
           "values": [
             {
-              "doubleValue": 11187
+              "doubleValue": 3627
             },
             {
               "int64Value": "4"
             }
           ],
           "timeInterval": {
-            "startTime": "2021-05-19T15:45:31.414435Z",
-            "endTime": "2021-05-19T15:45:31.414435Z"
+            "startTime": "2021-07-23T08:27:07.010750Z",
+            "endTime": "2021-07-23T08:27:07.010750Z"
           }
         },
         {
           "values": [
             {
-              "doubleValue": 10917
+              "doubleValue": 3357
             },
             {
               "int64Value": "5"
             }
           ],
           "timeInterval": {
-            "startTime": "2021-05-19T15:40:31.414435Z",
-            "endTime": "2021-05-19T15:40:31.414435Z"
+            "startTime": "2021-07-23T08:22:07.010750Z",
+            "endTime": "2021-07-23T08:22:07.010750Z"
           }
         }
       ]
@@ -110,36 +190,156 @@
           "stringValue": "europe-west1-b"
         },
         {
-          "stringValue": "gke-gke1-default-pool-d8701509-7822"
+          "stringValue": "gke-gke1-default-pool-564e261a-z7th"
         }
       ],
       "pointData": [
         {
           "values": [
             {
-              "doubleValue": 79227
+              "doubleValue": 2396843
             },
             {
               "int64Value": "4"
             }
           ],
           "timeInterval": {
-            "startTime": "2021-05-19T15:45:31.414435Z",
-            "endTime": "2021-05-19T15:45:31.414435Z"
+            "startTime": "2021-07-23T08:27:07.010750Z",
+            "endTime": "2021-07-23T08:27:07.010750Z"
           }
         },
         {
           "values": [
             {
-              "doubleValue": 78957
+              "doubleValue": 2396573
             },
             {
               "int64Value": "5"
             }
           ],
           "timeInterval": {
-            "startTime": "2021-05-19T15:40:31.414435Z",
-            "endTime": "2021-05-19T15:40:31.414435Z"
+            "startTime": "2021-07-23T08:22:07.010750Z",
+            "endTime": "2021-07-23T08:22:07.010750Z"
+          }
+        }
+      ]
+    },
+    {
+      "labelValues": [
+        {
+          "stringValue": "europe-west1-b"
+        },
+        {
+          "stringValue": "gke-gke1-default-pool-564e261a-gzhv"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 2396846
+            },
+            {
+              "int64Value": "4"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2021-07-23T08:27:07.010750Z",
+            "endTime": "2021-07-23T08:27:07.010750Z"
+          }
+        },
+        {
+          "values": [
+            {
+              "doubleValue": 2396576
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2021-07-23T08:22:07.010750Z",
+            "endTime": "2021-07-23T08:22:07.010750Z"
+          }
+        }
+      ]
+    },
+    {
+      "labelValues": [
+        {
+          "stringValue": "europe-west1-b"
+        },
+        {
+          "stringValue": "gke-gke1-default-pool-564e261a-dgx7"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 2396845
+            },
+            {
+              "int64Value": "4"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2021-07-23T08:27:07.010750Z",
+            "endTime": "2021-07-23T08:27:07.010750Z"
+          }
+        },
+        {
+          "values": [
+            {
+              "doubleValue": 2396575
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2021-07-23T08:22:07.010750Z",
+            "endTime": "2021-07-23T08:22:07.010750Z"
+          }
+        }
+      ]
+    },
+    {
+      "labelValues": [
+        {
+          "stringValue": "europe-west1-b"
+        },
+        {
+          "stringValue": "gke-gke1-default-pool-564e261a-2j8p"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 2396846
+            },
+            {
+              "int64Value": "4"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2021-07-23T08:27:07.010750Z",
+            "endTime": "2021-07-23T08:27:07.010750Z"
+          }
+        },
+        {
+          "values": [
+            {
+              "doubleValue": 2396576
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2021-07-23T08:22:07.010750Z",
+            "endTime": "2021-07-23T08:22:07.010750Z"
           }
         }
       ]

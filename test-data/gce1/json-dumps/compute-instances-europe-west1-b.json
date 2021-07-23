@@ -639,6 +639,6 @@
     }
   ],
   "kind": "compute#instanceList",
-  "nextPageToken": "ClgI4-qin4Oz8QI6TQoCGAMKAyC1EAoCGAIKByCn6q7hvAEKAhgHCiUqI2drZS1na2UxLWRlZmF1bHQtcG9vbC01NjRlMjYxYS1nemh2Cgogua7h85vlg5YJ",
+  "nextPageToken": "ClgI_O3M0eL48QI6TQoCGAMKAyC1EAoCGAIKByCn6q7hvAEKAhgHCiUqI2drZS1na2UxLWRlZmF1bHQtcG9vbC01NjRlMjYxYS1nemh2Cgogua7h85vlg5YJ",
   "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/zones/europe-west1-b/instances"
 }

@@ -1,0 +1,221 @@
+{
+  "commonInstanceMetadata": {
+    "fingerprint": "ZMvofGkvIN4=",
+    "items": [
+      {
+        "key": "serial-port-logging-enable",
+        "value": "true"
+      },
+      {
+        "key": "sshKeys",
+        "value": "REDACTED"
+      }
+    ],
+    "kind": "compute#metadata"
+  },
+  "creationTimestamp": "2021-02-17T06:59:17.525-08:00",
+  "defaultNetworkTier": "PREMIUM",
+  "defaultServiceAccount": "50670056743-compute@developer.gserviceaccount.com",
+  "id": "7548990507267953066",
+  "kind": "compute#project",
+  "name": "gcpd-gce1-4exv",
+  "quotas": [
+    {
+      "limit": 10000,
+      "metric": "SNAPSHOTS",
+      "usage": 0
+    },
+    {
+      "limit": 30,
+      "metric": "NETWORKS",
+      "usage": 1
+    },
+    {
+      "limit": 500,
+      "metric": "FIREWALLS",
+      "usage": 7
+    },
+    {
+      "limit": 5000,
+      "metric": "IMAGES",
+      "usage": 0
+    },
+    {
+      "limit": 175,
+      "metric": "STATIC_ADDRESSES",
+      "usage": 0
+    },
+    {
+      "limit": 300,
+      "metric": "ROUTES",
+      "usage": 5
+    },
+    {
+      "limit": 150,
+      "metric": "FORWARDING_RULES",
+      "usage": 0
+    },
+    {
+      "limit": 500,
+      "metric": "TARGET_POOLS",
+      "usage": 0
+    },
+    {
+      "limit": 500,
+      "metric": "HEALTH_CHECKS",
+      "usage": 0
+    },
+    {
+      "limit": 575,
+      "metric": "IN_USE_ADDRESSES",
+      "usage": 0
+    },
+    {
+      "limit": 500,
+      "metric": "TARGET_INSTANCES",
+      "usage": 0
+    },
+    {
+      "limit": 100,
+      "metric": "TARGET_HTTP_PROXIES",
+      "usage": 0
+    },
+    {
+      "limit": 100,
+      "metric": "URL_MAPS",
+      "usage": 0
+    },
+    {
+      "limit": 30,
+      "metric": "BACKEND_SERVICES",
+      "usage": 0
+    },
+    {
+      "limit": 1000,
+      "metric": "INSTANCE_TEMPLATES",
+      "usage": 2
+    },
+    {
+      "limit": 50,
+      "metric": "TARGET_VPN_GATEWAYS",
+      "usage": 0
+    },
+    {
+      "limit": 100,
+      "metric": "VPN_TUNNELS",
+      "usage": 0
+    },
+    {
+      "limit": 30,
+      "metric": "BACKEND_BUCKETS",
+      "usage": 0
+    },
+    {
+      "limit": 20,
+      "metric": "ROUTERS",
+      "usage": 0
+    },
+    {
+      "limit": 100,
+      "metric": "TARGET_SSL_PROXIES",
+      "usage": 0
+    },
+    {
+      "limit": 100,
+      "metric": "TARGET_HTTPS_PROXIES",
+      "usage": 0
+    },
+    {
+      "limit": 100,
+      "metric": "SSL_CERTIFICATES",
+      "usage": 0
+    },
+    {
+      "limit": 275,
+      "metric": "SUBNETWORKS",
+      "usage": 28
+    },
+    {
+      "limit": 100,
+      "metric": "TARGET_TCP_PROXIES",
+      "usage": 0
+    },
+    {
+      "limit": 10,
+      "metric": "SECURITY_POLICIES",
+      "usage": 0
+    },
+    {
+      "limit": 200,
+      "metric": "SECURITY_POLICY_RULES",
+      "usage": 0
+    },
+    {
+      "limit": 1000,
+      "metric": "XPN_SERVICE_PROJECTS",
+      "usage": 0
+    },
+    {
+      "limit": 150,
+      "metric": "PACKET_MIRRORINGS",
+      "usage": 0
+    },
+    {
+      "limit": 1000,
+      "metric": "NETWORK_ENDPOINT_GROUPS",
+      "usage": 0
+    },
+    {
+      "limit": 6,
+      "metric": "INTERCONNECTS",
+      "usage": 0
+    },
+    {
+      "limit": 5000,
+      "metric": "GLOBAL_INTERNAL_ADDRESSES",
+      "usage": 0
+    },
+    {
+      "limit": 50,
+      "metric": "VPN_GATEWAYS",
+      "usage": 0
+    },
+    {
+      "limit": 5000,
+      "metric": "MACHINE_IMAGES",
+      "usage": 0
+    },
+    {
+      "limit": 20,
+      "metric": "SECURITY_POLICY_CEVAL_RULES",
+      "usage": 0
+    },
+    {
+      "limit": 50,
+      "metric": "EXTERNAL_VPN_GATEWAYS",
+      "usage": 0
+    },
+    {
+      "limit": 1,
+      "metric": "PUBLIC_ADVERTISED_PREFIXES",
+      "usage": 0
+    },
+    {
+      "limit": 10,
+      "metric": "PUBLIC_DELEGATED_PREFIXES",
+      "usage": 0
+    },
+    {
+      "limit": 1024,
+      "metric": "STATIC_BYOIP_ADDRESSES",
+      "usage": 0
+    },
+    {
+      "limit": 150,
+      "metric": "INTERNAL_TRAFFIC_DIRECTOR_FORWARDING_RULES",
+      "usage": 0
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv",
+  "xpnProjectStatus": "UNSPECIFIED_XPN_PROJECT_STATUS"
+}

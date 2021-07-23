@@ -101,7 +101,8 @@ class CrmApiStub:
     del resource
     return CrmApiStub(mock_state='get_iam_policy')
 
-  def execute(self):
+  def execute(self, num_retries=0):
+    del num_retries
     if self.mock_state == 'get_iam_policy':
       with open(IAM_POLICY_JSON) as json_file:
         return json.load(json_file)

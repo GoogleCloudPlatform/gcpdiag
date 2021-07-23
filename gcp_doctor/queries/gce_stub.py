@@ -111,9 +111,20 @@ class ComputeEngineApiStub:
   def new_batch_http_request(self):
     return BatchRequestStub()
 
+  def get(self, project):
+    self.project_id = project
+    return self
+
+  def projects(self):
+    return ComputeEngineApiStub('projects')
+
   def execute(self, num_retries=0):
     if self.mock_state == 'zones':
       with open(f'{JSON_PROJECT_DIR[self.project_id]}/compute-zones.json'
+               ) as json_file:
+        return json.load(json_file)
+    if self.mock_state == 'projects':
+      with open(f'{JSON_PROJECT_DIR[self.project_id]}/compute-project.json'
                ) as json_file:
         return json.load(json_file)
     else:

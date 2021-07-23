@@ -26,6 +26,8 @@ DUMMY_CLUSTER1_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clust
 DUMMY_CLUSTER1_LABELS = {'foo': 'bar'}
 DUMMY_CLUSTER2_NAME = f'projects/{DUMMY_PROJECT_NAME}/locations/europe-west1/clusters/gke2'
 DUMMY_CLUSTER2_SHORT_NAME = f'{DUMMY_PROJECT_NAME}/europe-west1/gke2'
+DUMMY_CLUSTER1_SERVICE_ACCOUNT = '18404348413-compute@developer.gserviceaccount.com'
+DUMMY_CLUSTER2_SERVICE_ACCOUNT = 'gke2sa@gcpd-gke-1-9b90.iam.gserviceaccount.com'
 
 
 @mock.patch('gcp_doctor.queries.apis.get_api', new=gke_stub.get_api_stub)
@@ -139,3 +141,13 @@ class TestCluster:
     assert len(migs) == 1
     m = next(iter(migs))
     assert m.is_gke()
+
+  def test_service_account_property(self):
+    context = models.Context(projects=[DUMMY_PROJECT_NAME])
+    clusters = gke.get_clusters(context)
+    # 'default-pool' has the default SA
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    assert c.nodepools[0].service_account == DUMMY_CLUSTER1_SERVICE_ACCOUNT
+    # cluster2 has a custom SA
+    c = clusters[DUMMY_CLUSTER2_NAME]
+    assert c.nodepools[0].service_account == DUMMY_CLUSTER2_SERVICE_ACCOUNT

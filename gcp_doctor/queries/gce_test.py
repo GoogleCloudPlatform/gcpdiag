@@ -24,10 +24,10 @@ DUMMY_REGION = 'europe-west4'
 DUMMY_ZONE = 'europe-west4-a'
 DUMMY_PROJECT_NAME = 'gcpd-gce1-4exv'
 DUMMY_PROJECT_NR = '50670056743'
-DUMMY_INSTANCE1_ID = '5095970208757295818'
+DUMMY_INSTANCE1_ID = '48322001635889308'
 DUMMY_INSTANCE1_NAME = 'gce1'
 DUMMY_INSTANCE1_LABELS = {'foo': 'bar'}
-DUMMY_INSTANCE2_ID = '7608219626705758859'
+DUMMY_INSTANCE2_ID = '7817880697222713500'
 DUMMY_INSTANCE2_NAME = 'gce2'
 DUMMY_INSTANCE3_LABELS = {'gcp_doctor_test': 'gke'}
 
@@ -39,7 +39,7 @@ class TestGce:
   def test_get_instances(self):
     context = models.Context(projects=[DUMMY_PROJECT_NAME])
     instances = gce.get_instances(context)
-    assert len(instances) == 6
+    assert len(instances) == 8
     assert DUMMY_INSTANCE1_ID in instances
     assert instances[DUMMY_INSTANCE1_ID].full_path == \
         f'projects/{DUMMY_PROJECT_NAME}/zones/{DUMMY_ZONE}/instances/{DUMMY_INSTANCE1_NAME}'
@@ -50,7 +50,7 @@ class TestGce:
     context = models.Context(projects=[DUMMY_PROJECT_NAME],
                              regions=['fake-region', DUMMY_REGION])
     instances = gce.get_instances(context)
-    assert DUMMY_INSTANCE1_ID in instances and len(instances) == 2
+    assert DUMMY_INSTANCE1_ID in instances and len(instances) == 4
 
   def test_get_instances_by_label(self):
     context = models.Context(projects=[DUMMY_PROJECT_NAME],
@@ -108,3 +108,17 @@ class TestGce:
                              labels=[DUMMY_INSTANCE1_LABELS])
     migs = gce.get_managed_instance_groups(context)
     assert len(migs) == 0
+
+  def test_is_serial_port_logging_enabled(self):
+    context = models.Context(projects=[DUMMY_PROJECT_NAME],
+                             labels=[DUMMY_INSTANCE1_LABELS])
+    instances = gce.get_instances(context)
+    i = instances[DUMMY_INSTANCE1_ID]
+    assert i.is_serial_port_logging_enabled()
+    assert i.get_metadata('serial-port-logging-enable')
+
+  def test_is_serial_port_logging_enabled_instance_level(self):
+    context = models.Context(projects=[DUMMY_PROJECT_NAME])
+    instances = gce.get_instances(context)
+    i = instances[DUMMY_INSTANCE2_ID]
+    assert not i.is_serial_port_logging_enabled()
