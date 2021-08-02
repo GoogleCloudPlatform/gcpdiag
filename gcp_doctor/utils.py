@@ -11,17 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# Lint as: python3
 """Various utility functions."""
 
 import json
 import re
 
 from googleapiclient import errors
-
-from gcp_doctor import config
-from gcp_doctor.queries import apis
 
 DOMAIN_RES_NAME_MATCH = r'(http(s)?:)?//([a-z0-9][-a-z0-9]{1,61}[a-z0-9]\.)+[a-z]{2,}/'
 RES_NAME_KEY = r'[a-z][-a-z0-9]*'
@@ -135,20 +130,10 @@ def http_error_message(err: errors.HttpError) -> str:
 def report_usage_if_running_at_google(command, details=None):
   """For Google-internal use: report usage statistics."""
   try:
-    # Try the import first, because this will fail faster than checking the
-    # user (which is we check later that it is in the google.com domain).
+    # gcp_doctor_google_internal contains code that we run only internally
+    # at Google, so this import will fail in the public version.
     # pylint: disable=import-outside-toplevel
-    from gcp_doctor_google_internal import cta_client
-
-    # Only do this for google.com users.
-    email = apis.get_user_email()
-    match_google = re.match('(.*)@google.com$', email)
-    if match_google:
-      user = match_google.group(1)
-      if not details:
-        details = {}
-      details['version'] = config.VERSION
-      cta_client.submit(user, 'gcp-doctor', command, details)
-    print('How good were the results? https://forms.gle/jG1dUdkxhP2s5ced6')
-  except RuntimeError:
+    from gcp_doctor_google_internal import hooks
+    hooks.report_usage_if_running_at_google_hook(command, details)
+  except ImportError:
     pass
