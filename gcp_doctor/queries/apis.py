@@ -113,9 +113,17 @@ def get_api(service_name: str, version: str):
 
   def _request_builder(http, *args, **kwargs):
     del http
-    if os.getenv('GOOGLE_AUTH_TOKEN'):
-      headers = kwargs.get('headers', {})
-      headers['x-goog-iam-authorization-token'] = os.getenv('GOOGLE_AUTH_TOKEN')
+
+    try:
+      # This is for Google-internal use only and allows us to modify the request
+      # to make it work also internally. The import will fail for the public
+      # version of gcp-doctor.
+      # pylint: disable=import-outside-toplevel
+      from gcp_doctor_google_internal import hooks
+      hooks.request_builder_hook(*args, **kwargs)
+    except ImportError:
+      pass
+
     # thread safety: create a new AuthorizedHttp object for every request
     # https://github.com/googleapis/google-api-python-client/blob/master/docs/thread_safety.md
     new_http = google_auth_httplib2.AuthorizedHttp(credentials,
