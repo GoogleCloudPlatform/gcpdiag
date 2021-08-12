@@ -60,16 +60,6 @@ class Project(models.Resource):
   def short_path(self) -> str:
     return self._id
 
-  #@property
-  #def gce_metadata(self) -> Mapping[str, str]:
-  #  mapped_metadata: Dict[str, str] = {}
-
-  #  metadata = self._resource_data.get('commonInstanceMetadata')
-  #  if metadata and 'items' in metadata:
-  #    for m_item in metadata['items']:
-  #      mapped_metadata[m_item.get('key')] = m_item.get('value')
-  #  return mapped_metadata
-
 
 @caching.cached_api_call
 def get_project(project_id: str) -> Project:
