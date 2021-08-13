@@ -1,0 +1,48 @@
+{
+  "services": [
+    {
+      "serviceName": "pubsub.googleapis.com",
+      "producerProjectId": "cloud-pubsub-billing"
+    },
+    {
+      "serviceName": "bigquerystorage.googleapis.com",
+      "producerProjectId": "bigquery-storage-producer"
+    },
+    {
+      "serviceName": "containerregistry.googleapis.com",
+      "producerProjectId": "containerregistry"
+    },
+    {
+      "serviceName": "container.googleapis.com",
+      "producerProjectId": "google.com:cloud-kubernetes-devrel"
+    },
+    {
+      "serviceName": "monitoring.googleapis.com",
+      "producerProjectId": "google.com:gcm-api-admin"
+    },
+    {
+      "serviceName": "storage-api.googleapis.com",
+      "producerProjectId": "cloud-storage-producer"
+    },
+    {
+      "serviceName": "iamcredentials.googleapis.com",
+      "producerProjectId": "iam-credentials-prod"
+    },
+    {
+      "serviceName": "oslogin.googleapis.com",
+      "producerProjectId": "google.com:google-services"
+    },
+    {
+      "serviceName": "bigquery.googleapis.com",
+      "producerProjectId": "google.com:ultra-current-88221"
+    },
+    {
+      "serviceName": "compute.googleapis.com",
+      "producerProjectId": "google.com:api-project-539346026206"
+    },
+    {
+      "serviceName": "iam.googleapis.com",
+      "producerProjectId": "iam-whitelisting-project"
+    }
+  ]
+}
