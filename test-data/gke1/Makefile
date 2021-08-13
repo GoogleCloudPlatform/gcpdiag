@@ -100,6 +100,13 @@ json-dumps/container-server-config-$(ZONE_1).json:
 	$(CURL) -fsS \
 		'https://container.googleapis.com/v1/projects/$(PROJECT_ID)/zones/$(ZONE_1)/serverconfig' >$@
 
+# servicemanagement.googleapis.com
+
+json-dumps/services.json:
+	$(CURL) -fsS \
+		'https://servicemanagement.googleapis.com/v1/services?consumerId=project:$(PROJECT_ID)' >$@
+
+
 # If you need to recreate the JSON: adapt the timestamp and make sure that there are some entries found.
 define LOGGING_ENTRIES_BODY
 {
