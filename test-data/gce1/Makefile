@@ -15,7 +15,8 @@ all:	\
 	json-dumps/compute-migs-empty.json \
 	json-dumps/compute-project.json \
 	json-dumps/compute-zones.json \
-	json-dumps/monitoring-query.json
+	json-dumps/monitoring-query.json \
+	json-dumps/project.json
 
 json-dumps/compute-instances-$(ZONE_1).json:
 	$(CURL) -fsS \
@@ -61,6 +62,10 @@ json-dumps/compute-project.json:
 json-dumps/compute-zones.json:
 	$(CURL) -fsS \
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones' >$@
+
+json-dumps/project.json:
+	$(CURL) -fsS \
+		'https://cloudresourcemanager.googleapis.com/v3/projects/$(PROJECT_ID)' >$@
 
 define MONITORING_QUERY
 { \

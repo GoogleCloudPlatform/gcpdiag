@@ -109,6 +109,12 @@ class TestGce:
     migs = gce.get_managed_instance_groups(context)
     assert len(migs) == 0
 
+  def test_mig_property(self):
+    context = models.Context(projects=[DUMMY_PROJECT_NAME],
+                             labels=[DUMMY_INSTANCE3_LABELS])
+    for n in gce.get_instances(context).values():
+      assert n.mig.name == 'gke-gke1-default-pool-564e261a-grp'
+
   def test_is_serial_port_logging_enabled(self):
     context = models.Context(projects=[DUMMY_PROJECT_NAME],
                              labels=[DUMMY_INSTANCE1_LABELS])
