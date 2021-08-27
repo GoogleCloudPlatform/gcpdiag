@@ -63,7 +63,7 @@ class Project(models.Resource):
 
 @caching.cached_api_call
 def get_project(project_id: str) -> Project:
-  logging.info('retrieving project nr. of project %s', project_id)
+  logging.info('retrieving project %s', project_id)
   crm_api = apis.get_api('cloudresourcemanager', 'v3', project_id)
   request = crm_api.projects().get(name=f'projects/{project_id}')
   response = request.execute(num_retries=config.API_RETRIES)

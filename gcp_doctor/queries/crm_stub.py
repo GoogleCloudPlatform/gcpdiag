@@ -20,10 +20,20 @@ Instead of doing real API calls, we return test JSON data.
 
 import json
 import pathlib
+import re
 
 # pylint: disable=unused-argument
 
-PREFIX_GKE1 = pathlib.Path(__file__).parents[2] / 'test-data/gke1/json-dumps'
+JSON_PROJECT_DIR = {
+    'gcpd-gce1-4exv':
+        pathlib.Path(__file__).parents[2] / 'test-data/gce1/json-dumps',
+    '50670056743':
+        pathlib.Path(__file__).parents[2] / 'test-data/gce1/json-dumps',
+    'gcpd-gke-1-9b90':
+        pathlib.Path(__file__).parents[2] / 'test-data/gke1/json-dumps',
+    '18404348413':
+        pathlib.Path(__file__).parents[2] / 'test-data/gke1/json-dumps',
+}
 
 
 class CrmApiStub:
@@ -32,30 +42,33 @@ class CrmApiStub:
   # example API call:
   # crm_api.projects().getIamPolicy(resource=self._project_id).execute()
 
-  def __init__(self, mock_state='init'):
+  def __init__(self, mock_state='init', project_id=None):
     self.mock_state = mock_state
+    self.project_id = project_id
 
   def projects(self):
     return self
 
   # pylint: disable=invalid-name
-  def get(self, projectId=None, name=None):
-    del projectId
-    del name
-    return CrmApiStub(mock_state='get_project')
+  def get(self, project_id=None, name=None):
+    if not project_id and name is not None:
+      m = re.match(r'projects/(.*)', name)
+      project_id = m.group(1)
+    return CrmApiStub('get_project', project_id)
 
   # pylint: disable=invalid-name
   def getIamPolicy(self, resource):
-    del resource
-    return CrmApiStub(mock_state='get_iam_policy')
+    return CrmApiStub(mock_state='get_iam_policy', project_id=resource)
 
   def execute(self, num_retries=0):
     del num_retries
     if self.mock_state == 'get_iam_policy':
-      with open(PREFIX_GKE1 / 'iam-policy.json') as json_file:
+      with open(
+          f'{JSON_PROJECT_DIR[self.project_id]}/iam-policy.json') as json_file:
         return json.load(json_file)
     elif self.mock_state == 'get_project':
-      with open(PREFIX_GKE1 / 'project.json') as json_file:
+      with open(
+          f'{JSON_PROJECT_DIR[self.project_id]}/project.json') as json_file:
         return json.load(json_file)
     else:
       raise ValueError("can't call this method here")
