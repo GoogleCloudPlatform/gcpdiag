@@ -55,7 +55,8 @@ json-dumps/compute-migs-empty.json:
 
 json-dumps/compute-project.json:
 	$(CURL) -fsS \
-		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)' >$@
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)' \
+		| $(JSON_CLEANER) compute-project >$@
 
 
 # cloudresourcemanager.googleapis.com

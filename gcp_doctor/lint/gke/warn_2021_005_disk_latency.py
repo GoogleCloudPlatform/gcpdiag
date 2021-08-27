@@ -25,7 +25,7 @@ filesystems (usually including /tmp, etc.), and EmptyDir volumes.
 from typing import Any, Dict
 
 from gcp_doctor import config, lint, models
-from gcp_doctor.queries import gce, gke, monitoring
+from gcp_doctor.queries import gke, monitoring
 
 SLO_LATENCY_MS = 100
 # SLO: at least 99.5% of minutes are good (7 minutes in a day)
@@ -69,40 +69,16 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'no clusters found')
     return
 
-  # Create a mapping from instance id to cluster so that we can link back the
-  # instance metrics to the clusters.
-  instance_id_to_cluster_id = dict()
-  instance_id_to_instance_name = dict()
-  for instance_id, instance in gce.get_instances(context).items():
-    try:
-      cluster_project = instance.project_id
-      cluster_name = instance.get_metadata('cluster-name')
-      cluster_location = instance.get_metadata('cluster-location')
-      # Unfortunately cluster-uid is not available in the cluster description
-      cluster_id = (cluster_project, cluster_location, cluster_name)
-      instance_id_to_cluster_id[instance_id] = cluster_id
-      instance_id_to_instance_name[instance_id] = instance.name
-    except KeyError:
-      continue
-
-  # Map "cluster_ids" (see above) to cluster objects
-  cluster_id_to_cluster = dict()
-  for c in clusters.values():
-    cluster_id = (c.project_id, c.location, c.name)
-    cluster_id_to_cluster[cluster_id] = c
-
   # Organize data per-cluster.
   per_cluster_results: Dict[gke.Cluster, Dict[str, Any]] = dict()
   global _prefetched_query_results
   for ts in _prefetched_query_results.values():
     instance_id = ts['labels']['resource.instance_id']
     try:
-      cluster_id = instance_id_to_cluster_id[instance_id]
-      cluster = cluster_id_to_cluster[cluster_id]
-      instance_name = instance_id_to_instance_name[instance_id]
+      node = gke.get_node_by_instance_id(context, instance_id)
     except KeyError:
       continue
-    cluster_results = per_cluster_results.setdefault(cluster, {
+    cluster_results = per_cluster_results.setdefault(node.nodepool.cluster, {
         'bad_instances': [],
         'valid': False
     })
@@ -123,7 +99,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
     if slo_missed:
       cluster_results['bad_instances'].append(
-          (instance_name, total_minutes, total_minutes_bad))
+          (node.instance.name, total_minutes, total_minutes_bad))
 
   # Go over all selected clusters and report results.
   for _, c in sorted(clusters.items()):
