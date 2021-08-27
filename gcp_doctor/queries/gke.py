@@ -267,3 +267,60 @@ def get_valid_node_versions(project_id: str, location: str) -> List[str]:
   versions += server_config['validNodeVersions']
 
   return versions
+
+
+class Node(models.Resource):
+  """Represents a GKE node.
+
+  This class useful for example to determine the GKE cluster when you only have
+  an GCE instance id (like from a metrics label). """
+
+  instance: gce.Instance
+  nodepool: NodePool
+  mig: gce.ManagedInstanceGroup
+
+  def __init__(self, instance, nodepool, mig):
+    super().__init__(project_id=instance.project_id)
+    self.instance = instance
+    self.nodepool = nodepool
+    self.mig = mig
+    pass
+
+  @property
+  def full_path(self) -> str:
+    return self.nodepool.cluster.full_path + '/nodes/' + self.instance.name
+
+  @property
+  def short_path(self) -> str:
+    #return self.nodepool.cluster.short_path + '/' + self.instance.name
+    return self.instance.short_path
+
+
+@caching.cached_api_call(in_memory=True)
+def get_node_by_instance_id(context: models.Context, instance_id: str) -> Node:
+  """Get a gke.Node instance by instance id.
+
+  Throws a KeyError in case this instance is not found or isn't part of a GKE cluster.
+  """
+  # This will throw a KeyError if the instance is not found, which is also
+  # the behavior that we want for this function.
+  instance = gce.get_instances(context)[instance_id]
+  clusters = get_clusters(context)
+  try:
+    # instance.mig throws AttributeError if it isn't part of a mig
+    mig = instance.mig
+
+    # find a NodePool that uses this MIG
+    for c in clusters.values():
+      for np in c.nodepools:
+        for np_mig in np.instance_groups:
+          if mig == np_mig:
+            return Node(instance=instance, nodepool=np, mig=mig)
+
+    # if we didn't find a nodepool that owns this instance, raise a KeyError
+    raise KeyError('can\'t determine GKE cluster for instance %s' %
+                   (instance_id))
+
+  except AttributeError as err:
+    raise KeyError from err
+  return None

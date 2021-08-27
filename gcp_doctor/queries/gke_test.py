@@ -19,7 +19,7 @@ import ipaddress
 from unittest import mock
 
 from gcp_doctor import models
-from gcp_doctor.queries import gke, gke_stub
+from gcp_doctor.queries import gce, gke, gke_stub
 
 DUMMY_PROJECT_NAME = 'gcpd-gke-1-9b90'
 DUMMY_CLUSTER1_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clusters/gke1'
@@ -141,6 +141,21 @@ class TestCluster:
     assert len(migs) == 1
     m = next(iter(migs))
     assert m.is_gke()
+
+  def test_get_node_by_instance_id(self):
+    context = models.Context(projects=[DUMMY_PROJECT_NAME])
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    migs = c.nodepools[0].instance_groups
+    assert len(migs) == 1
+    m = next(iter(migs))
+    found_nodes = 0
+    for i in gce.get_instances(context).values():
+      if m.is_instance_member(m.project_id, m.region, i.name):
+        node = gke.get_node_by_instance_id(context, i.id)
+        assert node.mig == m
+        found_nodes += 1
+    assert found_nodes == 1
 
   def test_service_account_property(self):
     context = models.Context(projects=[DUMMY_PROJECT_NAME])
