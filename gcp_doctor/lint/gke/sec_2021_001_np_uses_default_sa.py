@@ -11,13 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# Lint as: python3
-"""GKE nodes w/o workload identity don't use the GCE default service account.
+"""GKE nodes don't use the GCE default service account.
 
 The GCE default service account has more permissions than are required to run
-your Kubernetes Engine cluster. You should create and use a minimally privileged
-service account.
+your Kubernetes Engine cluster. You should either use GKE Workload Identity or
+create and use a minimally privileged service account.
 
 Reference: Hardening your cluster's security
   https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#use_least_privilege_sa
