@@ -20,6 +20,7 @@ import logging
 import os
 import pkgutil
 import sys
+from typing import Optional
 
 import google.auth
 import google_auth_httplib2
@@ -122,7 +123,11 @@ def get_user_email() -> str:
 
 
 @caching.cached_api_call(in_memory=True)
-def get_api(service_name: str, version: str):
+def get_api(service_name: str, version: str, project_id: Optional[str] = None):
+  """Get an API object, as returned by googleapiclient.discovery.build.
+
+  If project_id is specified, this will be used as the billed project, and usually
+  you should put there the project id of the project that you are inspecting."""
   credentials = _get_credentials()
 
   def _request_builder(http, *args, **kwargs):
@@ -137,6 +142,12 @@ def get_api(service_name: str, version: str):
       hooks.request_builder_hook(*args, **kwargs)
     except ImportError:
       pass
+
+    if 'headers' in kwargs:
+      headers = kwargs.get('headers', {})
+      headers['user-agent'] = f'gcp-doctor/{config.VERSION} (gzip)'
+      if project_id:
+        headers['x-goog-user-project'] = project_id
 
     # thread safety: create a new AuthorizedHttp object for every request
     # https://github.com/googleapis/google-api-python-client/blob/master/docs/thread_safety.md

@@ -55,7 +55,7 @@ def get_crypto_key(key_name: str) -> CryptoKey:
   """Get a Crypto Key object by its resource name, caching the result."""
 
   project_id = utils.get_project_by_res_name(key_name)
-  kms_api = apis.get_api('cloudkms', 'v1')
+  kms_api = apis.get_api('cloudkms', 'v1', project_id)
   query = kms_api.projects().locations().keyRings().cryptoKeys().get(
       name=key_name)
   logging.info('fetching KMS Key %s in project %s',

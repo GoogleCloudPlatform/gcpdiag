@@ -131,5 +131,6 @@ class ComputeEngineApiStub:
       raise ValueError("can't call this method here")
 
 
-def get_api_stub(service_name: str, version: str):
+def get_api_stub(service_name: str, version: str, project_id: str = None):
+  del project_id
   return ComputeEngineApiStub()
