@@ -20,8 +20,8 @@ import logging
 import os
 import pkgutil
 import sys
-from typing import Dict
 
+import google.auth
 import google_auth_httplib2
 import googleapiclient.http
 import httplib2
@@ -30,20 +30,41 @@ from google.auth.transport import requests
 from google_auth_oauthlib import flow
 from googleapiclient import discovery
 
-from gcp_doctor import caching
+from gcp_doctor import caching, config
 
 _credentials = None
+
+AUTH_SCOPES = [
+    'openid',
+    'https://www.googleapis.com/auth/cloud-platform',
+    'https://www.googleapis.com/auth/userinfo.email',
+]
 
 
 def _get_credentials():
   global _credentials
 
-  # If we have no credentials in memory, fetch from the disk cache.
+  # Authenticate using Application Default Credentials?
+  if config.AUTH_ADC:
+    logging.debug('auth: using application default credentials')
+    if not _credentials:
+      _credentials, _ = google.auth.default(scopes=AUTH_SCOPES)
+    return _credentials
+
+  # Authenticate using service account key?
+  if config.AUTH_KEY:
+    logging.debug('auth: using service account key')
+    if not _credentials:
+      _credentials, _ = google.auth.load_credentials_from_file(
+          filename=config.AUTH_KEY, scopes=AUTH_SCOPES)
+    return _credentials
+
+  # Oauth: if we have no credentials in memory, fetch from the disk cache.
   if not _credentials:
     with caching.get_cache() as diskcache:
       _credentials = diskcache.get('credentials')
 
-  # Try to refresh the credentials.
+  # Oauth: try to refresh the credentials.
   if _credentials and _credentials.expired and _credentials.refresh_token:
     try:
       logging.debug('refreshing credentials')
@@ -54,19 +75,15 @@ def _get_credentials():
     except exceptions.RefreshError as e:
       logging.debug("couldn't refresh token: %s", e)
 
-  # Login using browser and verification code.
+  # Oauth: login using browser and verification code.
   if not _credentials or not _credentials.valid:
     logging.debug('No valid credentials found. Initiating auth flow.')
     client_config = json.loads(
         pkgutil.get_data('gcp_doctor.queries', 'client_secrets.json'))
     oauth_flow = flow.Flow.from_client_config(
         client_config,
-        scopes=[
-            'openid',
-            'https://www.googleapis.com/auth/cloud-platform',
-            'https://www.googleapis.com/auth/accounts.reauth',
-            'https://www.googleapis.com/auth/userinfo.email',
-        ],
+        scopes=AUTH_SCOPES +
+        ['https://www.googleapis.com/auth/accounts.reauth'],
         redirect_uri='urn:ietf:wg:oauth:2.0:oob')
     auth_url, _ = oauth_flow.authorization_url(prompt='consent')
     print('Go to the following URL in your browser to authenticate:\n',
@@ -95,15 +112,12 @@ def login():
 
 def get_user_email() -> str:
   credentials = _get_credentials()
-  http = httplib2.Http()
-  headers: Dict[str, str] = {}
-  credentials.apply(headers)
-  resp, content = http.request('https://www.googleapis.com/userinfo/v2/me',
-                               'GET',
-                               headers=headers)
+  http = google_auth_httplib2.AuthorizedHttp(credentials, http=httplib2.Http())
+  resp, content = http.request('https://www.googleapis.com/userinfo/v2/me')
   if resp['status'] != '200':
     raise RuntimeError(f"can't determine user email. status={resp['status']}")
   data = json.loads(content)
+  logging.debug('determined my email address: %s', data['email'])
   return data['email']
 
 
