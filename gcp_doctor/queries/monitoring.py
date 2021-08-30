@@ -165,8 +165,8 @@ def query(context: models.Context, query_str: str) -> TimeSeriesCollection:
 
   time_series = TimeSeriesCollection()
 
-  mon_api = apis.get_api('monitoring', 'v3')
   for project_id in context.projects:
+    mon_api = apis.get_api('monitoring', 'v3', project_id)
     try:
       request = mon_api.projects().timeSeries().query(name='projects/' +
                                                       project_id,

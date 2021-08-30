@@ -107,7 +107,9 @@ def _ratelimited_execute(req):
   return req.execute(num_retries=config.API_RETRIES)
 
 
-def _execute_query_job(logging_api, job: _LogsQueryJob):
+def _execute_query_job(job: _LogsQueryJob):
+  logging_api = apis.get_api('logging', 'v2', job.project_id)
+
   # Convert "within" relative time to an absolute timestamp.
   start_time = datetime.datetime.now(
       datetime.timezone.utc) - datetime.timedelta(days=config.WITHIN_DAYS)
@@ -180,9 +182,8 @@ def execute_queries(executor: concurrent.futures.Executor):
   global jobs_todo
   jobs_executing = jobs_todo
   jobs_todo = {}
-  logging_api = apis.get_api('logging', 'v2')
   for job in jobs_executing.values():
-    job.future = executor.submit(_execute_query_job, logging_api, job)
+    job.future = executor.submit(_execute_query_job, job)
 
 
 def log_entry_timestamp_str(log_entry: Mapping[str, Any]):

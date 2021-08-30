@@ -199,8 +199,8 @@ class Cluster(models.Resource):
 def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
   """Get a list of Cluster matching the given context, indexed by cluster name."""
   clusters: Dict[str, Cluster] = {}
-  container_api = apis.get_api('container', 'v1')
   for project_id in context.projects:
+    container_api = apis.get_api('container', 'v1', project_id)
     logging.info('fetching list of GKE clusters in project %s', project_id)
     query = container_api.projects().locations().clusters().list(
         parent=f'projects/{project_id}/locations/-')
@@ -219,16 +219,13 @@ def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
         c = Cluster(project_id=project_id, resource_data=resp_c)
         clusters[c.full_path] = c
     except googleapiclient.errors.HttpError as err:
-      errstr = utils.http_error_message(err)
-      # TODO: implement proper exception classes
-      raise ValueError(
-          f'can\'t list clusters for project {project_id}: {errstr}') from err
+      raise utils.GcpApiError(err) from err
   return clusters
 
 
 @caching.cached_api_call
 def _get_server_config(project_id: str, location: str):
-  container_api = apis.get_api('container', 'v1')
+  container_api = apis.get_api('container', 'v1', project_id)
   name = f'projects/{project_id}/locations/{location}'
   request = container_api.projects().locations().getServerConfig(name=name)
   try:

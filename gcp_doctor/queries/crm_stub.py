@@ -23,26 +23,46 @@ import pathlib
 
 # pylint: disable=unused-argument
 
-PROJECT_JSON = pathlib.Path(__file__).parents[2] \
-    / 'test-data/gke1/json-dumps/project.json'
+PREFIX_GKE1 = pathlib.Path(__file__).parents[2] / 'test-data/gke1/json-dumps'
 
 
 class CrmApiStub:
-  """Mock object to simulate container api calls."""
+  """Mock object to simulate CRM API calls."""
+
+  # example API call:
+  # crm_api.projects().getIamPolicy(resource=self._project_id).execute()
+
+  def __init__(self, mock_state='init'):
+    self.mock_state = mock_state
 
   def projects(self):
     return self
 
-  def get(self, name):
+  # pylint: disable=invalid-name
+  def get(self, projectId=None, name=None):
+    del projectId
     del name
-    return self
+    return CrmApiStub(mock_state='get_project')
+
+  # pylint: disable=invalid-name
+  def getIamPolicy(self, resource):
+    del resource
+    return CrmApiStub(mock_state='get_iam_policy')
 
   def execute(self, num_retries=0):
-    with open(PROJECT_JSON) as json_file:
-      return json.load(json_file)
+    del num_retries
+    if self.mock_state == 'get_iam_policy':
+      with open(PREFIX_GKE1 / 'iam-policy.json') as json_file:
+        return json.load(json_file)
+    elif self.mock_state == 'get_project':
+      with open(PREFIX_GKE1 / 'project.json') as json_file:
+        return json.load(json_file)
+    else:
+      raise ValueError("can't call this method here")
 
 
-def get_api_stub(service_name: str, version: str):
+def get_api_stub(service_name: str, version: str, project_id: str = None):
+  del project_id
   if service_name == 'cloudresourcemanager':
     return CrmApiStub()
   else:

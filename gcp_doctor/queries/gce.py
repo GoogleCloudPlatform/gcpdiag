@@ -159,7 +159,7 @@ class ManagedInstanceGroup(models.Resource):
 @caching.cached_api_call(in_memory=True)
 def get_gce_zones(project_id: str) -> Set[str]:
   try:
-    gce_api = apis.get_api('compute', 'v1')
+    gce_api = apis.get_api('compute', 'v1', project_id)
     logging.info('listing gce zones of project %s', project_id)
     request = gce_api.zones().list(project=project_id)
     response = request.execute(num_retries=config.API_RETRIES)
@@ -218,8 +218,8 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
   """Get a list of Instance matching the given context, indexed by instance id."""
 
   instances: Dict[str, Instance] = {}
-  gce_api = apis.get_api('compute', 'v1')
   for project_id in context.projects:
+    gce_api = apis.get_api('compute', 'v1', project_id)
     requests = [
         gce_api.instances().list(project=project_id, zone=zone)
         for zone in get_gce_zones(project_id)
@@ -252,8 +252,8 @@ def get_managed_instance_groups(
   """Get a list of ManagedInstanceGroups matching the given context, indexed by mig id."""
 
   migs: Dict[int, ManagedInstanceGroup] = {}
-  gce_api = apis.get_api('compute', 'v1')
   for project_id in context.projects:
+    gce_api = apis.get_api('compute', 'v1', project_id)
     requests = [
         gce_api.instanceGroupManagers().list(project=project_id, zone=zone)
         for zone in get_gce_zones(project_id)
@@ -283,7 +283,7 @@ def get_managed_instance_groups(
 
 @caching.cached_api_call
 def get_project_metadata(project_id) -> Mapping[str, str]:
-  gce_api = apis.get_api('compute', 'v1')
+  gce_api = apis.get_api('compute', 'v1', project_id)
   logging.info('fetching metadata of project %s', project_id)
   query = gce_api.projects().get(project=project_id)
   try:

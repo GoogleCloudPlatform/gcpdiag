@@ -27,7 +27,7 @@ from gcp_doctor.queries import apis, crm
 def run(argv) -> int:
   del argv
   parser = argparse.ArgumentParser(
-      description='Run diagnostics in GCP projects.')
+      description='Run diagnostics in GCP projects.', prog='gcp-doctor')
 
   parser.add_argument('--auth-adc',
                       help='Authenticate using Application Default Credentials',
@@ -39,11 +39,21 @@ def run(argv) -> int:
       help='Authenticate using a service account private key file',
       metavar='FILE')
 
-  parser.add_argument('--project',
-                      action='append',
-                      metavar='P',
-                      required=True,
-                      help='Project ID (can be specified multiple times)')
+  parser.add_argument(
+      '--project',
+      action='append',
+      metavar='P',
+      required=True,
+      help=
+      'Project ID of project that should be inspected (can be specified multiple times)'
+  )
+
+  parser.add_argument(
+      '--billing-project',
+      metavar='P',
+      help='Project used for billing/quota of API calls done by gcp-doctor '
+      '(default is the inspected project, requires '
+      '\'serviceusage.services.use\' permission)')
 
   parser.add_argument('--show-skipped',
                       help='Show skipped rules',

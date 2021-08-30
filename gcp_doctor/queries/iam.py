@@ -28,20 +28,10 @@ _predefined_roles: Dict[str, Any] = {}
 _predefined_roles_initialized: bool = False
 
 
-def _get_predefined_roles() -> Mapping[str, Any]:
-  """Get the list of predefined roles and keep it in memory."""
-  global _predefined_roles
-  global _predefined_roles_initialized
-  if not _predefined_roles_initialized:
-    _predefined_roles = _fetch_predefined_roles()
-    _predefined_roles_initialized = True
-  return _predefined_roles
-
-
 @caching.cached_api_call(expire=config.STATIC_DOCUMENTS_EXPIRY_SECONDS)
-def _fetch_predefined_roles() -> Mapping[str, Any]:
+def _fetch_predefined_roles(api_project_id=None) -> Mapping[str, Any]:
   logging.info('fetching IAM roles: predefined')
-  iam_api = apis.get_api('iam', 'v1')
+  iam_api = apis.get_api('iam', 'v1', project_id=api_project_id)
   roles_api = iam_api.roles()
   request = roles_api.list(parent='', view='FULL')
   roles: Dict[str, Any] = {}
@@ -58,10 +48,10 @@ def _fetch_predefined_roles() -> Mapping[str, Any]:
 
 
 # Note: caching is done with get_project_policy
-def _fetch_roles(parent: str) -> Mapping[str, Any]:
+def _fetch_roles(parent: str, api_project_id) -> Mapping[str, Any]:
   roles: Dict[str, Any] = {}
   logging.info('fetching IAM roles: %s', parent)
-  iam_api = apis.get_api('iam', 'v1')
+  iam_api = apis.get_api('iam', 'v1', api_project_id)
   roles_api = iam_api.projects().roles()
   request = roles_api.list(parent=parent, view='FULL')
   while True:
@@ -79,7 +69,7 @@ def _fetch_roles(parent: str) -> Mapping[str, Any]:
 # Note: caching is done with get_project_policy
 def _fetch_policy(project_id: str):
   logging.info('fetching IAM policy of project %s', project_id)
-  crm_api = apis.get_api('cloudresourcemanager', 'v1')
+  crm_api = apis.get_api('cloudresourcemanager', 'v1', project_id)
   request = crm_api.projects().getIamPolicy(resource=project_id)
   response = request.execute()
   policy: Dict[str, Any] = {
@@ -112,7 +102,7 @@ class ProjectPolicy:
   def _get_role_permissions(self, role: str) -> List[str]:
     if role in self._custom_roles:
       return self._custom_roles[role].get('includedPermissions', [])
-    predefined_roles = _fetch_predefined_roles()
+    predefined_roles = _fetch_predefined_roles(api_project_id=self._project_id)
     if role in predefined_roles:
       permissions: List[str] = predefined_roles[role].get(
           'includedPermissions', [])
@@ -176,7 +166,8 @@ class ProjectPolicy:
 
   def __init__(self, project_id):
     self._project_id = project_id
-    self._custom_roles = _fetch_roles('projects/' + self._project_id)
+    self._custom_roles = _fetch_roles('projects/' + self._project_id,
+                                      api_project_id=self._project_id)
     self._policy = _fetch_policy(project_id)
 
 
@@ -233,8 +224,8 @@ def get_service_accounts(
   https://cloud.google.com/iam/docs/reference/rest/v1/projects.serviceAccounts/list
   """
   accounts: Dict[str, ServiceAccount] = {}
-  iam_api = apis.get_api('iam', 'v1')
   for project_id in context.projects:
+    iam_api = apis.get_api('iam', 'v1', project_id)
     logging.info('fetching list of Service Accounts in project %s', project_id)
     request = iam_api.projects().serviceAccounts().list(
         name=f'projects/{project_id}')

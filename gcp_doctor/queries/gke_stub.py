@@ -21,7 +21,7 @@ Instead of doing real API calls, we return test JSON data.
 import json
 import pathlib
 
-from gcp_doctor.queries import crm_stub, gce_stub
+from gcp_doctor.queries import crm_stub, gce_stub, iam_stub
 
 # pylint: disable=unused-argument
 
@@ -49,12 +49,15 @@ class ContainerApiStub:
       return json.load(json_file)
 
 
-def get_api_stub(service_name: str, version: str):
+def get_api_stub(service_name: str, version: str, project_id: str = None):
+  del project_id
   if service_name == 'container':
     return ContainerApiStub()
   elif service_name == 'compute':
     return gce_stub.ComputeEngineApiStub()
   elif service_name == 'cloudresourcemanager':
     return crm_stub.CrmApiStub()
+  elif service_name == 'iam':
+    return iam_stub.IamApiStub()
   else:
     raise ValueError('unsupported service: %s' % service_name)
