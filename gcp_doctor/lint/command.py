@@ -27,7 +27,7 @@ from gcp_doctor.queries import apis, crm
 def run(argv) -> int:
   del argv
   parser = argparse.ArgumentParser(
-      description='Run diagnostics in GCP projects.', prog='gcp-doctor')
+      description='Run diagnostics in GCP projects.', prog='gcp-doctor lint')
 
   parser.add_argument('--auth-adc',
                       help='Authenticate using Application Default Credentials',
