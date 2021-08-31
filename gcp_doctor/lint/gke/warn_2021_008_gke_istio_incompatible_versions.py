@@ -67,10 +67,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     if LegacyVersion('1.21') < current_version < LegacyVersion('1.23'):
       check_clusters.append(c)
     else:
-      report.add_ok(c, 'Cluster version: ' + c.master_version)
+      report.add_ok(c, f'GKE {c.master_version}')
 
   if len(check_clusters) == 0:
-    report.add_skipped(None, 'No clusters at version 1.21 or greater found.')
     return
 
   # Organize the metrics per-cluster.
@@ -85,12 +84,12 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   for c in check_clusters:
     ts_cluster_key = (c.project_id, c.location, c.name)
     if ts_cluster_key not in per_cluster_results:
-      report.add_ok(c, 'No Istio/ASM in-cluster control plane found.')
+      report.add_ok(c, 'no Istio/ASM')
     else:
       container_image = per_cluster_results[ts_cluster_key]['container_image']
       (_, istio_version) = container_image.split(':')
       if LegacyVersion(istio_version) > LegacyVersion('1.10.2'):
-        report.add_ok(c, 'Istio/ASM control plane version above 1.10.3.')
+        report.add_ok(c, f'Istio/ASM {istio_version}')
         return
       else:
         report.add_failed(
