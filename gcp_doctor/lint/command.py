@@ -29,6 +29,16 @@ def run(argv) -> int:
   parser = argparse.ArgumentParser(
       description='Run diagnostics in GCP projects.')
 
+  parser.add_argument('--auth-adc',
+                      help='Authenticate using Application Default Credentials',
+                      default=False,
+                      action='store_true')
+
+  parser.add_argument(
+      '--auth-key',
+      help='Authenticate using a service account private key file',
+      metavar='FILE')
+
   parser.add_argument('--project',
                       action='append',
                       metavar='P',
@@ -73,6 +83,8 @@ def run(argv) -> int:
 
   # Initialize configuration
   config.WITHIN_DAYS = args.within_days
+  config.AUTH_ADC = args.auth_adc
+  config.AUTH_KEY = args.auth_key
 
   # Initialize Context, Repository, and Tests.
   context = models.Context(projects=args.project)

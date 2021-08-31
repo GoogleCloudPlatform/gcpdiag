@@ -45,3 +45,7 @@ LOGGING_RATELIMIT_PERIOD_SECONDS = 60
 
 # Prefetch worker threads
 MAX_WORKERS = 10
+
+# Options that can be set via command-line arguments
+AUTH_ADC = False
+AUTH_KEY = None
