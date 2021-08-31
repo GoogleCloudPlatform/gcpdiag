@@ -17,7 +17,6 @@
 
 import json
 import logging
-import os
 import pkgutil
 import sys
 from typing import Optional
@@ -106,9 +105,6 @@ def _get_credentials():
 def login():
   """Force GCP login (this otherwise happens on the first get_api call)."""
   _get_credentials()
-  if os.getenv('GOOGLE_AUTH_TOKEN'):
-    logging.warning(
-        'Using IAM authorization token from GOOGLE_AUTH_TOKEN env. variable.')
 
 
 def get_user_email() -> str:
