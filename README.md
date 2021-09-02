@@ -6,8 +6,8 @@ test projects against a wide range of best-practices and frequent mistakes,
 based on the troubleshooting experience of the Google Cloud Support team.
 
 gcp-doctor is open-source and contributions are welcome! Note that this is not
-an officially supported Google Cloud product, but a community effort. The Google
-Cloud Support team maintains this code and we do our best to avoid causing any
+an officially supported Google product, but a community effort. The Google Cloud
+Support team maintains this code and we do our best to avoid causing any
 problems in your projects, but we give no guarantees to that end.
 
 ## Installation
