@@ -101,11 +101,11 @@ json-dumps/container-server-config-$(ZONE_1).json:
 	$(CURL) -fsS \
 		'https://container.googleapis.com/v1/projects/$(PROJECT_ID)/zones/$(ZONE_1)/serverconfig' >$@
 
-# servicemanagement.googleapis.com
+# serviceusage.googleapis.com
 
 json-dumps/services.json:
-	$(CURL) -fsS \
-		'https://servicemanagement.googleapis.com/v1/services?consumerId=project:$(PROJECT_ID)' >$@
+	$(CURL) -fv \
+	  'https://serviceusage.googleapis.com/v1/projects/$(PROJECT_ID)/services?filter=state:ENABLED' >$@
 
 
 # If you need to recreate the JSON: adapt the timestamp and make sure that there are some entries found.
