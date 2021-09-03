@@ -19,7 +19,8 @@ Cloud Shell.
 ```
 curl https://storage.googleapis.com/gcp-doctor/gcp-doctor.sh >gcp-doctor
 chmod +x gcp-doctor
-./gcp-doctor lint --project=[*MYPROJECT*]
+gcloud auth login --update-adc
+./gcp-doctor lint --auth-adc --project=[*MYPROJECT*]
 ```
 
 We recommend that you put the wrapper script in a directory that is already in
@@ -36,21 +37,53 @@ usage: gcp-doctor lint --project P [OPTIONS]
 Run diagnostics in GCP projects.
 
 optional arguments:
-  -h, --help       show this help message and exit
-  --project P      Project ID (can be specified multiple times)
-  --show-skipped   Show skipped rules
-  --hide-ok        Hide rules with result OK
-  -v, --verbose    Increase log verbosity
-  --within-days D  How far back to search logs and metrics (default: 3)
+  -h, --help           show this help message and exit
+  --auth-adc           Authenticate using Application Default Credentials
+  --auth-key FILE      Authenticate using a service account private key file
+  --project P          Project ID of project that should be inspected (can be specified multiple times)
+  --billing-project P  Project used for billing/quota of API calls done by gcp-doctor
+                       (default is the inspected project, requires 'serviceusage.services.use' permission)
+  --show-skipped       Show skipped rules
+  --hide-ok            Hide rules with result OK
+  -v, --verbose        Increase log verbosity
+  --within-days D      How far back to search logs and metrics (default: 3)
 ```
 
-gcp-doctor uses the GCP public APIs and needs credentials to access your GCP
-projects. The first time that you run it, it will ask you to authenticate with
-your browser, similarly to what gcloud does. The credentials will be cached on
-disk, so that you can keep running it for 1 hour.
+### Authentication
 
-To remove cached authentication credentials, you can delete the
-`$HOME/.cache/gcp-doctor` directory.
+gcp-doctor supports authentication using multiple mechanisms:
+
+1. Oauth user consent flow
+
+   By default gcp-doctor can use a Oauth user authentication flow, similarly to
+   what gcloud does. It will print a URL that you need to access with a browser,
+   and ask you to enter the token that you receive after you authenticate there.
+   Note that this currently doesn't work for people outside of google.com,
+   because gcp-doctor is not approved for external Oauth authentication yet.
+
+   The credentials will be cached on disk, so that you can keep running it for 1
+   hour. To remove cached authentication credentials, you can delete the
+   `$HOME/.cache/gcp-doctor` directory.
+
+1. Application default credentials
+
+   If you supply `--auth-adc`, gcp-doctor will use [Application Default
+   Credentials](https://google-auth.readthedocs.io/en/latest/reference/google.auth.html#google.auth.default)
+   to authenticate. For example this works out of the box in Cloud Shell and
+   you don't need to re-authenticate, or you can use `gcloud auth login
+   --update-adc` to refresh the credentials using gcloud.
+
+1.  Service account key
+
+   You can also use the `--auth-key` parameter to specify the [private
+   key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys)
+   of a service account.
+
+The authenticated user will need as minimum the following permissions (both of them):
+
+- Viewer role
+- serviceusage.services.use permission (unless you specify another project with
+  `--billing-project`)
 
 ### Test Products, Classes, and IDs
 
