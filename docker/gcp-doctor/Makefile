@@ -13,7 +13,7 @@ SHELL=/bin/bash
 # we changed to "release-version" with a new format: KEY=VALUE pairs (shell
 # script-sourceable)
 OBJECT_NAME_RELEASE_VERSION=release-version
-WRAPPER_VERSION=0.4
+WRAPPER_VERSION=0.5
 VERSION_FILE_URL=https://storage.googleapis.com/gcp-doctor/$(OBJECT_NAME_RELEASE_VERSION)
 
 build:
