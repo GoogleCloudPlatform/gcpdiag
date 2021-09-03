@@ -15,6 +15,7 @@
 # Lint as: python3
 """Queries related to GCP Kubernetes Engine clusters."""
 
+import functools
 import ipaddress
 import logging
 import re
@@ -296,7 +297,10 @@ class Node(models.Resource):
     return self.instance.short_path
 
 
-@caching.cached_api_call(in_memory=True)
+# Note: we don't use caching.cached_api_call here to avoid the locking
+# overhead. which is not required because all API calls are wrapper already
+# around caching.cached_api_call.
+@functools.lru_cache
 def get_node_by_instance_id(context: models.Context, instance_id: str) -> Node:
   """Get a gke.Node instance by instance id.
 
