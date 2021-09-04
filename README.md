@@ -73,7 +73,7 @@ gcp-doctor supports authentication using multiple mechanisms:
    you don't need to re-authenticate, or you can use `gcloud auth login
    --update-adc` to refresh the credentials using gcloud.
 
-1.  Service account key
+1. Service account key
 
    You can also use the `--auth-key` parameter to specify the [private
    key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys)
@@ -83,7 +83,10 @@ The authenticated user will need as minimum the following permissions (both of t
 
 - Viewer role
 - serviceusage.services.use permission (unless you specify another project with
-  `--billing-project`)
+  `--billing-project`). This is included in the Editor role, but alternatively
+  you could also use a custom role that includes only Viewer +
+  serviceusage.services.use (and you are strongly encouraged to do that if you
+  use a service account key for authentication).
 
 ### Test Products, Classes, and IDs
 
