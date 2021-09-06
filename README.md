@@ -23,8 +23,7 @@ gcloud auth login --update-adc
 ./gcp-doctor lint --auth-adc --project=[*MYPROJECT*]
 ```
 
-We recommend that you put the wrapper script in a directory that is already in
-your shell PATH, so that you can run it from anywhere.
+Note: the `gcloud auth` step is not required in Cloud Shell.
 
 ## Usage
 
