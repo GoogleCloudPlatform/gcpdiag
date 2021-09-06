@@ -49,7 +49,7 @@ def period_aligned_now(period_seconds: int) -> str:
   """Return a MQL date string for the current timestamp aligned to the given period.
 
   This will return "now - now%period" in a MQL-parseable date string and is useful
-  to get stable results. See also: (internal)
+  to get stable results. See also: go/gcp-doctor-period-aligned
   """
 
   now = time.time()
