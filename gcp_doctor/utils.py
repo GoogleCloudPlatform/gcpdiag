@@ -16,8 +16,6 @@
 import json
 import re
 
-from googleapiclient import errors
-
 DOMAIN_RES_NAME_MATCH = r'(http(s)?:)?//([a-z0-9][-a-z0-9]{1,61}[a-z0-9]\.)+[a-z]{2,}/'
 RES_NAME_KEY = r'[a-z][-a-z0-9]*'
 RES_NAME_VALUE = r'[a-z0-9][-a-z0-9]*'
@@ -114,17 +112,6 @@ def is_rel_res_name(res_name: str) -> bool:
 
 def is_valid_res_name(res_name: str) -> bool:
   return is_rel_res_name(res_name) or is_full_res_name(res_name)
-
-
-# see also: https://github.com/googleapis/google-api-python-client/issues/662
-def http_error_message(err: errors.HttpError) -> str:
-  # TODO: use GcpApiError exception instead of this function
-  content = json.loads(err.content)
-  if isinstance(content,
-                dict) and 'error' in content and 'message' in content['error']:
-    return content['error']['message']
-  else:
-    return str(err)
 
 
 def report_usage_if_running_at_google(command, details=None):

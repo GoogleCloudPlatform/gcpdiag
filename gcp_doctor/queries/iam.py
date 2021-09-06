@@ -246,9 +246,5 @@ def get_service_accounts(
           request = iam_api.projects().serviceAccounts().list_next(
               previous_request=request, previous_response=resp)
     except googleapiclient.errors.HttpError as err:
-      errstr = utils.http_error_message(err)
-      # TODO: implement proper exception classes
-      raise ValueError(
-          f'can\'t list service accounts for project {project_id}: {errstr}'
-      ) from err
+      raise utils.GcpApiError(err) from err
   return accounts

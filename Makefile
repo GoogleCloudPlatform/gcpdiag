@@ -48,16 +48,4 @@ release:
 	bumpversion --commit minor
 	git push origin HEAD:refs/for/master
 
-### Kokoro-specific (do not run interactively) ###
-
-kokoro-build: build
-	# create the directory structure that we want in x20
-	mkdir -p dist/x20/v$(VERSION)
-	mv dist/gcp-doctor dist/x20/v$(VERSION)
-	ln -s v$(VERSION) dist/x20/latest
-	# make sure that the files are not group-writable, because
-	# otherwise all (internal) would be allowed, and this
-	# is not permitted (more than 500 users)
-	chmod -R go-w dist/x20
-
-.PHONY: test coverage-report version build bump-version tarfile release kokoro-build
+.PHONY: test coverage-report version build bump-version tarfile release

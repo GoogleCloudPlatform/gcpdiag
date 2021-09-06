@@ -233,10 +233,7 @@ def _get_server_config(project_id: str, location: str):
     resp = request.execute(num_retries=config.API_RETRIES)
     return resp
   except googleapiclient.errors.HttpError as err:
-    errstr = utils.http_error_message(err)
-    raise ValueError(
-        f'can\'t get gke version list for project {project_id}: {errstr}'
-    ) from err
+    raise utils.GcpApiError(err) from err
 
 
 def get_valid_master_versions(project_id: str, location: str) -> List[str]:

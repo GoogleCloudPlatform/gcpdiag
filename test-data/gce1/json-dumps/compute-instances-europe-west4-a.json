@@ -3,7 +3,7 @@
   "items": [
     {
       "canIpForward": false,
-      "cpuPlatform": "Intel Skylake",
+      "cpuPlatform": "Unknown CPU Platform",
       "creationTimestamp": "2021-07-23T00:23:31.822-07:00",
       "deletionProtection": false,
       "disks": [
@@ -72,7 +72,7 @@
           "type": "PERSISTENT"
         }
       ],
-      "fingerprint": "skYUFX5utGA=",
+      "fingerprint": "45BUqQc5qnY=",
       "id": "48322001635889308",
       "kind": "compute#instance",
       "labelFingerprint": "1TQLkowq0ZY=",
@@ -80,6 +80,7 @@
         "foo": "bar"
       },
       "lastStartTimestamp": "2021-07-23T00:23:40.577-07:00",
+      "lastStopTimestamp": "2021-07-24T00:24:15.626-07:00",
       "machineType": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/zones/europe-west4-a/machineTypes/f1-micro",
       "metadata": {
         "fingerprint": "N9vwLAgcV6k=",
@@ -124,7 +125,7 @@
         "updateAutoLearnPolicy": true
       },
       "startRestricted": false,
-      "status": "RUNNING",
+      "status": "TERMINATED",
       "tags": {
         "fingerprint": "42WmSpB8rSM="
       },
@@ -132,7 +133,7 @@
     },
     {
       "canIpForward": false,
-      "cpuPlatform": "Intel Skylake",
+      "cpuPlatform": "Unknown CPU Platform",
       "creationTimestamp": "2021-07-23T00:23:31.906-07:00",
       "deletionProtection": false,
       "disks": [
@@ -201,12 +202,12 @@
           "type": "PERSISTENT"
         }
       ],
-      "fingerprint": "ftagB9bwZpA=",
+      "fingerprint": "BsRNljcJ8kE=",
       "id": "7817880697222713500",
       "kind": "compute#instance",
       "labelFingerprint": "42WmSpB8rSM=",
       "lastStartTimestamp": "2021-07-23T01:20:41.521-07:00",
-      "lastStopTimestamp": "2021-07-23T01:13:00.746-07:00",
+      "lastStopTimestamp": "2021-07-24T01:21:45.610-07:00",
       "machineType": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/zones/europe-west4-a/machineTypes/f1-micro",
       "metadata": {
         "fingerprint": "nTqxc4p3SKk=",
@@ -257,7 +258,7 @@
         "updateAutoLearnPolicy": true
       },
       "startRestricted": false,
-      "status": "RUNNING",
+      "status": "TERMINATED",
       "tags": {
         "fingerprint": "42WmSpB8rSM="
       },
