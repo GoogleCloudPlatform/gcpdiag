@@ -48,16 +48,6 @@ def test_is_region():
   assert not utils.is_region('us-central1-b')
 
 
-def test_http_error_message():
-  """http_error_message extracts properly an error from a Google API JSON string."""
-  resp = httplib2.Response({})
-  resp.reason = 'foobar'
-  error = errors.HttpError(content=JSON_ERROR_CONTENT, resp=resp)
-  result = utils.http_error_message(error)
-  expected = 'country is required'
-  assert result == expected
-
-
 def test_is_full_res_name():
   """is_full_res_name() should return correct result for a valid/unvalid full resource name."""
   assert utils.is_full_res_name(

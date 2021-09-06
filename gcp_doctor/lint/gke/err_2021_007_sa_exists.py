@@ -34,7 +34,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     for np in c.nodepools:
       sa = np.service_account
 
-      # TODO(skanzhelev): this may not work for cross-project service accounts
+      # TODO: this may not work for cross-project service accounts
       accounts = iam.get_service_accounts(context)
       if sa in iam.get_service_accounts(context):
         service_account = accounts[sa]
