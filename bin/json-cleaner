@@ -22,6 +22,12 @@ clean_maps = {
             'REDACTED',
         '.items.[].disks.[].shieldedInstanceInitialState.pk.content':
             'REDACTED',
+        '.items.[].metadata.items.configure-sh':
+            'REDACTED',
+        '.items.[].metadata.items.user-data':
+            'REDACTED',
+        '.items.[].metadata.items.kube-env':
+            'REDACTED',
     },
     'compute-project': {
         '.commonInstanceMetadata.items.sshKeys': 'REDACTED'

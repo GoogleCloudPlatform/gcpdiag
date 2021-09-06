@@ -145,9 +145,6 @@ class Resource(abc.ABC):
     """Project id (not project number)."""
     return self._project_id
 
-  # TODO(dwes): should we have full_name() and return what is documented
-  # here? https://cloud.google.com/iam/docs/full-resource-names
-
   @property
   @abc.abstractmethod
   def full_path(self) -> str:
