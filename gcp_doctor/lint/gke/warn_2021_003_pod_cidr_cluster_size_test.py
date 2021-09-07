@@ -21,12 +21,12 @@ from unittest import mock
 from gcp_doctor import lint, models
 from gcp_doctor.lint import report_terminal
 from gcp_doctor.lint.gke import warn_2021_003_pod_cidr_cluster_size
-from gcp_doctor.queries import gke_stub
+from gcp_doctor.queries import apis_stub
 
 DUMMY_PROJECT_NAME = 'gcpd-gke-1-9b90'
 
 
-@mock.patch('gcp_doctor.queries.apis.get_api', new=gke_stub.get_api_stub)
+@mock.patch('gcp_doctor.queries.apis.get_api', new=apis_stub.get_api_stub)
 class Test:
 
   def test_run_rule(self, snapshot):

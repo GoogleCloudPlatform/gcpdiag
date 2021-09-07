@@ -19,14 +19,11 @@ Instead of doing real API calls, we return test JSON data.
 """
 
 import json
-import pathlib
+import re
 
-from gcp_doctor.queries import crm_stub, gce_stub, iam_stub
+from gcp_doctor.queries import apis_stub
 
 # pylint: disable=unused-argument
-
-CLUSTERS_LIST_JSON = pathlib.Path(
-    __file__).parents[2] / 'test-data/gke1/json-dumps/container-clusters.json'
 
 
 class ContainerApiStub:
@@ -41,23 +38,12 @@ class ContainerApiStub:
   def clusters(self):
     return self
 
-  def list(self, parent=None):
+  def list(self, parent):
+    m = re.match(r'projects/([^/]+)/', parent)
+    project_id = m.group(1)
+    self.json_dir = apis_stub.get_json_dir(project_id)
     return self
 
   def execute(self, num_retries=0):
-    with open(CLUSTERS_LIST_JSON) as json_file:
+    with open(self.json_dir / 'container-clusters.json') as json_file:
       return json.load(json_file)
-
-
-def get_api_stub(service_name: str, version: str, project_id: str = None):
-  del project_id
-  if service_name == 'container':
-    return ContainerApiStub()
-  elif service_name == 'compute':
-    return gce_stub.ComputeEngineApiStub()
-  elif service_name == 'cloudresourcemanager':
-    return crm_stub.CrmApiStub()
-  elif service_name == 'iam':
-    return iam_stub.IamApiStub()
-  else:
-    raise ValueError('unsupported service: %s' % service_name)

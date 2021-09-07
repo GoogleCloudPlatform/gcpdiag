@@ -19,7 +19,7 @@ import json
 import logging
 import pkgutil
 import sys
-from typing import Optional
+from typing import Optional, Set
 
 import google.auth
 import google_auth_httplib2
@@ -157,3 +157,22 @@ def get_api(service_name: str, version: str, project_id: Optional[str] = None):
                         credentials=credentials,
                         requestBuilder=_request_builder)
   return api
+
+
+@caching.cached_api_call(in_memory=True)
+def list_apis(project_id: str) -> Set[str]:
+  logging.info('listing enabled APIs')
+  serviceusage = get_api('serviceusage', 'v1', project_id)
+  request = serviceusage.services().list(parent=f'projects/{project_id}',
+                                         filter='state:ENABLED')
+  enabled_apis: Set[str] = set()
+  while request is not None:
+    response = request.execute(num_retries=config.API_RETRIES)
+    for service in response['services']:
+      enabled_apis.add(service['config']['name'])
+    request = serviceusage.services().list_next(request, response)
+  return enabled_apis
+
+
+def is_enabled(project_id: str, service_name: str) -> bool:
+  return service_name in list_apis(project_id)
