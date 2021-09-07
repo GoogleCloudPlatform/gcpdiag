@@ -19,7 +19,7 @@ import ipaddress
 from unittest import mock
 
 from gcp_doctor import models
-from gcp_doctor.queries import gce, gke, gke_stub
+from gcp_doctor.queries import apis_stub, gce, gke
 
 DUMMY_PROJECT_NAME = 'gcpd-gke-1-9b90'
 DUMMY_CLUSTER1_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clusters/gke1'
@@ -30,7 +30,7 @@ DUMMY_CLUSTER1_SERVICE_ACCOUNT = '18404348413-compute@developer.gserviceaccount.
 DUMMY_CLUSTER2_SERVICE_ACCOUNT = 'gke2sa@gcpd-gke-1-9b90.iam.gserviceaccount.com'
 
 
-@mock.patch('gcp_doctor.queries.apis.get_api', new=gke_stub.get_api_stub)
+@mock.patch('gcp_doctor.queries.apis.get_api', new=apis_stub.get_api_stub)
 class TestCluster:
   """Test gke.Cluster."""
 
