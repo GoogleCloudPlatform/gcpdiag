@@ -17,8 +17,8 @@
 set -e
 set -x
 
-PATH="${KOKORO_ARTIFACTS_DIR}/gcp-doctor/bin:$HOME/.local/bin:$PATH"
-cd "${KOKORO_ARTIFACTS_DIR}/gcp-doctor"
+PATH="${KOKORO_ARTIFACTS_DIR}/github/gcp-doctor/bin:$HOME/.local/bin:$PATH"
+cd "${KOKORO_ARTIFACTS_DIR}/github/gcp-doctor"
 
 pipenv-dockerized run pipenv install --dev
 pipenv-dockerized run make test
