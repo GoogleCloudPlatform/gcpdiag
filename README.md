@@ -78,14 +78,16 @@ gcp-doctor supports authentication using multiple mechanisms:
    key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys)
    of a service account.
 
-The authenticated user will need as minimum the following permissions (both of them):
+The authenticated user will need as minimum the following roles granted (both of them):
 
-- Viewer role
-- serviceusage.services.use permission (unless you specify another project with
-  `--billing-project`). This is included in the Editor role, but alternatively
-  you could also use a custom role that includes only Viewer +
-  serviceusage.services.use (and you are strongly encouraged to do that if you
-  use a service account key for authentication).
+- `Viewer` on the inspected project
+- `Service Usage Consumer` on the project used for billing/quota enforcement,
+  which is per default the project being inspected, but can be explicitely set
+  using the `--billing-project` option
+
+The Editor and Owner roles include all the required permissions, but we
+recommend that if you use service account authentication (`--auth-key`), you
+only grant the Viewer+Service Usage Consumer on that service account.
 
 ### Test Products, Classes, and IDs
 
