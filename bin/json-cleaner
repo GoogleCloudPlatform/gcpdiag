@@ -56,7 +56,7 @@ def traverse_and_clean(path: str, data, clean_map: dict):
         data[i] = traverse_and_clean(path + '.[]', data[i], clean_map)
   elif isinstance(data, str):
     # obfuscate real email addresses
-    data = re.sub(r'[a-z]+@google.com', 'testuser@example.com', data)
+    data = re.sub(r'[a-z]+@google\.com', 'testuser@example.com', data)
   return data
 
 
