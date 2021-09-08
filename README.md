@@ -1,6 +1,6 @@
 # gcp-doctor - Diagnostics for Google Cloud Platform
 
-![build status](https://storage.googleapis.com/gcp-doctor/build-status.svg)
+[![build status](https://storage.googleapis.com/gcp-doctor-build/build-status.svg)](https://storage.googleapis.com/gcp-doctor-build/build-status.html)
 
 **gcp-doctor** is a command-line diagnostics tool for GCP customers. It finds
 and helps to fix common issues in Google Cloud Platform projects. It is used to
