@@ -14,10 +14,23 @@
 # limitations under the License.
 
 set -e
-set -x
+set -u
+set -o pipefail
+
+REPORT_FILE=test_report.txt
 
 PATH="${KOKORO_ARTIFACTS_DIR}/github/gcp-doctor/bin:$HOME/.local/bin:$PATH"
 cd "${KOKORO_ARTIFACTS_DIR}/github/gcp-doctor"
 
-pipenv-dockerized run pipenv install --dev
-pipenv-dockerized run make test
+{
+  echo -n "Date: "
+  date
+  echo "Git commit: $KOKORO_GIT_COMMIT"
+  echo "Github pull request: $KOKORO_GITHUB_PULL_REQUEST_NUMBER"
+  echo
+
+  set -x
+  pipenv-dockerized run pipenv install --dev
+  pipenv-dockerized run pre-commit run --all-files
+  pipenv-dockerized run make test
+} 2>&1 | tee $REPORT_FILE
