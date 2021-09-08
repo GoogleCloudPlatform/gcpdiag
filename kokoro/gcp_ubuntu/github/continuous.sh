@@ -26,7 +26,6 @@ cd "${KOKORO_ARTIFACTS_DIR}/github/gcp-doctor"
   echo -n "Date: "
   date
   echo "Git commit: $KOKORO_GIT_COMMIT"
-  echo "Github pull request: $KOKORO_GITHUB_PULL_REQUEST_NUMBER"
   echo
 
   set -x
