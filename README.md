@@ -25,7 +25,8 @@ gcloud auth login --update-adc
 ./gcp-doctor lint --auth-adc --project=[*MYPROJECT*]
 ```
 
-Note: the `gcloud auth` step is not required in Cloud Shell.
+Note: the `gcloud auth` step is not required in Cloud Shell becaues you are
+already logged in.
 
 ## Usage
 
