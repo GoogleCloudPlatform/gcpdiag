@@ -13,6 +13,8 @@ an officially supported Google product, but a community effort. The Google Cloud
 Support team maintains this code and we do our best to avoid causing any
 problems in your projects, but we give no guarantees to that end.
 
+TEST
+
 ## Installation
 
 You can run gcp-doctor using a shell wrapper that starts gcp-doctor in a Docker
