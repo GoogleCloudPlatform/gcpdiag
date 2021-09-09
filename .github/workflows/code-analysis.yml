@@ -1,0 +1,19 @@
+name: Code analysis
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-python@v2
+    - uses: hashicorp/setup-terraform@3d8debd658c92063839bc97da5c2427100420dec
+      # v1.3.2
+      with:
+        terraform_version: 1.0.6
+    - uses: pre-commit/action@9b88afc9cd57fd75b655d5c71bd38146d07135fe
+      # v2.0.3
