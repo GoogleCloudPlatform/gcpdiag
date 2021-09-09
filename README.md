@@ -1,6 +1,7 @@
 # gcp-doctor - Diagnostics for Google Cloud Platform
 
-[![build status](https://storage.googleapis.com/gcp-doctor-build/build-status.svg)](https://storage.googleapis.com/gcp-doctor-build/build-status.html)
+[![code analysis badge](https://github.com/GoogleCloudPlatform/gcp-doctor/actions/workflows/code-analysis.yml/badge.svg?branch=main&event=push)](https://github.com/GoogleCloudPlatform/gcp-doctor/actions/workflows/code-analysis.yml?query=branch%3Amain+event%3Apush)
+[![test badge](https://github.com/GoogleCloudPlatform/gcp-doctor/actions/workflows/test.yml/badge.svg?branch=main&event=push)](https://github.com/GoogleCloudPlatform/gcp-doctor/actions/workflows/test.yml?query=branch%3Amain+event%3Apush)
 
 **gcp-doctor** is a command-line diagnostics tool for GCP customers. It finds
 and helps to fix common issues in Google Cloud Platform projects. It is used to
