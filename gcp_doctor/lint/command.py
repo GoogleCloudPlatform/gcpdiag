@@ -21,7 +21,7 @@ import sys
 
 from gcp_doctor import config, lint, models, utils
 from gcp_doctor.lint import gce, gke, report_terminal
-from gcp_doctor.queries import apis, crm
+from gcp_doctor.queries import apis
 
 
 def run(argv) -> int:
@@ -106,15 +106,9 @@ def run(argv) -> int:
       show_ok=not args.hide_ok,
       show_skipped=args.show_skipped)
 
-  # Verify that we have access.
+  # Verify that we have access and that the CRM API is enabled
   for project_id in context.projects:
-    try:
-      crm.get_project(project_id)
-    except utils.GcpApiError:
-      print(
-          f"ERROR: can't access project: {project_id}. Please verify that you have Viewer access.",
-          file=sys.stdout)
-      sys.exit(1)
+    apis.verify_access(project_id)
 
   # Logging setup.
   logging_handler = report.get_logging_handler()
