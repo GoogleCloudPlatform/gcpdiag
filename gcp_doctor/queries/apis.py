@@ -30,7 +30,7 @@ from google.auth.transport import requests
 from google_auth_oauthlib import flow
 from googleapiclient import discovery
 
-from gcp_doctor import caching, config
+from gcp_doctor import caching, config, utils
 
 _credentials = None
 
@@ -166,13 +166,31 @@ def list_apis(project_id: str) -> Set[str]:
   request = serviceusage.services().list(parent=f'projects/{project_id}',
                                          filter='state:ENABLED')
   enabled_apis: Set[str] = set()
-  while request is not None:
-    response = request.execute(num_retries=config.API_RETRIES)
-    for service in response['services']:
-      enabled_apis.add(service['config']['name'])
-    request = serviceusage.services().list_next(request, response)
+  try:
+    while request is not None:
+      response = request.execute(num_retries=config.API_RETRIES)
+      for service in response['services']:
+        enabled_apis.add(service['config']['name'])
+      request = serviceusage.services().list_next(request, response)
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
   return enabled_apis
 
 
 def is_enabled(project_id: str, service_name: str) -> bool:
-  return service_name in list_apis(project_id)
+  return f'{service_name}.googleapis.com' in list_apis(project_id)
+
+
+def verify_access(project_id: str):
+  """Verify that the user has access to the project, exit with an error otherwise."""
+
+  try:
+    if not is_enabled(project_id, 'cloudresourcemanager'):
+      print(
+          f'ERROR: Cloud Resource Manager API is required but not enabled in project {project_id}.',
+          file=sys.stdout)
+      sys.exit(1)
+  except utils.GcpApiError as err:
+    print(f'ERROR: can\'t access project {project_id}: {err.message}.',
+          file=sys.stdout)
+    sys.exit(1)

@@ -254,6 +254,8 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
 
   instances: Dict[str, Instance] = {}
   for project_id in context.projects:
+    if not apis.is_enabled(project_id, 'compute'):
+      continue
     gce_api = apis.get_api('compute', 'v1', project_id)
     requests = [
         gce_api.instances().list(project=project_id, zone=zone)
@@ -288,6 +290,8 @@ def get_managed_instance_groups(
 
   migs: Dict[int, ManagedInstanceGroup] = {}
   for project_id in context.projects:
+    if not apis.is_enabled(project_id, 'compute'):
+      continue
     gce_api = apis.get_api('compute', 'v1', project_id)
     requests = [
         gce_api.instanceGroupManagers().list(project=project_id, zone=zone)

@@ -201,6 +201,8 @@ def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
   """Get a list of Cluster matching the given context, indexed by cluster name."""
   clusters: Dict[str, Cluster] = {}
   for project_id in context.projects:
+    if not apis.is_enabled(project_id, 'container'):
+      continue
     container_api = apis.get_api('container', 'v1', project_id)
     logging.info('fetching list of GKE clusters in project %s', project_id)
     query = container_api.projects().locations().clusters().list(

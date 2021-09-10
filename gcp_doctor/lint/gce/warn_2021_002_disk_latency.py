@@ -66,6 +66,7 @@ fetch gce_instance
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   instances = gce.get_instances(context)
   if not instances:
+    report.add_skipped(None, 'no instances found')
     return
 
   global _prefetched_query_results
