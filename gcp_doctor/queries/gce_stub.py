@@ -22,8 +22,6 @@ import copy
 import json
 import pathlib
 
-from gcp_doctor.queries import crm_stub
-
 # pylint: disable=unused-argument
 
 JSON_PROJECT_DIR = {
@@ -131,13 +129,3 @@ class ComputeEngineApiStub:
         return json.load(json_file)
     else:
       raise ValueError("can't call this method here")
-
-
-def get_api_stub(service_name: str, version: str, project_id: str = None):
-  del project_id
-  if service_name == 'compute':
-    return ComputeEngineApiStub()
-  elif service_name == 'cloudresourcemanager':
-    return crm_stub.CrmApiStub()
-  else:
-    raise ValueError('unsupported service: %s' % service_name)

@@ -18,7 +18,7 @@
 from unittest import mock
 
 from gcp_doctor import models
-from gcp_doctor.queries import gce, gce_stub
+from gcp_doctor.queries import apis_stub, gce
 
 DUMMY_REGION = 'europe-west4'
 DUMMY_ZONE = 'europe-west4-a'
@@ -32,7 +32,7 @@ DUMMY_INSTANCE2_NAME = 'gce2'
 DUMMY_INSTANCE3_LABELS = {'gcp_doctor_test': 'gke'}
 
 
-@mock.patch('gcp_doctor.queries.apis.get_api', new=gce_stub.get_api_stub)
+@mock.patch('gcp_doctor.queries.apis.get_api', new=apis_stub.get_api_stub)
 class TestGce:
   """Test code in gce.py"""
 
