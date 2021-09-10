@@ -24,6 +24,5 @@ DUMMY_PROJECT_NAME = 'gcpd-gke-1-9b90'
 class Test:
 
   def test_is_enabled(self):
-    assert apis.is_enabled(DUMMY_PROJECT_NAME, 'container.googleapis.com')
-    assert not apis.is_enabled(DUMMY_PROJECT_NAME,
-                               'containerxyz.googleapis.com')
+    assert apis.is_enabled(DUMMY_PROJECT_NAME, 'container')
+    assert not apis.is_enabled(DUMMY_PROJECT_NAME, 'containerxyz')

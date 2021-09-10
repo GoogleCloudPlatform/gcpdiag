@@ -16,7 +16,8 @@ all:	\
 	json-dumps/compute-project.json \
 	json-dumps/compute-zones.json \
 	json-dumps/monitoring-query.json \
-	json-dumps/project.json
+	json-dumps/project.json \
+	json-dumps/services.json
 
 json-dumps/compute-instances-$(ZONE_1).json:
 	$(CURL) -fsS \
@@ -66,6 +67,10 @@ json-dumps/compute-zones.json:
 json-dumps/project.json:
 	$(CURL) -fsS \
 		'https://cloudresourcemanager.googleapis.com/v3/projects/$(PROJECT_ID)' >$@
+
+json-dumps/services.json:
+	$(CURL) -fv \
+	  'https://serviceusage.googleapis.com/v1/projects/$(PROJECT_ID)/services?filter=state:ENABLED' >$@
 
 define MONITORING_QUERY
 { \
