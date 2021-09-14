@@ -268,8 +268,6 @@ class LintRuleRepository:
 
         try:
           rule.run_rule_f(context, rule_report)
-        except (ValueError) as e:
-          report.add_skipped(rule, context, None, str(e), None)
         except (GcpApiError) as api_error:
           report.add_skipped(rule, context, None, str(api_error), None)
         report.rule_end(rule, context)
