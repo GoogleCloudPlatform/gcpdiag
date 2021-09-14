@@ -19,7 +19,7 @@ from unittest import mock
 
 import diskcache
 
-from gcp_doctor.queries import iam, iam_stub
+from gcp_doctor.queries import apis_stub, iam
 
 
 def get_cache_stub():
@@ -63,7 +63,7 @@ TEST_SERVICE_ACCOUNT_PERMISSIONS = [
 ]
 
 
-@mock.patch('gcp_doctor.queries.apis.get_api', new=iam_stub.get_api_stub)
+@mock.patch('gcp_doctor.queries.apis.get_api', new=apis_stub.get_api_stub)
 @mock.patch('gcp_doctor.caching.get_cache', new=get_cache_stub)
 class TestProjectPolicy:
   """Test gke.ProjectPolicy"""

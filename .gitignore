@@ -10,3 +10,4 @@ terraform.tfstate.backup
 .venv
 *.lock.hcl
 .pyinstaller.build
+.*.swp

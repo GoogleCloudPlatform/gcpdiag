@@ -25,6 +25,7 @@ import json
 import pathlib
 
 from gcp_doctor import utils
+from gcp_doctor.queries import apis_stub
 
 PREFIX_GKE1 = pathlib.Path(__file__).parents[2] / 'test-data/gke1/json-dumps'
 
@@ -49,12 +50,8 @@ class KmsApiStub:
     return self
 
   def execute(self, num_retries=0):
-    name = '{}{}'.format(
-        utils.extract_value_from_res_name(self.name, 'cryptoKeys'), '.json')
-    with open(PREFIX_GKE1 / name) as json_file:
+    project_id = utils.get_project_by_res_name(self.name)
+    basename = utils.extract_value_from_res_name(self.name, 'cryptoKeys')
+    json_dir = apis_stub.get_json_dir(project_id)
+    with open(json_dir / (basename + '.json')) as json_file:
       return json.load(json_file)
-
-
-def get_api_stub(service_name: str, version: str, project_id: str = None):
-  del project_id
-  return KmsApiStub()
