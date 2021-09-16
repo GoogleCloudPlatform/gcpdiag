@@ -1,4 +1,4 @@
-VERSION=0.41-test
+VERSION=$(shell sed -n 's/^current_version\s*=\s*//p' <.bumpversion.cfg)
 DIST_NAME=gcp-doctor-$(VERSION)
 SHELL=/bin/bash
 
