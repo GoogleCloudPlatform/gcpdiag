@@ -164,35 +164,33 @@ def query(context: models.Context, query_str: str) -> TimeSeriesCollection:
 
   time_series = TimeSeriesCollection()
 
-  for project_id in context.projects:
-    mon_api = apis.get_api('monitoring', 'v3', project_id)
-    try:
-      request = mon_api.projects().timeSeries().query(name='projects/' +
-                                                      project_id,
-                                                      body={'query': query_str})
+  mon_api = apis.get_api('monitoring', 'v3', context.project_id)
+  try:
+    request = mon_api.projects().timeSeries().query(name='projects/' +
+                                                    context.project_id,
+                                                    body={'query': query_str})
 
-      logging.info('executing monitoring query (project: %s)', project_id)
-      logging.debug('query: %s', query_str)
-      pages = 0
-      start_time = datetime.datetime.now()
-      while request:
-        pages += 1
-        response = request.execute()
-        time_series.add_api_response(response)
-        request = mon_api.projects().timeSeries().query_next(
-            previous_request=request, previous_response=response)
-        if request:
-          logging.info('still executing monitoring query (project: %s)',
-                       project_id)
-      end_time = datetime.datetime.now()
-      logging.debug('query run time: %s, pages: %d', end_time - start_time,
-                    pages)
-    except googleapiclient.errors.HttpError as err:
-      gcp_err = utils.GcpApiError(err)
-      # Ignore 502 because we get that when the monitoring query times out.
-      if gcp_err.status in [502]:
-        logging.warning('error executing monitoring query: %s',
-                        str(gcp_err.message))
-      else:
-        raise utils.GcpApiError(err) from err
+    logging.info('executing monitoring query (project: %s)', context.project_id)
+    logging.debug('query: %s', query_str)
+    pages = 0
+    start_time = datetime.datetime.now()
+    while request:
+      pages += 1
+      response = request.execute()
+      time_series.add_api_response(response)
+      request = mon_api.projects().timeSeries().query_next(
+          previous_request=request, previous_response=response)
+      if request:
+        logging.info('still executing monitoring query (project: %s)',
+                     context.project_id)
+    end_time = datetime.datetime.now()
+    logging.debug('query run time: %s, pages: %d', end_time - start_time, pages)
+  except googleapiclient.errors.HttpError as err:
+    gcp_err = utils.GcpApiError(err)
+    # Ignore 502 because we get that when the monitoring query times out.
+    if gcp_err.status in [502]:
+      logging.warning('error executing monitoring query: %s',
+                      str(gcp_err.message))
+    else:
+      raise utils.GcpApiError(err) from err
   return time_series

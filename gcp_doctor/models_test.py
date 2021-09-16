@@ -20,42 +20,35 @@ import pytest
 from gcp_doctor import models
 
 
-def test_context_mandatory_projects():
-  """Context constructor with empty project list should raise an exception."""
-  with pytest.raises(ValueError):
-    models.Context(projects=[])
-
-
 def test_context_region_exception():
   """Context constructor with non-list regions should raise an exception."""
   with pytest.raises(ValueError):
-    models.Context(projects=['project1'], regions='us-central1-b')
+    models.Context(project_id='project1', regions='us-central1-b')
 
 
 def test_context_to_string():
   """Verify stringification of Context with and without regions/labels."""
-  c = models.Context(projects=['project1', 'project2'])
-  assert str(c) == 'projects: project1,project2'
+  c = models.Context(project_id='project1')
+  assert str(c) == 'project: project1'
 
-  c = models.Context(projects=['project1', 'project2'], regions=[])
-  assert str(c) == 'projects: project1,project2'
+  c = models.Context(project_id='project1', regions=[])
+  assert str(c) == 'project: project1'
 
-  c = models.Context(projects=['project1', 'project2'], regions=['us-central1'])
-  assert str(c) == 'projects: project1,project2, regions: us-central1'
+  c = models.Context(project_id='project1', regions=['us-central1'])
+  assert str(c) == 'project: project1, regions: us-central1'
 
-  c = models.Context(projects=['project1', 'project2'],
+  c = models.Context(project_id='project1',
                      labels=[{
                          'A': 'B',
                          'X': 'Y'
                      }, {
                          'foo': 'bar'
                      }])
-  assert str(c) == 'projects: project1,project2, labels: {A=B,X=Y},{foo=bar}'
+  assert str(c) == 'project: project1, labels: {A=B,X=Y},{foo=bar}'
 
-  c = models.Context(projects=['project1', 'project2'],
+  c = models.Context(project_id='project1',
                      regions=['us-central1'],
                      labels=[{
                          'X': 'Y'
                      }])
-  assert str(
-      c) == 'projects: project1,project2, regions: us-central1, labels: {X=Y}'
+  assert str(c) == 'project: project1, regions: us-central1, labels: {X=Y}'

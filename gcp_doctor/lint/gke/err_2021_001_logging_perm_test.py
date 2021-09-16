@@ -30,7 +30,7 @@ DUMMY_PROJECT_NAME = 'gcpd-gke-1-9b90'
 class Test:
 
   def test_run_rule(self, snapshot):
-    context = models.Context(projects=[DUMMY_PROJECT_NAME])
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
     output = io.StringIO()
     report = report_terminal.LintReportTerminal(file=output, show_skipped=True)
     rule = lint.LintRule(product='test',

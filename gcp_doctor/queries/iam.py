@@ -217,34 +217,32 @@ class ServiceAccount(models.Resource):
 
 
 @caching.cached_api_call(in_memory=True)
-def get_service_accounts(
-    context: models.Context) -> Mapping[str, ServiceAccount]:
+def get_service_accounts(project_id: str) -> Mapping[str, ServiceAccount]:
   """Get a list of Service Accounts matching the given context, key is e-mail.
 
   https://cloud.google.com/iam/docs/reference/rest/v1/projects.serviceAccounts/list
   """
   accounts: Dict[str, ServiceAccount] = {}
-  for project_id in context.projects:
-    iam_api = apis.get_api('iam', 'v1', project_id)
-    logging.info('fetching list of Service Accounts in project %s', project_id)
-    request = iam_api.projects().serviceAccounts().list(
-        name=f'projects/{project_id}')
-    try:
-      while request:
-        resp = request.execute(num_retries=config.API_RETRIES)
-        if 'accounts' not in resp:
-          return accounts
-        for resp_sa in resp['accounts']:
-          # verify that we some minimal data that we expect
-          if 'name' not in resp_sa or 'email' not in resp_sa:
-            raise RuntimeError(
-                'missing data in projects.serviceAccounts.list response')
-          sa = ServiceAccount(project_id=project_id, resource_data=resp_sa)
-          accounts[resp_sa['email']] = sa
-          logging.debug('found service account %s: %s in project %s',
-                        resp_sa['name'], sa, project_id)
-          request = iam_api.projects().serviceAccounts().list_next(
-              previous_request=request, previous_response=resp)
-    except googleapiclient.errors.HttpError as err:
-      raise utils.GcpApiError(err) from err
+  iam_api = apis.get_api('iam', 'v1', project_id)
+  logging.info('fetching list of Service Accounts in project %s', project_id)
+  request = iam_api.projects().serviceAccounts().list(
+      name=f'projects/{project_id}')
+  try:
+    while request:
+      resp = request.execute(num_retries=config.API_RETRIES)
+      if 'accounts' not in resp:
+        return accounts
+      for resp_sa in resp['accounts']:
+        # verify that we some minimal data that we expect
+        if 'name' not in resp_sa or 'email' not in resp_sa:
+          raise RuntimeError(
+              'missing data in projects.serviceAccounts.list response')
+        sa = ServiceAccount(project_id=project_id, resource_data=resp_sa)
+        accounts[resp_sa['email']] = sa
+        logging.debug('found service account %s: %s in project %s',
+                      resp_sa['name'], sa, project_id)
+        request = iam_api.projects().serviceAccounts().list_next(
+            previous_request=request, previous_response=resp)
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
   return accounts
