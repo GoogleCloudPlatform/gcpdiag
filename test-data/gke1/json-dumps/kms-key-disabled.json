@@ -1,7 +1,7 @@
 {
-  "name": "projects/testproject/locations/us-central1/keyRings/usckr/cryptoKeys/kms-key-disabled",
+  "name": "projects/gcpd-gke-1-9b90/locations/us-central1/keyRings/usckr/cryptoKeys/kms-key-disabled",
   "primary": {
-    "name": "projects/testproject/locations/us-central1/keyRings/usckr/cryptoKeys/kms-key-disabled/cryptoKeyVersions/2",
+    "name": "projects/gcpd-gke-1-9b90/locations/us-central1/keyRings/usckr/cryptoKeys/kms-key-disabled/cryptoKeyVersions/2",
     "state": "DISABLED",
     "createTime": "2021-02-21T16:19:08.796116258Z",
     "protectionLevel": "SOFTWARE",

@@ -17,7 +17,8 @@ import json
 import pathlib
 import re
 
-from gcp_doctor.queries import crm_stub, gce_stub, gke_stub, iam_stub
+from gcp_doctor.queries import (crm_stub, gce_stub, gke_stub, iam_stub,
+                                kms_stub, monitoring_stub)
 
 # pylint: disable=unused-argument
 
@@ -63,10 +64,14 @@ def get_api_stub(service_name: str, version: str, project_id: str):
     return crm_stub.CrmApiStub()
   elif service_name == 'container':
     return gke_stub.ContainerApiStub()
+  elif service_name == 'cloudkms':
+    return kms_stub.KmsApiStub()
   elif service_name == 'compute':
     return gce_stub.ComputeEngineApiStub()
   elif service_name == 'iam':
     return iam_stub.IamApiStub()
+  elif service_name == 'monitoring':
+    return monitoring_stub.MonitoringApiStub()
   elif service_name == 'serviceusage':
     return ServiceUsageApiStub()
   else:

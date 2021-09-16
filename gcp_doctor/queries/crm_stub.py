@@ -19,21 +19,11 @@ Instead of doing real API calls, we return test JSON data.
 """
 
 import json
-import pathlib
 import re
 
-# pylint: disable=unused-argument
+from gcp_doctor.queries import apis_stub
 
-JSON_PROJECT_DIR = {
-    'gcpd-gce1-4exv':
-        pathlib.Path(__file__).parents[2] / 'test-data/gce1/json-dumps',
-    '50670056743':
-        pathlib.Path(__file__).parents[2] / 'test-data/gce1/json-dumps',
-    'gcpd-gke-1-9b90':
-        pathlib.Path(__file__).parents[2] / 'test-data/gke1/json-dumps',
-    '18404348413':
-        pathlib.Path(__file__).parents[2] / 'test-data/gke1/json-dumps',
-}
+# pylint: disable=unused-argument
 
 
 class CrmApiStub:
@@ -62,21 +52,12 @@ class CrmApiStub:
 
   def execute(self, num_retries=0):
     del num_retries
+    json_dir = apis_stub.get_json_dir(self.project_id)
     if self.mock_state == 'get_iam_policy':
-      with open(
-          f'{JSON_PROJECT_DIR[self.project_id]}/iam-policy.json') as json_file:
+      with open(json_dir / 'iam-policy.json') as json_file:
         return json.load(json_file)
     elif self.mock_state == 'get_project':
-      with open(
-          f'{JSON_PROJECT_DIR[self.project_id]}/project.json') as json_file:
+      with open(json_dir / 'project.json') as json_file:
         return json.load(json_file)
     else:
       raise ValueError("can't call this method here")
-
-
-def get_api_stub(service_name: str, version: str, project_id: str = None):
-  del project_id
-  if service_name == 'cloudresourcemanager':
-    return CrmApiStub()
-  else:
-    raise ValueError('unsupported service: %s' % service_name)
