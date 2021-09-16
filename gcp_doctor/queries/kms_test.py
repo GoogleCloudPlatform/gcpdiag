@@ -17,15 +17,16 @@
 
 from unittest import mock
 
-from gcp_doctor.queries import kms, kms_stub
+from gcp_doctor.queries import apis_stub, kms
 
-BASE_KEY_NAME = 'projects/testproject/locations/us-central1/keyRings/usckr/cryptoKeys/'
+DUMMY_PROJECT_NAME = 'gcpd-gke-1-9b90'
+BASE_KEY_NAME = f'projects/{DUMMY_PROJECT_NAME}/locations/us-central1/keyRings/usckr/cryptoKeys/'
 DUMMY_DESTROYED_CRYPTO_KEY_NAME = BASE_KEY_NAME + 'kms-key-destroyed'
 DUMMY_DISABLED_CRYPTO_KEY_NAME = BASE_KEY_NAME + 'kms-key-disabled'
 DUMMY_ENABLED_CRYPTO_KEY_NAME = BASE_KEY_NAME + 'kms-key-enabled'
 
 
-@mock.patch('gcp_doctor.queries.apis.get_api', new=kms_stub.get_api_stub)
+@mock.patch('gcp_doctor.queries.apis.get_api', new=apis_stub.get_api_stub)
 class TestCryptoKey:
   """Test kms.CryptoKey."""
 

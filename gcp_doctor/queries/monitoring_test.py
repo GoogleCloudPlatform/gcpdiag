@@ -18,14 +18,14 @@
 from unittest import mock
 
 from gcp_doctor import models
-from gcp_doctor.queries import monitoring, monitoring_stub
+from gcp_doctor.queries import apis_stub, monitoring
 
 DUMMY_PROJECT_NAME = 'gcpd-gce1-4exv'
 DUMMY_INSTANCE_NAME = 'gce1'
 DUMMY_ZONE = 'europe-west4-a'
 
 
-@mock.patch('gcp_doctor.queries.apis.get_api', new=monitoring_stub.get_api_stub)
+@mock.patch('gcp_doctor.queries.apis.get_api', new=apis_stub.get_api_stub)
 class Test:
 
   def test_timeserie(self):
