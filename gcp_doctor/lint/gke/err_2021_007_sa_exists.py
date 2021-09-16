@@ -35,8 +35,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       sa = np.service_account
 
       # TODO: this may not work for cross-project service accounts
-      accounts = iam.get_service_accounts(context)
-      if sa in iam.get_service_accounts(context):
+      accounts = iam.get_service_accounts(context.project_id)
+      if sa in accounts:
         service_account = accounts[sa]
         if service_account.disabled:
           report.add_failed(np, f'service account: {sa}\n is disabled')

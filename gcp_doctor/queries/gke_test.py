@@ -36,21 +36,21 @@ class TestCluster:
 
   def test_get_clusters_by_label(self):
     """get_clusters returns the right cluster matched by label."""
-    context = models.Context(projects=[DUMMY_PROJECT_NAME],
+    context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              labels=[DUMMY_CLUSTER1_LABELS])
     clusters = gke.get_clusters(context)
     assert DUMMY_CLUSTER1_NAME in clusters and len(clusters) == 1
 
   def test_get_clusters_by_region(self):
     """get_clusters returns the right cluster matched by region."""
-    context = models.Context(projects=[DUMMY_PROJECT_NAME],
+    context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              regions=['europe-west4'])
     clusters = gke.get_clusters(context)
     assert DUMMY_CLUSTER1_NAME in clusters and len(clusters) == 1
 
   def test_cluster_properties(self):
     """verify cluster property methods."""
-    context = models.Context(projects=[DUMMY_PROJECT_NAME])
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     c = clusters[DUMMY_CLUSTER1_NAME]
     assert c.name == 'gke1'
@@ -59,7 +59,7 @@ class TestCluster:
 
   def test_get_path_regional(self):
     """full_path and short_path should return correct results with regional clusters."""
-    context = models.Context(projects=[DUMMY_PROJECT_NAME])
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     assert DUMMY_CLUSTER2_NAME in clusters.keys()
     c = clusters[DUMMY_CLUSTER2_NAME]
@@ -69,7 +69,7 @@ class TestCluster:
 
   def test_has_logging_enabled_false(self):
     """has_logging_enabled should return false for GKE cluster with logging disabled."""
-    context = models.Context(projects=[DUMMY_PROJECT_NAME])
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     assert DUMMY_CLUSTER1_NAME in clusters.keys()
     c = clusters[DUMMY_CLUSTER1_NAME]
@@ -77,7 +77,7 @@ class TestCluster:
 
   def test_has_logging_enabled_true(self):
     """has_logging_enabled should return true for GKE cluster with logging enabled."""
-    context = models.Context(projects=[DUMMY_PROJECT_NAME])
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     assert DUMMY_CLUSTER2_NAME in clusters.keys()
     c = clusters[DUMMY_CLUSTER2_NAME]
@@ -86,7 +86,7 @@ class TestCluster:
   def test_has_default_service_account(self):
     """has_default_service_account should return true for GKE node-pools with
     the default GCE SA."""
-    context = models.Context(projects=[DUMMY_PROJECT_NAME])
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     # 'default-pool' has the default SA
     c = clusters[DUMMY_CLUSTER1_NAME]
@@ -97,7 +97,7 @@ class TestCluster:
 
   def test_pod_ipv4_cidr(self):
     """returns correct pod CIDR"""
-    context = models.Context(projects=[DUMMY_PROJECT_NAME])
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     # cluster 1
     c = clusters[DUMMY_CLUSTER1_NAME]
@@ -110,7 +110,7 @@ class TestCluster:
 
   def test_current_node_count(self):
     """returns correct number of nodes running"""
-    context = models.Context(projects=[DUMMY_PROJECT_NAME])
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     # cluster 1
     c = clusters[DUMMY_CLUSTER1_NAME]
@@ -121,20 +121,20 @@ class TestCluster:
 
   def test_np_pod_ipv4_cidr_size(self):
     """resturn correct pod CIDR size per allocated to node pool."""
-    context = models.Context(projects=[DUMMY_PROJECT_NAME])
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     # cluster 1
     c = clusters[DUMMY_CLUSTER1_NAME]
     assert c.nodepools[0].pod_ipv4_cidr_size == 24
 
   def test_has_workload_identity_enabled(self):
-    context = models.Context(projects=[DUMMY_PROJECT_NAME])
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     c = clusters[DUMMY_CLUSTER1_NAME]
     assert not c.nodepools[0].has_workload_identity_enabled()
 
   def test_nodepool_instance_groups(self):
-    context = models.Context(projects=[DUMMY_PROJECT_NAME])
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     c = clusters[DUMMY_CLUSTER1_NAME]
     migs = c.nodepools[0].instance_groups
@@ -143,7 +143,7 @@ class TestCluster:
     assert m.is_gke()
 
   def test_get_node_by_instance_id(self):
-    context = models.Context(projects=[DUMMY_PROJECT_NAME])
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     c = clusters[DUMMY_CLUSTER1_NAME]
     migs = c.nodepools[0].instance_groups
@@ -158,7 +158,7 @@ class TestCluster:
     assert found_nodes == 1
 
   def test_service_account_property(self):
-    context = models.Context(projects=[DUMMY_PROJECT_NAME])
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     # 'default-pool' has the default SA
     c = clusters[DUMMY_CLUSTER1_NAME]

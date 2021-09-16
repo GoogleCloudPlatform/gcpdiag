@@ -29,27 +29,27 @@ def _mapping_str(mapping: Mapping[str, str]) -> str:
 @dataclasses.dataclass
 class Context:
   """List of resource groups / scopes that should be analyzed."""
-  # list of project ids (e.g.: 'my-project', 'anotherproject', etc.), mandatory
-  projects: List[str]
+  # project_id of project that is being analyzed, mandatory
+  project_id: str
   # list of GCP regions (e.g.: 'us-central1')
   regions: Optional[List[str]]
   # list of "label sets" that must match.
   labels: Optional[List[Mapping[str, str]]]
 
-  # the selected resources are the intersection of projects, regions,
-  # and labels(i.e. all must match), but each value in projects, regions, and
+  # the selected resources are the intersection of project_id, regions,
+  # and labels(i.e. all must match), but each value in regions, and
   # labels is a OR, so it means:
-  # (project1 OR project2) AND
+  # project_id AND
   # (region1 OR region2) AND
   # ({label1=value1,label2=value2} OR {label3=value3})
 
   def __init__(self,
-               projects: Iterable[str],
+               project_id: str,
                regions: Optional[Iterable[str]] = None,
                labels: Optional[Iterable[Mapping[str, str]]] = None):
     """Args:
 
-      projects: projects that should be inspected.
+      project: project_id of project that should be inspected.
       regions: only include resources in these GCP regions.
       labels: only include resources with these labels. Expected is a list
         (iterable) of dicts, where the dicts represent a set of label=value
@@ -61,9 +61,7 @@ class Context:
         label1=foo.
     """
 
-    self.projects = list(projects)
-    if not self.projects:
-      raise ValueError('projects must be a non-empty list')
+    self.project_id = project_id
 
     if regions:
       self.regions = list(regions)
@@ -85,7 +83,7 @@ class Context:
       self.labels = None
 
   def __str__(self):
-    string = 'projects: ' + ','.join(self.projects)
+    string = 'project: ' + self.project_id
     if self.regions:
       string += ', regions: ' + ','.join(self.regions)
     if self.labels:
@@ -160,6 +158,6 @@ class Resource(abc.ABC):
 
     Note that it isn't clear from this name what kind of resource it is.
 
-    Example: 'gcpd-gke-1-9b90/gke1'
+    Example: 'gke1'
     """
     return self.full_path

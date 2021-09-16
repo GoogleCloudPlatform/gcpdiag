@@ -37,7 +37,7 @@ class TestGce:
   """Test code in gce.py"""
 
   def test_get_instances(self):
-    context = models.Context(projects=[DUMMY_PROJECT_NAME])
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
     instances = gce.get_instances(context)
     assert len(instances) == 8
     assert DUMMY_INSTANCE1_ID in instances
@@ -47,31 +47,31 @@ class TestGce:
         f'{DUMMY_PROJECT_NAME}/{DUMMY_INSTANCE1_NAME}'
 
   def test_get_instances_by_region_returns_instance(self):
-    context = models.Context(projects=[DUMMY_PROJECT_NAME],
+    context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              regions=['fake-region', DUMMY_REGION])
     instances = gce.get_instances(context)
     assert DUMMY_INSTANCE1_ID in instances and len(instances) == 4
 
   def test_get_instances_by_label(self):
-    context = models.Context(projects=[DUMMY_PROJECT_NAME],
+    context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              labels=[DUMMY_INSTANCE1_LABELS])
     instances = gce.get_instances(context)
     assert DUMMY_INSTANCE1_ID in instances and len(instances) == 1
 
   def test_get_instances_by_other_region_returns_empty_result(self):
-    context = models.Context(projects=[DUMMY_PROJECT_NAME],
+    context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              regions=['fake-region'])
     instances = gce.get_instances(context)
     assert len(instances) == 0
 
   def test_is_gke_node_false(self):
-    context = models.Context(projects=[DUMMY_PROJECT_NAME],
+    context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              labels=[DUMMY_INSTANCE1_LABELS])
     instances = gce.get_instances(context)
     assert not instances[DUMMY_INSTANCE1_ID].is_gke_node()
 
   def test_is_gke_node_true(self):
-    context = models.Context(projects=[DUMMY_PROJECT_NAME],
+    context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              labels=[DUMMY_INSTANCE3_LABELS])
     instances = gce.get_instances(context)
     assert len(instances) == 4
@@ -79,7 +79,7 @@ class TestGce:
       assert n.is_gke_node()
 
   def test_service_account(self):
-    context = models.Context(projects=[DUMMY_PROJECT_NAME],
+    context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              labels=[DUMMY_INSTANCE1_LABELS])
     instances = gce.get_instances(context)
     assert instances[
@@ -87,7 +87,7 @@ class TestGce:
           f'{DUMMY_PROJECT_NR}-compute@developer.gserviceaccount.com'
 
   def test_get_managed_instance_groups(self):
-    context = models.Context(projects=[DUMMY_PROJECT_NAME],
+    context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              regions=['europe-west4'])
     migs = gce.get_managed_instance_groups(context)
     assert len(migs) == 1
@@ -96,7 +96,7 @@ class TestGce:
     assert m.is_gke() is False
 
   def test_get_managed_instance_groups_gke(self):
-    context = models.Context(projects=[DUMMY_PROJECT_NAME],
+    context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              regions=['europe-west1'])
     migs = gce.get_managed_instance_groups(context)
     assert len(migs) == 1
@@ -104,19 +104,19 @@ class TestGce:
     assert m.is_gke() is True
 
   def test_get_managed_instance_groups_empty_result(self):
-    context = models.Context(projects=[DUMMY_PROJECT_NAME],
+    context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              labels=[DUMMY_INSTANCE1_LABELS])
     migs = gce.get_managed_instance_groups(context)
     assert len(migs) == 0
 
   def test_mig_property(self):
-    context = models.Context(projects=[DUMMY_PROJECT_NAME],
+    context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              labels=[DUMMY_INSTANCE3_LABELS])
     for n in gce.get_instances(context).values():
       assert n.mig.name == 'gke-gke1-default-pool-564e261a-grp'
 
   def test_is_serial_port_logging_enabled(self):
-    context = models.Context(projects=[DUMMY_PROJECT_NAME],
+    context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              labels=[DUMMY_INSTANCE1_LABELS])
     instances = gce.get_instances(context)
     i = instances[DUMMY_INSTANCE1_ID]
@@ -124,7 +124,7 @@ class TestGce:
     assert i.get_metadata('serial-port-logging-enable')
 
   def test_is_serial_port_logging_enabled_instance_level(self):
-    context = models.Context(projects=[DUMMY_PROJECT_NAME])
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
     instances = gce.get_instances(context)
     i = instances[DUMMY_INSTANCE2_ID]
     assert not i.is_serial_port_logging_enabled()

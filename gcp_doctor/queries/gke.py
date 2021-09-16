@@ -101,7 +101,7 @@ class NodePool(models.Resource):
     if self._migs is None:
       project_migs_by_selflink = dict()
       for m in gce.get_managed_instance_groups(
-          models.Context(projects=[self.project_id])).values():
+          models.Context(project_id=self.project_id)).values():
         project_migs_by_selflink[m.self_link] = m
 
       self._migs = []
@@ -200,29 +200,29 @@ class Cluster(models.Resource):
 def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
   """Get a list of Cluster matching the given context, indexed by cluster name."""
   clusters: Dict[str, Cluster] = {}
-  for project_id in context.projects:
-    if not apis.is_enabled(project_id, 'container'):
-      continue
-    container_api = apis.get_api('container', 'v1', project_id)
-    logging.info('fetching list of GKE clusters in project %s', project_id)
-    query = container_api.projects().locations().clusters().list(
-        parent=f'projects/{project_id}/locations/-')
-    try:
-      resp = query.execute(num_retries=config.API_RETRIES)
-      if 'clusters' not in resp:
-        return clusters
-      for resp_c in resp['clusters']:
-        # verify that we some minimal data that we expect
-        if 'name' not in resp_c or 'location' not in resp_c:
-          raise RuntimeError(
-              'missing data in projects.locations.clusters.list response')
-        if not context.match_project_resource(
-            location=resp_c['location'], labels=resp_c.get('resourceLabels')):
-          continue
-        c = Cluster(project_id=project_id, resource_data=resp_c)
-        clusters[c.full_path] = c
-    except googleapiclient.errors.HttpError as err:
-      raise utils.GcpApiError(err) from err
+  if not apis.is_enabled(context.project_id, 'container'):
+    return clusters
+  container_api = apis.get_api('container', 'v1', context.project_id)
+  logging.info('fetching list of GKE clusters in project %s',
+               context.project_id)
+  query = container_api.projects().locations().clusters().list(
+      parent=f'projects/{context.project_id}/locations/-')
+  try:
+    resp = query.execute(num_retries=config.API_RETRIES)
+    if 'clusters' not in resp:
+      return clusters
+    for resp_c in resp['clusters']:
+      # verify that we some minimal data that we expect
+      if 'name' not in resp_c or 'location' not in resp_c:
+        raise RuntimeError(
+            'missing data in projects.locations.clusters.list response')
+      if not context.match_project_resource(
+          location=resp_c['location'], labels=resp_c.get('resourceLabels')):
+        continue
+      c = Cluster(project_id=context.project_id, resource_data=resp_c)
+      clusters[c.full_path] = c
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
   return clusters
 
 
