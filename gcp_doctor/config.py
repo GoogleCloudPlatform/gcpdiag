@@ -18,7 +18,7 @@
 import appdirs
 
 # gcp-doctor version (not configurable, but useful to have here)
-VERSION = '0.41-test'
+VERSION = '0.41'
 
 # Default number of retries for API Calls.
 API_RETRIES = 10
