@@ -17,7 +17,7 @@ from unittest import mock
 
 import diskcache
 
-from gcp_doctor.queries import crm, crm_stub
+from gcp_doctor.queries import apis_stub, crm
 
 DUMMY_PROJECT_ID = 'gcpd-gke-1-9b90'
 DUMMY_PROJECT_NR = 18404348413
@@ -29,7 +29,7 @@ def get_cache_stub():
   return diskcache.Cache()
 
 
-@mock.patch('gcp_doctor.queries.apis.get_api', new=crm_stub.get_api_stub)
+@mock.patch('gcp_doctor.queries.apis.get_api', new=apis_stub.get_api_stub)
 @mock.patch('gcp_doctor.caching.get_cache', new=get_cache_stub)
 class Test:
   """Test project.py"""

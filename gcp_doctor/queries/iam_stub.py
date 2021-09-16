@@ -22,8 +22,6 @@ import gzip
 import json
 import pathlib
 
-from gcp_doctor.queries import crm_stub
-
 # pylint: disable=unused-argument
 
 PREFIX_GKE1 = pathlib.Path(__file__).parents[2] / 'test-data/gke1/json-dumps'
@@ -78,13 +76,3 @@ class IamApiStub:
     if self.list_page >= 3:
       return None
     return self
-
-
-def get_api_stub(service_name: str, version: str, project_id: str = None):
-  del project_id
-  if service_name == 'iam':
-    return IamApiStub()
-  elif service_name == 'cloudresourcemanager':
-    return crm_stub.CrmApiStub()
-  else:
-    raise ValueError(f"I don't know how to mock {service_name}")

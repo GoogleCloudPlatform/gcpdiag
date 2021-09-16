@@ -11,21 +11,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# Lint as: python3
 """Stub API calls used in monitoring.py for testing.
 
 Instead of doing real API calls, we return test JSON data.
 """
 
 import json
-import pathlib
+import re
+
+from gcp_doctor.queries import apis_stub
 
 # pylint: disable=unused-argument
-
-JSON_DUMPS_PATH = pathlib.Path(
-    __file__).parents[2] / 'test-data/gce1/json-dumps'
-QUERY_JSON = JSON_DUMPS_PATH / 'monitoring-query.json'
 
 
 class MonitoringApiStub:
@@ -39,8 +35,9 @@ class MonitoringApiStub:
     return self
 
   def query(self, name, body):
-    del name
     del body
+    m = re.match(r'projects/([^/]+)', name)
+    self.project_id = m.group(1)
     return self
 
   def query_next(self, previous_request, previous_response):
@@ -48,10 +45,6 @@ class MonitoringApiStub:
     del previous_response
 
   def execute(self, num_retries=0):
-    with open(QUERY_JSON) as json_file:
+    json_dir = apis_stub.get_json_dir(self.project_id)
+    with open(json_dir / 'monitoring-query.json') as json_file:
       return json.load(json_file)
-
-
-def get_api_stub(service_name: str, version: str, project_id: str = None):
-  del project_id
-  return MonitoringApiStub()
