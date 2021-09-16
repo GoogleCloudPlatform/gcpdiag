@@ -29,7 +29,7 @@ DUMMY_ZONE = 'europe-west4-a'
 class Test:
 
   def test_timeserie(self):
-    context = models.Context(projects=[DUMMY_PROJECT_NAME])
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
     ts_col = monitoring.query(context, 'mocked query (this is ignored)')
     fs = frozenset({
         f'resource.zone:{DUMMY_ZONE}',

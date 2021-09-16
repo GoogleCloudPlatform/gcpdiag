@@ -42,7 +42,7 @@ optional arguments:
   -h, --help           show this help message and exit
   --auth-adc           Authenticate using Application Default Credentials
   --auth-key FILE      Authenticate using a service account private key file
-  --project P          Project ID of project that should be inspected (can be specified multiple times)
+  --project P          Project ID of project that should be inspected
   --billing-project P  Project used for billing/quota of API calls done by gcp-doctor
                        (default is the inspected project, requires 'serviceusage.services.use' permission)
   --show-skipped       Show skipped rules

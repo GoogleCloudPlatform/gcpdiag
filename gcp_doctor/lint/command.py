@@ -39,14 +39,10 @@ def run(argv) -> int:
       help='Authenticate using a service account private key file',
       metavar='FILE')
 
-  parser.add_argument(
-      '--project',
-      action='append',
-      metavar='P',
-      required=True,
-      help=
-      'Project ID of project that should be inspected (can be specified multiple times)'
-  )
+  parser.add_argument('--project',
+                      metavar='P',
+                      required=True,
+                      help='Project ID of project to inspect')
 
   parser.add_argument(
       '--billing-project',
@@ -97,7 +93,7 @@ def run(argv) -> int:
   config.AUTH_KEY = args.auth_key
 
   # Initialize Context, Repository, and Tests.
-  context = models.Context(projects=args.project)
+  context = models.Context(project_id=args.project)
   repo = lint.LintRuleRepository()
   repo.load_rules(gce)
   repo.load_rules(gke)
@@ -107,8 +103,7 @@ def run(argv) -> int:
       show_skipped=args.show_skipped)
 
   # Verify that we have access and that the CRM API is enabled
-  for project_id in context.projects:
-    apis.verify_access(project_id)
+  apis.verify_access(context.project_id)
 
   # Logging setup.
   logging_handler = report.get_logging_handler()

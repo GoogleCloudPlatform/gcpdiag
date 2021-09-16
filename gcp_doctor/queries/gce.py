@@ -184,7 +184,7 @@ class Instance(models.Resource):
 
     # Try to find a matching mig.
     for mig in get_managed_instance_groups(
-        models.Context(projects=[self.project_id])).values():
+        models.Context(project_id=self.project_id)).values():
       if mig.self_link == mig_self_link:
         return mig
 
@@ -253,33 +253,32 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
   """Get a list of Instance matching the given context, indexed by instance id."""
 
   instances: Dict[str, Instance] = {}
-  for project_id in context.projects:
-    if not apis.is_enabled(project_id, 'compute'):
+  if not apis.is_enabled(context.project_id, 'compute'):
+    return instances
+  gce_api = apis.get_api('compute', 'v1', context.project_id)
+  requests = [
+      gce_api.instances().list(project=context.project_id, zone=zone)
+      for zone in get_gce_zones(context.project_id)
+  ]
+  items = batch_fetch_all(
+      api=gce_api,
+      requests=requests,
+      next_function=gce_api.instances().list_next,
+      log_text=f'listing gce instances of project {context.project_id}')
+  for i in items:
+    result = re.match(
+        r'https://www.googleapis.com/compute/v1/projects/[^/]+/zones/([^/]+)/',
+        i['selfLink'])
+    if not result:
+      logging.error('instance %s selfLink didn\'t match regexp: %s', i['id'],
+                    i['selfLink'])
       continue
-    gce_api = apis.get_api('compute', 'v1', project_id)
-    requests = [
-        gce_api.instances().list(project=project_id, zone=zone)
-        for zone in get_gce_zones(project_id)
-    ]
-    items = batch_fetch_all(
-        api=gce_api,
-        requests=requests,
-        next_function=gce_api.instances().list_next,
-        log_text=f'listing gce instances of project {project_id}')
-    for i in items:
-      result = re.match(
-          r'https://www.googleapis.com/compute/v1/projects/([^/]+)/zones/([^/]+)/',
-          i['selfLink'])
-      if not result:
-        logging.error('instance %s selfLink didn\'t match regexp: %s', i['id'],
-                      i['selfLink'])
-        continue
-      project_id = result.group(1)
-      zone = result.group(2)
-      labels = i.get('labels', {})
-      if not context.match_project_resource(location=zone, labels=labels):
-        continue
-      instances[i['id']] = Instance(project_id=project_id, resource_data=i)
+    zone = result.group(1)
+    labels = i.get('labels', {})
+    if not context.match_project_resource(location=zone, labels=labels):
+      continue
+    instances[i['id']] = Instance(project_id=context.project_id,
+                                  resource_data=i)
   return instances
 
 
@@ -289,34 +288,34 @@ def get_managed_instance_groups(
   """Get a list of ManagedInstanceGroups matching the given context, indexed by mig id."""
 
   migs: Dict[int, ManagedInstanceGroup] = {}
-  for project_id in context.projects:
-    if not apis.is_enabled(project_id, 'compute'):
+  if not apis.is_enabled(context.project_id, 'compute'):
+    return migs
+  gce_api = apis.get_api('compute', 'v1', context.project_id)
+  requests = [
+      gce_api.instanceGroupManagers().list(project=context.project_id,
+                                           zone=zone)
+      for zone in get_gce_zones(context.project_id)
+  ]
+  items = batch_fetch_all(
+      api=gce_api,
+      requests=requests,
+      next_function=gce_api.instances().list_next,
+      log_text=f'listing managed instance groups of project {context.project_id}'
+  )
+  for i in items:
+    result = re.match(
+        r'https://www.googleapis.com/compute/v1/projects/[^/]+/(?:regions|zones)/([^/]+)/',
+        i['selfLink'])
+    if not result:
+      logging.error('mig %s selfLink didn\'t match regexp: %s', i['name'],
+                    i['selfLink'])
       continue
-    gce_api = apis.get_api('compute', 'v1', project_id)
-    requests = [
-        gce_api.instanceGroupManagers().list(project=project_id, zone=zone)
-        for zone in get_gce_zones(project_id)
-    ]
-    items = batch_fetch_all(
-        api=gce_api,
-        requests=requests,
-        next_function=gce_api.instances().list_next,
-        log_text=f'listing managed instance groups of project {project_id}')
-    for i in items:
-      result = re.match(
-          r'https://www.googleapis.com/compute/v1/projects/([^/]+)/(?:regions|zones)/([^/]+)/',
-          i['selfLink'])
-      if not result:
-        logging.error('mig %s selfLink didn\'t match regexp: %s', i['name'],
-                      i['selfLink'])
-        continue
-      project_id = result.group(1)
-      location = result.group(2)
-      labels = i.get('labels', {})
-      if not context.match_project_resource(location=location, labels=labels):
-        continue
-      migs[i['id']] = ManagedInstanceGroup(project_id=project_id,
-                                           resource_data=i)
+    location = result.group(1)
+    labels = i.get('labels', {})
+    if not context.match_project_resource(location=location, labels=labels):
+      continue
+    migs[i['id']] = ManagedInstanceGroup(project_id=context.project_id,
+                                         resource_data=i)
   return migs
 
 
