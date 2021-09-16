@@ -1,5 +1,5 @@
 BIN_DIR=../../bin
-VERSION=0.41-test
+VERSION=$(shell sed -n 's/^current_version\s*=\s*//p' <../../.bumpversion.cfg)
 ifneq (,$(findstring test,$(VERSION)))
 REPO_NAME=test
 else
