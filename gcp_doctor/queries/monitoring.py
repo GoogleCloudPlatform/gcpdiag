@@ -23,7 +23,7 @@ from typing import Any, List, Mapping
 
 import googleapiclient.errors
 
-from gcp_doctor import models, utils
+from gcp_doctor import utils
 from gcp_doctor.queries import apis
 
 
@@ -154,7 +154,7 @@ class TimeSeriesCollection(collections.abc.Mapping):
     return self._data.values()
 
 
-def query(context: models.Context, query_str: str) -> TimeSeriesCollection:
+def query(project_id: str, query_str: str) -> TimeSeriesCollection:
   """Do a monitoring query in the specified project.
 
   Note that the project can be either the project where the monitored resources
@@ -164,13 +164,13 @@ def query(context: models.Context, query_str: str) -> TimeSeriesCollection:
 
   time_series = TimeSeriesCollection()
 
-  mon_api = apis.get_api('monitoring', 'v3', context.project_id)
+  mon_api = apis.get_api('monitoring', 'v3', project_id)
   try:
     request = mon_api.projects().timeSeries().query(name='projects/' +
-                                                    context.project_id,
+                                                    project_id,
                                                     body={'query': query_str})
 
-    logging.info('executing monitoring query (project: %s)', context.project_id)
+    logging.info('executing monitoring query (project: %s)', project_id)
     logging.debug('query: %s', query_str)
     pages = 0
     start_time = datetime.datetime.now()
@@ -182,7 +182,7 @@ def query(context: models.Context, query_str: str) -> TimeSeriesCollection:
           previous_request=request, previous_response=response)
       if request:
         logging.info('still executing monitoring query (project: %s)',
-                     context.project_id)
+                     project_id)
     end_time = datetime.datetime.now()
     logging.debug('query run time: %s, pages: %d', end_time - start_time, pages)
   except googleapiclient.errors.HttpError as err:

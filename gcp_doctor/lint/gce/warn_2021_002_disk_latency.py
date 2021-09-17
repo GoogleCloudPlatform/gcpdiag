@@ -22,6 +22,7 @@ disk (changing the type or making it larger).
 """
 
 import operator as op
+from typing import Dict
 
 from gcp_doctor import config, lint, models
 from gcp_doctor.queries import gce, monitoring
@@ -32,7 +33,7 @@ SLO_BAD_MINUTES_RATIO = 0.005
 # If we have less than this minutes measured, skip
 SLO_VALID_MINUTES_PER_DAY = 12 * 60
 
-_prefetched_query_results: monitoring.TimeSeriesCollection
+_query_results_per_project_id: Dict[str, monitoring.TimeSeriesCollection] = {}
 
 
 def prefetch_rule(context: models.Context):
@@ -43,9 +44,10 @@ def prefetch_rule(context: models.Context):
 
   within_str = 'within %dd, d\'%s\'' % (config.WITHIN_DAYS,
                                         monitoring.period_aligned_now(60))
-  global _prefetched_query_results
-  _prefetched_query_results = monitoring.query(
-      context, f"""
+  global _query_results_per_project_id
+  _query_results_per_project_id[context.project_id] = \
+      monitoring.query(
+          context.project_id, f"""
 fetch gce_instance
 | {{ metric 'agent.googleapis.com/disk/operation_time'
      | align rate(1m) ;
@@ -69,11 +71,11 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'no instances found')
     return
 
-  global _prefetched_query_results
+  global _query_results_per_project_id
   for i in sorted(instances.values(), key=op.attrgetter('project_id', 'name')):
     ts_key = frozenset({f'resource.instance_id:{i.id}'})
     try:
-      ts = _prefetched_query_results[ts_key]
+      ts = _query_results_per_project_id[context.project_id][ts_key]
     except KeyError:
       report.add_skipped(i, 'no data')
       continue
