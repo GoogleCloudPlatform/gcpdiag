@@ -33,7 +33,8 @@ SLO_BAD_MINUTES_RATIO = 0.005
 # If we have less than this minutes measured, skip
 SLO_VALID_MINUTES_PER_DAY = 12 * 60
 
-_prefetched_query_results: monitoring.TimeSeriesCollection
+_query_results_per_project_id: Dict[str,
+                                    monitoring.TimeSeriesCollection] = dict()
 
 
 def prefetch_rule(context: models.Context):
@@ -47,9 +48,9 @@ def prefetch_rule(context: models.Context):
 
   within_str = 'within %dd, d\'%s\'' % (config.WITHIN_DAYS,
                                         monitoring.period_aligned_now(60))
-  global _prefetched_query_results
-  _prefetched_query_results = monitoring.query(
-      context, f"""
+  global _query_results_per_project_id
+  _query_results_per_project_id[context.project_id] = monitoring.query(
+      context.project_id, f"""
 fetch gce_instance
   | {{ metric 'compute.googleapis.com/guest/disk/operation_time' ;
       metric 'compute.googleapis.com/guest/disk/operation_count' }}
@@ -71,8 +72,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   # Organize data per-cluster.
   per_cluster_results: Dict[gke.Cluster, Dict[str, Any]] = dict()
-  global _prefetched_query_results
-  for ts in _prefetched_query_results.values():
+  global _query_results_per_project_id
+  for ts in _query_results_per_project_id[context.project_id].values():
     instance_id = ts['labels']['resource.instance_id']
     try:
       node = gke.get_node_by_instance_id(context, instance_id)

@@ -17,7 +17,6 @@
 
 from unittest import mock
 
-from gcp_doctor import models
 from gcp_doctor.queries import apis_stub, monitoring
 
 DUMMY_PROJECT_NAME = 'gcpd-gce1-4exv'
@@ -29,8 +28,8 @@ DUMMY_ZONE = 'europe-west4-a'
 class Test:
 
   def test_timeserie(self):
-    context = models.Context(project_id=DUMMY_PROJECT_NAME)
-    ts_col = monitoring.query(context, 'mocked query (this is ignored)')
+    ts_col = monitoring.query(DUMMY_PROJECT_NAME,
+                              'mocked query (this is ignored)')
     fs = frozenset({
         f'resource.zone:{DUMMY_ZONE}',
         f'metric.instance_name:{DUMMY_INSTANCE_NAME}'
