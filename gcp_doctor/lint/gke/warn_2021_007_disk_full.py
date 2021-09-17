@@ -27,7 +27,8 @@ from gcp_doctor.queries import gke, monitoring
 # Verify that free/(free + used) is above this threshold
 MIN_FREE_THRESHOLD = 0.05
 
-_prefetched_query_results: monitoring.TimeSeriesCollection
+_query_results_per_project_id: Dict[str,
+                                    monitoring.TimeSeriesCollection] = dict()
 
 
 def prefetch_rule(context: models.Context):
@@ -41,9 +42,9 @@ def prefetch_rule(context: models.Context):
 
   # Only check the latest usage values
   within_str = 'within 5m, d\'%s\'' % (monitoring.period_aligned_now(300))
-  global _prefetched_query_results
-  _prefetched_query_results = monitoring.query(
-      context, f"""
+  global _query_results_per_project_id
+  _query_results_per_project_id[context.project_id] = monitoring.query(
+      context.project_id, f"""
   fetch gce_instance
   | metric 'compute.googleapis.com/guest/disk/bytes_used'
   | filter metric.device_name == 'sda1'
@@ -63,8 +64,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   # Organize data per-cluster.
   clusters_with_data: Set[gke.Cluster] = set()
   bad_nodes_per_cluster: Dict[gke.Cluster, List[gke.Node]] = defaultdict(list)
-  global _prefetched_query_results
-  for ts in _prefetched_query_results.values():
+  global _query_results_per_project_id
+  for ts in _query_results_per_project_id[context.project_id].values():
     instance_id = ts['labels']['resource.instance_id']
     try:
       node = gke.get_node_by_instance_id(context, instance_id)

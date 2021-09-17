@@ -30,7 +30,8 @@ from packaging.version import LegacyVersion
 from gcp_doctor import lint, models
 from gcp_doctor.queries import gke, monitoring
 
-_prefetched_query_results: monitoring.TimeSeriesCollection
+_query_results_per_project_id: Dict[str,
+                                    monitoring.TimeSeriesCollection] = dict()
 
 
 def prefetch_rule(context: models.Context):
@@ -39,10 +40,11 @@ def prefetch_rule(context: models.Context):
     return
 
   # Fetch the metrics for all clusters.
-  global _prefetched_query_results
+  global _query_results_per_project_id
 
-  _prefetched_query_results = monitoring.query(
-      context, """
+  _query_results_per_project_id[context.project_id] = \
+      monitoring.query(
+          context.project_id, """
 fetch k8s_container
 | metric 'kubernetes.io/container/uptime'
 | filter (metadata.system_labels.container_image =~ '.*pilot.*')
@@ -74,7 +76,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   # Organize the metrics per-cluster.
   per_cluster_results: Dict[tuple, Dict[str, str]] = dict()
-  for ts in _prefetched_query_results.values():
+  global _query_results_per_project_id
+  for ts in _query_results_per_project_id[context.project_id].values():
     cluster_key = (ts['labels']['resource.project_id'],
                    ts['labels']['location'], ts['labels']['cluster_name'])
     cluster_values = per_cluster_results.setdefault(cluster_key, dict())
