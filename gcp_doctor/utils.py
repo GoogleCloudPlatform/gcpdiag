@@ -15,6 +15,7 @@
 
 import json
 import re
+from typing import Optional
 
 DOMAIN_RES_NAME_MATCH = r'(http(s)?:)?//([a-z0-9][-a-z0-9]{1,61}[a-z0-9]\.)+[a-z]{2,}/'
 RES_NAME_KEY = r'[a-z][-a-z0-9]*'
@@ -33,8 +34,11 @@ class GcpApiError(Exception):
   """
 
   @property
-  def status(self) -> int:
-    return self.response.resp.status
+  def status(self) -> Optional[int]:
+    try:
+      return self.response.resp.status
+    except KeyError:
+      return None
 
   def __init__(self, response='An error occured during the GCP API call'):
     self.response = response

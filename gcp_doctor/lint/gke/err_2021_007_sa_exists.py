@@ -15,9 +15,9 @@
 # Lint as: python3
 """Service Account used by the cluster exists and not disabled
 
-Disabling or deleting service account used by the nodepool will render
-this nodepool not functional. To fix - restore the default compute account
-or service account that was specified when nodepool was created.
+Disabling or deleting the service account used by the nodepool will render this
+nodepool not functional. To fix - restore the default compute account or
+service account that was specified when the nodepool was created.
 """
 
 from gcp_doctor import lint, models
@@ -29,21 +29,19 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   clusters = gke.get_clusters(context)
   if not clusters:
     report.add_skipped(None, 'no clusters found')
+
   for _, c in sorted(clusters.items()):
     # Verify service-account exists for every nodepool.
     for np in c.nodepools:
       sa = np.service_account
-
-      # TODO: this may not work for cross-project service accounts
-      accounts = iam.get_service_accounts(context.project_id)
-      if sa in accounts:
-        service_account = accounts[sa]
-        if service_account.disabled:
-          report.add_failed(np, f'service account: {sa}\n is disabled')
+      default_prefix = ''
+      if np.has_default_service_account():
+        default_prefix = 'default '
+      if not iam.is_service_account_existing(sa, context.project_id):
+        report.add_failed(np,
+                          f'{default_prefix}service account is deleted: {sa}')
+      elif not iam.is_service_account_enabled(sa, context.project_id):
+        report.add_failed(np,
+                          f'{default_prefix}service account is disabled: {sa}')
       else:
-        if np.has_default_service_account():
-          report.add_failed(np,
-                            f'default service account: {sa}\n does not exists')
-        else:
-          report.add_failed(np, f'service account: {sa}\n does not exists')
-      report.add_ok(np)
+        report.add_ok(np, sa)

@@ -28,17 +28,19 @@ ROLE = 'roles/monitoring.metricWriter'
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   # Find all clusters with monitoring enabled.
   clusters = gke.get_clusters(context)
+  iam_policy = iam.get_project_policy(context.project_id)
   if not clusters:
     report.add_skipped(None, 'no clusters found')
   for _, c in sorted(clusters.items()):
     if not c.has_monitoring_enabled():
       report.add_skipped(c, 'monitoring disabled')
     else:
-      iam_policy = iam.get_project_policy(c.project_id)
       # Verify service-account permissions for every nodepool.
       for np in c.nodepools:
         sa = np.service_account
-        if not iam_policy.has_role_permissions(f'serviceAccount:{sa}', ROLE):
+        if not iam.is_service_account_enabled(sa, context.project_id):
+          report.add_failed(np, f'service account disabled or deleted: {sa}')
+        elif not iam_policy.has_role_permissions(f'serviceAccount:{sa}', ROLE):
           report.add_failed(np, f'service account: {sa}\nmissing role: {ROLE}')
         else:
           report.add_ok(np)

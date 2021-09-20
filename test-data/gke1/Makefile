@@ -25,6 +25,7 @@ all:	\
 	json-dumps/iam-roles-custom.json \
 	json-dumps/iam-roles-predefined-1.json.gz \
 	json-dumps/iam-roles-predefined-2.json.gz \
+	json-dumps/iam-service-accounts.json \
  	json-dumps/project.json
 
 # compute.googleapis.com
@@ -85,6 +86,12 @@ json-dumps/iam-roles-predefined-2.json.gz: json-dumps/iam-roles-predefined-1.jso
 json-dumps/iam-roles-custom.json:
 	$(CURL) -fsS \
 		'https://iam.googleapis.com/v1/projects/$(PROJECT_ID)/roles?view=FULL&pageSize=500' >$@
+
+json-dumps/iam-service-accounts.json:
+	$(CURL) -fsS \
+		'https://iam.googleapis.com/v1/projects/$(PROJECT_ID)/serviceAccounts' \
+		| $(JSON_CLEANER) service-accounts >$@
+
 
 # container.googleapis.com
 
