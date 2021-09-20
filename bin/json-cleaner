@@ -32,6 +32,9 @@ clean_maps = {
     'compute-project': {
         '.commonInstanceMetadata.items.sshKeys': 'REDACTED'
     },
+    'service-accounts': {
+        '.accounts.[].oauth2ClientId': 'REDACTED'
+    },
     'other': {}
 }
 
@@ -70,7 +73,8 @@ def main():
   resource_type = sys.argv[1]
   if resource_type not in clean_maps:
     print('first argument must be one of: ' +
-          ', '.join(sorted(clean_maps.keys())))
+          ', '.join(sorted(clean_maps.keys())),
+          file=sys.stderr)
     sys.exit(1)
 
   # transform using clean_maps

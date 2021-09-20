@@ -28,8 +28,8 @@ def get_cache_stub():
   return diskcache.Cache()
 
 
-TEST_PROJECT_NAME = 'gcpd-gke-1-9b90'
-TEST_SERVICE_ACCOUNT = 'serviceAccount:gke2sa@gcpd-gke-1-9b90.iam.gserviceaccount.com'
+TEST_PROJECT_ID = 'gcpd-gke-1-9b90'
+TEST_SERVICE_ACCOUNT = 'gke2sa@gcpd-gke-1-9b90.iam.gserviceaccount.com'
 TEST_SERVICE_ACCOUNT_PERMISSIONS = [
     'cloudnotifications.activities.list',
     'logging.logEntries.create',
@@ -69,19 +69,32 @@ class TestProjectPolicy:
   """Test gke.ProjectPolicy"""
 
   def test_get_member_permissions(self):
-    policy = iam.ProjectPolicy(TEST_PROJECT_NAME)
+    policy = iam.ProjectPolicy(TEST_PROJECT_ID)
     assert policy.get_member_permissions(
-        TEST_SERVICE_ACCOUNT) == TEST_SERVICE_ACCOUNT_PERMISSIONS
+        f'serviceAccount:{TEST_SERVICE_ACCOUNT}'
+    ) == TEST_SERVICE_ACCOUNT_PERMISSIONS
 
   def test_has_permission(self):
-    policy = iam.get_project_policy(TEST_PROJECT_NAME)
-    assert policy.has_permission(TEST_SERVICE_ACCOUNT, 'monitoring.groups.get')
-    assert not policy.has_permission(TEST_SERVICE_ACCOUNT,
+    policy = iam.get_project_policy(TEST_PROJECT_ID)
+    assert policy.has_permission(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
+                                 'monitoring.groups.get')
+    assert not policy.has_permission(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
                                      'monitoring.groups.create')
 
   def test_has_role_permissions(self):
-    policy = iam.get_project_policy(TEST_PROJECT_NAME)
-    assert policy.has_role_permissions(TEST_SERVICE_ACCOUNT,
+    policy = iam.get_project_policy(TEST_PROJECT_ID)
+    assert policy.has_role_permissions(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
                                        'roles/monitoring.viewer')
-    assert not policy.has_role_permissions(TEST_SERVICE_ACCOUNT,
-                                           'roles/monitoring.editor')
+    assert not policy.has_role_permissions(
+        f'serviceAccount:{TEST_SERVICE_ACCOUNT}', 'roles/monitoring.editor')
+
+  def test_is_service_acccount_existing(self):
+    assert iam.is_service_account_existing(TEST_SERVICE_ACCOUNT,
+                                           TEST_PROJECT_ID)
+
+  def test_is_service_acccount_existing_inexisting(self):
+    assert not iam.is_service_account_existing('foobar@example.com',
+                                               TEST_PROJECT_ID)
+
+  def test_is_service_acccount_enabled(self):
+    assert iam.is_service_account_enabled(TEST_SERVICE_ACCOUNT, TEST_PROJECT_ID)
