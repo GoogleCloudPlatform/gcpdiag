@@ -19,8 +19,6 @@ import logging
 import re
 from typing import Any, Dict, List, Mapping
 
-import googleapiclient.errors
-
 from gcp_doctor import caching, config, models, utils
 from gcp_doctor.queries import apis
 
@@ -83,6 +81,18 @@ def _fetch_policy(project_id: str):
     for member in binding['members']:
       policy['by_member'].setdefault(member, {'roles': {}})
       policy['by_member'][member]['roles'][binding['role']] = 1
+
+  # Pre-fetch service accounts using a single batch request.
+  # Note: not implemented as a generator expression because
+  # it looks ugly without assignment expressions, available
+  # only with Python >= 3.8.
+  sa_emails = []
+  for member in policy['by_member']:
+    m = re.match(r'serviceAccount:(\S+)', member)
+    if m:
+      sa_emails.append(m.group(1))
+  _batch_fetch_service_accounts(sa_emails, project_id)
+
   return policy
 
 
@@ -153,6 +163,7 @@ class ProjectPolicy:
 
   def has_role_permissions(self, member: str, role: str) -> bool:
     """Check whether this member has all the permissions defined by this role."""
+
     for p in self._get_role_permissions(role):
       # exceptions: some permissions can only be set at org level or aren't
       # supported in custom roles
@@ -162,6 +173,15 @@ class ProjectPolicy:
       if not self.has_permission(member, p):
         logging.debug('%s doesn\'t have permission %s', member, p)
         return False
+
+    # If this is a service account, make sure that the service account is enabled.
+    m = re.match(r'serviceAccount:(.*)', member)
+    if m:
+      if not is_service_account_enabled(m.group(1), self._project_id):
+        logging.info('service account %s has role %s, but is disabled!',
+                     m.group(1), role)
+        return False
+
     return True
 
   def __init__(self, project_id):
@@ -216,33 +236,217 @@ class ServiceAccount(models.Resource):
     return path
 
 
-@caching.cached_api_call(in_memory=True)
-def get_service_accounts(project_id: str) -> Mapping[str, ServiceAccount]:
-  """Get a list of Service Accounts matching the given context, key is e-mail.
+SERVICE_AGENT_DOMAINS = (
+    # https://cloud.google.com/iam/docs/service-accounts
+    'cloudservices.gserviceaccount.com',
 
-  https://cloud.google.com/iam/docs/reference/rest/v1/projects.serviceAccounts/list
+    # https://cloud.google.com/iam/docs/service-agents
+    'cloudbuild.gserviceaccount.com',
+    'cloudcomposer-accounts.iam.gserviceaccount.com',
+    'cloud-filer.iam.gserviceaccount.com',
+    'cloud-memcache-sa.iam.gserviceaccount.com',
+    'cloud-ml.google.com.iam.gserviceaccount.com',
+    'cloud-redis.iam.gserviceaccount.com',
+    'cloud-tpu.iam.gserviceaccount.com',
+    'compute-system.iam.gserviceaccount.com',
+    'container-analysis.iam.gserviceaccount.com',
+    'container-engine-robot.iam.gserviceaccount.com',
+    'containerregistry.iam.gserviceaccount.com',
+    'dataflow-service-producer-prod.iam.gserviceaccount.com',
+    'dataproc-accounts.iam.gserviceaccount.com',
+    'dlp-api.iam.gserviceaccount.com',
+    'endpoints-portal.iam.gserviceaccount.com',
+    'firebase-rules.iam.gserviceaccount.com',
+    'gae-api-prod.google.com.iam.gserviceaccount.com',
+    'gcf-admin-robot.iam.gserviceaccount.com',
+    'gcp-gae-service.iam.gserviceaccount.com',
+    'gcp-sa-aiplatform-cc.iam.gserviceaccount.com',
+    'gcp-sa-aiplatform.iam.gserviceaccount.com',
+    'gcp-sa-anthosaudit.iam.gserviceaccount.com',
+    'gcp-sa-anthosconfigmanagement.iam.gserviceaccount.com',
+    'gcp-sa-anthos.iam.gserviceaccount.com',
+    'gcp-sa-anthosidentityservice.iam.gserviceaccount.com',
+    'gcp-sa-anthossupport.iam.gserviceaccount.com',
+    'gcp-sa-apigateway.iam.gserviceaccount.com',
+    'gcp-sa-apigateway-mgmt.iam.gserviceaccount.com',
+    'gcp-sa-apigee.iam.gserviceaccount.com',
+    'gcp-sa-appdevexperience.iam.gserviceaccount.com',
+    'gcp-sa-artifactregistry.iam.gserviceaccount.com',
+    'gcp-sa-assuredworkloads.iam.gserviceaccount.com',
+    'gcp-sa-automl.iam.gserviceaccount.com',
+    'gcp-sa-bigqueryconnection.iam.gserviceaccount.com',
+    'gcp-sa-bigquerydatatransfer.iam.gserviceaccount.com',
+    'gcp-sa-bigtable.iam.gserviceaccount.com',
+    'gcp-sa-binaryauthorization.iam.gserviceaccount.com',
+    'gcp-sa-cloudasset.iam.gserviceaccount.com',
+    'gcp-sa-cloudbuild.iam.gserviceaccount.com',
+    'gcp-sa-cloud-ids.iam.gserviceaccount.com',
+    'gcp-sa-cloudiot.iam.gserviceaccount.com',
+    'gcp-sa-cloudkms.iam.gserviceaccount.com',
+    'gcp-sa-cloudscheduler.iam.gserviceaccount.com',
+    'gcp-sa-cloud-sql.iam.gserviceaccount.com',
+    'gcp-sa-cloudtasks.iam.gserviceaccount.com',
+    'gcp-sa-cloud-trace.iam.gserviceaccount.com',
+    'gcp-sa-contactcenterinsights.iam.gserviceaccount.com',
+    'gcp-sa-containerscanning.iam.gserviceaccount.com',
+    'gcp-sa-datafusion.iam.gserviceaccount.com',
+    'gcp-sa-datalabeling.iam.gserviceaccount.com',
+    'gcp-sa-datamigration.iam.gserviceaccount.com',
+    'gcp-sa-datapipelines.iam.gserviceaccount.com',
+    'gcp-sa-datastream.iam.gserviceaccount.com',
+    'gcp-sa-datastudio.iam.gserviceaccount.com',
+    'gcp-sa-dialogflow.iam.gserviceaccount.com',
+    'gcp-sa-ekms.iam.gserviceaccount.com',
+    'gcp-sa-endpoints.iam.gserviceaccount.com',
+    'gcp-sa-eventarc.iam.gserviceaccount.com',
+    'gcp-sa-firebasemods.iam.gserviceaccount.com',
+    'gcp-sa-firebasestorage.iam.gserviceaccount.com',
+    'gcp-sa-firestore.iam.gserviceaccount.com',
+    'gcp-sa-firewallinsights.iam.gserviceaccount.com',
+    'gcp-sa-gameservices.iam.gserviceaccount.com',
+    'gcp-sa-gkehub.iam.gserviceaccount.com',
+    'gcp-sa-gsuiteaddons.iam.gserviceaccount.com',
+    'gcp-sa-healthcare.iam.gserviceaccount.com',
+    'gcp-sa-krmapihosting-dataplane.iam.gserviceaccount.com',
+    'gcp-sa-krmapihosting.iam.gserviceaccount.com',
+    'gcp-sa-ktd-control.iam.gserviceaccount.com',
+    'gcp-sa-lifesciences.iam.gserviceaccount.com',
+    'gcp-sa-logging.iam.gserviceaccount.com',
+    'gcp-sa-mcmetering.iam.gserviceaccount.com',
+    'gcp-sa-mcsd.iam.gserviceaccount.com',
+    'gcp-sa-meshconfig.iam.gserviceaccount.com',
+    'gcp-sa-meshcontrolplane.iam.gserviceaccount.com',
+    'gcp-sa-meshdataplane.iam.gserviceaccount.com',
+    'gcp-sa-metastore.iam.gserviceaccount.com',
+    'gcp-sa-mi.iam.gserviceaccount.com',
+    'gcp-sa-monitoring.iam.gserviceaccount.com',
+    'gcp-sa-monitoring-notification.iam.gserviceaccount.com',
+    'gcp-sa-multiclusteringress.iam.gserviceaccount.com',
+    'gcp-sa-networkconnectivity.iam.gserviceaccount.com',
+    'gcp-sa-networkmanagement.iam.gserviceaccount.com',
+    'gcp-sa-notebooks.iam.gserviceaccount.com',
+    'gcp-sa-ondemandscanning.iam.gserviceaccount.com',
+    'gcp-sa-osconfig.iam.gserviceaccount.com',
+    'gcp-sa-privateca.iam.gserviceaccount.com',
+    'gcp-sa-prod-bigqueryomni.iam.gserviceaccount.com',
+    'gcp-sa-prod-dai-core.iam.gserviceaccount.com',
+    'gcp-sa-pubsub.iam.gserviceaccount.com',
+    'gcp-sa-rbe.iam.gserviceaccount.com',
+    'gcp-sa-recommendationengine.iam.gserviceaccount.com',
+    'gcp-sa-retail.iam.gserviceaccount.com',
+    'gcp-sa-scc-notification.iam.gserviceaccount.com',
+    'gcp-sa-scc-vmtd.iam.gserviceaccount.com',
+    'gcp-sa-secretmanager.iam.gserviceaccount.com',
+    'gcp-sa-servicedirectory.iam.gserviceaccount.com',
+    'gcp-sa-servicemesh.iam.gserviceaccount.com',
+    'gcp-sa-slz.iam.gserviceaccount.com',
+    'gcp-sa-spanner.iam.gserviceaccount.com',
+    'gcp-sa-tpu.iam.gserviceaccount.com',
+    'gcp-sa-transcoder.iam.gserviceaccount.com',
+    'gcp-sa-translation.iam.gserviceaccount.com',
+    'gcp-sa-vmmigration.iam.gserviceaccount.com',
+    'gcp-sa-vmwareengine.iam.gserviceaccount.com',
+    'gcp-sa-vpcaccess.iam.gserviceaccount.com',
+    'gcp-sa-websecurityscanner.iam.gserviceaccount.com',
+    'gcp-sa-workflows.iam.gserviceaccount.com',
+    'genomics-api.google.com.iam.gserviceaccount.com',
+    'remotebuildexecution.iam.gserviceaccount.com',
+    'serverless-robot-prod.iam.gserviceaccount.com',
+    'service-consumer-management.iam.gserviceaccount.com',
+    'service-networking.iam.gserviceaccount.com',
+    'sourcerepo-service-accounts.iam.gserviceaccount.com',
+
+    # https://firebase.google.com/support/guides/service-accounts
+    'appspot.gserviceaccount.com',
+    'cloudservices.gserviceaccount.com',
+    'crashlytics-bigquery-prod.iam.gserviceaccount.com',
+    'fcm-bq-export-prod.iam.gserviceaccount.com',
+    'firebase-sa-management.iam.gserviceaccount.com',
+    'performance-bq-export-prod.iam.gserviceaccount.com',
+    'predictions-bq-export-prod.iam.gserviceaccount.com',
+    'system.gserviceaccount.com',
+
+    # additional
+    'gcp-sa-computescanning.iam.gserviceaccount.com',
+)
+
+# The main reason to have two dicts instead of using for example None as value,
+# is that it works better for static typing (i.e. avoiding Optional[]).
+_service_account_cache: Dict[str, ServiceAccount] = {}
+_service_account_cache_fetched: Dict[str, bool] = {}
+_service_account_cache_is_not_found: Dict[str, bool] = {}
+
+
+def _batch_fetch_service_accounts(emails: List[str], billing_project_id: str):
+  """Retrieve a list of service accounts.
+
+  This function is used when inspecting a project_id, to retrieve all service accounts
+  that are used in the IAM policy, so that we can do this in a single batch request.
+  The goal is to be able to call is_service_account_enabled() without triggering
+  another API call.
   """
-  accounts: Dict[str, ServiceAccount] = {}
-  iam_api = apis.get_api('iam', 'v1', project_id)
-  logging.info('fetching list of Service Accounts in project %s', project_id)
-  request = iam_api.projects().serviceAccounts().list(
-      name=f'projects/{project_id}')
-  try:
-    while request:
-      resp = request.execute(num_retries=config.API_RETRIES)
-      if 'accounts' not in resp:
-        return accounts
-      for resp_sa in resp['accounts']:
-        # verify that we some minimal data that we expect
-        if 'name' not in resp_sa or 'email' not in resp_sa:
-          raise RuntimeError(
-              'missing data in projects.serviceAccounts.list response')
-        sa = ServiceAccount(project_id=project_id, resource_data=resp_sa)
-        accounts[resp_sa['email']] = sa
-        logging.debug('found service account %s: %s in project %s',
-                      resp_sa['name'], sa, project_id)
-        request = iam_api.projects().serviceAccounts().list_next(
-            previous_request=request, previous_response=resp)
-  except googleapiclient.errors.HttpError as err:
-    raise utils.GcpApiError(err) from err
-  return accounts
+
+  global _service_account_cache
+  iam_api = apis.get_api('iam', 'v1', billing_project_id)
+  service_accounts_api = iam_api.projects().serviceAccounts()
+
+  def callback(request_id, response, exception):
+    if exception:
+      gcp_exception = utils.GcpApiError(exception)
+      # 403 or 404 is expected for Google-managed service agents.
+      if request_id.partition('@')[2] in SERVICE_AGENT_DOMAINS:
+        # Too noisy even for debug-level
+        # logging.debug(
+        #     'ignoring error retrieving google-managed service agent %s: %s',
+        #     request_id, gcp_exception)
+        pass
+      elif gcp_exception.status == 404:
+        _service_account_cache_is_not_found[request_id] = True
+      else:
+        logging.warning("can't get service account %s: %s", request_id,
+                        gcp_exception)
+      return
+
+    sa = ServiceAccount(response['projectId'], response)
+    _service_account_cache[sa.email] = sa
+
+  emails_to_fetch = [
+      e for e in emails if e not in _service_account_cache_fetched
+  ]
+  while emails_to_fetch:
+    batch = iam_api.new_batch_http_request(callback=callback)
+    for _ in range(1000):
+      try:
+        email = emails_to_fetch.pop(0)
+        batch.add(request=service_accounts_api.get(
+            name='projects/-/serviceAccounts/' + email),
+                  request_id=email)
+        _service_account_cache_fetched[email] = True
+      except IndexError:
+        break
+    batch.execute()
+
+
+def is_service_account_existing(email: str, billing_project_id: str) -> bool:
+  """Verify that a service account exists.
+
+  If we get a non-404 API error when retrieving the service account, we will assume
+  that the service account exists, not to throw false positives (but
+  a warning will be printed out).
+  """
+  # Make sure that the service account is fetched (this is also
+  # called by get_project_policy).
+  _batch_fetch_service_accounts([email], billing_project_id)
+  return email not in _service_account_cache_is_not_found
+
+
+def is_service_account_enabled(email: str, billing_project_id: str) -> bool:
+  """Verify that a service account exists and is enabled.
+
+  If we get an API error when retrieving the service account, we will assume
+  that the service account is enabled, not to throw false positives (but
+  a warning will be printed out).
+  """
+  _batch_fetch_service_accounts([email], billing_project_id)
+  return (email not in _service_account_cache_is_not_found) and \
+      not (email in _service_account_cache and _service_account_cache[email].disabled)
