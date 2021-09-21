@@ -18,56 +18,11 @@
 Instead of doing real API calls, we return test JSON data.
 """
 
-import copy
 import json
-import pathlib
+
+from gcp_doctor.queries import apis_stub
 
 # pylint: disable=unused-argument
-
-JSON_PROJECT_DIR = {
-    'gcpd-gce1-4exv':
-        pathlib.Path(__file__).parents[2] / 'test-data/gce1/json-dumps',
-    'gcpd-gke-1-9b90':
-        pathlib.Path(__file__).parents[2] / 'test-data/gke1/json-dumps',
-}
-
-INSTANCES_ZONES = {
-    'gcpd-gce1-4exv': ['europe-west1-b', 'europe-west4-a'],
-    'gcpd-gke-1-9b90': ['europe-west4-a'],
-}
-
-
-class BatchRequestStub:
-  """Mock object returned by new_batch_http_request()."""
-
-  def __init__(self):
-    self.queue = []
-
-  def add(self, operation, callback, request_id=None):
-    self.queue.append((copy.deepcopy(operation), callback, request_id))
-    return self
-
-  def execute(self):
-    for op in self.queue:
-      if op[0].mock_state in ['migs', 'instances']:
-        if op[0].zone in INSTANCES_ZONES[op[0].project_id]:
-          if op[0].page == 1:
-            json_file_path = f'{JSON_PROJECT_DIR[op[0].project_id]}/'+\
-                f'compute-{op[0].mock_state}-{op[0].zone}.json'
-          else:
-            json_file_path = f'{JSON_PROJECT_DIR[op[0].project_id]}/'+\
-                f'compute-{op[0].mock_state}-{op[0].zone}-{op[0].page}.json'
-        else:
-          json_file_path = f'{JSON_PROJECT_DIR[op[0].project_id]}/'+\
-              f'compute-{op[0].mock_state}-empty.json'
-        with open(json_file_path) as json_file:
-          response = json.load(json_file)
-          op[1](op[2], response, None)
-      else:
-        raise ValueError(
-            'can\'t use batch request with methods other than'+\
-            f'instances and instanceGroupManagers ({op[0].mock_state})'
-        )
 
 
 class ComputeEngineApiStub:
@@ -109,7 +64,7 @@ class ComputeEngineApiStub:
     return ComputeEngineApiStub('migs')
 
   def new_batch_http_request(self):
-    return BatchRequestStub()
+    return apis_stub.BatchRequestStub()
 
   def get(self, project):
     self.project_id = project
@@ -119,13 +74,32 @@ class ComputeEngineApiStub:
     return ComputeEngineApiStub('projects')
 
   def execute(self, num_retries=0):
+    json_dir = apis_stub.get_json_dir(self.project_id)
+    page_suffix = ''
+    if self.page > 1:
+      page_suffix = f'-{self.page}'
     if self.mock_state == 'zones':
-      with open(f'{JSON_PROJECT_DIR[self.project_id]}/compute-zones.json'
-               ) as json_file:
+      with open(json_dir / 'compute-zones.json') as json_file:
         return json.load(json_file)
-    if self.mock_state == 'projects':
-      with open(f'{JSON_PROJECT_DIR[self.project_id]}/compute-project.json'
-               ) as json_file:
+    elif self.mock_state == 'projects':
+      with open(json_dir / 'compute-project.json') as json_file:
         return json.load(json_file)
+    elif self.mock_state == 'instances':
+      try:
+        with open(
+            json_dir /
+            f'compute-instances-{self.zone}{page_suffix}.json') as json_file:
+          return json.load(json_file)
+      except FileNotFoundError:
+        with open(json_dir / 'compute-instances-empty.json') as json_file:
+          return json.load(json_file)
+    elif self.mock_state == 'migs':
+      try:
+        with open(json_dir /
+                  f'compute-migs-{self.zone}{page_suffix}.json') as json_file:
+          return json.load(json_file)
+      except FileNotFoundError:
+        with open(json_dir / 'compute-migs-empty.json') as json_file:
+          return json.load(json_file)
     else:
       raise ValueError("can't call this method here")
