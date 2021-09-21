@@ -13,9 +13,12 @@
 # limitations under the License.
 """Stub API calls used in apis.py for testing."""
 
+import copy
 import json
 import pathlib
 import re
+
+import googleapiclient.errors
 
 from gcp_doctor.queries import (crm_stub, gce_stub, gke_stub, iam_stub,
                                 kms_stub, monitoring_stub)
@@ -57,6 +60,30 @@ class ServiceUsageApiStub:
   def execute(self, num_retries=0):
     with open(self.json_dir / 'services.json') as json_file:
       return json.load(json_file)
+
+
+class BatchRequestStub:
+  """Mock object returned by new_batch_http_request()."""
+
+  def __init__(self, callback=None):
+    self.queue = []
+    self.callback = callback
+
+  def add(self, request, callback=None, request_id=None):
+    self.queue.append({
+        'request': copy.deepcopy(request),
+        'cb': callback or self.callback,
+        'request_id': request_id
+    })
+    return self
+
+  def execute(self):
+    for op in self.queue:
+      try:
+        response = op['request'].execute()
+        op['cb'](op['request_id'], response, None)
+      except googleapiclient.errors.HttpError as err:
+        op['cb'](op['request_id'], None, err)
 
 
 def get_api_stub(service_name: str, version: str, project_id: str):
