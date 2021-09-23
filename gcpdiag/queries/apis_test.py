@@ -1,4 +1,3 @@
-#!/bin/bash
 # Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,21 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""Test code in apis.py."""
+
+from unittest import mock
+
+from gcpdiag.queries import apis, apis_stub
+
+DUMMY_PROJECT_NAME = 'gcpd-gke-1-9b90'
 
 
-set -e
-set -x
+@mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
+class Test:
 
-PATH="${KOKORO_ARTIFACTS_DIR}/git/gcp-doctor/bin:$HOME/.local/bin:$PATH"
-cd "${KOKORO_ARTIFACTS_DIR}/git/gcp-doctor"
-
-pipenv-dockerized run pipenv install --dev
-pipenv-dockerized run make test
-pipenv-dockerized run make -C kokoro kokoro-build
-
-docker login -u _json_key --password-stdin https://us-docker.pkg.dev \
-  <"$KOKORO_KEYSTORE_DIR/75985_gcp-doctor-repo-kokoro"
-make -C docker/gcpdiag build
-make -C docker/gcpdiag push
-make -C gcpdiag_google_internal/docker build
-make -C gcpdiag_google_internal/docker push
+  def test_is_enabled(self):
+    assert apis.is_enabled(DUMMY_PROJECT_NAME, 'container')
+    assert not apis.is_enabled(DUMMY_PROJECT_NAME, 'containerxyz')

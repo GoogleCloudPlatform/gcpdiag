@@ -3,7 +3,7 @@ DIST_NAME=gcp-doctor-$(VERSION)
 SHELL=/bin/bash
 
 test:
-	pytest -o log_level=DEBUG --cov-config=.coveragerc --cov=gcp_doctor --forked
+	pytest -o log_level=DEBUG --cov-config=.coveragerc --cov=gcpdiag --forked
 
 snapshots:
 	pytest --snapshot-update
@@ -25,8 +25,8 @@ tarfile:
 	cp Pipfile Pipfile.lock README.md dist-tmp/$(DIST_NAME)
 	cp gcp-doctor dist-tmp/$(DIST_NAME)
 	chmod +x dist-tmp/$(DIST_NAME)/gcp-doctor
-	cp --parents gcp_doctor/queries/client_secrets.json dist-tmp/$(DIST_NAME)
-	find gcp_doctor -name '*.py' -exec cp --parents '{}' dist-tmp/$(DIST_NAME) ';'
+	cp --parents gcpdiag/queries/client_secrets.json dist-tmp/$(DIST_NAME)
+	find gcpdiag -name '*.py' -exec cp --parents '{}' dist-tmp/$(DIST_NAME) ';'
 	chmod -R a+rX dist-tmp
 	mkdir -p dist
 	tar -C dist-tmp -czf dist/gcp-doctor-$(VERSION).tar.gz --owner=0 --group=0 gcp-doctor-$(VERSION)

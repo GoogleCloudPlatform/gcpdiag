@@ -16,9 +16,9 @@ def main():
 
   sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-  lint = importlib.import_module('gcp_doctor.lint')
-  gce = importlib.import_module('gcp_doctor.lint.gce')
-  gke = importlib.import_module('gcp_doctor.lint.gke')
+  lint = importlib.import_module('gcpdiag.lint')
+  gce = importlib.import_module('gcpdiag.lint.gce')
+  gke = importlib.import_module('gcpdiag.lint.gke')
   repo = lint.LintRuleRepository()
   repo.load_rules(gce)
   repo.load_rules(gke)
