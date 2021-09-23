@@ -17,15 +17,15 @@
 set -e
 set -x
 
-PATH="${KOKORO_ARTIFACTS_DIR}/git/gcp-doctor/bin:$HOME/.local/bin:$PATH"
-cd "${KOKORO_ARTIFACTS_DIR}/git/gcp-doctor"
+PATH="${KOKORO_ARTIFACTS_DIR}/git/gcpdiag/bin:$HOME/.local/bin:$PATH"
+cd "${KOKORO_ARTIFACTS_DIR}/git/gcpdiag"
 
 pipenv-dockerized run pipenv install --dev
 pipenv-dockerized run make test
 pipenv-dockerized run make -C kokoro kokoro-build
 
 docker login -u _json_key --password-stdin https://us-docker.pkg.dev \
-  <"$KOKORO_KEYSTORE_DIR/75985_gcp-doctor-repo-kokoro"
+  <"$KOKORO_KEYSTORE_DIR/76327_gcp-doctor-repo-kokoro"
 make -C docker/gcpdiag build
 make -C docker/gcpdiag push
 make -C gcpdiag_google_internal/docker build

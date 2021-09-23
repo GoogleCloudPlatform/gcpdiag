@@ -17,8 +17,8 @@
 set -e
 set -x
 
-PATH="${KOKORO_ARTIFACTS_DIR}/git/gcp-doctor/bin:$HOME/.local/bin:$PATH"
-cd "${KOKORO_ARTIFACTS_DIR}/git/gcp-doctor"
+PATH="${KOKORO_ARTIFACTS_DIR}/git/gcpdiag/bin:$HOME/.local/bin:$PATH"
+cd "${KOKORO_ARTIFACTS_DIR}/git/gcpdiag"
 
 pipenv-dockerized run pipenv install --dev
 pipenv-dockerized run pre-commit run --all-files
