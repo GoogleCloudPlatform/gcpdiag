@@ -11,10 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""pyinstaller configuration for gcp_doctor.lint."""
+"""pyinstaller configuration for gcpdiag.lint."""
 
 from PyInstaller.utils.hooks import collect_submodules
 
 hiddenimports = \
-  collect_submodules('gcp_doctor.lint.gce') + \
-  collect_submodules('gcp_doctor.lint.gke')
+  collect_submodules('gcpdiag.lint.gce') + \
+  collect_submodules('gcpdiag.lint.gke')
