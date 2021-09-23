@@ -2,7 +2,7 @@
 
 block_cipher = None
 
-a = Analysis(['gcp-doctor'],
+a = Analysis(['bin/gcpdiag'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -21,7 +21,7 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,
           [],
-          name='gcp-doctor',
+          name='gcpdiag',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,

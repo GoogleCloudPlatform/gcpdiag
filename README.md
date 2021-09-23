@@ -1,40 +1,40 @@
-# gcp-doctor - Diagnostics for Google Cloud Platform
+# gcpdiag - Diagnostics for Google Cloud Platform
 
-[![code analysis badge](https://github.com/GoogleCloudPlatform/gcp-doctor/actions/workflows/code-analysis.yml/badge.svg?branch=main&event=push)](https://github.com/GoogleCloudPlatform/gcp-doctor/actions/workflows/code-analysis.yml?query=branch%3Amain+event%3Apush)
-[![test badge](https://github.com/GoogleCloudPlatform/gcp-doctor/actions/workflows/test.yml/badge.svg?branch=main&event=push)](https://github.com/GoogleCloudPlatform/gcp-doctor/actions/workflows/test.yml?query=branch%3Amain+event%3Apush)
+[![code analysis badge](https://github.com/GoogleCloudPlatform/gcpdiag/actions/workflows/code-analysis.yml/badge.svg?branch=main&event=push)](https://github.com/GoogleCloudPlatform/gcpdiag/actions/workflows/code-analysis.yml?query=branch%3Amain+event%3Apush)
+[![test badge](https://github.com/GoogleCloudPlatform/gcpdiag/actions/workflows/test.yml/badge.svg?branch=main&event=push)](https://github.com/GoogleCloudPlatform/gcpdiag/actions/workflows/test.yml?query=branch%3Amain+event%3Apush)
 
-**gcp-doctor** is a command-line diagnostics tool for GCP customers. It finds
+**gcpdiag** is a command-line diagnostics tool for GCP customers. It finds
 and helps to fix common issues in Google Cloud Platform projects. It is used to
 test projects against a wide range of best-practices and frequent mistakes,
 based on the troubleshooting experience of the Google Cloud Support team.
 
-gcp-doctor is open-source and contributions are welcome! Note that this is not
+gcpdiag is open-source and contributions are welcome! Note that this is not
 an officially supported Google product, but a community effort. The Google Cloud
 Support team maintains this code and we do our best to avoid causing any
 problems in your projects, but we give no guarantees to that end.
 
 ## Installation
 
-You can run gcp-doctor using a shell wrapper that starts gcp-doctor in a Docker
+You can run gcpdiag using a shell wrapper that starts gcpdiag in a Docker
 container. This should work on any machine with Docker installed, including
 Cloud Shell.
 
 ```
-curl https://storage.googleapis.com/gcp-doctor/gcp-doctor.sh >gcp-doctor
-chmod +x gcp-doctor
+curl https://storage.googleapis.com/gcp-doctor/gcpdiag.sh >gcpdiag
+chmod +x gcpdiag
 gcloud auth login --update-adc
-./gcp-doctor lint --auth-adc --project=[*MYPROJECT*]
+./gcpdiag lint --auth-adc --project=[*MYPROJECT*]
 ```
 
 Note: the `gcloud auth` step is not required in Cloud Shell.
 
 ## Usage
 
-Currently gcp-doctor mainly supports one subcommand: `lint`, which is used
+Currently gcpdiag mainly supports one subcommand: `lint`, which is used
 to run diagnostics on one or more GCP projects.
 
 ```
-usage: gcp-doctor lint --project P [OPTIONS]
+usage: gcpdiag lint --project P [OPTIONS]
 
 Run diagnostics in GCP projects.
 
@@ -43,7 +43,7 @@ optional arguments:
   --auth-adc           Authenticate using Application Default Credentials
   --auth-key FILE      Authenticate using a service account private key file
   --project P          Project ID of project that should be inspected
-  --billing-project P  Project used for billing/quota of API calls done by gcp-doctor
+  --billing-project P  Project used for billing/quota of API calls done by gcpdiag
                        (default is the inspected project, requires 'serviceusage.services.use' permission)
   --show-skipped       Show skipped rules
   --hide-ok            Hide rules with result OK
@@ -53,23 +53,23 @@ optional arguments:
 
 ### Authentication
 
-gcp-doctor supports authentication using multiple mechanisms:
+gcpdiag supports authentication using multiple mechanisms:
 
 1. Oauth user consent flow
 
-   By default gcp-doctor can use a Oauth user authentication flow, similarly to
+   By default gcpdiag can use a Oauth user authentication flow, similarly to
    what gcloud does. It will print a URL that you need to access with a browser,
    and ask you to enter the token that you receive after you authenticate there.
    Note that this currently doesn't work for people outside of google.com,
-   because gcp-doctor is not approved for external Oauth authentication yet.
+   because gcpdiag is not approved for external Oauth authentication yet.
 
    The credentials will be cached on disk, so that you can keep running it for 1
    hour. To remove cached authentication credentials, you can delete the
-   `$HOME/.cache/gcp-doctor` directory.
+   `$HOME/.cache/gcpdiag` directory.
 
 1. Application default credentials
 
-   If you supply `--auth-adc`, gcp-doctor will use [Application Default
+   If you supply `--auth-adc`, gcpdiag will use [Application Default
    Credentials](https://google-auth.readthedocs.io/en/latest/reference/google.auth.html#google.auth.default)
    to authenticate. For example this works out of the box in Cloud Shell and
    you don't need to re-authenticate, or you can use `gcloud auth login

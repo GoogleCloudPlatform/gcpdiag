@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Generate a list of lint tests formatted in markdown for easy integration in
-the gcp-doctor homepage."""
+the gcpdiag homepage."""
 
 # pylint: disable=invalid-name
 # pylint: disable=line-too-long

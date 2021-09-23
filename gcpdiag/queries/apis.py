@@ -132,7 +132,7 @@ def get_api(service_name: str, version: str, project_id: Optional[str] = None):
     try:
       # This is for Google-internal use only and allows us to modify the request
       # to make it work also internally. The import will fail for the public
-      # version of gcp-doctor.
+      # version of gcpdiag.
       # pylint: disable=import-outside-toplevel
       from gcpdiag_google_internal import hooks
       hooks.request_builder_hook(*args, **kwargs)
@@ -141,7 +141,7 @@ def get_api(service_name: str, version: str, project_id: Optional[str] = None):
 
     if 'headers' in kwargs:
       headers = kwargs.get('headers', {})
-      headers['user-agent'] = f'gcp-doctor/{config.VERSION} (gzip)'
+      headers['user-agent'] = f'gcpdiag/{config.VERSION} (gzip)'
       if project_id:
         headers['x-goog-user-project'] = project_id
 
