@@ -11,5 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""pyinstaller configuration for gcpdiag.queries."""
-datas = [('gcpdiag/queries/client_secrets.json', 'gcpdiag/queries')]
+"""Test code in apis.py."""
+
+from unittest import mock
+
+from gcpdiag.queries import apis, apis_stub
+
+DUMMY_PROJECT_NAME = 'gcpd-gke-1-9b90'
+
+
+@mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
+class Test:
+
+  def test_is_enabled(self):
+    assert apis.is_enabled(DUMMY_PROJECT_NAME, 'container')
+    assert not apis.is_enabled(DUMMY_PROJECT_NAME, 'containerxyz')
