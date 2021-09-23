@@ -23,7 +23,7 @@ RUN chmod 755 /usr/bin/entrypoint.sh; \
     chmod 666 /etc/passwd /etc/group
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]
 
-# Install gcp-doctor + dependencies.
-COPY dist/Pipfile.lock /opt/gcp-doctor/Pipfile.lock
-RUN cd /opt/gcp-doctor && env PIPENV_VENV_IN_PROJECT=1 pipenv install --ignore-pipfile
-COPY dist /opt/gcp-doctor
+# Install gcpdiag + dependencies.
+COPY dist/Pipfile.lock /opt/gcpdiag/Pipfile.lock
+RUN cd /opt/gcpdiag && env PIPENV_VENV_IN_PROJECT=1 pipenv install --ignore-pipfile
+COPY dist /opt/gcpdiag

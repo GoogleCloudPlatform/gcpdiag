@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""gcp-doctor main script."""
+"""gcpdiag main script."""
 
 # pylint: disable=invalid-name
 
@@ -34,12 +34,12 @@ def main(argv):
   if len(argv) == 1 or argv[1] == '--help' or argv[1] == 'help':
     print_help()
   elif argv[1] == 'version' or argv[1] == '--version':
-    print('gcp-doctor ' + config.VERSION)
+    print('gcpdiag ' + config.VERSION)
     print('Copyright 2021 Google LLC')
   elif argv[1] == 'lint':
     # Replace argv[0:1] with only argv[0] so that argparse works correctly.
     sys.argv.pop(0)
-    sys.argv[0] = 'gcp-doctor lint'
+    sys.argv[0] = 'gcpdiag lint'
     lint_command.run(argv)
   else:
     print(f'ERROR: unknown command {argv[1]}. Use --help for help.',
@@ -48,17 +48,17 @@ def main(argv):
 
 
 def print_help():
-  print("""gcp-doctor 🩺 - Diagnostics for Google Cloud Platform
+  print("""gcpdiag 🩺 - Diagnostics for Google Cloud Platform
 
 Usage:
-        gcp-doctor COMMAND [OPTIONS]
+        gcpdiag COMMAND [OPTIONS]
 
 Commands:
         help     Print this help text.
         lint     Run diagnostics on GCP projects.
-        version  Print gcp-doctor version.
+        version  Print gcpdiag version.
 
-See: gcp-doctor COMMAND --help for command-specific usage.""")
+See: gcpdiag COMMAND --help for command-specific usage.""")
 
 
 if __name__ == '__main__':

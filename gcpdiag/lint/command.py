@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Lint as: python3
-"""gcp-doctor lint command."""
+"""gcpdiag lint command."""
 
 import argparse
 import logging
@@ -27,7 +27,7 @@ from gcpdiag.queries import apis
 def run(argv) -> int:
   del argv
   parser = argparse.ArgumentParser(
-      description='Run diagnostics in GCP projects.', prog='gcp-doctor lint')
+      description='Run diagnostics in GCP projects.', prog='gcpdiag lint')
 
   parser.add_argument('--auth-adc',
                       help='Authenticate using Application Default Credentials',
@@ -47,7 +47,7 @@ def run(argv) -> int:
   parser.add_argument(
       '--billing-project',
       metavar='P',
-      help='Project used for billing/quota of API calls done by gcp-doctor '
+      help='Project used for billing/quota of API calls done by gcpdiag '
       '(default is the inspected project, requires '
       '\'serviceusage.services.use\' permission)')
 

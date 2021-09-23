@@ -24,7 +24,9 @@ if [[ $UID -ne 0 ]]; then
   echo "${GROUP}:x:${GID}:" >>/etc/group
 fi
 
-# activate the venv for gcp-doctor
-. /opt/gcp-doctor/.venv/bin/activate
+# activate the venv for gcpdiag
+. /opt/gcpdiag/.venv/bin/activate
+
+export PYTHONPATH=/opt/gcpdiag
 
 exec "$@"
