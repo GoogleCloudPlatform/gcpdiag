@@ -1,5 +1,5 @@
 VERSION=$(shell sed -n 's/^current_version\s*=\s*//p' <.bumpversion.cfg)
-DIST_NAME=gcp-doctor-$(VERSION)
+DIST_NAME=gcpdiag-$(VERSION)
 SHELL=/bin/bash
 
 test:
@@ -12,7 +12,7 @@ version:
 	@echo $(VERSION)
 
 build:
-	rm -f dist/gcp-doctor
+	rm -f dist/gcpdiag
 	pyinstaller --workpath=.pyinstaller.build pyinstaller.spec
 
 bump-version:
@@ -21,15 +21,15 @@ bump-version:
 tarfile:
 	# TODO: replace with something based on setuptools?
 	rm -rf dist-tmp
-	mkdir -p dist-tmp/$(DIST_NAME)
+	mkdir -p dist-tmp/$(DIST_NAME)/bin
 	cp Pipfile Pipfile.lock README.md dist-tmp/$(DIST_NAME)
-	cp gcp-doctor dist-tmp/$(DIST_NAME)
-	chmod +x dist-tmp/$(DIST_NAME)/gcp-doctor
+	cp bin/gcpdiag dist-tmp/$(DIST_NAME)/bin
+	chmod +x dist-tmp/$(DIST_NAME)/bin/gcpdiag
 	cp --parents gcpdiag/queries/client_secrets.json dist-tmp/$(DIST_NAME)
 	find gcpdiag -name '*.py' -exec cp --parents '{}' dist-tmp/$(DIST_NAME) ';'
 	chmod -R a+rX dist-tmp
 	mkdir -p dist
-	tar -C dist-tmp -czf dist/gcp-doctor-$(VERSION).tar.gz --owner=0 --group=0 gcp-doctor-$(VERSION)
+	tar -C dist-tmp -czf dist/gcpdiag-$(VERSION).tar.gz --owner=0 --group=0 gcpdiag-$(VERSION)
 	rm -rf dist-tmp
 
 release:
