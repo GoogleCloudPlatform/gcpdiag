@@ -38,6 +38,7 @@ repos:
       rev: v0.790
       hooks:
           - id: mypy
+            exclude: bin/gcpdiag
             args: ['--ignore-missing-imports', '--scripts-are-modules']
 
     - repo: https://github.com/timothycrosley/isort
