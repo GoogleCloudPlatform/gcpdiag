@@ -94,10 +94,10 @@ class LintReportTerminal(lint.LintReport):
   def banner(self):
     if self.term.does_styling:
       print(
-          self.term.bold('gcp-doctor ' + _emoji_wrap('🩺') + ' ' +
-                         config.VERSION) + '\n')
+          self.term.bold('gcpdiag ' + _emoji_wrap('🩺') + ' ' + config.VERSION) +
+          '\n')
     else:
-      print('gcp-doctor ' + config.VERSION + '\n')
+      print('gcpdiag ' + config.VERSION + '\n')
 
   def lint_start(self, context):
     print(f'Starting lint inspection ({context})...\n')

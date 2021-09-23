@@ -5,7 +5,7 @@ REPO_NAME=test
 else
 REPO_NAME=release
 endif
-IMAGE=us-docker.pkg.dev/gcp-doctor-repo/$(REPO_NAME)/gcp-doctor
+IMAGE=us-docker.pkg.dev/gcp-doctor-repo/$(REPO_NAME)/gcpdiag
 BUCKET_NAME=gcp-doctor
 SHELL=/bin/bash
 
@@ -20,9 +20,7 @@ build:
 	make -C ../.. tarfile
 	rm -rf dist
 	mkdir dist
-	cd dist && tar -xf ../../../dist/gcp-doctor-$(VERSION).tar.gz --strip 1
-	# compatibility with old docker image:
-	cd dist && mkdir bin && ln -s ../gcp-doctor bin/gcp-doctor
+	cd dist && tar -xf ../../../dist/gcpdiag-$(VERSION).tar.gz --strip 1
 	chmod -R a+rX dist
 	docker build --pull -t $(IMAGE):$(VERSION) .
 	rm -rf dist
@@ -41,7 +39,7 @@ upload-wrapper:
 	@CUR_WRAPPER_VERSION=$$(curl -sf $(VERSION_FILE_URL) | grep WRAPPER_VERSION | sed -e 's/.*=//'); \
 	  if [ "$$CUR_WRAPPER_VERSION" != "$(WRAPPER_VERSION)" ]; then \
 	    echo "uploading new wrapper."; \
-	    gsutil -h "Content-Type: text/plain" -h "Cache-Control: max-age=300" cp $(BIN_DIR)/gcp-doctor-dockerized "gs://$(BUCKET_NAME)/gcp-doctor.sh"; \
+	    gsutil -h "Content-Type: text/plain" -h "Cache-Control: max-age=300" cp $(BIN_DIR)/gcpdiag-dockerized "gs://$(BUCKET_NAME)/gcpdiag.sh"; \
 	  else \
 	    echo "wrapper unchanged."; \
 	  fi
