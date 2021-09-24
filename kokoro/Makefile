@@ -8,7 +8,3 @@ kokoro-build:
 	mkdir -p ../dist/x20/v$(VERSION)
 	mv ../dist/gcpdiag ../dist/x20/v$(VERSION)
 	ln -s v$(VERSION) ../dist/x20/latest
-	# make sure that the files are not group-writable, because
-	# otherwise all mdb/gcp-doctor-users would be allowed, and this
-	# is not permitted (more than 500 users)
-	chmod -R go-w ../dist/x20
