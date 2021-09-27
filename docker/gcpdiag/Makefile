@@ -5,16 +5,16 @@ REPO_NAME=test
 else
 REPO_NAME=release
 endif
-IMAGE=us-docker.pkg.dev/gcp-doctor-repo/$(REPO_NAME)/gcpdiag
-BUCKET_NAME=gcp-doctor
+IMAGE=us-docker.pkg.dev/gcpdiag-repo/$(REPO_NAME)/gcpdiag
+BUCKET_NAME=gcpdiag
 SHELL=/bin/bash
 
 # "default-version" was the old name where we only put the version in the file
 # we changed to "release-version" with a new format: KEY=VALUE pairs (shell
 # script-sourceable)
 OBJECT_NAME_RELEASE_VERSION=release-version
-WRAPPER_VERSION=0.5
-VERSION_FILE_URL=https://storage.googleapis.com/gcp-doctor/$(OBJECT_NAME_RELEASE_VERSION)
+WRAPPER_VERSION=0.6
+VERSION_FILE_URL=https://storage.googleapis.com/gcpdiag/$(OBJECT_NAME_RELEASE_VERSION)
 
 build:
 	make -C ../.. tarfile
