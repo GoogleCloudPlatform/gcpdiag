@@ -25,7 +25,7 @@ pipenv-dockerized run make test
 pipenv-dockerized run make -C kokoro kokoro-build
 
 docker login -u _json_key --password-stdin https://us-docker.pkg.dev \
-  <"$KOKORO_KEYSTORE_DIR/76327_gcp-doctor-repo-kokoro"
+  <"$KOKORO_KEYSTORE_DIR/76327_gcpdiag-repo-kokoro"
 make -C docker/gcpdiag build
 make -C docker/gcpdiag push
 make -C gcpdiag_google_internal/docker build
