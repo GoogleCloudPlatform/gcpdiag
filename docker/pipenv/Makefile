@@ -1,5 +1,5 @@
-VERSION=0.6
-IMAGE=us-docker.pkg.dev/gcp-doctor-repo/public/gcp-doctor-pipenv
+VERSION=0.7
+IMAGE=us-docker.pkg.dev/gcpdiag-repo/devel/gcpdiag-pipenv
 
 build:
 	docker build --pull --no-cache -t $(IMAGE):$(VERSION) .

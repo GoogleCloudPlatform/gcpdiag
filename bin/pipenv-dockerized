@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IMAGE="us-docker.pkg.dev/gcp-doctor-repo/public/gcp-doctor-pipenv:0.6"
+IMAGE="us-docker.pkg.dev/gcpdiag-repo/devel/gcpdiag-pipenv:0.7"
 
 USE_TTY=""
 CWD=$(pwd)
