@@ -8,7 +8,7 @@ if [[ $THIS_WRAPPER_VERSION != $WRAPPER_VERSION ]]; then
   echo "## This gcpdiag wrapper script is obsolete ($THIS_WRAPPER_VERSION, newest: $WRAPPER_VERSION)."
   echo "## Please update the wrapper script to the latest version as follows:"
   echo
-  echo "curl https://storage.googleapis.com/gcpdiag/gcpdiag.sh >gcpdiag"
+  echo "curl https://gcpdiag.dev/gcpdiag.sh >gcpdiag"
   echo "chmod +x gcpdiag"
   echo
   exit 1
