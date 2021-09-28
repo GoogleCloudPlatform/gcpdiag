@@ -20,7 +20,7 @@ container. This should work on any machine with Docker installed, including
 Cloud Shell.
 
 ```
-curl https://storage.googleapis.com/gcpdiag/gcpdiag.sh >gcpdiag
+curl https://gcpdiag.dev/gcpdiag.sh >gcpdiag
 chmod +x gcpdiag
 gcloud auth login --update-adc
 ./gcpdiag lint --auth-adc --project=[*MYPROJECT*]
