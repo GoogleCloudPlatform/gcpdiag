@@ -6,12 +6,10 @@ else
 REPO_NAME=release
 endif
 IMAGE=us-docker.pkg.dev/gcpdiag-repo/$(REPO_NAME)/gcpdiag
-BUCKET_NAME=gcpdiag
+RELEASE_BUCKET_NAME=gcpdiag
+WRAPPER_BUCKET_NAME=gcpdiag-web
 SHELL=/bin/bash
 
-# "default-version" was the old name where we only put the version in the file
-# we changed to "release-version" with a new format: KEY=VALUE pairs (shell
-# script-sourceable)
 OBJECT_NAME_RELEASE_VERSION=release-version
 WRAPPER_VERSION=0.6
 VERSION_FILE_URL=https://storage.googleapis.com/gcpdiag/$(OBJECT_NAME_RELEASE_VERSION)
@@ -32,14 +30,14 @@ push:
 # much faster than running 'docker pull' everytime (and also avoids the bad
 # practice of using generic docker image tags like 'default')
 update-default:
-	echo -e "DOCKER_IMAGE=$(IMAGE)\nDOCKER_IMAGE_VERSION=$(VERSION)\nWRAPPER_VERSION=$(WRAPPER_VERSION)" | gsutil -h "Content-Type: text/plain" -h "Cache-Control: max-age=300" cp - "gs://$(BUCKET_NAME)/$(OBJECT_NAME_RELEASE_VERSION)"
+	echo -e "DOCKER_IMAGE=$(IMAGE)\nDOCKER_IMAGE_VERSION=$(VERSION)\nWRAPPER_VERSION=$(WRAPPER_VERSION)" | gsutil -h "Content-Type: text/plain" -h "Cache-Control: max-age=300" cp - "gs://$(RELEASE_BUCKET_NAME)/$(OBJECT_NAME_RELEASE_VERSION)"
 
 upload-wrapper:
 	# only update docker wrapper script if this version is newer ($(WRAPPER_VERSION))
 	@CUR_WRAPPER_VERSION=$$(curl -sf $(VERSION_FILE_URL) | grep WRAPPER_VERSION | sed -e 's/.*=//'); \
 	  if [ "$$CUR_WRAPPER_VERSION" != "$(WRAPPER_VERSION)" ]; then \
 	    echo "uploading new wrapper."; \
-	    gsutil -h "Content-Type: text/plain" -h "Cache-Control: max-age=300" cp $(BIN_DIR)/gcpdiag-dockerized "gs://$(BUCKET_NAME)/gcpdiag.sh"; \
+	    gsutil -h "Content-Type: text/plain" -h "Cache-Control: max-age=300" cp $(BIN_DIR)/gcpdiag-dockerized "gs://$(WRAPPER_BUCKET_NAME)/gcpdiag.sh"; \
 	  else \
 	    echo "wrapper unchanged."; \
 	  fi
