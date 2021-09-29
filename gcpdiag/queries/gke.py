@@ -27,13 +27,50 @@ from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis, crm, gce
 
 
+class Version:
+  """ Represents GKE Version """
+
+  version_str: str
+  major: int
+  minor: int
+
+  def __init__(self, version_str: str):
+    # example: 1.19.13-gke.701
+    self.version_str = version_str
+    self.major = int(self.extract(0))
+    self.minor = int(self.extract(1))
+
+  def same_major(self, other_version: 'Version') -> bool:
+    return self.major == other_version.major
+
+  def diff_minor(self, other_version: 'Version') -> int:
+    return abs(self.minor - other_version.minor)
+
+  def extract(self, n: int) -> str:
+    return self.version_str.split('.')[n]
+
+  def __str__(self) -> str:
+    return self.version_str
+
+  def __eq__(self, other: object) -> bool:
+    if isinstance(other, str):
+      return other == self.version_str
+    if isinstance(other, Version):
+      return self.version_str == other.version_str
+    raise AttributeError('Can not compare Version object with {}'.format(
+        type(other)))
+
+
 class NodePool(models.Resource):
   """Represents a GKE node pool."""
+
+  version: Version
 
   def __init__(self, cluster, resource_data):
     super().__init__(project_id=cluster.project_id)
     self._cluster = cluster
     self._resource_data = resource_data
+    self.version = Version(self._resource_data['version'])
     self._migs = None
 
   def _get_service_account(self) -> str:
@@ -85,10 +122,6 @@ class NodePool(models.Resource):
       return sa
 
   @property
-  def version(self) -> str:
-    return self._resource_data['version']
-
-  @property
   def pod_ipv4_cidr_size(self) -> int:
     return self._resource_data['podIpv4CidrSize']
 
@@ -120,10 +153,12 @@ class Cluster(models.Resource):
   https://cloud.google.com/kubernetes-engine/docs/reference/rest/v1/projects.locations.clusters#Cluster
   """
   _resource_data: dict
+  master_version: Version
 
   def __init__(self, project_id, resource_data):
     super().__init__(project_id=project_id)
     self._resource_data = resource_data
+    self.master_version = Version(self._resource_data['currentMasterVersion'])
     self._nodepools = None
 
   @property
@@ -160,10 +195,6 @@ class Cluster(models.Resource):
   @property
   def current_node_count(self) -> int:
     return self._resource_data.get('currentNodeCount', 0)
-
-  @property
-  def master_version(self) -> str:
-    return self._resource_data['currentMasterVersion']
 
   @property
   def release_channel(self) -> Optional[str]:

@@ -18,8 +18,12 @@
 import ipaddress
 from unittest import mock
 
+import pytest
+from packaging.version import LegacyVersion
+
 from gcpdiag import models
 from gcpdiag.queries import apis_stub, gce, gke
+from gcpdiag.queries.gke import Version
 
 DUMMY_PROJECT_NAME = 'gcpd-gke-1-9b90'
 DUMMY_CLUSTER1_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clusters/gke1'
@@ -166,3 +170,39 @@ class TestCluster:
     # cluster2 has a custom SA
     c = clusters[DUMMY_CLUSTER2_NAME]
     assert c.nodepools[0].service_account == DUMMY_CLUSTER2_SERVICE_ACCOUNT
+
+
+class TestVersion:
+  """ Test GKE Version class """
+
+  def test_init(self):
+    Version('1.19.13-gke.701')
+    self.raises('x.19.13-gke.701')
+    self.raises('.19.13-gke.701')
+    self.raises('1.x.13-gke.701')
+    self.raises('1..13-gke.701')
+
+  def test_same_major(self):
+    assert Version('1.19.13-gke.701').same_major(Version('1.23.45-six.7'))
+    assert not Version('1.19.13-gke.701').same_major(Version('9.23.45-six.7'))
+
+  def test_diff_minor(self):
+    assert Version('1.19.13-gke.701').diff_minor(Version('1.23.45-six.7')) == 4
+    assert Version('1.19.13-gke.701').diff_minor(Version('1.19.45-six.7')) == 0
+
+  def test_eq_str(self):
+    assert Version('1.19.13-gke.701') == '1.19.13-gke.701'
+    assert Version('1.19.13-gke.701') != '1.19.13-gke.702'
+
+  def test_eq_version(self):
+    assert Version('1.19.13-gke.701') == Version('1.19.13-gke.701')
+    assert Version('1.19.13-gke.701') != Version('1.19.13-gke.702')
+
+  def test_compatible_with_legacy_version(self):
+    l1 = LegacyVersion(Version('1.19.13-gke.701'))
+    l2 = LegacyVersion(Version('1.19.14-something.else'))
+    assert l1 < l2
+
+  def raises(self, v):
+    with pytest.raises(Exception):
+      Version(v)
