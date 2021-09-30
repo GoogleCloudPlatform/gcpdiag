@@ -41,6 +41,9 @@ def prefetch_rule(context: models.Context):
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   instances = gce.get_instances(context)
+  if not instances:
+    report.add_skipped(None, 'no instances found')
+    return
 
   for project_id in sorted({i.project_id for i in instances.values()}):
     project = crm.get_project(project_id)
@@ -51,5 +54,3 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
                         f'service account: {sa_email}\nmissing role: {ROLE}')
     else:
       report.add_ok(project)
-  else:
-    report.add_skipped(None, 'no clusters found')
