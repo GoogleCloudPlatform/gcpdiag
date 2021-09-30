@@ -157,6 +157,14 @@ class LintReportTerminal(lint.LintReport):
     self.terminal_erase_line()
     if self.rule_has_results:
       self.terminal_print_line()
+    else:
+      # if we printed nothing about this rule (probably because
+      # skipped, and --hide-skipped active), then also don't
+      # print the rule line -> overwrite it with the next.
+      print(self.term.move_up + self.term.clear_eol(),
+            flush=True,
+            end='',
+            file=self.file)
 
     # If the rule failed, add more information about the rule.
     if rule in self.per_rule_data and self.per_rule_data[rule]['failed_count']:
