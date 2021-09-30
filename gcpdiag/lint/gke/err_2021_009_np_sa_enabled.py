@@ -13,11 +13,11 @@
 # limitations under the License.
 
 # Lint as: python3
-"""Service Account used by the cluster exists and not disabled
+"""Node pool service account exists and not disabled
 
-Disabling or deleting the service account used by the nodepool will render this
-nodepool not functional. To fix - restore the default compute account or
-service account that was specified when the nodepool was created.
+Disabling or deleting the service account used by a node pool will render the
+node pool not functional. To fix - restore the default compute account or
+service account that was specified when the node pool was created.
 """
 
 from gcpdiag import lint, models
@@ -44,4 +44,4 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
         report.add_failed(np,
                           f'{default_prefix}service account is disabled: {sa}')
       else:
-        report.add_ok(np, sa)
+        report.add_ok(np)
