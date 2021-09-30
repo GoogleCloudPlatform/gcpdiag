@@ -18,7 +18,7 @@
 import appdirs
 
 # gcpdiag version (not configurable, but useful to have here)
-VERSION = '0.43'
+VERSION = '0.44-test'
 
 # Default number of retries for API Calls.
 API_RETRIES = 10
