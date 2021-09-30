@@ -88,7 +88,10 @@ def _fetch_policy(project_id: str):
   # only with Python >= 3.8.
   sa_emails = []
   for member in policy['by_member']:
-    m = re.match(r'serviceAccount:(\S+)', member)
+    # Note: not matching / makes sure that we don't match for example fleet
+    # workload identities:
+    # https://cloud.google.com/anthos/multicluster-management/fleets/workload-identity
+    m = re.match(r'serviceAccount:([^/]+)$', member)
     if m:
       sa_emails.append(m.group(1))
   _batch_fetch_service_accounts(sa_emails, project_id)
@@ -175,7 +178,7 @@ class ProjectPolicy:
         return False
 
     # If this is a service account, make sure that the service account is enabled.
-    m = re.match(r'serviceAccount:(.*)', member)
+    m = re.match(r'serviceAccount:([^/]+)$', member)
     if m:
       if not is_service_account_enabled(m.group(1), self._project_id):
         logging.info('service account %s has role %s, but is disabled!',
