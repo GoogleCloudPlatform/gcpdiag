@@ -32,7 +32,7 @@ def main():
   for t in repo.rules:
     long_desc = ' '.join(t.long_desc.splitlines())
     print(
-        f'{t.product:7} | {t.rule_class:5} | {t.rule_id:8} | {t.short_desc:60} | {long_desc} '
+        f'{t.product:7} | {t.rule_class:5} | {t.rule_id:8} | {t.short_desc:60} | {long_desc}'
     )
 
 
