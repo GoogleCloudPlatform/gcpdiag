@@ -3,10 +3,11 @@ gcpdiag Privacy Policy
 
 ## Data collected via public APIs
 
-gcpdiag is a command-line tool that uses credentials provided by you to
-access your data in Google Cloud Platform via public APIs.
+gcpdiag is a command-line tool that uses credentials provided by you (via oauth,
+service account key, or application default credentials) to access your data in
+Google Cloud Platform via public APIs.
 
-The data collected is never stored or transmitted anywhere except on the
+The collected data is never stored or transmitted anywhere except on the
 environment where you run it:
 
 - gcpdiag caches data (credentials and certain API call results) under
