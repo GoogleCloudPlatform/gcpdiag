@@ -31,13 +31,18 @@ def run(argv) -> int:
 
   parser.add_argument('--auth-adc',
                       help='Authenticate using Application Default Credentials',
-                      default=False,
                       action='store_true')
 
   parser.add_argument(
       '--auth-key',
       help='Authenticate using a service account private key file',
       metavar='FILE')
+
+  parser.add_argument(
+      '--auth-oauth',
+      help=
+      'Authenticate using Oauth user authentication (default, except in Cloud Shell)',
+      action='store_true')
 
   parser.add_argument('--project',
                       metavar='P',
@@ -89,8 +94,13 @@ def run(argv) -> int:
 
   # Initialize configuration
   config.WITHIN_DAYS = args.within_days
-  config.AUTH_ADC = args.auth_adc
-  config.AUTH_KEY = args.auth_key
+
+  # Determine what authentication should be used
+  if args.auth_key:
+    config.AUTH_KEY = args.auth_key
+  elif args.auth_adc or (not args.auth_oauth and
+                         report_terminal.is_cloud_shell()):
+    config.AUTH_ADC = True
 
   # Initialize Context, Repository, and Tests.
   context = models.Context(project_id=args.project)

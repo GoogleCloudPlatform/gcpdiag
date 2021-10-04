@@ -28,8 +28,12 @@ from gcpdiag import config, lint, models
 OUTPUT_WIDTH = 68
 
 
+def is_cloud_shell():
+  return os.getenv('CLOUD_SHELL')
+
+
 def _emoji_wrap(char):
-  if os.getenv('CLOUD_SHELL'):
+  if is_cloud_shell():
     # emoji not displayed as double width in Cloud Shell (bug?)
     return char + ' '
   else:
