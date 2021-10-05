@@ -17,6 +17,7 @@
 
 import json
 import logging
+import os
 import pkgutil
 import sys
 from typing import Optional, Set
@@ -46,6 +47,10 @@ def _get_credentials():
 
   # Authenticate using Application Default Credentials?
   if config.AUTH_ADC:
+    # workaround to avoid log message:
+    # "WARNING:google.auth._default:No project ID could be determined."
+    os.environ.setdefault('GOOGLE_CLOUD_PROJECT', '...fake project id...')
+
     logging.debug('auth: using application default credentials')
     if not _credentials:
       _credentials, _ = google.auth.default(scopes=AUTH_SCOPES)
@@ -193,4 +198,11 @@ def verify_access(project_id: str):
   except utils.GcpApiError as err:
     print(f'ERROR: can\'t access project {project_id}: {err.message}.',
           file=sys.stdout)
+    sys.exit(1)
+  except exceptions.GoogleAuthError as err:
+    print(f'ERROR: {err}', file=sys.stdout)
+    if config.AUTH_ADC:
+      print(('Error using application default credentials. '
+             'Try running: gcloud auth login --update-adc'),
+            file=sys.stderr)
     sys.exit(1)
