@@ -20,7 +20,7 @@ import logging
 import sys
 
 from gcpdiag import config, lint, models, utils
-from gcpdiag.lint import gce, gke, report_terminal
+from gcpdiag.lint import gce, gke, iam, report_terminal
 from gcpdiag.queries import apis
 
 
@@ -107,6 +107,7 @@ def run(argv) -> int:
   repo = lint.LintRuleRepository()
   repo.load_rules(gce)
   repo.load_rules(gke)
+  repo.load_rules(iam)
   report = report_terminal.LintReportTerminal(
       log_info_for_progress_only=(args.verbose == 0),
       show_ok=not args.hide_ok,

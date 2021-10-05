@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Lint as: python3
-"""Queries related to GCP Kubernetes Engine clusters."""
+"""Queries related to GCP Identity and Access Management."""
 
 import logging
 import re
@@ -139,7 +139,7 @@ class ProjectPolicy:
       member_policy['permissions'] = permissions_dict
 
   def get_member_permissions(self, member: str) -> List[str]:
-    """Return permissions for an member (either a user or serviceAccount).
+    """Return permissions for a member (either a user or serviceAccount).
 
     The "member" can be a user or a service account and must be specified with
     the IAM member syntax, i.e. using the prefixes `user:` or `serviceAccount:`.
@@ -150,6 +150,15 @@ class ProjectPolicy:
       return sorted(self._policy['by_member'][member]['permissions'].keys())
     except KeyError:
       return []
+
+  def get_members(self):
+    """Returns the IAM members of the project.
+
+    The "member" can be a user or a service account and is specified with
+    the IAM member syntax, i.e. using the prefixes `user:` or `serviceAccount:`.
+    """
+
+    return self._policy['by_member'].keys()
 
   def has_permission(self, member: str, permission: str) -> bool:
     """Return true if user or service account member has this project-level permission.
