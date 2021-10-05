@@ -20,5 +20,5 @@ set -x
 PATH="${KOKORO_ARTIFACTS_DIR}/git/gcpdiag/bin:$HOME/.local/bin:$PATH"
 cd "${KOKORO_ARTIFACTS_DIR}/git/gcpdiag"
 
-pipenv-dockerized run pipenv install --dev
-pipenv-dockerized run pre-commit run --all-files
+pipenv-dockerized 3.9 run pipenv install --dev
+pipenv-dockerized 3.9 run pre-commit run --all-files

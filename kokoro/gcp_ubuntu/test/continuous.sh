@@ -20,9 +20,16 @@ set -x
 PATH="${KOKORO_ARTIFACTS_DIR}/git/gcpdiag/bin:$HOME/.local/bin:$PATH"
 cd "${KOKORO_ARTIFACTS_DIR}/git/gcpdiag"
 
-pipenv-dockerized run pipenv install --dev
-pipenv-dockerized run make test
-pipenv-dockerized run make -C kokoro kokoro-build
+# Test with Python 3.7
+pipenv-dockerized 3.7 run pipenv install --dev
+pipenv-dockerized 3.7 run make test
+
+# Test with Python 3.9
+pipenv-dockerized 3.9 run pipenv install --dev
+pipenv-dockerized 3.9 run make test
+
+# Build pyinstaller binary
+pipenv-dockerized 3.9 run make -C kokoro kokoro-build
 
 docker login -u _json_key --password-stdin https://us-docker.pkg.dev \
   <"$KOKORO_KEYSTORE_DIR/76327_gcpdiag-repo-kokoro"
