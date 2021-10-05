@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python:3.8-slim-buster
+FROM python:3.7-slim
 
 # Add pipenv.
 RUN pip install pipenv
@@ -28,7 +28,7 @@ RUN apt-get update && \
         make
 
 # terraform
-RUN curl https://releases.hashicorp.com/terraform/0.14.10/terraform_0.14.10_linux_amd64.zip | \
+RUN curl https://releases.hashicorp.com/terraform/1.0.8/terraform_1.0.8_linux_amd64.zip | \
     gunzip - >/usr/bin/terraform && \
     chmod +x /usr/bin/terraform
 

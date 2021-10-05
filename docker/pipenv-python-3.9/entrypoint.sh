@@ -1,3 +1,4 @@
+#!/bin/bash
 # Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,18 +13,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM python:3.9-slim
 
-# Add pipenv.
-RUN pip install pipenv
-
-# Add an entrypoint to create a user in /etc/passwd and /etc/group.
-COPY entrypoint.sh /usr/bin/entrypoint.sh
-RUN chmod 755 /usr/bin/entrypoint.sh; \
-    chmod 666 /etc/passwd /etc/group
-ENTRYPOINT ["/usr/bin/entrypoint.sh"]
-
-# Install gcpdiag + dependencies.
-COPY dist/Pipfile.lock /opt/gcpdiag/Pipfile.lock
-RUN cd /opt/gcpdiag && env PIPENV_VENV_IN_PROJECT=1 pipenv install --ignore-pipfile
-COPY dist /opt/gcpdiag
+# If the container is running as non-root (as it should), make sure that we have
+# an entry for this UID and GID in passwd and group.
+if [[ $UID -ne 0 ]]; then
+  GID=$(id -g)
+  USER=${USER:-local}
+  GROUP=${GROUP:-local}
+  echo "${USER}:x:${UID}:${GID}::${HOME}:/bin/bash" >>/etc/passwd
+  echo "${GROUP}:x:${GID}:" >>/etc/group
+fi
+exec "$@"

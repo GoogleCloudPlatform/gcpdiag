@@ -1,6 +1,13 @@
 #!/bin/bash
 
-IMAGE="us-docker.pkg.dev/gcpdiag-repo/devel/gcpdiag-pipenv:0.7"
+if [ "$#" == "0" ]; then
+  echo "usage: $0 PYTHON_VERSION COMMAND ARG1 ARG2" >&2
+  exit 1
+fi
+PYTHON_VERSION="$1"
+shift
+
+IMAGE="us-docker.pkg.dev/gcpdiag-repo/devel/gcpdiag-pipenv-python-${PYTHON_VERSION}:0.7"
 
 USE_TTY=""
 CWD=$(pwd)
@@ -10,7 +17,7 @@ CWD=$(pwd)
 #mkdir -p "$HOME/.cache/pipenv"
 #mkdir -p "$HOME/.local/share/virtualenv"
 mkdir -p "$HOME/.config/gcloud"
-mkdir -p .pipenv-dockerized/venv
+mkdir -p .pipenv-dockerized/venv-$PYTHON_VERSION
 mkdir -p .pipenv-dockerized/home
 mkdir -p .venv
 exec docker run $USE_TTY \
@@ -25,6 +32,6 @@ exec docker run $USE_TTY \
   -v "$CWD:$CWD" \
   -v "$HOME/.config/gcloud:$HOME/.config/gcloud" \
   -v "$CWD/.pipenv-dockerized/home:$HOME" \
-  -v "$CWD/.pipenv-dockerized/venv:$CWD/.venv" \
+  -v "$CWD/.pipenv-dockerized/venv-$PYTHON_VERSION:$CWD/.venv" \
   -w "$CWD" \
   $IMAGE pipenv "$@"
