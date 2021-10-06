@@ -23,10 +23,12 @@ cd "${KOKORO_ARTIFACTS_DIR}/git/gcpdiag"
 # Test with Python 3.7
 pipenv-dockerized 3.7 run pipenv install --dev
 pipenv-dockerized 3.7 run make test
+pipenv-dockerized 3.7 run make test-mocked
 
 # Test with Python 3.9
 pipenv-dockerized 3.9 run pipenv install --dev
 pipenv-dockerized 3.9 run make test
+pipenv-dockerized 3.9 run make test-mocked
 
 # Build pyinstaller binary
 pipenv-dockerized 3.9 run make -C kokoro kokoro-build

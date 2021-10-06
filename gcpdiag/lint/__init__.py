@@ -105,9 +105,11 @@ class LintReport:
     The return value is the recommended exit value for the main script.
     """
     del context
-    # did any rule fail? Then exit with 1, otherwise 0.
+    # did any rule fail? Then exit with 2, otherwise 0.
+    # note: we don't use 1 because that's already the exit code when the script
+    # exits with an exception.
     if any(r['overall_status'] == 'failed' for r in self.rules_report.values()):
-      return 1
+      return 2
     return 0
 
 

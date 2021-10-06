@@ -19,14 +19,14 @@ import concurrent.futures
 import re
 from unittest import mock
 
-from gcpdiag.queries import logs, logs_stub
+from gcpdiag.queries import apis_stub, logs, logs_stub
 
 DUMMY_PROJECT_ID = 'gcpd-gke-1-9b90'
 FIRST_INSERT_ID = '-hqnw82c9z6'
 TOTAL_LOG_ENTRIES = 6
 
 
-@mock.patch('gcpdiag.queries.apis.get_api', new=logs_stub.get_api_stub)
+@mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
 class TestLogs:
   """Test logs.py functions."""
 
