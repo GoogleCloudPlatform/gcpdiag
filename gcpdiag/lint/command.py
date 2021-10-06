@@ -108,7 +108,6 @@ def run(argv) -> int:
   repo.load_rules(gce)
   repo.load_rules(gke)
   repo.load_rules(iam)
-  # ^^^ If you add rules directory, update also pyinstaller/hook-gcpdiag.lint.py
   report = report_terminal.LintReportTerminal(
       log_info_for_progress_only=(args.verbose == 0),
       show_ok=not args.hide_ok,

@@ -181,7 +181,6 @@ class TestVersion:
     self.raises('.19.13-gke.701')
     self.raises('1.x.13-gke.701')
     self.raises('1..13-gke.701')
-    self.raises('x')
 
   def test_same_major(self):
     assert Version('1.19.13-gke.701').same_major(Version('1.23.45-six.7'))
@@ -195,17 +194,6 @@ class TestVersion:
     assert Version('1.19.13-gke.701') == '1.19.13-gke.701'
     assert Version('1.19.13-gke.701') != '1.19.13-gke.702'
 
-  def test_add_str(self):
-    assert 'the version is: ' + Version('1.19.13-gke.701') == \
-      'the version is: 1.19.13-gke.701'
-    assert Version('1.19.13-gke.701') + '!' == '1.19.13-gke.701!'
-    with pytest.raises(TypeError):
-      assert Version('1.19.13-gke.701') + 42
-    with pytest.raises(TypeError):
-      assert 42 + Version('1.19.13-gke.701')
-    with pytest.raises(TypeError):
-      assert Version('1.19.13-gke.701') + Version('1.19.13-gke.701')
-
   def test_eq_version(self):
     assert Version('1.19.13-gke.701') == Version('1.19.13-gke.701')
     assert Version('1.19.13-gke.701') != Version('1.19.13-gke.702')
@@ -214,17 +202,6 @@ class TestVersion:
     l1 = LegacyVersion(Version('1.19.13-gke.701'))
     l2 = LegacyVersion(Version('1.19.14-something.else'))
     assert l1 < l2
-
-  def test_compare_lt_gt(self):
-    assert Version('1.19.13-gke.701') < Version('2.19.13-gke.701')
-    assert Version('1.19.13-gke.701') < Version('1.20.13-gke.701')
-    assert Version('1.19.13-gke.701') < Version('1.19.14-gke.701')
-
-    assert Version('1.19') < Version('1.19.13-gke.701')
-    assert Version('1.19.13-gke.701') < Version('1.20')
-    assert Version('1') < Version('1.19.13-gke.701')
-    assert Version('1.19.13-gke.701') < Version('2')
-    assert Version('1') < Version('2')
 
   def raises(self, v):
     with pytest.raises(Exception):
