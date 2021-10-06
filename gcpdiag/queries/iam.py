@@ -99,6 +99,10 @@ def _fetch_policy(project_id: str):
   return policy
 
 
+class RoleNotFoundError(Exception):
+  pass
+
+
 class ProjectPolicy:
   """Represents the IAM policy of a single project.
 
@@ -120,7 +124,7 @@ class ProjectPolicy:
       permissions: List[str] = predefined_roles[role].get(
           'includedPermissions', [])
       return permissions
-    raise ValueError('unknown role: ' + role)
+    raise RoleNotFoundError('unknown role: ' + role)
 
   def _init_member_permissions(self, member):
     if not member.startswith('user:') and not member.startswith(
@@ -134,8 +138,13 @@ class ProjectPolicy:
       # lazy-initialize exploded roles in 'permissions'
       permissions_dict = {}
       for role in member_policy['roles']:
-        for p in self._get_role_permissions(role):
-          permissions_dict[p] = 1
+        # Ignore unknown roles for the expansion of permissions (some predefined roles
+        # are not returned when listing roles).
+        try:
+          for p in self._get_role_permissions(role):
+            permissions_dict[p] = 1
+        except RoleNotFoundError:
+          pass
       member_policy['permissions'] = permissions_dict
 
   def get_member_permissions(self, member: str) -> List[str]:

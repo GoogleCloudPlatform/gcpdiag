@@ -34,8 +34,11 @@ def prefetch_rule(context: models.Context):
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   project = crm.get_project(context.project_id)
   iam_policy = iam.get_project_policy(context.project_id)
-  roles = iam_policy.get_permissions()
-  for member in roles:
+
+  for member in sorted(iam_policy.get_members()):
     if member.startswith('serviceAccount:'):
       if iam_policy.has_role_permissions(member, ROLE):
         report.add_failed(project, member + f' has the role {ROLE}')
+        break
+  else:
+    report.add_ok(project)
