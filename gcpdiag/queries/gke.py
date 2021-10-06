@@ -27,27 +27,46 @@ from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis, crm, gce
 
 
+class VersionComponentsParser:
+  """ Simple helper class to parse version string to components """
+
+  version_str: str
+
+  def __init__(self, version_str: str):
+    self.version_str = str(version_str)
+
+  def get_components(self) -> List[int]:
+    cs = [int(s) for s in self.extract_base_version().split('.')]
+    # example: 1 -> 1.0.0, 1.2 -> 1.2.0
+    cs += [0] * (3 - len(cs))
+    return cs
+
+  def extract_base_version(self) -> str:
+    m = re.search(r'^[\d\.]+', self.version_str)
+    if m is None:
+      raise Exception(f'Can not parse version {self.version_str}')
+    return m.group(0)
+
+
 class Version:
   """ Represents GKE Version """
 
   version_str: str
   major: int
   minor: int
+  patch: int
 
   def __init__(self, version_str: str):
     # example: 1.19.13-gke.701
     self.version_str = version_str
-    self.major = int(self.extract(0))
-    self.minor = int(self.extract(1))
+    self.major, self.minor, self.patch = \
+      VersionComponentsParser(version_str).get_components()
 
   def same_major(self, other_version: 'Version') -> bool:
     return self.major == other_version.major
 
   def diff_minor(self, other_version: 'Version') -> int:
     return abs(self.minor - other_version.minor)
-
-  def extract(self, n: int) -> str:
-    return self.version_str.split('.')[n]
 
   def __str__(self) -> str:
     return self.version_str
@@ -69,6 +88,9 @@ class Version:
       return self.version_str == other.version_str
     raise AttributeError('Can not compare Version object with {}'.format(
         type(other)))
+
+  def __lt__(self, other):
+    return self.major < other.major or self.minor < other.minor or self.patch < other.patch
 
 
 class NodePool(models.Resource):
