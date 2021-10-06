@@ -191,11 +191,9 @@ def verify_access(project_id: str):
 
   try:
     if not is_enabled(project_id, 'cloudresourcemanager'):
-      print((
-          'ERROR: Cloud Resource Manager API must be enabled. To enable, execute:\n'
-          f'gcloud services enable cloudresourcemanager.googleapis.com --project={project_id}'
-      ),
-            file=sys.stdout)
+      print(
+          f'ERROR: Cloud Resource Manager API is required but not enabled in project {project_id}.',
+          file=sys.stdout)
       sys.exit(1)
   except utils.GcpApiError as err:
     print(f'ERROR: can\'t access project {project_id}: {err.message}.',

@@ -47,8 +47,3 @@ class LoggingApiStub:
   def execute(self, num_retries=0):
     with open(PREFIX_GKE1 / 'logging-entries-1.json') as json_file:
       return json.load(json_file)
-
-
-def get_api_stub(service_name: str, version: str, project_id: str = None):
-  del project_id
-  return LoggingApiStub()

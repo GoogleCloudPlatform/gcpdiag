@@ -21,7 +21,7 @@ import re
 import googleapiclient.errors
 
 from gcpdiag.queries import (crm_stub, gce_stub, gke_stub, iam_stub, kms_stub,
-                             monitoring_stub)
+                             logs_stub, monitoring_stub)
 
 # pylint: disable=unused-argument
 
@@ -97,6 +97,8 @@ def get_api_stub(service_name: str, version: str, project_id: str):
     return gce_stub.ComputeEngineApiStub()
   elif service_name == 'iam':
     return iam_stub.IamApiStub()
+  elif service_name == 'logging':
+    return logs_stub.LoggingApiStub()
   elif service_name == 'monitoring':
     return monitoring_stub.MonitoringApiStub()
   elif service_name == 'serviceusage':

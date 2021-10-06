@@ -105,9 +105,11 @@ class LintReport:
     The return value is the recommended exit value for the main script.
     """
     del context
-    # did any rule fail? Then exit with 1, otherwise 0.
+    # did any rule fail? Then exit with 2, otherwise 0.
+    # note: we don't use 1 because that's already the exit code when the script
+    # exits with an exception.
     if any(r['overall_status'] == 'failed' for r in self.rules_report.values()):
-      return 1
+      return 2
     return 0
 
 
@@ -150,9 +152,17 @@ class LintRuleRepository:
 
   @staticmethod
   def _iter_namespace(ns_pkg):
+    """Workaround for https://github.com/pyinstaller/pyinstaller/issues/1905."""
     prefix = ns_pkg.__name__ + '.'
     for p in pkgutil.iter_modules(ns_pkg.__path__, prefix):
       yield p[1]
+    toc = set()
+    for importer in pkgutil.iter_importers(ns_pkg.__name__.partition('.')[0]):
+      if hasattr(importer, 'toc'):
+        toc |= importer.toc
+    for name in toc:
+      if name.startswith(prefix):
+        yield name
 
   def load_rules(self, pkg):
     for name in LintRuleRepository._iter_namespace(pkg):
