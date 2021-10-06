@@ -207,7 +207,7 @@ class LintReportTerminal(lint.LintReport):
       return
     self.rule_has_results = True
     if short_info:
-      short_info = ' ' + short_info
+      short_info = ' ' + str(short_info)
     else:
       short_info = ''
     self.terminal_print_line('   - ' + resource.short_path.ljust(OUTPUT_WIDTH) +

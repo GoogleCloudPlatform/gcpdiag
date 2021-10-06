@@ -52,6 +52,16 @@ class Version:
   def __str__(self) -> str:
     return self.version_str
 
+  def __add__(self, other: object) -> object:
+    if isinstance(other, str):
+      return self.version_str + other
+    raise TypeError('Can not concatenate Version and {}'.format(type(other)))
+
+  def __radd__(self, other: object) -> object:
+    if isinstance(other, str):
+      return other + self.version_str
+    raise TypeError('Can not concatenate and {} Version'.format(type(other)))
+
   def __eq__(self, other: object) -> bool:
     if isinstance(other, str):
       return other == self.version_str
