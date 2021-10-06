@@ -194,6 +194,17 @@ class TestVersion:
     assert Version('1.19.13-gke.701') == '1.19.13-gke.701'
     assert Version('1.19.13-gke.701') != '1.19.13-gke.702'
 
+  def test_add_str(self):
+    assert 'the version is: ' + Version('1.19.13-gke.701') == \
+      'the version is: 1.19.13-gke.701'
+    assert Version('1.19.13-gke.701') + '!' == '1.19.13-gke.701!'
+    with pytest.raises(TypeError):
+      assert Version('1.19.13-gke.701') + 42
+    with pytest.raises(TypeError):
+      assert 42 + Version('1.19.13-gke.701')
+    with pytest.raises(TypeError):
+      assert Version('1.19.13-gke.701') + Version('1.19.13-gke.701')
+
   def test_eq_version(self):
     assert Version('1.19.13-gke.701') == Version('1.19.13-gke.701')
     assert Version('1.19.13-gke.701') != Version('1.19.13-gke.702')
