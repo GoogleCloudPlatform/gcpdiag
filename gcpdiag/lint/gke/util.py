@@ -100,6 +100,24 @@ def _gke_node_of_log_entry(context, log_entry):
     raise _CantMapLogEntry()
 
 
+def _gke_cluster_of_log_entry(context, log_entry):
+
+  try:
+    labels = log_entry['resource']['labels']
+    project_id = labels['project_id']
+    error_msg = log_entry['jsonPayload']['message']
+  except KeyError:
+    logging.warning('log entry without project_id label: %s', log_entry)
+    raise _CantMapLogEntry() from KeyError
+
+  try:
+    c = _clusters_by_name[context][(project_id, labels['location'],
+                                    labels['cluster_name'])]
+    return (c, error_msg)
+  except KeyError as err:
+    raise _CantMapLogEntry() from err
+
+
 def gke_logs_find_bad_nodes(context: models.Context,
                             logs_by_project: Dict[str, logs.LogsQuery],
                             filter_f: Callable):
@@ -125,3 +143,28 @@ def gke_logs_find_bad_nodes(context: models.Context,
       except _CantMapLogEntry:
         continue
   return bad_nodes_by_cluster
+
+
+def gke_logs_find_bad_cluster(context: models.Context,
+                              logs_by_project: Dict[str, logs.LogsQuery],
+                              filter_f: Callable):
+  """Go through logs and find GKE cluster-level issues.
+
+  Returns dict with clusters as key and error message as
+  value."""
+
+  # Process the log entries.
+  bad_cluster = collections.defaultdict(set)
+  for query in logs_by_project.values():
+    for log_entry in query.entries:
+      # Retrieved logs are not guaranteed to only contain what we defined as
+      # "filter_str", so we need to filter out what isn't ours.
+      if not filter_f(log_entry):
+        continue
+
+      try:
+        (c, error_msg) = _gke_cluster_of_log_entry(context, log_entry)
+        bad_cluster[c] = error_msg
+      except _CantMapLogEntry:
+        continue
+  return bad_cluster
