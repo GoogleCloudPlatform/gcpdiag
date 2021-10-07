@@ -11,7 +11,7 @@ WRAPPER_BUCKET_NAME=gcpdiag-web
 SHELL=/bin/bash
 
 OBJECT_NAME_RELEASE_VERSION=release-version
-WRAPPER_VERSION=0.6
+WRAPPER_VERSION=0.7
 VERSION_FILE_URL=https://storage.googleapis.com/gcpdiag/$(OBJECT_NAME_RELEASE_VERSION)
 
 build:
