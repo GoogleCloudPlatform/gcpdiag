@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
-THIS_WRAPPER_VERSION=0.6
-source <(curl -sf https://storage.googleapis.com/gcpdiag/release-version|grep -Ei '^\w*=[0-9a-z/\._-]*$')
-if [[ $THIS_WRAPPER_VERSION != $WRAPPER_VERSION ]]; then
+THIS_WRAPPER_VERSION=0.7
+eval $(curl -sf https://storage.googleapis.com/gcpdiag/release-version|grep -Ei '^\w*=[0-9a-z/\._-]*$')
+if [[ $THIS_WRAPPER_VERSION != "$WRAPPER_VERSION" ]]; then
   echo
   echo "## ERROR:"
   echo "## This gcpdiag wrapper script is obsolete ($THIS_WRAPPER_VERSION, newest: $WRAPPER_VERSION)."
