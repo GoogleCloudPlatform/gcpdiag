@@ -77,16 +77,20 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   per_cluster_results: Dict[tuple, Dict[str, str]] = dict()
   global _query_results_per_project_id
   for ts in _query_results_per_project_id[context.project_id].values():
-    cluster_key = (ts['labels']['resource.project_id'],
-                   ts['labels']['location'], ts['labels']['cluster_name'])
-    cluster_values = per_cluster_results.setdefault(cluster_key, dict())
-    cluster_values['container_image'] = ts['labels']['container_image']
+    try:
+      cluster_key = (ts['labels']['resource.project_id'],
+                     ts['labels']['location'], ts['labels']['cluster_name'])
+      cluster_values = per_cluster_results.setdefault(cluster_key, dict())
+      cluster_values['container_image'] = ts['labels']['container_image']
+    except KeyError:
+      # Ignore metrics that don't have those labels
+      pass
 
   # Go over the list of reported clusters
   for c in check_clusters:
     ts_cluster_key = (c.project_id, c.location, c.name)
     if ts_cluster_key not in per_cluster_results:
-      report.add_ok(c, 'no Istio/ASM')
+      report.add_skipped(c, 'no Istio/ASM reported')
     else:
       container_image = per_cluster_results[ts_cluster_key]['container_image']
       (_, istio_version) = container_image.split(':')
