@@ -39,3 +39,8 @@ resource "google_project_service" "container" {
 output "project_id" {
   value = google_project.project.project_id
 }
+
+resource "google_project_service" "cloudresourcemanager" {
+  project = google_project.project.project_id
+  service = "cloudresourcemanager.googleapis.com"
+}

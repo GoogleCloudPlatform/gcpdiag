@@ -41,61 +41,6 @@
                 "key": "cloud.googleapis.com/service"
               }
             ]
-          },
-          {
-            "type": "serviceruntime.googleapis.com/consumer_quota",
-            "labels": [
-              {
-                "key": "cloud.googleapis.com/location"
-              },
-              {
-                "key": "cloud.googleapis.com/uid"
-              },
-              {
-                "key": "cloud.googleapis.com/service"
-              },
-              {
-                "key": "cloud.googleapis.com/resource_id"
-              },
-              {
-                "key": "cloud.googleapis.com/resource_node"
-              },
-              {
-                "key": "cloud.googleapis.com/quota_metric"
-              },
-              {
-                "key": "cloud.googleapis.com/quota_location"
-              }
-            ]
-          },
-          {
-            "type": "serviceruntime.googleapis.com/producer_quota",
-            "labels": [
-              {
-                "key": "cloud.googleapis.com/location"
-              },
-              {
-                "key": "cloud.googleapis.com/uid"
-              },
-              {
-                "key": "cloud.googleapis.com/service"
-              },
-              {
-                "key": "cloud.googleapis.com/resource_id"
-              },
-              {
-                "key": "cloud.googleapis.com/resource_node"
-              },
-              {
-                "key": "cloud.googleapis.com/consumer_resource_node"
-              },
-              {
-                "key": "cloud.googleapis.com/quota_metric"
-              },
-              {
-                "key": "cloud.googleapis.com/quota_location"
-              }
-            ]
           }
         ],
         "monitoring": {
@@ -103,22 +48,7 @@
             {
               "monitoredResource": "serviceruntime.googleapis.com/api",
               "metrics": [
-                "serviceruntime.googleapis.com/api/consumer/quota_used_count",
-                "serviceruntime.googleapis.com/api/consumer/quota_refund_count",
-                "serviceruntime.googleapis.com/quota/used",
-                "serviceruntime.googleapis.com/quota/limit",
-                "serviceruntime.googleapis.com/quota/exceeded",
-                "serviceruntime.googleapis.com/allocation/consumer/quota_used_count"
-              ]
-            },
-            {
-              "monitoredResource": "serviceruntime.googleapis.com/consumer_quota",
-              "metrics": [
-                "serviceruntime.googleapis.com/quota/rate/consumer/used_count",
-                "serviceruntime.googleapis.com/quota/rate/consumer/refund_count",
-                "serviceruntime.googleapis.com/quota/allocation/consumer/usage",
-                "serviceruntime.googleapis.com/quota/consumer/limit",
-                "serviceruntime.googleapis.com/quota/consumer/exceeded"
+                "serviceruntime.googleapis.com/api/consumer/quota_used_count"
               ]
             }
           ]
@@ -234,6 +164,143 @@
                 "serviceruntime.googleapis.com/quota/limit",
                 "serviceruntime.googleapis.com/quota/exceeded",
                 "serviceruntime.googleapis.com/allocation/consumer/quota_used_count"
+              ]
+            },
+            {
+              "monitoredResource": "serviceruntime.googleapis.com/consumer_quota",
+              "metrics": [
+                "serviceruntime.googleapis.com/quota/rate/consumer/used_count",
+                "serviceruntime.googleapis.com/quota/rate/consumer/refund_count",
+                "serviceruntime.googleapis.com/quota/allocation/consumer/usage",
+                "serviceruntime.googleapis.com/quota/consumer/limit",
+                "serviceruntime.googleapis.com/quota/consumer/exceeded"
+              ]
+            }
+          ]
+        }
+      },
+      "state": "ENABLED",
+      "parent": "projects/18404348413"
+    },
+    {
+      "name": "projects/18404348413/services/cloudresourcemanager.googleapis.com",
+      "config": {
+        "name": "cloudresourcemanager.googleapis.com",
+        "title": "Cloud Resource Manager API",
+        "documentation": {
+          "summary": "Creates, reads, and updates metadata for Google Cloud Platform resource containers."
+        },
+        "quota": {},
+        "authentication": {},
+        "usage": {
+          "requirements": [
+            "serviceusage.googleapis.com/tos/cloud"
+          ]
+        },
+        "monitoredResources": [
+          {
+            "type": "serviceruntime.googleapis.com/api",
+            "labels": [
+              {
+                "key": "cloud.googleapis.com/location"
+              },
+              {
+                "key": "cloud.googleapis.com/uid"
+              },
+              {
+                "key": "serviceruntime.googleapis.com/api_version"
+              },
+              {
+                "key": "serviceruntime.googleapis.com/api_method"
+              },
+              {
+                "key": "serviceruntime.googleapis.com/consumer_project"
+              },
+              {
+                "key": "cloud.googleapis.com/project"
+              },
+              {
+                "key": "cloud.googleapis.com/service"
+              }
+            ]
+          },
+          {
+            "type": "serviceruntime.googleapis.com/consumer_quota",
+            "labels": [
+              {
+                "key": "cloud.googleapis.com/location"
+              },
+              {
+                "key": "cloud.googleapis.com/uid"
+              },
+              {
+                "key": "cloud.googleapis.com/service"
+              },
+              {
+                "key": "cloud.googleapis.com/resource_id"
+              },
+              {
+                "key": "cloud.googleapis.com/resource_node"
+              },
+              {
+                "key": "cloud.googleapis.com/quota_metric"
+              },
+              {
+                "key": "cloud.googleapis.com/quota_location"
+              }
+            ]
+          },
+          {
+            "type": "serviceruntime.googleapis.com/producer_quota",
+            "labels": [
+              {
+                "key": "cloud.googleapis.com/location"
+              },
+              {
+                "key": "cloud.googleapis.com/uid"
+              },
+              {
+                "key": "cloud.googleapis.com/service"
+              },
+              {
+                "key": "cloud.googleapis.com/resource_id"
+              },
+              {
+                "key": "cloud.googleapis.com/resource_node"
+              },
+              {
+                "key": "cloud.googleapis.com/consumer_resource_node"
+              },
+              {
+                "key": "cloud.googleapis.com/quota_metric"
+              },
+              {
+                "key": "cloud.googleapis.com/quota_location"
+              }
+            ]
+          }
+        ],
+        "monitoring": {
+          "consumerDestinations": [
+            {
+              "monitoredResource": "serviceruntime.googleapis.com/api",
+              "metrics": [
+                "serviceruntime.googleapis.com/api/consumer/quota_used_count",
+                "serviceruntime.googleapis.com/api/consumer/quota_refund_count",
+                "serviceruntime.googleapis.com/quota/used",
+                "serviceruntime.googleapis.com/quota/limit",
+                "serviceruntime.googleapis.com/quota/exceeded",
+                "serviceruntime.googleapis.com/allocation/consumer/quota_used_count",
+                "serviceruntime.googleapis.com/api/consumer/request_count",
+                "serviceruntime.googleapis.com/api/consumer/error_count",
+                "serviceruntime.googleapis.com/api/consumer/total_latencies",
+                "serviceruntime.googleapis.com/api/consumer/request_overhead_latencies",
+                "serviceruntime.googleapis.com/api/consumer/backend_latencies",
+                "serviceruntime.googleapis.com/api/consumer/request_sizes",
+                "serviceruntime.googleapis.com/api/consumer/response_sizes",
+                "serviceruntime.googleapis.com/api/consumer/top_request_count_by_end_user",
+                "serviceruntime.googleapis.com/api/consumer/top_request_count_by_end_user_country",
+                "serviceruntime.googleapis.com/api/consumer/top_request_count_by_referer"
               ]
             },
             {
@@ -524,87 +591,6 @@
         },
         "monitoredResources": [
           {
-            "type": "serviceruntime.googleapis.com/api",
-            "labels": [
-              {
-                "key": "cloud.googleapis.com/location"
-              },
-              {
-                "key": "cloud.googleapis.com/uid"
-              },
-              {
-                "key": "serviceruntime.googleapis.com/api_version"
-              },
-              {
-                "key": "serviceruntime.googleapis.com/api_method"
-              },
-              {
-                "key": "serviceruntime.googleapis.com/consumer_project"
-              },
-              {
-                "key": "cloud.googleapis.com/project"
-              },
-              {
-                "key": "cloud.googleapis.com/service"
-              }
-            ]
-          },
-          {
-            "type": "serviceruntime.googleapis.com/consumer_quota",
-            "labels": [
-              {
-                "key": "cloud.googleapis.com/location"
-              },
-              {
-                "key": "cloud.googleapis.com/uid"
-              },
-              {
-                "key": "cloud.googleapis.com/service"
-              },
-              {
-                "key": "cloud.googleapis.com/resource_id"
-              },
-              {
-                "key": "cloud.googleapis.com/resource_node"
-              },
-              {
-                "key": "cloud.googleapis.com/quota_metric"
-              },
-              {
-                "key": "cloud.googleapis.com/quota_location"
-              }
-            ]
-          },
-          {
-            "type": "serviceruntime.googleapis.com/producer_quota",
-            "labels": [
-              {
-                "key": "cloud.googleapis.com/location"
-              },
-              {
-                "key": "cloud.googleapis.com/uid"
-              },
-              {
-                "key": "cloud.googleapis.com/service"
-              },
-              {
-                "key": "cloud.googleapis.com/resource_id"
-              },
-              {
-                "key": "cloud.googleapis.com/resource_node"
-              },
-              {
-                "key": "cloud.googleapis.com/consumer_resource_node"
-              },
-              {
-                "key": "cloud.googleapis.com/quota_metric"
-              },
-              {
-                "key": "cloud.googleapis.com/quota_location"
-              }
-            ]
-          },
-          {
             "type": "iam.googleapis.com/WorkloadIdentityPoolProvider",
             "displayName": "Workload Identity Pool Provider",
             "description": "A workload identity pool provider.",
@@ -654,27 +640,6 @@
                 "iam.googleapis.com/service_account/key/authn_events_count",
                 "iam.googleapis.com/service_account/authn_events_count_preprod",
                 "iam.googleapis.com/service_account/key/authn_events_count_preprod"
-              ]
-            },
-            {
-              "monitoredResource": "serviceruntime.googleapis.com/api",
-              "metrics": [
-                "serviceruntime.googleapis.com/api/consumer/quota_used_count",
-                "serviceruntime.googleapis.com/api/consumer/quota_refund_count",
-                "serviceruntime.googleapis.com/quota/used",
-                "serviceruntime.googleapis.com/quota/limit",
-                "serviceruntime.googleapis.com/quota/exceeded",
-                "serviceruntime.googleapis.com/allocation/consumer/quota_used_count"
-              ]
-            },
-            {
-              "monitoredResource": "serviceruntime.googleapis.com/consumer_quota",
-              "metrics": [
-                "serviceruntime.googleapis.com/quota/rate/consumer/used_count",
-                "serviceruntime.googleapis.com/quota/rate/consumer/refund_count",
-                "serviceruntime.googleapis.com/quota/allocation/consumer/usage",
-                "serviceruntime.googleapis.com/quota/consumer/limit",
-                "serviceruntime.googleapis.com/quota/consumer/exceeded"
               ]
             },
             {
@@ -801,7 +766,7 @@
                 "description": "The metric type."
               }
             ],
-            "launchStage": "ALPHA"
+            "launchStage": "BETA"
           },
           {
             "type": "monitoring.googleapis.com/MetricIngestionAttribution",
@@ -825,7 +790,7 @@
                 "description": "The attribution id of the source of the metric write."
               }
             ],
-            "launchStage": "ALPHA"
+            "launchStage": "BETA"
           }
         ],
         "monitoring": {
@@ -833,7 +798,8 @@
             {
               "monitoredResource": "monitoring.googleapis.com/ChargedProject",
               "metrics": [
-                "monitoring.googleapis.com/billing/bytes_ingested"
+                "monitoring.googleapis.com/billing/bytes_ingested",
+                "monitoring.googleapis.com/billing/samples_ingested"
               ]
             },
             {
@@ -870,114 +836,7 @@
             "serviceusage.googleapis.com/tos/cloud"
           ]
         },
-        "monitoredResources": [
-          {
-            "type": "serviceruntime.googleapis.com/api",
-            "labels": [
-              {
-                "key": "cloud.googleapis.com/location"
-              },
-              {
-                "key": "cloud.googleapis.com/uid"
-              },
-              {
-                "key": "serviceruntime.googleapis.com/api_version"
-              },
-              {
-                "key": "serviceruntime.googleapis.com/api_method"
-              },
-              {
-                "key": "serviceruntime.googleapis.com/consumer_project"
-              },
-              {
-                "key": "cloud.googleapis.com/project"
-              },
-              {
-                "key": "cloud.googleapis.com/service"
-              }
-            ]
-          },
-          {
-            "type": "serviceruntime.googleapis.com/consumer_quota",
-            "labels": [
-              {
-                "key": "cloud.googleapis.com/location"
-              },
-              {
-                "key": "cloud.googleapis.com/uid"
-              },
-              {
-                "key": "cloud.googleapis.com/service"
-              },
-              {
-                "key": "cloud.googleapis.com/resource_id"
-              },
-              {
-                "key": "cloud.googleapis.com/resource_node"
-              },
-              {
-                "key": "cloud.googleapis.com/quota_metric"
-              },
-              {
-                "key": "cloud.googleapis.com/quota_location"
-              }
-            ]
-          },
-          {
-            "type": "serviceruntime.googleapis.com/producer_quota",
-            "labels": [
-              {
-                "key": "cloud.googleapis.com/location"
-              },
-              {
-                "key": "cloud.googleapis.com/uid"
-              },
-              {
-                "key": "cloud.googleapis.com/service"
-              },
-              {
-                "key": "cloud.googleapis.com/resource_id"
-              },
-              {
-                "key": "cloud.googleapis.com/resource_node"
-              },
-              {
-                "key": "cloud.googleapis.com/consumer_resource_node"
-              },
-              {
-                "key": "cloud.googleapis.com/quota_metric"
-              },
-              {
-                "key": "cloud.googleapis.com/quota_location"
-              }
-            ]
-          }
-        ],
-        "monitoring": {
-          "consumerDestinations": [
-            {
-              "monitoredResource": "serviceruntime.googleapis.com/api",
-              "metrics": [
-                "serviceruntime.googleapis.com/api/consumer/quota_used_count",
-                "serviceruntime.googleapis.com/api/consumer/quota_refund_count",
-                "serviceruntime.googleapis.com/quota/used",
-                "serviceruntime.googleapis.com/quota/limit",
-                "serviceruntime.googleapis.com/quota/exceeded",
-                "serviceruntime.googleapis.com/allocation/consumer/quota_used_count"
-              ]
-            },
-            {
-              "monitoredResource": "serviceruntime.googleapis.com/consumer_quota",
-              "metrics": [
-                "serviceruntime.googleapis.com/quota/rate/consumer/used_count",
-                "serviceruntime.googleapis.com/quota/rate/consumer/refund_count",
-                "serviceruntime.googleapis.com/quota/allocation/consumer/usage",
-                "serviceruntime.googleapis.com/quota/consumer/limit",
-                "serviceruntime.googleapis.com/quota/consumer/exceeded"
-              ]
-            }
-          ]
-        }
+        "monitoring": {}
       },
       "state": "ENABLED",
       "parent": "projects/18404348413"
@@ -997,114 +856,7 @@
             "serviceusage.googleapis.com/tos/cloud"
           ]
         },
-        "monitoredResources": [
-          {
-            "type": "serviceruntime.googleapis.com/api",
-            "labels": [
-              {
-                "key": "cloud.googleapis.com/location"
-              },
-              {
-                "key": "cloud.googleapis.com/uid"
-              },
-              {
-                "key": "serviceruntime.googleapis.com/api_version"
-              },
-              {
-                "key": "serviceruntime.googleapis.com/api_method"
-              },
-              {
-                "key": "serviceruntime.googleapis.com/consumer_project"
-              },
-              {
-                "key": "cloud.googleapis.com/project"
-              },
-              {
-                "key": "cloud.googleapis.com/service"
-              }
-            ]
-          },
-          {
-            "type": "serviceruntime.googleapis.com/consumer_quota",
-            "labels": [
-              {
-                "key": "cloud.googleapis.com/location"
-              },
-              {
-                "key": "cloud.googleapis.com/uid"
-              },
-              {
-                "key": "cloud.googleapis.com/service"
-              },
-              {
-                "key": "cloud.googleapis.com/resource_id"
-              },
-              {
-                "key": "cloud.googleapis.com/resource_node"
-              },
-              {
-                "key": "cloud.googleapis.com/quota_metric"
-              },
-              {
-                "key": "cloud.googleapis.com/quota_location"
-              }
-            ]
-          },
-          {
-            "type": "serviceruntime.googleapis.com/producer_quota",
-            "labels": [
-              {
-                "key": "cloud.googleapis.com/location"
-              },
-              {
-                "key": "cloud.googleapis.com/uid"
-              },
-              {
-                "key": "cloud.googleapis.com/service"
-              },
-              {
-                "key": "cloud.googleapis.com/resource_id"
-              },
-              {
-                "key": "cloud.googleapis.com/resource_node"
-              },
-              {
-                "key": "cloud.googleapis.com/consumer_resource_node"
-              },
-              {
-                "key": "cloud.googleapis.com/quota_metric"
-              },
-              {
-                "key": "cloud.googleapis.com/quota_location"
-              }
-            ]
-          }
-        ],
-        "monitoring": {
-          "consumerDestinations": [
-            {
-              "monitoredResource": "serviceruntime.googleapis.com/api",
-              "metrics": [
-                "serviceruntime.googleapis.com/api/consumer/quota_used_count",
-                "serviceruntime.googleapis.com/api/consumer/quota_refund_count",
-                "serviceruntime.googleapis.com/quota/used",
-                "serviceruntime.googleapis.com/quota/limit",
-                "serviceruntime.googleapis.com/quota/exceeded",
-                "serviceruntime.googleapis.com/allocation/consumer/quota_used_count"
-              ]
-            },
-            {
-              "monitoredResource": "serviceruntime.googleapis.com/consumer_quota",
-              "metrics": [
-                "serviceruntime.googleapis.com/quota/rate/consumer/used_count",
-                "serviceruntime.googleapis.com/quota/rate/consumer/refund_count",
-                "serviceruntime.googleapis.com/quota/allocation/consumer/usage",
-                "serviceruntime.googleapis.com/quota/consumer/limit",
-                "serviceruntime.googleapis.com/quota/consumer/exceeded"
-              ]
-            }
-          ]
-        }
+        "monitoring": {}
       },
       "state": "ENABLED",
       "parent": "projects/18404348413"

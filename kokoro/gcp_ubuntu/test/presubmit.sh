@@ -22,3 +22,4 @@ cd "${KOKORO_ARTIFACTS_DIR}/git/gcpdiag"
 
 pipenv-dockerized 3.7 run pipenv install --dev
 pipenv-dockerized 3.7 run make test
+pipenv-dockerized 3.7 run make test-mocked

@@ -26,7 +26,8 @@ all:	\
 	json-dumps/iam-roles-predefined-1.json.gz \
 	json-dumps/iam-roles-predefined-2.json.gz \
 	json-dumps/iam-service-accounts.json \
- 	json-dumps/project.json
+	json-dumps/project.json \
+	json-dumps/services.json
 
 # compute.googleapis.com
 
@@ -111,7 +112,7 @@ json-dumps/container-server-config-$(ZONE_1).json:
 # serviceusage.googleapis.com
 
 json-dumps/services.json:
-	$(CURL) -fv \
+	$(CURL) -fsS \
 	  'https://serviceusage.googleapis.com/v1/projects/$(PROJECT_ID)/services?filter=state:ENABLED' >$@
 
 
