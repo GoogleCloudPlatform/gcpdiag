@@ -17,4 +17,5 @@ from PyInstaller.utils.hooks import collect_submodules
 
 hiddenimports = \
   collect_submodules('gcpdiag.lint.gce') + \
-  collect_submodules('gcpdiag.lint.gke')
+  collect_submodules('gcpdiag.lint.gke') + \
+  collect_submodules('gcpdiag.lint.iam')

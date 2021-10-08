@@ -25,10 +25,9 @@ https://istio.io/latest/docs/releases/supported-releases/#support-status-of-isti
 
 from typing import Dict
 
-from packaging.version import LegacyVersion
-
 from gcpdiag import lint, models
 from gcpdiag.queries import gke, monitoring
+from gcpdiag.queries.gke import Version
 
 _query_results_per_project_id: Dict[str,
                                     monitoring.TimeSeriesCollection] = dict()
@@ -65,8 +64,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   # Skip querying metrics if no cluster is in 1.21+
   check_clusters = []
   for _, c in sorted(clusters.items()):
-    current_version = LegacyVersion(c.master_version)
-    if LegacyVersion('1.21') < current_version < LegacyVersion('1.23'):
+    current_version = c.master_version
+    if Version('1.21') < current_version < Version('1.23'):
       check_clusters.append(c)
     else:
       report.add_ok(c, f'GKE {c.master_version}')
@@ -91,7 +90,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     else:
       container_image = per_cluster_results[ts_cluster_key]['container_image']
       (_, istio_version) = container_image.split(':')
-      if LegacyVersion(istio_version) > LegacyVersion('1.10.2'):
+      if Version(istio_version) > Version('1.10.2'):
         report.add_ok(c, f'Istio/ASM {istio_version}')
         return
       else:
