@@ -152,17 +152,9 @@ class LintRuleRepository:
 
   @staticmethod
   def _iter_namespace(ns_pkg):
-    """Workaround for https://github.com/pyinstaller/pyinstaller/issues/1905."""
     prefix = ns_pkg.__name__ + '.'
     for p in pkgutil.iter_modules(ns_pkg.__path__, prefix):
       yield p[1]
-    toc = set()
-    for importer in pkgutil.iter_importers(ns_pkg.__name__.partition('.')[0]):
-      if hasattr(importer, 'toc'):
-        toc |= importer.toc
-    for name in toc:
-      if name.startswith(prefix):
-        yield name
 
   def load_rules(self, pkg):
     for name in LintRuleRepository._iter_namespace(pkg):
