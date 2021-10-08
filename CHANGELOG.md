@@ -1,3 +1,9 @@
+## 0.45 (2021-10-08)
+
+#### Enhancements
+
+- Use --auth-adc by default for all non-google.com users (b/202488675)
+
 ## 0.44 (2021-10-07)
 
 #### New rules
