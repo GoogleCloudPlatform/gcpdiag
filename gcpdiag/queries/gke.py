@@ -92,6 +92,20 @@ class Version:
   def __lt__(self, other):
     return self.major < other.major or self.minor < other.minor or self.patch < other.patch
 
+  def __ge__(self, other):
+    return self.major >= other.major and self.minor >= other.minor and self.patch >= other.patch
+
+
+class NodeConfig:
+  """Represents a GKE node pool configuration."""
+
+  def __init__(self, resource_data):
+    self._resource_data = resource_data
+
+  @property
+  def image_type(self) -> str:
+    return self._resource_data['imageType']
+
 
 class NodePool(models.Resource):
   """Represents a GKE node pool."""
@@ -131,6 +145,10 @@ class NodePool(models.Resource):
   @property
   def name(self) -> str:
     return self._resource_data['name']
+
+  @property
+  def config(self) -> NodeConfig:
+    return NodeConfig(self._resource_data['config'])
 
   def has_default_service_account(self) -> bool:
     sa = self._get_service_account()
