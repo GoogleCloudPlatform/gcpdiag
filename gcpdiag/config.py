@@ -18,7 +18,7 @@
 import appdirs
 
 # gcpdiag version (not configurable, but useful to have here)
-VERSION = '0.45-test'
+VERSION = '0.46-test'
 
 # Default number of retries for API Calls.
 API_RETRIES = 10
@@ -47,5 +47,5 @@ LOGGING_RATELIMIT_PERIOD_SECONDS = 60
 MAX_WORKERS = 10
 
 # Options that can be set via command-line arguments
-AUTH_ADC = False
+AUTH_ADC = True
 AUTH_KEY = None

@@ -74,8 +74,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   per_cluster_results: Dict[gke.Cluster, Dict[str, Any]] = dict()
   global _query_results_per_project_id
   for ts in _query_results_per_project_id[context.project_id].values():
-    instance_id = ts['labels']['resource.instance_id']
     try:
+      instance_id = ts['labels']['resource.instance_id']
       node = gke.get_node_by_instance_id(context, instance_id)
     except KeyError:
       continue

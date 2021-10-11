@@ -66,8 +66,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   bad_nodes_per_cluster: Dict[gke.Cluster, List[gke.Node]] = defaultdict(list)
   global _query_results_per_project_id
   for ts in _query_results_per_project_id[context.project_id].values():
-    instance_id = ts['labels']['resource.instance_id']
     try:
+      instance_id = ts['labels']['resource.instance_id']
       node = gke.get_node_by_instance_id(context, instance_id)
       cluster = node.nodepool.cluster
       clusters_with_data.add(cluster)

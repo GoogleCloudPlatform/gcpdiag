@@ -38,11 +38,9 @@ def run(argv) -> int:
       help='Authenticate using a service account private key file',
       metavar='FILE')
 
-  parser.add_argument(
-      '--auth-oauth',
-      help=
-      'Authenticate using Oauth user authentication (default, except in Cloud Shell)',
-      action='store_true')
+  parser.add_argument('--auth-oauth',
+                      help='Authenticate using OAuth user authentication',
+                      action='store_true')
 
   parser.add_argument('--project',
                       metavar='P',
@@ -97,10 +95,24 @@ def run(argv) -> int:
 
   # Determine what authentication should be used
   if args.auth_key:
+    config.AUTH_ADC = False
     config.AUTH_KEY = args.auth_key
-  elif args.auth_adc or (not args.auth_oauth and
-                         report_terminal.is_cloud_shell()):
+  elif args.auth_oauth:
+    config.AUTH_ADC = False
+    config.AUTH_KEY = None
+  else:
+    # TODO: use oauth as default once consent screen approved
     config.AUTH_ADC = True
+    config.AUTH_KEY = None
+
+  try:
+    # This is for Google-internal use only and allows us to modify
+    # default options for internal use.
+    # pylint: disable=import-outside-toplevel
+    from gcpdiag_google_internal import hooks
+    hooks.set_google_default_options(args)
+  except ImportError:
+    pass
 
   # Initialize Context, Repository, and Tests.
   context = models.Context(project_id=args.project)
