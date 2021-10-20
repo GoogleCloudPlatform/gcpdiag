@@ -20,8 +20,8 @@ import re
 
 import googleapiclient.errors
 
-from gcpdiag.queries import (crm_stub, gce_stub, gke_stub, iam_stub, kms_stub,
-                             logs_stub, monitoring_stub)
+from gcpdiag.queries import (crm_stub, gce_stub, gcf_stub, gke_stub, iam_stub,
+                             kms_stub, logs_stub, monitoring_stub)
 
 # pylint: disable=unused-argument
 
@@ -34,6 +34,8 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/gke1/json-dumps',
     '18404348413':
         pathlib.Path(__file__).parents[2] / 'test-data/gke1/json-dumps',
+    'gcpd-gcf1-s6ew':
+        pathlib.Path(__file__).parents[2] / 'test-data/gcf1/json-dumps',
 }
 
 
@@ -103,5 +105,7 @@ def get_api_stub(service_name: str, version: str, project_id: str):
     return monitoring_stub.MonitoringApiStub()
   elif service_name == 'serviceusage':
     return ServiceUsageApiStub()
+  elif service_name == 'cloudfunctions':
+    return gcf_stub.CloudFunctionsApiStub()
   else:
     raise ValueError('unsupported service: %s' % service_name)

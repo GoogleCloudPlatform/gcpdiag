@@ -8,6 +8,9 @@ import re
 import sys
 
 clean_maps = {
+    'cloudfunctions': {
+        '.cloudfunctions.[].sourceToken': 'REDACTED'
+    },
     'clusters': {
         '.clusters.[].endpoint': '192.168.1.1',
         '.clusters.[].masterAuth.clusterCaCertificate': 'REDACTED',
