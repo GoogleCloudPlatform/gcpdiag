@@ -44,3 +44,7 @@ gcloud auth activate-service-account kokoro@gcpdiag-repo.iam.gserviceaccount.com
   --key-file="$KOKORO_KEYSTORE_DIR/76327_gcpdiag-repo-kokoro"
 make -C docker/gcpdiag update-default
 make -C gcpdiag_google_internal/docker update-default
+
+# Publish prod website (http://gcpdiag.dev)
+cd website
+./hugo.sh deploy --target gcs-prod
