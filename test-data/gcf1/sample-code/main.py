@@ -11,12 +11,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""pyinstaller configuration for gcpdiag.lint."""
 
-from PyInstaller.utils.hooks import collect_submodules
+# Lint as: python3
+"""Sample python code"""
 
-hiddenimports = \
-  collect_submodules('gcpdiag.lint.gce') + \
-  collect_submodules('gcpdiag.lint.gke') + \
-  collect_submodules('gcpdiag.lint.iam') + \
-  collect_submodules('gcpdiag.lint.gcf')
+
+def hello_world(request):
+  request_json = request.get_json()
+  if request.args and 'message' in request.args:
+    return request.args.get('message')
+  elif request_json and 'message' in request_json:
+    return request_json['message']
+  else:
+    return 'Hello World!'
