@@ -1,0 +1,113 @@
+baseURL = "/"
+title = "gcpdiag"
+enableRobotsTXT = true
+theme = ["docsy"]
+contentDir = "content/en"
+defaultContentLanguage = "en"
+defaultContentLanguageInSubdir = false
+enableMissingTranslationPlaceholders = true
+
+# disable taxonomies
+disableKinds = ["taxonomy", "taxonomyTerm"]
+
+# # Highlighting config
+pygmentsCodeFences = true
+pygmentsUseClasses = false
+#pygmentsOptions = "linenos=table"
+pygmentsStyle = "tango"
+
+[[menu.main]]
+    name = "GitHub"
+    weight = 50
+    pre = "<i class='fab fa-github'></i>"
+    url = "https://github.com/GoogleCloudPlatform/gcpdiag"
+
+
+[permalinks]
+blog = "/:section/:year/:month/:day/:slug/"
+
+# ## Configuration for BlackFriday markdown parser: https://github.com/russross/blackfriday
+[blackfriday]
+plainIDAnchors = true
+hrefTargetBlank = true
+angledQuotes = false
+latexDashes = true
+
+# Image processing configuration.
+[imaging]
+resampleFilter = "CatmullRom"
+quality = 75
+anchor = "smart"
+
+[services]
+[services.googleAnalytics]
+# Comment out the next line to disable GA tracking. Also disables the feature described in [params.ui.feedback].
+id = "UA-00000000-0"
+
+# Language configuration
+[languages]
+[languages.en]
+title = "gcpdiag"
+description = "Diagnostics for GCP"
+languageName ="English"
+weight = 1
+
+[outputs]
+section = ["HTML"]
+
+[params]
+github_repo = "https://github.com/GoogleCloudPlatform/gcpdiag"
+github_subdir = "website/content"
+github_branch= "main"
+gcs_engine_id = "b920527de2312a391"
+copyright = "Google LLC"
+privacy_policy = "/privacy/"
+
+[params.ui]
+navbar_logo = false
+breadcrumb_disable = true
+sidebar_search_disable = true
+
+[params.ui.feedback]
+enable = false
+
+[params.links]
+[[params.links.developer]]
+	name = "GitHub"
+	url = "https://github.com/GoogleCloudPlatform/gcpdiag"
+	icon = "fab fa-github"
+        desc = "Development takes place here!"
+
+[deployment]
+order = [".jpg$", ".gif$"]
+
+[[deployment.targets]]
+name = "gcs-staging"
+URL = "gs://gcpdiag-web-staging"
+exclude = "gcpdiag.sh"
+
+[[deployment.targets]]
+name = "gcs-prod"
+URL = "gs://gcpdiag-web"
+exclude = "gcpdiag.sh"
+
+[[deployment.matchers]]
+# Cache static assets for 1 year.
+pattern = "^.+\\.(js|css|svg|ttf)$"
+cacheControl = "max-age=31536000, no-transform, public"
+gzip = true
+
+[[deployment.matchers]]
+pattern = "^.+\\.(png|jpg)$"
+cacheControl = "max-age=31536000, no-transform, public"
+gzip = false
+
+[[deployment.matchers]]
+# Set custom content type for /sitemap.xml
+pattern = "^sitemap\\.xml$"
+contentType = "application/xml"
+gzip = true
+
+[[deployment.matchers]]
+pattern = "^.+\\.(html|xml|json)$"
+gzip = true

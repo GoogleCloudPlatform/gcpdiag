@@ -1,0 +1,54 @@
+---
+title: gcpdiag
+linkTitle: gcpdiag
+---
+<!-- based on the great work done by the Agones team: https://agones.dev/site/ -->
+
+{{< blocks/cover title="" image_anchor="top" height="min" color="white" >}}
+<div class="mx-auto mt-3">
+	<a class="btn btn-lg btn-secondary mr-3 mb-4" href="{{< relref "/docs" >}}">
+		Learn More <i class="fas fa-arrow-alt-circle-right ml-2"></i>
+	</a>
+	<a class="btn btn-lg btn-secondary mr-3 mb-4" href="https://github.com/GoogleCloudPlatform/gcpdiag/releases">
+		Releases <i class="fab fa-github ml-2 "></i>
+	</a>
+	<p class="lead mt-2">Helps you smoothly run infrastructure on GCP.</p>
+	<div class="mx-auto mt-5">
+		{{< blocks/link-down color="secondary" >}}
+	</div>
+</div>
+{{< /blocks/cover >}}
+
+{{< blocks/lead color="secondary" >}}
+<p class="mb-3"><b>What is gcpdiag?</b></p>
+
+gcpdiag is a command-line diagnostics tool for GCP customers. It
+finds and helps to fix common issues in Google Cloud Platform projects. It is
+used to test projects against a wide range of best-practices and common
+mistakes, based on the troubleshooting experience of the
+<a href="https://cloud.google.com/support" style="color: #c9e7f8">Google Cloud Support</a> team.
+{{< /blocks/lead >}}
+
+{{< blocks/section color="dark" >}}
+
+{{% blocks/feature icon="fas fa-scroll" title="A Test Suite for GCP" url="./docs/" %}}
+gcpdiag works similarly like code testing. The lint command runs a test
+suite to detect whether the project is deviating from a list of expected
+conditions and creates a report.
+{{% /blocks/feature %}}
+<!-- The tests encompass clear mistakes, but also
+    best practices and optimization hints. -->
+
+{{% blocks/feature icon="fas fa-hat-wizard" title="Troubleshooting by Google Cloud Support TSEs" url="./docs/" %}}
+gcpdiag includes automated diagnostics based on the troubleshooting experience
+of Google Cloud Support's Technical Solution Engineers, solving real customer
+issues.
+{{% /blocks/feature %}}
+
+{{% blocks/feature icon="fab fa-github" title="Open Source" url="https://github.com/GoogleCloudPlatform/gcpdiag" %}}
+gcpdiag is an open-source project hosted on GitHub, and contributors are
+welcome! We encourage you to file GitHub issues for any idea or problem that
+you have, and also welcome code contributions.
+{{% /blocks/feature %}}
+
+{{< /blocks/section >}}
