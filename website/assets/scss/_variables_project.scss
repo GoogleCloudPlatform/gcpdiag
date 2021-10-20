@@ -1,0 +1,64 @@
+// based on the great work done by the Agones team: https://agones.dev/site/
+
+// https://coolors.co/ffffff-0e8ec4-0b3954-ff5a5f-c81d25
+$white: #ffffffff;
+$blue-ncs: #0e8ec4ff;
+$prussian-blue: #0b3954ff;
+$sizzling-red: #ff5a5fff;
+$lava: #c81d25ff;
+
+$sapphire-blue: #006b99ff;
+
+$display1-weight: 500 !default;
+$display2-weight: 100 !default;
+
+
+$primary: rgb(255, 255,255)  !default;
+$primary-light: lighten($primary, 75%) !default;
+$secondary: $prussian-blue !default;
+$light: $white !default;
+$grey:  #888 !default;
+$orange: $secondary;
+$td-sidebar-tree-root-color: #222 !default;
+
+.nav-shadow {
+    box-shadow: 0 2px 2px -2px rgba(0,0,0,.2);
+}
+
+.navbar-brand {
+    color: black !important
+}
+
+.control-bar {
+    display: none;
+}
+
+.td-navbar .td-search-input {
+    background: rgba(190, 185, 185, 0.3) !important;
+}
+
+input[type="search"]::placeholder {
+    color:  #9B9595 !important;
+}
+
+.td-box--secondary p > a:hover {
+    color: #121314 !important;
+}
+
+#community a {
+    color: #121314 !important;
+}
+
+.showcase img {
+    margin: 0 30px;
+}
+
+img#gcpdiag-demo-cover {
+  object-fit: none;
+  /* will not be resized */
+  object-position: 0 0;
+  /* clip to your coordonates*/
+  width: 550px;
+  height: 260px;
+  border-radius: 5px;
+}
