@@ -43,4 +43,5 @@ make -C gcpdiag_google_internal/docker push
 
 # Publish staging website (http://staging.gcpdiag.dev)
 cd website
+./hugo.sh
 ./hugo.sh deploy --target gcs-staging
