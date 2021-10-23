@@ -13,9 +13,10 @@ fi
 
 mkdir -p "$HOME/.config/gcloud"
 
-docker run \
+[ -t 0 ] && USE_TTY="-it"
+
+docker run $USE_TTY \
   --rm \
-  -it \
   -u "$(id -u):$(id -g)" \
   -e "USER=$(id -n -u)" \
   -e "GROUP=$(id -n -g)" \
