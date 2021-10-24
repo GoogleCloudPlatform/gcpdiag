@@ -17,11 +17,20 @@
 
 import argparse
 import logging
+import re
 import sys
 
 from gcpdiag import config, lint, models, utils
 from gcpdiag.lint import gce, gcf, gke, iam, report_terminal
 from gcpdiag.queries import apis
+
+
+def _flatten_multi_arg(arg_list):
+  """Flatten a list of comma-separated values, like:
+  ['a', 'b, c'] -> ['a','b','c']
+  """
+  for arg in arg_list:
+    yield from re.split(r'\s*,\s*', arg)
 
 
 def run(argv) -> int:
@@ -72,7 +81,18 @@ def run(argv) -> int:
   parser.add_argument('--show-ok',
                       help=argparse.SUPPRESS,
                       action='store_false',
-                      dest='hide_skipped')
+                      dest='hide_ok')
+
+  parser.add_argument(
+      '--include',
+      help=('Include rule pattern (e.g.: `gke`, `gke/*/2021*`). '
+            'Multiple pattern can be specified (comma separated, '
+            'or with multiple arguments)'),
+      action='append')
+
+  parser.add_argument('--exclude',
+                      help=('Exclude rule pattern (e.g.: `BP`, `*/*/2022*`)'),
+                      action='append')
 
   parser.add_argument('-v',
                       '--verbose',
@@ -114,6 +134,28 @@ def run(argv) -> int:
   except ImportError:
     pass
 
+  # --include
+  include_patterns = None
+  if args.include:
+    include_patterns = []
+    for arg in _flatten_multi_arg(args.include):
+      try:
+        include_patterns.append(lint.LintRulesPattern(arg))
+      except ValueError:
+        print(f"ERROR: can't parse rule pattern: {arg}", file=sys.stderr)
+        sys.exit(1)
+
+  # --exclude
+  exclude_patterns = None
+  if args.exclude:
+    exclude_patterns = []
+    for arg in _flatten_multi_arg(args.exclude):
+      try:
+        exclude_patterns.append(lint.LintRulesPattern(arg))
+      except ValueError:
+        print(f"ERROR: can't parse rule pattern: {arg}", file=sys.stderr)
+        sys.exit(1)
+
   # Initialize Context, Repository, and Tests.
   context = models.Context(project_id=args.project)
   repo = lint.LintRuleRepository()
@@ -145,7 +187,8 @@ def run(argv) -> int:
   report.banner()
   apis.login()
   report.lint_start(context)
-  exit_code = repo.run_rules(context, report)
+  exit_code = repo.run_rules(context, report, include_patterns,
+                             exclude_patterns)
 
   # (google internal) Report usage information.
   details = {
