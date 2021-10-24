@@ -22,6 +22,7 @@ docker run $USE_TTY \
   -e "GROUP=$(id -n -g)" \
   -e "SHELL=/bin/bash" \
   -e HOME -e LANG \
+  -e GOOGLE_APPLICATION_CREDENTIALS \
   -v "$(pwd):/src" \
   -v "$HOME/.config/gcloud:$HOME/.config/gcloud" \
   -p 1313:1313 \
