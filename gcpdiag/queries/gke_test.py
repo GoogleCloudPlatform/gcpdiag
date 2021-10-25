@@ -33,6 +33,8 @@ DUMMY_CLUSTER2_SHORT_NAME = f'{DUMMY_PROJECT_NAME}/europe-west1/gke2'
 DUMMY_CLUSTER1_SERVICE_ACCOUNT = '18404348413-compute@developer.gserviceaccount.com'
 DUMMY_CLUSTER2_SERVICE_ACCOUNT = 'gke2sa@gcpd-gke-1-9b90.iam.gserviceaccount.com'
 
+# pylint: disable=consider-iterating-dictionary
+
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
 class TestCluster:

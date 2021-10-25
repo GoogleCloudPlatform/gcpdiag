@@ -91,8 +91,7 @@ class LintReportTerminal(lint.LintReport):
 
   def _wrap_indent(self, text, prefix):
     width = self.term.width or 80
-    if width > 80:
-      width = 80
+    width = min(width, 80)
     return textwrap.indent(textwrap.fill(text, width - len(prefix)), prefix)
 
   def banner(self):
@@ -173,8 +172,7 @@ class LintReportTerminal(lint.LintReport):
     # If the rule failed, add more information about the rule.
     if rule in self.per_rule_data and self.per_rule_data[rule]['failed_count']:
       width = self.term.width or 80
-      if width > 80:
-        width = 80
+      width = min(width, 80)
       self.terminal_print_line(
           self.term.italic(self._wrap_indent(rule.long_desc, '   ')))
       self.terminal_print_line()

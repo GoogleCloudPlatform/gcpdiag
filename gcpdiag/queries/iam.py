@@ -407,7 +407,6 @@ def _batch_fetch_service_accounts(emails: List[str], billing_project_id: str):
   another API call.
   """
 
-  global _service_account_cache
   iam_api = apis.get_api('iam', 'v1', billing_project_id)
   service_accounts_api = iam_api.projects().serviceAccounts()
 

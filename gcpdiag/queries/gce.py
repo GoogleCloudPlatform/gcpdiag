@@ -146,7 +146,7 @@ class Instance(models.Resource):
 
   def get_metadata(self, key: str) -> str:
     if not self._metadata_dict:
-      self._metadata_dict = dict()
+      self._metadata_dict = {}
       if 'metadata' in self._resource_data and 'items' in self._resource_data[
           'metadata']:
         for item in self._resource_data['metadata']['items']:

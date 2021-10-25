@@ -83,7 +83,7 @@ class TimeSeriesCollection(collections.abc.Mapping):
   def __init__(self):
     # In order to ease the retrieval and matching, we store
     # label:value pairs as strings in a frozenset object.
-    self._data = dict()
+    self._data = {}
 
   def __str__(self):
     return str(self._data)
@@ -108,15 +108,14 @@ class TimeSeriesCollection(collections.abc.Mapping):
         continue
 
       # Use frozenset of label:value pairs as key to store the data
-      labels_dict = dict()
+      labels_dict = {}
       if 'labelValues' in ts:
         for i, value in enumerate(ts['labelValues']):
           label_name = resource_data['timeSeriesDescriptor'][
               'labelDescriptors'][i]['key']
           if 'stringValue' in value:
             labels_dict[label_name] = value['stringValue']
-        labels_frozenset = frozenset(
-            k + ':' + labels_dict[k] for k in labels_dict)
+        labels_frozenset = frozenset(f'{k}:{v}' for k, v in labels_dict.items())
       else:
         labels_frozenset = frozenset()
 

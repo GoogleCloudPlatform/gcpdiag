@@ -24,8 +24,7 @@ from gcpdiag import lint, models
 from gcpdiag.queries import gke, monitoring
 from gcpdiag.queries.gke import Version
 
-_query_results_per_project_id: Dict[str,
-                                    monitoring.TimeSeriesCollection] = dict()
+_query_results_per_project_id: Dict[str, monitoring.TimeSeriesCollection] = {}
 
 
 def prefetch_rule(context: models.Context):
@@ -34,8 +33,6 @@ def prefetch_rule(context: models.Context):
     return
 
   # Fetch the metrics for all clusters.
-  global _query_results_per_project_id
-
   _query_results_per_project_id[context.project_id] = \
       monitoring.query(
           context.project_id, """
@@ -69,13 +66,12 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     return
 
   # Organize the metrics per-cluster.
-  per_cluster_results: Dict[tuple, Dict[str, str]] = dict()
-  global _query_results_per_project_id
+  per_cluster_results: Dict[tuple, Dict[str, str]] = {}
   for ts in _query_results_per_project_id[context.project_id].values():
     try:
       cluster_key = (ts['labels']['resource.project_id'],
                      ts['labels']['location'], ts['labels']['cluster_name'])
-      cluster_values = per_cluster_results.setdefault(cluster_key, dict())
+      cluster_values = per_cluster_results.setdefault(cluster_key, {})
       cluster_values['container_image'] = ts['labels']['container_image']
     except KeyError:
       # Ignore metrics that don't have those labels

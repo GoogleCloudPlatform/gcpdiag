@@ -79,27 +79,29 @@ class ComputeEngineApiStub:
     if self.page > 1:
       page_suffix = f'-{self.page}'
     if self.mock_state == 'zones':
-      with open(json_dir / 'compute-zones.json') as json_file:
+      with open(json_dir / 'compute-zones.json', encoding='utf-8') as json_file:
         return json.load(json_file)
     elif self.mock_state == 'projects':
-      with open(json_dir / 'compute-project.json') as json_file:
+      with open(json_dir / 'compute-project.json',
+                encoding='utf-8') as json_file:
         return json.load(json_file)
     elif self.mock_state == 'instances':
       try:
-        with open(
-            json_dir /
-            f'compute-instances-{self.zone}{page_suffix}.json') as json_file:
+        with open(json_dir / f'compute-instances-{self.zone}{page_suffix}.json',
+                  encoding='utf-8') as json_file:
           return json.load(json_file)
       except FileNotFoundError:
-        with open(json_dir / 'compute-instances-empty.json') as json_file:
+        with open(json_dir / 'compute-instances-empty.json',
+                  encoding='utf-8') as json_file:
           return json.load(json_file)
     elif self.mock_state == 'migs':
       try:
-        with open(json_dir /
-                  f'compute-migs-{self.zone}{page_suffix}.json') as json_file:
+        with open(json_dir / f'compute-migs-{self.zone}{page_suffix}.json',
+                  encoding='utf-8') as json_file:
           return json.load(json_file)
       except FileNotFoundError:
-        with open(json_dir / 'compute-migs-empty.json') as json_file:
+        with open(json_dir / 'compute-migs-empty.json',
+                  encoding='utf-8') as json_file:
           return json.load(json_file)
     else:
       raise ValueError("can't call this method here")

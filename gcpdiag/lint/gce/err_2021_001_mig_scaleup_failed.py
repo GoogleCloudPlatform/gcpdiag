@@ -26,11 +26,10 @@ from typing import List
 from gcpdiag import lint, models, utils
 from gcpdiag.queries import gce, logs
 
-logs_by_project = dict()
+logs_by_project = {}
 
 
 def prepare_rule(context: models.Context):
-  global logs_by_project
   migs = [
       m for m in gce.get_managed_instance_groups(context).values()
       if not m.is_gke()
@@ -45,8 +44,6 @@ def prepare_rule(context: models.Context):
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-  global logs_by_project
-
   # Any work to do?
   # Note: we exclude GKE MIGs because we have a separate lint rule for this
   # (gke/ERR/2021_006)
@@ -58,7 +55,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'no non-GKE managed instance groups found')
 
   # Process gce_instance logs and search for insert errors
-  errors_by_mig = dict()
+  errors_by_mig = {}
   for query in logs_by_project.values():
     for log_entry in query.entries:
       try:
@@ -76,7 +73,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
           continue
         instance_name = m.group(1)
         region = utils.zone_region(log_entry['resource']['labels']['zone'])
-        ## pylint: disable=cell-var-from-loop
+        # pylint: disable=cell-var-from-loop
         mig_list = list(
             filter(
                 lambda x: x.is_instance_member(

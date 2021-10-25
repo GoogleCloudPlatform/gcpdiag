@@ -89,7 +89,7 @@ class IamApiStub:
 
     if self.mock_state == 'serviceaccounts_get':
       service_accounts_filename = PREFIX_GKE1 / 'iam-service-accounts.json'
-      with open(service_accounts_filename) as json_file:
+      with open(service_accounts_filename, encoding='utf-8') as json_file:
         service_accounts_data = json.load(json_file)
         service_accounts = {
             sa['email']: sa for sa in service_accounts_data['accounts']
@@ -112,5 +112,5 @@ class IamApiStub:
         with gzip.open(json_filename) as json_file:
           return json.load(json_file)
       else:
-        with open(json_filename) as json_file:
+        with open(json_filename, encoding='utf-8') as json_file:
           return json.load(json_file)

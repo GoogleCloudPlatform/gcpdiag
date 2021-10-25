@@ -54,10 +54,10 @@ class CrmApiStub:
     del num_retries
     json_dir = apis_stub.get_json_dir(self.project_id)
     if self.mock_state == 'get_iam_policy':
-      with open(json_dir / 'iam-policy.json') as json_file:
+      with open(json_dir / 'iam-policy.json', encoding='utf-8') as json_file:
         return json.load(json_file)
     elif self.mock_state == 'get_project':
-      with open(json_dir / 'project.json') as json_file:
+      with open(json_dir / 'project.json', encoding='utf-8') as json_file:
         return json.load(json_file)
     else:
       raise ValueError("can't call this method here")
