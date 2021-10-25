@@ -50,6 +50,9 @@ optional arguments:
                        (default is the inspected project, requires 'serviceusage.services.use' permission)
   --show-skipped       Show skipped rules
   --hide-ok            Hide rules with result OK
+  --include INCLUDE    Include rule pattern (e.g.: `gke`, `gke/*/2021*`). Multiple pattern can be specified
+                       (comma separated, or with multiple arguments)
+  --exclude EXCLUDE    Exclude rule pattern (e.g.: `BP`, `*/*/2022*`)
   -v, --verbose        Increase log verbosity
   --within-days D      How far back to search logs and metrics (default: 3)
 ```
