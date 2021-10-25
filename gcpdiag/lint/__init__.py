@@ -189,7 +189,6 @@ class LintRulesPattern:
     else:
       raise ValueError(
           f"rule pattern doesn't look like a pattern: {pattern_str}")
-    print(str(self))
 
   def __str__(self):
     # pylint: disable=consider-using-f-string
