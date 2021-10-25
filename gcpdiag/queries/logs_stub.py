@@ -45,5 +45,6 @@ class LoggingApiStub:
     del req, res
 
   def execute(self, num_retries=0):
-    with open(PREFIX_GKE1 / 'logging-entries-1.json') as json_file:
+    with open(PREFIX_GKE1 / 'logging-entries-1.json',
+              encoding='utf-8') as json_file:
       return json.load(json_file)

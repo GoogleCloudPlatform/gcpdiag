@@ -27,8 +27,7 @@ from gcpdiag.queries import gke, monitoring
 # Verify that free/(free + used) is above this threshold
 MIN_FREE_THRESHOLD = 0.05
 
-_query_results_per_project_id: Dict[str,
-                                    monitoring.TimeSeriesCollection] = dict()
+_query_results_per_project_id: Dict[str, monitoring.TimeSeriesCollection] = {}
 
 
 def prefetch_rule(context: models.Context):
@@ -42,7 +41,6 @@ def prefetch_rule(context: models.Context):
 
   # Only check the latest usage values
   within_str = 'within 5m, d\'%s\'' % (monitoring.period_aligned_now(300))
-  global _query_results_per_project_id
   _query_results_per_project_id[context.project_id] = monitoring.query(
       context.project_id, f"""
   fetch gce_instance
@@ -64,7 +62,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   # Organize data per-cluster.
   clusters_with_data: Set[gke.Cluster] = set()
   bad_nodes_per_cluster: Dict[gke.Cluster, List[gke.Node]] = defaultdict(list)
-  global _query_results_per_project_id
   for ts in _query_results_per_project_id[context.project_id].values():
     try:
       instance_id = ts['labels']['resource.instance_id']

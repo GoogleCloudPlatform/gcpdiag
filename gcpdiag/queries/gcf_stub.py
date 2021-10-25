@@ -45,5 +45,6 @@ class CloudFunctionsApiStub:
     return self
 
   def execute(self, num_retries=0):
-    with open(self.json_dir / 'cloudfunctions.json') as json_file:
+    with open(self.json_dir / 'cloudfunctions.json',
+              encoding='utf-8') as json_file:
       return json.load(json_file)

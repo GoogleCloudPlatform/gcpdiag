@@ -79,12 +79,11 @@ class LogsQuery:
     return self.job.future.result()
 
 
-jobs_todo: Dict[Tuple[str, str, str], _LogsQueryJob] = dict()
+jobs_todo: Dict[Tuple[str, str, str], _LogsQueryJob] = {}
 
 
 def query(project_id: str, resource_type: str, log_name: str,
           filter_str: str) -> LogsQuery:
-  global jobs_todo
   # Aggregate by project_id, resource_type, log_name
   job_key = (project_id, resource_type, log_name)
   job = jobs_todo.setdefault(

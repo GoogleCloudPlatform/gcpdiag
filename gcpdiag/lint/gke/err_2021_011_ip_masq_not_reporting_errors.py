@@ -26,11 +26,10 @@ from gcpdiag.queries import gke, logs
 IP_MASQ_AGENT_CONTAINER_NAME = 'ip-masq-agent'
 
 # k8s_container
-ip_masq_container_errors = dict()
+ip_masq_container_errors = {}
 
 
 def prepare_rule(context: models.Context):
-  global ip_masq_container_errors
   ip_masq_container_errors[context.project_id] = logs.query(
       project_id=context.project_id,
       resource_type='k8s_container',
@@ -40,8 +39,6 @@ def prepare_rule(context: models.Context):
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-  global ip_masq_container_errors
-
   clusters = gke.get_clusters(context)
   if not clusters:
     report.add_skipped(None, 'no clusters found')

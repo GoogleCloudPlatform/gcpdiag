@@ -31,28 +31,25 @@ class _CantMapLogEntry(BaseException):
 # situations where this code is running multiple times with different context
 # objects.
 _clusters_by_name: Dict[models.Context, Dict[Tuple[str, str, str],
-                                             gke.Cluster]] = dict()
+                                             gke.Cluster]] = {}
 _clusters_by_instance_id: Dict[models.Context, Dict[str, Tuple[gke.Cluster,
-                                                               str]]] = dict()
+                                                               str]]] = {}
 
 
 def _initialize_clusters_by_name(context: models.Context):
-  global _clusters_by_name
   if not context in _clusters_by_name:
-    _clusters_by_name[context] = dict()
+    _clusters_by_name[context] = {}
     clusters = gke.get_clusters(context)
     for c in clusters.values():
       _clusters_by_name[context][(c.project_id, c.location, c.name)] = c
 
 
 def _initialize_clusters_by_instance_id(context: models.Context):
-  global _clusters_by_name
-  global _clusters_by_instance_id
   # Don't assume that _initialize_clusters_by_name is called first,
   # so make sure here, even though actually it was already called.
   _initialize_clusters_by_name(context)
   if not context in _clusters_by_instance_id:
-    _clusters_by_instance_id[context] = dict()
+    _clusters_by_instance_id[context] = {}
     for instance_id, instance in gce.get_instances(context).items():
       try:
         c = _clusters_by_name[context][(
@@ -69,8 +66,6 @@ def _initialize_clusters_by_instance_id(context: models.Context):
 
 
 def _gke_node_of_log_entry(context, log_entry):
-  global _clusters_by_name
-  global _clusters_by_instance_id
   try:
     labels = log_entry['resource']['labels']
     project_id = labels['project_id']
