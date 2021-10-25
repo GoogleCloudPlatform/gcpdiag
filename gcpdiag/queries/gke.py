@@ -74,12 +74,12 @@ class Version:
   def __add__(self, other: object) -> object:
     if isinstance(other, str):
       return self.version_str + other
-    raise TypeError('Can not concatenate Version and {}'.format(type(other)))
+    raise TypeError(f'Can not concatenate Version and {type(other)}')
 
   def __radd__(self, other: object) -> object:
     if isinstance(other, str):
       return other + self.version_str
-    raise TypeError('Can not concatenate and {} Version'.format(type(other)))
+    raise TypeError(f'Can not concatenate and {type(other)} Version')
 
   def __eq__(self, other: object) -> bool:
     if isinstance(other, str):
@@ -182,7 +182,7 @@ class NodePool(models.Resource):
   @property
   def instance_groups(self) -> List[gce.ManagedInstanceGroup]:
     if self._migs is None:
-      project_migs_by_selflink = dict()
+      project_migs_by_selflink = {}
       for m in gce.get_managed_instance_groups(
           models.Context(project_id=self.project_id)).values():
         project_migs_by_selflink[m.self_link] = m

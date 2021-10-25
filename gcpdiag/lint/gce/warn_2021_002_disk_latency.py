@@ -44,7 +44,6 @@ def prefetch_rule(context: models.Context):
 
   within_str = 'within %dd, d\'%s\'' % (config.WITHIN_DAYS,
                                         monitoring.period_aligned_now(60))
-  global _query_results_per_project_id
   _query_results_per_project_id[context.project_id] = \
       monitoring.query(
           context.project_id, f"""
@@ -71,7 +70,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'no instances found')
     return
 
-  global _query_results_per_project_id
   for i in sorted(instances.values(), key=op.attrgetter('project_id', 'name')):
     ts_key = frozenset({f'resource.instance_id:{i.id}'})
     try:

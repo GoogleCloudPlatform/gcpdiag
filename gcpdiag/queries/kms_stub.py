@@ -53,5 +53,5 @@ class KmsApiStub:
     project_id = utils.get_project_by_res_name(self.name)
     basename = utils.extract_value_from_res_name(self.name, 'cryptoKeys')
     json_dir = apis_stub.get_json_dir(project_id)
-    with open(json_dir / (basename + '.json')) as json_file:
+    with open(json_dir / (basename + '.json'), encoding='utf-8') as json_file:
       return json.load(json_file)

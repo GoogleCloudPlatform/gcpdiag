@@ -33,8 +33,7 @@ SLO_BAD_MINUTES_RATIO = 0.005
 # If we have less than this minutes measured, skip
 SLO_VALID_MINUTES_PER_DAY = 12 * 60
 
-_query_results_per_project_id: Dict[str,
-                                    monitoring.TimeSeriesCollection] = dict()
+_query_results_per_project_id: Dict[str, monitoring.TimeSeriesCollection] = {}
 
 
 def prefetch_rule(context: models.Context):
@@ -48,7 +47,6 @@ def prefetch_rule(context: models.Context):
 
   within_str = 'within %dd, d\'%s\'' % (config.WITHIN_DAYS,
                                         monitoring.period_aligned_now(60))
-  global _query_results_per_project_id
   _query_results_per_project_id[context.project_id] = monitoring.query(
       context.project_id, f"""
 fetch gce_instance
@@ -71,8 +69,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     return
 
   # Organize data per-cluster.
-  per_cluster_results: Dict[gke.Cluster, Dict[str, Any]] = dict()
-  global _query_results_per_project_id
+  per_cluster_results: Dict[gke.Cluster, Dict[str, Any]] = {}
   for ts in _query_results_per_project_id[context.project_id].values():
     try:
       instance_id = ts['labels']['resource.instance_id']

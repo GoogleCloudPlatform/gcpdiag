@@ -60,7 +60,7 @@ class ServiceUsageApiStub:
     return None
 
   def execute(self, num_retries=0):
-    with open(self.json_dir / 'services.json') as json_file:
+    with open(self.json_dir / 'services.json', encoding='utf-8') as json_file:
       return json.load(json_file)
 
 

@@ -26,7 +26,6 @@ logs_by_project = {}
 
 
 def prepare_rule(context: models.Context):
-  global logs_by_project
   logs_by_project[context.project_id] = logs.query(
       project_id=context.project_id,
       resource_type='k8s_cluster',

@@ -41,8 +41,7 @@ from gcpdiag.queries import gke, monitoring
 # SLO: at least 99.8% of minutes are good (3 minutes in a day)
 SLO_BAD_MINUTES = 3
 
-_query_results_per_project_id: Dict[str,
-                                    monitoring.TimeSeriesCollection] = dict()
+_query_results_per_project_id: Dict[str, monitoring.TimeSeriesCollection] = {}
 
 
 def prefetch_rule(context: models.Context):
@@ -51,7 +50,6 @@ def prefetch_rule(context: models.Context):
     return
 
   # Fetch the metrics for all clusters.
-  global _query_results_per_project_id
   within_str = 'within %dd, d\'%s\'' % (config.WITHIN_DAYS,
                                         monitoring.period_aligned_now(60))
   _query_results_per_project_id[context.project_id] = monitoring.query(
@@ -81,13 +79,12 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     return
 
   # Organize the metrics per-cluster.
-  per_cluster_results: Dict[tuple, Dict[str, int]] = dict()
-  global _query_results_per_project_id
+  per_cluster_results: Dict[tuple, Dict[str, int]] = {}
   for ts in _query_results_per_project_id[context.project_id].values():
     try:
       cluster_key = (ts['labels']['resource.project_id'],
                      ts['labels']['location'], ts['labels']['cluster_name'])
-      cluster_values = per_cluster_results.setdefault(cluster_key, dict())
+      cluster_values = per_cluster_results.setdefault(cluster_key, {})
       cluster_values[ts['labels']['controller']] = ts
     except KeyError:
       # Ignore time series that don't have the required labels.

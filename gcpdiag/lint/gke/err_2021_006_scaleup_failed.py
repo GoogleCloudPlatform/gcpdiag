@@ -25,14 +25,12 @@ from gcpdiag import lint, models
 from gcpdiag.queries import gke, logs
 
 # k8s_cluster, container.googleapis.com/cluster-autoscaler-visibility
-ca_logs_by_project = dict()
+ca_logs_by_project = {}
 # gce_instance, cloudaudit.googleapis.com/activity
-gce_logs_by_project = dict()
+gce_logs_by_project = {}
 
 
 def prepare_rule(context: models.Context):
-  global ca_logs_by_project
-  global gce_logs_by_project
   clusters = gke.get_clusters(context)
   for project_id in {c.project_id for c in clusters.values()}:
     ca_logs_by_project[project_id] = logs.query(
@@ -64,9 +62,6 @@ def is_mig_instance(mig_name: str, instance_name: str):
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-  global ca_logs_by_project
-  global gce_logs_by_project
-
   # Any work to do?
   clusters = gke.get_clusters(context)
   if not clusters:
@@ -74,7 +69,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   # Correlation dicts, so that we can determine resources based on log labels:
   try:
-    cluster_by_mig = dict()
+    cluster_by_mig = {}
     cluster_migs = collections.defaultdict(set)
     for c in clusters.values():
       for np in c.nodepools:
@@ -85,7 +80,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     pass
 
   # Collect errors by mig name.
-  mig_errors = dict()
+  mig_errors = {}
 
   # Process gce_instance logs and search for VM creation errors
   for query in gce_logs_by_project.values():

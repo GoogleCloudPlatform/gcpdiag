@@ -22,11 +22,10 @@ from gcpdiag.lint.gke import util
 from gcpdiag.queries import gke, logs
 
 MATCH_STR = 'nf_conntrack: table full'
-logs_by_project = dict()
+logs_by_project = {}
 
 
 def prepare_rule(context: models.Context):
-  global logs_by_project
   clusters = gke.get_clusters(context)
   for project_id in {c.project_id for c in clusters.values()}:
     logs_by_project[project_id] = logs.query(
