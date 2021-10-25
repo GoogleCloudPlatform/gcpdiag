@@ -25,7 +25,7 @@ import logging
 import pkgutil
 import re
 from collections.abc import Callable
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Iterable, Iterator, List, Optional
 
 from gcpdiag import config, models
 from gcpdiag.queries import logs
@@ -68,7 +68,7 @@ class LintReport:
   rules_report: Dict[LintRule, Dict[str, Any]]
 
   def __init__(self):
-    self.rules_report = dict()
+    self.rules_report = {}
 
   def rule_start(self, rule: LintRule, context: models.Context):
     """Called when a rule run is started with a context."""
@@ -138,6 +138,75 @@ class LintReportRuleInterface:
                  short_info: str = None):
     self.report.add_failed(self.rule, self.context, resource, reason,
                            short_info)
+
+
+class LintRulesPattern:
+  """Filter to include/exclude rules to run.
+
+  Rule inclusion/exclusion patterns are written with the following
+  format: PRODUCT/CLASS/ID, e.g. gke/WARN/2021_001.
+
+  `*` can be used as a wildcard:
+  - `gke/*` for all gke rules
+  - `gke/WARN/*` for all GKE WARN rules
+  - `gke/WARN/2021_*` for all GKE WARN rules written in 2021
+  - `*/WARN/*` for all WARN rules, for any product
+
+  Additionally, you can also write just a product like `gke` or
+  a rule class like `WARN`.
+  """
+
+  product: Optional[str]
+  rule_class: Optional[LintRuleClass]
+  rule_id: Optional[re.Pattern]
+
+  def __init__(self, pattern_str: str):
+    self.product = None
+    self.rule_class = None
+    self.rule_id = None
+
+    pattern_elems = pattern_str.split('/')
+    if len(pattern_elems) == 1:
+      # if there are no '/', assume this is either a product name
+      # or a rule class.
+      if pattern_str == '*':
+        pass
+      elif pattern_str.upper() in LintRuleClass.__members__:
+        self.rule_class = LintRuleClass(pattern_str.upper())
+      else:
+        self.product = pattern_str
+    elif 1 < len(pattern_elems) <= 3:
+      # product
+      if pattern_elems[0] != '' and pattern_elems[0] != '*':
+        self.product = pattern_elems[0]
+      # rule class
+      if pattern_elems[1] != '' and pattern_elems[1] != '*':
+        self.rule_class = LintRuleClass(pattern_elems[1].upper())
+      # rule id
+      if len(pattern_elems) == 3:
+        # convert wildcard match to regex pattern
+        self.rule_id = re.compile(re.sub(r'\*', '.*', pattern_elems[2]))
+    else:
+      raise ValueError(
+          f"rule pattern doesn't look like a pattern: {pattern_str}")
+    print(str(self))
+
+  def __str__(self):
+    # pylint: disable=consider-using-f-string
+    return '{}/{}/{}'.format(self.product or '*', self.rule_class or '*',
+                             self.rule_id or '*')
+
+  def match_rule(self, rule: LintRule) -> bool:
+    if self.product:
+      if self.product != rule.product:
+        return False
+    if self.rule_class:
+      if self.rule_class != rule.rule_class:
+        return False
+    if self.rule_id:
+      if not self.rule_id.match(rule.rule_id):
+        return False
+    return True
 
 
 class LintRuleRepository:
@@ -228,9 +297,17 @@ class LintRuleRepository:
 
       self.register_rule(rule)
 
-  def run_rules(self, context: models.Context, report: LintReport) -> int:
+  def run_rules(self,
+                context: models.Context,
+                report: LintReport,
+                include: Iterable[LintRulesPattern] = None,
+                exclude: Iterable[LintRulesPattern] = None) -> int:
+
+    # Make sure the rules are sorted alphabetically
+    self.rules.sort(key=str)
+
     # Run the "prepare_rule" functions first, in a single thread.
-    for rule in self.rules:
+    for rule in self.list_rules(include, exclude):
       if rule.prepare_rule_f:
         rule.prepare_rule_f(context)
 
@@ -243,7 +320,7 @@ class LintRuleRepository:
 
       # Run the "prefetch_rule" functions with multiple worker threads to speed up
       # execution of the "run_rule" executions later.
-      for rule in self.rules:
+      for rule in self.list_rules(include, exclude):
         if rule.prefetch_rule_f:
           rule.prefetch_rule_future = prefetch_executor.submit(
               rule.prefetch_rule_f, context)
@@ -251,8 +328,7 @@ class LintRuleRepository:
       # While the prefetch_rule functions are still being executed in multiple
       # threads, start executing the rules, but block and wait in case the
       # prefetch for a specific rule is still running.
-      self.rules.sort(key=str)
-      for rule in self.rules:
+      for rule in self.list_rules(include, exclude):
         rule_report = report.rule_start(rule, context)
 
         if rule.prefetch_rule_future:
@@ -266,3 +342,16 @@ class LintRuleRepository:
           report.add_skipped(rule, context, None, str(api_error), None)
         report.rule_end(rule, context)
     return report.finish(context)
+
+  def list_rules(
+      self,
+      include: Iterable[LintRulesPattern] = None,
+      exclude: Iterable[LintRulesPattern] = None) -> Iterator[LintRule]:
+    for rule in self.rules:
+      if include:
+        if not any(x.match_rule(rule) for x in include):
+          continue
+      if exclude:
+        if any(x.match_rule(rule) for x in exclude):
+          continue
+      yield rule
