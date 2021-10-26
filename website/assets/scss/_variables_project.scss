@@ -21,6 +21,11 @@ $grey:  #888 !default;
 $orange: $secondary;
 $td-sidebar-tree-root-color: #222 !default;
 
+
+.td-toc #TableOfContents a { color: #444 !important; }
+.td-toc #TableOfContents a:hover { color: #3176d9 !important; }
+
+
 .nav-shadow {
     box-shadow: 0 2px 2px -2px rgba(0,0,0,.2);
 }

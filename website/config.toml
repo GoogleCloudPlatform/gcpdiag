@@ -6,6 +6,7 @@ contentDir = "content/en"
 defaultContentLanguage = "en"
 defaultContentLanguageInSubdir = false
 enableMissingTranslationPlaceholders = true
+disablePathToLower = true
 
 # disable taxonomies
 disableKinds = ["taxonomy", "taxonomyTerm"]
@@ -67,6 +68,9 @@ privacy_policy = "/privacy/"
 navbar_logo = false
 breadcrumb_disable = true
 sidebar_search_disable = true
+# sidebar_menu_compact = true
+sidebar_menu_foldable = true
+ul_show = 1
 
 [params.ui.feedback]
 enable = false
