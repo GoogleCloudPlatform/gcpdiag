@@ -61,6 +61,10 @@ class LintRule:
   def __str__(self):
     return self.product + '/' + self.rule_class.value + '/' + self.rule_id
 
+  @property
+  def doc_url(self) -> str:
+    return f'https://gcpdiag.dev/rules/{self.product}/{self.rule_class}/{self.rule_id}'
+
 
 class LintReport:
   """Represent a lint report, which can be terminal-based, or (in the future) JSON."""

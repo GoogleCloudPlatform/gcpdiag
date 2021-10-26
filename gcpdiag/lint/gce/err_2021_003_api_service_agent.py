@@ -17,13 +17,11 @@
 # grant is there only when resources of a certain product (like GKE clusters)
 # are present, and we know that the grant is necessary for the correct
 # operation of that product. Copy the rule for other products, as necessary.
-"""Google APIs service agent has Editor role.
+"""Google APIs service agent has the Editor role.
 
 The Google API service agent project-number@cloudservices.gserviceaccount.com
 runs internal Google processes on your behalf. It is automatically granted the
 Editor role on the project.
-
-Reference: https://cloud.google.com/iam/docs/service-accounts#google-managed
 """
 
 from gcpdiag import lint, models
