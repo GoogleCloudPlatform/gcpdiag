@@ -178,6 +178,8 @@ class LintReportTerminal(lint.LintReport):
       self.terminal_print_line(
           self.term.italic(self._wrap_indent(rule.long_desc, '   ')))
       self.terminal_print_line()
+      self.terminal_print_line('   ' + rule.doc_url)
+      self.terminal_print_line()
 
   def add_skipped(self, rule: lint.LintRule, context: models.Context,
                   resource: Optional[models.Resource], reason: str,

@@ -16,8 +16,8 @@
 """GCE instance service account permissions for logging.
 
 The service account used by GCE instance should have the logging.logWriter
-permission, otherwise, if you install the logging agent, it won't be able
-to send the logs to Cloud Logging.
+role, otherwise, if you install the logging agent, it won't be able to send the
+logs to Cloud Logging.
 """
 
 import operator as op

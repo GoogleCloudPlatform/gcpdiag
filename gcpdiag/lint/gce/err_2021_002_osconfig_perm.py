@@ -13,13 +13,11 @@
 # limitations under the License.
 
 # Lint as: python3
-"""OS Config permissions check for a project
+"""OS Config service account has the required permissions.
 
-  The metadata of OS Config enabled should be present at the project level or
-  instance level. Secondly every vm should have minimally a service account
-  attached to the vm. Lastly the Google managed service account should
-  have the role roles/osconfig.serviceAgent as a permission
-  """
+The OS Config service account (@gcp-sa-osconfig.iam.gserviceaccount.com) must
+have the osconfig.serviceAgent role.
+"""
 import operator
 
 from gcpdiag import lint, models

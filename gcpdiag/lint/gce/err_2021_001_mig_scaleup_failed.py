@@ -13,12 +13,10 @@
 # limitations under the License.
 
 # Lint as: python3
-"""Managed instance groups are not reporting scaleup failures.
+"""Managed instance groups do not report scaleup failures.
 
-Suggested Cloud Logging query:
-resource.type="gce_instance" AND log_id(cloudaudit.googleapis.com/activity) AND
-severity=ERROR AND protoPayload.methodName="v1.compute.instances.insert" AND
-protoPayload.requestMetadata.callerSuppliedUserAgent="GCE Managed Instance Group"
+The managed instance group autoscaler will report via Cloud Logging any scale
+up failures, and the logs can help you determine why a scale up didn't succeed.
 """
 
 import operator
