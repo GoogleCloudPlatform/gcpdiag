@@ -11,13 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# Lint as: python3
 """GKE system logging and monitoring enabled.
 
-Disabling system logging and monitoring (aka "GKE Cloud Operations") severly
-impacts the ability of Google Cloud Support to troubleshoot any issues that
-you might have.
+Disabling system logging and monitoring (aka "GKE Cloud Operations") impacts the
+ability to troubleshoot any issues that you might have.
 """
 
 from gcpdiag import lint, models

@@ -11,14 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# Lint as: python3
 """GKE nodes use a containerd image.
 
-Node images with the Docker runtime are deprecated.
-Switch to the containerd image types.
-https://cloud.google.com/kubernetes-engine/docs/concepts/node-images
-https://cloud.google.com/kubernetes-engine/docs/concepts/using-containerd
+Node images with the Docker runtime are deprecated. Switch to the containerd
+image types.
 """
 
 from gcpdiag import lint, models

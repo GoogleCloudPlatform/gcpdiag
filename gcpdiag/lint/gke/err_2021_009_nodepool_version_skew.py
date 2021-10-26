@@ -11,19 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# Lint as: python3
-"""Version skew between cluster and node pool
+"""Version skew between cluster and node pool.
 
 Difference between cluster version and node pools version should be no more
 than 2 minor versions.
-
-For example: Cluster 1.19.12-gke.2101, Node Pool: 1.14.10-gke.36
-Such a big difference is not supported.
-
-In this situation the cluster might be stuck in auto-repair.
-Possible solution is to upgrade the problematic node pool or recreate it
-with a later version.
 """
 
 from gcpdiag import lint, models

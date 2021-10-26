@@ -11,22 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# Lint as: python3
 """ip-masq-agent not reporting errors
 
 If ip-masq-agent is reporting errors, it is possible that the config received
 is invalid. In that case, it is possible that the applied config is not
 reflecting the desired masquerading behavior, which could lead to unexpected
 connectivity issues.
-
-For more details on how to configure ip-masq-agent, please review:
-https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#config_agent_configmap
-
-To find these logs, you can use this filter:
-
-resource.type="k8s_container" AND resource.labels.container_name="ip-masq-agent"
-AND log_id("stderr")
 """
 
 from gcpdiag import lint, models

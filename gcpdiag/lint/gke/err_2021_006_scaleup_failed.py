@@ -11,20 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# Lint as: python3
 """GKE Autoscaler isn't reporting scaleup failures.
 
-If the GKE autoscaler reported a problem when trying to add nodes
-to a cluster, it could mean that you don't have enough resources
-to accomodate for new nodes. E.g. you might not have enough free
-IP addresses in the GKE cluster network.
-
-Suggested Cloud Logging query:
-resource.type="gce_instance" AND log_id(cloudaudit.googleapis.com/activity) AND
-severity=ERROR AND protoPayload.methodName="v1.compute.instances.insert" AND
-protoPayload.requestMetadata.callerSuppliedUserAgent="GCE Managed Instance Group for GKE"
-
+If the GKE autoscaler reported a problem when trying to add nodes to a cluster,
+it could mean that you don't have enough resources to accomodate for new nodes.
+E.g. you might not have enough free IP addresses in the GKE cluster network.
 """
 
 import collections
