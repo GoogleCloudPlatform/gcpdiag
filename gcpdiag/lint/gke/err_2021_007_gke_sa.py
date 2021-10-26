@@ -13,10 +13,8 @@
 # limitations under the License.
 """GKE service account permissions.
 
-Verifying if Google Kubernetes Engine service account is created and assigned
+Verify that the Google Kubernetes Engine service account exists and has
 the Kubernetes Engine Service Agent role on the project.
-See also:
-https://cloud.google.com/kubernetes-engine/docs/troubleshooting#gke_service_account_deleted
 """
 from gcpdiag import lint, models
 from gcpdiag.queries import crm, gce, iam

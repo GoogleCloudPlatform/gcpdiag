@@ -16,9 +16,6 @@
 The GCE default service account has more permissions than are required to run
 your Kubernetes Engine cluster. You should either use GKE Workload Identity or
 create and use a minimally privileged service account.
-
-Reference: Hardening your cluster's security
-  https://cloud.google.com/kubernetes-engine/docs/how-to/hardening-your-cluster#use_least_privilege_sa
 """
 
 from gcpdiag import lint, models

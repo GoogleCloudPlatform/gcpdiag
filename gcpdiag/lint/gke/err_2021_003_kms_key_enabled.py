@@ -11,12 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# Lint as: python3
 """App-layer secrets encryption is activated and Cloud KMS key is enabled.
 
-GKE's default service account cannot use a disabled Cloud KMS key for
-application-level secrets encryption.
+GKE's default service account cannot use a disabled or destroyed Cloud KMS key
+for application-level secrets encryption.
 """
 
 from gcpdiag import lint, models

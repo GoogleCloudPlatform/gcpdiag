@@ -11,8 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# Lint as: python3
 """GKE nodes service account permissions for logging.
 
 The service account used by GKE nodes should have the logging.logWriter

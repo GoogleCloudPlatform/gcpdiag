@@ -15,9 +15,6 @@
 
 The following string was found in the serial logs:
 nf_conntrack: table full
-
-See also:
-https://cloud.google.com/kubernetes-engine/docs/troubleshooting
 """
 
 from gcpdiag import lint, models
