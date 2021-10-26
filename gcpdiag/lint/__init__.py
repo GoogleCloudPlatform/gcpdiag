@@ -208,6 +208,10 @@ class LintRulesPattern:
     return True
 
 
+class NotLintRule(Exception):
+  pass
+
+
 class LintRuleRepository:
   """Repository of Lint rule which is also used to run the rules."""
   rules: List[LintRule]
@@ -224,75 +228,82 @@ class LintRuleRepository:
     for p in pkgutil.iter_modules(ns_pkg.__path__, prefix):
       yield p[1]
 
+  def get_rule_by_module_name(self, name):
+    # Skip code tests
+    if name.endswith('_test'):
+      raise NotLintRule()
+
+    # Determine Lint Rule parameters based on the module name.
+    m = re.search(
+        r"""
+         \.([^\.]+)\. # product path, e.g.: .gke.
+         ([a-z]+)_    # class prefix, e.g.: 'err_'
+         (\d+_\d+)    # id: 2020_001
+      """, name, re.VERBOSE)
+    if not m:
+      # Assume this is not a rule (e.g. could be a "utility" module)
+      raise NotLintRule()
+
+    product, rule_class, rule_id = m.group(1, 2, 3)
+
+    # Import the module.
+    module = importlib.import_module(name)
+
+    # Get a reference to the run_rule() function.
+    run_rule_f = None
+    for f_name, f in inspect.getmembers(module, inspect.isfunction):
+      if f_name == 'run_rule':
+        run_rule_f = f
+        break
+    if not run_rule_f:
+      raise RuntimeError(f'module {module} doesn\'t have a run_rule function')
+
+    # Get a reference to the prepare_rule() function.
+    prepare_rule_f = None
+    for f_name, f in inspect.getmembers(module, inspect.isfunction):
+      if f_name == 'prepare_rule':
+        prepare_rule_f = f
+        break
+
+    # Get a reference to the prefetch_rule() function.
+    prefetch_rule_f = None
+    for f_name, f in inspect.getmembers(module, inspect.isfunction):
+      if f_name == 'prefetch_rule':
+        prefetch_rule_f = f
+        break
+
+    # Get module docstring.
+    doc = inspect.getdoc(module)
+    if not doc:
+      raise RuntimeError(f'module {module} doesn\'t provide a module docstring')
+    # The first line is the short "good state description"
+    doc_lines = doc.splitlines()
+    short_desc = doc_lines[0]
+    long_desc = None
+    if len(doc_lines) >= 3:
+      if doc_lines[1]:
+        raise RuntimeError(
+            f'module {module} has a non-empty second line in the module docstring'
+        )
+      long_desc = '\n'.join(doc_lines[2:])
+
+    # Instantiate the LintRule object and register it
+    rule = LintRule(product=product,
+                    rule_class=LintRuleClass(rule_class.upper()),
+                    rule_id=rule_id,
+                    run_rule_f=run_rule_f,
+                    prepare_rule_f=prepare_rule_f,
+                    prefetch_rule_f=prefetch_rule_f,
+                    short_desc=short_desc,
+                    long_desc=long_desc)
+    return rule
+
   def load_rules(self, pkg):
     for name in LintRuleRepository._iter_namespace(pkg):
-      # Skip code tests
-      if name.endswith('_test'):
+      try:
+        rule = self.get_rule_by_module_name(name)
+      except NotLintRule:
         continue
-
-      # Determine Lint Rule parameters based on the module name.
-      m = re.search(
-          r"""
-           \.([^\.]+)\. # product path, e.g.: .gke.
-           ([a-z]+)_    # class prefix, e.g.: 'err_'
-           (\d+_\d+)    # id: 2020_001
-        """, name, re.VERBOSE)
-      if not m:
-        # Assume this is not a rule (e.g. could be a "utility" module)
-        continue
-      product, rule_class, rule_id = m.group(1, 2, 3)
-
-      # Import the module.
-      module = importlib.import_module(name)
-
-      # Get a reference to the run_rule() function.
-      run_rule_f = None
-      for f_name, f in inspect.getmembers(module, inspect.isfunction):
-        if f_name == 'run_rule':
-          run_rule_f = f
-          break
-      if not run_rule_f:
-        raise RuntimeError(f'module {module} doesn\'t have a run_rule function')
-
-      # Get a reference to the prepare_rule() function.
-      prepare_rule_f = None
-      for f_name, f in inspect.getmembers(module, inspect.isfunction):
-        if f_name == 'prepare_rule':
-          prepare_rule_f = f
-          break
-
-      # Get a reference to the prefetch_rule() function.
-      prefetch_rule_f = None
-      for f_name, f in inspect.getmembers(module, inspect.isfunction):
-        if f_name == 'prefetch_rule':
-          prefetch_rule_f = f
-          break
-
-      # Get module docstring.
-      doc = inspect.getdoc(module)
-      if not doc:
-        raise RuntimeError(
-            f'module {module} doesn\'t provide a module docstring')
-      # The first line is the short "good state description"
-      doc_lines = doc.splitlines()
-      short_desc = doc_lines[0]
-      long_desc = None
-      if len(doc_lines) >= 3:
-        if doc_lines[1]:
-          raise RuntimeError(
-              f'module {module} has a non-empty second line in the module docstring'
-          )
-        long_desc = '\n'.join(doc_lines[2:])
-
-      # Instantiate the LintRule object and register it
-      rule = LintRule(product=product,
-                      rule_class=LintRuleClass(rule_class.upper()),
-                      rule_id=rule_id,
-                      run_rule_f=run_rule_f,
-                      prepare_rule_f=prepare_rule_f,
-                      prefetch_rule_f=prefetch_rule_f,
-                      short_desc=short_desc,
-                      long_desc=long_desc)
 
       self.register_rule(rule)
 
