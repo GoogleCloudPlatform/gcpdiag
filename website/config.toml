@@ -63,6 +63,7 @@ github_branch= "main"
 gcs_engine_id = "b920527de2312a391"
 copyright = "Google LLC"
 privacy_policy = "/privacy/"
+images = ["images/website-preview.png"]
 
 [params.ui]
 navbar_logo = false
