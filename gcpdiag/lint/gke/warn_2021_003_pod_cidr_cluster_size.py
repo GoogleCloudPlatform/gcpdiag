@@ -15,11 +15,11 @@
 # Lint as: python3
 """GKE cluster size close to maximum allowed by pod range
 
-The maximum amount of nodes in a GKE cluster is limited based on its pod CIDR range.
-This test checks if the cluster is approaching the maximum amount of nodes allowed by
-the pod range.
-Users may end up blocked in production if they are not able to scale their cluster
-due to this hard limit imposed by the pod CIDR.
+The maximum amount of nodes in a GKE cluster is limited based on its pod CIDR
+range. This test checks if the cluster is approaching the maximum amount of
+nodes allowed by the pod range. Users may end up blocked in production if they
+are not able to scale their cluster due to this hard limit imposed by the pod
+CIDR.
 """
 
 from gcpdiag import lint, models

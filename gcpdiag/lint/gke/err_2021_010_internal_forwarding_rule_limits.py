@@ -11,14 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# Lint as: python3
 """Check internal peering forwarding limits which affect GKE.
 
-ILB's creation depends on project quota.
-
-The following log lines are searched in the the k8s cluster logs:
-"INTERNAL_FORWARDING_RULES_WITH_PEERING_LIMITS_EXCEEDED" and "SyncLoadBalancerFailed"
+Internal Load Balancer creation can fail due to VPC internal forwarding rules limits.
 """
 
 from gcpdiag import lint, models

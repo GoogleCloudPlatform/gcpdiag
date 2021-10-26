@@ -11,16 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# Lint as: python3
 """GKE nodes aren't reporting connection issues to storage.google.com.
 
 GKE node need to download artifacts from storage.google.com:443 when
 booting. If a node reports that it can't connect to storage.google.com,
 it probably means that it can't boot correctly.
-
-The following log line is searched in the GCE serial logs: "Failed to connect to
-storage.googleapis.com"
 """
 
 from gcpdiag import lint, models

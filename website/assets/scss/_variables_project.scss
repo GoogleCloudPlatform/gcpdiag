@@ -67,3 +67,9 @@ img#gcpdiag-demo-cover {
   height: 260px;
   border-radius: 5px;
 }
+
+@media (min-width: 992px) {
+  .td-content pre {
+    max-width: 99% !important;
+  }
+}

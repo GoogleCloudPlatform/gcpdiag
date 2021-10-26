@@ -11,16 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# Lint as: python3
 """Istio/ASM version not deprecated nor close to deprecation in GKE
 
 As of GKE 1.22, all Istio versions below 1.10.0 and ASM versions of 1.10.2 and
-below will no longer work. We recommend upgrading to ASM Managed Control Plane
-or version 1.10.3+ to avoid outages.
-Please find more details about this in https://github.com/istio/istio/issues/34665.
-For Support status of Istio releases, please see:
-https://istio.io/latest/docs/releases/supported-releases/#support-status-of-istio-releases
+below will no longer work. It is recommended that you upgrade to ASM Managed
+Control Plane or Istio version 1.10.3+ to avoid outages.
 """
 
 from typing import Dict

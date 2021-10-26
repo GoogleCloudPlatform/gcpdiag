@@ -11,15 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# Lint as: python3
 """GKE nodes aren't reporting connection issues to apiserver.
 
 GKE nodes need to connect to the control plane to register and to report status
 regularly. If connection errors are found in the logs, possibly there is a
 connectivity issue, like a firewall rule blocking access.
-
-The following log line is searched: "Failed to connect to apiserver"
 """
 
 from gcpdiag import lint, models

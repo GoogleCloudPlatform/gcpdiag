@@ -15,9 +15,6 @@
 
 A Service account should not have a role that could potentially increase the security risk
 to the project to malicious activity
-
-See also:
-https://cloud.google.com/iam/docs/best-practices-for-securing-service-accounts
 """
 
 from gcpdiag import lint, models

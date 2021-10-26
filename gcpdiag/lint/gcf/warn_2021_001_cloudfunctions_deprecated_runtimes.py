@@ -2,7 +2,6 @@
 """Cloud Functions don't use deprecated runtimes.
 
 Nodejs8 and Go111 runtimes are deprecated.
-https://cloud.google.com/functions/docs/runtime-support
 """
 
 from gcpdiag import lint, models

@@ -11,14 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# Lint as: python3
 """GKE master version available for new clusters.
 
-The GKE master version should be a version that is available
-for new clusters. If a version is not available it could mean
-that it is deprecated, or possibly retired due to issues with
-it.
+The GKE master version should be a version that is available for new clusters.
+If a version is not available it could mean that it is deprecated, or possibly
+retired due to issues with it.
 """
 
 from gcpdiag import lint, models
