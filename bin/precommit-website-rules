@@ -78,7 +78,6 @@ def gen_rule_page(rule, rule_page_path):
     **Rule class**: {rule.rule_class} - {RULE_CLASSES[str(rule.rule_class)]}
 
     ### Description
-
     '''),
           file=f)
     print(rule.long_desc, file=f)

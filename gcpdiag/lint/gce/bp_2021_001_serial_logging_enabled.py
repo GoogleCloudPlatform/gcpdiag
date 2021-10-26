@@ -19,9 +19,6 @@ Serial port output can be often useful for troubleshooting, and enabling serial
 logging makes sure that you don't lose the information when the VM is restarted.
 Additionally, serial port logs are timestamped, which is useful to determine
 when a particular serial output line was printed.
-
-Reference:
-  https://cloud.google.com/compute/docs/instances/viewing-serial-port-output
 """
 
 import operator as op
