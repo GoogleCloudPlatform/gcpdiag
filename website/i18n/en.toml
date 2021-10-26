@@ -1,0 +1,5 @@
+# original version: "Create documentation issue"
+# we make it shorter so that it doesn't wrap
+
+[post_create_issue]
+other = "Create issue"
