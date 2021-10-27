@@ -1,3 +1,16 @@
+## 0.46 (2021-10-27)
+
+#### New rules
+
+- gce/WARN/2021_003: gce service account monitoring permissions (b/199277342)
+- gcf/WARN/2021_001: cloud functions deprecated runtimes
+- gke/WARN/2021_009: deprecated node image types (b/202405661)
+
+#### Enhancements
+
+- New website! https://gcpdiag.dev
+- Rule documentation permalinks added to lint output (b/191612825)
+
 ## 0.45 (2021-10-08)
 
 #### Enhancements
