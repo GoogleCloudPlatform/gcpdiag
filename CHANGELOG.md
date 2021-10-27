@@ -10,6 +10,8 @@
 
 - New website! https://gcpdiag.dev
 - Rule documentation permalinks added to lint output (b/191612825)
+- Added --include and --exclude arguments to filter rules to run (b/183490284)
+
 
 ## 0.45 (2021-10-08)
 
