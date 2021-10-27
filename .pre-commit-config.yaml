@@ -64,3 +64,12 @@ repos:
   hooks:
   - id: terraform_fmt
   - id: terraform_validate
+
+- repo: local
+  hooks:
+  - id: gcpdiag-rule-page
+    name: Check that there is a page in website for each lint rule
+    entry: ./bin/precommit-website-rules-wrapper
+    language: script
+    files: ^gcpdiag/lint/[^/]+/(bp|warn|err|sec)_.*.py
+    exclude: .*_test.py
