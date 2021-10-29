@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
-THIS_WRAPPER_VERSION=0.7
+THIS_WRAPPER_VERSION=0.8
+SUPPORTED_RUNTIME="docker podman"
+
 eval $(curl -sf https://storage.googleapis.com/gcpdiag/release-version|grep -Ei '^\w*=[0-9a-z/\._-]*$')
 if [[ $THIS_WRAPPER_VERSION != "$WRAPPER_VERSION" ]]; then
   echo
@@ -23,7 +25,24 @@ mkdir -p "$HOME/.cache/gcpdiag" \
          "$HOME/.cache/gcpdiag-dockerized" \
          "$HOME/.config/gcloud"
 
-exec docker run "$USE_TTY" \
+# Set RUNTIME based on available container runtime cmd
+for r in $SUPPORTED_RUNTIME; do
+  if command -v "$r" >/dev/null; then
+    RUNTIME="$r"
+    break
+  fi
+done
+
+if [ -z "$RUNTIME" ]; then
+  >&2 echo "No container runtime found - supported: $SUPPORTED_RUNTIME"
+  exit 1
+fi
+
+if [ "$RUNTIME" = podman ]; then
+  export PODMAN_USERNS=keep-id
+fi
+
+exec "$RUNTIME" run "$USE_TTY" \
   --rm \
   -u "$(id -u):$(id -g)" \
   -e "USER=$(id -n -u)" \
