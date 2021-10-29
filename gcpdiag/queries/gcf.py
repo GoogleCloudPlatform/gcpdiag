@@ -73,6 +73,8 @@ def get_cloudfunctions(context: models.Context) -> Mapping[str, CloudFunction]:
       parent=f'projects/{context.project_id}/locations/-')
   try:
     resp = query.execute(num_retries=config.API_RETRIES)
+    if 'functions' not in resp:
+      return cloudfunctions
     for resp_f in resp['functions']:
       # verify that we have some minimal data that we expect
       if 'name' not in resp_f or 'runtime' not in resp_f:
