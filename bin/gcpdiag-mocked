@@ -32,7 +32,7 @@ def noop(*args):
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
-@mock.patch('gcpdiag.utils.report_usage_if_running_at_google', new=noop)
+@mock.patch('gcpdiag.hooks.post_lint_hook', new=noop)
 def main(argv):
   # A very simple command-line parser to determine what subcommand is called.
   # Proper argument parsing will be done in the subcommands.
