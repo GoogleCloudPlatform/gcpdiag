@@ -13,9 +13,9 @@
 # limitations under the License.
 """Hooks function definitions.
 
-Hooks are functions that are called in different parts of the codebase
-to execute some functionality that might be only available/done only in
-certain environments (like at Google internally).
+Hooks are functions that are called in different parts of the codebase,
+and used to execute some functionality that might be only required in
+certain environments.
 """
 
 

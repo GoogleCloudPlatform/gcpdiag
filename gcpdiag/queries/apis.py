@@ -201,5 +201,5 @@ def verify_access(project_id: str):
             file=sys.stderr)
     sys.exit(1)
 
-  # Used to do some additional authorization verifications (Google-internal only)
+  # Plug-in additional authorization verifications
   hooks.verify_access_hook(project_id)
