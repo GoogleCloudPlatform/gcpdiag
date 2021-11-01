@@ -20,7 +20,7 @@ import logging
 import re
 import sys
 
-from gcpdiag import config, lint, models, utils
+from gcpdiag import config, hooks, lint, models
 from gcpdiag.lint import gce, gcf, gke, iam, report_terminal
 from gcpdiag.queries import apis
 
@@ -125,14 +125,7 @@ def run(argv) -> int:
     config.AUTH_ADC = True
     config.AUTH_KEY = None
 
-  try:
-    # This is for Google-internal use only and allows us to modify
-    # default options for internal use.
-    # pylint: disable=import-outside-toplevel
-    from gcpdiag_google_internal import hooks
-    hooks.set_google_default_options(args)
-  except ImportError:
-    pass
+  hooks.set_lint_args_hook(args)
 
   # --include
   include_patterns = None
@@ -189,12 +182,7 @@ def run(argv) -> int:
   report.lint_start(context)
   exit_code = repo.run_rules(context, report, include_patterns,
                              exclude_patterns)
-
-  # (google internal) Report usage information.
-  details = {
-      str(k): v['overall_status'] for k, v in report.rules_report.items()
-  }
-  utils.report_usage_if_running_at_google('lint', details)
+  hooks.post_lint_hook(report)
 
   # Exit 0 if there are no failed rules.
   sys.exit(exit_code)

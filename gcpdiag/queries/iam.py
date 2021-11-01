@@ -19,6 +19,8 @@ import logging
 import re
 from typing import Any, Dict, List, Mapping
 
+import googleapiclient
+
 from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis
 
@@ -215,7 +217,10 @@ class ProjectPolicy:
 @caching.cached_api_call(in_memory=True)
 def get_project_policy(project_id):
   """Return the ProjectPolicy object for a project, caching the result."""
-  return ProjectPolicy(project_id)
+  try:
+    return ProjectPolicy(project_id)
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
 
 
 class ServiceAccount(models.Resource):
