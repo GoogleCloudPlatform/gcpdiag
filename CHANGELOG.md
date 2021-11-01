@@ -1,3 +1,17 @@
+## 0.47 (2021-11-01)
+
+#### New rules
+
+- gce/WARN/2021_004: check serial output for 'disk full' messages (b/193383069)
+
+#### Enhancements
+
+- Add podman support in wrapper script
+
+#### Fixes
+
+- Fix gcf KeyError when API enabled but no functions defined (b/204516746)
+
 ## 0.46 (2021-10-27)
 
 #### New rules
