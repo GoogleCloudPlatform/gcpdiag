@@ -116,15 +116,3 @@ def is_rel_res_name(res_name: str) -> bool:
 
 def is_valid_res_name(res_name: str) -> bool:
   return is_rel_res_name(res_name) or is_full_res_name(res_name)
-
-
-def report_usage_if_running_at_google(command, details=None):
-  """For Google-internal use: report usage statistics."""
-  try:
-    # gcpdiag_google_internal contains code that we run only internally
-    # at Google, so this import will fail in the public version.
-    # pylint: disable=import-outside-toplevel
-    from gcpdiag_google_internal import hooks
-    hooks.report_usage_if_running_at_google_hook(command, details)
-  except ImportError:
-    pass
