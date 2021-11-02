@@ -45,8 +45,5 @@ Cloud Shell.
 ```
 curl https://gcpdiag.dev/gcpdiag.sh >gcpdiag
 chmod +x gcpdiag
-gcloud auth login --update-adc
 ./gcpdiag lint --project=MYPROJECT
 ```
-
-Note: the `gcloud auth` step is not required in Cloud Shell.

@@ -47,9 +47,10 @@ def run(argv) -> int:
       help='Authenticate using a service account private key file',
       metavar='FILE')
 
-  parser.add_argument('--auth-oauth',
-                      help='Authenticate using OAuth user authentication',
-                      action='store_true')
+  parser.add_argument(
+      '--auth-oauth',
+      help='Authenticate using OAuth user authentication (default)',
+      action='store_true')
 
   parser.add_argument('--project',
                       metavar='P',
@@ -115,16 +116,20 @@ def run(argv) -> int:
 
   # Determine what authentication should be used
   if args.auth_key:
-    config.AUTH_ADC = False
+    config.AUTH_METHOD = 'key'
     config.AUTH_KEY = args.auth_key
+  elif args.auth_adc:
+    config.AUTH_METHOD = 'adc'
   elif args.auth_oauth:
-    config.AUTH_ADC = False
-    config.AUTH_KEY = None
+    config.AUTH_METHOD = 'oauth'
   else:
-    # TODO(b/195908593): use oauth as default once consent screen approved
-    config.AUTH_ADC = True
-    config.AUTH_KEY = None
+    # use OAuth by default, except in Cloud Shell
+    if report_terminal.is_cloud_shell():
+      config.AUTH_METHOD = 'adc'
+    else:
+      config.AUTH_METHOD = 'oauth'
 
+  # Allow to change defaults using a hook function.
   hooks.set_lint_args_hook(args)
 
   # --include
@@ -162,9 +167,6 @@ def run(argv) -> int:
       show_ok=not args.hide_ok,
       show_skipped=args.show_skipped)
 
-  # Verify that we have access and that the CRM API is enabled
-  apis.verify_access(context.project_id)
-
   # Logging setup.
   logging_handler = report.get_logging_handler()
   logger = logging.getLogger()
@@ -175,6 +177,9 @@ def run(argv) -> int:
     logger.setLevel(logging.DEBUG)
   else:
     logger.setLevel(logging.INFO)
+
+  # Verify that we have access and that the CRM API is enabled
+  apis.verify_access(context.project_id)
 
   # Run the tests.
   report.banner()
