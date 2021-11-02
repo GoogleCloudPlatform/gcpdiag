@@ -8,26 +8,30 @@ description: >
 
 gcpdiag supports authentication using multiple mechanisms:
 
-1. Application default credentials
-
-   gcpdiag uses by default [Application Default
-   Credentials](https://google-auth.readthedocs.io/en/latest/reference/google.auth.html#google.auth.default).
-   This might require that you first run `gcloud auth login --update-adc` to
-   update the cached credentials.
-
 1. OAuth user consent flow
 
-   gcpdiag can use a OAuth user authentication flow, similarly to what gcloud
-   does. It will print a URL that you need to access with a browser, and ask you
-   to enter the token that you receive after you authenticate there.
+   gcpdiag uses by default the OAuth user authentication flow, similarly to what
+   gcloud does. It will print a URL that you need to access with a browser, and
+   ask you to enter the token that you receive after you authenticate there.
 
    The credentials will be cached on disk, so that you can keep running it for 1
    hour. To remove cached authentication credentials, you can delete the
    `$HOME/.cache/gcpdiag` directory.
 
-   **Note**: OAuth-based authentication is currently not working for users
-   outside of the `google.com` domain, because gcpdiag is not approved for
-   external OAuth authentication yet.
+   Note: if your organization has the "Block all third-party API access"
+   policy set, you will need to either ask an organization admin to add gcpdiag
+   to the list of trusted applications (client id:
+   `539612726288-l17ksc9k8f0d63tfs53i45op9nel9h74.apps.googleusercontent.com`),
+   or use another authentication mechanism (such as application default
+   credentials).
+
+1. Application default credentials
+
+   gcpdiag can use Cloud SDK's [Application Default
+   Credentials](https://google-auth.readthedocs.io/en/latest/reference/google.auth.html#google.auth.default).
+   This might require that you first run `gcloud auth login --update-adc` to
+   update the cached credentials. This is the default in Cloud Shell because in
+   that environment, ADC credentials are automatically provisioned.
 
 1. Service account key
 
