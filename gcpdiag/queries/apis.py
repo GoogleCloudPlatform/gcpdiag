@@ -42,34 +42,62 @@ AUTH_SCOPES = [
 ]
 
 
-def _get_credentials():
-  global _credentials
+def _get_credentials_adc():
+  logging.debug('auth: using application default credentials')
 
-  # Authenticate using Application Default Credentials?
-  if config.AUTH_ADC:
+  global _credentials
+  if not _credentials:
     # workaround to avoid log message:
     # "WARNING:google.auth._default:No project ID could be determined."
     os.environ.setdefault('GOOGLE_CLOUD_PROJECT', '...fake project id...')
+    _credentials, _ = google.auth.default(scopes=AUTH_SCOPES)
+  return _credentials
 
-    logging.debug('auth: using application default credentials')
-    if not _credentials:
-      _credentials, _ = google.auth.default(scopes=AUTH_SCOPES)
-    return _credentials
 
-  # Authenticate using service account key?
-  if config.AUTH_KEY:
-    logging.debug('auth: using service account key')
-    if not _credentials:
-      _credentials, _ = google.auth.load_credentials_from_file(
-          filename=config.AUTH_KEY, scopes=AUTH_SCOPES)
-    return _credentials
+def _get_credentials_key():
+  logging.debug('auth: using service account key')
 
-  # Oauth: if we have no credentials in memory, fetch from the disk cache.
+  global _credentials
+  if not _credentials:
+    _credentials, _ = google.auth.load_credentials_from_file(
+        filename=config.AUTH_KEY, scopes=AUTH_SCOPES)
+  return _credentials
+
+
+def _oauth_flow_prompt(client_config):
+  oauth_flow = flow.Flow.from_client_config(
+      client_config,
+      scopes=AUTH_SCOPES + ['https://www.googleapis.com/auth/accounts.reauth'],
+      redirect_uri='urn:ietf:wg:oauth:2.0:oob')
+  while True:
+    auth_url, _ = oauth_flow.authorization_url(prompt='consent')
+    print('Go to the following URL in your browser to authenticate:\n',
+          file=sys.stderr)
+    print('  ' + auth_url, file=sys.stderr)
+    print('\nEnter verification code: ', file=sys.stderr, end='')
+    code = input()
+    print(file=sys.stderr)
+
+    os.environ.setdefault('OAUTHLIB_RELAX_TOKEN_SCOPE', 'True')
+    token = oauth_flow.fetch_token(code=code)
+    if 'https://www.googleapis.com/auth/cloud-platform' in token['scope']:
+      return oauth_flow.credentials
+    print((
+        'ERROR: Cloud Platform scope must be granted. Make sure that you tick all boxes\n'
+        '       in the consent screen.\n'),
+          file=sys.stderr)
+
+
+def _get_credentials_oauth():
+  logging.debug('auth: using oauth authentication')
+
+  # If we have no credentials in memory, fetch from the disk cache.
+  global _credentials
   if not _credentials:
     with caching.get_cache() as diskcache:
       _credentials = diskcache.get('credentials')
 
-  # Oauth: try to refresh the credentials.
+  # Try to refresh the credentials.
   if _credentials and _credentials.expired and _credentials.refresh_token:
     try:
       logging.debug('refreshing credentials')
@@ -80,31 +108,39 @@ def _get_credentials():
     except exceptions.RefreshError as e:
       logging.debug("couldn't refresh token: %s", e)
 
-  # Oauth: login using browser and verification code.
+  # Login using browser and verification code.
   if not _credentials or not _credentials.valid:
+    # Read client id from json file, or fallback to adc if not found.
+    try:
+      client_config = json.loads(
+          pkgutil.get_data('gcpdiag.queries', 'client_secrets.json'))
+    except FileNotFoundError:
+      logging.warning(
+          'client_secrets.json file not found. Using ADC for authentication.')
+      return _get_credentials_adc()
+
     logging.debug('No valid credentials found. Initiating auth flow.')
-    client_config = json.loads(
-        pkgutil.get_data('gcpdiag.queries', 'client_secrets.json'))
-    oauth_flow = flow.Flow.from_client_config(
-        client_config,
-        scopes=AUTH_SCOPES +
-        ['https://www.googleapis.com/auth/accounts.reauth'],
-        redirect_uri='urn:ietf:wg:oauth:2.0:oob')
-    auth_url, _ = oauth_flow.authorization_url(prompt='consent')
-    print('Go to the following URL in your browser to authenticate:\n',
-          file=sys.stderr)
-    print('  ' + auth_url, file=sys.stderr)
-    print('\nEnter verification code: ', file=sys.stderr, end='')
-    code = input()
-    print(file=sys.stderr)
-    oauth_flow.fetch_token(code=code)
-    _credentials = oauth_flow.credentials
+    _credentials = _oauth_flow_prompt(client_config)
 
     # Store the credentials in the disk cache.
     with caching.get_cache() as diskcache:
       diskcache.set('credentials', _credentials)
 
   return _credentials
+
+
+def _get_credentials():
+  if config.AUTH_METHOD == 'adc':
+    return _get_credentials_adc()
+  elif config.AUTH_METHOD == 'key':
+    return _get_credentials_key()
+  elif config.AUTH_METHOD == 'oauth':
+    return _get_credentials_oauth()
+  else:
+    raise AssertionError(
+        'BUG: AUTH_METHOD method should be one of `adc`, `oauth`, `key`, but got '
+        f'`{config.AUTH_METHOD} instead. Please report at https://gcpdiag.dev/issues/'
+    )
 
 
 def login():
@@ -158,7 +194,7 @@ def get_api(service_name: str, version: str, project_id: Optional[str] = None):
 
 @caching.cached_api_call(in_memory=True)
 def list_apis(project_id: str) -> Set[str]:
-  logging.info('listing enabled APIs')
+  logging.debug('listing enabled APIs')
   serviceusage = get_api('serviceusage', 'v1', project_id)
   request = serviceusage.services().list(parent=f'projects/{project_id}',
                                          filter='state:ENABLED')
@@ -195,7 +231,7 @@ def verify_access(project_id: str):
     sys.exit(1)
   except exceptions.GoogleAuthError as err:
     print(f'ERROR: {err}', file=sys.stdout)
-    if config.AUTH_ADC:
+    if config.AUTH_METHOD == 'adc':
       print(('Error using application default credentials. '
              'Try running: gcloud auth login --update-adc'),
             file=sys.stderr)

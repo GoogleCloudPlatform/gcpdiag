@@ -1,1 +1,2 @@
-gcp_doctor/queries/client_secrets.json
+gcpdiag/queries/client_secrets.json
+website/content/en/docs/authentication.md
