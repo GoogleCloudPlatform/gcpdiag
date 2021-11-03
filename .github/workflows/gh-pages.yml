@@ -1,0 +1,28 @@
+name: github pages
+
+on:
+  push:
+    branches:
+    - main
+  pull_request:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        submodules: true
+        fetch-depth: 0
+
+    - name: Hugo build
+      uses: docker://us-docker.pkg.dev/gcpdiag-repo/devel/gcpdiag-hugo:0.1
+      with:
+        args: /bin/sh -c "cd website && hugo build --themesDir=/themes --baseUrl=https://gcpdiag.dev/ --minify --enableGitInfo"
+
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v3
+      if: github.ref == 'refs/heads/main'
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./website/public
