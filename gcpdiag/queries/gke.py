@@ -268,6 +268,9 @@ class Cluster(models.Resource):
   def has_monitoring_enabled(self) -> bool:
     return self._resource_data['monitoringService'] != 'none'
 
+  def has_authenticator_group_enabled(self) -> bool:
+    return self._resource_data['authenticatorGroupsConfig'].get('enabled', 'none') != 'none'
+
   @property
   def nodepools(self) -> Iterable[NodePool]:
     if self._nodepools is None:
