@@ -128,3 +128,11 @@ class TestGce:
     instances = gce.get_instances(context)
     i = instances[DUMMY_INSTANCE2_ID]
     assert not i.is_serial_port_logging_enabled()
+
+  def test_get_all_regions(self):
+    regions = gce.get_all_regions(DUMMY_PROJECT_NAME)
+    assert len(regions) > 0
+    assert 'us-east1' in regions
+    assert 'europe-north1' in regions
+    assert 'asia-southeast1' in regions
+    assert 'southamerica-east1' in regions
