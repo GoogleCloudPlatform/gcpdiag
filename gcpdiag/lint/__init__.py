@@ -27,7 +27,8 @@ import re
 from collections.abc import Callable
 from typing import Any, Dict, Iterable, Iterator, List, Optional
 
-from gcpdiag import config, models
+from gcpdiag import models
+from gcpdiag.executor import get_executor
 from gcpdiag.queries import logs
 from gcpdiag.utils import GcpApiError
 
@@ -326,35 +327,34 @@ class LintRuleRepository:
         rule.prepare_rule_f(context)
 
     # Start multiple threads for logs fetching and prefetch functions.
-    with concurrent.futures.ThreadPoolExecutor(
-        max_workers=config.MAX_WORKERS) as prefetch_executor:
-      # Start fetching any logs queries that were defined in prepare_rule
-      # functions.
-      logs.execute_queries(prefetch_executor)
+    executor = get_executor()
+    # Start fetching any logs queries that were defined in prepare_rule
+    # functions.
+    logs.execute_queries(executor)
 
-      # Run the "prefetch_rule" functions with multiple worker threads to speed up
-      # execution of the "run_rule" executions later.
-      for rule in self.list_rules(include, exclude):
-        if rule.prefetch_rule_f:
-          rule.prefetch_rule_future = prefetch_executor.submit(
-              rule.prefetch_rule_f, context)
+    # Run the "prefetch_rule" functions with multiple worker threads to speed up
+    # execution of the "run_rule" executions later.
+    for rule in self.list_rules(include, exclude):
+      if rule.prefetch_rule_f:
+        rule.prefetch_rule_future = executor.submit(rule.prefetch_rule_f,
+                                                    context)
 
-      # While the prefetch_rule functions are still being executed in multiple
-      # threads, start executing the rules, but block and wait in case the
-      # prefetch for a specific rule is still running.
-      for rule in self.list_rules(include, exclude):
-        rule_report = report.rule_start(rule, context)
+    # While the prefetch_rule functions are still being executed in multiple
+    # threads, start executing the rules, but block and wait in case the
+    # prefetch for a specific rule is still running.
+    for rule in self.list_rules(include, exclude):
+      rule_report = report.rule_start(rule, context)
 
-        if rule.prefetch_rule_future:
-          if rule.prefetch_rule_future.running():
-            logging.info('waiting for query results')
-          rule.prefetch_rule_future.result()
+      if rule.prefetch_rule_future:
+        if rule.prefetch_rule_future.running():
+          logging.info('waiting for query results')
+        rule.prefetch_rule_future.result()
 
-        try:
-          rule.run_rule_f(context, rule_report)
-        except (GcpApiError) as api_error:
-          report.add_skipped(rule, context, None, str(api_error), None)
-        report.rule_end(rule, context)
+      try:
+        rule.run_rule_f(context, rule_report)
+      except (GcpApiError) as api_error:
+        report.add_skipped(rule, context, None, str(api_error), None)
+      report.rule_end(rule, context)
     return report.finish(context)
 
   def list_rules(
