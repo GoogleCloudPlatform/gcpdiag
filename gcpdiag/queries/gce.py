@@ -335,3 +335,16 @@ def get_project_metadata(project_id) -> Mapping[str, str]:
     for m_item in metadata['items']:
       mapped_metadata[m_item.get('key')] = m_item.get('value')
   return mapped_metadata
+
+
+@caching.cached_api_call
+def get_all_regions(project_id: str) -> Iterable[str]:
+  try:
+    gce_api = apis.get_api('compute', 'v1', project_id)
+    request = gce_api.regions().list(project=project_id)
+    response = request.execute(num_retries=config.API_RETRIES)
+    if not response or 'items' not in response:
+      return set()
+    return {item['name'] for item in response['items'] if 'name' in item}
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err

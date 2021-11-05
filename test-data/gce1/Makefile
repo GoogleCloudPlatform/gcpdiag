@@ -14,6 +14,7 @@ all:	\
 	json-dumps/compute-migs-$(ZONE_2).json \
 	json-dumps/compute-migs-empty.json \
 	json-dumps/compute-project.json \
+	json-dumps/compute-regions.json:
 	json-dumps/compute-zones.json \
 	json-dumps/monitoring-query.json \
 	json-dumps/project.json \
@@ -59,6 +60,10 @@ json-dumps/compute-project.json:
 	$(CURL) -fsS \
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)' \
 		| $(JSON_CLEANER) compute-project >$@
+
+json-dumps/compute-regions.json:
+	$(CURL) -fsS \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/regions' >$@
 
 json-dumps/compute-zones.json:
 	$(CURL) -fsS \

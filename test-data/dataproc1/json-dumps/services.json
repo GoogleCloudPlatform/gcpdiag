@@ -1,0 +1,327 @@
+{
+  "services": [
+    {
+      "name": "projects/920639739287/services/compute.googleapis.com",
+      "config": {
+        "name": "compute.googleapis.com",
+        "title": "Compute Engine API",
+        "documentation": {
+          "summary": "Creates and runs virtual machines on Google Cloud Platform.\n"
+        },
+        "quota": {},
+        "authentication": {},
+        "usage": {
+          "requirements": [
+            "serviceusage.googleapis.com/tos/cloud",
+            "serviceusage.googleapis.com/billing-enabled"
+          ]
+        },
+        "monitoredResources": [
+          {
+            "type": "compute.googleapis.com/VpcNetwork",
+            "displayName": "VPC Network",
+            "description": "VPC Network.",
+            "labels": [
+              {
+                "key": "resource_container",
+                "description": "The identifier of the GCP container (i.e. project) associated with the VPC Network."
+              },
+              {
+                "key": "location",
+                "description": "Location of the VPC Network, global always."
+              },
+              {
+                "key": "network_id",
+                "description": "VPC Network resource ID."
+              }
+            ],
+            "launchStage": "GA"
+          }
+        ],
+        "monitoring": {
+          "consumerDestinations": [
+            {
+              "monitoredResource": "compute.googleapis.com/VpcNetwork",
+              "metrics": [
+                "compute.googleapis.com/instances_per_vpc_network",
+                "compute.googleapis.com/internal_lb_forwarding_rules_per_vpc_network",
+                "compute.googleapis.com/internal_managed_forwarding_rules_per_vpc_network",
+                "compute.googleapis.com/internal_protocol_forwarding_rules_per_vpc_network",
+                "compute.googleapis.com/ip_aliases_per_vpc_network",
+                "compute.googleapis.com/psc_google_apis_forwarding_rules_per_vpc_network",
+                "compute.googleapis.com/psc_ilb_consumer_forwarding_rules_per_producer_vpc_network",
+                "compute.googleapis.com/quota/instances_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/internal_lb_forwarding_rules_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/internal_managed_forwarding_rules_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/internal_protocol_forwarding_rules_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/ip_aliases_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/psc_google_apis_forwarding_rules_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/psc_ilb_consumer_forwarding_rules_per_producer_vpc_network/exceeded",
+                "compute.googleapis.com/quota/quota/instances_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/quota/internal_load_balancer_forwarding_rules_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/quota/internal_protocol_forwarding_rules_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/quota/ip_aliases_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/quota/psc_google_apis_forwarding_rules_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/quota/subnet_ranges_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/subnet_ranges_per_vpc_network/exceeded",
+                "compute.googleapis.com/subnet_ranges_per_vpc_network"
+              ]
+            },
+            {
+              "monitoredResource": "compute.googleapis.com/VpcNetwork",
+              "metrics": [
+                "compute.googleapis.com/quota/instances_per_vpc_network/limit",
+                "compute.googleapis.com/quota/instances_per_vpc_network/usage",
+                "compute.googleapis.com/quota/internal_lb_forwarding_rules_per_vpc_network/limit",
+                "compute.googleapis.com/quota/internal_lb_forwarding_rules_per_vpc_network/usage",
+                "compute.googleapis.com/quota/internal_managed_forwarding_rules_per_vpc_network/limit",
+                "compute.googleapis.com/quota/internal_managed_forwarding_rules_per_vpc_network/usage",
+                "compute.googleapis.com/quota/internal_protocol_forwarding_rules_per_vpc_network/limit",
+                "compute.googleapis.com/quota/internal_protocol_forwarding_rules_per_vpc_network/usage",
+                "compute.googleapis.com/quota/ip_aliases_per_vpc_network/limit",
+                "compute.googleapis.com/quota/ip_aliases_per_vpc_network/usage",
+                "compute.googleapis.com/quota/psc_google_apis_forwarding_rules_per_vpc_network/limit",
+                "compute.googleapis.com/quota/psc_google_apis_forwarding_rules_per_vpc_network/usage",
+                "compute.googleapis.com/quota/psc_ilb_consumer_forwarding_rules_per_producer_vpc_network/limit",
+                "compute.googleapis.com/quota/psc_ilb_consumer_forwarding_rules_per_producer_vpc_network/usage",
+                "compute.googleapis.com/quota/quota/instances_per_vpc_network/limit",
+                "compute.googleapis.com/quota/quota/instances_per_vpc_network/usage",
+                "compute.googleapis.com/quota/quota/internal_load_balancer_forwarding_rules_per_vpc_network/limit",
+                "compute.googleapis.com/quota/quota/internal_load_balancer_forwarding_rules_per_vpc_network/usage",
+                "compute.googleapis.com/quota/quota/internal_protocol_forwarding_rules_per_vpc_network/limit",
+                "compute.googleapis.com/quota/quota/internal_protocol_forwarding_rules_per_vpc_network/usage",
+                "compute.googleapis.com/quota/quota/ip_aliases_per_vpc_network/limit",
+                "compute.googleapis.com/quota/quota/ip_aliases_per_vpc_network/usage",
+                "compute.googleapis.com/quota/quota/psc_google_apis_forwarding_rules_per_vpc_network/limit",
+                "compute.googleapis.com/quota/quota/psc_google_apis_forwarding_rules_per_vpc_network/usage",
+                "compute.googleapis.com/quota/quota/subnet_ranges_per_vpc_network/limit",
+                "compute.googleapis.com/quota/quota/subnet_ranges_per_vpc_network/usage",
+                "compute.googleapis.com/quota/subnet_ranges_per_vpc_network/limit",
+                "compute.googleapis.com/quota/subnet_ranges_per_vpc_network/usage"
+              ]
+            }
+          ]
+        }
+      },
+      "state": "ENABLED",
+      "parent": "projects/920639739287"
+    },
+    {
+      "name": "projects/920639739287/services/dataproc-control.googleapis.com",
+      "config": {
+        "name": "dataproc-control.googleapis.com",
+        "title": "Cloud Dataproc Control API",
+        "documentation": {
+          "summary": "Manages internal resources for Google Cloud Dataproc."
+        },
+        "quota": {},
+        "authentication": {},
+        "usage": {
+          "requirements": [
+            "serviceusage.googleapis.com/tos/cloud"
+          ]
+        },
+        "monitoring": {}
+      },
+      "state": "ENABLED",
+      "parent": "projects/920639739287"
+    },
+    {
+      "name": "projects/920639739287/services/dataproc.googleapis.com",
+      "config": {
+        "name": "dataproc.googleapis.com",
+        "title": "Cloud Dataproc API",
+        "documentation": {
+          "summary": "Manages Hadoop-based clusters and jobs on Google Cloud Platform."
+        },
+        "quota": {},
+        "authentication": {},
+        "usage": {
+          "requirements": [
+            "serviceusage.googleapis.com/tos/cloud"
+          ]
+        },
+        "monitoring": {}
+      },
+      "state": "ENABLED",
+      "parent": "projects/920639739287"
+    },
+    {
+      "name": "projects/920639739287/services/oslogin.googleapis.com",
+      "config": {
+        "name": "oslogin.googleapis.com",
+        "title": "Cloud OS Login API",
+        "documentation": {
+          "summary": "You can use OS Login to manage access to your VM instances using IAM roles."
+        },
+        "quota": {},
+        "authentication": {},
+        "usage": {
+          "requirements": [
+            "serviceusage.googleapis.com/tos/cloud"
+          ]
+        },
+        "monitoring": {}
+      },
+      "state": "ENABLED",
+      "parent": "projects/920639739287"
+    },
+    {
+      "name": "projects/920639739287/services/storage-api.googleapis.com",
+      "config": {
+        "name": "storage-api.googleapis.com",
+        "title": "Google Cloud Storage JSON API",
+        "documentation": {
+          "summary": "Lets you store and retrieve potentially-large, immutable data objects."
+        },
+        "quota": {},
+        "authentication": {},
+        "usage": {
+          "requirements": [
+            "serviceusage.googleapis.com/tos/cloud"
+          ]
+        },
+        "monitoring": {}
+      },
+      "state": "ENABLED",
+      "parent": "projects/920639739287"
+    },
+    {
+      "name": "projects/920639739287/services/storage-component.googleapis.com",
+      "config": {
+        "name": "storage-component.googleapis.com",
+        "title": "Cloud Storage",
+        "documentation": {
+          "summary": "Google Cloud Storage is a RESTful service for storing and accessing your data on Google's\n    infrastructure."
+        },
+        "quota": {},
+        "authentication": {},
+        "usage": {
+          "requirements": [
+            "serviceusage.googleapis.com/tos/cloud"
+          ]
+        },
+        "monitoredResources": [
+          {
+            "type": "serviceruntime.googleapis.com/api",
+            "labels": [
+              {
+                "key": "cloud.googleapis.com/location"
+              },
+              {
+                "key": "cloud.googleapis.com/uid"
+              },
+              {
+                "key": "serviceruntime.googleapis.com/api_version"
+              },
+              {
+                "key": "serviceruntime.googleapis.com/api_method"
+              },
+              {
+                "key": "serviceruntime.googleapis.com/consumer_project"
+              },
+              {
+                "key": "cloud.googleapis.com/project"
+              },
+              {
+                "key": "cloud.googleapis.com/service"
+              }
+            ]
+          },
+          {
+            "type": "serviceruntime.googleapis.com/consumer_quota",
+            "labels": [
+              {
+                "key": "cloud.googleapis.com/location"
+              },
+              {
+                "key": "cloud.googleapis.com/uid"
+              },
+              {
+                "key": "cloud.googleapis.com/service"
+              },
+              {
+                "key": "cloud.googleapis.com/resource_id"
+              },
+              {
+                "key": "cloud.googleapis.com/resource_node"
+              },
+              {
+                "key": "cloud.googleapis.com/quota_metric"
+              },
+              {
+                "key": "cloud.googleapis.com/quota_location"
+              }
+            ]
+          },
+          {
+            "type": "serviceruntime.googleapis.com/producer_quota",
+            "labels": [
+              {
+                "key": "cloud.googleapis.com/location"
+              },
+              {
+                "key": "cloud.googleapis.com/uid"
+              },
+              {
+                "key": "cloud.googleapis.com/service"
+              },
+              {
+                "key": "cloud.googleapis.com/resource_id"
+              },
+              {
+                "key": "cloud.googleapis.com/resource_node"
+              },
+              {
+                "key": "cloud.googleapis.com/consumer_resource_node"
+              },
+              {
+                "key": "cloud.googleapis.com/quota_metric"
+              },
+              {
+                "key": "cloud.googleapis.com/quota_location"
+              }
+            ]
+          }
+        ],
+        "monitoring": {
+          "consumerDestinations": [
+            {
+              "monitoredResource": "serviceruntime.googleapis.com/api",
+              "metrics": [
+                "serviceruntime.googleapis.com/api/consumer/request_count",
+                "serviceruntime.googleapis.com/api/consumer/error_count",
+                "serviceruntime.googleapis.com/api/consumer/quota_used_count",
+                "serviceruntime.googleapis.com/api/consumer/quota_refund_count",
+                "serviceruntime.googleapis.com/api/consumer/total_latencies",
+                "serviceruntime.googleapis.com/api/consumer/request_overhead_latencies",
+                "serviceruntime.googleapis.com/api/consumer/backend_latencies",
+                "serviceruntime.googleapis.com/api/consumer/request_sizes",
+                "serviceruntime.googleapis.com/api/consumer/response_sizes",
+                "serviceruntime.googleapis.com/api/consumer/top_request_count_by_end_user",
+                "serviceruntime.googleapis.com/api/consumer/top_request_count_by_end_user_country",
+                "serviceruntime.googleapis.com/api/consumer/top_request_count_by_referer",
+                "serviceruntime.googleapis.com/quota/used",
+                "serviceruntime.googleapis.com/quota/limit",
+                "serviceruntime.googleapis.com/quota/exceeded",
+                "serviceruntime.googleapis.com/allocation/consumer/quota_used_count"
+              ]
+            },
+            {
+              "monitoredResource": "serviceruntime.googleapis.com/consumer_quota",
+              "metrics": [
+                "serviceruntime.googleapis.com/quota/rate/consumer/used_count",
+                "serviceruntime.googleapis.com/quota/rate/consumer/refund_count",
+                "serviceruntime.googleapis.com/quota/allocation/consumer/usage",
+                "serviceruntime.googleapis.com/quota/consumer/limit",
+                "serviceruntime.googleapis.com/quota/consumer/exceeded"
+              ]
+            }
+          ]
+        }
+      },
+      "state": "ENABLED",
+      "parent": "projects/920639739287"
+    }
+  ]
+}

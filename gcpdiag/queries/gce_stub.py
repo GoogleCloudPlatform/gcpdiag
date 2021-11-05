@@ -25,6 +25,23 @@ from gcpdiag.queries import apis_stub
 # pylint: disable=unused-argument
 
 
+class ListRegionsQuery:
+
+  def __init__(self, project_id):
+    self.project_id = project_id
+
+  def execute(self, num_retries=0):
+    json_dir = apis_stub.get_json_dir(self.project_id)
+    with open(json_dir / 'compute-regions.json', encoding='utf-8') as json_file:
+      return json.load(json_file)
+
+
+class ComputeEngineApiStubRegions:
+
+  def list(self, project):
+    return ListRegionsQuery(project_id=project)
+
+
 class ComputeEngineApiStub:
   """Mock object to simulate compute engine api calls."""
 
@@ -40,6 +57,9 @@ class ComputeEngineApiStub:
     self.project_id = project_id
     self.zone = zone
     self.page = page
+
+  def regions(self):
+    return ComputeEngineApiStubRegions()
 
   def zones(self):
     return ComputeEngineApiStub('zones')
@@ -78,6 +98,10 @@ class ComputeEngineApiStub:
     page_suffix = ''
     if self.page > 1:
       page_suffix = f'-{self.page}'
+    if self.mock_state == 'regions':
+      with open(json_dir / 'compute-regions.json',
+                encoding='utf-8') as json_file:
+        return json.load(json_file)
     if self.mock_state == 'zones':
       with open(json_dir / 'compute-zones.json', encoding='utf-8') as json_file:
         return json.load(json_file)
