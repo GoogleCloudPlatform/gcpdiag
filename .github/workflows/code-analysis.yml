@@ -33,7 +33,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ./.venv
-        key: gcpdiag-${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-pipenv-${{ hashFiles('Pipfile.lock') }}
+        key: code-analysis-${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-pipenv-${{ hashFiles('Pipfile.lock') }}
 
     - name: Install dependencies
       if: steps.cache-pipenv.outputs.cache-hit != 'true'
