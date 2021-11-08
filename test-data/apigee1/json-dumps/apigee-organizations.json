@@ -1,0 +1,22 @@
+{
+  "organizations": [
+    {
+      "organization": "gcpd-apigee-1-lus4",
+      "projectIds": [
+        "gcpd-apigee-1-lus4"
+      ]
+    },
+    {
+      "organization": "apigee-x-support-apac-03",
+      "projectIds": [
+        "apigee-x-support-apac-03"
+      ]
+    },
+    {
+      "organization": "apigee-hybrid-support-apac-03",
+      "projectIds": [
+        "apigee-hybrid-support-apac-03"
+      ]
+    }
+  ]
+}

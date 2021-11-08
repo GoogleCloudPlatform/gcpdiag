@@ -17,11 +17,12 @@ import copy
 import json
 import pathlib
 import re
+from typing import Optional
 
 import googleapiclient.errors
 
-from gcpdiag.queries import (crm_stub, dataproc_stub, gce_stub, gcf_stub,
-                             gke_stub, iam_stub, kms_stub, logs_stub,
+from gcpdiag.queries import (apigee_stub, crm_stub, dataproc_stub, gce_stub,
+                             gcf_stub, gke_stub, iam_stub, kms_stub, logs_stub,
                              monitoring_stub)
 
 # pylint: disable=unused-argument
@@ -39,6 +40,8 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/gcf1/json-dumps',
     'dataproc1':
         pathlib.Path(__file__).parents[2] / 'test-data/dataproc1/json-dumps',
+    'gcpd-apigee-1-lus4':
+        pathlib.Path(__file__).parents[2] / 'test-data/apigee1/json-dumps',
 }
 
 
@@ -91,7 +94,9 @@ class BatchRequestStub:
         op['cb'](op['request_id'], None, err)
 
 
-def get_api_stub(service_name: str, version: str, project_id: str):
+def get_api_stub(service_name: str,
+                 version: str,
+                 project_id: Optional[str] = None):
   if service_name == 'cloudresourcemanager':
     return crm_stub.CrmApiStub()
   elif service_name == 'container':
@@ -112,5 +117,7 @@ def get_api_stub(service_name: str, version: str, project_id: str):
     return gcf_stub.CloudFunctionsApiStub()
   elif service_name == 'dataproc':
     return dataproc_stub.DataprocApiStub()
+  elif service_name == 'apigee':
+    return apigee_stub.ApigeeApiStub()
   else:
     raise ValueError('unsupported service: %s' % service_name)
