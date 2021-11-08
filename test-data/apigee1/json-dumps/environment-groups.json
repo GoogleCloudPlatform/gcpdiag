@@ -1,0 +1,22 @@
+{
+  "environmentGroups": [
+    {
+      "name": "gcpdiag-demo-envgroup",
+      "hostnames": [
+        "gcpdiag.apigee.example.com"
+      ],
+      "createdAt": "1635081390055",
+      "lastModifiedAt": "1635081390055",
+      "state": "ACTIVE"
+    },
+    {
+      "name": "gcpdiag-demo-envgroup-1",
+      "hostnames": [
+        "1.gcpdiag.apigee.example.com"
+      ],
+      "createdAt": "1635996424759",
+      "lastModifiedAt": "1635996424759",
+      "state": "ACTIVE"
+    }
+  ]
+}
