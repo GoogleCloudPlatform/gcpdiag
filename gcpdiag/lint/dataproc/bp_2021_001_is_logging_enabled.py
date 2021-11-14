@@ -11,9 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Dataproc cluster is in RUNNING state
+""" Check if logging is enabled : Stackdriver Logging enabled
 
-Cluster should normally spend most of the time in RUNNING state.
+Enabling stackdriver logging for your dataproc cluster impacts the ability
+to troubleshoot any issues that you might have.
+
 """
 
 from gcpdiag import lint, models
@@ -34,7 +36,7 @@ def run_rule(context: models.Context,
     report.add_skipped(None, 'no dataproc clusters found')
 
   for cluster in clusters:
-    if cluster.is_running():
+    if cluster.is_stackdriver_logging_enabled():
       report.add_ok(cluster)
     else:
       report.add_failed(cluster)
