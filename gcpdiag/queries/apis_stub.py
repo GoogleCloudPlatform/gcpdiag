@@ -21,9 +21,9 @@ from typing import Optional
 
 import googleapiclient.errors
 
-from gcpdiag.queries import (apigee_stub, crm_stub, dataproc_stub, gce_stub,
-                             gcf_stub, gke_stub, iam_stub, kms_stub, logs_stub,
-                             monitoring_stub)
+from gcpdiag.queries import (apigee_stub, composer_stub, crm_stub,
+                             dataproc_stub, gce_stub, gcf_stub, gke_stub,
+                             iam_stub, kms_stub, logs_stub, monitoring_stub)
 
 # pylint: disable=unused-argument
 
@@ -42,6 +42,8 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/dataproc1/json-dumps',
     'gcpd-apigee-1-lus4':
         pathlib.Path(__file__).parents[2] / 'test-data/apigee1/json-dumps',
+    'composer1':
+        pathlib.Path(__file__).parents[2] / 'test-data/composer1/json-dumps',
 }
 
 
@@ -119,5 +121,7 @@ def get_api_stub(service_name: str,
     return dataproc_stub.DataprocApiStub()
   elif service_name == 'apigee':
     return apigee_stub.ApigeeApiStub()
+  elif service_name == 'composer':
+    return composer_stub.ComposerApiStub()
   else:
     raise ValueError('unsupported service: %s' % service_name)
