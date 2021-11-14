@@ -1,0 +1,58 @@
+{
+  "environments": [
+    {
+      "name": "projects/composer1/locations/us-central1/environments/good",
+      "config": {
+        "gkeCluster": "projects/composer1/zones/us-central1-b/clusters/us-central1-good-d7e4c596-gke",
+        "dagGcsPrefix": "gs://us-central1-good-d7e4c596-bucket/dags",
+        "nodeCount": 3,
+        "softwareConfig": {
+          "imageVersion": "composer-1.17.4-airflow-1.10.15",
+          "pythonVersion": "3",
+          "schedulerCount": 1
+        },
+        "nodeConfig": {
+          "location": "projects/composer1/zones/us-central1-b",
+          "machineType": "projects/composer1/zones/us-central1-b/machineTypes/n1-standard-1",
+          "network": "projects/composer1/global/networks/default",
+          "diskSizeGb": 100,
+          "oauthScopes": [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          "serviceAccount": "56010455997-compute@developer.gserviceaccount.com",
+          "ipAllocationPolicy": {}
+        },
+        "airflowUri": "https://j49c8bb13b595f74dp-tp.appspot.com",
+        "privateEnvironmentConfig": {
+          "privateClusterConfig": {},
+          "webServerIpv4CidrBlock": "172.31.245.0/24",
+          "cloudSqlIpv4CidrBlock": "10.0.0.0/12"
+        },
+        "webServerNetworkAccessControl": {
+          "allowedIpRanges": [
+            {
+              "value": "0.0.0.0/0",
+              "description": "Allows access from all IPv4 addresses (default value)"
+            },
+            {
+              "value": "::0/0",
+              "description": "Allows access from all IPv6 addresses (default value)"
+            }
+          ]
+        },
+        "databaseConfig": {
+          "machineType": "db-n1-standard-2"
+        },
+        "webServerConfig": {
+          "machineType": "composer-n1-webserver-2"
+        },
+        "encryptionConfig": {},
+        "workloadsConfig": {}
+      },
+      "uuid": "e81a4b45-1c23-47c8-b8cc-81c3e870d8a2",
+      "state": "RUNNING",
+      "createTime": "2021-11-13T13:59:57.362Z",
+      "updateTime": "2021-11-13T14:16:59.782433Z"
+    }
+  ]
+}
