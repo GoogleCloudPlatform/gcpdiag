@@ -21,7 +21,8 @@ import re
 import sys
 
 from gcpdiag import config, hooks, lint, models
-from gcpdiag.lint import apigee, dataproc, gce, gcf, gke, iam, report_terminal
+from gcpdiag.lint import (apigee, composer, dataproc, gce, gcf, gke, iam,
+                          report_terminal)
 from gcpdiag.queries import apis
 
 
@@ -162,6 +163,7 @@ def run(argv) -> int:
   repo.load_rules(iam)
   repo.load_rules(gcf)
   repo.load_rules(dataproc)
+  repo.load_rules(composer)
   # ^^^ If you add rules directory, update also
   # pyinstaller/hook-gcpdiag.lint.py and bin/precommit-website-rules
   repo.load_rules(apigee)
