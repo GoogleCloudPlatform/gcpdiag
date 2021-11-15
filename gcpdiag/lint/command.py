@@ -181,13 +181,14 @@ def run(argv) -> int:
   else:
     logger.setLevel(logging.INFO)
 
+  # Start the reporting
+  report.banner()
+  report.lint_start(context)
+
   # Verify that we have access and that the CRM API is enabled
   apis.verify_access(context.project_id)
 
   # Run the tests.
-  report.banner()
-  apis.login()
-  report.lint_start(context)
   exit_code = repo.run_rules(context, report, include_patterns,
                              exclude_patterns)
   hooks.post_lint_hook(report)
