@@ -46,6 +46,9 @@ resource "google_container_cluster" "gke3" {
   name               = "gke3"
   location           = "europe-west1"
   initial_node_count = 1
+  authenticator_groups_config {
+    security_group = "gke-security-groups-test@gcpdiag.dev"
+  }
   node_config {
     service_account = google_service_account.gke3_sa.email
     oauth_scopes = [
