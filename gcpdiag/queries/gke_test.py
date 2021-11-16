@@ -60,7 +60,7 @@ class TestCluster:
     clusters = gke.get_clusters(context)
     c = clusters[DUMMY_CLUSTER1_NAME]
     assert c.name == 'gke1'
-    assert c.master_version == '1.18.16-gke.502'
+    assert c.master_version == '1.20.10-gke.1600'
     assert c.release_channel == 'REGULAR'
 
   def test_get_path_regional(self):
