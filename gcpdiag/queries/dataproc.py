@@ -23,17 +23,31 @@ from gcpdiag.queries import apis, gce
 class Cluster(models.Resource):
   """ Represents Dataproc Cluster """
   name: str
-  region: str
-  status: str
+  _resource_data: dict
 
-  def __init__(self, name: str, status: str, project_id: str, region: str):
+  def __init__(self, name: str, project_id: str, resource_data: dict):
     super().__init__(project_id)
     self.name = name
-    self.region = region
-    self.status = status
+    self._resource_data = resource_data
 
   def is_running(self) -> bool:
     return self.status == 'RUNNING'
+
+  def get_software_property(self, property_name) -> str:
+    return self._resource_data['config']['softwareConfig']['properties'].get(
+        property_name)
+
+  def is_stackdriver_logging_enabled(self) -> bool:
+    return self.get_software_property(
+        'dataproc:dataproc.logging.stackdriver.job.driver.enable') == 'true'
+
+  @property
+  def region(self) -> str:
+    """biggest regions have a trailing '-d' at most in its zoneUri
+    https://www.googleapis.com/compute/v1/projects/dataproc1/zones/us-central1-d
+    """
+    return self._resource_data['config']['gceClusterConfig']['zoneUri'].split(
+        '/')[-1][0:-2]
 
   @property
   def full_path(self) -> str:
@@ -42,6 +56,10 @@ class Cluster(models.Resource):
   @property
   def short_path(self) -> str:
     return f'{self.project_id}/{self.region}/{self.name}'
+
+  @property
+  def status(self) -> str:
+    return self._resource_data['status']['state']
 
   def __str__(self) -> str:
     return self.short_path
@@ -59,11 +77,10 @@ class Region:
   def get_clusters(self) -> Iterable[Cluster]:
     r = []
     for cluster in self.query_api():
-      r.append(
-          Cluster(name=cluster['clusterName'],
-                  status=cluster['status']['state'],
+      c = Cluster(name=cluster['clusterName'],
                   project_id=self.project_id,
-                  region=self.region))
+                  resource_data=cluster)
+      r.append(c)
     return r
 
   def query_api(self) -> Iterable[dict]:
