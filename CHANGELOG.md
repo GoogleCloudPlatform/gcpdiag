@@ -1,3 +1,20 @@
+## 0.48 (2021-11-15)
+
+#### New rules
+
+- apigee/WARN/2021_001: Every env. group has at least one env. (b/193733957)
+- dataproc/WARN/2021_001: Dataproc cluster is in RUNNING state (b/204850980)
+
+#### Enhancements
+
+- Use OAuth authentication by default (b/195908593)
+- New product: Dataproc (b/204850980)
+- New product: Apigee (b/193733957)
+
+#### Fixes
+
+- Fix GitHub actions with newest pipenv
+
 ## 0.47 (2021-11-01)
 
 #### New rules

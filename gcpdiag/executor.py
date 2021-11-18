@@ -11,13 +11,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""pyinstaller configuration for gcpdiag.lint."""
+"""ThreadPoolExecutor instance that can be used to run tasks in parallel"""
 
-from PyInstaller.utils.hooks import collect_submodules
+import concurrent.futures
+from typing import Optional
 
-hiddenimports = \
-  collect_submodules('gcpdiag.lint.gce') + \
-  collect_submodules('gcpdiag.lint.gke') + \
-  collect_submodules('gcpdiag.lint.iam') + \
-  collect_submodules('gcpdiag.lint.gcf') + \
-  collect_submodules('gcpdiag.lint.dataproc')
+from gcpdiag import config
+
+_executor: Optional[concurrent.futures.Executor] = None
+
+
+def get_executor() -> concurrent.futures.Executor:
+  global _executor
+  if _executor is None:
+    _executor = concurrent.futures.ThreadPoolExecutor(
+        max_workers=config.MAX_WORKERS)
+  return _executor

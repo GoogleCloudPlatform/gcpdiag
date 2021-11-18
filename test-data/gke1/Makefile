@@ -96,7 +96,7 @@ json-dumps/iam-service-accounts.json:
 
 # container.googleapis.com
 
-json-dumps/clusters.json:
+json-dumps/container-clusters.json:
 	$(CURL) -fsS \
 		'https://container.googleapis.com/v1/projects/$(PROJECT_ID)/locations/-/clusters' \
 		| $(JSON_CLEANER) clusters >$@

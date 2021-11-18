@@ -21,7 +21,7 @@ import re
 import sys
 
 from gcpdiag import config, hooks, lint, models
-from gcpdiag.lint import gce, gcf, gke, iam, report_terminal
+from gcpdiag.lint import apigee, dataproc, gce, gcf, gke, iam, report_terminal
 from gcpdiag.queries import apis
 
 
@@ -161,7 +161,10 @@ def run(argv) -> int:
   repo.load_rules(gke)
   repo.load_rules(iam)
   repo.load_rules(gcf)
-  # ^^^ If you add rules directory, update also pyinstaller/hook-gcpdiag.lint.py
+  repo.load_rules(dataproc)
+  # ^^^ If you add rules directory, update also
+  # pyinstaller/hook-gcpdiag.lint.py and bin/precommit-website-rules
+  repo.load_rules(apigee)
   report = report_terminal.LintReportTerminal(
       log_info_for_progress_only=(args.verbose == 0),
       show_ok=not args.hide_ok,
@@ -178,13 +181,14 @@ def run(argv) -> int:
   else:
     logger.setLevel(logging.INFO)
 
+  # Start the reporting
+  report.banner()
+  report.lint_start(context)
+
   # Verify that we have access and that the CRM API is enabled
   apis.verify_access(context.project_id)
 
   # Run the tests.
-  report.banner()
-  apis.login()
-  report.lint_start(context)
   exit_code = repo.run_rules(context, report, include_patterns,
                              exclude_patterns)
   hooks.post_lint_hook(report)
