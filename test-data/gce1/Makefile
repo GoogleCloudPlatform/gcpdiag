@@ -1,9 +1,19 @@
-PROJECT_ID  := $(shell terraform output project_id | sed -e 's|"||g')
+PROJECT_ID  := $(shell terraform output -raw project_id)
+PROJECT_ID_SUFFIX := $(shell terraform output -raw project_id_suffix)
+PROJECT_NR  := $(shell terraform output -raw project_nr)
+ORG_ID      := $(shell terraform output -raw org_id)
 CURL         = ../../bin/curl-wrap.sh
 JSON_CLEANER = ../../bin/json-cleaner
 ZONE_1       = europe-west1-b
 ZONE_2       = europe-west4-a
 ZONE_EMPTY   = europe-west4-b
+
+FAKE_PROJECT_ID_SUFFIX = aaaa
+FAKE_PROJECT_NR = 12340001
+FAKE_ORG_ID = 11112222
+SED_SUBST_FAKE = sed -e "s/$(PROJECT_ID_SUFFIX)/$(FAKE_PROJECT_ID_SUFFIX)/" \
+		     -e "s/$(PROJECT_NR)/$(FAKE_PROJECT_NR)/" \
+		     -e "s/$(ORG_ID)/$(FAKE_ORG_ID)/" \
 
 all:	\
 	json-dumps/compute-instances-$(ZONE_1)-2.json \
@@ -14,7 +24,7 @@ all:	\
 	json-dumps/compute-migs-$(ZONE_2).json \
 	json-dumps/compute-migs-empty.json \
 	json-dumps/compute-project.json \
-	json-dumps/compute-regions.json:
+	json-dumps/compute-regions.json \
 	json-dumps/compute-zones.json \
 	json-dumps/monitoring-query.json \
 	json-dumps/project.json \
@@ -23,59 +33,69 @@ all:	\
 json-dumps/compute-instances-$(ZONE_1).json:
 	$(CURL) -fsS \
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_1)/instances?maxResults=3' \
-		| $(JSON_CLEANER) instances >$@
+		| $(JSON_CLEANER) instances \
+		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/compute-instances-$(ZONE_1)-2.json: json-dumps/compute-instances-$(ZONE_1).json
 	$(CURL) -fsS \
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_1)/instances?maxResults=3&pageToken=$(shell cat json-dumps/compute-instances-$(ZONE_1).json | jq -r '.nextPageToken')' \
-		| $(JSON_CLEANER) instances >$@
+		| $(JSON_CLEANER) instances \
+		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/compute-instances-$(ZONE_2).json:
 	$(CURL) -fsS \
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_2)/instances' \
-		| $(JSON_CLEANER) instances >$@
+		| $(JSON_CLEANER) instances \
+		| $(SED_SUBST_FAKE) >$@
 
 
 json-dumps/compute-instances-empty.json:
 	$(CURL) -fsS \
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_EMPTY)/instances' \
-		| $(JSON_CLEANER) instances >$@
+		| $(JSON_CLEANER) instances \
+		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/compute-migs-$(ZONE_1).json:
 	$(CURL) -fsS \
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_1)/instanceGroupManagers' \
-		 >$@
+		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/compute-migs-$(ZONE_2).json:
 	$(CURL) -fsS \
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_2)/instanceGroupManagers' \
-		 >$@
+		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/compute-migs-empty.json:
 	$(CURL) -fsS \
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_EMPTY)/instanceGroupManagers' \
-		| $(JSON_CLEANER) instances >$@
+		| $(JSON_CLEANER) instances \
+		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/compute-project.json:
 	$(CURL) -fsS \
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)' \
-		| $(JSON_CLEANER) compute-project >$@
+		| $(JSON_CLEANER) compute-project \
+		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/compute-regions.json:
 	$(CURL) -fsS \
-		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/regions' >$@
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/regions' \
+		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/compute-zones.json:
 	$(CURL) -fsS \
-		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones' >$@
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones' \
+		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/project.json:
 	$(CURL) -fsS \
-		'https://cloudresourcemanager.googleapis.com/v3/projects/$(PROJECT_ID)' >$@
+		'https://cloudresourcemanager.googleapis.com/v3/projects/$(PROJECT_ID)' \
+		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/services.json:
 	$(CURL) -fv \
-	  'https://serviceusage.googleapis.com/v1/projects/$(PROJECT_ID)/services?filter=state:ENABLED' >$@
+	        'https://serviceusage.googleapis.com/v1/projects/$(PROJECT_ID)/services?filter=state:ENABLED' \
+		| $(SED_SUBST_FAKE) >$@
 
 define MONITORING_QUERY
 { \
@@ -90,4 +110,5 @@ json-dumps/monitoring-query.json:
 	$(CURL) -fsS \
 		'https://monitoring.googleapis.com/v3/projects/$(PROJECT_ID)/timeSeries:query' \
 		--header "Content-Type: application/json" -X POST \
-		--data '$(MONITORING_QUERY)' >$@
+		--data '$(MONITORING_QUERY)' \
+		| $(SED_SUBST_FAKE) >$@

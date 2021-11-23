@@ -19,7 +19,7 @@ from unittest import mock
 
 from gcpdiag.queries import apis_stub, monitoring
 
-DUMMY_PROJECT_NAME = 'gcpd-gce1-4exv'
+DUMMY_PROJECT_NAME = 'gcpdiag-gce1-aaaa'
 DUMMY_INSTANCE_NAME = 'gce1'
 DUMMY_ZONE = 'europe-west4-a'
 

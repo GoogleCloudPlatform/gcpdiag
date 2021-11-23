@@ -18,7 +18,7 @@
       {
         "key": "value_uptime_total_aggregate_count",
         "valueType": "INT64",
-        "metricKind": "DELTA",
+        "metricKind": "GAUGE",
         "unit": "1"
       }
     ]
@@ -30,36 +30,22 @@
           "stringValue": "europe-west4-a"
         },
         {
-          "stringValue": "mig-tcnm"
+          "stringValue": "mig-z5cm"
         }
       ],
       "pointData": [
         {
           "values": [
             {
-              "doubleValue": 2071746
+              "doubleValue": 58.666666666666664
             },
             {
-              "int64Value": "4"
+              "int64Value": "3"
             }
           ],
           "timeInterval": {
-            "startTime": "2021-07-23T08:27:07.010750Z",
-            "endTime": "2021-07-23T08:27:07.010750Z"
-          }
-        },
-        {
-          "values": [
-            {
-              "doubleValue": 2071476
-            },
-            {
-              "int64Value": "5"
-            }
-          ],
-          "timeInterval": {
-            "startTime": "2021-07-23T08:22:07.010750Z",
-            "endTime": "2021-07-23T08:22:07.010750Z"
+            "startTime": "2021-11-23T14:30:02.683047Z",
+            "endTime": "2021-11-23T14:30:02.683047Z"
           }
         }
       ]
@@ -70,36 +56,22 @@
           "stringValue": "europe-west4-a"
         },
         {
-          "stringValue": "mig-6dlt"
+          "stringValue": "mig-srbj"
         }
       ],
       "pointData": [
         {
           "values": [
             {
-              "doubleValue": 2071745
+              "doubleValue": 58.666666666666664
             },
             {
-              "int64Value": "4"
+              "int64Value": "3"
             }
           ],
           "timeInterval": {
-            "startTime": "2021-07-23T08:27:07.010750Z",
-            "endTime": "2021-07-23T08:27:07.010750Z"
-          }
-        },
-        {
-          "values": [
-            {
-              "doubleValue": 2071475
-            },
-            {
-              "int64Value": "5"
-            }
-          ],
-          "timeInterval": {
-            "startTime": "2021-07-23T08:22:07.010750Z",
-            "endTime": "2021-07-23T08:22:07.010750Z"
+            "startTime": "2021-11-23T14:30:02.683047Z",
+            "endTime": "2021-11-23T14:30:02.683047Z"
           }
         }
       ]
@@ -124,8 +96,8 @@
             }
           ],
           "timeInterval": {
-            "startTime": "2021-07-23T08:27:07.010750Z",
-            "endTime": "2021-07-23T08:27:07.010750Z"
+            "startTime": "2021-11-23T14:30:02.683047Z",
+            "endTime": "2021-11-23T14:30:02.683047Z"
           }
         },
         {
@@ -138,8 +110,8 @@
             }
           ],
           "timeInterval": {
-            "startTime": "2021-07-23T08:22:07.010750Z",
-            "endTime": "2021-07-23T08:22:07.010750Z"
+            "startTime": "2021-11-23T14:25:02.683047Z",
+            "endTime": "2021-11-23T14:25:02.683047Z"
           }
         }
       ]
@@ -157,29 +129,29 @@
         {
           "values": [
             {
-              "doubleValue": 3627
+              "doubleValue": 1528
             },
             {
               "int64Value": "4"
             }
           ],
           "timeInterval": {
-            "startTime": "2021-07-23T08:27:07.010750Z",
-            "endTime": "2021-07-23T08:27:07.010750Z"
+            "startTime": "2021-11-23T14:30:02.683047Z",
+            "endTime": "2021-11-23T14:30:02.683047Z"
           }
         },
         {
           "values": [
             {
-              "doubleValue": 3357
+              "doubleValue": 1258
             },
             {
               "int64Value": "5"
             }
           ],
           "timeInterval": {
-            "startTime": "2021-07-23T08:22:07.010750Z",
-            "endTime": "2021-07-23T08:22:07.010750Z"
+            "startTime": "2021-11-23T14:25:02.683047Z",
+            "endTime": "2021-11-23T14:25:02.683047Z"
           }
         }
       ]
@@ -190,36 +162,22 @@
           "stringValue": "europe-west1-b"
         },
         {
-          "stringValue": "gke-gke1-default-pool-564e261a-z7th"
+          "stringValue": "gke-gke1-default-pool-7d122a82-vbpp"
         }
       ],
       "pointData": [
         {
           "values": [
             {
-              "doubleValue": 2396843
+              "doubleValue": 59.333333333333336
             },
             {
-              "int64Value": "4"
+              "int64Value": "3"
             }
           ],
           "timeInterval": {
-            "startTime": "2021-07-23T08:27:07.010750Z",
-            "endTime": "2021-07-23T08:27:07.010750Z"
-          }
-        },
-        {
-          "values": [
-            {
-              "doubleValue": 2396573
-            },
-            {
-              "int64Value": "5"
-            }
-          ],
-          "timeInterval": {
-            "startTime": "2021-07-23T08:22:07.010750Z",
-            "endTime": "2021-07-23T08:22:07.010750Z"
+            "startTime": "2021-11-23T14:30:02.683047Z",
+            "endTime": "2021-11-23T14:30:02.683047Z"
           }
         }
       ]
@@ -230,36 +188,22 @@
           "stringValue": "europe-west1-b"
         },
         {
-          "stringValue": "gke-gke1-default-pool-564e261a-gzhv"
+          "stringValue": "gke-gke1-default-pool-7d122a82-pwpr"
         }
       ],
       "pointData": [
         {
           "values": [
             {
-              "doubleValue": 2396846
+              "doubleValue": 59.333333333333336
             },
             {
-              "int64Value": "4"
+              "int64Value": "3"
             }
           ],
           "timeInterval": {
-            "startTime": "2021-07-23T08:27:07.010750Z",
-            "endTime": "2021-07-23T08:27:07.010750Z"
-          }
-        },
-        {
-          "values": [
-            {
-              "doubleValue": 2396576
-            },
-            {
-              "int64Value": "5"
-            }
-          ],
-          "timeInterval": {
-            "startTime": "2021-07-23T08:22:07.010750Z",
-            "endTime": "2021-07-23T08:22:07.010750Z"
+            "startTime": "2021-11-23T14:30:02.683047Z",
+            "endTime": "2021-11-23T14:30:02.683047Z"
           }
         }
       ]
@@ -270,36 +214,22 @@
           "stringValue": "europe-west1-b"
         },
         {
-          "stringValue": "gke-gke1-default-pool-564e261a-dgx7"
+          "stringValue": "gke-gke1-default-pool-7d122a82-gtw0"
         }
       ],
       "pointData": [
         {
           "values": [
             {
-              "doubleValue": 2396845
+              "doubleValue": 59.333333333333336
             },
             {
-              "int64Value": "4"
+              "int64Value": "3"
             }
           ],
           "timeInterval": {
-            "startTime": "2021-07-23T08:27:07.010750Z",
-            "endTime": "2021-07-23T08:27:07.010750Z"
-          }
-        },
-        {
-          "values": [
-            {
-              "doubleValue": 2396575
-            },
-            {
-              "int64Value": "5"
-            }
-          ],
-          "timeInterval": {
-            "startTime": "2021-07-23T08:22:07.010750Z",
-            "endTime": "2021-07-23T08:22:07.010750Z"
+            "startTime": "2021-11-23T14:30:02.683047Z",
+            "endTime": "2021-11-23T14:30:02.683047Z"
           }
         }
       ]
@@ -310,36 +240,22 @@
           "stringValue": "europe-west1-b"
         },
         {
-          "stringValue": "gke-gke1-default-pool-564e261a-2j8p"
+          "stringValue": "gke-gke1-default-pool-7d122a82-4sdz"
         }
       ],
       "pointData": [
         {
           "values": [
             {
-              "doubleValue": 2396846
+              "doubleValue": 88
             },
             {
-              "int64Value": "4"
+              "int64Value": "2"
             }
           ],
           "timeInterval": {
-            "startTime": "2021-07-23T08:27:07.010750Z",
-            "endTime": "2021-07-23T08:27:07.010750Z"
-          }
-        },
-        {
-          "values": [
-            {
-              "doubleValue": 2396576
-            },
-            {
-              "int64Value": "5"
-            }
-          ],
-          "timeInterval": {
-            "startTime": "2021-07-23T08:22:07.010750Z",
-            "endTime": "2021-07-23T08:22:07.010750Z"
+            "startTime": "2021-11-23T14:30:02.683047Z",
+            "endTime": "2021-11-23T14:30:02.683047Z"
           }
         }
       ]

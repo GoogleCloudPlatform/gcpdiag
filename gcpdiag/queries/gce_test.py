@@ -15,6 +15,7 @@
 # Lint as: python3
 """Test code in gce.py."""
 
+import re
 from unittest import mock
 
 from gcpdiag import models
@@ -22,12 +23,10 @@ from gcpdiag.queries import apis_stub, gce
 
 DUMMY_REGION = 'europe-west4'
 DUMMY_ZONE = 'europe-west4-a'
-DUMMY_PROJECT_NAME = 'gcpd-gce1-4exv'
-DUMMY_PROJECT_NR = '50670056743'
-DUMMY_INSTANCE1_ID = '48322001635889308'
+DUMMY_PROJECT_NAME = 'gcpdiag-gce1-aaaa'
+DUMMY_PROJECT_NR = '12340001'
 DUMMY_INSTANCE1_NAME = 'gce1'
 DUMMY_INSTANCE1_LABELS = {'foo': 'bar'}
-DUMMY_INSTANCE2_ID = '7817880697222713500'
 DUMMY_INSTANCE2_NAME = 'gce2'
 DUMMY_INSTANCE3_LABELS = {'gcp_doctor_test': 'gke'}
 
@@ -40,23 +39,28 @@ class TestGce:
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     instances = gce.get_instances(context)
     assert len(instances) == 8
-    assert DUMMY_INSTANCE1_ID in instances
-    assert instances[DUMMY_INSTANCE1_ID].full_path == \
+    instances_by_name = {i.name: i for i in instances.values()}
+    assert DUMMY_INSTANCE1_NAME in instances_by_name
+    assert instances_by_name[DUMMY_INSTANCE1_NAME].full_path == \
         f'projects/{DUMMY_PROJECT_NAME}/zones/{DUMMY_ZONE}/instances/{DUMMY_INSTANCE1_NAME}'
-    assert instances[DUMMY_INSTANCE1_ID].short_path == \
+    assert instances_by_name[DUMMY_INSTANCE1_NAME].short_path == \
         f'{DUMMY_PROJECT_NAME}/{DUMMY_INSTANCE1_NAME}'
+    # also verify that the instances dict uses the instance id as key
+    assert instances_by_name[DUMMY_INSTANCE1_NAME].id in instances
 
   def test_get_instances_by_region_returns_instance(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              regions=['fake-region', DUMMY_REGION])
     instances = gce.get_instances(context)
-    assert DUMMY_INSTANCE1_ID in instances and len(instances) == 4
+    instances_by_name = {i.name: i for i in instances.values()}
+    assert DUMMY_INSTANCE1_NAME in instances_by_name and len(instances) == 4
 
   def test_get_instances_by_label(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              labels=[DUMMY_INSTANCE1_LABELS])
     instances = gce.get_instances(context)
-    assert DUMMY_INSTANCE1_ID in instances and len(instances) == 1
+    instances_by_name = {i.name: i for i in instances.values()}
+    assert DUMMY_INSTANCE1_NAME in instances_by_name and len(instances) == 1
 
   def test_get_instances_by_other_region_returns_empty_result(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
@@ -64,11 +68,28 @@ class TestGce:
     instances = gce.get_instances(context)
     assert len(instances) == 0
 
+  def test_is_serial_port_logging_enabled(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME,
+                             labels=[DUMMY_INSTANCE1_LABELS])
+    instances = gce.get_instances(context)
+    instances_by_name = {i.name: i for i in instances.values()}
+    i = instances_by_name[DUMMY_INSTANCE1_NAME]
+    assert i.is_serial_port_logging_enabled()
+    assert i.get_metadata('serial-port-logging-enable')
+
+  def test_is_serial_port_logging_enabled_instance_level(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    instances = gce.get_instances(context)
+    instances_by_name = {i.name: i for i in instances.values()}
+    i = instances_by_name[DUMMY_INSTANCE2_NAME]
+    assert not i.is_serial_port_logging_enabled()
+
   def test_is_gke_node_false(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              labels=[DUMMY_INSTANCE1_LABELS])
     instances = gce.get_instances(context)
-    assert not instances[DUMMY_INSTANCE1_ID].is_gke_node()
+    instances_by_name = {i.name: i for i in instances.values()}
+    assert not instances_by_name[DUMMY_INSTANCE1_NAME].is_gke_node()
 
   def test_is_gke_node_true(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
@@ -82,8 +103,9 @@ class TestGce:
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              labels=[DUMMY_INSTANCE1_LABELS])
     instances = gce.get_instances(context)
-    assert instances[
-        DUMMY_INSTANCE1_ID].service_account == \
+    instances_by_name = {i.name: i for i in instances.values()}
+    assert instances_by_name[
+        DUMMY_INSTANCE1_NAME].service_account == \
           f'{DUMMY_PROJECT_NR}-compute@developer.gserviceaccount.com'
 
   def test_get_managed_instance_groups(self):
@@ -113,21 +135,7 @@ class TestGce:
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              labels=[DUMMY_INSTANCE3_LABELS])
     for n in gce.get_instances(context).values():
-      assert n.mig.name == 'gke-gke1-default-pool-564e261a-grp'
-
-  def test_is_serial_port_logging_enabled(self):
-    context = models.Context(project_id=DUMMY_PROJECT_NAME,
-                             labels=[DUMMY_INSTANCE1_LABELS])
-    instances = gce.get_instances(context)
-    i = instances[DUMMY_INSTANCE1_ID]
-    assert i.is_serial_port_logging_enabled()
-    assert i.get_metadata('serial-port-logging-enable')
-
-  def test_is_serial_port_logging_enabled_instance_level(self):
-    context = models.Context(project_id=DUMMY_PROJECT_NAME)
-    instances = gce.get_instances(context)
-    i = instances[DUMMY_INSTANCE2_ID]
-    assert not i.is_serial_port_logging_enabled()
+      assert re.match(r'gke-gke1-default-pool-\w+-grp', n.mig.name)
 
   def test_get_all_regions(self):
     regions = gce.get_all_regions(DUMMY_PROJECT_NAME)
