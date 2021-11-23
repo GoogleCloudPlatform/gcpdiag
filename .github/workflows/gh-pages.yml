@@ -18,11 +18,15 @@ jobs:
     - name: Hugo build
       uses: docker://us-docker.pkg.dev/gcpdiag-repo/devel/gcpdiag-hugo:0.1
       with:
-        args: /bin/sh -c "cd website && hugo build --themesDir=/themes --baseUrl=https://gcpdiag.dev/ --minify --enableGitInfo"
+        args: >
+          /bin/sh -e -c "
+          cp bin/gcpdiag-dockerized website/static/gcpdiag.sh;
+          cd website;
+          hugo build --themesDir=/themes --baseUrl=https://gcpdiag.dev/ --minify --enableGitInfo"
 
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
-      if: github.ref == 'refs/heads/main'
+      if: github.repository == 'GoogleCloudPlatform/gcpdiag' && github.ref == 'refs/heads/main'
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./website/public
