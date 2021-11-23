@@ -14,21 +14,31 @@
  * limitations under the License.
  */
 
+/*
 terraform {
   backend "gcs" {
     bucket = "gcpd-tf-state"
     prefix = "projects/gce"
   }
 }
+*/
+
+resource "random_string" "project_id_suffix" {
+  length  = 8
+  number  = true
+  lower   = true
+  upper   = false
+  special = false
+}
 
 resource "google_project" "project" {
-  name = "gcp-doctor test - gce1"
-  # note: we add a "random" 2-byte suffix to make it easy to recreate the
-  # project under another name and avoid project name conflicts.
-  project_id      = "gcpd-gce1-4exv"
-  org_id          = "98915863894"
-  billing_account = "0072A3-8FBEBA-7CD837"
-  skip_delete     = true
+  name            = "gcp-doctor test - gce1"
+  project_id      = "gcpdiag-gce1-${random_string.project_id_suffix.id}"
+  org_id          = var.org_id
+  billing_account = var.billing_account_id
+  labels = {
+    gcpdiag : "test"
+  }
 }
 
 resource "google_project_service" "compute" {
@@ -42,9 +52,10 @@ resource "google_project_service" "container" {
 }
 
 resource "google_compute_project_metadata_item" "serial_logging" {
-  project = google_project.project.project_id
-  key     = "serial-port-logging-enable"
-  value   = "true"
+  project    = google_project.project.project_id
+  depends_on = [google_project_service.compute]
+  key        = "serial-port-logging-enable"
+  value      = "true"
 }
 
 data "google_compute_default_service_account" "default" {
@@ -59,4 +70,16 @@ data "google_compute_image" "cos" {
 
 output "project_id" {
   value = google_project.project.project_id
+}
+
+output "project_id_suffix" {
+  value = random_string.project_id_suffix.id
+}
+
+output "project_nr" {
+  value = google_project.project.number
+}
+
+output "org_id" {
+  value = var.org_id
 }

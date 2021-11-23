@@ -25,11 +25,19 @@ clean_maps = {
             'REDACTED',
         '.items.[].disks.[].shieldedInstanceInitialState.pk.content':
             'REDACTED',
+        '.items.[].fingerprint':
+            'REDACTED',
+        '.items.[].metadata.fingerprint':
+            'REDACTED',
         '.items.[].metadata.items.configure-sh':
+            'REDACTED',
+        '.items.[].metadata.items.kube-env':
             'REDACTED',
         '.items.[].metadata.items.user-data':
             'REDACTED',
-        '.items.[].metadata.items.kube-env':
+        '.items.[].networkInterfaces.[].fingerprint':
+            'REDACTED',
+        '.items.[].tags.fingerprint':
             'REDACTED',
     },
     'compute-project': {
