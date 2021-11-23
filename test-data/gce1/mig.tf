@@ -15,8 +15,9 @@
  */
 
 resource "google_compute_instance_template" "default" {
-  name         = "mig-template"
   project      = google_project.project.project_id
+  depends_on   = [google_project_service.compute]
+  name         = "mig-template"
   machine_type = "e2-micro"
   disk {
     source_image = "debian-cloud/debian-9"
@@ -29,8 +30,9 @@ resource "google_compute_instance_template" "default" {
 }
 
 resource "google_compute_instance_group_manager" "mig" {
-  name               = "mig"
   project            = google_project.project.project_id
+  depends_on         = [google_project_service.compute]
+  name               = "mig"
   base_instance_name = "mig"
   zone               = "europe-west4-a"
   version {

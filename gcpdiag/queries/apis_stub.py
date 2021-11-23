@@ -28,9 +28,9 @@ from gcpdiag.queries import (apigee_stub, crm_stub, dataproc_stub, gce_stub,
 # pylint: disable=unused-argument
 
 JSON_PROJECT_DIR = {
-    'gcpd-gce1-4exv':
+    'gcpdiag-gce1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/gce1/json-dumps',
-    '50670056743':
+    '12340001':
         pathlib.Path(__file__).parents[2] / 'test-data/gce1/json-dumps',
     'gcpd-gke-1-9b90':
         pathlib.Path(__file__).parents[2] / 'test-data/gke1/json-dumps',

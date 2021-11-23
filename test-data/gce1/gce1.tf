@@ -16,6 +16,7 @@
 
 resource "google_compute_instance" "gce1" {
   project        = google_project.project.project_id
+  depends_on     = [google_project_service.compute]
   name           = "gce1"
   machine_type   = "f1-micro"
   zone           = "europe-west4-a"

@@ -1,24 +1,24 @@
 {
   "commonInstanceMetadata": {
-    "fingerprint": "ZMvofGkvIN4=",
+    "fingerprint": "Qdy9jxpMZxs=",
     "items": [
       {
         "key": "serial-port-logging-enable",
         "value": "true"
       },
       {
-        "key": "sshKeys",
-        "value": "REDACTED"
+        "key": "gke-gke1-61f8d982-secondary-ranges",
+        "value": "services:default:default:gke-gke1-services-61f8d982,pods:default:default:gke-gke1-pods-61f8d982"
       }
     ],
     "kind": "compute#metadata"
   },
-  "creationTimestamp": "2021-02-17T06:59:17.525-08:00",
+  "creationTimestamp": "2021-11-23T05:55:41.984-08:00",
   "defaultNetworkTier": "PREMIUM",
-  "defaultServiceAccount": "50670056743-compute@developer.gserviceaccount.com",
-  "id": "7548990507267953066",
+  "defaultServiceAccount": "12340001-compute@developer.gserviceaccount.com",
+  "id": "7970567725207604274",
   "kind": "compute#project",
-  "name": "gcpd-gce1-4exv",
+  "name": "gcpdiag-gce1-aaaa",
   "quotas": [
     {
       "limit": 10000,
@@ -48,7 +48,7 @@
     {
       "limit": 300,
       "metric": "ROUTES",
-      "usage": 5
+      "usage": 1
     },
     {
       "limit": 150,
@@ -86,7 +86,7 @@
       "usage": 0
     },
     {
-      "limit": 30,
+      "limit": 150,
       "metric": "BACKEND_SERVICES",
       "usage": 0
     },
@@ -133,7 +133,7 @@
     {
       "limit": 275,
       "metric": "SUBNETWORKS",
-      "usage": 28
+      "usage": 29
     },
     {
       "limit": 100,
@@ -216,6 +216,6 @@
       "usage": 0
     }
   ],
-  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa",
   "xpnProjectStatus": "UNSPECIFIED_XPN_PROJECT_STATUS"
 }
