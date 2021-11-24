@@ -1,23 +1,37 @@
 #!/bin/bash
 set -e
-THIS_WRAPPER_VERSION_MAJOR=0
-THIS_WRAPPER_VERSION_MINOR=8
+THIS_WRAPPER_VERSION=0.8
 SUPPORTED_RUNTIME="docker podman"
 
 eval $(curl -sf https://storage.googleapis.com/gcpdiag/release-version|grep -Ei '^\w*=[0-9a-z/\._-]*$')
 
+# Test whether 1st arg is greater than or equal to the 2nd, when compared as version numbers (bash-only)
+version_ge () {
+  # Note: implementation is rather crude and will treat missing numbers as `0`
+  # so e.g. "1" and "1.0.0" compare equal; even worse, "..1" is accepted and
+  # less than "0.0.2", and the empty string is equal to "0.0"
+  local -a V1=(${1//./ })
+  local -a V2=(${2//./ })
+  if (( ${#V1[@]} > ${#V2[@]} )); then
+    local -i len=${#V1[@]}
+  else
+    local -i len=${#V2[@]}
+  fi
+  for i in $(seq 0 ${len}); do
+    if (( "${V1[$i]:-0}" < "${V2[$i]:-0}")); then
+      return 1  # V1[i] < V2[i]
+    fi
+  done
+  return 0  # V1 >= V2
+}
+
 # Check this script version and compare with the minimum required version
 # defined in the release-version file. This allows us to force an upgrade
 # of the wrapper script.
-WRAPPER_VERSION_MAJOR=${WRAPPER_VERSION%.*}
-WRAPPER_VERSION_MINOR=${WRAPPER_VERSION#*.}
-if [[ $THIS_WRAPPER_VERSION_MAJOR -lt $WRAPPER_VERSION_MAJOR ||
-      ( $THIS_WRAPPER_VERSION_MAJOR -eq $WRAPPER_VERSION_MAJOR &&
-        $THIS_WRAPPER_VERSION_MINOR -lt $WRAPPER_VERSION_MINOR ) ]]
-then
+if ! version_ge "$THIS_WRAPPER_VERSION" "$WRAPPER_VERSION"; then
   echo
   echo "## ERROR:"
-  echo "## This gcpdiag wrapper script is obsolete ($THIS_WRAPPER_VERSION_MAJOR.$THIS_WRAPPER_VERSION_MINOR, minimum required: $WRAPPER_VERSION)."
+  echo "## This gcpdiag wrapper script is obsolete (version $THIS_WRAPPER_VERSION, minimum required: $WRAPPER_VERSION)."
   echo "## Please update the wrapper script to the latest version as follows:"
   echo
   echo "curl https://gcpdiag.dev/gcpdiag.sh >gcpdiag"
