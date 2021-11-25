@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-resource "google_compute_instance" "default" {
+resource "google_compute_instance" "gce2" {
   project        = google_project.project.project_id
   depends_on     = [google_project_service.compute]
   name           = "gce2"

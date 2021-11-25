@@ -19,8 +19,8 @@ import diskcache
 
 from gcpdiag.queries import apis_stub, crm
 
-DUMMY_PROJECT_ID = 'gcpd-gke-1-9b90'
-DUMMY_PROJECT_NR = 18404348413
+DUMMY_PROJECT_ID = 'gcpdiag-gke1-aaaa'
+DUMMY_PROJECT_NR = 12340002
 DUMMY_PROJECT_NAME = 'gcp-doctor test - gke1'
 
 

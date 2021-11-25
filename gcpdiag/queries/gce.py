@@ -168,7 +168,7 @@ class Instance(models.Resource):
 
     # Example created-by:
     # pylint: disable=line-too-long
-    # "projects/18404348413/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-e5e20a34-grp"
+    # "projects/12340002/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-e5e20a34-grp"
     # (note how it uses a project number and not a project id...)
     created_by_match = re.match(
         r'projects/([^/]+)/((?:regions|zones)/[^/]+/instanceGroupManagers/[^/]+)$',
