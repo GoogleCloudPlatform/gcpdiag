@@ -1,10 +1,13 @@
 {
-  "name": "projects/778405515516",
-  "parent": "folders/422810093603",
-  "projectId": "gcpd-gcf1-s6ew",
+  "name": "projects/12340003",
+  "parent": "organizations/11112222",
+  "projectId": "gcpdiag-gcf1-aaaa",
   "state": "ACTIVE",
-  "displayName": "gcpd-gcf1-s6ew",
-  "createTime": "2021-10-18T09:17:07.671Z",
-  "updateTime": "2021-10-18T09:17:09.520Z",
-  "etag": "xE/y8l0O8NhD16fT0SAguw=="
+  "displayName": "gcp-doctor test - gcf1",
+  "createTime": "2021-11-26T16:11:25.377Z",
+  "updateTime": "2021-11-26T16:11:27.335Z",
+  "etag": "JP5K3b6eftM4ytdtXhvbVg==",
+  "labels": {
+    "gcpdiag": "test"
+  }
 }

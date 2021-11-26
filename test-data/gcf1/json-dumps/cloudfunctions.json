@@ -2,22 +2,22 @@
   "functions": [
     {
       "availableMemoryMb": 256,
-      "buildId": "46e8a9f8-5e2a-4e5f-9fe7-03c0a29f9e4c",
-      "buildName": "projects/778405515516/locations/us-central1/builds/46e8a9f8-5e2a-4e5f-9fe7-03c0a29f9e4c",
+      "buildId": "ec7ee473-df70-4a4c-9c55-c934ef390099",
+      "buildName": "projects/12340003/locations/us-central1/builds/ec7ee473-df70-4a4c-9c55-c934ef390099",
       "entryPoint": "hello_world",
       "httpsTrigger": {
         "securityLevel": "SECURE_OPTIONAL",
-        "url": "https://us-central1-gcpd-gcf1-s6ew.cloudfunctions.net/gcf1"
+        "url": "https://us-central1-gcpdiag-gcf1-aaaa.cloudfunctions.net/gcf1"
       },
       "ingressSettings": "ALLOW_ALL",
       "maxInstances": 100,
-      "name": "projects/gcpd-gcf1-s6ew/locations/us-central1/functions/gcf1",
+      "name": "projects/gcpdiag-gcf1-aaaa/locations/us-central1/functions/gcf1",
       "runtime": "python39",
-      "serviceAccountEmail": "gcpd-gcf1-s6ew@appspot.gserviceaccount.com",
-      "sourceArchiveUrl": "gs://gcpd-gcf1-s6ew-gcf1bucket/gcpd-gcf1-s6ew-gcf1archive",
+      "serviceAccountEmail": "gcpdiag-gcf1-aaaa@appspot.gserviceaccount.com",
+      "sourceArchiveUrl": "gs://gcpdiag-gcf1bucket-aaaa/gcpdiag-gcf1archive",
       "status": "ACTIVE",
       "timeout": "60s",
-      "updateTime": "2021-10-19T07:35:00.254Z",
+      "updateTime": "2021-11-26T16:25:10.278Z",
       "versionId": "1"
     }
   ]
