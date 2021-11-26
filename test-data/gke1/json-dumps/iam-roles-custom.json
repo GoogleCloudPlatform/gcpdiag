@@ -1,7 +1,7 @@
 {
   "roles": [
     {
-      "name": "projects/gcpd-gke-1-9b90/roles/gke2_custom_role",
+      "name": "projects/gcpdiag-gke1-aaaa/roles/gke2_custom_role",
       "title": "GKE Custom Role",
       "description": "A description",
       "includedPermissions": [
@@ -36,17 +36,17 @@
         "stackdriver.resourceMetadata.write"
       ],
       "stage": "GA",
-      "etag": "BwXAVSZiOkU="
+      "etag": "BwXRi2qCbu4="
     },
     {
-      "name": "projects/gcpd-gke-1-9b90/roles/gke3_custom_role",
+      "name": "projects/gcpdiag-gke1-aaaa/roles/gke3_custom_role",
       "title": "GKE 3 Custom Role",
       "description": "A description",
       "includedPermissions": [
         "cloudnotifications.activities.list"
       ],
       "stage": "GA",
-      "etag": "BwW6mdcgYL4="
+      "etag": "BwXRi2qCZMc="
     }
   ]
 }

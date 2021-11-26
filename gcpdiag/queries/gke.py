@@ -124,7 +124,7 @@ class NodePool(models.Resource):
 
   @property
   def full_path(self) -> str:
-    # https://container.googleapis.com/v1/projects/gcpd-gke-1-9b90/
+    # https://container.googleapis.com/v1/projects/gcpdiag-gke1-aaaa/
     #   locations/europe-west1/clusters/gke2/nodePools/default-pool
     m = re.match(r'https://container.googleapis.com/v1/(.*)',
                  self._resource_data.get('selfLink', ''))

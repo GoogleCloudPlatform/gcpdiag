@@ -1,36 +1,28 @@
 {
   "commonInstanceMetadata": {
-    "fingerprint": "xsNuK3qP4wg=",
+    "fingerprint": "YFUBBGPwmdA=",
     "items": [
       {
-        "key": "sshKeys",
-        "value": "REDACTED"
-      },
-      {
-        "key": "gke-gke2-d0316f66-cidr",
-        "value": "default:10.112.0.0/14"
-      },
-      {
-        "key": "gke-gke3-7934be25-cidr",
-        "value": "default:10.4.0.0/14"
-      },
-      {
-        "key": "gke-gke1-d0e49c9d-secondary-ranges",
+        "key": "gke-gke1-511b0aa6-secondary-ranges",
         "value": "services:default:gke1-subnet:gke1-secondary-range-svc,shareable-pods:default:gke1-subnet:gke1-secondary-range-pod"
       },
       {
-        "key": "gke-gke4-autopilot-c23a782f-secondary-ranges",
-        "value": "services:default:default:gke-gke4-autopilot-services-c23a782f,pods:default:default:gke-gke4-autopilot-pods-c23a782f"
+        "key": "gke-gke3-5d02218c-secondary-ranges",
+        "value": "services:default:default:gke-gke3-services-5d02218c,pods:default:default:gke-gke3-pods-5d02218c"
+      },
+      {
+        "key": "gke-gke2-ee491143-secondary-ranges",
+        "value": "services:default:default:gke-gke2-services-ee491143,pods:default:default:gke-gke2-pods-ee491143"
       }
     ],
     "kind": "compute#metadata"
   },
-  "creationTimestamp": "2020-11-09T05:13:13.168-08:00",
+  "creationTimestamp": "2021-11-24T08:26:56.706-08:00",
   "defaultNetworkTier": "PREMIUM",
-  "defaultServiceAccount": "18404348413-compute@developer.gserviceaccount.com",
-  "id": "8973615412969537159",
+  "defaultServiceAccount": "12340002-compute@developer.gserviceaccount.com",
+  "id": "5277175338541242687",
   "kind": "compute#project",
-  "name": "gcpd-gke-1-9b90",
+  "name": "gcpdiag-gke1-aaaa",
   "quotas": [
     {
       "limit": 10000,
@@ -45,7 +37,7 @@
     {
       "limit": 500,
       "metric": "FIREWALLS",
-      "usage": 16
+      "usage": 13
     },
     {
       "limit": 5000,
@@ -60,7 +52,7 @@
     {
       "limit": 300,
       "metric": "ROUTES",
-      "usage": 7
+      "usage": 1
     },
     {
       "limit": 150,
@@ -105,7 +97,7 @@
     {
       "limit": 1000,
       "metric": "INSTANCE_TEMPLATES",
-      "usage": 15
+      "usage": 7
     },
     {
       "limit": 50,
@@ -145,7 +137,7 @@
     {
       "limit": 275,
       "metric": "SUBNETWORKS",
-      "usage": 29
+      "usage": 30
     },
     {
       "limit": 100,
@@ -228,6 +220,6 @@
       "usage": 0
     }
   ],
-  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpd-gke-1-9b90",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa",
   "xpnProjectStatus": "UNSPECIFIED_XPN_PROJECT_STATUS"
 }

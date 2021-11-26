@@ -16,6 +16,7 @@
 """Test code in gke.py."""
 
 import ipaddress
+import re
 from unittest import mock
 
 import pytest
@@ -25,13 +26,13 @@ from gcpdiag import models
 from gcpdiag.queries import apis_stub, gce, gke
 from gcpdiag.queries.gke import Version
 
-DUMMY_PROJECT_NAME = 'gcpd-gke-1-9b90'
+DUMMY_PROJECT_NAME = 'gcpdiag-gke1-aaaa'
 DUMMY_CLUSTER1_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clusters/gke1'
 DUMMY_CLUSTER1_LABELS = {'foo': 'bar'}
 DUMMY_CLUSTER2_NAME = f'projects/{DUMMY_PROJECT_NAME}/locations/europe-west1/clusters/gke2'
 DUMMY_CLUSTER2_SHORT_NAME = f'{DUMMY_PROJECT_NAME}/europe-west1/gke2'
-DUMMY_CLUSTER1_SERVICE_ACCOUNT = '18404348413-compute@developer.gserviceaccount.com'
-DUMMY_CLUSTER2_SERVICE_ACCOUNT = 'gke2sa@gcpd-gke-1-9b90.iam.gserviceaccount.com'
+DUMMY_CLUSTER1_SERVICE_ACCOUNT = '12340002-compute@developer.gserviceaccount.com'
+DUMMY_CLUSTER2_SERVICE_ACCOUNT = 'gke2sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com'
 
 # pylint: disable=consider-iterating-dictionary
 
@@ -60,7 +61,7 @@ class TestCluster:
     clusters = gke.get_clusters(context)
     c = clusters[DUMMY_CLUSTER1_NAME]
     assert c.name == 'gke1'
-    assert c.master_version == '1.20.10-gke.1600'
+    assert re.match(r'1\.\d+\.\d+-gke\.\d+', str(c.master_version))
     assert c.release_channel == 'REGULAR'
 
   def test_get_path_regional(self):

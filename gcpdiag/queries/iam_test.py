@@ -28,8 +28,8 @@ def get_cache_stub():
   return diskcache.Cache()
 
 
-TEST_PROJECT_ID = 'gcpd-gke-1-9b90'
-TEST_SERVICE_ACCOUNT = 'gke2sa@gcpd-gke-1-9b90.iam.gserviceaccount.com'
+TEST_PROJECT_ID = 'gcpdiag-gke1-aaaa'
+TEST_SERVICE_ACCOUNT = 'gke2sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com'
 TEST_SERVICE_ACCOUNT_PERMISSIONS = [
     'cloudnotifications.activities.list',
     'logging.logEntries.create',

@@ -32,9 +32,9 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/gce1/json-dumps',
     '12340001':
         pathlib.Path(__file__).parents[2] / 'test-data/gce1/json-dumps',
-    'gcpd-gke-1-9b90':
+    'gcpdiag-gke1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/gke1/json-dumps',
-    '18404348413':
+    '12340002':
         pathlib.Path(__file__).parents[2] / 'test-data/gke1/json-dumps',
     'gcpd-gcf1-s6ew':
         pathlib.Path(__file__).parents[2] / 'test-data/gcf1/json-dumps',
