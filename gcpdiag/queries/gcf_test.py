@@ -20,7 +20,7 @@ from unittest import mock
 from gcpdiag import models
 from gcpdiag.queries import apis_stub, gcf
 
-DUMMY_PROJECT_NAME = 'gcpd-gcf1-s6ew'
+DUMMY_PROJECT_NAME = 'gcpdiag-gcf1-aaaa'
 DUMMY_CLOUD_FUNCTION_1_NAME = f'projects/{DUMMY_PROJECT_NAME}/locations/us-central1/functions/gcf1'
 DUMMY_REGION_1 = 'us-central1'
 

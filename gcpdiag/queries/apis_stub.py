@@ -38,6 +38,8 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/gke1/json-dumps',
     'gcpd-gcf1-s6ew':
         pathlib.Path(__file__).parents[2] / 'test-data/gcf1/json-dumps',
+    'gcpdiag-gcf1-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/gcf1/json-dumps',
     'dataproc1':
         pathlib.Path(__file__).parents[2] / 'test-data/dataproc1/json-dumps',
     'gcpd-apigee-1-lus4':
