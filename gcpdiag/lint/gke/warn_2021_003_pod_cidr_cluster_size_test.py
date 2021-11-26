@@ -23,7 +23,7 @@ from gcpdiag.lint import report_terminal
 from gcpdiag.lint.gke import warn_2021_003_pod_cidr_cluster_size
 from gcpdiag.queries import apis_stub
 
-DUMMY_PROJECT_NAME = 'gcpd-gke-1-9b90'
+DUMMY_PROJECT_NAME = 'gcpdiag-gke1-aaaa'
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)

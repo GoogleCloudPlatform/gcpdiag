@@ -18,8 +18,9 @@
 # And with small pod CIDR
 
 resource "google_compute_subnetwork" "secondary_ip_range_pod" {
-  network       = "default"
   project       = google_project.project.project_id
+  depends_on    = [google_project_service.compute]
+  network       = "default"
   name          = "gke1-subnet"
   ip_cidr_range = "192.168.0.0/24"
   region        = "europe-west4"

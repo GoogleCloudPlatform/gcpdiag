@@ -1,7 +1,7 @@
 {
-  "name": "projects/gcpd-gke-1-9b90/locations/us-central1/keyRings/usckr/cryptoKeys/kms-key-enabled",
+  "name": "projects/gcpdiag-gke1-aaaa/locations/us-central1/keyRings/usckr/cryptoKeys/kms-key-enabled",
   "primary": {
-    "name": "projects/gcpd-gke-1-9b90/locations/us-central1/keyRings/usckr/cryptoKeys/kms-key-enabled/cryptoKeyVersions/1",
+    "name": "projects/gcpdiag-gke1-aaaa/locations/us-central1/keyRings/usckr/cryptoKeys/kms-key-enabled/cryptoKeyVersions/1",
     "state": "ENABLED",
     "createTime": "2021-01-04T15:32:50.749517603Z",
     "protectionLevel": "SOFTWARE",

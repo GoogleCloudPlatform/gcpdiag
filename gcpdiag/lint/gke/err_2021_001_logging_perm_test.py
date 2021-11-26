@@ -21,7 +21,7 @@ from gcpdiag.lint import report_terminal
 from gcpdiag.lint.gke import err_2021_001_logging_perm
 from gcpdiag.queries import apis_stub
 
-DUMMY_PROJECT_NAME = 'gcpd-gke-1-9b90'
+DUMMY_PROJECT_NAME = 'gcpdiag-gke1-aaaa'
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)

@@ -14,15 +14,6 @@
  * limitations under the License.
  */
 
-/*
-terraform {
-  backend "gcs" {
-    bucket = "gcpd-tf-state"
-    prefix = "projects/gce"
-  }
-}
-*/
-
 resource "random_string" "project_id_suffix" {
   length  = 8
   number  = true
