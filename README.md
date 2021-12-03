@@ -18,8 +18,8 @@ problems in your projects, but we give no guarantees to that end.
 ## Installation
 
 You can run gcpdiag using a shell wrapper that starts gcpdiag in a Docker
-container. This should work on any machine with Docker installed, including
-Cloud Shell.
+container. This should work on any machine with Docker or Podman installed,
+including Cloud Shell.
 
 ```
 curl https://gcpdiag.dev/gcpdiag.sh >gcpdiag
