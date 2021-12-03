@@ -238,7 +238,7 @@ class Cluster(models.Resource):
     return self._resource_data['location']
 
   @property
-  def pod_ipv4_cidr(self) -> ipaddress.IPv4Address:
+  def pod_ipv4_cidr(self) -> ipaddress.IPv4Network:
     cidr = self._resource_data['clusterIpv4Cidr']
     return ipaddress.ip_network(cidr)
 
@@ -275,6 +275,19 @@ class Cluster(models.Resource):
       for n in self._resource_data.get('nodePools', []):
         self._nodepools.append(NodePool(self, n))
     return self._nodepools
+
+  @property
+  def masters_cidr_list(self) -> Iterable[ipaddress.IPv4Network]:
+    if 'privateClusterConfig' in self._resource_data and \
+       'masterIpv4CidrBlock' in self._resource_data['privateClusterConfig']:
+      return [
+          ipaddress.ip_network(self._resource_data['privateClusterConfig']
+                               ['masterIpv4CidrBlock'])
+      ]
+    else:
+      # TODO: implement retrieval of masters public IPs via network firewall
+      # rule.
+      return []
 
 
 @caching.cached_api_call

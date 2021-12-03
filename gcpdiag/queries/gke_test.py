@@ -33,6 +33,7 @@ DUMMY_CLUSTER2_NAME = f'projects/{DUMMY_PROJECT_NAME}/locations/europe-west1/clu
 DUMMY_CLUSTER2_SHORT_NAME = f'{DUMMY_PROJECT_NAME}/europe-west1/gke2'
 DUMMY_CLUSTER1_SERVICE_ACCOUNT = '12340002-compute@developer.gserviceaccount.com'
 DUMMY_CLUSTER2_SERVICE_ACCOUNT = 'gke2sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com'
+DUMMY_CLUSTER4_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clusters/gke4'
 
 # pylint: disable=consider-iterating-dictionary
 
@@ -53,7 +54,7 @@ class TestCluster:
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              regions=['europe-west4'])
     clusters = gke.get_clusters(context)
-    assert DUMMY_CLUSTER1_NAME in clusters and len(clusters) == 1
+    assert DUMMY_CLUSTER1_NAME in clusters and len(clusters) == 2
 
   def test_cluster_properties(self):
     """verify cluster property methods."""
@@ -173,6 +174,12 @@ class TestCluster:
     # cluster2 has a custom SA
     c = clusters[DUMMY_CLUSTER2_NAME]
     assert c.nodepools[0].service_account == DUMMY_CLUSTER2_SERVICE_ACCOUNT
+
+  def test_masters_cidr_list(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER4_NAME]
+    assert c.masters_cidr_list == [ipaddress.IPv4Network('10.0.1.0/28')]
 
 
 class TestVersion:
