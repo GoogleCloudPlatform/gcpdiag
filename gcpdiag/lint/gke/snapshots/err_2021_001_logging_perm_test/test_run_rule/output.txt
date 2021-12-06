@@ -5,6 +5,7 @@
      missing role: roles/logging.logWriter
    - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [SKIP]
      logging disabled
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke4/default-pool                   [ OK ]
 
    long description
 
