@@ -1,26 +1,30 @@
 {
   "commonInstanceMetadata": {
-    "fingerprint": "YFUBBGPwmdA=",
+    "fingerprint": "1xEl_9fJMr0=",
     "items": [
       {
-        "key": "gke-gke1-511b0aa6-secondary-ranges",
+        "key": "gke-gke4-563f802d-secondary-ranges",
+        "value": "services:default:default:gke-gke4-services-563f802d,pods:default:default:gke-gke4-pods-563f802d"
+      },
+      {
+        "key": "gke-gke2-eccf0fd7-secondary-ranges",
+        "value": "services:default:default:gke-gke2-services-eccf0fd7,pods:default:default:gke-gke2-pods-eccf0fd7"
+      },
+      {
+        "key": "gke-gke1-0e900d4f-secondary-ranges",
         "value": "services:default:gke1-subnet:gke1-secondary-range-svc,shareable-pods:default:gke1-subnet:gke1-secondary-range-pod"
       },
       {
-        "key": "gke-gke3-5d02218c-secondary-ranges",
-        "value": "services:default:default:gke-gke3-services-5d02218c,pods:default:default:gke-gke3-pods-5d02218c"
-      },
-      {
-        "key": "gke-gke2-ee491143-secondary-ranges",
-        "value": "services:default:default:gke-gke2-services-ee491143,pods:default:default:gke-gke2-pods-ee491143"
+        "key": "gke-gke3-330dd0b1-secondary-ranges",
+        "value": "services:default:default:gke-gke3-services-330dd0b1,pods:default:default:gke-gke3-pods-330dd0b1"
       }
     ],
     "kind": "compute#metadata"
   },
-  "creationTimestamp": "2021-11-24T08:26:56.706-08:00",
+  "creationTimestamp": "2021-12-03T04:50:09.976-08:00",
   "defaultNetworkTier": "PREMIUM",
   "defaultServiceAccount": "12340002-compute@developer.gserviceaccount.com",
-  "id": "5277175338541242687",
+  "id": "7341060892685479022",
   "kind": "compute#project",
   "name": "gcpdiag-gke1-aaaa",
   "quotas": [
@@ -37,7 +41,7 @@
     {
       "limit": 500,
       "metric": "FIREWALLS",
-      "usage": 13
+      "usage": 16
     },
     {
       "limit": 5000,
@@ -97,7 +101,7 @@
     {
       "limit": 1000,
       "metric": "INSTANCE_TEMPLATES",
-      "usage": 7
+      "usage": 8
     },
     {
       "limit": 50,
