@@ -1,0 +1,5 @@
+{
+  "id": "projects/gcpdiag-fw-policy-aaaa/zones/europe-west4-b/instanceGroupManagers",
+  "kind": "compute#instanceGroupManagerList",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/zones/europe-west4-b/instanceGroupManagers"
+}
