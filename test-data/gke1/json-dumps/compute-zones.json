@@ -420,6 +420,7 @@
         "Intel Haswell",
         "Intel Ivy Bridge",
         "Intel Sandy Bridge",
+        "AMD Milan",
         "AMD Rome"
       ],
       "supportsPzs": false,

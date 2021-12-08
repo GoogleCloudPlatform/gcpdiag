@@ -24,7 +24,7 @@ from typing import Dict, Iterable, List, Mapping, Optional
 import googleapiclient.errors
 
 from gcpdiag import caching, config, models, utils
-from gcpdiag.queries import apis, crm, gce
+from gcpdiag.queries import apis, crm, gce, network
 
 
 class VersionComponentsParser:
@@ -193,8 +193,19 @@ class NodePool(models.Resource):
           self._migs.append(project_migs_by_selflink[url])
         except KeyError:
           continue
-
     return self._migs
+
+  @property
+  def node_tags(self) -> List[str]:
+    """Returns the firewall tags used for nodes in this cluster.
+
+    If the node tags can't be determined, [] is returned.
+    """
+
+    migs = self.instance_groups
+    if not migs:
+      return []
+    return migs[0].template.tags
 
 
 class Cluster(models.Resource):
@@ -277,6 +288,19 @@ class Cluster(models.Resource):
     return self._nodepools
 
   @property
+  def network(self) -> network.Network:
+    # projects/gcpdiag-gke1-aaaa/global/networks/default
+    network_string = self._resource_data['networkConfig']['network']
+    m = re.match(r'projects/([^/]+)/global/networks/([^/]+)$', network_string)
+    if not m:
+      raise RuntimeError("can't parse network string: %s" % network_string)
+    return network.get_network(m.group(1), m.group(2))
+
+  @property
+  def is_private(self) -> bool:
+    return 'privateClusterConfig' in self._resource_data
+
+  @property
   def masters_cidr_list(self) -> Iterable[ipaddress.IPv4Network]:
     if 'privateClusterConfig' in self._resource_data and \
        'masterIpv4CidrBlock' in self._resource_data['privateClusterConfig']:
@@ -285,14 +309,40 @@ class Cluster(models.Resource):
                                ['masterIpv4CidrBlock'])
       ]
     else:
-      # TODO: implement retrieval of masters public IPs via network firewall
-      # rule.
-      return []
+      if self.current_node_count and not self.cluster_hash:
+        logging.warning("couldn't retrieve cluster hash for cluster %s.",
+                        self.name)
+        return []
+      fw_rule_name = f'gke-{self.name}-{self.cluster_hash}-ssh'
+      try:
+        ips = self.network.firewall.get_ingress_rule_src_ips(fw_rule_name)
+        return ips
+      except network.FirewallRuleNotFoundError:
+        logging.warning("couldn't retrieve automatic firewall rule: %s.",
+                        fw_rule_name)
+        return []
+
+  @property
+  def cluster_hash(self) -> Optional[str]:
+    """Returns the "cluster hash" as used in automatic firewall rules for GKE clusters.
+    See also: https://cloud.google.com/kubernetes-engine/docs/concepts/firewall-rules
+
+    Returns None if cluster has can't be determined.
+    """
+    np = next(iter(self.nodepools))
+    if not np or not np.instance_groups:
+      return None
+    for tag in np.node_tags:
+      m = re.match(f'gke-{self.name}-([^-]+)-node', tag)
+      if m:
+        return m.group(1)
+    logging.warning("can't match gke node tag: %s", np.node_tags)
+    return None
 
 
 @caching.cached_api_call
 def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
-  """Get a list of Cluster matching the given context, indexed by cluster name."""
+  """Get a list of Cluster matching the given context, indexed by cluster full path."""
   clusters: Dict[str, Cluster] = {}
   if not apis.is_enabled(context.project_id, 'container'):
     return clusters

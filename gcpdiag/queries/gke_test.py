@@ -181,6 +181,53 @@ class TestCluster:
     c = clusters[DUMMY_CLUSTER4_NAME]
     assert c.masters_cidr_list == [ipaddress.IPv4Network('10.0.1.0/28')]
 
+  def test_cluster_is_private(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    assert not c.is_private
+    c = clusters[DUMMY_CLUSTER4_NAME]
+    assert c.is_private
+
+  def test_node_tag_property(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    assert [t for t in c.nodepools[0].node_tags if t.startswith('gke-gke1-')]
+
+    c = clusters[DUMMY_CLUSTER4_NAME]
+    assert [t for t in c.nodepools[0].node_tags if t.endswith('-node')]
+
+  def test_cluster_hash_property(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER4_NAME]
+    assert re.match('[a-z0-9]+$', c.cluster_hash)
+
+  def test_verify_firewall_rule_exists(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER4_NAME]
+    assert c.network.firewall.verify_ingress_rule_exists(
+        f'gke-gke4-{c.cluster_hash}-master')
+    assert not c.network.firewall.verify_ingress_rule_exists('foobar')
+
+  def test_cluster_masters_cidr_list(self):
+    # test both public and private clusters, because the code is quite
+    # different for each of them.
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    ips = c.masters_cidr_list
+    assert len(ips) == 1
+    assert isinstance(ips[0], ipaddress.IPv4Network)
+    assert not ips[0].is_private
+    c = clusters[DUMMY_CLUSTER4_NAME]
+    ips = c.masters_cidr_list
+    assert len(ips) == 1
+    assert isinstance(ips[0], ipaddress.IPv4Network)
+    assert ips[0].is_private
+
 
 class TestVersion:
   """ Test GKE Version class """

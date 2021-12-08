@@ -20,7 +20,10 @@ all:	\
 	json-dumps/compute-instances-empty.json \
 	json-dumps/compute-migs-$(ZONE_1).json \
 	json-dumps/compute-migs-empty.json \
+	json-dumps/compute-network-default.json \
+	json-dumps/compute-effective-firewalls-default.json \
 	json-dumps/compute-project.json \
+	json-dumps/compute-templates.json \
 	json-dumps/compute-zones.json \
 	json-dumps/container-clusters.json \
 	json-dumps/container-server-config-$(REGION_1).json \
@@ -68,6 +71,22 @@ json-dumps/compute-project.json:
 	$(CURL) -fsS \
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)' \
 		| $(JSON_CLEANER) compute-project \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-network-default.json:
+	$(CURL) -fsS \
+	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/networks/default' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-effective-firewalls-default.json:
+	$(CURL) -fsS \
+	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/networks/default/getEffectiveFirewalls' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-templates.json:
+	ZONE=$(subst json-dumps/,,$%); \
+	$(CURL) -fsS \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/instanceTemplates' \
 		| $(SED_SUBST_FAKE) >$@
 
 
