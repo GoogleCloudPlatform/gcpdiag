@@ -23,6 +23,7 @@ import json
 from gcpdiag.queries import apis_stub, network_stub
 
 # pylint: disable=unused-argument
+# pylint: disable=invalid-name
 
 
 class ListRegionsQuery:
@@ -64,24 +65,29 @@ class ComputeEngineApiStub:
   def zones(self):
     return ComputeEngineApiStub('zones')
 
-  def list(self, project, zone=None):
+  def list(self, project, zone=None, returnPartialSuccess=None, fields=None):
+    # TODO: implement fields filtering
     return ComputeEngineApiStub(self.mock_state, project_id=project, zone=zone)
 
-  def list_next(self, request, response):
-    if self.mock_state == 'instances' and request.zone == 'europe-west1-b' and request.page == 1:
+  def list_next(self, previous_request, previous_response):
+    if self.mock_state == 'instances' and \
+        previous_request.zone == 'europe-west1-b' and \
+        previous_request.page == 1:
       return ComputeEngineApiStub(mock_state='instances',
-                                  project_id=request.project_id,
-                                  zone=request.zone,
-                                  page=request.page + 1)
+                                  project_id=previous_request.project_id,
+                                  zone=previous_request.zone,
+                                  page=previous_request.page + 1)
     else:
       return None
 
   def instances(self):
     return ComputeEngineApiStub('instances')
 
-  # pylint: disable=invalid-name
   def instanceGroupManagers(self):
     return ComputeEngineApiStub('migs')
+
+  def instanceTemplates(self):
+    return ComputeEngineApiStub('templates')
 
   def new_batch_http_request(self):
     return apis_stub.BatchRequestStub()
@@ -130,5 +136,9 @@ class ComputeEngineApiStub:
         with open(json_dir / 'compute-migs-empty.json',
                   encoding='utf-8') as json_file:
           return json.load(json_file)
+    if self.mock_state == 'templates':
+      with open(json_dir / 'compute-templates.json',
+                encoding='utf-8') as json_file:
+        return json.load(json_file)
     else:
       raise ValueError("can't call this method here")

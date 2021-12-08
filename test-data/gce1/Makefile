@@ -22,6 +22,7 @@ all:	\
 	json-dumps/compute-instances-empty.json \
 	json-dumps/compute-migs-$(ZONE_1).json \
 	json-dumps/compute-migs-$(ZONE_2).json \
+	json-dumps/compute-templates.json \
 	json-dumps/compute-migs-empty.json \
 	json-dumps/compute-project.json \
 	json-dumps/compute-regions.json \
@@ -63,6 +64,12 @@ json-dumps/compute-migs-$(ZONE_1).json:
 json-dumps/compute-migs-$(ZONE_2).json:
 	$(CURL) -fsS \
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_2)/instanceGroupManagers' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-templates.json:
+	ZONE=$(subst json-dumps/,,$%); \
+	$(CURL) -fsS \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/instanceTemplates' \
 		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/compute-migs-empty.json:
