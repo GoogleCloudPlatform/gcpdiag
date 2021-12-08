@@ -1,12 +1,12 @@
 {
   "name": "projects/12340002",
-  "parent": "organizations/11112222",
+  "parent": "folders/422810093603",
   "projectId": "gcpdiag-gke1-aaaa",
   "state": "ACTIVE",
   "displayName": "gcp-doctor test - gke1",
-  "createTime": "2021-11-24T16:26:16.947Z",
-  "updateTime": "2021-11-24T16:26:19.017Z",
-  "etag": "1xNwWmPK310LbjUlCP6QOg==",
+  "createTime": "2021-12-06T10:39:13.610Z",
+  "updateTime": "2021-12-06T10:39:15.558Z",
+  "etag": "NdRtoQbprleONiALgkn2uw==",
   "labels": {
     "gcpdiag": "test"
   }

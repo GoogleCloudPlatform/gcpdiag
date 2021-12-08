@@ -2,22 +2,22 @@
   "id": "projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers",
   "items": [
     {
-      "id": "1852612495404411922",
-      "creationTimestamp": "2021-12-03T04:52:13.153-08:00",
-      "name": "gke-gke1-default-pool-0515d4f5-grp",
+      "id": "1398703257592813060",
+      "creationTimestamp": "2021-12-06T02:41:47.885-08:00",
+      "name": "gke-gke1-default-pool-d6415eb8-grp",
       "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a",
-      "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/instanceTemplates/gke-gke1-default-pool-0515d4f5",
+      "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/instanceTemplates/gke-gke1-default-pool-d6415eb8",
       "versions": [
         {
-          "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/instanceTemplates/gke-gke1-default-pool-0515d4f5",
+          "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/instanceTemplates/gke-gke1-default-pool-d6415eb8",
           "targetSize": {
             "calculated": 1
           }
         }
       ],
-      "instanceGroup": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroups/gke-gke1-default-pool-0515d4f5-grp",
-      "baseInstanceName": "gke-gke1-default-pool-0515d4f5",
-      "fingerprint": "o1O7JR53Nsk=",
+      "instanceGroup": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroups/gke-gke1-default-pool-d6415eb8-grp",
+      "baseInstanceName": "gke-gke1-default-pool-d6415eb8",
+      "fingerprint": "3IFJPKl7ZKw=",
       "currentActions": {
         "none": 1,
         "creating": 0,
@@ -42,7 +42,7 @@
         }
       },
       "targetSize": 1,
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-0515d4f5-grp",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-d6415eb8-grp",
       "updatePolicy": {
         "type": "OPPORTUNISTIC",
         "minimalAction": "REPLACE",
@@ -59,22 +59,22 @@
       "kind": "compute#instanceGroupManager"
     },
     {
-      "id": "9072182658595270077",
-      "creationTimestamp": "2021-12-03T04:53:38.899-08:00",
-      "name": "gke-gke4-default-pool-c0409f4b-grp",
+      "id": "153432109216716762",
+      "creationTimestamp": "2021-12-06T02:43:01.952-08:00",
+      "name": "gke-gke4-default-pool-fd15f71b-grp",
       "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a",
-      "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/instanceTemplates/gke-gke4-default-pool-c0409f4b",
+      "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/instanceTemplates/gke-gke4-default-pool-fd15f71b",
       "versions": [
         {
-          "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/instanceTemplates/gke-gke4-default-pool-c0409f4b",
+          "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/instanceTemplates/gke-gke4-default-pool-fd15f71b",
           "targetSize": {
             "calculated": 1
           }
         }
       ],
-      "instanceGroup": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroups/gke-gke4-default-pool-c0409f4b-grp",
-      "baseInstanceName": "gke-gke4-default-pool-c0409f4b",
-      "fingerprint": "LCzc5eQXXxg=",
+      "instanceGroup": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroups/gke-gke4-default-pool-fd15f71b-grp",
+      "baseInstanceName": "gke-gke4-default-pool-fd15f71b",
+      "fingerprint": "azyVqeSVNuA=",
       "currentActions": {
         "none": 1,
         "creating": 0,
@@ -99,7 +99,7 @@
         }
       },
       "targetSize": 1,
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke4-default-pool-c0409f4b-grp",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke4-default-pool-fd15f71b-grp",
       "updatePolicy": {
         "type": "OPPORTUNISTIC",
         "minimalAction": "REPLACE",
