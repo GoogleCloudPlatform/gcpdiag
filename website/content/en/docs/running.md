@@ -3,7 +3,7 @@ title: "Running gcpdiag"
 linkTitle: "Running gcpdiag"
 weight: 3
 description: >
-  Prerequisites and how run gcpdiag.
+  Prerequisites and how to run gcpdiag.
 ---
 
 ## Pre-requisites
@@ -12,8 +12,8 @@ gcpdiag requires the following in order to be able to run correctly:
 
 #### 1. Permissions
 
-The credentials that you use with gcpdiag needs to have at minimum the
-following roles granted (both of them):
+The credentials that you use with gcpdiag need to have at minimum both of the
+following roles granted:
 
 - `Viewer` on the inspected project
 - `Service Usage Consumer` on the project used for billing/quota enforcement,
@@ -27,9 +27,9 @@ only grant the Viewer+Service Usage Consumer on that service account.
 #### 2. Cloud Resource Manager API
 
 You need the **Cloud Resource Manager API** to be enabled on the GCP project you
-are trying to diagnose. You can either enable it from the
+wish to diagnose. You can enable it either from the
 [GCP console](https://console.cloud.google.com/marketplace/product/google/cloudresourcemanager.googleapis.com)
-or use the `gcloud` CLI.
+or by using the `gcloud` CLI.
 
 ```
 gcloud --project=MYPROJECT services enable \
