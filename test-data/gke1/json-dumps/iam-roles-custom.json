@@ -36,7 +36,7 @@
         "stackdriver.resourceMetadata.write"
       ],
       "stage": "GA",
-      "etag": "BwXRi2qCbu4="
+      "etag": "BwXSd9+s6yU="
     },
     {
       "name": "projects/gcpdiag-gke1-aaaa/roles/gke3_custom_role",
@@ -46,7 +46,7 @@
         "cloudnotifications.activities.list"
       ],
       "stage": "GA",
-      "etag": "BwXRi2qCZMc="
+      "etag": "BwXSd9+tzLI="
     }
   ]
 }

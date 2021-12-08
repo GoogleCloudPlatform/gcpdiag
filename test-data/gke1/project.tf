@@ -25,8 +25,9 @@ resource "random_string" "project_id_suffix" {
 resource "google_project" "project" {
   name            = "gcp-doctor test - gke1"
   project_id      = "gcpdiag-gke1-${random_string.project_id_suffix.id}"
-  org_id          = var.org_id
   billing_account = var.billing_account_id
+  org_id          = var.folder_id != "" ? null : var.org_id
+  folder_id       = var.folder_id != "" ? var.folder_id : null
   labels = {
     gcpdiag : "test"
   }

@@ -1,30 +1,30 @@
 {
   "commonInstanceMetadata": {
-    "fingerprint": "1xEl_9fJMr0=",
+    "fingerprint": "d-NnSzf0Xe8=",
     "items": [
       {
-        "key": "gke-gke4-563f802d-secondary-ranges",
-        "value": "services:default:default:gke-gke4-services-563f802d,pods:default:default:gke-gke4-pods-563f802d"
+        "key": "gke-gke4-5da39605-secondary-ranges",
+        "value": "services:default:default:gke-gke4-services-5da39605,pods:default:default:gke-gke4-pods-5da39605"
       },
       {
-        "key": "gke-gke2-eccf0fd7-secondary-ranges",
-        "value": "services:default:default:gke-gke2-services-eccf0fd7,pods:default:default:gke-gke2-pods-eccf0fd7"
+        "key": "gke-gke2-709dc5cc-secondary-ranges",
+        "value": "services:default:default:gke-gke2-services-709dc5cc,pods:default:default:gke-gke2-pods-709dc5cc"
       },
       {
-        "key": "gke-gke1-0e900d4f-secondary-ranges",
+        "key": "gke-gke1-170a398a-secondary-ranges",
         "value": "services:default:gke1-subnet:gke1-secondary-range-svc,shareable-pods:default:gke1-subnet:gke1-secondary-range-pod"
       },
       {
-        "key": "gke-gke3-330dd0b1-secondary-ranges",
-        "value": "services:default:default:gke-gke3-services-330dd0b1,pods:default:default:gke-gke3-pods-330dd0b1"
+        "key": "gke-gke3-c0f5e27c-secondary-ranges",
+        "value": "services:default:default:gke-gke3-services-c0f5e27c,pods:default:default:gke-gke3-pods-c0f5e27c"
       }
     ],
     "kind": "compute#metadata"
   },
-  "creationTimestamp": "2021-12-03T04:50:09.976-08:00",
+  "creationTimestamp": "2021-12-06T02:39:53.220-08:00",
   "defaultNetworkTier": "PREMIUM",
   "defaultServiceAccount": "12340002-compute@developer.gserviceaccount.com",
-  "id": "7341060892685479022",
+  "id": "3332797038948538006",
   "kind": "compute#project",
   "name": "gcpdiag-gke1-aaaa",
   "quotas": [
