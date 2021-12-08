@@ -144,3 +144,26 @@ class TestGce:
     assert 'europe-north1' in regions
     assert 'asia-southeast1' in regions
     assert 'southamerica-east1' in regions
+
+  def test_get_instance_templates(self):
+    templates = gce.get_instance_templates(DUMMY_PROJECT_NAME)
+    # find the GKE node pool template
+    matched_names = [
+        t for t in templates if t.startswith('gke-gke1-default-pool')
+    ]
+    assert len(matched_names) == 1
+    t = templates[matched_names[0]]
+    assert t.name.startswith('gke-gke1-default-pool')
+    # GKE nodes pools have at least one tag called 'gke-CLUSTERNAME-CLUSTERHASH-node'
+    assert [
+        True for tag in t.tags
+        if tag.startswith('gke-') and tag.endswith('-node')
+    ]
+    # service_account
+    assert t.service_account == f'{DUMMY_PROJECT_NR}-compute@developer.gserviceaccount.com'
+
+  def test_mig_template(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME,
+                             labels=[DUMMY_INSTANCE3_LABELS])
+    for n in {i.mig for i in gce.get_instances(context).values()}:
+      assert n.template.name.startswith('gke-')
