@@ -50,7 +50,8 @@ resource "google_compute_project_metadata_item" "serial_logging" {
 }
 
 data "google_compute_default_service_account" "default" {
-  project = google_project.project.project_id
+  project    = google_project.project.project_id
+  depends_on = [google_project_service.compute]
 }
 
 data "google_compute_image" "cos" {

@@ -1,22 +1,22 @@
 {
   "commonInstanceMetadata": {
-    "fingerprint": "Qdy9jxpMZxs=",
+    "fingerprint": "jJq-gNcX1GM=",
     "items": [
       {
         "key": "serial-port-logging-enable",
         "value": "true"
       },
       {
-        "key": "gke-gke1-61f8d982-secondary-ranges",
-        "value": "services:default:default:gke-gke1-services-61f8d982,pods:default:default:gke-gke1-pods-61f8d982"
+        "key": "gke-gke1-77ed25e9-secondary-ranges",
+        "value": "services:default:default:gke-gke1-services-77ed25e9,pods:default:default:gke-gke1-pods-77ed25e9"
       }
     ],
     "kind": "compute#metadata"
   },
-  "creationTimestamp": "2021-11-23T05:55:41.984-08:00",
+  "creationTimestamp": "2021-12-08T01:45:42.183-08:00",
   "defaultNetworkTier": "PREMIUM",
   "defaultServiceAccount": "12340001-compute@developer.gserviceaccount.com",
-  "id": "7970567725207604274",
+  "id": "2747904471276044329",
   "kind": "compute#project",
   "name": "gcpdiag-gce1-aaaa",
   "quotas": [

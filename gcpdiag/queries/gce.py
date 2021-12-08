@@ -17,12 +17,58 @@
 
 import logging
 import re
-from typing import Callable, Dict, Iterable, Mapping, Optional, Set
+from typing import Callable, Dict, Iterable, List, Mapping, Optional, Set
 
 import googleapiclient.errors
 
 from gcpdiag import caching, config, models, utils
-from gcpdiag.queries import apis, crm
+from gcpdiag.queries import apis, apis_utils, crm
+
+
+class InstanceTemplate(models.Resource):
+  """Represents a GCE Instance Template."""
+  _resource_data: dict
+
+  def __init__(self, project_id, resource_data):
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+
+  @property
+  def self_link(self) -> str:
+    return self._resource_data['selfLink']
+
+  @property
+  def full_path(self) -> str:
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
+                      self.self_link)
+    if result:
+      return result.group(1)
+    else:
+      return f'>> {self.self_link}'
+
+  @property
+  def short_path(self) -> str:
+    path = self.project_id + '/' + self.name
+    return path
+
+  @property
+  def name(self) -> str:
+    return self._resource_data['name']
+
+  @property
+  def tags(self) -> List[str]:
+    return self._resource_data['properties'].get('tags', {}).get('items', [])
+
+  @property
+  def service_account(self) -> Optional[str]:
+    sa_list = self._resource_data['properties'].get('serviceAccounts', [])
+    if not sa_list:
+      return None
+    email = sa_list[0]['email']
+    if email == 'default':
+      project_nr = crm.get_project(self._project_id).number
+      return f'{project_nr}-compute@developer.gserviceaccount.com'
+    return email
 
 
 class ManagedInstanceGroup(models.Resource):
@@ -85,7 +131,7 @@ class ManagedInstanceGroup(models.Resource):
         self._region = utils.zone_region(zone)
       else:
         raise RuntimeError(
-            'can\'t determine region of mig %s, both region and zone aren\'t set!'
+            f"can't determine region of mig {self.name}, both region and zone aren't set!"
         )
     return self._region
 
@@ -94,6 +140,23 @@ class ManagedInstanceGroup(models.Resource):
     """Given the project_id, region and instance name, is it a member of this MIG?"""
     return self.project_id == project_id and self.region == region and \
         instance_name.startswith(self._resource_data['baseInstanceName'])
+
+  @property
+  def template(self) -> InstanceTemplate:
+    if 'instanceTemplate' not in self._resource_data:
+      raise RuntimeError('instanceTemplate not set for MIG {self.name}')
+    m = re.match(
+        r'https://www.googleapis.com/compute/v1/projects/([^/]+)/global/instanceTemplates/([^/]+)',
+        self._resource_data['instanceTemplate'])
+    if not m:
+      raise RuntimeError("can't parse instanceTemplate: %s" %
+                         self._resource_data['instanceTemplate'])
+    (project_id, template_name) = (m.group(1), m.group(2))
+    templates = get_instance_templates(project_id)
+    if template_name not in templates:
+      raise RuntimeError(
+          f'instanceTemplate {template_name} for MIG {self.name} not found')
+    return templates[template_name]
 
 
 class Instance(models.Resource):
@@ -317,6 +380,24 @@ def get_managed_instance_groups(
     migs[i['id']] = ManagedInstanceGroup(project_id=context.project_id,
                                          resource_data=i)
   return migs
+
+
+@caching.cached_api_call
+def get_instance_templates(project_id: str) -> Mapping[str, InstanceTemplate]:
+  logging.info('fetching instance templates')
+  templates = {}
+  gce_api = apis.get_api('compute', 'v1', project_id)
+  request = gce_api.instanceTemplates().list(
+      project=project_id,
+      returnPartialSuccess=True,
+      # Fetch only a subset of the fields to improve performance.
+      fields=
+      'items/name, items/properties/tags, items/properties/serviceAccounts',
+  )
+  for t in apis_utils.list_all(
+      request, next_function=gce_api.instanceTemplates().list_next):
+    templates[t['name']] = InstanceTemplate(project_id, t)
+  return templates
 
 
 @caching.cached_api_call
