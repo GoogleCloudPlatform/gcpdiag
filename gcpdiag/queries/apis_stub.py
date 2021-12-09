@@ -46,6 +46,10 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/apigee1/json-dumps',
     'composer1':
         pathlib.Path(__file__).parents[2] / 'test-data/composer1/json-dumps',
+    'gcpdiag-fw-policy-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/fw-policy/json-dumps',
+    '12340004':
+        pathlib.Path(__file__).parents[2] / 'test-data/fw-policy/json-dumps',
 }
 
 
