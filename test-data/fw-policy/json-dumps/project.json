@@ -1,0 +1,13 @@
+{
+  "name": "projects/12340004",
+  "parent": "folders/100002",
+  "projectId": "gcpdiag-fw-policy-aaaa",
+  "state": "ACTIVE",
+  "displayName": "gcp-doctor test - fw-policy",
+  "createTime": "2021-12-06T16:30:26.953Z",
+  "updateTime": "2021-12-06T16:30:28.702Z",
+  "etag": "iofhQqfC8KCp7Zqt17HV8A==",
+  "labels": {
+    "gcpdiag": "test"
+  }
+}

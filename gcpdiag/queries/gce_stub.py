@@ -20,7 +20,7 @@ Instead of doing real API calls, we return test JSON data.
 
 import json
 
-from gcpdiag.queries import apis_stub
+from gcpdiag.queries import apis_stub, network_stub
 
 # pylint: disable=unused-argument
 
@@ -92,6 +92,9 @@ class ComputeEngineApiStub:
 
   def projects(self):
     return ComputeEngineApiStub('projects')
+
+  def networks(self):
+    return network_stub.NetworkApiStub()
 
   def execute(self, num_retries=0):
     json_dir = apis_stub.get_json_dir(self.project_id)
