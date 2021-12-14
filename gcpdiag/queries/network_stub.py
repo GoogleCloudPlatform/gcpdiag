@@ -23,9 +23,16 @@ from gcpdiag.queries import apis_stub
 # pylint: disable=unused-argument
 # pylint: disable=invalid-name
 
+SUBNETWORKS_REGION = 'europe-west1'
+
 
 class NetworkApiStub:
-  """Mock object to simulate compute engine networking api calls."""
+  """Mock object to simulate compute engine networking api calls.
+
+  This object is created by GceApiStub, not used directly in test scripts."""
+
+  def __init__(self, mock_state):
+    self.mock_state = mock_state
 
   def get(self, project, network):
     self.mock_state = 'get'
@@ -39,6 +46,17 @@ class NetworkApiStub:
     self.network = network
     return self
 
+  # pylint: disable=redefined-builtin
+  def list(self, project, region, filter=None, fields=None):
+    self.project_id = project
+    if self.mock_state == 'subnetworks':
+      return self
+    else:
+      raise ValueError(f'cannot call method {self.mock_state} here')
+
+  def list_next(self, prev_request, prev_response):
+    return None
+
   def execute(self, num_retries=0):
     json_dir = apis_stub.get_json_dir(self.project_id)
     if self.mock_state == 'get':
@@ -47,6 +65,10 @@ class NetworkApiStub:
         return json.load(json_file)
     elif self.mock_state == 'get_effective_firewalls':
       with open(json_dir / f'compute-effective-firewalls-{self.network}.json',
+                encoding='utf-8') as json_file:
+        return json.load(json_file)
+    elif self.mock_state == 'subnetworks':
+      with open(json_dir / f'compute-subnetworks-{SUBNETWORKS_REGION}.json',
                 encoding='utf-8') as json_file:
         return json.load(json_file)
     else:
