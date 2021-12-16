@@ -23,7 +23,7 @@ from gcpdiag.queries import apis_stub
 # pylint: disable=unused-argument
 # pylint: disable=invalid-name
 
-SUBNETWORKS_REGION = 'europe-west1'
+SUBNETWORKS_REGION = 'europe-west4'
 
 
 class NetworkApiStub:

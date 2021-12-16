@@ -15,7 +15,7 @@
 
 import json
 import re
-from typing import Optional
+from typing import Any, Dict, List, Optional
 
 DOMAIN_RES_NAME_MATCH = r'(http(s)?:)?//([a-z0-9][-a-z0-9]{1,61}[a-z0-9]\.)+[a-z]{2,}/'
 RES_NAME_KEY = r'[a-z][-a-z0-9]*'
@@ -116,3 +116,12 @@ def is_rel_res_name(res_name: str) -> bool:
 
 def is_valid_res_name(res_name: str) -> bool:
   return is_rel_res_name(res_name) or is_full_res_name(res_name)
+
+
+def iter_dictlist(dictlist: Dict[Any, List[Any]]):
+  """Given a dictionary of lists, iterate over the list elements returning
+  tuples (dict_key, item), (dict_key, item), ..."""
+
+  for (k, v) in dictlist.items():
+    for i in v:
+      yield (k, i)
