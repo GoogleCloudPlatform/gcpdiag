@@ -200,6 +200,14 @@ class Instance(models.Resource):
            'goog-gke-node' in self._resource_data['labels']
 
   @property
+  def access_scopes(self) -> List[str]:
+    if 'serviceAccounts' in self._resource_data:
+      saccts = self._resource_data['serviceAccounts']
+      if isinstance(saccts, list) and len(saccts) >= 1:
+        return saccts[0]['scopes']
+    return []
+
+  @property
   def service_account(self) -> Optional[str]:
     if 'serviceAccounts' in self._resource_data:
       saccts = self._resource_data['serviceAccounts']
