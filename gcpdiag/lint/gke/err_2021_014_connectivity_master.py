@@ -30,14 +30,6 @@ def _run_rule_cluster(report: lint.LintReportRuleInterface, c: gke.Cluster):
     report.add_skipped(c, 'public cluster')
     return
 
-  # Verify that the automatic firewall rule exists
-  rule_name = f'gke-{c.name}-{c.cluster_hash}-master'
-  if not c.network.firewall.verify_ingress_rule_exists(rule_name):
-    report.add_failed(
-        c, 'firewall rule %s not found in network %s' %
-        (rule_name, c.network.short_path))
-    return
-
   # Verify connectivity
   for masters_net in c.masters_cidr_list:
     for p in [443, 10250]:

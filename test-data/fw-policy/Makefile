@@ -24,7 +24,7 @@ all:	\
 	json-dumps/compute-instances-empty.json \
 	json-dumps/compute-migs-empty.json \
 	json-dumps/compute-network-default.json \
-	json-dumps/compute-subnetworks-europe-west1.json \
+	json-dumps/compute-subnetworks-europe-west4.json \
 	json-dumps/compute-effective-firewalls-default.json \
 	json-dumps/compute-project.json \
 	json-dumps/compute-zones.json \

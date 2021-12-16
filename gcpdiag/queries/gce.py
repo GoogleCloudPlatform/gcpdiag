@@ -23,6 +23,7 @@ import googleapiclient.errors
 
 from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis, apis_utils, crm
+from gcpdiag.queries import network as network_q
 
 
 class InstanceTemplate(models.Resource):
@@ -69,6 +70,17 @@ class InstanceTemplate(models.Resource):
       project_nr = crm.get_project(self._project_id).number
       return f'{project_nr}-compute@developer.gserviceaccount.com'
     return email
+
+  @property
+  def network(self) -> network_q.Network:
+    return network_q.get_network_from_url(
+        self._resource_data['properties']['networkInterfaces'][0]['network'])
+
+  @property
+  def subnetwork(self) -> network_q.Subnetwork:
+    subnet_url = self._resource_data['properties']['networkInterfaces'][0][
+        'subnetwork']
+    return self.network.subnetworks[subnet_url]
 
 
 class ManagedInstanceGroup(models.Resource):
@@ -400,7 +412,8 @@ def get_instance_templates(project_id: str) -> Mapping[str, InstanceTemplate]:
       returnPartialSuccess=True,
       # Fetch only a subset of the fields to improve performance.
       fields=
-      'items/name, items/properties/tags, items/properties/serviceAccounts',
+      ('items/name, items/properties/tags, items/properties/networkInterfaces, '
+       'items/properties/serviceAccounts'),
   )
   for t in apis_utils.list_all(
       request, next_function=gce_api.instanceTemplates().list_next):

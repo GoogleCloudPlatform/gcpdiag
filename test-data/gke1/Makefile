@@ -16,13 +16,14 @@ SED_SUBST_FAKE = sed -e "s/$(PROJECT_ID_SUFFIX)/$(FAKE_PROJECT_ID_SUFFIX)/" \
 		     -e "s/$(ORG_ID)/$(FAKE_ORG_ID)/" \
 
 all:	\
+	json-dumps/compute-effective-firewalls-default.json \
 	json-dumps/compute-instances-$(ZONE_1).json \
 	json-dumps/compute-instances-empty.json \
 	json-dumps/compute-migs-$(ZONE_1).json \
 	json-dumps/compute-migs-empty.json \
 	json-dumps/compute-network-default.json \
-	json-dumps/compute-effective-firewalls-default.json \
 	json-dumps/compute-project.json \
+	json-dumps/compute-subnetworks-europe-west4.json \
 	json-dumps/compute-templates.json \
 	json-dumps/compute-zones.json \
 	json-dumps/container-clusters.json \
@@ -89,6 +90,11 @@ json-dumps/compute-templates.json:
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/instanceTemplates' \
 		| $(SED_SUBST_FAKE) >$@
 
+json-dumps/compute-subnetworks-%.json:
+	REGION=$(subst json-dumps/,,$*); \
+	$(CURL) -fsS \
+	        "https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/regions/$$REGION/subnetworks" \
+		| $(SED_SUBST_FAKE) >$@
 
 # cloudresourcemanager.googleapis.com
 

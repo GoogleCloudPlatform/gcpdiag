@@ -39,7 +39,7 @@ class TestNetwork:
                               network_name='default')
     expected_subnet_url = (
         f'https://www.googleapis.com/compute/v1/projects/{DUMMY_PROJECT_ID}/'
-        'regions/europe-west1/subnetworks/default')
+        'regions/europe-west4/subnetworks/default')
     assert expected_subnet_url in net.subnetworks
     assert isinstance(net.subnetworks[expected_subnet_url].ip_network,
                       ipaddress.IPv4Network)

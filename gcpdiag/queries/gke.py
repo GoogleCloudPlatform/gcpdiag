@@ -208,6 +208,13 @@ class NodePool(models.Resource):
     return migs[0].template.tags
 
 
+class UndefinedClusterPropertyError(Exception):
+  """Thrown when a property of a cluster can't be determined for
+  some reason. For example, the cluster_hash can't be determined
+  because there are no nodepools defined."""
+  pass
+
+
 class Cluster(models.Resource):
   """Represents a GKE cluster.
 
@@ -326,9 +333,10 @@ class Cluster(models.Resource):
   def cluster_hash(self) -> Optional[str]:
     """Returns the "cluster hash" as used in automatic firewall rules for GKE clusters.
     See also: https://cloud.google.com/kubernetes-engine/docs/concepts/firewall-rules
-
-    Returns None if cluster has can't be determined.
     """
+
+    if not self.nodepools:
+      raise UndefinedClusterPropertyError('no nodepool')
     np = next(iter(self.nodepools))
     if not np or not np.instance_groups:
       return None
@@ -336,8 +344,8 @@ class Cluster(models.Resource):
       m = re.match(f'gke-{self.name}-([^-]+)-node', tag)
       if m:
         return m.group(1)
-    logging.warning("can't match gke node tag: %s", np.node_tags)
-    return None
+    raise UndefinedClusterPropertyError(
+        f"can't match node tags: {np.node_tags}")
 
 
 @caching.cached_api_call
