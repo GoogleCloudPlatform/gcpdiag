@@ -21,11 +21,11 @@ import re
 from typing import Any, Dict, Iterable, List, Optional, Union
 
 from gcpdiag import caching, config, models
-from gcpdiag.queries import apis
+from gcpdiag.queries import apis, apis_utils
 
 
-class Network(models.Resource):
-  """A VPC network."""
+class Subnetwork(models.Resource):
+  """A VPC subnetwork."""
   _resource_data: dict
 
   def __init__(self, project_id, resource_data):
@@ -55,19 +55,91 @@ class Network(models.Resource):
     return self._resource_data['selfLink']
 
   @property
+  def ip_network(self) -> ipaddress.IPv4Network:
+    return ipaddress.ip_network(self._resource_data['ipCidrRange'])
+
+
+class Network(models.Resource):
+  """A VPC network."""
+  _resource_data: dict
+  _subnetworks: Optional[Dict[str, Subnetwork]]
+
+  def __init__(self, project_id, resource_data):
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+    self._subnetworks = None
+
+  @property
+  def full_path(self) -> str:
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
+                      self.self_link)
+    if result:
+      return result.group(1)
+    else:
+      return f'>> {self.self_link}'
+
+  @property
+  def short_path(self) -> str:
+    path = self.project_id + '/' + self.name
+    return path
+
+  @property
+  def name(self) -> str:
+    return self._resource_data['name']
+
+  @property
+  def self_link(self) -> str:
+    return self._resource_data['selfLink']
+
+  @property
   def firewall(self) -> 'EffectiveFirewalls':
     return _get_effective_firewalls(self)
+
+  @property
+  def subnetworks(self) -> Dict[str, Subnetwork]:
+    if self._subnetworks is None:
+      self._subnetworks = {}
+      compute = apis.get_api('compute', 'v1', self.project_id)
+      requests = []
+      for subnet_url in self._resource_data.get('subnetworks', []):
+        m = re.match(
+            r'https://www.googleapis.com/compute/v1/projects/([^/]+)/regions/([^/]+)/subnetworks',
+            subnet_url)
+        if not m:
+          logging.warning("can't parse subnet URL: %s", subnet_url)
+          continue
+        requests.append(  #
+            compute.subnetworks().list(
+                project=m.group(1),
+                region=m.group(2),
+                filter=f'network="{self.self_link}"',
+                fields='items/selfLink,items/ipCidrRange',
+            ))
+      if requests:
+        for item in apis_utils.batch_list_all(
+            compute,  #
+            requests,
+            compute.subnetworks().list_next,
+            f'listing subnets of {self.name}'):
+          self._subnetworks[item['selfLink']] = Subnetwork(
+              self.project_id, item)
+    return self._subnetworks
 
 
 IPAddrOrNet = Union[ipaddress.IPv4Address, ipaddress.IPv6Address,
                     ipaddress.IPv4Network, ipaddress.IPv6Network]
 
 
-def _ip_match(
-    ip1: IPAddrOrNet, ip2_list: List[Union[ipaddress.IPv4Network,
-                                           ipaddress.IPv6Network]]) -> bool:
+def _ip_match(  #
+    ip1: IPAddrOrNet,
+    ip2_list: List[Union[ipaddress.IPv4Network, ipaddress.IPv6Network]],
+    match_type: str = 'allow') -> bool:
   """Match IP address or network to a network list (i.e. verify that ip1 is
-  included in any ip of ip2_list)."""
+  included in any ip of ip2_list).
+
+  If match_type is 'allow', ip1 will match any ip in ip2_list if it is a subnet.
+  If match_type is 'deny', ip1 will match any ip in ip2_list if they overlap
+  (i.e. even if only part of ip1 is matched, it should still be considered a match)."""
   for ip2 in ip2_list:
     if isinstance(ip1, (ipaddress.IPv4Address, ipaddress.IPv6Address)):
       # ip1: address, ip2: network
@@ -76,13 +148,20 @@ def _ip_match(
     else:
       # ip1: network, ip2: network
       if isinstance(ip1, ipaddress.IPv4Network) and \
-         isinstance(ip2, ipaddress.IPv4Network) and \
-         ip1.subnet_of(ip2):
-        return True
+          isinstance(ip2, ipaddress.IPv4Network):
+        if match_type == 'allow' and ip1.subnet_of(ip2):
+          return True
+        elif match_type == 'deny' and ip1.overlaps(ip2):
+          return True
+        else:
+          logging.debug('network no match %s of %s (%s matching)', ip1, ip2,
+                        match_type)
       elif isinstance(ip1, ipaddress.IPv6Network) and \
-         isinstance(ip2, ipaddress.IPv6Network) and \
-         ip1.subnet_of(ip2):
-        return True
+          isinstance(ip2, ipaddress.IPv6Network):
+        if match_type == 'allow' and ip1.subnet_of(ip2):
+          return True
+        elif match_type == 'deny' and ip1.overlaps(ip2):
+          return True
   return False
 
 
@@ -145,7 +224,7 @@ def _vpc_allow_deny_match(protocol: str, port: int,
   """
   for action, l4_rules in [('allow', allowed), ('deny', denied)]:
     for l4_rule in l4_rules:
-      if protocol != l4_rule['IPProtocol']:
+      if l4_rule['IPProtocol'] not in [protocol, 'all']:
         continue
       if 'ports' not in l4_rule:
         return action
@@ -226,8 +305,12 @@ class _FirewallPolicy:
     for rule in self._rules['INGRESS']:
       if rule.get('disabled'):
         continue
+      # To match networks, use 'supernet_of' for deny, because if the network that we
+      # are checking is partially matched by a deny rule, it should still be considered
+      # a match.
+      ip_match_type = 'deny' if rule['action'] == 'deny' else 'allow'
       # src_ip
-      if not _ip_match(src_ip, rule['match']['srcIpRanges']):
+      if not _ip_match(src_ip, rule['match']['srcIpRanges'], ip_match_type):
         continue
       # ip_protocol and port
       if not _l4_match(ip_protocol, port, rule['match']['layer4Configs']):
@@ -302,13 +385,24 @@ class _VpcFirewall:
       raise ValueError('Internal error: source_tags must be a list')
 
     for rule in self._rules['INGRESS']:
+      #logging.debug('vpc firewall: %s -> %s/%s ? %s', src_ip, port, ip_protocol,
+      #              rule['name'])
+
       # disabled?
       if rule.get('disabled'):
         continue
 
+      # ip_protocol and port
+      action = _vpc_allow_deny_match(ip_protocol,
+                                     port,
+                                     allowed=rule.get('allowed', []),
+                                     denied=rule.get('denied', []))
+      if not action:
+        continue
+
       # source
       if 'sourceRanges' in rule and \
-          _ip_match(src_ip, rule['sourceRanges']):
+          _ip_match(src_ip, rule['sourceRanges'], action):
         pass
       elif source_service_account and \
           source_service_account in rule.get('sourceServiceAccounts', {}):
@@ -331,17 +425,11 @@ class _VpcFirewall:
         if not set(target_tags) & rule['targetTags']:
           continue
 
-      # ip_protocol and port
-      result = _vpc_allow_deny_match(ip_protocol,
-                                     port,
-                                     allowed=rule.get('allowed', []),
-                                     denied=rule.get('denied', []))
-      if result:
-        logging.debug('vpc firewall: %s -> %s/%s = %s (%s)', src_ip, port,
-                      ip_protocol, result, rule['name'])
-        return FirewallCheckResult(result,
-                                   vpc_firewall_rule_id=rule['id'],
-                                   vpc_firewall_rule_name=rule['name'])
+      logging.debug('vpc firewall: %s -> %s/%s = %s (%s)', src_ip, port,
+                    ip_protocol, action, rule['name'])
+      return FirewallCheckResult(action,
+                                 vpc_firewall_rule_id=rule['id'],
+                                 vpc_firewall_rule_name=rule['name'])
     # implied deny
     logging.debug('vpc firewall: %s -> %s/%s = %s (implied rule)', src_ip, port,
                   ip_protocol, 'deny')
@@ -445,9 +533,20 @@ def _get_effective_firewalls(network: Network):
   return EffectiveFirewalls(network, response)
 
 
-@caching.cached_api_call()
-def get_network(project_id: str, network_id: str):
+@caching.cached_api_call(in_memory=True)
+def get_network(project_id: str, network_name: str) -> Network:
+  logging.info('fetching network: %s/%s', project_id, network_name)
   compute = apis.get_api('compute', 'v1', project_id)
-  request = compute.networks().get(project=project_id, network=network_id)
+  request = compute.networks().get(project=project_id, network=network_name)
   response = request.execute(num_retries=config.API_RETRIES)
   return Network(project_id, response)
+
+
+def get_network_from_url(url: str) -> Network:
+  m = re.match(
+      r'https://www.googleapis.com/compute/v1/projects/([^/]+)/global/networks/([^/]+)',
+      url)
+  if not m:
+    raise ValueError(f"can't parse network url: {url}")
+  (project_id, network_name) = (m.group(1), m.group(2))
+  return get_network(project_id, network_name)

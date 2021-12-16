@@ -100,7 +100,10 @@ class ComputeEngineApiStub:
     return ComputeEngineApiStub('projects')
 
   def networks(self):
-    return network_stub.NetworkApiStub()
+    return network_stub.NetworkApiStub(mock_state='networks')
+
+  def subnetworks(self):
+    return network_stub.NetworkApiStub(mock_state='subnetworks')
 
   def execute(self, num_retries=0):
     json_dir = apis_stub.get_json_dir(self.project_id)

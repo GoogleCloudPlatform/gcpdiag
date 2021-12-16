@@ -13,7 +13,8 @@
 # limitations under the License.
 """GCP API-related utility functions."""
 
-from typing import Any, Callable, Iterator
+import logging
+from typing import Any, Callable, Iterable, Iterator
 
 import googleapiclient
 
@@ -35,3 +36,50 @@ def list_all(request, next_function: Callable) -> Iterator[Any]:
                             previous_response=response)
     if request is None:
       break
+
+
+def batch_list_all(api, requests: Iterable, next_function: Callable,
+                   log_text: str):
+  """Similar to list_all but using batch API."""
+  try:
+    items = []
+    additional_pages_to_fetch = []
+    pending_requests = list(requests)
+
+    # TODO(b/200675491) implement retry
+
+    def fetch_all_cb(request_id, response, exception):
+      if exception:
+        logging.error('exception when %s: %s', log_text, exception)
+        return
+      if not response or 'items' not in response:
+        return
+      items.extend(response['items'])
+      additional_pages_to_fetch.append(
+          (pending_requests[int(request_id)], response))
+
+    page = 1
+    while pending_requests:
+      batch = api.new_batch_http_request()
+      for i, req in enumerate(pending_requests):
+        batch.add(req, callback=fetch_all_cb, request_id=str(i))
+      if page <= 1:
+        logging.info(log_text)
+      else:
+        logging.info('%s (page: %d)', log_text, page)
+      batch.execute()
+      yield from items
+      items = []
+
+      # Do we need to fetch any additional pages?
+      pending_requests = []
+      for p in additional_pages_to_fetch:
+        req = next_function(p[0], p[1])
+        if req:
+          pending_requests.append(req)
+      additional_pages_to_fetch = []
+      page += 1
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
+
+  yield from items

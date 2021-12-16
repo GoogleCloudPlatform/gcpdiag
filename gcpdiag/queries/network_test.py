@@ -26,15 +26,27 @@ class TestNetwork:
   """Test network.Network."""
 
   def test_get_network(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID, network_id='default')
+    net = network.get_network(project_id=DUMMY_PROJECT_ID,
+                              network_name='default')
     assert net.name == 'default'
     assert net.full_path == 'projects/gcpdiag-fw-policy-aaaa/global/networks/default'
     assert net.short_path == f'{DUMMY_PROJECT_ID}/default'
     assert net.self_link == \
         f'https://www.googleapis.com/compute/v1/projects/{DUMMY_PROJECT_ID}/global/networks/default'
 
+  def test_subnetworks(self):
+    net = network.get_network(project_id=DUMMY_PROJECT_ID,
+                              network_name='default')
+    expected_subnet_url = (
+        f'https://www.googleapis.com/compute/v1/projects/{DUMMY_PROJECT_ID}/'
+        'regions/europe-west1/subnetworks/default')
+    assert expected_subnet_url in net.subnetworks
+    assert isinstance(net.subnetworks[expected_subnet_url].ip_network,
+                      ipaddress.IPv4Network)
+
   def test_ingress_deny(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID, network_id='default')
+    net = network.get_network(project_id=DUMMY_PROJECT_ID,
+                              network_name='default')
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_address('10.0.0.1'),  #
         ip_protocol='tcp',
@@ -47,15 +59,31 @@ class TestNetwork:
     assert r.action == 'deny'
 
   def test_ingress_deny_2(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID, network_id='default')
+    net = network.get_network(project_id=DUMMY_PROJECT_ID,
+                              network_name='default')
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.100.0.16/29'),  #
         ip_protocol='tcp',
         port=1001)
     assert r.action == 'deny'
+    assert r.matched_by_str == 'vpc firewall rule: fw-test-800'
+
+  def test_ingress_deny_3(self):
+    net = network.get_network(project_id=DUMMY_PROJECT_ID,
+                              network_name='default')
+    # a supernet of src_ip for a deny rule should also match
+    # (because we want to catch when a fw rule partially blocks
+    # a connection).
+    r = net.firewall.check_connectivity_ingress(
+        src_ip=ipaddress.ip_network('10.0.0.0/8'),  #
+        ip_protocol='tcp',
+        port=1001)
+    assert r.action == 'deny'
+    assert r.matched_by_str == 'vpc firewall rule: fw-test-800'
 
   def test_ingress_allow_src_ip(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID, network_id='default')
+    net = network.get_network(project_id=DUMMY_PROJECT_ID,
+                              network_name='default')
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.100.0.16/29'),  #
         ip_protocol='tcp',
@@ -63,8 +91,19 @@ class TestNetwork:
     assert r.action == 'allow'
     assert r.matched_by_str == 'vpc firewall rule: fw-test-900'
 
+  def test_ingress_allow_src_ip_subnet(self):
+    net = network.get_network(project_id=DUMMY_PROJECT_ID,
+                              network_name='default')
+    r = net.firewall.check_connectivity_ingress(
+        src_ip=ipaddress.ip_network('10.100.0.16/30'),  #
+        ip_protocol='tcp',
+        port=1006)
+    assert r.action == 'allow'
+    assert r.matched_by_str == 'vpc firewall rule: fw-test-900'
+
   def test_ingress_allow_source_tags(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID, network_id='default')
+    net = network.get_network(project_id=DUMMY_PROJECT_ID,
+                              network_name='default')
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.200.0.16/29'),  #
         source_tags=['foo'],
@@ -74,7 +113,8 @@ class TestNetwork:
     assert r.matched_by_str == 'vpc firewall rule: fw-test-900'
 
   def test_ingress_allow_target_tags(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID, network_id='default')
+    net = network.get_network(project_id=DUMMY_PROJECT_ID,
+                              network_name='default')
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_address('192.168.1.1'),  #
         target_tags=['bar'],
@@ -84,7 +124,8 @@ class TestNetwork:
     assert r.matched_by_str == 'vpc firewall rule: fw-test-903'
 
   def test_ingress_allow_source_sa(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID, network_id='default')
+    net = network.get_network(project_id=DUMMY_PROJECT_ID,
+                              network_name='default')
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.200.0.16/29'),  #
         source_service_account=
@@ -95,7 +136,8 @@ class TestNetwork:
     assert r.matched_by_str == 'vpc firewall rule: fw-test-901'
 
   def test_ingress_allow_target_sa(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID, network_id='default')
+    net = network.get_network(project_id=DUMMY_PROJECT_ID,
+                              network_name='default')
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.200.0.16/29'),  #
         target_tags=['foo'],
@@ -104,7 +146,8 @@ class TestNetwork:
     assert r.action == 'allow'
 
   def test_ingress_parent_policy_allow(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID, network_id='default')
+    net = network.get_network(project_id=DUMMY_PROJECT_ID,
+                              network_name='default')
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.101.0.1/32'),  #
         ip_protocol='tcp',
@@ -113,7 +156,8 @@ class TestNetwork:
     assert r.matched_by_str == 'policy: parent-folder-policy'
 
   def test_ingress_sub_policy_allow(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID, network_id='default')
+    net = network.get_network(project_id=DUMMY_PROJECT_ID,
+                              network_name='default')
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.101.0.1/32'),  #
         ip_protocol='tcp',
@@ -122,7 +166,8 @@ class TestNetwork:
     assert r.matched_by_str == 'policy: sub-folder-policy'
 
   def test_ingress_sub_policy_allow_target_sa(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID, network_id='default')
+    net = network.get_network(project_id=DUMMY_PROJECT_ID,
+                              network_name='default')
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.102.0.1/32'),  #
         ip_protocol='tcp',
@@ -133,7 +178,8 @@ class TestNetwork:
     assert r.matched_by_str == 'policy: sub-folder-policy'
 
   def test_ingress_sub_policy_deny_wrong_target_sa(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID, network_id='default')
+    net = network.get_network(project_id=DUMMY_PROJECT_ID,
+                              network_name='default')
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.102.0.1/32'),  #
         ip_protocol='tcp',
