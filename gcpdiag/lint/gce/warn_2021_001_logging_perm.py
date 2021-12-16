@@ -16,8 +16,9 @@
 """GCE instance service account permissions for logging.
 
 The service account used by GCE instance should have the logging.logWriter
-role, otherwise, if you install the logging agent, it won't be able to send the
-logs to Cloud Logging.
+permission and a GCE instance should have the logging.write access scope,
+otherwise, if you install the logging agent, it won't be able to send
+the logs to Cloud Logging.
 """
 
 import operator as op
@@ -26,6 +27,11 @@ from gcpdiag import lint, models
 from gcpdiag.queries import gce, iam
 
 ROLE = 'roles/logging.logWriter'
+LOGGING_SCOPES = [
+    'https://www.googleapis.com/auth/cloud-platform',
+    'https://www.googleapis.com/auth/logging.admin',
+    'https://www.googleapis.com/auth/logging.write'
+]
 
 
 def prefetch_rule(context: models.Context):
@@ -42,14 +48,24 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     # GKE nodes are checked by another test.
     if i.is_gke_node():
       continue
+    message = []
     instances_count += 1
     iam_policy = iam.get_project_policy(i.project_id)
     sa = i.service_account
+    has_scope = set(LOGGING_SCOPES) & set(i.access_scopes)
+
+    if not has_scope:
+      message.append('missing scope: logging.write')
+
     if not sa:
-      report.add_failed(i, 'no service account')
+      message.append('no service account')
     elif not iam_policy.has_role_permissions(f'serviceAccount:{sa}', ROLE):
-      report.add_failed(i, f'service account: {sa}\nmissing role: {ROLE}')
+      message.append(f'service account: {sa}\nmissing role: {ROLE}')
+
+    if message:
+      report.add_failed(i, '\n'.join(message))
     else:
       report.add_ok(i)
+
   if not instances_count:
     report.add_skipped(None, 'no instances found')

@@ -99,6 +99,19 @@ class TestGce:
     for n in instances.values():
       assert n.is_gke_node()
 
+  def test_access_scopes(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME,
+                             labels=[DUMMY_INSTANCE1_LABELS])
+    instances = gce.get_instances(context)
+    instances_by_name = {i.name: i for i in instances.values()}
+    assert set(instances_by_name[DUMMY_INSTANCE1_NAME].access_scopes) == {
+        'https://www.googleapis.com/auth/devstorage.read_only',
+        'https://www.googleapis.com/auth/logging.write',
+        'https://www.googleapis.com/auth/monitoring.write',
+        'https://www.googleapis.com/auth/service.management.readonly',
+        'https://www.googleapis.com/auth/servicecontrol'
+    }
+
   def test_service_account(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              labels=[DUMMY_INSTANCE1_LABELS])
