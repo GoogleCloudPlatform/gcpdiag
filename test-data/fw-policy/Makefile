@@ -24,6 +24,7 @@ all:	\
 	json-dumps/compute-instances-empty.json \
 	json-dumps/compute-migs-empty.json \
 	json-dumps/compute-network-default.json \
+	json-dumps/compute-subnetworks-europe-west1.json \
 	json-dumps/compute-effective-firewalls-default.json \
 	json-dumps/compute-project.json \
 	json-dumps/compute-zones.json \
@@ -61,6 +62,12 @@ json-dumps/compute-project.json:
 json-dumps/compute-network-default.json:
 	$(CURL) -fsS \
 	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/networks/default' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-subnetworks-%.json:
+	REGION=$(subst json-dumps/,,$*); \
+	$(CURL) -fsS \
+	        "https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/regions/$$REGION/subnetworks" \
 		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/compute-effective-firewalls-default.json:
