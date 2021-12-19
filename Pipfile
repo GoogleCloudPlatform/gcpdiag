@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 appdirs = "*"
+boltons = "*"
 blessings = "*"
 dataclasses = "==0.6"
 diskcache = "*"

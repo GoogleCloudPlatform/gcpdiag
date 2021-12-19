@@ -20,4 +20,5 @@
         "--scripts-are-modules"
     ],
     "python.terminal.activateEnvInCurrentTerminal": true,
+    "python.linting.pylintCategorySeverity.refactor": "Warning",
 }
