@@ -185,8 +185,7 @@ def execute_queries(executor: concurrent.futures.Executor):
     job.future = executor.submit(_execute_query_job, job)
 
 
-def log_entry_timestamp_str(log_entry: Mapping[str, Any]):
+def log_entry_timestamp(log_entry: Mapping[str, Any]) -> datetime.datetime:
   # Use receiveTimestamp so that we don't have any time synchronization issues
   # (i.e. don't trust the timestamp field)
-  t = dateutil.parser.parse(log_entry['receiveTimestamp'])
-  return t.astimezone().isoformat(sep=' ', timespec='seconds')
+  return dateutil.parser.parse(log_entry['receiveTimestamp'])

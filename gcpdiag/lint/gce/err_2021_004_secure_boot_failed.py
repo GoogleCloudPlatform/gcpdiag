@@ -13,22 +13,26 @@
 # limitations under the License.
 
 # Lint as: python3
-"""Serial logs don't contain disk full messages
+"""Serial logs don't contain Secure Boot error messages
 
-The messages:
-"No space left on device" / "I/O error" / "No usable temporary directory found"
-in serial output usually indicate that the disk is full.
+The messages: "Security Violation" / "Binary is blacklisted" /
+"UEFI: Failed to start image" / "UEFI: Failed to load image"
+in serial output usually indicate that the Secure Boot doesn't pass its
+pre-checks.
 """
+
 from typing import Optional
 
 from gcpdiag import lint, models
 from gcpdiag.lint.gce.utils import LogEntryShort, SerialOutputSearch
 from gcpdiag.queries import gce
 
-NO_SPACE_LEFT_MESSAGES = [
-    'I/O error',  #
-    'No space left on device',
-    'No usable temporary directory found'
+SECURE_BOOT_ERR_MESSAGES = [
+    'UEFI: Failed to load image.',  #
+    'UEFI: Failed to start image.',
+    'Status: Security Violation',
+    'Binary is blacklisted ',
+    'Verification failed: (0x1A) Security Violation',
 ]
 
 logs_by_project = {}
@@ -36,7 +40,7 @@ logs_by_project = {}
 
 def prepare_rule(context: models.Context):
   logs_by_project[context.project_id] = SerialOutputSearch(
-      context, search_strings=NO_SPACE_LEFT_MESSAGES)
+      context, search_strings=SECURE_BOOT_ERR_MESSAGES)
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -45,14 +49,19 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   instances = gce.get_instances(context).values()
   if len(instances) == 0:
     report.add_skipped(None, 'No instances found')
-  else:
-    for instance in instances:
-      match: Optional[LogEntryShort] = search.get_last_match(
-          instance_id=instance.id)
-      if match:
-        report.add_failed(instance,
-                          ('There are messages indicating that the disk might'
-                           ' be full in serial output of {}\n{}: "{}"').format(
-                               instance.name, match.timestamp_iso, match.text))
-      else:
-        report.add_ok(instance)
+  for instance in instances:
+    # this lint rule isn't relevant to GKE nodes
+    if instance.is_gke_node():
+      continue
+
+    match: Optional[LogEntryShort] = search.get_last_match(
+        instance_id=instance.id)
+    if match:
+      report.add_failed(
+          instance,
+          ('There are messages indicating that the Secure Boot violations'
+           ' prevent booting {}\n{}: "{}"').format(instance.name,
+                                                   match.timestamp_iso,
+                                                   match.text))
+    else:
+      report.add_ok(instance)
