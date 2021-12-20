@@ -11,4 +11,13 @@
     "python.linting.enabled": true,
     "python.linting.pylintEnabled": true,
     "python.linting.pylintPath": "pylint",
+    "python.linting.mypyEnabled": true,
+    "python.linting.mypyArgs": [
+        "--follow-imports=silent",
+        "--ignore-missing-imports",
+        "--show-column-numbers",
+        "--no-pretty",
+        "--scripts-are-modules"
+    ],
+    "python.terminal.activateEnvInCurrentTerminal": true,
 }
