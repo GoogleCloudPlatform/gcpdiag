@@ -1,3 +1,24 @@
+## 0.49 (2021-12-20)
+
+#### New / updated rules
+
+- dataproc/BP/2021_001: Dataproc Job driver logs are enabled
+- composer/WARN/2021_001: Composer environment status is running (b/207615409)
+- gke/ERR/2021_013: GKE cluster firewall rules are configured. (b/210407018)
+- gke/ERR/2021_014: GKE masters of can reach the nodes. (b/210407018)
+- gke/ERR/2021_015: GKE connectivity: node to pod communication. (b/210407018)
+- gce/WARN/2021_001: verify logging access scopes (b/210711351)
+- gce/WARN/2021_003: verify monitoring access scopes (b/210711351)
+
+#### Enhancements
+
+- New product: Cloud Composer (b/207615409)
+- Simplify API testing by using ephemeral projects (b/207484323)
+- gcpdiag.sh wrapper script now verifies the minimum version of current script
+- Add support for client-side firewall connectivity tests (b/210407018)
+
+#### Fixes
+
 ## 0.48 (2021-11-15)
 
 #### New rules
