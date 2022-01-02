@@ -1,0 +1,29 @@
+{
+  "kind": "storage#buckets",
+  "items": [
+    {
+      "kind": "storage#bucket",
+      "selfLink": "https://www.googleapis.com/storage/v1/b/gcpdiag-gcs1bucket-aaaa",
+      "id": "gcpdiag-gcs1bucket-aaaa",
+      "name": "gcpdiag-gcs1bucket-aaaa",
+      "projectNumber": "12340008",
+      "metageneration": "1",
+      "location": "US",
+      "storageClass": "STANDARD",
+      "etag": "CAE=",
+      "timeCreated": "2022-01-01T01:45:19.621Z",
+      "updated": "2022-01-01T01:45:19.621Z",
+      "iamConfiguration": {
+        "bucketPolicyOnly": {
+          "enabled": false
+        },
+        "uniformBucketLevelAccess": {
+          "enabled": false
+        },
+        "publicAccessPrevention": "inherited"
+      },
+      "locationType": "multi-region",
+      "rpo": "DEFAULT"
+    }
+  ]
+}
