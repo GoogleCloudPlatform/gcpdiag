@@ -211,6 +211,11 @@ class Instance(models.Resource):
     return 'labels' in self._resource_data and \
            'goog-gke-node' in self._resource_data['labels']
 
+  def secure_boot_enabled(self) -> bool:
+    if 'shieldedInstanceConfig' in self._resource_data:
+      return self._resource_data['shieldedInstanceConfig']['enableSecureBoot']
+    return False
+
   @property
   def access_scopes(self) -> List[str]:
     if 'serviceAccounts' in self._resource_data:
