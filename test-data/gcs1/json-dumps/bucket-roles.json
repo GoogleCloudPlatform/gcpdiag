@@ -1,0 +1,21 @@
+{
+  "kind": "storage#policy",
+  "resourceId": "projects/_/buckets/gcpdiag-gcs1bucket-aaaa",
+  "version": 1,
+  "etag": "CAE=",
+  "bindings": [
+    {
+      "role": "roles/storage.legacyBucketOwner",
+      "members": [
+        "projectEditor:gcpdiag-gcs1-aaaa",
+        "projectOwner:gcpdiag-gcs1-aaaa"
+      ]
+    },
+    {
+      "role": "roles/storage.legacyBucketReader",
+      "members": [
+        "projectViewer:gcpdiag-gcs1-aaaa"
+      ]
+    }
+  ]
+}
