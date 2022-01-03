@@ -21,8 +21,8 @@ import re
 import sys
 
 from gcpdiag import config, hooks, lint, models
-from gcpdiag.lint import (apigee, composer, dataproc, gce, gcf, gcs, gke, iam,
-                          report_terminal)
+from gcpdiag.lint import (apigee, composer, dataproc, gcb, gce, gcf, gcs, gke,
+                          iam, report_terminal)
 from gcpdiag.queries import apis
 
 
@@ -168,6 +168,7 @@ def run(argv) -> int:
   # ^^^ If you add rules directory, update also
   # pyinstaller/hook-gcpdiag.lint.py and bin/precommit-website-rules
   repo.load_rules(apigee)
+  repo.load_rules(gcb)
   report = report_terminal.LintReportTerminal(
       log_info_for_progress_only=(args.verbose == 0),
       show_ok=not args.hide_ok,

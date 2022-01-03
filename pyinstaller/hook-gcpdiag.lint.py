@@ -21,4 +21,5 @@ hiddenimports = \
   collect_submodules('gcpdiag.lint.iam') + \
   collect_submodules('gcpdiag.lint.gcf') + \
   collect_submodules('gcpdiag.lint.dataproc') + \
-  collect_submodules('gcpdiag.lint.composer')
+  collect_submodules('gcpdiag.lint.composer') + \
+  collect_submodules('gcpdiag.lint.cloudbuild')

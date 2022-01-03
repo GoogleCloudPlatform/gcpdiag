@@ -22,8 +22,8 @@ from typing import Optional
 import googleapiclient.errors
 
 from gcpdiag.queries import (apigee_stub, composer_stub, crm_stub,
-                             dataproc_stub, gce_stub, gcf_stub, gcs_stub,
-                             gke_stub, iam_stub, kms_stub, logs_stub,
+                             dataproc_stub, gcb_stub, gce_stub, gcf_stub,
+                             gcs_stub, gke_stub, iam_stub, kms_stub, logs_stub,
                              monitoring_stub)
 
 # pylint: disable=unused-argument
@@ -53,6 +53,8 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/fw-policy/json-dumps',
     '12340004':
         pathlib.Path(__file__).parents[2] / 'test-data/fw-policy/json-dumps',
+    'gcpdiag-cloudbuild1-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/cloudbuild1/json-dumps'
 }
 
 
@@ -134,5 +136,7 @@ def get_api_stub(service_name: str,
     return composer_stub.ComposerApiStub()
   elif service_name == 'storage':
     return gcs_stub.BucketApiStub()
+  elif service_name == 'cloudbuild':
+    return gcb_stub.CloudBuildApiStub()
   else:
     raise ValueError('unsupported service: %s' % service_name)
