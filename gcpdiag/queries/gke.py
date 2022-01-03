@@ -22,7 +22,6 @@ import re
 from typing import Dict, Iterable, List, Mapping, Optional
 
 import googleapiclient.errors
-
 from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis, crm, gce
 
@@ -269,7 +268,8 @@ class Cluster(models.Resource):
     return self._resource_data['monitoringService'] != 'none'
 
   def has_authenticator_group_enabled(self) -> bool:
-    return self._resource_data['authenticatorGroupsConfig'].get('enabled', 'none') != 'none'
+    return self._resource_data['authenticatorGroupsConfig'].get(
+        'enabled', 'none') != 'none'
 
   @property
   def nodepools(self) -> Iterable[NodePool]:

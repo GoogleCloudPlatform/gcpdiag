@@ -19,11 +19,10 @@ import ipaddress
 from unittest import mock
 
 import pytest
-from packaging.version import LegacyVersion
-
 from gcpdiag import models
 from gcpdiag.queries import apis_stub, gce, gke
 from gcpdiag.queries.gke import Version
+from packaging.version import LegacyVersion
 
 DUMMY_PROJECT_NAME = 'gcpd-gke-1-9b90'
 DUMMY_CLUSTER1_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clusters/gke1'
@@ -32,6 +31,7 @@ DUMMY_CLUSTER2_NAME = f'projects/{DUMMY_PROJECT_NAME}/locations/europe-west1/clu
 DUMMY_CLUSTER2_SHORT_NAME = f'{DUMMY_PROJECT_NAME}/europe-west1/gke2'
 DUMMY_CLUSTER1_SERVICE_ACCOUNT = '18404348413-compute@developer.gserviceaccount.com'
 DUMMY_CLUSTER2_SERVICE_ACCOUNT = 'gke2sa@gcpd-gke-1-9b90.iam.gserviceaccount.com'
+DUMMY_CLUSTER3_NAME = f'projects/{DUMMY_PROJECT_NAME}/locations/europe-west1/clusters/gke3'
 
 # pylint: disable=consider-iterating-dictionary
 
@@ -88,6 +88,15 @@ class TestCluster:
     assert DUMMY_CLUSTER2_NAME in clusters.keys()
     c = clusters[DUMMY_CLUSTER2_NAME]
     assert c.has_logging_enabled()
+
+  def test_has_authenticator_group_enabled(self):
+    """""has_authenticator_group_enabled should return true for GKE cluster with Groups for RBAC
+    enabled."""
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    assert DUMMY_CLUSTER3_NAME in clusters.keys()
+    c = clusters[DUMMY_CLUSTER3_NAME]
+    assert c.has_authenticator_group_enabled()
 
   def test_has_default_service_account(self):
     """has_default_service_account should return true for GKE node-pools with
