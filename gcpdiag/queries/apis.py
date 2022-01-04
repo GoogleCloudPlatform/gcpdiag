@@ -225,6 +225,13 @@ def verify_access(project_id: str):
       ),
             file=sys.stdout)
       sys.exit(1)
+
+    if not is_enabled(project_id, 'iam'):
+      print((
+          'ERROR: Identity and Access Management (IAM) API must be enabled. To enable, execute:\n'
+          f'gcloud services enable iam.googleapis.com --project={project_id}'),
+            file=sys.stdout)
+      sys.exit(1)
   except utils.GcpApiError as err:
     print(f'ERROR: can\'t access project {project_id}: {err.message}.',
           file=sys.stdout)
