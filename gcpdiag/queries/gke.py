@@ -307,6 +307,9 @@ class Cluster(models.Resource):
   def is_private(self) -> bool:
     return 'privateClusterConfig' in self._resource_data
 
+  def is_regional(self) -> bool:
+    return len(self._resource_data['locations']) > 1
+
   @property
   def masters_cidr_list(self) -> Iterable[ipaddress.IPv4Network]:
     if 'privateClusterConfig' in self._resource_data and \
