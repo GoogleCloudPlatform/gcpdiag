@@ -44,6 +44,10 @@ class Bucket(models.Resource):
   def name(self) -> str:
     return self._resource_data['name']
 
+  def is_uniform_access(self) -> bool:
+    return self._resource_data['iamConfiguration']['uniformBucketLevelAccess'][
+        'enabled']
+
   @property
   def full_path(self) -> str:
     result = re.match(r'https://www.googleapis.com/storage/v1/(.*)',
