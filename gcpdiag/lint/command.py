@@ -21,7 +21,7 @@ import re
 import sys
 
 from gcpdiag import config, hooks, lint, models
-from gcpdiag.lint import (apigee, composer, dataproc, gce, gcf, gke, iam,
+from gcpdiag.lint import (apigee, composer, dataproc, gce, gcf, gcs, gke, iam,
                           report_terminal)
 from gcpdiag.queries import apis
 
@@ -162,6 +162,7 @@ def run(argv) -> int:
   repo.load_rules(gke)
   repo.load_rules(iam)
   repo.load_rules(gcf)
+  repo.load_rules(gcs)
   repo.load_rules(dataproc)
   repo.load_rules(composer)
   # ^^^ If you add rules directory, update also
