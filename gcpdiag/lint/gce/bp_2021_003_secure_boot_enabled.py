@@ -39,9 +39,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     if i.secure_boot_enabled():
       report.add_ok(i)
     else:
-      report.add_failed(
-          i,
-          'it is recommended to enable Secure Boot if it is appropriate for your workload'
-      )
+      report.add_failed(i)
   if not instances_count:
     report.add_skipped(None, 'no instances found')
