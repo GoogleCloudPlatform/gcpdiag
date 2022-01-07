@@ -91,6 +91,16 @@ class TestCluster:
     c = clusters[DUMMY_CLUSTER2_NAME]
     assert c.has_logging_enabled()
 
+  def test_cluster_has_workload_identity_enabled(self):
+    """has_workload_identity_enabled should return true for GKE cluster with
+    workload identity enabled."""
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    assert not c.has_workload_identity_enabled()
+    c = clusters[DUMMY_CLUSTER4_NAME]
+    assert c.has_workload_identity_enabled()
+
   def test_has_default_service_account(self):
     """has_default_service_account should return true for GKE node-pools with
     the default GCE SA."""
@@ -188,6 +198,14 @@ class TestCluster:
     assert not c.is_private
     c = clusters[DUMMY_CLUSTER4_NAME]
     assert c.is_private
+
+  def test_cluster_is_regional(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER4_NAME]
+    assert not c.is_regional()
+    c = clusters[DUMMY_CLUSTER2_NAME]
+    assert c.is_regional()
 
   def test_node_tag_property(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)

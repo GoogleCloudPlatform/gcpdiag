@@ -10,4 +10,7 @@ resource "google_container_cluster" "gke4" {
     enable_private_endpoint = false
     master_ipv4_cidr_block  = "10.0.1.0/28"
   }
+  workload_identity_config {
+    workload_pool = "${google_project.project.project_id}.svc.id.goog"
+  }
 }

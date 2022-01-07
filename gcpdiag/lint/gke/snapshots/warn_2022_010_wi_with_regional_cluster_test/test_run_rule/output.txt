@@ -1,0 +1,10 @@
+*  test/ERR/9999_999: short description
+   - gcpdiag-gke1-aaaa/europe-west1/gke2                                  [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west1/gke3                                  [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [FAIL]
+
+   long description
+
+   https://gcpdiag.dev/rules/test/ERR/9999_999
+

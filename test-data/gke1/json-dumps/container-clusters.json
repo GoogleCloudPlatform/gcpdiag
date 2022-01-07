@@ -166,6 +166,9 @@
       },
       "status": "RUNNING",
       "subnetwork": "default",
+      "workloadIdentityConfig": {
+        "workloadPool": "gcpdiag-gke1-aaaa.svc.id.goog"
+      },
       "zone": "europe-west1"
     },
     {
@@ -682,6 +685,9 @@
       },
       "status": "RUNNING",
       "subnetwork": "default",
+      "workloadIdentityConfig": {
+        "workloadPool": "gcpdiag-gke1-aaaa.svc.id.goog"
+      },
       "zone": "europe-west4-a"
     }
   ]
