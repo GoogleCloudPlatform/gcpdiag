@@ -5,6 +5,10 @@ resource "google_container_cluster" "gke4" {
   name               = "gke4"
   location           = "europe-west4-a"
   initial_node_count = 1
+  ip_allocation_policy {
+    cluster_ipv4_cidr_block  = "/14"
+    services_ipv4_cidr_block = "/20"
+  }
   private_cluster_config {
     enable_private_nodes    = true
     enable_private_endpoint = false

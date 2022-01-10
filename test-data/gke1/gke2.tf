@@ -98,4 +98,7 @@ resource "google_container_cluster" "gke2" {
       "https://www.googleapis.com/auth/cloud-platform"
     ]
   }
+  workload_identity_config {
+    workload_pool = "${google_project.project.project_id}.svc.id.goog"
+  }
 }
