@@ -182,7 +182,7 @@
       },
       "authenticatorGroupsConfig": {
         "enabled": true,
-        "securityGroup": "gke-security-groups-test@gcpdiag.dev"
+        "securityGroup": "gke-security-groups@gcpdiag.dev"
       },
       "autopilot": {},
       "autoscaling": {
