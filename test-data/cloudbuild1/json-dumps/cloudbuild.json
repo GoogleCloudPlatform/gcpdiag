@@ -1,0 +1,84 @@
+{
+  "builds": [
+    {
+      "id": "01ff384c-d7f2-4295-ad68-5c32529d8b85",
+      "status": "SUCCESS",
+      "source": {
+        "repoSource": {
+          "projectId": "gcpdiag-cloudbuild1-aaaa",
+          "repoName": "test-repo",
+          "commitSha": "1fe8ae4ef0757752e358e1a7cc2bbe147d95b305"
+        }
+      },
+      "createTime": "2022-01-04T12:50:22.022583902Z",
+      "startTime": "2022-01-04T12:50:23.887714058Z",
+      "finishTime": "2022-01-04T12:50:32.809031Z",
+      "results": {
+        "buildStepImages": [
+          "sha256:84102d4bb6d15a430377b343d560515939f8b797a1ea8d483811be13e32aaa1b"
+        ],
+        "buildStepOutputs": [
+          ""
+        ]
+      },
+      "steps": [
+        {
+          "name": "gcr.io/cloud-builders/gsutil",
+          "timing": {
+            "startTime": "2022-01-04T12:50:29.570759942Z",
+            "endTime": "2022-01-04T12:50:32.100388276Z"
+          },
+          "status": "SUCCESS",
+          "pullTiming": {
+            "startTime": "2022-01-04T12:50:29.570759942Z",
+            "endTime": "2022-01-04T12:50:29.574674936Z"
+          }
+        }
+      ],
+      "timeout": "600s",
+      "projectId": "gcpdiag-cloudbuild1-aaaa",
+      "logsBucket": "gs://12340005.cloudbuild-logs.googleusercontent.com",
+      "sourceProvenance": {
+        "resolvedRepoSource": {
+          "projectId": "gcpdiag-cloudbuild1-aaaa",
+          "repoName": "test-repo",
+          "commitSha": "1fe8ae4ef0757752e358e1a7cc2bbe147d95b305"
+        }
+      },
+      "buildTriggerId": "edd81df6-c8fc-417e-9bb9-08bb710e57af",
+      "options": {
+        "substitutionOption": "ALLOW_LOOSE",
+        "logging": "LEGACY",
+        "dynamicSubstitutions": true,
+        "pool": {}
+      },
+      "logUrl": "https://console.cloud.google.com/cloud-build/builds/01ff384c-d7f2-4295-ad68-5c32529d8b85?project=12340005",
+      "substitutions": {
+        "REPO_NAME": "test-repo",
+        "REVISION_ID": "1fe8ae4ef0757752e358e1a7cc2bbe147d95b305",
+        "COMMIT_SHA": "1fe8ae4ef0757752e358e1a7cc2bbe147d95b305",
+        "SHORT_SHA": "1fe8ae4",
+        "BRANCH_NAME": "main",
+        "REF_NAME": "main",
+        "TRIGGER_NAME": "trigger",
+        "TRIGGER_BUILD_CONFIG_PATH": ""
+      },
+      "tags": [
+        "trigger-edd81df6-c8fc-417e-9bb9-08bb710e57af"
+      ],
+      "timing": {
+        "FETCHSOURCE": {
+          "startTime": "2022-01-04T12:50:24.496776953Z",
+          "endTime": "2022-01-04T12:50:29.049046326Z"
+        },
+        "BUILD": {
+          "startTime": "2022-01-04T12:50:29.049143383Z",
+          "endTime": "2022-01-04T12:50:32.100462845Z"
+        }
+      },
+      "queueTtl": "3600s",
+      "name": "projects/12340005/locations/global/builds/01ff384c-d7f2-4295-ad68-5c32529d8b85"
+    }
+  ],
+  "nextPageToken": "MjAyMi0wMS0wNFQxMjo1MDoyMi4wMjI1ODI5MDJa"
+}
