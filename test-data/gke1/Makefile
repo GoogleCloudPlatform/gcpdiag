@@ -34,7 +34,7 @@ all:	\
 	json-dumps/iam-roles-predefined-1.json.gz \
 	json-dumps/iam-roles-predefined-2.json.gz \
 	json-dumps/iam-service-accounts.json \
-        json-dumps/logging-entries-1.json \
+	json-dumps/logging-entries-1.json \
 	json-dumps/project.json \
 	json-dumps/services.json
 
