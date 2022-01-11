@@ -60,5 +60,5 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
           report.add_ok(i)
       else:
         report.add_ok(i)
-    if not instances_count:
-      report.add_skipped(None, 'no instances found with OS Config enabled')
+  if not instances_count:
+    report.add_skipped(None, 'no instances found with OS Config enabled')
