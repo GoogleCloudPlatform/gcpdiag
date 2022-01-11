@@ -70,6 +70,7 @@ json-dumps/compute-templates.json:
 	ZONE=$(subst json-dumps/,,$%); \
 	$(CURL) -fsS \
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/instanceTemplates' \
+		| $(JSON_CLEANER) compute-templates \
 		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/compute-migs-empty.json:
