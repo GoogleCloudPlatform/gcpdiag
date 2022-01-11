@@ -50,13 +50,13 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     sa = i.service_account
     has_scope = set(MONITORING_SCOPES) & set(i.access_scopes)
 
-    if not has_scope:
-      message.append('missing scope: monitoring.write')
-
     if not sa:
       message.append('no service account')
-    elif not iam_policy.has_role_permissions(f'serviceAccount:{sa}', ROLE):
-      message.append(f'service account: {sa}\nmissing role: {ROLE}')
+    else:
+      if not has_scope:
+        message.append('missing scope: monitoring.write')
+      elif not iam_policy.has_role_permissions(f'serviceAccount:{sa}', ROLE):
+        message.append(f'service account: {sa}\nmissing role: {ROLE}')
 
     if message:
       report.add_failed(i, '\n'.join(message))
