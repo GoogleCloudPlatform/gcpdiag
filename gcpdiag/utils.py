@@ -58,7 +58,7 @@ class GcpApiError(Exception):
     super().__init__(self.message)
 
   def __str__(self):
-    return f'can\'t fetch data, reason: {self.message}'
+    return self.message
 
 
 def extract_value_from_res_name(resource_name: str, key: str) -> str:

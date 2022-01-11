@@ -27,10 +27,11 @@ import re
 from collections.abc import Callable
 from typing import Any, Dict, Iterable, Iterator, List, Optional
 
-from gcpdiag import models
+import googleapiclient.errors
+
+from gcpdiag import models, utils
 from gcpdiag.executor import get_executor
 from gcpdiag.queries import logs
-from gcpdiag.utils import GcpApiError
 
 
 class LintRuleClass(enum.Enum):
@@ -345,15 +346,18 @@ class LintRuleRepository:
     for rule in self.list_rules(include, exclude):
       rule_report = report.rule_start(rule, context)
 
-      if rule.prefetch_rule_future:
-        if rule.prefetch_rule_future.running():
-          logging.info('waiting for query results')
-        rule.prefetch_rule_future.result()
-
       try:
+        if rule.prefetch_rule_future:
+          if rule.prefetch_rule_future.running():
+            logging.info('waiting for query results')
+          rule.prefetch_rule_future.result()
+
         rule.run_rule_f(context, rule_report)
-      except (GcpApiError) as api_error:
-        report.add_skipped(rule, context, None, str(api_error), None)
+      except (utils.GcpApiError, googleapiclient.errors.HttpError) as err:
+        if isinstance(err, googleapiclient.errors.HttpError):
+          err = utils.GcpApiError(err)
+        logging.warning('%s', str(err))
+        report.add_skipped(rule, context, None, f'API error: {err}', None)
       report.rule_end(rule, context)
     return report.finish(context)
 
