@@ -40,6 +40,12 @@ clean_maps = {
         '.items.[].tags.fingerprint':
             'REDACTED',
     },
+    'compute-templates': {
+        '.items.[].properties.metadata.fingerprint': 'REDACTED',
+        '.items.[].properties.metadata.items.configure-sh': 'REDACTED',
+        '.items.[].properties.metadata.items.kube-env': 'REDACTED',
+        '.items.[].properties.metadata.items.user-data': 'REDACTED',
+    },
     'compute-project': {
         '.commonInstanceMetadata.items.sshKeys': 'REDACTED'
     },
