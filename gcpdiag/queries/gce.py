@@ -17,6 +17,7 @@
 
 import logging
 import re
+from datetime import datetime, timezone
 from typing import Callable, Dict, Iterable, List, Mapping, Optional, Set
 
 import googleapiclient.errors
@@ -202,6 +203,13 @@ class Instance(models.Resource):
     # Note: instance names must be unique per project, so no need to add the zone.
     path = self.project_id + '/' + self.name
     return path
+
+  @property
+  def creation_timestamp(self) -> datetime:
+    """VM creation time, as a *naive* `datetime` object."""
+    return datetime.fromisoformat(
+        self._resource_data['creationTimestamp']).astimezone(
+            timezone.utc).replace(tzinfo=None)
 
   def is_serial_port_logging_enabled(self) -> bool:
     value = self.get_metadata('serial-port-logging-enable')
