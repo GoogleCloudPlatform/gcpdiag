@@ -336,23 +336,19 @@
   ],
   "defaultImageType": "COS",
   "validImageTypes": [
+    "UBUNTU_CONTAINERD",
+    "WINDOWS_SAC",
     "WINDOWS_LTSC",
     "WINDOWS_SAC_CONTAINERD",
     "WINDOWS_LTSC_CONTAINERD",
     "COS",
     "UBUNTU",
-    "COS_CONTAINERD",
-    "UBUNTU_CONTAINERD",
-    "WINDOWS_SAC"
+    "COS_CONTAINERD"
   ],
   "validMasterVersions": [
     "1.21.6-gke.1500",
     "1.21.5-gke.1802",
     "1.21.5-gke.1302",
-    "1.21.5-gke.1300",
-    "1.21.4-gke.2302",
-    "1.21.4-gke.2300",
-    "1.21.3-gke.2003",
     "1.20.12-gke.1500",
     "1.20.11-gke.1801",
     "1.20.11-gke.1300",
@@ -360,42 +356,38 @@
     "1.20.10-gke.1600",
     "1.19.16-gke.1500",
     "1.19.15-gke.1801",
-    "1.19.15-gke.1300",
-    "1.19.15-gke.500",
-    "1.19.14-gke.2300",
-    "1.19.14-gke.1900",
-    "1.19.14-gke.301",
-    "1.19.13-gke.1900"
+    "1.19.15-gke.1300"
   ],
   "channels": [
     {
       "channel": "RAPID",
-      "defaultVersion": "1.21.5-gke.1802",
+      "defaultVersion": "1.22.3-gke.700",
       "validVersions": [
+        "1.22.3-gke.1500",
         "1.22.3-gke.700",
-        "1.22.2-gke.1901",
-        "1.21.5-gke.1802",
-        "1.21.5-gke.1302"
+        "1.21.6-gke.1500",
+        "1.21.5-gke.1802"
       ]
     },
     {
       "channel": "REGULAR",
       "defaultVersion": "1.21.5-gke.1302",
       "validVersions": [
+        "1.21.5-gke.1802",
         "1.21.5-gke.1302",
-        "1.21.3-gke.2003",
-        "1.20.11-gke.1801",
-        "1.20.10-gke.2100"
+        "1.20.12-gke.1500",
+        "1.20.11-gke.1801"
       ]
     },
     {
       "channel": "STABLE",
-      "defaultVersion": "1.20.10-gke.1600",
+      "defaultVersion": "1.20.11-gke.1300",
       "validVersions": [
+        "1.20.12-gke.1500",
+        "1.20.11-gke.1801",
         "1.20.11-gke.1300",
-        "1.20.10-gke.1600",
-        "1.19.15-gke.1300",
-        "1.19.15-gke.500"
+        "1.19.16-gke.1500",
+        "1.19.15-gke.1801"
       ]
     }
   ]

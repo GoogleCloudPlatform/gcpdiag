@@ -87,7 +87,7 @@ resource "google_container_cluster" "gke2" {
   project            = google_project.project.project_id
   depends_on         = [google_project_service.container]
   name               = "gke2"
-  location           = "europe-west1"
+  location           = "europe-west4"
   initial_node_count = 1
   cluster_telemetry {
     type = "SYSTEM_ONLY"
