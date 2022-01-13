@@ -44,7 +44,7 @@ resource "google_container_cluster" "gke3" {
   project            = google_project.project.project_id
   depends_on         = [google_project_service.container]
   name               = "gke3"
-  location           = "europe-west1"
+  location           = "europe-west4"
   initial_node_count = 1
   authenticator_groups_config {
     security_group = "gke-security-groups@gcpdiag.dev"
