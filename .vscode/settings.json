@@ -21,4 +21,9 @@
     ],
     "python.terminal.activateEnvInCurrentTerminal": true,
     "python.linting.pylintCategorySeverity.refactor": "Warning",
+    "python.testing.pytestArgs": [
+      "gcpdiag"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true,
 }
