@@ -24,7 +24,7 @@ import googleapiclient.errors
 from gcpdiag.queries import (apigee_stub, composer_stub, crm_stub,
                              dataproc_stub, gcb_stub, gce_stub, gcf_stub,
                              gcs_stub, gke_stub, iam_stub, kms_stub, logs_stub,
-                             monitoring_stub)
+                             monitoring_stub, pubsub_stub)
 
 # pylint: disable=unused-argument
 
@@ -54,7 +54,9 @@ JSON_PROJECT_DIR = {
     '12340004':
         pathlib.Path(__file__).parents[2] / 'test-data/fw-policy/json-dumps',
     'gcpdiag-cloudbuild1-aaaa':
-        pathlib.Path(__file__).parents[2] / 'test-data/cloudbuild1/json-dumps'
+        pathlib.Path(__file__).parents[2] / 'test-data/cloudbuild1/json-dumps',
+    'gcpdiag-pubsub1-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/pubsub1/json-dumps',
 }
 
 
@@ -138,5 +140,7 @@ def get_api_stub(service_name: str,
     return gcs_stub.BucketApiStub()
   elif service_name == 'cloudbuild':
     return gcb_stub.CloudBuildApiStub()
+  elif service_name == 'pubsub':
+    return pubsub_stub.PubsubApiStub()
   else:
     raise ValueError('unsupported service: %s' % service_name)

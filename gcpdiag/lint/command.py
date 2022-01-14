@@ -184,6 +184,10 @@ def run(argv) -> int:
     logger.setLevel(logging.DEBUG)
   else:
     logger.setLevel(logging.INFO)
+  # Disable logging from python-api-client, unless verbose is turned on
+  if args.verbose == 0:
+    gac_http_logger = logging.getLogger('googleapiclient.http')
+    gac_http_logger.setLevel(logging.ERROR)
 
   # Start the reporting
   report.banner()

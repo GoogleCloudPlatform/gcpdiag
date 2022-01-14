@@ -29,8 +29,8 @@ from gcpdiag.queries.gke import Version
 DUMMY_PROJECT_NAME = 'gcpdiag-gke1-aaaa'
 DUMMY_CLUSTER1_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clusters/gke1'
 DUMMY_CLUSTER1_LABELS = {'foo': 'bar'}
-DUMMY_CLUSTER2_NAME = f'projects/{DUMMY_PROJECT_NAME}/locations/europe-west1/clusters/gke2'
-DUMMY_CLUSTER2_SHORT_NAME = f'{DUMMY_PROJECT_NAME}/europe-west1/gke2'
+DUMMY_CLUSTER2_NAME = f'projects/{DUMMY_PROJECT_NAME}/locations/europe-west4/clusters/gke2'
+DUMMY_CLUSTER2_SHORT_NAME = f'{DUMMY_PROJECT_NAME}/europe-west4/gke2'
 DUMMY_CLUSTER1_SERVICE_ACCOUNT = '12340002-compute@developer.gserviceaccount.com'
 DUMMY_CLUSTER2_SERVICE_ACCOUNT = 'gke2sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com'
 DUMMY_CLUSTER4_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clusters/gke4'
@@ -54,7 +54,7 @@ class TestCluster:
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              regions=['europe-west4'])
     clusters = gke.get_clusters(context)
-    assert DUMMY_CLUSTER1_NAME in clusters and len(clusters) == 2
+    assert DUMMY_CLUSTER1_NAME in clusters and len(clusters) == 4
 
   def test_cluster_properties(self):
     """verify cluster property methods."""
@@ -124,7 +124,7 @@ class TestCluster:
     # cluster 2
     c = clusters[DUMMY_CLUSTER2_NAME]
     assert c.pod_ipv4_cidr.compare_networks(
-        ipaddress.ip_network('10.112.0.0/14')) == 0
+        ipaddress.ip_network('10.8.0.0/14')) == 0
 
   def test_current_node_count(self):
     """returns correct number of nodes running"""

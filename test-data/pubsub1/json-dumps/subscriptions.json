@@ -1,0 +1,14 @@
+{
+  "subscriptions": [
+    {
+      "name": "projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-pubsub1subscription-aaaa",
+      "topic": "projects/gcpdiag-pubsub1-aaaa/topics/gcpdiag-pubsub1topic-aaaa",
+      "pushConfig": {},
+      "ackDeadlineSeconds": 10,
+      "messageRetentionDuration": "604800s",
+      "expirationPolicy": {
+        "ttl": "2678400s"
+      }
+    }
+  ]
+}

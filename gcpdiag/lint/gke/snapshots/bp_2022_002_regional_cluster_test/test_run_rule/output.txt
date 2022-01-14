@@ -1,6 +1,6 @@
 *  test/ERR/9999_999: short description
-   - gcpdiag-gke1-aaaa/europe-west1/gke2                                  [ OK ]
-   - gcpdiag-gke1-aaaa/europe-west1/gke3                                  [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [ OK ]
    - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [FAIL]
       is not regional
    - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [FAIL]

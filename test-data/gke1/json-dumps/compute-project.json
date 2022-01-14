@@ -1,30 +1,30 @@
 {
   "commonInstanceMetadata": {
-    "fingerprint": "d-NnSzf0Xe8=",
+    "fingerprint": "i87tP87z8HM=",
     "items": [
       {
-        "key": "gke-gke4-5da39605-secondary-ranges",
-        "value": "services:default:default:gke-gke4-services-5da39605,pods:default:default:gke-gke4-pods-5da39605"
+        "key": "gke-gke4-1019cf00-secondary-ranges",
+        "value": "services:default:default:gke-gke4-services-1019cf00,pods:default:default:gke-gke4-pods-1019cf00"
       },
       {
-        "key": "gke-gke2-709dc5cc-secondary-ranges",
-        "value": "services:default:default:gke-gke2-services-709dc5cc,pods:default:default:gke-gke2-pods-709dc5cc"
-      },
-      {
-        "key": "gke-gke1-170a398a-secondary-ranges",
+        "key": "gke-gke1-79f3ce44-secondary-ranges",
         "value": "services:default:gke1-subnet:gke1-secondary-range-svc,shareable-pods:default:gke1-subnet:gke1-secondary-range-pod"
       },
       {
-        "key": "gke-gke3-c0f5e27c-secondary-ranges",
-        "value": "services:default:default:gke-gke3-services-c0f5e27c,pods:default:default:gke-gke3-pods-c0f5e27c"
+        "key": "gke-gke3-8614055e-cidr",
+        "value": "default:10.4.0.0/14"
+      },
+      {
+        "key": "gke-gke2-498f0ae5-cidr",
+        "value": "default:10.8.0.0/14"
       }
     ],
     "kind": "compute#metadata"
   },
-  "creationTimestamp": "2021-12-06T02:39:53.220-08:00",
+  "creationTimestamp": "2022-01-10T03:51:49.731-08:00",
   "defaultNetworkTier": "PREMIUM",
   "defaultServiceAccount": "12340002-compute@developer.gserviceaccount.com",
-  "id": "3332797038948538006",
+  "id": "1163917191032185658",
   "kind": "compute#project",
   "name": "gcpdiag-gke1-aaaa",
   "quotas": [
@@ -56,7 +56,7 @@
     {
       "limit": 300,
       "metric": "ROUTES",
-      "usage": 1
+      "usage": 7
     },
     {
       "limit": 150,
@@ -141,7 +141,7 @@
     {
       "limit": 275,
       "metric": "SUBNETWORKS",
-      "usage": 30
+      "usage": 31
     },
     {
       "limit": 100,
