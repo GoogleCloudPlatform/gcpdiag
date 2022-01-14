@@ -1,11 +1,13 @@
 # Lint as: python3
 """Cloud Functions don't use deprecated runtimes.
 
-The following runtimes are deprecated: Nodejs8, Nodejs6, Go111.
+The following runtimes are deprecated: Go111, Nodejs6, Nodejs8.
 """
 
 from gcpdiag import lint, models
 from gcpdiag.queries import gcf
+
+DEPRECATED_RUNTIMES = ['go111', 'nodejs6', 'nodejs8']
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -14,7 +16,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'no functions found')
   for cloudfunction in sorted(cloudfunctions.values(),
                               key=lambda cloudfunction: cloudfunction.name):
-    if cloudfunction.runtime in ['go111', 'nodejs8', 'nodejs6']:
+    if cloudfunction.runtime in DEPRECATED_RUNTIMES:
       report.add_failed(
           cloudfunction,
           f'cloudfunction with deprecated runtime {cloudfunction.runtime}')
