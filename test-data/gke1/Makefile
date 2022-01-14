@@ -4,9 +4,9 @@ PROJECT_NR  := $(shell terraform output -raw project_nr)
 ORG_ID      := $(shell terraform output -raw org_id)
 CURL         = ../../bin/curl-wrap.sh
 JSON_CLEANER = ../../bin/json-cleaner
-REGION_1     = europe-west1
+REGION_1     = europe-west4
 ZONE_1       = europe-west4-a
-ZONE_EMPTY   = europe-west4-b
+ZONE_EMPTY   = europe-west1-b
 
 FAKE_PROJECT_ID_SUFFIX = aaaa
 FAKE_PROJECT_NR = 12340002

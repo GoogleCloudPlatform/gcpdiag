@@ -1,6 +1,6 @@
 *  test/ERR/9999_999: short description
-   - gcpdiag-gke1-aaaa/europe-west1/gke2/default-pool                     [ OK ]
-   - gcpdiag-gke1-aaaa/europe-west1/gke3/default-pool                     [FAIL]
+   - gcpdiag-gke1-aaaa/europe-west4/gke2/default-pool                     [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/gke3/default-pool                     [FAIL]
      service account: gke3sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com
      missing role: roles/logging.logWriter
    - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [SKIP]

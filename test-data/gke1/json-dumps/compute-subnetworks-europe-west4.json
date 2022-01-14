@@ -2,8 +2,8 @@
   "id": "projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks",
   "items": [
     {
-      "id": "2600853935044449895",
-      "creationTimestamp": "2021-12-06T02:40:08.123-08:00",
+      "id": "5392090487084655375",
+      "creationTimestamp": "2022-01-10T03:52:00.390-08:00",
       "name": "default",
       "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
       "ipCidrRange": "10.164.0.0/20",
@@ -13,23 +13,23 @@
       "privateIpGoogleAccess": true,
       "secondaryIpRanges": [
         {
-          "rangeName": "gke-gke4-services-5da39605",
-          "ipCidrRange": "10.60.0.0/20"
+          "rangeName": "gke-gke4-pods-1019cf00",
+          "ipCidrRange": "10.56.0.0/14"
         },
         {
-          "rangeName": "gke-gke4-pods-5da39605",
-          "ipCidrRange": "10.56.0.0/14"
+          "rangeName": "gke-gke4-services-1019cf00",
+          "ipCidrRange": "10.60.0.0/20"
         }
       ],
-      "fingerprint": "kdvB2q7c88c=",
+      "fingerprint": "7hlp9oL_aIQ=",
       "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
       "purpose": "PRIVATE",
       "stackType": "IPV4_ONLY",
       "kind": "compute#subnetwork"
     },
     {
-      "id": "3728559987304191576",
-      "creationTimestamp": "2021-12-06T02:40:55.303-08:00",
+      "id": "4865582433521732759",
+      "creationTimestamp": "2022-01-10T05:19:52.120-08:00",
       "name": "gke1-subnet",
       "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
       "ipCidrRange": "192.168.0.0/24",
@@ -47,7 +47,7 @@
           "ipCidrRange": "192.168.2.0/24"
         }
       ],
-      "fingerprint": "B6iDnVDb-LM=",
+      "fingerprint": "imq0iTzxquc=",
       "enableFlowLogs": false,
       "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
       "purpose": "PRIVATE",

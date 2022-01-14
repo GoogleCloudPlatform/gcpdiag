@@ -481,6 +481,7 @@
         "Intel Haswell",
         "Intel Ivy Bridge",
         "Intel Sandy Bridge",
+        "AMD Milan",
         "AMD Rome"
       ],
       "supportsPzs": true,
@@ -521,6 +522,7 @@
         "Intel Haswell",
         "Intel Ivy Bridge",
         "Intel Sandy Bridge",
+        "AMD Milan",
         "AMD Rome"
       ],
       "supportsPzs": true,
@@ -729,7 +731,8 @@
         "Intel Broadwell",
         "Intel Haswell",
         "Intel Ivy Bridge",
-        "Intel Sandy Bridge"
+        "Intel Sandy Bridge",
+        "AMD Milan"
       ],
       "supportsPzs": false,
       "kind": "compute#zone"
@@ -748,7 +751,8 @@
         "Intel Broadwell",
         "Intel Haswell",
         "Intel Ivy Bridge",
-        "Intel Sandy Bridge"
+        "Intel Sandy Bridge",
+        "AMD Milan"
       ],
       "supportsPzs": false,
       "kind": "compute#zone"
@@ -767,7 +771,8 @@
         "Intel Broadwell",
         "Intel Haswell",
         "Intel Ivy Bridge",
-        "Intel Sandy Bridge"
+        "Intel Sandy Bridge",
+        "AMD Milan"
       ],
       "supportsPzs": false,
       "kind": "compute#zone"
@@ -786,7 +791,8 @@
         "Intel Broadwell",
         "Intel Haswell",
         "Intel Ivy Bridge",
-        "Intel Sandy Bridge"
+        "Intel Sandy Bridge",
+        "AMD Milan"
       ],
       "supportsPzs": true,
       "kind": "compute#zone"
@@ -805,7 +811,8 @@
         "Intel Broadwell",
         "Intel Haswell",
         "Intel Ivy Bridge",
-        "Intel Sandy Bridge"
+        "Intel Sandy Bridge",
+        "AMD Milan"
       ],
       "supportsPzs": true,
       "kind": "compute#zone"
@@ -824,7 +831,8 @@
         "Intel Broadwell",
         "Intel Haswell",
         "Intel Ivy Bridge",
-        "Intel Sandy Bridge"
+        "Intel Sandy Bridge",
+        "AMD Milan"
       ],
       "supportsPzs": true,
       "kind": "compute#zone"
