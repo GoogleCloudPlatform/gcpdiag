@@ -145,6 +145,12 @@ class TestCluster:
     c = clusters[DUMMY_CLUSTER1_NAME]
     assert c.nodepools[0].pod_ipv4_cidr_size == 24
 
+  def test_has_md_concealment_enabled(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    assert not c.nodepools[0].has_md_concealment_enabled()
+
   def test_has_workload_identity_enabled(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)

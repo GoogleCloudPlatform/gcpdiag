@@ -22,6 +22,7 @@ import re
 from typing import Dict, Iterable, List, Mapping, Optional
 
 import googleapiclient.errors
+from boltons.iterutils import get_path
 
 from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis, crm, gce, network
@@ -154,13 +155,19 @@ class NodePool(models.Resource):
     sa = self._get_service_account()
     return sa == 'default'
 
-  def has_workload_identity_enabled(self) -> bool:
+  def has_md_concealment_enabled(self) -> bool:
     # Empty ({}) workloadMetadataConfig means that 'Metadata concealment'
-    # (predecessor of Workload Identity) is enabled. That doesn't protect the
-    # default SA's token
+    # (predecessor of Workload Identity) is enabled.
     # https://cloud.google.com/kubernetes-engine/docs/how-to/protecting-cluster-metadata#concealment
-    return 'config' in self._resource_data and bool(
-        self._resource_data['config'].get('workloadMetadataConfig'))
+    return get_path(self._resource_data, ('config', 'workloadMetadataConfig'),
+                    default=None) == {}
+
+  def has_workload_identity_enabled(self) -> bool:
+    # 'Metadata concealment' (workloadMetadataConfig == {}) doesn't protect the
+    # default SA's token
+    return bool(
+        get_path(self._resource_data, ('config', 'workloadMetadataConfig'),
+                 default=None))
 
   @property
   def service_account(self) -> str:
@@ -277,8 +284,8 @@ class Cluster(models.Resource):
 
   def has_app_layer_enc_enabled(self) -> bool:
     # state := 'DECRYPTED' | 'ENCRYPTED', keyName := 'full_path_to_key_resouce'
-    return 'databaseEncryption' in self._resource_data and \
-           self._resource_data['databaseEncryption'].get('state') == 'ENCRYPTED'
+    return get_path(self._resource_data, ('databaseEncryption', 'state'),
+                    default=None) == 'ENCRYPTED'
 
   def has_logging_enabled(self) -> bool:
     return self._resource_data['loggingService'] != 'none'
@@ -315,8 +322,9 @@ class Cluster(models.Resource):
 
   @property
   def masters_cidr_list(self) -> Iterable[ipaddress.IPv4Network]:
-    if 'privateClusterConfig' in self._resource_data and \
-       'masterIpv4CidrBlock' in self._resource_data['privateClusterConfig']:
+    if get_path(self._resource_data,
+                ('privateClusterConfig', 'masterIpv4CidrBlock'),
+                default=None):
       return [
           ipaddress.ip_network(self._resource_data['privateClusterConfig']
                                ['masterIpv4CidrBlock'])
