@@ -11,14 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Test code in err_2022_016_connectivity_all.py."""
+"""Test code in err_2022_016_connectivity_pod_to_pod.py."""
 
 import io
 from unittest import mock
 
 from gcpdiag import lint, models
 from gcpdiag.lint import report_terminal
-from gcpdiag.lint.gke import err_2022_016_connectivity_all
+from gcpdiag.lint.gke import err_2022_016_connectivity_pod_to_pod
 from gcpdiag.queries import apis_stub
 
 DUMMY_PROJECT_NAME = 'gcpdiag-gke1-aaaa'
@@ -31,12 +31,13 @@ class Test:
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     output = io.StringIO()
     report = report_terminal.LintReportTerminal(file=output, show_skipped=True)
-    rule = lint.LintRule(product='test',
-                         rule_class=lint.LintRuleClass.ERR,
-                         rule_id='9999_999',
-                         short_desc='short description',
-                         long_desc='long description',
-                         run_rule_f=err_2022_016_connectivity_all.run_rule)
+    rule = lint.LintRule(
+        product='test',
+        rule_class=lint.LintRuleClass.ERR,
+        rule_id='9999_999',
+        short_desc='short description',
+        long_desc='long description',
+        run_rule_f=err_2022_016_connectivity_pod_to_pod.run_rule)
     lint_report = report.rule_start(rule, context)
     rule.run_rule_f(context, lint_report)
     report.rule_end(rule, context)
