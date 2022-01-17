@@ -94,6 +94,13 @@ class LintReportTerminal(lint.LintReport):
     width = min(width, 80)
     return textwrap.indent(textwrap.fill(text, width - len(prefix)), prefix)
 
+  def _italic(self, text):
+    if is_cloud_shell():
+      # TODO(b/201958597): Cloud Shell with tmux doesn't format italic properly at the moment
+      return text
+    else:
+      return self.term.italic(text)
+
   def banner(self):
     if self.term.does_styling:
       print(
@@ -174,7 +181,7 @@ class LintReportTerminal(lint.LintReport):
       width = self.term.width or 80
       width = min(width, 80)
       self.terminal_print_line(
-          self.term.italic(self._wrap_indent(rule.long_desc, '   ')))
+          self._italic(self._wrap_indent(rule.long_desc, '   ')))
       self.terminal_print_line()
       self.terminal_print_line('   ' + rule.doc_url)
       self.terminal_print_line()
