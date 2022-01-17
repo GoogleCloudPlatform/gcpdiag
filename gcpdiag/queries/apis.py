@@ -170,13 +170,16 @@ def get_api(service_name: str, version: str, project_id: Optional[str] = None):
   def _request_builder(http, *args, **kwargs):
     del http
 
-    hooks.request_builder_hook(*args, **kwargs)
-
     if 'headers' in kwargs:
+      # thread safety: make sure that original dictionary isn't modified
+      kwargs['headers'] = kwargs['headers'].copy()
+
       headers = kwargs.get('headers', {})
       headers['user-agent'] = f'gcpdiag/{config.VERSION} (gzip)'
       if project_id:
         headers['x-goog-user-project'] = project_id
+
+    hooks.request_builder_hook(*args, **kwargs)
 
     # thread safety: create a new AuthorizedHttp object for every request
     # https://github.com/googleapis/google-api-python-client/blob/master/docs/thread_safety.md
