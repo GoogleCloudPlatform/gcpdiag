@@ -299,6 +299,7 @@
         },
         "tags": {
           "items": [
+            "gke-gke2-custom-node",
             "gke-gke2-498f0ae5-node"
           ]
         }
@@ -445,6 +446,7 @@
         },
         "tags": {
           "items": [
+            "gke-gke2-custom-node",
             "gke-gke2-498f0ae5-node"
           ]
         }
@@ -591,6 +593,7 @@
         },
         "tags": {
           "items": [
+            "gke-gke2-custom-node",
             "gke-gke2-498f0ae5-node"
           ]
         }
