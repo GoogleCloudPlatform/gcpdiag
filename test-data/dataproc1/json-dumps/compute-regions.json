@@ -369,6 +369,11 @@
           "usage": 0
         },
         {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
@@ -743,6 +748,11 @@
         {
           "metric": "PD_EXTREME_TOTAL_PROVISIONED_IOPS",
           "limit": 720000,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
           "usage": 0
         },
         {
@@ -1123,6 +1133,11 @@
           "usage": 0
         },
         {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
@@ -1497,6 +1512,11 @@
         {
           "metric": "PD_EXTREME_TOTAL_PROVISIONED_IOPS",
           "limit": 720000,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
           "usage": 0
         },
         {
@@ -1877,6 +1897,11 @@
           "usage": 0
         },
         {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
@@ -2254,6 +2279,11 @@
           "usage": 0
         },
         {
+          "metric": "C2D_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 24,
           "usage": 0
@@ -2277,32 +2307,32 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 24,
+          "limit": 300,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
-          "limit": 4096,
+          "limit": 102400,
           "usage": 0
         },
         {
           "metric": "STATIC_ADDRESSES",
-          "limit": 8,
+          "limit": 175,
           "usage": 0
         },
         {
           "metric": "IN_USE_ADDRESSES",
-          "limit": 8,
+          "limit": 575,
           "usage": 0
         },
         {
           "metric": "SSD_TOTAL_GB",
-          "limit": 500,
+          "limit": 40960,
           "usage": 0
         },
         {
           "metric": "LOCAL_SSD_TOTAL_GB",
-          "limit": 6000,
+          "limit": 25000,
           "usage": 0
         },
         {
@@ -2337,7 +2367,7 @@
         },
         {
           "metric": "PREEMPTIBLE_CPUS",
-          "limit": 0,
+          "limit": 5000,
           "usage": 0
         },
         {
@@ -2347,12 +2377,12 @@
         },
         {
           "metric": "COMMITTED_CPUS",
-          "limit": 0,
+          "limit": 300,
           "usage": 0
         },
         {
           "metric": "COMMITTED_LOCAL_SSD_TOTAL_GB",
-          "limit": 0,
+          "limit": 25000,
           "usage": 0
         },
         {
@@ -2367,7 +2397,7 @@
         },
         {
           "metric": "INTERNAL_ADDRESSES",
-          "limit": 200,
+          "limit": 2000,
           "usage": 0
         },
         {
@@ -2517,22 +2547,22 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 24,
+          "limit": 300,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 24,
+          "limit": 300,
           "usage": 0
         },
         {
           "metric": "COMMITTED_N2_CPUS",
-          "limit": 24,
+          "limit": 300,
           "usage": 0
         },
         {
           "metric": "COMMITTED_C2_CPUS",
-          "limit": 24,
+          "limit": 300,
           "usage": 0
         },
         {
@@ -2562,7 +2592,7 @@
         },
         {
           "metric": "STATIC_BYOIP_ADDRESSES",
-          "limit": 128,
+          "limit": 1024,
           "usage": 0
         },
         {
@@ -2587,7 +2617,7 @@
         },
         {
           "metric": "M1_CPUS",
-          "limit": 160,
+          "limit": 0,
           "usage": 0
         },
         {
@@ -2628,6 +2658,11 @@
         {
           "metric": "PD_EXTREME_TOTAL_PROVISIONED_IOPS",
           "limit": 120000,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 24,
           "usage": 0
         },
         {
@@ -3008,6 +3043,11 @@
           "usage": 0
         },
         {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
@@ -3382,6 +3422,11 @@
         {
           "metric": "PD_EXTREME_TOTAL_PROVISIONED_IOPS",
           "limit": 720000,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
           "usage": 0
         },
         {
@@ -3762,6 +3807,11 @@
           "usage": 0
         },
         {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
@@ -3785,32 +3835,32 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 24,
+          "limit": 300,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
-          "limit": 4096,
+          "limit": 102400,
           "usage": 0
         },
         {
           "metric": "STATIC_ADDRESSES",
-          "limit": 8,
+          "limit": 175,
           "usage": 0
         },
         {
           "metric": "IN_USE_ADDRESSES",
-          "limit": 8,
+          "limit": 575,
           "usage": 0
         },
         {
           "metric": "SSD_TOTAL_GB",
-          "limit": 500,
+          "limit": 40960,
           "usage": 0
         },
         {
           "metric": "LOCAL_SSD_TOTAL_GB",
-          "limit": 6000,
+          "limit": 25000,
           "usage": 0
         },
         {
@@ -3845,7 +3895,7 @@
         },
         {
           "metric": "PREEMPTIBLE_CPUS",
-          "limit": 0,
+          "limit": 5000,
           "usage": 0
         },
         {
@@ -3855,12 +3905,12 @@
         },
         {
           "metric": "COMMITTED_CPUS",
-          "limit": 0,
+          "limit": 300,
           "usage": 0
         },
         {
           "metric": "COMMITTED_LOCAL_SSD_TOTAL_GB",
-          "limit": 0,
+          "limit": 25000,
           "usage": 0
         },
         {
@@ -3875,7 +3925,7 @@
         },
         {
           "metric": "INTERNAL_ADDRESSES",
-          "limit": 200,
+          "limit": 2000,
           "usage": 0
         },
         {
@@ -4025,22 +4075,22 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 24,
+          "limit": 300,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 24,
+          "limit": 300,
           "usage": 0
         },
         {
           "metric": "COMMITTED_N2_CPUS",
-          "limit": 24,
+          "limit": 300,
           "usage": 0
         },
         {
           "metric": "COMMITTED_C2_CPUS",
-          "limit": 24,
+          "limit": 300,
           "usage": 0
         },
         {
@@ -4070,7 +4120,7 @@
         },
         {
           "metric": "STATIC_BYOIP_ADDRESSES",
-          "limit": 128,
+          "limit": 1024,
           "usage": 0
         },
         {
@@ -4095,7 +4145,7 @@
         },
         {
           "metric": "M1_CPUS",
-          "limit": 160,
+          "limit": 0,
           "usage": 0
         },
         {
@@ -4136,6 +4186,11 @@
         {
           "metric": "PD_EXTREME_TOTAL_PROVISIONED_IOPS",
           "limit": 120000,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 24,
           "usage": 0
         },
         {
@@ -4162,32 +4217,32 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 24,
+          "limit": 300,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
-          "limit": 4096,
+          "limit": 102400,
           "usage": 0
         },
         {
           "metric": "STATIC_ADDRESSES",
-          "limit": 8,
+          "limit": 175,
           "usage": 0
         },
         {
           "metric": "IN_USE_ADDRESSES",
-          "limit": 8,
+          "limit": 575,
           "usage": 0
         },
         {
           "metric": "SSD_TOTAL_GB",
-          "limit": 500,
+          "limit": 40960,
           "usage": 0
         },
         {
           "metric": "LOCAL_SSD_TOTAL_GB",
-          "limit": 6000,
+          "limit": 25000,
           "usage": 0
         },
         {
@@ -4222,7 +4277,7 @@
         },
         {
           "metric": "PREEMPTIBLE_CPUS",
-          "limit": 0,
+          "limit": 5000,
           "usage": 0
         },
         {
@@ -4232,12 +4287,12 @@
         },
         {
           "metric": "COMMITTED_CPUS",
-          "limit": 0,
+          "limit": 300,
           "usage": 0
         },
         {
           "metric": "COMMITTED_LOCAL_SSD_TOTAL_GB",
-          "limit": 0,
+          "limit": 25000,
           "usage": 0
         },
         {
@@ -4252,7 +4307,7 @@
         },
         {
           "metric": "INTERNAL_ADDRESSES",
-          "limit": 200,
+          "limit": 2000,
           "usage": 0
         },
         {
@@ -4402,22 +4457,22 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 24,
+          "limit": 300,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 24,
+          "limit": 300,
           "usage": 0
         },
         {
           "metric": "COMMITTED_N2_CPUS",
-          "limit": 24,
+          "limit": 300,
           "usage": 0
         },
         {
           "metric": "COMMITTED_C2_CPUS",
-          "limit": 24,
+          "limit": 300,
           "usage": 0
         },
         {
@@ -4447,7 +4502,7 @@
         },
         {
           "metric": "STATIC_BYOIP_ADDRESSES",
-          "limit": 128,
+          "limit": 1024,
           "usage": 0
         },
         {
@@ -4472,7 +4527,7 @@
         },
         {
           "metric": "M1_CPUS",
-          "limit": 160,
+          "limit": 0,
           "usage": 0
         },
         {
@@ -4513,6 +4568,11 @@
         {
           "metric": "PD_EXTREME_TOTAL_PROVISIONED_IOPS",
           "limit": 120000,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 24,
           "usage": 0
         },
         {
@@ -4893,6 +4953,11 @@
           "usage": 0
         },
         {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
@@ -5267,6 +5332,11 @@
         {
           "metric": "PD_EXTREME_TOTAL_PROVISIONED_IOPS",
           "limit": 720000,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
           "usage": 0
         },
         {
@@ -5647,6 +5717,11 @@
           "usage": 0
         },
         {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
@@ -6021,6 +6096,11 @@
         {
           "metric": "PD_EXTREME_TOTAL_PROVISIONED_IOPS",
           "limit": 720000,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
           "usage": 0
         },
         {
@@ -6401,6 +6481,11 @@
           "usage": 0
         },
         {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
@@ -6775,6 +6860,11 @@
         {
           "metric": "PD_EXTREME_TOTAL_PROVISIONED_IOPS",
           "limit": 720000,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
           "usage": 0
         },
         {
@@ -7155,6 +7245,11 @@
           "usage": 0
         },
         {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
@@ -7178,32 +7273,32 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 24,
+          "limit": 300,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
-          "limit": 4096,
+          "limit": 102400,
           "usage": 0
         },
         {
           "metric": "STATIC_ADDRESSES",
-          "limit": 8,
+          "limit": 175,
           "usage": 0
         },
         {
           "metric": "IN_USE_ADDRESSES",
-          "limit": 8,
+          "limit": 575,
           "usage": 0
         },
         {
           "metric": "SSD_TOTAL_GB",
-          "limit": 500,
+          "limit": 40960,
           "usage": 0
         },
         {
           "metric": "LOCAL_SSD_TOTAL_GB",
-          "limit": 6000,
+          "limit": 25000,
           "usage": 0
         },
         {
@@ -7238,7 +7333,7 @@
         },
         {
           "metric": "PREEMPTIBLE_CPUS",
-          "limit": 0,
+          "limit": 5000,
           "usage": 0
         },
         {
@@ -7248,12 +7343,12 @@
         },
         {
           "metric": "COMMITTED_CPUS",
-          "limit": 0,
+          "limit": 300,
           "usage": 0
         },
         {
           "metric": "COMMITTED_LOCAL_SSD_TOTAL_GB",
-          "limit": 0,
+          "limit": 25000,
           "usage": 0
         },
         {
@@ -7268,7 +7363,7 @@
         },
         {
           "metric": "INTERNAL_ADDRESSES",
-          "limit": 200,
+          "limit": 2000,
           "usage": 0
         },
         {
@@ -7418,22 +7513,22 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 24,
+          "limit": 300,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 24,
+          "limit": 300,
           "usage": 0
         },
         {
           "metric": "COMMITTED_N2_CPUS",
-          "limit": 24,
+          "limit": 300,
           "usage": 0
         },
         {
           "metric": "COMMITTED_C2_CPUS",
-          "limit": 24,
+          "limit": 300,
           "usage": 0
         },
         {
@@ -7463,7 +7558,7 @@
         },
         {
           "metric": "STATIC_BYOIP_ADDRESSES",
-          "limit": 128,
+          "limit": 1024,
           "usage": 0
         },
         {
@@ -7488,7 +7583,7 @@
         },
         {
           "metric": "M1_CPUS",
-          "limit": 160,
+          "limit": 0,
           "usage": 0
         },
         {
@@ -7529,6 +7624,11 @@
         {
           "metric": "PD_EXTREME_TOTAL_PROVISIONED_IOPS",
           "limit": 120000,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 24,
           "usage": 0
         },
         {
@@ -7909,12 +8009,399 @@
           "usage": 0
         },
         {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/dataproc1/regions/southamerica-east1",
+      "supportsPzs": false,
+      "kind": "compute#region"
+    },
+    {
+      "id": "1490",
+      "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
+      "name": "southamerica-west1",
+      "description": "southamerica-west1",
+      "status": "UP",
+      "zones": [
+        "https://www.googleapis.com/compute/v1/projects/dataproc1/zones/southamerica-west1-a",
+        "https://www.googleapis.com/compute/v1/projects/dataproc1/zones/southamerica-west1-b",
+        "https://www.googleapis.com/compute/v1/projects/dataproc1/zones/southamerica-west1-c"
+      ],
+      "quotas": [
+        {
+          "metric": "CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "DISKS_TOTAL_GB",
+          "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "STATIC_ADDRESSES",
+          "limit": 175,
+          "usage": 0
+        },
+        {
+          "metric": "IN_USE_ADDRESSES",
+          "limit": 575,
+          "usage": 0
+        },
+        {
+          "metric": "SSD_TOTAL_GB",
+          "limit": 40960,
+          "usage": 0
+        },
+        {
+          "metric": "LOCAL_SSD_TOTAL_GB",
+          "limit": 25000,
+          "usage": 0
+        },
+        {
+          "metric": "INSTANCE_GROUPS",
+          "limit": 100,
+          "usage": 0
+        },
+        {
+          "metric": "INSTANCE_GROUP_MANAGERS",
+          "limit": 50,
+          "usage": 0
+        },
+        {
+          "metric": "INSTANCES",
+          "limit": 240,
+          "usage": 0
+        },
+        {
+          "metric": "AUTOSCALERS",
+          "limit": 50,
+          "usage": 0
+        },
+        {
+          "metric": "REGIONAL_AUTOSCALERS",
+          "limit": 20,
+          "usage": 0
+        },
+        {
+          "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
+          "limit": 20,
+          "usage": 0
+        },
+        {
+          "metric": "PREEMPTIBLE_CPUS",
+          "limit": 5000,
+          "usage": 0
+        },
+        {
+          "metric": "NVIDIA_K80_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_LOCAL_SSD_TOTAL_GB",
+          "limit": 25000,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITMENTS",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "NETWORK_ENDPOINT_GROUPS",
+          "limit": 100,
+          "usage": 0
+        },
+        {
+          "metric": "INTERNAL_ADDRESSES",
+          "limit": 2000,
+          "usage": 0
+        },
+        {
+          "metric": "NVIDIA_P100_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "PREEMPTIBLE_LOCAL_SSD_GB",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "PREEMPTIBLE_NVIDIA_K80_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "PREEMPTIBLE_NVIDIA_P100_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "NVIDIA_P100_VWS_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "NVIDIA_V100_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "NVIDIA_P4_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "NVIDIA_P4_VWS_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "NODE_GROUPS",
+          "limit": 100,
+          "usage": 0
+        },
+        {
+          "metric": "NODE_TEMPLATES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
+          "metric": "PREEMPTIBLE_NVIDIA_V100_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "PREEMPTIBLE_NVIDIA_P4_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "PREEMPTIBLE_NVIDIA_P100_VWS_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "PREEMPTIBLE_NVIDIA_P4_VWS_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "INTERCONNECT_ATTACHMENTS_PER_REGION",
+          "limit": 16,
+          "usage": 0
+        },
+        {
+          "metric": "INTERCONNECT_ATTACHMENTS_TOTAL_MBPS",
+          "limit": 80000,
+          "usage": 0
+        },
+        {
+          "metric": "RESOURCE_POLICIES",
+          "limit": 5,
+          "usage": 0
+        },
+        {
+          "metric": "IN_USE_SNAPSHOT_SCHEDULES",
+          "limit": 500,
+          "usage": 0
+        },
+        {
+          "metric": "NVIDIA_T4_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "NVIDIA_T4_VWS_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "PREEMPTIBLE_NVIDIA_T4_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "PREEMPTIBLE_NVIDIA_T4_VWS_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "IN_USE_BACKUP_SCHEDULES",
+          "limit": 20,
+          "usage": 0
+        },
+        {
+          "metric": "PUBLIC_DELEGATED_PREFIXES",
+          "limit": 10,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_NVIDIA_K80_GPUS",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_NVIDIA_P100_GPUS",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_NVIDIA_P4_GPUS",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_NVIDIA_V100_GPUS",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_NVIDIA_T4_GPUS",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "C2_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_N2_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_C2_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "RESERVATIONS",
+          "limit": 100,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_LICENSES",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "N2D_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_N2D_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
+          "metric": "SERVICE_ATTACHMENTS",
+          "limit": 800,
+          "usage": 0
+        },
+        {
+          "metric": "STATIC_BYOIP_ADDRESSES",
+          "limit": 1024,
+          "usage": 0
+        },
+        {
+          "metric": "AFFINITY_GROUPS",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "NVIDIA_A100_GPUS",
+          "limit": 16,
+          "usage": 0
+        },
+        {
+          "metric": "PREEMPTIBLE_NVIDIA_A100_GPUS",
+          "limit": 64,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_NVIDIA_A100_GPUS",
+          "limit": 16,
+          "usage": 0
+        },
+        {
+          "metric": "M1_CPUS",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "M2_CPUS",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "A2_CPUS",
+          "limit": 192,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_A2_CPUS",
+          "limit": 192,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_MEMORY_OPTIMIZED_CPUS",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "PSC_INTERNAL_LB_FORWARDING_RULES",
+          "limit": 800,
+          "usage": 0
+        },
+        {
+          "metric": "EXTERNAL_NETWORK_LB_FORWARDING_RULES",
+          "limit": 15,
+          "usage": 0
+        },
+        {
+          "metric": "EXTERNAL_PROTOCOL_FORWARDING_RULES",
+          "limit": 15,
+          "usage": 0
+        },
+        {
+          "metric": "PD_EXTREME_TOTAL_PROVISIONED_IOPS",
+          "limit": 120000,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
+          "metric": "T2D_CPUS",
+          "limit": 24,
+          "usage": 0
+        }
+      ],
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/dataproc1/regions/southamerica-west1",
       "supportsPzs": false,
       "kind": "compute#region"
     },
@@ -7934,12 +8421,12 @@
         {
           "metric": "CPUS",
           "limit": 600,
-          "usage": 3
+          "usage": 9
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
-          "usage": 90
+          "usage": 270
         },
         {
           "metric": "STATIC_ADDRESSES",
@@ -7949,7 +8436,7 @@
         {
           "metric": "IN_USE_ADDRESSES",
           "limit": 575,
-          "usage": 3
+          "usage": 9
         },
         {
           "metric": "SSD_TOTAL_GB",
@@ -7974,7 +8461,7 @@
         {
           "metric": "INSTANCES",
           "limit": 6000,
-          "usage": 3
+          "usage": 9
         },
         {
           "metric": "AUTOSCALERS",
@@ -8284,6 +8771,11 @@
         {
           "metric": "PD_EXTREME_TOTAL_PROVISIONED_IOPS",
           "limit": 720000,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
           "usage": 0
         },
         {
@@ -8664,6 +9156,11 @@
           "usage": 0
         },
         {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
@@ -9038,6 +9535,11 @@
         {
           "metric": "PD_EXTREME_TOTAL_PROVISIONED_IOPS",
           "limit": 720000,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
           "usage": 0
         },
         {
@@ -9418,6 +9920,11 @@
           "usage": 0
         },
         {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
@@ -9792,6 +10299,11 @@
         {
           "metric": "PD_EXTREME_TOTAL_PROVISIONED_IOPS",
           "limit": 720000,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
           "usage": 0
         },
         {
@@ -10172,6 +10684,11 @@
           "usage": 0
         },
         {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
@@ -10546,6 +11063,11 @@
         {
           "metric": "PD_EXTREME_TOTAL_PROVISIONED_IOPS",
           "limit": 720000,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
           "usage": 0
         },
         {

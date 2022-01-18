@@ -38,8 +38,10 @@ class Cluster(models.Resource):
         property_name)
 
   def is_stackdriver_logging_enabled(self) -> bool:
-    return self.get_software_property(
-        'dataproc:dataproc.logging.stackdriver.job.driver.enable') == 'true'
+    # Unless overridden during create, properties with default values are not returned,
+    # therefore get_software_property should only return when its false
+    return not self.get_software_property(
+        'dataproc:dataproc.logging.stackdriver.enable') == 'false'
 
   @property
   def region(self) -> str:
