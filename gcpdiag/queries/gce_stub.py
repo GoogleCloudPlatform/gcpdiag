@@ -110,6 +110,9 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
   def subnetworks(self):
     return network_stub.NetworkApiStub(mock_state='subnetworks')
 
+  def routers(self):
+    return network_stub.NetworkApiStub(mock_state='routers')
+
   def execute(self, num_retries=0):
     self._maybe_raise_api_exception()
     json_dir = apis_stub.get_json_dir(self.project_id)

@@ -34,10 +34,14 @@ class NetworkApiStub:
   def __init__(self, mock_state):
     self.mock_state = mock_state
 
-  def get(self, project, network):
-    self.mock_state = 'get'
+  def get(self, project, network=None, region=None, subnetwork=None):
+    if not subnetwork:
+      self.mock_state = 'get'
+      self.network = network
+    else:
+      self.mock_state = 'get_single_subnetwork'
+      self.subnetwork = subnetwork
     self.project_id = project
-    self.network = network
     return self
 
   def getEffectiveFirewalls(self, project, network):
@@ -50,6 +54,8 @@ class NetworkApiStub:
   def list(self, project, region, filter=None, fields=None):
     self.project_id = project
     if self.mock_state == 'subnetworks':
+      return self
+    elif self.mock_state == 'routers':
       return self
     else:
       raise ValueError(f'cannot call method {self.mock_state} here')
@@ -69,6 +75,16 @@ class NetworkApiStub:
         return json.load(json_file)
     elif self.mock_state == 'subnetworks':
       with open(json_dir / f'compute-subnetworks-{SUBNETWORKS_REGION}.json',
+                encoding='utf-8') as json_file:
+        return json.load(json_file)
+    elif self.mock_state == 'get_single_subnetwork':
+      with open(json_dir / f'compute-subnetworks-{SUBNETWORKS_REGION}.json',
+                encoding='utf-8') as json_file:
+        for subnet in json.load(json_file)['items']:
+          if subnet['name'] == self.subnetwork:
+            return subnet
+    elif self.mock_state == 'routers':
+      with open(json_dir / f'compute-routers-{SUBNETWORKS_REGION}.json',
                 encoding='utf-8') as json_file:
         return json.load(json_file)
     else:

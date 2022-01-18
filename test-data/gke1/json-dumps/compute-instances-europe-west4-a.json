@@ -443,7 +443,7 @@
       "tags": {
         "fingerprint": "REDACTED",
         "items": [
-          "gke-gke2-custom-node",
+          "gke-gke2-custom-tag",
           "gke-gke2-498f0ae5-node"
         ]
       },

@@ -26,6 +26,7 @@ all:	\
 	json-dumps/compute-subnetworks-europe-west4.json \
 	json-dumps/compute-templates.json \
 	json-dumps/compute-zones.json \
+	json-dumps/compute-routers-europe-west4.json \
 	json-dumps/container-clusters.json \
 	json-dumps/container-server-config-$(REGION_1).json \
 	json-dumps/container-server-config-$(ZONE_1).json \
@@ -95,6 +96,12 @@ json-dumps/compute-subnetworks-%.json:
 	REGION=$(subst json-dumps/,,$*); \
 	$(CURL) -fsS \
 	        "https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/regions/$$REGION/subnetworks" \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-routers-%.json:
+	REGION=$(subst json-dumps/,,$*); \
+	$(CURL) -fsS \
+	        "https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/regions/$$REGION/routers" \
 		| $(SED_SUBST_FAKE) >$@
 
 # cloudresourcemanager.googleapis.com

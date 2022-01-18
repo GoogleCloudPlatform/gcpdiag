@@ -34,6 +34,7 @@ DUMMY_CLUSTER2_SHORT_NAME = f'{DUMMY_PROJECT_NAME}/europe-west4/gke2'
 DUMMY_CLUSTER1_SERVICE_ACCOUNT = '12340002-compute@developer.gserviceaccount.com'
 DUMMY_CLUSTER2_SERVICE_ACCOUNT = 'gke2sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com'
 DUMMY_CLUSTER4_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clusters/gke4'
+DUMMY_DEFAULT_NAME = 'default'
 
 # pylint: disable=consider-iterating-dictionary
 
@@ -235,6 +236,14 @@ class TestCluster:
     assert c.network.firewall.verify_ingress_rule_exists(
         f'gke-gke4-{c.cluster_hash}-master')
     assert not c.network.firewall.verify_ingress_rule_exists('foobar')
+
+  def test_cluster_network_subnetwork(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER4_NAME]
+    assert DUMMY_DEFAULT_NAME == c.network.name
+    assert DUMMY_DEFAULT_NAME == c.subnetwork.name
+    assert c.subnetwork.ip_network == ipaddress.IPv4Network('10.164.0.0/20')
 
   def test_cluster_masters_cidr_list(self):
     # test both public and private clusters, because the code is quite

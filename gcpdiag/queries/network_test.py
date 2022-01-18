@@ -19,6 +19,11 @@ from unittest import mock
 from gcpdiag.queries import apis_stub, network
 
 DUMMY_PROJECT_ID = 'gcpdiag-fw-policy-aaaa'
+DUMMY_DEFAULT_NETWORK = 'default'
+DUMMY_DEFAULT_SUBNET = 'default'
+DUMMY_GKE_PROJECT_ID = 'gcpdiag-gke1-aaaa'
+DUMMY_GKE_REGION = 'europe-west4'
+DUMMY_GKE_SUBNET = 'gke1-subnet'
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
@@ -27,8 +32,8 @@ class TestNetwork:
 
   def test_get_network(self):
     net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name='default')
-    assert net.name == 'default'
+                              network_name=DUMMY_DEFAULT_NETWORK)
+    assert net.name == DUMMY_DEFAULT_NETWORK
     assert net.full_path == 'projects/gcpdiag-fw-policy-aaaa/global/networks/default'
     assert net.short_path == f'{DUMMY_PROJECT_ID}/default'
     assert net.self_link == \
@@ -36,7 +41,7 @@ class TestNetwork:
 
   def test_subnetworks(self):
     net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name='default')
+                              network_name=DUMMY_DEFAULT_NETWORK)
     expected_subnet_url = (
         f'https://www.googleapis.com/compute/v1/projects/{DUMMY_PROJECT_ID}/'
         'regions/europe-west4/subnetworks/default')
@@ -44,9 +49,32 @@ class TestNetwork:
     assert isinstance(net.subnetworks[expected_subnet_url].ip_network,
                       ipaddress.IPv4Network)
 
+  def test_cluster_subnetwork(self):
+    subnet = network.get_subnetwork(project_id=DUMMY_GKE_PROJECT_ID,
+                                    region=DUMMY_GKE_REGION,
+                                    subnetwork_name=DUMMY_GKE_SUBNET)
+    assert subnet.name == DUMMY_GKE_SUBNET
+    assert subnet.ip_network == ipaddress.ip_network('192.168.0.0/24')
+
+  def test_get_routers(self):
+    net = network.get_network(project_id=DUMMY_GKE_PROJECT_ID,
+                              network_name=DUMMY_DEFAULT_NETWORK)
+    sub1 = network.get_subnetwork(project_id=DUMMY_GKE_PROJECT_ID,
+                                  region=DUMMY_GKE_REGION,
+                                  subnetwork_name=DUMMY_GKE_SUBNET)
+    sub2 = network.get_subnetwork(project_id=DUMMY_GKE_PROJECT_ID,
+                                  region=DUMMY_GKE_REGION,
+                                  subnetwork_name=DUMMY_DEFAULT_SUBNET)
+    router = network.get_router(project_id=DUMMY_GKE_PROJECT_ID,
+                                region=DUMMY_GKE_REGION,
+                                network=net)
+    assert router.name == 'gke-default-router'
+    assert router.subnet_has_nat(sub1) is False
+    assert router.subnet_has_nat(sub2) is True
+
   def test_ingress_deny(self):
     net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name='default')
+                              network_name=DUMMY_DEFAULT_NETWORK)
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_address('10.0.0.1'),  #
         ip_protocol='tcp',
@@ -60,7 +88,7 @@ class TestNetwork:
 
   def test_ingress_deny_2(self):
     net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name='default')
+                              network_name=DUMMY_DEFAULT_NETWORK)
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.100.0.16/29'),  #
         ip_protocol='tcp',
@@ -70,7 +98,7 @@ class TestNetwork:
 
   def test_ingress_deny_3(self):
     net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name='default')
+                              network_name=DUMMY_DEFAULT_NETWORK)
     # a supernet of src_ip for a deny rule should also match
     # (because we want to catch when a fw rule partially blocks
     # a connection).
@@ -83,7 +111,7 @@ class TestNetwork:
 
   def test_ingress_allow_src_ip(self):
     net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name='default')
+                              network_name=DUMMY_DEFAULT_NETWORK)
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.100.0.16/29'),  #
         ip_protocol='tcp',
@@ -93,7 +121,7 @@ class TestNetwork:
 
   def test_ingress_allow_src_ip_subnet(self):
     net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name='default')
+                              network_name=DUMMY_DEFAULT_NETWORK)
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.100.0.16/30'),  #
         ip_protocol='tcp',
@@ -103,7 +131,7 @@ class TestNetwork:
 
   def test_ingress_allow_source_tags(self):
     net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name='default')
+                              network_name=DUMMY_DEFAULT_NETWORK)
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.200.0.16/29'),  #
         source_tags=['foo'],
@@ -114,7 +142,7 @@ class TestNetwork:
 
   def test_ingress_allow_target_tags(self):
     net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name='default')
+                              network_name=DUMMY_DEFAULT_NETWORK)
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_address('192.168.1.1'),  #
         target_tags=['bar'],
@@ -125,7 +153,7 @@ class TestNetwork:
 
   def test_ingress_allow_source_sa(self):
     net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name='default')
+                              network_name=DUMMY_DEFAULT_NETWORK)
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.200.0.16/29'),  #
         source_service_account=
@@ -137,7 +165,7 @@ class TestNetwork:
 
   def test_ingress_allow_target_sa(self):
     net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name='default')
+                              network_name=DUMMY_DEFAULT_NETWORK)
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.200.0.16/29'),  #
         target_tags=['foo'],
@@ -147,7 +175,7 @@ class TestNetwork:
 
   def test_ingress_parent_policy_allow(self):
     net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name='default')
+                              network_name=DUMMY_DEFAULT_NETWORK)
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.101.0.1/32'),  #
         ip_protocol='tcp',
@@ -157,7 +185,7 @@ class TestNetwork:
 
   def test_ingress_sub_policy_allow(self):
     net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name='default')
+                              network_name=DUMMY_DEFAULT_NETWORK)
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.101.0.1/32'),  #
         ip_protocol='tcp',
@@ -167,7 +195,7 @@ class TestNetwork:
 
   def test_ingress_sub_policy_allow_target_sa(self):
     net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name='default')
+                              network_name=DUMMY_DEFAULT_NETWORK)
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.102.0.1/32'),  #
         ip_protocol='tcp',
@@ -179,7 +207,7 @@ class TestNetwork:
 
   def test_ingress_sub_policy_deny_wrong_target_sa(self):
     net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name='default')
+                              network_name=DUMMY_DEFAULT_NETWORK)
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.102.0.1/32'),  #
         ip_protocol='tcp',

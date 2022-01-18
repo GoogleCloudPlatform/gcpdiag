@@ -423,7 +423,7 @@
         "10.8.0.0/14"
       ],
       "targetTags": [
-        "gke-gke2-custom-node"
+        "gke-gke2-custom-tag"
       ],
       "denied": [
         {
@@ -452,7 +452,7 @@
         "10.128.0.0/9"
       ],
       "targetTags": [
-        "gke-gke2-custom-node"
+        "gke-gke2-custom-tag"
       ],
       "denied": [
         {
