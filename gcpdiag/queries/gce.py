@@ -18,7 +18,7 @@
 import logging
 import re
 from datetime import datetime, timezone
-from typing import Callable, Dict, Iterable, List, Mapping, Optional, Set
+from typing import Dict, Iterable, List, Mapping, Optional, Set
 
 import googleapiclient.errors
 
@@ -301,49 +301,6 @@ def get_gce_zones(project_id: str) -> Set[str]:
     raise utils.GcpApiError(err) from err
 
 
-def batch_fetch_all(api, requests: Iterable, next_function: Callable,
-                    log_text: str):
-  try:
-    items = []
-    additional_pages_to_fetch = []
-    pending_requests = list(requests)
-
-    def fetch_all_cb(request_id, response, exception):
-      if exception:
-        logging.error('exception when %s: %s', log_text, exception)
-        return
-      if not response or 'items' not in response:
-        return
-      items.extend(response['items'])
-      if 'nextPageToken' in response and response['nextPageToken']:
-        additional_pages_to_fetch.append(
-            (pending_requests[int(request_id)], response))
-
-    page = 1
-    while pending_requests:
-      batch = api.new_batch_http_request()
-      for i, req in enumerate(pending_requests):
-        batch.add(req, callback=fetch_all_cb, request_id=str(i))
-      if page <= 1:
-        logging.info(log_text)
-      else:
-        logging.info('%s (page: %d)', log_text, page)
-      batch.execute()
-
-      # Do we need to fetch any additional pages?
-      pending_requests = []
-      for p in additional_pages_to_fetch:
-        req = next_function(p[0], p[1])
-        if req:
-          pending_requests.append(req)
-      additional_pages_to_fetch = []
-      page += 1
-  except googleapiclient.errors.HttpError as err:
-    raise utils.GcpApiError(err) from err
-
-  return items
-
-
 @caching.cached_api_call(in_memory=True)
 def get_instances(context: models.Context) -> Mapping[str, Instance]:
   """Get a list of Instance matching the given context, indexed by instance id."""
@@ -356,7 +313,7 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
       gce_api.instances().list(project=context.project_id, zone=zone)
       for zone in get_gce_zones(context.project_id)
   ]
-  items = batch_fetch_all(
+  items = apis_utils.batch_list_all(
       api=gce_api,
       requests=requests,
       next_function=gce_api.instances().list_next,
@@ -392,10 +349,10 @@ def get_managed_instance_groups(
                                            zone=zone)
       for zone in get_gce_zones(context.project_id)
   ]
-  items = batch_fetch_all(
+  items = apis_utils.batch_list_all(
       api=gce_api,
       requests=requests,
-      next_function=gce_api.instances().list_next,
+      next_function=gce_api.instanceGroupManagers().list_next,
       log_text=f'listing managed instance groups of project {context.project_id}'
   )
   for i in items:

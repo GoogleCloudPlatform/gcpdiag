@@ -26,24 +26,25 @@ from gcpdiag.queries import apis_stub, network_stub
 # pylint: disable=invalid-name
 
 
-class ListRegionsQuery:
+class ListRegionsQuery(apis_stub.ApiStub):
 
   def __init__(self, project_id):
     self.project_id = project_id
 
   def execute(self, num_retries=0):
+    self._maybe_raise_api_exception()
     json_dir = apis_stub.get_json_dir(self.project_id)
     with open(json_dir / 'compute-regions.json', encoding='utf-8') as json_file:
       return json.load(json_file)
 
 
-class ComputeEngineApiStubRegions:
+class ComputeEngineApiStubRegions(apis_stub.ApiStub):
 
   def list(self, project):
     return ListRegionsQuery(project_id=project)
 
 
-class ComputeEngineApiStub:
+class ComputeEngineApiStub(apis_stub.ApiStub):
   """Mock object to simulate compute engine api calls."""
 
   # mocked methods:
@@ -90,7 +91,11 @@ class ComputeEngineApiStub:
     return ComputeEngineApiStub('templates')
 
   def new_batch_http_request(self):
-    return apis_stub.BatchRequestStub()
+    batch_api = apis_stub.BatchRequestStub()
+    if self._fail_count:
+      batch_api.fail_next(self._fail_count, self._fail_status)
+      self._fail_count = 0
+    return batch_api
 
   def get(self, project):
     self.project_id = project
@@ -106,6 +111,7 @@ class ComputeEngineApiStub:
     return network_stub.NetworkApiStub(mock_state='subnetworks')
 
   def execute(self, num_retries=0):
+    self._maybe_raise_api_exception()
     json_dir = apis_stub.get_json_dir(self.project_id)
     page_suffix = ''
     if self.page > 1:

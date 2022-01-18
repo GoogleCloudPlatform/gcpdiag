@@ -14,9 +14,11 @@
 """GCP API-related utility functions."""
 
 import logging
-from typing import Any, Callable, Iterable, Iterator
+import random
+import time
+from typing import Any, Callable, Iterator, List
 
-import googleapiclient
+import googleapiclient.errors
 
 from gcpdiag import config, utils
 
@@ -38,48 +40,111 @@ def list_all(request, next_function: Callable) -> Iterator[Any]:
       break
 
 
-def batch_list_all(api, requests: Iterable, next_function: Callable,
-                   log_text: str):
+def batch_list_all(api, requests: list, next_function: Callable, log_text: str):
   """Similar to list_all but using batch API."""
-  try:
-    items = []
-    additional_pages_to_fetch = []
-    pending_requests = list(requests)
+  pending_requests = requests
 
-    # TODO(b/200675491) implement retry
+  page = 1
+  while pending_requests:
+    next_requests = pending_requests
+    pending_requests = []
+    if page == 1:
+      logging.info(log_text)
+    else:
+      logging.info('%s (page: %d)', log_text, page)
+    for (request, response) in batch_execute_all(api, next_requests):
+      # add request for next page if required
+      req = next_function(request, response)
+      if req:
+        pending_requests.append(req)
+      # yield items
+      if 'items' in response:
+        yield from response['items']
+    page += 1
 
-    def fetch_all_cb(request_id, response, exception):
-      if exception:
-        logging.error('exception when %s: %s', log_text, exception)
-        return
-      if not response or 'items' not in response:
-        return
-      items.extend(response['items'])
-      additional_pages_to_fetch.append(
-          (pending_requests[int(request_id)], response))
 
-    page = 1
-    while pending_requests:
+# inspired by:
+# https://github.com/googleapis/google-api-python-client/blob/063dc27da5371264d36d299edb0682e63874089b/googleapiclient/http.py#L79
+# but without the json "reason" handling. If we get a 403, we won't retry.
+def _should_retry(resp_status):
+  if resp_status >= 500:
+    return True
+  if resp_status == 429:  # too many requests
+    return True
+  return False
+
+
+def batch_execute_all(api, requests: list):
+  """Execute all `requests` using the batch API and yield (request,response)
+  tuples."""
+  # TODO(b/200675491) implement retry of batch API request itself
+  results = []
+  requests_todo = requests
+  requests_in_flight: List = []
+  error_exceptions = []
+
+  def fetch_all_cb(request_id, response, exception):
+    if exception:
+      # TODO: handle exceptions better
+      if isinstance(exception, googleapiclient.errors.HttpError):
+        if _should_retry(exception.status_code):
+          logging.debug('received HTTP error status code %d from API, retrying',
+                        exception.status_code)
+          requests_todo.append(requests_in_flight[int(request_id)])
+        else:
+          error_exceptions.append(exception)
+      return
+    if not response:
+      return
+
+    try:
+      req_id = int(request_id)
+    except ValueError:
+      logging.debug(
+          'BUG: Cannot convert request ID `%r` to integer, dropping request.',
+          request_id)
+    if req_id not in requests:
+      logging.debug(
+          'BUG: Cannot find request %r in list of pending requests, dropping request.',
+          req_id)
+    results.append((requests[int(request_id)], response))
+
+  for retry in range(config.API_RETRIES + 1):
+    requests_in_flight = requests_todo
+    requests_todo = []
+    results = []
+
+    # Do the batch API request
+    try:
       batch = api.new_batch_http_request()
-      for i, req in enumerate(pending_requests):
+      for i, req in enumerate(requests_in_flight):
         batch.add(req, callback=fetch_all_cb, request_id=str(i))
-      if page <= 1:
-        logging.info(log_text)
-      else:
-        logging.info('%s (page: %d)', log_text, page)
       batch.execute()
-      yield from items
-      items = []
+    except googleapiclient.errors.HttpError as err:
+      # Handle exception of Batch API call
+      if _should_retry(err.status_code):
+        logging.debug(
+            'received HTTP error status code %d from Batch API, retrying',
+            err.status_code)
+        requests_todo = requests_in_flight
+        results = []
+      else:
+        raise utils.GcpApiError(err) from err
 
-      # Do we need to fetch any additional pages?
-      pending_requests = []
-      for p in additional_pages_to_fetch:
-        req = next_function(p[0], p[1])
-        if req:
-          pending_requests.append(req)
-      additional_pages_to_fetch = []
-      page += 1
-  except googleapiclient.errors.HttpError as err:
-    raise utils.GcpApiError(err) from err
+    # Yield results
+    yield from results
 
-  yield from items
+    # Handle retries
+    if requests_todo:
+      # 20% is random, progression: 1, 2, 4, 8
+      sleep_time = (1 - random.random() * 0.2) * 2**retry
+      logging.debug('sleeping %.2f seconds before retry #%d', sleep_time,
+                    retry + 1)
+      time.sleep(sleep_time)
+    else:
+      break
+
+  # Any exception after the retry count has been reached?
+  if error_exceptions:
+    # just raise the first exception that we encountered
+    raise utils.GcpApiError(error_exceptions[0])
