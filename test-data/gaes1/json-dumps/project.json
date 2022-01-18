@@ -1,0 +1,13 @@
+{
+  "name": "projects/123400010",
+  "parent": "organizations/11112222",
+  "projectId": "gcpdiag-gaes1-aaaa",
+  "state": "ACTIVE",
+  "displayName": "gcp-doctor test - gaes1",
+  "createTime": "2022-01-16T15:01:44.243Z",
+  "updateTime": "2022-01-16T15:01:46.204Z",
+  "etag": "+KU/oa5enHLJr4zqmCD/8w==",
+  "labels": {
+    "gcpdiag": "test"
+  }
+}

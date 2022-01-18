@@ -1,0 +1,13 @@
+{
+  "services": [
+    {
+      "name": "apps/gcpdiag-gaes1-aaaa/services/default",
+      "id": "default",
+      "split": {
+        "allocations": {
+          "v1": 1
+        }
+      }
+    }
+  ]
+}

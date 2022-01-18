@@ -52,6 +52,8 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/cloudbuild1/json-dumps',
     'gcpdiag-pubsub1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/pubsub1/json-dumps',
+    'gcpdiag-gaes1-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/gaes1/json-dumps'
 }
 
 # set to a value higher than 0 to emulate API temp. failure
@@ -191,5 +193,8 @@ def get_api_stub(service_name: str,
   elif service_name == 'pubsub':
     from gcpdiag.queries import pubsub_stub
     return pubsub_stub.PubsubApiStub()
+  elif service_name == 'appengine':
+    from gcpdiag.queries import gaes_stub
+    return gaes_stub.AppEngineStandardApiStub()
   else:
     raise ValueError('unsupported service: %s' % service_name)

@@ -11,6 +11,9 @@ clean_maps = {
     'cloudfunctions': {
         '.cloudfunctions.[].sourceToken': 'REDACTED'
     },
+    'appengine_versions': {
+        '.versions.[].createdBy': 'REDACTED'
+    },
     'clusters': {
         '.clusters.[].endpoint': '192.168.1.1',
         '.clusters.[].masterAuth.clusterCaCertificate': 'REDACTED',
