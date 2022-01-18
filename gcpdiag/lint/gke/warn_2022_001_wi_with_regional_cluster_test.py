@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Test code in warn_2022_010_wi_with_regional_cluster.py."""
+"""Test code in warn_2022_001_wi_with_regional_cluster.py."""
 
 import io
 from unittest import mock

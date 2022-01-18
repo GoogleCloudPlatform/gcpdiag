@@ -13,8 +13,8 @@
 # limitations under the License.
 """GKE connectivity: node to pod communication.
 
-Agents and host-network pods from a node must be able to communicate with with
-all pods on all nodes.
+Agents and host-network pods from a node must be able to communicate with all
+pods on all nodes.
 """
 
 from gcpdiag import lint, models, utils

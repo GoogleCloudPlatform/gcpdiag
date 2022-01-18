@@ -58,6 +58,67 @@ class Subnetwork(models.Resource):
   def ip_network(self) -> ipaddress.IPv4Network:
     return ipaddress.ip_network(self._resource_data['ipCidrRange'])
 
+  @property
+  def region(self) -> str:
+    # https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4
+    m = re.match(
+        r'https://www.googleapis.com/compute/v1/projects/([^/]+)/regions/([^/]+)',
+        self._resource_data['region'])
+    if not m:
+      raise RuntimeError(
+          f"can't parse region URL: {self._resource_data['region']}")
+    return m.group(2)
+
+  def is_private_ip_google_access(self) -> bool:
+    return self._resource_data.get('privateIpGoogleAccess', False)
+
+
+class Router(models.Resource):
+  """A VPC Router."""
+  _resource_data: dict
+
+  def __init__(self, project_id, resource_data):
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+    self._nats = None
+
+  @property
+  def full_path(self) -> str:
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
+                      self.self_link)
+    if result:
+      return result.group(1)
+    else:
+      return f'>> {self.self_link}'
+
+  @property
+  def short_path(self) -> str:
+    path = self.project_id + '/' + self.name
+    return path
+
+  @property
+  def name(self) -> str:
+    return self._resource_data['name']
+
+  @property
+  def self_link(self) -> str:
+    return self._resource_data['selfLink']
+
+  def subnet_has_nat(self, subnetwork):
+    if not self._resource_data.get('nats', []):
+      return False
+    for n in self._resource_data.get('nats', []):
+      if n['sourceSubnetworkIpRangesToNat'] == 'LIST_OF_SUBNETWORKS':
+        # Cloud NAT configure for specific subnets
+        if 'subnetworks' in n and subnetwork.self_link in [
+            s['name'] for s in n['subnetworks']
+        ]:
+          return True
+      else:
+        # Cloud NAT configured for all subnets
+        return True
+    return False
+
 
 class Network(models.Resource):
   """A VPC network."""
@@ -550,3 +611,26 @@ def get_network_from_url(url: str) -> Network:
     raise ValueError(f"can't parse network url: {url}")
   (project_id, network_name) = (m.group(1), m.group(2))
   return get_network(project_id, network_name)
+
+
+@caching.cached_api_call(in_memory=True)
+def get_subnetwork(project_id: str, region: str,
+                   subnetwork_name: str) -> Subnetwork:
+  logging.info('fetching network: %s/%s', project_id, subnetwork_name)
+  compute = apis.get_api('compute', 'v1', project_id)
+  request = compute.subnetworks().get(project=project_id,
+                                      region=region,
+                                      subnetwork=subnetwork_name)
+  response = request.execute(num_retries=config.API_RETRIES)
+  return Subnetwork(project_id, response)
+
+
+@caching.cached_api_call(in_memory=True)
+def get_router(project_id: str, region: str, network) -> Router:
+  logging.info('fetching routers: %s/%s', project_id, region)
+  compute = apis.get_api('compute', 'v1', project_id)
+  request = compute.routers().list(project=project_id,
+                                   region=region,
+                                   filter=f'network="{network.self_link}"')
+  response = request.execute(num_retries=config.API_RETRIES)
+  return Router(project_id, next(iter(response.get('items', [{}]))))

@@ -314,6 +314,16 @@ class Cluster(models.Resource):
     return network.get_network(m.group(1), m.group(2))
 
   @property
+  def subnetwork(self):
+    # 'projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks/default'
+    subnetwork_string = self._resource_data['networkConfig']['subnetwork']
+    m = re.match(r'projects/([^/]+)/regions/([^/]+)/subnetworks/([^/]+)$',
+                 subnetwork_string)
+    if not m:
+      raise RuntimeError("can't parse network string: %s" % subnetwork_string)
+    return network.get_subnetwork(m.group(1), m.group(2), m.group(3))
+
+  @property
   def is_private(self) -> bool:
     return 'privateClusterConfig' in self._resource_data
 
