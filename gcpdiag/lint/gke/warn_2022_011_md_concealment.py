@@ -1,4 +1,4 @@
-# Copyright 2021 Google LLC
+# Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,11 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""GKE nodes don't use the GCE default service account.
+"""GKE metadata concealment is not in use
 
-The GCE default service account has more permissions than are required to run
-your Kubernetes Engine cluster. You should either use GKE Workload Identity or
-create and use a minimally privileged service account.
+Metadata concealment is scheduled to be deprecated and removed in the future.
+Workload Identity replaces the need to use metadata concealment and the two
+approaches are incompatible. It is recommended that you use Workload Identity
+instead of metadata concealment.
 """
 
 from gcpdiag import lint, models
@@ -28,11 +29,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not clusters:
     report.add_skipped(None, 'no clusters found')
   for _, c in sorted(clusters.items()):
-    # Verify service-account for every standard nodepool.
+    # Verify MD concealment for every standard nodepool.
     for np in c.nodepools:
-      if np.has_workload_identity_enabled():
-        report.add_skipped(np, 'workload identity enabled')
-      elif np.has_default_service_account():
-        report.add_failed(np, 'node pool uses the GCE default service account')
+      if np.has_md_concealment_enabled():
+        report.add_failed(np, 'metadata concealment is in use')
       else:
         report.add_ok(np)
