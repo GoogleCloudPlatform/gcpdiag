@@ -21,8 +21,8 @@ import re
 import sys
 
 from gcpdiag import config, hooks, lint, models
-from gcpdiag.lint import (apigee, composer, dataproc, gcb, gce, gcf, gcs, gke,
-                          iam, report_terminal)
+from gcpdiag.lint import (apigee, composer, dataproc, gaes, gcb, gce, gcf, gcs,
+                          gke, iam, report_terminal)
 from gcpdiag.queries import apis
 
 
@@ -158,6 +158,7 @@ def run(argv) -> int:
   # Initialize Context, Repository, and Tests.
   context = models.Context(project_id=args.project)
   repo = lint.LintRuleRepository()
+  repo.load_rules(gaes)
   repo.load_rules(gce)
   repo.load_rules(gke)
   repo.load_rules(iam)
