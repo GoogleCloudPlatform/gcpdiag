@@ -16,6 +16,7 @@ SED_SUBST_FAKE = sed -e "s/$(PROJECT_ID_SUFFIX)/$(FAKE_PROJECT_ID_SUFFIX)/" \
 		     -e "s/$(ORG_ID)/$(FAKE_ORG_ID)/" \
 
 all:	\
+	json-dumps/compute-effective-firewalls-default.json \
 	json-dumps/compute-instances-$(ZONE_1)-2.json \
 	json-dumps/compute-instances-$(ZONE_1).json \
 	json-dumps/compute-instances-$(ZONE_2).json \
@@ -24,12 +25,18 @@ all:	\
 	json-dumps/compute-migs-$(ZONE_2).json \
 	json-dumps/compute-templates.json \
 	json-dumps/compute-migs-empty.json \
+	json-dumps/compute-network-default.json \
 	json-dumps/compute-project.json \
 	json-dumps/compute-regions.json \
 	json-dumps/compute-zones.json \
 	json-dumps/monitoring-query.json \
 	json-dumps/project.json \
 	json-dumps/services.json
+
+json-dumps/compute-effective-firewalls-default.json:
+	$(CURL) -fsS \
+	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/networks/default/getEffectiveFirewalls' \
+		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/compute-instances-$(ZONE_1).json:
 	$(CURL) -fsS \
@@ -77,6 +84,11 @@ json-dumps/compute-migs-empty.json:
 	$(CURL) -fsS \
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_EMPTY)/instanceGroupManagers' \
 		| $(JSON_CLEANER) instances \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-network-default.json:
+	$(CURL) -fsS \
+	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/networks/default' \
 		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/compute-project.json:

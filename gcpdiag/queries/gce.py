@@ -219,6 +219,24 @@ class Instance(models.Resource):
     return 'labels' in self._resource_data and \
            'goog-gke-node' in self._resource_data['labels']
 
+  def is_windows_machine(self) -> bool:
+    if 'disks' in self._resource_data:
+      disks = next(iter(self._resource_data['disks']))
+      if 'guestOsFeatures' in disks:
+        if 'WINDOWS' in [t['type'] for t in iter(disks['guestOsFeatures'])]:
+          return True
+    return False
+
+  @property
+  def network(self) -> network_q.Network:
+    # 'https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/global/networks/default'
+    network_string = self._resource_data['networkInterfaces'][0]['network']
+    m = re.match(r'^.+/projects/([^/]+)/global/networks/([^/]+)$',
+                 network_string)
+    if not m:
+      raise RuntimeError("can't parse network string: %s" % network_string)
+    return network_q.get_network(m.group(1), m.group(2))
+
   def secure_boot_enabled(self) -> bool:
     if 'shieldedInstanceConfig' in self._resource_data:
       return self._resource_data['shieldedInstanceConfig']['enableSecureBoot']
@@ -239,6 +257,13 @@ class Instance(models.Resource):
       if isinstance(saccts, list) and len(saccts) >= 1:
         return saccts[0]['email']
     return None
+
+  @property
+  def tags(self) -> List[str]:
+    if 'tags' in self._resource_data:
+      if 'items' in self._resource_data['tags']:
+        return self._resource_data['tags']['items']
+    return []
 
   def get_metadata(self, key: str) -> str:
     if not self._metadata_dict:

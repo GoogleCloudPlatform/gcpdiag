@@ -24,6 +24,7 @@ resource "google_compute_instance" "gce2" {
   network_interface {
     network = "default"
   }
+  tags = ["secured-instance"]
   scheduling {
     preemptible       = true
     automatic_restart = false
