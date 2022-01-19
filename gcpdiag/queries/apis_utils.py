@@ -19,6 +19,7 @@ import time
 from typing import Any, Callable, Iterator, List
 
 import googleapiclient.errors
+import httplib2
 
 from gcpdiag import config, utils
 
@@ -129,6 +130,10 @@ def batch_execute_all(api, requests: list):
         results = []
       else:
         raise utils.GcpApiError(err) from err
+    except httplib2.HttpLib2Error as err:
+      logging.debug('exception %s when doing Batch API call, retrying', err)
+      requests_todo = requests_in_flight
+      results = []
 
     # Yield results
     yield from results
