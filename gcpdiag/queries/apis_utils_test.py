@@ -99,7 +99,8 @@ class Test:
     with pytest.raises(utils.GcpApiError):
       list(
           apis_utils.batch_execute_all(api, [
-              RequestMock(1, fail_count=3, fail_status=config.API_RETRIES + 1),
+              RequestMock(1, fail_count=config.API_RETRIES + 1,
+                          fail_status=429),
               RequestMock(3)
           ]))
 
@@ -108,14 +109,14 @@ class Test:
     mock_sleep_slept_time = []
     api = apis_stub.get_api_stub('compute', 'v1')
     results = list(
-        apis_utils.batch_execute_all(
-            api,
-            [RequestMock(1, fail_count=2, fail_status=429),
-             RequestMock(3)]))
-    assert len(mock_sleep_slept_time) == 2
-    # 20% is random, progression: 1, 2, 4, 8
+        apis_utils.batch_execute_all(api, [
+            RequestMock(1, fail_count=config.API_RETRIES, fail_status=429),
+            RequestMock(3)
+        ]))
+    assert len(mock_sleep_slept_time) == config.API_RETRIES
+    # 20% is random, progression: 1, 1.4, 2.0, 2.7, ... 28.9 (10 retries)
     assert 0.8 <= mock_sleep_slept_time[0] <= 1.0
-    assert 1.6 <= mock_sleep_slept_time[1] <= 2.0
+    assert 1.1 <= mock_sleep_slept_time[1] <= 1.4
     # requests
     assert [x[0].n for x in results] == [3, 1]
     # responses

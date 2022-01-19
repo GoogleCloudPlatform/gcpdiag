@@ -77,39 +77,38 @@ def _should_retry(resp_status):
 def batch_execute_all(api, requests: list):
   """Execute all `requests` using the batch API and yield (request,response)
   tuples."""
-  # TODO(b/200675491) implement retry of batch API request itself
   results = []
   requests_todo = requests
   requests_in_flight: List = []
   error_exceptions = []
+  retry_count = 0
 
   def fetch_all_cb(request_id, response, exception):
-    if exception:
-      # TODO: handle exceptions better
-      if isinstance(exception, googleapiclient.errors.HttpError):
-        if _should_retry(exception.status_code):
-          logging.debug('received HTTP error status code %d from API, retrying',
-                        exception.status_code)
-          requests_todo.append(requests_in_flight[int(request_id)])
-        else:
-          error_exceptions.append(exception)
+    try:
+      request = requests_in_flight[int(request_id)]
+    except (IndexError, ValueError, TypeError):
+      logging.debug(
+          'BUG: Cannot find request %r in list of pending requests, dropping request.',
+          request_id)
       return
+
+    if exception:
+      if isinstance(exception, googleapiclient.errors.HttpError) and \
+        _should_retry(exception.status_code) and \
+        retry_count < config.API_RETRIES:
+        logging.debug('received HTTP error status code %d from API, retrying',
+                      exception.status_code)
+        requests_todo.append(request)
+      else:
+        error_exceptions.append(exception)
+      return
+
     if not response:
       return
 
-    try:
-      req_id = int(request_id)
-    except ValueError:
-      logging.debug(
-          'BUG: Cannot convert request ID `%r` to integer, dropping request.',
-          request_id)
-    if req_id not in requests:
-      logging.debug(
-          'BUG: Cannot find request %r in list of pending requests, dropping request.',
-          req_id)
-    results.append((requests[int(request_id)], response))
+    results.append((request, response))
 
-  for retry in range(config.API_RETRIES + 1):
+  for retry_count in range(config.API_RETRIES + 1):
     requests_in_flight = requests_todo
     requests_todo = []
     results = []
@@ -136,10 +135,10 @@ def batch_execute_all(api, requests: list):
 
     # Handle retries
     if requests_todo:
-      # 20% is random, progression: 1, 2, 4, 8
-      sleep_time = (1 - random.random() * 0.2) * 2**retry
+      # 20% is random, progression: 1, 1.4, 2.0, 2.7, ... 28.9 (10 retries)
+      sleep_time = (1 - random.random() * 0.2) * 1.4**retry_count
       logging.debug('sleeping %.2f seconds before retry #%d', sleep_time,
-                    retry + 1)
+                    retry_count + 1)
       time.sleep(sleep_time)
     else:
       break
