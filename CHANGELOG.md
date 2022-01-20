@@ -1,3 +1,39 @@
+## 0.50 (2022-01-20)
+
+#### New rules
+
+- gcb/ERR/2022_001: The Cloud Build logs do not report permission issues
+- gce/BP/2021_002: GCE nodes have an up to date ops agent
+- gce/BP/2021_003: Secure Boot is enabled
+- gce/ERR/2021_004: Serial logs don’t contain Secure Boot errors
+- gce/ERR/2021_005: Serial logs don't contain mount error messages
+- gce/WARN/2021_005: Serial logs don't contain out-of-memory messages
+- gce/WARN/2021_006: Serial logs don't contain "Kernel panic" messages
+- gce/WARN/2021_007: Serial logs don't contain "BSOD" messages
+- gcs/BP/2022_001: Buckets are using uniform access
+- gke/BP/2022_001: GKE clusters are regional
+- gke/ERR/2022_016: GKE connectivity: pod to pod communication
+- gke/WARN/2022_001: GKE clusters with workload identity are regional
+- gke/WARN/2022_002: GKE metadata concealment is not in use
+
+#### Updated rules
+
+- gcf/WARN/2021_001: add one more deprecated runtime Nodejs6 (github #17)
+
+#### Enhancements
+
+- New product: App Engine Standard
+- New product: Cloud Build
+- New product: Cloud Pub/Sub
+- New product: Cloud Storage
+
+#### Fixes
+
+- Verify early that IAM API is enabled
+- Catch API errors in prefetch_rule
+- Disable italic in Cloud Shell
+- Implement retry logic for batch API failures
+
 ## 0.49 (2021-12-20)
 
 #### New / updated rules
