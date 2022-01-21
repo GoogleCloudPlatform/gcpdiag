@@ -19,7 +19,7 @@ from gcpdiag import models
 from gcpdiag.queries import apis_stub, dataproc
 
 DUMMY_PROJECT_NAME = 'dataproc1'
-NUMBER_OF_CLUSTERS_IN_DATAPROC_JSON_DUMP_FILE = 4
+NUMBER_OF_CLUSTERS_IN_DATAPROC_JSON_DUMP_FILE = 3
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
@@ -36,19 +36,12 @@ class TestDataproc:
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = dataproc.get_clusters(context)
     for c in clusters:
-      # In cluster logging-enable-true
-      # dataproc:dataproc.logging.stackdriver.job.driver.enable is set
+      # dataproc:dataproc.logging.stackdriver.enable is set
       # and equals "true"
-      if c.name == 'logging-enable-true':
+      if c.name == 'test-best-practices-enabled':
         assert c.is_stackdriver_logging_enabled()
 
-      # In cluster logging-enable-false
-      # dataproc:dataproc.logging.stackdriver.job.driver.enable is set
+      # dataproc:dataproc.logging.stackdriver.enable is set
       # and equals "false"
-      if c.name == 'logging-enable-false':
-        assert not c.is_stackdriver_logging_enabled()
-
-      # In cluster logging-enable-not-set
-      # dataproc:dataproc.logging.stackdriver.job.driver.enable is not set
-      if c.name == 'logging-enable-not-set':
+      if c.name == 'test-best-practices-disabled':
         assert not c.is_stackdriver_logging_enabled()
