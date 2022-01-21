@@ -1,0 +1,11 @@
+*  dataproc/BP/2022_001: Cloud Monitoring agent is enabled.
+   - dataproc1/us-central1/good                                           [ OK ]
+   - dataproc1/us-central1/test-best-practices-disabled                   [FAIL]
+   - dataproc1/us-central1/test-best-practices-enabled                    [ OK ]
+
+   Memory and disk usage metrics are often useful when troubleshooting, however,
+   the Cloud Monitoring agent is not enabled by default when when a cluster is
+   created.
+
+   https://gcpdiag.dev/rules/dataproc/BP/2022_001
+
