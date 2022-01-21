@@ -1,4 +1,10 @@
-## 0.50 (2022-01-20)
+## 0.51 (2022-01-21)
+
+#### Fixes
+
+- Update Python dependencies, and add 'packaging', missing in the docker image.
+
+## 0.50 (2022-01-21)
 
 #### New rules
 
