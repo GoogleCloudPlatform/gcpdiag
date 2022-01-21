@@ -45,3 +45,13 @@ class TestDataproc:
       # and equals "false"
       if c.name == 'test-best-practices-disabled':
         assert not c.is_stackdriver_logging_enabled()
+
+  def test_monitoring_enabled(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = dataproc.get_clusters(context)
+    for cluster in clusters:
+      if cluster.name == 'test-best-practices-enabled':
+        assert cluster.is_stackdriver_monitoring_enabled()
+
+      if cluster.name == 'test-best-practices-disabled':
+        assert not cluster.is_stackdriver_monitoring_enabled()

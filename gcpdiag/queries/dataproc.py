@@ -43,6 +43,10 @@ class Cluster(models.Resource):
     return not self.get_software_property(
         'dataproc:dataproc.logging.stackdriver.enable') == 'false'
 
+  def is_stackdriver_monitoring_enabled(self) -> bool:
+    return self.get_software_property(
+        'dataproc:dataproc.monitoring.stackdriver.enable') == 'true'
+
   @property
   def region(self) -> str:
     """biggest regions have a trailing '-d' at most in its zoneUri

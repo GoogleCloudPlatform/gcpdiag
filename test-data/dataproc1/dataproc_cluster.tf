@@ -45,6 +45,14 @@ resource "google_dataproc_cluster" "test-best-practices-enabled" {
         boot_disk_size_gb = 30
       }
     }
+
+    # Override or set some custom properties
+    software_config {
+      override_properties = {
+        # enable cloud monitoring
+        "dataproc:dataproc.monitoring.stackdriver.enable" = "true"
+      }
+    }
   }
 }
 resource "google_dataproc_cluster" "test-best-practices-disabled" {
