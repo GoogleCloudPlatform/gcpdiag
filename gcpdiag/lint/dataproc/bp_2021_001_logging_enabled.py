@@ -13,7 +13,7 @@
 # limitations under the License.
 """ Check if logging is enabled : Stackdriver Logging enabled
 
-Enabling stackdriver logging for your dataproc cluster impacts the ability
+Enabling stackdriver logging for your Dataproc cluster impacts the ability
 to troubleshoot any issues that you might have.
 
 """
