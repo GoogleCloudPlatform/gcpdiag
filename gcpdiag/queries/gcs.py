@@ -62,6 +62,10 @@ class Bucket(models.Resource):
     path = self.project_id + '/' + self.name
     return path
 
+  @property
+  def labels(self) -> dict:
+    return self._resource_data.get('labels', {})
+
 
 @caching.cached_api_call(in_memory=True)
 def get_bucket_iam_policy(context: models.Context, bucket: str) -> Dict:

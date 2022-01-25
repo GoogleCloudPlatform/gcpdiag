@@ -24,14 +24,21 @@ https://cloud.google.com/storage/docs/access-control#choose_between_uniform_and_
 from gcpdiag import lint, models
 from gcpdiag.queries import gcs
 
+IGNORE_WITH_LABELS = {'goog-composer-environment'}
+
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   buckets = gcs.get_buckets(context)
-  if not buckets:
-    report.add_skipped(None, 'no buckets found')
+  bucket_count = 0
   for b in buckets.values():
-    if b.is_uniform_access():
+    bucket_count += 1
+    if set(b.labels.keys()) & IGNORE_WITH_LABELS:
+      report.add_skipped(b, 'Google-managed bucket')
+    elif b.is_uniform_access():
       report.add_ok(b)
     else:
       report.add_failed(b,
                         'it is recommend to use uniform access on your bucket')
+
+  if bucket_count == 0:
+    report.add_skipped(None, 'no buckets found')
