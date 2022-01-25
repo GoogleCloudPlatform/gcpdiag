@@ -1,0 +1,13 @@
+*  gcb/ERR/2022_001: Cloud Build service account has the cloudbuild.builds.editor role.
+   (no builds found)                                                      [SKIP]
+   - gcpdiag-gke1-aaaa                                                    [FAIL]
+     service account: 12340002@cloudbuild.gserviceaccount.com
+     missing role: roles/cloudbuild.builds.editor
+
+   The Cloud Build service account is missing the cloudbuild.builds.create IAM
+   permission, which is required for the service account to run a build trigger.
+   You can resolve this error by granting the Cloud Build Service Account IAM
+   role to [PROJECT_NUMBER]@cloudbuild.gserviceaccount.com.
+
+   https://gcpdiag.dev/rules/gcb/ERR/2022_001
+

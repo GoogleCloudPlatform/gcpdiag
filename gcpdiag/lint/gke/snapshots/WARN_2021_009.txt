@@ -1,0 +1,6 @@
+*  gke/WARN/2021_009: GKE nodes use a containerd image.
+   - gcpdiag-gke1-aaaa/europe-west4/gke2/default-pool                     [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/gke3/default-pool                     [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1/default-pool                   [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke4/default-pool                   [ OK ]
+

@@ -1,0 +1,6 @@
+*  gce/ERR/2021_005: Serial logs don't contain mount error messages
+   - gcpdiag-gke1-aaaa/gke-gke1-default-pool-73c0488e-pgh4                [ OK ]
+   - gcpdiag-gke1-aaaa/gke-gke2-default-pool-a708ea6d-rjq8                [ OK ]
+   - gcpdiag-gke1-aaaa/gke-gke3-default-pool-a05b62c3-2df6                [ OK ]
+   - gcpdiag-gke1-aaaa/gke-gke4-default-pool-74a76f36-tbsm                [ OK ]
+

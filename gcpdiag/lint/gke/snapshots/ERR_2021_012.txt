@@ -1,0 +1,6 @@
+*  gke/ERR/2021_012: Node pool service account exists and not is disabled.
+   - gcpdiag-gke1-aaaa/europe-west4/gke2/default-pool                     [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/gke3/default-pool                     [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1/default-pool                   [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke4/default-pool                   [ OK ]
+
