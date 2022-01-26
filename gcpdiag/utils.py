@@ -42,6 +42,8 @@ class GcpApiError(Exception):
 
   def __init__(self, response='An error occured during the GCP API call'):
     self.response = response
+    self.reason = None
+    self.service = None
     # see also: https://github.com/googleapis/google-api-python-client/issues/662
     try:
       content = json.loads(response.content)
@@ -49,6 +51,13 @@ class GcpApiError(Exception):
           content,
           dict) and 'error' in content and 'message' in content['error']:
         self.message = content['error']['message']
+        try:
+          for c in content['error']['details']:
+            if c['@type'] == 'type.googleapis.com/google.rpc.ErrorInfo':
+              self.reason = c['reason']
+              self.service = c['metadata']['service']
+        except KeyError:
+          pass
       else:
         self.message = str(response)
     except json.decoder.JSONDecodeError:
