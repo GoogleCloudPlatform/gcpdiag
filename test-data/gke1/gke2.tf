@@ -137,12 +137,7 @@ resource "google_compute_firewall" "all_test_deny" {
     protocol = "tcp"
   }
 
-  # terraform will not work with this dependency during first apply and will
-  # fail with this error:
-  # `one of source_tags, source_ranges, or source_service_accounts must be defined`
-  # uncomment this and run terraform apply again
-  source_ranges = [google_container_cluster.gke2.cluster_ipv4_cidr]
-  # source_ranges = ["10.0.0.0/8"]
+  source_ranges = ["10.0.0.0/8"]
 
   target_tags = google_container_cluster.gke2.node_config[0].tags
 
