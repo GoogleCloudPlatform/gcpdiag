@@ -25,6 +25,7 @@ DUMMY_REGION = 'europe-west4'
 DUMMY_ZONE = 'europe-west4-a'
 DUMMY_PROJECT_NAME = 'gcpdiag-gce1-aaaa'
 DUMMY_PROJECT_NR = '12340001'
+DUMMY_DEFAULT_NAME = 'default'
 DUMMY_INSTANCE1_NAME = 'gce1'
 DUMMY_INSTANCE1_LABELS = {'foo': 'bar'}
 DUMMY_INSTANCE2_NAME = 'gce2'
@@ -98,6 +99,29 @@ class TestGce:
     assert len(instances) == 4
     for n in instances.values():
       assert n.is_gke_node()
+
+  def test_is_windows_machine(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    instances = gce.get_instances(context)
+    instances_by_name = {i.name: i for i in instances.values()}
+    assert instances_by_name[DUMMY_INSTANCE1_NAME].is_windows_machine() is True
+    assert instances_by_name[DUMMY_INSTANCE2_NAME].is_windows_machine() is False
+
+  def test_network(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    instances = gce.get_instances(context)
+    instances_by_name = {i.name: i for i in instances.values()}
+    assert instances_by_name[
+        DUMMY_INSTANCE1_NAME].network.name == DUMMY_DEFAULT_NAME
+    assert instances_by_name[
+        DUMMY_INSTANCE2_NAME].network.name == DUMMY_DEFAULT_NAME
+
+  def test_tags(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    instances = gce.get_instances(context)
+    instances_by_name = {i.name: i for i in instances.values()}
+    assert 'secured-instance' in instances_by_name[DUMMY_INSTANCE1_NAME].tags
+    assert 'secured-instance' in instances_by_name[DUMMY_INSTANCE2_NAME].tags
 
   def test_access_scopes(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
