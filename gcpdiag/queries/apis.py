@@ -236,8 +236,15 @@ def verify_access(project_id: str):
             file=sys.stdout)
       sys.exit(1)
   except utils.GcpApiError as err:
-    print(f'ERROR: can\'t access project {project_id}: {err.message}.',
-          file=sys.stdout)
+    if 'SERVICE_DISABLED' == err.reason and 'serviceusage.googleapis.com' == err.service:
+      print((
+          'ERROR: Service Usage API must be enabled. To enable, execute:\n'
+          f'gcloud services enable serviceusage.googleapis.com --project={project_id}'
+      ),
+            file=sys.stdout)
+    else:
+      print(f'ERROR: can\'t access project {project_id}: {err.message}.',
+            file=sys.stdout)
     sys.exit(1)
   except exceptions.GoogleAuthError as err:
     print(f'ERROR: {err}', file=sys.stdout)
