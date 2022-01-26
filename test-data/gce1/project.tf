@@ -40,6 +40,8 @@ resource "google_project_service" "compute" {
 resource "google_project_service" "container" {
   project = google_project.project.project_id
   service = "container.googleapis.com"
+
+  depends_on = [google_project_service.compute]
 }
 
 resource "google_compute_project_metadata_item" "serial_logging" {

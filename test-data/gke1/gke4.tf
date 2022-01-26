@@ -24,12 +24,16 @@ resource "google_container_cluster" "gke4" {
 data "google_compute_network" "default" {
   name    = "default"
   project = google_project.project.project_id
+
+  depends_on = [google_project_service.compute]
 }
 
 data "google_compute_subnetwork" "default" {
   name    = "default"
   project = google_project.project.project_id
   region  = "europe-west4"
+
+  depends_on = [google_project_service.compute]
 }
 
 resource "google_compute_router" "router" {
