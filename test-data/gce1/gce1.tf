@@ -24,13 +24,14 @@ resource "google_compute_instance" "gce1" {
   network_interface {
     network = "default"
   }
+  tags = ["secured-instance"]
   scheduling {
     preemptible       = true
     automatic_restart = false
   }
   boot_disk {
     initialize_params {
-      image = data.google_compute_image.cos.self_link
+      image = data.google_compute_image.windows.self_link
     }
   }
   service_account {
@@ -46,4 +47,25 @@ resource "google_compute_instance" "gce1" {
   labels = {
     foo = "bar"
   }
+}
+
+# firewall configuration used for connectivity testing
+
+resource "google_compute_firewall" "secured_instance_test_deny" {
+  name    = "gce-secured-instance-test-deny"
+  network = "default"
+  project = google_project.project.project_id
+
+  priority = 900
+
+  deny {
+    ports    = ["22", "3389"]
+    protocol = "tcp"
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+
+  target_tags = google_compute_instance.gce1.tags
+
+  depends_on = [google_compute_instance.gce1]
 }

@@ -4,82 +4,48 @@
     {
       "canIpForward": false,
       "cpuPlatform": "Intel Skylake",
-      "creationTimestamp": "2021-12-08T01:55:12.634-08:00",
+      "creationTimestamp": "2022-01-18T05:27:22.278-08:00",
       "deletionProtection": false,
       "disks": [
         {
           "autoDelete": true,
           "boot": true,
           "deviceName": "persistent-disk-0",
-          "diskSizeGb": "10",
+          "diskSizeGb": "32",
           "guestOsFeatures": [
             {
-              "type": "VIRTIO_SCSI_MULTIQUEUE"
+              "type": "MULTI_IP_SUBNET"
             },
             {
               "type": "UEFI_COMPATIBLE"
             },
             {
-              "type": "SEV_CAPABLE"
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "WINDOWS"
             }
           ],
           "index": 0,
           "interface": "SCSI",
           "kind": "compute#attachedDisk",
           "licenses": [
-            "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos-pcid",
-            "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos",
-            "https://www.googleapis.com/compute/v1/projects/cos-cloud-shielded/global/licenses/shielded-cos"
+            "https://www.googleapis.com/compute/v1/projects/windows-cloud/global/licenses/windows-server-2019-dc",
+            "https://www.googleapis.com/compute/v1/projects/windows-cloud/global/licenses/windows-server-core"
           ],
           "mode": "READ_WRITE",
-          "shieldedInstanceInitialState": {
-            "dbs": [
-              {
-                "content": "REDACTED",
-                "fileType": "X509"
-              }
-            ],
-            "dbxs": [
-              {
-                "content": "REDACTED",
-                "fileType": "X509"
-              },
-              {
-                "content": "REDACTED",
-                "fileType": "X509"
-              },
-              {
-                "content": "REDACTED",
-                "fileType": "X509"
-              },
-              {
-                "content": "REDACTED",
-                "fileType": "X509"
-              }
-            ],
-            "keks": [
-              {
-                "content": "REDACTED",
-                "fileType": "X509"
-              }
-            ],
-            "pk": {
-              "content": "REDACTED",
-              "fileType": "X509"
-            }
-          },
           "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/disks/gce1",
           "type": "PERSISTENT"
         }
       ],
       "fingerprint": "REDACTED",
-      "id": "7734044460331122671",
+      "id": "1028374594467888854",
       "kind": "compute#instance",
       "labelFingerprint": "1TQLkowq0ZY=",
       "labels": {
         "foo": "bar"
       },
-      "lastStartTimestamp": "2021-12-08T01:55:22.638-08:00",
+      "lastStartTimestamp": "2022-01-18T05:27:32.691-08:00",
       "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/machineTypes/f1-micro",
       "metadata": {
         "fingerprint": "REDACTED",
@@ -92,7 +58,7 @@
           "kind": "compute#networkInterface",
           "name": "nic0",
           "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/global/networks/default",
-          "networkIP": "10.164.0.4",
+          "networkIP": "10.164.0.6",
           "stackType": "IPV4_ONLY",
           "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/europe-west4/subnetworks/default"
         }
@@ -126,14 +92,17 @@
       "startRestricted": false,
       "status": "RUNNING",
       "tags": {
-        "fingerprint": "REDACTED"
+        "fingerprint": "REDACTED",
+        "items": [
+          "secured-instance"
+        ]
       },
       "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a"
     },
     {
       "canIpForward": false,
       "cpuPlatform": "Intel Skylake",
-      "creationTimestamp": "2021-12-08T01:55:12.926-08:00",
+      "creationTimestamp": "2022-01-18T04:51:53.516-08:00",
       "deletionProtection": false,
       "disks": [
         {
@@ -143,13 +112,13 @@
           "diskSizeGb": "10",
           "guestOsFeatures": [
             {
-              "type": "VIRTIO_SCSI_MULTIQUEUE"
+              "type": "SEV_CAPABLE"
             },
             {
               "type": "UEFI_COMPATIBLE"
             },
             {
-              "type": "SEV_CAPABLE"
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
             }
           ],
           "index": 0,
@@ -157,8 +126,8 @@
           "kind": "compute#attachedDisk",
           "licenses": [
             "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos-pcid",
-            "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos",
-            "https://www.googleapis.com/compute/v1/projects/cos-cloud-shielded/global/licenses/shielded-cos"
+            "https://www.googleapis.com/compute/v1/projects/cos-cloud-shielded/global/licenses/shielded-cos",
+            "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos"
           ],
           "mode": "READ_WRITE",
           "shieldedInstanceInitialState": {
@@ -202,10 +171,10 @@
         }
       ],
       "fingerprint": "REDACTED",
-      "id": "1994369037766574063",
+      "id": "6537823869997877513",
       "kind": "compute#instance",
       "labelFingerprint": "42WmSpB8rSM=",
-      "lastStartTimestamp": "2021-12-08T01:55:22.824-08:00",
+      "lastStartTimestamp": "2022-01-18T04:52:03.348-08:00",
       "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/machineTypes/f1-micro",
       "metadata": {
         "fingerprint": "REDACTED",
@@ -224,7 +193,7 @@
           "kind": "compute#networkInterface",
           "name": "nic0",
           "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/global/networks/default",
-          "networkIP": "10.164.0.5",
+          "networkIP": "10.164.0.3",
           "stackType": "IPV4_ONLY",
           "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/europe-west4/subnetworks/default"
         }
@@ -258,13 +227,16 @@
       "startRestricted": false,
       "status": "RUNNING",
       "tags": {
-        "fingerprint": "REDACTED"
+        "fingerprint": "REDACTED",
+        "items": [
+          "secured-instance"
+        ]
       },
       "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a"
     },
     {
       "cpuPlatform": "Intel Broadwell",
-      "creationTimestamp": "2021-12-08T01:47:19.293-08:00",
+      "creationTimestamp": "2022-01-18T04:52:29.551-08:00",
       "deletionProtection": false,
       "disks": [
         {
@@ -284,15 +256,15 @@
             "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-9-stretch"
           ],
           "mode": "READ_WRITE",
-          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/disks/mig-mwws",
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/disks/mig-kmm1",
           "type": "PERSISTENT"
         }
       ],
       "fingerprint": "REDACTED",
-      "id": "5062456643373875658",
+      "id": "6295166949442389731",
       "kind": "compute#instance",
       "labelFingerprint": "42WmSpB8rSM=",
-      "lastStartTimestamp": "2021-12-08T01:47:29.276-08:00",
+      "lastStartTimestamp": "2022-01-18T04:52:40.033-08:00",
       "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/machineTypes/e2-micro",
       "metadata": {
         "fingerprint": "REDACTED",
@@ -308,14 +280,14 @@
         ],
         "kind": "compute#metadata"
       },
-      "name": "mig-mwws",
+      "name": "mig-kmm1",
       "networkInterfaces": [
         {
           "fingerprint": "REDACTED",
           "kind": "compute#networkInterface",
           "name": "nic0",
           "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/global/networks/default",
-          "networkIP": "10.164.0.3",
+          "networkIP": "10.164.0.5",
           "stackType": "IPV4_ONLY",
           "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/europe-west4/subnetworks/default"
         }
@@ -325,7 +297,7 @@
         "onHostMaintenance": "MIGRATE",
         "preemptible": false
       },
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-mwws",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-kmm1",
       "startRestricted": false,
       "status": "RUNNING",
       "tags": {
@@ -335,7 +307,7 @@
     },
     {
       "cpuPlatform": "Intel Broadwell",
-      "creationTimestamp": "2021-12-08T01:47:18.232-08:00",
+      "creationTimestamp": "2022-01-18T04:52:29.158-08:00",
       "deletionProtection": false,
       "disks": [
         {
@@ -355,15 +327,15 @@
             "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-9-stretch"
           ],
           "mode": "READ_WRITE",
-          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/disks/mig-wr2l",
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/disks/mig-zd52",
           "type": "PERSISTENT"
         }
       ],
       "fingerprint": "REDACTED",
-      "id": "891882986224337354",
+      "id": "3783357018317457123",
       "kind": "compute#instance",
       "labelFingerprint": "42WmSpB8rSM=",
-      "lastStartTimestamp": "2021-12-08T01:47:28.679-08:00",
+      "lastStartTimestamp": "2022-01-18T04:52:40.866-08:00",
       "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/machineTypes/e2-micro",
       "metadata": {
         "fingerprint": "REDACTED",
@@ -379,14 +351,14 @@
         ],
         "kind": "compute#metadata"
       },
-      "name": "mig-wr2l",
+      "name": "mig-zd52",
       "networkInterfaces": [
         {
           "fingerprint": "REDACTED",
           "kind": "compute#networkInterface",
           "name": "nic0",
           "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/global/networks/default",
-          "networkIP": "10.164.0.2",
+          "networkIP": "10.164.0.4",
           "stackType": "IPV4_ONLY",
           "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/europe-west4/subnetworks/default"
         }
@@ -396,7 +368,7 @@
         "onHostMaintenance": "MIGRATE",
         "preemptible": false
       },
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-wr2l",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-zd52",
       "startRestricted": false,
       "status": "RUNNING",
       "tags": {

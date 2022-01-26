@@ -59,6 +59,10 @@ data "google_compute_image" "cos" {
   project = "cos-cloud"
 }
 
+data "google_compute_image" "windows" {
+  family  = "windows-2019-core"
+  project = "windows-cloud"
+}
 
 output "project_id" {
   value = google_project.project.project_id
