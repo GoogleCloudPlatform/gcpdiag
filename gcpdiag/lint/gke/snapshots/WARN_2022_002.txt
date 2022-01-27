@@ -1,0 +1,6 @@
+*  gke/WARN/2022_002: GKE metadata concealment is not in use
+   - gcpdiag-gke1-aaaa/europe-west4/gke2/default-pool                     [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/gke3/default-pool                     [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1/default-pool                   [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke4/default-pool                   [ OK ]
+

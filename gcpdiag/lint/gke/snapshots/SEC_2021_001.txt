@@ -1,0 +1,15 @@
+*  gke/SEC/2021_001: GKE nodes don't use the GCE default service account.
+   - gcpdiag-gke1-aaaa/europe-west4/gke2/default-pool                     [SKIP]
+     workload identity enabled
+   - gcpdiag-gke1-aaaa/europe-west4/gke3/default-pool                     [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1/default-pool                   [FAIL]
+     node pool uses the GCE default service account
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke4/default-pool                   [SKIP]
+     workload identity enabled
+
+   The GCE default service account has more permissions than are required to run
+   your Kubernetes Engine cluster. You should either use GKE Workload Identity
+   or create and use a minimally privileged service account.
+
+   https://gcpdiag.dev/rules/gke/SEC/2021_001
+

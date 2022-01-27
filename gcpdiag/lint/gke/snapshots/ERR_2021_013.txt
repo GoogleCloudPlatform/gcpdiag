@@ -1,0 +1,6 @@
+*  gke/ERR/2021_013: GKE cluster firewall rules are configured.
+   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [ OK ]
+
