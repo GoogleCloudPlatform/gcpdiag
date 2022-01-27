@@ -1,0 +1,15 @@
+*  gke/WARN/2021_003: GKE cluster size close to maximum allowed by pod range
+   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [ OK ] 3/1024 nodes used.
+   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [ OK ] 3/1024 nodes used.
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [FAIL] 1/1 nodes used.
+     Pod CIDR: 192.168.1.0/24. Test threshold: 1 (90%).
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [ OK ] 1/1024 nodes used.
+
+   The maximum amount of nodes in a GKE cluster is limited based on its pod CIDR
+   range. This test checks if the cluster is approaching the maximum amount of
+   nodes allowed by the pod range. Users may end up blocked in production if
+   they are not able to scale their cluster due to this hard limit imposed by
+   the pod CIDR.
+
+   https://gcpdiag.dev/rules/gke/WARN/2021_003
+

@@ -1,0 +1,14 @@
+*  gke/ERR/2021_002: GKE nodes service account permissions for monitoring.
+   - gcpdiag-gke1-aaaa/europe-west4/gke2/default-pool                     [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/gke3/default-pool                     [FAIL]
+     service account: gke3sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com
+     missing role: roles/monitoring.metricWriter
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [SKIP]
+     monitoring disabled
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke4/default-pool                   [ OK ]
+
+   The service account used by GKE nodes should have the monitoring.metricWriter
+   role, otherwise ingestion of metrics won't work.
+
+   https://gcpdiag.dev/rules/gke/ERR/2021_002
+

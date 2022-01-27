@@ -1,0 +1,15 @@
+*  gke/BP/2022_001: GKE clusters are regional.
+   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [FAIL]
+      is not regional
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [FAIL]
+      is not regional
+
+   The availability of regional clusters (both control plane and nodes) is
+   higher for regional clusters as they are replicated across zones in the
+   region. It is recommended to use regional clusters for the production
+   workload.
+
+   https://gcpdiag.dev/rules/gke/BP/2022_001
+

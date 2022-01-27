@@ -1,0 +1,6 @@
+*  gke/ERR/2021_006: GKE Autoscaler isn't reporting scaleup failures.
+   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [ OK ]
+

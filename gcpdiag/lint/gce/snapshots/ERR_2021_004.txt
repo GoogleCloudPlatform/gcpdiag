@@ -1,0 +1,2 @@
+*  gce/ERR/2021_004: Serial logs don't contain Secure Boot error messages
+

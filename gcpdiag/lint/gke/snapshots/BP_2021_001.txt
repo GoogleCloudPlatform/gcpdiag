@@ -1,0 +1,12 @@
+*  gke/BP/2021_001: GKE system logging and monitoring enabled.
+   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [FAIL]
+     logging and monitoring are disabled
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [ OK ]
+
+   Disabling system logging and monitoring (aka "GKE Cloud Operations") impacts
+   the ability to troubleshoot any issues that you might have.
+
+   https://gcpdiag.dev/rules/gke/BP/2021_001
+
