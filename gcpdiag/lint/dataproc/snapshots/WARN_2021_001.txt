@@ -1,3 +1,5 @@
 *  dataproc/WARN/2021_001: Dataproc cluster is in RUNNING state
-   (no dataproc clusters found)                                           [SKIP]
+   - dataproc1/us-central1/good                                           [ OK ]
+   - dataproc1/us-central1/test-best-practices-disabled                   [ OK ]
+   - dataproc1/us-central1/test-best-practices-enabled                    [ OK ]
 

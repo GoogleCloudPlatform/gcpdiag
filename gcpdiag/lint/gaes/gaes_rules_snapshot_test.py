@@ -21,7 +21,7 @@ from gcpdiag import lint, models
 from gcpdiag.lint import gaes, report_terminal
 from gcpdiag.queries import apis_stub
 
-DUMMY_PROJECT_NAME = 'gcpdiag-gke1-aaaa'
+DUMMY_PROJECT_NAME = 'gcpdiag-gaes1-aaaa'
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)

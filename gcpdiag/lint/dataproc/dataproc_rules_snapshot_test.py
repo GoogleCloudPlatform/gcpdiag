@@ -21,7 +21,7 @@ from gcpdiag import lint, models
 from gcpdiag.lint import dataproc, report_terminal
 from gcpdiag.queries import apis_stub
 
-DUMMY_PROJECT_NAME = 'gcpdiag-gke1-aaaa'
+DUMMY_PROJECT_NAME = 'dataproc1'
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
