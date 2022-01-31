@@ -328,6 +328,32 @@ class FirewallRuleNotFoundError(Exception):
     self.disabled = disabled
 
 
+class VpcFirewallRule:
+  """Represents firewall rule"""
+
+  def __init__(self, resource_data):
+    self._resource_data = resource_data
+
+  @property
+  def name(self) -> str:
+    return self._resource_data['name']
+
+  @property
+  def source_ranges(self) -> List[ipaddress.IPv4Network]:
+    return self._resource_data['sourceRanges']
+
+  @property
+  def target_tags(self) -> set:
+    return self._resource_data['targetTags']
+
+  @property
+  def allowed(self) -> List[dict]:
+    return self._resource_data['allowed']
+
+  def is_enabled(self) -> bool:
+    return not self._resource_data['disabled']
+
+
 class _FirewallPolicy:
   """Represents a org/folder firewall policy."""
 
@@ -496,20 +522,38 @@ class _VpcFirewall:
                   ip_protocol, 'deny')
     return FirewallCheckResult('deny')
 
-  def get_ingress_rule_src_ips(self, name: str) -> List[Any]:
-    """See documentation for EffectiveFirewalls.get_ingress_rule_src_ips()."""
-    # Note: testing for this is done in gke_test.py
-    for rule in self._rules['INGRESS']:
-      if rule['name'] == name:
-        if not rule['disabled']:
-          return rule['sourceRanges']
-        else:
-          raise FirewallRuleNotFoundError(name, disabled=True)
-    raise FirewallRuleNotFoundError(name)
-
   def verify_ingress_rule_exists(self, name: str):
     """See documentation for EffectiveFirewalls.verify_ingress_rule_exists()."""
     return any(r['name'] == name for r in self._rules['INGRESS'])
+
+  def get_vpc_ingress_rules(self,
+                            name: Optional[str] = None,
+                            name_pattern: Optional[Optional[re.Pattern]] = None,
+                            target_tags: Optional[List[str]] = None):
+    """See documentation for EffectiveFirewalls.get_vpc_ingress_rules()."""
+    if not (name or name_pattern):
+      raise ValueError('Internal error: name or name_pattern must be provided')
+    if target_tags is not None and not isinstance(target_tags, list):
+      raise ValueError('Internal error: target_tags must be a list')
+
+    rules = []
+    for rule in self._rules['INGRESS']:
+      if name:
+        if not rule['name'] == name:
+          continue
+      elif name_pattern:
+        m = name_pattern.match(rule['name'])
+        if not m:
+          continue
+      # filter by target_tags if needed
+      if target_tags:
+        if not 'targetTags' in rule:
+          continue
+        if not set(target_tags) & rule['targetTags']:
+          continue
+      rules.append(VpcFirewallRule(rule))
+
+    return rules
 
 
 class EffectiveFirewalls:
@@ -562,21 +606,25 @@ class EffectiveFirewalls:
         target_service_account=target_service_account,
         target_tags=target_tags)
 
-  def get_ingress_rule_src_ips(self, name: str) -> List[Any]:
-    """Retrieve the source IPs of a specific ingress firewall rule.
+  def get_vpc_ingress_rules(
+      self,
+      name: Optional[str] = None,
+      name_pattern: Optional[re.Pattern] = None,
+      target_tags: Optional[List[str]] = None) -> List[VpcFirewallRule]:
+    """Retrive the list of ingress firewall rules matching name or name pattern and target tags.
 
-    This is specifically used to retrieve the list of GKE masters
-    by reading the configuration of the automatically generated firewall
-    rule that covers masters to node communication. See also: b/72535654
+    Args:
+        name (Optional[str], optional): firewall rune name. Defaults to None.
+        name_pattern (Optional[re.Pattern], optional): firewall rule name pattern. Defaults to None.
+        target_tags (Optional[List[str]], optional): firewall target tags
+          (if not specified any tag will match). Defaults to None.
 
-    Throws FirewallRuleNotFoundError if the rule is not found.
+    Returns:
+        List[VpcFirewallRule]: List of ingress firewall rules
     """
-    # Note that we chose for now not to provide full introspection for
-    # firewall rules outside of this module (like: fw.get_firewalls()[0].name,
-    # etc.), because at the moment the main use cases for rules should be
-    # covered by check_connectivity_ingress() and we want to avoid the
-    # complexity of creating a model for the whole firewall configuration.
-    return self._vpc_firewall.get_ingress_rule_src_ips(name)
+    rules = self._vpc_firewall.get_vpc_ingress_rules(name, name_pattern,
+                                                     target_tags)
+    return rules
 
   def verify_ingress_rule_exists(self, name: str):
     """Verify that a certain VPC rule exists. This is useful to verify

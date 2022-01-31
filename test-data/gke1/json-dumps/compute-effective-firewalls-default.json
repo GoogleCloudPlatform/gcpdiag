@@ -446,7 +446,7 @@
       "creationTimestamp": "2022-01-15T13:17:22.286-08:00",
       "name": "gke-gke2-vms-test-deny",
       "description": "",
-      "network": "projects/gcpdiag-gke1-lvanmo2y/global/networks/default",
+      "network": "projects/gcpdiag-gke1-aaaay/global/networks/default",
       "priority": 900,
       "sourceRanges": [
         "10.128.0.0/9"
@@ -467,8 +467,35 @@
         "enable": false
       },
       "disabled": false,
-      "selfLink": "projects/gcpdiag-gke1-lvanmo2y/global/firewalls/gke-gke2-498f0ae5-vms-test-deny",
+      "selfLink": "projects/gcpdiag-gke1-aaaay/global/firewalls/gke-gke2-498f0ae5-vms-test-deny",
       "kind": "compute#firewall"
+    },
+    {
+      "creationTimestamp": "2022-02-02T04:29:42.498-08:00",
+      "denied": [
+        {
+          "IPProtocol": "tcp",
+          "ports": [
+            "1024-10000"
+          ]
+        }
+      ],
+      "description": "",
+      "direction": "INGRESS",
+      "disabled": false,
+      "enableLogging": false,
+      "id": "8009568875821123545",
+      "kind": "compute#firewall",
+      "logConfig": {
+        "enable": false
+      },
+      "name": "gke-gke4-ingress-test-deny",
+      "network": "projects/gcpdiag-gke1-aaaay/global/networks/default",
+      "priority": 900,
+      "selfLink": "projects/gcpdiag-gke1-aaaay/global/firewalls/gke-gke4-ingress-test-deny",
+      "sourceRanges": [
+        "35.191.0.0/16"
+      ]
     },
     {
       "id": "7652525074820566214",
@@ -604,6 +631,66 @@
       },
       "disabled": false,
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/firewalls/gke-gke1-79f3ce44-all",
+      "kind": "compute#firewall"
+    },
+    {
+      "id": "2520105633602740212",
+      "creationTimestamp": "2022-01-31T00:43:07.414-08:00",
+      "name": "k8s-fw-l7--ff9247ffa8ffeb9e",
+      "description": "GCE L7 firewall rule",
+      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+      "priority": 1000,
+      "sourceRanges": [
+        "130.211.0.0/22",
+        "35.191.0.0/16"
+      ],
+      "targetTags": [
+        "gke-gke4-1019cf00-node"
+      ],
+      "allowed": [
+        {
+          "IPProtocol": "tcp",
+          "ports": [
+            "8080"
+          ]
+        }
+      ],
+      "direction": "INGRESS",
+      "logConfig": {
+        "enable": false
+      },
+      "disabled": false,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/firewalls/k8s-fw-l7--ff9247ffa8ffeb9e",
+      "kind": "compute#firewall"
+    },
+    {
+      "id": "5450210809166280725",
+      "creationTimestamp": "2022-01-28T07:08:42.834-08:00",
+      "name": "k8s-fw-l7--29d5d55dd871faef",
+      "description": "GCE L7 firewall rule",
+      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+      "priority": 1000,
+      "sourceRanges": [
+        "130.211.0.0/22",
+        "35.191.0.0/16"
+      ],
+      "targetTags": [
+        "gke-gke3-8614055e-node"
+      ],
+      "allowed": [
+        {
+          "IPProtocol": "tcp",
+          "ports": [
+            "30000-32767"
+          ]
+        }
+      ],
+      "direction": "INGRESS",
+      "logConfig": {
+        "enable": false
+      },
+      "disabled": false,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/firewalls/k8s-fw-l7--29d5d55dd871faef",
       "kind": "compute#firewall"
     }
   ],
