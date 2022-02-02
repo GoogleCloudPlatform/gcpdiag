@@ -16,7 +16,7 @@
 import logging
 import random
 import time
-from typing import Any, Callable, Iterator, List
+from typing import Any, Callable, Iterator, List, Optional, Tuple
 
 import googleapiclient.errors
 import httplib2
@@ -53,7 +53,10 @@ def batch_list_all(api, requests: list, next_function: Callable, log_text: str):
       logging.info(log_text)
     else:
       logging.info('%s (page: %d)', log_text, page)
-    for (request, response) in batch_execute_all(api, next_requests):
+    for (request, response, exception) in batch_execute_all(api, next_requests):
+      if exception:
+        raise exception
+
       # add request for next page if required
       req = next_function(request, response)
       if req:
@@ -76,12 +79,12 @@ def _should_retry(resp_status):
 
 
 def batch_execute_all(api, requests: list):
-  """Execute all `requests` using the batch API and yield (request,response)
+  """Execute all `requests` using the batch API and yield (request,response,exception)
   tuples."""
-  results = []
+  # results: (request, result, exception) tuples
+  results: List[Tuple[Any, Optional[Any], Optional[Exception]]] = []
   requests_todo = requests
   requests_in_flight: List = []
-  error_exceptions = []
   retry_count = 0
 
   def fetch_all_cb(request_id, response, exception):
@@ -101,15 +104,15 @@ def batch_execute_all(api, requests: list):
                       exception.status_code)
         requests_todo.append(request)
       else:
-        error_exceptions.append(exception)
+        results.append((request, None, utils.GcpApiError(exception)))
       return
 
     if not response:
       return
 
-    results.append((request, response))
+    results.append((request, response, None))
 
-  for retry_count in range(config.API_RETRIES + 1):
+  while True:
     requests_in_flight = requests_todo
     requests_todo = []
     results = []
@@ -120,35 +123,30 @@ def batch_execute_all(api, requests: list):
       for i, req in enumerate(requests_in_flight):
         batch.add(req, callback=fetch_all_cb, request_id=str(i))
       batch.execute()
-    except googleapiclient.errors.HttpError as err:
-      # Handle exception of Batch API call
-      if _should_retry(err.status_code):
-        logging.debug(
-            'received HTTP error status code %d from Batch API, retrying',
-            err.status_code)
+    except (googleapiclient.errors.HttpError, httplib2.HttpLib2Error) as err:
+      if isinstance(err, googleapiclient.errors.HttpError):
+        error_msg = f'received HTTP error status code {err.status_code} from Batch API, retrying'
+      else:
+        error_msg = f'received exception from Batch API: {err}, retrying'
+      if (not isinstance(err, googleapiclient.errors.HttpError) or \
+          _should_retry(err.status_code)) \
+          and retry_count < config.API_RETRIES:
+        logging.debug(error_msg)
         requests_todo = requests_in_flight
         results = []
       else:
         raise utils.GcpApiError(err) from err
-    except httplib2.HttpLib2Error as err:
-      logging.debug('exception %s when doing Batch API call, retrying', err)
-      requests_todo = requests_in_flight
-      results = []
 
     # Yield results
     yield from results
 
-    # Handle retries
-    if requests_todo:
-      # 20% is random, progression: 1, 1.4, 2.0, 2.7, ... 28.9 (10 retries)
-      sleep_time = (1 - random.random() * 0.2) * 1.4**retry_count
-      logging.debug('sleeping %.2f seconds before retry #%d', sleep_time,
-                    retry_count + 1)
-      time.sleep(sleep_time)
-    else:
+    # If no requests_todo, means we are done.
+    if not requests_todo:
       break
 
-  # Any exception after the retry count has been reached?
-  if error_exceptions:
-    # just raise the first exception that we encountered
-    raise utils.GcpApiError(error_exceptions[0])
+    # Retry delay: 20% is random, progression: 1, 1.4, 2.0, 2.7, ... 28.9 (10 retries)
+    sleep_time = (1 - random.random() * 0.2) * 1.4**retry_count
+    logging.debug('sleeping %.2f seconds before retry #%d', sleep_time,
+                  retry_count + 1)
+    time.sleep(sleep_time)
+    retry_count += 1

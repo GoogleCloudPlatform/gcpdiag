@@ -23,7 +23,7 @@ from typing import Any, List, Mapping
 
 import googleapiclient.errors
 
-from gcpdiag import utils
+from gcpdiag import config, utils
 from gcpdiag.queries import apis
 
 
@@ -175,7 +175,7 @@ def query(project_id: str, query_str: str) -> TimeSeriesCollection:
     start_time = datetime.datetime.now()
     while request:
       pages += 1
-      response = request.execute()
+      response = request.execute(num_retries=config.API_RETRIES)
       time_series.add_api_response(response)
       request = mon_api.projects().timeSeries().query_next(
           previous_request=request, previous_response=response)

@@ -44,8 +44,11 @@ class IamApiStub:
     self.project_id = None
     self.argument = argument
 
-  def new_batch_http_request(self, callback):
-    return apis_stub.BatchRequestStub(callback)
+  def new_batch_http_request(self, callback=None):
+    if callback:
+      return apis_stub.BatchRequestStub(callback)
+    else:
+      return apis_stub.BatchRequestStub()
 
   def projects(self):
     return IamApiStub('projects')
@@ -82,6 +85,10 @@ class IamApiStub:
     if self.list_page >= 3:
       return None
     return self
+
+  @property
+  def uri(self):
+    return f'https://iam.googleapis.com/v1/projects/-/serviceAccounts/{self.argument}?alt=json'
 
   def execute(self, num_retries=0):
     if self.project_id:
