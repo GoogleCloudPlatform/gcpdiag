@@ -22,7 +22,7 @@ from typing import Any, Dict, List, Mapping
 import googleapiclient
 
 from gcpdiag import caching, config, models, utils
-from gcpdiag.queries import apis
+from gcpdiag.queries import apis, apis_utils
 
 _predefined_roles: Dict[str, Any] = {}
 _predefined_roles_initialized: bool = False
@@ -71,7 +71,7 @@ def _fetch_policy(project_id: str):
   logging.info('fetching IAM policy of project %s', project_id)
   crm_api = apis.get_api('cloudresourcemanager', 'v1', project_id)
   request = crm_api.projects().getIamPolicy(resource=project_id)
-  response = request.execute()
+  response = request.execute(num_retries=config.API_RETRIES)
   policy: Dict[str, Any] = {
       'by_member': {},
   }
@@ -414,42 +414,38 @@ def _batch_fetch_service_accounts(emails: List[str], billing_project_id: str):
 
   iam_api = apis.get_api('iam', 'v1', billing_project_id)
   service_accounts_api = iam_api.projects().serviceAccounts()
+  requests = [
+      service_accounts_api.get(name='projects/-/serviceAccounts/' + email)
+      for email in emails
+      if email not in _service_account_cache_fetched
+  ]
+  for email in emails:
+    _service_account_cache_fetched[email] = True
 
-  def callback(request_id, response, exception):
+  for (request, response,
+       exception) in apis_utils.batch_execute_all(iam_api, requests):
     if exception:
-      gcp_exception = utils.GcpApiError(exception)
+      # extract from uri what the requested email was
+      m = re.search(r'/([^/?]+)(?:\?[^/]*)', request.uri)
+      if not m:
+        logging.warning("BUG: can't determine SA email from request URI: %s",
+                        request.uri)
+        continue
+      email = m.group(1)
+
       # 403 or 404 is expected for Google-managed service agents.
-      if request_id.partition('@')[2] in SERVICE_AGENT_DOMAINS:
+      if email.partition('@')[2] in SERVICE_AGENT_DOMAINS:
         # Too noisy even for debug-level
         # logging.debug(
-        #     'ignoring error retrieving google-managed service agent %s: %s',
-        #     request_id, gcp_exception)
+        #     'ignoring error retrieving google-managed service agent %s: %s', email, exception)
         pass
-      elif gcp_exception.status == 404:
-        _service_account_cache_is_not_found[request_id] = True
+      elif isinstance(exception, utils.GcpApiError) and exception.status == 404:
+        _service_account_cache_is_not_found[email] = True
       else:
-        logging.warning("can't get service account %s: %s", request_id,
-                        gcp_exception)
-      return
-
-    sa = ServiceAccount(response['projectId'], response)
-    _service_account_cache[sa.email] = sa
-
-  emails_to_fetch = [
-      e for e in emails if e not in _service_account_cache_fetched
-  ]
-  while emails_to_fetch:
-    batch = iam_api.new_batch_http_request(callback=callback)
-    for _ in range(1000):
-      try:
-        email = emails_to_fetch.pop(0)
-        batch.add(request=service_accounts_api.get(
-            name='projects/-/serviceAccounts/' + email),
-                  request_id=email)
-        _service_account_cache_fetched[email] = True
-      except IndexError:
-        break
-    batch.execute()
+        logging.warning("can't get service account %s: %s", email, exception)
+    else:
+      sa = ServiceAccount(response['projectId'], response)
+      _service_account_cache[sa.email] = sa
 
 
 def is_service_account_existing(email: str, billing_project_id: str) -> bool:

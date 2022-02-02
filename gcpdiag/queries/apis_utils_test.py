@@ -15,8 +15,6 @@
 
 from unittest import mock
 
-import pytest
-
 from gcpdiag import config, utils
 from gcpdiag.queries import apis_stub, apis_utils
 
@@ -87,22 +85,22 @@ class Test:
 
   def test_batch_execute_all_unretriable_exception(self):
     api = apis_stub.get_api_stub('compute', 'v1')
-    with pytest.raises(utils.GcpApiError):
-      list(
-          apis_utils.batch_execute_all(
-              api,
-              [RequestMock(1, fail_count=1, fail_status=403),
-               RequestMock(3)]))
+    results = list(
+        apis_utils.batch_execute_all(
+            api,
+            [RequestMock(1, fail_count=1, fail_status=403),
+             RequestMock(3)]))
+    assert isinstance(results[0][2], utils.GcpApiError) and \
+        results[0][2].status == 403
 
   def test_batch_execute_all_too_many_failures(self):
     api = apis_stub.get_api_stub('compute', 'v1')
-    with pytest.raises(utils.GcpApiError):
-      list(
-          apis_utils.batch_execute_all(api, [
-              RequestMock(1, fail_count=config.API_RETRIES + 1,
-                          fail_status=429),
-              RequestMock(3)
-          ]))
+    results = list(
+        apis_utils.batch_execute_all(api, [
+            RequestMock(1, fail_count=config.API_RETRIES + 1, fail_status=429),
+            RequestMock(3)
+        ]))
+    assert isinstance(results[1][2], Exception)
 
   def test_batch_execute_all_retriable_exception(self):
     global mock_sleep_slept_time
