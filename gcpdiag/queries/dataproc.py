@@ -70,6 +70,10 @@ class Cluster(models.Resource):
   def __str__(self) -> str:
     return self.short_path
 
+  @property
+  def image_version(self):
+    return self._resource_data['config']['softwareConfig']['imageVersion']
+
 
 class Region:
   """ Represents Dataproc region """
