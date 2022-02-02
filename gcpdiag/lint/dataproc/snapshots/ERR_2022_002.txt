@@ -1,0 +1,5 @@
+*  dataproc/ERR/2022_002: Dataproc cluster doesn't use deprecated images
+   - dataproc1/us-central1/good                                           [ OK ]
+   - dataproc1/us-central1/test-best-practices-disabled                   [ OK ]
+   - dataproc1/us-central1/test-best-practices-enabled                    [ OK ]
+
