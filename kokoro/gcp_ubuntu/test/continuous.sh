@@ -18,7 +18,6 @@ set -e
 set -x
 
 PATH="${KOKORO_ARTIFACTS_DIR}/git/gcpdiag/bin:$HOME/.local/bin:$PATH"
-SA_KEY_FILE="$KOKORO_KEYSTORE_DIR/76327_gcpdiag-repo-kokoro"
 cd "${KOKORO_ARTIFACTS_DIR}/git/gcpdiag"
 
 # Test with Python 3.7
@@ -40,8 +39,8 @@ pipenv-dockerized 3.9 run make test-mocked
 pipenv-dockerized 3.9 run make -C kokoro kokoro-build
 
 # Push docker images
-docker login -u _json_key --password-stdin https://us-docker.pkg.dev \
-  <"$SA_KEY_FILE"
+gcloud -q components update
+gcloud -q auth configure-docker us-docker.pkg.dev
 make -C docker/gcpdiag build
 make -C docker/gcpdiag push
 make -C gcpdiag_google_internal/docker build
