@@ -14,6 +14,7 @@
 """Test code in network.py."""
 
 import ipaddress
+import re
 from unittest import mock
 
 from gcpdiag.queries import apis_stub, network
@@ -214,3 +215,28 @@ class TestNetwork:
         port=2000,
         target_service_account='foobar@compute-system.iam.gserviceaccount.com')
     assert r.action == 'deny'
+
+  def test_get_ingress_rules(self):
+    net = network.get_network(project_id=DUMMY_GKE_PROJECT_ID,
+                              network_name=DUMMY_DEFAULT_NETWORK)
+    pattern = re.compile(r'k8s-fw-l7-.*')
+    rules = net.firewall.get_vpc_ingress_rules(
+        name_pattern=pattern, target_tags=['gke-gke4-1019cf00-node'])
+    assert 'k8s-fw-l7--ff9247ffa8ffeb9e' == rules[0].name
+    assert 'gke-gke4-1019cf00-node' in rules[0].target_tags
+    assert ipaddress.IPv4Network('130.211.0.0/22') in rules[0].source_ranges
+
+    pattern = re.compile(r'default-allow-.*')
+    rules = net.firewall.get_vpc_ingress_rules(name_pattern=pattern)
+    assert 'default-allow-rdp' in [r.name for r in rules]
+    assert 'default-allow-ssh' in [r.name for r in rules]
+    assert 'default-allow-internal' in [r.name for r in rules]
+    assert 'default-allow-icmp' in [r.name for r in rules]
+
+    rules = net.firewall.get_vpc_ingress_rules(name='gke-gke3-8614055e-ssh')
+    assert 'gke-gke3-8614055e-ssh' == rules[0].name
+    assert 'tcp' == rules[0].allowed[0]['IPProtocol']
+    assert '22' in rules[0].allowed[0]['ports']
+
+    rules = net.firewall.get_vpc_ingress_rules(name='not-existing-rule')
+    assert 'gke-gke3-8614055e-ssh' not in [r.name for r in rules]
