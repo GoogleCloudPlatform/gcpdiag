@@ -130,6 +130,10 @@ def run(argv) -> int:
     else:
       config.AUTH_METHOD = 'oauth'
 
+  # Use proper project for billing/quota API calls
+  if args.billing_project:
+    config.BILLING_PROJECT_ID = args.billing_project
+
   # Allow to change defaults using a hook function.
   hooks.set_lint_args_hook(args)
 
