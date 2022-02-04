@@ -345,13 +345,10 @@ class Cluster(models.Resource):
                         self.name)
         return []
       fw_rule_name = f'gke-{self.name}-{self.cluster_hash}-ssh'
-      try:
-        ips = self.network.firewall.get_ingress_rule_src_ips(fw_rule_name)
-        return ips
-      except network.FirewallRuleNotFoundError:
-        logging.warning("couldn't retrieve automatic firewall rule: %s.",
-                        fw_rule_name)
-        return []
+      rule = self.network.firewall.get_vpc_ingress_rules(name=fw_rule_name)
+      if rule and rule[0].is_enabled():
+        return rule[0].source_ranges
+      return []
 
   @property
   def cluster_hash(self) -> Optional[str]:
