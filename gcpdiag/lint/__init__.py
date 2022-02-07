@@ -35,10 +35,16 @@ from gcpdiag.queries import logs
 
 
 class LintRuleClass(enum.Enum):
+  """Identifies rule class."""
   ERR = 'ERR'
   BP = 'BP'
   SEC = 'SEC'
   WARN = 'WARN'
+  # classes for extended rules
+  ERR_EXT = 'ERR_EXT'
+  BP_EXT = 'BP_EXT'
+  SEC_EXT = 'SEC_EXT'
+  WARN_EXT = 'WARN_EXT'
 
   def __str__(self):
     return str(self.value)
@@ -222,8 +228,9 @@ class LintRuleRepository:
   """Repository of Lint rule which is also used to run the rules."""
   rules: List[LintRule]
 
-  def __init__(self):
+  def __init__(self, load_extended: bool = False):
     self.rules = []
+    self.load_extended = load_extended
 
   def register_rule(self, rule: LintRule):
     self.rules.append(rule)
@@ -242,15 +249,18 @@ class LintRuleRepository:
     # Determine Lint Rule parameters based on the module name.
     m = re.search(
         r"""
-         \.([^\.]+)\. # product path, e.g.: .gke.
-         ([a-z]+)_    # class prefix, e.g.: 'err_'
-         (\d+_\d+)    # id: 2020_001
+         \.
+         (?P<product>[^\.]+)                 # product path, e.g.: .gke.
+         \.
+         (?P<class_prefix>[a-z]+(?:_ext)?)   # class prefix, e.g.: 'err_' or 'err_ext'
+         _
+         (?P<rule_id>\d+_\d+)                # id: 2020_001
       """, name, re.VERBOSE)
     if not m:
       # Assume this is not a rule (e.g. could be a "utility" module)
       raise NotLintRule()
 
-    product, rule_class, rule_id = m.group(1, 2, 3)
+    product, rule_class, rule_id = m.group('product', 'class_prefix', 'rule_id')
 
     # Import the module.
     module = importlib.import_module(name)
@@ -307,6 +317,8 @@ class LintRuleRepository:
   def load_rules(self, pkg):
     for name in LintRuleRepository._iter_namespace(pkg):
       try:
+        if '_ext_' in name and not self.load_extended:
+          continue
         rule = self.get_rule_by_module_name(name)
       except NotLintRule:
         continue

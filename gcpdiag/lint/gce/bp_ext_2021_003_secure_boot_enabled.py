@@ -19,8 +19,6 @@ Google recommends enabling Secure Boot if you can ensure that it doesn't
 prevent a representative test VM from booting and if it is appropriate
 for your workload. Compute Engine does not enable Secure Boot by default
 because unsigned drivers and other low-level software might not be compatible.
-
-https://cloud.google.com/compute/shielded-vm/docs/shielded-vm
 """
 import operator as op
 
