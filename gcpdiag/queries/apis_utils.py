@@ -24,7 +24,9 @@ import httplib2
 from gcpdiag import config, utils
 
 
-def list_all(request, next_function: Callable) -> Iterator[Any]:
+def list_all(request,
+             next_function: Callable,
+             response_keyword='items') -> Iterator[Any]:
   """Execute GCP API `request` and subsequently call `next_function` until
   there are no more results. Assumes that it is a list method and that
   the results are under a `items` key."""
@@ -34,7 +36,7 @@ def list_all(request, next_function: Callable) -> Iterator[Any]:
       response = request.execute(num_retries=config.API_RETRIES)
     except googleapiclient.errors.HttpError as err:
       raise utils.GcpApiError(err) from err
-    yield from response['items']
+    yield from response[response_keyword]
     request = next_function(previous_request=request,
                             previous_response=response)
     if request is None:

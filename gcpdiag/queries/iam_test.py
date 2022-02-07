@@ -18,6 +18,7 @@
 from unittest import mock
 
 import diskcache
+import pytest
 
 from gcpdiag.queries import apis_stub, iam
 
@@ -87,6 +88,12 @@ class TestProjectPolicy:
                                        'roles/monitoring.viewer')
     assert not policy.has_role_permissions(
         f'serviceAccount:{TEST_SERVICE_ACCOUNT}', 'roles/monitoring.editor')
+
+  def test_missing_role(self):
+    with pytest.raises(iam.RoleNotFoundError):
+      policy = iam.get_project_policy(TEST_PROJECT_ID)
+      policy.has_role_permissions(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
+                                  'roles/non-existing-role')
 
   def test_is_service_acccount_existing(self):
     assert iam.is_service_account_existing(TEST_SERVICE_ACCOUNT,

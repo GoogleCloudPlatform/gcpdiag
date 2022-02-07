@@ -15,55 +15,106 @@
 # Lint as: python3
 """Queries related to GCP Identity and Access Management."""
 
+import functools
 import logging
 import re
-from typing import Any, Dict, List, Mapping
+from typing import Any, Dict, List, Tuple
 
 import googleapiclient
 
 from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis, apis_utils
 
-_predefined_roles: Dict[str, Any] = {}
-_predefined_roles_initialized: bool = False
+
+class Role(models.Resource):
+  """Represents an IAM role"""
+
+  def __init__(self, resource_data):
+    try:
+      project_id = utils.get_project_by_res_name(resource_data['name'])
+    except ValueError:
+      project_id = None
+
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+
+  @property
+  def name(self) -> str:
+    return self._resource_data['name']
+
+  @property
+  def full_path(self) -> str:
+    return self.name
+
+  @property
+  def permissions(self) -> List[str]:
+    return self._resource_data['includedPermissions']
+
+
+class RoleNotFoundError(Exception):
+  pass
+
+
+# Note: caching is done in get_*_roles because of different caching policies
+def _fetch_iam_roles(parent: str, api_project_id: str) -> Dict[str, Role]:
+
+  def _make_role(resource_data: Dict[str, Any]) -> Tuple[str, Role]:
+    resource_name = resource_data['name']
+    return resource_name, Role(resource_data)
+
+  logging.info('fetching IAM roles of \'%s\'', parent)
+  iam_api = apis.get_api('iam', 'v1', api_project_id)
+  if parent.startswith('projects/'):
+    roles_api = iam_api.projects().roles()
+  elif parent.startswith('organizations/'):
+    roles_api = iam_api.organizations().roles()
+  else:
+    roles_api = iam_api.roles()
+
+  return dict(
+      map(
+          _make_role,
+          apis_utils.list_all(roles_api.list(view='FULL', parent=parent),
+                              roles_api.list_next, 'roles')))
 
 
 @caching.cached_api_call(expire=config.STATIC_DOCUMENTS_EXPIRY_SECONDS)
-def _fetch_predefined_roles(api_project_id=None) -> Mapping[str, Any]:
-  logging.info('fetching IAM roles: predefined')
-  iam_api = apis.get_api('iam', 'v1', project_id=api_project_id)
-  roles_api = iam_api.roles()
-  request = roles_api.list(parent='', view='FULL')
-  roles: Dict[str, Any] = {}
-  while True:
-    response = request.execute(num_retries=config.API_RETRIES)
-    for role in response.get('roles', []):
-      name = str(role['name'])
-      roles[name] = role
-    request = roles_api.list_next(previous_request=request,
-                                  previous_response=response)
-    if request is None:
-      break
-  return roles
+def _get_predefined_roles(api_project_id: str) -> Dict[str, Role]:
+  return _fetch_iam_roles('', api_project_id)
 
 
-# Note: caching is done with get_project_policy
-def _fetch_roles(parent: str, api_project_id) -> Mapping[str, Any]:
-  roles: Dict[str, Any] = {}
-  logging.info('fetching IAM roles: %s', parent)
-  iam_api = apis.get_api('iam', 'v1', api_project_id)
-  roles_api = iam_api.projects().roles()
-  request = roles_api.list(parent=parent, view='FULL')
-  while True:
-    response = request.execute(num_retries=config.API_RETRIES)
-    for role in response.get('roles', []):
-      name = str(role['name'])
-      roles[name] = role
-    request = roles_api.list_next(previous_request=request,
-                                  previous_response=response)
-    if request is None:
-      break
-  return roles
+@caching.cached_api_call(in_memory=True)
+def _get_organization_roles(organization_name: str,
+                            api_project_id: str) -> Dict[str, Role]:
+  return _fetch_iam_roles(organization_name, api_project_id)
+
+
+@caching.cached_api_call(in_memory=True)
+def _get_project_roles(project_name: str,
+                       api_project_id: str) -> Dict[str, Role]:
+  return _fetch_iam_roles(project_name, api_project_id)
+
+
+@functools.lru_cache()
+def _get_iam_role(name: str, default_project_id: str) -> Role:
+  m = re.match(r'(.*)(^|/)roles/.*$', name)
+  if not m:
+    raise ValueError(f'invalid role: {name}')
+
+  parent = m.group(1)
+  if parent == '':
+    parent_roles = _get_predefined_roles(default_project_id)
+  elif parent.startswith('projects/'):
+    project_id = utils.get_project_by_res_name(parent)
+    parent_roles = _get_project_roles(parent, project_id)
+  elif parent.startswith('organizations/'):
+    parent_roles = _get_organization_roles(parent, default_project_id)
+  else:
+    raise ValueError(f'invalid role: {name}')
+
+  if name not in parent_roles:
+    raise RoleNotFoundError(f'unknown role: {name}')
+  return parent_roles[name]
 
 
 # Note: caching is done with get_project_policy
@@ -101,10 +152,6 @@ def _fetch_policy(project_id: str):
   return policy
 
 
-class RoleNotFoundError(Exception):
-  pass
-
-
 class ProjectPolicy:
   """Represents the IAM policy of a single project.
 
@@ -116,17 +163,9 @@ class ProjectPolicy:
   """
   _project_id: str
   _policy: Dict[str, Any]
-  _custom_roles: Mapping[str, Mapping[str, Any]]
 
   def _get_role_permissions(self, role: str) -> List[str]:
-    if role in self._custom_roles:
-      return self._custom_roles[role].get('includedPermissions', [])
-    predefined_roles = _fetch_predefined_roles(api_project_id=self._project_id)
-    if role in predefined_roles:
-      permissions: List[str] = predefined_roles[role].get(
-          'includedPermissions', [])
-      return permissions
-    raise RoleNotFoundError('unknown role: ' + role)
+    return _get_iam_role(role, self._project_id).permissions
 
   def _init_member_permissions(self, member):
     if not member.startswith('user:') and not member.startswith(
@@ -209,8 +248,6 @@ class ProjectPolicy:
 
   def __init__(self, project_id):
     self._project_id = project_id
-    self._custom_roles = _fetch_roles('projects/' + self._project_id,
-                                      api_project_id=self._project_id)
     self._policy = _fetch_policy(project_id)
 
 
