@@ -23,8 +23,10 @@ all:	\
 	json-dumps/compute-instances-empty.json \
 	json-dumps/compute-migs-$(ZONE_1).json \
 	json-dumps/compute-migs-$(ZONE_2).json \
+	json-dumps/compute-igs-$(ZONE_2).json \
 	json-dumps/compute-templates.json \
 	json-dumps/compute-migs-empty.json \
+	json-dumps/compute-igs-empty.json \
 	json-dumps/compute-network-default.json \
 	json-dumps/compute-project.json \
 	json-dumps/compute-regions.json \
@@ -74,6 +76,11 @@ json-dumps/compute-migs-$(ZONE_2).json:
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_2)/instanceGroupManagers' \
 		| $(SED_SUBST_FAKE) >$@
 
+json-dumps/compute-igs-$(ZONE_2).json:
+	$(CURL) -fsS \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_2)/instanceGroups' \
+		| $(SED_SUBST_FAKE) >$@
+
 json-dumps/compute-templates.json:
 	ZONE=$(subst json-dumps/,,$%); \
 	$(CURL) -fsS \
@@ -85,6 +92,11 @@ json-dumps/compute-migs-empty.json:
 	$(CURL) -fsS \
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_EMPTY)/instanceGroupManagers' \
 		| $(JSON_CLEANER) instances \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-igs-empty.json:
+	$(CURL) -fsS \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_EMPTY)/instanceGroups' \
 		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/compute-network-default.json:

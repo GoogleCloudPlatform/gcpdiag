@@ -53,6 +53,7 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
   # op1=gce_api.instances().list(project=pid, zone=z)
   # gce_api.new_batch_http_request().add(op1, callback=cb, request_id=id).execute()
   # gce_api.instanceGroupManagers().list(project=project_id, zone=zone)
+  # gce_api.instanceGroups().list(project=project_id, zone=zone)
 
   def __init__(self, mock_state='init', project_id=None, zone=None, page=1):
     self.mock_state = mock_state
@@ -86,6 +87,9 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
 
   def instanceGroupManagers(self):
     return ComputeEngineApiStub('migs')
+
+  def instanceGroups(self):
+    return ComputeEngineApiStub('igs')
 
   def instanceTemplates(self):
     return ComputeEngineApiStub('templates')
@@ -146,6 +150,15 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
           return json.load(json_file)
       except FileNotFoundError:
         with open(json_dir / 'compute-migs-empty.json',
+                  encoding='utf-8') as json_file:
+          return json.load(json_file)
+    elif self.mock_state == 'igs':
+      try:
+        with open(json_dir / f'compute-igs-{self.zone}{page_suffix}.json',
+                  encoding='utf-8') as json_file:
+          return json.load(json_file)
+      except FileNotFoundError:
+        with open(json_dir / 'compute-igs-empty.json',
                   encoding='utf-8') as json_file:
           return json.load(json_file)
     if self.mock_state == 'templates':
