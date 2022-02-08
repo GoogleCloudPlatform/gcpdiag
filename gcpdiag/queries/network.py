@@ -18,7 +18,7 @@ import dataclasses
 import ipaddress
 import logging
 import re
-from typing import Any, Dict, Iterable, List, Optional, Union
+from typing import Any, Dict, FrozenSet, Iterable, List, Optional, Union
 
 from gcpdiag import caching, config, models
 from gcpdiag.queries import apis, apis_utils
@@ -158,33 +158,8 @@ class Network(models.Resource):
 
   @property
   def subnetworks(self) -> Dict[str, Subnetwork]:
-    if self._subnetworks is None:
-      self._subnetworks = {}
-      compute = apis.get_api('compute', 'v1', self.project_id)
-      requests = []
-      for subnet_url in self._resource_data.get('subnetworks', []):
-        m = re.match(
-            r'https://www.googleapis.com/compute/v1/projects/([^/]+)/regions/([^/]+)/subnetworks',
-            subnet_url)
-        if not m:
-          logging.warning("can't parse subnet URL: %s", subnet_url)
-          continue
-        requests.append(  #
-            compute.subnetworks().list(
-                project=m.group(1),
-                region=m.group(2),
-                filter=f'network="{self.self_link}"',
-                fields='items/selfLink,items/ipCidrRange',
-            ))
-      if requests:
-        for item in apis_utils.batch_list_all(
-            compute,  #
-            requests,
-            compute.subnetworks().list_next,
-            f'listing subnets of {self.name}'):
-          self._subnetworks[item['selfLink']] = Subnetwork(
-              self.project_id, item)
-    return self._subnetworks
+    return _batch_get_subnetworks(
+        self._project_id, frozenset(self._resource_data.get('subnetworks', [])))
 
 
 IPAddrOrNet = Union[ipaddress.IPv4Address, ipaddress.IPv6Address,
@@ -671,6 +646,32 @@ def get_subnetwork(project_id: str, region: str,
                                       subnetwork=subnetwork_name)
   response = request.execute(num_retries=config.API_RETRIES)
   return Subnetwork(project_id, response)
+
+
+@caching.cached_api_call(in_memory=True)
+def _batch_get_subnetworks(
+    project_id, subnetworks_urls: FrozenSet[str]) -> Dict[str, Subnetwork]:
+  compute = apis.get_api('compute', 'v1', project_id)
+  requests = []
+  for subnet_url in subnetworks_urls:
+    m = re.match((r'https://www.googleapis.com/compute/v1/projects/'
+                  r'([^/]+)/regions/([^/]+)/subnetworks/([^/]+)$'), subnet_url)
+    if not m:
+      logging.warning("can't parse subnet URL: %s", subnet_url)
+      continue
+    requests.append(  #
+        compute.subnetworks().get(project=m.group(1),
+                                  region=m.group(2),
+                                  subnetwork=m.group(3)))
+  subnets = {}
+  if not requests:
+    return {}
+  for (_, resp, exception) in apis_utils.batch_execute_all(compute, requests):
+    if exception:
+      logging.warning(exception)
+      continue
+    subnets[resp['selfLink']] = Subnetwork(project_id, resp)
+  return subnets
 
 
 @caching.cached_api_call(in_memory=True)
