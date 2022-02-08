@@ -32,6 +32,7 @@ def get_cache_stub():
 TEST_PROJECT_ID = 'gcpdiag-gke1-aaaa'
 TEST_SERVICE_ACCOUNT = 'gke2sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com'
 TEST_SERVICE_ACCOUNT_PERMISSIONS = [
+    'autoscaling.sites.writeMetrics',
     'cloudnotifications.activities.list',
     'logging.logEntries.create',
     'monitoring.alertPolicies.get',
@@ -61,6 +62,8 @@ TEST_SERVICE_ACCOUNT_PERMISSIONS = [
     'monitoring.uptimeCheckConfigs.list',
     'opsconfigmonitoring.resourceMetadata.list',
     'stackdriver.resourceMetadata.write',
+    'storage.objects.get',
+    'storage.objects.list',
 ]
 
 
@@ -94,6 +97,11 @@ class TestProjectPolicy:
       policy = iam.get_project_policy(TEST_PROJECT_ID)
       policy.has_role_permissions(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
                                   'roles/non-existing-role')
+
+  def test_internal_role(self):
+    policy = iam.get_project_policy(TEST_PROJECT_ID)
+    policy.has_role_permissions(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
+                                'roles/container.nodeServiceAgent')
 
   def test_is_service_acccount_existing(self):
     assert iam.is_service_account_existing(TEST_SERVICE_ACCOUNT,

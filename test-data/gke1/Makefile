@@ -34,6 +34,7 @@ all:	\
 	json-dumps/iam-roles-custom.json \
 	json-dumps/iam-roles-predefined-1.json.gz \
 	json-dumps/iam-roles-predefined-2.json.gz \
+	json-dumps/iam-roles-get.json \
 	json-dumps/iam-service-accounts.json \
 	json-dumps/logging-entries-1.json \
 	json-dumps/project.json \
@@ -137,6 +138,12 @@ json-dumps/iam-roles-custom.json:
 	$(CURL) -fsS \
 		'https://iam.googleapis.com/v1/projects/$(PROJECT_ID)/roles?view=FULL&pageSize=500' \
 		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/iam-roles-get.json:
+	$(CURL) -fsS \
+		'https://iam.googleapis.com/v1/roles/container.nodeServiceAgent' \
+		| $(SED_SUBST_FAKE) \
+		| jq '{"roles": [.]}' >$@
 
 json-dumps/iam-service-accounts.json:
 	$(CURL) -fsS \

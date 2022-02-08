@@ -83,6 +83,28 @@ def _get_predefined_roles(api_project_id: str) -> Dict[str, Role]:
   return _fetch_iam_roles('', api_project_id)
 
 
+@caching.cached_api_call(expire=config.STATIC_DOCUMENTS_EXPIRY_SECONDS)
+def _get_predefined_role(name: str, api_project_id: str) -> Role:
+  """Returns a predefined role using roles.get
+
+  It should only be used if role is internal and cannot be retrieved using
+  roles.list. For all other roles, _get_predefined_roles should be preferred
+  because of caching efficiency
+  """
+  logging.info('fetching IAM role \'%s\'', name)
+  iam_api = apis.get_api('iam', 'v1', api_project_id)
+  request = iam_api.roles().get(name=name)
+
+  try:
+    response = request.execute(num_retries=config.API_RETRIES)
+  except googleapiclient.errors.HttpError as err:
+    if err.resp.status == 404:
+      raise RoleNotFoundError(f'unknown role: {name}') from err
+    raise utils.GcpApiError(err) from err
+
+  return Role(response)
+
+
 @caching.cached_api_call(in_memory=True)
 def _get_organization_roles(organization_name: str,
                             api_project_id: str) -> Dict[str, Role]:
@@ -104,7 +126,15 @@ def _get_iam_role(name: str, default_project_id: str) -> Role:
   parent = m.group(1)
   if parent == '':
     parent_roles = _get_predefined_roles(default_project_id)
-  elif parent.startswith('projects/'):
+    if name in parent_roles:
+      return parent_roles[name]
+
+    # IAM roles can be marked as internal and won't be returned by `list`
+    # But they are available using `get` method and can be granted or revoked
+    # using gcloud CLI, so using it as a fallback
+    return _get_predefined_role(name, default_project_id)
+
+  if parent.startswith('projects/'):
     project_id = utils.get_project_by_res_name(parent)
     parent_roles = _get_project_roles(parent, project_id)
   elif parent.startswith('organizations/'):

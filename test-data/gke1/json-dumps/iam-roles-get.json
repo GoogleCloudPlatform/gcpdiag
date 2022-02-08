@@ -1,0 +1,21 @@
+{
+  "roles": [
+    {
+      "name": "roles/container.nodeServiceAgent",
+      "title": "Kubernetes Engine Node Service Agent",
+      "description": "Minimal set of permission required by a GKE node to support standard capabilities such as logging and monitoring export, and image pulls.",
+      "includedPermissions": [
+        "autoscaling.sites.writeMetrics",
+        "logging.logEntries.create",
+        "monitoring.metricDescriptors.create",
+        "monitoring.metricDescriptors.list",
+        "monitoring.timeSeries.create",
+        "resourcemanager.projects.get",
+        "resourcemanager.projects.list",
+        "storage.objects.get",
+        "storage.objects.list"
+      ],
+      "etag": "AA=="
+    }
+  ]
+}
