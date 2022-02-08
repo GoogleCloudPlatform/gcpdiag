@@ -5,6 +5,7 @@
       "title": "GKE Custom Role",
       "description": "A description",
       "includedPermissions": [
+        "autoscaling.sites.writeMetrics",
         "cloudnotifications.activities.list",
         "logging.logEntries.create",
         "monitoring.alertPolicies.get",
@@ -33,10 +34,12 @@
         "monitoring.uptimeCheckConfigs.get",
         "monitoring.uptimeCheckConfigs.list",
         "opsconfigmonitoring.resourceMetadata.list",
-        "stackdriver.resourceMetadata.write"
+        "stackdriver.resourceMetadata.write",
+        "storage.objects.get",
+        "storage.objects.list"
       ],
       "stage": "GA",
-      "etag": "BwXSd9+s6yU="
+      "etag": "BwXXp/+O7cs="
     },
     {
       "name": "projects/gcpdiag-gke1-aaaa/roles/gke3_custom_role",
@@ -46,7 +49,7 @@
         "cloudnotifications.activities.list"
       ],
       "stage": "GA",
-      "etag": "BwXSd9+tzLI="
+      "etag": "BwXXp/+Ke/c="
     }
   ]
 }

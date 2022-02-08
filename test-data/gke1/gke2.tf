@@ -64,7 +64,18 @@ resource "google_project_iam_custom_role" "gke2_custom_role" {
 
     #"stackdriver.resourceMetadata.writer"
     "stackdriver.resourceMetadata.write",
-    "opsconfigmonitoring.resourceMetadata.list"
+    "opsconfigmonitoring.resourceMetadata.list",
+
+    # container.nodeServiceAgent
+    "autoscaling.sites.writeMetrics",
+    "logging.logEntries.create",
+    "monitoring.metricDescriptors.create",
+    "monitoring.metricDescriptors.list",
+    "monitoring.timeSeries.create",
+    #"resourcemanager.projects.get",
+    #"resourcemanager.projects.list",
+    "storage.objects.get",
+    "storage.objects.list",
   ]
 }
 
