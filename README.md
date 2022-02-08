@@ -50,6 +50,8 @@ optional arguments:
   --include INCLUDE    Include rule pattern (e.g.: `gke`, `gke/*/2021*`). Multiple pattern can be specified
                        (comma separated, or with multiple arguments)
   --exclude EXCLUDE    Exclude rule pattern (e.g.: `BP`, `*/*/2022*`)
+  --include-extended   Include extended rules. Additional rules might generate false positives
+                       (default: False)
   -v, --verbose        Increase log verbosity
   --within-days D      How far back to search logs and metrics (default: 3)
 ```

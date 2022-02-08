@@ -29,7 +29,7 @@ class Test:
 
   def test_all_rules(self, snapshot):
 
-    repo = lint.LintRuleRepository()
+    repo = lint.LintRuleRepository(load_extended=True)
     repo.load_rules(composer)
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     snapshot.snapshot_dir = path.join(path.dirname(__file__), 'snapshots')
