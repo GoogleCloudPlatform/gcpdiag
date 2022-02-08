@@ -21,7 +21,7 @@ from gcpdiag import lint, models
 from gcpdiag.lint import composer, report_terminal
 from gcpdiag.queries import apis_stub
 
-DUMMY_PROJECT_NAME = 'composer1'
+DUMMY_PROJECT_NAME = 'gcpdiag-composer1-aaaa'
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)

@@ -1,0 +1,12 @@
+{
+  "bindings": [
+    {
+      "members": [
+        "user:dawidmalina@premium-cloud-support.com"
+      ],
+      "role": "roles/owner"
+    }
+  ],
+  "etag": "BwXXim1ZMUM=",
+  "version": 1
+}

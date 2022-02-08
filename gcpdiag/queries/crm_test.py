@@ -21,7 +21,7 @@ from gcpdiag.queries import apis_stub, crm
 
 DUMMY_PROJECT_ID = 'gcpdiag-gke1-aaaa'
 DUMMY_PROJECT_NR = 12340002
-DUMMY_PROJECT_NAME = 'gcp-doctor test - gke1'
+DUMMY_PROJECT_NAME = 'gcpdiag test - gke1'
 
 
 def get_cache_stub():

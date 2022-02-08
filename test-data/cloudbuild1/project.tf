@@ -23,7 +23,7 @@ resource "random_string" "project_id_suffix" {
 }
 
 resource "google_project" "project" {
-  name            = "gcp-doctor test - cloudbuild1"
+  name            = "gcpdiag test - cloudbuild1"
   project_id      = "gcpdiag-cloudbuild1-${random_string.project_id_suffix.id}"
   org_id          = var.org_id
   billing_account = var.billing_account_id
@@ -35,6 +35,11 @@ resource "google_project" "project" {
 resource "google_project_service" "cloudbuild" {
   project = google_project.project.project_id
   service = "cloudbuild.googleapis.com"
+}
+
+resource "google_project_service" "sourcerepo" {
+  project = google_project.project.project_id
+  service = "sourcerepo.googleapis.com"
 }
 
 output "project_id" {

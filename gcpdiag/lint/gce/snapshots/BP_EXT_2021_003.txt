@@ -1,3 +1,13 @@
 *  gce/BP_EXT/2021_003: Secure Boot is enabled
-   (no instances found)                                                   [SKIP]
+   - gcpdiag-gce1-aaaa/gce1                                               [FAIL]
+   - gcpdiag-gce1-aaaa/gce2                                               [FAIL]
+   - gcpdiag-gce1-aaaa/mig-kmm1                                           [FAIL]
+   - gcpdiag-gce1-aaaa/mig-zd52                                           [FAIL]
+
+   Google recommends enabling Secure Boot if you can ensure that it doesn't
+   prevent a representative test VM from booting and if it is appropriate for
+   your workload. Compute Engine does not enable Secure Boot by default because
+   unsigned drivers and other low-level software might not be compatible.
+
+   https://gcpdiag.dev/rules/gce/BP_EXT/2021_003
 

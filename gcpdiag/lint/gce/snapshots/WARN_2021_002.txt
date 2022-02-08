@@ -1,10 +1,18 @@
 *  gce/WARN/2021_002: GCE nodes have good disk performance.
-   - gcpdiag-gke1-aaaa/gke-gke1-default-pool-73c0488e-pgh4                [SKIP]
+   - gcpdiag-gce1-aaaa/gce1                                               [SKIP]
      no data
-   - gcpdiag-gke1-aaaa/gke-gke2-default-pool-a708ea6d-rjq8                [SKIP]
+   - gcpdiag-gce1-aaaa/gce2                                               [SKIP]
      no data
-   - gcpdiag-gke1-aaaa/gke-gke3-default-pool-a05b62c3-2df6                [SKIP]
+   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-aabeeb2f-89fp                [SKIP]
      no data
-   - gcpdiag-gke1-aaaa/gke-gke4-default-pool-74a76f36-tbsm                [SKIP]
+   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-aabeeb2f-c8f3                [SKIP]
+     no data
+   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-aabeeb2f-mncd                [SKIP]
+     no data
+   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-aabeeb2f-s8r2                [SKIP]
+     no data
+   - gcpdiag-gce1-aaaa/mig-kmm1                                           [SKIP]
+     no data
+   - gcpdiag-gce1-aaaa/mig-zd52                                           [SKIP]
      no data
 

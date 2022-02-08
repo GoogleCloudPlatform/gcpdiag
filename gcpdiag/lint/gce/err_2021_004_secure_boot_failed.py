@@ -49,7 +49,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   instances = gce.get_instances(context).values()
   if len(instances) == 0:
     report.add_skipped(None, 'No instances found')
-  for instance in instances:
+  for instance in sorted(instances, key=lambda i: i.name):
     # this lint rule isn't relevant to GKE nodes
     if instance.is_gke_node():
       continue

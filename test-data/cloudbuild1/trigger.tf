@@ -1,4 +1,5 @@
 resource "google_cloudbuild_trigger" "trigger" {
+  project = google_project.project.project_id
   trigger_template {
     branch_name = "main"
     repo_name   = "test-repo"
@@ -8,5 +9,5 @@ resource "google_cloudbuild_trigger" "trigger" {
       name = "gcr.io/cloud-builders/gsutil"
     }
   }
-  project = "gcpdiag-cloudbuild1-3kag9l6k"
+  depends_on = [google_project_service.cloudbuild]
 }

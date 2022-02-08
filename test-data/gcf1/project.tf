@@ -23,7 +23,7 @@ resource "random_string" "project_id_suffix" {
 }
 
 resource "google_project" "project" {
-  name            = "gcp-doctor test - gcf1"
+  name            = "gcpdiag test - gcf1"
   project_id      = "gcpdiag-gcf1-${random_string.project_id_suffix.id}"
   org_id          = var.org_id
   billing_account = var.billing_account_id

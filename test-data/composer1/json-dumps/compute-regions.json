@@ -1,5 +1,5 @@
 {
-  "id": "projects/composer1/regions",
+  "id": "projects/gcpdiag-composer1-aaaa/regions",
   "items": [
     {
       "id": "1220",
@@ -8,9 +8,9 @@
       "description": "asia-east1",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-east1-a",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-east1-b",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-east1-c"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-east1-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-east1-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-east1-c"
       ],
       "quotas": [
         {
@@ -374,7 +374,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/asia-east1",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/asia-east1",
       "supportsPzs": false,
       "kind": "compute#region"
     },
@@ -385,9 +385,9 @@
       "description": "asia-east2",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-east2-c",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-east2-b",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-east2-a"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-east2-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-east2-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-east2-a"
       ],
       "quotas": [
         {
@@ -751,7 +751,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/asia-east2",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/asia-east2",
       "supportsPzs": true,
       "kind": "compute#region"
     },
@@ -762,9 +762,9 @@
       "description": "asia-northeast1",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-northeast1-a",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-northeast1-b",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-northeast1-c"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-northeast1-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-northeast1-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-northeast1-c"
       ],
       "quotas": [
         {
@@ -1128,7 +1128,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/asia-northeast1",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/asia-northeast1",
       "supportsPzs": false,
       "kind": "compute#region"
     },
@@ -1139,9 +1139,9 @@
       "description": "asia-northeast2",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-northeast2-b",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-northeast2-c",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-northeast2-a"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-northeast2-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-northeast2-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-northeast2-a"
       ],
       "quotas": [
         {
@@ -1505,7 +1505,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/asia-northeast2",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/asia-northeast2",
       "supportsPzs": false,
       "kind": "compute#region"
     },
@@ -1516,9 +1516,9 @@
       "description": "asia-northeast3",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-northeast3-a",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-northeast3-c",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-northeast3-b"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-northeast3-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-northeast3-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-northeast3-b"
       ],
       "quotas": [
         {
@@ -1882,7 +1882,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/asia-northeast3",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/asia-northeast3",
       "supportsPzs": false,
       "kind": "compute#region"
     },
@@ -1893,9 +1893,9 @@
       "description": "asia-south1",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-south1-b",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-south1-a",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-south1-c"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-south1-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-south1-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-south1-c"
       ],
       "quotas": [
         {
@@ -2259,7 +2259,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/asia-south1",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/asia-south1",
       "supportsPzs": false,
       "kind": "compute#region"
     },
@@ -2270,9 +2270,9 @@
       "description": "asia-south2",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-south2-a",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-south2-c",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-south2-b"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-south2-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-south2-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-south2-b"
       ],
       "quotas": [
         {
@@ -2636,7 +2636,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/asia-south2",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/asia-south2",
       "supportsPzs": false,
       "kind": "compute#region"
     },
@@ -2647,9 +2647,9 @@
       "description": "asia-southeast1",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-southeast1-a",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-southeast1-b",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-southeast1-c"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-southeast1-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-southeast1-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-southeast1-c"
       ],
       "quotas": [
         {
@@ -3013,7 +3013,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/asia-southeast1",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/asia-southeast1",
       "supportsPzs": false,
       "kind": "compute#region"
     },
@@ -3024,9 +3024,9 @@
       "description": "asia-southeast2",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-southeast2-a",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-southeast2-c",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/asia-southeast2-b"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-southeast2-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-southeast2-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/asia-southeast2-b"
       ],
       "quotas": [
         {
@@ -3390,7 +3390,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/asia-southeast2",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/asia-southeast2",
       "supportsPzs": false,
       "kind": "compute#region"
     },
@@ -3401,9 +3401,9 @@
       "description": "australia-southeast1",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/australia-southeast1-c",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/australia-southeast1-a",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/australia-southeast1-b"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/australia-southeast1-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/australia-southeast1-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/australia-southeast1-b"
       ],
       "quotas": [
         {
@@ -3767,7 +3767,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/australia-southeast1",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/australia-southeast1",
       "supportsPzs": true,
       "kind": "compute#region"
     },
@@ -3778,9 +3778,9 @@
       "description": "australia-southeast2",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/australia-southeast2-a",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/australia-southeast2-c",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/australia-southeast2-b"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/australia-southeast2-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/australia-southeast2-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/australia-southeast2-b"
       ],
       "quotas": [
         {
@@ -4144,7 +4144,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/australia-southeast2",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/australia-southeast2",
       "supportsPzs": false,
       "kind": "compute#region"
     },
@@ -4155,9 +4155,9 @@
       "description": "europe-central2",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/europe-central2-b",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/europe-central2-c",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/europe-central2-a"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/europe-central2-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/europe-central2-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/europe-central2-a"
       ],
       "quotas": [
         {
@@ -4521,7 +4521,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/europe-central2",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/europe-central2",
       "supportsPzs": false,
       "kind": "compute#region"
     },
@@ -4532,9 +4532,9 @@
       "description": "europe-north1",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/europe-north1-b",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/europe-north1-c",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/europe-north1-a"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/europe-north1-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/europe-north1-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/europe-north1-a"
       ],
       "quotas": [
         {
@@ -4898,7 +4898,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/europe-north1",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/europe-north1",
       "supportsPzs": false,
       "kind": "compute#region"
     },
@@ -4909,9 +4909,9 @@
       "description": "europe-west1",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/europe-west1-b",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/europe-west1-c",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/europe-west1-d"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/europe-west1-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/europe-west1-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/europe-west1-d"
       ],
       "quotas": [
         {
@@ -5275,7 +5275,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/europe-west1",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/europe-west1",
       "supportsPzs": false,
       "kind": "compute#region"
     },
@@ -5286,9 +5286,9 @@
       "description": "europe-west2",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/europe-west2-a",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/europe-west2-b",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/europe-west2-c"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/europe-west2-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/europe-west2-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/europe-west2-c"
       ],
       "quotas": [
         {
@@ -5652,7 +5652,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/europe-west2",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/europe-west2",
       "supportsPzs": true,
       "kind": "compute#region"
     },
@@ -5663,9 +5663,9 @@
       "description": "europe-west3",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/europe-west3-c",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/europe-west3-a",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/europe-west3-b"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/europe-west3-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/europe-west3-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/europe-west3-b"
       ],
       "quotas": [
         {
@@ -6029,7 +6029,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/europe-west3",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/europe-west3",
       "supportsPzs": true,
       "kind": "compute#region"
     },
@@ -6040,9 +6040,9 @@
       "description": "europe-west4",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/europe-west4-c",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/europe-west4-b",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/europe-west4-a"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/europe-west4-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/europe-west4-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/europe-west4-a"
       ],
       "quotas": [
         {
@@ -6406,7 +6406,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/europe-west4",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/europe-west4",
       "supportsPzs": false,
       "kind": "compute#region"
     },
@@ -6417,9 +6417,9 @@
       "description": "europe-west6",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/europe-west6-b",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/europe-west6-c",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/europe-west6-a"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/europe-west6-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/europe-west6-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/europe-west6-a"
       ],
       "quotas": [
         {
@@ -6783,7 +6783,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/europe-west6",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/europe-west6",
       "supportsPzs": false,
       "kind": "compute#region"
     },
@@ -6794,9 +6794,9 @@
       "description": "northamerica-northeast1",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/northamerica-northeast1-a",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/northamerica-northeast1-b",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/northamerica-northeast1-c"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/northamerica-northeast1-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/northamerica-northeast1-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/northamerica-northeast1-c"
       ],
       "quotas": [
         {
@@ -7160,7 +7160,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/northamerica-northeast1",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/northamerica-northeast1",
       "supportsPzs": false,
       "kind": "compute#region"
     },
@@ -7171,9 +7171,9 @@
       "description": "northamerica-northeast2",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/northamerica-northeast2-b",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/northamerica-northeast2-a",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/northamerica-northeast2-c"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/northamerica-northeast2-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/northamerica-northeast2-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/northamerica-northeast2-c"
       ],
       "quotas": [
         {
@@ -7537,7 +7537,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/northamerica-northeast2",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/northamerica-northeast2",
       "supportsPzs": false,
       "kind": "compute#region"
     },
@@ -7548,9 +7548,9 @@
       "description": "southamerica-east1",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/southamerica-east1-a",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/southamerica-east1-b",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/southamerica-east1-c"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/southamerica-east1-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/southamerica-east1-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/southamerica-east1-c"
       ],
       "quotas": [
         {
@@ -7914,7 +7914,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/southamerica-east1",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/southamerica-east1",
       "supportsPzs": false,
       "kind": "compute#region"
     },
@@ -7925,10 +7925,10 @@
       "description": "us-central1",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/us-central1-a",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/us-central1-b",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/us-central1-c",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/us-central1-f"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/us-central1-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/us-central1-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/us-central1-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/us-central1-f"
       ],
       "quotas": [
         {
@@ -8292,7 +8292,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/us-central1",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/us-central1",
       "supportsPzs": false,
       "kind": "compute#region"
     },
@@ -8303,9 +8303,9 @@
       "description": "us-east1",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/us-east1-b",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/us-east1-c",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/us-east1-d"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/us-east1-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/us-east1-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/us-east1-d"
       ],
       "quotas": [
         {
@@ -8669,7 +8669,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/us-east1",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/us-east1",
       "supportsPzs": false,
       "kind": "compute#region"
     },
@@ -8680,9 +8680,9 @@
       "description": "us-east4",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/us-east4-a",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/us-east4-b",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/us-east4-c"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/us-east4-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/us-east4-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/us-east4-c"
       ],
       "quotas": [
         {
@@ -9046,7 +9046,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/us-east4",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/us-east4",
       "supportsPzs": true,
       "kind": "compute#region"
     },
@@ -9057,9 +9057,9 @@
       "description": "us-west1",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/us-west1-a",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/us-west1-b",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/us-west1-c"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/us-west1-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/us-west1-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/us-west1-c"
       ],
       "quotas": [
         {
@@ -9423,7 +9423,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/us-west1",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/us-west1",
       "supportsPzs": false,
       "kind": "compute#region"
     },
@@ -9434,9 +9434,9 @@
       "description": "us-west2",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/us-west2-c",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/us-west2-b",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/us-west2-a"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/us-west2-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/us-west2-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/us-west2-a"
       ],
       "quotas": [
         {
@@ -9800,7 +9800,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/us-west2",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/us-west2",
       "supportsPzs": false,
       "kind": "compute#region"
     },
@@ -9811,9 +9811,9 @@
       "description": "us-west3",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/us-west3-a",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/us-west3-b",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/us-west3-c"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/us-west3-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/us-west3-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/us-west3-c"
       ],
       "quotas": [
         {
@@ -10177,7 +10177,7 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/us-west3",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/us-west3",
       "supportsPzs": false,
       "kind": "compute#region"
     },
@@ -10188,9 +10188,9 @@
       "description": "us-west4",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/us-west4-c",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/us-west4-a",
-        "https://www.googleapis.com/compute/v1/projects/composer1/zones/us-west4-b"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/us-west4-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/us-west4-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/zones/us-west4-b"
       ],
       "quotas": [
         {
@@ -10554,11 +10554,11 @@
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions/us-west4",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions/us-west4",
       "supportsPzs": false,
       "kind": "compute#region"
     }
   ],
-  "selfLink": "https://www.googleapis.com/compute/v1/projects/composer1/regions",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-composer1-aaaa/regions",
   "kind": "compute#regionList"
 }

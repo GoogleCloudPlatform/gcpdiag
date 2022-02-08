@@ -21,7 +21,7 @@ from gcpdiag import lint, models
 from gcpdiag.lint import apigee, report_terminal
 from gcpdiag.queries import apis_stub
 
-DUMMY_PROJECT_NAME = 'gcpd-apigee-1-lus4'
+DUMMY_PROJECT_NAME = 'gcpdiag-apigee1-aaaa'
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)

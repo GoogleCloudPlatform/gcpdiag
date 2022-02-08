@@ -1,0 +1,117 @@
+{
+  "services": [
+    {
+      "name": "projects/12340009/services/storage.googleapis.com",
+      "config": {
+        "name": "storage.googleapis.com",
+        "title": "Cloud Storage API",
+        "documentation": {
+          "summary": "Lets you store and retrieve potentially-large, immutable data objects."
+        },
+        "quota": {},
+        "authentication": {},
+        "usage": {
+          "requirements": [
+            "serviceusage.googleapis.com/tos/cloud"
+          ]
+        },
+        "monitoredResources": [
+          {
+            "type": "storage.googleapis.com/StorageLocation",
+            "displayName": "Storage Location of GCS Buckets",
+            "description": "Storage Location of GCS Buckets.",
+            "labels": [
+              {
+                "key": "resource_container",
+                "description": "The project number of the bucket."
+              },
+              {
+                "key": "location",
+                "description": "The storage location of the bucket."
+              }
+            ],
+            "launchStage": "EARLY_ACCESS"
+          },
+          {
+            "type": "storage.googleapis.com/Location",
+            "displayName": "GCS Location",
+            "description": "GCS Location.",
+            "labels": [
+              {
+                "key": "resource_container",
+                "description": "The project number of the bucket."
+              },
+              {
+                "key": "location",
+                "description": "The location of the bucket."
+              }
+            ],
+            "launchStage": "ALPHA"
+          },
+          {
+            "type": "storage.googleapis.com/storage",
+            "labels": [
+              {
+                "key": "storage.googleapis.com/bucket_name"
+              },
+              {
+                "key": "storage.googleapis.com/bucket_storage_class"
+              },
+              {
+                "key": "cloud.googleapis.com/location"
+              },
+              {
+                "key": "cloud.googleapis.com/uid"
+              },
+              {
+                "key": "cloud.googleapis.com/project"
+              }
+            ]
+          }
+        ],
+        "monitoring": {
+          "consumerDestinations": [
+            {
+              "monitoredResource": "storage.googleapis.com/storage",
+              "metrics": [
+                "storage.googleapis.com/storage/total_bytes",
+                "storage.googleapis.com/storage/object_count"
+              ]
+            },
+            {
+              "monitoredResource": "storage.googleapis.com/StorageLocation",
+              "metrics": [
+                "storage.googleapis.com/quota/in_multi_region_read_bandwidth/exceeded",
+                "storage.googleapis.com/quota/in_multi_region_read_bandwidth/usage",
+                "storage.googleapis.com/quota/in_multi_region_read_bandwidth_preview/exceeded",
+                "storage.googleapis.com/quota/in_multi_region_read_bandwidth_preview/usage"
+              ]
+            },
+            {
+              "monitoredResource": "storage.googleapis.com/Location",
+              "metrics": [
+                "storage.googleapis.com/quota/turbo_replication_ingress_bandwidth/exceeded",
+                "storage.googleapis.com/quota/turbo_replication_ingress_bandwidth/usage"
+              ]
+            },
+            {
+              "monitoredResource": "storage.googleapis.com/StorageLocation",
+              "metrics": [
+                "storage.googleapis.com/quota/in_multi_region_read_bandwidth/limit",
+                "storage.googleapis.com/quota/in_multi_region_read_bandwidth_preview/limit"
+              ]
+            },
+            {
+              "monitoredResource": "storage.googleapis.com/Location",
+              "metrics": [
+                "storage.googleapis.com/quota/turbo_replication_ingress_bandwidth/limit"
+              ]
+            }
+          ]
+        }
+      },
+      "state": "ENABLED",
+      "parent": "projects/12340009"
+    }
+  ]
+}

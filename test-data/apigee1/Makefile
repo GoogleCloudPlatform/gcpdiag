@@ -8,7 +8,7 @@ JSON_CLEANER = ../../bin/json-cleaner
 all:	\
 	json-dumps/apigee-organizations.json \
 	json-dumps/environment-groups.json   \
-    json-dumps/environment-group-empty-attachments.json   \
+  json-dumps/environment-group-empty-attachments.json   \
 	json-dumps/environment-group-attachments.json    \
 	json-dumps/project.json \
 	json-dumps/services.json

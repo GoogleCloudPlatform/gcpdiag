@@ -177,4 +177,6 @@ resource "google_compute_firewall" "ingress_test_deny" {
   }
 
   source_ranges = ["35.191.0.0/16"]
+
+  depends_on = [google_project_service.compute]
 }
