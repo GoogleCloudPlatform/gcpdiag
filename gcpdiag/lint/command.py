@@ -96,6 +96,12 @@ def run(argv) -> int:
                       help=('Exclude rule pattern (e.g.: `BP`, `*/*/2022*`)'),
                       action='append')
 
+  parser.add_argument('--include-extended',
+                      help=('Include extended rules. Additional rules might '
+                            'generate false positives (default: False)'),
+                      default=False,
+                      action='store_true')
+
   parser.add_argument('-v',
                       '--verbose',
                       action='count',
@@ -157,7 +163,7 @@ def run(argv) -> int:
 
   # Initialize Context, Repository, and Tests.
   context = models.Context(project_id=args.project)
-  repo = lint.LintRuleRepository()
+  repo = lint.LintRuleRepository(args.include_extended)
   repo.load_rules(gaes)
   repo.load_rules(gce)
   repo.load_rules(gke)
@@ -166,10 +172,10 @@ def run(argv) -> int:
   repo.load_rules(gcs)
   repo.load_rules(dataproc)
   repo.load_rules(composer)
-  # ^^^ If you add rules directory, update also
-  # pyinstaller/hook-gcpdiag.lint.py and bin/precommit-website-rules
   repo.load_rules(apigee)
   repo.load_rules(gcb)
+  # ^^^ If you add rules directory, update also
+  # pyinstaller/hook-gcpdiag.lint.py and bin/precommit-website-rules
   report = report_terminal.LintReportTerminal(
       log_info_for_progress_only=(args.verbose == 0),
       show_ok=not args.hide_ok,

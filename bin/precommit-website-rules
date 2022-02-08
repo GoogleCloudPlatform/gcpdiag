@@ -38,6 +38,11 @@ RULE_CLASSES = {
     'ERR': 'Something that is very likely to be wrong',
     'WARN': 'Something that is possibly wrong',
     'SEC': 'Potential security issue',
+    # classes for extended rules
+    'BP_EXT': '(Extended) Best practice, opinionated recommendation',
+    'ERR_EXT': '(Extended) Something that is very likely to be wrong',
+    'WARN_EXT': '(Extended) Something that is possibly wrong',
+    'SEC_EXT': '(Extended) Potential security issue',
 }
 
 
