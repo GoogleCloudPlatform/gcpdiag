@@ -143,6 +143,13 @@ def _get_credentials():
     )
 
 
+def _get_project_or_billing_id(project_id: str) -> str:
+  """Return project or billing project id (if defined)"""
+  if config.BILLING_PROJECT_ID:
+    return config.BILLING_PROJECT_ID
+  return project_id
+
+
 def login():
   """Force GCP login (this otherwise happens on the first get_api call)."""
   _get_credentials()
@@ -177,7 +184,7 @@ def get_api(service_name: str, version: str, project_id: Optional[str] = None):
       headers = kwargs.get('headers', {})
       headers['user-agent'] = f'gcpdiag/{config.VERSION} (gzip)'
       if project_id:
-        headers['x-goog-user-project'] = project_id
+        headers['x-goog-user-project'] = _get_project_or_billing_id(project_id)
 
     hooks.request_builder_hook(*args, **kwargs)
 
