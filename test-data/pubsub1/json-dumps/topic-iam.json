@@ -1,11 +1,11 @@
 {
   "version": 1,
-  "etag": "BwXU1TBJ0dU=",
+  "etag": "BwXXiuCzMx0=",
   "bindings": [
     {
       "role": "roles/viewer",
       "members": [
-        "user:user@example.com"
+        "domain:google.com"
       ]
     }
   ]

@@ -1,12 +1,14 @@
-terraform {
-  backend "gcs" {
-    bucket = "gcpd-apigee-1-lus4-tfstate"
-  }
+resource "random_string" "project_id_suffix" {
+  length  = 8
+  number  = true
+  lower   = true
+  upper   = false
+  special = false
 }
 
 resource "google_project" "project" {
-  name            = "gcpd-apigee-1-lus4"
-  project_id      = "gcpd-apigee-1-lus4"
+  name            = "gcpdiag test - apigee1"
+  project_id      = "gcpdiag-apigee1-${random_string.project_id_suffix.id}"
   org_id          = "126083999674"
   billing_account = "003745-B32D41-4F1D6A"
   skip_delete     = true

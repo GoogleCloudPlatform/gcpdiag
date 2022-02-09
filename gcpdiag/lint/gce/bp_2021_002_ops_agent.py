@@ -74,6 +74,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     }
   except KeyError:
     report.add_skipped(None, 'The metrics have incorrect labels')
+    return
   for i in sorted(instances, key=op.attrgetter('project_id', 'name')):
     if datetime.utcnow() - i.creation_timestamp < INSTANCE_MIN_AGE:
       #instance is less than 1 hour of creation agent data might not be accurate yet

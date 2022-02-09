@@ -1,0 +1,13 @@
+{
+  "name": "projects/12340009",
+  "parent": "organizations/11112222",
+  "projectId": "gcpdiag-iam1-aaaa",
+  "state": "ACTIVE",
+  "displayName": "gcpdiag test - iam1",
+  "createTime": "2022-02-08T23:53:42.154Z",
+  "updateTime": "2022-02-08T23:53:43.701Z",
+  "etag": "ZPsI3xvWVgvyuQafVcNtsg==",
+  "labels": {
+    "gcpdiag": "test"
+  }
+}

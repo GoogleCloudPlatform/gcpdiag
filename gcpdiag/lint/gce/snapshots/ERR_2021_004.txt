@@ -1,2 +1,6 @@
 *  gce/ERR/2021_004: Serial logs don't contain Secure Boot error messages
+   - gcpdiag-gce1-aaaa/gce1                                               [ OK ]
+   - gcpdiag-gce1-aaaa/gce2                                               [ OK ]
+   - gcpdiag-gce1-aaaa/mig-kmm1                                           [ OK ]
+   - gcpdiag-gce1-aaaa/mig-zd52                                           [ OK ]
 

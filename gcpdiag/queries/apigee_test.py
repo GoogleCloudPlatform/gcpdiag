@@ -20,8 +20,8 @@ from unittest import mock
 from gcpdiag import models
 from gcpdiag.queries import apigee, apis_stub
 
-DUMMY_PROJECT_NAME = 'gcpd-apigee-1-lus4'
-DUMMY_APIGEE_ORG_NAME = 'gcpd-apigee-1-lus4'
+DUMMY_PROJECT_NAME = 'gcpdiag-apigee1-aaaa'
+DUMMY_APIGEE_ORG_NAME = 'gcpdiag-apigee1-aaaa'
 DUMMY_APIGEE_ENVGROUP_NAME = 'gcpdiag-demo-envgroup'
 DUMMY_APIGEE_ENVGROUP_FULL_PATH = \
         f'organizations/{DUMMY_APIGEE_ORG_NAME}/envgroups/{DUMMY_APIGEE_ENVGROUP_NAME}'

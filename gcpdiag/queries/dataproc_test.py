@@ -18,7 +18,7 @@ from unittest import mock
 from gcpdiag import models
 from gcpdiag.queries import apis_stub, dataproc
 
-DUMMY_PROJECT_NAME = 'dataproc1'
+DUMMY_PROJECT_NAME = 'gcpdiag-dataproc1-aaaa'
 NUMBER_OF_CLUSTERS_IN_DATAPROC_JSON_DUMP_FILE = 3
 
 

@@ -1,14 +1,14 @@
 {
   "clusters": [
     {
-      "projectId": "dataproc1",
+      "projectId": "gcpdiag-dataproc1-aaaa",
       "clusterName": "good",
       "config": {
-        "configBucket": "dataproc-staging-us-central1-833775888957-azj28gon",
-        "tempBucket": "dataproc-temp-us-central1-833775888957-mwpwjwbs",
+        "configBucket": "dataproc-staging-us-central1-12340005-azj28gon",
+        "tempBucket": "dataproc-temp-us-central1-12340005-mwpwjwbs",
         "gceClusterConfig": {
-          "zoneUri": "https://www.googleapis.com/compute/v1/projects/dataproc1/zones/us-central1-f",
-          "networkUri": "https://www.googleapis.com/compute/v1/projects/dataproc1/global/networks/default",
+          "zoneUri": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f",
+          "networkUri": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/global/networks/default",
           "serviceAccountScopes": [
             "https://www.googleapis.com/auth/bigquery",
             "https://www.googleapis.com/auth/bigtable.admin.table",
@@ -26,7 +26,7 @@
             "good-m"
           ],
           "imageUri": "https://www.googleapis.com/compute/v1/projects/cloud-dataproc/global/images/dataproc-2-0-deb10-20220109-050200-rc01",
-          "machineTypeUri": "https://www.googleapis.com/compute/v1/projects/dataproc1/zones/us-central1-f/machineTypes/e2-medium",
+          "machineTypeUri": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f/machineTypes/e2-medium",
           "diskConfig": {
             "bootDiskSizeGb": 30,
             "bootDiskType": "pd-standard"
@@ -41,7 +41,7 @@
             "good-w-1"
           ],
           "imageUri": "https://www.googleapis.com/compute/v1/projects/cloud-dataproc/global/images/dataproc-2-0-deb10-20220109-050200-rc01",
-          "machineTypeUri": "https://www.googleapis.com/compute/v1/projects/dataproc1/zones/us-central1-f/machineTypes/e2-medium",
+          "machineTypeUri": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f/machineTypes/e2-medium",
           "diskConfig": {
             "bootDiskSizeGb": 30,
             "bootDiskType": "pd-standard"
@@ -174,14 +174,14 @@
       }
     },
     {
-      "projectId": "dataproc1",
+      "projectId": "gcpdiag-dataproc1-aaaa",
       "clusterName": "test-best-practices-disabled",
       "config": {
-        "configBucket": "dataproc-staging-us-central1-833775888957-azj28gon",
-        "tempBucket": "dataproc-temp-us-central1-833775888957-mwpwjwbs",
+        "configBucket": "dataproc-staging-us-central1-12340005-azj28gon",
+        "tempBucket": "dataproc-temp-us-central1-12340005-mwpwjwbs",
         "gceClusterConfig": {
-          "zoneUri": "https://www.googleapis.com/compute/v1/projects/dataproc1/zones/us-central1-c",
-          "networkUri": "https://www.googleapis.com/compute/v1/projects/dataproc1/global/networks/default",
+          "zoneUri": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-c",
+          "networkUri": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/global/networks/default",
           "serviceAccountScopes": [
             "https://www.googleapis.com/auth/bigquery",
             "https://www.googleapis.com/auth/bigtable.admin.table",
@@ -198,7 +198,7 @@
             "test-best-practices-disabled-m"
           ],
           "imageUri": "https://www.googleapis.com/compute/v1/projects/cloud-dataproc/global/images/dataproc-2-0-deb10-20220109-050200-rc01",
-          "machineTypeUri": "https://www.googleapis.com/compute/v1/projects/dataproc1/zones/us-central1-c/machineTypes/e2-medium",
+          "machineTypeUri": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-c/machineTypes/e2-medium",
           "diskConfig": {
             "bootDiskSizeGb": 30,
             "bootDiskType": "pd-standard"
@@ -213,7 +213,7 @@
             "test-best-practices-disabled-w-1"
           ],
           "imageUri": "https://www.googleapis.com/compute/v1/projects/cloud-dataproc/global/images/dataproc-2-0-deb10-20220109-050200-rc01",
-          "machineTypeUri": "https://www.googleapis.com/compute/v1/projects/dataproc1/zones/us-central1-c/machineTypes/e2-medium",
+          "machineTypeUri": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-c/machineTypes/e2-medium",
           "diskConfig": {
             "bootDiskSizeGb": 30,
             "bootDiskType": "pd-standard"
@@ -346,14 +346,14 @@
       }
     },
     {
-      "projectId": "dataproc1",
+      "projectId": "gcpdiag-dataproc1-aaaa",
       "clusterName": "test-best-practices-enabled",
       "config": {
-        "configBucket": "dataproc-staging-us-central1-833775888957-azj28gon",
-        "tempBucket": "dataproc-temp-us-central1-833775888957-mwpwjwbs",
+        "configBucket": "dataproc-staging-us-central1-12340005-azj28gon",
+        "tempBucket": "dataproc-temp-us-central1-12340005-mwpwjwbs",
         "gceClusterConfig": {
-          "zoneUri": "https://www.googleapis.com/compute/v1/projects/dataproc1/zones/us-central1-f",
-          "networkUri": "https://www.googleapis.com/compute/v1/projects/dataproc1/global/networks/default",
+          "zoneUri": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f",
+          "networkUri": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/global/networks/default",
           "serviceAccountScopes": [
             "https://www.googleapis.com/auth/bigquery",
             "https://www.googleapis.com/auth/bigtable.admin.table",
@@ -371,7 +371,7 @@
             "test-best-practices-enabled-m"
           ],
           "imageUri": "https://www.googleapis.com/compute/v1/projects/cloud-dataproc/global/images/dataproc-2-0-deb10-20220109-050200-rc01",
-          "machineTypeUri": "https://www.googleapis.com/compute/v1/projects/dataproc1/zones/us-central1-f/machineTypes/e2-medium",
+          "machineTypeUri": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f/machineTypes/e2-medium",
           "diskConfig": {
             "bootDiskSizeGb": 30,
             "bootDiskType": "pd-standard"
@@ -386,7 +386,7 @@
             "test-best-practices-enabled-w-1"
           ],
           "imageUri": "https://www.googleapis.com/compute/v1/projects/cloud-dataproc/global/images/dataproc-2-0-deb10-20220109-050200-rc01",
-          "machineTypeUri": "https://www.googleapis.com/compute/v1/projects/dataproc1/zones/us-central1-f/machineTypes/e2-medium",
+          "machineTypeUri": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f/machineTypes/e2-medium",
           "diskConfig": {
             "bootDiskSizeGb": 30,
             "bootDiskType": "pd-standard"

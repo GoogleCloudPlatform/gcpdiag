@@ -30,6 +30,7 @@ all:	\
 	json-dumps/compute-regions.json \
 	json-dumps/compute-zones.json \
 	json-dumps/monitoring-query.json \
+	json-dumps/iam-policy.json \
 	json-dumps/project.json \
 	json-dumps/services.json
 
@@ -105,6 +106,14 @@ json-dumps/compute-regions.json:
 json-dumps/compute-zones.json:
 	$(CURL) -fsS \
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/iam-policy.json:
+	$(CURL) -fsS \
+		'https://cloudresourcemanager.googleapis.com/v1/projects/$(PROJECT_ID):getIamPolicy' \
+		-X POST  --header "Content-Type:text/json" \
+		-d "" \
+		| $(JSON_CLEANER) other \
 		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/project.json:

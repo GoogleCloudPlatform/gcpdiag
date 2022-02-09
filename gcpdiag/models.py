@@ -148,7 +148,7 @@ class Resource(abc.ABC):
   def full_path(self) -> str:
     """Returns the full path of this resource.
 
-    Example: 'projects/gcpd-gke-1-9b90/zones/europe-west4-a/clusters/gke1'
+    Example: 'projects/gcpdiag-gke-1-9b90/zones/europe-west4-a/clusters/gke1'
     """
     pass
 
