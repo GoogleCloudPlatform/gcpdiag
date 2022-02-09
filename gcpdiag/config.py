@@ -49,3 +49,6 @@ MAX_WORKERS = 10
 # Authentication method (set via command-line arguments)
 AUTH_METHOD = 'oauth'
 AUTH_KEY = None
+
+# Project used for billing/quota of API calls done by gcpdiag
+BILLING_PROJECT_ID = None
