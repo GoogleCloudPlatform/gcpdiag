@@ -1,9 +1,9 @@
 *  apigee/WARN/2021_001: Every environment group contains at least one environment.
-   - organizations/gcpd-apigee-1-lus4/envgroups/gcpdiag-demo-envgroup     [FAIL]
+   - organizations/gcpdiag-apigee1-aaaa/envgroups/gcpdiag-demo-envgroup   [FAIL]
      No environment is attached to the environment group: gcpdiag-demo-envgroup
      All of the requests to the hostname list below will receive 404 errors: 
      ['gcpdiag.apigee.example.com']
-   - organizations/gcpd-apigee-1-lus4/envgroups/gcpdiag-demo-envgroup-1   [ OK ]
+   - organizations/gcpdiag-apigee1-aaaa/envgroups/gcpdiag-demo-envgroup-1 [ OK ]
 
    An environment must be a member of at least one environment group before you
    can access resources defined within it. In other words, you must assign an

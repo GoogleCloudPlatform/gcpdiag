@@ -1,7 +1,7 @@
 *  dataproc/BP/2021_001: Check if logging is enabled : Stackdriver Logging enabled
-   - dataproc1/us-central1/good                                           [ OK ]
-   - dataproc1/us-central1/test-best-practices-disabled                   [FAIL]
-   - dataproc1/us-central1/test-best-practices-enabled                    [ OK ]
+   - gcpdiag-dataproc1-aaaa/us-central1/good                              [ OK ]
+   - gcpdiag-dataproc1-aaaa/us-central1/test-best-practices-disabled      [FAIL]
+   - gcpdiag-dataproc1-aaaa/us-central1/test-best-practices-enabled       [ OK ]
 
    Enabling stackdriver logging for your Dataproc cluster impacts the ability to
    troubleshoot any issues that you might have.

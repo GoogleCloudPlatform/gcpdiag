@@ -32,17 +32,15 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/gke1/json-dumps',
     '12340002':
         pathlib.Path(__file__).parents[2] / 'test-data/gke1/json-dumps',
-    'gcpd-gcf1-s6ew':
-        pathlib.Path(__file__).parents[2] / 'test-data/gcf1/json-dumps',
     'gcpdiag-gcf1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/gcf1/json-dumps',
     'gcpdiag-gcs1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/gcs1/json-dumps',
-    'dataproc1':
+    'gcpdiag-dataproc1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/dataproc1/json-dumps',
-    'gcpd-apigee-1-lus4':
+    'gcpdiag-apigee1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/apigee1/json-dumps',
-    'composer1':
+    'gcpdiag-composer1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/composer1/json-dumps',
     'gcpdiag-fw-policy-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/fw-policy/json-dumps',
@@ -53,7 +51,11 @@ JSON_PROJECT_DIR = {
     'gcpdiag-pubsub1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/pubsub1/json-dumps',
     'gcpdiag-gaes1-aaaa':
-        pathlib.Path(__file__).parents[2] / 'test-data/gaes1/json-dumps'
+        pathlib.Path(__file__).parents[2] / 'test-data/gaes1/json-dumps',
+    'gcpdiag-gcb1-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/gcb1/json-dumps',
+    'gcpdiag-iam1-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/iam1/json-dumps'
 }
 
 # set to a value higher than 0 to emulate API temp. failure

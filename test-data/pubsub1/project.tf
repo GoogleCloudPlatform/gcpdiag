@@ -23,7 +23,7 @@ resource "random_string" "project_id_suffix" {
 }
 
 resource "google_project" "project" {
-  name            = "gcp-doctor test - pubsub1"
+  name            = "gcpdiag test - pubsub1"
   project_id      = "gcpdiag-pubsub1-${random_string.project_id_suffix.id}"
   org_id          = var.org_id
   billing_account = var.billing_account_id
@@ -51,4 +51,12 @@ output "project_nr" {
 
 output "org_id" {
   value = var.org_id
+}
+
+output "topic" {
+  value = google_pubsub_topic.pubsub1topic.name
+}
+
+output "subscription" {
+  value = google_pubsub_subscription.pubsub1subscription.name
 }

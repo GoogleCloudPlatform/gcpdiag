@@ -1,6 +1,10 @@
 *  gce/WARN/2021_005: Serial logs don't contain out-of-memory messages
-   - gcpdiag-gke1-aaaa/gke-gke1-default-pool-73c0488e-pgh4                [ OK ]
-   - gcpdiag-gke1-aaaa/gke-gke2-default-pool-a708ea6d-rjq8                [ OK ]
-   - gcpdiag-gke1-aaaa/gke-gke3-default-pool-a05b62c3-2df6                [ OK ]
-   - gcpdiag-gke1-aaaa/gke-gke4-default-pool-74a76f36-tbsm                [ OK ]
+   - gcpdiag-gce1-aaaa/gce1                                               [ OK ]
+   - gcpdiag-gce1-aaaa/gce2                                               [ OK ]
+   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-aabeeb2f-89fp                [ OK ]
+   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-aabeeb2f-c8f3                [ OK ]
+   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-aabeeb2f-mncd                [ OK ]
+   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-aabeeb2f-s8r2                [ OK ]
+   - gcpdiag-gce1-aaaa/mig-kmm1                                           [ OK ]
+   - gcpdiag-gce1-aaaa/mig-zd52                                           [ OK ]
 

@@ -1,9 +1,9 @@
 {
   "environments": [
     {
-      "name": "projects/composer1/locations/us-central1/environments/good",
+      "name": "projects/gcpdiag-composer1-aaaa/locations/us-central1/environments/good",
       "config": {
-        "gkeCluster": "projects/composer1/zones/us-central1-b/clusters/us-central1-good-d7e4c596-gke",
+        "gkeCluster": "projects/gcpdiag-composer1-aaaa/zones/us-central1-b/clusters/us-central1-good-d7e4c596-gke",
         "dagGcsPrefix": "gs://us-central1-good-d7e4c596-bucket/dags",
         "nodeCount": 3,
         "softwareConfig": {
@@ -12,14 +12,14 @@
           "schedulerCount": 1
         },
         "nodeConfig": {
-          "location": "projects/composer1/zones/us-central1-b",
-          "machineType": "projects/composer1/zones/us-central1-b/machineTypes/n1-standard-1",
-          "network": "projects/composer1/global/networks/default",
+          "location": "projects/gcpdiag-composer1-aaaa/zones/us-central1-b",
+          "machineType": "projects/gcpdiag-composer1-aaaa/zones/us-central1-b/machineTypes/n1-standard-1",
+          "network": "projects/gcpdiag-composer1-aaaa/global/networks/default",
           "diskSizeGb": 100,
           "oauthScopes": [
             "https://www.googleapis.com/auth/cloud-platform"
           ],
-          "serviceAccount": "56010455997-compute@developer.gserviceaccount.com",
+          "serviceAccount": "12340005-compute@developer.gserviceaccount.com",
           "ipAllocationPolicy": {}
         },
         "airflowUri": "https://j49c8bb13b595f74dp-tp.appspot.com",

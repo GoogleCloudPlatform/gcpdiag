@@ -3,7 +3,7 @@
   "parent": "organizations/11112222",
   "projectId": "gcpdiag-gcf1-aaaa",
   "state": "ACTIVE",
-  "displayName": "gcp-doctor test - gcf1",
+  "displayName": "gcpdiag test - gcf1",
   "createTime": "2021-11-26T16:11:25.377Z",
   "updateTime": "2021-11-26T16:11:27.335Z",
   "etag": "JP5K3b6eftM4ytdtXhvbVg==",

@@ -2,10 +2,10 @@ PROJECT_ID  := $(shell terraform output -raw project_id)
 PROJECT_ID_SUFFIX := $(shell terraform output -raw project_id_suffix)
 PROJECT_NR  := $(shell terraform output -raw project_nr)
 ORG_ID      := $(shell terraform output -raw org_id)
-FOLDER_ID_1 := $(shell terraform output -raw folder_id_1)
-FOLDER_ID_2 := $(shell terraform output -raw folder_id_2)
 CURL         = ../../bin/curl-wrap.sh
 JSON_CLEANER = ../../bin/json-cleaner
+FOLDER_ID_1 := $(shell terraform output -raw folder_id_1)
+FOLDER_ID_2 := $(shell terraform output -raw folder_id_2)
 
 ZONE_EMPTY   = europe-west4-b
 

@@ -18,7 +18,7 @@ from unittest import mock
 from gcpdiag import models
 from gcpdiag.queries import apis_stub, composer
 
-DUMMY_PROJECT_NAME = 'composer1'
+DUMMY_PROJECT_NAME = 'gcpdiag-composer1-aaaa'
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
