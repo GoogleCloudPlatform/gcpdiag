@@ -247,7 +247,7 @@ class Instance(models.Resource):
     if 'serviceAccounts' in self._resource_data:
       saccts = self._resource_data['serviceAccounts']
       if isinstance(saccts, list) and len(saccts) >= 1:
-        return saccts[0]['scopes']
+        return saccts[0].get('scopes', [])
     return []
 
   @property
