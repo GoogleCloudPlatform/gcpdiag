@@ -5,7 +5,7 @@
       "status": "SUCCESS",
       "source": {
         "repoSource": {
-          "projectId": "gcpdiag-cloudbuild1-aaaa",
+          "projectId": "gcpdiag-gcb1-aaaa",
           "repoName": "test-repo",
           "commitSha": "1fe8ae4ef0757752e358e1a7cc2bbe147d95b305"
         }
@@ -36,11 +36,11 @@
         }
       ],
       "timeout": "600s",
-      "projectId": "gcpdiag-cloudbuild1-aaaa",
+      "projectId": "gcpdiag-gcb1-aaaa",
       "logsBucket": "gs://12340005.cloudbuild-logs.googleusercontent.com",
       "sourceProvenance": {
         "resolvedRepoSource": {
-          "projectId": "gcpdiag-cloudbuild1-aaaa",
+          "projectId": "gcpdiag-gcb1-aaaa",
           "repoName": "test-repo",
           "commitSha": "1fe8ae4ef0757752e358e1a7cc2bbe147d95b305"
         }
