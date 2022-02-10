@@ -31,6 +31,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   builds = gcb.get_builds(context)
   if not builds:
     report.add_skipped(None, 'no builds found')
+    return
   project_id = context.project_id
   project = crm.get_project(context.project_id)
   sa_email = f'{project.number}@cloudbuild.gserviceaccount.com'
