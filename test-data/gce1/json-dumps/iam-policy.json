@@ -33,7 +33,7 @@
     },
     {
       "members": [
-        "user:dawidmalina@premium-cloud-support.com"
+        "user:testuser@example.com"
       ],
       "role": "roles/owner"
     },

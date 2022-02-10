@@ -20,7 +20,7 @@ from unittest import mock
 from gcpdiag import models
 from gcpdiag.queries import apis_stub, gcb
 
-DUMMY_PROJECT_NAME = 'gcpdiag-cloudbuild1-aaaa'
+DUMMY_PROJECT_NAME = 'gcpdiag-gcb1-aaaa'
 DUMMY_CLOUD_BUILD_1_ID = '01ff384c-d7f2-4295-ad68-5c32529d8b85'
 
 
