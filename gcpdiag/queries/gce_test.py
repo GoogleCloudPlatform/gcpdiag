@@ -145,6 +145,17 @@ class TestGce:
         DUMMY_INSTANCE1_NAME].service_account == \
           f'{DUMMY_PROJECT_NR}-compute@developer.gserviceaccount.com'
 
+  def test_get_instance_groups(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME,
+                             regions=['europe-west4'])
+    groups = gce.get_instance_groups(context)
+    assert groups['instance-group-1'].has_named_ports() is True
+    assert groups['mig'].has_named_ports() is False
+    assert 'http' in [p['name'] for p in groups['instance-group-1'].named_ports]
+    assert 'https' not in [
+        p['name'] for p in groups['instance-group-1'].named_ports
+    ]
+
   def test_get_managed_instance_groups(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              regions=['europe-west4'])
