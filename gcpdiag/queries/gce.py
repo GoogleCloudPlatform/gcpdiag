@@ -84,6 +84,48 @@ class InstanceTemplate(models.Resource):
     return self.network.subnetworks[subnet_url]
 
 
+class InstanceGroup(models.Resource):
+  """Represents a GCE instance group."""
+  _resource_data: dict
+
+  def __init__(self, project_id, resource_data):
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+
+  @property
+  def full_path(self) -> str:
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
+                      self._resource_data['selfLink'])
+    if result:
+      return result.group(1)
+    else:
+      return '>> ' + self._resource_data['selfLink']
+
+  @property
+  def short_path(self) -> str:
+    path = self.project_id + '/' + self.name
+    return path
+
+  @property
+  def self_link(self) -> str:
+    return self._resource_data['selfLink']
+
+  @property
+  def name(self) -> str:
+    return self._resource_data['name']
+
+  @property
+  def named_ports(self) -> List[dict]:
+    if 'namedPorts' in self._resource_data:
+      return self._resource_data['namedPorts']
+    return []
+
+  def has_named_ports(self) -> bool:
+    if 'namedPorts' in self._resource_data:
+      return True
+    return False
+
+
 class ManagedInstanceGroup(models.Resource):
   """Represents a GCE managed instance group."""
   _resource_data: dict
@@ -358,6 +400,27 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
     instances[i['id']] = Instance(project_id=context.project_id,
                                   resource_data=i)
   return instances
+
+
+@caching.cached_api_call(in_memory=True)
+def get_instance_groups(context: models.Context) -> Mapping[str, InstanceGroup]:
+  """Get a list of InstanceGroups matching the given context, indexed by name."""
+  groups: Dict[str, InstanceGroup] = {}
+  if not apis.is_enabled(context.project_id, 'compute'):
+    return groups
+  gce_api = apis.get_api('compute', 'v1', context.project_id)
+  requests = [
+      gce_api.instanceGroups().list(project=context.project_id, zone=zone)
+      for zone in get_gce_zones(context.project_id)
+  ]
+  items = apis_utils.batch_list_all(
+      api=gce_api,
+      requests=requests,
+      next_function=gce_api.instanceGroups().list_next,
+      log_text=f'listing gce instances of project {context.project_id}')
+  for i in items:
+    groups[i['name']] = InstanceGroup(context.project_id, i)
+  return groups
 
 
 @caching.cached_api_call(in_memory=True)

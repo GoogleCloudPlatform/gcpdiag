@@ -1,0 +1,12 @@
+*  gce/WARN/2022_002: Instance groups named ports are using unique names.
+   - gcpdiag-gce1-aaaa/instance-group-1                                   [FAIL]
+     Instance group contains multiple ports with the same name
+   - gcpdiag-gce1-aaaa/instance-group-2                                   [ OK ]
+   - gcpdiag-gce1-aaaa/mig                                                [ OK ]
+
+   Named ports are key-value pairs that represent a port's name and number. It
+   is recommended to use unique port name for the same application, so that
+   backend service can only forward traffic to one named port at a time.
+
+   https://gcpdiag.dev/rules/gce/WARN/2022_002
+

@@ -6,6 +6,7 @@ __pycache__
 .terraform
 terraform.tfstate
 terraform.tfstate.backup
+terraform.tfstate.*.backup
 .terraform.tfstate.lock.info
 .venv
 *.lock.hcl
