@@ -1,4 +1,4 @@
-*  gce/WARN/2022_001: GCE connectivity: allow IAP to connect to your VM instances
+*  gce/WARN/2022_001: GCE connectivity: IAP service can connect to SSH/RDP port on instances.
    - gcpdiag-gce1-aaaa/gce1                                               [FAIL]
      connections from 35.235.240.0/20 to tcp:3389 blocked by vpc firewall rule: gce-secured-instance-test-deny (instance: gce1)
    - gcpdiag-gce1-aaaa/gce2                                               [FAIL]
