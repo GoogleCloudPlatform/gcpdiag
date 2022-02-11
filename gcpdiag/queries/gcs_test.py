@@ -22,7 +22,7 @@ from gcpdiag.queries import apis_stub, gcs
 
 DUMMY_PROJECT_NAME = 'gcpdiag-gcs1-aaaa'
 DUMMY_BUCKET_NAME = 'b/gcpdiag-gcs1bucket-aaaa'
-DUMMY_BUCKET_PERM = 'projectEditor'
+DUMMY_BUCKET_PERM = 'projectEditor:gcpdiag-gcs1-aaaa'
 DUMMY_BUCKET_LABELS = {
     'b/gcpdiag-gcs1bucket-aaaa': {},
     'b/gcpdiag-gcs1bucket-labels': {
@@ -44,7 +44,7 @@ class TestGcs:
   def test_get_bucket_iam_policy(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     policy = gcs.get_bucket_iam_policy(context, DUMMY_BUCKET_NAME)
-    assert DUMMY_BUCKET_PERM in policy
+    assert DUMMY_BUCKET_PERM in policy.get_members()
 
   def test_bucket_labels(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)

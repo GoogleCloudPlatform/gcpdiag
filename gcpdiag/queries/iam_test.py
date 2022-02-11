@@ -31,6 +31,7 @@ def get_cache_stub():
 
 TEST_PROJECT_ID = 'gcpdiag-gke1-aaaa'
 TEST_SERVICE_ACCOUNT = 'gke2sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com'
+TEST_SERVICE_ACCOUNT_ROLE = 'projects/gcpdiag-gke1-aaaa/roles/gke2_custom_role'
 TEST_SERVICE_ACCOUNT_PERMISSIONS = [
     'autoscaling.sites.writeMetrics',
     'cloudnotifications.activities.list',
@@ -73,7 +74,7 @@ class TestProjectPolicy:
   """Test gke.ProjectPolicy"""
 
   def test_get_member_permissions(self):
-    policy = iam.ProjectPolicy(TEST_PROJECT_ID)
+    policy = iam.get_project_policy(TEST_PROJECT_ID)
     assert policy.get_member_permissions(
         f'serviceAccount:{TEST_SERVICE_ACCOUNT}'
     ) == TEST_SERVICE_ACCOUNT_PERMISSIONS
@@ -84,6 +85,13 @@ class TestProjectPolicy:
                                  'monitoring.groups.get')
     assert not policy.has_permission(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
                                      'monitoring.groups.create')
+
+  def test_has_role(self):
+    policy = iam.get_project_policy(TEST_PROJECT_ID)
+    assert policy.has_role(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
+                           TEST_SERVICE_ACCOUNT_ROLE)
+    assert not policy.has_role(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
+                               'roles/container.nodeServiceAgent')
 
   def test_has_role_permissions(self):
     policy = iam.get_project_policy(TEST_PROJECT_ID)

@@ -15,10 +15,12 @@
 # Lint as: python3
 """Queries related to GCP Identity and Access Management."""
 
+import abc
 import functools
 import logging
 import re
-from typing import Any, Dict, List, Tuple
+from collections import defaultdict
+from typing import Any, Dict, List, Tuple, Type
 
 import googleapiclient
 
@@ -147,76 +149,138 @@ def _get_iam_role(name: str, default_project_id: str) -> Role:
   return parent_roles[name]
 
 
-# Note: caching is done with get_project_policy
-def _fetch_policy(project_id: str):
-  logging.info('fetching IAM policy of project %s', project_id)
-  crm_api = apis.get_api('cloudresourcemanager', 'v1', project_id)
-  request = crm_api.projects().getIamPolicy(resource=project_id)
-  response = request.execute(num_retries=config.API_RETRIES)
-  policy: Dict[str, Any] = {
-      'by_member': {},
-  }
-  if not 'bindings' in response:
-    return
-  for binding in response['bindings']:
-    if not 'role' in binding or not 'members' in binding:
-      continue
-    for member in binding['members']:
-      policy['by_member'].setdefault(member, {'roles': {}})
-      policy['by_member'][member]['roles'][binding['role']] = 1
+class BaseIAMPolicy(models.Resource):
+  """Common class for IAM policies"""
 
-  # Pre-fetch service accounts using a single batch request.
-  # Note: not implemented as a generator expression because
-  # it looks ugly without assignment expressions, available
-  # only with Python >= 3.8.
-  sa_emails = []
-  for member in policy['by_member']:
+  _name: str
+  _policy_by_member: Dict[str, Any]
+
+  @property
+  def full_path(self):
+    return self._name
+
+  @abc.abstractmethod
+  def _is_resource_permission(self, permission: str) -> bool:
+    """Checks that a permission is applicable to the resource
+
+    Any role can be assigned on a resource level but only a subset of
+    permissions will be relevant to a resource
+    Irrelevant permissions are ignored in `has_role_permissions` method
+    """
+    pass
+
+  def _expand_policy(self, resource_data: Dict[str, Any]) -> Dict[str, Any]:
+    """Groups `getIamPolicy` bindings by member
+
+    API response contains a list of bindings of a role to members:
+    {
+      "bindings": [
+      {
+        "role": "roles/resourcemanager.organizationAdmin",
+        "members": [
+          "user:mike@example.com",
+          "serviceAccount:my-project-id@appspot.gserviceaccount.com"
+        ]
+      },
+      ...
+    }
+
+    This method will convert those bindings into the following structure:
+    {
+      "user:mike@example.com": {
+        "roles": { "roles/resourcemanager.organizationAdmin" },
+      },
+      "serviceAccount:my-project-id@appspot.gserviceaccount.com": {
+        "roles": { "roles/resourcemanager.organizationAdmin" },
+      },
+    }
+    """
+
+    policy_roles = set()
+    policy_by_member: Dict[str, Any] = defaultdict(dict)
+
+    for binding in resource_data['bindings']:
+      if 'condition' in binding:
+        logging.warning(
+            'IAM binding contains a condition, which would be ignored: %s',
+            binding)
+
+      policy_roles.add(binding['role'])
+      for member in binding['members']:
+        member_policy = policy_by_member[member]
+        member_policy.setdefault('roles', set()).add(binding['role'])
+
+    # Populate cache for IAM roles used in the policy
+    # Unlike `has_role_permissions` this part will be executed inside
+    # `prefetch_rule` and will benefit from multi-threading execution
+    for role in policy_roles:
+      # Ignore all errors - there could be no rules involving this role
+      try:
+        _get_iam_role(role, self.project_id)
+      except (RoleNotFoundError, utils.GcpApiError):
+        pass
+
+    # Populate cache for service accounts used in the policy
+    # Note: not implemented as a generator expression because
+    # it looks ugly without assignment expressions, available
+    # only with Python >= 3.8.
+    sa_emails = set()
+    for member in policy_by_member.keys():
+      # Note: not matching / makes sure that we don't match for example fleet
+      # workload identities:
+      # https://cloud.google.com/anthos/multicluster-management/fleets/workload-identity
+      m = re.match(r'serviceAccount:([^/]+)$', member)
+      if m:
+        sa_emails.add(m.group(1))
+    _batch_fetch_service_accounts(list(sa_emails), self.project_id)
+
+    return policy_by_member
+
+  def _expand_member_policy(self, member: str):
+    """Expands member roles into set of permissions
+
+    Permissions are using "lazy" initialisation and only expanded if needed
+    """
+    member_policy = self._policy_by_member.get(member)
+    if not member_policy or \
+        'permissions' in member_policy:
+      return
+
+    permissions = set()
+    for role in member_policy['roles']:
+      try:
+        permissions.update(_get_iam_role(role, self.project_id).permissions)
+      except (RoleNotFoundError, utils.GcpApiError) as err:
+        # Ignore roles if cannot retrieve a role
+        # For example, due to lack of permissions in an organization
+        logging.warning('Unable to find IAM role \'%s\', ignoring: %s', role,
+                        err)
+    member_policy['permissions'] = permissions
+
+  def _is_active_member(self, member: str) -> bool:
+    """Checks that the member isn't disabled
+
+    Currently supports only service accounts and not other account types
+    Used in `has_role_permissions` and similar methods to ensure that
+    the member isn't disabled and permissions are effectively working
+    """
+
+    # If this is a service account, make sure that the service account is enabled.
     # Note: not matching / makes sure that we don't match for example fleet
     # workload identities:
     # https://cloud.google.com/anthos/multicluster-management/fleets/workload-identity
     m = re.match(r'serviceAccount:([^/]+)$', member)
     if m:
-      sa_emails.append(m.group(1))
-  _batch_fetch_service_accounts(sa_emails, project_id)
+      if not is_service_account_enabled(m.group(1), self.project_id):
+        logging.info('service account %s is disabled', m.group(1))
+        return False
 
-  return policy
+    return True
 
-
-class ProjectPolicy:
-  """Represents the IAM policy of a single project.
-
-  Note that you should use the get_project_policy() method so that the
-  objects are cached and you don't re-fetch the project policy.
-
-  See also the API documentation:
-  https://cloud.google.com/resource-manager/reference/rest/v1/projects/getIamPolicy
-  """
-  _project_id: str
-  _policy: Dict[str, Any]
-
-  def _get_role_permissions(self, role: str) -> List[str]:
-    return _get_iam_role(role, self._project_id).permissions
-
-  def _init_member_permissions(self, member):
-    if not member.startswith('user:') and not member.startswith(
-        'serviceAccount:'):
-      raise ValueError('member must start with user: or serviceAccount:')
-
-    if member not in self._policy['by_member']:
-      return
-    member_policy = self._policy['by_member'][member]
-    if 'permissions' not in member_policy and 'roles' in member_policy:
-      # lazy-initialize exploded roles in 'permissions'
-      permissions_dict = {}
-      for role in member_policy['roles']:
-        # Ignore unknown roles for the expansion of permissions (some predefined roles
-        # are not returned when listing roles).
-        try:
-          for p in self._get_role_permissions(role):
-            permissions_dict[p] = 1
-        except RoleNotFoundError:
-          pass
-      member_policy['permissions'] = permissions_dict
+  def __init__(self, project_id: str, name: str, resource_data: Dict[str, Any]):
+    super().__init__(project_id)
+    self._name = name
+    self._policy_by_member = self._expand_policy(resource_data)
 
   def get_member_permissions(self, member: str) -> List[str]:
     """Return permissions for a member (either a user or serviceAccount).
@@ -225,69 +289,132 @@ class ProjectPolicy:
     the IAM member syntax, i.e. using the prefixes `user:` or `serviceAccount:`.
     """
 
-    self._init_member_permissions(member)
-    try:
-      return sorted(self._policy['by_member'][member]['permissions'].keys())
-    except KeyError:
+    if member not in self._policy_by_member:
       return []
 
-  def get_members(self):
+    self._expand_member_policy(member)
+    return sorted(self._policy_by_member[member]['permissions'])
+
+  def get_members(self) -> List[str]:
     """Returns the IAM members of the project.
 
     The "member" can be a user or a service account and is specified with
     the IAM member syntax, i.e. using the prefixes `user:` or `serviceAccount:`.
     """
-
-    return self._policy['by_member'].keys()
+    return list(self._policy_by_member.keys())
 
   def has_permission(self, member: str, permission: str) -> bool:
-    """Return true if user or service account member has this project-level permission.
+    """Return true if user or service account member has this permission.
 
-    Note that the member must be prefixed with `user:` or `serviceAccount:`,
-    depending on what type of member it is.
+    Note that any indirect bindings, for example through group membership,
+    aren't supported and only direct bindings to this member are checked
     """
 
-    self._init_member_permissions(member)
-    try:
-      return self._policy['by_member'][member]['permissions'][permission]
-    except KeyError:
+    if member not in self._policy_by_member:
       return False
 
+    self._expand_member_policy(member)
+    if permission not in self._policy_by_member[member]['permissions']:
+      return False
+    return self._is_active_member(member)
+
+  def has_role(self, member: str, role: str) -> bool:
+    """Checks that the member has this role
+
+    It performs exact match and doesn't expand role to list of permissions"""
+
+    if member not in self._policy_by_member:
+      return False
+
+    if role not in self._policy_by_member[member]['roles']:
+      return False
+    return self._is_active_member(member)
+
   def has_role_permissions(self, member: str, role: str) -> bool:
-    """Check whether this member has all the permissions defined by this role."""
+    """Checks that this member has all the permissions defined by this role"""
 
-    for p in self._get_role_permissions(role):
-      # exceptions: some permissions can only be set at org level or aren't
-      # supported in custom roles
-      if p.startswith('resourcemanager.projects.') or p.startswith(
-          'stackdriver.projects.'):
-        continue
-      if not self.has_permission(member, p):
-        logging.debug('%s doesn\'t have permission %s', member, p)
-        return False
+    if member not in self._policy_by_member:
+      return False
 
-    # If this is a service account, make sure that the service account is enabled.
-    m = re.match(r'serviceAccount:([^/]+)$', member)
-    if m:
-      if not is_service_account_enabled(m.group(1), self._project_id):
-        logging.info('service account %s has role %s, but is disabled!',
-                     m.group(1), role)
-        return False
+    # Avoid expanding roles to permissions
+    if self.has_role(member, role):
+      # member status was already checked in `has_role`
+      return True
 
+    self._expand_member_policy(member)
+    role_permissions = {
+        p for p in _get_iam_role(role, self.project_id).permissions
+        if self._is_resource_permission(p)
+    }
+
+    missing_roles = role_permissions - self._policy_by_member[member][
+        'permissions']
+    if missing_roles:
+      logging.debug('member \'%s\' doesn\'t have permissions %s', member,
+                    ','.join(missing_roles))
+      return False
+    return self._is_active_member(member)
+
+
+def fetch_iam_policy(request, resource_class: Type[BaseIAMPolicy],
+                     project_id: str, name: str):
+  """Executes `getIamPolicy` request and converts into a resource class
+
+  Supposed to be used by `get_*_policy` functions in gcpdiag.queries.* and
+  requires an API request, which can be executed, to be passed in parameters
+
+  An abstract policy request should look like:
+    class ResourcePolicy(BaseIAMPolicy):
+      pass
+
+    def get_resource_policy(name):
+      api_request = get_api(..).resources().get(name=name)
+      ...
+      return fetch_iam_policy(api_request, ResourcePolicy, project_id, name)
+
+  Note: API calls aren't cached and it should be done externally
+  """
+
+  logging.info('fetching IAM policy of \'%s\'', name)
+  try:
+    response = request.execute(num_retries=config.API_RETRIES)
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
+  return resource_class(project_id, name, response)
+
+
+class ProjectPolicy(BaseIAMPolicy):
+  """Represents the IAM policy of a single project.
+
+  Note that you should use the get_project_policy() method so that the
+  objects are cached and you don't re-fetch the project policy.
+
+  See also the API documentation:
+  https://cloud.google.com/resource-manager/reference/rest/v1/projects/getIamPolicy
+  """
+
+  def _is_resource_permission(self, permission: str) -> bool:
+    # Filter out permissions that can be granted only on organisation or folders
+    # It also excludes some permissions that aren't supported in custom roles
+    #
+    # https://cloud.google.com/resource-manager/docs/access-control-proj#permissions
+    # https://cloud.google.com/monitoring/access-control#custom_roles
+    if permission.startswith('resourcemanager.projects.') or \
+        permission.startswith('stackdriver.projects.'):
+      return False
     return True
-
-  def __init__(self, project_id):
-    self._project_id = project_id
-    self._policy = _fetch_policy(project_id)
 
 
 @caching.cached_api_call(in_memory=True)
-def get_project_policy(project_id):
+def get_project_policy(project_id: str) -> ProjectPolicy:
   """Return the ProjectPolicy object for a project, caching the result."""
-  try:
-    return ProjectPolicy(project_id)
-  except googleapiclient.errors.HttpError as err:
-    raise utils.GcpApiError(err) from err
+
+  resource_name = f'projects/{project_id}'
+
+  crm_api = apis.get_api('cloudresourcemanager', 'v1', project_id)
+  request = crm_api.projects().getIamPolicy(resource=project_id)
+
+  return fetch_iam_policy(request, ProjectPolicy, project_id, resource_name)
 
 
 class ServiceAccount(models.Resource):

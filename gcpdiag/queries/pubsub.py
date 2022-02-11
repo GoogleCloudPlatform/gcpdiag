@@ -19,12 +19,12 @@
 
 import logging
 import re
-from typing import Any, Dict, Mapping
+from typing import Dict, Mapping
 
 import googleapiclient.errors
 
 from gcpdiag import caching, config, models, utils
-from gcpdiag.queries import apis
+from gcpdiag.queries import apis, iam
 
 
 class Topic(models.Resource):
@@ -79,27 +79,20 @@ def get_topics(context: models.Context) -> Mapping[str, Topic]:
   return topics
 
 
+class TopicIAMPolicy(iam.BaseIAMPolicy):
+
+  def _is_resource_permission(self, permission):
+    return True
+
+
 @caching.cached_api_call(in_memory=True)
-def get_topic_iam_policy(context: models.Context, topic: Topic) -> Dict:
-  pubsub_api = apis.get_api('pubsub', 'v1', context.project_id)
-  logging.info('fetching list of topics in project %s', context.project_id)
-  query = pubsub_api.projects().topics().getIamPolicy(resource=topic)
-  try:
-    response = query.execute(num_retries=config.API_RETRIES)
-    policy: Dict[str, Any] = {
-        'by_member': {},
-    }
-    if not 'bindings' in response:
-      return policy
-    for binding in response['bindings']:
-      if not 'role' in binding or not 'members' in binding:
-        continue
-      for member in binding['members']:
-        policy['by_member'].setdefault(member, {'roles': {}})
-        policy['by_member'][member]['roles'][binding['role']] = 1
-  except googleapiclient.errors.HttpError as err:
-    raise utils.GcpApiError(err) from err
-  return policy['by_member']
+def get_topic_iam_policy(name: str) -> TopicIAMPolicy:
+  project_id = utils.get_project_by_res_name(name)
+
+  pubsub_api = apis.get_api('pubsub', 'v1', project_id)
+  request = pubsub_api.projects().topics().getIamPolicy(resource=name)
+
+  return iam.fetch_iam_policy(request, TopicIAMPolicy, project_id, name)
 
 
 class Subscription(models.Resource):
@@ -169,27 +162,17 @@ def get_subscription(context: models.Context) -> Mapping[str, Subscription]:
   return subscription
 
 
+class SubscriptionIAMPolicy(iam.BaseIAMPolicy):
+
+  def _is_resource_permission(self, permission):
+    return True
+
+
 @caching.cached_api_call(in_memory=True)
-def get_subscription_iam_policy(context: models.Context,
-                                subscription: Subscription) -> Dict:
-  pubsub_api = apis.get_api('pubsub', 'v1', context.project_id)
-  logging.info('fetching list of subscriptions in project %s',
-               context.project_id)
-  query = pubsub_api.projects().subscriptions().getIamPolicy(
-      resource=subscription)
-  try:
-    response = query.execute(num_retries=config.API_RETRIES)
-    policy: Dict[str, Any] = {
-        'by_member': {},
-    }
-    if not 'bindings' in response:
-      return policy
-    for binding in response['bindings']:
-      if not 'role' in binding or not 'members' in binding:
-        continue
-      for member in binding['members']:
-        policy['by_member'].setdefault(member, {'roles': {}})
-        policy['by_member'][member]['roles'][binding['role']] = 1
-  except googleapiclient.errors.HttpError as err:
-    raise utils.GcpApiError(err) from err
-  return policy['by_member']
+def get_subscription_iam_policy(name: str) -> SubscriptionIAMPolicy:
+  project_id = utils.get_project_by_res_name(name)
+
+  pubsub_api = apis.get_api('pubsub', 'v1', project_id)
+  request = pubsub_api.projects().subscriptions().getIamPolicy(resource=name)
+
+  return iam.fetch_iam_policy(request, SubscriptionIAMPolicy, project_id, name)
