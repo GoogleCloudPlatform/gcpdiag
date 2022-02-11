@@ -82,9 +82,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     if i.id in vms_agents:
       if MONITORING_NAME in vms_agents[i.id]:
         report.add_failed(
-            i,
-            'instance using old monitoring agent instead of ops agent. See description to upgrade'
-        )
+            i, 'instance using old monitoring agent instead of ops agent.')
       if OPS_NAME in vms_agents[i.id]:
         if OPS_AGENT_MIN_VERSION <= version.parse(
             vms_agents[i.id].split('/')[1].split('-')[0]):
@@ -92,9 +90,10 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
         else:
           # if an unsafe or buggy old version is present
           # we notify the user here by changing to add fail
+          version_str = vms_agents[i.id].split('/')[1].split('-')[0]
           report.add_failed(
               i,
-              f'ops agent too old, should be at least ({OPS_AGENT_MIN_VERSION})'
+              f'ops agent too old: {version_str}, should be at least {OPS_AGENT_MIN_VERSION}'
           )
     else:
-      report.add_failed(i, 'ops agent not installed.')
+      report.add_failed(i, None, 'not installed')
