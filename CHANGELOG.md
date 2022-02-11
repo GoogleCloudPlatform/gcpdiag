@@ -1,3 +1,31 @@
+## 0.52 (2022-02-11)
+
+#### New rules
+
+- dataproc/BP/2022_001: Cloud Monitoring agent is enabled.
+- dataproc/ERR/2022_002: Dataproc is not using deprecated images.
+- gce/WARN/2022_001: IAP service can connect to SSH/RDP port on instances.
+- gce/WARN/2022_002: Instance groups named ports are using unique names.
+- gke/ERR/2022_002: GKE nodes of private clusters can access Google APIs and services.
+- gke/ERR/2022_003: GKE connectivity: load balancer to node communication (ingress).
+
+#### Updated rules
+
+- gcb/ERR/2022_001: Fix false positive when no build is configured.
+- gke/WARN/2021_008: Improve Istio deprecation message
+
+#### Enhancements
+
+- Introduce "extended" rules (BP_EXT, ERR_EXT, etc.), disabled by default
+  and which can be enabled with --include-extended.
+- Large IAM policy code refactorings in preparation for org-level IAM
+  policy support.
+
+#### Fixes
+
+- More API retry fixes.
+- Fix --billing-project which had no effect before.
+
 ## 0.51 (2022-01-21)
 
 #### Fixes
@@ -18,7 +46,7 @@
 - gce/WARN/2021_007: Serial logs don't contain "BSOD" messages
 - gcs/BP/2022_001: Buckets are using uniform access
 - gke/BP/2022_001: GKE clusters are regional
-- gke/ERR/2022_016: GKE connectivity: pod to pod communication
+- gke/ERR/2022_001: GKE connectivity: pod to pod communication
 - gke/WARN/2022_001: GKE clusters with workload identity are regional
 - gke/WARN/2022_002: GKE metadata concealment is not in use
 
