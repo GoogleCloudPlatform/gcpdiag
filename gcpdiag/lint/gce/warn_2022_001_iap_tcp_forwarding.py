@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""GCE connectivity: allow IAP to connect to your VM instances
+"""GCE connectivity: IAP service can connect to SSH/RDP port on instances.
 
 Traffic from the IP range 35.235.240.0/20 to VM instances is necessary for
 IAP TCP forwarding to establish an encrypted tunnel over which you can forward
