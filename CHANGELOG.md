@@ -25,6 +25,7 @@
 
 - More API retry fixes.
 - Fix --billing-project which had no effect before.
+- Fix exception related to GCE instance scopes.
 
 ## 0.51 (2022-01-21)
 
