@@ -121,3 +121,11 @@ class TestProjectPolicy:
 
   def test_is_service_acccount_enabled(self):
     assert iam.is_service_account_enabled(TEST_SERVICE_ACCOUNT, TEST_PROJECT_ID)
+
+  def test_service_account_policy(self):
+    policy = iam.get_service_account_iam_policy(TEST_PROJECT_ID,
+                                                TEST_SERVICE_ACCOUNT)
+    assert policy.has_role_permissions(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
+                                       'roles/iam.serviceAccountUser')
+    assert not policy.has_role_permissions(
+        f'serviceAccount:{TEST_SERVICE_ACCOUNT}', 'roles/monitoring.editor')

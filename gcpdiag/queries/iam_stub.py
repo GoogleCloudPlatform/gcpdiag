@@ -66,6 +66,14 @@ class IamApiStub:
       raise ValueError("can't call this method here (mock_state: %s)" %
                        self.mock_state)
 
+  def getIamPolicy(self, resource):
+    if self.mock_state == 'serviceaccounts':
+      m = re.match(r'projects/[^/]+/serviceAccounts/(.*)', resource)
+      return IamApiStub('serviceaccounts_getIamPolicy', m.group(1))
+    else:
+      raise ValueError("can't call this method here (mock_state: %s)" %
+                       self.mock_state)
+
   def roles(self):
     if self.mock_state == 'init':
       return IamApiStub('roles')
@@ -108,6 +116,10 @@ class IamApiStub:
         else:
           raise googleapiclient.errors.HttpError(
               httplib2.Response({'status': 404}), b'not found')
+    elif self.mock_state == 'serviceaccounts_getIamPolicy':
+      json_filename = PREFIX_GKE1 / 'iam-service-account-policy.json'
+      with open(json_filename, encoding='utf-8') as json_file:
+        return json.load(json_file)
     elif self.mock_state == 'roles_get':
       json_filename = PREFIX_GKE1 / 'iam-roles-get.json'
       with open(json_filename, encoding='utf-8') as json_file:

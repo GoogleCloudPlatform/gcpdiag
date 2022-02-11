@@ -2,11 +2,13 @@ PROJECT_ID  := $(shell terraform output -raw project_id)
 PROJECT_ID_SUFFIX := $(shell terraform output -raw project_id_suffix)
 PROJECT_NR  := $(shell terraform output -raw project_nr)
 ORG_ID      := $(shell terraform output -raw org_id)
+GKE2_SA     := $(shell terraform output -raw gke2_sa)
 CURL         = ../../bin/curl-wrap.sh
 JSON_CLEANER = ../../bin/json-cleaner
 REGION_1     = europe-west4
 ZONE_1       = europe-west4-a
 ZONE_EMPTY   = europe-west1-b
+SUBNETWORK_1 = gke1-subnet
 
 FAKE_PROJECT_ID_SUFFIX = aaaa
 FAKE_PROJECT_NR = 12340002
@@ -25,6 +27,7 @@ all:	\
 	json-dumps/compute-network-default.json \
 	json-dumps/compute-project.json \
 	json-dumps/compute-subnetworks-europe-west4.json \
+	json-dumps/compute-subnetwork-policy.json \
 	json-dumps/compute-templates.json \
 	json-dumps/compute-zones.json \
 	json-dumps/compute-routers-europe-west4.json \
@@ -37,6 +40,7 @@ all:	\
 	json-dumps/iam-roles-predefined-2.json.gz \
 	json-dumps/iam-roles-get.json \
 	json-dumps/iam-service-accounts.json \
+	json-dumps/iam-service-account-policy.json \
 	json-dumps/logging-entries-1.json \
 	json-dumps/project.json \
 	json-dumps/services.json
@@ -105,6 +109,13 @@ json-dumps/compute-subnetworks-%.json:
 	        "https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/regions/$$REGION/subnetworks" \
 		| $(SED_SUBST_FAKE) >$@
 
+json-dumps/compute-subnetwork-policy.json:
+	$(CURL) -fsS \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/regions/$(REGION_1)/subnetworks/$(SUBNETWORK_1)/getIamPolicy' \
+		--header "Content-Type:text/json" \
+		| $(JSON_CLEANER) other \
+		| $(SED_SUBST_FAKE) >$@
+
 json-dumps/compute-routers-%.json:
 	REGION=$(subst json-dumps/,,$*); \
 	$(CURL) -fsS \
@@ -157,6 +168,13 @@ json-dumps/iam-service-accounts.json:
 		| $(JSON_CLEANER) service-accounts \
 		| $(SED_SUBST_FAKE) >$@
 
+json-dumps/iam-service-account-policy.json:
+	$(CURL) -fsS \
+		'https://iam.googleapis.com/v1/$(GKE2_SA):getIamPolicy' \
+		-X POST  --header "Content-Type:text/json" \
+		-d "" \
+		| $(JSON_CLEANER) other \
+		| $(SED_SUBST_FAKE) >$@
 
 # container.googleapis.com
 

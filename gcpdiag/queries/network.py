@@ -21,7 +21,7 @@ import re
 from typing import Any, Dict, FrozenSet, Iterable, List, Optional, Union
 
 from gcpdiag import caching, config, models
-from gcpdiag.queries import apis, apis_utils
+from gcpdiag.queries import apis, apis_utils, iam
 
 
 class Subnetwork(models.Resource):
@@ -683,3 +683,24 @@ def get_router(project_id: str, region: str, network) -> Router:
                                    filter=f'network="{network.self_link}"')
   response = request.execute(num_retries=config.API_RETRIES)
   return Router(project_id, next(iter(response.get('items', [{}]))))
+
+
+class VPCSubnetworkIAMPolicy(iam.BaseIAMPolicy):
+
+  def _is_resource_permission(self, permission):
+    return True
+
+
+@caching.cached_api_call(in_memory=True)
+def get_subnetwork_iam_policy(project_id: str, region: str,
+                              subnetwork_name: str) -> VPCSubnetworkIAMPolicy:
+  resource_name = (f'projects/{project_id}/regions/{region}/'
+                   f'subnetworks/{subnetwork_name}')
+
+  compute = apis.get_api('compute', 'v1', project_id)
+  request = compute.subnetworks().getIamPolicy(project=project_id,
+                                               region=region,
+                                               resource=subnetwork_name)
+
+  return iam.fetch_iam_policy(request, VPCSubnetworkIAMPolicy, project_id,
+                              resource_name)
