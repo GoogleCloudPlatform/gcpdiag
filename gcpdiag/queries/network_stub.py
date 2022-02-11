@@ -44,6 +44,12 @@ class NetworkApiStub:
     self.project_id = project
     return self
 
+  def getIamPolicy(self, project, region, resource):
+    self.mock_state = 'getIamPolicy_subnetwork'
+    self.project_id = project
+    self.subnetwork = resource
+    return self
+
   def getEffectiveFirewalls(self, project, network):
     self.mock_state = 'get_effective_firewalls'
     self.project_id = project
@@ -83,6 +89,10 @@ class NetworkApiStub:
         for subnet in json.load(json_file)['items']:
           if subnet['name'] == self.subnetwork:
             return subnet
+    elif self.mock_state == 'getIamPolicy_subnetwork':
+      with open(json_dir / 'compute-subnetwork-policy.json',
+                encoding='utf-8') as json_file:
+        return json.load(json_file)
     elif self.mock_state == 'routers':
       with open(json_dir / f'compute-routers-{SUBNETWORKS_REGION}.json',
                 encoding='utf-8') as json_file:

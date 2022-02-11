@@ -92,6 +92,12 @@ resource "google_project_iam_member" "gke2_sa" {
   member  = "serviceAccount:${google_service_account.gke2_sa.email}"
 }
 
+resource "google_service_account_iam_member" "gke2_sa" {
+  service_account_id = google_service_account.gke2_sa.name
+  role               = "roles/iam.serviceAccountUser"
+  member             = "serviceAccount:${google_service_account.gke2_sa.email}"
+}
+
 # GKE cluster with monitoring enabled and service account using a custom role
 resource "google_container_cluster" "gke2" {
   provider           = google-beta
@@ -153,4 +159,8 @@ resource "google_compute_firewall" "all_test_deny" {
   target_tags = google_container_cluster.gke2.node_config[0].tags
 
   depends_on = [google_container_cluster.gke2]
+}
+
+output "gke2_sa" {
+  value = google_service_account.gke2_sa.name
 }

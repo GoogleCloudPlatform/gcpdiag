@@ -665,3 +665,24 @@ def is_service_account_enabled(email: str, billing_project_id: str) -> bool:
   _batch_fetch_service_accounts([email], billing_project_id)
   return (email not in _service_account_cache_is_not_found) and \
       not (email in _service_account_cache and _service_account_cache[email].disabled)
+
+
+class ServiceAccountIAMPolicy(BaseIAMPolicy):
+
+  def _is_resource_permission(self, permission):
+    return True
+
+
+@caching.cached_api_call(in_memory=True)
+def get_service_account_iam_policy(
+    project_id: str, service_account: str) -> ServiceAccountIAMPolicy:
+  """Returns an IAM policy for a service account"""
+
+  resource_name = f'projects/{project_id}/serviceAccounts/{service_account}'
+
+  iam_api = apis.get_api('iam', 'v1', project_id)
+  request = iam_api.projects().serviceAccounts().getIamPolicy(
+      resource=resource_name)
+
+  return fetch_iam_policy(request, ServiceAccountIAMPolicy, project_id,
+                          resource_name)

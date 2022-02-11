@@ -1,0 +1,12 @@
+{
+  "bindings": [
+    {
+      "members": [
+        "serviceAccount:gke1sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com"
+      ],
+      "role": "roles/compute.networkUser"
+    }
+  ],
+  "etag": "BwXXwe8Tswc=",
+  "version": 1
+}

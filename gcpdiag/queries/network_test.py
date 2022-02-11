@@ -25,6 +25,7 @@ DUMMY_DEFAULT_SUBNET = 'default'
 DUMMY_GKE_PROJECT_ID = 'gcpdiag-gke1-aaaa'
 DUMMY_GKE_REGION = 'europe-west4'
 DUMMY_GKE_SUBNET = 'gke1-subnet'
+DUMMY_SERVICE_ACCOUNT = 'gke1sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com'
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
@@ -56,6 +57,15 @@ class TestNetwork:
                                     subnetwork_name=DUMMY_GKE_SUBNET)
     assert subnet.name == DUMMY_GKE_SUBNET
     assert subnet.ip_network == ipaddress.ip_network('192.168.0.0/24')
+
+  def test_cluster_subnetwork_iam_policy(self):
+    policy = network.get_subnetwork_iam_policy(project_id=DUMMY_GKE_PROJECT_ID,
+                                               region=DUMMY_GKE_REGION,
+                                               subnetwork_name=DUMMY_GKE_SUBNET)
+    assert policy.has_role_permissions(
+        f'serviceAccount:{DUMMY_SERVICE_ACCOUNT}', 'roles/compute.networkUser')
+    assert not policy.has_role_permissions(
+        f'serviceAccount:{DUMMY_SERVICE_ACCOUNT}', 'roles/compute.networkAdmin')
 
   def test_get_routers(self):
     net = network.get_network(project_id=DUMMY_GKE_PROJECT_ID,
