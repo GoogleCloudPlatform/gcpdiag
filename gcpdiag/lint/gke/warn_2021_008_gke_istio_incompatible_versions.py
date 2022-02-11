@@ -13,9 +13,9 @@
 # limitations under the License.
 """Istio/ASM version not deprecated nor close to deprecation in GKE
 
-As of GKE 1.22, all Istio versions below 1.10.0 and ASM versions of 1.10.2 and
-below will no longer work. It is recommended that you upgrade to ASM Managed
-Control Plane or Istio version 1.10.3+ to avoid outages.
+At the end of 2021, those Istio/ASM versions of 1.10.2 and below reached
+end of life and not supported. It is recommended that you upgrade to
+ASM Managed Control Plane or Istio version 1.10.3+ to avoid outages.
 """
 
 from typing import Dict
