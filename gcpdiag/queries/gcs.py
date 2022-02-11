@@ -19,12 +19,12 @@
 
 import logging
 import re
-from typing import Any, Dict, Mapping
+from typing import Dict, Mapping
 
 import googleapiclient.errors
 
 from gcpdiag import caching, config, models, utils
-from gcpdiag.queries import apis
+from gcpdiag.queries import apis, iam
 
 
 class Bucket(models.Resource):
@@ -67,27 +67,18 @@ class Bucket(models.Resource):
     return self._resource_data.get('labels', {})
 
 
+class BucketIAMPolicy(iam.BaseIAMPolicy):
+
+  def _is_resource_permission(self, permission):
+    return True
+
+
 @caching.cached_api_call(in_memory=True)
-def get_bucket_iam_policy(context: models.Context, bucket: str) -> Dict:
-  gcs_api = apis.get_api('storage', 'v1', context.project_id)
-  logging.info('fetching list of GCS buckets in project %s', context.project_id)
-  query = gcs_api.buckets().getIamPolicy(bucket=bucket)
-  try:
-    response = query.execute(num_retries=config.API_RETRIES)
-    policy: Dict[str, Any] = {
-        'by_member': {},
-    }
-    if not 'bindings' in response:
-      return policy
-    for binding in response['bindings']:
-      if not 'role' in binding or not 'members' in binding:
-        continue
-      for member in binding['members']:
-        policy['by_member'].setdefault(member.split(':')[0], {'roles': {}})
-        policy['by_member'][member.split(':')[0]]['roles'][binding['role']] = 1
-  except googleapiclient.errors.HttpError as err:
-    raise utils.GcpApiError(err) from err
-  return policy['by_member']
+def get_bucket_iam_policy(project_id: str, bucket: str) -> BucketIAMPolicy:
+  gcs_api = apis.get_api('storage', 'v1', project_id)
+  request = gcs_api.buckets().getIamPolicy(bucket=bucket)
+
+  return iam.fetch_iam_policy(request, BucketIAMPolicy, project_id, bucket)
 
 
 @caching.cached_api_call(in_memory=True)

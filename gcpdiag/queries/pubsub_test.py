@@ -41,11 +41,9 @@ class TestPubsub:
     assert DUMMY_SUB_NAME in subscription
 
   def test_get_topic_iam_policy(self):
-    context = models.Context(project_id=DUMMY_PROJECT_NAME)
-    policy = pubsub.get_topic_iam_policy(context, DUMMY_TOPIC_NAME)
-    assert DUMMY_PERM in policy
+    policy = pubsub.get_topic_iam_policy(DUMMY_TOPIC_NAME)
+    assert DUMMY_PERM in policy.get_members()
 
   def test_get_subscription_iam_policy(self):
-    context = models.Context(project_id=DUMMY_PROJECT_NAME)
-    policy = pubsub.get_subscription_iam_policy(context, DUMMY_SUB_NAME)
-    assert DUMMY_PERM in policy
+    policy = pubsub.get_subscription_iam_policy(DUMMY_SUB_NAME)
+    assert DUMMY_PERM in policy.get_members()
