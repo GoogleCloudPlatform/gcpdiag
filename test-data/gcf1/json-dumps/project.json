@@ -1,12 +1,12 @@
 {
   "name": "projects/12340003",
-  "parent": "organizations/11112222",
+  "parent": "folders/348077457356",
   "projectId": "gcpdiag-gcf1-aaaa",
   "state": "ACTIVE",
   "displayName": "gcpdiag test - gcf1",
-  "createTime": "2021-11-26T16:11:25.377Z",
-  "updateTime": "2021-11-26T16:11:27.335Z",
-  "etag": "JP5K3b6eftM4ytdtXhvbVg==",
+  "createTime": "2022-05-05T11:38:25.421Z",
+  "updateTime": "2022-05-05T11:38:27.179Z",
+  "etag": "xuGDBcJDriJCrG5QJRflXA==",
   "labels": {
     "gcpdiag": "test"
   }
