@@ -34,7 +34,8 @@ all:	\
 	json-dumps/monitoring-query.json \
 	json-dumps/iam-policy.json \
 	json-dumps/project.json \
-	json-dumps/services.json
+	json-dumps/services.json \
+	json-dumps/iam-service-accounts.json
 
 json-dumps/compute-effective-firewalls-default.json:
 	$(CURL) -fsS \
@@ -152,4 +153,10 @@ json-dumps/monitoring-query.json:
 		'https://monitoring.googleapis.com/v3/projects/$(PROJECT_ID)/timeSeries:query' \
 		--header "Content-Type: application/json" -X POST \
 		--data '$(MONITORING_QUERY)' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/iam-service-accounts.json:
+	$(CURL) -fsS \
+		'https://iam.googleapis.com/v1/projects/$(PROJECT_ID)/serviceAccounts' \
+		| $(JSON_CLEANER) service-accounts \
 		| $(SED_SUBST_FAKE) >$@
