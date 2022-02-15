@@ -19,7 +19,8 @@ all:	\
 	json-dumps/cloudfunctions-$(REGION_1).json \
 	json-dumps/cloudfunctions-empty.json \
 	json-dumps/project.json \
-	json-dumps/services.json
+	json-dumps/services.json \
+	json-dumps/logging-entries-1.json \
 
 json-dumps/project.json:
 	$(CURL) -fsS \
@@ -47,4 +48,25 @@ json-dumps/cloudfunctions-empty.json:
 	$(CURL) -fsS \
 	  'https://cloudfunctions.googleapis.com/v1/projects/$(PROJECT_ID)/locations/$(REGION_2)/functions' \
 		| $(JSON_CLEANER) cloudfunctions \
+		| $(SED_SUBST_FAKE) >$@
+
+# If you need to recreate the JSON: adapt the timestamp and make sure that there are some entries found.
+define LOGGING_ENTRIES_BODY
+{
+	"resourceNames": ["projects/$(PROJECT_ID)"],
+	"orderBy": "timestamp desc",
+	"filter": "
+		timestamp > \"2022-04-01T00:00:00+00:00\" AND
+		timestamp < \"2022-07-06T00:00:00+00:00\" AND
+		resource.type=\"cloud_function\"
+	"
+}
+endef
+export LOGGING_ENTRIES_BODY
+
+json-dumps/logging-entries-1.json:
+	$(CURL) -fsS \
+		'https://logging.googleapis.com/v2/entries:list' \
+		--header "Content-Type:text/json" \
+		-d "$$LOGGING_ENTRIES_BODY" \
 		| $(SED_SUBST_FAKE) >$@

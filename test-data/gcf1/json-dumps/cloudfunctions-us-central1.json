@@ -2,8 +2,9 @@
   "functions": [
     {
       "availableMemoryMb": 256,
-      "buildId": "ec7ee473-df70-4a4c-9c55-c934ef390099",
-      "buildName": "projects/12340003/locations/us-central1/builds/ec7ee473-df70-4a4c-9c55-c934ef390099",
+      "buildId": "7cf84a4e-64e1-4885-933a-04e5df2df781",
+      "buildName": "projects/12340003/locations/us-central1/builds/7cf84a4e-64e1-4885-933a-04e5df2df781",
+      "dockerRegistry": "CONTAINER_REGISTRY",
       "entryPoint": "hello_world",
       "httpsTrigger": {
         "securityLevel": "SECURE_OPTIONAL",
@@ -17,7 +18,7 @@
       "sourceArchiveUrl": "gs://gcpdiag-gcf1bucket-aaaa/gcpdiag-gcf1archive",
       "status": "ACTIVE",
       "timeout": "60s",
-      "updateTime": "2021-11-26T16:25:10.278Z",
+      "updateTime": "2022-05-05T11:41:32.357Z",
       "versionId": "1"
     }
   ]
