@@ -19,6 +19,8 @@ from gcpdiag import models
 from gcpdiag.queries import apis_stub, composer
 
 DUMMY_PROJECT_NAME = 'gcpdiag-composer1-aaaa'
+GCE_SERVICE_ACCOUNT = '12340005-compute@developer.gserviceaccount.com'
+ENV_SERVICE_ACCOUNT = f'env2sa@{DUMMY_PROJECT_NAME}.iam.gserviceaccount.com'
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
@@ -28,5 +30,26 @@ class TestComposer:
   def test_get_environments(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     environments = composer.get_environments(context)
-    assert len(environments) == 1
-    assert ('good', True) in [(c.name, c.is_running) for c in environments]
+    assert len(environments) == 2
+
+  def test_running(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    environments = composer.get_environments(context)
+    assert ('env1', True) in [(c.name, c.is_running) for c in environments]
+
+  def test_service_account(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    environments = composer.get_environments(context)
+    assert ('env1', GCE_SERVICE_ACCOUNT) in [
+        (c.name, c.service_account) for c in environments
+    ]
+    assert ('env2', ENV_SERVICE_ACCOUNT) in [
+        (c.name, c.service_account) for c in environments
+    ]
+
+  def test_is_private_ip(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    environments = composer.get_environments(context)
+    assert ('env1', False) in [(c.name, c.is_private_ip()) for c in environments
+                              ]
+    assert ('env2', True) in [(c.name, c.is_private_ip()) for c in environments]

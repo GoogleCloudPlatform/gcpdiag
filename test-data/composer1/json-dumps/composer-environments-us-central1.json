@@ -1,19 +1,86 @@
 {
   "environments": [
     {
-      "name": "projects/gcpdiag-composer1-aaaa/locations/us-central1/environments/good",
+      "name": "projects/gcpdiag-composer1-aaaa/locations/us-central1/environments/env2",
       "config": {
-        "gkeCluster": "projects/gcpdiag-composer1-aaaa/zones/us-central1-b/clusters/us-central1-good-d7e4c596-gke",
-        "dagGcsPrefix": "gs://us-central1-good-d7e4c596-bucket/dags",
+        "gkeCluster": "projects/gcpdiag-composer1-aaaa/zones/us-central1-c/clusters/us-central1-env2-941355a9-gke",
+        "dagGcsPrefix": "gs://us-central1-env2-941355a9-bucket/dags",
         "nodeCount": 3,
         "softwareConfig": {
-          "imageVersion": "composer-1.17.4-airflow-1.10.15",
+          "imageVersion": "composer-1.17.10-airflow-1.10.15",
           "pythonVersion": "3",
           "schedulerCount": 1
         },
         "nodeConfig": {
-          "location": "projects/gcpdiag-composer1-aaaa/zones/us-central1-b",
-          "machineType": "projects/gcpdiag-composer1-aaaa/zones/us-central1-b/machineTypes/n1-standard-1",
+          "location": "projects/gcpdiag-composer1-aaaa/zones/us-central1-c",
+          "machineType": "projects/gcpdiag-composer1-aaaa/zones/us-central1-c/machineTypes/n1-standard-1",
+          "network": "projects/gcpdiag-composer1-aaaa/global/networks/default",
+          "diskSizeGb": 100,
+          "oauthScopes": [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ],
+          "serviceAccount": "env2sa@gcpdiag-composer1-aaaa.iam.gserviceaccount.com",
+          "ipAllocationPolicy": {
+            "useIpAliases": true
+          }
+        },
+        "airflowUri": "https://dbf98c0de9a7bf17dp-tp.appspot.com",
+        "privateEnvironmentConfig": {
+          "enablePrivateEnvironment": true,
+          "privateClusterConfig": {
+            "enablePrivateEndpoint": true,
+            "masterIpv4CidrBlock": "172.16.20.0/23",
+            "masterIpv4ReservedRange": "172.16.20.0/28"
+          },
+          "webServerIpv4CidrBlock": "172.31.245.0/24",
+          "cloudSqlIpv4CidrBlock": "10.0.0.0/12",
+          "webServerIpv4ReservedRange": "172.31.245.0/29"
+        },
+        "webServerNetworkAccessControl": {
+          "allowedIpRanges": [
+            {
+              "value": "0.0.0.0/0",
+              "description": "Allows access from all IPv4 addresses (default value)"
+            },
+            {
+              "value": "::0/0",
+              "description": "Allows access from all IPv6 addresses (default value)"
+            }
+          ]
+        },
+        "databaseConfig": {
+          "machineType": "db-n1-standard-2"
+        },
+        "webServerConfig": {
+          "machineType": "composer-n1-webserver-2"
+        },
+        "encryptionConfig": {},
+        "maintenanceWindow": {
+          "startTime": "1970-01-01T00:00:00Z",
+          "endTime": "1970-01-01T04:00:00Z",
+          "recurrence": "FREQ=WEEKLY;BYDAY=FR,SA,SU"
+        },
+        "workloadsConfig": {}
+      },
+      "uuid": "64f43466-ae3a-4cf3-b749-da9e9fd7fb89",
+      "state": "RUNNING",
+      "createTime": "2022-02-15T13:43:01.942Z",
+      "updateTime": "2022-02-15T14:08:07.055420Z"
+    },
+    {
+      "name": "projects/gcpdiag-composer1-aaaa/locations/us-central1/environments/env1",
+      "config": {
+        "gkeCluster": "projects/gcpdiag-composer1-aaaa/zones/us-central1-c/clusters/us-central1-env1-83babad2-gke",
+        "dagGcsPrefix": "gs://us-central1-env1-83babad2-bucket/dags",
+        "nodeCount": 3,
+        "softwareConfig": {
+          "imageVersion": "composer-1.17.10-airflow-1.10.15",
+          "pythonVersion": "3",
+          "schedulerCount": 1
+        },
+        "nodeConfig": {
+          "location": "projects/gcpdiag-composer1-aaaa/zones/us-central1-c",
+          "machineType": "projects/gcpdiag-composer1-aaaa/zones/us-central1-c/machineTypes/n1-standard-1",
           "network": "projects/gcpdiag-composer1-aaaa/global/networks/default",
           "diskSizeGb": 100,
           "oauthScopes": [
@@ -22,7 +89,7 @@
           "serviceAccount": "12340005-compute@developer.gserviceaccount.com",
           "ipAllocationPolicy": {}
         },
-        "airflowUri": "https://j49c8bb13b595f74dp-tp.appspot.com",
+        "airflowUri": "https://h5e4e6d46fe855ee0p-tp.appspot.com",
         "privateEnvironmentConfig": {
           "privateClusterConfig": {},
           "webServerIpv4CidrBlock": "172.31.245.0/24",
@@ -47,12 +114,17 @@
           "machineType": "composer-n1-webserver-2"
         },
         "encryptionConfig": {},
+        "maintenanceWindow": {
+          "startTime": "1970-01-01T00:00:00Z",
+          "endTime": "1970-01-01T04:00:00Z",
+          "recurrence": "FREQ=WEEKLY;BYDAY=FR,SA,SU"
+        },
         "workloadsConfig": {}
       },
-      "uuid": "e81a4b45-1c23-47c8-b8cc-81c3e870d8a2",
+      "uuid": "f56c0072-c520-46ff-98c7-a2af4c703782",
       "state": "RUNNING",
-      "createTime": "2021-11-13T13:59:57.362Z",
-      "updateTime": "2021-11-13T14:16:59.782433Z"
+      "createTime": "2022-02-15T13:08:11.626Z",
+      "updateTime": "2022-02-15T13:28:16.349130Z"
     }
   ]
 }
