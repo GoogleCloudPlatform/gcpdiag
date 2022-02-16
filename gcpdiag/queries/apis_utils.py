@@ -36,7 +36,11 @@ def list_all(request,
       response = request.execute(num_retries=config.API_RETRIES)
     except googleapiclient.errors.HttpError as err:
       raise utils.GcpApiError(err) from err
-    yield from response[response_keyword]
+
+    # Empty lists are omitted in GCP API responses
+    if response_keyword in response:
+      yield from response[response_keyword]
+
     request = next_function(previous_request=request,
                             previous_response=response)
     if request is None:
