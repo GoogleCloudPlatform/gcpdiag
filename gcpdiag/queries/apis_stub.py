@@ -163,7 +163,11 @@ def get_api_stub(service_name: str,
     return gce_stub.ComputeEngineApiStub()
   elif service_name == 'iam':
     from gcpdiag.queries import iam_stub
-    return iam_stub.IamApiStub()
+
+    # project_id isn't required in serviceaccounts.get requests
+    # and it cannot be easily extracted from a service account name
+    # thus passing api_project_id to determine the correct test-data
+    return iam_stub.IamApiStub(project_id)
   elif service_name == 'logging':
     from gcpdiag.queries import logs_stub
     return logs_stub.LoggingApiStub()
