@@ -50,6 +50,7 @@ class Role(models.Resource):
 
   @property
   def permissions(self) -> List[str]:
+    # roles should always include one or more permissions
     return self._resource_data['includedPermissions']
 
 
@@ -199,12 +200,14 @@ class BaseIAMPolicy(models.Resource):
     policy_roles = set()
     policy_by_member: Dict[str, Any] = defaultdict(dict)
 
-    for binding in resource_data['bindings']:
+    # Empty lists are omitted in GCP API responses
+    for binding in resource_data.get('bindings', []):
       if 'condition' in binding:
         logging.warning(
             'IAM binding contains a condition, which would be ignored: %s',
             binding)
 
+      # IAM binding should always have a role and at least one member
       policy_roles.add(binding['role'])
       for member in binding['members']:
         member_policy = policy_by_member[member]
