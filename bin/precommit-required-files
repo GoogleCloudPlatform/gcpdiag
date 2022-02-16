@@ -13,6 +13,7 @@ from os import path
 from gcpdiag import lint
 
 WEBSITE_RULES_DIR = 'website/content/en/rules'
+LINT_RULES_DIR = 'gcpdiag/lint'
 
 PRODUCTS = {
     'gaes':
@@ -102,7 +103,7 @@ def gen_rule_page(rule, rule_page_path):
           file=f)
 
 
-def check_rule(rule):
+def check_rule_page(rule):
   rule_page_path = f'{WEBSITE_RULES_DIR}/{rule.product}/{rule.rule_class}/{rule.rule_id}.md'
   # check that rule page exists and is staged
   lsfiles = subprocess.run(['git', 'ls-files', '-s', rule_page_path],
@@ -116,6 +117,26 @@ def check_rule(rule):
   else:
     print(f'generated initial rule page: {rule_page_path}', file=sys.stderr)
     gen_rule_page(rule, rule_page_path)
+    return False
+
+
+def check_rule_snapshot(rule):
+  rule_snapshot_path = (f'{LINT_RULES_DIR}/{rule.product}/snapshots/'
+                        f'{rule.rule_class}_{rule.rule_id}.txt')
+
+  # check that rule snapshot exists and is staged
+  lsfiles = subprocess.run(['git', 'ls-files', '-s', rule_snapshot_path],
+                           stdout=subprocess.PIPE,
+                           check=False)
+  if len(lsfiles.stdout) > 0:
+    return True
+  elif path.exists(rule_snapshot_path):
+    print(f'rule snapshot not staged: {rule_snapshot_path}', file=sys.stderr)
+    return False
+  else:
+    print(
+        f'run "make snapshots" to generate rule snapshot: {rule_snapshot_path} ',
+        file=sys.stderr)
     return False
 
 
@@ -138,7 +159,9 @@ def check(files):
         print(f'ERROR: rule id {str(rule)} is not unique!', file=sys.stderr)
         exit_fail = True
       seen_rule_ids[str(rule)] = 1
-      if not check_rule(rule):
+      if not check_rule_page(rule):
+        exit_fail = True
+      if not check_rule_snapshot(rule):
         exit_fail = True
     except lint.NotLintRule:
       continue
