@@ -1,0 +1,10 @@
+{
+  "name": "projects/12340005",
+  "parent": "organizations/11112222",
+  "projectId": "gcpdiag-composer1-aaaa",
+  "state": "ACTIVE",
+  "displayName": "gcpdiag test - composer1",
+  "createTime": "2022-02-15T13:06:30.006Z",
+  "updateTime": "2022-02-15T13:06:31.796Z",
+  "etag": "Q7kuUzNEqrwCj/KHaetQyg=="
+}
