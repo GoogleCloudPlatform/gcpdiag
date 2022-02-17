@@ -30,6 +30,10 @@ resource "google_dataproc_cluster" "test-best-practices-enabled" {
   region     = "us-central1"
 
   cluster_config {
+    gce_cluster_config {
+      service_account = google_service_account.sa_worker.email
+    }
+
     master_config {
       num_instances = 1
       machine_type  = "e2-medium"
@@ -55,6 +59,19 @@ resource "google_dataproc_cluster" "test-best-practices-enabled" {
     }
   }
 }
+
+resource "google_service_account" "sa_worker" {
+  project      = google_project.project.project_id
+  account_id   = "saworker"
+  display_name = "Dataproc VM Service account with Dataproc Worker role"
+}
+
+resource "google_project_iam_member" "sa_worker" {
+  project = google_project.project.project_id
+  role    = "roles/dataproc.worker"
+  member  = "serviceAccount:${google_service_account.sa_worker.email}"
+}
+
 resource "google_dataproc_cluster" "test-best-practices-disabled" {
   depends_on = [google_project_service.dataproc]
   project    = google_project.project.project_id

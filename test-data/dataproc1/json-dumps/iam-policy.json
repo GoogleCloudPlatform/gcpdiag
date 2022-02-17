@@ -14,6 +14,12 @@
     },
     {
       "members": [
+        "serviceAccount:saworker@gcpdiag-dataproc1-aaaa.iam.gserviceaccount.com"
+      ],
+      "role": "roles/dataproc.worker"
+    },
+    {
+      "members": [
         "serviceAccount:12340005@cloudservices.gserviceaccount.com",
         "serviceAccount:12340005-compute@developer.gserviceaccount.com"
       ],
@@ -21,11 +27,11 @@
     },
     {
       "members": [
-        "user:junggill@premium-cloud-support.com"
+        "user:testuser@example.com"
       ],
       "role": "roles/owner"
     }
   ],
-  "etag": "BwXe+FiFUWw=",
+  "etag": "BwXpl3K8tAs=",
   "version": 1
 }
