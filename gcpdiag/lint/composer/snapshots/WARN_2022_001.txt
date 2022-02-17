@@ -1,0 +1,10 @@
+*  composer/WARN/2022_001: Composer Service Agent permissions for Composer 2.x
+   - gcpdiag-composer1-aaaa                                               [FAIL]
+     service account: service-12340005@cloudcomposer-accounts.iam.gserviceaccount.com
+     missing role: roles/composer.ServiceAgentV2Ext
+
+   Verify that the Cloud Composer Service Agent account exists and has the Cloud
+   Composer v2 API Service Agent Extension role on the project.
+
+   https://gcpdiag.dev/rules/composer/WARN/2022_001
+

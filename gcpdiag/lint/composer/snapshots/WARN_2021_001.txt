@@ -1,3 +1,4 @@
 *  composer/WARN/2021_001: Composer environment is in RUNNING state
-   - gcpdiag-composer1-aaaa/us-central1/good                              [ OK ]
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [ OK ]
+   - gcpdiag-composer1-aaaa/us-central1/env1                              [ OK ]
 

@@ -18,7 +18,7 @@ from typing import Iterable, List, Tuple
 
 from gcpdiag import caching, config, models
 from gcpdiag.lint import get_executor
-from gcpdiag.queries import apis
+from gcpdiag.queries import apis, crm
 
 
 class Environment(models.Resource):
@@ -46,6 +46,16 @@ class Environment(models.Resource):
   def short_path(self) -> str:
     return f'{self.project_id}/{self.region}/{self.name}'
 
+  @property
+  def service_account(self) -> str:
+    sa = self._resource_data['config']['nodeConfig'].get('serviceAccount')
+    if sa is None:
+      # serviceAccount is marked as optional in REST API docs
+      # using a default GCE SA as a fallback
+      project_nr = crm.get_project(self.project_id).number
+      sa = f'{project_nr}-compute@developer.gserviceaccount.com'
+    return sa
+
   def parse_full_path(self) -> Tuple[str, str]:
     match = re.match(r'projects/[^/]*/locations/([^/]*)/environments/([^/]*)',
                      self.full_path)
@@ -55,6 +65,10 @@ class Environment(models.Resource):
 
   def __str__(self) -> str:
     return self.short_path
+
+  def is_private_ip(self) -> bool:
+    return self._resource_data['config']['privateEnvironmentConfig'].get(
+        'enablePrivateEnvironment', False)
 
 
 COMPOSER_REGIONS = [
