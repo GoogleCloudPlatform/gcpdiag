@@ -242,6 +242,14 @@ def verify_access(project_id: str):
           f'gcloud services enable iam.googleapis.com --project={project_id}'),
             file=sys.stdout)
       sys.exit(1)
+
+    if not is_enabled(project_id, 'logging'):
+      print((
+          'WARNING: Cloud Logging API is not enabled (related rules will be skipped).'
+          ' To enable, execute:\n'
+          f'gcloud services enable logging.googleapis.com --project={project_id}\n'
+      ),
+            file=sys.stdout)
   except utils.GcpApiError as err:
     if 'SERVICE_DISABLED' == err.reason and 'serviceusage.googleapis.com' == err.service:
       print((

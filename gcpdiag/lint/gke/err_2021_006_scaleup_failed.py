@@ -22,7 +22,7 @@ import collections
 import re
 
 from gcpdiag import lint, models
-from gcpdiag.queries import gke, logs
+from gcpdiag.queries import apis, gke, logs
 
 # k8s_cluster, container.googleapis.com/cluster-autoscaler-visibility
 ca_logs_by_project = {}
@@ -62,6 +62,11 @@ def is_mig_instance(mig_name: str, instance_name: str):
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
+  # skip entire rule is logging disabled
+  if not apis.is_enabled(context.project_id, 'logging'):
+    report.add_skipped(None, 'logging api is disabled')
+    return
+
   # Any work to do?
   clusters = gke.get_clusters(context)
   if not clusters:

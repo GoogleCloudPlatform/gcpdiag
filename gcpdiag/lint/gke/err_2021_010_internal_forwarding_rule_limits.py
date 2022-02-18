@@ -18,7 +18,7 @@ Internal Load Balancer creation can fail due to VPC internal forwarding rules li
 
 from gcpdiag import lint, models
 from gcpdiag.lint.gke import util
-from gcpdiag.queries import gke, logs
+from gcpdiag.queries import apis, gke, logs
 
 MATCH_STR_1 = 'INTERNAL_FORWARDING_RULES_WITH_PEERING_LIMITS_EXCEEDED'
 MATCH_STR_2 = 'SyncLoadBalancerFailed'
@@ -36,6 +36,11 @@ def prepare_rule(context: models.Context):
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
+  # skip entire rule is logging disabled
+  if not apis.is_enabled(context.project_id, 'logging'):
+    report.add_skipped(None, 'logging api is disabled')
+    return
+
   # Any work to do?
   clusters = gke.get_clusters(context)
   if not clusters:
