@@ -25,7 +25,7 @@ from typing import Optional
 
 from gcpdiag import lint, models
 from gcpdiag.lint.gce.utils import LogEntryShort, SerialOutputSearch
-from gcpdiag.queries import gce
+from gcpdiag.queries import apis, gce
 
 SECURE_BOOT_ERR_MESSAGES = [
     'UEFI: Failed to load image.',  #
@@ -44,6 +44,11 @@ def prepare_rule(context: models.Context):
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
+  # skip entire rule is logging disabled
+  if not apis.is_enabled(context.project_id, 'logging'):
+    report.add_skipped(None, 'logging api is disabled')
+    return
+
   search = logs_by_project[context.project_id]
 
   instances = gce.get_instances(context).values()

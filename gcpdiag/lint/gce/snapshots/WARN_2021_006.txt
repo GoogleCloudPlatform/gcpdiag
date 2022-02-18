@@ -1,10 +1,3 @@
 *  gce/WARN/2021_006: Serial logs don't contain "Kernel panic" messages
-   - gcpdiag-gce1-aaaa/gce1                                               [ OK ]
-   - gcpdiag-gce1-aaaa/gce2                                               [ OK ]
-   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-aabeeb2f-89fp                [ OK ]
-   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-aabeeb2f-c8f3                [ OK ]
-   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-aabeeb2f-mncd                [ OK ]
-   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-aabeeb2f-s8r2                [ OK ]
-   - gcpdiag-gce1-aaaa/mig-kmm1                                           [ OK ]
-   - gcpdiag-gce1-aaaa/mig-zd52                                           [ OK ]
+   (logging api is disabled)                                              [SKIP]
 
