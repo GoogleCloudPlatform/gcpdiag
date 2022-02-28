@@ -1,0 +1,14 @@
+*  gke/BP/2022_002: GKE clusters are using unique subnets.
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [FAIL]
+     Subnet "gcpdiag-gke1-aaaa/default" is used by "gcpdiag-gke1-aaaa/europe-west4-a/gke4" cluster
+   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [FAIL]
+     Subnet "gcpdiag-gke1-aaaa/default" is used by "gcpdiag-gke1-aaaa/europe-west4-a/gke4" cluster
+
+   Verify that the Google Kubernetes Engine clusters are not sharing subnets. It
+   is recommended to use unique subnet for each cluster.  Keep in mind that
+   subnets may be also reused in other projects.
+
+   https://gcpdiag.dev/rules/gke/BP/2022_002
+
