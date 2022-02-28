@@ -109,6 +109,10 @@ def test_extract_value_from_res_name():
   with pytest.raises(ValueError):
     utils.extract_value_from_res_name(
         'projects/testproject/locations/us-central1', 'us-central1')
+  result = utils.extract_value_from_res_name(
+      'projects/testproject/locations/us-east1/keyRings/testkeyring/cryptoKeys/test_key',
+      'projects')
+  assert result == 'testproject'
 
 
 def test_iter_dictlist():

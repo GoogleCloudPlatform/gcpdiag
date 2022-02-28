@@ -19,7 +19,7 @@ from typing import Any, Dict, List, Optional
 
 DOMAIN_RES_NAME_MATCH = r'(http(s)?:)?//([a-z0-9][-a-z0-9]{1,61}[a-z0-9]\.)+[a-z]{2,}/'
 RES_NAME_KEY = r'[a-z][-a-z0-9]*'
-RES_NAME_VALUE = r'[a-z0-9][-a-z0-9]*'
+RES_NAME_VALUE = r'[a-z0-9][-a-z0-9_?]*'
 REL_RES_NAME_MATCH = r'({key}/{value}/)*{key}/{value}'.format(
     key=RES_NAME_KEY, value=RES_NAME_VALUE)
 REGION_NAME_MATCH = r'^\w+-\w+$'
@@ -79,7 +79,7 @@ def extract_value_from_res_name(resource_name: str, key: str) -> str:
       return value: us-central1-c
   """
   if not is_valid_res_name(resource_name):
-    raise ValueError('invalid resource name')
+    raise ValueError(f'invalid resource name: {resource_name}')
 
   path_items = resource_name.split('/')
   for i, item in enumerate(path_items):
@@ -88,7 +88,7 @@ def extract_value_from_res_name(resource_name: str, key: str) -> str:
         return path_items[i + 1]
       else:
         break
-  raise ValueError('invalid resource name')
+  raise ValueError(f'invalid resource name: {resource_name}')
 
 
 def get_region_by_res_name(res_name: str) -> str:

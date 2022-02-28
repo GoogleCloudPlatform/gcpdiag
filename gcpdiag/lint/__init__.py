@@ -370,6 +370,9 @@ class LintRuleRepository:
           err = utils.GcpApiError(err)
         logging.warning('%s', str(err))
         report.add_skipped(rule, context, None, f'API error: {err}', None)
+      except (RuntimeError, ValueError) as err:
+        logging.warning('%s', str(err))
+        report.add_skipped(rule, context, None, f'Error: {err}', None)
       report.rule_end(rule, context)
     return report.finish(context)
 
