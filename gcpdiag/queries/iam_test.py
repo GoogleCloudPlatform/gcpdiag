@@ -86,12 +86,13 @@ class TestProjectPolicy:
     assert not policy.has_permission(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
                                      'monitoring.groups.create')
 
+  # pylint: disable=protected-access
   def test_has_role(self):
     policy = iam.get_project_policy(TEST_PROJECT_ID)
-    assert policy.has_role(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
-                           TEST_SERVICE_ACCOUNT_ROLE)
-    assert not policy.has_role(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
-                               'roles/container.nodeServiceAgent')
+    assert policy._has_role(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
+                            TEST_SERVICE_ACCOUNT_ROLE)
+    assert not policy._has_role(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
+                                'roles/container.nodeServiceAgent')
 
   def test_has_role_permissions(self):
     policy = iam.get_project_policy(TEST_PROJECT_ID)
