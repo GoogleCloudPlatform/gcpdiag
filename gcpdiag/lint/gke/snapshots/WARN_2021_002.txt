@@ -1,10 +1,8 @@
 *  gke/WARN/2021_002: GKE nodes version available for new clusters.
-   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [SKIP]
-     release channel: REGULAR
+   - gcpdiag-gke1-aaaa/europe-west4/gke2/default-pool                     [ OK ] 1.21.5-gke.1302
    - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [SKIP]
      release channel: REGULAR
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [SKIP]
-     release channel: REGULAR
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1/default-pool                   [ OK ] 1.21.5-gke.1302
    - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [SKIP]
      release channel: REGULAR
 
