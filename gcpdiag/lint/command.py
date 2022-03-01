@@ -113,8 +113,15 @@ def run(argv) -> int:
       metavar='D',
       type=int,
       help=
-      f'How far back to search logs and metrics (default: {config.WITHIN_DAYS})',
+      f'How far back to search logs and metrics (default: {config.WITHIN_DAYS} days)',
       default=config.WITHIN_DAYS)
+
+  parser.add_argument(
+      '--logs-query-timeout',
+      metavar='S',
+      type=int,
+      help=(f'Configure timeout to fetch query logs'
+            f' (default: {config.LOGGING_FETCH_MAX_TIME_SECONDS} seconds)'))
 
   args = parser.parse_args()
 
@@ -139,6 +146,10 @@ def run(argv) -> int:
   # Use proper project for billing/quota API calls
   if args.billing_project:
     config.BILLING_PROJECT_ID = args.billing_project
+
+  # Overwrite logs query timeout
+  if args.logs_query_timeout:
+    config.LOGGING_FETCH_MAX_TIME_SECONDS = args.logs_query_timeout
 
   # Allow to change defaults using a hook function.
   hooks.set_lint_args_hook(args)
