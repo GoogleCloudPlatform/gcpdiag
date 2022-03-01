@@ -321,10 +321,13 @@ class BaseIAMPolicy(models.Resource):
       return False
     return self._is_active_member(member)
 
-  def has_role(self, member: str, role: str) -> bool:
+  def _has_role(self, member: str, role: str) -> bool:
     """Checks that the member has this role
 
-    It performs exact match and doesn't expand role to list of permissions"""
+    It performs exact match and doesn't expand role to list of permissions.
+    Note that this method is not public because users of this module should
+    use has_role_permissions(), i.e. verify effective permissions instead of
+    roles."""
 
     if member not in self._policy_by_member:
       return False
@@ -340,7 +343,7 @@ class BaseIAMPolicy(models.Resource):
       return False
 
     # Avoid expanding roles to permissions
-    if self.has_role(member, role):
+    if self._has_role(member, role):
       # member status was already checked in `has_role`
       return True
 
