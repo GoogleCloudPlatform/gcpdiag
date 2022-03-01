@@ -38,22 +38,21 @@ usage: gcpdiag lint --project P [OPTIONS]
 Run diagnostics in GCP projects.
 
 optional arguments:
-  -h, --help           show this help message and exit
-  --auth-adc           Authenticate using Application Default Credentials
-  --auth-key FILE      Authenticate using a service account private key file
-  --auth-oauth         Authenticate using OAuth user authentication (default)
-  --project P          Project ID of project to inspect
-  --billing-project P  Project used for billing/quota of API calls done by gcpdiag
-                       (default is the inspected project, requires 'serviceusage.services.use' permission)
-  --show-skipped       Show skipped rules
-  --hide-ok            Hide rules with result OK
-  --include INCLUDE    Include rule pattern (e.g.: `gke`, `gke/*/2021*`). Multiple pattern can be specified
-                       (comma separated, or with multiple arguments)
-  --exclude EXCLUDE    Exclude rule pattern (e.g.: `BP`, `*/*/2022*`)
-  --include-extended   Include extended rules. Additional rules might generate false positives
-                       (default: False)
-  -v, --verbose        Increase log verbosity
-  --within-days D      How far back to search logs and metrics (default: 3)
+  -h, --help            show this help message and exit
+  --auth-adc            Authenticate using Application Default Credentials
+  --auth-key FILE       Authenticate using a service account private key file
+  --auth-oauth          Authenticate using OAuth user authentication (default)
+  --project P           Project ID of project to inspect
+  --billing-project P   Project used for billing/quota of API calls done by gcpdiag (default is the inspected project, requires 'serviceusage.services.use' permission)
+  --show-skipped        Show skipped rules
+  --hide-ok             Hide rules with result OK
+  --include INCLUDE     Include rule pattern (e.g.: `gke`, `gke/*/2021*`). Multiple pattern can be specified (comma separated, or with multiple arguments)
+  --exclude EXCLUDE     Exclude rule pattern (e.g.: `BP`, `*/*/2022*`)
+  --include-extended    Include extended rules. Additional rules might generate false positives (default: False)
+  -v, --verbose         Increase log verbosity
+  --within-days D       How far back to search logs and metrics (default: 3 days)
+  --logs-query-timeout S
+                        Configure timeout to fetch query logs (default: 120 seconds)
 ```
 
 ### Authentication
