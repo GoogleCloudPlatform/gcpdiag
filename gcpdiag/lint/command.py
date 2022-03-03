@@ -34,8 +34,7 @@ def _flatten_multi_arg(arg_list):
     yield from re.split(r'\s*,\s*', arg)
 
 
-def run(argv) -> int:
-  del argv
+def _init_args_parser():
   parser = argparse.ArgumentParser(
       description='Run diagnostics in GCP projects.', prog='gcpdiag lint')
 
@@ -68,7 +67,7 @@ def run(argv) -> int:
   parser.add_argument('--show-skipped',
                       help='Show skipped rules',
                       action='store_true',
-                      default=False)
+                      default=config.get('show_skipped'))
 
   parser.add_argument('--hide-skipped',
                       help=argparse.SUPPRESS,
@@ -78,7 +77,7 @@ def run(argv) -> int:
   parser.add_argument('--hide-ok',
                       help='Hide rules with result OK',
                       action='store_true',
-                      default=False)
+                      default=config.get('hide_ok'))
 
   parser.add_argument('--show-ok',
                       help=argparse.SUPPRESS,
@@ -99,86 +98,98 @@ def run(argv) -> int:
   parser.add_argument('--include-extended',
                       help=('Include extended rules. Additional rules might '
                             'generate false positives (default: False)'),
-                      default=False,
+                      default=config.get('include_extended'),
                       action='store_true')
 
   parser.add_argument('-v',
                       '--verbose',
                       action='count',
-                      default=0,
+                      default=config.get('verbose'),
                       help='Increase log verbosity')
 
-  parser.add_argument(
-      '--within-days',
-      metavar='D',
-      type=int,
-      help=
-      f'How far back to search logs and metrics (default: {config.WITHIN_DAYS} days)',
-      default=config.WITHIN_DAYS)
+  parser.add_argument('--within-days',
+                      metavar='D',
+                      type=int,
+                      help=(f'How far back to search logs and metrics (default:'
+                            f" {config.get('within_days')} days)"),
+                      default=config.get('within_days'))
+
+  parser.add_argument('--config',
+                      metavar='FILE',
+                      type=str,
+                      help=('Read configuration from FILE'))
+
+  parser.add_argument('--logging-ratelimit-requests',
+                      metavar='R',
+                      type=int,
+                      help=('Configure rate limit for logging queries (default:'
+                            f" {config.get('logging_ratelimit_requests')})"))
 
   parser.add_argument(
-      '--logs-query-timeout',
+      '--logging-ratelimit-period-seconds',
       metavar='S',
       type=int,
-      help=(f'Configure timeout to fetch query logs'
-            f' (default: {config.LOGGING_FETCH_MAX_TIME_SECONDS} seconds)'))
+      help=('Configure rate limit period for logging queries (default:'
+            f" {config.get('logging_ratelimit_period_seconds')} seconds)"))
 
+  parser.add_argument('--logging-page-size',
+                      metavar='P',
+                      type=int,
+                      help=('Configure page size for logging queries (default:'
+                            f" {config.get('logging_page_size')})"))
+
+  parser.add_argument(
+      '--logging-fetch-max-entries',
+      metavar='E',
+      type=int,
+      help=('Configure max entries to fetch by logging queries (default:'
+            f" {config.get('logging_fetch_max_entries')})"))
+
+  parser.add_argument(
+      '--logging-fetch-max-time-seconds',
+      metavar='S',
+      type=int,
+      help=('Configure timeout for logging queries (default:'
+            f" {config.get('logging_fetch_max_time_seconds')} seconds)"))
+
+  return parser
+
+
+def _parse_rule_patterns(patterns):
+  if patterns:
+    rules = []
+    for arg in _flatten_multi_arg(patterns):
+      try:
+        rules.append(lint.LintRulesPattern(arg))
+      except ValueError:
+        print(f"ERROR: can't parse rule pattern: {arg}", file=sys.stderr)
+        sys.exit(1)
+    return rules
+  return None
+
+
+def run(argv) -> int:
+  del argv
+
+  # Initialize argument parser
+  parser = _init_args_parser()
   args = parser.parse_args()
-
-  # Initialize configuration
-  config.WITHIN_DAYS = args.within_days
-
-  # Determine what authentication should be used
-  if args.auth_key:
-    config.AUTH_METHOD = 'key'
-    config.AUTH_KEY = args.auth_key
-  elif args.auth_adc:
-    config.AUTH_METHOD = 'adc'
-  elif args.auth_oauth:
-    config.AUTH_METHOD = 'oauth'
-  else:
-    # use OAuth by default, except in Cloud Shell
-    if report_terminal.is_cloud_shell():
-      config.AUTH_METHOD = 'adc'
-    else:
-      config.AUTH_METHOD = 'oauth'
-
-  # Use proper project for billing/quota API calls
-  if args.billing_project:
-    config.BILLING_PROJECT_ID = args.billing_project
-
-  # Overwrite logs query timeout
-  if args.logs_query_timeout:
-    config.LOGGING_FETCH_MAX_TIME_SECONDS = args.logs_query_timeout
 
   # Allow to change defaults using a hook function.
   hooks.set_lint_args_hook(args)
 
-  # --include
-  include_patterns = None
-  if args.include:
-    include_patterns = []
-    for arg in _flatten_multi_arg(args.include):
-      try:
-        include_patterns.append(lint.LintRulesPattern(arg))
-      except ValueError:
-        print(f"ERROR: can't parse rule pattern: {arg}", file=sys.stderr)
-        sys.exit(1)
-
-  # --exclude
-  exclude_patterns = None
-  if args.exclude:
-    exclude_patterns = []
-    for arg in _flatten_multi_arg(args.exclude):
-      try:
-        exclude_patterns.append(lint.LintRulesPattern(arg))
-      except ValueError:
-        print(f"ERROR: can't parse rule pattern: {arg}", file=sys.stderr)
-        sys.exit(1)
-
-  # Initialize Context, Repository, and Tests.
+  # Initialize Context.
   context = models.Context(project_id=args.project)
-  repo = lint.LintRuleRepository(args.include_extended)
+
+  # Initialize configuration
+  config.init(vars(args), context.project_id, report_terminal.is_cloud_shell())
+
+  # Rules name patterns that shall be included or excluded
+  include_patterns = _parse_rule_patterns(config.get('include'))
+  exclude_patterns = _parse_rule_patterns(config.get('exclude'))
+
+  # Initialize Repository, and Tests.
+  repo = lint.LintRuleRepository(config.get('include_extended'))
   repo.load_rules(gaes)
   repo.load_rules(gce)
   repo.load_rules(gke)
@@ -192,9 +203,9 @@ def run(argv) -> int:
   # ^^^ If you add rules directory, update also
   # pyinstaller/hook-gcpdiag.lint.py and bin/precommit-website-rules
   report = report_terminal.LintReportTerminal(
-      log_info_for_progress_only=(args.verbose == 0),
-      show_ok=not args.hide_ok,
-      show_skipped=args.show_skipped)
+      log_info_for_progress_only=(config.get('verbose') == 0),
+      show_ok=not config.get('hide_ok'),
+      show_skipped=config.get('show_skipped'))
 
   # Logging setup.
   logging_handler = report.get_logging_handler()
@@ -202,12 +213,12 @@ def run(argv) -> int:
   # Make sure we are only using our own handler
   logger.handlers = []
   logger.addHandler(logging_handler)
-  if args.verbose >= 2:
+  if config.get('verbose') >= 2:
     logger.setLevel(logging.DEBUG)
   else:
     logger.setLevel(logging.INFO)
   # Disable logging from python-api-client, unless verbose is turned on
-  if args.verbose == 0:
+  if config.get('verbose') == 0:
     gac_http_logger = logging.getLogger('googleapiclient.http')
     gac_http_logger.setLevel(logging.ERROR)
 

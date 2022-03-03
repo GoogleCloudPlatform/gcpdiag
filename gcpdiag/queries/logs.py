@@ -99,8 +99,8 @@ def query(project_id: str, resource_type: str, log_name: str,
 
 
 @ratelimit.sleep_and_retry
-@ratelimit.limits(calls=config.LOGGING_RATELIMIT_REQUESTS,
-                  period=config.LOGGING_RATELIMIT_PERIOD_SECONDS)
+@ratelimit.limits(calls=config.get('logging_ratelimit_requests'),
+                  period=config.get('logging_ratelimit_period_seconds'))
 def _ratelimited_execute(req):
   """Wrapper to req.execute() with rate limiting to avoid hitting quotas."""
   return req.execute(num_retries=config.API_RETRIES)
@@ -111,7 +111,8 @@ def _execute_query_job(job: _LogsQueryJob):
 
   # Convert "within" relative time to an absolute timestamp.
   start_time = datetime.datetime.now(
-      datetime.timezone.utc) - datetime.timedelta(days=config.WITHIN_DAYS)
+      datetime.timezone.utc) - datetime.timedelta(
+          days=config.get('within_days'))
   filter_lines = ['timestamp>"%s"' % start_time.isoformat(timespec='seconds')]
   filter_lines.append('resource.type="%s"' % job.resource_type)
   if job.log_name.startswith('log_id('):
@@ -136,7 +137,7 @@ def _execute_query_job(job: _LogsQueryJob):
           'resourceNames': [f'projects/{job.project_id}'],
           'filter': filter_str,
           'orderBy': 'timestamp desc',
-          'pageSize': config.LOGGING_PAGE_SIZE
+          'pageSize': config.get('logging_page_size')
       })
   fetched_entries_count = 0
   query_pages = 0
@@ -150,14 +151,14 @@ def _execute_query_job(job: _LogsQueryJob):
         deque.appendleft(e)
 
     # Verify that we aren't above limits, exit otherwise.
-    if fetched_entries_count > config.LOGGING_FETCH_MAX_ENTRIES:
+    if fetched_entries_count > config.get('logging_fetch_max_entries'):
       logging.warning(
           'maximum number of log entries (%d) reached (project: %s, query: %s).',
-          config.LOGGING_FETCH_MAX_ENTRIES, job.project_id,
+          config.get('logging_fetch_max_entries'), job.project_id,
           filter_str.replace('\n', ' AND '))
       return deque
     run_time = (datetime.datetime.now() - query_start_time).total_seconds()
-    if run_time >= config.LOGGING_FETCH_MAX_TIME_SECONDS:
+    if run_time >= config.get('logging_fetch_max_time_seconds'):
       logging.warning(
           'maximum query runtime for log query reached (project: %s, query: %s).',
           job.project_id, filter_str.replace('\n', ' AND '))
@@ -167,7 +168,7 @@ def _execute_query_job(job: _LogsQueryJob):
       logging.info(
           'still fetching logs (project: %s, resource type: %s, max wait: %ds)',
           job.project_id, job.resource_type,
-          config.LOGGING_FETCH_MAX_TIME_SECONDS - run_time)
+          config.get('logging_fetch_max_time_seconds') - run_time)
 
   query_end_time = datetime.datetime.now()
   logging.debug('logging query run time: %s, pages: %d, query: %s',

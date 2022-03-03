@@ -16,12 +16,11 @@
 """gcpdiag test script using data from test-data."""
 
 # pylint: disable=invalid-name
-# pylint: disable=unused-import
 
 import sys
 from unittest import mock
 
-from gcpdiag import config, utils
+from gcpdiag import config
 from gcpdiag.lint import command as lint_command
 from gcpdiag.queries import apis_stub
 
@@ -44,8 +43,7 @@ def main(argv):
   if len(argv) == 1 or argv[1] == '--help' or argv[1] == 'help':
     print_help()
   elif argv[1] == 'version' or argv[1] == '--version':
-    print('gcpdiag ' + config.VERSION)
-    print('Copyright 2021 Google LLC')
+    print(f'gcpdiag {config.VERSION}\nCopyright 2021 Google LLC')
   elif argv[1] == 'lint':
     # Replace argv[0:1] with only argv[0] so that argparse works correctly.
     sys.argv.pop(0)

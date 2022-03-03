@@ -45,7 +45,7 @@ def prefetch_rule(context: models.Context):
   if not clusters:
     return
 
-  within_str = 'within %dd, d\'%s\'' % (config.WITHIN_DAYS,
+  within_str = 'within %dd, d\'%s\'' % (config.get('within_days'),
                                         monitoring.period_aligned_now(60))
   _query_results_per_project_id[context.project_id] = monitoring.query(
       context.project_id, f"""
@@ -107,9 +107,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       report.add_ok(c)
     else:
       report.add_failed(
-          c,
-          f'disk latency >{SLO_LATENCY_MS}ms (1 min. avg., within {config.WITHIN_DAYS} days): \n. '
-          + '\n. '.join([
-              f'{i[0]} ({i[2]} out of {i[1]} minutes bad)'
-              for i in sorted(per_cluster_results[c]['bad_instances'])
-          ]))
+          c, (f'disk latency >{SLO_LATENCY_MS}ms (1 min. avg., within'
+              f" {config.get('within_days')} days): \n. ") + '\n. '.join([
+                  f'{i[0]} ({i[2]} out of {i[1]} minutes bad)'
+                  for i in sorted(per_cluster_results[c]['bad_instances'])
+              ]))
