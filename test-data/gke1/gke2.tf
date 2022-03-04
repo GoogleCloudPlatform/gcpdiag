@@ -106,6 +106,9 @@ resource "google_container_cluster" "gke2" {
   name               = "gke2"
   location           = "europe-west4"
   initial_node_count = 1
+  release_channel {
+    channel = "UNSPECIFIED"
+  }
   cluster_telemetry {
     type = "SYSTEM_ONLY"
   }

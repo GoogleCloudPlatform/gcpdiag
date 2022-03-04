@@ -64,6 +64,9 @@ class TestCluster:
     c = clusters[DUMMY_CLUSTER1_NAME]
     assert c.name == 'gke1'
     assert re.match(r'1\.\d+\.\d+-gke\.\d+', str(c.master_version))
+    assert c.release_channel is None
+    c = clusters[DUMMY_CLUSTER4_NAME]
+    assert c.name == 'gke4'
     assert c.release_channel == 'REGULAR'
 
   def test_get_path_regional(self):
