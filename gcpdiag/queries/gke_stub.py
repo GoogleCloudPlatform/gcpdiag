@@ -21,13 +21,19 @@ Instead of doing real API calls, we return test JSON data.
 import json
 import re
 
+from gcpdiag import utils
 from gcpdiag.queries import apis_stub
 
 # pylint: disable=unused-argument
 
 
-class ContainerApiStub:
+class ContainerApiStub(apis_stub.ApiStub):
   """Mock object to simulate container api calls."""
+
+  def __init__(self, mock_state='init', project_id=None, region=None):
+    self.mock_state = mock_state
+    self.project_id = project_id
+    self.region = region
 
   def projects(self):
     return self
@@ -36,15 +42,30 @@ class ContainerApiStub:
     return self
 
   def clusters(self):
-    return self
+    return ContainerApiStub(mock_state='clusters')
+
+  # pylint: disable=invalid-name
+  def getServerConfig(self, name):
+    project_id = utils.get_project_by_res_name(name)
+    region = utils.get_region_by_res_name(name)
+    return ContainerApiStub(mock_state='server_config',
+                            project_id=project_id,
+                            region=region)
 
   def list(self, parent):
     m = re.match(r'projects/([^/]+)/', parent)
-    project_id = m.group(1)
-    self.json_dir = apis_stub.get_json_dir(project_id)
+    self.project_id = m.group(1)
     return self
 
   def execute(self, num_retries=0):
-    with open(self.json_dir / 'container-clusters.json',
-              encoding='utf8') as json_file:
-      return json.load(json_file)
+    json_dir = apis_stub.get_json_dir(self.project_id)
+    if self.mock_state == 'clusters':
+      with open(json_dir / 'container-clusters.json',
+                encoding='utf8') as json_file:
+        return json.load(json_file)
+    elif self.mock_state == 'server_config':
+      with open(json_dir / f'container-server-config-{self.region}.json',
+                encoding='utf8') as json_file:
+        return json.load(json_file)
+    else:
+      raise ValueError("can't call this method here")

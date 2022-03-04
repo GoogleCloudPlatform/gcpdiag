@@ -151,9 +151,7 @@
       "notificationConfig": {
         "pubsub": {}
       },
-      "releaseChannel": {
-        "channel": "REGULAR"
-      },
+      "releaseChannel": {},
       "resourceLabels": {
         "foo": "bar"
       },
@@ -502,9 +500,7 @@
       "notificationConfig": {
         "pubsub": {}
       },
-      "releaseChannel": {
-        "channel": "REGULAR"
-      },
+      "releaseChannel": {},
       "selfLink": "https://container.googleapis.com/v1/projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2",
       "servicesIpv4Cidr": "10.11.240.0/20",
       "shieldedNodes": {

@@ -55,6 +55,9 @@ resource "google_container_cluster" "gke1" {
   name       = "gke1"
   subnetwork = google_compute_subnetwork.secondary_ip_range_pod.name
   location   = "europe-west4-a"
+  release_channel {
+    channel = "UNSPECIFIED"
+  }
   ip_allocation_policy {
     cluster_secondary_range_name  = "gke1-secondary-range-pod"
     services_secondary_range_name = "gke1-secondary-range-svc"
