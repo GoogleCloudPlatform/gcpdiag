@@ -27,6 +27,7 @@ from gcpdiag.queries import apis_stub, network_stub
 
 
 class ListRegionsQuery(apis_stub.ApiStub):
+  """Mock object to simulate compute engine api calls."""
 
   def __init__(self, project_id):
     self.project_id = project_id

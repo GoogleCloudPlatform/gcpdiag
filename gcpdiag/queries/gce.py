@@ -217,11 +217,13 @@ class ManagedInstanceGroup(models.Resource):
 class Instance(models.Resource):
   """Represents a GCE instance."""
   _resource_data: dict
+  _region: Optional[str]
 
   def __init__(self, project_id, resource_data):
     super().__init__(project_id=project_id)
     self._resource_data = resource_data
     self._metadata_dict = None
+    self._region = None
 
   @property
   def id(self) -> str:
@@ -252,6 +254,21 @@ class Instance(models.Resource):
     return datetime.fromisoformat(
         self._resource_data['creationTimestamp']).astimezone(
             timezone.utc).replace(tzinfo=None)
+
+  @property
+  def region(self) -> str:
+    if self._region is None:
+      if 'zone' in self._resource_data:
+        m = re.search(r'/zones/([^/]+)$', self._resource_data['zone'])
+        if not m:
+          raise RuntimeError('can\'t determine region of instance %s (%s)' %
+                             (self.name, self._resource_data['region']))
+        zone = m.group(1)
+        self._region = utils.zone_region(zone)
+      else:
+        raise RuntimeError(
+            f"can't determine region of instance {self.name}, zone isn't set!")
+    return self._region
 
   def is_serial_port_logging_enabled(self) -> bool:
     value = self.get_metadata('serial-port-logging-enable')
@@ -497,14 +514,73 @@ def get_project_metadata(project_id) -> Mapping[str, str]:
   return mapped_metadata
 
 
+class Region(models.Resource):
+  """Represents a GCE Region."""
+  _resource_data: dict
+
+  def __init__(self, project_id, resource_data):
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+
+  @property
+  def self_link(self) -> str:
+    return self._resource_data['selfLink']
+
+  @property
+  def full_path(self) -> str:
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
+                      self.self_link)
+    if result:
+      return result.group(1)
+    else:
+      return f'>> {self.self_link}'
+
+  @property
+  def name(self) -> str:
+    return self._resource_data['name']
+
+
 @caching.cached_api_call
-def get_all_regions(project_id: str) -> Iterable[str]:
+def get_all_regions(project_id: str) -> Iterable[Region]:
+  """Return list of all regions
+
+  Args:
+      project_id (str): project id for this request
+
+  Raises:
+      utils.GcpApiError: Raises GcpApiError in case of query issues
+
+  Returns:
+      Iterable[Region]: Return list of all regions
+  """
   try:
     gce_api = apis.get_api('compute', 'v1', project_id)
     request = gce_api.regions().list(project=project_id)
     response = request.execute(num_retries=config.API_RETRIES)
     if not response or 'items' not in response:
       return set()
-    return {item['name'] for item in response['items'] if 'name' in item}
+
+    return {
+        Region(project_id, item) for item in response['items'] if 'name' in item
+    }
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
+
+
+def get_regions_with_instances(context: models.Context) -> Iterable[Region]:
+  """Return list of regions with instances
+
+  Args:
+      context (models.Context): context for this request
+
+  Returns:
+      Iterable[Region]: Return list of regions which contains instances
+  """
+
+  regions_of_instances = {i.region for i in get_instances(context).values()}
+
+  all_regions = get_all_regions(context.project_id)
+  if not all_regions:
+    return set()
+
+  return {r for r in all_regions if r.name in regions_of_instances}

@@ -29,6 +29,7 @@ all:	\
 	json-dumps/compute-subnetworks-europe-west4.json \
 	json-dumps/compute-subnetwork-policy.json \
 	json-dumps/compute-templates.json \
+	json-dumps/compute-regions.json \
 	json-dumps/compute-zones.json \
 	json-dumps/compute-routers-europe-west4.json \
 	json-dumps/container-clusters.json \
@@ -46,6 +47,11 @@ all:	\
 	json-dumps/services.json
 
 # compute.googleapis.com
+
+json-dumps/compute-regions.json:
+	$(CURL) -fsS \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/regions' \
+		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/compute-zones.json:
 	$(CURL) -fsS \
