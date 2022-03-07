@@ -9,8 +9,8 @@ resource "random_string" "project_id_suffix" {
 resource "google_project" "project" {
   name            = "gcpdiag test - apigee1"
   project_id      = "gcpdiag-apigee1-${random_string.project_id_suffix.id}"
-  org_id          = "126083999674"
-  billing_account = "003745-B32D41-4F1D6A"
+  org_id          = var.org_id
+  billing_account = var.billing_account_id
   skip_delete     = true
 }
 
