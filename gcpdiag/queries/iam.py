@@ -242,7 +242,7 @@ class BaseIAMPolicy(models.Resource):
   def _expand_member_policy(self, member: str):
     """Expands member roles into set of permissions
 
-    Permissions are using "lazy" initialisation and only expanded if needed
+    Permissions are using "lazy" initialization and only expanded if needed
     """
     member_policy = self._policy_by_member.get(member)
     if not member_policy or \
@@ -400,7 +400,7 @@ class ProjectPolicy(BaseIAMPolicy):
   """
 
   def _is_resource_permission(self, permission: str) -> bool:
-    # Filter out permissions that can be granted only on organisation or folders
+    # Filter out permissions that can be granted only on organization or folders
     # It also excludes some permissions that aren't supported in custom roles
     #
     # https://cloud.google.com/resource-manager/docs/access-control-proj#permissions

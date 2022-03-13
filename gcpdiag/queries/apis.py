@@ -42,6 +42,27 @@ AUTH_SCOPES = [
 ]
 
 
+def _auth_method():
+  """Calculate proper authentication method based on provided configuration
+
+  Returns:
+      str: Return type of authentication method
+  """
+  if config.get('auth_key'):
+    auth_method = 'key'
+  elif config.get('auth_adc'):
+    auth_method = 'adc'
+  elif config.get('auth_oauth'):
+    auth_method = 'oauth'
+  else:
+    # use OAuth by default, except in Cloud Shell
+    if config.get('is_cloud_shell'):
+      auth_method = 'adc'
+    else:
+      auth_method = 'oauth'
+  return auth_method
+
+
 def _get_credentials_adc():
   logging.debug('auth: using application default credentials')
 
@@ -60,7 +81,7 @@ def _get_credentials_key():
   global _credentials
   if not _credentials:
     _credentials, _ = google.auth.load_credentials_from_file(
-        filename=config.AUTH_KEY, scopes=AUTH_SCOPES)
+        filename=_auth_method(), scopes=AUTH_SCOPES)
   return _credentials
 
 
@@ -130,23 +151,23 @@ def _get_credentials_oauth():
 
 
 def _get_credentials():
-  if config.AUTH_METHOD == 'adc':
+  if _auth_method() == 'adc':
     return _get_credentials_adc()
-  elif config.AUTH_METHOD == 'key':
+  elif _auth_method() == 'key':
     return _get_credentials_key()
-  elif config.AUTH_METHOD == 'oauth':
+  elif _auth_method() == 'oauth':
     return _get_credentials_oauth()
   else:
     raise AssertionError(
         'BUG: AUTH_METHOD method should be one of `adc`, `oauth`, `key`, but got '
-        f'`{config.AUTH_METHOD} instead. Please report at https://gcpdiag.dev/issues/'
-    )
+        f'`{_auth_method()}` instead.'
+        ' Please report at https://gcpdiag.dev/issues/')
 
 
 def _get_project_or_billing_id(project_id: str) -> str:
   """Return project or billing project id (if defined)"""
-  if config.BILLING_PROJECT_ID:
-    return config.BILLING_PROJECT_ID
+  if config.get('billing_project'):
+    return config.get('billing_project')
   return project_id
 
 
@@ -263,7 +284,7 @@ def verify_access(project_id: str):
     sys.exit(1)
   except exceptions.GoogleAuthError as err:
     print(f'ERROR: {err}', file=sys.stdout)
-    if config.AUTH_METHOD == 'adc':
+    if _auth_method() == 'adc':
       print(('Error using application default credentials. '
              'Try running: gcloud auth login --update-adc'),
             file=sys.stderr)
