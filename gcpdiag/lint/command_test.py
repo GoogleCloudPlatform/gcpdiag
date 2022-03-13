@@ -13,6 +13,7 @@
 # limitations under the License.
 """Test code in command.py."""
 
+from gcpdiag import lint
 from gcpdiag.lint import command
 
 
@@ -64,3 +65,19 @@ class Test:
     args = parser.parse_args(
         ['--project', 'myproject', '--config', '/path/to/file'])
     assert args.config == '/path/to/file'
+
+  # pylint: disable=protected-access
+  def test_load_repository_rules(self):
+    repo = lint.LintRuleRepository()
+    command._load_repository_rules(repo)
+    modules = {r.product for r in repo.rules}
+    assert 'gke' in modules
+    assert 'gcb' in modules
+    assert 'gaes' in modules
+    assert 'gce' in modules
+    assert 'iam' in modules
+    assert 'apigee' in modules
+    assert 'composer' in modules
+    assert 'dataproc' in modules
+    assert 'gcs' in modules
+    assert 'gcf' in modules
