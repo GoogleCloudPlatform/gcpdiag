@@ -76,7 +76,7 @@ def _clean_tmp_deque():
 
 
 def get_tmp_deque(prefix='tmp-deque-') -> diskcache.Deque:
-  """Get a Diskcache.Deque object useful to temporily store data (like logs).
+  """Get a Diskcache.Deque object useful to temporarily store data (like logs).
 
   arguments:
     prefix: prefix to be added to the temporary directory (default: tmp-deque)
@@ -106,7 +106,7 @@ def _make_key(func, args, kwargs):
 def _acquire_timeout(lock, timeout, name):
   result = lock.acquire(timeout=timeout)
   if not result:
-    raise RuntimeError(f"Couldn't aquire lock for {name}.")
+    raise RuntimeError(f"Couldn't acquire lock for {name}.")
   try:
     yield
   finally:

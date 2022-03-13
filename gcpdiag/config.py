@@ -15,10 +15,50 @@
 # Lint as: python3
 """Globals that will be potentially user-configurable in future."""
 
+import os
+import sys
+from typing import Any, Dict
+
 import appdirs
+import yaml
 
 # gcpdiag version (not configurable, but useful to have here)
 VERSION = '0.53-test'
+"""
+Configuration properties are divided into 3 main categories:
+- static (class properties) which values cannot be changed or provided
+- options which values can be provided as command arguments
+- options which values can be provided as yaml configuration
+
+In addition yaml configuration can contains global configuration which will
+be applied to all inspected projects or we can provide strict configuration
+dedicated to particular project:
+
+```
+---
+logging_fetch_max_time_seconds: 300
+verbose: 3
+within_days: 5
+
+projects:
+  myproject:
+    billing_project: sample
+    include:
+    - '*BP*'
+    exclude:
+    - '*SEC*'
+    - '*ERR*'
+    include_extended: True
+```
+
+Yaml configuration defined per project takes precedence over global
+configuration. Global configuration takes precedence over configuration
+provided as a command arguments.
+"""
+
+#
+# Static properties
+#
 
 # Default number of retries for API Calls.
 API_RETRIES = 10
@@ -32,23 +72,95 @@ CACHE_LOCK_TIMEOUT = 120
 # How long to cache documents that rarely change (e.g. predefined IAM roles).
 STATIC_DOCUMENTS_EXPIRY_SECONDS = 3600 * 24
 
-# How far back to look for metrics and logs
-WITHIN_DAYS = 3
-
-# Logging-related parameters
-LOGGING_PAGE_SIZE = 500
-LOGGING_FETCH_MAX_ENTRIES = 10000
-LOGGING_FETCH_MAX_TIME_SECONDS = 120
-# https://cloud.google.com/logging/quotas:
-LOGGING_RATELIMIT_REQUESTS = 60
-LOGGING_RATELIMIT_PERIOD_SECONDS = 60
-
 # Prefetch worker threads
 MAX_WORKERS = 10
 
-# Authentication method (set via command-line arguments)
-AUTH_METHOD = 'oauth'
-AUTH_KEY = None
+_args: Dict[str, Any] = {}
+_config: Dict[str, Any] = {}
+_project_id: str = ''
 
-# Project used for billing/quota of API calls done by gcpdiag
-BILLING_PROJECT_ID = None
+_defaults: Dict[str, Any] = {
+    'auth_adc': False,
+    'auth_key': None,
+    'auth_oauth': False,
+    'billing_project': None,
+    'show_skipped': False,
+    'hide_ok': False,
+    'include': None,
+    'exclude': None,
+    'include_extended': False,
+    'verbose': 0,
+    'within_days': 3,
+    'hide_skipped': True,
+    'show_ok': True,
+    'logging_ratelimit_requests': 60,
+    'logging_ratelimit_period_seconds': 60,
+    'logging_page_size': 500,
+    'logging_fetch_max_entries': 10000,
+    'logging_fetch_max_time_seconds': 120,
+}
+
+#
+# externally used methods
+#
+
+
+def init(args, project_id, is_cloud_shell=False):
+  """Load configuration based on provided CLI args.
+
+  Args:
+      args (Dict): Configuration dictionary.
+      project_id (str): Current project id
+      is_cloud_shell (bool, optional): Wheather cloud shell is used. Defaults to False.
+  """
+  global _args
+  global _config
+  global _project_id
+  _args = args if args else {}
+  _args.update({'is_cloud_shell': is_cloud_shell})
+  _project_id = project_id
+
+  file = args.get('config', None)
+  if file:
+    # Read the file contents
+    if os.path.exists(file):
+      with open(file, encoding='utf-8') as f:
+        content = f.read()
+    else:
+      content = None
+
+    # Parse the content of the file as YAML
+    if content:
+      try:
+        _config = yaml.safe_load(content)
+      except yaml.YAMLError as err:
+        print(f"ERROR: can't parse content of the file as YAML: {err}",
+              file=sys.stderr)
+
+
+def get(key):
+  """Find property value for provided key inside CLI args or yaml configuration
+  (including global and per project configuration).
+
+  Yaml configuration defined per project takes precedence over global
+  configuration. Global configuration takes precedence over configuration
+  provided as a command argument.
+
+  Args:
+      key (str): property key name
+
+  Returns:
+      Any: return value for provided key
+  """
+  if _project_id and _project_id in _config.get('projects', {}).keys():
+    if key in _config['projects'][_project_id].keys():
+      # return property from configuration per project if provided
+      return _config['projects'][_project_id][key]
+  if key in _config:
+    # return property from global configuration if provided
+    return _config[key]
+  if key in _args and _args[key]:
+    # return property from args if provided and not None
+    return _args[key]
+  # return property form defaults
+  return _defaults.get(key, None)
