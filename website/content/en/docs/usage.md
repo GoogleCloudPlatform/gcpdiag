@@ -5,6 +5,9 @@ weight: 4
 description: >
     gcpdiag command-line usage
 ---
+
+## Command Line Options
+
 Currently gcpdiag mainly supports one subcommand: `lint`, which is used
 to run diagnostics on one or more GCP projects.
 
@@ -39,3 +42,45 @@ optional arguments:
   --logging-fetch-max-time-seconds S
                         Configure timeout for logging queries (default: 120 seconds)
 ```
+
+## Configuration File
+
+The configuration for the gcpdiag run can be provided as a local configuration file via the `--config path/to/file` CLI flag written in YAML format.
+
+If a value is provided on both the command line and via a configuration file, the values from the configuration file will be preferred.
+
+### Example configuration which will be applied to any projects
+```
+---
+billing_project: sample
+include:
+- '*BP*'
+exclude:
+- '*SEC*'
+- '*ERR*'
+include_extended: True
+verbose: 3
+within_days: 5
+```
+
+### Example configuration which will be applied to specific project
+```
+---
+logging_fetch_max_time_seconds: 300
+verbose: 3
+within_days: 5
+
+projects:
+  myproject:
+    billing_project: perproject
+    include:
+    - '*BP*'
+    exclude:
+    - '*SEC*'
+    - '*ERR*'
+    include_extended: True
+```
+
+If values are provided via a configuration file for any projects and specific project, the values from the configuration defined to specific project will be preferred.
+
+> All values are supported (except `--project` and `-config`) and function identically to their CLI counterparts.
