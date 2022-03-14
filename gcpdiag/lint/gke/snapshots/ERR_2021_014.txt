@@ -9,4 +9,6 @@
    - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [SKIP]
      public cluster
    - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [SKIP]
+     public cluster
 

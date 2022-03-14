@@ -2,10 +2,11 @@
    - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [ OK ]
    - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [ OK ]
    - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [FAIL]
-     connections from 10.164.0.0/20 to udp:53 blocked by vpc firewall rule: gke-gke2-vms-test-deny (node pool: default-pool)
+     connections from 10.164.0.0/20 to tcp:53 blocked by vpc firewall rule: gke-gke2-all-test-deny (node pool: default-pool)
    - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [ OK ]
    - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [ OK ]
    - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [ OK ]
 
    Agents and host-network pods from a node must be able to communicate with all
    pods on all nodes.

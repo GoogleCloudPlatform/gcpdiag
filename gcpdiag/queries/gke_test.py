@@ -34,6 +34,7 @@ DUMMY_CLUSTER2_SHORT_NAME = f'{DUMMY_PROJECT_NAME}/europe-west4/gke2'
 DUMMY_CLUSTER1_SERVICE_ACCOUNT = '12340002-compute@developer.gserviceaccount.com'
 DUMMY_CLUSTER2_SERVICE_ACCOUNT = 'gke2sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com'
 DUMMY_CLUSTER4_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clusters/gke4'
+DUMMY_CLUSTER6_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clusters/gke6'
 DUMMY_DEFAULT_NAME = 'default'
 
 # pylint: disable=consider-iterating-dictionary
@@ -55,7 +56,7 @@ class TestCluster:
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              regions=['europe-west4'])
     clusters = gke.get_clusters(context)
-    assert DUMMY_CLUSTER1_NAME in clusters and len(clusters) == 6
+    assert DUMMY_CLUSTER1_NAME in clusters and len(clusters) == 7
 
   def test_cluster_properties(self):
     """verify cluster property methods."""
@@ -128,7 +129,7 @@ class TestCluster:
     # cluster 2
     c = clusters[DUMMY_CLUSTER2_NAME]
     assert c.pod_ipv4_cidr.compare_networks(
-        ipaddress.ip_network('10.8.0.0/14')) == 0
+        ipaddress.ip_network('10.4.0.0/14')) == 0
 
   def test_current_node_count(self):
     """returns correct number of nodes running"""
@@ -160,6 +161,18 @@ class TestCluster:
     clusters = gke.get_clusters(context)
     c = clusters[DUMMY_CLUSTER1_NAME]
     assert not c.nodepools[0].has_workload_identity_enabled()
+
+  def test_no_accelerators(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    assert not c.nodepools[0].config.has_accelerators()
+
+  def test_has_accelerators(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER6_NAME]
+    assert c.nodepools[0].config.has_accelerators()
 
   def test_nodepool_instance_groups(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)

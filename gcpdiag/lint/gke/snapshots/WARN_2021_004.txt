@@ -5,4 +5,5 @@
    - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [ OK ]
    - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [ OK ]
    - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [ OK ]
 

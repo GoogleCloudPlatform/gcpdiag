@@ -11,4 +11,6 @@
      no data
    - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [SKIP]
      no data
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [SKIP]
+     no data
 

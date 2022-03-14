@@ -1,7 +1,9 @@
 {
+  "kind": "compute#zoneList",
   "id": "projects/gcpdiag-gke1-aaaa/zones",
   "items": [
     {
+      "kind": "compute#zone",
       "id": "2231",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-east1-b",
@@ -19,10 +21,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2233",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-east1-c",
@@ -40,10 +42,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2234",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-east1-d",
@@ -61,10 +63,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2272",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-east4-c",
@@ -73,6 +75,7 @@
       "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-east4",
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-east4-c",
       "availableCpuPlatforms": [
+        "Intel Ice Lake",
         "Intel Cascade Lake",
         "Intel Skylake",
         "Intel Broadwell",
@@ -82,10 +85,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": true,
-      "kind": "compute#zone"
+      "supportsPzs": true
     },
     {
+      "kind": "compute#zone",
       "id": "2271",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-east4-b",
@@ -94,6 +97,7 @@
       "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-east4",
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-east4-b",
       "availableCpuPlatforms": [
+        "Intel Ice Lake",
         "Intel Cascade Lake",
         "Intel Skylake",
         "Intel Broadwell",
@@ -103,10 +107,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": true,
-      "kind": "compute#zone"
+      "supportsPzs": true
     },
     {
+      "kind": "compute#zone",
       "id": "2270",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-east4-a",
@@ -124,10 +128,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": true,
-      "kind": "compute#zone"
+      "supportsPzs": true
     },
     {
+      "kind": "compute#zone",
       "id": "2002",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-central1-c",
@@ -146,10 +150,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2000",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-central1-a",
@@ -168,10 +172,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2004",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-central1-f",
@@ -180,6 +184,7 @@
       "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1",
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f",
       "availableCpuPlatforms": [
+        "Intel Ice Lake",
         "Intel Cascade Lake",
         "Intel Skylake",
         "Intel Broadwell",
@@ -189,10 +194,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2001",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-central1-b",
@@ -211,10 +216,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2211",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-west1-b",
@@ -232,10 +237,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2212",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-west1-c",
@@ -253,10 +258,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2210",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-west1-a",
@@ -274,10 +279,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2342",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-west4-a",
@@ -296,10 +301,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2341",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-west4-b",
@@ -308,6 +313,7 @@
       "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4",
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-b",
       "availableCpuPlatforms": [
+        "Intel Ice Lake",
         "Intel Cascade Lake",
         "Intel Skylake",
         "Intel Broadwell",
@@ -317,10 +323,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2340",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-west4-c",
@@ -339,10 +345,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2101",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-west1-b",
@@ -351,6 +357,7 @@
       "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west1",
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west1-b",
       "availableCpuPlatforms": [
+        "Intel Ice Lake",
         "Intel Cascade Lake",
         "Intel Skylake",
         "Intel Broadwell",
@@ -360,10 +367,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2104",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-west1-d",
@@ -372,6 +379,7 @@
       "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west1",
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west1-d",
       "availableCpuPlatforms": [
+        "Intel Ice Lake",
         "Intel Cascade Lake",
         "Intel Skylake",
         "Intel Broadwell",
@@ -381,10 +389,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2103",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-west1-c",
@@ -393,6 +401,7 @@
       "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west1",
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west1-c",
       "availableCpuPlatforms": [
+        "Intel Ice Lake",
         "Intel Cascade Lake",
         "Intel Skylake",
         "Intel Broadwell",
@@ -402,10 +411,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2300",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-west3-c",
@@ -423,10 +432,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2301",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-west3-a",
@@ -441,12 +450,13 @@
         "Intel Haswell",
         "Intel Ivy Bridge",
         "Intel Sandy Bridge",
+        "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": true,
-      "kind": "compute#zone"
+      "supportsPzs": true
     },
     {
+      "kind": "compute#zone",
       "id": "2302",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-west3-b",
@@ -455,18 +465,20 @@
       "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west3",
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west3-b",
       "availableCpuPlatforms": [
+        "Intel Ice Lake",
         "Intel Cascade Lake",
         "Intel Skylake",
         "Intel Broadwell",
         "Intel Haswell",
         "Intel Ivy Bridge",
         "Intel Sandy Bridge",
+        "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": true,
-      "kind": "compute#zone"
+      "supportsPzs": true
     },
     {
+      "kind": "compute#zone",
       "id": "2292",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-west2-c",
@@ -484,10 +496,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": true,
-      "kind": "compute#zone"
+      "supportsPzs": true
     },
     {
+      "kind": "compute#zone",
       "id": "2291",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-west2-b",
@@ -496,18 +508,20 @@
       "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west2",
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west2-b",
       "availableCpuPlatforms": [
+        "Intel Ice Lake",
         "Intel Cascade Lake",
         "Intel Skylake",
         "Intel Broadwell",
         "Intel Haswell",
         "Intel Ivy Bridge",
         "Intel Sandy Bridge",
+        "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": true,
-      "kind": "compute#zone"
+      "supportsPzs": true
     },
     {
+      "kind": "compute#zone",
       "id": "2290",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-west2-a",
@@ -525,10 +539,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": true,
-      "kind": "compute#zone"
+      "supportsPzs": true
     },
     {
+      "kind": "compute#zone",
       "id": "2221",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-east1-b",
@@ -546,10 +560,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2220",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-east1-a",
@@ -567,10 +581,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2222",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-east1-c",
@@ -588,10 +602,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2261",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-southeast1-b",
@@ -610,10 +624,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2260",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-southeast1-a",
@@ -632,10 +646,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2262",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-southeast1-c",
@@ -654,10 +668,10 @@
         "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2251",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-northeast1-b",
@@ -672,12 +686,13 @@
         "Intel Haswell",
         "Intel Ivy Bridge",
         "Intel Sandy Bridge",
+        "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2252",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-northeast1-c",
@@ -694,10 +709,10 @@
         "Intel Sandy Bridge",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2250",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-northeast1-a",
@@ -714,10 +729,10 @@
         "Intel Sandy Bridge",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2322",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-south1-c",
@@ -732,12 +747,13 @@
         "Intel Haswell",
         "Intel Ivy Bridge",
         "Intel Sandy Bridge",
-        "AMD Milan"
+        "AMD Milan",
+        "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2320",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-south1-b",
@@ -752,12 +768,13 @@
         "Intel Haswell",
         "Intel Ivy Bridge",
         "Intel Sandy Bridge",
-        "AMD Milan"
+        "AMD Milan",
+        "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2321",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-south1-a",
@@ -772,12 +789,13 @@
         "Intel Haswell",
         "Intel Ivy Bridge",
         "Intel Sandy Bridge",
-        "AMD Milan"
+        "AMD Milan",
+        "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2282",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "australia-southeast1-b",
@@ -792,12 +810,13 @@
         "Intel Haswell",
         "Intel Ivy Bridge",
         "Intel Sandy Bridge",
-        "AMD Milan"
+        "AMD Milan",
+        "AMD Rome"
       ],
-      "supportsPzs": true,
-      "kind": "compute#zone"
+      "supportsPzs": true
     },
     {
+      "kind": "compute#zone",
       "id": "2280",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "australia-southeast1-c",
@@ -812,12 +831,13 @@
         "Intel Haswell",
         "Intel Ivy Bridge",
         "Intel Sandy Bridge",
-        "AMD Milan"
+        "AMD Milan",
+        "AMD Rome"
       ],
-      "supportsPzs": true,
-      "kind": "compute#zone"
+      "supportsPzs": true
     },
     {
+      "kind": "compute#zone",
       "id": "2281",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "australia-southeast1-a",
@@ -832,12 +852,13 @@
         "Intel Haswell",
         "Intel Ivy Bridge",
         "Intel Sandy Bridge",
-        "AMD Milan"
+        "AMD Milan",
+        "AMD Rome"
       ],
-      "supportsPzs": true,
-      "kind": "compute#zone"
+      "supportsPzs": true
     },
     {
+      "kind": "compute#zone",
       "id": "2311",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "southamerica-east1-b",
@@ -851,12 +872,14 @@
         "Intel Broadwell",
         "Intel Haswell",
         "Intel Ivy Bridge",
-        "Intel Sandy Bridge"
+        "Intel Sandy Bridge",
+        "AMD Milan",
+        "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2312",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "southamerica-east1-c",
@@ -870,12 +893,14 @@
         "Intel Broadwell",
         "Intel Haswell",
         "Intel Ivy Bridge",
-        "Intel Sandy Bridge"
+        "Intel Sandy Bridge",
+        "AMD Milan",
+        "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2310",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "southamerica-east1-a",
@@ -889,12 +914,14 @@
         "Intel Broadwell",
         "Intel Haswell",
         "Intel Ivy Bridge",
-        "Intel Sandy Bridge"
+        "Intel Sandy Bridge",
+        "AMD Milan",
+        "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2372",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-east2-a",
@@ -911,10 +938,10 @@
         "Intel Sandy Bridge",
         "AMD Rome"
       ],
-      "supportsPzs": true,
-      "kind": "compute#zone"
+      "supportsPzs": true
     },
     {
+      "kind": "compute#zone",
       "id": "2371",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-east2-b",
@@ -930,10 +957,10 @@
         "Intel Sandy Bridge",
         "AMD Rome"
       ],
-      "supportsPzs": true,
-      "kind": "compute#zone"
+      "supportsPzs": true
     },
     {
+      "kind": "compute#zone",
       "id": "2370",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-east2-c",
@@ -949,10 +976,10 @@
         "Intel Sandy Bridge",
         "AMD Rome"
       ],
-      "supportsPzs": true,
-      "kind": "compute#zone"
+      "supportsPzs": true
     },
     {
+      "kind": "compute#zone",
       "id": "2392",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-northeast2-a",
@@ -968,10 +995,10 @@
         "Intel Sandy Bridge",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2390",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-northeast2-b",
@@ -987,10 +1014,10 @@
         "Intel Sandy Bridge",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2391",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-northeast2-c",
@@ -1006,10 +1033,10 @@
         "Intel Sandy Bridge",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2410",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-northeast3-a",
@@ -1025,10 +1052,10 @@
         "Intel Ivy Bridge",
         "Intel Sandy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2412",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-northeast3-b",
@@ -1044,10 +1071,10 @@
         "Intel Ivy Bridge",
         "Intel Sandy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2411",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-northeast3-c",
@@ -1062,10 +1089,10 @@
         "Intel Ivy Bridge",
         "Intel Sandy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2470",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-south2-a",
@@ -1080,10 +1107,10 @@
         "Intel Haswell",
         "Intel Ivy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2472",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-south2-b",
@@ -1098,10 +1125,10 @@
         "Intel Haswell",
         "Intel Ivy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2471",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-south2-c",
@@ -1116,10 +1143,10 @@
         "Intel Haswell",
         "Intel Ivy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2440",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-southeast2-a",
@@ -1134,10 +1161,10 @@
         "Intel Haswell",
         "Intel Ivy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2442",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-southeast2-b",
@@ -1152,10 +1179,10 @@
         "Intel Haswell",
         "Intel Ivy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2441",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-southeast2-c",
@@ -1170,10 +1197,10 @@
         "Intel Haswell",
         "Intel Ivy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2480",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "australia-southeast2-a",
@@ -1188,10 +1215,10 @@
         "Intel Haswell",
         "Intel Ivy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2482",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "australia-southeast2-b",
@@ -1206,10 +1233,10 @@
         "Intel Haswell",
         "Intel Ivy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2481",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "australia-southeast2-c",
@@ -1224,10 +1251,10 @@
         "Intel Haswell",
         "Intel Ivy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2452",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-central2-a",
@@ -1242,10 +1269,10 @@
         "Intel Haswell",
         "Intel Ivy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2450",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-central2-b",
@@ -1260,10 +1287,10 @@
         "Intel Haswell",
         "Intel Ivy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2451",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-central2-c",
@@ -1278,10 +1305,10 @@
         "Intel Haswell",
         "Intel Ivy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2352",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-north1-a",
@@ -1295,12 +1322,13 @@
         "Intel Broadwell",
         "Intel Ivy Bridge",
         "Intel Sandy Bridge",
+        "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2350",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-north1-b",
@@ -1314,12 +1342,13 @@
         "Intel Broadwell",
         "Intel Ivy Bridge",
         "Intel Sandy Bridge",
+        "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2351",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-north1-c",
@@ -1336,10 +1365,10 @@
         "Intel Sandy Bridge",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2382",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-west6-a",
@@ -1355,10 +1384,10 @@
         "Intel Ivy Bridge",
         "Intel Sandy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2380",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-west6-b",
@@ -1374,10 +1403,10 @@
         "Intel Ivy Bridge",
         "Intel Sandy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2381",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-west6-c",
@@ -1393,10 +1422,10 @@
         "Intel Ivy Bridge",
         "Intel Sandy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2330",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "northamerica-northeast1-a",
@@ -1411,12 +1440,13 @@
         "Intel Haswell",
         "Intel Ivy Bridge",
         "Intel Sandy Bridge",
+        "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2331",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "northamerica-northeast1-b",
@@ -1433,10 +1463,10 @@
         "Intel Sandy Bridge",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2332",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "northamerica-northeast1-c",
@@ -1451,12 +1481,13 @@
         "Intel Haswell",
         "Intel Ivy Bridge",
         "Intel Sandy Bridge",
+        "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2461",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "northamerica-northeast2-a",
@@ -1471,10 +1502,10 @@
         "Intel Haswell",
         "Intel Ivy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2460",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "northamerica-northeast2-b",
@@ -1489,10 +1520,10 @@
         "Intel Haswell",
         "Intel Ivy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2462",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "northamerica-northeast2-c",
@@ -1507,10 +1538,10 @@
         "Intel Haswell",
         "Intel Ivy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2490",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "southamerica-west1-a",
@@ -1525,10 +1556,10 @@
         "Intel Haswell",
         "Intel Ivy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2491",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "southamerica-west1-b",
@@ -1543,10 +1574,10 @@
         "Intel Haswell",
         "Intel Ivy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2492",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "southamerica-west1-c",
@@ -1561,10 +1592,10 @@
         "Intel Haswell",
         "Intel Ivy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2362",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-west2-a",
@@ -1580,10 +1611,10 @@
         "Intel Ivy Bridge",
         "Intel Sandy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2361",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-west2-b",
@@ -1597,12 +1628,14 @@
         "Intel Broadwell",
         "Intel Haswell",
         "Intel Ivy Bridge",
-        "Intel Sandy Bridge"
+        "Intel Sandy Bridge",
+        "AMD Milan",
+        "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2360",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-west2-c",
@@ -1618,10 +1651,10 @@
         "Intel Ivy Bridge",
         "Intel Sandy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2420",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-west3-a",
@@ -1633,13 +1666,14 @@
         "Intel Cascade Lake",
         "Intel Skylake",
         "Intel Broadwell",
+        "Intel Haswell",
         "Intel Ivy Bridge",
         "Intel Sandy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2421",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-west3-b",
@@ -1654,10 +1688,10 @@
         "Intel Ivy Bridge",
         "Intel Sandy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2422",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-west3-c",
@@ -1672,10 +1706,10 @@
         "Intel Ivy Bridge",
         "Intel Sandy Bridge"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2431",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-west4-a",
@@ -1688,12 +1722,13 @@
         "Intel Skylake",
         "Intel Broadwell",
         "Intel Ivy Bridge",
+        "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2432",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-west4-b",
@@ -1706,12 +1741,13 @@
         "Intel Skylake",
         "Intel Broadwell",
         "Intel Ivy Bridge",
+        "AMD Milan",
         "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#zone",
       "id": "2430",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-west4-c",
@@ -1723,12 +1759,12 @@
         "Intel Cascade Lake",
         "Intel Skylake",
         "Intel Broadwell",
-        "Intel Ivy Bridge"
+        "Intel Ivy Bridge",
+        "AMD Milan",
+        "AMD Rome"
       ],
-      "supportsPzs": false,
-      "kind": "compute#zone"
+      "supportsPzs": false
     }
   ],
-  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones",
-  "kind": "compute#zoneList"
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones"
 }
