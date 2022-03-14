@@ -6,6 +6,7 @@
    - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [SKIP]
      GKE logging is disabled
    - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [FAIL]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [FAIL]
 
    If Cloud Logging API is disabled, while GKE logging is enabled the Workload
    and Node logs won't be ingested, and thus, won't be visible in Logs Explorer.

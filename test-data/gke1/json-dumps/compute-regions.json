@@ -1,16 +1,18 @@
 {
-  "id": "projects/gcpdiag-gce1-aaaa/regions",
+  "kind": "compute#regionList",
+  "id": "projects/gcpdiag-gke1-aaaa/regions",
   "items": [
     {
+      "kind": "compute#region",
       "id": "1220",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-east1",
       "description": "asia-east1",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-east1-a",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-east1-b",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-east1-c"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-east1-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-east1-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-east1-c"
       ],
       "quotas": [
         {
@@ -71,6 +73,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 200,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -369,25 +376,40 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/asia-east1",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/asia-east1",
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1370",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-east2",
       "description": "asia-east2",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-east2-c",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-east2-b",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-east2-a"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-east2-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-east2-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-east2-a"
       ],
       "quotas": [
         {
@@ -448,6 +470,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 200,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -746,25 +773,40 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/asia-east2",
-      "supportsPzs": true,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/asia-east2",
+      "supportsPzs": true
     },
     {
+      "kind": "compute#region",
       "id": "1250",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-northeast1",
       "description": "asia-northeast1",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-northeast1-a",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-northeast1-b",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-northeast1-c"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-northeast1-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-northeast1-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-northeast1-c"
       ],
       "quotas": [
         {
@@ -825,6 +867,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 200,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -1123,25 +1170,40 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/asia-northeast1",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/asia-northeast1",
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1390",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-northeast2",
       "description": "asia-northeast2",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-northeast2-b",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-northeast2-c",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-northeast2-a"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-northeast2-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-northeast2-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-northeast2-a"
       ],
       "quotas": [
         {
@@ -1202,6 +1264,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 200,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -1500,25 +1567,40 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/asia-northeast2",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/asia-northeast2",
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1410",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-northeast3",
       "description": "asia-northeast3",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-northeast3-a",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-northeast3-c",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-northeast3-b"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-northeast3-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-northeast3-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-northeast3-b"
       ],
       "quotas": [
         {
@@ -1579,6 +1661,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 200,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -1877,25 +1964,40 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/asia-northeast3",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/asia-northeast3",
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1320",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-south1",
       "description": "asia-south1",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-south1-b",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-south1-a",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-south1-c"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-south1-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-south1-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-south1-c"
       ],
       "quotas": [
         {
@@ -1956,6 +2058,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 200,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -2254,25 +2361,40 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 24,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/asia-south1",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/asia-south1",
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1470",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-south2",
       "description": "asia-south2",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-south2-a",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-south2-c",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-south2-b"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-south2-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-south2-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-south2-b"
       ],
       "quotas": [
         {
@@ -2333,6 +2455,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 20,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -2631,25 +2758,40 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 15,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 24,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/asia-south2",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/asia-south2",
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1260",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-southeast1",
       "description": "asia-southeast1",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-southeast1-a",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-southeast1-b",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-southeast1-c"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-southeast1-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-southeast1-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-southeast1-c"
       ],
       "quotas": [
         {
@@ -2710,6 +2852,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 200,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -3008,25 +3155,40 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/asia-southeast1",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/asia-southeast1",
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1440",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-southeast2",
       "description": "asia-southeast2",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-southeast2-a",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-southeast2-c",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/asia-southeast2-b"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-southeast2-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-southeast2-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/asia-southeast2-b"
       ],
       "quotas": [
         {
@@ -3087,6 +3249,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 200,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -3385,25 +3552,40 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/asia-southeast2",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/asia-southeast2",
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1280",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "australia-southeast1",
       "description": "australia-southeast1",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/australia-southeast1-c",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/australia-southeast1-a",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/australia-southeast1-b"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/australia-southeast1-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/australia-southeast1-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/australia-southeast1-b"
       ],
       "quotas": [
         {
@@ -3464,6 +3646,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 200,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -3762,25 +3949,40 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/australia-southeast1",
-      "supportsPzs": true,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/australia-southeast1",
+      "supportsPzs": true
     },
     {
+      "kind": "compute#region",
       "id": "1480",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "australia-southeast2",
       "description": "australia-southeast2",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/australia-southeast2-a",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/australia-southeast2-c",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/australia-southeast2-b"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/australia-southeast2-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/australia-southeast2-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/australia-southeast2-b"
       ],
       "quotas": [
         {
@@ -3841,6 +4043,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 20,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -4139,25 +4346,40 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 15,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 24,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/australia-southeast2",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/australia-southeast2",
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1450",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-central2",
       "description": "europe-central2",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-central2-b",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-central2-c",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-central2-a"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-central2-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-central2-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-central2-a"
       ],
       "quotas": [
         {
@@ -4218,6 +4440,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 20,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -4516,25 +4743,40 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 15,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 24,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/europe-central2",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-central2",
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1350",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-north1",
       "description": "europe-north1",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-north1-b",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-north1-c",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-north1-a"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-north1-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-north1-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-north1-a"
       ],
       "quotas": [
         {
@@ -4595,6 +4837,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 200,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -4893,36 +5140,51 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/europe-north1",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-north1",
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1100",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-west1",
       "description": "europe-west1",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west1-b",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west1-c",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west1-d"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west1-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west1-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west1-d"
       ],
       "quotas": [
         {
           "metric": "CPUS",
           "limit": 600,
-          "usage": 4
+          "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
-          "usage": 400
+          "usage": 0
         },
         {
           "metric": "STATIC_ADDRESSES",
@@ -4932,7 +5194,7 @@
         {
           "metric": "IN_USE_ADDRESSES",
           "limit": 575,
-          "usage": 4
+          "usage": 0
         },
         {
           "metric": "SSD_TOTAL_GB",
@@ -4947,17 +5209,17 @@
         {
           "metric": "INSTANCE_GROUPS",
           "limit": 1000,
-          "usage": 1
+          "usage": 0
         },
         {
           "metric": "INSTANCE_GROUP_MANAGERS",
           "limit": 500,
-          "usage": 1
+          "usage": 0
         },
         {
           "metric": "INSTANCES",
           "limit": 6000,
-          "usage": 4
+          "usage": 0
         },
         {
           "metric": "AUTOSCALERS",
@@ -4972,6 +5234,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 200,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -5270,25 +5537,40 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/europe-west1",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west1",
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1290",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-west2",
       "description": "europe-west2",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west2-a",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west2-b",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west2-c"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west2-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west2-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west2-c"
       ],
       "quotas": [
         {
@@ -5349,6 +5631,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 200,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -5647,25 +5934,40 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/europe-west2",
-      "supportsPzs": true,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west2",
+      "supportsPzs": true
     },
     {
+      "kind": "compute#region",
       "id": "1300",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-west3",
       "description": "europe-west3",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west3-c",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west3-a",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west3-b"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west3-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west3-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west3-b"
       ],
       "quotas": [
         {
@@ -5726,6 +6028,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 200,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -6024,36 +6331,51 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/europe-west3",
-      "supportsPzs": true,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west3",
+      "supportsPzs": true
     },
     {
+      "kind": "compute#region",
       "id": "1340",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-west4",
       "description": "europe-west4",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-c",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-b",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a"
       ],
       "quotas": [
         {
           "metric": "CPUS",
           "limit": 600,
-          "usage": 2
+          "usage": 14
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
-          "usage": 40
+          "usage": 1300
         },
         {
           "metric": "STATIC_ADDRESSES",
@@ -6063,7 +6385,7 @@
         {
           "metric": "IN_USE_ADDRESSES",
           "limit": 575,
-          "usage": 0
+          "usage": 10
         },
         {
           "metric": "SSD_TOTAL_GB",
@@ -6078,17 +6400,17 @@
         {
           "metric": "INSTANCE_GROUPS",
           "limit": 1000,
-          "usage": 1
+          "usage": 16
         },
         {
           "metric": "INSTANCE_GROUP_MANAGERS",
           "limit": 500,
-          "usage": 1
+          "usage": 13
         },
         {
           "metric": "INSTANCES",
           "limit": 6000,
-          "usage": 4
+          "usage": 13
         },
         {
           "metric": "AUTOSCALERS",
@@ -6106,9 +6428,14 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
-          "usage": 2
+          "usage": 0
         },
         {
           "metric": "NVIDIA_K80_GPUS",
@@ -6133,7 +6460,7 @@
         {
           "metric": "NETWORK_ENDPOINT_GROUPS",
           "limit": 1000,
-          "usage": 0
+          "usage": 1
         },
         {
           "metric": "INTERNAL_ADDRESSES",
@@ -6168,7 +6495,7 @@
         {
           "metric": "NVIDIA_V100_GPUS",
           "limit": 8,
-          "usage": 0
+          "usage": 1
         },
         {
           "metric": "NVIDIA_P4_GPUS",
@@ -6401,25 +6728,40 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/europe-west4",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4",
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1380",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-west6",
       "description": "europe-west6",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west6-b",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west6-c",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west6-a"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west6-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west6-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west6-a"
       ],
       "quotas": [
         {
@@ -6480,6 +6822,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 200,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -6778,25 +7125,40 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/europe-west6",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west6",
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1330",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "northamerica-northeast1",
       "description": "northamerica-northeast1",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/northamerica-northeast1-a",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/northamerica-northeast1-b",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/northamerica-northeast1-c"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/northamerica-northeast1-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/northamerica-northeast1-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/northamerica-northeast1-c"
       ],
       "quotas": [
         {
@@ -6857,6 +7219,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 200,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -7155,25 +7522,40 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/northamerica-northeast1",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/northamerica-northeast1",
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1460",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "northamerica-northeast2",
       "description": "northamerica-northeast2",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/northamerica-northeast2-b",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/northamerica-northeast2-a",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/northamerica-northeast2-c"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/northamerica-northeast2-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/northamerica-northeast2-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/northamerica-northeast2-c"
       ],
       "quotas": [
         {
@@ -7234,6 +7616,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 20,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -7532,25 +7919,40 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 15,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 24,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/northamerica-northeast2",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/northamerica-northeast2",
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1310",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "southamerica-east1",
       "description": "southamerica-east1",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/southamerica-east1-a",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/southamerica-east1-b",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/southamerica-east1-c"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/southamerica-east1-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/southamerica-east1-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/southamerica-east1-c"
       ],
       "quotas": [
         {
@@ -7611,6 +8013,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 200,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -7909,25 +8316,40 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/southamerica-east1",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/southamerica-east1",
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1490",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "southamerica-west1",
       "description": "southamerica-west1",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/southamerica-west1-a",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/southamerica-west1-b",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/southamerica-west1-c"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/southamerica-west1-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/southamerica-west1-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/southamerica-west1-c"
       ],
       "quotas": [
         {
@@ -7988,6 +8410,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 20,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -8286,26 +8713,41 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 15,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 24,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/southamerica-west1",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/southamerica-west1",
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1000",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-central1",
       "description": "us-central1",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/us-central1-a",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/us-central1-b",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/us-central1-c",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/us-central1-f"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-central1-f"
       ],
       "quotas": [
         {
@@ -8366,6 +8808,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 200,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -8664,25 +9111,40 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/us-central1",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-central1",
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1230",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-east1",
       "description": "us-east1",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/us-east1-b",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/us-east1-c",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/us-east1-d"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-east1-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-east1-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-east1-d"
       ],
       "quotas": [
         {
@@ -8743,6 +9205,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 200,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -9041,25 +9508,40 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/us-east1",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-east1",
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1270",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-east4",
       "description": "us-east4",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/us-east4-a",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/us-east4-b",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/us-east4-c"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-east4-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-east4-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-east4-c"
       ],
       "quotas": [
         {
@@ -9120,6 +9602,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 200,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -9418,25 +9905,40 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/us-east4",
-      "supportsPzs": true,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-east4",
+      "supportsPzs": true
     },
     {
+      "kind": "compute#region",
       "id": "1210",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-west1",
       "description": "us-west1",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/us-west1-a",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/us-west1-b",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/us-west1-c"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-west1-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-west1-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-west1-c"
       ],
       "quotas": [
         {
@@ -9497,6 +9999,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 200,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -9795,25 +10302,40 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/us-west1",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west1",
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1360",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-west2",
       "description": "us-west2",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/us-west2-c",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/us-west2-b",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/us-west2-a"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-west2-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-west2-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-west2-a"
       ],
       "quotas": [
         {
@@ -9874,6 +10396,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 200,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -10172,25 +10699,40 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/us-west2",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west2",
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1420",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-west3",
       "description": "us-west3",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/us-west3-a",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/us-west3-b",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/us-west3-c"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-west3-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-west3-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-west3-c"
       ],
       "quotas": [
         {
@@ -10251,6 +10793,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 200,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -10549,25 +11096,40 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/us-west3",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west3",
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1430",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-west4",
       "description": "us-west4",
       "status": "UP",
       "zones": [
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/us-west4-c",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/us-west4-a",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/us-west4-b"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-west4-c",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-west4-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/us-west4-b"
       ],
       "quotas": [
         {
@@ -10628,6 +11190,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 200,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -10926,16 +11493,29 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/us-west4",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west4",
+      "supportsPzs": false
     }
   ],
-  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions",
-  "kind": "compute#regionList"
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions"
 }

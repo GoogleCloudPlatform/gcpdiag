@@ -1,0 +1,22 @@
+*  gke/WARN/2022_005: NVIDIA GPU device drivers are installed on GKE nodes with GPU
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [SKIP]
+     no GPU found
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [SKIP]
+     no GPU found
+   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [SKIP]
+     no GPU found
+   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [SKIP]
+     no GPU found
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [SKIP]
+     monitoring disabled
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [SKIP]
+     no GPU found
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [FAIL]
+     The DaemonSet of nvidia-driver-installer is not found in the GKE cluster.
+
+   After adding GPU nodes to the GKE cluster, the NVIDIA's device drivers should
+   be installed in the nodes. Google provides a DaemonSet that will install the
+   drivers.
+
+   https://gcpdiag.dev/rules/gke/WARN/2022_005
+

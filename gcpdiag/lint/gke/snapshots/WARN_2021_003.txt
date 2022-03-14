@@ -6,6 +6,7 @@
    - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [FAIL] 1/1 nodes used.
      Pod CIDR: 192.168.1.0/24. Test threshold: 1 (90%).
    - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [ OK ] 1/1024 nodes used.
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [ OK ] 1/1024 nodes used.
 
    The maximum amount of nodes in a GKE cluster is limited based on its pod CIDR
    range. This test checks if the cluster is approaching the maximum amount of

@@ -8,6 +8,7 @@
    - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [SKIP]
      monitoring disabled
    - gcpdiag-gke1-aaaa/europe-west4-a/gke4/default-pool                   [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke6/default-pool                   [ OK ]
 
    The service account used by GKE nodes should have the monitoring.metricWriter
    role, otherwise ingestion of metrics won't work.

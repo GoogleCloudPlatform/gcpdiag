@@ -1,9 +1,11 @@
 {
+  "kind": "compute#routerList",
   "id": "projects/gcpdiag-gke1-aaaa/regions/europe-west4/routers",
   "items": [
     {
-      "id": "804970109629473550",
-      "creationTimestamp": "2022-01-19T06:19:13.250-08:00",
+      "kind": "compute#router",
+      "id": "6498501077836079272",
+      "creationTimestamp": "2022-03-30T02:09:27.014-07:00",
       "name": "gke-default-router",
       "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4",
       "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
@@ -27,10 +29,8 @@
           "tcpTransitoryIdleTimeoutSec": 30,
           "enableEndpointIndependentMapping": true
         }
-      ],
-      "kind": "compute#router"
+      ]
     }
   ],
-  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4/routers",
-  "kind": "compute#routerList"
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4/routers"
 }

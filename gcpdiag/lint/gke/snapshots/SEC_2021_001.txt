@@ -10,6 +10,8 @@
      node pool uses the GCE default service account
    - gcpdiag-gke1-aaaa/europe-west4-a/gke4/default-pool                   [SKIP]
      workload identity enabled
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke6/default-pool                   [FAIL]
+     node pool uses the GCE default service account
 
    The GCE default service account has more permissions than are required to run
    your Kubernetes Engine cluster. You should either use GKE Workload Identity

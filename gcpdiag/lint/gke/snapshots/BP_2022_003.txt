@@ -9,4 +9,6 @@
    - gcpdiag-gke1-aaaa/europe-west4-a/gke1/default-pool                   [ OK ]
    - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [SKIP]
      release channel: REGULAR
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [SKIP]
+     release channel: REGULAR
 

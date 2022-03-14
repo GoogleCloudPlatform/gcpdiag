@@ -10,6 +10,8 @@
      no ingress detected
    - gcpdiag-gke1-aaaa/europe-west4-a/gke4/default-pool                   [FAIL]
      connections from 35.191.0.0/16 to port 8080 blocked by vpc firewall rule: gke-gke4-ingress-test-deny
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke6/default-pool                   [SKIP]
+     no ingress detected
 
    In order for the Ingress service to work correctly, the network connection
    from the load balancer must be allowed.

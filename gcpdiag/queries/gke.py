@@ -103,6 +103,11 @@ class NodeConfig:
   def __init__(self, resource_data):
     self._resource_data = resource_data
 
+  def has_accelerators(self) -> bool:
+    if 'accelerators' in self._resource_data:
+      return True
+    return False
+
   @property
   def image_type(self) -> str:
     return self._resource_data['imageType']

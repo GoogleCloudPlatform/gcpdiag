@@ -8,6 +8,7 @@
    - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [SKIP]
      logging disabled
    - gcpdiag-gke1-aaaa/europe-west4-a/gke4/default-pool                   [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke6/default-pool                   [ OK ]
 
    The service account used by GKE nodes should have the logging.logWriter role,
    otherwise ingestion of logs won't work.

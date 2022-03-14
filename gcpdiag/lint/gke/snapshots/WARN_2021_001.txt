@@ -3,10 +3,12 @@
      release channel: REGULAR
    - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [SKIP]
      release channel: REGULAR
-   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [ OK ] 1.21.5-gke.1302
+   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [ OK ] 1.21.9-gke.1002
    - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [SKIP]
      release channel: REGULAR
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [ OK ] 1.21.5-gke.1302
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [ OK ] 1.21.9-gke.1002
    - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [SKIP]
+     release channel: REGULAR
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [SKIP]
      release channel: REGULAR
 

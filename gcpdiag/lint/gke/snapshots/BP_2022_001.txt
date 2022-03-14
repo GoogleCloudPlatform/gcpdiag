@@ -7,6 +7,8 @@
       is not regional
    - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [FAIL]
       is not regional
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [FAIL]
+      is not regional
 
    The availability of regional clusters (both control plane and nodes) is
    higher for regional clusters as they are replicated across zones in the

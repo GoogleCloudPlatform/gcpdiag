@@ -1,30 +1,42 @@
 {
   "commonInstanceMetadata": {
-    "fingerprint": "i87tP87z8HM=",
+    "fingerprint": "Tz3suBrdUu4=",
     "items": [
       {
-        "key": "gke-gke4-1019cf00-secondary-ranges",
-        "value": "services:default:default:gke-gke4-services-1019cf00,pods:default:default:gke-gke4-pods-1019cf00"
+        "key": "gke-gke4-93befb7e-secondary-ranges",
+        "value": "services:default:default:gke-gke4-services-93befb7e,pods:default:default:gke-gke4-pods-93befb7e"
       },
       {
-        "key": "gke-gke1-79f3ce44-secondary-ranges",
-        "value": "services:default:gke1-subnet:gke1-secondary-range-svc,shareable-pods:default:gke1-subnet:gke1-secondary-range-pod"
-      },
-      {
-        "key": "gke-gke3-8614055e-cidr",
+        "key": "gke-gke2-7cf59b1c-cidr",
         "value": "default:10.4.0.0/14"
       },
       {
-        "key": "gke-gke2-498f0ae5-cidr",
+        "key": "gke-gke3-b4ccfbf1-cidr",
         "value": "default:10.8.0.0/14"
+      },
+      {
+        "key": "gke-gke1-8a964d6d-secondary-ranges",
+        "value": "services:default:gke1-subnet:gke1-secondary-range-svc,shareable-pods:default:gke1-subnet:gke1-secondary-range-pod"
+      },
+      {
+        "key": "gke-autopilot-gke1-19977223-secondary-ranges",
+        "value": "services:default:default:gke-autopilot-gke1-services-19977223,pods:default:default:gke-autopilot-gke1-pods-19977223"
+      },
+      {
+        "key": "gke-autopilot-gke2-65d1ba15-secondary-ranges",
+        "value": "services:default:default:gke-autopilot-gke2-services-65d1ba15,pods:default:default:gke-autopilot-gke2-pods-65d1ba15"
+      },
+      {
+        "key": "gke-gke6-e660e8cd-cidr",
+        "value": "default:10.12.0.0/14"
       }
     ],
     "kind": "compute#metadata"
   },
-  "creationTimestamp": "2022-01-10T03:51:49.731-08:00",
+  "creationTimestamp": "2022-03-30T02:08:23.669-07:00",
   "defaultNetworkTier": "PREMIUM",
   "defaultServiceAccount": "12340002-compute@developer.gserviceaccount.com",
-  "id": "1163917191032185658",
+  "id": "1543636336255803624",
   "kind": "compute#project",
   "name": "gcpdiag-gke1-aaaa",
   "quotas": [
@@ -41,7 +53,7 @@
     {
       "limit": 500,
       "metric": "FIREWALLS",
-      "usage": 16
+      "usage": 30
     },
     {
       "limit": 5000,
@@ -56,12 +68,12 @@
     {
       "limit": 300,
       "metric": "ROUTES",
-      "usage": 7
+      "usage": 8
     },
     {
       "limit": 150,
       "metric": "FORWARDING_RULES",
-      "usage": 0
+      "usage": 1
     },
     {
       "limit": 500,
@@ -71,12 +83,12 @@
     {
       "limit": 500,
       "metric": "HEALTH_CHECKS",
-      "usage": 0
+      "usage": 2
     },
     {
       "limit": 575,
       "metric": "IN_USE_ADDRESSES",
-      "usage": 0
+      "usage": 1
     },
     {
       "limit": 500,
@@ -86,22 +98,22 @@
     {
       "limit": 100,
       "metric": "TARGET_HTTP_PROXIES",
-      "usage": 0
+      "usage": 2
     },
     {
       "limit": 100,
       "metric": "URL_MAPS",
-      "usage": 0
+      "usage": 2
     },
     {
       "limit": 150,
       "metric": "BACKEND_SERVICES",
-      "usage": 0
+      "usage": 2
     },
     {
       "limit": 1000,
       "metric": "INSTANCE_TEMPLATES",
-      "usage": 8
+      "usage": 13
     },
     {
       "limit": 50,
@@ -121,7 +133,7 @@
     {
       "limit": 20,
       "metric": "ROUTERS",
-      "usage": 0
+      "usage": 1
     },
     {
       "limit": 100,
@@ -141,7 +153,7 @@
     {
       "limit": 275,
       "metric": "SUBNETWORKS",
-      "usage": 31
+      "usage": 30
     },
     {
       "limit": 100,
@@ -221,6 +233,11 @@
     {
       "limit": 150,
       "metric": "INTERNAL_TRAFFIC_DIRECTOR_FORWARDING_RULES",
+      "usage": 0
+    },
+    {
+      "limit": 150,
+      "metric": "GLOBAL_EXTERNAL_MANAGED_FORWARDING_RULES",
       "usage": 0
     }
   ],
