@@ -547,7 +547,7 @@ class EffectiveFirewalls:
     if 'firewallPolicys' in resource_data:
       for policy in resource_data['firewallPolicys']:
         self._policies.append(_FirewallPolicy(policy))
-    self._vpc_firewall = _VpcFirewall(resource_data['firewalls'])
+    self._vpc_firewall = _VpcFirewall(resource_data.get('firewalls', {}))
 
   def check_connectivity_ingress(
       self,  #
