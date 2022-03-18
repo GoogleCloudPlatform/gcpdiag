@@ -1,0 +1,6 @@
+*  gce/WARN/2022_003: GCE VM instances quota is not near the limit.
+   - projects/gcpdiag-gce1-aaaa/regions/europe-west1                      [SKIP]
+     no data
+   - projects/gcpdiag-gce1-aaaa/regions/europe-west4                      [SKIP]
+     no data
+
