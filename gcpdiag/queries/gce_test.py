@@ -188,10 +188,16 @@ class TestGce:
   def test_get_all_regions(self):
     regions = gce.get_all_regions(DUMMY_PROJECT_NAME)
     assert len(regions) > 0
-    assert 'us-east1' in regions
-    assert 'europe-north1' in regions
-    assert 'asia-southeast1' in regions
-    assert 'southamerica-east1' in regions
+    assert 'us-east1' in [r.name for r in regions]
+    assert 'europe-north1' in [r.name for r in regions]
+    assert 'asia-southeast1' in [r.name for r in regions]
+    assert 'southamerica-east1' in [r.name for r in regions]
+
+  def test_get_regions_with_instances(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    regions = gce.get_regions_with_instances(context)
+    assert len(regions) == 2
+    assert 'europe-west1' in [r.name for r in regions]
 
   def test_get_instance_templates(self):
     templates = gce.get_instance_templates(DUMMY_PROJECT_NAME)

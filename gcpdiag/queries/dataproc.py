@@ -110,7 +110,8 @@ class Dataproc:
 
   def get_regions(self) -> Iterable[Region]:
     return [
-        Region(self.project_id, r) for r in gce.get_all_regions(self.project_id)
+        Region(self.project_id, r.name)
+        for r in gce.get_all_regions(self.project_id)
     ]
 
   def is_api_enabled(self) -> bool:
