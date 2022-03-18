@@ -208,7 +208,6 @@ class NodePool(models.Resource):
 
     If the node tags can't be determined, [] is returned.
     """
-
     migs = self.instance_groups
     if not migs:
       return []
@@ -327,8 +326,15 @@ class Cluster(models.Resource):
   def is_private(self) -> bool:
     return 'privateClusterConfig' in self._resource_data
 
+  @property
   def is_regional(self) -> bool:
     return len(self._resource_data['locations']) > 1
+
+  @property
+  def is_autopilot(self) -> bool:
+    if not 'autopilot' in self._resource_data:
+      return False
+    return self._resource_data['autopilot'].get('enabled', False)
 
   @property
   def masters_cidr_list(self) -> Iterable[ipaddress.IPv4Network]:
@@ -353,20 +359,12 @@ class Cluster(models.Resource):
   @property
   def cluster_hash(self) -> Optional[str]:
     """Returns the "cluster hash" as used in automatic firewall rules for GKE clusters.
+    Cluster hash is the first 8 characters of cluster id.
     See also: https://cloud.google.com/kubernetes-engine/docs/concepts/firewall-rules
     """
-
-    if not self.nodepools:
-      raise UndefinedClusterPropertyError('no nodepool')
-    np = next(iter(self.nodepools))
-    if not np or not np.instance_groups:
-      return None
-    for tag in np.node_tags:
-      m = re.match(f'gke-{self.name}-([^-]+)-node', tag)
-      if m:
-        return m.group(1)
-    raise UndefinedClusterPropertyError(
-        f"can't match node tags: {np.node_tags}")
+    if 'id' in self._resource_data:
+      return self._resource_data['id'][:8]
+    raise UndefinedClusterPropertyError('no id')
 
 
 @caching.cached_api_call

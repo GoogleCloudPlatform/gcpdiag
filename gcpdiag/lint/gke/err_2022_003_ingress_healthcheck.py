@@ -53,8 +53,12 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'no clusters found')
   for _, c in sorted(clusters.items()):
     for np in c.nodepools:
+      tags = np.node_tags
+      if c.is_autopilot:
+        # use default tags for autopilot clusters
+        tags = [f'gke-{c.name}-{c.cluster_hash}-node']
       rules = c.network.firewall.get_vpc_ingress_rules(
-          name_pattern=FIREWALL_RULE_NAME_PATTERN, target_tags=np.node_tags)
+          name_pattern=FIREWALL_RULE_NAME_PATTERN, target_tags=tags)
       if not rules:
         report.add_skipped(np, 'no ingress detected')
         break

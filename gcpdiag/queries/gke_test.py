@@ -55,7 +55,7 @@ class TestCluster:
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              regions=['europe-west4'])
     clusters = gke.get_clusters(context)
-    assert DUMMY_CLUSTER1_NAME in clusters and len(clusters) == 4
+    assert DUMMY_CLUSTER1_NAME in clusters and len(clusters) == 6
 
   def test_cluster_properties(self):
     """verify cluster property methods."""
@@ -213,9 +213,9 @@ class TestCluster:
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     c = clusters[DUMMY_CLUSTER4_NAME]
-    assert not c.is_regional()
+    assert not c.is_regional
     c = clusters[DUMMY_CLUSTER2_NAME]
-    assert c.is_regional()
+    assert c.is_regional
 
   def test_node_tag_property(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)

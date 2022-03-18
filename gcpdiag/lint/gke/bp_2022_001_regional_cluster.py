@@ -27,7 +27,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not clusters:
     report.add_skipped(None, 'no clusters found')
   for _, c in sorted(clusters.items()):
-    if not c.is_regional():
+    if not c.is_regional:
       report.add_failed(c, ' is not regional')
     else:
       report.add_ok(c)
