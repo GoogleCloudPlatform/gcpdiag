@@ -324,6 +324,15 @@ class Cluster(models.Resource):
     return network.get_subnetwork(m.group(1), m.group(2), m.group(3))
 
   @property
+  def is_shared_vpc(self) -> bool:
+    # projects/gcpdiag-gke1-aaaa/global/networks/default
+    network_string = self._resource_data['networkConfig']['network']
+    m = re.match(r'projects/([^/]+)/global/networks/([^/]+)$', network_string)
+    if not m:
+      raise RuntimeError("can't parse network string: %s" % network_string)
+    return self.project_id != m.group(1)
+
+  @property
   def is_private(self) -> bool:
     return 'privateClusterConfig' in self._resource_data
 
