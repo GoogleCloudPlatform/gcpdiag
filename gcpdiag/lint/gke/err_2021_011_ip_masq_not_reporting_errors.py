@@ -57,7 +57,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     except KeyError:
       return False
 
-  clusters_with_errors = util.gke_logs_find_bad_cluster(
+  clusters_with_errors = util.gke_logs_find_bad_clusters(
       context=context,
       logs_by_project=ip_masq_container_errors,
       filter_f=filter_f)
@@ -65,7 +65,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   # Generate report
   for c in clusters.values():
     if c in clusters_with_errors:
-      msg = clusters_with_errors[c]
-      report.add_failed(c, f'Error message:\n```\n {msg}\n```')
+      report.add_failed(c, logs.format_log_entry(clusters_with_errors[c]))
     else:
       report.add_ok(c)
