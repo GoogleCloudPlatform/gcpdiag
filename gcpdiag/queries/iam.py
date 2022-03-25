@@ -525,6 +525,7 @@ SERVICE_AGENT_DOMAINS = (
     'gcp-sa-ekms.iam.gserviceaccount.com',
     'gcp-sa-endpoints.iam.gserviceaccount.com',
     'gcp-sa-eventarc.iam.gserviceaccount.com',
+    'gcp-sa-firebase.iam.gserviceaccount.com',
     'gcp-sa-firebasemods.iam.gserviceaccount.com',
     'gcp-sa-firebasestorage.iam.gserviceaccount.com',
     'gcp-sa-firestore.iam.gserviceaccount.com',
