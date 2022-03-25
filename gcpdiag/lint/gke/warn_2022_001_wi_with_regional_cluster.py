@@ -27,7 +27,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not clusters:
     report.add_skipped(None, 'no clusters found')
   for _, c in sorted(clusters.items()):
-    if c.has_workload_identity_enabled() and not c.is_regional():
+    if c.has_workload_identity_enabled() and not c.is_regional:
       report.add_failed(c)
     else:
       report.add_ok(c)

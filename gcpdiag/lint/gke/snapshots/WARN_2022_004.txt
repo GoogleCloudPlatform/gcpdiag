@@ -1,4 +1,6 @@
 *  gke/WARN/2022_004: Cloud Logging API enabled when GKE logging is enabled
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [FAIL]
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [FAIL]
    - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [FAIL]
    - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [FAIL]
    - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [SKIP]

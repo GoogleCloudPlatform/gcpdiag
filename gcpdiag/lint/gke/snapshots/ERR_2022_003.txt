@@ -1,4 +1,8 @@
 *  gke/ERR/2022_003: GKE connectivity: load balancer to node communication (ingress).
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1/default-pool           [SKIP]
+     no ingress detected
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2/default-pool           [SKIP]
+     no ingress detected
    - gcpdiag-gke1-aaaa/europe-west4/gke2/default-pool                     [SKIP]
      no ingress detected
    - gcpdiag-gke1-aaaa/europe-west4/gke3/default-pool                     [ OK ]

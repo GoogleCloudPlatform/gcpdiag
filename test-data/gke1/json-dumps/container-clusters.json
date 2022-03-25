@@ -671,6 +671,485 @@
       "status": "RUNNING",
       "subnetwork": "default",
       "zone": "europe-west4"
+    },
+    {
+      "addonsConfig": {
+        "dnsCacheConfig": {
+          "enabled": true
+        },
+        "gcePersistentDiskCsiDriverConfig": {
+          "enabled": true
+        },
+        "gcpFilestoreCsiDriverConfig": {
+          "enabled": true
+        },
+        "kubernetesDashboard": {
+          "disabled": true
+        },
+        "networkPolicyConfig": {
+          "disabled": true
+        }
+      },
+      "autopilot": {
+        "enabled": true
+      },
+      "autoscaling": {
+        "autoprovisioningNodePoolDefaults": {
+          "imageType": "COS_CONTAINERD",
+          "management": {
+            "autoRepair": true,
+            "autoUpgrade": true
+          },
+          "oauthScopes": [
+            "https://www.googleapis.com/auth/devstorage.read_only",
+            "https://www.googleapis.com/auth/logging.write",
+            "https://www.googleapis.com/auth/monitoring",
+            "https://www.googleapis.com/auth/service.management.readonly",
+            "https://www.googleapis.com/auth/servicecontrol",
+            "https://www.googleapis.com/auth/trace.append"
+          ],
+          "serviceAccount": "default",
+          "upgradeSettings": {
+            "maxSurge": 1
+          }
+        },
+        "autoscalingProfile": "OPTIMIZE_UTILIZATION",
+        "enableNodeAutoprovisioning": true,
+        "resourceLimits": [
+          {
+            "maximum": "1000000000",
+            "resourceType": "cpu"
+          },
+          {
+            "maximum": "1000000000",
+            "resourceType": "memory"
+          }
+        ]
+      },
+      "binaryAuthorization": {},
+      "clusterIpv4Cidr": "10.85.0.0/17",
+      "createTime": "2022-03-18T13:42:58+00:00",
+      "currentMasterVersion": "1.21.6-gke.1503",
+      "currentNodeCount": 2,
+      "currentNodeVersion": "1.21.6-gke.1503",
+      "databaseEncryption": {
+        "state": "DECRYPTED"
+      },
+      "defaultMaxPodsConstraint": {
+        "maxPodsPerNode": "110"
+      },
+      "endpoint": "192.168.1.1",
+      "id": "4be0bc476d1c410fb690bfb988c9f917fef6908c9d7141a2b21c5408a3d08f14",
+      "initialClusterVersion": "1.21.6-gke.1503",
+      "initialNodeCount": 1,
+      "instanceGroupUrls": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-c/instanceGroupManagers/gk3-autopilot-gke1-default-pool-891270ad-grp",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-b/instanceGroupManagers/gk3-autopilot-gke1-default-pool-fed8a35a-grp"
+      ],
+      "ipAllocationPolicy": {
+        "clusterIpv4Cidr": "10.85.0.0/17",
+        "clusterIpv4CidrBlock": "10.85.0.0/17",
+        "clusterSecondaryRangeName": "gke-autopilot-gke1-pods-4be0bc47",
+        "servicesIpv4Cidr": "10.85.128.0/22",
+        "servicesIpv4CidrBlock": "10.85.128.0/22",
+        "servicesSecondaryRangeName": "gke-autopilot-gke1-services-4be0bc47",
+        "useIpAliases": true
+      },
+      "labelFingerprint": "a9dc16a7",
+      "legacyAbac": {},
+      "location": "europe-west4",
+      "locations": [
+        "europe-west4-a",
+        "europe-west4-c",
+        "europe-west4-b"
+      ],
+      "loggingConfig": {
+        "componentConfig": {
+          "enableComponents": [
+            "SYSTEM_COMPONENTS",
+            "WORKLOADS"
+          ]
+        }
+      },
+      "loggingService": "logging.googleapis.com/kubernetes",
+      "maintenancePolicy": {
+        "resourceVersion": "e3b0c442"
+      },
+      "masterAuth": {
+        "clusterCaCertificate": "REDACTED"
+      },
+      "masterAuthorizedNetworksConfig": {},
+      "monitoringConfig": {
+        "componentConfig": {
+          "enableComponents": [
+            "SYSTEM_COMPONENTS"
+          ]
+        }
+      },
+      "monitoringService": "monitoring.googleapis.com/kubernetes",
+      "name": "autopilot-gke1",
+      "network": "default",
+      "networkConfig": {
+        "defaultSnatStatus": {},
+        "enableIntraNodeVisibility": true,
+        "network": "projects/gcpdiag-gke1-aaaa/global/networks/default",
+        "serviceExternalIpsConfig": {},
+        "subnetwork": "projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks/default"
+      },
+      "nodeConfig": {
+        "diskSizeGb": 100,
+        "diskType": "pd-standard",
+        "imageType": "COS_CONTAINERD",
+        "machineType": "e2-medium",
+        "metadata": {
+          "disable-legacy-endpoints": "true"
+        },
+        "oauthScopes": [
+          "https://www.googleapis.com/auth/devstorage.read_only",
+          "https://www.googleapis.com/auth/logging.write",
+          "https://www.googleapis.com/auth/monitoring",
+          "https://www.googleapis.com/auth/service.management.readonly",
+          "https://www.googleapis.com/auth/servicecontrol",
+          "https://www.googleapis.com/auth/trace.append"
+        ],
+        "serviceAccount": "default",
+        "shieldedInstanceConfig": {
+          "enableIntegrityMonitoring": true,
+          "enableSecureBoot": true
+        },
+        "workloadMetadataConfig": {
+          "mode": "GKE_METADATA"
+        }
+      },
+      "nodePoolAutoConfig": {},
+      "nodePoolDefaults": {
+        "nodeConfigDefaults": {}
+      },
+      "nodePools": [
+        {
+          "autoscaling": {
+            "autoprovisioned": true,
+            "enabled": true,
+            "maxNodeCount": 1000
+          },
+          "config": {
+            "diskSizeGb": 100,
+            "diskType": "pd-standard",
+            "imageType": "COS_CONTAINERD",
+            "machineType": "e2-medium",
+            "metadata": {
+              "disable-legacy-endpoints": "true"
+            },
+            "oauthScopes": [
+              "https://www.googleapis.com/auth/devstorage.read_only",
+              "https://www.googleapis.com/auth/logging.write",
+              "https://www.googleapis.com/auth/monitoring",
+              "https://www.googleapis.com/auth/service.management.readonly",
+              "https://www.googleapis.com/auth/servicecontrol",
+              "https://www.googleapis.com/auth/trace.append"
+            ],
+            "serviceAccount": "default",
+            "shieldedInstanceConfig": {
+              "enableIntegrityMonitoring": true,
+              "enableSecureBoot": true
+            },
+            "workloadMetadataConfig": {
+              "mode": "GKE_METADATA"
+            }
+          },
+          "initialNodeCount": 1,
+          "instanceGroupUrls": [
+            "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-c/instanceGroupManagers/gk3-autopilot-gke1-default-pool-891270ad-grp",
+            "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-b/instanceGroupManagers/gk3-autopilot-gke1-default-pool-fed8a35a-grp"
+          ],
+          "locations": [
+            "europe-west4-c",
+            "europe-west4-b"
+          ],
+          "management": {
+            "autoRepair": true,
+            "autoUpgrade": true
+          },
+          "maxPodsConstraint": {
+            "maxPodsPerNode": "32"
+          },
+          "name": "default-pool",
+          "networkConfig": {
+            "podIpv4CidrBlock": "10.85.0.0/17",
+            "podRange": "gke-autopilot-gke1-pods-4be0bc47"
+          },
+          "podIpv4CidrSize": 26,
+          "selfLink": "https://container.googleapis.com/v1/projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke1/nodePools/default-pool",
+          "status": "RUNNING",
+          "upgradeSettings": {
+            "maxSurge": 1
+          },
+          "version": "1.21.6-gke.1503"
+        }
+      ],
+      "notificationConfig": {
+        "pubsub": {}
+      },
+      "releaseChannel": {
+        "channel": "REGULAR"
+      },
+      "selfLink": "https://container.googleapis.com/v1/projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke1",
+      "servicesIpv4Cidr": "10.85.128.0/22",
+      "shieldedNodes": {
+        "enabled": true
+      },
+      "status": "RUNNING",
+      "subnetwork": "default",
+      "verticalPodAutoscaling": {
+        "enabled": true
+      },
+      "workloadIdentityConfig": {
+        "workloadPool": "gcpdiag-gke1-aaaa.svc.id.goog"
+      },
+      "zone": "europe-west4"
+    },
+    {
+      "addonsConfig": {
+        "dnsCacheConfig": {
+          "enabled": true
+        },
+        "gcePersistentDiskCsiDriverConfig": {
+          "enabled": true
+        },
+        "gcpFilestoreCsiDriverConfig": {
+          "enabled": true
+        },
+        "kubernetesDashboard": {
+          "disabled": true
+        },
+        "networkPolicyConfig": {
+          "disabled": true
+        }
+      },
+      "autopilot": {
+        "enabled": true
+      },
+      "autoscaling": {
+        "autoprovisioningNodePoolDefaults": {
+          "imageType": "COS_CONTAINERD",
+          "management": {
+            "autoRepair": true,
+            "autoUpgrade": true
+          },
+          "oauthScopes": [
+            "https://www.googleapis.com/auth/devstorage.read_only",
+            "https://www.googleapis.com/auth/logging.write",
+            "https://www.googleapis.com/auth/monitoring",
+            "https://www.googleapis.com/auth/service.management.readonly",
+            "https://www.googleapis.com/auth/servicecontrol",
+            "https://www.googleapis.com/auth/trace.append"
+          ],
+          "serviceAccount": "default",
+          "upgradeSettings": {
+            "maxSurge": 1
+          }
+        },
+        "autoscalingProfile": "OPTIMIZE_UTILIZATION",
+        "enableNodeAutoprovisioning": true,
+        "resourceLimits": [
+          {
+            "maximum": "1000000000",
+            "resourceType": "cpu"
+          },
+          {
+            "maximum": "1000000000",
+            "resourceType": "memory"
+          }
+        ]
+      },
+      "binaryAuthorization": {},
+      "clusterIpv4Cidr": "10.60.0.0/17",
+      "createTime": "2022-03-18T13:47:57+00:00",
+      "currentMasterVersion": "1.21.6-gke.1503",
+      "currentNodeCount": 2,
+      "currentNodeVersion": "1.21.6-gke.1503",
+      "databaseEncryption": {
+        "state": "DECRYPTED"
+      },
+      "defaultMaxPodsConstraint": {
+        "maxPodsPerNode": "110"
+      },
+      "endpoint": "192.168.1.1",
+      "id": "68304a7d71384b159d76715b9cd209118ad6b4f0e3834a5db7079c48934dd42e",
+      "initialClusterVersion": "1.21.6-gke.1503",
+      "initialNodeCount": 1,
+      "instanceGroupUrls": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-c/instanceGroupManagers/gk3-autopilot-gke2-default-pool-b8503cf9-grp",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-b/instanceGroupManagers/gk3-autopilot-gke2-default-pool-14a0245f-grp"
+      ],
+      "ipAllocationPolicy": {
+        "clusterIpv4Cidr": "10.60.0.0/17",
+        "clusterIpv4CidrBlock": "10.60.0.0/17",
+        "clusterSecondaryRangeName": "gke-autopilot-gke2-pods-68304a7d",
+        "servicesIpv4Cidr": "10.60.128.0/22",
+        "servicesIpv4CidrBlock": "10.60.128.0/22",
+        "servicesSecondaryRangeName": "gke-autopilot-gke2-services-68304a7d",
+        "useIpAliases": true
+      },
+      "labelFingerprint": "a9dc16a7",
+      "legacyAbac": {},
+      "location": "europe-west4",
+      "locations": [
+        "europe-west4-c",
+        "europe-west4-b",
+        "europe-west4-a"
+      ],
+      "loggingConfig": {
+        "componentConfig": {
+          "enableComponents": [
+            "SYSTEM_COMPONENTS",
+            "WORKLOADS"
+          ]
+        }
+      },
+      "loggingService": "logging.googleapis.com/kubernetes",
+      "maintenancePolicy": {
+        "resourceVersion": "e3b0c442"
+      },
+      "masterAuth": {
+        "clusterCaCertificate": "REDACTED"
+      },
+      "masterAuthorizedNetworksConfig": {},
+      "monitoringConfig": {
+        "componentConfig": {
+          "enableComponents": [
+            "SYSTEM_COMPONENTS"
+          ]
+        }
+      },
+      "monitoringService": "monitoring.googleapis.com/kubernetes",
+      "name": "autopilot-gke2",
+      "network": "default",
+      "networkConfig": {
+        "defaultSnatStatus": {},
+        "enableIntraNodeVisibility": true,
+        "network": "projects/gcpdiag-gke1-aaaa/global/networks/default",
+        "serviceExternalIpsConfig": {},
+        "subnetwork": "projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks/default"
+      },
+      "nodeConfig": {
+        "diskSizeGb": 100,
+        "diskType": "pd-standard",
+        "imageType": "COS_CONTAINERD",
+        "machineType": "e2-medium",
+        "metadata": {
+          "disable-legacy-endpoints": "true"
+        },
+        "oauthScopes": [
+          "https://www.googleapis.com/auth/devstorage.read_only",
+          "https://www.googleapis.com/auth/logging.write",
+          "https://www.googleapis.com/auth/monitoring",
+          "https://www.googleapis.com/auth/service.management.readonly",
+          "https://www.googleapis.com/auth/servicecontrol",
+          "https://www.googleapis.com/auth/trace.append"
+        ],
+        "serviceAccount": "default",
+        "shieldedInstanceConfig": {
+          "enableIntegrityMonitoring": true,
+          "enableSecureBoot": true
+        },
+        "workloadMetadataConfig": {
+          "mode": "GKE_METADATA"
+        }
+      },
+      "nodePoolAutoConfig": {},
+      "nodePoolDefaults": {
+        "nodeConfigDefaults": {}
+      },
+      "nodePools": [
+        {
+          "autoscaling": {
+            "autoprovisioned": true,
+            "enabled": true,
+            "maxNodeCount": 1000
+          },
+          "config": {
+            "diskSizeGb": 100,
+            "diskType": "pd-standard",
+            "imageType": "COS_CONTAINERD",
+            "machineType": "e2-medium",
+            "metadata": {
+              "disable-legacy-endpoints": "true"
+            },
+            "oauthScopes": [
+              "https://www.googleapis.com/auth/devstorage.read_only",
+              "https://www.googleapis.com/auth/logging.write",
+              "https://www.googleapis.com/auth/monitoring",
+              "https://www.googleapis.com/auth/service.management.readonly",
+              "https://www.googleapis.com/auth/servicecontrol",
+              "https://www.googleapis.com/auth/trace.append"
+            ],
+            "serviceAccount": "default",
+            "shieldedInstanceConfig": {
+              "enableIntegrityMonitoring": true,
+              "enableSecureBoot": true
+            },
+            "workloadMetadataConfig": {
+              "mode": "GKE_METADATA"
+            }
+          },
+          "initialNodeCount": 1,
+          "instanceGroupUrls": [
+            "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-c/instanceGroupManagers/gk3-autopilot-gke2-default-pool-b8503cf9-grp",
+            "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-b/instanceGroupManagers/gk3-autopilot-gke2-default-pool-14a0245f-grp"
+          ],
+          "locations": [
+            "europe-west4-c",
+            "europe-west4-b"
+          ],
+          "management": {
+            "autoRepair": true,
+            "autoUpgrade": true
+          },
+          "maxPodsConstraint": {
+            "maxPodsPerNode": "32"
+          },
+          "name": "default-pool",
+          "networkConfig": {
+            "podIpv4CidrBlock": "10.60.0.0/17",
+            "podRange": "gke-autopilot-gke2-pods-68304a7d"
+          },
+          "podIpv4CidrSize": 26,
+          "selfLink": "https://container.googleapis.com/v1/projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke2/nodePools/default-pool",
+          "status": "RUNNING",
+          "upgradeSettings": {
+            "maxSurge": 1
+          },
+          "version": "1.21.6-gke.1503"
+        }
+      ],
+      "notificationConfig": {
+        "pubsub": {}
+      },
+      "privateClusterConfig": {
+        "enablePrivateNodes": true,
+        "masterIpv4CidrBlock": "172.16.114.128/28",
+        "peeringName": "gke-n89a86a444cf2b3b03f7-267e-e31c-peer",
+        "privateEndpoint": "172.16.114.130",
+        "publicEndpoint": "34.91.4.205"
+      },
+      "releaseChannel": {
+        "channel": "REGULAR"
+      },
+      "selfLink": "https://container.googleapis.com/v1/projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke2",
+      "servicesIpv4Cidr": "10.60.128.0/22",
+      "shieldedNodes": {
+        "enabled": true
+      },
+      "status": "RUNNING",
+      "subnetwork": "default",
+      "verticalPodAutoscaling": {
+        "enabled": true
+      },
+      "workloadIdentityConfig": {
+        "workloadPool": "gcpdiag-gke1-aaaa.svc.id.goog"
+      },
+      "zone": "europe-west4"
     }
   ]
 }

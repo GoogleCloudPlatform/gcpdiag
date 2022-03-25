@@ -30,6 +30,11 @@ def _run_rule_cluster(report: lint.LintReportRuleInterface, c: gke.Cluster):
     report.add_skipped(c, 'public cluster')
     return
 
+  tags = np.node_tags
+  if c.is_autopilot:
+    # use default tags for autopilot clusters
+    tags = [f'gke-{c.name}-{c.cluster_hash}-node']
+
   # Verify connectivity
   for masters_net in c.masters_cidr_list:
     for p in [443, 10250]:
@@ -38,7 +43,7 @@ def _run_rule_cluster(report: lint.LintReportRuleInterface, c: gke.Cluster):
           ip_protocol='tcp',
           port=p,
           target_service_account=np.service_account,
-          target_tags=np.node_tags)
+          target_tags=tags)
       if result.action == 'deny':
         report.add_failed(
             c, 'connections from %s to port %s blocked by %s' %

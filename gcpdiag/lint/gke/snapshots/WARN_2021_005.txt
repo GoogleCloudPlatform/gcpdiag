@@ -1,4 +1,8 @@
 *  gke/WARN/2021_005: GKE nodes have good disk performance.
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [SKIP]
+     no data
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [SKIP]
+     no data
    - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [SKIP]
      no data
    - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [SKIP]
