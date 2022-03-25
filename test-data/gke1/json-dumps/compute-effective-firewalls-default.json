@@ -692,6 +692,231 @@
       "disabled": false,
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/firewalls/k8s-fw-l7--29d5d55dd871faef",
       "kind": "compute#firewall"
+    },
+    {
+      "allowed": [
+        {
+          "IPProtocol": "esp"
+        },
+        {
+          "IPProtocol": "ah"
+        },
+        {
+          "IPProtocol": "sctp"
+        },
+        {
+          "IPProtocol": "tcp"
+        },
+        {
+          "IPProtocol": "udp"
+        },
+        {
+          "IPProtocol": "icmp"
+        }
+      ],
+      "creationTimestamp": "2022-03-22T13:19:04.456-07:00",
+      "description": "",
+      "direction": "INGRESS",
+      "disabled": false,
+      "enableLogging": false,
+      "id": "1455954853780492759",
+      "kind": "compute#firewall",
+      "logConfig": {
+        "enable": false
+      },
+      "name": "gke-autopilot-gke1-4be0bc47-all",
+      "network": "projects/gcpdiag-gke1-aaaa/global/networks/default",
+      "priority": 1000,
+      "selfLink": "projects/gcpdiag-gke1-aaaa/global/firewalls/gke-autopilot-gke1-4be0bc47-all",
+      "sourceRanges": [
+        "10.85.0.0/17"
+      ],
+      "targetTags": [
+        "gke-autopilot-gke1-4be0bc47-node"
+      ]
+    },
+    {
+      "allowed": [
+        {
+          "IPProtocol": "tcp",
+          "ports": [
+            "22"
+          ]
+        }
+      ],
+      "creationTimestamp": "2022-03-22T13:19:04.682-07:00",
+      "description": "",
+      "direction": "INGRESS",
+      "disabled": false,
+      "enableLogging": false,
+      "id": "8519156686631965143",
+      "kind": "compute#firewall",
+      "logConfig": {
+        "enable": false
+      },
+      "name": "gke-autopilot-gke1-4be0bc47-ssh",
+      "network": "projects/gcpdiag-gke1-aaaa/global/networks/default",
+      "priority": 1000,
+      "selfLink": "projects/gcpdiag-gke1-aaaa/global/firewalls/gke-autopilot-gke1-4be0bc47-ssh",
+      "sourceRanges": [
+        "34.90.57.201/32",
+        "34.90.109.120/32",
+        "35.204.192.252/32"
+      ],
+      "targetTags": [
+        "gke-autopilot-gke1-4be0bc47-node"
+      ]
+    },
+    {
+      "allowed": [
+        {
+          "IPProtocol": "icmp"
+        },
+        {
+          "IPProtocol": "tcp",
+          "ports": [
+            "1-65535"
+          ]
+        },
+        {
+          "IPProtocol": "udp",
+          "ports": [
+            "1-65535"
+          ]
+        }
+      ],
+      "creationTimestamp": "2022-03-22T13:19:04.793-07:00",
+      "description": "",
+      "direction": "INGRESS",
+      "disabled": false,
+      "enableLogging": false,
+      "id": "3853812529379119575",
+      "kind": "compute#firewall",
+      "logConfig": {
+        "enable": false
+      },
+      "name": "gke-autopilot-gke1-4be0bc47-vms",
+      "network": "projects/gcpdiag-gke1-aaaa/global/networks/default",
+      "priority": 1000,
+      "selfLink": "projects/gcpdiag-gke1-aaaa/global/firewalls/gke-autopilot-gke1-4be0bc47-vms",
+      "sourceRanges": [
+        "10.128.0.0/9"
+      ],
+      "targetTags": [
+        "gke-autopilot-gke1-4be0bc47-node"
+      ]
+    },
+    {
+      "allowed": [
+        {
+          "IPProtocol": "ah"
+        },
+        {
+          "IPProtocol": "sctp"
+        },
+        {
+          "IPProtocol": "tcp"
+        },
+        {
+          "IPProtocol": "udp"
+        },
+        {
+          "IPProtocol": "icmp"
+        },
+        {
+          "IPProtocol": "esp"
+        }
+      ],
+      "creationTimestamp": "2022-03-22T14:21:35.073-07:00",
+      "description": "",
+      "direction": "INGRESS",
+      "disabled": false,
+      "enableLogging": false,
+      "id": "493674612297007920",
+      "kind": "compute#firewall",
+      "logConfig": {
+        "enable": false
+      },
+      "name": "gke-autopilot-gke2-68304a7d-all",
+      "network": "projects/gcpdiag-gke1-aaaa/global/networks/default",
+      "priority": 1000,
+      "selfLink": "projects/gcpdiag-gke1-aaaa/global/firewalls/gke-autopilot-gke2-68304a7d-all",
+      "sourceRanges": [
+        "10.60.0.0/17"
+      ],
+      "targetTags": [
+        "gke-autopilot-gke2-68304a7d-node"
+      ]
+    },
+    {
+      "allowed": [
+        {
+          "IPProtocol": "tcp",
+          "ports": [
+            "10250",
+            "443"
+          ]
+        }
+      ],
+      "creationTimestamp": "2022-03-22T14:21:35.109-07:00",
+      "description": "",
+      "direction": "INGRESS",
+      "disabled": false,
+      "enableLogging": false,
+      "id": "4575402142169793328",
+      "kind": "compute#firewall",
+      "logConfig": {
+        "enable": false
+      },
+      "name": "gke-autopilot-gke2-68304a7d-master",
+      "network": "projects/gcpdiag-gke1-aaaa/global/networks/default",
+      "priority": 1000,
+      "selfLink": "projects/gcpdiag-gke1-aaaa/global/firewalls/gke-autopilot-gke2-68304a7d-master",
+      "sourceRanges": [
+        "172.16.114.128/28"
+      ],
+      "targetTags": [
+        "gke-autopilot-gke2-68304a7d-node"
+      ]
+    },
+    {
+      "allowed": [
+        {
+          "IPProtocol": "icmp"
+        },
+        {
+          "IPProtocol": "tcp",
+          "ports": [
+            "1-65535"
+          ]
+        },
+        {
+          "IPProtocol": "udp",
+          "ports": [
+            "1-65535"
+          ]
+        }
+      ],
+      "creationTimestamp": "2022-03-22T14:21:35.280-07:00",
+      "description": "",
+      "direction": "INGRESS",
+      "disabled": false,
+      "enableLogging": false,
+      "id": "3748426040663835440",
+      "kind": "compute#firewall",
+      "logConfig": {
+        "enable": false
+      },
+      "name": "gke-autopilot-gke2-68304a7d-vms",
+      "network": "projects/gcpdiag-gke1-aaaa/global/networks/default",
+      "priority": 1000,
+      "selfLink": "projects/gcpdiag-gke1-aaaa/global/firewalls/gke-autopilot-gke2-68304a7d-vms",
+      "sourceRanges": [
+        "10.128.0.0/9"
+      ],
+      "targetTags": [
+        "gke-autopilot-gke2-68304a7d-node"
+      ]
     }
   ],
   "firewallPolicys": [

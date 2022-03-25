@@ -1,4 +1,6 @@
 *  gke/ERR/2021_001: GKE nodes service account permissions for logging.
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1/default-pool           [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2/default-pool           [ OK ]
    - gcpdiag-gke1-aaaa/europe-west4/gke2/default-pool                     [ OK ]
    - gcpdiag-gke1-aaaa/europe-west4/gke3/default-pool                     [FAIL]
      service account: gke3sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com

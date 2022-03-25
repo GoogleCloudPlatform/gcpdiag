@@ -44,13 +44,17 @@ def _run_rule_cluster(report: lint.LintReportRuleInterface, c: gke.Cluster):
   src_net = c.pod_ipv4_cidr
 
   for np in c.nodepools:
+    tags = np.node_tags
+    if c.is_autopilot:
+      # use default tags for autopilot clusters
+      tags = [f'gke-{c.name}-{c.cluster_hash}-node']
     for (proto, port) in utils.iter_dictlist(VERIFY_PORTS):
       result = network.firewall.check_connectivity_ingress(
           src_ip=src_net,
           ip_protocol=proto,
           port=port,
           target_service_account=np.service_account,
-          target_tags=np.node_tags)
+          target_tags=tags)
 
       if result.action == 'deny':
         report.add_failed(
