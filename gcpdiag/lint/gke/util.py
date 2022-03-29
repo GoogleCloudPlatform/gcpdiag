@@ -17,7 +17,7 @@
 
 import collections
 import logging
-from typing import Callable, Dict, Tuple
+from typing import Any, Callable, Dict, Set, Tuple
 
 from gcpdiag import models
 from gcpdiag.queries import gce, gke, logs
@@ -100,7 +100,6 @@ def _gke_cluster_of_log_entry(context, log_entry):
   try:
     labels = log_entry['resource']['labels']
     project_id = labels['project_id']
-    error_msg = log_entry['jsonPayload']['message']
   except KeyError:
     logging.warning('log entry without project_id label: %s', log_entry)
     raise _CantMapLogEntry() from KeyError
@@ -108,14 +107,14 @@ def _gke_cluster_of_log_entry(context, log_entry):
   try:
     c = _clusters_by_name[context][(project_id, labels['location'],
                                     labels['cluster_name'])]
-    return (c, error_msg)
+    return c
   except KeyError as err:
     raise _CantMapLogEntry() from err
 
 
 def gke_logs_find_bad_nodes(context: models.Context,
                             logs_by_project: Dict[str, logs.LogsQuery],
-                            filter_f: Callable):
+                            filter_f: Callable) -> Dict[gke.Cluster, Set[str]]:
   """Go through logs and find GKE node-level issues.
 
   Returns dict with clusters as key and node list of "bad nodes" as
@@ -140,16 +139,18 @@ def gke_logs_find_bad_nodes(context: models.Context,
   return bad_nodes_by_cluster
 
 
-def gke_logs_find_bad_cluster(context: models.Context,
-                              logs_by_project: Dict[str, logs.LogsQuery],
-                              filter_f: Callable):
+def gke_logs_find_bad_clusters(context: models.Context,
+                               logs_by_project: Dict[str, logs.LogsQuery],
+                               filter_f: Callable) -> Dict[gke.Cluster, Any]:
   """Go through logs and find GKE cluster-level issues.
 
-  Returns dict with clusters as key and error message as
+  Returns dict with clusters as key and first matched log entry as
   value."""
 
+  _initialize_clusters_by_name(context)
+
   # Process the log entries.
-  bad_cluster = collections.defaultdict(set)
+  bad_clusters = {}
   for query in logs_by_project.values():
     for log_entry in query.entries:
       # Retrieved logs are not guaranteed to only contain what we defined as
@@ -158,8 +159,11 @@ def gke_logs_find_bad_cluster(context: models.Context,
         continue
 
       try:
-        (c, error_msg) = _gke_cluster_of_log_entry(context, log_entry)
-        bad_cluster[c] = error_msg
+        c = _gke_cluster_of_log_entry(context, log_entry)
+        if c in bad_clusters:
+          # only store the first log message
+          continue
+        bad_clusters[c] = log_entry
       except _CantMapLogEntry:
         continue
-  return bad_cluster
+  return bad_clusters

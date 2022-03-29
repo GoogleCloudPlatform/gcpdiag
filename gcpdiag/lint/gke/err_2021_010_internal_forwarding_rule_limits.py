@@ -55,13 +55,12 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     except KeyError:
       return False
 
-  bad_cluster = util.gke_logs_find_bad_cluster(context=context,
-                                               logs_by_project=logs_by_project,
-                                               filter_f=filter_f)
+  bad_clusters = util.gke_logs_find_bad_clusters(
+      context=context, logs_by_project=logs_by_project, filter_f=filter_f)
 
   # Create the report.
   for _, c in sorted(clusters.items()):
-    if c in bad_cluster:
-      report.add_failed(c, 'Quota issues for ILB :\n. ' + bad_cluster[c])
+    if c in bad_clusters:
+      report.add_failed(c, logs.format_log_entry(bad_clusters[c]))
     else:
       report.add_ok(c)

@@ -17,6 +17,7 @@
 
 import concurrent.futures
 import re
+import time
 from unittest import mock
 
 from gcpdiag.queries import apis_stub, logs, logs_stub
@@ -68,3 +69,23 @@ class TestLogs:
     assert logs_stub.logging_body['resourceNames'] == [
         'projects/gcpdiag-gke1-aaaa'
     ]
+
+  def test_format_log_entry(self):
+    with mock.patch.dict('os.environ', {'TZ': 'America/Los_Angeles'}):
+      time.tzset()
+      assert logs.format_log_entry({
+          'jsonPayload': {
+              'message': 'test message'
+          },
+          'receiveTimestamp': '2022-03-24T13:26:37.370862686Z'
+      }) == '2022-03-24 06:26:37-07:00: test message'
+      assert logs.format_log_entry({
+          'jsonPayload': {
+              'MESSAGE': 'test message'
+          },
+          'receiveTimestamp': '2022-03-24T13:26:37.370862686Z'
+      }) == '2022-03-24 06:26:37-07:00: test message'
+      assert logs.format_log_entry({
+          'textPayload': 'test message',
+          'receiveTimestamp': '2022-03-24T13:26:37.370862686Z'
+      }) == '2022-03-24 06:26:37-07:00: test message'
