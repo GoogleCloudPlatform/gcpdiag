@@ -16,14 +16,13 @@
 """gcpdiag lint command."""
 
 import argparse
-import importlib
 import logging
-import os
 import re
 import sys
 
 from gcpdiag import config, hooks, lint, models
-from gcpdiag.lint import report_terminal
+from gcpdiag.lint import (apigee, composer, dataproc, gaes, gcb, gce, gcf, gcs,
+                          gke, iam, report_terminal)
 from gcpdiag.queries import apis
 
 
@@ -169,20 +168,6 @@ def _parse_rule_patterns(patterns):
   return None
 
 
-def _load_repository_rules(repo: lint.LintRuleRepository):
-  """Find and load all lint rule modules dynamically"""
-  with os.scandir(os.path.dirname(__file__)) as modules:
-    for module in modules:
-      if not module.is_dir():
-        continue
-      try:
-        m = importlib.import_module(f'{__package__}.{module.name}')
-        repo.load_rules(m)
-      except ImportError as err:
-        print(f"ERROR: can't import module: {err}", file=sys.stderr)
-        continue
-
-
 def run(argv) -> int:
   del argv
 
@@ -205,8 +190,16 @@ def run(argv) -> int:
 
   # Initialize Repository, and Tests.
   repo = lint.LintRuleRepository(config.get('include_extended'))
-  _load_repository_rules(repo)
-
+  repo.load_rules(gaes)
+  repo.load_rules(gce)
+  repo.load_rules(gke)
+  repo.load_rules(iam)
+  repo.load_rules(gcf)
+  repo.load_rules(gcs)
+  repo.load_rules(dataproc)
+  repo.load_rules(composer)
+  repo.load_rules(apigee)
+  repo.load_rules(gcb)
   # ^^^ If you add rules directory, update also
   # pyinstaller/hook-gcpdiag.lint.py and bin/precommit-website-rules
   report = report_terminal.LintReportTerminal(
