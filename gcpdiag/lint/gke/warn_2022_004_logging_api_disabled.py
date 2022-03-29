@@ -23,14 +23,13 @@ from gcpdiag.queries import apis, gke
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   clusters = gke.get_clusters(context)
-  enabled_apis = apis.list_apis(context.project_id)
   if not clusters:
     report.add_skipped(None, 'no clusters found')
   for _, c in sorted(clusters.items()):
     if not c.has_logging_enabled():
       report.add_skipped(c, 'GKE logging is disabled')
-    elif c.has_logging_enabled() and ('logging.googleapis.com'
-                                      not in enabled_apis):
+    elif c.has_logging_enabled() and \
+        not apis.is_enabled(context.project_id, 'logging'):
       report.add_failed(c)
     else:
       report.add_ok(c)
