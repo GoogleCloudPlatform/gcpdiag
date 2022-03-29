@@ -190,3 +190,19 @@ def log_entry_timestamp(log_entry: Mapping[str, Any]) -> datetime.datetime:
   # Use receiveTimestamp so that we don't have any time synchronization issues
   # (i.e. don't trust the timestamp field)
   return dateutil.parser.parse(log_entry['receiveTimestamp'])
+
+
+def format_log_entry(log_entry: dict) -> str:
+  """Format a log_entry, as returned by LogsQuery.entries to a simple one-line
+  string with the date and message."""
+  log_message = None
+  if 'jsonPayload' in log_entry:
+    for key in ['message', 'MESSAGE']:
+      if key in log_entry['jsonPayload']:
+        log_message = log_entry['jsonPayload'][key]
+        break
+  if log_message is None:
+    log_message = log_entry.get('textPayload')
+  log_date = log_entry_timestamp(log_entry)
+  log_date_str = log_date.astimezone().isoformat(sep=' ', timespec='seconds')
+  return f'{log_date_str}: {log_message}'
