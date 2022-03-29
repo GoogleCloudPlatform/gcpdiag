@@ -13,7 +13,7 @@ test-mocked:
 	  exit 0
 
 snapshots:
-	pytest --snapshot-update
+	pytest --snapshot-update --forked
 
 version:
 	@echo $(VERSION)
