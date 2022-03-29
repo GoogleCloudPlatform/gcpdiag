@@ -20,6 +20,7 @@ import logging
 import os
 import pkgutil
 import sys
+import time
 from typing import Optional, Set
 
 import google.auth
@@ -223,8 +224,10 @@ def get_api(service_name: str, version: str, project_id: Optional[str] = None):
   return api
 
 
+# FIXME(b/227280729): use this method again in is_enabled() as soon as it works
+# reliably.
 @caching.cached_api_call(in_memory=True)
-def list_apis(project_id: str) -> Set[str]:
+def _list_apis(project_id: str) -> Set[str]:
   logging.debug('listing enabled APIs')
   serviceusage = get_api('serviceusage', 'v1', project_id)
   request = serviceusage.services().list(parent=f'projects/{project_id}',
@@ -241,8 +244,23 @@ def list_apis(project_id: str) -> Set[str]:
   return enabled_apis
 
 
+@caching.cached_api_call(in_memory=True)
 def is_enabled(project_id: str, service_name: str) -> bool:
-  return f'{service_name}.googleapis.com' in list_apis(project_id)
+  logging.info('checking that API is enabled: %s.googleapis.com', service_name)
+  serviceusage = get_api('serviceusage', 'v1', project_id)
+  request = serviceusage.services().get(
+      name=f'projects/{project_id}/services/{service_name}.googleapis.com')
+  # It can happen that the API returns a 403, even though the permissions
+  # are fine -> retry a couple of times.
+  for _ in range(2):
+    try:
+      response = request.execute()
+      return response.get('state') == 'ENABLED'
+    except googleapiclient.errors.HttpError as err:
+      logging.warning(str(utils.GcpApiError(err)))
+      exception = err
+      time.sleep(1)
+  raise exception
 
 
 def verify_access(project_id: str):

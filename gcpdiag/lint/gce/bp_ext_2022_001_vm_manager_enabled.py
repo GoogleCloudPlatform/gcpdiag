@@ -24,8 +24,7 @@ from gcpdiag.queries import apis, crm
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   project = crm.get_project(context.project_id)
-  api_list = apis.list_apis(context.project_id)
-  if 'osconfig.googleapis.com' in api_list:
+  if apis.is_enabled(context.project_id, 'osconfig'):
     report.add_ok(project)
   else:
     report.add_failed(project,
