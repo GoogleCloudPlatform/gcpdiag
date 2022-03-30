@@ -16,14 +16,16 @@ WEBSITE_RULES_DIR = 'website/content/en/rules'
 LINT_RULES_DIR = 'gcpdiag/lint'
 
 PRODUCTS = {
-    'gaes':
-        '[App Engine Standard](https://cloud.google.com/appengine)',
-    'gcb':
-        '[Cloud Build](https://cloud.google.com/build)',
+    'apigee':
+        '[Apigee API Management](https://cloud.google.com/apigee)',
     'composer':
         '[Cloud Composer](https://cloud.google.com/composer)',
     'dataproc':
         '[Cloud Dataproc](https://cloud.google.com/dataproc)',
+    'gaes':
+        '[App Engine Standard](https://cloud.google.com/appengine)',
+    'gcb':
+        '[Cloud Build](https://cloud.google.com/build)',
     'gce':
         '[Compute Engine](https://cloud.google.com/compute)',
     'gcf':
