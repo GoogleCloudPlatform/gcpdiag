@@ -81,6 +81,11 @@ def _fetch_iam_roles(parent: str, api_project_id: str) -> Dict[str, Role]:
                               roles_api.list_next, 'roles')))
 
 
+# Cache both in memory and on disk, so that multiple calls during the same
+# gcpdiag execution are very quick, but also results are cached on disk
+# for the next execution. Only caching on disk causes slowness because this method
+# is called multiple times.
+@functools.lru_cache()
 @caching.cached_api_call(expire=config.STATIC_DOCUMENTS_EXPIRY_SECONDS)
 def _get_predefined_roles(api_project_id: str) -> Dict[str, Role]:
   return _fetch_iam_roles('', api_project_id)
