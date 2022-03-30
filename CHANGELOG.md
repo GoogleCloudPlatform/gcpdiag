@@ -1,3 +1,29 @@
+## 0.53 (2022-03-30)
+
+#### New rules
+
+- composer/ERR/2022_001: Composer Service Agent permissions
+- composer/ERR/2022_002: Composer Environment Service Account permissions
+- composer/WARN/2022_001: Composer Service Agent permissions for Composer 2.x
+- gce/BP_EXT/2022_001: GCP project has VM Manager enabled
+- gce/WARN/2022_003: GCE VM instances quota is not near the limit
+- gke/BP/2022_002: GKE clusters are using unique subnets
+- gke/BP/2022_003: GKE cluster is not near to end of life
+- gke/WARN/2022_003: GKE service account permissions to manage project firewall rules
+- gke/WARN/2022_004: Cloud Logging API enabled when GKE logging is enabled
+
+#### Enhancements
+
+- Support IAM policies for service accounts and subnetworks
+- Skip rules using logs if Cloud Logging API is disabled
+- New option: --logs-query-timeout
+- Add support for configuration files
+  (see https://gcpdiag.dev/docs/usage/#configuration-file)
+
+#### Fixes
+
+- Fix various unhandled exceptions
+
 ## 0.52 (2022-02-11)
 
 #### New rules
