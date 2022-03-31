@@ -11,6 +11,7 @@
 - gke/BP/2022_003: GKE cluster is not near to end of life
 - gke/WARN/2022_003: GKE service account permissions to manage project firewall rules
 - gke/WARN/2022_004: Cloud Logging API enabled when GKE logging is enabled
+- gke/WARN/2022_005: NVIDIA GPU device drivers are installed on GKE nodes with GPU
 
 #### Enhancements
 
