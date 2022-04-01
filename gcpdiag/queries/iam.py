@@ -25,7 +25,7 @@ from typing import Any, Dict, List, Tuple, Type
 import googleapiclient
 
 from gcpdiag import caching, config, models, utils
-from gcpdiag.queries import apis, apis_utils
+from gcpdiag.queries import apis, apis_utils, crm
 
 
 class Role(models.Resource):
@@ -609,16 +609,19 @@ _service_account_cache_fetched: Dict[str, bool] = {}
 _service_account_cache_is_not_found: Dict[str, bool] = {}
 
 
-def _batch_fetch_service_accounts(emails: List[str], billing_project_id: str):
+def _batch_fetch_service_accounts(emails: List[str], project_id: str):
   """Retrieve a list of service accounts.
 
-  This function is used when inspecting a project_id, to retrieve all service accounts
+  This function is used when inspecting a project, to retrieve all service accounts
   that are used in the IAM policy, so that we can do this in a single batch request.
   The goal is to be able to call is_service_account_enabled() without triggering
   another API call.
+
+  `project_id` is used primarily as the default billing project. Service
+  accounts from other projects in `emails` will be also retrieved.
   """
 
-  iam_api = apis.get_api('iam', 'v1', billing_project_id)
+  iam_api = apis.get_api('iam', 'v1', project_id)
   service_accounts_api = iam_api.projects().serviceAccounts()
   requests = [
       service_accounts_api.get(name='projects/-/serviceAccounts/' + email)
@@ -648,7 +651,14 @@ def _batch_fetch_service_accounts(emails: List[str], billing_project_id: str):
       elif isinstance(exception, utils.GcpApiError) and exception.status == 404:
         _service_account_cache_is_not_found[email] = True
       else:
-        logging.warning("can't get service account %s: %s", email, exception)
+        project_nr = crm.get_project(project_id).number
+        if re.match(rf'{project_nr}-\w+@', email) \
+            or email.endswith(f'@{project_id}.iam.gserviceaccount.com'):
+          # if retrieving service accounts from the project being inspected fails,
+          # we need to fail hard because many rules won't work correctly.
+          raise exception
+        else:
+          logging.warning("can't get service account %s: %s", email, exception)
     else:
       sa = ServiceAccount(response['projectId'], response)
       _service_account_cache[sa.email] = sa
