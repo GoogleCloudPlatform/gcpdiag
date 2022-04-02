@@ -25,9 +25,14 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not clusters:
     report.add_skipped(None, 'no clusters found')
   for _, c in sorted(clusters.items()):
+    # fetch project number
+    p: str = c.project_id
+    if c.project_id != c.network.project_id:
+      # shared vpc
+      p = c.network.project_id
     if c.is_private and not c.subnetwork.is_private_ip_google_access():
 
-      router = network.get_router(project_id=context.project_id,
+      router = network.get_router(project_id=p,
                                   region=c.subnetwork.region,
                                   network=c.network)
 
