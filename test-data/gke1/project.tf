@@ -43,7 +43,7 @@ resource "google_project" "project" {
   name            = "gcpdiag test - gke1"
   project_id      = "gcpdiag-gke1-${random_string.project_id_suffix.id}"
   billing_account = var.billing_account_id
-  org_id          = var.org_id != "" ? null : var.org_id
+  org_id          = var.folder_id == "" ? var.org_id : null
   folder_id       = var.folder_id != "" ? var.folder_id : null
   labels = {
     gcpdiag : "test"

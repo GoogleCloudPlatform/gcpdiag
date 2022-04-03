@@ -18,6 +18,7 @@ billing account id as variables:
 ```
 $ export TF_VAR_billing_account_id=0123456-ABCDEF-987654
 $ export TF_VAR_org_id=123456789012
+$ export TF_VAR_folder_id=123456789012 # optional
 $ cd projectdir
 $ terraform init
 $ terraform apply
@@ -39,6 +40,7 @@ If you need to create a project template for a new use case, proceed as follows:
 
    - gce1/Makefile
    - gce1/project.tf
+   - gce1/variables.tf
 
 1. Create a Makefile file that looks as follows:
 
