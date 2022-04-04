@@ -127,7 +127,9 @@ def init(args, project_id, is_cloud_shell=False):
       with open(file, encoding='utf-8') as f:
         content = f.read()
     else:
-      content = None
+      print(f'ERROR: Configuration file: {file} does not exist!',
+            file=sys.stderr)
+      sys.exit(1)
 
     # Parse the content of the file as YAML
     if content:
@@ -136,6 +138,7 @@ def init(args, project_id, is_cloud_shell=False):
       except yaml.YAMLError as err:
         print(f"ERROR: can't parse content of the file as YAML: {err}",
               file=sys.stderr)
+        sys.exit(1)
 
 
 def get(key):
