@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e
-THIS_WRAPPER_VERSION=0.8
+THIS_WRAPPER_VERSION=0.9
 SUPPORTED_RUNTIME="docker podman"
+ARGS="$@"
 
 eval $(curl -sf https://storage.googleapis.com/gcpdiag/release-version|grep -Ei '^\w*=[0-9a-z/\._-]*$')
 
@@ -66,6 +67,41 @@ if [ "$RUNTIME" = podman ]; then
   export PODMAN_USERNS=keep-id
 fi
 
+# Check if config argument was provided via --config file or --config=file
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --config=*)
+      CONFIG_FILE="${1#*=}"
+      ;;
+    --config)
+      CONFIG_FILE="$2"
+      ;;
+  esac
+  shift
+done
+
+# If config argument was provided we need to check if file exists and mount it
+# inside container with the same path if absolut path was used or inside
+# root folder if relative path was used.
+CONFIG_MOUNT=""
+if [ ! -z "$CONFIG_FILE" ]; then
+  if [ -f "$CONFIG_FILE" ]; then
+    if [[ "$CONFIG_FILE" = /* ]]; then
+      # absolut path shall be mounted as is
+      CONFIG_MOUNT="-v $CONFIG_FILE:$CONFIG_FILE"
+    else
+      # local path need to be mounted inside root folder
+      CONFIG_MOUNT="-v $PWD/$CONFIG_FILE:/$CONFIG_FILE"
+    fi
+  else
+    echo
+    echo "## ERROR:"
+    echo "## Configuration file: $CONFIG_FILE does not exist!"
+    echo
+    exit 1
+  fi
+fi
+
 exec "$RUNTIME" run "$USE_TTY" \
   --rm \
   -u "$(id -u):$(id -g)" \
@@ -75,4 +111,5 @@ exec "$RUNTIME" run "$USE_TTY" \
   -e HOME -e LANG -e GOOGLE_AUTH_TOKEN -e CLOUD_SHELL \
   -v "$HOME/.cache/gcpdiag-dockerized:$HOME/.cache/gcpdiag" \
   -v "$HOME/.config/gcloud:$HOME/.config/gcloud" \
-  "$DOCKER_IMAGE:$DOCKER_IMAGE_VERSION" /opt/gcpdiag/bin/gcpdiag "$@"
+  $CONFIG_MOUNT \
+  "$DOCKER_IMAGE:$DOCKER_IMAGE_VERSION" /opt/gcpdiag/bin/gcpdiag $ARGS
