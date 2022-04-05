@@ -31,5 +31,5 @@ class TestCloudBuild:
   def test_get_builds(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     builds = gcb.get_builds(context=context)
-    assert len(builds) == 1
+    assert len(builds) == 3
     assert DUMMY_CLOUD_BUILD_1_ID in builds

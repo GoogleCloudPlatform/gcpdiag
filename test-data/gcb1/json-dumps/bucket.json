@@ -1,0 +1,28 @@
+{
+  "kind": "storage#bucket",
+  "selfLink": "https://www.googleapis.com/storage/v1/b/gcpdiag-gcb1-bucket1-aaaa",
+  "id": "gcpdiag-gcb1-bucket1-aaaa",
+  "name": "gcpdiag-gcb1-bucket1-aaaa",
+  "projectNumber": "12340005",
+  "metageneration": "2",
+  "location": "US",
+  "storageClass": "STANDARD",
+  "etag": "CAI=",
+  "timeCreated": "2022-04-05T10:41:00.004Z",
+  "updated": "2022-04-05T11:19:01.187Z",
+  "retentionPolicy": {
+    "retentionPeriod": "10",
+    "effectiveTime": "2022-04-05T11:20:01.062Z"
+  },
+  "iamConfiguration": {
+    "bucketPolicyOnly": {
+      "enabled": false
+    },
+    "uniformBucketLevelAccess": {
+      "enabled": false
+    },
+    "publicAccessPrevention": "inherited"
+  },
+  "locationType": "multi-region",
+  "rpo": "DEFAULT"
+}

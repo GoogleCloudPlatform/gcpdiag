@@ -43,6 +43,16 @@ resource "google_project_service" "sourcerepo" {
   service = "sourcerepo.googleapis.com"
 }
 
+resource "google_project_service" "iam" {
+  project = google_project.project.project_id
+  service = "iam.googleapis.com"
+}
+
+resource "google_project_service" "artifactregistry" {
+  project = google_project.project.project_id
+  service = "artifactregistry.googleapis.com"
+}
+
 output "project_id" {
   value = google_project.project.project_id
 }

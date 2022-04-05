@@ -2,20 +2,13 @@
   "builds": [
     {
       "id": "01ff384c-d7f2-4295-ad68-5c32529d8b85",
-      "status": "SUCCESS",
-      "source": {
-        "repoSource": {
-          "projectId": "gcpdiag-gcb1-aaaa",
-          "repoName": "test-repo",
-          "commitSha": "1fe8ae4ef0757752e358e1a7cc2bbe147d95b305"
-        }
-      },
-      "createTime": "2022-01-04T12:50:22.022583902Z",
-      "startTime": "2022-01-04T12:50:23.887714058Z",
-      "finishTime": "2022-01-04T12:50:32.809031Z",
+      "status": "FAILURE",
+      "createTime": "2022-04-05T11:54:05.438831262Z",
+      "startTime": "2022-04-05T11:54:06.585702187Z",
+      "finishTime": "2022-04-05T11:54:10.754613900Z",
       "results": {
         "buildStepImages": [
-          "sha256:84102d4bb6d15a430377b343d560515939f8b797a1ea8d483811be13e32aaa1b"
+          "sha256:bea6d19168bbfd6af8d77c2cc3c572114eb5d113e6f422573c93cb605a0e2ffb"
         ],
         "buildStepOutputs": [
           ""
@@ -23,62 +16,166 @@
       },
       "steps": [
         {
-          "name": "gcr.io/cloud-builders/gsutil",
+          "name": "ubuntu",
+          "args": [
+            "bash",
+            "-c",
+            "[ 1 == 2 ]"
+          ],
           "timing": {
-            "startTime": "2022-01-04T12:50:29.570759942Z",
-            "endTime": "2022-01-04T12:50:32.100388276Z"
+            "startTime": "2022-04-05T11:54:07.804641745Z",
+            "endTime": "2022-04-05T11:54:10.169720241Z"
           },
-          "status": "SUCCESS",
+          "status": "FAILURE",
           "pullTiming": {
-            "startTime": "2022-01-04T12:50:29.570759942Z",
-            "endTime": "2022-01-04T12:50:29.574674936Z"
+            "startTime": "2022-04-05T11:54:07.804641745Z",
+            "endTime": "2022-04-05T11:54:09.312828516Z"
           }
         }
       ],
-      "timeout": "600s",
+      "timeout": "1800s",
       "projectId": "gcpdiag-gcb1-aaaa",
       "logsBucket": "gs://12340005.cloudbuild-logs.googleusercontent.com",
-      "sourceProvenance": {
-        "resolvedRepoSource": {
-          "projectId": "gcpdiag-gcb1-aaaa",
-          "repoName": "test-repo",
-          "commitSha": "1fe8ae4ef0757752e358e1a7cc2bbe147d95b305"
-        }
-      },
-      "buildTriggerId": "edd81df6-c8fc-417e-9bb9-08bb710e57af",
+      "sourceProvenance": {},
       "options": {
-        "substitutionOption": "ALLOW_LOOSE",
         "logging": "LEGACY",
-        "dynamicSubstitutions": true,
         "pool": {}
       },
-      "logUrl": "https://console.cloud.google.com/cloud-build/builds/01ff384c-d7f2-4295-ad68-5c32529d8b85?project=12340005",
-      "substitutions": {
-        "REPO_NAME": "test-repo",
-        "REVISION_ID": "1fe8ae4ef0757752e358e1a7cc2bbe147d95b305",
-        "COMMIT_SHA": "1fe8ae4ef0757752e358e1a7cc2bbe147d95b305",
-        "SHORT_SHA": "1fe8ae4",
-        "BRANCH_NAME": "main",
-        "REF_NAME": "main",
-        "TRIGGER_NAME": "trigger",
-        "TRIGGER_BUILD_CONFIG_PATH": ""
-      },
-      "tags": [
-        "trigger-edd81df6-c8fc-417e-9bb9-08bb710e57af"
-      ],
+      "logUrl": "https://console.cloud.google.com/cloud-build/builds/32ca4219-dc76-4ab7-bb6f-f183facf73ed?project=12340005",
       "timing": {
-        "FETCHSOURCE": {
-          "startTime": "2022-01-04T12:50:24.496776953Z",
-          "endTime": "2022-01-04T12:50:29.049046326Z"
-        },
         "BUILD": {
-          "startTime": "2022-01-04T12:50:29.049143383Z",
-          "endTime": "2022-01-04T12:50:32.100462845Z"
+          "startTime": "2022-04-05T11:54:07.097181515Z",
+          "endTime": "2022-04-05T11:54:10.169908787Z"
         }
       },
       "queueTtl": "3600s",
-      "name": "projects/12340005/locations/global/builds/01ff384c-d7f2-4295-ad68-5c32529d8b85"
+      "name": "projects/12340005/locations/global/builds/32ca4219-dc76-4ab7-bb6f-f183facf73ed",
+      "failureInfo": {
+        "type": "USER_BUILD_STEP",
+        "detail": "Build step failure: build step 0 \"ubuntu\" failed: step exited with non-zero status: 1"
+      }
+    },
+    {
+      "id": "58c22070-5629-480e-b822-cd8eff7befb8",
+      "status": "FAILURE",
+      "createTime": "2022-04-05T11:53:57.024283109Z",
+      "startTime": "2022-04-05T11:53:58.105300833Z",
+      "finishTime": "2022-04-05T11:54:02.526820640Z",
+      "results": {
+        "buildStepImages": [
+          "sha256:ace8974a1cadb3dfb95653973af926e01755613afb943d5deab41539cde70051"
+        ],
+        "buildStepOutputs": [
+          ""
+        ]
+      },
+      "steps": [
+        {
+          "name": "gcr.io/cloud-builders/docker",
+          "args": [
+            "ps"
+          ],
+          "timing": {
+            "startTime": "2022-04-05T11:53:59.371129057Z",
+            "endTime": "2022-04-05T11:54:00.490704415Z"
+          },
+          "status": "SUCCESS",
+          "pullTiming": {
+            "startTime": "2022-04-05T11:53:59.371129057Z",
+            "endTime": "2022-04-05T11:53:59.378457305Z"
+          }
+        }
+      ],
+      "timeout": "1800s",
+      "projectId": "gcpdiag-gcb1-aaaa",
+      "logsBucket": "gs://gcpdiag-gcb1-bucket1-aaaa",
+      "sourceProvenance": {},
+      "options": {
+        "logging": "LEGACY",
+        "pool": {}
+      },
+      "logUrl": "https://console.cloud.google.com/cloud-build/builds/58c22070-5629-480e-b822-cd8eff7befb8?project=12340005",
+      "timing": {
+        "BUILD": {
+          "startTime": "2022-04-05T11:53:58.663154626Z",
+          "endTime": "2022-04-05T11:54:00.490785587Z"
+        }
+      },
+      "queueTtl": "3600s",
+      "name": "projects/12340005/locations/global/builds/58c22070-5629-480e-b822-cd8eff7befb8",
+      "failureInfo": {
+        "type": "LOGGING_FAILURE",
+        "detail": "Cloud Storage logging failed. Try again in a few minutes."
+      }
+    },
+    {
+      "id": "db540598-5a45-46f3-a716-39d834e884c6",
+      "status": "FAILURE",
+      "createTime": "2022-04-05T11:53:16.584630234Z",
+      "startTime": "2022-04-05T11:53:17.567161242Z",
+      "finishTime": "2022-04-05T11:53:53.826458203Z",
+      "results": {
+        "buildStepImages": [
+          "sha256:ace8974a1cadb3dfb95653973af926e01755613afb943d5deab41539cde70051"
+        ],
+        "buildStepOutputs": [
+          ""
+        ]
+      },
+      "steps": [
+        {
+          "name": "gcr.io/cloud-builders/docker",
+          "args": [
+            "tag",
+            "gcr.io/cloud-builders/docker",
+            "us-central1-docker.pkg.dev/gcpdiag-gcb1-aaaa/gcb1-repository/image"
+          ],
+          "timing": {
+            "startTime": "2022-04-05T11:53:18.508651083Z",
+            "endTime": "2022-04-05T11:53:19.553011555Z"
+          },
+          "status": "SUCCESS",
+          "pullTiming": {
+            "startTime": "2022-04-05T11:53:18.508651083Z",
+            "endTime": "2022-04-05T11:53:18.512797521Z"
+          }
+        }
+      ],
+      "timeout": "1800s",
+      "images": [
+        "us-central1-docker.pkg.dev/gcpdiag-gcb1-aaaa/gcb1-repository/image"
+      ],
+      "projectId": "gcpdiag-gcb1-aaaa",
+      "sourceProvenance": {},
+      "options": {
+        "logging": "CLOUD_LOGGING_ONLY",
+        "pool": {}
+      },
+      "logUrl": "https://console.cloud.google.com/cloud-build/builds/db540598-5a45-46f3-a716-39d834e884c6?project=12340005",
+      "timing": {
+        "BUILD": {
+          "startTime": "2022-04-05T11:53:17.864543307Z",
+          "endTime": "2022-04-05T11:53:19.594071402Z"
+        },
+        "PUSH": {
+          "startTime": "2022-04-05T11:53:19.594176772Z",
+          "endTime": "2022-04-05T11:53:53.639779579Z"
+        }
+      },
+      "artifacts": {
+        "images": [
+          "us-central1-docker.pkg.dev/gcpdiag-gcb1-aaaa/gcb1-repository/image"
+        ]
+      },
+      "queueTtl": "3600s",
+      "serviceAccount": "projects/gcpdiag-gcb1-aaaa/serviceAccounts/gcb-custom1@gcpdiag-gcb1-xczqvxgx.iam.gserviceaccount.com",
+      "name": "projects/12340005/locations/global/builds/db540598-5a45-46f3-a716-39d834e884c6",
+      "warnings": [
+        {
+          "text": "The service account running this build does not have permission to write logs. To fix this, grant the Logs Writer (roles/logging.logWriter) role to the service account.",
+          "priority": "INFO"
+        }
+      ]
     }
-  ],
-  "nextPageToken": "MjAyMi0wMS0wNFQxMjo1MDoyMi4wMjI1ODI5MDJa"
+  ]
 }
