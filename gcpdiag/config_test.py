@@ -15,6 +15,8 @@
 
 from tempfile import NamedTemporaryFile
 
+import pytest
+
 from gcpdiag import config
 
 SAMPLE_CONFIG = '''
@@ -61,6 +63,15 @@ projects:
 
 class Test:
   """Unit tests for Configuration."""
+
+  @pytest.fixture(autouse=True)
+  def clear_globals(self):
+    """These tests modify global state, so it is important to clean it."""
+    # pylint: disable=protected-access
+    yield
+    config._args = {}
+    config._config = {}
+    config._project_id = ''
 
   def test_static_properties(self):
     assert config.CACHE_LOCK_TIMEOUT == 120
