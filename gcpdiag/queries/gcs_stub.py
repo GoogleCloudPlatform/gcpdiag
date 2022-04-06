@@ -19,44 +19,48 @@ Instead of doing real API calls, we return test JSON data.
 """
 
 import json
+from typing import Optional
 
 from gcpdiag.queries import apis_stub
 
 # pylint: disable=unused-argument
 # pylint: disable=invalid-name
 
-DUMMY_PROJECT_NAME = 'gcpdiag-gcs1-aaaa'
+NO_PROJECT_ID_ERROR = 'Not able to call {} without setting project_id for API.'
 
 
 class BucketApiStub:
-  """Mock object to simulate storage api calls."""
+  """Mock object to simulate storage api calls.
 
-  def __init__(self, mock_state='init', project_id=None, json_dir=None):
-    self.mock_state = mock_state
+  Attributes:
+    project_id: Since buckets are not explicitly assigned to projects we need a
+      project_id to be provided by user to know where to find json_directory
+      with bucket data. Without providing it you can still list buckets per
+      project.
+  """
+
+  def __init__(self, project_id: Optional[str] = None):
     self.project_id = project_id
-    self.json_dir = json_dir
 
   def buckets(self):
     return self
 
   def list(self, project):
-    json_dir = apis_stub.get_json_dir(project)
-    return BucketApiStub('list', project_id=project, json_dir=json_dir)
+    return RestCallStub(project, 'storage.json')
 
   def getIamPolicy(self, bucket):
-    json_dir = apis_stub.get_json_dir(DUMMY_PROJECT_NAME)
-    return BucketApiStub('get_iam_policy',
-                         project_id=DUMMY_PROJECT_NAME,
-                         json_dir=json_dir)
+    if not self.project_id:
+      raise ValueError(NO_PROJECT_ID_ERROR.format('getIamPolicy'))
+    return RestCallStub(self.project_id, 'bucket-roles.json')
 
-  def execute(self, num_retries=0):
-    del num_retries
-    json_dir = apis_stub.get_json_dir(self.project_id)
-    if self.mock_state == 'get_iam_policy':
-      with open(json_dir / 'bucket-roles.json', encoding='utf-8') as json_file:
-        return json.load(json_file)
-    elif self.mock_state == 'list':
-      with open(self.json_dir / 'storage.json', encoding='utf-8') as json_file:
-        return json.load(json_file)
-    else:
-      raise ValueError("can't call this method here")
+
+class RestCallStub:
+  """Mock object to simulate executable api request."""
+
+  def __init__(self, project_id: str, json_file: str):
+    self.json_dir = apis_stub.get_json_dir(project_id)
+    self.json_file = json_file
+
+  def execute(self, num_retries: int = 0) -> dict:
+    with open(self.json_dir / self.json_file, encoding='utf-8') as json_file:
+      return json.load(json_file)
