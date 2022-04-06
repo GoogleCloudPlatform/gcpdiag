@@ -22,6 +22,10 @@ cd "${KOKORO_ARTIFACTS_DIR}/git/gcpdiag"
 
 pipenv-dockerized 3.7 run pipenv install --dev
 pipenv-dockerized 3.7 run make test
+# remove previously installed packages and install only default packages
+rm -rf .pipenv-dockerized/venv-3.7
+pipenv-dockerized 3.7 run pipenv install --ignore-pipfile
+# run gcpdiag-mocked
 pipenv-dockerized 3.7 run make test-mocked
 
 # Try building the website to make sure that there are no errors
