@@ -213,7 +213,11 @@ def get_api_stub(service_name: str,
     return composer_stub.ComposerApiStub()
   elif service_name == 'storage':
     from gcpdiag.queries import gcs_stub
-    return gcs_stub.BucketApiStub()
+
+    # project_id isn't required in buckets.get and buckets.getIamPolicy requests
+    # and it cannot be extracted from bucket name
+    # thus passing api_project_id to determine the correct test-data
+    return gcs_stub.BucketApiStub(project_id)
   elif service_name == 'cloudbuild':
     from gcpdiag.queries import gcb_stub
     return gcb_stub.CloudBuildApiStub()
