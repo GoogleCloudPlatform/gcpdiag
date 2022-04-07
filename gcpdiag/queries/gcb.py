@@ -16,7 +16,7 @@
 """Queries related to GCP Cloud Build instances."""
 
 import logging
-from typing import Dict, Mapping
+from typing import Dict, List, Mapping, Optional
 
 import googleapiclient.errors
 
@@ -48,6 +48,14 @@ class Build(models.Resource):
   @property
   def status(self) -> str:
     return self._resource_data['status']
+
+  @property
+  def service_account(self) -> Optional[str]:
+    return self._resource_data.get('serviceAccount')
+
+  @property
+  def images(self) -> List[str]:
+    return self._resource_data.get('images', [])
 
 
 class Trigger(models.Resource):
