@@ -18,7 +18,6 @@
 Instead of doing real API calls, we return test JSON data.
 """
 
-import json
 from typing import Optional
 
 from gcpdiag.queries import apis_stub
@@ -46,21 +45,9 @@ class BucketApiStub:
     return self
 
   def list(self, project):
-    return RestCallStub(project, 'storage.json')
+    return apis_stub.RestCallStub(project, 'storage.json')
 
   def getIamPolicy(self, bucket):
     if not self.project_id:
       raise ValueError(NO_PROJECT_ID_ERROR.format('getIamPolicy'))
-    return RestCallStub(self.project_id, 'bucket-roles.json')
-
-
-class RestCallStub:
-  """Mock object to simulate executable api request."""
-
-  def __init__(self, project_id: str, json_file: str):
-    self.json_dir = apis_stub.get_json_dir(project_id)
-    self.json_file = json_file
-
-  def execute(self, num_retries: int = 0) -> dict:
-    with open(self.json_dir / self.json_file, encoding='utf-8') as json_file:
-      return json.load(json_file)
+    return apis_stub.RestCallStub(self.project_id, 'bucket-roles.json')

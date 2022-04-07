@@ -26,23 +26,10 @@ from gcpdiag.queries import apis_stub, network_stub
 # pylint: disable=invalid-name
 
 
-class ListRegionsQuery(apis_stub.ApiStub):
-  """Mock object to simulate compute engine api calls."""
-
-  def __init__(self, project_id):
-    self.project_id = project_id
-
-  def execute(self, num_retries=0):
-    self._maybe_raise_api_exception()
-    json_dir = apis_stub.get_json_dir(self.project_id)
-    with open(json_dir / 'compute-regions.json', encoding='utf-8') as json_file:
-      return json.load(json_file)
-
-
 class ComputeEngineApiStubRegions(apis_stub.ApiStub):
 
   def list(self, project):
-    return ListRegionsQuery(project_id=project)
+    return apis_stub.RestCallStub(project, 'compute-regions.json')
 
 
 class ComputeEngineApiStub(apis_stub.ApiStub):

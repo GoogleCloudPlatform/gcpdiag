@@ -18,8 +18,6 @@
 Instead of doing real API calls, we return test JSON data.
 """
 
-import json
-
 from gcpdiag.queries import apis_stub
 
 #pylint: disable=unused-argument
@@ -42,14 +40,7 @@ class AppEngineStandardApiStub(apis_stub.ApiStub):
     return AppEngineStandardApiStub('versions')
 
   def list(self, appsId='appsId', servicesId='servicesId'):
-    self.json_dir = apis_stub.get_json_dir(appsId)
-    return self
-
-  def execute(self, num_retries=0):
     if self.mock_state == 'services':
-      with open(self.json_dir / 'appengine_services.json',
-                encoding='utf-8') as json_file:
-        return json.load(json_file)
+      return apis_stub.RestCallStub(appsId, 'appengine_services.json')
     else:
-      with open(self.json_dir / 'versions.json', encoding='utf-8') as json_file:
-        return json.load(json_file)
+      return apis_stub.RestCallStub(appsId, 'versions.json')

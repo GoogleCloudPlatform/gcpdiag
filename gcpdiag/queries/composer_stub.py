@@ -16,41 +16,11 @@
 Instead of doing real API calls, we return test JSON data.
 """
 
-import json
 import re
-from typing import Tuple
 
 from gcpdiag.queries import apis_stub
 
 #pylint: disable=unused-argument
-
-
-class ListEnvironmentsQuery:
-  """
-    Test double for HTTP request for
-      https://composer.googleapis.com/v1/projects/{project}/locations/{region}/environments
-    API call
-  """
-  project_id: str
-  region: str
-
-  def __init__(self, parent):
-    self.project_id, self.region = self.parse_parent(parent)
-
-  def execute(self, num_retries: int = 0):
-    json_dir = apis_stub.get_json_dir(self.project_id)
-    try:
-      with open(json_dir / f'composer-environments-{self.region}.json',
-                encoding='utf-8') as f:
-        return json.load(f)
-    except FileNotFoundError:
-      return {}
-
-  def parse_parent(self, parent) -> Tuple[str, str]:
-    match = re.match(r'projects/([^/]*)/locations/([^/]*)', parent)
-    if not match:
-      raise RuntimeError(f"Can't parse parent {parent}")
-    return match.group(1), match.group(2)
 
 
 class ComposerApiStub:
@@ -67,4 +37,10 @@ class ComposerApiStub:
 
   # pylint: disable=invalid-name
   def list(self, parent):
-    return ListEnvironmentsQuery(parent)
+    match = re.match(r'projects/([^/]*)/locations/([^/]*)', parent)
+    if not match:
+      raise RuntimeError(f"Can't parse parent {parent}")
+    project_id, region = match.group(1), match.group(2)
+    return apis_stub.RestCallStub(project_id,
+                                  f'composer-environments-{region}.json',
+                                  default={})

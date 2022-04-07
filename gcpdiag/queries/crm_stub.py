@@ -18,7 +18,6 @@
 Instead of doing real API calls, we return test JSON data.
 """
 
-import json
 import re
 
 from gcpdiag.queries import apis_stub
@@ -32,8 +31,7 @@ class CrmApiStub:
   # example API call:
   # crm_api.projects().getIamPolicy(resource=self._project_id).execute()
 
-  def __init__(self, mock_state='init', project_id=None):
-    self.mock_state = mock_state
+  def __init__(self, project_id=None):
     self.project_id = project_id
 
   def projects(self):
@@ -44,20 +42,8 @@ class CrmApiStub:
     if not project_id and name is not None:
       m = re.match(r'projects/(.*)', name)
       project_id = m.group(1)
-    return CrmApiStub('get_project', project_id)
+    return apis_stub.RestCallStub(project_id, 'project.json')
 
   # pylint: disable=invalid-name
   def getIamPolicy(self, resource):
-    return CrmApiStub(mock_state='get_iam_policy', project_id=resource)
-
-  def execute(self, num_retries=0):
-    del num_retries
-    json_dir = apis_stub.get_json_dir(self.project_id)
-    if self.mock_state == 'get_iam_policy':
-      with open(json_dir / 'iam-policy.json', encoding='utf-8') as json_file:
-        return json.load(json_file)
-    elif self.mock_state == 'get_project':
-      with open(json_dir / 'project.json', encoding='utf-8') as json_file:
-        return json.load(json_file)
-    else:
-      raise ValueError("can't call this method here")
+    return apis_stub.RestCallStub(resource, 'iam-policy.json')

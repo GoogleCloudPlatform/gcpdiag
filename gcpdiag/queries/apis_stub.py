@@ -89,6 +89,27 @@ class ApiStub:
           b'mocking API error')
 
 
+class RestCallStub:
+  """Generic mock object to simulate executable api request."""
+
+  def __init__(self,
+               project_id: str,
+               json_file: str,
+               default: Optional[dict] = None):
+    self.json_dir = get_json_dir(project_id)
+    self.json_file = json_file
+    self.default = default
+
+  def execute(self, num_retries: int = 0) -> dict:
+    try:
+      with open(self.json_dir / self.json_file, encoding='utf-8') as json_file:
+        return json.load(json_file)
+    except FileNotFoundError:
+      if self.default is not None:
+        return self.default
+      raise
+
+
 class ServiceUsageApiStub(ApiStub):
   """Mock object to simulate api calls."""
 
@@ -106,7 +127,7 @@ class ServiceUsageApiStub(ApiStub):
     if not m:
       raise ValueError(f"can't parse parent: {parent}")
     project_id = m.group(1)
-    return ServiceUsageApiStub(mock_state='list', project_id=project_id)
+    return RestCallStub(project_id, 'services.json')
 
   def list_next(self, request, response):
     return None
@@ -124,9 +145,7 @@ class ServiceUsageApiStub(ApiStub):
     json_dir = get_json_dir(self._project_id)
     with open(json_dir / 'services.json', encoding='utf-8') as json_file:
       services_list = json.load(json_file)
-      if self._mock_state == 'list':
-        return services_list
-      elif self._mock_state == 'get':
+      if self._mock_state == 'get':
         for service in services_list.get('services', []):
           if service.get('config', {}).get('name') \
               == f'{self._service}':
