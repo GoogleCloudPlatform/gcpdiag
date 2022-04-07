@@ -171,8 +171,10 @@ def _parse_rule_patterns(patterns):
 
 def _load_repository_rules(repo: lint.LintRuleRepository):
   """Find and load all lint rule modules dynamically"""
-  for module in pkgutil.walk_packages():
-    if module.ispkg and module.name.startswith('gcpdiag.lint.'):
+  for module in pkgutil.walk_packages(
+      lint.__path__,  # type: ignore
+      lint.__name__ + '.'):
+    if module.ispkg:
       try:
         m = importlib.import_module(f'{module.name}')
         repo.load_rules(m)
