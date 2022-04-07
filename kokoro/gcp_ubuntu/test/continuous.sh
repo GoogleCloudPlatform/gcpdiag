@@ -33,12 +33,9 @@ pipenv-dockerized 3.7 run make test-mocked
 # Test with Python 3.9
 pipenv-dockerized 3.9 run pipenv install --dev
 pipenv-dockerized 3.9 run make test
-# remove previously installed packages and install only default packages
-rm -rf .pipenv-dockerized/venv-3.9
-pipenv-dockerized 3.9 run pipenv install --ignore-pipfile
-# run gcpdiag-mocked
+# Note: we don't re-install without dev packages same as above,
+#       because "make kokoro-build" needs dev packages.
 pipenv-dockerized 3.9 run make test-mocked
-
 # Build pyinstaller binary
 pipenv-dockerized 3.9 run make -C kokoro kokoro-build
 
