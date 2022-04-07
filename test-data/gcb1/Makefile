@@ -23,6 +23,7 @@ all:	\
 	json-dumps/cloudbuild.json \
 	json-dumps/cloudbuild-$(REGION_1).json \
 	json-dumps/cloudbuild-empty.json \
+	json-dumps/cloudbuild-triggers.json \
 	json-dumps/bucket.json \
 	json-dumps/artifact-registry-policy.json \
 	json-dumps/iam-service-accounts.json \
@@ -60,6 +61,11 @@ json-dumps/cloudbuild-$(REGION_1).json:
 json-dumps/cloudbuild-empty.json:
 	$(CURL) -fsS \
 	  'https://cloudbuild.googleapis.com/v1/projects/$(PROJECT_ID)/locations/$(REGION_2)/builds' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/cloudbuild-triggers.json:
+	$(CURL) -fsS \
+	  'https://cloudbuild.googleapis.com/v1/projects/$(PROJECT_ID)/triggers' \
 		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/bucket.json:

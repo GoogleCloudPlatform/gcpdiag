@@ -13,9 +13,9 @@
 # limitations under the License.
 
 # Lint as: python3
-"""Cloud Build service account has the cloudbuild.builds.editor role.
+"""Cloud Build service account has the cloudbuild.builds.builder role.
 
-The Cloud Build service account is missing the cloudbuild.builds.create IAM permission,
+The Cloud Build service account is missing the cloudbuild.builds.builder role,
 which is required for the service account to run a build trigger.
 You can resolve this error by granting the Cloud Build Service Account IAM role
 to [PROJECT_NUMBER]@cloudbuild.gserviceaccount.com.
@@ -24,13 +24,13 @@ to [PROJECT_NUMBER]@cloudbuild.gserviceaccount.com.
 from gcpdiag import lint, models
 from gcpdiag.queries import crm, gcb, iam
 
-ROLE = 'roles/cloudbuild.builds.editor'
+ROLE = 'roles/cloudbuild.builds.builder'
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-  builds = gcb.get_builds(context)
-  if not builds:
-    report.add_skipped(None, 'no builds found')
+  triggers = gcb.get_triggers(context)
+  if not triggers:
+    report.add_skipped(None, 'no triggers found')
     return
   project_id = context.project_id
   project = crm.get_project(context.project_id)
