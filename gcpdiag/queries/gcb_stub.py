@@ -36,14 +36,37 @@ class CloudBuildApiStub:
     return self
 
   def builds(self):
-    return self
+    return CloudBuildBuildsApiStub()
+
+  def triggers(self):
+    return CloudBuildTriggersApiStub()
+
+
+class CloudBuildBuildsApiStub:
+  """Mock object to simulate functions of builds api calls."""
 
   def list(self, parent):
     m = re.match(r'projects/([^/]+)/', parent)
     project_id = m.group(1)
-    self.json_dir = apis_stub.get_json_dir(project_id)
-    return self
+    return RestCallStub(project_id, 'cloudbuild.json')
 
-  def execute(self, num_retries=0):
-    with open(self.json_dir / 'cloudbuild.json', encoding='utf-8') as json_file:
+
+class CloudBuildTriggersApiStub:
+  """Mock object to simulate functions of triggers api calls."""
+
+  def list(self, parent):
+    m = re.match(r'projects/([^/]+)/', parent)
+    project_id = m.group(1)
+    return RestCallStub(project_id, 'cloudbuild-triggers.json')
+
+
+class RestCallStub:
+  """Mock object to simulate executable api request."""
+
+  def __init__(self, project_id: str, json_file: str):
+    self.json_dir = apis_stub.get_json_dir(project_id)
+    self.json_file = json_file
+
+  def execute(self, num_retries: int = 0) -> dict:
+    with open(self.json_dir / self.json_file, encoding='utf-8') as json_file:
       return json.load(json_file)

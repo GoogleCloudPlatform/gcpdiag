@@ -1,0 +1,22 @@
+{
+  "triggers": [
+    {
+      "id": "1affbb4f-7b0b-4ebe-bb44-c440b574279d",
+      "build": {
+        "steps": [
+          {
+            "name": "gcr.io/cloud-builders/gsutil"
+          }
+        ],
+        "timeout": "600s"
+      },
+      "createTime": "2022-04-03T14:02:31.203612089Z",
+      "triggerTemplate": {
+        "projectId": "gcpdiag-gcb1-aaaa",
+        "repoName": "test-repo",
+        "branchName": "main"
+      },
+      "name": "trigger"
+    }
+  ]
+}
