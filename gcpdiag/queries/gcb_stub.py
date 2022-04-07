@@ -18,7 +18,6 @@
 Instead of doing real API calls, we return test JSON data.
 """
 
-import json
 import re
 
 from gcpdiag.queries import apis_stub
@@ -48,7 +47,7 @@ class CloudBuildBuildsApiStub:
   def list(self, parent):
     m = re.match(r'projects/([^/]+)/', parent)
     project_id = m.group(1)
-    return RestCallStub(project_id, 'cloudbuild.json')
+    return apis_stub.RestCallStub(project_id, 'cloudbuild.json')
 
 
 class CloudBuildTriggersApiStub:
@@ -57,16 +56,4 @@ class CloudBuildTriggersApiStub:
   def list(self, parent):
     m = re.match(r'projects/([^/]+)/', parent)
     project_id = m.group(1)
-    return RestCallStub(project_id, 'cloudbuild-triggers.json')
-
-
-class RestCallStub:
-  """Mock object to simulate executable api request."""
-
-  def __init__(self, project_id: str, json_file: str):
-    self.json_dir = apis_stub.get_json_dir(project_id)
-    self.json_file = json_file
-
-  def execute(self, num_retries: int = 0) -> dict:
-    with open(self.json_dir / self.json_file, encoding='utf-8') as json_file:
-      return json.load(json_file)
+    return apis_stub.RestCallStub(project_id, 'cloudbuild-triggers.json')

@@ -18,7 +18,6 @@
 Instead of doing real API calls, we return test JSON data.
 """
 
-import json
 import re
 
 from gcpdiag.queries import apis_stub
@@ -41,10 +40,4 @@ class CloudFunctionsApiStub:
   def list(self, parent):
     m = re.match(r'projects/([^/]+)/', parent)
     project_id = m.group(1)
-    self.json_dir = apis_stub.get_json_dir(project_id)
-    return self
-
-  def execute(self, num_retries=0):
-    with open(self.json_dir / 'cloudfunctions.json',
-              encoding='utf-8') as json_file:
-      return json.load(json_file)
+    return apis_stub.RestCallStub(project_id, 'cloudfunctions.json')

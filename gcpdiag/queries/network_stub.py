@@ -36,8 +36,7 @@ class NetworkApiStub:
 
   def get(self, project, network=None, region=None, subnetwork=None):
     if not subnetwork:
-      self.mock_state = 'get'
-      self.network = network
+      return apis_stub.RestCallStub(project, f'compute-network-{network}.json')
     else:
       self.mock_state = 'get_single_subnetwork'
       self.subnetwork = subnetwork
@@ -45,24 +44,20 @@ class NetworkApiStub:
     return self
 
   def getIamPolicy(self, project, region, resource):
-    self.mock_state = 'getIamPolicy_subnetwork'
-    self.project_id = project
-    self.subnetwork = resource
-    return self
+    return apis_stub.RestCallStub(project, 'compute-subnetwork-policy.json')
 
   def getEffectiveFirewalls(self, project, network):
-    self.mock_state = 'get_effective_firewalls'
-    self.project_id = project
-    self.network = network
-    return self
+    return apis_stub.RestCallStub(
+        project, f'compute-effective-firewalls-{network}.json')
 
   # pylint: disable=redefined-builtin
   def list(self, project, region, filter=None, fields=None):
-    self.project_id = project
     if self.mock_state == 'subnetworks':
-      return self
+      return apis_stub.RestCallStub(
+          project, f'compute-subnetworks-{SUBNETWORKS_REGION}.json')
     elif self.mock_state == 'routers':
-      return self
+      return apis_stub.RestCallStub(
+          project, f'compute-routers-{SUBNETWORKS_REGION}.json')
     else:
       raise ValueError(f'cannot call method {self.mock_state} here')
 
@@ -71,31 +66,11 @@ class NetworkApiStub:
 
   def execute(self, num_retries=0):
     json_dir = apis_stub.get_json_dir(self.project_id)
-    if self.mock_state == 'get':
-      with open(json_dir / f'compute-network-{self.network}.json',
-                encoding='utf-8') as json_file:
-        return json.load(json_file)
-    elif self.mock_state == 'get_effective_firewalls':
-      with open(json_dir / f'compute-effective-firewalls-{self.network}.json',
-                encoding='utf-8') as json_file:
-        return json.load(json_file)
-    elif self.mock_state == 'subnetworks':
-      with open(json_dir / f'compute-subnetworks-{SUBNETWORKS_REGION}.json',
-                encoding='utf-8') as json_file:
-        return json.load(json_file)
-    elif self.mock_state == 'get_single_subnetwork':
+    if self.mock_state == 'get_single_subnetwork':
       with open(json_dir / f'compute-subnetworks-{SUBNETWORKS_REGION}.json',
                 encoding='utf-8') as json_file:
         for subnet in json.load(json_file)['items']:
           if subnet['name'] == self.subnetwork:
             return subnet
-    elif self.mock_state == 'getIamPolicy_subnetwork':
-      with open(json_dir / 'compute-subnetwork-policy.json',
-                encoding='utf-8') as json_file:
-        return json.load(json_file)
-    elif self.mock_state == 'routers':
-      with open(json_dir / f'compute-routers-{SUBNETWORKS_REGION}.json',
-                encoding='utf-8') as json_file:
-        return json.load(json_file)
     else:
       raise ValueError(f'cannot call method {self.mock_state} here')
