@@ -24,23 +24,39 @@ The Editor and Owner roles include all the required permissions, but we
 recommend that if you use service account authentication (`--auth-key`), you
 only grant the Viewer+Service Usage Consumer on that service account.
 
-#### 2. Cloud Resource Manager API
+#### 2. Required APIs
 
-You need the **Cloud Resource Manager API** to be enabled on the GCP project you
-are trying to diagnose. You can either enable it from the
-[GCP console](https://console.cloud.google.com/marketplace/product/google/cloudresourcemanager.googleapis.com)
-or use the `gcloud` CLI.
+gcpdiag requires some APIs to be enabled in order for the inspection of
+resources to work correctly:
+
+- `cloudresourcemanager.googleapis.com` *(Cloud Resource Manager API)*
+- `iam.googleapis.com` *(Identity and Access Management API)*
+- `logging.googleapis.com` *(Cloud Logging API)*
+- `serviceusage.googleapis.com` *(Service Usage API)*
+
+You can enable these APIs using Cloud Console or via command-line:
 
 ```
 gcloud --project=MYPROJECT services enable \
-    cloudresourcemanager.googleapis.com
+    cloudresourcemanager.googleapis.com \
+    iam.googleapis.com \
+    logging.googleapis.com \
+    serviceusage.googleapis.com
+
+```
+
+## Running in Cloud Shell
+
+gcpdiag is integrated in Cloud Shell:
+
+```
+gcpdiag lint --project=MYPROJECT
 ```
 
 ## Running with Docker
 
 You can run gcpdiag using a shell wrapper that starts gcpdiag in a Docker
-container. This should work on any machine with Docker or Podman installed,
-including Cloud Shell.
+container. This should work on any machine with Docker or Podman installed.
 
 ```
 curl https://gcpdiag.dev/gcpdiag.sh >gcpdiag
