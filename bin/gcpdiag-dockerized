@@ -2,7 +2,7 @@
 set -e
 THIS_WRAPPER_VERSION=0.9
 SUPPORTED_RUNTIME="docker podman"
-ARGS="$@"
+ARGS="$*"
 
 eval $(curl -sf https://storage.googleapis.com/gcpdiag/release-version|grep -Ei '^\w*=[0-9a-z/\._-]*$')
 
@@ -24,6 +24,29 @@ version_ge () {
     fi
   done
   return 0  # V1 >= V2
+}
+
+# Test whether 1st arg (file) was provided and exists, then prepare mount path
+# that will be used inside container with the same path if absolut path was used
+# or inside root folder if relative path was used.
+handle_mount_path () {
+  local FILE="$1"
+  local MOUNT=""
+  if [ -n "$FILE" ]; then
+    if [ -f "$FILE" ]; then
+      if [[ "$FILE" = /* ]]; then
+        # absolut path shall be mounted as is
+        MOUNT="-v $FILE:$FILE"
+      else
+        # local path need to be mounted inside root folder
+        MOUNT="-v $PWD/$FILE:/$FILE"
+      fi
+      echo "$MOUNT"
+    else
+      return 1
+    fi
+  fi
+  return 0
 }
 
 # Check this script version and compare with the minimum required version
@@ -67,7 +90,9 @@ if [ "$RUNTIME" = podman ]; then
   export PODMAN_USERNS=keep-id
 fi
 
-# Check if config argument was provided via --config file or --config=file
+# Check if:
+# - config argument was provided via --config file or --config=file
+# - auth-key argument was provided via --auth-key file or --auth-key=file
 while [[ $# -gt 0 ]]; do
   case $1 in
     --config=*)
@@ -76,6 +101,12 @@ while [[ $# -gt 0 ]]; do
     --config)
       CONFIG_FILE="$2"
       ;;
+    --auth-key=*)
+      AUTH_KEY="${1#*=}"
+      ;;
+    --auth-key)
+      AUTH_KEY="$2"
+      ;;
   esac
   shift
 done
@@ -83,25 +114,26 @@ done
 # If config argument was provided we need to check if file exists and mount it
 # inside container with the same path if absolut path was used or inside
 # root folder if relative path was used.
-CONFIG_MOUNT=""
-if [ ! -z "$CONFIG_FILE" ]; then
-  if [ -f "$CONFIG_FILE" ]; then
-    if [[ "$CONFIG_FILE" = /* ]]; then
-      # absolut path shall be mounted as is
-      CONFIG_MOUNT="-v $CONFIG_FILE:$CONFIG_FILE"
-    else
-      # local path need to be mounted inside root folder
-      CONFIG_MOUNT="-v $PWD/$CONFIG_FILE:/$CONFIG_FILE"
-    fi
-  else
+if ! CONFIG_MOUNT=$(handle_mount_path "$CONFIG_FILE"); then
     echo
     echo "## ERROR:"
     echo "## Configuration file: $CONFIG_FILE does not exist!"
     echo
     exit 1
-  fi
 fi
 
+# If auth-key argument was provided we need to check if file exists and mount it
+# inside container with the same path if absolut path was used or inside
+# root folder if relative path was used.
+if ! AUTH_KEY_MOUNT=$(handle_mount_path "$AUTH_KEY"); then
+    echo
+    echo "## ERROR:"
+    echo "## Authentication key: $AUTH_KEY does not exist!"
+    echo
+    exit 1
+fi
+
+# shellcheck disable=SC2086
 exec "$RUNTIME" run "$USE_TTY" \
   --rm \
   -u "$(id -u):$(id -g)" \
@@ -112,4 +144,5 @@ exec "$RUNTIME" run "$USE_TTY" \
   -v "$HOME/.cache/gcpdiag-dockerized:$HOME/.cache/gcpdiag" \
   -v "$HOME/.config/gcloud:$HOME/.config/gcloud" \
   $CONFIG_MOUNT \
+  $AUTH_KEY_MOUNT \
   "$DOCKER_IMAGE:$DOCKER_IMAGE_VERSION" /opt/gcpdiag/bin/gcpdiag $ARGS
