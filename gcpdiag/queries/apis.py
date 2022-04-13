@@ -76,12 +76,13 @@ def _get_credentials_adc():
 
 
 def _get_credentials_key():
-  logging.debug('auth: using service account key')
+  filename = config.get('auth_key')
+  logging.debug('auth: using service account key %s', filename)
 
   global _credentials
   if not _credentials:
-    _credentials, _ = google.auth.load_credentials_from_file(
-        filename=_auth_method(), scopes=AUTH_SCOPES)
+    _credentials, _ = google.auth.load_credentials_from_file(filename=filename,
+                                                             scopes=AUTH_SCOPES)
   return _credentials
 
 
