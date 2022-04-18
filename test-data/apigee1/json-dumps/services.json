@@ -1,7 +1,7 @@
 {
   "services": [
     {
-      "name": "projects/594934244236/services/apigee.googleapis.com",
+      "name": "projects/12340005/services/apigee.googleapis.com",
       "config": {
         "name": "apigee.googleapis.com",
         "title": "Apigee API",
@@ -210,6 +210,9 @@
             {
               "monitoredResource": "apigee.googleapis.com/ProxyV2",
               "metrics": [
+                "apigee.googleapis.com/mint/request_count",
+                "apigee.googleapis.com/mint/response_count",
+                "apigee.googleapis.com/mint/latencies_percentile",
                 "apigee.googleapis.com/internal/proxyv2/response_count_delta",
                 "apigee.googleapis.com/internal/proxyv2/response_latencies_double",
                 "apigee.googleapis.com/proxyv2/request_count",
@@ -228,9 +231,8 @@
                 "apigee.googleapis.com/targetv2/response_count",
                 "apigee.googleapis.com/targetv2/latencies",
                 "apigee.googleapis.com/targetv2/latencies_percentile",
-                "apigee.googleapis.com/mint/request_count",
-                "apigee.googleapis.com/mint/response_count",
-                "apigee.googleapis.com/mint/latencies_percentile"
+                "apigee.googleapis.com/proxyv2/release/response_count",
+                "apigee.googleapis.com/proxyv2/release/latencies_percentile"
               ]
             },
             {
@@ -303,7 +305,19 @@
                 "apigee.googleapis.com/envoy/redis/commands/get/error",
                 "apigee.googleapis.com/envoy/redis/commands/get/latency",
                 "apigee.googleapis.com/internal/server/google_token_generation_latencies",
-                "apigee.googleapis.com/internal/server/google_token_generation_count"
+                "apigee.googleapis.com/internal/server/google_token_generation_count",
+                "apigee.googleapis.com/internal/envoy/gateway/downstream_request_count",
+                "apigee.googleapis.com/internal/envoy/gateway/downstream_latencies",
+                "apigee.googleapis.com/internal/envoy/gateway/downstream_response_count",
+                "apigee.googleapis.com/internal/envoy/gateway/upstream_request_count",
+                "apigee.googleapis.com/internal/envoy/gateway/upstream_latencies",
+                "apigee.googleapis.com/internal/envoy/gateway/grpc_access_logs_written_count",
+                "apigee.googleapis.com/internal/envoy/gateway/grpc_access_logs_dropped_count",
+                "apigee.googleapis.com/internal/envoy/adapter/request_count",
+                "apigee.googleapis.com/internal/envoy/adapter/auth_request_latencies",
+                "apigee.googleapis.com/internal/envoy/adapter/apigee_request_latencies",
+                "apigee.googleapis.com/internal/envoy/adapter/products_cached",
+                "apigee.googleapis.com/internal/envoy/adapter/analytics_records_batch_size"
               ]
             },
             {
@@ -320,17 +334,19 @@
                 "apigee.googleapis.com/targetv2/request_count",
                 "apigee.googleapis.com/targetv2/response_count",
                 "apigee.googleapis.com/targetv2/latencies",
-                "apigee.googleapis.com/targetv2/latencies_percentile"
+                "apigee.googleapis.com/targetv2/latencies_percentile",
+                "apigee.googleapis.com/targetv2/release/response_count",
+                "apigee.googleapis.com/targetv2/release/latencies_percentile"
               ]
             }
           ]
         }
       },
       "state": "ENABLED",
-      "parent": "projects/594934244236"
+      "parent": "projects/12340005"
     },
     {
-      "name": "projects/594934244236/services/cloudkms.googleapis.com",
+      "name": "projects/12340005/services/cloudkms.googleapis.com",
       "config": {
         "name": "cloudkms.googleapis.com",
         "title": "Cloud Key Management Service (KMS) API",
@@ -367,17 +383,42 @@
             {
               "monitoredResource": "cloudkms.googleapis.com/Project",
               "metrics": [
-                "cloudkms.googleapis.com/peak_qps"
+                "cloudkms.googleapis.com/ekm/external/request_count",
+                "cloudkms.googleapis.com/ekm/external/request_latencies",
+                "cloudkms.googleapis.com/external_kms_multiregion_requests",
+                "cloudkms.googleapis.com/hsm_multiregion_asymmetric_requests",
+                "cloudkms.googleapis.com/hsm_multiregion_symmetric_requests",
+                "cloudkms.googleapis.com/peak_qps",
+                "cloudkms.googleapis.com/quota/external_kms_multiregion_requests/exceeded",
+                "cloudkms.googleapis.com/quota/external_kms_multiregion_requests/usage",
+                "cloudkms.googleapis.com/quota/hsm_multiregion_asymmetric_requests/exceeded",
+                "cloudkms.googleapis.com/quota/hsm_multiregion_asymmetric_requests/usage",
+                "cloudkms.googleapis.com/quota/hsm_multiregion_symmetric_requests/exceeded",
+                "cloudkms.googleapis.com/quota/hsm_multiregion_symmetric_requests/usage",
+                "cloudkms.googleapis.com/quota/software_multiregion_asymmetric_requests/exceeded",
+                "cloudkms.googleapis.com/quota/software_multiregion_asymmetric_requests/usage",
+                "cloudkms.googleapis.com/quota/software_multiregion_symmetric_requests/exceeded",
+                "cloudkms.googleapis.com/quota/software_multiregion_symmetric_requests/usage"
+              ]
+            },
+            {
+              "monitoredResource": "cloudkms.googleapis.com/Project",
+              "metrics": [
+                "cloudkms.googleapis.com/quota/external_kms_multiregion_requests/limit",
+                "cloudkms.googleapis.com/quota/hsm_multiregion_asymmetric_requests/limit",
+                "cloudkms.googleapis.com/quota/hsm_multiregion_symmetric_requests/limit",
+                "cloudkms.googleapis.com/quota/software_multiregion_asymmetric_requests/limit",
+                "cloudkms.googleapis.com/quota/software_multiregion_symmetric_requests/limit"
               ]
             }
           ]
         }
       },
       "state": "ENABLED",
-      "parent": "projects/594934244236"
+      "parent": "projects/12340005"
     },
     {
-      "name": "projects/594934244236/services/compute.googleapis.com",
+      "name": "projects/12340005/services/compute.googleapis.com",
       "config": {
         "name": "compute.googleapis.com",
         "title": "Compute Engine API",
@@ -480,10 +521,10 @@
         }
       },
       "state": "ENABLED",
-      "parent": "projects/594934244236"
+      "parent": "projects/12340005"
     },
     {
-      "name": "projects/594934244236/services/oslogin.googleapis.com",
+      "name": "projects/12340005/services/oslogin.googleapis.com",
       "config": {
         "name": "oslogin.googleapis.com",
         "title": "Cloud OS Login API",
@@ -500,10 +541,10 @@
         "monitoring": {}
       },
       "state": "ENABLED",
-      "parent": "projects/594934244236"
+      "parent": "projects/12340005"
     },
     {
-      "name": "projects/594934244236/services/servicenetworking.googleapis.com",
+      "name": "projects/12340005/services/servicenetworking.googleapis.com",
       "config": {
         "name": "servicenetworking.googleapis.com",
         "title": "Service Networking API",
@@ -520,7 +561,7 @@
         "monitoring": {}
       },
       "state": "ENABLED",
-      "parent": "projects/594934244236"
+      "parent": "projects/12340005"
     }
   ]
 }

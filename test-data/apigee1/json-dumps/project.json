@@ -1,10 +1,10 @@
 {
-  "name": "projects/594934244236",
-  "parent": "organizations/126083999674",
+  "name": "projects/12340005",
+  "parent": "folders/348077457356",
   "projectId": "gcpdiag-apigee1-aaaa",
   "state": "ACTIVE",
-  "displayName": "gcpdiag-apigee1-aaaa",
-  "createTime": "2021-10-24T12:47:17.144Z",
-  "updateTime": "2021-10-24T12:47:18.468Z",
-  "etag": "lYtpsFO1ttMlAbPM8ljejw=="
+  "displayName": "gcpdiag test - apigee1",
+  "createTime": "2022-04-15T07:57:45.772Z",
+  "updateTime": "2022-04-15T07:57:47.522Z",
+  "etag": "dTwm6ePUckc4Y+dgi3Yg1g=="
 }
