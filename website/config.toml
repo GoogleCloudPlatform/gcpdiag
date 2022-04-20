@@ -88,12 +88,12 @@ order = [".jpg$", ".gif$"]
 
 [[deployment.targets]]
 name = "gcs-staging"
-URL = "gs://gcpdiag-web-staging"
+URL = "gs://gcpdiag-website-staging"
 exclude = "gcpdiag.sh"
 
 [[deployment.targets]]
 name = "gcs-prod"
-URL = "gs://gcpdiag-web"
+URL = "gs://gcpdiag-website-prod"
 exclude = "gcpdiag.sh"
 
 [[deployment.matchers]]
