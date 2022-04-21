@@ -47,5 +47,6 @@ make -C docker/gcpdiag update-default
 make -C gcpdiag_google_internal/docker update-default
 
 # Publish prod website (http://gcpdiag.dev)
+cd website
 ./hugo.sh
 ./hugo.sh deploy --target gcs-prod
