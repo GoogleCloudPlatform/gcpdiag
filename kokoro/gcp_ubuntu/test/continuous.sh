@@ -47,10 +47,6 @@ make -C docker/gcpdiag push
 make -C gcpdiag_google_internal/docker build
 make -C gcpdiag_google_internal/docker push
 
-# Publish staging website (http://staging.gcpdiag.dev)
-cd website
+# Publish prod website (http://gcpdiag.dev)
 ./hugo.sh
-cp "$SA_KEY_FILE" sa-key.json
-export GOOGLE_APPLICATION_CREDENTIALS=/src/sa-key.json
-./hugo.sh deploy --target gcs-staging
-rm sa-key.json
+./hugo.sh deploy --target gcs-prod

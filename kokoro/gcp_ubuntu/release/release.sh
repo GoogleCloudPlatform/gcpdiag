@@ -47,9 +47,5 @@ make -C docker/gcpdiag update-default
 make -C gcpdiag_google_internal/docker update-default
 
 # Publish prod website (http://gcpdiag.dev)
-cd website
 ./hugo.sh
-cp "$SA_KEY_FILE" sa-key.json
-export GOOGLE_APPLICATION_CREDENTIALS=/src/sa-key.json
 ./hugo.sh deploy --target gcs-prod
-rm sa-key.json
