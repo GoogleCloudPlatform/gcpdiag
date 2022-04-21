@@ -23,7 +23,7 @@ import re
 import sys
 
 from gcpdiag import config, hooks, lint, models
-from gcpdiag.lint import report_terminal
+from gcpdiag.lint import report_csv, report_json, report_terminal
 from gcpdiag.queries import apis
 
 
@@ -153,6 +153,14 @@ def _init_args_parser():
       help=('Configure timeout for logging queries (default:'
             f" {config.get('logging_fetch_max_time_seconds')} seconds)"))
 
+  parser.add_argument(
+      '--output',
+      metavar='FORMATTER',
+      default='terminal',
+      type=str,
+      help=(
+          'Format output as one of [terminal, json, csv] (default: terminal)'))
+
   return parser
 
 
@@ -183,6 +191,26 @@ def _load_repository_rules(repo: lint.LintRuleRepository):
         continue
 
 
+def _initialize_output_formater() -> lint.LintReport:
+  report: lint.LintReport
+  if config.get('output') == 'json':
+    report = report_json.LintReportJson(
+        log_info_for_progress_only=(config.get('verbose') == 0),
+        show_ok=not config.get('hide_ok'),
+        show_skipped=config.get('show_skipped'))
+  elif config.get('output') == 'csv':
+    report = report_csv.LintReportCsv(
+        log_info_for_progress_only=(config.get('verbose') == 0),
+        show_ok=not config.get('hide_ok'),
+        show_skipped=config.get('show_skipped'))
+  else:
+    report = report_terminal.LintReportTerminal(
+        log_info_for_progress_only=(config.get('verbose') == 0),
+        show_ok=not config.get('hide_ok'),
+        show_skipped=config.get('show_skipped'))
+  return report
+
+
 def run(argv) -> int:
   del argv
 
@@ -208,11 +236,10 @@ def run(argv) -> int:
   _load_repository_rules(repo)
 
   # ^^^ If you add rules directory, update also
-  # pyinstaller/hook-gcpdiag.lint.py and bin/precommit-required-files
-  report = report_terminal.LintReportTerminal(
-      log_info_for_progress_only=(config.get('verbose') == 0),
-      show_ok=not config.get('hide_ok'),
-      show_skipped=config.get('show_skipped'))
+  # pyinstaller/hook-gcpdiag.lint.py and bin/precommit-website-rules
+
+  # Initialize proper output formater
+  report = _initialize_output_formater()
 
   # Logging setup.
   logging_handler = report.get_logging_handler()

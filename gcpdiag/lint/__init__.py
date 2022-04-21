@@ -22,14 +22,16 @@ import enum
 import importlib
 import inspect
 import logging
+import os
 import pkgutil
 import re
+import sys
 from collections.abc import Callable
 from typing import Any, Dict, Iterable, Iterator, List, Optional
 
 import googleapiclient.errors
 
-from gcpdiag import models, utils
+from gcpdiag import config, models, utils
 from gcpdiag.executor import get_executor
 from gcpdiag.queries import logs
 
@@ -74,21 +76,37 @@ class LintRule:
     return f'https://gcpdiag.dev/rules/{self.product}/{self.rule_class}/{self.rule_id}'
 
 
-class LintReport:
+class LintReport(abc.ABC):
   """Represent a lint report, which can be terminal-based, or (in the future) JSON."""
 
   rules_report: Dict[LintRule, Dict[str, Any]]
 
-  def __init__(self):
+  def __init__(self,
+               file=sys.stdout,
+               log_info_for_progress_only=True,
+               show_ok=True,
+               show_skipped=False):
+    self.file = file
+    self.show_ok = show_ok
+    self.show_skipped = show_skipped
+    self.log_info_for_progress_only = log_info_for_progress_only
+    self.rule_has_results = False
     self.rules_report = {}
 
   def rule_start(self, rule: LintRule, context: models.Context):
     """Called when a rule run is started with a context."""
+    self.rule_has_results = False
     return LintReportRuleInterface(self, rule, context)
 
   def rule_end(self, rule: LintRule, context: models.Context):
     """Called when the rule is finished running."""
     pass
+
+  def banner(self):
+    print(f'gcpdiag {config.VERSION}\n', file=sys.stderr)
+
+  def lint_start(self, context):
+    print(f'Starting lint inspection ({context})...\n', file=sys.stderr)
 
   @abc.abstractmethod
   def add_skipped(self, rule: LintRule, context: models.Context,
@@ -120,9 +138,54 @@ class LintReport:
     # did any rule fail? Then exit with 2, otherwise 0.
     # note: we don't use 1 because that's already the exit code when the script
     # exits with an exception.
+    exit_code = 0
     if any(r['overall_status'] == 'failed' for r in self.rules_report.values()):
-      return 2
-    return 0
+      exit_code = 2
+
+    totals = {
+        'skipped': 0,
+        'ok': 0,
+        'failed': 0,
+    }
+    for rule in self.rules_report.values():
+      totals[rule['overall_status']] += 1
+    if not self.rule_has_results:
+      self.print_line()
+    print(
+        f"Rules summary: {totals['skipped']} skipped, {totals['ok']} ok, {totals['failed']} failed",
+        file=sys.stderr)
+    return exit_code
+
+  def get_logging_handler(self):
+    return _LintReportLoggingHandler(self)
+
+  def print_line(self, text: str = ''):
+    """Write a line to the desired output provided as self.file."""
+    print(text, file=self.file, flush=True)
+
+
+class _LintReportLoggingHandler(logging.Handler):
+  """logging.Handler implementation used when producing a lint report."""
+
+  def __init__(self, report):
+    super().__init__()
+    self.report = report
+
+  def format(self, record: logging.LogRecord):
+    return record.getMessage()
+
+  def emit(self, record):
+    if record.levelno == logging.INFO:
+      # Do not output anything, assuming that the
+      # interesting output will be passed via print_line
+      return
+    else:
+      msg = f'[{record.levelname}] ' + self.format(record) + ' '
+      # workaround for bug:
+      # https://github.com/googleapis/google-api-python-client/issues/1116
+      if 'Invalid JSON content from response' in msg:
+        return
+    self.report.print_line(msg)
 
 
 class LintReportRuleInterface:
