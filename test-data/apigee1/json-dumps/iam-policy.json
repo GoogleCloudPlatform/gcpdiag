@@ -1,0 +1,31 @@
+{
+  "bindings": [
+    {
+      "members": [
+        "serviceAccount:service-12340005@compute-system.iam.gserviceaccount.com"
+      ],
+      "role": "roles/compute.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:12340005-compute@developer.gserviceaccount.com",
+        "serviceAccount:12340005@cloudservices.gserviceaccount.com"
+      ],
+      "role": "roles/editor"
+    },
+    {
+      "members": [
+        "user:test@example.com"
+      ],
+      "role": "roles/owner"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12340005@service-networking.iam.gserviceaccount.com"
+      ],
+      "role": "roles/servicenetworking.serviceAgent"
+    }
+  ],
+  "etag": "BwXc5HTQmKE=",
+  "version": 1
+}
