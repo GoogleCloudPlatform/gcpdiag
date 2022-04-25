@@ -1,10 +1,10 @@
 #!/bin/bash
 set -e
-THIS_WRAPPER_VERSION=0.9
+THIS_WRAPPER_VERSION=0.10
 SUPPORTED_RUNTIME="docker podman"
 ARGS="$*"
 
-eval $(curl -sf https://storage.googleapis.com/gcpdiag/release-version|grep -Ei '^\w*=[0-9a-z/\._-]*$')
+eval $(curl -sf https://storage.googleapis.com/gcpdiag-dist/release-version|grep -Ei '^\w*=[0-9a-z/\._-]*$')
 
 # Test whether 1st arg is greater than or equal to the 2nd, when compared as version numbers (bash-only)
 version_ge () {

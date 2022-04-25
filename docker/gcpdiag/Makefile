@@ -7,11 +7,10 @@ REPO_NAME=release
 endif
 IMAGE=us-docker.pkg.dev/gcpdiag-dist/$(REPO_NAME)/gcpdiag
 RELEASE_BUCKET_NAME=gcpdiag-dist
-WRAPPER_BUCKET_NAME=gcpdiag-web
 SHELL=/bin/bash
 
 OBJECT_NAME_RELEASE_VERSION=release-version
-WRAPPER_VERSION=0.7
+WRAPPER_VERSION=0.10
 VERSION_FILE_URL=https://storage.googleapis.com/$(RELEASE_BUCKET_NAME)/$(OBJECT_NAME_RELEASE_VERSION)
 
 build:
@@ -33,13 +32,3 @@ update-default:
 	echo -e "DOCKER_IMAGE=$(IMAGE)\nDOCKER_IMAGE_VERSION=$(VERSION)\nWRAPPER_VERSION=$(WRAPPER_VERSION)" | gsutil -h "Content-Type: text/plain" -h "Cache-Control: max-age=300" cp - "gs://$(RELEASE_BUCKET_NAME)/$(OBJECT_NAME_RELEASE_VERSION)"
 	# for transition period only
 	echo -e "DOCKER_IMAGE=$(IMAGE)\nDOCKER_IMAGE_VERSION=$(VERSION)\nWRAPPER_VERSION=$(WRAPPER_VERSION)" | gsutil -h "Content-Type: text/plain" -h "Cache-Control: max-age=300" cp - "gs://gcpdiag/$(OBJECT_NAME_RELEASE_VERSION)"
-
-upload-wrapper:
-	# only update docker wrapper script if this version is newer ($(WRAPPER_VERSION))
-	@CUR_WRAPPER_VERSION=$$(curl -sf $(VERSION_FILE_URL) | grep WRAPPER_VERSION | sed -e 's/.*=//'); \
-	  if [ "$$CUR_WRAPPER_VERSION" != "$(WRAPPER_VERSION)" ]; then \
-	    echo "uploading new wrapper."; \
-	    gsutil -h "Content-Type: text/plain" -h "Cache-Control: max-age=300" cp $(BIN_DIR)/gcpdiag-dockerized "gs://$(WRAPPER_BUCKET_NAME)/gcpdiag.sh"; \
-	  else \
-	    echo "wrapper unchanged."; \
-	  fi
