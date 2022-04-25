@@ -1,3 +1,23 @@
+## 0.54 (2022-04-25)
+
+#### New rules
+
+- apigee/ERR/2022_001: Apigee Service Agent permissions
+
+#### Enhancements
+
+- dynamically load gcpdiag lint rules for all products
+- support IAM policy retrieval for Artifact Registry
+- move gcpdiag release buckets to new location
+
+#### Fixes
+
+- gke/ERR/2022_002: use correct network for shared VPC scenario (#24)
+- error out early if service accounts of inspected projects can't be retrieved
+- fix docker wrapper script for --config and --auth-key options
+- allow to create test projects in an org folder
+- ignore more system service accounts (ignore all accounts starting with gcp-sa)
+
 ## 0.53 (2022-03-30)
 
 #### New rules
