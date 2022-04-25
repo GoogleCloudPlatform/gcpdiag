@@ -1,6 +1,6 @@
 #!/bin/sh
 
-IMAGE=us-docker.pkg.dev/gcpdiag-repo/devel/gcpdiag-hugo:0.1
+IMAGE=us-docker.pkg.dev/gcpdiag-dist/common/gcpdiag-hugo:0.1
 SUPPORTED_RUNTIME="docker podman"
 
 if [ "$#" -eq 0 ]; then

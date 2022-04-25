@@ -1,18 +1,18 @@
 BIN_DIR=../../bin
 VERSION=$(shell sed -n 's/^current_version\s*=\s*//p' <../../.bumpversion.cfg)
 ifneq (,$(findstring test,$(VERSION)))
-REPO_NAME=test
+REPO_NAME=staging
 else
 REPO_NAME=release
 endif
-IMAGE=us-docker.pkg.dev/gcpdiag-repo/$(REPO_NAME)/gcpdiag
-RELEASE_BUCKET_NAME=gcpdiag
+IMAGE=us-docker.pkg.dev/gcpdiag-dist/$(REPO_NAME)/gcpdiag
+RELEASE_BUCKET_NAME=gcpdiag-dist
 WRAPPER_BUCKET_NAME=gcpdiag-web
 SHELL=/bin/bash
 
 OBJECT_NAME_RELEASE_VERSION=release-version
 WRAPPER_VERSION=0.7
-VERSION_FILE_URL=https://storage.googleapis.com/gcpdiag/$(OBJECT_NAME_RELEASE_VERSION)
+VERSION_FILE_URL=https://storage.googleapis.com/$(RELEASE_BUCKET_NAME)/$(OBJECT_NAME_RELEASE_VERSION)
 
 build:
 	make -C ../.. tarfile
@@ -31,6 +31,8 @@ push:
 # practice of using generic docker image tags like 'default')
 update-default:
 	echo -e "DOCKER_IMAGE=$(IMAGE)\nDOCKER_IMAGE_VERSION=$(VERSION)\nWRAPPER_VERSION=$(WRAPPER_VERSION)" | gsutil -h "Content-Type: text/plain" -h "Cache-Control: max-age=300" cp - "gs://$(RELEASE_BUCKET_NAME)/$(OBJECT_NAME_RELEASE_VERSION)"
+	# for transition period only
+	echo -e "DOCKER_IMAGE=$(IMAGE)\nDOCKER_IMAGE_VERSION=$(VERSION)\nWRAPPER_VERSION=$(WRAPPER_VERSION)" | gsutil -h "Content-Type: text/plain" -h "Cache-Control: max-age=300" cp - "gs://gcpdiag/$(OBJECT_NAME_RELEASE_VERSION)"
 
 upload-wrapper:
 	# only update docker wrapper script if this version is newer ($(WRAPPER_VERSION))
