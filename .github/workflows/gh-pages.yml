@@ -16,7 +16,7 @@ jobs:
         fetch-depth: 0
 
     - name: Hugo build
-      uses: docker://us-docker.pkg.dev/gcpdiag-repo/devel/gcpdiag-hugo:0.1
+      uses: docker://us-docker.pkg.dev/gcpdiag-dist/common/gcpdiag-hugo:0.1
       with:
         args: >
           /bin/sh -e -c "
