@@ -64,6 +64,7 @@ optional arguments:
                         Configure max entries to fetch by logging queries (default: 10000)
   --logging-fetch-max-time-seconds S
                         Configure timeout for logging queries (default: 120 seconds)
+  --output FORMATTER    Format output as one of [terminal, json, csv] (default: terminal)
 ```
 
 ### Authentication
