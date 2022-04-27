@@ -38,7 +38,7 @@ class LoggingApiStub:
   def list(self, body):
     global logging_body
     logging_body = body
-    return apis_stub.RestCallStub(GKE1_PROJECT, 'logging-entries-1.json')
+    return apis_stub.RestCallStub(GKE1_PROJECT, 'logging-entries-1')
 
   def list_next(self, req, res):
     del req, res

@@ -36,7 +36,7 @@ class NetworkApiStub:
 
   def get(self, project, network=None, region=None, subnetwork=None):
     if not subnetwork:
-      return apis_stub.RestCallStub(project, f'compute-network-{network}.json')
+      return apis_stub.RestCallStub(project, f'compute-network-{network}')
     else:
       self.mock_state = 'get_single_subnetwork'
       self.subnetwork = subnetwork
@@ -44,20 +44,20 @@ class NetworkApiStub:
     return self
 
   def getIamPolicy(self, project, region, resource):
-    return apis_stub.RestCallStub(project, 'compute-subnetwork-policy.json')
+    return apis_stub.RestCallStub(project, 'compute-subnetwork-policy')
 
   def getEffectiveFirewalls(self, project, network):
-    return apis_stub.RestCallStub(
-        project, f'compute-effective-firewalls-{network}.json')
+    return apis_stub.RestCallStub(project,
+                                  f'compute-effective-firewalls-{network}')
 
   # pylint: disable=redefined-builtin
   def list(self, project, region, filter=None, fields=None):
     if self.mock_state == 'subnetworks':
       return apis_stub.RestCallStub(
-          project, f'compute-subnetworks-{SUBNETWORKS_REGION}.json')
+          project, f'compute-subnetworks-{SUBNETWORKS_REGION}')
     elif self.mock_state == 'routers':
-      return apis_stub.RestCallStub(
-          project, f'compute-routers-{SUBNETWORKS_REGION}.json')
+      return apis_stub.RestCallStub(project,
+                                    f'compute-routers-{SUBNETWORKS_REGION}')
     else:
       raise ValueError(f'cannot call method {self.mock_state} here')
 

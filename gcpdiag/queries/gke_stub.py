@@ -47,9 +47,9 @@ class ContainerApiStub(apis_stub.ApiStub):
     project_id = utils.get_project_by_res_name(name)
     region = utils.get_region_by_res_name(name)
     return apis_stub.RestCallStub(project_id,
-                                  f'container-server-config-{region}.json')
+                                  f'container-server-config-{region}')
 
   def list(self, parent):
     m = re.match(r'projects/([^/]+)/', parent)
     project_id = m.group(1)
-    return apis_stub.RestCallStub(project_id, 'container-clusters.json')
+    return apis_stub.RestCallStub(project_id, 'container-clusters')

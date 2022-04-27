@@ -47,7 +47,7 @@ class CloudBuildBuildsApiStub:
   def list(self, parent):
     m = re.match(r'projects/([^/]+)/', parent)
     project_id = m.group(1)
-    return apis_stub.RestCallStub(project_id, 'cloudbuild.json')
+    return apis_stub.RestCallStub(project_id, 'cloudbuild')
 
 
 class CloudBuildTriggersApiStub:
@@ -56,4 +56,4 @@ class CloudBuildTriggersApiStub:
   def list(self, parent):
     m = re.match(r'projects/([^/]+)/', parent)
     project_id = m.group(1)
-    return apis_stub.RestCallStub(project_id, 'cloudbuild-triggers.json')
+    return apis_stub.RestCallStub(project_id, 'cloudbuild-triggers')

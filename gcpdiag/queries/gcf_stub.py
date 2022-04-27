@@ -40,4 +40,4 @@ class CloudFunctionsApiStub:
   def list(self, parent):
     m = re.match(r'projects/([^/]+)/', parent)
     project_id = m.group(1)
-    return apis_stub.RestCallStub(project_id, 'cloudfunctions.json')
+    return apis_stub.RestCallStub(project_id, 'cloudfunctions')

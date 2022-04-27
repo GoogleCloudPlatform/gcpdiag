@@ -37,7 +37,7 @@ class MonitoringApiStub:
     del body
     m = re.match(r'projects/([^/]+)', name)
     project_id = m.group(1)
-    return apis_stub.RestCallStub(project_id, 'monitoring-query.json')
+    return apis_stub.RestCallStub(project_id, 'monitoring-query')
 
   def query_next(self, previous_request, previous_response):
     del previous_request

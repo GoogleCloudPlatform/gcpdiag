@@ -45,6 +45,6 @@ class ArtifactRegistryApiStub:
                  resource)
     if m:
       project_id = m.group(1)
-      return apis_stub.RestCallStub(project_id, 'artifact-registry-policy.json')
+      return apis_stub.RestCallStub(project_id, 'artifact-registry-policy')
     else:
       raise ValueError(INCORRECT_RESOURCE_ERROR)

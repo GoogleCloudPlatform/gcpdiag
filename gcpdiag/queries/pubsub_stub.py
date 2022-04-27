@@ -49,17 +49,16 @@ class PubsubApiStub:
     m = re.match(r'projects/([^/]+)', project)
     project_id = m.group(1)
     if self.mock_state == 'topics':
-      return apis_stub.RestCallStub(project_id, 'topics.json')
+      return apis_stub.RestCallStub(project_id, 'topics')
     if self.mock_state == 'subscription':
-      return apis_stub.RestCallStub(project_id, 'subscriptions.json')
+      return apis_stub.RestCallStub(project_id, 'subscriptions')
     else:
       raise ValueError('incorrect value received')
 
   def getIamPolicy(self, resource):
     if self.mock_state == 'topics':
-      return apis_stub.RestCallStub(DUMMY_PROJECT_NAME, 'topic-iam.json')
+      return apis_stub.RestCallStub(DUMMY_PROJECT_NAME, 'topic-iam')
     if self.mock_state == 'subscription':
-      return apis_stub.RestCallStub(DUMMY_PROJECT_NAME,
-                                    'subscriptions-iam.json')
+      return apis_stub.RestCallStub(DUMMY_PROJECT_NAME, 'subscriptions-iam')
     else:
       raise ValueError('incorrect value received')

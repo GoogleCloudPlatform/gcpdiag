@@ -89,24 +89,39 @@ class ApiStub:
           b'mocking API error')
 
 
-class RestCallStub:
+class RestCallStub(ApiStub):
   """Generic mock object to simulate executable api request."""
 
   def __init__(self,
                project_id: str,
-               json_file: str,
-               default: Optional[dict] = None):
+               json_basename: str,
+               *,
+               page: int = 1,
+               default: Optional[dict] = None,
+               default_json_basename: Optional[str] = None):
+    self.project_id = project_id
     self.json_dir = get_json_dir(project_id)
-    self.json_file = json_file
+    self.json_basename = json_basename
+    self.page = page
     self.default = default
+    self.default_json_basename = default_json_basename
 
   def execute(self, num_retries: int = 0) -> dict:
+    self._maybe_raise_api_exception()
     try:
-      with open(self.json_dir / self.json_file, encoding='utf-8') as json_file:
+      filename = str(self.json_dir / self.json_basename)
+      if self.page > 1:
+        filename += f'-{self.page}'
+      filename += '.json'
+      with open(filename, encoding='utf-8') as json_file:
         return json.load(json_file)
     except FileNotFoundError:
       if self.default is not None:
         return self.default
+      if self.default_json_basename is not None:
+        with open(self.json_dir / self.default_json_basename + '.json',
+                  encoding='utf-8') as json_file:
+          return json.load(json_file)
       raise
 
 
@@ -127,7 +142,7 @@ class ServiceUsageApiStub(ApiStub):
     if not m:
       raise ValueError(f"can't parse parent: {parent}")
     project_id = m.group(1)
-    return RestCallStub(project_id, 'services.json')
+    return RestCallStub(project_id, 'services')
 
   def list_next(self, request, response):
     return None

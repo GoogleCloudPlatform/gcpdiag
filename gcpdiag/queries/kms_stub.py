@@ -47,4 +47,4 @@ class KmsApiStub:
   def get(self, name=None):
     project_id = utils.get_project_by_res_name(name)
     basename = utils.extract_value_from_res_name(name, 'cryptoKeys')
-    return apis_stub.RestCallStub(project_id, basename + '.json')
+    return apis_stub.RestCallStub(project_id, basename)

@@ -42,5 +42,5 @@ class ComposerApiStub:
       raise RuntimeError(f"Can't parse parent {parent}")
     project_id, region = match.group(1), match.group(2)
     return apis_stub.RestCallStub(project_id,
-                                  f'composer-environments-{region}.json',
+                                  f'composer-environments-{region}',
                                   default={})
