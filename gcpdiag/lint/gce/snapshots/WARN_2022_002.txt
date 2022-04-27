@@ -1,4 +1,5 @@
 *  gce/WARN/2022_002: Instance groups named ports are using unique names.
+   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-grp                 [ OK ]
    - gcpdiag-gce1-aaaa/instance-group-1                                   [FAIL]
      Instance group contains multiple ports with the same name
    - gcpdiag-gce1-aaaa/instance-group-2                                   [ OK ]

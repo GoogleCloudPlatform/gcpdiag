@@ -2,8 +2,9 @@
   "id": "projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroupManagers",
   "items": [
     {
-      "id": "192108341258732002",
-      "creationTimestamp": "2021-12-08T01:46:53.076-08:00",
+      "kind": "compute#instanceGroupManager",
+      "id": "7183453391228875571",
+      "creationTimestamp": "2022-04-26T08:21:00.715-07:00",
       "name": "mig",
       "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a",
       "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/global/instanceTemplates/mig-template",
@@ -17,7 +18,7 @@
       ],
       "instanceGroup": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroups/mig",
       "baseInstanceName": "mig",
-      "fingerprint": "y0rDrnWROy0=",
+      "fingerprint": "lss-DXagYSg=",
       "currentActions": {
         "none": 2,
         "creating": 0,
@@ -27,7 +28,11 @@
         "deleting": 0,
         "abandoning": 0,
         "restarting": 0,
-        "refreshing": 0
+        "refreshing": 0,
+        "suspending": 0,
+        "resuming": 0,
+        "stopping": 0,
+        "starting": 0
       },
       "status": {
         "isStable": true,
@@ -55,8 +60,7 @@
           "calculated": 1
         },
         "replacementMethod": "SUBSTITUTE"
-      },
-      "kind": "compute#instanceGroupManager"
+      }
     }
   ],
   "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroupManagers",

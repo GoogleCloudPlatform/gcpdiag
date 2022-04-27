@@ -1,6 +1,40 @@
 {
   "firewalls": [
     {
+      "kind": "compute#firewall",
+      "id": "1586287710887445984",
+      "creationTimestamp": "2021-12-06T08:32:15.983-08:00",
+      "name": "fw-test-900",
+      "description": "",
+      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/networks/default",
+      "priority": 900,
+      "sourceRanges": [
+        "10.100.0.0/24"
+      ],
+      "sourceTags": [
+        "bar",
+        "foo",
+        "foobar"
+      ],
+      "allowed": [
+        {
+          "IPProtocol": "tcp",
+          "ports": [
+            "1234",
+            "1000-2000",
+            "2033"
+          ]
+        }
+      ],
+      "direction": "INGRESS",
+      "logConfig": {
+        "enable": false
+      },
+      "disabled": false,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/firewalls/fw-test-900"
+    },
+    {
+      "kind": "compute#firewall",
       "id": "4374547412497434080",
       "creationTimestamp": "2021-12-06T08:32:15.958-08:00",
       "name": "fw-test-950",
@@ -23,10 +57,97 @@
         "enable": false
       },
       "disabled": false,
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/firewalls/fw-test-950",
-      "kind": "compute#firewall"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/firewalls/fw-test-950"
     },
     {
+      "kind": "compute#firewall",
+      "id": "3934489538667891704",
+      "creationTimestamp": "2022-04-26T06:35:19.380-07:00",
+      "name": "gke-gke1-c8fb19cb-vms",
+      "description": "",
+      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/networks/default",
+      "priority": 1000,
+      "sourceRanges": [
+        "10.128.0.0/9"
+      ],
+      "targetTags": [
+        "gke-gke1-c8fb19cb-node"
+      ],
+      "allowed": [
+        {
+          "IPProtocol": "icmp"
+        },
+        {
+          "IPProtocol": "tcp",
+          "ports": [
+            "1-65535"
+          ]
+        },
+        {
+          "IPProtocol": "udp",
+          "ports": [
+            "1-65535"
+          ]
+        }
+      ],
+      "direction": "INGRESS",
+      "logConfig": {
+        "enable": false
+      },
+      "disabled": false,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/firewalls/gke-gke1-c8fb19cb-vms"
+    },
+    {
+      "kind": "compute#firewall",
+      "id": "2493080101642798591",
+      "creationTimestamp": "2021-12-06T08:32:16.212-08:00",
+      "name": "fw-test-901",
+      "description": "",
+      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/networks/default",
+      "priority": 901,
+      "sourceServiceAccounts": [
+        "service-12340002@compute-system.iam.gserviceaccount.com"
+      ],
+      "allowed": [
+        {
+          "IPProtocol": "tcp",
+          "ports": [
+            "4000"
+          ]
+        }
+      ],
+      "direction": "INGRESS",
+      "logConfig": {
+        "enable": false
+      },
+      "disabled": false,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/firewalls/fw-test-901"
+    },
+    {
+      "kind": "compute#firewall",
+      "id": "4090334076307997726",
+      "creationTimestamp": "2021-12-06T08:31:45.288-08:00",
+      "name": "default-allow-icmp",
+      "description": "Allow ICMP from anywhere",
+      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/networks/default",
+      "priority": 65534,
+      "sourceRanges": [
+        "0.0.0.0/0"
+      ],
+      "allowed": [
+        {
+          "IPProtocol": "icmp"
+        }
+      ],
+      "direction": "INGRESS",
+      "logConfig": {
+        "enable": false
+      },
+      "disabled": false,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/firewalls/default-allow-icmp"
+    },
+    {
+      "kind": "compute#firewall",
       "id": "3146660543683884546",
       "creationTimestamp": "2021-12-06T09:31:25.256-08:00",
       "name": "fw-test-903",
@@ -52,10 +173,77 @@
         "enable": false
       },
       "disabled": false,
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/firewalls/fw-test-903",
-      "kind": "compute#firewall"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/firewalls/fw-test-903"
     },
     {
+      "kind": "compute#firewall",
+      "id": "294281872312337888",
+      "creationTimestamp": "2021-12-06T08:32:15.943-08:00",
+      "name": "fw-test-800",
+      "description": "",
+      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/networks/default",
+      "priority": 800,
+      "sourceRanges": [
+        "10.100.0.0/24"
+      ],
+      "denied": [
+        {
+          "IPProtocol": "tcp",
+          "ports": [
+            "1001-1002"
+          ]
+        }
+      ],
+      "direction": "INGRESS",
+      "logConfig": {
+        "enable": false
+      },
+      "disabled": false,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/firewalls/fw-test-800"
+    },
+    {
+      "kind": "compute#firewall",
+      "id": "41078775488334840",
+      "creationTimestamp": "2022-04-26T06:35:19.625-07:00",
+      "name": "gke-gke1-c8fb19cb-all",
+      "description": "",
+      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/networks/default",
+      "priority": 1000,
+      "sourceRanges": [
+        "10.4.0.0/14"
+      ],
+      "targetTags": [
+        "gke-gke1-c8fb19cb-node"
+      ],
+      "allowed": [
+        {
+          "IPProtocol": "esp"
+        },
+        {
+          "IPProtocol": "ah"
+        },
+        {
+          "IPProtocol": "sctp"
+        },
+        {
+          "IPProtocol": "tcp"
+        },
+        {
+          "IPProtocol": "udp"
+        },
+        {
+          "IPProtocol": "icmp"
+        }
+      ],
+      "direction": "INGRESS",
+      "logConfig": {
+        "enable": false
+      },
+      "disabled": false,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/firewalls/gke-gke1-c8fb19cb-all"
+    },
+    {
+      "kind": "compute#firewall",
       "id": "8722045246608999454",
       "creationTimestamp": "2021-12-06T08:31:45.223-08:00",
       "name": "default-allow-internal",
@@ -87,14 +275,14 @@
         "enable": false
       },
       "disabled": false,
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/firewalls/default-allow-internal",
-      "kind": "compute#firewall"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/firewalls/default-allow-internal"
     },
     {
-      "id": "3709819709257122846",
-      "creationTimestamp": "2021-12-06T08:31:45.266-08:00",
-      "name": "default-allow-rdp",
-      "description": "Allow RDP from anywhere",
+      "kind": "compute#firewall",
+      "id": "5657786582871278622",
+      "creationTimestamp": "2021-12-06T08:31:45.245-08:00",
+      "name": "default-allow-ssh",
+      "description": "Allow SSH from anywhere",
       "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/networks/default",
       "priority": 65534,
       "sourceRanges": [
@@ -104,7 +292,7 @@
         {
           "IPProtocol": "tcp",
           "ports": [
-            "3389"
+            "22"
           ]
         }
       ],
@@ -113,10 +301,10 @@
         "enable": false
       },
       "disabled": false,
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/firewalls/default-allow-rdp",
-      "kind": "compute#firewall"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/firewalls/default-allow-ssh"
     },
     {
+      "kind": "compute#firewall",
       "id": "7387195472873780738",
       "creationTimestamp": "2021-12-06T09:31:25.228-08:00",
       "name": "fw-test-902",
@@ -142,41 +330,21 @@
         "enable": false
       },
       "disabled": false,
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/firewalls/fw-test-902",
-      "kind": "compute#firewall"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/firewalls/fw-test-902"
     },
     {
-      "id": "4090334076307997726",
-      "creationTimestamp": "2021-12-06T08:31:45.288-08:00",
-      "name": "default-allow-icmp",
-      "description": "Allow ICMP from anywhere",
+      "kind": "compute#firewall",
+      "id": "1583992647830883321",
+      "creationTimestamp": "2022-04-26T06:35:19.012-07:00",
+      "name": "gke-gke1-c8fb19cb-ssh",
+      "description": "",
       "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/networks/default",
-      "priority": 65534,
+      "priority": 1000,
       "sourceRanges": [
-        "0.0.0.0/0"
+        "34.77.103.187/32"
       ],
-      "allowed": [
-        {
-          "IPProtocol": "icmp"
-        }
-      ],
-      "direction": "INGRESS",
-      "logConfig": {
-        "enable": false
-      },
-      "disabled": false,
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/firewalls/default-allow-icmp",
-      "kind": "compute#firewall"
-    },
-    {
-      "id": "5657786582871278622",
-      "creationTimestamp": "2021-12-06T08:31:45.245-08:00",
-      "name": "default-allow-ssh",
-      "description": "Allow SSH from anywhere",
-      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/networks/default",
-      "priority": 65534,
-      "sourceRanges": [
-        "0.0.0.0/0"
+      "targetTags": [
+        "gke-gke1-c8fb19cb-node"
       ],
       "allowed": [
         {
@@ -191,31 +359,24 @@
         "enable": false
       },
       "disabled": false,
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/firewalls/default-allow-ssh",
-      "kind": "compute#firewall"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/firewalls/gke-gke1-c8fb19cb-ssh"
     },
     {
-      "id": "1586287710887445984",
-      "creationTimestamp": "2021-12-06T08:32:15.983-08:00",
-      "name": "fw-test-900",
-      "description": "",
+      "kind": "compute#firewall",
+      "id": "3709819709257122846",
+      "creationTimestamp": "2021-12-06T08:31:45.266-08:00",
+      "name": "default-allow-rdp",
+      "description": "Allow RDP from anywhere",
       "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/networks/default",
-      "priority": 900,
+      "priority": 65534,
       "sourceRanges": [
-        "10.100.0.0/24"
-      ],
-      "sourceTags": [
-        "bar",
-        "foo",
-        "foobar"
+        "0.0.0.0/0"
       ],
       "allowed": [
         {
           "IPProtocol": "tcp",
           "ports": [
-            "1234",
-            "1000-2000",
-            "2033"
+            "3389"
           ]
         }
       ],
@@ -224,60 +385,7 @@
         "enable": false
       },
       "disabled": false,
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/firewalls/fw-test-900",
-      "kind": "compute#firewall"
-    },
-    {
-      "id": "294281872312337888",
-      "creationTimestamp": "2021-12-06T08:32:15.943-08:00",
-      "name": "fw-test-800",
-      "description": "",
-      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/networks/default",
-      "priority": 800,
-      "sourceRanges": [
-        "10.100.0.0/24"
-      ],
-      "denied": [
-        {
-          "IPProtocol": "tcp",
-          "ports": [
-            "1001-1002"
-          ]
-        }
-      ],
-      "direction": "INGRESS",
-      "logConfig": {
-        "enable": false
-      },
-      "disabled": false,
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/firewalls/fw-test-800",
-      "kind": "compute#firewall"
-    },
-    {
-      "id": "2493080101642798591",
-      "creationTimestamp": "2021-12-06T08:32:16.212-08:00",
-      "name": "fw-test-901",
-      "description": "",
-      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/networks/default",
-      "priority": 901,
-      "sourceServiceAccounts": [
-        "service-12340002@compute-system.iam.gserviceaccount.com"
-      ],
-      "allowed": [
-        {
-          "IPProtocol": "tcp",
-          "ports": [
-            "4000"
-          ]
-        }
-      ],
-      "direction": "INGRESS",
-      "logConfig": {
-        "enable": false
-      },
-      "disabled": false,
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/firewalls/fw-test-901",
-      "kind": "compute#firewall"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/global/firewalls/default-allow-rdp"
     }
   ],
   "firewallPolicys": [
@@ -288,6 +396,7 @@
       "displayName": "parent-folder-policy",
       "rules": [
         {
+          "kind": "compute#firewallPolicyRule",
           "description": "",
           "priority": 9000,
           "match": {
@@ -304,10 +413,10 @@
             ]
           },
           "action": "allow",
-          "direction": "INGRESS",
-          "kind": "compute#firewallPolicyRule"
+          "direction": "INGRESS"
         },
         {
+          "kind": "compute#firewallPolicyRule",
           "description": "",
           "priority": 2147483644,
           "match": {
@@ -321,10 +430,10 @@
             ]
           },
           "action": "goto_next",
-          "direction": "EGRESS",
-          "kind": "compute#firewallPolicyRule"
+          "direction": "EGRESS"
         },
         {
+          "kind": "compute#firewallPolicyRule",
           "description": "",
           "priority": 2147483645,
           "match": {
@@ -338,10 +447,10 @@
             ]
           },
           "action": "goto_next",
-          "direction": "INGRESS",
-          "kind": "compute#firewallPolicyRule"
+          "direction": "INGRESS"
         },
         {
+          "kind": "compute#firewallPolicyRule",
           "description": "",
           "priority": 2147483646,
           "match": {
@@ -355,10 +464,10 @@
             ]
           },
           "action": "goto_next",
-          "direction": "EGRESS",
-          "kind": "compute#firewallPolicyRule"
+          "direction": "EGRESS"
         },
         {
+          "kind": "compute#firewallPolicyRule",
           "description": "",
           "priority": 2147483647,
           "match": {
@@ -372,8 +481,7 @@
             ]
           },
           "action": "goto_next",
-          "direction": "INGRESS",
-          "kind": "compute#firewallPolicyRule"
+          "direction": "INGRESS"
         }
       ]
     },
@@ -384,6 +492,7 @@
       "displayName": "sub-folder-policy",
       "rules": [
         {
+          "kind": "compute#firewallPolicyRule",
           "description": "",
           "priority": 8999,
           "match": {
@@ -400,10 +509,10 @@
           "direction": "INGRESS",
           "targetServiceAccounts": [
             "service-12340002@compute-system.iam.gserviceaccount.com"
-          ],
-          "kind": "compute#firewallPolicyRule"
+          ]
         },
         {
+          "kind": "compute#firewallPolicyRule",
           "description": "",
           "priority": 9000,
           "match": {
@@ -420,10 +529,10 @@
             ]
           },
           "action": "allow",
-          "direction": "INGRESS",
-          "kind": "compute#firewallPolicyRule"
+          "direction": "INGRESS"
         },
         {
+          "kind": "compute#firewallPolicyRule",
           "description": "",
           "priority": 2147483644,
           "match": {
@@ -437,10 +546,10 @@
             ]
           },
           "action": "goto_next",
-          "direction": "EGRESS",
-          "kind": "compute#firewallPolicyRule"
+          "direction": "EGRESS"
         },
         {
+          "kind": "compute#firewallPolicyRule",
           "description": "",
           "priority": 2147483645,
           "match": {
@@ -454,10 +563,10 @@
             ]
           },
           "action": "goto_next",
-          "direction": "INGRESS",
-          "kind": "compute#firewallPolicyRule"
+          "direction": "INGRESS"
         },
         {
+          "kind": "compute#firewallPolicyRule",
           "description": "",
           "priority": 2147483646,
           "match": {
@@ -471,10 +580,10 @@
             ]
           },
           "action": "goto_next",
-          "direction": "EGRESS",
-          "kind": "compute#firewallPolicyRule"
+          "direction": "EGRESS"
         },
         {
+          "kind": "compute#firewallPolicyRule",
           "description": "",
           "priority": 2147483647,
           "match": {
@@ -488,8 +597,7 @@
             ]
           },
           "action": "goto_next",
-          "direction": "INGRESS",
-          "kind": "compute#firewallPolicyRule"
+          "direction": "INGRESS"
         }
       ]
     }

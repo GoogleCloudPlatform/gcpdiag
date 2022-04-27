@@ -1,8 +1,8 @@
 *  gce/BP_EXT/2021_003: Secure Boot is enabled
    - gcpdiag-gce1-aaaa/gce1                                               [FAIL]
    - gcpdiag-gce1-aaaa/gce2                                               [FAIL]
-   - gcpdiag-gce1-aaaa/mig-kmm1                                           [FAIL]
-   - gcpdiag-gce1-aaaa/mig-zd52                                           [FAIL]
+   - gcpdiag-gce1-aaaa/mig-4h21                                           [FAIL]
+   - gcpdiag-gce1-aaaa/mig-7pvl                                           [FAIL]
 
    Google recommends enabling Secure Boot if you can ensure that it doesn't
    prevent a representative test VM from booting and if it is appropriate for

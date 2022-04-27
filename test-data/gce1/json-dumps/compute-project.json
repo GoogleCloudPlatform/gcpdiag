@@ -1,22 +1,22 @@
 {
   "commonInstanceMetadata": {
-    "fingerprint": "jJq-gNcX1GM=",
+    "fingerprint": "5WfGmP2rsbA=",
     "items": [
       {
         "key": "serial-port-logging-enable",
         "value": "true"
       },
       {
-        "key": "gke-gke1-77ed25e9-secondary-ranges",
-        "value": "services:default:default:gke-gke1-services-77ed25e9,pods:default:default:gke-gke1-pods-77ed25e9"
+        "key": "gke-gke1-f36cf6dd-cidr",
+        "value": "default:10.0.0.0/14"
       }
     ],
     "kind": "compute#metadata"
   },
-  "creationTimestamp": "2021-12-08T01:45:42.183-08:00",
+  "creationTimestamp": "2022-04-26T08:19:36.093-07:00",
   "defaultNetworkTier": "PREMIUM",
   "defaultServiceAccount": "12340001-compute@developer.gserviceaccount.com",
-  "id": "2747904471276044329",
+  "id": "7145890083999429480",
   "kind": "compute#project",
   "name": "gcpdiag-gce1-aaaa",
   "quotas": [
@@ -33,7 +33,7 @@
     {
       "limit": 500,
       "metric": "FIREWALLS",
-      "usage": 7
+      "usage": 8
     },
     {
       "limit": 5000,
@@ -48,7 +48,7 @@
     {
       "limit": 300,
       "metric": "ROUTES",
-      "usage": 1
+      "usage": 5
     },
     {
       "limit": 150,
@@ -133,7 +133,7 @@
     {
       "limit": 275,
       "metric": "SUBNETWORKS",
-      "usage": 29
+      "usage": 35
     },
     {
       "limit": 100,
@@ -213,6 +213,11 @@
     {
       "limit": 150,
       "metric": "INTERNAL_TRAFFIC_DIRECTOR_FORWARDING_RULES",
+      "usage": 0
+    },
+    {
+      "limit": 150,
+      "metric": "GLOBAL_EXTERNAL_MANAGED_FORWARDING_RULES",
       "usage": 0
     }
   ],

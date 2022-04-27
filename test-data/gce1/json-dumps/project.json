@@ -4,9 +4,9 @@
   "projectId": "gcpdiag-gce1-aaaa",
   "state": "ACTIVE",
   "displayName": "gcpdiag test - gce1",
-  "createTime": "2021-11-23T13:55:00.411Z",
-  "updateTime": "2021-11-23T14:01:16.076Z",
-  "etag": "eW9YEDR7qcQ2NYpS62l3Uw==",
+  "createTime": "2022-04-26T15:18:57.559Z",
+  "updateTime": "2022-04-26T15:18:59.029Z",
+  "etag": "MQV1kuwMB6N2UKQqCiihhA==",
   "labels": {
     "gcpdiag": "test"
   }

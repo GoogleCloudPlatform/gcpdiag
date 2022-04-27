@@ -16,6 +16,10 @@
 
 # send a curl request with gcloud default app credentials
 
+if [ -z "$ACCESS_TOKEN" ]; then
+  ACCESS_TOKEN=$(gcloud auth application-default print-access-token)
+fi
+
 exec curl \
-  -H "Authorization: Bearer $(gcloud auth application-default print-access-token)" \
+  -H "Authorization: Bearer $ACCESS_TOKEN" \
   "$@"
