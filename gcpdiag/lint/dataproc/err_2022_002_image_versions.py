@@ -75,9 +75,9 @@ class ImageVersion:
     if self.version.major == 1 and self.version.minor < 4:
       return True
     if self.version.major == 1 and 4 <= self.version.minor <= 5:
-      if self.version.os == 'debian' and self.os_ver < 10:
+      if self.version.os == 'debian' and self.version.os_ver < 10:
         return True
-      if self.version.os == 'ubuntu' and self.os_ver < 18:
+      if self.version.os == 'ubuntu' and self.version.os_ver < 18:
         return True
     return False
 
