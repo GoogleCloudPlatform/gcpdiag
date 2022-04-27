@@ -168,7 +168,7 @@
         ]
       },
       "queueTtl": "3600s",
-      "serviceAccount": "projects/gcpdiag-gcb1-aaaa/serviceAccounts/gcb-custom1@gcpdiag-gcb1-xczqvxgx.iam.gserviceaccount.com",
+      "serviceAccount": "projects/gcpdiag-gcb1-aaaa/serviceAccounts/gcb-custom1@gcpdiag-gcb1-aaaa.iam.gserviceaccount.com",
       "name": "projects/12340005/locations/global/builds/db540598-5a45-46f3-a716-39d834e884c6",
       "warnings": [
         {
