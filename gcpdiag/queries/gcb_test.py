@@ -21,7 +21,12 @@ from gcpdiag import models
 from gcpdiag.queries import apis_stub, gcb
 
 DUMMY_PROJECT_NAME = 'gcpdiag-gcb1-aaaa'
-DUMMY_CLOUD_BUILD_1_ID = '01ff384c-d7f2-4295-ad68-5c32529d8b85'
+BUILD_ID_FAILED_STEP = '01ff384c-d7f2-4295-ad68-5c32529d8b85'
+BUIDL_ID_FAILED_LOGGING = '58c22070-5629-480e-b822-cd8eff7befb8'
+BUILD_ID_FAILED_IMAGE_UPLOAD = 'db540598-5a45-46f3-a716-39d834e884c6'
+CUSTOM1_SERVICE_ACCOUNT = \
+  'projects/gcpdiag-gcb1-aaaa/serviceAccounts/gcb-custom1@gcpdiag-gcb1-aaaa.iam.gserviceaccount.com'
+BUILD_IMAGE = 'us-central1-docker.pkg.dev/gcpdiag-gcb1-aaaa/gcb1-repository/image'
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
@@ -32,4 +37,19 @@ class TestCloudBuild:
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     builds = gcb.get_builds(context=context)
     assert len(builds) == 3
-    assert DUMMY_CLOUD_BUILD_1_ID in builds
+    assert BUILD_ID_FAILED_STEP in builds
+    assert BUIDL_ID_FAILED_LOGGING in builds
+    assert BUILD_ID_FAILED_IMAGE_UPLOAD in builds
+
+  def test_build_service_account(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    builds = gcb.get_builds(context=context)
+    assert (builds[BUILD_ID_FAILED_IMAGE_UPLOAD].service_account ==
+            CUSTOM1_SERVICE_ACCOUNT)
+    assert builds[BUILD_ID_FAILED_STEP].service_account is None
+
+  def test_build_images(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    builds = gcb.get_builds(context=context)
+    assert builds[BUILD_ID_FAILED_IMAGE_UPLOAD].images == [BUILD_IMAGE]
+    assert builds[BUILD_ID_FAILED_STEP].images == []
