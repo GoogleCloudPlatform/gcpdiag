@@ -18,18 +18,10 @@
 Instead of doing real API calls, we return test JSON data.
 """
 
-import json
-
 from gcpdiag.queries import apis_stub, network_stub
 
 # pylint: disable=unused-argument
 # pylint: disable=invalid-name
-
-
-class ComputeEngineApiStubRegions(apis_stub.ApiStub):
-
-  def list(self, project):
-    return apis_stub.RestCallStub(project, 'compute-regions.json')
 
 
 class ComputeEngineApiStub(apis_stub.ApiStub):
@@ -50,23 +42,29 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
     self.page = page
 
   def regions(self):
-    return ComputeEngineApiStubRegions()
+    return ComputeEngineApiStub('regions')
 
   def zones(self):
     return ComputeEngineApiStub('zones')
 
   def list(self, project, zone=None, returnPartialSuccess=None, fields=None):
     # TODO: implement fields filtering
-    return ComputeEngineApiStub(self.mock_state, project_id=project, zone=zone)
+    if self.mock_state in ['igs', 'instances', 'migs']:
+      return apis_stub.RestCallStub(project,
+                                    f'compute-{self.mock_state}-{zone}',
+                                    default=f'compute-{self.mock_state}-empty')
+    elif self.mock_state in ['regions', 'templates', 'zones']:
+      return apis_stub.RestCallStub(project, f'compute-{self.mock_state}')
+    else:
+      raise RuntimeError(f"can't list for mock state {self.mock_state}")
 
   def list_next(self, previous_request, previous_response):
-    if self.mock_state == 'instances' and \
-        previous_request.zone == 'europe-west1-b' and \
-        previous_request.page == 1:
-      return ComputeEngineApiStub(mock_state='instances',
-                                  project_id=previous_request.project_id,
-                                  zone=previous_request.zone,
-                                  page=previous_request.page + 1)
+    if isinstance(previous_response,
+                  dict) and previous_response.get('nextPageToken'):
+      return apis_stub.RestCallStub(
+          project_id=previous_request.project_id,
+          json_basename=previous_request.json_basename,
+          page=previous_request.page + 1)
     else:
       return None
 
@@ -90,8 +88,8 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
     return batch_api
 
   def get(self, project):
-    self.project_id = project
-    return self
+    if self.mock_state == 'projects':
+      return apis_stub.RestCallStub(project, 'compute-project')
 
   def projects(self):
     return ComputeEngineApiStub('projects')
@@ -106,52 +104,5 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
     return network_stub.NetworkApiStub(mock_state='routers')
 
   def execute(self, num_retries=0):
-    self._maybe_raise_api_exception()
-    json_dir = apis_stub.get_json_dir(self.project_id)
-    page_suffix = ''
-    if self.page > 1:
-      page_suffix = f'-{self.page}'
-    if self.mock_state == 'regions':
-      with open(json_dir / 'compute-regions.json',
-                encoding='utf-8') as json_file:
-        return json.load(json_file)
-    if self.mock_state == 'zones':
-      with open(json_dir / 'compute-zones.json', encoding='utf-8') as json_file:
-        return json.load(json_file)
-    elif self.mock_state == 'projects':
-      with open(json_dir / 'compute-project.json',
-                encoding='utf-8') as json_file:
-        return json.load(json_file)
-    elif self.mock_state == 'instances':
-      try:
-        with open(json_dir / f'compute-instances-{self.zone}{page_suffix}.json',
-                  encoding='utf-8') as json_file:
-          return json.load(json_file)
-      except FileNotFoundError:
-        with open(json_dir / 'compute-instances-empty.json',
-                  encoding='utf-8') as json_file:
-          return json.load(json_file)
-    elif self.mock_state == 'migs':
-      try:
-        with open(json_dir / f'compute-migs-{self.zone}{page_suffix}.json',
-                  encoding='utf-8') as json_file:
-          return json.load(json_file)
-      except FileNotFoundError:
-        with open(json_dir / 'compute-migs-empty.json',
-                  encoding='utf-8') as json_file:
-          return json.load(json_file)
-    elif self.mock_state == 'igs':
-      try:
-        with open(json_dir / f'compute-igs-{self.zone}{page_suffix}.json',
-                  encoding='utf-8') as json_file:
-          return json.load(json_file)
-      except FileNotFoundError:
-        with open(json_dir / 'compute-igs-empty.json',
-                  encoding='utf-8') as json_file:
-          return json.load(json_file)
-    if self.mock_state == 'templates':
-      with open(json_dir / 'compute-templates.json',
-                encoding='utf-8') as json_file:
-        return json.load(json_file)
-    else:
-      raise ValueError("can't call this method here")
+    raise ValueError(
+        f"can't call this method here (mock_state: {self.mock_state}")

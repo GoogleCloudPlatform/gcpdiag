@@ -45,9 +45,9 @@ class BucketApiStub:
     return self
 
   def list(self, project):
-    return apis_stub.RestCallStub(project, 'storage.json')
+    return apis_stub.RestCallStub(project, 'storage')
 
   def getIamPolicy(self, bucket):
     if not self.project_id:
       raise ValueError(NO_PROJECT_ID_ERROR.format('getIamPolicy'))
-    return apis_stub.RestCallStub(self.project_id, 'bucket-roles.json')
+    return apis_stub.RestCallStub(self.project_id, 'bucket-roles')

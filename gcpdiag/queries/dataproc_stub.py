@@ -36,5 +36,5 @@ class DataprocApiStub:
   # pylint: disable=invalid-name
   def list(self, projectId, region):
     return apis_stub.RestCallStub(projectId,
-                                  f'dataproc-clusters-{region}.json',
+                                  f'dataproc-clusters-{region}',
                                   default={})

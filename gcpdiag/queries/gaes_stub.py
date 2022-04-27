@@ -41,6 +41,6 @@ class AppEngineStandardApiStub(apis_stub.ApiStub):
 
   def list(self, appsId='appsId', servicesId='servicesId'):
     if self.mock_state == 'services':
-      return apis_stub.RestCallStub(appsId, 'appengine_services.json')
+      return apis_stub.RestCallStub(appsId, 'appengine_services')
     else:
-      return apis_stub.RestCallStub(appsId, 'versions.json')
+      return apis_stub.RestCallStub(appsId, 'versions')

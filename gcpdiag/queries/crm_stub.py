@@ -42,8 +42,8 @@ class CrmApiStub:
     if not project_id and name is not None:
       m = re.match(r'projects/(.*)', name)
       project_id = m.group(1)
-    return apis_stub.RestCallStub(project_id, 'project.json')
+    return apis_stub.RestCallStub(project_id, 'project')
 
   # pylint: disable=invalid-name
   def getIamPolicy(self, resource):
-    return apis_stub.RestCallStub(resource, 'iam-policy.json')
+    return apis_stub.RestCallStub(resource, 'iam-policy')
