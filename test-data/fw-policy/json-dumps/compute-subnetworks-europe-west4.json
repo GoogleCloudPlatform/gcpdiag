@@ -1,7 +1,9 @@
 {
+  "kind": "compute#subnetworkList",
   "id": "projects/gcpdiag-fw-policy-aaaa/regions/europe-west4/subnetworks",
   "items": [
     {
+      "kind": "compute#subnetwork",
       "id": "1510756175501820978",
       "creationTimestamp": "2021-12-06T08:31:25.950-08:00",
       "name": "default",
@@ -14,10 +16,8 @@
       "fingerprint": "Zuro06Cq_IY=",
       "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
       "purpose": "PRIVATE",
-      "stackType": "IPV4_ONLY",
-      "kind": "compute#subnetwork"
+      "stackType": "IPV4_ONLY"
     }
   ],
-  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/regions/europe-west4/subnetworks",
-  "kind": "compute#subnetworkList"
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-fw-policy-aaaa/regions/europe-west4/subnetworks"
 }

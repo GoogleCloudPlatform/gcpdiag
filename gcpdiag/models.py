@@ -132,6 +132,9 @@ class Resource(abc.ABC):
   def __hash__(self):
     return self.full_path.__hash__()
 
+  def __lt__(self, other):
+    return self.full_path < other.full_path
+
   def __eq__(self, other):
     if self.__class__ == other.__class__:
       return self.full_path == other.full_path

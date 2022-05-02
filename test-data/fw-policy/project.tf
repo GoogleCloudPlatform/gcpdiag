@@ -37,6 +37,13 @@ resource "google_project_service" "compute" {
   service = "compute.googleapis.com"
 }
 
+resource "google_project_service" "container" {
+  project = google_project.project.project_id
+  service = "container.googleapis.com"
+
+  depends_on = [google_project_service.compute]
+}
+
 data "google_folder" "parent" {
   folder              = "folders/${var.parent_folder_id}"
   lookup_organization = true

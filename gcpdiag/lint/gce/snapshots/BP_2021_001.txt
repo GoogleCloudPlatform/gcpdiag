@@ -1,12 +1,12 @@
 *  gce/BP/2021_001: Serial port logging is enabled.
    - gcpdiag-gce1-aaaa/gce1                                               [ OK ]
    - gcpdiag-gce1-aaaa/gce2                                               [FAIL]
-   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-aabeeb2f-89fp                [ OK ]
-   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-aabeeb2f-c8f3                [ OK ]
-   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-aabeeb2f-mncd                [ OK ]
-   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-aabeeb2f-s8r2                [ OK ]
-   - gcpdiag-gce1-aaaa/mig-kmm1                                           [ OK ]
-   - gcpdiag-gce1-aaaa/mig-zd52                                           [ OK ]
+   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-2xxp                [ OK ]
+   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-c12f                [ OK ]
+   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-fv50                [ OK ]
+   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-k05c                [ OK ]
+   - gcpdiag-gce1-aaaa/mig-4h21                                           [ OK ]
+   - gcpdiag-gce1-aaaa/mig-7pvl                                           [ OK ]
 
    Serial port output can be often useful for troubleshooting, and enabling
    serial logging makes sure that you don't lose the information when the VM is
