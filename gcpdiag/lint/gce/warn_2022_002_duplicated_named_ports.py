@@ -32,7 +32,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   groups = gce.get_instance_groups(context).values()
   if len(groups) == 0:
     report.add_skipped(None, 'No instance groups found')
-  for g in groups:
+  for g in sorted(groups):
     if g.has_named_ports():
       names = [n['name'] for n in g.named_ports]
       if len(names) > len(set(names)):

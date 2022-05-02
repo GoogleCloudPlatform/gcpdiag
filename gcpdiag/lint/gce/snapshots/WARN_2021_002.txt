@@ -3,16 +3,16 @@
      no data
    - gcpdiag-gce1-aaaa/gce2                                               [SKIP]
      no data
-   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-aabeeb2f-89fp                [SKIP]
+   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-2xxp                [SKIP]
      no data
-   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-aabeeb2f-c8f3                [SKIP]
+   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-c12f                [SKIP]
      no data
-   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-aabeeb2f-mncd                [SKIP]
+   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-fv50                [SKIP]
      no data
-   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-aabeeb2f-s8r2                [SKIP]
+   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-k05c                [SKIP]
      no data
-   - gcpdiag-gce1-aaaa/mig-kmm1                                           [SKIP]
+   - gcpdiag-gce1-aaaa/mig-4h21                                           [SKIP]
      no data
-   - gcpdiag-gce1-aaaa/mig-zd52                                           [SKIP]
+   - gcpdiag-gce1-aaaa/mig-7pvl                                           [SKIP]
      no data
 

@@ -1,7 +1,9 @@
 {
+  "kind": "compute#regionList",
   "id": "projects/gcpdiag-gce1-aaaa/regions",
   "items": [
     {
+      "kind": "compute#region",
       "id": "1220",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-east1",
@@ -74,6 +76,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -369,16 +376,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/asia-east1",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1370",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-east2",
@@ -451,6 +473,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -746,16 +773,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/asia-east2",
-      "supportsPzs": true,
-      "kind": "compute#region"
+      "supportsPzs": true
     },
     {
+      "kind": "compute#region",
       "id": "1250",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-northeast1",
@@ -828,6 +870,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -1123,16 +1170,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/asia-northeast1",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1390",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-northeast2",
@@ -1205,6 +1267,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -1500,16 +1567,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/asia-northeast2",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1410",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-northeast3",
@@ -1582,6 +1664,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -1877,16 +1964,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/asia-northeast3",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1320",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-south1",
@@ -1959,6 +2061,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -2254,16 +2361,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 24,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/asia-south1",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1470",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-south2",
@@ -2336,6 +2458,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -2631,16 +2758,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 15,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 24,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/asia-south2",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1260",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-southeast1",
@@ -2713,6 +2855,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -3008,16 +3155,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/asia-southeast1",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1440",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "asia-southeast2",
@@ -3090,6 +3252,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -3385,16 +3552,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/asia-southeast2",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1280",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "australia-southeast1",
@@ -3467,6 +3649,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -3762,16 +3949,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/australia-southeast1",
-      "supportsPzs": true,
-      "kind": "compute#region"
+      "supportsPzs": true
     },
     {
+      "kind": "compute#region",
       "id": "1480",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "australia-southeast2",
@@ -3844,6 +4046,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -4139,16 +4346,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 15,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 24,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/australia-southeast2",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1450",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-central2",
@@ -4221,6 +4443,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -4516,16 +4743,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 15,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 24,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/europe-central2",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1350",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-north1",
@@ -4598,6 +4840,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -4893,16 +5140,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/europe-north1",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1100",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-west1",
@@ -4975,6 +5237,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -5270,16 +5537,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/europe-west1",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1290",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-west2",
@@ -5352,6 +5634,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -5647,16 +5934,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/europe-west2",
-      "supportsPzs": true,
-      "kind": "compute#region"
+      "supportsPzs": true
     },
     {
+      "kind": "compute#region",
       "id": "1300",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-west3",
@@ -5729,6 +6031,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -6024,16 +6331,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/europe-west3",
-      "supportsPzs": true,
-      "kind": "compute#region"
+      "supportsPzs": true
     },
     {
+      "kind": "compute#region",
       "id": "1340",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-west4",
@@ -6053,7 +6375,7 @@
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
-          "usage": 40
+          "usage": 62
         },
         {
           "metric": "STATIC_ADDRESSES",
@@ -6078,7 +6400,7 @@
         {
           "metric": "INSTANCE_GROUPS",
           "limit": 1000,
-          "usage": 1
+          "usage": 3
         },
         {
           "metric": "INSTANCE_GROUP_MANAGERS",
@@ -6106,6 +6428,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 2
@@ -6401,16 +6728,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/europe-west4",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1380",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "europe-west6",
@@ -6483,6 +6825,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -6778,16 +7125,428 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/europe-west6",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
+      "id": "1510",
+      "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
+      "name": "europe-west8",
+      "description": "europe-west8",
+      "status": "UP",
+      "zones": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west8-a",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west8-b",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west8-c"
+      ],
+      "quotas": [
+        {
+          "metric": "CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
+          "metric": "DISKS_TOTAL_GB",
+          "limit": 4096,
+          "usage": 0
+        },
+        {
+          "metric": "STATIC_ADDRESSES",
+          "limit": 8,
+          "usage": 0
+        },
+        {
+          "metric": "IN_USE_ADDRESSES",
+          "limit": 8,
+          "usage": 0
+        },
+        {
+          "metric": "SSD_TOTAL_GB",
+          "limit": 500,
+          "usage": 0
+        },
+        {
+          "metric": "LOCAL_SSD_TOTAL_GB",
+          "limit": 6000,
+          "usage": 0
+        },
+        {
+          "metric": "INSTANCE_GROUPS",
+          "limit": 100,
+          "usage": 0
+        },
+        {
+          "metric": "INSTANCE_GROUP_MANAGERS",
+          "limit": 50,
+          "usage": 0
+        },
+        {
+          "metric": "INSTANCES",
+          "limit": 240,
+          "usage": 0
+        },
+        {
+          "metric": "AUTOSCALERS",
+          "limit": 50,
+          "usage": 0
+        },
+        {
+          "metric": "REGIONAL_AUTOSCALERS",
+          "limit": 20,
+          "usage": 0
+        },
+        {
+          "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
+          "limit": 20,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
+          "metric": "PREEMPTIBLE_CPUS",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "NVIDIA_K80_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_CPUS",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_LOCAL_SSD_TOTAL_GB",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITMENTS",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "NETWORK_ENDPOINT_GROUPS",
+          "limit": 100,
+          "usage": 0
+        },
+        {
+          "metric": "INTERNAL_ADDRESSES",
+          "limit": 200,
+          "usage": 0
+        },
+        {
+          "metric": "NVIDIA_P100_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "PREEMPTIBLE_LOCAL_SSD_GB",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "PREEMPTIBLE_NVIDIA_K80_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "PREEMPTIBLE_NVIDIA_P100_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "NVIDIA_P100_VWS_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "NVIDIA_V100_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "NVIDIA_P4_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "NVIDIA_P4_VWS_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "NODE_GROUPS",
+          "limit": 100,
+          "usage": 0
+        },
+        {
+          "metric": "NODE_TEMPLATES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
+          "metric": "PREEMPTIBLE_NVIDIA_V100_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "PREEMPTIBLE_NVIDIA_P4_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "PREEMPTIBLE_NVIDIA_P100_VWS_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "PREEMPTIBLE_NVIDIA_P4_VWS_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "INTERCONNECT_ATTACHMENTS_PER_REGION",
+          "limit": 16,
+          "usage": 0
+        },
+        {
+          "metric": "INTERCONNECT_ATTACHMENTS_TOTAL_MBPS",
+          "limit": 80000,
+          "usage": 0
+        },
+        {
+          "metric": "RESOURCE_POLICIES",
+          "limit": 5,
+          "usage": 0
+        },
+        {
+          "metric": "IN_USE_SNAPSHOT_SCHEDULES",
+          "limit": 500,
+          "usage": 0
+        },
+        {
+          "metric": "NVIDIA_T4_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "NVIDIA_T4_VWS_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "PREEMPTIBLE_NVIDIA_T4_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "PREEMPTIBLE_NVIDIA_T4_VWS_GPUS",
+          "limit": 1,
+          "usage": 0
+        },
+        {
+          "metric": "IN_USE_BACKUP_SCHEDULES",
+          "limit": 20,
+          "usage": 0
+        },
+        {
+          "metric": "PUBLIC_DELEGATED_PREFIXES",
+          "limit": 10,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_NVIDIA_K80_GPUS",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_NVIDIA_P100_GPUS",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_NVIDIA_P4_GPUS",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_NVIDIA_V100_GPUS",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_NVIDIA_T4_GPUS",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "C2_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
+          "metric": "N2_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_N2_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_C2_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
+          "metric": "RESERVATIONS",
+          "limit": 100,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_LICENSES",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "N2D_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_N2D_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
+          "metric": "SERVICE_ATTACHMENTS",
+          "limit": 800,
+          "usage": 0
+        },
+        {
+          "metric": "STATIC_BYOIP_ADDRESSES",
+          "limit": 128,
+          "usage": 0
+        },
+        {
+          "metric": "AFFINITY_GROUPS",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "NVIDIA_A100_GPUS",
+          "limit": 16,
+          "usage": 0
+        },
+        {
+          "metric": "PREEMPTIBLE_NVIDIA_A100_GPUS",
+          "limit": 64,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_NVIDIA_A100_GPUS",
+          "limit": 16,
+          "usage": 0
+        },
+        {
+          "metric": "M1_CPUS",
+          "limit": 160,
+          "usage": 0
+        },
+        {
+          "metric": "M2_CPUS",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "A2_CPUS",
+          "limit": 192,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_A2_CPUS",
+          "limit": 192,
+          "usage": 0
+        },
+        {
+          "metric": "COMMITTED_MEMORY_OPTIMIZED_CPUS",
+          "limit": 0,
+          "usage": 0
+        },
+        {
+          "metric": "PSC_INTERNAL_LB_FORWARDING_RULES",
+          "limit": 800,
+          "usage": 0
+        },
+        {
+          "metric": "EXTERNAL_NETWORK_LB_FORWARDING_RULES",
+          "limit": 15,
+          "usage": 0
+        },
+        {
+          "metric": "EXTERNAL_PROTOCOL_FORWARDING_RULES",
+          "limit": 15,
+          "usage": 0
+        },
+        {
+          "metric": "PD_EXTREME_TOTAL_PROVISIONED_IOPS",
+          "limit": 120000,
+          "usage": 0
+        },
+        {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 15,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
+          "metric": "T2D_CPUS",
+          "limit": 24,
+          "usage": 0
+        }
+      ],
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/europe-west8",
+      "supportsPzs": false
+    },
+    {
+      "kind": "compute#region",
       "id": "1330",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "northamerica-northeast1",
@@ -6860,6 +7619,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -7155,16 +7919,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/northamerica-northeast1",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1460",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "northamerica-northeast2",
@@ -7237,6 +8016,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -7532,16 +8316,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 15,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 24,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/northamerica-northeast2",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1310",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "southamerica-east1",
@@ -7611,6 +8410,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 200,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -7909,16 +8713,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/southamerica-east1",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1490",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "southamerica-west1",
@@ -7988,6 +8807,11 @@
         {
           "metric": "REGIONAL_INSTANCE_GROUP_MANAGERS",
           "limit": 20,
+          "usage": 0
+        },
+        {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
           "usage": 0
         },
         {
@@ -8286,16 +9110,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 15,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 24,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 24,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/southamerica-west1",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1000",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-central1",
@@ -8369,6 +9208,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -8664,16 +9508,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/us-central1",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1230",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-east1",
@@ -8746,6 +9605,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -9041,16 +9905,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/us-east1",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1270",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-east4",
@@ -9123,6 +10002,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -9418,16 +10302,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/us-east4",
-      "supportsPzs": true,
-      "kind": "compute#region"
+      "supportsPzs": true
     },
     {
+      "kind": "compute#region",
       "id": "1210",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-west1",
@@ -9500,6 +10399,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -9795,16 +10699,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/us-west1",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1360",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-west2",
@@ -9877,6 +10796,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -10172,16 +11096,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/us-west2",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1420",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-west3",
@@ -10254,6 +11193,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -10549,16 +11493,31 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/us-west3",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "supportsPzs": false
     },
     {
+      "kind": "compute#region",
       "id": "1430",
       "creationTimestamp": "1969-12-31T16:00:00.000-08:00",
       "name": "us-west4",
@@ -10631,6 +11590,11 @@
           "usage": 0
         },
         {
+          "metric": "TARGET_TCP_PROXIES",
+          "limit": 100,
+          "usage": 0
+        },
+        {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
           "usage": 0
@@ -10926,16 +11890,29 @@
           "usage": 0
         },
         {
+          "metric": "EXTERNAL_MANAGED_FORWARDING_RULES",
+          "limit": 25,
+          "usage": 0
+        },
+        {
+          "metric": "C2D_CPUS",
+          "limit": 300,
+          "usage": 0
+        },
+        {
+          "metric": "N2A_CPUS",
+          "limit": 128,
+          "usage": 0
+        },
+        {
           "metric": "T2D_CPUS",
           "limit": 128,
           "usage": 0
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/us-west4",
-      "supportsPzs": false,
-      "kind": "compute#region"
+      "supportsPzs": false
     }
   ],
-  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions",
-  "kind": "compute#regionList"
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions"
 }

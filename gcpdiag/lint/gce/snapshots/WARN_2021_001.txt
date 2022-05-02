@@ -1,14 +1,10 @@
 *  gce/WARN/2021_001: GCE instance service account permissions for logging.
-   - gcpdiag-gce1-aaaa/gce1                                               [FAIL]
-     service account: 12340001-compute@developer.gserviceaccount.com
-     missing role: roles/logging.logWriter
-   - gcpdiag-gce1-aaaa/gce2                                               [FAIL]
-     service account: 12340001-compute@developer.gserviceaccount.com
-     missing role: roles/logging.logWriter
-   - gcpdiag-gce1-aaaa/mig-kmm1                                           [FAIL]
+   - gcpdiag-gce1-aaaa/gce1                                               [ OK ]
+   - gcpdiag-gce1-aaaa/gce2                                               [ OK ]
+   - gcpdiag-gce1-aaaa/mig-4h21                                           [FAIL]
      missing scope: logging.write
      no service account
-   - gcpdiag-gce1-aaaa/mig-zd52                                           [FAIL]
+   - gcpdiag-gce1-aaaa/mig-7pvl                                           [FAIL]
      missing scope: logging.write
      no service account
 

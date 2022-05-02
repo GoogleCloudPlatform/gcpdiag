@@ -1,6 +1,12 @@
 {
   "commonInstanceMetadata": {
-    "fingerprint": "xDTmgOr7s3g=",
+    "fingerprint": "O3sXwEaEuMA=",
+    "items": [
+      {
+        "key": "gke-gke1-c8fb19cb-secondary-ranges",
+        "value": "services:default:default:gke-gke1-services-c8fb19cb,pods:default:default:gke-gke1-pods-c8fb19cb"
+      }
+    ],
     "kind": "compute#metadata"
   },
   "creationTimestamp": "2021-12-06T08:31:05.630-08:00",
@@ -23,7 +29,7 @@
     {
       "limit": 500,
       "metric": "FIREWALLS",
-      "usage": 8
+      "usage": 13
     },
     {
       "limit": 5000,
@@ -83,7 +89,7 @@
     {
       "limit": 1000,
       "metric": "INSTANCE_TEMPLATES",
-      "usage": 0
+      "usage": 1
     },
     {
       "limit": 50,
@@ -123,7 +129,7 @@
     {
       "limit": 275,
       "metric": "SUBNETWORKS",
-      "usage": 29
+      "usage": 34
     },
     {
       "limit": 100,
@@ -203,6 +209,11 @@
     {
       "limit": 150,
       "metric": "INTERNAL_TRAFFIC_DIRECTOR_FORWARDING_RULES",
+      "usage": 0
+    },
+    {
+      "limit": 150,
+      "metric": "GLOBAL_EXTERNAL_MANAGED_FORWARDING_RULES",
       "usage": 0
     }
   ],

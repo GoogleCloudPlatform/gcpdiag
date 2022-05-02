@@ -5,8 +5,8 @@
   "state": "ACTIVE",
   "displayName": "gcpdiag test - fw-policy",
   "createTime": "2021-12-06T16:30:26.953Z",
-  "updateTime": "2021-12-06T16:30:28.702Z",
-  "etag": "iofhQqfC8KCp7Zqt17HV8A==",
+  "updateTime": "2022-04-25T16:06:00.374Z",
+  "etag": "+uU+KxzozpwgpdToJJzXew==",
   "labels": {
     "gcpdiag": "test"
   }

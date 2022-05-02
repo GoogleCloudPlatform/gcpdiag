@@ -1,13 +1,9 @@
 *  gce/WARN/2021_003: GCE instance service account permissions for monitoring.
-   - gcpdiag-gce1-aaaa/gce1                                               [FAIL]
-     service account: 12340001-compute@developer.gserviceaccount.com
-     missing role: roles/monitoring.metricWriter
-   - gcpdiag-gce1-aaaa/gce2                                               [FAIL]
-     service account: 12340001-compute@developer.gserviceaccount.com
-     missing role: roles/monitoring.metricWriter
-   - gcpdiag-gce1-aaaa/mig-kmm1                                           [FAIL]
+   - gcpdiag-gce1-aaaa/gce1                                               [ OK ]
+   - gcpdiag-gce1-aaaa/gce2                                               [ OK ]
+   - gcpdiag-gce1-aaaa/mig-4h21                                           [FAIL]
      no service account
-   - gcpdiag-gce1-aaaa/mig-zd52                                           [FAIL]
+   - gcpdiag-gce1-aaaa/mig-7pvl                                           [FAIL]
      no service account
 
    The service account used by GCE instance should have the
