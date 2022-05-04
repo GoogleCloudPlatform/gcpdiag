@@ -29,6 +29,7 @@ pipenv-dockerized 3.7 run pipenv install --ignore-pipfile
 pipenv-dockerized 3.7 run make test-mocked
 
 # Publish staging website (http://staging.gcpdiag.dev)
+cp bin/gcpdiag-dockerized website/static/gcpdiag.sh
 cd website
 ./hugo.sh
 ./hugo.sh deploy --target gcs-staging
