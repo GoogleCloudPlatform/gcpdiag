@@ -39,7 +39,13 @@ def main(argv):
     # Replace argv[0:1] with only argv[0] so that argparse works correctly.
     sys.argv.pop(0)
     sys.argv[0] = 'gcpdiag lint'
-    lint_command.run(argv)
+    try:
+      lint_command.run(argv)
+    except KeyboardInterrupt:
+      print(
+          '\n[WARNING] KeyboardInterrupt: Application was interrupted (terminated)',
+          file=sys.stderr)
+      sys.exit(1)
   else:
     print(f'ERROR: unknown command {argv[1]}. Use --help for help.',
           file=sys.stderr)
