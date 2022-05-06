@@ -431,10 +431,12 @@ class LintRuleRepository:
       except (utils.GcpApiError, googleapiclient.errors.HttpError) as err:
         if isinstance(err, googleapiclient.errors.HttpError):
           err = utils.GcpApiError(err)
-        logging.warning('%s', str(err))
+        logging.warning('%s: %s while processing rule: %s',
+                        type(err).__name__, err, rule)
         report.add_skipped(rule, context, None, f'API error: {err}', None)
-      except (RuntimeError, ValueError) as err:
-        logging.warning('%s', str(err))
+      except (RuntimeError, ValueError, KeyError) as err:
+        logging.warning('%s: %s while processing rule: %s',
+                        type(err).__name__, err, rule)
         report.add_skipped(rule, context, None, f'Error: {err}', None)
       report.rule_end(rule, context)
     return report.finish(context)
