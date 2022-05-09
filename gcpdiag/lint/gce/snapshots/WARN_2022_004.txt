@@ -1,0 +1,3 @@
+*  gce/WARN/2022_004: Cloud SQL Docker bridge network should be avoided.
+   (no Cloud SQL peered vpc found)                                        [SKIP]
+

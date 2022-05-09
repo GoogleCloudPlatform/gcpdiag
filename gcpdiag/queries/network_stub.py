@@ -51,13 +51,15 @@ class NetworkApiStub:
                                   f'compute-effective-firewalls-{network}')
 
   # pylint: disable=redefined-builtin
-  def list(self, project, region, filter=None, fields=None):
+  def list(self, project, region=None, filter=None, fields=None):
     if self.mock_state == 'subnetworks':
       return apis_stub.RestCallStub(
           project, f'compute-subnetworks-{SUBNETWORKS_REGION}')
     elif self.mock_state == 'routers':
       return apis_stub.RestCallStub(project,
                                     f'compute-routers-{SUBNETWORKS_REGION}')
+    elif self.mock_state == 'networks':
+      return apis_stub.RestCallStub(project, 'compute-network-default')
     else:
       raise ValueError(f'cannot call method {self.mock_state} here')
 
