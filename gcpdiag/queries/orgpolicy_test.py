@@ -15,30 +15,20 @@
 
 from unittest import mock
 
-import diskcache
+from gcpdiag.queries import apis_stub, orgpolicy
 
-from gcpdiag.queries import apis_stub, crm
-
-DUMMY_PROJECT_ID = 'gcpdiag-gke1-aaaa'
-DUMMY_PROJECT_NR = 12340002
-DUMMY_PROJECT_NAME = 'gcpdiag test - gke1'
-
-
-def get_cache_stub():
-  """Use a temporary directory instead of the user cache for testing."""
-  return diskcache.Cache()
+DUMMY_PROJECT_ID = 'gcpdiag-fw-policy-aaaa'
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
-@mock.patch('gcpdiag.caching.get_cache', new=get_cache_stub)
 class Test:
   """Test project.py"""
 
-  def test_get_project(self):
-    p = crm.get_project(DUMMY_PROJECT_ID)
-    assert p.id == DUMMY_PROJECT_ID
-    assert p.number == DUMMY_PROJECT_NR
-    assert p.name == DUMMY_PROJECT_NAME
+  def test_get_effective_org_policy(self):
+    p = orgpolicy.get_effective_org_policy(
+        DUMMY_PROJECT_ID, 'constraints/compute.disableSerialPortAccess')
+    assert p.is_enforced()
 
-  # getIamPolicy is tested in iam_test.py
-  # getEffectiveOrgPolicy is tested in orgpolicy_test.py
+    p = orgpolicy.get_effective_org_policy(
+        DUMMY_PROJECT_ID, 'constraints/compute.requireOsLogin')
+    assert not p.is_enforced()
