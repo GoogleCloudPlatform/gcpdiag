@@ -120,6 +120,16 @@ class Router(models.Resource):
     return False
 
 
+@dataclasses.dataclass
+class Peering:
+  """VPC Peerings"""
+  name: str
+  url: str
+
+  def __str__(self):
+    return self.name
+
+
 class Network(models.Resource):
   """A VPC network."""
   _resource_data: dict
@@ -160,6 +170,13 @@ class Network(models.Resource):
   def subnetworks(self) -> Dict[str, Subnetwork]:
     return _batch_get_subnetworks(
         self._project_id, frozenset(self._resource_data.get('subnetworks', [])))
+
+  @property
+  def peerings(self) -> List[Peering]:
+    return [
+        Peering(peer['name'], peer['network'])
+        for peer in self._resource_data.get('peerings', [])
+    ]
 
 
 IPAddrOrNet = Union[ipaddress.IPv4Address, ipaddress.IPv6Address,
@@ -634,6 +651,15 @@ def get_network_from_url(url: str) -> Network:
     raise ValueError(f"can't parse network url: {url}")
   (project_id, network_name) = (m.group(1), m.group(2))
   return get_network(project_id, network_name)
+
+
+@caching.cached_api_call(in_memory=True)
+def get_networks(project_id: str) -> List[Network]:
+  logging.info('fetching network: %s', project_id)
+  compute = apis.get_api('compute', 'v1', project_id)
+  request = compute.networks().list(project=project_id)
+  response = request.execute(num_retries=config.API_RETRIES)
+  return [Network(project_id, item) for item in response.get('items', [])]
 
 
 @caching.cached_api_call(in_memory=True)
