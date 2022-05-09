@@ -15,6 +15,7 @@
 # Lint as: python3
 """Queries related to GCP Kubernetes Engine clusters."""
 
+import ipaddress
 import logging
 import re
 from datetime import datetime, timezone
@@ -295,6 +296,13 @@ class Instance(models.Resource):
     if not m:
       raise RuntimeError("can't parse network string: %s" % network_string)
     return network_q.get_network(m.group(1), m.group(2))
+
+  @property
+  def network_ips(self) -> List[ipaddress.IPv4Address]:
+    return [
+        ipaddress.ip_address(nic['networkIP'])
+        for nic in self._resource_data['networkInterfaces']
+    ]
 
   def secure_boot_enabled(self) -> bool:
     if 'shieldedInstanceConfig' in self._resource_data:
