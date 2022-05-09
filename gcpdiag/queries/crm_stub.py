@@ -31,8 +31,8 @@ class CrmApiStub:
   # example API call:
   # crm_api.projects().getIamPolicy(resource=self._project_id).execute()
 
-  def __init__(self, project_id=None):
-    self.project_id = project_id
+  def new_batch_http_request(self):
+    return apis_stub.BatchRequestStub()
 
   def projects(self):
     return self
@@ -47,3 +47,18 @@ class CrmApiStub:
   # pylint: disable=invalid-name
   def getIamPolicy(self, resource):
     return apis_stub.RestCallStub(resource, 'iam-policy')
+
+  # pylint: disable=invalid-name
+  def getEffectiveOrgPolicy(self, resource, body):
+    m = re.match(r'projects/([^/]+)', resource)
+    if not m:
+      raise ValueError(
+          'only projects are supported for getEffectiveOrgPolicy stub')
+    project_id = m.group(1)
+    if 'constraint' not in body:
+      raise ValueError('constraint not defined')
+    m = re.match(r'constraints/([^/]+)', body['constraint'])
+    if not m:
+      raise ValueError(
+          f"constraint doesn\'t start with constraints/: {body['constraint']}")
+    return apis_stub.RestCallStub(project_id, f'org-constraint-{m.group(1)}')

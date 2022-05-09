@@ -11,6 +11,11 @@ FAKE_ORG_ID = 11112222
 FAKE_FOLDER_ID_1 = 100001
 FAKE_FOLDER_ID_2 = 100002
 
+ORG_POLICY_CONSTRAINTS = \
+	json-dumps/org-constraint-compute.disableSerialPortAccess.json \
+	json-dumps/org-constraint-compute.requireOsLogin.json \
+	json-dumps/org-constraint-compute.requireShieldedVm.json
+
 all:	\
 	json-dumps/compute-effective-firewalls-default.json \
 	json-dumps/compute-instances-europe-west1-b.json \
@@ -25,6 +30,7 @@ all:	\
 	json-dumps/iam-roles-custom.json \
 	json-dumps/iam-service-accounts.json \
 	json-dumps/project.json \
-	json-dumps/services.json
+	json-dumps/services.json \
+	$(ORG_POLICY_CONSTRAINTS)
 
 include ../Makefile.inc
