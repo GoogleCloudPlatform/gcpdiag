@@ -23,6 +23,8 @@ all:	\
 	json-dumps/compute-instances-empty.json \
 	json-dumps/compute-migs-$(ZONE_1).json \
 	json-dumps/compute-migs-empty.json \
+	json-dumps/compute-disks-$(ZONE_1).json \
+	json-dumps/compute-disks-empty.json \
 	json-dumps/compute-igs-empty.json \
 	json-dumps/compute-network-default.json \
 	json-dumps/compute-project.json \
@@ -127,6 +129,14 @@ json-dumps/compute-routers-%.json:
 	$(CURL) -fsS \
 	        "https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/regions/$$REGION/routers" \
 		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-disks-%.json:
+	$(CURL) -fsS \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$*/disks' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-disks-empty.json: json-dumps/compute-disks-$(ZONE_EMPTY).json
+	ln -sf $(notdir $<) $@
 
 # cloudresourcemanager.googleapis.com
 

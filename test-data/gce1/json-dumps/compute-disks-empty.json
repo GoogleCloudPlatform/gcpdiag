@@ -1,0 +1,5 @@
+{
+  "kind": "compute#diskList",
+  "id": "projects/gcpdiag-gce1-aaaa/zones/europe-west2-b/disks",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west2-b/disks"
+}

@@ -221,3 +221,12 @@ class TestGce:
                              labels=[DUMMY_INSTANCE3_LABELS])
     for n in {i.mig for i in gce.get_instances(context).values()}:
       assert n.template.name.startswith('gke-')
+
+  def test_get_all_disks(self):
+    disks = gce.get_all_disks(DUMMY_PROJECT_NAME)
+    for d in disks:
+      assert d.bootable is True
+      if 'unattached-disk' == d.name:
+        assert d.in_use is False
+      else:
+        assert d.in_use is True
