@@ -42,6 +42,8 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/apigee1/json-dumps',
     'gcpdiag-composer1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/composer1/json-dumps',
+    'gcpdiag-cloudsql1-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/cloudsql1/json-dumps',
     'gcpdiag-fw-policy-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/fw-policy/json-dumps',
     '12340004':
@@ -245,6 +247,9 @@ def get_api_stub(service_name: str,
   elif service_name == 'composer':
     from gcpdiag.queries import composer_stub
     return composer_stub.ComposerApiStub()
+  elif service_name == 'sqladmin':
+    from gcpdiag.queries import cloudsql_stub
+    return cloudsql_stub.CloudSQLApiStub()
   elif service_name == 'storage':
     from gcpdiag.queries import gcs_stub
 

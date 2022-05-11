@@ -20,6 +20,8 @@ PRODUCTS = {
         '[Apigee API Management](https://cloud.google.com/apigee)',
     'composer':
         '[Cloud Composer](https://cloud.google.com/composer)',
+    'cloudsql':
+        '[CloudSQL](https://cloud.google.com/sql)',
     'dataproc':
         '[Cloud Dataproc](https://cloud.google.com/dataproc)',
     'gaes':
