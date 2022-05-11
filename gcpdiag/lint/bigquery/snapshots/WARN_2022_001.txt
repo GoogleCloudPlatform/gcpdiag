@@ -1,0 +1,4 @@
+*  bigquery/WARN/2022_001: BigQuery is not exceeding rate limits
+   - gcpdiag-cloudsql1-aaaa                                               [SKIP]
+     logging api is disabled
+

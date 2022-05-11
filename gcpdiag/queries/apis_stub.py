@@ -26,6 +26,8 @@ import httplib2
 JSON_PROJECT_DIR = {
     'gcpdiag-gce1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/gce1/json-dumps',
+    'gcpdiag-bigquery1-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/bigquery1/json-dumps',
     '12340001':
         pathlib.Path(__file__).parents[2] / 'test-data/gce1/json-dumps',
     'gcpdiag-gke1-aaaa':
