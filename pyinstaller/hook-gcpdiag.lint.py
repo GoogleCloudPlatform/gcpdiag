@@ -15,9 +15,11 @@
 
 from PyInstaller.utils.hooks import collect_submodules
 
+# update also bin/precommit-required-files
 hiddenimports = \
   collect_submodules('gcpdiag.lint.apigee') + \
   collect_submodules('gcpdiag.lint.composer') + \
+  collect_submodules('gcpdiag.lint.cloudsql') + \
   collect_submodules('gcpdiag.lint.dataproc') + \
   collect_submodules('gcpdiag.lint.gaes') + \
   collect_submodules('gcpdiag.lint.gcb') + \

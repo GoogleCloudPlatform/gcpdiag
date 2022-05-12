@@ -15,6 +15,7 @@ from gcpdiag import lint
 WEBSITE_RULES_DIR = 'website/content/en/rules'
 LINT_RULES_DIR = 'gcpdiag/lint'
 
+# update also pyinstaller/hook-gcpdiag.lint.py
 PRODUCTS = {
     'apigee':
         '[Apigee API Management](https://cloud.google.com/apigee)',

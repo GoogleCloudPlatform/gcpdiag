@@ -236,7 +236,7 @@ def run(argv) -> int:
   _load_repository_rules(repo)
 
   # ^^^ If you add rules directory, update also
-  # pyinstaller/hook-gcpdiag.lint.py and bin/precommit-website-rules
+  # pyinstaller/hook-gcpdiag.lint.py and bin/precommit-required-files
 
   # Initialize proper output formater
   report = _initialize_output_formater()
