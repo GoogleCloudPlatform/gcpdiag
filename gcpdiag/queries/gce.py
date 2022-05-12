@@ -379,6 +379,52 @@ class Instance(models.Resource):
     raise AttributeError(f'instance {self.id} is not managed by a mig')
 
 
+class Disk(models.Resource):
+  """Represents a GCE disk."""
+  _resource_data: dict
+
+  def __init__(self, project_id, resource_data):
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+
+  @property
+  def id(self) -> str:
+    return self._resource_data['id']
+
+  @property
+  def name(self) -> str:
+    return self._resource_data['name']
+
+  @property
+  def zone(self) -> str:
+    m = re.search(r'/zones/([^/]+)$', self._resource_data['zone'])
+    if not m:
+      raise RuntimeError('can\'t determine zone of disk %s (%s)' %
+                         (self.name, self._resource_data['zone']))
+    return m.group(1)
+
+  @property
+  def full_path(self) -> str:
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
+                      self._resource_data['selfLink'])
+    if result:
+      return result.group(1)
+    else:
+      return '>> ' + self._resource_data['selfLink']
+
+  @property
+  def short_path(self) -> str:
+    return f'{self.project_id}/{self.name}'
+
+  @property
+  def bootable(self) -> bool:
+    return 'guestOsFeatures' in self._resource_data
+
+  @property
+  def in_use(self) -> bool:
+    return 'users' in self._resource_data
+
+
 @caching.cached_api_call(in_memory=True)
 def get_gce_zones(project_id: str) -> Set[str]:
   try:
@@ -592,3 +638,23 @@ def get_regions_with_instances(context: models.Context) -> Iterable[Region]:
     return set()
 
   return {r for r in all_regions if r.name in regions_of_instances}
+
+
+@caching.cached_api_call
+def get_all_disks(project_id: str) -> Iterable[Disk]:
+  try:
+    gce_api = apis.get_api('compute', 'v1', project_id)
+    requests = [
+        gce_api.disks().list(project=project_id, zone=zone)
+        for zone in get_gce_zones(project_id)
+    ]
+    items = apis_utils.batch_list_all(
+        api=gce_api,
+        requests=requests,
+        next_function=gce_api.disks().list_next,
+        log_text=f'listing gce disks of project {project_id}')
+
+    return {Disk(project_id, item) for item in items}
+
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err

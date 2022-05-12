@@ -34,6 +34,7 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
   # gce_api.new_batch_http_request().add(op1, callback=cb, request_id=id).execute()
   # gce_api.instanceGroupManagers().list(project=project_id, zone=zone)
   # gce_api.instanceGroups().list(project=project_id, zone=zone)
+  # gce_api.disks().list(project=project_id, zone=zone)
 
   def __init__(self, mock_state='init', project_id=None, zone=None, page=1):
     self.mock_state = mock_state
@@ -47,9 +48,12 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
   def zones(self):
     return ComputeEngineApiStub('zones')
 
+  def disks(self):
+    return ComputeEngineApiStub('disks')
+
   def list(self, project, zone=None, returnPartialSuccess=None, fields=None):
     # TODO: implement fields filtering
-    if self.mock_state in ['igs', 'instances', 'migs']:
+    if self.mock_state in ['igs', 'instances', 'migs', 'disks']:
       return apis_stub.RestCallStub(project,
                                     f'compute-{self.mock_state}-{zone}',
                                     default=f'compute-{self.mock_state}-empty')
