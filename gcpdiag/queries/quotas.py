@@ -21,7 +21,7 @@ fetch consumer_quota
     | group_by [resource.project_id, metric.quota_metric, resource.location],
         max(val())
   ; metric serviceruntime.googleapis.com/quota/limit
-    | filter metric.limit_name == '{limit_name}'
+    | filter metric.limit_name =~ '{limit_name}'
     | align next_older(1d)
     | group_by [resource.project_id, metric.quota_metric, resource.location],
         min(val())
