@@ -60,6 +60,14 @@ json-dumps/compute-migs-%.json:
 json-dumps/compute-migs-empty.json: json-dumps/compute-migs-$(ZONE_EMPTY).json
 	ln -sf $(notdir $<) $@
 
+json-dumps/compute-disks-%.json:
+	$(CURL) -fsS \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$*/disks' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-disks-empty.json: json-dumps/compute-disks-$(ZONE_EMPTY).json
+	ln -sf $(notdir $<) $@
+
 json-dumps/compute-network-%.json:
 	$(CURL) -fsS \
 	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/networks/$*' \
