@@ -1,0 +1,159 @@
+{
+  "services": [
+    {
+      "name": "projects/12340007/services/compute.googleapis.com",
+      "config": {
+        "name": "compute.googleapis.com",
+        "title": "Compute Engine API",
+        "documentation": {
+          "summary": "Creates and runs virtual machines on Google Cloud Platform.\n"
+        },
+        "quota": {},
+        "authentication": {},
+        "usage": {
+          "requirements": [
+            "serviceusage.googleapis.com/tos/cloud",
+            "serviceusage.googleapis.com/billing-enabled"
+          ]
+        },
+        "monitoredResources": [
+          {
+            "type": "compute.googleapis.com/VpcNetwork",
+            "displayName": "VPC Network",
+            "description": "VPC Network.",
+            "labels": [
+              {
+                "key": "resource_container",
+                "description": "The identifier of the GCP container (i.e. project) associated with the VPC Network."
+              },
+              {
+                "key": "location",
+                "description": "Location of the VPC Network, global always."
+              },
+              {
+                "key": "network_id",
+                "description": "VPC Network resource ID."
+              }
+            ],
+            "launchStage": "GA"
+          },
+          {
+            "type": "compute.googleapis.com/Location",
+            "displayName": "Compute Location",
+            "description": "A location in the Compute API.",
+            "labels": [
+              {
+                "key": "resource_container",
+                "description": "The identifier of the GCP container (i.e. project) associated with the Compute Location."
+              },
+              {
+                "key": "location",
+                "description": "Location of resource."
+              }
+            ],
+            "launchStage": "ALPHA"
+          }
+        ],
+        "monitoring": {
+          "consumerDestinations": [
+            {
+              "monitoredResource": "compute.googleapis.com/VpcNetwork",
+              "metrics": [
+                "compute.googleapis.com/instances_per_vpc_network",
+                "compute.googleapis.com/internal_lb_forwarding_rules_per_vpc_network",
+                "compute.googleapis.com/internal_managed_forwarding_rules_per_vpc_network",
+                "compute.googleapis.com/internal_protocol_forwarding_rules_per_vpc_network",
+                "compute.googleapis.com/ip_aliases_per_vpc_network",
+                "compute.googleapis.com/psc_google_apis_forwarding_rules_per_vpc_network",
+                "compute.googleapis.com/psc_ilb_consumer_forwarding_rules_per_producer_vpc_network",
+                "compute.googleapis.com/quota/instances_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/internal_lb_forwarding_rules_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/internal_managed_forwarding_rules_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/internal_protocol_forwarding_rules_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/ip_aliases_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/psc_google_apis_forwarding_rules_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/psc_ilb_consumer_forwarding_rules_per_producer_vpc_network/exceeded",
+                "compute.googleapis.com/quota/quota/instances_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/quota/internal_load_balancer_forwarding_rules_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/quota/internal_protocol_forwarding_rules_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/quota/ip_aliases_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/quota/psc_google_apis_forwarding_rules_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/quota/subnet_ranges_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/subnet_ranges_per_vpc_network/exceeded",
+                "compute.googleapis.com/subnet_ranges_per_vpc_network"
+              ]
+            },
+            {
+              "monitoredResource": "compute.googleapis.com/VpcNetwork",
+              "metrics": [
+                "compute.googleapis.com/quota/instances_per_vpc_network/limit",
+                "compute.googleapis.com/quota/instances_per_vpc_network/usage",
+                "compute.googleapis.com/quota/internal_lb_forwarding_rules_per_vpc_network/limit",
+                "compute.googleapis.com/quota/internal_lb_forwarding_rules_per_vpc_network/usage",
+                "compute.googleapis.com/quota/internal_managed_forwarding_rules_per_vpc_network/limit",
+                "compute.googleapis.com/quota/internal_managed_forwarding_rules_per_vpc_network/usage",
+                "compute.googleapis.com/quota/internal_protocol_forwarding_rules_per_vpc_network/limit",
+                "compute.googleapis.com/quota/internal_protocol_forwarding_rules_per_vpc_network/usage",
+                "compute.googleapis.com/quota/ip_aliases_per_vpc_network/limit",
+                "compute.googleapis.com/quota/ip_aliases_per_vpc_network/usage",
+                "compute.googleapis.com/quota/psc_google_apis_forwarding_rules_per_vpc_network/limit",
+                "compute.googleapis.com/quota/psc_google_apis_forwarding_rules_per_vpc_network/usage",
+                "compute.googleapis.com/quota/psc_ilb_consumer_forwarding_rules_per_producer_vpc_network/limit",
+                "compute.googleapis.com/quota/psc_ilb_consumer_forwarding_rules_per_producer_vpc_network/usage",
+                "compute.googleapis.com/quota/quota/instances_per_vpc_network/limit",
+                "compute.googleapis.com/quota/quota/instances_per_vpc_network/usage",
+                "compute.googleapis.com/quota/quota/internal_load_balancer_forwarding_rules_per_vpc_network/limit",
+                "compute.googleapis.com/quota/quota/internal_load_balancer_forwarding_rules_per_vpc_network/usage",
+                "compute.googleapis.com/quota/quota/internal_protocol_forwarding_rules_per_vpc_network/limit",
+                "compute.googleapis.com/quota/quota/internal_protocol_forwarding_rules_per_vpc_network/usage",
+                "compute.googleapis.com/quota/quota/ip_aliases_per_vpc_network/limit",
+                "compute.googleapis.com/quota/quota/ip_aliases_per_vpc_network/usage",
+                "compute.googleapis.com/quota/quota/psc_google_apis_forwarding_rules_per_vpc_network/limit",
+                "compute.googleapis.com/quota/quota/psc_google_apis_forwarding_rules_per_vpc_network/usage",
+                "compute.googleapis.com/quota/quota/subnet_ranges_per_vpc_network/limit",
+                "compute.googleapis.com/quota/quota/subnet_ranges_per_vpc_network/usage",
+                "compute.googleapis.com/quota/subnet_ranges_per_vpc_network/limit",
+                "compute.googleapis.com/quota/subnet_ranges_per_vpc_network/usage"
+              ]
+            },
+            {
+              "monitoredResource": "compute.googleapis.com/Location",
+              "metrics": [
+                "compute.googleapis.com/quota/local_ssd_total_storage_per_vm_family/exceeded"
+              ]
+            },
+            {
+              "monitoredResource": "compute.googleapis.com/Location",
+              "metrics": [
+                "compute.googleapis.com/quota/local_ssd_total_storage_per_vm_family/limit",
+                "compute.googleapis.com/quota/local_ssd_total_storage_per_vm_family/usage"
+              ]
+            }
+          ]
+        }
+      },
+      "state": "ENABLED",
+      "parent": "projects/12340007"
+    },
+    {
+      "name": "projects/12340007/services/oslogin.googleapis.com",
+      "config": {
+        "name": "oslogin.googleapis.com",
+        "title": "Cloud OS Login API",
+        "documentation": {
+          "summary": "You can use OS Login to manage access to your VM instances using IAM roles."
+        },
+        "quota": {},
+        "authentication": {},
+        "usage": {
+          "requirements": [
+            "serviceusage.googleapis.com/tos/cloud"
+          ]
+        },
+        "monitoring": {}
+      },
+      "state": "ENABLED",
+      "parent": "projects/12340007"
+    }
+  ]
+}
