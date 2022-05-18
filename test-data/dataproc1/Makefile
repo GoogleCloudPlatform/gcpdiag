@@ -16,7 +16,10 @@ SED_SUBST_FAKE = sed -e "s/$(PROJECT_ID_SUFFIX)/$(FAKE_PROJECT_ID_SUFFIX)/" \
 all:	\
 	json-dumps/compute-regions.json \
 	json-dumps/dataproc-clusters-$(REGION_1).json \
-	json-dumps/services.json
+	json-dumps/services.json \
+	json-dumps/project.json \
+	json-dumps/iam-policy.json \
+	json-dumps/iam-service-accounts.json
 
 json-dumps/compute-regions.json:
 	$(CURL) -fsS \
@@ -32,3 +35,22 @@ json-dumps/services.json:
 	$(CURL) -fsS \
 	  'https://serviceusage.googleapis.com/v1/projects/$(PROJECT_ID)/services?filter=state:ENABLED' \
 	| $(SED_SUBST_FAKE) >$@
+
+json-dumps/project.json:
+	$(CURL) -fsS \
+	  'https://cloudresourcemanager.googleapis.com/v3/projects/$(PROJECT_ID)' \
+	  | $(SED_SUBST_FAKE) >$@
+
+json-dumps/iam-policy.json:
+	$(CURL) -fsS \
+	  'https://cloudresourcemanager.googleapis.com/v1/projects/$(PROJECT_ID):getIamPolicy' \
+	  -X POST  --header "Content-Type:text/json" \
+	  -d "" \
+	  | $(JSON_CLEANER) other \
+	  | $(SED_SUBST_FAKE) >$@
+
+json-dumps/iam-service-accounts.json:
+	$(CURL) -fsS \
+	  'https://iam.googleapis.com/v1/projects/$(PROJECT_ID)/serviceAccounts' \
+	  | $(JSON_CLEANER) service-accounts \
+	  | $(SED_SUBST_FAKE) >$@

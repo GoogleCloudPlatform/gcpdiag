@@ -23,3 +23,15 @@ resource "google_project_service" "dataproc" {
 output "project_id" {
   value = google_project.project.project_id
 }
+
+output "project_id_suffix" {
+  value = random_string.project_id.id
+}
+
+output "project_nr" {
+  value = google_project.project.number
+}
+
+output "org_id" {
+  value = var.org_id
+}
