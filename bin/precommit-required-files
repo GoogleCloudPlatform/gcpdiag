@@ -19,6 +19,8 @@ LINT_RULES_DIR = 'gcpdiag/lint'
 PRODUCTS = {
     'apigee':
         '[Apigee API Management](https://cloud.google.com/apigee)',
+    'bigquery':
+        '[BigQuery](https://cloud.google.com/bigquery)',
     'composer':
         '[Cloud Composer](https://cloud.google.com/composer)',
     'cloudsql':
