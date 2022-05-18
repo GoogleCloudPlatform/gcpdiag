@@ -1,0 +1,31 @@
+{
+  "bindings": [
+    {
+      "members": [
+        "serviceAccount:service-12340005@compute-system.iam.gserviceaccount.com"
+      ],
+      "role": "roles/compute.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12340005@dataproc-accounts.iam.gserviceaccount.com"
+      ],
+      "role": "roles/dataproc.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:12340005@cloudservices.gserviceaccount.com",
+        "serviceAccount:12340005-compute@developer.gserviceaccount.com"
+      ],
+      "role": "roles/editor"
+    },
+    {
+      "members": [
+        "user:junggill@premium-cloud-support.com"
+      ],
+      "role": "roles/owner"
+    }
+  ],
+  "etag": "BwXe+FiFUWw=",
+  "version": 1
+}
