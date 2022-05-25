@@ -11,8 +11,8 @@
       "location": "US",
       "storageClass": "STANDARD",
       "etag": "CAE=",
-      "timeCreated": "2022-01-01T01:45:19.621Z",
-      "updated": "2022-01-01T01:45:19.621Z",
+      "timeCreated": "2022-05-20T11:09:54.411Z",
+      "updated": "2022-05-20T11:09:54.411Z",
       "iamConfiguration": {
         "bucketPolicyOnly": {
           "enabled": false
@@ -27,16 +27,16 @@
     },
     {
       "kind": "storage#bucket",
-      "selfLink": "https://www.googleapis.com/storage/v1/b/gcpdiag-gcs1bucket-labels",
-      "id": "gcpdiag-gcs1bucket-labels",
-      "name": "gcpdiag-gcs1bucket-labels",
+      "selfLink": "https://www.googleapis.com/storage/v1/b/gcpdiag-gcs1bucket-labels-aaaa",
+      "id": "gcpdiag-gcs1bucket-labels-aaaa",
+      "name": "gcpdiag-gcs1bucket-labels-aaaa",
       "projectNumber": "12340008",
       "metageneration": "1",
-      "location": "EUROPE-WEST1",
+      "location": "US",
       "storageClass": "STANDARD",
       "etag": "CAE=",
-      "timeCreated": "2021-12-13T10:39:22.477Z",
-      "updated": "2021-12-13T10:39:22.477Z",
+      "timeCreated": "2022-05-20T11:32:54.003Z",
+      "updated": "2022-05-20T11:32:54.003Z",
       "labels": {
         "label1": "value1"
       },
@@ -49,7 +49,8 @@
         },
         "publicAccessPrevention": "inherited"
       },
-      "locationType": "region"
+      "locationType": "multi-region",
+      "rpo": "DEFAULT"
     }
   ]
 }

@@ -25,7 +25,7 @@ DUMMY_BUCKET_NAME = 'b/gcpdiag-gcs1bucket-aaaa'
 DUMMY_BUCKET_PERM = 'projectEditor:gcpdiag-gcs1-aaaa'
 DUMMY_BUCKET_LABELS = {
     'b/gcpdiag-gcs1bucket-aaaa': {},
-    'b/gcpdiag-gcs1bucket-labels': {
+    'b/gcpdiag-gcs1bucket-labels-aaaa': {
         'label1': 'value1'
     },
 }
