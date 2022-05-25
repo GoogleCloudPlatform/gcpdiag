@@ -2,6 +2,7 @@ PROJECT_ID  := $(shell terraform output -raw project_id)
 PROJECT_ID_SUFFIX := $(shell terraform output -raw project_id_suffix)
 PROJECT_NR  := $(shell terraform output -raw project_nr)
 ORG_ID      := $(shell terraform output -raw org_id)
+BUCKET_WITH_RETENTION    := $(shell terraform output -raw bucket_with_retention)
 CURL         = ../../bin/curl-wrap.sh
 JSON_CLEANER = ../../bin/json-cleaner
 BUCKET_ID = gcpdiag-gcs1bucket-aaaa
@@ -17,6 +18,7 @@ all:	\
 	json-dumps/project.json \
 	json-dumps/services.json \
 	json-dumps/storage.json \
+	json-dumps/bucket-gcpdiag-gcs1bucket2-aaaa.json \
 	json-dumps/bucket-roles.json
 
 json-dumps/project.json:
@@ -37,4 +39,9 @@ json-dumps/storage.json:
 json-dumps/bucket-roles.json:
 	$(CURL) -fv \
 		'https://storage.googleapis.com/storage/v1/b/${BUCKET_ID}/iam' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/bucket-gcpdiag-gcs1bucket2-aaaa.json:
+	$(CURL) -fv \
+		'https://storage.googleapis.com/storage/v1/b/${BUCKET_WITH_RETENTION}' \
 		| $(SED_SUBST_FAKE) >$@
