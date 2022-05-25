@@ -17,6 +17,7 @@
 
 """
 
+import dataclasses
 import logging
 import re
 from typing import Dict, Mapping
@@ -25,6 +26,28 @@ import googleapiclient.errors
 
 from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis, iam
+
+
+@dataclasses.dataclass(frozen=True)
+class RetentionPolicy:
+  """Bucket's retention policy."""
+  retention_period: int
+
+
+class RetentionPolicyBuilder:
+  """Builds Bucket's retention policy from dict representation."""
+
+  def __init__(self, retention_policy):
+    self._retention_policy = retention_policy
+
+  def build(self) -> RetentionPolicy:
+    return RetentionPolicy(retention_period=self._get_retention_period())
+
+  def _get_retention_period(self) -> int:
+    try:
+      return int(self._retention_policy['retentionPeriod'])
+    except (KeyError, ValueError):
+      return 0
 
 
 class Bucket(models.Resource):
@@ -59,12 +82,16 @@ class Bucket(models.Resource):
 
   @property
   def short_path(self) -> str:
-    path = self.project_id + '/' + self.name
-    return path
+    return self.name
 
   @property
   def labels(self) -> dict:
     return self._resource_data.get('labels', {})
+
+  @property
+  def retention_policy(self) -> RetentionPolicy:
+    return RetentionPolicyBuilder(self._resource_data.get(
+        'retentionPolicy', {})).build()
 
 
 class BucketIAMPolicy(iam.BaseIAMPolicy):
@@ -82,8 +109,23 @@ def get_bucket_iam_policy(project_id: str, bucket: str) -> BucketIAMPolicy:
 
 
 @caching.cached_api_call(in_memory=True)
-def get_buckets(context: models.Context) -> Mapping[str, Bucket]:
+def get_bucket(context: models.Context, bucket: str) -> Bucket:
+  gcs_api = apis.get_api('storage', 'v1', context.project_id)
+  logging.info('fetching GCS bucket %s', bucket)
+  query = gcs_api.buckets().get(bucket=bucket)
+  try:
+    response = query.execute(num_retries=config.API_RETRIES)
+  except googleapiclient.errors.HttpError as err:
+    print(err)
+    raise utils.GcpApiError(err) from err
+  print(response)
+  # Resource data only provides us project number.
+  # We don't know project id at this point.
+  return Bucket(project_id=None, resource_data=response)
 
+
+@caching.cached_api_call(in_memory=True)
+def get_buckets(context: models.Context) -> Mapping[str, Bucket]:
   buckets: Dict[str, Bucket] = {}
   if not apis.is_enabled(context.project_id, 'storage'):
     return buckets
