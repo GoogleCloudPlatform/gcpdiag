@@ -16,6 +16,7 @@
 """Various utility functions for GCE linters."""
 
 import datetime
+import re
 from typing import Dict, Iterable, Optional
 
 from boltons.iterutils import get_path
@@ -87,3 +88,11 @@ class SerialOutputSearch:
       return self.instances_with_match[instance_id]
     except KeyError:
       return None
+
+
+def is_cloudsql_peer_network(url: str) -> bool:
+  prefix = 'https://www.googleapis.com/compute/v1/projects'
+  pattern_non_tu = f'{prefix}/speckle-umbrella.*/cloud-sql-network-.*'
+  pattern_tu = f'{prefix}/.*-tp/servicenetworking'
+  return re.match(pattern_non_tu, url) is not None or \
+         re.match(pattern_tu, url) is not None
