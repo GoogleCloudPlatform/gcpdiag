@@ -13,21 +13,24 @@
 # limitations under the License.
 
 # Lint as: python3
-"""Cloud SQL Docker bridge network should be avoided.
+"""Compute Engine VM has the proper scope to connect using the Cloud SQL Admin API
 
-The IP range 172.17.0.0/16 is reserved for the Docker bridge network.
-Connections from any IP within that range to Cloud SQL instances using private
-IP fail.
+The service account used by Compute Engine VM should have permission
+(roles/cloudsql.client) to connect to the Cloud SQL using the Cloud SQL Admin
+API, otherwise connection won't work.
 """
 
-import ipaddress
 import operator as op
 
 from gcpdiag import lint, models
 from gcpdiag.lint.gce import utils
-from gcpdiag.queries import apis, gce, network
+from gcpdiag.queries import apis, gce, iam, network
 
-DOCKER_BRIDGE_NETWORK = ipaddress.ip_network('172.17.0.0/16')
+ROLE = 'roles/cloudsql.client'
+CLOUDSQL_ADMIN_SCOPES = [
+    'https://www.googleapis.com/auth/cloud-platform',
+    'https://www.googleapis.com/auth/sqlservice.admin'
+]
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -56,12 +59,23 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     if instance.network.self_link not in cloudsql_peered_networks:
       continue
 
-    if any(_is_docker_bridge_ip(ip) for ip in instance.network_ips):
-      report.add_failed(instance,
-                        f'{instance.name} is inside of Docker bridge network')
+    iam_policy = iam.get_project_policy(instance.project_id)
+    service_account = instance.service_account
+    has_scope = set(CLOUDSQL_ADMIN_SCOPES) & set(instance.access_scopes)
+
+    message = []
+
+    if not has_scope:
+      message.append('missing scope: sqlservice.admin')
+
+    if not service_account:
+      message.append('no service account')
+    elif not iam_policy.has_role_permissions(
+        f'serviceAccount:{service_account}', ROLE):
+      message.append(
+          f'service_account: {service_account}\nmissing role: {ROLE}')
+
+    if message:
+      report.add_failed(instance, '\n'.join(message))
     else:
       report.add_ok(instance)
-
-
-def _is_docker_bridge_ip(ip: ipaddress.IPv4Address) -> bool:
-  return ip in DOCKER_BRIDGE_NETWORK
