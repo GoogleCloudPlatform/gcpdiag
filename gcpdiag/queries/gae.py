@@ -81,6 +81,10 @@ class Version(models.Resource):
   def runtime(self) -> str:
     return self._resource_data['runtime']
 
+  @property
+  def env(self) -> str:
+    return self._resource_data['env']
+
 
 @caching.cached_api_call
 def get_services(context: models.Context) -> Mapping[str, Service]:

@@ -1,3 +1,0 @@
-*  gaes/WARN/2022_001: App Engine Standard versions don't use deprecated runtimes.
-   - gcpdiag-gaes1-aaaa/v1                                                [ OK ]
-

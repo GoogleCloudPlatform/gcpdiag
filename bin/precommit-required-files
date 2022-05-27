@@ -27,8 +27,8 @@ PRODUCTS = {
         '[CloudSQL](https://cloud.google.com/sql)',
     'dataproc':
         '[Cloud Dataproc](https://cloud.google.com/dataproc)',
-    'gaes':
-        '[App Engine Standard](https://cloud.google.com/appengine)',
+    'gae':
+        '[App Engine](https://cloud.google.com/appengine)',
     'gcb':
         '[Cloud Build](https://cloud.google.com/build)',
     'gce':
