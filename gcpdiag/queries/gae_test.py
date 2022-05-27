@@ -13,26 +13,26 @@
 # limitations under the License.
 
 # Lint as: python3
-"""Test code in gaes.py."""
+"""Test code in gae.py."""
 
 from unittest import mock
 
 from gcpdiag import models
-from gcpdiag.queries import apis_stub, gaes
+from gcpdiag.queries import apis_stub, gae
 
 DUMMY_PROJECT_NAME = 'gcpdiag-gaes1-aaaa'
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
-class TestAppEngineStandard:
-  """Test App Engine Standard"""
+class TestAppEngine:
+  """Test App Engine"""
 
   def test_get_services(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
-    services = gaes.get_services(context)
+    services = gae.get_services(context)
     assert len(services) == 1
 
   def test_get_versions(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
-    versions = gaes.get_versions(context)
+    versions = gae.get_versions(context)
     assert len(versions) == 1

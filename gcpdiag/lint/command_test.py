@@ -74,7 +74,7 @@ class Test:
     modules = {r.product for r in repo.rules}
     assert 'gke' in modules
     assert 'gcb' in modules
-    assert 'gaes' in modules
+    assert 'gae' in modules
     assert 'gce' in modules
     assert 'iam' in modules
     assert 'apigee' in modules

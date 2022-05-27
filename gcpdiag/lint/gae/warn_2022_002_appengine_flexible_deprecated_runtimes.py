@@ -13,23 +13,27 @@
 # limitations under the License.
 
 # Lint as: python3
-"""App Engine Standard versions don't use deprecated runtimes.
+"""App Engine Flexible versions don't use deprecated runtimes.
 
-The following runtimes are deprecated: 'go16', 'go18', 'go19', 'java7', 'php'.
+The following runtimes are deprecated: 'go16', 'go18', 'python27'.
 """
 
 from gcpdiag import lint, models
-from gcpdiag.queries import gaes
+from gcpdiag.queries import gae
 
-DEPRECATED_RUNTIMES = ['go16', 'go18', 'go19', 'java7', 'php']
+DEPRECATED_RUNTIMES = ['go16', 'go18', 'python27']
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-  versions = gaes.get_versions(context)
+  versions = gae.get_versions(context)
   if not versions:
-    report.add_skipped(None, 'no versions found')
+    report.add_skipped(None, 'no versions found for flexible environment')
+    return
 
   for version in sorted(versions.values(), key=lambda version: version.id):
+    if version.env != 'flexible':
+      report.add_skipped(None, 'no versions found for flexible environment')
+      return
     if version.runtime in DEPRECATED_RUNTIMES:
       report.add_failed(
           version, f'the version \'{version.id}\' for '

@@ -18,7 +18,7 @@ from os import path
 from unittest import mock
 
 from gcpdiag import lint, models
-from gcpdiag.lint import gaes, report_terminal
+from gcpdiag.lint import gae, report_terminal
 from gcpdiag.queries import apis_stub
 
 DUMMY_PROJECT_NAME = 'gcpdiag-gaes1-aaaa'
@@ -30,7 +30,7 @@ class Test:
   def test_all_rules(self, snapshot):
 
     repo = lint.LintRuleRepository(load_extended=True)
-    repo.load_rules(gaes)
+    repo.load_rules(gae)
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     snapshot.snapshot_dir = path.join(path.dirname(__file__), 'snapshots')
     # run rule one by one to have separated outputs

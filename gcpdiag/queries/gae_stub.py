@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Lint as: python3
-"""Stub API calls used in gaes.py for testing.
+"""Stub API calls used in gae.py for testing.
 
 Instead of doing real API calls, we return test JSON data.
 """
@@ -24,8 +24,8 @@ from gcpdiag.queries import apis_stub
 #pylint: disable=invalid-name
 
 
-class AppEngineStandardApiStub(apis_stub.ApiStub):
-  """Mock object to simulate App Engine Standard api calls."""
+class AppEngineApiStub(apis_stub.ApiStub):
+  """Mock object to simulate App Engine api calls."""
 
   def __init__(self, mock_state='init'):
     self.mock_state = mock_state
@@ -34,10 +34,10 @@ class AppEngineStandardApiStub(apis_stub.ApiStub):
     return self
 
   def services(self):
-    return AppEngineStandardApiStub('services')
+    return AppEngineApiStub('services')
 
   def versions(self):
-    return AppEngineStandardApiStub('versions')
+    return AppEngineApiStub('versions')
 
   def list(self, appsId='appsId', servicesId='servicesId'):
     if self.mock_state == 'services':

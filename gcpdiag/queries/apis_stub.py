@@ -266,8 +266,8 @@ def get_api_stub(service_name: str,
     from gcpdiag.queries import pubsub_stub
     return pubsub_stub.PubsubApiStub()
   elif service_name == 'appengine':
-    from gcpdiag.queries import gaes_stub
-    return gaes_stub.AppEngineStandardApiStub()
+    from gcpdiag.queries import gae_stub
+    return gae_stub.AppEngineApiStub()
   elif service_name == 'artifactregistry':
     from gcpdiag.queries import artifact_registry_stub
     return artifact_registry_stub.ArtifactRegistryApiStub()
