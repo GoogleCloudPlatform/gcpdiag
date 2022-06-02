@@ -13,24 +13,23 @@
 # limitations under the License.
 
 # Lint as: python3
-"""BigQuery does not exceed rate limits
+"""BigQuery does not violate column level security
 
-BigQuery has various quotas that limit the rate and volume of incoming
-requests. These quotas exist both to protect the backend systems, and to help
-guard against unexpected billing if you submit large jobs.
+BigQuery provides fine-grained access to sensitive columns using policy tags.
+Using BigQuery column-level security, you can create policies that check, at
+query time, whether a user has proper access.
+
 """
 from boltons.iterutils import get_path
 
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
 
-MATCH_STR = 'Exceeded rate limits'
+MATCH_STR = ('Access Denied: BigQuery BigQuery: User does not have permission '
+             'to access data protected by policy tag')
 
-RATE_LIMITS_FILTER = [
-    'severity=ERROR',
-    'protoPayload.@type="type.googleapis.com/google.cloud.audit.AuditLog"',
-    'protoPayload.serviceData.jobCompletedEvent.job.jobStatus.'
-    f'additionalErrors.message:"{MATCH_STR}"'
+COLUMN_LEVEL_SECURITY_FILTER = [
+    'severity=ERROR', f'protoPayload.status.message:"{MATCH_STR}"'
 ]
 
 logs_by_project = {}
@@ -41,7 +40,7 @@ def prepare_rule(context: models.Context):
       project_id=context.project_id,
       resource_type='bigquery_resource',
       log_name='log_id("cloudaudit.googleapis.com/data_access")',
-      filter_str=' AND '.join(RATE_LIMITS_FILTER))
+      filter_str=' AND '.join(COLUMN_LEVEL_SECURITY_FILTER))
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -64,7 +63,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
          MATCH_STR not in get_path(log_entry,
                      ('protoPayload', 'status', 'message'), default=''):
         continue
-      report.add_failed(project, 'exceeded BigQuery rate limits')
+      report.add_failed(project,
+                        'found viloations on BigQuery column level security')
       return
 
   # in case of there is no log or all logs are non-relevant
