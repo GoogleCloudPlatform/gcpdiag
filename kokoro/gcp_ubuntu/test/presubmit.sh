@@ -22,6 +22,8 @@ cd "${KOKORO_ARTIFACTS_DIR}/git/gcpdiag"
 
 pipenv-dockerized 3.7 run pipenv install --dev
 pipenv-dockerized 3.7 run make test
+# generate API documentation
+pipenv-dockerized 3.7 run bash -c 'cd website; python api_render.py'
 # remove previously installed packages and install only default packages
 rm -rf .pipenv-dockerized/venv-3.7
 pipenv-dockerized 3.7 run pipenv install --ignore-pipfile

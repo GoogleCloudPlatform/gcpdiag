@@ -21,11 +21,13 @@ six = "==1.15.0"
 typing-extensions = "*"
 
 [dev-packages]
+astunparse = "*"
 bump2version = "*"
 coverage = "*"
 importlib-metadata = "*"
 isort = "*"
 mypy = "*"
+pdoc = "*"
 pre-commit = "*"
 pyinstaller = "*"
 pytest = "*"

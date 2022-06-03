@@ -1,0 +1,17 @@
+{% macro description(var) %}
+    {% if var.docstring %}
+        {{ var.docstring.replace('\r', '').replace('\n', ' ') }}
+    {% endif %}
+{% endmacro %}
+
+---
+title: {{ module.modulename }}
+linkTitle: {{ module.name }}
+weight: 2
+description: >
+  {{ description(module) }}
+---
+
+{% block module_info %}{% endblock %}
+
+{% extends "default/module.html.jinja2" %}
