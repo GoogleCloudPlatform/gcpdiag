@@ -17,13 +17,17 @@
 Query results for SQL queries in BigQuery that generate excessively large results and don't
 set a destination table fail with job error "responseTooLarge"
 """
+from boltons.iterutils import get_path
+
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
+
+MATCH_STR = 'Response too large to return'
 
 RESPONSE_TOO_LARGE = [
     'severity=ERROR',
     'protoPayload.@type="type.googleapis.com/google.cloud.audit.AuditLog"',
-    'protoPayload.status.message:"Response too large to return"',
+    f'protoPayload.status.message:("{MATCH_STR}")',
 ]
 logs_by_project = {}
 
@@ -47,9 +51,20 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     return
   if logs_by_project.get(context.project_id) and \
      logs_by_project[context.project_id].entries:
-    report.add_failed(
-        project,
-        'has BigQuery jobs failing because query results are larger than the '
-        'maximum response size')
+    for log_entry in logs_by_project[context.project_id].entries:
+      project_ok_flag = True
+      if MATCH_STR not in get_path(log_entry,
+                                   ('protoPayload', 'status', 'message'),
+                                   default=''):
+        continue
+      else:
+        report.add_failed(
+            project,
+            'has BigQuery jobs failing because query results are larger than the '
+            'maximum response size')
+        project_ok_flag = False
+        break
+    if project_ok_flag:
+      report.add_ok(project)
   else:
     report.add_ok(project)
