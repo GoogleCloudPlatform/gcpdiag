@@ -81,4 +81,5 @@ class Test:
     assert 'composer' in modules
     assert 'dataproc' in modules
     assert 'gcs' in modules
+    assert 'vpc' in modules
     assert 'gcf' in modules
