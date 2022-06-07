@@ -1,0 +1,4 @@
+*  bigquery/ERR/2022_003: BigQuery jobs not failing while accessing data in Drive due to a permission issue
+   - gcpdiag-cloudsql1-aaaa                                               [SKIP]
+     Logging api is disabled
+
