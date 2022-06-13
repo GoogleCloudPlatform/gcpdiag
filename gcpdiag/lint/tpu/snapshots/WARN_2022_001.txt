@@ -1,0 +1,3 @@
+*  tpu/WARN/2022_001: Cloud TPU resource availability
+   - gcpdiag-tpu1-aaaa                                                    [ OK ]
+
