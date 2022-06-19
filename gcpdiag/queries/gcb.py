@@ -17,12 +17,44 @@
 
 import dataclasses
 import logging
+import re
 from typing import Dict, List, Mapping, Optional
 
 import googleapiclient.errors
 
 from gcpdiag import caching, config, models, utils
-from gcpdiag.queries import apis
+from gcpdiag.queries import apis, apis_utils
+
+# List of locations from https://cloud.google.com/build/docs/locations
+# There is no API to get them programmatically.
+LOCATIONS = [
+    '-',  # global
+    'asia-east1',
+    'asia-east2',
+    'asia-northeast1',
+    'asia-northeast2',
+    'asia-northeast3',
+    'asia-south1',
+    'asia-southeast1',
+    'asia-southeast2',
+    'australia-southeast1',
+    'europe-central2',
+    'europe-north1',
+    'europe-west1',
+    'europe-west2',
+    'europe-west3',
+    'europe-west4',
+    'europe-west6',
+    'northamerica-northeast1',
+    'southamerica-east1',
+    'us-central1',
+    'us-east1',
+    'us-east4',
+    'us-west1',
+    'us-west2',
+    'us-west3',
+    'us-west4',
+]
 
 
 @dataclasses.dataclass(frozen=True)
@@ -78,8 +110,9 @@ class Build(models.Resource):
   """Represents a Cloud Build execution."""
   _resource_data: dict
 
-  def __init__(self, project_id, resource_data):
+  def __init__(self, project_id, location, resource_data):
     super().__init__(project_id=project_id)
+    self.location = location
     self._resource_data = resource_data
 
   @property
@@ -88,7 +121,7 @@ class Build(models.Resource):
 
   @property
   def full_path(self) -> str:
-    return f'projects/{self.project_id}/locations/-/builds/{self.id}'
+    return f'projects/{self.project_id}/locations/{self.location}/builds/{self.id}'
 
   @property
   def short_path(self) -> str:
@@ -152,26 +185,36 @@ class Trigger(models.Resource):
 @caching.cached_api_call
 def get_builds(context: models.Context) -> Mapping[str, Build]:
   """Get a list of Cloud Build instances matching the given context, indexed by Cloud Build id."""
-  builds: Dict[str, Build] = {}
   if not apis.is_enabled(context.project_id, 'cloudbuild'):
-    return builds
+    return {}
   build_api = apis.get_api('cloudbuild', 'v1', context.project_id)
+  batch = []
+  builds = {}
   logging.info('fetching list of builds in the project %s', context.project_id)
-  query = build_api.projects().locations().builds().list(
-      parent=f'projects/{context.project_id}/locations/-')
-  try:
-    resp = query.execute(num_retries=config.API_RETRIES)
-    if 'builds' not in resp:
-      return builds
-    for resp_f in resp['builds']:
+  for location in LOCATIONS:
+    query = build_api.projects().locations().builds().list(
+        parent=f'projects/{context.project_id}/locations/{location}')
+    batch.append(query)
+  for request, response, exception in apis_utils.batch_execute_all(
+      build_api, batch):
+    if exception:
+      if isinstance(exception, googleapiclient.errors.HttpError):
+        raise utils.GcpApiError(exception) from exception
+      else:
+        raise exception
+    match = re.search(r'projects/([^/]+)/locations/([^/]+)', request.uri)
+    assert match, 'Bug: request uri does not match respected format'
+    project_id = match.group(1)
+    location = match.group(2)
+    if 'builds' not in response:
+      continue
+    for resp_f in response['builds']:
       # verify that we have some minimal data that we expect
       if 'id' not in resp_f:
         raise RuntimeError(
             'missing data in projects.locations.builds.list response')
-      f = Build(project_id=context.project_id, resource_data=resp_f)
+      f = Build(project_id=project_id, location=location, resource_data=resp_f)
       builds[f.id] = f
-  except googleapiclient.errors.HttpError as err:
-    raise utils.GcpApiError(err) from err
   return builds
 
 

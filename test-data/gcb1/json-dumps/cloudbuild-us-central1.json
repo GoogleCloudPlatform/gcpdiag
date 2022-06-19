@@ -1,1 +1,59 @@
-{}
+{
+  "builds": [
+    {
+      "id": "f055f209-21ef-4fa1-84f8-8509d24b0fae",
+      "status": "FAILURE",
+      "createTime": "2022-06-19T13:07:41.315702640Z",
+      "startTime": "2022-06-19T13:07:41.853968180Z",
+      "finishTime": "2022-06-19T13:07:47.857781608Z",
+      "results": {
+        "buildStepImages": [
+          "sha256:b6b83d3c331794420340093eb706a6f152d9c1fa51b262d9bf34594887c2c7ac"
+        ],
+        "buildStepOutputs": [
+          ""
+        ]
+      },
+      "steps": [
+        {
+          "name": "ubuntu",
+          "args": [
+            "bash",
+            "-c",
+            "[ 1 == 2 ]"
+          ],
+          "timing": {
+            "startTime": "2022-06-19T13:07:42.855671750Z",
+            "endTime": "2022-06-19T13:07:47.371799580Z"
+          },
+          "status": "FAILURE",
+          "pullTiming": {
+            "startTime": "2022-06-19T13:07:42.855671750Z",
+            "endTime": "2022-06-19T13:07:46.729940784Z"
+          }
+        }
+      ],
+      "timeout": "1800s",
+      "projectId": "gcpdiag-gcb1-aaaa",
+      "logsBucket": "gs://12340005.cloudbuild-logs.googleusercontent.com",
+      "sourceProvenance": {},
+      "options": {
+        "logging": "LEGACY",
+        "pool": {}
+      },
+      "logUrl": "https://console.cloud.google.com/cloud-build/builds;region=us-central1/f055f209-21ef-4fa1-84f8-8509d24b0fae?project=12340005",
+      "timing": {
+        "BUILD": {
+          "startTime": "2022-06-19T13:07:42.252766500Z",
+          "endTime": "2022-06-19T13:07:47.371926312Z"
+        }
+      },
+      "queueTtl": "3600s",
+      "name": "projects/12340005/locations/us-central1/builds/f055f209-21ef-4fa1-84f8-8509d24b0fae",
+      "failureInfo": {
+        "type": "USER_BUILD_STEP",
+        "detail": "Build step failure: build step 0 \"ubuntu\" failed: step exited with non-zero status: 1"
+      }
+    }
+  ]
+}
