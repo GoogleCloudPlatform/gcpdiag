@@ -16,6 +16,7 @@
 """Queries related to GCP Cloud Build instances."""
 
 import dataclasses
+import datetime
 import logging
 import re
 from typing import Dict, List, Mapping, Optional
@@ -190,10 +191,14 @@ def get_builds(context: models.Context) -> Mapping[str, Build]:
   build_api = apis.get_api('cloudbuild', 'v1', context.project_id)
   batch = []
   builds = {}
+  start_time = datetime.datetime.now(
+      datetime.timezone.utc) - datetime.timedelta(
+          days=config.get('within_days'))
   logging.info('fetching list of builds in the project %s', context.project_id)
   for location in LOCATIONS:
     query = build_api.projects().locations().builds().list(
-        parent=f'projects/{context.project_id}/locations/{location}')
+        parent=f'projects/{context.project_id}/locations/{location}',
+        filter=f'create_time>"{start_time.isoformat()}"')
     batch.append(query)
   for request, response, exception in apis_utils.batch_execute_all(
       build_api, batch):

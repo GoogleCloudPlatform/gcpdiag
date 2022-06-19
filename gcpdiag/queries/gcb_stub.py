@@ -47,7 +47,9 @@ class CloudBuildApiStub:
 class CloudBuildBuildsApiStub:
   """Mock object to simulate functions of builds api calls."""
 
-  def list(self, parent):
+  # pylint: disable-next=redefined-builtin
+  def list(self, parent, filter):
+    del filter  # unused
     m = re.match(r'^projects/([^/]+)/locations/([^/]+)', parent)
     project_id = m.group(1)
     location = m.group(2)
