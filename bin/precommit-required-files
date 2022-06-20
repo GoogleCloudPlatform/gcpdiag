@@ -39,6 +39,8 @@ PRODUCTS = {
         '[Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine)',
     'iam':
         '[Identity and Access Management (IAM)](https://cloud.google.com/iam)',
+    'tpu':
+        '[Cloud TPU](https://cloud.google.com/tpu)',
 }
 
 RULE_CLASSES = {
