@@ -1,4 +1,5 @@
-#!/bin/sh
+#!/bin/bash
+set -eu # set bash strict mode to catch subtle bugs
 
 IMAGE=us-docker.pkg.dev/gcpdiag-dist/common/gcpdiag-hugo:0.1
 SUPPORTED_RUNTIME="docker podman"
@@ -33,7 +34,7 @@ if [ "$RUNTIME" = podman ]; then
   export PODMAN_USERNS=keep-id
 fi
 
-exec "$RUNTIME" run $USE_TTY \
+exec "$RUNTIME" run ${USE_TTY:-} \
   --rm \
   -u "$(id -u):$(id -g)" \
   -e "USER=$(id -n -u)" \
