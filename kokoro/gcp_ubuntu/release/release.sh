@@ -46,6 +46,8 @@ make -C gcpdiag_google_internal/docker update-default
 
 # Publish prod website (http://gcpdiag.dev)
 cp bin/gcpdiag-dockerized website/static/gcpdiag.sh
+# generate API documentation
+pipenv-dockerized 3.9 run bash -c 'cd website; python api_render.py'
 cd website
 ./hugo.sh
 ./hugo.sh deploy --target gcs-prod
