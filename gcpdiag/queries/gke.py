@@ -318,8 +318,11 @@ class Cluster(models.Resource):
     return network.get_network(m.group(1), m.group(2))
 
   @property
-  def subnetwork(self):
+  def subnetwork(self) -> Optional[models.Resource]:
     # 'projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks/default'
+    if 'subnetwork' not in self._resource_data['networkConfig']:
+      return None
+
     subnetwork_string = self._resource_data['networkConfig']['subnetwork']
     m = re.match(r'projects/([^/]+)/regions/([^/]+)/subnetworks/([^/]+)$',
                  subnetwork_string)
