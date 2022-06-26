@@ -31,3 +31,10 @@ fetch consumer_quota
 | within {within_days}d
 | group_by 1d, [max(val(0))/min(val(1)), min(val(1))]
 """
+
+QUOTA_EXCEEDED_QUERY_TEMPLATE = """
+fetch consumer_quota
+| metric 'serviceruntime.googleapis.com/quota/exceeded'
+| group_by 1d, [value_exceeded_count_true: count_true(value.exceeded)]
+| within {within_days}d
+"""
