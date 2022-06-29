@@ -3,7 +3,7 @@ title: "Running gcpdiag"
 linkTitle: "Running gcpdiag"
 weight: 3
 description: >
-  Prerequisites and how run gcpdiag.
+  Prerequisites and how to run gcpdiag.
 ---
 
 ## Pre-requisites
