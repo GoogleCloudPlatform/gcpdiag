@@ -38,8 +38,14 @@ class Cluster(models.Resource):
         property_name)
 
   def is_stackdriver_logging_enabled(self) -> bool:
+    # Unless overridden during create, properties with default values are not returned,
+    # therefore get_software_property should only return when its false
+    return not self.get_software_property(
+        'dataproc:dataproc.logging.stackdriver.enable') == 'false'
+
+  def is_stackdriver_monitoring_enabled(self) -> bool:
     return self.get_software_property(
-        'dataproc:dataproc.logging.stackdriver.job.driver.enable') == 'true'
+        'dataproc:dataproc.monitoring.stackdriver.enable') == 'true'
 
   @property
   def region(self) -> str:
@@ -63,6 +69,10 @@ class Cluster(models.Resource):
 
   def __str__(self) -> str:
     return self.short_path
+
+  @property
+  def image_version(self):
+    return self._resource_data['config']['softwareConfig']['imageVersion']
 
 
 class Region:
@@ -100,7 +110,8 @@ class Dataproc:
 
   def get_regions(self) -> Iterable[Region]:
     return [
-        Region(self.project_id, r) for r in gce.get_all_regions(self.project_id)
+        Region(self.project_id, r.name)
+        for r in gce.get_all_regions(self.project_id)
     ]
 
   def is_api_enabled(self) -> bool:

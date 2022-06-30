@@ -1,0 +1,265 @@
+{
+  "entries": [
+    {
+      "textPayload": "Function execution took 945 ms. Finished with status code: 200",
+      "insertId": "a9rgo4f14or1u",
+      "resource": {
+        "type": "cloud_function",
+        "labels": {
+          "region": "us-central1",
+          "function_name": "gcf1",
+          "project_id": "gcpdiag-gcf1-aaaa"
+        }
+      },
+      "timestamp": "2022-05-05T12:01:06.128122869Z",
+      "severity": "DEBUG",
+      "labels": {
+        "execution_id": "mhislea4j857"
+      },
+      "logName": "projects/gcpdiag-gcf1-aaaa/logs/cloudfunctions.googleapis.com%2Fcloud-functions",
+      "trace": "projects/gcpdiag-gcf1-aaaa/traces/6fd8eedf2876d8fd3801cd6b504367d2",
+      "receiveTimestamp": "2022-05-05T12:01:06.188127133Z"
+    },
+    {
+      "textPayload": "Function execution started",
+      "insertId": "17uk4mvfhxl9ts",
+      "resource": {
+        "type": "cloud_function",
+        "labels": {
+          "region": "us-central1",
+          "function_name": "gcf1",
+          "project_id": "gcpdiag-gcf1-aaaa"
+        }
+      },
+      "timestamp": "2022-05-05T12:01:05.182900682Z",
+      "severity": "DEBUG",
+      "labels": {
+        "execution_id": "mhislea4j857"
+      },
+      "logName": "projects/gcpdiag-gcf1-aaaa/logs/cloudfunctions.googleapis.com%2Fcloud-functions",
+      "trace": "projects/gcpdiag-gcf1-aaaa/traces/6fd8eedf2876d8fd3801cd6b504367d2",
+      "receiveTimestamp": "2022-05-05T12:01:05.188759770Z"
+    },
+    {
+      "protoPayload": {
+        "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+        "status": {},
+        "authenticationInfo": {
+          "principalEmail": "atalyk@premium-cloud-support.com"
+        },
+        "serviceName": "cloudfunctions.googleapis.com",
+        "methodName": "google.cloud.functions.v1.CloudFunctionsService.GenerateUploadUrl",
+        "resourceName": "projects/gcpdiag-gcf1-aaaa/locations/us-central1"
+      },
+      "insertId": "-rqfznxd15hs",
+      "resource": {
+        "type": "cloud_function",
+        "labels": {
+          "region": "us-central1",
+          "project_id": "gcpdiag-gcf1-aaaa",
+          "function_name": ""
+        }
+      },
+      "timestamp": "2022-05-05T12:00:48.941606Z",
+      "severity": "INFO",
+      "logName": "projects/gcpdiag-gcf1-aaaa/logs/cloudaudit.googleapis.com%2Fdata_access",
+      "operation": {
+        "id": "operations/Z2NwZGlhZy1nY2YxLXZ0OWlkcHdkL3VzLWNlbnRyYWwxLy9xbWl2Sjd0LV9qSQ",
+        "producer": "cloudfunctions.googleapis.com",
+        "last": true
+      },
+      "receiveTimestamp": "2022-05-05T12:00:49.869634258Z"
+    },
+    {
+      "protoPayload": {
+        "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+        "authenticationInfo": {
+          "principalEmail": "atalyk@premium-cloud-support.com"
+        },
+        "requestMetadata": {
+          "callerIp": "2a00:79e0:9b:200:f500:3658:c455:b705",
+          "callerSuppliedUserAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.41 Safari/537.36,gzip(gfe),gzip(gfe)",
+          "requestAttributes": {
+            "time": "2022-05-05T12:00:48.949288Z",
+            "auth": {}
+          },
+          "destinationAttributes": {}
+        },
+        "serviceName": "cloudfunctions.googleapis.com",
+        "methodName": "google.cloud.functions.v1.CloudFunctionsService.GenerateUploadUrl",
+        "authorizationInfo": [
+          {
+            "resource": "projects/gcpdiag-gcf1-aaaa/locations/us-central1",
+            "permission": "cloudfunctions.functions.sourceCodeSet",
+            "granted": true,
+            "resourceAttributes": {}
+          }
+        ],
+        "resourceName": "projects/gcpdiag-gcf1-aaaa/locations/us-central1",
+        "request": {
+          "@type": "type.googleapis.com/google.cloud.functions.v1.GenerateUploadUrlRequest",
+          "parent": "projects/gcpdiag-gcf1-aaaa/locations/us-central1"
+        },
+        "response": {
+          "@type": "type.googleapis.com/google.cloud.functions.v1.GenerateUploadUrlResponse",
+          "uploadUrl": "https://storage.googleapis.com/uploads-289647548769.us-central1.cloudfunctions.appspot.com/c7017102-a8ac-401b-9e36-5bc2475cf265.zip?GoogleAccessId=service-12340003@gcf-admin-robot.iam.gserviceaccount.com&Expires=1651753848&Signature=qCzg8gUIxEdHA3HDZ5Z7sDRmEkIrUHUURFBSbkM6VZ9tjxFKEZD1GYBkCrxIZNELz9CGGDx5aq6JsN73j%2B8sm9HzSf6DodL019SluC0OBWYN86iIbW2VsGivyuwanNAaFfo51%2FHxCF7UYakmFdxb8fUQp9C%2BZ%2Bweh60PA%2F%2Flemlwsa6ic%2FXd%2FYHJD4u6LNdKFmFz2YJHcsGwZnASSrEn4DC0OPXdCyYZJe%2F5Gedzo5nsgQ4ytKk25QHBgxNJRc%2B3bubbfsrCkbLD1%2B5f2k3Nycl4AN456FquvaVi2yTIqqZfAvm8Mw%2FootRq7JCQiKVBJexXIlrNDACXfmqzuMGvAg%3D%3D"
+        },
+        "resourceLocation": {
+          "currentLocations": [
+            "us-central1"
+          ]
+        }
+      },
+      "insertId": "152cv48d6y8x",
+      "resource": {
+        "type": "cloud_function",
+        "labels": {
+          "function_name": "",
+          "project_id": "gcpdiag-gcf1-aaaa",
+          "region": "us-central1"
+        }
+      },
+      "timestamp": "2022-05-05T12:00:48.580598Z",
+      "severity": "INFO",
+      "logName": "projects/gcpdiag-gcf1-aaaa/logs/cloudaudit.googleapis.com%2Fdata_access",
+      "receiveTimestamp": "2022-05-05T12:00:49.340305880Z"
+    },
+    {
+      "protoPayload": {
+        "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+        "status": {},
+        "authenticationInfo": {
+          "principalEmail": "atalyk@premium-cloud-support.com"
+        },
+        "serviceName": "cloudfunctions.googleapis.com",
+        "methodName": "google.cloud.functions.v1.CloudFunctionsService.CreateFunction",
+        "resourceName": "projects/gcpdiag-gcf1-aaaa/locations/us-central1/functions/gcf1"
+      },
+      "insertId": "rhcarwc71w",
+      "resource": {
+        "type": "cloud_function",
+        "labels": {
+          "region": "us-central1",
+          "project_id": "gcpdiag-gcf1-aaaa",
+          "function_name": "gcf1"
+        }
+      },
+      "timestamp": "2022-05-05T11:41:32.412785Z",
+      "severity": "NOTICE",
+      "logName": "projects/gcpdiag-gcf1-aaaa/logs/cloudaudit.googleapis.com%2Factivity",
+      "operation": {
+        "id": "operations/Z2NwZGlhZy1nY2YxLXZ0OWlkcHdkL3VzLWNlbnRyYWwxL2djZjEvUHZXT3EwVjV1S2c",
+        "producer": "cloudfunctions.googleapis.com",
+        "last": true
+      },
+      "receiveTimestamp": "2022-05-05T11:41:32.450029638Z"
+    },
+    {
+      "textPayload": "Function execution took 995 ms. Finished with status code: 200",
+      "insertId": "tevh4zf4wzeok",
+      "resource": {
+        "type": "cloud_function",
+        "labels": {
+          "project_id": "gcpdiag-gcf1-aaaa",
+          "function_name": "gcf1",
+          "region": "us-central1"
+        }
+      },
+      "timestamp": "2022-05-05T11:41:32.321717527Z",
+      "severity": "DEBUG",
+      "labels": {
+        "execution_id": "inlq2vd7rhu6"
+      },
+      "logName": "projects/gcpdiag-gcf1-aaaa/logs/cloudfunctions.googleapis.com%2Fcloud-functions",
+      "trace": "projects/gcpdiag-gcf1-aaaa/traces/faea7d801bb35c52348626ce91e953e5",
+      "receiveTimestamp": "2022-05-05T11:41:32.331415475Z"
+    },
+    {
+      "textPayload": "Function execution started",
+      "insertId": "k976v7f3fyo3p",
+      "resource": {
+        "type": "cloud_function",
+        "labels": {
+          "function_name": "gcf1",
+          "region": "us-central1",
+          "project_id": "gcpdiag-gcf1-aaaa"
+        }
+      },
+      "timestamp": "2022-05-05T11:41:31.325867157Z",
+      "severity": "DEBUG",
+      "labels": {
+        "execution_id": "inlq2vd7rhu6"
+      },
+      "logName": "projects/gcpdiag-gcf1-aaaa/logs/cloudfunctions.googleapis.com%2Fcloud-functions",
+      "trace": "projects/gcpdiag-gcf1-aaaa/traces/faea7d801bb35c52348626ce91e953e5",
+      "receiveTimestamp": "2022-05-05T11:41:31.331337869Z"
+    },
+    {
+      "protoPayload": {
+        "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+        "authenticationInfo": {
+          "principalEmail": "atalyk@premium-cloud-support.com"
+        },
+        "requestMetadata": {
+          "callerIp": "gce-internal-ip",
+          "callerSuppliedUserAgent": "google-api-go-client/0.5 Terraform/1.0.7 (+https://www.terraform.io) Terraform-Plugin-SDK/2.10.1 terraform-provider-google/dev,gzip(gfe),gzip(gfe)",
+          "requestAttributes": {
+            "time": "2022-05-05T11:39:44.695545Z",
+            "auth": {}
+          },
+          "destinationAttributes": {}
+        },
+        "serviceName": "cloudfunctions.googleapis.com",
+        "methodName": "google.cloud.functions.v1.CloudFunctionsService.CreateFunction",
+        "authorizationInfo": [
+          {
+            "resource": "projects/gcpdiag-gcf1-aaaa/locations/us-central1/functions/gcf1",
+            "permission": "cloudfunctions.functions.create",
+            "granted": true,
+            "resourceAttributes": {}
+          }
+        ],
+        "resourceName": "projects/gcpdiag-gcf1-aaaa/locations/us-central1/functions/gcf1",
+        "request": {
+          "function": {
+            "ingressSettings": "ALLOW_ALL",
+            "httpsTrigger": {},
+            "maxInstances": 100,
+            "sourceArchiveUrl": "gs://gcpdiag-gcf1bucket-aaaa/gcpdiag-gcf1archive",
+            "name": "projects/gcpdiag-gcf1-aaaa/locations/us-central1/functions/gcf1",
+            "availableMemoryMb": 256,
+            "entryPoint": "hello_world",
+            "runtime": "python39",
+            "timeout": "60s"
+          },
+          "location": "projects/gcpdiag-gcf1-aaaa/locations/us-central1",
+          "@type": "type.googleapis.com/google.cloud.functions.v1.CreateFunctionRequest"
+        },
+        "resourceLocation": {
+          "currentLocations": [
+            "us-central1"
+          ]
+        }
+      },
+      "insertId": "1g5vthid6zm5",
+      "resource": {
+        "type": "cloud_function",
+        "labels": {
+          "function_name": "gcf1",
+          "project_id": "gcpdiag-gcf1-aaaa",
+          "region": "us-central1"
+        }
+      },
+      "timestamp": "2022-05-05T11:39:44.533975Z",
+      "severity": "NOTICE",
+      "logName": "projects/gcpdiag-gcf1-aaaa/logs/cloudaudit.googleapis.com%2Factivity",
+      "operation": {
+        "id": "operations/Z2NwZGlhZy1nY2YxLXZ0OWlkcHdkL3VzLWNlbnRyYWwxL2djZjEvUHZXT3EwVjV1S2c",
+        "producer": "cloudfunctions.googleapis.com",
+        "first": true
+      },
+      "receiveTimestamp": "2022-05-05T11:39:45.098947945Z"
+    }
+  ],
+  "nextPageToken": "EAE43uW4t-nsi8vzAUoUIhIiAgoAKgwI_5HvkgYQ_5Pr3ANSBwiexIKd4A1gqJnxgPC_kqJrahwKDAj-_M6TBhDPmrWnAxIICAUQpc_zngEYCCAA"
+}

@@ -18,6 +18,7 @@
 from unittest import mock
 
 import diskcache
+import pytest
 
 from gcpdiag.queries import apis_stub, iam
 
@@ -28,9 +29,11 @@ def get_cache_stub():
   return diskcache.Cache()
 
 
-TEST_PROJECT_ID = 'gcpd-gke-1-9b90'
-TEST_SERVICE_ACCOUNT = 'gke2sa@gcpd-gke-1-9b90.iam.gserviceaccount.com'
+TEST_PROJECT_ID = 'gcpdiag-gke1-aaaa'
+TEST_SERVICE_ACCOUNT = 'gke2sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com'
+TEST_SERVICE_ACCOUNT_ROLE = 'projects/gcpdiag-gke1-aaaa/roles/gke2_custom_role'
 TEST_SERVICE_ACCOUNT_PERMISSIONS = [
+    'autoscaling.sites.writeMetrics',
     'cloudnotifications.activities.list',
     'logging.logEntries.create',
     'monitoring.alertPolicies.get',
@@ -60,6 +63,8 @@ TEST_SERVICE_ACCOUNT_PERMISSIONS = [
     'monitoring.uptimeCheckConfigs.list',
     'opsconfigmonitoring.resourceMetadata.list',
     'stackdriver.resourceMetadata.write',
+    'storage.objects.get',
+    'storage.objects.list',
 ]
 
 
@@ -69,7 +74,7 @@ class TestProjectPolicy:
   """Test gke.ProjectPolicy"""
 
   def test_get_member_permissions(self):
-    policy = iam.ProjectPolicy(TEST_PROJECT_ID)
+    policy = iam.get_project_policy(TEST_PROJECT_ID)
     assert policy.get_member_permissions(
         f'serviceAccount:{TEST_SERVICE_ACCOUNT}'
     ) == TEST_SERVICE_ACCOUNT_PERMISSIONS
@@ -81,12 +86,31 @@ class TestProjectPolicy:
     assert not policy.has_permission(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
                                      'monitoring.groups.create')
 
+  # pylint: disable=protected-access
+  def test_has_role(self):
+    policy = iam.get_project_policy(TEST_PROJECT_ID)
+    assert policy._has_role(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
+                            TEST_SERVICE_ACCOUNT_ROLE)
+    assert not policy._has_role(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
+                                'roles/container.nodeServiceAgent')
+
   def test_has_role_permissions(self):
     policy = iam.get_project_policy(TEST_PROJECT_ID)
     assert policy.has_role_permissions(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
                                        'roles/monitoring.viewer')
     assert not policy.has_role_permissions(
         f'serviceAccount:{TEST_SERVICE_ACCOUNT}', 'roles/monitoring.editor')
+
+  def test_missing_role(self):
+    with pytest.raises(iam.RoleNotFoundError):
+      policy = iam.get_project_policy(TEST_PROJECT_ID)
+      policy.has_role_permissions(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
+                                  'roles/non-existing-role')
+
+  def test_internal_role(self):
+    policy = iam.get_project_policy(TEST_PROJECT_ID)
+    policy.has_role_permissions(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
+                                'roles/container.nodeServiceAgent')
 
   def test_is_service_acccount_existing(self):
     assert iam.is_service_account_existing(TEST_SERVICE_ACCOUNT,
@@ -98,3 +122,11 @@ class TestProjectPolicy:
 
   def test_is_service_acccount_enabled(self):
     assert iam.is_service_account_enabled(TEST_SERVICE_ACCOUNT, TEST_PROJECT_ID)
+
+  def test_service_account_policy(self):
+    policy = iam.get_service_account_iam_policy(TEST_PROJECT_ID,
+                                                TEST_SERVICE_ACCOUNT)
+    assert policy.has_role_permissions(f'serviceAccount:{TEST_SERVICE_ACCOUNT}',
+                                       'roles/iam.serviceAccountUser')
+    assert not policy.has_role_permissions(
+        f'serviceAccount:{TEST_SERVICE_ACCOUNT}', 'roles/monitoring.editor')

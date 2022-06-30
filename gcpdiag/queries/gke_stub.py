@@ -18,16 +18,20 @@
 Instead of doing real API calls, we return test JSON data.
 """
 
-import json
 import re
 
+from gcpdiag import utils
 from gcpdiag.queries import apis_stub
 
 # pylint: disable=unused-argument
 
 
-class ContainerApiStub:
+class ContainerApiStub(apis_stub.ApiStub):
   """Mock object to simulate container api calls."""
+
+  def __init__(self, mock_state='init', region=None):
+    self.mock_state = mock_state
+    self.region = region
 
   def projects(self):
     return self
@@ -38,13 +42,14 @@ class ContainerApiStub:
   def clusters(self):
     return self
 
+  # pylint: disable=invalid-name
+  def getServerConfig(self, name):
+    project_id = utils.get_project_by_res_name(name)
+    region = utils.get_region_by_res_name(name)
+    return apis_stub.RestCallStub(project_id,
+                                  f'container-server-config-{region}')
+
   def list(self, parent):
     m = re.match(r'projects/([^/]+)/', parent)
     project_id = m.group(1)
-    self.json_dir = apis_stub.get_json_dir(project_id)
-    return self
-
-  def execute(self, num_retries=0):
-    with open(self.json_dir / 'container-clusters.json',
-              encoding='utf8') as json_file:
-      return json.load(json_file)
+    return apis_stub.RestCallStub(project_id, 'container-clusters')

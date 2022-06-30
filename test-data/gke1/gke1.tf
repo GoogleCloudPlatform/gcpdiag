@@ -17,9 +17,16 @@
 # GKE cluster with monitoring disabled
 # And with small pod CIDR
 
+resource "google_service_account" "gke1_sa" {
+  project      = google_project.project.project_id
+  account_id   = "gke1sa"
+  display_name = "GKE 1 Service Account"
+}
+
 resource "google_compute_subnetwork" "secondary_ip_range_pod" {
-  network       = "default"
   project       = google_project.project.project_id
+  depends_on    = [google_project_service.compute]
+  network       = "default"
   name          = "gke1-subnet"
   ip_cidr_range = "192.168.0.0/24"
   region        = "europe-west4"
@@ -33,6 +40,14 @@ resource "google_compute_subnetwork" "secondary_ip_range_pod" {
   }
 }
 
+resource "google_compute_subnetwork_iam_member" "gke1_subnet" {
+  project    = google_compute_subnetwork.secondary_ip_range_pod.project
+  region     = google_compute_subnetwork.secondary_ip_range_pod.region
+  subnetwork = google_compute_subnetwork.secondary_ip_range_pod.name
+  role       = "roles/compute.networkUser"
+  member     = "serviceAccount:${google_service_account.gke1_sa.email}"
+}
+
 resource "google_container_cluster" "gke1" {
   provider   = google-beta
   project    = google_project.project.project_id
@@ -40,6 +55,9 @@ resource "google_container_cluster" "gke1" {
   name       = "gke1"
   subnetwork = google_compute_subnetwork.secondary_ip_range_pod.name
   location   = "europe-west4-a"
+  release_channel {
+    channel = "UNSPECIFIED"
+  }
   ip_allocation_policy {
     cluster_secondary_range_name  = "gke1-secondary-range-pod"
     services_secondary_range_name = "gke1-secondary-range-svc"

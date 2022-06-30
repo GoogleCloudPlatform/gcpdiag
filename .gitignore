@@ -6,6 +6,7 @@ __pycache__
 .terraform
 terraform.tfstate
 terraform.tfstate.backup
+terraform.tfstate.*.backup
 .terraform.tfstate.lock.info
 .venv
 *.lock.hcl
@@ -13,3 +14,4 @@ terraform.tfstate.backup
 .*.swp
 website/public
 website/resources
+crash.*.log

@@ -2,38 +2,38 @@
   "bindings": [
     {
       "members": [
-        "serviceAccount:gke2sa@gcpd-gke-1-9b90.iam.gserviceaccount.com"
+        "serviceAccount:gke2sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com"
       ],
-      "role": "projects/gcpd-gke-1-9b90/roles/gke2_custom_role"
+      "role": "projects/gcpdiag-gke1-aaaa/roles/gke2_custom_role"
     },
     {
       "members": [
-        "serviceAccount:gke3sa@gcpd-gke-1-9b90.iam.gserviceaccount.com"
+        "serviceAccount:gke3sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com"
       ],
-      "role": "projects/gcpd-gke-1-9b90/roles/gke3_custom_role"
+      "role": "projects/gcpdiag-gke1-aaaa/roles/gke3_custom_role"
     },
     {
       "members": [
-        "serviceAccount:service-18404348413@compute-system.iam.gserviceaccount.com"
+        "serviceAccount:service-12340002@compute-system.iam.gserviceaccount.com"
       ],
       "role": "roles/compute.serviceAgent"
     },
     {
       "members": [
-        "serviceAccount:service-18404348413@container-engine-robot.iam.gserviceaccount.com"
+        "serviceAccount:service-12340002@container-engine-robot.iam.gserviceaccount.com"
       ],
       "role": "roles/container.serviceAgent"
     },
     {
       "members": [
-        "serviceAccount:service-18404348413@containerregistry.iam.gserviceaccount.com"
+        "serviceAccount:service-12340002@containerregistry.iam.gserviceaccount.com"
       ],
       "role": "roles/containerregistry.ServiceAgent"
     },
     {
       "members": [
-        "serviceAccount:18404348413-compute@developer.gserviceaccount.com",
-        "serviceAccount:18404348413@cloudservices.gserviceaccount.com"
+        "serviceAccount:12340002-compute@developer.gserviceaccount.com",
+        "serviceAccount:12340002@cloudservices.gserviceaccount.com"
       ],
       "role": "roles/editor"
     },
@@ -42,8 +42,14 @@
         "user:testuser@example.com"
       ],
       "role": "roles/owner"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12340002@gcp-sa-pubsub.iam.gserviceaccount.com"
+      ],
+      "role": "roles/pubsub.serviceAgent"
     }
   ],
-  "etag": "BwW6mfZeQy4=",
+  "etag": "BwXSd+CQHPE=",
   "version": 1
 }

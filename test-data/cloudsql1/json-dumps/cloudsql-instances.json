@@ -1,0 +1,71 @@
+{
+  "items": [
+    {
+      "kind": "sql#instance",
+      "state": "RUNNABLE",
+      "databaseVersion": "MYSQL_8_0",
+      "settings": {
+        "authorizedGaeApplications": [],
+        "tier": "db-f1-micro",
+        "kind": "sql#settings",
+        "availabilityType": "ZONAL",
+        "pricingPlan": "PER_USE",
+        "replicationType": "SYNCHRONOUS",
+        "activationPolicy": "ALWAYS",
+        "ipConfiguration": {
+          "privateNetwork": "projects/gcpdiag-cloudsql1-aaaa/global/networks/private-network",
+          "authorizedNetworks": [],
+          "ipv4Enabled": false,
+          "requireSsl": false
+        },
+        "locationPreference": {
+          "zone": "us-central1-a",
+          "kind": "sql#locationPreference"
+        },
+        "dataDiskType": "PD_SSD",
+        "backupConfiguration": {
+          "startTime": "06:00",
+          "kind": "sql#backupConfiguration",
+          "backupRetentionSettings": {
+            "retentionUnit": "COUNT",
+            "retainedBackups": 7
+          },
+          "enabled": false,
+          "transactionLogRetentionDays": 7
+        },
+        "settingsVersion": "1",
+        "storageAutoResizeLimit": "0",
+        "storageAutoResize": true,
+        "dataDiskSizeGb": "10"
+      },
+      "etag": "c4c69a19f017f91e28c66158a50b9a752d85b6aa8f5dbdd4ba018f656d96933b",
+      "ipAddresses": [
+        {
+          "type": "PRIVATE",
+          "ipAddress": "172.17.0.3"
+        }
+      ],
+      "serverCaCert": {
+        "kind": "sql#sslCert",
+        "certSerialNumber": "0",
+        "cert": "-----BEGIN CERTIFICATE-----\nMIIDfzCCAmegAwIBAgIBADANBgkqhkiG9w0BAQsFADB3MS0wKwYDVQQuEyQzZTFm\nYTc5OC0wYzc1LTRjMWEtYmRkZi00ZGZjZDVhY2YwNjQxIzAhBgNVBAMTGkdvb2ds\nZSBDbG91ZCBTUUwgU2VydmVyIENBMRQwEgYDVQQKEwtHb29nbGUsIEluYzELMAkG\nA1UEBhMCVVMwHhcNMjIwNTEwMDg0MDA2WhcNMzIwNTA3MDg0MTA2WjB3MS0wKwYD\nVQQuEyQzZTFmYTc5OC0wYzc1LTRjMWEtYmRkZi00ZGZjZDVhY2YwNjQxIzAhBgNV\nBAMTGkdvb2dsZSBDbG91ZCBTUUwgU2VydmVyIENBMRQwEgYDVQQKEwtHb29nbGUs\nIEluYzELMAkGA1UEBhMCVVMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIB\nAQDGV9bVV88MjegjzE4iZyP1GjxK4ahSffXDI5CwqIA+XYEFeA5JYY/5D3Amka9M\nS/mgI/6Rhe9C46JPqG2vIkUsjrs1AZPWS7qJyQN2SZXqfl+vaMJHtHh88fQUjru4\nixE/5W+PonhCUS6Amq3xm0rW929FuuVdzzTC5PC8ShCaprjEw0o6y0sa7fpS8vlp\nGNrYwZdDViLIm+OuoIRIm7eVLx09GSpk5O0UTzqyPqNOXa1CB4bGYxuTlHCk+m32\ntiKapH6Ee+vdhw1YppJVk9DDFn2EjcAjf+jxda1nBUxmX1uxHn8RsZUnztVdytxJ\nHN3vy7t3q7Rmq/LF+djEODJ3AgMBAAGjFjAUMBIGA1UdEwEB/wQIMAYBAf8CAQAw\nDQYJKoZIhvcNAQELBQADggEBABZjnPfPAFw/TP0nFnUbGMKgy6gwc30rdsAXS0qB\n8H25ZUor6IXfCiQzmmMQYfyIG5T6/JuY83PKgRxew0XjKBYaCVa+GcOogzPrLCl4\nLcfyJeGLJVZ5dqYaK9Qcm4Qp2KoN3iaEyX9q6Dbrw8owo28VFjBMULeNglh5Kb7/\nZgv7vIV8R8Z04GQteeHk8y/OJwrA0i0v9gZSy+prZzqr8LXbIH59kziSf8IEfAQc\n4LFXaQjxHYMQfGqcH8bZEqGzA/sL9wHMDUoUqNybKI7BacRiV2tdad0xUGDyEqUj\nbSTk1IzCCWNwqwtWWTr10O118ezIk12hwNxC1VrQ8+pCNug=\n-----END CERTIFICATE-----",
+        "commonName": "C=US,O=Google\\, Inc,CN=Google Cloud SQL Server CA,dnQualifier=3e1fa798-0c75-4c1a-bddf-4dfcd5acf064",
+        "sha1Fingerprint": "0502e192d2b9abe562a339192263ad9b3c26198c",
+        "instance": "sql1",
+        "createTime": "2022-05-10T08:40:06.232Z",
+        "expirationTime": "2032-05-07T08:41:06.232Z"
+      },
+      "instanceType": "CLOUD_SQL_INSTANCE",
+      "project": "gcpdiag-cloudsql1-aaaa",
+      "serviceAccountEmailAddress": "p12340006-4lw5u9@gcp-sa-cloud-sql.iam.gserviceaccount.com",
+      "backendType": "SECOND_GEN",
+      "selfLink": "https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql1-aaaa/instances/sql1",
+      "connectionName": "gcpdiag-cloudsql1-aaaa:us-central1:sql1",
+      "name": "sql1",
+      "region": "us-central1",
+      "gceZone": "us-central1-a",
+      "databaseInstalledVersion": "MYSQL_8_0_26",
+      "createTime": "2022-05-10T08:37:30.089Z"
+    }
+  ]
+}

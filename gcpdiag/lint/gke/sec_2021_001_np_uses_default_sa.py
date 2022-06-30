@@ -21,8 +21,6 @@ create and use a minimally privileged service account.
 from gcpdiag import lint, models
 from gcpdiag.queries import gke
 
-ROLE = 'roles/logging.logWriter'
-
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   # Find all clusters.

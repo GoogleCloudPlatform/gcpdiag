@@ -1,0 +1,3 @@
+*  composer/ERR/2022_001: Composer Service Agent permissions
+   - gcpdiag-composer1-aaaa                                               [ OK ]
+

@@ -18,8 +18,8 @@ from unittest import mock
 from gcpdiag import models
 from gcpdiag.queries import apis_stub, dataproc
 
-DUMMY_PROJECT_NAME = 'dataproc1'
-NUMBER_OF_CLUSTERS_IN_DATAPROC_JSON_DUMP_FILE = 4
+DUMMY_PROJECT_NAME = 'gcpdiag-dataproc1-aaaa'
+NUMBER_OF_CLUSTERS_IN_DATAPROC_JSON_DUMP_FILE = 3
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
@@ -30,25 +30,38 @@ class TestDataproc:
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = dataproc.get_clusters(context)
     assert len(clusters) == NUMBER_OF_CLUSTERS_IN_DATAPROC_JSON_DUMP_FILE
+
+  def test_is_running(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = dataproc.get_clusters(context)
     assert ('good', True) in [(c.name, c.is_running()) for c in clusters]
+
+  def test_image_version(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = dataproc.get_clusters(context)
+    assert ('good',
+            '2.0.29-debian10') in [(c.name, c.image_version) for c in clusters]
 
   def test_stackdriver_logging_enabled(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = dataproc.get_clusters(context)
     for c in clusters:
-      # In cluster logging-enable-true
-      # dataproc:dataproc.logging.stackdriver.job.driver.enable is set
+      # dataproc:dataproc.logging.stackdriver.enable is set
       # and equals "true"
-      if c.name == 'logging-enable-true':
+      if c.name == 'test-best-practices-enabled':
         assert c.is_stackdriver_logging_enabled()
 
-      # In cluster logging-enable-false
-      # dataproc:dataproc.logging.stackdriver.job.driver.enable is set
+      # dataproc:dataproc.logging.stackdriver.enable is set
       # and equals "false"
-      if c.name == 'logging-enable-false':
+      if c.name == 'test-best-practices-disabled':
         assert not c.is_stackdriver_logging_enabled()
 
-      # In cluster logging-enable-not-set
-      # dataproc:dataproc.logging.stackdriver.job.driver.enable is not set
-      if c.name == 'logging-enable-not-set':
-        assert not c.is_stackdriver_logging_enabled()
+  def test_monitoring_enabled(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = dataproc.get_clusters(context)
+    for cluster in clusters:
+      if cluster.name == 'test-best-practices-enabled':
+        assert cluster.is_stackdriver_monitoring_enabled()
+
+      if cluster.name == 'test-best-practices-disabled':
+        assert not cluster.is_stackdriver_monitoring_enabled()

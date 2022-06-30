@@ -1,23 +1,24 @@
 {
-  "id": "projects/gcpd-gce1-4exv/zones/europe-west4-a/instanceGroupManagers",
+  "id": "projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroupManagers",
   "items": [
     {
-      "id": "2625473950296531337",
-      "creationTimestamp": "2021-06-29T01:52:54.126-07:00",
+      "kind": "compute#instanceGroupManager",
+      "id": "7183453391228875571",
+      "creationTimestamp": "2022-04-26T08:21:00.715-07:00",
       "name": "mig",
-      "zone": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/zones/europe-west4-a",
-      "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/global/instanceTemplates/mig-template",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a",
+      "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/global/instanceTemplates/mig-template",
       "versions": [
         {
-          "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/global/instanceTemplates/mig-template",
+          "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/global/instanceTemplates/mig-template",
           "targetSize": {
             "calculated": 2
           }
         }
       ],
-      "instanceGroup": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/zones/europe-west4-a/instanceGroups/mig",
+      "instanceGroup": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroups/mig",
       "baseInstanceName": "mig",
-      "fingerprint": "uwCEu1jPzgw=",
+      "fingerprint": "lss-DXagYSg=",
       "currentActions": {
         "none": 2,
         "creating": 0,
@@ -27,7 +28,11 @@
         "deleting": 0,
         "abandoning": 0,
         "restarting": 0,
-        "refreshing": 0
+        "refreshing": 0,
+        "suspending": 0,
+        "resuming": 0,
+        "stopping": 0,
+        "starting": 0
       },
       "status": {
         "isStable": true,
@@ -42,7 +47,7 @@
         }
       },
       "targetSize": 2,
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/zones/europe-west4-a/instanceGroupManagers/mig",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroupManagers/mig",
       "updatePolicy": {
         "type": "OPPORTUNISTIC",
         "minimalAction": "REPLACE",
@@ -55,10 +60,9 @@
           "calculated": 1
         },
         "replacementMethod": "SUBSTITUTE"
-      },
-      "kind": "compute#instanceGroupManager"
+      }
     }
   ],
-  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv/zones/europe-west4-a/instanceGroupManagers",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroupManagers",
   "kind": "compute#instanceGroupManagerList"
 }

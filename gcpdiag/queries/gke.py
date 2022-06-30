@@ -22,8 +22,10 @@ import re
 from typing import Dict, Iterable, List, Mapping, Optional
 
 import googleapiclient.errors
+from boltons.iterutils import get_path
+
 from gcpdiag import caching, config, models, utils
-from gcpdiag.queries import apis, crm, gce
+from gcpdiag.queries import apis, crm, gce, network
 
 
 class VersionComponentsParser:
@@ -101,6 +103,11 @@ class NodeConfig:
   def __init__(self, resource_data):
     self._resource_data = resource_data
 
+  def has_accelerators(self) -> bool:
+    if 'accelerators' in self._resource_data:
+      return True
+    return False
+
   @property
   def image_type(self) -> str:
     return self._resource_data['imageType']
@@ -123,7 +130,7 @@ class NodePool(models.Resource):
 
   @property
   def full_path(self) -> str:
-    # https://container.googleapis.com/v1/projects/gcpd-gke-1-9b90/
+    # https://container.googleapis.com/v1/projects/gcpdiag-gke1-aaaa/
     #   locations/europe-west1/clusters/gke2/nodePools/default-pool
     m = re.match(r'https://container.googleapis.com/v1/(.*)',
                  self._resource_data.get('selfLink', ''))
@@ -153,13 +160,19 @@ class NodePool(models.Resource):
     sa = self._get_service_account()
     return sa == 'default'
 
-  def has_workload_identity_enabled(self) -> bool:
+  def has_md_concealment_enabled(self) -> bool:
     # Empty ({}) workloadMetadataConfig means that 'Metadata concealment'
-    # (predecessor of Workload Identity) is enabled. That doesn't protect the
-    # default SA's token
+    # (predecessor of Workload Identity) is enabled.
     # https://cloud.google.com/kubernetes-engine/docs/how-to/protecting-cluster-metadata#concealment
-    return 'config' in self._resource_data and bool(
-        self._resource_data['config'].get('workloadMetadataConfig'))
+    return get_path(self._resource_data, ('config', 'workloadMetadataConfig'),
+                    default=None) == {}
+
+  def has_workload_identity_enabled(self) -> bool:
+    # 'Metadata concealment' (workloadMetadataConfig == {}) doesn't protect the
+    # default SA's token
+    return bool(
+        get_path(self._resource_data, ('config', 'workloadMetadataConfig'),
+                 default=None))
 
   @property
   def service_account(self) -> str:
@@ -192,8 +205,25 @@ class NodePool(models.Resource):
           self._migs.append(project_migs_by_selflink[url])
         except KeyError:
           continue
-
     return self._migs
+
+  @property
+  def node_tags(self) -> List[str]:
+    """Returns the firewall tags used for nodes in this cluster.
+
+    If the node tags can't be determined, [] is returned.
+    """
+    migs = self.instance_groups
+    if not migs:
+      return []
+    return migs[0].template.tags
+
+
+class UndefinedClusterPropertyError(Exception):
+  """Thrown when a property of a cluster can't be determined for
+  some reason. For example, the cluster_hash can't be determined
+  because there are no nodepools defined."""
+  pass
 
 
 class Cluster(models.Resource):
@@ -237,7 +267,7 @@ class Cluster(models.Resource):
     return self._resource_data['location']
 
   @property
-  def pod_ipv4_cidr(self) -> ipaddress.IPv4Address:
+  def pod_ipv4_cidr(self) -> ipaddress.IPv4Network:
     cidr = self._resource_data['clusterIpv4Cidr']
     return ipaddress.ip_network(cidr)
 
@@ -258,8 +288,8 @@ class Cluster(models.Resource):
 
   def has_app_layer_enc_enabled(self) -> bool:
     # state := 'DECRYPTED' | 'ENCRYPTED', keyName := 'full_path_to_key_resouce'
-    return 'databaseEncryption' in self._resource_data and \
-           self._resource_data['databaseEncryption'].get('state') == 'ENCRYPTED'
+    return get_path(self._resource_data, ('databaseEncryption', 'state'),
+                    default=None) == 'ENCRYPTED'
 
   def has_logging_enabled(self) -> bool:
     return self._resource_data['loggingService'] != 'none'
@@ -271,6 +301,9 @@ class Cluster(models.Resource):
     return self._resource_data['authenticatorGroupsConfig'].get(
         'enabled', 'none') != 'none'
 
+  def has_workload_identity_enabled(self) -> bool:
+    return len(self._resource_data.get('workloadIdentityConfig', {})) > 0
+
   @property
   def nodepools(self) -> Iterable[NodePool]:
     if self._nodepools is None:
@@ -279,10 +312,73 @@ class Cluster(models.Resource):
         self._nodepools.append(NodePool(self, n))
     return self._nodepools
 
+  @property
+  def network(self) -> network.Network:
+    # projects/gcpdiag-gke1-aaaa/global/networks/default
+    network_string = self._resource_data['networkConfig']['network']
+    m = re.match(r'projects/([^/]+)/global/networks/([^/]+)$', network_string)
+    if not m:
+      raise RuntimeError("can't parse network string: %s" % network_string)
+    return network.get_network(m.group(1), m.group(2))
+
+  @property
+  def subnetwork(self):
+    # 'projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks/default'
+    subnetwork_string = self._resource_data['networkConfig']['subnetwork']
+    m = re.match(r'projects/([^/]+)/regions/([^/]+)/subnetworks/([^/]+)$',
+                 subnetwork_string)
+    if not m:
+      raise RuntimeError("can't parse network string: %s" % subnetwork_string)
+    return network.get_subnetwork(m.group(1), m.group(2), m.group(3))
+
+  @property
+  def is_private(self) -> bool:
+    return 'privateClusterConfig' in self._resource_data
+
+  @property
+  def is_regional(self) -> bool:
+    return len(self._resource_data['locations']) > 1
+
+  @property
+  def is_autopilot(self) -> bool:
+    if not 'autopilot' in self._resource_data:
+      return False
+    return self._resource_data['autopilot'].get('enabled', False)
+
+  @property
+  def masters_cidr_list(self) -> Iterable[ipaddress.IPv4Network]:
+    if get_path(self._resource_data,
+                ('privateClusterConfig', 'masterIpv4CidrBlock'),
+                default=None):
+      return [
+          ipaddress.ip_network(self._resource_data['privateClusterConfig']
+                               ['masterIpv4CidrBlock'])
+      ]
+    else:
+      if self.current_node_count and not self.cluster_hash:
+        logging.warning("couldn't retrieve cluster hash for cluster %s.",
+                        self.name)
+        return []
+      fw_rule_name = f'gke-{self.name}-{self.cluster_hash}-ssh'
+      rule = self.network.firewall.get_vpc_ingress_rules(name=fw_rule_name)
+      if rule and rule[0].is_enabled():
+        return rule[0].source_ranges
+      return []
+
+  @property
+  def cluster_hash(self) -> Optional[str]:
+    """Returns the "cluster hash" as used in automatic firewall rules for GKE clusters.
+    Cluster hash is the first 8 characters of cluster id.
+    See also: https://cloud.google.com/kubernetes-engine/docs/concepts/firewall-rules
+    """
+    if 'id' in self._resource_data:
+      return self._resource_data['id'][:8]
+    raise UndefinedClusterPropertyError('no id')
+
 
 @caching.cached_api_call
 def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
-  """Get a list of Cluster matching the given context, indexed by cluster name."""
+  """Get a list of Cluster matching the given context, indexed by cluster full path."""
   clusters: Dict[str, Cluster] = {}
   if not apis.is_enabled(context.project_id, 'container'):
     return clusters

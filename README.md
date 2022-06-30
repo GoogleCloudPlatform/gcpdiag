@@ -5,7 +5,7 @@
 
 **gcpdiag** is a command-line diagnostics tool for GCP customers. It finds
 and helps to fix common issues in Google Cloud Platform projects. It is used to
-test projects against a wide range of best-practices and frequent mistakes,
+test projects against a wide range of best practices and frequent mistakes,
 based on the troubleshooting experience of the Google Cloud Support team.
 
 gcpdiag is open-source and contributions are welcome! Note that this is not
@@ -18,8 +18,8 @@ problems in your projects, but we give no guarantees to that end.
 ## Installation
 
 You can run gcpdiag using a shell wrapper that starts gcpdiag in a Docker
-container. This should work on any machine with Docker installed, including
-Cloud Shell.
+container. This should work on any machine with Docker or Podman installed,
+including Cloud Shell.
 
 ```
 curl https://gcpdiag.dev/gcpdiag.sh >gcpdiag
@@ -38,20 +38,33 @@ usage: gcpdiag lint --project P [OPTIONS]
 Run diagnostics in GCP projects.
 
 optional arguments:
-  -h, --help           show this help message and exit
-  --auth-adc           Authenticate using Application Default Credentials
-  --auth-key FILE      Authenticate using a service account private key file
-  --auth-oauth         Authenticate using OAuth user authentication (default)
-  --project P          Project ID of project to inspect
-  --billing-project P  Project used for billing/quota of API calls done by gcpdiag
-                       (default is the inspected project, requires 'serviceusage.services.use' permission)
-  --show-skipped       Show skipped rules
-  --hide-ok            Hide rules with result OK
-  --include INCLUDE    Include rule pattern (e.g.: `gke`, `gke/*/2021*`). Multiple pattern can be specified
-                       (comma separated, or with multiple arguments)
-  --exclude EXCLUDE    Exclude rule pattern (e.g.: `BP`, `*/*/2022*`)
-  -v, --verbose        Increase log verbosity
-  --within-days D      How far back to search logs and metrics (default: 3)
+  -h, --help            show this help message and exit
+  --auth-adc            Authenticate using Application Default Credentials
+  --auth-key FILE       Authenticate using a service account private key file
+  --auth-oauth          Authenticate using OAuth user authentication (default)
+  --project P           Project ID of project to inspect
+  --billing-project P   Project used for billing/quota of API calls done by gcpdiag (default is the inspected project, requires
+                        'serviceusage.services.use' permission)
+  --show-skipped        Show skipped rules
+  --hide-ok             Hide rules with result OK
+  --include INCLUDE     Include rule pattern (e.g.: `gke`, `gke/*/2021*`). Multiple pattern can be specified (comma separated, or with multiple
+                        arguments)
+  --exclude EXCLUDE     Exclude rule pattern (e.g.: `BP`, `*/*/2022*`)
+  --include-extended    Include extended rules. Additional rules might generate false positives (default: False)
+  -v, --verbose         Increase log verbosity
+  --within-days D       How far back to search logs and metrics (default: 3 days)
+  --config FILE         Read configuration from FILE
+  --logging-ratelimit-requests R
+                        Configure rate limit for logging queries (default: 60)
+  --logging-ratelimit-period-seconds S
+                        Configure rate limit period for logging queries (default: 60 seconds)
+  --logging-page-size P
+                        Configure page size for logging queries (default: 500)
+  --logging-fetch-max-entries E
+                        Configure max entries to fetch by logging queries (default: 10000)
+  --logging-fetch-max-time-seconds S
+                        Configure timeout for logging queries (default: 120 seconds)
+  --output FORMATTER    Format output as one of [terminal, json, csv] (default: terminal)
 ```
 
 ### Authentication

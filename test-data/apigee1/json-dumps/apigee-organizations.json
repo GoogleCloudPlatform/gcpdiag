@@ -1,22 +1,25 @@
 {
   "organizations": [
     {
-      "organization": "gcpd-apigee-1-lus4",
+      "organization": "apigee-hybrid-support-apac-03",
       "projectIds": [
-        "gcpd-apigee-1-lus4"
-      ]
+        "apigee-hybrid-support-apac-03"
+      ],
+      "projectId": "apigee-hybrid-support-apac-03"
     },
     {
       "organization": "apigee-x-support-apac-03",
       "projectIds": [
         "apigee-x-support-apac-03"
-      ]
+      ],
+      "projectId": "apigee-x-support-apac-03"
     },
     {
-      "organization": "apigee-hybrid-support-apac-03",
+      "organization": "gcpdiag-apigee1-aaaa",
       "projectIds": [
-        "apigee-hybrid-support-apac-03"
-      ]
+        "gcpdiag-apigee1-aaaa"
+      ],
+      "projectId": "gcpdiag-apigee1-aaaa"
     }
   ]
 }

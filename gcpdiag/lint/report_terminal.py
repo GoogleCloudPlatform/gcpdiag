@@ -32,40 +32,12 @@ def is_cloud_shell():
   return os.getenv('CLOUD_SHELL')
 
 
-def _emoji_wrap(char):
+def emoji_wrap(char):
   if is_cloud_shell():
     # emoji not displayed as double width in Cloud Shell (bug?)
     return char + ' '
   else:
     return char
-
-
-class _LintReportTerminalLoggingHandler(logging.Handler):
-  """logging.Handler implementation used when producing a lint report."""
-
-  def __init__(self, report):
-    super().__init__()
-    self.report = report
-
-  def format(self, record: logging.LogRecord):
-    return record.getMessage()
-
-  def emit(self, record):
-    if record.levelno == logging.INFO and self.report.log_info_for_progress_only:
-      msg = '   ... ' + self.format(record)
-      # make sure we don't go beyond the terminal width
-      if self.report.term.width:
-        term_overflow = len(msg) - self.report.term.width
-        if term_overflow > 0:
-          msg = msg[:-term_overflow]
-      self.report.terminal_update_line(msg)
-    else:
-      msg = f'[{record.levelname}] ' + self.format(record) + ' '
-      # workaround for bug:
-      # https://github.com/googleapis/google-api-python-client/issues/1116
-      if 'Invalid JSON content from response' in msg:
-        return
-      self.report.terminal_print_line(msg)
 
 
 class LintReportTerminal(lint.LintReport):
@@ -76,34 +48,22 @@ class LintReportTerminal(lint.LintReport):
                log_info_for_progress_only=True,
                show_ok=True,
                show_skipped=False):
-    super().__init__()
-    self.file = file
+    super().__init__(file, log_info_for_progress_only, show_ok, show_skipped)
     self.line_unfinished = False
-    self.rule_has_results = False
-    self.log_info_for_progress_only = log_info_for_progress_only
-    self.show_ok = show_ok
-    self.show_skipped = show_skipped
     self.per_rule_data = {}
-    if file == sys.stdout:
-      self.term = blessings.Terminal()
-    else:
-      self.term = blessings.Terminal()
+    self.term = blessings.Terminal()
 
   def _wrap_indent(self, text, prefix):
     width = self.term.width or 80
     width = min(width, 80)
     return textwrap.indent(textwrap.fill(text, width - len(prefix)), prefix)
 
-  def banner(self):
-    if self.term.does_styling:
-      print(
-          self.term.bold('gcpdiag ' + _emoji_wrap('🩺') + ' ' + config.VERSION) +
-          '\n')
+  def _italic(self, text):
+    if is_cloud_shell():
+      # TODO(b/201958597): Cloud Shell with tmux doesn't format italic properly at the moment
+      return text
     else:
-      print('gcpdiag ' + config.VERSION + '\n')
-
-  def lint_start(self, context):
-    print(f'Starting lint inspection ({context})...\n')
+      return self.term.italic(text)
 
   def terminal_update_line(self, text: str):
     """Update the current line on the terminal."""
@@ -138,25 +98,26 @@ class LintReportTerminal(lint.LintReport):
       sys.stdout.flush()
     self.line_unfinished = False
 
-  def get_logging_handler(self):
-    return _LintReportTerminalLoggingHandler(self)
+  def banner(self):
+    if self.term.does_styling:
+      print(self.term.bold(f"gcpdiag {emoji_wrap('🩺')} {config.VERSION}\n"))
+    else:
+      print(f'gcpdiag {config.VERSION}\n', file=sys.stderr)
 
   def rule_start(self, rule: lint.LintRule, context: models.Context):
     rule_interface = super().rule_start(rule, context)
     bullet = ''
     if self.term.does_styling:
-      bullet = _emoji_wrap('🔎') + ' '
+      bullet = emoji_wrap('🔎') + ' '
     else:
       bullet = '*  '
     self.terminal_print_line(
         bullet +
         self.term.yellow(f'{rule.product}/{rule.rule_class}/{rule.rule_id}') +
         ': ' + f'{rule.short_desc}')
-    self.rule_has_results = False
     return rule_interface
 
   def rule_end(self, rule: lint.LintRule, context: models.Context):
-    super().rule_end(rule, context)
     self.terminal_erase_line()
     if self.rule_has_results:
       self.terminal_print_line()
@@ -174,7 +135,7 @@ class LintReportTerminal(lint.LintReport):
       width = self.term.width or 80
       width = min(width, 80)
       self.terminal_print_line(
-          self.term.italic(self._wrap_indent(rule.long_desc, '   ')))
+          self._italic(self._wrap_indent(rule.long_desc, '   ')))
       self.terminal_print_line()
       self.terminal_print_line('   ' + rule.doc_url)
       self.terminal_print_line()
@@ -229,18 +190,33 @@ class LintReportTerminal(lint.LintReport):
     if reason:
       self.terminal_print_line(textwrap.indent(reason, '     '))
 
-  def finish(self, context: models.Context):
-    exit_code = super().finish(context)
-    totals = {
-        'skipped': 0,
-        'ok': 0,
-        'failed': 0,
-    }
-    for rule in self.rules_report.values():
-      totals[rule['overall_status']] += 1
-    if not self.rule_has_results:
-      self.terminal_print_line()
-    print(
-        f"Rules summary: {totals['skipped']} skipped, {totals['ok']} ok, {totals['failed']} failed"
-    )
-    return exit_code
+  def get_logging_handler(self):
+    return _LintReportTerminalLoggingHandler(self)
+
+
+class _LintReportTerminalLoggingHandler(logging.Handler):
+  """logging.Handler implementation used when producing a lint report."""
+
+  def __init__(self, report):
+    super().__init__()
+    self.report = report
+
+  def format(self, record: logging.LogRecord):
+    return record.getMessage()
+
+  def emit(self, record):
+    if record.levelno == logging.INFO and self.report.log_info_for_progress_only:
+      msg = '   ... ' + self.format(record)
+      # make sure we don't go beyond the terminal width
+      if self.report.term.width:
+        term_overflow = len(msg) - self.report.term.width
+        if term_overflow > 0:
+          msg = msg[:-term_overflow]
+      self.report.terminal_update_line(msg)
+    else:
+      msg = f'[{record.levelname}] ' + self.format(record) + ' '
+      # workaround for bug:
+      # https://github.com/googleapis/google-api-python-client/issues/1116
+      if 'Invalid JSON content from response' in msg:
+        return
+      self.report.terminal_print_line(msg)

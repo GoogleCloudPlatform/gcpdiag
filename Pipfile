@@ -4,30 +4,37 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+appdirs = "*"
+boltons = "*"
+blessings = "*"
 dataclasses = "==0.6"
-six = "==1.15.0"
+diskcache = "*"
 google-api-python-client = "*"
 google-auth-oauthlib = "*"
-blessings = "*"
 importlib-resources = "*"
-appdirs = "*"
-diskcache = "*"
-ratelimit = "*"
+packaging = "*"
 python-dateutil = "*"
+pyyaml = "*"
+ratelimit = "*"
+six = "==1.15.0"
 # Python 3.7 compatibility
 typing-extensions = "*"
 
 [dev-packages]
-pytest = "*"
-pre-commit = "*"
-importlib-metadata = "*"
-yapf = "*"
-coverage = "*"
+astunparse = "*"
 bump2version = "*"
+coverage = "*"
+importlib-metadata = "*"
+isort = "*"
+mypy = "*"
+pdoc = "*"
+pre-commit = "*"
 pyinstaller = "*"
+pytest = "*"
 pytest-cov = "*"
 pytest-forked = "*"
 pytest-snapshot = "*"
+yapf = "*"
 
 # for vim:
 # pip install 'python-language-server[yapf,pyflakes,mccabe]'

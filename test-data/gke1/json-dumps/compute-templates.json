@@ -1,0 +1,1343 @@
+{
+  "id": "projects/gcpdiag-gke1-aaaa/global/instanceTemplates",
+  "items": [
+    {
+      "creationTimestamp": "2022-03-30T02:10:20.649-07:00",
+      "description": "",
+      "id": "8786297325961715859",
+      "kind": "compute#instanceTemplate",
+      "name": "gke-gke1-default-pool-fdd5f538",
+      "properties": {
+        "disks": [
+          {
+            "autoDelete": true,
+            "boot": true,
+            "deviceName": "persistent-disk-0",
+            "index": 0,
+            "initializeParams": {
+              "diskSizeGb": "100",
+              "diskType": "pd-standard",
+              "labels": {
+                "foo": "bar",
+                "goog-gke-node": ""
+              },
+              "sourceImage": "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/images/gke-1219-gke1002-cos-89-16108-604-3-v220225-c-pre"
+            },
+            "kind": "compute#attachedDisk",
+            "mode": "READ_WRITE",
+            "type": "PERSISTENT"
+          }
+        ],
+        "labels": {
+          "foo": "bar",
+          "goog-gke-node": ""
+        },
+        "machineType": "e2-medium",
+        "metadata": {
+          "fingerprint": "REDACTED",
+          "items": [
+            {
+              "key": "gci-update-strategy",
+              "value": "update_disabled"
+            },
+            {
+              "key": "gci-metrics-enabled",
+              "value": "true"
+            },
+            {
+              "key": "kube-env",
+              "value": "REDACTED"
+            },
+            {
+              "key": "kubelet-config",
+              "value": "apiVersion: kubelet.config.k8s.io/v1beta1\nauthentication:\n  anonymous:\n    enabled: false\n  webhook:\n    enabled: true\n  x509:\n    clientCAFile: /etc/srv/kubernetes/pki/ca-certificates.crt\nauthorization:\n  mode: Webhook\ncgroupRoot: /\nclusterDNS:\n- 192.168.2.10\nclusterDomain: cluster.local\nenableDebuggingHandlers: true\nevictionHard:\n  memory.available: 100Mi\n  nodefs.available: 10%\n  nodefs.inodesFree: 5%\n  pid.available: 10%\nfeatureGates:\n  DynamicKubeletConfig: false\n  ExecProbeTimeout: false\n  InTreePluginAWSUnregister: true\n  InTreePluginAzureDiskUnregister: true\n  InTreePluginOpenStackUnregister: true\n  InTreePluginvSphereUnregister: true\n  RotateKubeletServerCertificate: true\nkernelMemcgNotification: true\nkind: KubeletConfiguration\nkubeReserved:\n  cpu: 1060m\n  ephemeral-storage: 41Gi\n  memory: 1019Mi\nreadOnlyPort: 10255\nserverTLSBootstrap: true\nstaticPodPath: /etc/kubernetes/manifests\n"
+            },
+            {
+              "key": "kubeconfig",
+              "value": "apiVersion: v1\nkind: Config\nclusters:\n- cluster:\n    server: https://34.90.168.187\n    certificate-authority: '/etc/srv/kubernetes/pki/ca-certificates.crt'\n  name: default-cluster\ncontexts:\n- context:\n    cluster: default-cluster\n    namespace: default\n    user: exec-plugin-auth\n  name: default-context\ncurrent-context: default-context\nusers:\n- name: exec-plugin-auth\n  user:\n    exec:\n      apiVersion: \"client.authentication.k8s.io/v1alpha1\"\n      command: '/home/kubernetes/bin/gke-exec-auth-plugin'\n      args: [\"--cache-dir\", '/var/lib/kubelet/pki/']\n"
+            },
+            {
+              "key": "google-compute-enable-pcid",
+              "value": "true"
+            },
+            {
+              "key": "user-data",
+              "value": "REDACTED"
+            },
+            {
+              "key": "cluster-location",
+              "value": "europe-west4-a"
+            },
+            {
+              "key": "enable-oslogin",
+              "value": "false"
+            },
+            {
+              "key": "kube-labels",
+              "value": "cloud.google.com/gke-boot-disk=pd-standard,cloud.google.com/gke-container-runtime=containerd,cloud.google.com/gke-nodepool=default-pool,cloud.google.com/gke-os-distribution=cos,cloud.google.com/machine-family=e2,node.kubernetes.io/masq-agent-ds-ready=true"
+            },
+            {
+              "key": "disable-legacy-endpoints",
+              "value": "true"
+            },
+            {
+              "key": "serial-port-logging-enable",
+              "value": "true"
+            },
+            {
+              "key": "cluster-name",
+              "value": "gke1"
+            },
+            {
+              "key": "configure-sh",
+              "value": "REDACTED"
+            },
+            {
+              "key": "gci-ensure-gke-docker",
+              "value": "true"
+            },
+            {
+              "key": "cluster-uid",
+              "value": "8a964d6d1f4647c3ba479ae17b3a20ba712c2848117d42688f1ca86b177983cc"
+            }
+          ],
+          "kind": "compute#metadata"
+        },
+        "networkInterfaces": [
+          {
+            "accessConfigs": [
+              {
+                "kind": "compute#accessConfig",
+                "name": "external-nat",
+                "networkTier": "PREMIUM",
+                "type": "ONE_TO_ONE_NAT"
+              }
+            ],
+            "aliasIpRanges": [
+              {
+                "ipCidrRange": "/24",
+                "subnetworkRangeName": "gke1-secondary-range-pod"
+              }
+            ],
+            "kind": "compute#networkInterface",
+            "name": "nic0",
+            "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+            "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks/gke1-subnet"
+          }
+        ],
+        "networkPerformanceConfig": {
+          "totalEgressBandwidthTier": "DEFAULT"
+        },
+        "scheduling": {
+          "automaticRestart": true,
+          "onHostMaintenance": "MIGRATE",
+          "preemptible": false
+        },
+        "serviceAccounts": [
+          {
+            "email": "default",
+            "scopes": [
+              "https://www.googleapis.com/auth/devstorage.read_only",
+              "https://www.googleapis.com/auth/logging.write",
+              "https://www.googleapis.com/auth/monitoring",
+              "https://www.googleapis.com/auth/service.management.readonly",
+              "https://www.googleapis.com/auth/servicecontrol",
+              "https://www.googleapis.com/auth/trace.append"
+            ]
+          }
+        ],
+        "shieldedInstanceConfig": {
+          "enableIntegrityMonitoring": true,
+          "enableSecureBoot": false,
+          "enableVtpm": true
+        },
+        "tags": {
+          "items": [
+            "gke-gke1-8a964d6d-node"
+          ]
+        }
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/instanceTemplates/gke-gke1-default-pool-fdd5f538"
+    },
+    {
+      "creationTimestamp": "2022-03-30T02:10:34.545-07:00",
+      "description": "",
+      "id": "4835566577789804645",
+      "kind": "compute#instanceTemplate",
+      "name": "gke-gke2-default-pool-47d41bb0",
+      "properties": {
+        "canIpForward": true,
+        "disks": [
+          {
+            "autoDelete": true,
+            "boot": true,
+            "deviceName": "persistent-disk-0",
+            "index": 0,
+            "initializeParams": {
+              "diskSizeGb": "100",
+              "diskType": "pd-standard",
+              "labels": {
+                "goog-gke-node": ""
+              },
+              "sourceImage": "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/images/gke-1219-gke1002-cos-89-16108-604-3-v220225-c-pre"
+            },
+            "kind": "compute#attachedDisk",
+            "mode": "READ_WRITE",
+            "type": "PERSISTENT"
+          }
+        ],
+        "labels": {
+          "goog-gke-node": ""
+        },
+        "machineType": "e2-medium",
+        "metadata": {
+          "fingerprint": "REDACTED",
+          "items": [
+            {
+              "key": "cluster-uid",
+              "value": "7cf59b1c81044293849d209432245c4cd1f1b56f6fa640938dc3785b7f0e39b3"
+            },
+            {
+              "key": "gci-metrics-enabled",
+              "value": "true"
+            },
+            {
+              "key": "disable-legacy-endpoints",
+              "value": "true"
+            },
+            {
+              "key": "gci-ensure-gke-docker",
+              "value": "true"
+            },
+            {
+              "key": "kubeconfig",
+              "value": "apiVersion: v1\nkind: Config\nclusters:\n- cluster:\n    server: https://34.90.156.159\n    certificate-authority: '/etc/srv/kubernetes/pki/ca-certificates.crt'\n  name: default-cluster\ncontexts:\n- context:\n    cluster: default-cluster\n    namespace: default\n    user: exec-plugin-auth\n  name: default-context\ncurrent-context: default-context\nusers:\n- name: exec-plugin-auth\n  user:\n    exec:\n      apiVersion: \"client.authentication.k8s.io/v1alpha1\"\n      command: '/home/kubernetes/bin/gke-exec-auth-plugin'\n      args: [\"--cache-dir\", '/var/lib/kubelet/pki/']\n"
+            },
+            {
+              "key": "configure-sh",
+              "value": "REDACTED"
+            },
+            {
+              "key": "gci-update-strategy",
+              "value": "update_disabled"
+            },
+            {
+              "key": "enable-oslogin",
+              "value": "false"
+            },
+            {
+              "key": "kube-env",
+              "value": "REDACTED"
+            },
+            {
+              "key": "serial-port-logging-enable",
+              "value": "true"
+            },
+            {
+              "key": "cluster-name",
+              "value": "gke2"
+            },
+            {
+              "key": "google-compute-enable-pcid",
+              "value": "true"
+            },
+            {
+              "key": "kubelet-config",
+              "value": "apiVersion: kubelet.config.k8s.io/v1beta1\nauthentication:\n  anonymous:\n    enabled: false\n  webhook:\n    enabled: true\n  x509:\n    clientCAFile: /etc/srv/kubernetes/pki/ca-certificates.crt\nauthorization:\n  mode: Webhook\ncgroupRoot: /\nclusterDNS:\n- 10.7.240.10\nclusterDomain: cluster.local\nenableDebuggingHandlers: true\nevictionHard:\n  memory.available: 100Mi\n  nodefs.available: 10%\n  nodefs.inodesFree: 5%\n  pid.available: 10%\nfeatureGates:\n  DynamicKubeletConfig: false\n  ExecProbeTimeout: false\n  InTreePluginAWSUnregister: true\n  InTreePluginAzureDiskUnregister: true\n  InTreePluginOpenStackUnregister: true\n  InTreePluginvSphereUnregister: true\n  RotateKubeletServerCertificate: true\nkernelMemcgNotification: true\nkind: KubeletConfiguration\nkubeReserved:\n  cpu: 1060m\n  ephemeral-storage: 41Gi\n  memory: 1019Mi\nreadOnlyPort: 10255\nserverTLSBootstrap: true\nstaticPodPath: /etc/kubernetes/manifests\n"
+            },
+            {
+              "key": "kube-labels",
+              "value": "cloud.google.com/gke-boot-disk=pd-standard,cloud.google.com/gke-container-runtime=containerd,cloud.google.com/gke-netd-ready=true,cloud.google.com/gke-nodepool=default-pool,cloud.google.com/gke-os-distribution=cos,cloud.google.com/machine-family=e2,iam.gke.io/gke-metadata-server-enabled=true"
+            },
+            {
+              "key": "cluster-location",
+              "value": "europe-west4"
+            },
+            {
+              "key": "user-data",
+              "value": "REDACTED"
+            }
+          ],
+          "kind": "compute#metadata"
+        },
+        "networkInterfaces": [
+          {
+            "accessConfigs": [
+              {
+                "kind": "compute#accessConfig",
+                "name": "external-nat",
+                "networkTier": "PREMIUM",
+                "type": "ONE_TO_ONE_NAT"
+              }
+            ],
+            "kind": "compute#networkInterface",
+            "name": "nic0",
+            "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+            "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks/default"
+          }
+        ],
+        "networkPerformanceConfig": {
+          "totalEgressBandwidthTier": "DEFAULT"
+        },
+        "scheduling": {
+          "automaticRestart": true,
+          "onHostMaintenance": "MIGRATE",
+          "preemptible": false
+        },
+        "serviceAccounts": [
+          {
+            "email": "gke2sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com",
+            "scopes": [
+              "https://www.googleapis.com/auth/cloud-platform"
+            ]
+          }
+        ],
+        "shieldedInstanceConfig": {
+          "enableIntegrityMonitoring": true,
+          "enableSecureBoot": false,
+          "enableVtpm": true
+        },
+        "tags": {
+          "items": [
+            "gke-gke2-custom-tag",
+            "gke-gke2-7cf59b1c-node"
+          ]
+        }
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/instanceTemplates/gke-gke2-default-pool-47d41bb0"
+    },
+    {
+      "creationTimestamp": "2022-03-30T02:10:34.521-07:00",
+      "description": "",
+      "id": "6104672578455576677",
+      "kind": "compute#instanceTemplate",
+      "name": "gke-gke2-default-pool-53119809",
+      "properties": {
+        "canIpForward": true,
+        "disks": [
+          {
+            "autoDelete": true,
+            "boot": true,
+            "deviceName": "persistent-disk-0",
+            "index": 0,
+            "initializeParams": {
+              "diskSizeGb": "100",
+              "diskType": "pd-standard",
+              "labels": {
+                "goog-gke-node": ""
+              },
+              "sourceImage": "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/images/gke-1219-gke1002-cos-89-16108-604-3-v220225-c-pre"
+            },
+            "kind": "compute#attachedDisk",
+            "mode": "READ_WRITE",
+            "type": "PERSISTENT"
+          }
+        ],
+        "labels": {
+          "goog-gke-node": ""
+        },
+        "machineType": "e2-medium",
+        "metadata": {
+          "fingerprint": "REDACTED",
+          "items": [
+            {
+              "key": "gci-ensure-gke-docker",
+              "value": "true"
+            },
+            {
+              "key": "kubeconfig",
+              "value": "apiVersion: v1\nkind: Config\nclusters:\n- cluster:\n    server: https://34.90.156.159\n    certificate-authority: '/etc/srv/kubernetes/pki/ca-certificates.crt'\n  name: default-cluster\ncontexts:\n- context:\n    cluster: default-cluster\n    namespace: default\n    user: exec-plugin-auth\n  name: default-context\ncurrent-context: default-context\nusers:\n- name: exec-plugin-auth\n  user:\n    exec:\n      apiVersion: \"client.authentication.k8s.io/v1alpha1\"\n      command: '/home/kubernetes/bin/gke-exec-auth-plugin'\n      args: [\"--cache-dir\", '/var/lib/kubelet/pki/']\n"
+            },
+            {
+              "key": "disable-legacy-endpoints",
+              "value": "true"
+            },
+            {
+              "key": "gci-update-strategy",
+              "value": "update_disabled"
+            },
+            {
+              "key": "enable-oslogin",
+              "value": "false"
+            },
+            {
+              "key": "kube-env",
+              "value": "REDACTED"
+            },
+            {
+              "key": "serial-port-logging-enable",
+              "value": "true"
+            },
+            {
+              "key": "cluster-name",
+              "value": "gke2"
+            },
+            {
+              "key": "google-compute-enable-pcid",
+              "value": "true"
+            },
+            {
+              "key": "configure-sh",
+              "value": "REDACTED"
+            },
+            {
+              "key": "kube-labels",
+              "value": "cloud.google.com/gke-boot-disk=pd-standard,cloud.google.com/gke-container-runtime=containerd,cloud.google.com/gke-netd-ready=true,cloud.google.com/gke-nodepool=default-pool,cloud.google.com/gke-os-distribution=cos,cloud.google.com/machine-family=e2,iam.gke.io/gke-metadata-server-enabled=true"
+            },
+            {
+              "key": "cluster-location",
+              "value": "europe-west4"
+            },
+            {
+              "key": "user-data",
+              "value": "REDACTED"
+            },
+            {
+              "key": "kubelet-config",
+              "value": "apiVersion: kubelet.config.k8s.io/v1beta1\nauthentication:\n  anonymous:\n    enabled: false\n  webhook:\n    enabled: true\n  x509:\n    clientCAFile: /etc/srv/kubernetes/pki/ca-certificates.crt\nauthorization:\n  mode: Webhook\ncgroupRoot: /\nclusterDNS:\n- 10.7.240.10\nclusterDomain: cluster.local\nenableDebuggingHandlers: true\nevictionHard:\n  memory.available: 100Mi\n  nodefs.available: 10%\n  nodefs.inodesFree: 5%\n  pid.available: 10%\nfeatureGates:\n  DynamicKubeletConfig: false\n  ExecProbeTimeout: false\n  InTreePluginAWSUnregister: true\n  InTreePluginAzureDiskUnregister: true\n  InTreePluginOpenStackUnregister: true\n  InTreePluginvSphereUnregister: true\n  RotateKubeletServerCertificate: true\nkernelMemcgNotification: true\nkind: KubeletConfiguration\nkubeReserved:\n  cpu: 1060m\n  ephemeral-storage: 41Gi\n  memory: 1019Mi\nreadOnlyPort: 10255\nserverTLSBootstrap: true\nstaticPodPath: /etc/kubernetes/manifests\n"
+            },
+            {
+              "key": "cluster-uid",
+              "value": "7cf59b1c81044293849d209432245c4cd1f1b56f6fa640938dc3785b7f0e39b3"
+            },
+            {
+              "key": "gci-metrics-enabled",
+              "value": "true"
+            }
+          ],
+          "kind": "compute#metadata"
+        },
+        "networkInterfaces": [
+          {
+            "accessConfigs": [
+              {
+                "kind": "compute#accessConfig",
+                "name": "external-nat",
+                "networkTier": "PREMIUM",
+                "type": "ONE_TO_ONE_NAT"
+              }
+            ],
+            "kind": "compute#networkInterface",
+            "name": "nic0",
+            "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+            "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks/default"
+          }
+        ],
+        "networkPerformanceConfig": {
+          "totalEgressBandwidthTier": "DEFAULT"
+        },
+        "scheduling": {
+          "automaticRestart": true,
+          "onHostMaintenance": "MIGRATE",
+          "preemptible": false
+        },
+        "serviceAccounts": [
+          {
+            "email": "gke2sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com",
+            "scopes": [
+              "https://www.googleapis.com/auth/cloud-platform"
+            ]
+          }
+        ],
+        "shieldedInstanceConfig": {
+          "enableIntegrityMonitoring": true,
+          "enableSecureBoot": false,
+          "enableVtpm": true
+        },
+        "tags": {
+          "items": [
+            "gke-gke2-custom-tag",
+            "gke-gke2-7cf59b1c-node"
+          ]
+        }
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/instanceTemplates/gke-gke2-default-pool-53119809"
+    },
+    {
+      "creationTimestamp": "2022-03-30T02:10:34.541-07:00",
+      "description": "",
+      "id": "463568167162716261",
+      "kind": "compute#instanceTemplate",
+      "name": "gke-gke2-default-pool-69de2659",
+      "properties": {
+        "canIpForward": true,
+        "disks": [
+          {
+            "autoDelete": true,
+            "boot": true,
+            "deviceName": "persistent-disk-0",
+            "index": 0,
+            "initializeParams": {
+              "diskSizeGb": "100",
+              "diskType": "pd-standard",
+              "labels": {
+                "goog-gke-node": ""
+              },
+              "sourceImage": "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/images/gke-1219-gke1002-cos-89-16108-604-3-v220225-c-pre"
+            },
+            "kind": "compute#attachedDisk",
+            "mode": "READ_WRITE",
+            "type": "PERSISTENT"
+          }
+        ],
+        "labels": {
+          "goog-gke-node": ""
+        },
+        "machineType": "e2-medium",
+        "metadata": {
+          "fingerprint": "REDACTED",
+          "items": [
+            {
+              "key": "gci-metrics-enabled",
+              "value": "true"
+            },
+            {
+              "key": "cluster-uid",
+              "value": "7cf59b1c81044293849d209432245c4cd1f1b56f6fa640938dc3785b7f0e39b3"
+            },
+            {
+              "key": "kubeconfig",
+              "value": "apiVersion: v1\nkind: Config\nclusters:\n- cluster:\n    server: https://34.90.156.159\n    certificate-authority: '/etc/srv/kubernetes/pki/ca-certificates.crt'\n  name: default-cluster\ncontexts:\n- context:\n    cluster: default-cluster\n    namespace: default\n    user: exec-plugin-auth\n  name: default-context\ncurrent-context: default-context\nusers:\n- name: exec-plugin-auth\n  user:\n    exec:\n      apiVersion: \"client.authentication.k8s.io/v1alpha1\"\n      command: '/home/kubernetes/bin/gke-exec-auth-plugin'\n      args: [\"--cache-dir\", '/var/lib/kubelet/pki/']\n"
+            },
+            {
+              "key": "disable-legacy-endpoints",
+              "value": "true"
+            },
+            {
+              "key": "gci-ensure-gke-docker",
+              "value": "true"
+            },
+            {
+              "key": "google-compute-enable-pcid",
+              "value": "true"
+            },
+            {
+              "key": "configure-sh",
+              "value": "REDACTED"
+            },
+            {
+              "key": "gci-update-strategy",
+              "value": "update_disabled"
+            },
+            {
+              "key": "enable-oslogin",
+              "value": "false"
+            },
+            {
+              "key": "kube-env",
+              "value": "REDACTED"
+            },
+            {
+              "key": "serial-port-logging-enable",
+              "value": "true"
+            },
+            {
+              "key": "cluster-name",
+              "value": "gke2"
+            },
+            {
+              "key": "user-data",
+              "value": "REDACTED"
+            },
+            {
+              "key": "kubelet-config",
+              "value": "apiVersion: kubelet.config.k8s.io/v1beta1\nauthentication:\n  anonymous:\n    enabled: false\n  webhook:\n    enabled: true\n  x509:\n    clientCAFile: /etc/srv/kubernetes/pki/ca-certificates.crt\nauthorization:\n  mode: Webhook\ncgroupRoot: /\nclusterDNS:\n- 10.7.240.10\nclusterDomain: cluster.local\nenableDebuggingHandlers: true\nevictionHard:\n  memory.available: 100Mi\n  nodefs.available: 10%\n  nodefs.inodesFree: 5%\n  pid.available: 10%\nfeatureGates:\n  DynamicKubeletConfig: false\n  ExecProbeTimeout: false\n  InTreePluginAWSUnregister: true\n  InTreePluginAzureDiskUnregister: true\n  InTreePluginOpenStackUnregister: true\n  InTreePluginvSphereUnregister: true\n  RotateKubeletServerCertificate: true\nkernelMemcgNotification: true\nkind: KubeletConfiguration\nkubeReserved:\n  cpu: 1060m\n  ephemeral-storage: 41Gi\n  memory: 1019Mi\nreadOnlyPort: 10255\nserverTLSBootstrap: true\nstaticPodPath: /etc/kubernetes/manifests\n"
+            },
+            {
+              "key": "kube-labels",
+              "value": "cloud.google.com/gke-boot-disk=pd-standard,cloud.google.com/gke-container-runtime=containerd,cloud.google.com/gke-netd-ready=true,cloud.google.com/gke-nodepool=default-pool,cloud.google.com/gke-os-distribution=cos,cloud.google.com/machine-family=e2,iam.gke.io/gke-metadata-server-enabled=true"
+            },
+            {
+              "key": "cluster-location",
+              "value": "europe-west4"
+            }
+          ],
+          "kind": "compute#metadata"
+        },
+        "networkInterfaces": [
+          {
+            "accessConfigs": [
+              {
+                "kind": "compute#accessConfig",
+                "name": "external-nat",
+                "networkTier": "PREMIUM",
+                "type": "ONE_TO_ONE_NAT"
+              }
+            ],
+            "kind": "compute#networkInterface",
+            "name": "nic0",
+            "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+            "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks/default"
+          }
+        ],
+        "networkPerformanceConfig": {
+          "totalEgressBandwidthTier": "DEFAULT"
+        },
+        "scheduling": {
+          "automaticRestart": true,
+          "onHostMaintenance": "MIGRATE",
+          "preemptible": false
+        },
+        "serviceAccounts": [
+          {
+            "email": "gke2sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com",
+            "scopes": [
+              "https://www.googleapis.com/auth/cloud-platform"
+            ]
+          }
+        ],
+        "shieldedInstanceConfig": {
+          "enableIntegrityMonitoring": true,
+          "enableSecureBoot": false,
+          "enableVtpm": true
+        },
+        "tags": {
+          "items": [
+            "gke-gke2-custom-tag",
+            "gke-gke2-7cf59b1c-node"
+          ]
+        }
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/instanceTemplates/gke-gke2-default-pool-69de2659"
+    },
+    {
+      "creationTimestamp": "2022-03-30T02:10:35.610-07:00",
+      "description": "",
+      "id": "7574570632376590436",
+      "kind": "compute#instanceTemplate",
+      "name": "gke-gke3-default-pool-2dad69e8",
+      "properties": {
+        "canIpForward": true,
+        "disks": [
+          {
+            "autoDelete": true,
+            "boot": true,
+            "deviceName": "persistent-disk-0",
+            "index": 0,
+            "initializeParams": {
+              "diskSizeGb": "100",
+              "diskType": "pd-standard",
+              "labels": {
+                "goog-gke-node": ""
+              },
+              "sourceImage": "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/images/gke-1219-gke1002-cos-89-16108-604-3-v220225-c-pre"
+            },
+            "kind": "compute#attachedDisk",
+            "mode": "READ_WRITE",
+            "type": "PERSISTENT"
+          }
+        ],
+        "labels": {
+          "goog-gke-node": ""
+        },
+        "machineType": "e2-medium",
+        "metadata": {
+          "fingerprint": "REDACTED",
+          "items": [
+            {
+              "key": "kube-env",
+              "value": "REDACTED"
+            },
+            {
+              "key": "kubelet-config",
+              "value": "apiVersion: kubelet.config.k8s.io/v1beta1\nauthentication:\n  anonymous:\n    enabled: false\n  webhook:\n    enabled: true\n  x509:\n    clientCAFile: /etc/srv/kubernetes/pki/ca-certificates.crt\nauthorization:\n  mode: Webhook\ncgroupRoot: /\nclusterDNS:\n- 10.11.240.10\nclusterDomain: cluster.local\nenableDebuggingHandlers: true\nevictionHard:\n  memory.available: 100Mi\n  nodefs.available: 10%\n  nodefs.inodesFree: 5%\n  pid.available: 10%\nfeatureGates:\n  DynamicKubeletConfig: false\n  ExecProbeTimeout: false\n  InTreePluginAWSUnregister: true\n  InTreePluginAzureDiskUnregister: true\n  InTreePluginOpenStackUnregister: true\n  InTreePluginvSphereUnregister: true\n  RotateKubeletServerCertificate: true\nkernelMemcgNotification: true\nkind: KubeletConfiguration\nkubeReserved:\n  cpu: 1060m\n  ephemeral-storage: 41Gi\n  memory: 1019Mi\nreadOnlyPort: 10255\nserverTLSBootstrap: true\nstaticPodPath: /etc/kubernetes/manifests\n"
+            },
+            {
+              "key": "kube-labels",
+              "value": "cloud.google.com/gke-boot-disk=pd-standard,cloud.google.com/gke-container-runtime=containerd,cloud.google.com/gke-nodepool=default-pool,cloud.google.com/gke-os-distribution=cos,cloud.google.com/machine-family=e2"
+            },
+            {
+              "key": "cluster-location",
+              "value": "europe-west4"
+            },
+            {
+              "key": "google-compute-enable-pcid",
+              "value": "true"
+            },
+            {
+              "key": "user-data",
+              "value": "REDACTED"
+            },
+            {
+              "key": "gci-metrics-enabled",
+              "value": "true"
+            },
+            {
+              "key": "serial-port-logging-enable",
+              "value": "true"
+            },
+            {
+              "key": "configure-sh",
+              "value": "REDACTED"
+            },
+            {
+              "key": "disable-legacy-endpoints",
+              "value": "true"
+            },
+            {
+              "key": "cluster-name",
+              "value": "gke3"
+            },
+            {
+              "key": "cluster-uid",
+              "value": "b4ccfbf1aca04a92a32f23fbd20a5eb3291e94f22ae24265bdccddfba112328d"
+            },
+            {
+              "key": "gci-update-strategy",
+              "value": "update_disabled"
+            },
+            {
+              "key": "gci-ensure-gke-docker",
+              "value": "true"
+            },
+            {
+              "key": "enable-oslogin",
+              "value": "false"
+            },
+            {
+              "key": "kubeconfig",
+              "value": "apiVersion: v1\nkind: Config\nclusters:\n- cluster:\n    server: https://34.141.248.136\n    certificate-authority: '/etc/srv/kubernetes/pki/ca-certificates.crt'\n  name: default-cluster\ncontexts:\n- context:\n    cluster: default-cluster\n    namespace: default\n    user: exec-plugin-auth\n  name: default-context\ncurrent-context: default-context\nusers:\n- name: exec-plugin-auth\n  user:\n    exec:\n      apiVersion: \"client.authentication.k8s.io/v1alpha1\"\n      command: '/home/kubernetes/bin/gke-exec-auth-plugin'\n      args: [\"--cache-dir\", '/var/lib/kubelet/pki/']\n"
+            }
+          ],
+          "kind": "compute#metadata"
+        },
+        "networkInterfaces": [
+          {
+            "accessConfigs": [
+              {
+                "kind": "compute#accessConfig",
+                "name": "external-nat",
+                "networkTier": "PREMIUM",
+                "type": "ONE_TO_ONE_NAT"
+              }
+            ],
+            "kind": "compute#networkInterface",
+            "name": "nic0",
+            "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+            "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks/default"
+          }
+        ],
+        "networkPerformanceConfig": {
+          "totalEgressBandwidthTier": "DEFAULT"
+        },
+        "scheduling": {
+          "automaticRestart": true,
+          "onHostMaintenance": "MIGRATE",
+          "preemptible": false
+        },
+        "serviceAccounts": [
+          {
+            "email": "gke3sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com",
+            "scopes": [
+              "https://www.googleapis.com/auth/cloud-platform"
+            ]
+          }
+        ],
+        "shieldedInstanceConfig": {
+          "enableIntegrityMonitoring": true,
+          "enableSecureBoot": false,
+          "enableVtpm": true
+        },
+        "tags": {
+          "items": [
+            "gke-gke3-b4ccfbf1-node"
+          ]
+        }
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/instanceTemplates/gke-gke3-default-pool-2dad69e8"
+    },
+    {
+      "creationTimestamp": "2022-03-30T02:10:35.940-07:00",
+      "description": "",
+      "id": "1283725119028043876",
+      "kind": "compute#instanceTemplate",
+      "name": "gke-gke3-default-pool-6c71a9ca",
+      "properties": {
+        "canIpForward": true,
+        "disks": [
+          {
+            "autoDelete": true,
+            "boot": true,
+            "deviceName": "persistent-disk-0",
+            "index": 0,
+            "initializeParams": {
+              "diskSizeGb": "100",
+              "diskType": "pd-standard",
+              "labels": {
+                "goog-gke-node": ""
+              },
+              "sourceImage": "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/images/gke-1219-gke1002-cos-89-16108-604-3-v220225-c-pre"
+            },
+            "kind": "compute#attachedDisk",
+            "mode": "READ_WRITE",
+            "type": "PERSISTENT"
+          }
+        ],
+        "labels": {
+          "goog-gke-node": ""
+        },
+        "machineType": "e2-medium",
+        "metadata": {
+          "fingerprint": "REDACTED",
+          "items": [
+            {
+              "key": "cluster-name",
+              "value": "gke3"
+            },
+            {
+              "key": "cluster-uid",
+              "value": "b4ccfbf1aca04a92a32f23fbd20a5eb3291e94f22ae24265bdccddfba112328d"
+            },
+            {
+              "key": "gci-update-strategy",
+              "value": "update_disabled"
+            },
+            {
+              "key": "gci-ensure-gke-docker",
+              "value": "true"
+            },
+            {
+              "key": "enable-oslogin",
+              "value": "false"
+            },
+            {
+              "key": "kubeconfig",
+              "value": "apiVersion: v1\nkind: Config\nclusters:\n- cluster:\n    server: https://34.141.248.136\n    certificate-authority: '/etc/srv/kubernetes/pki/ca-certificates.crt'\n  name: default-cluster\ncontexts:\n- context:\n    cluster: default-cluster\n    namespace: default\n    user: exec-plugin-auth\n  name: default-context\ncurrent-context: default-context\nusers:\n- name: exec-plugin-auth\n  user:\n    exec:\n      apiVersion: \"client.authentication.k8s.io/v1alpha1\"\n      command: '/home/kubernetes/bin/gke-exec-auth-plugin'\n      args: [\"--cache-dir\", '/var/lib/kubelet/pki/']\n"
+            },
+            {
+              "key": "kube-env",
+              "value": "REDACTED"
+            },
+            {
+              "key": "kubelet-config",
+              "value": "apiVersion: kubelet.config.k8s.io/v1beta1\nauthentication:\n  anonymous:\n    enabled: false\n  webhook:\n    enabled: true\n  x509:\n    clientCAFile: /etc/srv/kubernetes/pki/ca-certificates.crt\nauthorization:\n  mode: Webhook\ncgroupRoot: /\nclusterDNS:\n- 10.11.240.10\nclusterDomain: cluster.local\nenableDebuggingHandlers: true\nevictionHard:\n  memory.available: 100Mi\n  nodefs.available: 10%\n  nodefs.inodesFree: 5%\n  pid.available: 10%\nfeatureGates:\n  DynamicKubeletConfig: false\n  ExecProbeTimeout: false\n  InTreePluginAWSUnregister: true\n  InTreePluginAzureDiskUnregister: true\n  InTreePluginOpenStackUnregister: true\n  InTreePluginvSphereUnregister: true\n  RotateKubeletServerCertificate: true\nkernelMemcgNotification: true\nkind: KubeletConfiguration\nkubeReserved:\n  cpu: 1060m\n  ephemeral-storage: 41Gi\n  memory: 1019Mi\nreadOnlyPort: 10255\nserverTLSBootstrap: true\nstaticPodPath: /etc/kubernetes/manifests\n"
+            },
+            {
+              "key": "kube-labels",
+              "value": "cloud.google.com/gke-boot-disk=pd-standard,cloud.google.com/gke-container-runtime=containerd,cloud.google.com/gke-nodepool=default-pool,cloud.google.com/gke-os-distribution=cos,cloud.google.com/machine-family=e2"
+            },
+            {
+              "key": "cluster-location",
+              "value": "europe-west4"
+            },
+            {
+              "key": "google-compute-enable-pcid",
+              "value": "true"
+            },
+            {
+              "key": "user-data",
+              "value": "REDACTED"
+            },
+            {
+              "key": "gci-metrics-enabled",
+              "value": "true"
+            },
+            {
+              "key": "serial-port-logging-enable",
+              "value": "true"
+            },
+            {
+              "key": "configure-sh",
+              "value": "REDACTED"
+            },
+            {
+              "key": "disable-legacy-endpoints",
+              "value": "true"
+            }
+          ],
+          "kind": "compute#metadata"
+        },
+        "networkInterfaces": [
+          {
+            "accessConfigs": [
+              {
+                "kind": "compute#accessConfig",
+                "name": "external-nat",
+                "networkTier": "PREMIUM",
+                "type": "ONE_TO_ONE_NAT"
+              }
+            ],
+            "kind": "compute#networkInterface",
+            "name": "nic0",
+            "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+            "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks/default"
+          }
+        ],
+        "networkPerformanceConfig": {
+          "totalEgressBandwidthTier": "DEFAULT"
+        },
+        "scheduling": {
+          "automaticRestart": true,
+          "onHostMaintenance": "MIGRATE",
+          "preemptible": false
+        },
+        "serviceAccounts": [
+          {
+            "email": "gke3sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com",
+            "scopes": [
+              "https://www.googleapis.com/auth/cloud-platform"
+            ]
+          }
+        ],
+        "shieldedInstanceConfig": {
+          "enableIntegrityMonitoring": true,
+          "enableSecureBoot": false,
+          "enableVtpm": true
+        },
+        "tags": {
+          "items": [
+            "gke-gke3-b4ccfbf1-node"
+          ]
+        }
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/instanceTemplates/gke-gke3-default-pool-6c71a9ca"
+    },
+    {
+      "creationTimestamp": "2022-03-30T02:10:35.718-07:00",
+      "description": "",
+      "id": "8495866796978053220",
+      "kind": "compute#instanceTemplate",
+      "name": "gke-gke3-default-pool-ea414006",
+      "properties": {
+        "canIpForward": true,
+        "disks": [
+          {
+            "autoDelete": true,
+            "boot": true,
+            "deviceName": "persistent-disk-0",
+            "index": 0,
+            "initializeParams": {
+              "diskSizeGb": "100",
+              "diskType": "pd-standard",
+              "labels": {
+                "goog-gke-node": ""
+              },
+              "sourceImage": "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/images/gke-1219-gke1002-cos-89-16108-604-3-v220225-c-pre"
+            },
+            "kind": "compute#attachedDisk",
+            "mode": "READ_WRITE",
+            "type": "PERSISTENT"
+          }
+        ],
+        "labels": {
+          "goog-gke-node": ""
+        },
+        "machineType": "e2-medium",
+        "metadata": {
+          "fingerprint": "REDACTED",
+          "items": [
+            {
+              "key": "user-data",
+              "value": "REDACTED"
+            },
+            {
+              "key": "gci-metrics-enabled",
+              "value": "true"
+            },
+            {
+              "key": "serial-port-logging-enable",
+              "value": "true"
+            },
+            {
+              "key": "cluster-location",
+              "value": "europe-west4"
+            },
+            {
+              "key": "google-compute-enable-pcid",
+              "value": "true"
+            },
+            {
+              "key": "configure-sh",
+              "value": "REDACTED"
+            },
+            {
+              "key": "disable-legacy-endpoints",
+              "value": "true"
+            },
+            {
+              "key": "gci-update-strategy",
+              "value": "update_disabled"
+            },
+            {
+              "key": "gci-ensure-gke-docker",
+              "value": "true"
+            },
+            {
+              "key": "enable-oslogin",
+              "value": "false"
+            },
+            {
+              "key": "kubeconfig",
+              "value": "apiVersion: v1\nkind: Config\nclusters:\n- cluster:\n    server: https://34.141.248.136\n    certificate-authority: '/etc/srv/kubernetes/pki/ca-certificates.crt'\n  name: default-cluster\ncontexts:\n- context:\n    cluster: default-cluster\n    namespace: default\n    user: exec-plugin-auth\n  name: default-context\ncurrent-context: default-context\nusers:\n- name: exec-plugin-auth\n  user:\n    exec:\n      apiVersion: \"client.authentication.k8s.io/v1alpha1\"\n      command: '/home/kubernetes/bin/gke-exec-auth-plugin'\n      args: [\"--cache-dir\", '/var/lib/kubelet/pki/']\n"
+            },
+            {
+              "key": "cluster-name",
+              "value": "gke3"
+            },
+            {
+              "key": "cluster-uid",
+              "value": "b4ccfbf1aca04a92a32f23fbd20a5eb3291e94f22ae24265bdccddfba112328d"
+            },
+            {
+              "key": "kube-labels",
+              "value": "cloud.google.com/gke-boot-disk=pd-standard,cloud.google.com/gke-container-runtime=containerd,cloud.google.com/gke-nodepool=default-pool,cloud.google.com/gke-os-distribution=cos,cloud.google.com/machine-family=e2"
+            },
+            {
+              "key": "kube-env",
+              "value": "REDACTED"
+            },
+            {
+              "key": "kubelet-config",
+              "value": "apiVersion: kubelet.config.k8s.io/v1beta1\nauthentication:\n  anonymous:\n    enabled: false\n  webhook:\n    enabled: true\n  x509:\n    clientCAFile: /etc/srv/kubernetes/pki/ca-certificates.crt\nauthorization:\n  mode: Webhook\ncgroupRoot: /\nclusterDNS:\n- 10.11.240.10\nclusterDomain: cluster.local\nenableDebuggingHandlers: true\nevictionHard:\n  memory.available: 100Mi\n  nodefs.available: 10%\n  nodefs.inodesFree: 5%\n  pid.available: 10%\nfeatureGates:\n  DynamicKubeletConfig: false\n  ExecProbeTimeout: false\n  InTreePluginAWSUnregister: true\n  InTreePluginAzureDiskUnregister: true\n  InTreePluginOpenStackUnregister: true\n  InTreePluginvSphereUnregister: true\n  RotateKubeletServerCertificate: true\nkernelMemcgNotification: true\nkind: KubeletConfiguration\nkubeReserved:\n  cpu: 1060m\n  ephemeral-storage: 41Gi\n  memory: 1019Mi\nreadOnlyPort: 10255\nserverTLSBootstrap: true\nstaticPodPath: /etc/kubernetes/manifests\n"
+            }
+          ],
+          "kind": "compute#metadata"
+        },
+        "networkInterfaces": [
+          {
+            "accessConfigs": [
+              {
+                "kind": "compute#accessConfig",
+                "name": "external-nat",
+                "networkTier": "PREMIUM",
+                "type": "ONE_TO_ONE_NAT"
+              }
+            ],
+            "kind": "compute#networkInterface",
+            "name": "nic0",
+            "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+            "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks/default"
+          }
+        ],
+        "networkPerformanceConfig": {
+          "totalEgressBandwidthTier": "DEFAULT"
+        },
+        "scheduling": {
+          "automaticRestart": true,
+          "onHostMaintenance": "MIGRATE",
+          "preemptible": false
+        },
+        "serviceAccounts": [
+          {
+            "email": "gke3sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com",
+            "scopes": [
+              "https://www.googleapis.com/auth/cloud-platform"
+            ]
+          }
+        ],
+        "shieldedInstanceConfig": {
+          "enableIntegrityMonitoring": true,
+          "enableSecureBoot": false,
+          "enableVtpm": true
+        },
+        "tags": {
+          "items": [
+            "gke-gke3-b4ccfbf1-node"
+          ]
+        }
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/instanceTemplates/gke-gke3-default-pool-ea414006"
+    },
+    {
+      "creationTimestamp": "2022-03-30T02:12:21.556-07:00",
+      "description": "",
+      "id": "1955412215476101146",
+      "kind": "compute#instanceTemplate",
+      "name": "gke-gke4-default-pool-4b133c3f",
+      "properties": {
+        "disks": [
+          {
+            "autoDelete": true,
+            "boot": true,
+            "deviceName": "persistent-disk-0",
+            "index": 0,
+            "initializeParams": {
+              "diskSizeGb": "100",
+              "diskType": "pd-standard",
+              "labels": {
+                "goog-gke-node": ""
+              },
+              "sourceImage": "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/images/gke-1219-gke1002-cos-89-16108-604-3-v220225-c-pre"
+            },
+            "kind": "compute#attachedDisk",
+            "mode": "READ_WRITE",
+            "type": "PERSISTENT"
+          }
+        ],
+        "labels": {
+          "goog-gke-node": ""
+        },
+        "machineType": "e2-medium",
+        "metadata": {
+          "fingerprint": "REDACTED",
+          "items": [
+            {
+              "key": "cluster-location",
+              "value": "europe-west4-a"
+            },
+            {
+              "key": "google-compute-enable-pcid",
+              "value": "true"
+            },
+            {
+              "key": "kube-labels",
+              "value": "cloud.google.com/gke-boot-disk=pd-standard,cloud.google.com/gke-container-runtime=containerd,cloud.google.com/gke-netd-ready=true,cloud.google.com/gke-nodepool=default-pool,cloud.google.com/gke-os-distribution=cos,cloud.google.com/machine-family=e2,iam.gke.io/gke-metadata-server-enabled=true"
+            },
+            {
+              "key": "disable-legacy-endpoints",
+              "value": "true"
+            },
+            {
+              "key": "cluster-uid",
+              "value": "93befb7e908b42b2aad0a3424d3b940034253bd22a584bd3b177d7e2575ed5f3"
+            },
+            {
+              "key": "configure-sh",
+              "value": "REDACTED"
+            },
+            {
+              "key": "kube-env",
+              "value": "REDACTED"
+            },
+            {
+              "key": "kubeconfig",
+              "value": "apiVersion: v1\nkind: Config\nclusters:\n- cluster:\n    server: https://10.0.1.2\n    certificate-authority: '/etc/srv/kubernetes/pki/ca-certificates.crt'\n  name: default-cluster\ncontexts:\n- context:\n    cluster: default-cluster\n    namespace: default\n    user: exec-plugin-auth\n  name: default-context\ncurrent-context: default-context\nusers:\n- name: exec-plugin-auth\n  user:\n    exec:\n      apiVersion: \"client.authentication.k8s.io/v1alpha1\"\n      command: '/home/kubernetes/bin/gke-exec-auth-plugin'\n      args: [\"--cache-dir\", '/var/lib/kubelet/pki/']\n"
+            },
+            {
+              "key": "serial-port-logging-enable",
+              "value": "true"
+            },
+            {
+              "key": "cluster-name",
+              "value": "gke4"
+            },
+            {
+              "key": "user-data",
+              "value": "REDACTED"
+            },
+            {
+              "key": "gci-update-strategy",
+              "value": "update_disabled"
+            },
+            {
+              "key": "gci-ensure-gke-docker",
+              "value": "true"
+            },
+            {
+              "key": "gci-metrics-enabled",
+              "value": "true"
+            },
+            {
+              "key": "kubelet-config",
+              "value": "apiVersion: kubelet.config.k8s.io/v1beta1\nauthentication:\n  anonymous:\n    enabled: false\n  webhook:\n    enabled: true\n  x509:\n    clientCAFile: /etc/srv/kubernetes/pki/ca-certificates.crt\nauthorization:\n  mode: Webhook\ncgroupRoot: /\nclusterDNS:\n- 10.60.0.10\nclusterDomain: cluster.local\nenableDebuggingHandlers: true\nevictionHard:\n  memory.available: 100Mi\n  nodefs.available: 10%\n  nodefs.inodesFree: 5%\n  pid.available: 10%\nfeatureGates:\n  DynamicKubeletConfig: false\n  ExecProbeTimeout: false\n  InTreePluginAWSUnregister: true\n  InTreePluginAzureDiskUnregister: true\n  InTreePluginOpenStackUnregister: true\n  InTreePluginvSphereUnregister: true\n  RotateKubeletServerCertificate: true\nkernelMemcgNotification: true\nkind: KubeletConfiguration\nkubeReserved:\n  cpu: 1060m\n  ephemeral-storage: 41Gi\n  memory: 1019Mi\nreadOnlyPort: 10255\nserverTLSBootstrap: true\nstaticPodPath: /etc/kubernetes/manifests\n"
+            }
+          ],
+          "kind": "compute#metadata"
+        },
+        "networkInterfaces": [
+          {
+            "aliasIpRanges": [
+              {
+                "ipCidrRange": "/24",
+                "subnetworkRangeName": "gke-gke4-pods-93befb7e"
+              }
+            ],
+            "kind": "compute#networkInterface",
+            "name": "nic0",
+            "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+            "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks/default"
+          }
+        ],
+        "networkPerformanceConfig": {
+          "totalEgressBandwidthTier": "DEFAULT"
+        },
+        "scheduling": {
+          "automaticRestart": true,
+          "onHostMaintenance": "MIGRATE",
+          "preemptible": false
+        },
+        "serviceAccounts": [
+          {
+            "email": "default",
+            "scopes": [
+              "https://www.googleapis.com/auth/devstorage.read_only",
+              "https://www.googleapis.com/auth/logging.write",
+              "https://www.googleapis.com/auth/monitoring",
+              "https://www.googleapis.com/auth/service.management.readonly",
+              "https://www.googleapis.com/auth/servicecontrol",
+              "https://www.googleapis.com/auth/trace.append"
+            ]
+          }
+        ],
+        "shieldedInstanceConfig": {
+          "enableIntegrityMonitoring": true,
+          "enableSecureBoot": false,
+          "enableVtpm": true
+        },
+        "tags": {
+          "items": [
+            "gke-gke4-93befb7e-node"
+          ]
+        }
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/instanceTemplates/gke-gke4-default-pool-4b133c3f"
+    },
+    {
+      "creationTimestamp": "2022-03-30T04:04:25.829-07:00",
+      "description": "",
+      "id": "8945517119448647638",
+      "kind": "compute#instanceTemplate",
+      "name": "gke-gke6-default-pool-67109377",
+      "properties": {
+        "canIpForward": true,
+        "disks": [
+          {
+            "autoDelete": true,
+            "boot": true,
+            "deviceName": "persistent-disk-0",
+            "index": 0,
+            "initializeParams": {
+              "diskSizeGb": "100",
+              "diskType": "pd-standard",
+              "labels": {
+                "gcpdiag_test": "gke",
+                "goog-gke-node": ""
+              },
+              "sourceImage": "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/images/gke-1219-gke1002-cos-89-16108-604-3-v220225-c-pre-nvda"
+            },
+            "kind": "compute#attachedDisk",
+            "mode": "READ_WRITE",
+            "type": "PERSISTENT"
+          }
+        ],
+        "guestAccelerators": [
+          {
+            "acceleratorCount": 1,
+            "acceleratorType": "nvidia-tesla-v100"
+          }
+        ],
+        "labels": {
+          "gcpdiag_test": "gke",
+          "goog-gke-node": ""
+        },
+        "machineType": "n1-standard-2",
+        "metadata": {
+          "fingerprint": "REDACTED",
+          "items": [
+            {
+              "key": "cluster-location",
+              "value": "europe-west4-a"
+            },
+            {
+              "key": "kubelet-config",
+              "value": "apiVersion: kubelet.config.k8s.io/v1beta1\nauthentication:\n  anonymous:\n    enabled: false\n  webhook:\n    enabled: true\n  x509:\n    clientCAFile: /etc/srv/kubernetes/pki/ca-certificates.crt\nauthorization:\n  mode: Webhook\ncgroupRoot: /\nclusterDNS:\n- 10.15.240.10\nclusterDomain: cluster.local\nenableDebuggingHandlers: true\nevictionHard:\n  memory.available: 100Mi\n  nodefs.available: 10%\n  nodefs.inodesFree: 5%\n  pid.available: 10%\nfeatureGates:\n  DevicePlugins: true\n  DynamicKubeletConfig: false\n  ExecProbeTimeout: false\n  GracefulNodeShutdown: true\n  InTreePluginAWSUnregister: true\n  InTreePluginAzureDiskUnregister: true\n  InTreePluginOpenStackUnregister: true\n  InTreePluginvSphereUnregister: true\n  RotateKubeletServerCertificate: true\nkernelMemcgNotification: true\nkind: KubeletConfiguration\nkubeReserved:\n  cpu: 70m\n  ephemeral-storage: 41Gi\n  memory: 1736Mi\nreadOnlyPort: 10255\nserverTLSBootstrap: true\nshutdownGracePeriod: 30s\nshutdownGracePeriodCriticalPods: 5s\nstaticPodPath: /etc/kubernetes/manifests\n"
+            },
+            {
+              "key": "kube-labels",
+              "value": "cloud.google.com/gke-accelerator=nvidia-tesla-v100,cloud.google.com/gke-boot-disk=pd-standard,cloud.google.com/gke-container-runtime=containerd,cloud.google.com/gke-nodepool=default-pool,cloud.google.com/gke-os-distribution=cos,cloud.google.com/machine-family=n1"
+            },
+            {
+              "key": "cluster-uid",
+              "value": "e660e8cda47341b1ac7f18585768acc0adb789c8a06b4b7893f435661231db2f"
+            },
+            {
+              "key": "google-compute-enable-pcid",
+              "value": "true"
+            },
+            {
+              "key": "user-data",
+              "value": "REDACTED"
+            },
+            {
+              "key": "enable-oslogin",
+              "value": "false"
+            },
+            {
+              "key": "serial-port-logging-enable",
+              "value": "true"
+            },
+            {
+              "key": "configure-sh",
+              "value": "REDACTED"
+            },
+            {
+              "key": "gci-update-strategy",
+              "value": "update_disabled"
+            },
+            {
+              "key": "kube-env",
+              "value": "REDACTED"
+            },
+            {
+              "key": "kubeconfig",
+              "value": "apiVersion: v1\nkind: Config\nclusters:\n- cluster:\n    server: https://35.204.48.141\n    certificate-authority: '/etc/srv/kubernetes/pki/ca-certificates.crt'\n  name: default-cluster\ncontexts:\n- context:\n    cluster: default-cluster\n    namespace: default\n    user: exec-plugin-auth\n  name: default-context\ncurrent-context: default-context\nusers:\n- name: exec-plugin-auth\n  user:\n    exec:\n      apiVersion: \"client.authentication.k8s.io/v1alpha1\"\n      command: '/home/kubernetes/bin/gke-exec-auth-plugin'\n      args: [\"--cache-dir\", '/var/lib/kubelet/pki/']\n"
+            },
+            {
+              "key": "disable-legacy-endpoints",
+              "value": "true"
+            },
+            {
+              "key": "cluster-name",
+              "value": "gke6"
+            },
+            {
+              "key": "gci-ensure-gke-docker",
+              "value": "true"
+            },
+            {
+              "key": "gci-metrics-enabled",
+              "value": "true"
+            }
+          ],
+          "kind": "compute#metadata"
+        },
+        "networkInterfaces": [
+          {
+            "accessConfigs": [
+              {
+                "kind": "compute#accessConfig",
+                "name": "external-nat",
+                "networkTier": "PREMIUM",
+                "type": "ONE_TO_ONE_NAT"
+              }
+            ],
+            "kind": "compute#networkInterface",
+            "name": "nic0",
+            "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+            "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks/default"
+          }
+        ],
+        "networkPerformanceConfig": {
+          "totalEgressBandwidthTier": "DEFAULT"
+        },
+        "scheduling": {
+          "automaticRestart": true,
+          "onHostMaintenance": "TERMINATE",
+          "preemptible": false
+        },
+        "serviceAccounts": [
+          {
+            "email": "default",
+            "scopes": [
+              "https://www.googleapis.com/auth/logging.write",
+              "https://www.googleapis.com/auth/monitoring"
+            ]
+          }
+        ],
+        "shieldedInstanceConfig": {
+          "enableIntegrityMonitoring": true,
+          "enableSecureBoot": false,
+          "enableVtpm": true
+        },
+        "tags": {
+          "items": [
+            "gke-gke6-e660e8cd-node"
+          ]
+        }
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/instanceTemplates/gke-gke6-default-pool-67109377"
+    }
+  ],
+  "kind": "compute#instanceTemplateList",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/instanceTemplates"
+}

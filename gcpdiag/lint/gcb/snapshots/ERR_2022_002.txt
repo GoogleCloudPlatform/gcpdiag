@@ -1,0 +1,9 @@
+*  gcb/ERR/2022_002: Builds don't fail because of failed registry permissions.
+   - gcpdiag-gcb1-aaaa/db540598-5a45-46f3-a716-39d834e884c6               [FAIL]
+     gcb-custom1@gcpdiag-gcb1-aaaa.iam.gserviceaccount.com can not read gcb1-repository registry in us-central1 in gcpdiag-gcb1-aaaa project.
+
+   Builds configured to upload image to Artifact Registry must use service
+   account  that has write permission for it.
+
+   https://gcpdiag.dev/rules/gcb/ERR/2022_002
+

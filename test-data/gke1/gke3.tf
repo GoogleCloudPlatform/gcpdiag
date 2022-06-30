@@ -44,10 +44,10 @@ resource "google_container_cluster" "gke3" {
   project            = google_project.project.project_id
   depends_on         = [google_project_service.container]
   name               = "gke3"
-  location           = "europe-west1"
+  location           = "europe-west4"
   initial_node_count = 1
   authenticator_groups_config {
-    security_group = "gke-security-groups-test@gcpdiag.dev"
+    security_group = "gke-security-groups@gcpdiag.dev"
   }
   node_config {
     service_account = google_service_account.gke3_sa.email
@@ -55,4 +55,99 @@ resource "google_container_cluster" "gke3" {
       "https://www.googleapis.com/auth/cloud-platform"
     ]
   }
+}
+
+# configure external ingress for web application
+
+# authenticate kubernetes provider with cluster
+data "google_client_config" "gke3" {
+  depends_on = [google_container_cluster.gke3]
+}
+
+data "google_container_cluster" "gke3" {
+  project    = google_project.project.project_id
+  name       = "gke3"
+  location   = "europe-west4"
+  depends_on = [google_container_cluster.gke3]
+}
+
+provider "kubernetes" {
+  alias = "gke3"
+  host  = "https://${data.google_container_cluster.gke3.endpoint}"
+  token = data.google_client_config.gke3.access_token
+  cluster_ca_certificate = base64decode(
+    data.google_container_cluster.gke3.master_auth[0].cluster_ca_certificate,
+  )
+}
+
+# configure simple web application
+resource "kubernetes_deployment" "web_at_gke3" {
+  provider = kubernetes.gke3
+  metadata {
+    name      = "web"
+    namespace = "default"
+  }
+  spec {
+    replicas = 4
+    selector {
+      match_labels = {
+        run = "web"
+      }
+    }
+    template {
+      metadata {
+        labels = {
+          run = "web"
+        }
+      }
+      spec {
+        container {
+          image = "us-docker.pkg.dev/google-samples/containers/gke/hello-app:1.0"
+          name  = "web"
+          port {
+            container_port = 8080
+          }
+        }
+      }
+    }
+  }
+  depends_on = [google_container_cluster.gke3]
+}
+
+resource "kubernetes_service" "web_at_gke3" {
+  provider = kubernetes.gke3
+  metadata {
+    name      = "web"
+    namespace = "default"
+  }
+  spec {
+    selector = {
+      run = "web"
+    }
+    type = "NodePort"
+    port {
+      port        = 8080
+      target_port = 8080
+    }
+  }
+  depends_on = [google_container_cluster.gke3]
+}
+
+resource "kubernetes_ingress_v1" "web_at_gke3" {
+  provider = kubernetes.gke3
+  metadata {
+    name      = "web"
+    namespace = "default"
+  }
+  spec {
+    default_backend {
+      service {
+        name = "web"
+        port {
+          number = 8080
+        }
+      }
+    }
+  }
+  depends_on = [google_container_cluster.gke3]
 }

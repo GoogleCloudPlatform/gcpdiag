@@ -18,31 +18,13 @@
 Instead of doing real API calls, we return test JSON data.
 """
 
-import json
-
-from gcpdiag.queries import apis_stub
+from gcpdiag.queries import apis_stub, network_stub
 
 # pylint: disable=unused-argument
+# pylint: disable=invalid-name
 
 
-class ListRegionsQuery:
-
-  def __init__(self, project_id):
-    self.project_id = project_id
-
-  def execute(self, num_retries=0):
-    json_dir = apis_stub.get_json_dir(self.project_id)
-    with open(json_dir / 'compute-regions.json', encoding='utf-8') as json_file:
-      return json.load(json_file)
-
-
-class ComputeEngineApiStubRegions:
-
-  def list(self, project):
-    return ListRegionsQuery(project_id=project)
-
-
-class ComputeEngineApiStub:
+class ComputeEngineApiStub(apis_stub.ApiStub):
   """Mock object to simulate compute engine api calls."""
 
   # mocked methods:
@@ -51,6 +33,8 @@ class ComputeEngineApiStub:
   # op1=gce_api.instances().list(project=pid, zone=z)
   # gce_api.new_batch_http_request().add(op1, callback=cb, request_id=id).execute()
   # gce_api.instanceGroupManagers().list(project=project_id, zone=zone)
+  # gce_api.instanceGroups().list(project=project_id, zone=zone)
+  # gce_api.disks().list(project=project_id, zone=zone)
 
   def __init__(self, mock_state='init', project_id=None, zone=None, page=1):
     self.mock_state = mock_state
@@ -59,73 +43,70 @@ class ComputeEngineApiStub:
     self.page = page
 
   def regions(self):
-    return ComputeEngineApiStubRegions()
+    return ComputeEngineApiStub('regions')
 
   def zones(self):
     return ComputeEngineApiStub('zones')
 
-  def list(self, project, zone=None):
-    return ComputeEngineApiStub(self.mock_state, project_id=project, zone=zone)
+  def disks(self):
+    return ComputeEngineApiStub('disks')
 
-  def list_next(self, request, response):
-    if self.mock_state == 'instances' and request.zone == 'europe-west1-b' and request.page == 1:
-      return ComputeEngineApiStub(mock_state='instances',
-                                  project_id=request.project_id,
-                                  zone=request.zone,
-                                  page=request.page + 1)
+  def list(self, project, zone=None, returnPartialSuccess=None, fields=None):
+    # TODO: implement fields filtering
+    if self.mock_state in ['igs', 'instances', 'migs', 'disks']:
+      return apis_stub.RestCallStub(project,
+                                    f'compute-{self.mock_state}-{zone}',
+                                    default=f'compute-{self.mock_state}-empty')
+    elif self.mock_state in ['regions', 'templates', 'zones']:
+      return apis_stub.RestCallStub(project, f'compute-{self.mock_state}')
+    else:
+      raise RuntimeError(f"can't list for mock state {self.mock_state}")
+
+  def list_next(self, previous_request, previous_response):
+    if isinstance(previous_response,
+                  dict) and previous_response.get('nextPageToken'):
+      return apis_stub.RestCallStub(
+          project_id=previous_request.project_id,
+          json_basename=previous_request.json_basename,
+          page=previous_request.page + 1)
     else:
       return None
 
   def instances(self):
     return ComputeEngineApiStub('instances')
 
-  # pylint: disable=invalid-name
   def instanceGroupManagers(self):
     return ComputeEngineApiStub('migs')
 
+  def instanceGroups(self):
+    return ComputeEngineApiStub('igs')
+
+  def instanceTemplates(self):
+    return ComputeEngineApiStub('templates')
+
   def new_batch_http_request(self):
-    return apis_stub.BatchRequestStub()
+    batch_api = apis_stub.BatchRequestStub()
+    if self._fail_count:
+      batch_api.fail_next(self._fail_count, self._fail_status)
+      self._fail_count = 0
+    return batch_api
 
   def get(self, project):
-    self.project_id = project
-    return self
+    if self.mock_state == 'projects':
+      return apis_stub.RestCallStub(project, 'compute-project')
 
   def projects(self):
     return ComputeEngineApiStub('projects')
 
+  def networks(self):
+    return network_stub.NetworkApiStub(mock_state='networks')
+
+  def subnetworks(self):
+    return network_stub.NetworkApiStub(mock_state='subnetworks')
+
+  def routers(self):
+    return network_stub.NetworkApiStub(mock_state='routers')
+
   def execute(self, num_retries=0):
-    json_dir = apis_stub.get_json_dir(self.project_id)
-    page_suffix = ''
-    if self.page > 1:
-      page_suffix = f'-{self.page}'
-    if self.mock_state == 'regions':
-      with open(json_dir / 'compute-regions.json',
-                encoding='utf-8') as json_file:
-        return json.load(json_file)
-    if self.mock_state == 'zones':
-      with open(json_dir / 'compute-zones.json', encoding='utf-8') as json_file:
-        return json.load(json_file)
-    elif self.mock_state == 'projects':
-      with open(json_dir / 'compute-project.json',
-                encoding='utf-8') as json_file:
-        return json.load(json_file)
-    elif self.mock_state == 'instances':
-      try:
-        with open(json_dir / f'compute-instances-{self.zone}{page_suffix}.json',
-                  encoding='utf-8') as json_file:
-          return json.load(json_file)
-      except FileNotFoundError:
-        with open(json_dir / 'compute-instances-empty.json',
-                  encoding='utf-8') as json_file:
-          return json.load(json_file)
-    elif self.mock_state == 'migs':
-      try:
-        with open(json_dir / f'compute-migs-{self.zone}{page_suffix}.json',
-                  encoding='utf-8') as json_file:
-          return json.load(json_file)
-      except FileNotFoundError:
-        with open(json_dir / 'compute-migs-empty.json',
-                  encoding='utf-8') as json_file:
-          return json.load(json_file)
-    else:
-      raise ValueError("can't call this method here")
+    raise ValueError(
+        f"can't call this method here (mock_state: {self.mock_state}")

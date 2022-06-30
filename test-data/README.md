@@ -5,51 +5,81 @@ are fetched with curl and stored in this directory. The API is then mocked
 and returns data from the response files (in JSON format).
 
 In order to create the response data, we use real GCP projects. We setup
-everything using Terraform, and fetch the responses with curl.
+everything using Terraform, and fetch the responses with curl. We create
+ephemeral projects only for the purprose of generating those API responses,
+and delete the projects afterwards.
 
-### Creating a new project
+Every directory has a different project template, based on the test use
+case.
 
-To create a new project, proceed as follows (note: this needs to be done
-by Googlers in the gcpdiag-dev-team group, reach out to dwes@google.com
-if you need something here).
+In order to run terraform, you will need to supply the organization id and
+billing account id as variables:
 
-1. Create the project in Cloud Console in the gcpdiag.dev organization.
+```
+$ export TF_VAR_billing_account_id=0123456-ABCDEF-987654
+$ export TF_VAR_org_id=123456789012
+$ export TF_VAR_folder_id=123456789012 # optional
+$ cd projectdir
+$ terraform init
+$ terraform apply
+```
 
-   - Name: something like: `gcpd-XXXXX-YYYY`, where XXXXX is the name
-     of the directory that you are creating, and YYYY is a random suffix
-     to make recreation of the project easier (can't reuse names). Example:
-     `gcpd-gcf1-s6ew`. For the random suffix, you can use `pwgen -A 4`.
-   - Organization: gcpdiag.dev
-   - Folder: `gcpdiag-testing`.
-   - Billing account: same as for other Cloud Support test projects
+The API responses are generated using curl commands started with make:
 
-1. Create a Cloud Storage Bucket called `PROJECTID-tfstate`, e.g.:
-   `gcpd-gcf1-s6ew-tfstate`. This will be used to store Terraform state.
+```
+$ make all
+```
 
-   - Location type: Multi-region
-   - Location: us
-   - Storage class: standard
-   - Access control: uniform
-   - Protection tools: none
+### Creating new projects
 
-1. Create a `project.tf` file with the required parameters:
+If you need to create a project template for a new use case, proceed as follows:
+
+1. Create a new directory
+
+1. Copy the following files as starting point:
+
+   - gce1/Makefile
+   - gce1/project.tf
+   - gce1/variables.tf
+
+1. Create a Makefile file that looks as follows:
 
    ```
-   terraform {
-     backend "gcs" {
-       bucket = "gcpd-gcf1-s6ew-tfstate"
-     }
-   }
+   PROJECT_ID  := $(shell terraform output -raw project_id)
+   PROJECT_ID_SUFFIX := $(shell terraform output -raw project_id_suffix)
+   PROJECT_NR  := $(shell terraform output -raw project_nr)
+   ORG_ID      := $(shell terraform output -raw org_id)
+   CURL         = ../../bin/curl-wrap.sh
+   JSON_CLEANER = ../../bin/json-cleaner
 
-   provider "google" {
-     project = "gcpd-gcf1-s6ew"
-   }
+   FAKE_PROJECT_ID_SUFFIX = aaaa
+   FAKE_PROJECT_NR = 12340001
+   FAKE_ORG_ID = 11112222
+   SED_SUBST_FAKE = sed -e "s/$(PROJECT_ID_SUFFIX)/$(FAKE_PROJECT_ID_SUFFIX)/" \
+   		     -e "s/$(PROJECT_NR)/$(FAKE_PROJECT_NR)/" \
+   		     -e "s/$(ORG_ID)/$(FAKE_ORG_ID)/" \
 
-   provider "google-beta" {
-     project = "gcpd-gcf1-s6ew"
-   }
+   all:	\
+   	json-dumps/project.json \
+   	json-dumps/services.json
+
+   json-dumps/project.json:
+   	$(CURL) -fsS \
+   		'https://cloudresourcemanager.googleapis.com/v3/projects/$(PROJECT_ID)' \
+   		| $(SED_SUBST_FAKE) >$@
+
+   json-dumps/services.json:
+   	$(CURL) -fv \
+   	        'https://serviceusage.googleapis.com/v1/projects/$(PROJECT_ID)/services?filter=state:ENABLED' \
+   		| $(SED_SUBST_FAKE) >$@
    ```
 
-1. Run `terraform init` to initialize terraform and then `terraform apply`, etc.
-   to create resources. Note: you might need to run `gcloud auth login
-   --update-adc` first.
+1. Search and replace the following strings:
+
+   - `gce1`: use your own short project template name.
+   - `12340001`: this is the fake project number. Use a number that is not yet
+     used in any other template (keep the same '123400' prefix).
+
+1. Create .tf files with all the resources that you need.
+
+1. Add curl calls to the Makefile for all json files that you need.

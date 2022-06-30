@@ -15,11 +15,11 @@
 
 import json
 import re
-from typing import Optional
+from typing import Any, Dict, List, Optional
 
 DOMAIN_RES_NAME_MATCH = r'(http(s)?:)?//([a-z0-9][-a-z0-9]{1,61}[a-z0-9]\.)+[a-z]{2,}/'
 RES_NAME_KEY = r'[a-z][-a-z0-9]*'
-RES_NAME_VALUE = r'[a-z0-9][-a-z0-9]*'
+RES_NAME_VALUE = r'[a-z0-9][-a-z0-9_?]*'
 REL_RES_NAME_MATCH = r'({key}/{value}/)*{key}/{value}'.format(
     key=RES_NAME_KEY, value=RES_NAME_VALUE)
 REGION_NAME_MATCH = r'^\w+-\w+$'
@@ -42,6 +42,8 @@ class GcpApiError(Exception):
 
   def __init__(self, response='An error occured during the GCP API call'):
     self.response = response
+    self.reason = None
+    self.service = None
     # see also: https://github.com/googleapis/google-api-python-client/issues/662
     try:
       content = json.loads(response.content)
@@ -49,6 +51,13 @@ class GcpApiError(Exception):
           content,
           dict) and 'error' in content and 'message' in content['error']:
         self.message = content['error']['message']
+        try:
+          for c in content['error']['details']:
+            if c['@type'] == 'type.googleapis.com/google.rpc.ErrorInfo':
+              self.reason = c['reason']
+              self.service = c['metadata']['service']
+        except KeyError:
+          pass
       else:
         self.message = str(response)
     except json.decoder.JSONDecodeError:
@@ -58,7 +67,7 @@ class GcpApiError(Exception):
     super().__init__(self.message)
 
   def __str__(self):
-    return f'can\'t fetch data, reason: {self.message}'
+    return self.message
 
 
 def extract_value_from_res_name(resource_name: str, key: str) -> str:
@@ -70,7 +79,7 @@ def extract_value_from_res_name(resource_name: str, key: str) -> str:
       return value: us-central1-c
   """
   if not is_valid_res_name(resource_name):
-    raise ValueError('invalid resource name')
+    raise ValueError(f'invalid resource name: {resource_name}')
 
   path_items = resource_name.split('/')
   for i, item in enumerate(path_items):
@@ -79,7 +88,7 @@ def extract_value_from_res_name(resource_name: str, key: str) -> str:
         return path_items[i + 1]
       else:
         break
-  raise ValueError('invalid resource name')
+  raise ValueError(f'invalid resource name: {resource_name}')
 
 
 def get_region_by_res_name(res_name: str) -> str:
@@ -116,3 +125,12 @@ def is_rel_res_name(res_name: str) -> bool:
 
 def is_valid_res_name(res_name: str) -> bool:
   return is_rel_res_name(res_name) or is_full_res_name(res_name)
+
+
+def iter_dictlist(dictlist: Dict[Any, List[Any]]):
+  """Given a dictionary of lists, iterate over the list elements returning
+  tuples (dict_key, item), (dict_key, item), ..."""
+
+  for (k, v) in dictlist.items():
+    for i in v:
+      yield (k, i)

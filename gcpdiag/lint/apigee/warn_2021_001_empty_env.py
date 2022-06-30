@@ -31,7 +31,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'no Apigee organizations found')
     return
   envgroup_list = apigee.get_envgroups(apigee_org[context.project_id])
-  for _, envgroup in envgroup_list.items():
+  for envgroup in sorted(envgroup_list.values(),
+                         key=lambda envgroup: envgroup.name):
     environments = apigee.get_envgroups_attachments(envgroup.full_path)
     if environments:
       report.add_ok(envgroup)

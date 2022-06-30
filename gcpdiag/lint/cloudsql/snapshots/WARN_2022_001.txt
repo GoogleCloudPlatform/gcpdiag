@@ -1,0 +1,11 @@
+*  cloudsql/WARN/2022_001: Cloud SQL is not using Docker bridge network.
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql1-aaaa/instances/sql1 [FAIL]
+     sql1 is inside of Docker bridge network
+
+   The IP range 172.17.0.0/16 is reserved for the Docker bridge network. Any
+   Cloud SQL instances created with an IP in that range will be unreachable.
+   Connections from any IP within that range to Cloud SQL instances using
+   private IP fail.
+
+   https://gcpdiag.dev/rules/cloudsql/WARN/2022_001
+

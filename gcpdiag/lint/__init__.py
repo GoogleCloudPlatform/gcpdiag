@@ -22,22 +22,31 @@ import enum
 import importlib
 import inspect
 import logging
+import os
 import pkgutil
 import re
+import sys
 from collections.abc import Callable
 from typing import Any, Dict, Iterable, Iterator, List, Optional
 
-from gcpdiag import models
+import googleapiclient.errors
+
+from gcpdiag import config, models, utils
 from gcpdiag.executor import get_executor
 from gcpdiag.queries import logs
-from gcpdiag.utils import GcpApiError
 
 
 class LintRuleClass(enum.Enum):
+  """Identifies rule class."""
   ERR = 'ERR'
   BP = 'BP'
   SEC = 'SEC'
   WARN = 'WARN'
+  # classes for extended rules
+  ERR_EXT = 'ERR_EXT'
+  BP_EXT = 'BP_EXT'
+  SEC_EXT = 'SEC_EXT'
+  WARN_EXT = 'WARN_EXT'
 
   def __str__(self):
     return str(self.value)
@@ -67,21 +76,37 @@ class LintRule:
     return f'https://gcpdiag.dev/rules/{self.product}/{self.rule_class}/{self.rule_id}'
 
 
-class LintReport:
+class LintReport(abc.ABC):
   """Represent a lint report, which can be terminal-based, or (in the future) JSON."""
 
   rules_report: Dict[LintRule, Dict[str, Any]]
 
-  def __init__(self):
+  def __init__(self,
+               file=sys.stdout,
+               log_info_for_progress_only=True,
+               show_ok=True,
+               show_skipped=False):
+    self.file = file
+    self.show_ok = show_ok
+    self.show_skipped = show_skipped
+    self.log_info_for_progress_only = log_info_for_progress_only
+    self.rule_has_results = False
     self.rules_report = {}
 
   def rule_start(self, rule: LintRule, context: models.Context):
     """Called when a rule run is started with a context."""
+    self.rule_has_results = False
     return LintReportRuleInterface(self, rule, context)
 
   def rule_end(self, rule: LintRule, context: models.Context):
     """Called when the rule is finished running."""
     pass
+
+  def banner(self):
+    print(f'gcpdiag {config.VERSION}\n', file=sys.stderr)
+
+  def lint_start(self, context):
+    print(f'Starting lint inspection ({context})...\n', file=sys.stderr)
 
   @abc.abstractmethod
   def add_skipped(self, rule: LintRule, context: models.Context,
@@ -113,9 +138,54 @@ class LintReport:
     # did any rule fail? Then exit with 2, otherwise 0.
     # note: we don't use 1 because that's already the exit code when the script
     # exits with an exception.
+    exit_code = 0
     if any(r['overall_status'] == 'failed' for r in self.rules_report.values()):
-      return 2
-    return 0
+      exit_code = 2
+
+    totals = {
+        'skipped': 0,
+        'ok': 0,
+        'failed': 0,
+    }
+    for rule in self.rules_report.values():
+      totals[rule['overall_status']] += 1
+    if not self.rule_has_results:
+      self.print_line()
+    print(
+        f"Rules summary: {totals['skipped']} skipped, {totals['ok']} ok, {totals['failed']} failed",
+        file=sys.stderr)
+    return exit_code
+
+  def get_logging_handler(self):
+    return _LintReportLoggingHandler(self)
+
+  def print_line(self, text: str = ''):
+    """Write a line to the desired output provided as self.file."""
+    print(text, file=self.file, flush=True)
+
+
+class _LintReportLoggingHandler(logging.Handler):
+  """logging.Handler implementation used when producing a lint report."""
+
+  def __init__(self, report):
+    super().__init__()
+    self.report = report
+
+  def format(self, record: logging.LogRecord):
+    return record.getMessage()
+
+  def emit(self, record):
+    if record.levelno == logging.INFO:
+      # Do not output anything, assuming that the
+      # interesting output will be passed via print_line
+      return
+    else:
+      msg = f'[{record.levelname}] ' + self.format(record) + ' '
+      # workaround for bug:
+      # https://github.com/googleapis/google-api-python-client/issues/1116
+      if 'Invalid JSON content from response' in msg:
+        return
+    self.report.print_line(msg)
 
 
 class LintReportRuleInterface:
@@ -221,8 +291,9 @@ class LintRuleRepository:
   """Repository of Lint rule which is also used to run the rules."""
   rules: List[LintRule]
 
-  def __init__(self):
+  def __init__(self, load_extended: bool = False):
     self.rules = []
+    self.load_extended = load_extended
 
   def register_rule(self, rule: LintRule):
     self.rules.append(rule)
@@ -241,15 +312,18 @@ class LintRuleRepository:
     # Determine Lint Rule parameters based on the module name.
     m = re.search(
         r"""
-         \.([^\.]+)\. # product path, e.g.: .gke.
-         ([a-z]+)_    # class prefix, e.g.: 'err_'
-         (\d+_\d+)    # id: 2020_001
+         \.
+         (?P<product>[^\.]+)                 # product path, e.g.: .gke.
+         \.
+         (?P<class_prefix>[a-z]+(?:_ext)?)   # class prefix, e.g.: 'err_' or 'err_ext'
+         _
+         (?P<rule_id>\d+_\d+)                # id: 2020_001
       """, name, re.VERBOSE)
     if not m:
       # Assume this is not a rule (e.g. could be a "utility" module)
       raise NotLintRule()
 
-    product, rule_class, rule_id = m.group(1, 2, 3)
+    product, rule_class, rule_id = m.group('product', 'class_prefix', 'rule_id')
 
     # Import the module.
     module = importlib.import_module(name)
@@ -306,6 +380,8 @@ class LintRuleRepository:
   def load_rules(self, pkg):
     for name in LintRuleRepository._iter_namespace(pkg):
       try:
+        if '_ext_' in name and not self.load_extended:
+          continue
         rule = self.get_rule_by_module_name(name)
       except NotLintRule:
         continue
@@ -345,15 +421,23 @@ class LintRuleRepository:
     for rule in self.list_rules(include, exclude):
       rule_report = report.rule_start(rule, context)
 
-      if rule.prefetch_rule_future:
-        if rule.prefetch_rule_future.running():
-          logging.info('waiting for query results')
-        rule.prefetch_rule_future.result()
-
       try:
+        if rule.prefetch_rule_future:
+          if rule.prefetch_rule_future.running():
+            logging.info('waiting for query results')
+          rule.prefetch_rule_future.result()
+
         rule.run_rule_f(context, rule_report)
-      except (GcpApiError) as api_error:
-        report.add_skipped(rule, context, None, str(api_error), None)
+      except (utils.GcpApiError, googleapiclient.errors.HttpError) as err:
+        if isinstance(err, googleapiclient.errors.HttpError):
+          err = utils.GcpApiError(err)
+        logging.warning('%s: %s while processing rule: %s',
+                        type(err).__name__, err, rule)
+        report.add_skipped(rule, context, None, f'API error: {err}', None)
+      except (RuntimeError, ValueError, KeyError) as err:
+        logging.warning('%s: %s while processing rule: %s',
+                        type(err).__name__, err, rule)
+        report.add_skipped(rule, context, None, f'Error: {err}', None)
       report.rule_end(rule, context)
     return report.finish(context)
 

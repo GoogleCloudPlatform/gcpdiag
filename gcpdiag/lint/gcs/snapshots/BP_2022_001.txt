@@ -1,0 +1,14 @@
+*  gcs/BP/2022_001: Buckets are using uniform access
+   - gcpdiag-gcs1bucket-aaaa                                              [FAIL]
+     it is recommend to use uniform access on your bucket
+   - gcpdiag-gcs1bucket-labels-aaaa                                       [FAIL]
+     it is recommend to use uniform access on your bucket
+   - gcpdiag-gcs1bucket2-aaaa                                             [FAIL]
+     it is recommend to use uniform access on your bucket
+
+   Google recommends using uniform access for a Cloud Storage bucket IAM policy
+   https://cloud.google.com/storage/docs/access-
+   control#choose_between_uniform_and_fine-grained_access
+
+   https://gcpdiag.dev/rules/gcs/BP/2022_001
+

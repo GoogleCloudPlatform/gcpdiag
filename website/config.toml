@@ -88,13 +88,11 @@ order = [".jpg$", ".gif$"]
 
 [[deployment.targets]]
 name = "gcs-staging"
-URL = "gs://gcpdiag-web-staging"
-exclude = "gcpdiag.sh"
+URL = "gs://gcpdiag-website-staging"
 
 [[deployment.targets]]
 name = "gcs-prod"
-URL = "gs://gcpdiag-web"
-exclude = "gcpdiag.sh"
+URL = "gs://gcpdiag-website-prod"
 
 [[deployment.matchers]]
 # Cache static assets for 1 year.

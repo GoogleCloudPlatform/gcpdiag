@@ -1,0 +1,13 @@
+{
+  "name": "projects/12340008",
+  "parent": "organizations/11112222",
+  "projectId": "gcpdiag-gcs1-aaaa",
+  "state": "ACTIVE",
+  "displayName": "gcpdiag test - gcs1",
+  "createTime": "2022-01-01T01:44:52.786Z",
+  "updateTime": "2022-01-01T01:44:54.432Z",
+  "etag": "1k3YTPogq+IJ3F8nGjfbqg==",
+  "labels": {
+    "gcpdiag": "test"
+  }
+}

@@ -16,6 +16,7 @@
 
 resource "google_compute_instance" "gce1" {
   project        = google_project.project.project_id
+  depends_on     = [google_project_service.compute]
   name           = "gce1"
   machine_type   = "f1-micro"
   zone           = "europe-west4-a"
@@ -23,13 +24,14 @@ resource "google_compute_instance" "gce1" {
   network_interface {
     network = "default"
   }
+  tags = ["secured-instance"]
   scheduling {
     preemptible       = true
     automatic_restart = false
   }
   boot_disk {
     initialize_params {
-      image = data.google_compute_image.cos.self_link
+      image = data.google_compute_image.windows.self_link
     }
   }
   service_account {
@@ -45,4 +47,39 @@ resource "google_compute_instance" "gce1" {
   labels = {
     foo = "bar"
   }
+}
+
+# firewall configuration used for connectivity testing
+
+resource "google_compute_firewall" "secured_instance_test_deny" {
+  name    = "gce-secured-instance-test-deny"
+  network = "default"
+  project = google_project.project.project_id
+
+  priority = 900
+
+  deny {
+    ports    = ["22", "3389"]
+    protocol = "tcp"
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+
+  target_tags = google_compute_instance.gce1.tags
+
+  depends_on = [google_compute_instance.gce1]
+}
+
+# simple unattached bootable disk
+resource "google_compute_disk" "unattached" {
+  name    = "unattached-disk"
+  project = google_project.project.project_id
+
+  type  = "pd-ssd"
+  zone  = "europe-west4-a"
+  image = "debian-9-stretch-v20200805"
+  labels = {
+    environment = "dev"
+  }
+  physical_block_size_bytes = 4096
 }

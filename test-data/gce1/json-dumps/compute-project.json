@@ -1,24 +1,24 @@
 {
   "commonInstanceMetadata": {
-    "fingerprint": "ZMvofGkvIN4=",
+    "fingerprint": "5WfGmP2rsbA=",
     "items": [
       {
         "key": "serial-port-logging-enable",
         "value": "true"
       },
       {
-        "key": "sshKeys",
-        "value": "REDACTED"
+        "key": "gke-gke1-f36cf6dd-cidr",
+        "value": "default:10.0.0.0/14"
       }
     ],
     "kind": "compute#metadata"
   },
-  "creationTimestamp": "2021-02-17T06:59:17.525-08:00",
+  "creationTimestamp": "2022-04-26T08:19:36.093-07:00",
   "defaultNetworkTier": "PREMIUM",
-  "defaultServiceAccount": "50670056743-compute@developer.gserviceaccount.com",
-  "id": "7548990507267953066",
+  "defaultServiceAccount": "12340001-compute@developer.gserviceaccount.com",
+  "id": "7145890083999429480",
   "kind": "compute#project",
-  "name": "gcpd-gce1-4exv",
+  "name": "gcpdiag-gce1-aaaa",
   "quotas": [
     {
       "limit": 10000,
@@ -33,7 +33,7 @@
     {
       "limit": 500,
       "metric": "FIREWALLS",
-      "usage": 7
+      "usage": 8
     },
     {
       "limit": 5000,
@@ -86,7 +86,7 @@
       "usage": 0
     },
     {
-      "limit": 30,
+      "limit": 150,
       "metric": "BACKEND_SERVICES",
       "usage": 0
     },
@@ -133,7 +133,7 @@
     {
       "limit": 275,
       "metric": "SUBNETWORKS",
-      "usage": 28
+      "usage": 35
     },
     {
       "limit": 100,
@@ -214,8 +214,13 @@
       "limit": 150,
       "metric": "INTERNAL_TRAFFIC_DIRECTOR_FORWARDING_RULES",
       "usage": 0
+    },
+    {
+      "limit": 150,
+      "metric": "GLOBAL_EXTERNAL_MANAGED_FORWARDING_RULES",
+      "usage": 0
     }
   ],
-  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpd-gce1-4exv",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa",
   "xpnProjectStatus": "UNSPECIFIED_XPN_PROJECT_STATUS"
 }

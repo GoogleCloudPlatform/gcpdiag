@@ -1,3 +1,142 @@
+## 0.54 (2022-04-25)
+
+#### New rules
+
+- apigee/ERR/2022_001: Apigee Service Agent permissions
+
+#### Enhancements
+
+- dynamically load gcpdiag lint rules for all products
+- support IAM policy retrieval for Artifact Registry
+- move gcpdiag release buckets to new location
+
+#### Fixes
+
+- gke/ERR/2022_002: use correct network for shared VPC scenario (#24)
+- error out early if service accounts of inspected projects can't be retrieved
+- fix docker wrapper script for --config and --auth-key options
+- allow to create test projects in an org folder
+- ignore more system service accounts (ignore all accounts starting with gcp-sa)
+
+## 0.53 (2022-03-30)
+
+#### New rules
+
+- composer/ERR/2022_001: Composer Service Agent permissions
+- composer/ERR/2022_002: Composer Environment Service Account permissions
+- composer/WARN/2022_001: Composer Service Agent permissions for Composer 2.x
+- gce/BP_EXT/2022_001: GCP project has VM Manager enabled
+- gce/WARN/2022_003: GCE VM instances quota is not near the limit
+- gke/BP/2022_002: GKE clusters are using unique subnets
+- gke/BP/2022_003: GKE cluster is not near to end of life
+- gke/WARN/2022_003: GKE service account permissions to manage project firewall rules
+- gke/WARN/2022_004: Cloud Logging API enabled when GKE logging is enabled
+- gke/WARN/2022_005: NVIDIA GPU device drivers are installed on GKE nodes with GPU
+
+#### Enhancements
+
+- Support IAM policies for service accounts and subnetworks
+- Skip rules using logs if Cloud Logging API is disabled
+- New option: --logs-query-timeout
+- Add support for configuration files
+  (see https://gcpdiag.dev/docs/usage/#configuration-file)
+
+#### Fixes
+
+- Fix various unhandled exceptions
+
+## 0.52 (2022-02-11)
+
+#### New rules
+
+- dataproc/BP/2022_001: Cloud Monitoring agent is enabled.
+- dataproc/ERR/2022_002: Dataproc is not using deprecated images.
+- gce/WARN/2022_001: IAP service can connect to SSH/RDP port on instances.
+- gce/WARN/2022_002: Instance groups named ports are using unique names.
+- gke/ERR/2022_002: GKE nodes of private clusters can access Google APIs and services.
+- gke/ERR/2022_003: GKE connectivity: load balancer to node communication (ingress).
+
+#### Updated rules
+
+- gcb/ERR/2022_001: Fix false positive when no build is configured.
+- gke/WARN/2021_008: Improve Istio deprecation message
+
+#### Enhancements
+
+- Introduce "extended" rules (BP_EXT, ERR_EXT, etc.), disabled by default
+  and which can be enabled with --include-extended.
+- Large IAM policy code refactorings in preparation for org-level IAM
+  policy support.
+
+#### Fixes
+
+- More API retry fixes.
+- Fix --billing-project which had no effect before.
+- Fix exception related to GCE instance scopes.
+
+## 0.51 (2022-01-21)
+
+#### Fixes
+
+- Update Python dependencies, and add 'packaging', missing in the docker image.
+
+## 0.50 (2022-01-21)
+
+#### New rules
+
+- gcb/ERR/2022_001: The Cloud Build logs do not report permission issues
+- gce/BP/2021_002: GCE nodes have an up to date ops agent
+- gce/BP/2021_003: Secure Boot is enabled
+- gce/ERR/2021_004: Serial logs don’t contain Secure Boot errors
+- gce/ERR/2021_005: Serial logs don't contain mount error messages
+- gce/WARN/2021_005: Serial logs don't contain out-of-memory messages
+- gce/WARN/2021_006: Serial logs don't contain "Kernel panic" messages
+- gce/WARN/2021_007: Serial logs don't contain "BSOD" messages
+- gcs/BP/2022_001: Buckets are using uniform access
+- gke/BP/2022_001: GKE clusters are regional
+- gke/ERR/2022_001: GKE connectivity: pod to pod communication
+- gke/WARN/2022_001: GKE clusters with workload identity are regional
+- gke/WARN/2022_002: GKE metadata concealment is not in use
+
+#### Updated rules
+
+- gcf/WARN/2021_001: add one more deprecated runtime Nodejs6 (github #17)
+
+#### Enhancements
+
+- New product: App Engine Standard
+- New product: Cloud Build
+- New product: Cloud Pub/Sub
+- New product: Cloud Storage
+
+#### Fixes
+
+- Verify early that IAM API is enabled
+- Catch API errors in prefetch_rule
+- Disable italic in Cloud Shell
+- Implement retry logic for batch API failures
+
+## 0.49 (2021-12-20)
+
+#### New / updated rules
+
+- dataproc/BP/2021_001: Dataproc Job driver logs are enabled
+- composer/WARN/2021_001: Composer environment status is running (b/207615409)
+- gke/ERR/2021_013: GKE cluster firewall rules are configured. (b/210407018)
+- gke/ERR/2021_014: GKE masters of can reach the nodes. (b/210407018)
+- gke/ERR/2021_015: GKE connectivity: node to pod communication. (b/210407018)
+- gce/WARN/2021_001: verify logging access scopes (b/210711351)
+- gce/WARN/2021_003: verify monitoring access scopes (b/210711351)
+
+#### Enhancements
+
+- New product: Cloud Composer (b/207615409)
+- Simplify API testing by using ephemeral projects (b/207484323)
+- gcpdiag.sh wrapper script now verifies the minimum version of current script
+- Add support for client-side firewall connectivity tests (b/210407018)
+
+#### Fixes
+
 ## 0.48 (2021-11-15)
 
 #### New rules

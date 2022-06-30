@@ -5,7 +5,9 @@ type: docs
 hide_summary: true
 ---
 
-## Data collected via public APIs
+## gcpdiag tool
+
+### Data collected via public APIs
 
 gcpdiag is a command-line tool that uses credentials provided by you (via oauth,
 service account key, or application default credentials) to access your data in
@@ -23,21 +25,16 @@ environment where you run it:
 
 In other words: the data collected by gcpdiag always stays with you.
 
-## User-agent
+### User-agent
 
 The gcpdiag command-line tool sets a specific User-agent string for the GCP API
 calls, which makes it possible to identify them as originating from the gcpdiag
 tool. The [Google Cloud Privacy
 Notice](https://cloud.google.com/terms/cloud-privacy-notice) describes how
-personal information is collected and processed in Google Cloud.
+Google collects and processes personal information in relation to Google Cloud
+Platform and Google’s other Cloud Services.
 
 ## Website
 
-The [gcpdiag website](http://gcpdiag.dev/) is a simple, statically-generated
-website which doesn't collect personally-identifying information, except for
-client IP addresses and User agent strings, which are collected for usage
-statistics in aggregated form.
-
-The Search functionality provided on the gcpdiag.dev website uses Google
-Programmable Search Engine, with the related <a
-href="https://policies.google.com/privacy">privacy policy</a>.
+For the website http://gcpdiag.dev, the privacy policy at
+https://policies.google.com/privacy applies.

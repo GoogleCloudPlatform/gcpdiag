@@ -19,79 +19,45 @@ The messages:
 "No space left on device" / "I/O error" / "No usable temporary directory found"
 in serial output usually indicate that the disk is full.
 """
-
-from typing import Iterable, Optional
+from typing import Optional
 
 from gcpdiag import lint, models
-from gcpdiag.queries import gce, logs
+from gcpdiag.lint.gce.utils import LogEntryShort, SerialOutputSearch
+from gcpdiag.queries import apis, gce
 
+NO_SPACE_LEFT_MESSAGES = [
+    'I/O error',  #
+    'No space left on device',
+    'No usable temporary directory found'
+]
 
-class SerialOutputSearch:
-  """ Search any of strings in instance's serial output """
-
-  search_strings: Iterable[str]
-  query: Optional[logs.LogsQuery]
-  unique_ids: Optional[Iterable[str]]
-
-  def __init__(self, search_strings: Iterable[str]):
-    self.search_strings = search_strings
-    self.query = None
-    self.unique_ids = None
-
-  def prepare(self, context: models.Context) -> None:
-    self.query = logs.query(
-        project_id=context.project_id,
-        resource_type='gce_instance',
-        log_name='log_id("serialconsole.googleapis.com/serial_port_1_output")',
-        filter_str=self.mk_filters())
-
-  def mk_filters(self) -> str:
-    return ' OR '.join([self.mk_filter(s) for s in self.search_strings])
-
-  def mk_filter(self, s: str) -> str:
-    return f'textPayload=~".*{s}.*"'
-
-  def has_results_for(self, instance_id: str) -> bool:
-    return instance_id in [
-        self.extract_instance_id_or_none(e) for e in self.get_query().entries
-    ]
-
-  def extract_instance_id_or_none(self, entry) -> Optional[str]:
-    try:
-      return entry['resource']['labels']['instance_id']
-    except KeyError:
-      return None
-
-  def get_query(self) -> logs.LogsQuery:
-    if self.query is None:
-      raise RuntimeError('Search is not prepared yet')
-    return self.query
-
-
-search_by_project = {}
+logs_by_project = {}
 
 
 def prepare_rule(context: models.Context):
-  s = SerialOutputSearch(search_strings=[
-      'No space left on device', 'I/O error',
-      'No usable temporary directory found'
-  ])
-  s.prepare(context)
-  search_by_project[context.project_id] = s
+  logs_by_project[context.project_id] = SerialOutputSearch(
+      context, search_strings=NO_SPACE_LEFT_MESSAGES)
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-  search = search_by_project[context.project_id]
+  # skip entire rule is logging disabled
+  if not apis.is_enabled(context.project_id, 'logging'):
+    report.add_skipped(None, 'logging api is disabled')
+    return
+
+  search = logs_by_project[context.project_id]
 
   instances = gce.get_instances(context).values()
   if len(instances) == 0:
     report.add_skipped(None, 'No instances found')
   else:
-    for instance in instances:
-      if search.has_results_for(instance_id=instance.id):
+    for instance in sorted(instances, key=lambda i: i.name):
+      match: Optional[LogEntryShort] = search.get_last_match(
+          instance_id=instance.id)
+      if match:
         report.add_failed(instance,
                           ('There are messages indicating that the disk might'
-                           ' be full in serial output of {} ').format(
-                               instance.name))
+                           ' be full in serial output of {}\n{}: "{}"').format(
+                               instance.name, match.timestamp_iso, match.text))
       else:
         report.add_ok(instance)

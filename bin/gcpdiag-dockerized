@@ -1,13 +1,61 @@
 #!/bin/bash
 set -e
-THIS_WRAPPER_VERSION=0.8
+THIS_WRAPPER_VERSION=0.10
 SUPPORTED_RUNTIME="docker podman"
+ARGS="$*"
 
-eval $(curl -sf https://storage.googleapis.com/gcpdiag/release-version|grep -Ei '^\w*=[0-9a-z/\._-]*$')
-if [[ $THIS_WRAPPER_VERSION != "$WRAPPER_VERSION" ]]; then
+eval $(curl -sf https://storage.googleapis.com/gcpdiag-dist/release-version|grep -Ei '^\w*=[0-9a-z/\._-]*$')
+
+# Test whether 1st arg is greater than or equal to the 2nd, when compared as version numbers (bash-only)
+version_ge () {
+  # Note: implementation is rather crude and will treat missing numbers as `0`
+  # so e.g. "1" and "1.0.0" compare equal; even worse, "..1" is accepted and
+  # less than "0.0.2", and the empty string is equal to "0.0"
+  local -a V1=(${1//./ })
+  local -a V2=(${2//./ })
+  if (( ${#V1[@]} > ${#V2[@]} )); then
+    local -i len=${#V1[@]}
+  else
+    local -i len=${#V2[@]}
+  fi
+  for i in $(seq 0 ${len}); do
+    if (( "${V1[$i]:-0}" < "${V2[$i]:-0}")); then
+      return 1  # V1[i] < V2[i]
+    fi
+  done
+  return 0  # V1 >= V2
+}
+
+# Test whether 1st arg (file) was provided and exists, then prepare mount path
+# that will be used inside container with the same path if absolut path was used
+# or inside root folder if relative path was used.
+handle_mount_path () {
+  local FILE="$1"
+  local MOUNT=""
+  if [ -n "$FILE" ]; then
+    if [ -f "$FILE" ]; then
+      if [[ "$FILE" = /* ]]; then
+        # absolut path shall be mounted as is
+        MOUNT="-v $FILE:$FILE"
+      else
+        # local path need to be mounted inside root folder
+        MOUNT="-v $PWD/$FILE:/$FILE"
+      fi
+      echo "$MOUNT"
+    else
+      return 1
+    fi
+  fi
+  return 0
+}
+
+# Check this script version and compare with the minimum required version
+# defined in the release-version file. This allows us to force an upgrade
+# of the wrapper script.
+if ! version_ge "$THIS_WRAPPER_VERSION" "$WRAPPER_VERSION"; then
   echo
   echo "## ERROR:"
-  echo "## This gcpdiag wrapper script is obsolete ($THIS_WRAPPER_VERSION, newest: $WRAPPER_VERSION)."
+  echo "## This gcpdiag wrapper script is obsolete (version $THIS_WRAPPER_VERSION, minimum required: $WRAPPER_VERSION)."
   echo "## Please update the wrapper script to the latest version as follows:"
   echo
   echo "curl https://gcpdiag.dev/gcpdiag.sh >gcpdiag"
@@ -42,6 +90,50 @@ if [ "$RUNTIME" = podman ]; then
   export PODMAN_USERNS=keep-id
 fi
 
+# Check if:
+# - config argument was provided via --config file or --config=file
+# - auth-key argument was provided via --auth-key file or --auth-key=file
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --config=*)
+      CONFIG_FILE="${1#*=}"
+      ;;
+    --config)
+      CONFIG_FILE="$2"
+      ;;
+    --auth-key=*)
+      AUTH_KEY="${1#*=}"
+      ;;
+    --auth-key)
+      AUTH_KEY="$2"
+      ;;
+  esac
+  shift
+done
+
+# If config argument was provided we need to check if file exists and mount it
+# inside container with the same path if absolut path was used or inside
+# root folder if relative path was used.
+if ! CONFIG_MOUNT=$(handle_mount_path "$CONFIG_FILE"); then
+    echo
+    echo "## ERROR:"
+    echo "## Configuration file: $CONFIG_FILE does not exist!"
+    echo
+    exit 1
+fi
+
+# If auth-key argument was provided we need to check if file exists and mount it
+# inside container with the same path if absolut path was used or inside
+# root folder if relative path was used.
+if ! AUTH_KEY_MOUNT=$(handle_mount_path "$AUTH_KEY"); then
+    echo
+    echo "## ERROR:"
+    echo "## Authentication key: $AUTH_KEY does not exist!"
+    echo
+    exit 1
+fi
+
+# shellcheck disable=SC2086
 exec "$RUNTIME" run "$USE_TTY" \
   --rm \
   -u "$(id -u):$(id -g)" \
@@ -51,4 +143,6 @@ exec "$RUNTIME" run "$USE_TTY" \
   -e HOME -e LANG -e GOOGLE_AUTH_TOKEN -e CLOUD_SHELL \
   -v "$HOME/.cache/gcpdiag-dockerized:$HOME/.cache/gcpdiag" \
   -v "$HOME/.config/gcloud:$HOME/.config/gcloud" \
-  "$DOCKER_IMAGE:$DOCKER_IMAGE_VERSION" /opt/gcpdiag/bin/gcpdiag "$@"
+  $CONFIG_MOUNT \
+  $AUTH_KEY_MOUNT \
+  "$DOCKER_IMAGE:$DOCKER_IMAGE_VERSION" /opt/gcpdiag/bin/gcpdiag $ARGS

@@ -1,0 +1,18 @@
+{% block content %}{% endblock %}
+
+{% filter minify_css %}
+    {% block style %}
+        {# The same CSS files as in pdoc's default template, except for layout.css.
+        You may leave out Bootstrap Reboot, which corrects inconsistences across browsers
+        but may conflict with you website's stylesheet. #}
+        <style>{% include "resources/bootstrap-reboot.min.css" %}</style>
+        <style>{% include "syntax-highlighting.css" %}</style>
+        <style>{% include "theme.css" %}</style>
+        <style>{% include "content.css" %}</style>
+        <style>main .pdoc { padding-top: 0.3em; padding-bottom: 0em }</style>
+        <style>.pdoc h1 { margin-bottom: 1em; }</style>
+        <style>.pdoc .attribution { margin-top: 0.5em; }</style>
+    {% endblock %}
+{% endfilter %}
+
+<div class="pdoc" style="margin-top: 0.5em">{% block attribution %}{% endblock %}</div>

@@ -17,13 +17,13 @@
 
 import concurrent.futures
 import re
+import time
 from unittest import mock
 
 from gcpdiag.queries import apis_stub, logs, logs_stub
 
-DUMMY_PROJECT_ID = 'gcpd-gke-1-9b90'
-FIRST_INSERT_ID = '-hqnw82c9z6'
-TOTAL_LOG_ENTRIES = 6
+DUMMY_PROJECT_ID = 'gcpdiag-gke1-aaaa'
+FIRST_INSERT_ID = '-tt9mudi768'
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
@@ -40,7 +40,7 @@ class TestLogs:
       logs.execute_queries(executor)
       # verify the number of entries
       all_entries = list(query.entries)
-      assert len(all_entries) == TOTAL_LOG_ENTRIES
+      assert len(all_entries) > 0
       # verify that the first log entry is correct (the earliest one)
       first = next(iter(query.entries))
       assert first['insertId'] == FIRST_INSERT_ID
@@ -67,5 +67,25 @@ class TestLogs:
     assert logs_stub.logging_body['orderBy'] == 'timestamp desc'
     assert logs_stub.logging_body['pageSize'] == 500
     assert logs_stub.logging_body['resourceNames'] == [
-        'projects/gcpd-gke-1-9b90'
+        'projects/gcpdiag-gke1-aaaa'
     ]
+
+  def test_format_log_entry(self):
+    with mock.patch.dict('os.environ', {'TZ': 'America/Los_Angeles'}):
+      time.tzset()
+      assert logs.format_log_entry({
+          'jsonPayload': {
+              'message': 'test message'
+          },
+          'receiveTimestamp': '2022-03-24T13:26:37.370862686Z'
+      }) == '2022-03-24 06:26:37-07:00: test message'
+      assert logs.format_log_entry({
+          'jsonPayload': {
+              'MESSAGE': 'test message'
+          },
+          'receiveTimestamp': '2022-03-24T13:26:37.370862686Z'
+      }) == '2022-03-24 06:26:37-07:00: test message'
+      assert logs.format_log_entry({
+          'textPayload': 'test message',
+          'receiveTimestamp': '2022-03-24T13:26:37.370862686Z'
+      }) == '2022-03-24 06:26:37-07:00: test message'

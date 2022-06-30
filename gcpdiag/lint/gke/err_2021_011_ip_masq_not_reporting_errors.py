@@ -21,7 +21,7 @@ connectivity issues.
 
 from gcpdiag import lint, models
 from gcpdiag.lint.gke import util
-from gcpdiag.queries import gke, logs
+from gcpdiag.queries import apis, gke, logs
 
 IP_MASQ_AGENT_CONTAINER_NAME = 'ip-masq-agent'
 
@@ -39,6 +39,11 @@ def prepare_rule(context: models.Context):
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
+  # skip entire rule is logging disabled
+  if not apis.is_enabled(context.project_id, 'logging'):
+    report.add_skipped(None, 'logging api is disabled')
+    return
+
   clusters = gke.get_clusters(context)
   if not clusters:
     report.add_skipped(None, 'no clusters found')
@@ -52,7 +57,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     except KeyError:
       return False
 
-  clusters_with_errors = util.gke_logs_find_bad_cluster(
+  clusters_with_errors = util.gke_logs_find_bad_clusters(
       context=context,
       logs_by_project=ip_masq_container_errors,
       filter_f=filter_f)
@@ -60,7 +65,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   # Generate report
   for c in clusters.values():
     if c in clusters_with_errors:
-      msg = clusters_with_errors[c]
-      report.add_failed(c, f'Error message:\n```\n {msg}\n```')
+      report.add_failed(c, logs.format_log_entry(clusters_with_errors[c]))
     else:
       report.add_ok(c)
