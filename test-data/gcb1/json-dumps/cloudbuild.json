@@ -1,6 +1,56 @@
 {
   "builds": [
     {
+      "id": "4b040094-4204-4f00-a7bd-302639dd6785",
+      "status": "SUCCESS",
+      "createTime": "2022-05-20T12:34:10.791863494Z",
+      "startTime": "2022-05-20T12:34:11.439000115Z",
+      "finishTime": "2022-05-20T12:34:13.628759Z",
+      "results": {
+        "buildStepImages": [
+          "sha256:0917313aa0c9da1bfe297c502bc09af4fd75950b81cd761169ff0f3f544cc68d"
+        ],
+        "buildStepOutputs": [
+          ""
+        ]
+      },
+      "steps": [
+        {
+          "name": "gcr.io/cloud-builders/docker",
+          "args": [
+            "ps"
+          ],
+          "timing": {
+            "startTime": "2022-05-20T12:34:12.234187301Z",
+            "endTime": "2022-05-20T12:34:13.280971897Z"
+          },
+          "status": "SUCCESS",
+          "pullTiming": {
+            "startTime": "2022-05-20T12:34:12.234187301Z",
+            "endTime": "2022-05-20T12:34:12.237976136Z"
+          }
+        }
+      ],
+      "timeout": "1800s",
+      "projectId": "gcpdiag-gcb1-aaaa",
+      "logsBucket": "gs://gcpdiag-gcb1-bucket1-aaaa",
+      "sourceProvenance": {},
+      "options": {
+        "logStreamingOption": "STREAM_OFF",
+        "logging": "GCS_ONLY",
+        "pool": {}
+      },
+      "logUrl": "https://console.cloud.google.com/cloud-build/builds/4b040094-4204-4f00-a7bd-302639dd6785?project=12340005",
+      "timing": {
+        "BUILD": {
+          "startTime": "2022-05-20T12:34:11.696110664Z",
+          "endTime": "2022-05-20T12:34:13.281028898Z"
+        }
+      },
+      "queueTtl": "3600s",
+      "name": "projects/12340005/locations/global/builds/4b040094-4204-4f00-a7bd-302639dd6785"
+    },
+    {
       "id": "01ff384c-d7f2-4295-ad68-5c32529d8b85",
       "status": "FAILURE",
       "createTime": "2022-04-05T11:54:05.438831262Z",

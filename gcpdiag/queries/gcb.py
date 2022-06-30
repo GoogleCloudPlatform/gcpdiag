@@ -15,6 +15,7 @@
 # Lint as: python3
 """Queries related to GCP Cloud Build instances."""
 
+import dataclasses
 import logging
 from typing import Dict, List, Mapping, Optional
 
@@ -24,8 +25,57 @@ from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis
 
 
+@dataclasses.dataclass(frozen=True)
+class BuildOptions:
+  """representation of build.options object"""
+  logging: str
+  log_streaming_option: str
+
+  def is_bucket_streaming_enabled(self) -> bool:
+    return (self.logging != 'GCS_ONLY' or
+            self.log_streaming_option != 'STREAM_OFF')
+
+
+class BuildOptionsBuilder:
+  """Build options builder from dictionary."""
+
+  def __init__(self, options: dict):
+    self._options = options
+
+  def build(self) -> BuildOptions:
+    return BuildOptions(
+        logging=self._get_logging(),
+        log_streaming_option=self._get_log_streaming_option(),
+    )
+
+  def _get_logging(self) -> str:
+    return self._options.get('logging', 'LEGACY')
+
+  def _get_log_streaming_option(self) -> str:
+    return self._options.get('logStreamingOption', 'LOGGING_UNSPECIFIED')
+
+
+@dataclasses.dataclass(frozen=True)
+class FailureInfo:
+  """Wrapper around build.failureInfo object."""
+  failure_type: str
+
+
+class FailureInfoBuilder:
+  """Wrapper around build.failureInfo object."""
+
+  def __init__(self, failure_info: dict):
+    self._failure_info = failure_info
+
+  def build(self) -> FailureInfo:
+    return FailureInfo(failure_type=self._get_failure_type())
+
+  def _get_failure_type(self) -> str:
+    return self._failure_info.get('type', '')
+
+
 class Build(models.Resource):
-  """Represents a Cloud Build instance."""
+  """Represents a Cloud Build execution."""
   _resource_data: dict
 
   def __init__(self, project_id, resource_data):
@@ -56,6 +106,19 @@ class Build(models.Resource):
   @property
   def images(self) -> List[str]:
     return self._resource_data.get('images', [])
+
+  @property
+  def logs_bucket(self) -> str:
+    return self._resource_data.get('logsBucket', '')
+
+  @property
+  def options(self) -> BuildOptions:
+    return BuildOptionsBuilder(self._resource_data.get('options', {})).build()
+
+  @property
+  def failure_info(self) -> FailureInfo:
+    return FailureInfoBuilder(self._resource_data.get('failureInfo',
+                                                      {})).build()
 
 
 class Trigger(models.Resource):
