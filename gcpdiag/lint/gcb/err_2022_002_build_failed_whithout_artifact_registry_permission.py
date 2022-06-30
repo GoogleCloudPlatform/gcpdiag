@@ -13,13 +13,10 @@
 # limitations under the License.
 
 # Lint as: python3
-"""Builds didn't fail because of failed registry permissions.
+"""Builds don't fail because of failed registry permissions.
 
-One of your recent builds have failed. It was configured to upload image to
-Artifact Registry, but used service account does not have write permission for
-it. You can resolve this error by granting IAM role
-to the used service account. If you did not specify service account for this
-build, then it used default one: [PROJECT_NUMBER]@cloudbuild.gserviceaccount.com.
+Builds configured to upload image to Artifact Registry must use service account  that has write
+permission for it.
 """
 import dataclasses
 import re
