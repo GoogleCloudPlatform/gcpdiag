@@ -1,0 +1,4 @@
+*  vpc/WARN/2022_001: Cross Project Networking Service projects quota is not near the limit.
+   - gcpdiag-vpc1-aaaa                                                    [SKIP]
+     no data
+

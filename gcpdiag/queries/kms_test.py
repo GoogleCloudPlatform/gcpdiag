@@ -19,7 +19,7 @@ from unittest import mock
 
 from gcpdiag.queries import apis_stub, kms
 
-DUMMY_PROJECT_NAME = 'gcpd-gke-1-9b90'
+DUMMY_PROJECT_NAME = 'gcpdiag-gke1-aaaa'
 BASE_KEY_NAME = f'projects/{DUMMY_PROJECT_NAME}/locations/us-central1/keyRings/usckr/cryptoKeys/'
 DUMMY_DESTROYED_CRYPTO_KEY_NAME = BASE_KEY_NAME + 'kms-key-destroyed'
 DUMMY_DISABLED_CRYPTO_KEY_NAME = BASE_KEY_NAME + 'kms-key-disabled'

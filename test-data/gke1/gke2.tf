@@ -64,7 +64,18 @@ resource "google_project_iam_custom_role" "gke2_custom_role" {
 
     #"stackdriver.resourceMetadata.writer"
     "stackdriver.resourceMetadata.write",
-    "opsconfigmonitoring.resourceMetadata.list"
+    "opsconfigmonitoring.resourceMetadata.list",
+
+    # container.nodeServiceAgent
+    "autoscaling.sites.writeMetrics",
+    "logging.logEntries.create",
+    "monitoring.metricDescriptors.create",
+    "monitoring.metricDescriptors.list",
+    "monitoring.timeSeries.create",
+    #"resourcemanager.projects.get",
+    #"resourcemanager.projects.list",
+    "storage.objects.get",
+    "storage.objects.list",
   ]
 }
 
@@ -81,14 +92,23 @@ resource "google_project_iam_member" "gke2_sa" {
   member  = "serviceAccount:${google_service_account.gke2_sa.email}"
 }
 
+resource "google_service_account_iam_member" "gke2_sa" {
+  service_account_id = google_service_account.gke2_sa.name
+  role               = "roles/iam.serviceAccountUser"
+  member             = "serviceAccount:${google_service_account.gke2_sa.email}"
+}
+
 # GKE cluster with monitoring enabled and service account using a custom role
 resource "google_container_cluster" "gke2" {
   provider           = google-beta
   project            = google_project.project.project_id
   depends_on         = [google_project_service.container]
   name               = "gke2"
-  location           = "europe-west1"
+  location           = "europe-west4"
   initial_node_count = 1
+  release_channel {
+    channel = "UNSPECIFIED"
+  }
   cluster_telemetry {
     type = "SYSTEM_ONLY"
   }
@@ -97,5 +117,53 @@ resource "google_container_cluster" "gke2" {
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
+    tags = ["gke-gke2-custom-tag"]
   }
+  workload_identity_config {
+    workload_pool = "${google_project.project.project_id}.svc.id.goog"
+  }
+}
+
+# firewall configuration used for connectivity testing
+
+resource "google_compute_firewall" "vms_test_deny" {
+  name    = "gke-gke2-vms-test-deny"
+  network = "default"
+  project = google_project.project.project_id
+
+  priority = 900
+
+  deny {
+    ports    = ["1-1000"]
+    protocol = "udp"
+  }
+
+  source_ranges = ["10.128.0.0/9"]
+
+  target_tags = google_container_cluster.gke2.node_config[0].tags
+
+  depends_on = [google_container_cluster.gke2]
+}
+
+resource "google_compute_firewall" "all_test_deny" {
+  name    = "gke-gke2-all-test-deny"
+  network = "default"
+  project = google_project.project.project_id
+
+  priority = 900
+
+  deny {
+    ports    = ["1-1000"]
+    protocol = "tcp"
+  }
+
+  source_ranges = ["10.0.0.0/8"]
+
+  target_tags = google_container_cluster.gke2.node_config[0].tags
+
+  depends_on = [google_container_cluster.gke2]
+}
+
+output "gke2_sa" {
+  value = google_service_account.gke2_sa.name
 }

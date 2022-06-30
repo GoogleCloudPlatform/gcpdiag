@@ -28,10 +28,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not clusters:
     report.add_skipped(None, 'no clusters found')
   for _, c in sorted(clusters.items()):
-    disabled = []
     if not c.has_authenticator_group_enabled():
-      disabled.append('groups')
-    if disabled:
-      report.add_failed(c, ' and '.join(disabled) + ' are disabled')
+      report.add_failed(c, ' does not have Google Groups for RBAC enabled')
     else:
       report.add_ok(c)

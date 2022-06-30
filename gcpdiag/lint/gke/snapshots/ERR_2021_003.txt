@@ -1,0 +1,16 @@
+*  gke/ERR/2021_003: App-layer secrets encryption is activated and Cloud KMS key is enabled.
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [SKIP]
+     App-layer secrets encryption isn't enabled
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [SKIP]
+     App-layer secrets encryption isn't enabled
+   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [SKIP]
+     App-layer secrets encryption isn't enabled
+   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [SKIP]
+     App-layer secrets encryption isn't enabled
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [SKIP]
+     App-layer secrets encryption isn't enabled
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [SKIP]
+     App-layer secrets encryption isn't enabled
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [SKIP]
+     App-layer secrets encryption isn't enabled
+

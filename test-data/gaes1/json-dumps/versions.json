@@ -1,0 +1,22 @@
+{
+  "versions": [
+    {
+      "automaticScaling": {
+        "maxIdleInstances": 1
+      },
+      "createTime": "2022-01-16T15:24:02Z",
+      "createdBy": "REDACTED",
+      "diskUsageBytes": "2488636",
+      "env": "standard",
+      "id": "v1",
+      "instanceClass": "F1",
+      "name": "apps/gcpdiag-gaes1-aaaa/services/default/versions/v1",
+      "network": {},
+      "runtime": "python39",
+      "runtimeChannel": "default",
+      "servingStatus": "SERVING",
+      "threadsafe": true,
+      "versionUrl": "https://v1-dot-gcpdiag-gaes1-aaaa.appspot.com"
+    }
+  ]
+}

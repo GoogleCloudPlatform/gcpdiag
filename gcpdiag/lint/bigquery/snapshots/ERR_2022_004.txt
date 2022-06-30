@@ -1,0 +1,4 @@
+*  bigquery/ERR/2022_004: BigQuery jobs are not failing due to shuffle operation resources exceeded
+   - gcpdiag-cloudsql1-aaaa                                               [SKIP]
+     Logging api is disabled
+

@@ -11,6 +11,9 @@ clean_maps = {
     'cloudfunctions': {
         '.cloudfunctions.[].sourceToken': 'REDACTED'
     },
+    'appengine_versions': {
+        '.versions.[].createdBy': 'REDACTED'
+    },
     'clusters': {
         '.clusters.[].endpoint': '192.168.1.1',
         '.clusters.[].masterAuth.clusterCaCertificate': 'REDACTED',
@@ -25,12 +28,26 @@ clean_maps = {
             'REDACTED',
         '.items.[].disks.[].shieldedInstanceInitialState.pk.content':
             'REDACTED',
-        '.items.[].metadata.items.configure-sh':
+        '.items.[].fingerprint':
             'REDACTED',
-        '.items.[].metadata.items.user-data':
+        '.items.[].metadata.fingerprint':
+            'REDACTED',
+        '.items.[].metadata.items.configure-sh':
             'REDACTED',
         '.items.[].metadata.items.kube-env':
             'REDACTED',
+        '.items.[].metadata.items.user-data':
+            'REDACTED',
+        '.items.[].networkInterfaces.[].fingerprint':
+            'REDACTED',
+        '.items.[].tags.fingerprint':
+            'REDACTED',
+    },
+    'compute-templates': {
+        '.items.[].properties.metadata.fingerprint': 'REDACTED',
+        '.items.[].properties.metadata.items.configure-sh': 'REDACTED',
+        '.items.[].properties.metadata.items.kube-env': 'REDACTED',
+        '.items.[].properties.metadata.items.user-data': 'REDACTED',
     },
     'compute-project': {
         '.commonInstanceMetadata.items.sshKeys': 'REDACTED'

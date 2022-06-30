@@ -24,7 +24,7 @@ import re
 from typing import List
 
 from gcpdiag import lint, models, utils
-from gcpdiag.queries import gce, logs
+from gcpdiag.queries import apis, gce, logs
 
 logs_by_project = {}
 
@@ -44,7 +44,11 @@ def prepare_rule(context: models.Context):
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-  # Any work to do?
+  # skip entire rule is logging disabled
+  if not apis.is_enabled(context.project_id, 'logging'):
+    report.add_skipped(None, 'logging api is disabled')
+    return
+
   # Note: we exclude GKE MIGs because we have a separate lint rule for this
   # (gke/ERR/2021_006)
   migs: List[gce.ManagedInstanceGroup] = [

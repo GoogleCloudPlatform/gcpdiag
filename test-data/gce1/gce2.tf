@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-resource "google_compute_instance" "default" {
+resource "google_compute_instance" "gce2" {
   project        = google_project.project.project_id
+  depends_on     = [google_project_service.compute]
   name           = "gce2"
   machine_type   = "f1-micro"
   zone           = "europe-west4-a"
@@ -23,6 +24,7 @@ resource "google_compute_instance" "default" {
   network_interface {
     network = "default"
   }
+  tags = ["secured-instance"]
   scheduling {
     preemptible       = true
     automatic_restart = false

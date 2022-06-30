@@ -34,13 +34,18 @@ def main(argv):
   if len(argv) == 1 or argv[1] == '--help' or argv[1] == 'help':
     print_help()
   elif argv[1] == 'version' or argv[1] == '--version':
-    print('gcpdiag ' + config.VERSION)
-    print('Copyright 2021 Google LLC')
+    print(f'gcpdiag {config.VERSION}\nCopyright 2021 Google LLC')
   elif argv[1] == 'lint':
     # Replace argv[0:1] with only argv[0] so that argparse works correctly.
     sys.argv.pop(0)
     sys.argv[0] = 'gcpdiag lint'
-    lint_command.run(argv)
+    try:
+      lint_command.run(argv)
+    except KeyboardInterrupt:
+      print(
+          '\n[WARNING] KeyboardInterrupt: Application was interrupted (terminated)',
+          file=sys.stderr)
+      sys.exit(1)
   else:
     print(f'ERROR: unknown command {argv[1]}. Use --help for help.',
           file=sys.stderr)

@@ -16,32 +16,9 @@
 Instead of doing real API calls, we return test JSON data.
 """
 
-import json
-
 from gcpdiag.queries import apis_stub
 
 #pylint: disable=unused-argument
-
-
-class ListClustersQuery:
-  """
-    Test double for HTTP request for
-      https://dataproc.googleapis.com/v1/projects/{project}/regions/{region}/clusters
-    API call
-  """
-
-  def __init__(self, project_id, region):
-    self.project_id = project_id
-    self.region = region
-
-  def execute(self, num_retries: int = 0):
-    json_dir = apis_stub.get_json_dir(self.project_id)
-    try:
-      with open(json_dir / f'dataproc-clusters-{self.region}.json',
-                encoding='utf-8') as f:
-        return json.load(f)
-    except FileNotFoundError:
-      return {}
 
 
 class DataprocApiStub:
@@ -58,4 +35,6 @@ class DataprocApiStub:
 
   # pylint: disable=invalid-name
   def list(self, projectId, region):
-    return ListClustersQuery(project_id=projectId, region=region)
+    return apis_stub.RestCallStub(projectId,
+                                  f'dataproc-clusters-{region}',
+                                  default={})

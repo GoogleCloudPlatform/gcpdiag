@@ -1,0 +1,3 @@
+*  gke/ERR/2021_010: Check internal peering forwarding limits which affect GKE.
+   (logging api is disabled)                                              [SKIP]
+

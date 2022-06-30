@@ -1,0 +1,13 @@
+{
+  "name": "projects/12340009",
+  "parent": "folders/11112222",
+  "projectId": "gcpdiag-vpc1-aaaa",
+  "state": "ACTIVE",
+  "displayName": "gcpdiag test - vpc1",
+  "createTime": "2022-06-07T12:06:37.529Z",
+  "updateTime": "2022-06-07T12:06:39.191Z",
+  "etag": "73LYwBG8oClJWMj4WmVI7w==",
+  "labels": {
+    "gcpdiag": "test"
+  }
+}

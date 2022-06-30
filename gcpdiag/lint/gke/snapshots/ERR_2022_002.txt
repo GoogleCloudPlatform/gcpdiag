@@ -1,0 +1,9 @@
+*  gke/ERR/2022_002: GKE nodes of private clusters can access Google APIs and services.
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [ OK ]
+

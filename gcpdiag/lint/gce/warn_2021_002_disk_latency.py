@@ -42,7 +42,7 @@ def prefetch_rule(context: models.Context):
   if not instances:
     return
 
-  within_str = 'within %dd, d\'%s\'' % (config.WITHIN_DAYS,
+  within_str = 'within %dd, d\'%s\'' % (config.get('within_days'),
                                         monitoring.period_aligned_now(60))
   _query_results_per_project_id[context.project_id] = \
       monitoring.query(

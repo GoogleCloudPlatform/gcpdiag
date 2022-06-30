@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "etag": "BwXXiuC2MaU=",
+  "bindings": [
+    {
+      "role": "roles/viewer",
+      "members": [
+        "domain:google.com"
+      ]
+    }
+  ]
+}

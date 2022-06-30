@@ -1,10 +1,11 @@
 {
   "roles": [
     {
-      "name": "projects/gcpd-gke-1-9b90/roles/gke2_custom_role",
+      "name": "projects/gcpdiag-gke1-aaaa/roles/gke2_custom_role",
       "title": "GKE Custom Role",
       "description": "A description",
       "includedPermissions": [
+        "autoscaling.sites.writeMetrics",
         "cloudnotifications.activities.list",
         "logging.logEntries.create",
         "monitoring.alertPolicies.get",
@@ -33,20 +34,22 @@
         "monitoring.uptimeCheckConfigs.get",
         "monitoring.uptimeCheckConfigs.list",
         "opsconfigmonitoring.resourceMetadata.list",
-        "stackdriver.resourceMetadata.write"
+        "stackdriver.resourceMetadata.write",
+        "storage.objects.get",
+        "storage.objects.list"
       ],
       "stage": "GA",
-      "etag": "BwXAVSZiOkU="
+      "etag": "BwXXp/+O7cs="
     },
     {
-      "name": "projects/gcpd-gke-1-9b90/roles/gke3_custom_role",
+      "name": "projects/gcpdiag-gke1-aaaa/roles/gke3_custom_role",
       "title": "GKE 3 Custom Role",
       "description": "A description",
       "includedPermissions": [
         "cloudnotifications.activities.list"
       ],
       "stage": "GA",
-      "etag": "BwW6mdcgYL4="
+      "etag": "BwXXp/+Ke/c="
     }
   ]
 }

@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# wrapper to call precommit-required-files with correct environment set
+# (this is particularly problematic in GitHub Actions and I couldn't get
+# it to work without this wrapper)
+
+# note: the script assumes to be running in the root directory of the git
+# repository
+
+export PATH=$(pipenv --venv)/bin:$PATH
+export PYTHONPATH=$(pwd)
+python bin/precommit-required-files "$@"

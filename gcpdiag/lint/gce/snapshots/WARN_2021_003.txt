@@ -1,0 +1,15 @@
+*  gce/WARN/2021_003: GCE instance service account permissions for monitoring.
+   - gcpdiag-gce1-aaaa/gce1                                               [ OK ]
+   - gcpdiag-gce1-aaaa/gce2                                               [ OK ]
+   - gcpdiag-gce1-aaaa/mig-4h21                                           [FAIL]
+     no service account
+   - gcpdiag-gce1-aaaa/mig-7pvl                                           [FAIL]
+     no service account
+
+   The service account used by GCE instance should have the
+   monitoring.metricWriter permission and a GCE instance should have the
+   monitoring.write access scope, otherwise, if you install the ops or
+   monitoring agent, it won't be able to send the metrics to Cloud Monitoring.
+
+   https://gcpdiag.dev/rules/gce/WARN/2021_003
+

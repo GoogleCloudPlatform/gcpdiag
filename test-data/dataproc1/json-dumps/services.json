@@ -1,7 +1,7 @@
 {
   "services": [
     {
-      "name": "projects/920639739287/services/compute.googleapis.com",
+      "name": "projects/12340005/services/compute.googleapis.com",
       "config": {
         "name": "compute.googleapis.com",
         "title": "Compute Engine API",
@@ -104,10 +104,10 @@
         }
       },
       "state": "ENABLED",
-      "parent": "projects/920639739287"
+      "parent": "projects/12340005"
     },
     {
-      "name": "projects/920639739287/services/dataproc-control.googleapis.com",
+      "name": "projects/12340005/services/dataproc-control.googleapis.com",
       "config": {
         "name": "dataproc-control.googleapis.com",
         "title": "Cloud Dataproc Control API",
@@ -124,10 +124,10 @@
         "monitoring": {}
       },
       "state": "ENABLED",
-      "parent": "projects/920639739287"
+      "parent": "projects/12340005"
     },
     {
-      "name": "projects/920639739287/services/dataproc.googleapis.com",
+      "name": "projects/12340005/services/dataproc.googleapis.com",
       "config": {
         "name": "dataproc.googleapis.com",
         "title": "Cloud Dataproc API",
@@ -144,10 +144,10 @@
         "monitoring": {}
       },
       "state": "ENABLED",
-      "parent": "projects/920639739287"
+      "parent": "projects/12340005"
     },
     {
-      "name": "projects/920639739287/services/oslogin.googleapis.com",
+      "name": "projects/12340005/services/oslogin.googleapis.com",
       "config": {
         "name": "oslogin.googleapis.com",
         "title": "Cloud OS Login API",
@@ -164,10 +164,10 @@
         "monitoring": {}
       },
       "state": "ENABLED",
-      "parent": "projects/920639739287"
+      "parent": "projects/12340005"
     },
     {
-      "name": "projects/920639739287/services/storage-api.googleapis.com",
+      "name": "projects/12340005/services/storage-api.googleapis.com",
       "config": {
         "name": "storage-api.googleapis.com",
         "title": "Google Cloud Storage JSON API",
@@ -184,10 +184,10 @@
         "monitoring": {}
       },
       "state": "ENABLED",
-      "parent": "projects/920639739287"
+      "parent": "projects/12340005"
     },
     {
-      "name": "projects/920639739287/services/storage-component.googleapis.com",
+      "name": "projects/12340005/services/storage-component.googleapis.com",
       "config": {
         "name": "storage-component.googleapis.com",
         "title": "Cloud Storage",
@@ -321,7 +321,7 @@
         }
       },
       "state": "ENABLED",
-      "parent": "projects/920639739287"
+      "parent": "projects/12340005"
     }
   ]
 }

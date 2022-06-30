@@ -1,0 +1,12 @@
+{
+  "bindings": [
+    {
+      "members": [
+        "user:testuser@example.com"
+      ],
+      "role": "roles/owner"
+    }
+  ],
+  "etag": "BwXXikLqmJg=",
+  "version": 1
+}

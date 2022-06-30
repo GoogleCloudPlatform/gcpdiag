@@ -67,9 +67,9 @@ repos:
 
 - repo: local
   hooks:
-  - id: gcpdiag-rule-page
-    name: Check that there is a page in website for each lint rule
-    entry: ./bin/precommit-website-rules-wrapper
+  - id: gcpdiag-custom-rule
+    name: Check that there are required files for each lint rule
+    entry: ./bin/precommit-required-files-wrapper
     language: script
     files: ^gcpdiag/lint/[^/]+/(bp|warn|err|sec)_.*.py
     exclude: .*_test.py

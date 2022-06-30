@@ -1,0 +1,44 @@
+{
+  "services": [
+    {
+      "name": "projects/12340009/services/pubsub.googleapis.com",
+      "config": {
+        "name": "pubsub.googleapis.com",
+        "title": "Cloud Pub/Sub API",
+        "documentation": {
+          "summary": "Provides reliable, many-to-many, asynchronous messaging between applications.\n"
+        },
+        "quota": {},
+        "authentication": {},
+        "usage": {
+          "requirements": [
+            "serviceusage.googleapis.com/tos/cloud"
+          ]
+        },
+        "monitoring": {}
+      },
+      "state": "ENABLED",
+      "parent": "projects/12340009"
+    },
+    {
+      "name": "projects/12340009/services/serviceusage.googleapis.com",
+      "config": {
+        "name": "serviceusage.googleapis.com",
+        "title": "Service Usage API",
+        "documentation": {
+          "summary": "Enables services that service consumers want to use on Google Cloud Platform, lists the available or enabled services, or disables services that service consumers no longer use."
+        },
+        "quota": {},
+        "authentication": {},
+        "usage": {
+          "requirements": [
+            "serviceusage.googleapis.com/tos/cloud"
+          ]
+        },
+        "monitoring": {}
+      },
+      "state": "ENABLED",
+      "parent": "projects/12340009"
+    }
+  ]
+}

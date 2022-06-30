@@ -61,9 +61,9 @@ resource in GCP and must have these three methods:
 
 -   `project_id` (property)
 -   `full_path` (property) - returns the full path of this resource (e.g.:
-    `projects/gcpd-gke-1-9b90/zones/europe-west4-a/clusters/gke1`)
+    `projects/gcpdiag-gke-1-9b90/zones/europe-west4-a/clusters/gke1`)
 -   `short_path` (property) - returns the short name for this resource (e.g.:
-    `gcpd-gke-1-9b90/europe-west4-a/gke1`)
+    `gcpdiag-gke-1-9b90/europe-west4-a/gke1`)
 
 Queries modules provide functions that generally require as input a `Context`
 object and return a dictionary or list of `Resource`. It is the responsibility

@@ -42,6 +42,27 @@ AUTH_SCOPES = [
 ]
 
 
+def _auth_method():
+  """Calculate proper authentication method based on provided configuration
+
+  Returns:
+      str: Return type of authentication method
+  """
+  if config.get('auth_key'):
+    auth_method = 'key'
+  elif config.get('auth_adc'):
+    auth_method = 'adc'
+  elif config.get('auth_oauth'):
+    auth_method = 'oauth'
+  else:
+    # use OAuth by default, except in Cloud Shell
+    if config.get('is_cloud_shell'):
+      auth_method = 'adc'
+    else:
+      auth_method = 'oauth'
+  return auth_method
+
+
 def _get_credentials_adc():
   logging.debug('auth: using application default credentials')
 
@@ -55,12 +76,13 @@ def _get_credentials_adc():
 
 
 def _get_credentials_key():
-  logging.debug('auth: using service account key')
+  filename = config.get('auth_key')
+  logging.debug('auth: using service account key %s', filename)
 
   global _credentials
   if not _credentials:
-    _credentials, _ = google.auth.load_credentials_from_file(
-        filename=config.AUTH_KEY, scopes=AUTH_SCOPES)
+    _credentials, _ = google.auth.load_credentials_from_file(filename=filename,
+                                                             scopes=AUTH_SCOPES)
   return _credentials
 
 
@@ -130,17 +152,24 @@ def _get_credentials_oauth():
 
 
 def _get_credentials():
-  if config.AUTH_METHOD == 'adc':
+  if _auth_method() == 'adc':
     return _get_credentials_adc()
-  elif config.AUTH_METHOD == 'key':
+  elif _auth_method() == 'key':
     return _get_credentials_key()
-  elif config.AUTH_METHOD == 'oauth':
+  elif _auth_method() == 'oauth':
     return _get_credentials_oauth()
   else:
     raise AssertionError(
         'BUG: AUTH_METHOD method should be one of `adc`, `oauth`, `key`, but got '
-        f'`{config.AUTH_METHOD} instead. Please report at https://gcpdiag.dev/issues/'
-    )
+        f'`{_auth_method()}` instead.'
+        ' Please report at https://gcpdiag.dev/issues/')
+
+
+def _get_project_or_billing_id(project_id: str) -> str:
+  """Return project or billing project id (if defined)"""
+  if config.get('billing_project'):
+    return config.get('billing_project')
+  return project_id
 
 
 def login():
@@ -170,13 +199,16 @@ def get_api(service_name: str, version: str, project_id: Optional[str] = None):
   def _request_builder(http, *args, **kwargs):
     del http
 
-    hooks.request_builder_hook(*args, **kwargs)
-
     if 'headers' in kwargs:
+      # thread safety: make sure that original dictionary isn't modified
+      kwargs['headers'] = kwargs['headers'].copy()
+
       headers = kwargs.get('headers', {})
       headers['user-agent'] = f'gcpdiag/{config.VERSION} (gzip)'
       if project_id:
-        headers['x-goog-user-project'] = project_id
+        headers['x-goog-user-project'] = _get_project_or_billing_id(project_id)
+
+    hooks.request_builder_hook(*args, **kwargs)
 
     # thread safety: create a new AuthorizedHttp object for every request
     # https://github.com/googleapis/google-api-python-client/blob/master/docs/thread_safety.md
@@ -193,7 +225,7 @@ def get_api(service_name: str, version: str, project_id: Optional[str] = None):
 
 
 @caching.cached_api_call(in_memory=True)
-def list_apis(project_id: str) -> Set[str]:
+def _list_apis(project_id: str) -> Set[str]:
   logging.debug('listing enabled APIs')
   serviceusage = get_api('serviceusage', 'v1', project_id)
   request = serviceusage.services().list(parent=f'projects/{project_id}',
@@ -211,7 +243,7 @@ def list_apis(project_id: str) -> Set[str]:
 
 
 def is_enabled(project_id: str, service_name: str) -> bool:
-  return f'{service_name}.googleapis.com' in list_apis(project_id)
+  return f'{service_name}.googleapis.com' in _list_apis(project_id)
 
 
 def verify_access(project_id: str):
@@ -225,13 +257,35 @@ def verify_access(project_id: str):
       ),
             file=sys.stdout)
       sys.exit(1)
+
+    if not is_enabled(project_id, 'iam'):
+      print((
+          'ERROR: Identity and Access Management (IAM) API must be enabled. To enable, execute:\n'
+          f'gcloud services enable iam.googleapis.com --project={project_id}'),
+            file=sys.stdout)
+      sys.exit(1)
+
+    if not is_enabled(project_id, 'logging'):
+      print((
+          'WARNING: Cloud Logging API is not enabled (related rules will be skipped).'
+          ' To enable, execute:\n'
+          f'gcloud services enable logging.googleapis.com --project={project_id}\n'
+      ),
+            file=sys.stdout)
   except utils.GcpApiError as err:
-    print(f'ERROR: can\'t access project {project_id}: {err.message}.',
-          file=sys.stdout)
+    if 'SERVICE_DISABLED' == err.reason and 'serviceusage.googleapis.com' == err.service:
+      print((
+          'ERROR: Service Usage API must be enabled. To enable, execute:\n'
+          f'gcloud services enable serviceusage.googleapis.com --project={project_id}'
+      ),
+            file=sys.stdout)
+    else:
+      print(f'ERROR: can\'t access project {project_id}: {err.message}.',
+            file=sys.stdout)
     sys.exit(1)
   except exceptions.GoogleAuthError as err:
     print(f'ERROR: {err}', file=sys.stdout)
-    if config.AUTH_METHOD == 'adc':
+    if _auth_method() == 'adc':
       print(('Error using application default credentials. '
              'Try running: gcloud auth login --update-adc'),
             file=sys.stderr)

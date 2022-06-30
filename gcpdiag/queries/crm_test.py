@@ -19,9 +19,9 @@ import diskcache
 
 from gcpdiag.queries import apis_stub, crm
 
-DUMMY_PROJECT_ID = 'gcpd-gke-1-9b90'
-DUMMY_PROJECT_NR = 18404348413
-DUMMY_PROJECT_NAME = 'gcp-doctor test - gke1'
+DUMMY_PROJECT_ID = 'gcpdiag-gke1-aaaa'
+DUMMY_PROJECT_NR = 12340002
+DUMMY_PROJECT_NAME = 'gcpdiag test - gke1'
 
 
 def get_cache_stub():
@@ -39,3 +39,6 @@ class Test:
     assert p.id == DUMMY_PROJECT_ID
     assert p.number == DUMMY_PROJECT_NR
     assert p.name == DUMMY_PROJECT_NAME
+
+  # getIamPolicy is tested in iam_test.py
+  # getEffectiveOrgPolicy is tested in orgpolicy_test.py

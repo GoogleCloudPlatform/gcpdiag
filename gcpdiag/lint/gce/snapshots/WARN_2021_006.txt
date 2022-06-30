@@ -1,0 +1,3 @@
+*  gce/WARN/2021_006: Serial logs don't contain "Kernel panic" messages
+   (logging api is disabled)                                              [SKIP]
+

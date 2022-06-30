@@ -1,10 +1,13 @@
 {
-  "name": "projects/18404348413",
-  "parent": "organizations/98915863894",
-  "projectId": "gcpd-gke-1-9b90",
+  "name": "projects/12340002",
+  "parent": "folders/422810093603",
+  "projectId": "gcpdiag-gke1-aaaa",
   "state": "ACTIVE",
-  "displayName": "gcp-doctor test - gke1",
-  "createTime": "2020-11-09T12:24:48.019Z",
-  "updateTime": "2020-11-09T12:24:49.624Z",
-  "etag": "K/h+xsxPOL12Wj5D7HQUHA=="
+  "displayName": "gcpdiag test - gke1",
+  "createTime": "2021-12-06T10:39:13.610Z",
+  "updateTime": "2021-12-06T10:39:15.558Z",
+  "etag": "NdRtoQbprleONiALgkn2uw==",
+  "labels": {
+    "gcpdiag": "test"
+  }
 }

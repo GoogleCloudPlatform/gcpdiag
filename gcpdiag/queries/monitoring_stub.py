@@ -16,7 +16,6 @@
 Instead of doing real API calls, we return test JSON data.
 """
 
-import json
 import re
 
 from gcpdiag.queries import apis_stub
@@ -37,15 +36,9 @@ class MonitoringApiStub:
   def query(self, name, body):
     del body
     m = re.match(r'projects/([^/]+)', name)
-    self.project_id = m.group(1)
-    return self
+    project_id = m.group(1)
+    return apis_stub.RestCallStub(project_id, 'monitoring-query')
 
   def query_next(self, previous_request, previous_response):
     del previous_request
     del previous_response
-
-  def execute(self, num_retries=0):
-    json_dir = apis_stub.get_json_dir(self.project_id)
-    with open(json_dir / 'monitoring-query.json',
-              encoding='utf-8') as json_file:
-      return json.load(json_file)

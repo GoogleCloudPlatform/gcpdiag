@@ -1,0 +1,5 @@
+*  dataproc/WARN/2021_001: Dataproc cluster is in RUNNING state
+   - gcpdiag-dataproc1-aaaa/us-central1/good                              [ OK ]
+   - gcpdiag-dataproc1-aaaa/us-central1/test-best-practices-disabled      [ OK ]
+   - gcpdiag-dataproc1-aaaa/us-central1/test-best-practices-enabled       [ OK ]
+

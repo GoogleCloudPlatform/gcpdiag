@@ -7,13 +7,13 @@ test:
 
 test-mocked:
 	# run gcpdiag-mocked and verify that the exit status is what we expect
-	bin/gcpdiag-mocked lint --auth-adc --project=gcpd-gke-1-9b90; \
+	bin/gcpdiag-mocked lint --auth-adc --project=gcpdiag-gke1-aaaa; \
 	  EXIT_CODE=$$?; \
 	  if [ $$EXIT_CODE != 2 ]; then echo "incorrect exit code $$EXIT_CODE" >&2; exit 1; fi; \
 	  exit 0
 
 snapshots:
-	pytest --snapshot-update
+	pytest --snapshot-update --forked
 
 version:
 	@echo $(VERSION)

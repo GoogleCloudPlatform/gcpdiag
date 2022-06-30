@@ -17,7 +17,7 @@ from unittest import mock
 
 from gcpdiag.queries import apis, apis_stub
 
-DUMMY_PROJECT_NAME = 'gcpd-gke-1-9b90'
+DUMMY_PROJECT_NAME = 'gcpdiag-gke1-aaaa'
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)

@@ -1,0 +1,3 @@
+*  iam/SEC/2021_001: No service accounts have the Owner role
+   - gcpdiag-iam1-aaaa                                                    [ OK ]
+

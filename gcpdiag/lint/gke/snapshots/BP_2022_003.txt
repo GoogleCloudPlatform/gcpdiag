@@ -1,0 +1,14 @@
+*  gke/BP/2022_003: GKE cluster is not near to end of life
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [SKIP]
+     release channel: REGULAR
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [SKIP]
+     release channel: REGULAR
+   - gcpdiag-gke1-aaaa/europe-west4/gke2/default-pool                     [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [SKIP]
+     release channel: REGULAR
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1/default-pool                   [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [SKIP]
+     release channel: REGULAR
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [SKIP]
+     release channel: REGULAR
+

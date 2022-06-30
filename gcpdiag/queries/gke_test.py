@@ -16,6 +16,7 @@
 """Test code in gke.py."""
 
 import ipaddress
+import re
 from unittest import mock
 
 import pytest
@@ -25,13 +26,19 @@ from gcpdiag import models
 from gcpdiag.queries import apis_stub, gce, gke
 from gcpdiag.queries.gke import Version
 
-DUMMY_PROJECT_NAME = 'gcpd-gke-1-9b90'
+DUMMY_PROJECT_NAME = 'gcpdiag-gke1-aaaa'
 DUMMY_CLUSTER1_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clusters/gke1'
 DUMMY_CLUSTER1_LABELS = {'foo': 'bar'}
 DUMMY_CLUSTER2_NAME = f'projects/{DUMMY_PROJECT_NAME}/locations/europe-west1/clusters/gke2'
 DUMMY_CLUSTER2_SHORT_NAME = f'{DUMMY_PROJECT_NAME}/europe-west1/gke2'
-DUMMY_CLUSTER1_SERVICE_ACCOUNT = '18404348413-compute@developer.gserviceaccount.com'
-DUMMY_CLUSTER2_SERVICE_ACCOUNT = 'gke2sa@gcpd-gke-1-9b90.iam.gserviceaccount.com'
+DUMMY_CLUSTER3_NAME = f'projects/{DUMMY_PROJECT_NAME}/locations/europe-west1/clusters/gke3'
+DUMMY_CLUSTER2_NAME = f'projects/{DUMMY_PROJECT_NAME}/locations/europe-west4/clusters/gke2'
+DUMMY_CLUSTER2_SHORT_NAME = f'{DUMMY_PROJECT_NAME}/europe-west4/gke2'
+DUMMY_CLUSTER1_SERVICE_ACCOUNT = '12340002-compute@developer.gserviceaccount.com'
+DUMMY_CLUSTER2_SERVICE_ACCOUNT = 'gke2sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com'
+DUMMY_CLUSTER4_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clusters/gke4'
+DUMMY_CLUSTER6_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clusters/gke6'
+DUMMY_DEFAULT_NAME = 'default'
 
 # pylint: disable=consider-iterating-dictionary
 
@@ -52,7 +59,7 @@ class TestCluster:
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              regions=['europe-west4'])
     clusters = gke.get_clusters(context)
-    assert DUMMY_CLUSTER1_NAME in clusters and len(clusters) == 1
+    assert DUMMY_CLUSTER1_NAME in clusters and len(clusters) == 7
 
   def test_cluster_properties(self):
     """verify cluster property methods."""
@@ -60,7 +67,10 @@ class TestCluster:
     clusters = gke.get_clusters(context)
     c = clusters[DUMMY_CLUSTER1_NAME]
     assert c.name == 'gke1'
-    assert c.master_version == '1.20.10-gke.1600'
+    assert re.match(r'1\.\d+\.\d+-gke\.\d+', str(c.master_version))
+    assert c.release_channel is None
+    c = clusters[DUMMY_CLUSTER4_NAME]
+    assert c.name == 'gke4'
     assert c.release_channel == 'REGULAR'
 
   def test_get_path_regional(self):
@@ -89,6 +99,25 @@ class TestCluster:
     c = clusters[DUMMY_CLUSTER2_NAME]
     assert c.has_logging_enabled()
 
+  def test_has_authenticator_group_enabled(self):
+    """""has_authenticator_group_enabled should return true for GKE cluster with Groups for RBAC
+    enabled."""
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    assert DUMMY_CLUSTER3_NAME in clusters.keys()
+    c = clusters[DUMMY_CLUSTER3_NAME]
+    assert c.has_authenticator_group_enabled()
+
+  def test_cluster_has_workload_identity_enabled(self):
+    """has_workload_identity_enabled should return true for GKE cluster with
+    workload identity enabled."""
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    assert not c.has_workload_identity_enabled()
+    c = clusters[DUMMY_CLUSTER4_NAME]
+    assert c.has_workload_identity_enabled()
+
   def test_has_default_service_account(self):
     """has_default_service_account should return true for GKE node-pools with
     the default GCE SA."""
@@ -112,7 +141,7 @@ class TestCluster:
     # cluster 2
     c = clusters[DUMMY_CLUSTER2_NAME]
     assert c.pod_ipv4_cidr.compare_networks(
-        ipaddress.ip_network('10.112.0.0/14')) == 0
+        ipaddress.ip_network('10.4.0.0/14')) == 0
 
   def test_current_node_count(self):
     """returns correct number of nodes running"""
@@ -133,11 +162,29 @@ class TestCluster:
     c = clusters[DUMMY_CLUSTER1_NAME]
     assert c.nodepools[0].pod_ipv4_cidr_size == 24
 
+  def test_has_md_concealment_enabled(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    assert not c.nodepools[0].has_md_concealment_enabled()
+
   def test_has_workload_identity_enabled(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     c = clusters[DUMMY_CLUSTER1_NAME]
     assert not c.nodepools[0].has_workload_identity_enabled()
+
+  def test_no_accelerators(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    assert not c.nodepools[0].config.has_accelerators()
+
+  def test_has_accelerators(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER6_NAME]
+    assert c.nodepools[0].config.has_accelerators()
 
   def test_nodepool_instance_groups(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
@@ -172,6 +219,75 @@ class TestCluster:
     # cluster2 has a custom SA
     c = clusters[DUMMY_CLUSTER2_NAME]
     assert c.nodepools[0].service_account == DUMMY_CLUSTER2_SERVICE_ACCOUNT
+
+  def test_masters_cidr_list(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER4_NAME]
+    assert c.masters_cidr_list == [ipaddress.IPv4Network('10.0.1.0/28')]
+
+  def test_cluster_is_private(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    assert not c.is_private
+    c = clusters[DUMMY_CLUSTER4_NAME]
+    assert c.is_private
+
+  def test_cluster_is_regional(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER4_NAME]
+    assert not c.is_regional
+    c = clusters[DUMMY_CLUSTER2_NAME]
+    assert c.is_regional
+
+  def test_node_tag_property(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    assert [t for t in c.nodepools[0].node_tags if t.startswith('gke-gke1-')]
+
+    c = clusters[DUMMY_CLUSTER4_NAME]
+    assert [t for t in c.nodepools[0].node_tags if t.endswith('-node')]
+
+  def test_cluster_hash_property(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER4_NAME]
+    assert re.match('[a-z0-9]+$', c.cluster_hash)
+
+  def test_verify_firewall_rule_exists(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER4_NAME]
+    assert c.network.firewall.verify_ingress_rule_exists(
+        f'gke-gke4-{c.cluster_hash}-master')
+    assert not c.network.firewall.verify_ingress_rule_exists('foobar')
+
+  def test_cluster_network_subnetwork(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER4_NAME]
+    assert DUMMY_DEFAULT_NAME == c.network.name
+    assert DUMMY_DEFAULT_NAME == c.subnetwork.name
+    assert c.subnetwork.ip_network == ipaddress.IPv4Network('10.164.0.0/20')
+
+  def test_cluster_masters_cidr_list(self):
+    # test both public and private clusters, because the code is quite
+    # different for each of them.
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    ips = c.masters_cidr_list
+    assert len(ips) == 1
+    assert isinstance(ips[0], ipaddress.IPv4Network)
+    assert not ips[0].is_private
+    c = clusters[DUMMY_CLUSTER4_NAME]
+    ips = c.masters_cidr_list
+    assert len(ips) == 1
+    assert isinstance(ips[0], ipaddress.IPv4Network)
+    assert ips[0].is_private
 
 
 class TestVersion:

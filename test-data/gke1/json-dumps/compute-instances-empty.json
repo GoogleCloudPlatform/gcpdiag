@@ -1,5 +1,5 @@
 {
-  "id": "projects/gcpd-gke-1-9b90/zones/europe-west4-b/instances",
+  "id": "projects/gcpdiag-gke1-aaaa/zones/europe-west1-b/instances",
   "kind": "compute#instanceList",
-  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpd-gke-1-9b90/zones/europe-west4-b/instances"
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west1-b/instances"
 }
