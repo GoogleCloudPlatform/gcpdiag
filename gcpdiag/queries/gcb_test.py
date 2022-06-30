@@ -23,6 +23,7 @@ from gcpdiag.queries import apis_stub, gcb
 DUMMY_PROJECT_NAME = 'gcpdiag-gcb1-aaaa'
 BUILD_ID_FAILED_STEP = '01ff384c-d7f2-4295-ad68-5c32529d8b85'
 BUIDL_ID_FAILED_LOGGING = '58c22070-5629-480e-b822-cd8eff7befb8'
+BUIDL_ID_SUCCESS_LOGGING = '4b040094-4204-4f00-a7bd-302639dd6785'
 BUILD_ID_FAILED_IMAGE_UPLOAD = 'db540598-5a45-46f3-a716-39d834e884c6'
 CUSTOM1_SERVICE_ACCOUNT = \
   'projects/gcpdiag-gcb1-aaaa/serviceAccounts/gcb-custom1@gcpdiag-gcb1-aaaa.iam.gserviceaccount.com'
@@ -36,9 +37,10 @@ class TestCloudBuild:
   def test_get_builds(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     builds = gcb.get_builds(context=context)
-    assert len(builds) == 3
+    assert len(builds) == 4
     assert BUILD_ID_FAILED_STEP in builds
     assert BUIDL_ID_FAILED_LOGGING in builds
+    assert BUIDL_ID_SUCCESS_LOGGING in builds
     assert BUILD_ID_FAILED_IMAGE_UPLOAD in builds
 
   def test_build_service_account(self):
@@ -53,3 +55,19 @@ class TestCloudBuild:
     builds = gcb.get_builds(context=context)
     assert builds[BUILD_ID_FAILED_IMAGE_UPLOAD].images == [BUILD_IMAGE]
     assert builds[BUILD_ID_FAILED_STEP].images == []
+
+  def test_build_failure_info(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    builds = gcb.get_builds(context=context)
+    assert builds[BUILD_ID_FAILED_IMAGE_UPLOAD].failure_info.failure_type == ''
+    assert (builds[BUIDL_ID_FAILED_LOGGING].failure_info.failure_type ==
+            'LOGGING_FAILURE')
+    assert (builds[BUILD_ID_FAILED_STEP].failure_info.failure_type ==
+            'USER_BUILD_STEP')
+
+  def test_build_options(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    builds = gcb.get_builds(context=context)
+    assert (builds[BUIDL_ID_SUCCESS_LOGGING].options.log_streaming_option ==
+            'STREAM_OFF')
+    assert builds[BUIDL_ID_SUCCESS_LOGGING].options.logging == 'GCS_ONLY'

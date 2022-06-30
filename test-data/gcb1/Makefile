@@ -5,6 +5,7 @@ ORG_ID      := $(shell terraform output -raw org_id)
 BUILD1_CONFIG            := $(shell terraform output -raw build1_config)
 BUILD2_CONFIG            := $(shell terraform output -raw build2_config)
 BUILD3_CONFIG            := $(shell terraform output -raw build3_config)
+BUILD4_CONFIG            := $(shell terraform output -raw build4_config)
 BUCKET_WITH_RETENTION    := $(shell terraform output -raw bucket_with_retention)
 ARTIFACT_REGISTRY        := $(shell terraform output -raw artifact_registry)
 CURL         = ../../bin/curl-wrap.sh
@@ -24,7 +25,7 @@ all:	\
 	json-dumps/cloudbuild-$(REGION_1).json \
 	json-dumps/cloudbuild-empty.json \
 	json-dumps/cloudbuild-triggers.json \
-	json-dumps/bucket.json \
+	json-dumps/bucket-gcpdiag-gcb1-bucket1-aaaa.json \
 	json-dumps/artifact-registry-policy.json \
 	json-dumps/iam-service-accounts.json \
 	json-dumps/project.json \
@@ -36,6 +37,8 @@ run-builds:
 	gcloud builds submit --no-source --config $(BUILD2_CONFIG) \
 		--project $(PROJECT_ID) || true
 	gcloud builds submit --no-source --config $(BUILD3_CONFIG) \
+		--project $(PROJECT_ID) || true
+	gcloud builds submit --no-source --config $(BUILD4_CONFIG) \
 		--project $(PROJECT_ID) || true
 
 json-dumps/project.json:
@@ -68,7 +71,7 @@ json-dumps/cloudbuild-triggers.json:
 	  'https://cloudbuild.googleapis.com/v1/projects/$(PROJECT_ID)/triggers' \
 		| $(SED_SUBST_FAKE) >$@
 
-json-dumps/bucket.json:
+json-dumps/bucket-gcpdiag-gcb1-bucket1-aaaa.json:
 	$(CURL) -fv \
 		'https://storage.googleapis.com/storage/v1/b/${BUCKET_WITH_RETENTION}' \
 		| $(SED_SUBST_FAKE) >$@
