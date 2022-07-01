@@ -283,6 +283,14 @@ class Cluster(models.Resource):
       return None
 
   @property
+  def nap_node_image_type(self) -> Optional[str]:
+
+    return get_path(
+        self._resource_data,
+        ('autoscaling', 'autoprovisioningNodePoolDefaults', 'imageType'),
+        default=None)
+
+  @property
   def app_layer_sec_key(self) -> str:
     return self._resource_data['databaseEncryption'].get('keyName')
 
