@@ -1,0 +1,3 @@
+*  gke/BP_EXT/2022_001: Google Groups for RBAC enabled.
+   (Error: 'authenticatorGroupsConfig')                                   [SKIP]
+
