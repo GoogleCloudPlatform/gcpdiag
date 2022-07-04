@@ -1,3 +1,22 @@
 *  gke/BP_EXT/2022_001: Google Groups for RBAC enabled.
-   (Error: 'authenticatorGroupsConfig')                                   [SKIP]
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [FAIL]
+      does not have Google Groups for RBAC enabled
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [FAIL]
+      does not have Google Groups for RBAC enabled
+   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [FAIL]
+      does not have Google Groups for RBAC enabled
+   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [FAIL]
+      does not have Google Groups for RBAC enabled
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [FAIL]
+      does not have Google Groups for RBAC enabled
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [FAIL]
+      does not have Google Groups for RBAC enabled
+
+   Enable Google Groups for RBAC so cluster administrators do not need to manage
+   permissions manually for each user on the cluster and so Workspace
+   administrators can manage user accounts, such as revoking access when someone
+   leaves your organization.
+
+   https://gcpdiag.dev/rules/gke/BP_EXT/2022_001
 

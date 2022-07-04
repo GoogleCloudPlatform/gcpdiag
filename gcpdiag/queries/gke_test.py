@@ -103,8 +103,11 @@ class TestCluster:
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     assert DUMMY_CLUSTER3_NAME in clusters.keys()
+    assert DUMMY_CLUSTER4_NAME in clusters.keys()
     c = clusters[DUMMY_CLUSTER3_NAME]
     assert c.has_authenticator_group_enabled()
+    c = clusters[DUMMY_CLUSTER4_NAME]
+    assert not c.has_authenticator_group_enabled()
 
   def test_cluster_has_workload_identity_enabled(self):
     """has_workload_identity_enabled should return true for GKE cluster with
