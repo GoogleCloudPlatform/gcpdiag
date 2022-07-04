@@ -305,6 +305,9 @@ class Cluster(models.Resource):
   def has_monitoring_enabled(self) -> bool:
     return self._resource_data['monitoringService'] != 'none'
 
+  def has_authenticator_group_enabled(self) -> bool:
+    return len(self._resource_data.get('authenticatorGroupsConfig', {})) > 0
+
   def has_workload_identity_enabled(self) -> bool:
     return len(self._resource_data.get('workloadIdentityConfig', {})) > 0
 
