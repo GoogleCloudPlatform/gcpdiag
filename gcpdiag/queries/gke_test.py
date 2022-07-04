@@ -33,6 +33,7 @@ DUMMY_CLUSTER2_NAME = f'projects/{DUMMY_PROJECT_NAME}/locations/europe-west4/clu
 DUMMY_CLUSTER2_SHORT_NAME = f'{DUMMY_PROJECT_NAME}/europe-west4/gke2'
 DUMMY_CLUSTER1_SERVICE_ACCOUNT = '12340002-compute@developer.gserviceaccount.com'
 DUMMY_CLUSTER2_SERVICE_ACCOUNT = 'gke2sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com'
+DUMMY_CLUSTER3_NAME = f'projects/{DUMMY_PROJECT_NAME}/locations/europe-west4/clusters/gke3'
 DUMMY_CLUSTER4_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clusters/gke4'
 DUMMY_CLUSTER6_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clusters/gke6'
 DUMMY_DEFAULT_NAME = 'default'
@@ -95,6 +96,18 @@ class TestCluster:
     assert DUMMY_CLUSTER2_NAME in clusters.keys()
     c = clusters[DUMMY_CLUSTER2_NAME]
     assert c.has_logging_enabled()
+
+  def test_has_authenticator_group_enabled(self):
+    """""has_authenticator_group_enabled should return true for GKE cluster with Groups for RBAC
+    enabled."""
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    assert DUMMY_CLUSTER3_NAME in clusters.keys()
+    assert DUMMY_CLUSTER4_NAME in clusters.keys()
+    c = clusters[DUMMY_CLUSTER3_NAME]
+    assert c.has_authenticator_group_enabled()
+    c = clusters[DUMMY_CLUSTER4_NAME]
+    assert not c.has_authenticator_group_enabled()
 
   def test_cluster_has_workload_identity_enabled(self):
     """has_workload_identity_enabled should return true for GKE cluster with
