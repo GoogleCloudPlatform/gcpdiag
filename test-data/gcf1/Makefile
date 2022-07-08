@@ -18,6 +18,8 @@ all:	\
 	json-dumps/cloudfunctions.json \
 	json-dumps/cloudfunctions-$(REGION_1).json \
 	json-dumps/cloudfunctions-empty.json \
+	json-dumps/iam-policy.json \
+	json-dumps/iam-service-accounts.json \
 	json-dumps/project.json \
 	json-dumps/services.json \
 	json-dumps/logging-entries-1.json \
@@ -48,6 +50,20 @@ json-dumps/cloudfunctions-empty.json:
 	$(CURL) -fsS \
 	  'https://cloudfunctions.googleapis.com/v1/projects/$(PROJECT_ID)/locations/$(REGION_2)/functions' \
 		| $(JSON_CLEANER) cloudfunctions \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/iam-service-accounts.json:
+	$(CURL) -fsS \
+		'https://iam.googleapis.com/v1/projects/$(PROJECT_ID)/serviceAccounts' \
+		| $(JSON_CLEANER) service-accounts \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/iam-policy.json:
+	$(CURL) -fsS \
+		'https://cloudresourcemanager.googleapis.com/v1/projects/$(PROJECT_ID):getIamPolicy' \
+		-X POST  --header "Content-Type:text/json" \
+		-d "" \
+		| $(JSON_CLEANER) other \
 		| $(SED_SUBST_FAKE) >$@
 
 # If you need to recreate the JSON: adapt the timestamp and make sure that there are some entries found.
