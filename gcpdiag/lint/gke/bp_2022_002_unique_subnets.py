@@ -31,8 +31,14 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'no clusters found')
   subnets: Dict[str, str] = {}
   for c in sorted(clusters.values(), key=lambda cluster: cluster.short_path):
-    if c.subnetwork.short_path not in subnets.keys():
-      subnets[c.subnetwork.short_path] = c.short_path
+    subnetwork_config = c.subnetwork
+    if subnetwork_config is None:
+      report.add_skipped(
+          c, (f'Cluster "{c.name}" is using Legacy VPC with no'
+              f' support for subnets. Suggest change to modern VPC.'))
+      continue
+    if subnetwork_config.short_path not in subnets.keys():
+      subnets[subnetwork_config.short_path] = c.short_path
       report.add_ok(c)
     else:
       report.add_failed(c, (f'Subnet "{c.subnetwork.short_path}" is used by'
