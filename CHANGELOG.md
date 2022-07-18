@@ -1,3 +1,58 @@
+## 0.56 (2022-07-18)
+
+#### New rules
+
+- bigquery/ERR/2022\_001: BigQuery is not exceeding rate limits
+- bigquery/ERR/2022\_001: BigQuery jobs not failing due to concurrent DML updates on the same table
+- bigquery/ERR/2022\_002: BigQuery jobs are not failing due to results being larger than the maximum response size
+- bigquery/ERR/2022\_003: BigQuery jobs are not failing while accessing data in Drive due to a permission issue
+- bigquery/ERR/2022\_004: BigQuery jobs are not failing due to shuffle operation resources exceeded
+- bigquery/WARN/2022\_002: BigQuery does not violate column level security
+- cloudsql/WARN/2022\_001: Docker bridge network should be avoided
+- composer/WARN/2022\_002: fluentd pods in Composer enviroments are not crashing
+- dataproc/ERR/2022\_003: Dataproc Service Account permissions
+- dataproc/WARN/2022\_001: Dataproc clusters are not failed to stop due to the local SSDs
+- gae/WARN/2022\_002: App Engine Flexible versions don't use deprecated runtimes
+- gcb/ERR/2022\_002: Cloud Build service account registry permissions
+- gcb/ERR/2022\_003: Builds don't fail because of retention policy set on logs bucket
+- gce/BP/2022\_003: detect orphaned disks
+- gce/ERR/2022\_001: Project limits were not exceeded
+- gce/WARN/2022\_004: Cloud SQL Docker bridge network should be avoided
+- gce/WARN/2022\_005: GCE CPU quota is not near the limit
+- gce/WARN/2022\_006: GCE GPU quota is not near the limit
+- gce/WARN/2022\_007: VM has the proper scope to connect using the Cloud SQL Admin API
+- gce/WARN/2022\_008: GCE External IP addresses quota is not near the limit
+- gce/WARN/2022\_009: GCE disk quota is not near the limit
+- gcf/ERR/2022\_001: Cloud Functions service agent has the cloudfunctions.serviceAgent role
+- gcf/WARN/2021\_002: Cloud Functions have no scale up issues
+- gke/BP\_EXT/2022\_001: Google Groups for RBAC enabled (github #12)
+- gke/WARN/2022\_006: GKE NAP nodes use a containerd image
+- tpu/WARN/2022\_001: Cloud TPU resource availability
+- vpc/WARN/2022\_001: Cross Project Networking Service projects quota is not near the limit
+
+#### Updated rules
+
+- dataproc/ERR/2022\_002: fix os version detection (github #26)
+- gke/BP/2022\_003: update GKE EOL schedule
+- gke/ERR/2022\_001: fix KeyError exception
+- gke/BP/2022\_002: skip legacy VPC
+
+#### Enhancements
+
+- Add support for multiple output formats (--output=csv, --output=json)
+- Better handle CTRL-C signal
+- Org policy support
+- New product: CloudSQL
+- New product: VPC
+- Renamed product "GAES" to "GAE" (Google App Engine)
+- Publish internal API documentation on https://gcpdiag.dev/docs/development/api/
+- Update Python dependencies
+
+## 0.55 (2022-04-25)
+
+Version 0.55 was released with the same code as 0.54. The release was used
+to facilitate the transition of binaries to another location.
+
 ## 0.54 (2022-04-25)
 
 #### New rules
