@@ -75,4 +75,4 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
                       (f'Project has reached {ratio:.0%} of {limit} limit:\n'
                        f' quota metric: {QUOTA_METRIC_NAMES}'))
   else:
-    report.add_ok(project, f' quota metric: {QUOTA_METRIC_NAMES}')
+    report.add_ok(project)
