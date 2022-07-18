@@ -95,7 +95,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
                           (f'Region has reached {ratio:.0%} of {limit} limit:\n'
                            f' quota metric: {quota_metric_name}'))
       else:
-        report.add_ok(region, f' quota metric: {quota_metric_name}')
+        report.add_ok(region)
 
     # report skip if all data for region not available
     if all_skipped:
