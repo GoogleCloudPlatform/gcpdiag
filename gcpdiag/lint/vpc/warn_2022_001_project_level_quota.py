@@ -159,6 +159,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     return
 
   all_skipped = True
+  exceeded_quotas = ''
   for quota_metrics_name in QUOTA_LIST.values():
     ts_key = frozenset({
         f'resource.project_id:{context.project_id}',
@@ -173,20 +174,20 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       continue
 
     # did we exceeded threshold on any day?
-    exceeded = False
+    ratio = 0
     for day_value in ts['values']:
-      ratio = day_value[0]
-      limit = day_value[1]
-      if ratio > QUOTA_LIMIT_THRESHOLD:
-        exceeded = True
-        break
+      ratio = max(ratio, day_value[0])
+    if ratio > QUOTA_LIMIT_THRESHOLD:
+      exceeded_quotas += f'  - quota metric: {quota_metrics_name}.\n'
 
-    if exceeded:
-      report.add_failed(project,
-                        (f'Project has reached {ratio:.0%} of {limit} limit:\n'
-                         f' quota metric: {quota_metrics_name}'))
-    else:
-      report.add_ok(project, f' quota metric: {quota_metrics_name}')
+  #verify and report the result
+  if len(exceeded_quotas) > 0:
+    report.add_failed(
+        project,
+        ('The following quotas in this project have been exceeded recently:\n' +
+         exceeded_quotas))
+  else:
+    report.add_ok(project)
 
   # report skip if all data for region not available
   if all_skipped:
