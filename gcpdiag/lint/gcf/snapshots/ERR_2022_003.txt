@@ -1,0 +1,3 @@
+*  gcf/ERR/2022_003: Cloud Functions do not exceed memory limits.
+   - gcpdiag-gcf1-aaaa/gcf1                                               [ OK ]
+

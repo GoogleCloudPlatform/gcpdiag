@@ -1,0 +1,25 @@
+{
+  "functions": [
+    {
+      "availableMemoryMb": 256,
+      "buildId": "0ab71ef9-da4a-4b7b-abc5-04d5628c5635",
+      "buildName": "projects/12340011/locations/europe-west2/builds/0ab71ef9-da4a-4b7b-abc5-04d5628c5635",
+      "dockerRegistry": "CONTAINER_REGISTRY",
+      "entryPoint": "gcf_mem_alloc",
+      "httpsTrigger": {
+        "securityLevel": "SECURE_OPTIONAL",
+        "url": "https://europe-west2-gcpdiag-gcf2-aaaa.cloudfunctions.net/gcf2"
+      },
+      "ingressSettings": "ALLOW_ALL",
+      "maxInstances": 100,
+      "name": "projects/gcpdiag-gcf2-aaaa/locations/europe-west2/functions/gcf2",
+      "runtime": "python39",
+      "serviceAccountEmail": "gcpdiag-gcf2-aaaa@appspot.gserviceaccount.com",
+      "sourceArchiveUrl": "gs://gcpdiag-gcf2bucket-aaaa/gcpdiag-gcf2archive",
+      "status": "ACTIVE",
+      "timeout": "60s",
+      "updateTime": "2022-07-20T14:34:32.664Z",
+      "versionId": "1"
+    }
+  ]
+}
