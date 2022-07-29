@@ -17,6 +17,7 @@
 
 Log entries with Cloud Functions having scale up issues have been found.
 """
+from boltons.iterutils import get_path
 
 from gcpdiag import lint, models
 from gcpdiag.queries import gcf, logs
@@ -46,14 +47,14 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   for query in logs_by_project.values():
     for log_entry in query.entries:
-      if 'resource' in log_entry and 'httpRequest' in log_entry:
-        if 'labels' in log_entry['resource'] and 'status' in log_entry[
-            'httpRequest']:
-          if 'function_name' in log_entry['resource']['labels']:
-            function_name = log_entry['resource']['labels']['function_name']
-            status = log_entry['httpRequest']['status']
-            if status in [429, 500]:
-              failed_functions.add(function_name)
+      if MATCH_STR not in get_path(log_entry, ('textPayload'), default=''):
+        continue
+      function_name = get_path(log_entry,
+                               ('resource', 'labels', 'function_name'),
+                               default='')
+      status = get_path(log_entry, ('httpRequest', 'status'), default=0)
+      if status in [429, 500] and function_name:
+        failed_functions.add(function_name)
 
   for _, cloudfunction in sorted(cloudfunctions.items()):
     if cloudfunction.name in failed_functions:
