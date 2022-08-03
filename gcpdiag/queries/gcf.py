@@ -59,6 +59,10 @@ class CloudFunction(models.Resource):
   def runtime(self) -> str:
     return self._resource_data['runtime']
 
+  @property
+  def memory(self) -> str:
+    return self._resource_data['availableMemoryMb']
+
 
 @caching.cached_api_call
 def get_cloudfunctions(context: models.Context) -> Mapping[str, CloudFunction]:
