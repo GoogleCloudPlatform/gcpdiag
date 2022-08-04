@@ -40,6 +40,8 @@ run-builds:
 		--project $(PROJECT_ID) || true
 	gcloud builds submit --no-source --config $(BUILD4_CONFIG) \
 		--project $(PROJECT_ID) || true
+	gcloud builds submit --no-source --region $(REGION_1) --config $(BUILD3_CONFIG) \
+		--project $(PROJECT_ID) || true
 
 json-dumps/project.json:
 	$(CURL) -fsS \

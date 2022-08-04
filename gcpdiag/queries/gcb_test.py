@@ -25,6 +25,7 @@ BUILD_ID_FAILED_STEP = '01ff384c-d7f2-4295-ad68-5c32529d8b85'
 BUIDL_ID_FAILED_LOGGING = '58c22070-5629-480e-b822-cd8eff7befb8'
 BUIDL_ID_SUCCESS_LOGGING = '4b040094-4204-4f00-a7bd-302639dd6785'
 BUILD_ID_FAILED_IMAGE_UPLOAD = 'db540598-5a45-46f3-a716-39d834e884c6'
+BUILD_ID_REGIONAL = 'f055f209-21ef-4fa1-84f8-8509d24b0fae'
 CUSTOM1_SERVICE_ACCOUNT = \
   'projects/gcpdiag-gcb1-aaaa/serviceAccounts/gcb-custom1@gcpdiag-gcb1-aaaa.iam.gserviceaccount.com'
 BUILD_IMAGE = 'us-central1-docker.pkg.dev/gcpdiag-gcb1-aaaa/gcb1-repository/image'
@@ -37,11 +38,12 @@ class TestCloudBuild:
   def test_get_builds(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     builds = gcb.get_builds(context=context)
-    assert len(builds) == 4
+    assert len(builds) == 5
     assert BUILD_ID_FAILED_STEP in builds
     assert BUIDL_ID_FAILED_LOGGING in builds
     assert BUIDL_ID_SUCCESS_LOGGING in builds
     assert BUILD_ID_FAILED_IMAGE_UPLOAD in builds
+    assert BUILD_ID_REGIONAL in builds
 
   def test_build_service_account(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
