@@ -106,13 +106,15 @@ class RestCallStub(ApiStub):
                *,
                page: int = 1,
                default: Optional[dict] = None,
-               default_json_basename: Optional[str] = None):
+               default_json_basename: Optional[str] = None,
+               request_uri: str = ''):
     self.project_id = project_id
     self.json_dir = get_json_dir(project_id)
     self.json_basename = json_basename
     self.page = page
     self.default = default
     self.default_json_basename = default_json_basename
+    self.uri = request_uri
 
   def execute(self, num_retries: int = 0) -> dict:
     self._maybe_raise_api_exception()

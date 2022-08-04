@@ -28,6 +28,9 @@ from gcpdiag.queries import apis_stub
 class CloudBuildApiStub:
   """Mock object to simulate function api calls."""
 
+  def new_batch_http_request(self):
+    return apis_stub.BatchRequestStub()
+
   def projects(self):
     return self
 
@@ -45,9 +48,18 @@ class CloudBuildBuildsApiStub:
   """Mock object to simulate functions of builds api calls."""
 
   def list(self, parent):
-    m = re.match(r'projects/([^/]+)/', parent)
+    m = re.match(r'^projects/([^/]+)/locations/([^/]+)', parent)
     project_id = m.group(1)
-    return apis_stub.RestCallStub(project_id, 'cloudbuild')
+    location = m.group(2)
+    if location == '-':
+      path = 'cloudbuild'
+    else:
+      path = f'cloudbuild-{location}'
+    return apis_stub.RestCallStub(
+        project_id,
+        path,
+        default={},
+        request_uri=f'https://build.googleapis.com/{parent}')
 
 
 class CloudBuildTriggersApiStub:
