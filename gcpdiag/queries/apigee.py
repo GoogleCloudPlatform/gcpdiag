@@ -15,13 +15,34 @@
 # Lint as: python3
 """Queries related to Apigee."""
 
-from typing import Dict, List, Mapping
+from typing import Dict, List, Mapping, Optional
 
 import googleapiclient.errors
 
 from gcpdiag import caching, config, models
 from gcpdiag.queries import apis
 from gcpdiag.utils import GcpApiError
+
+
+class ApigeeOrganization(models.Resource):
+  """Represents an Apigee Organization
+    https://cloud.google.com/apigee/docs/reference/apis/apigee/rest/v1/organizations#Organization
+    """
+  _resource_data: Optional[dict]
+
+  # It is possible to create an Apigee organization resource in another GCP project,
+  # set the resource_data as optional to avoid permission issues while accessing another GCP project
+  def __init__(self,
+               project_id: str,
+               org_name: str,
+               resource_data: Optional[dict] = None):
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+    self.name = org_name
+
+  @property
+  def full_path(self) -> str:
+    return f'organizations/{self.name}'
 
 
 class EnvironmentGroup(models.Resource):
