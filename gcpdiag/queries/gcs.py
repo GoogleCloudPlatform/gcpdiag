@@ -23,6 +23,7 @@ import re
 from typing import Dict, Mapping
 
 import googleapiclient.errors
+from boltons.iterutils import get_path
 
 from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis, iam
@@ -68,8 +69,9 @@ class Bucket(models.Resource):
     return self._resource_data['name']
 
   def is_uniform_access(self) -> bool:
-    return self._resource_data['iamConfiguration']['uniformBucketLevelAccess'][
-        'enabled']
+    return get_path(self._resource_data,
+                    ('iamConfiguration', 'uniformBucketLevelAccess', 'enabled'),
+                    default=False) == {}
 
   @property
   def full_path(self) -> str:
