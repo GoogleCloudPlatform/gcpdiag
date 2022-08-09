@@ -50,8 +50,8 @@ class Role(models.Resource):
 
   @property
   def permissions(self) -> List[str]:
-    # roles should always include one or more permissions
-    return self._resource_data['includedPermissions']
+    # roles should usually include one or more permissions
+    return self._resource_data.get('includedPermissions', [])
 
 
 class RoleNotFoundError(Exception):
