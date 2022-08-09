@@ -36,7 +36,7 @@ def _get_rule_allowed_ports(rule: VpcFirewallRule):
   """
   result = []
   for a in rule.allowed:
-    for port in a['ports']:
+    for port in a.get('ports', []):
       # in the rule definition we might have one port or port range
       # in the 2nd case we will use first value of the range to test connectivity
       # finally we need to combine ports with source ranges
