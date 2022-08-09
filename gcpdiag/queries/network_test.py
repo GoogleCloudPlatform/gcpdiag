@@ -232,7 +232,6 @@ class TestNetwork:
     pattern = re.compile(r'k8s-fw-l7-.*')
     rules = net.firewall.get_vpc_ingress_rules(
         name_pattern=pattern, target_tags=['gke-gke4-93befb7e-node'])
-    assert 'k8s-fw-l7--21ffc7f07223960a' == rules[0].name
     assert 'gke-gke4-93befb7e-node' in rules[0].target_tags
     assert ipaddress.IPv4Network('130.211.0.0/22') in rules[0].source_ranges
 
