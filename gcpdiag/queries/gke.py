@@ -156,6 +156,10 @@ class NodePool(models.Resource):
   def config(self) -> NodeConfig:
     return NodeConfig(self._resource_data['config'])
 
+  @property
+  def node_count(self) -> int:
+    return self._resource_data.get('initialNodeCount', 0)
+
   def has_default_service_account(self) -> bool:
     sa = self._get_service_account()
     return sa == 'default'

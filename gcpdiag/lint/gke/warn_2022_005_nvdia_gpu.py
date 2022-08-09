@@ -37,7 +37,7 @@ def prefetch_rule(context: models.Context):
           context.project_id, """
 fetch k8s_container
 | metric 'kubernetes.io/container/uptime'
-| filter (metadata.user.c'k8s-app'= "nvidia-driver-installer")
+| filter (metadata.user.c'k8s-app' = "nvidia-driver-installer")
 | within 1h
 | group_by [resource.project_id,
     cluster_name: resource.cluster_name,
@@ -62,11 +62,11 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       report.add_skipped(None, 'no nodepools found')
       continue
     for nodepool in cluster.nodepools:
-      if nodepool.config.has_accelerators():
+      if nodepool.config.has_accelerators() and nodepool.node_count > 0:
         check_clusters.append(cluster)
         break
       else:
-        report.add_skipped(cluster, 'no GPU found')
+        report.add_skipped(nodepool, 'no nodes with GPU found')
 
   if len(check_clusters) == 0:
     return
