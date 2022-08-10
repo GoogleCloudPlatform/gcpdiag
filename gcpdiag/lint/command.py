@@ -39,9 +39,10 @@ def _init_args_parser():
   parser = argparse.ArgumentParser(
       description='Run diagnostics in GCP projects.', prog='gcpdiag lint')
 
-  parser.add_argument('--auth-adc',
-                      help='Authenticate using Application Default Credentials',
-                      action='store_true')
+  parser.add_argument(
+      '--auth-adc',
+      help='Authenticate using Application Default Credentials (default)',
+      action='store_true')
 
   parser.add_argument(
       '--auth-key',
@@ -50,7 +51,7 @@ def _init_args_parser():
 
   parser.add_argument(
       '--auth-oauth',
-      help='Authenticate using OAuth user authentication (default - currently '
+      help='Authenticate using OAuth user authentication (currently '
       'marked as deprecated, consider using other authentication methods)',
       action='store_true')
 

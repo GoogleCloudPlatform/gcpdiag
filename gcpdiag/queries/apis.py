@@ -55,11 +55,8 @@ def _auth_method():
   elif config.get('auth_oauth'):
     auth_method = 'oauth'
   else:
-    # use OAuth by default, except in Cloud Shell
-    if config.get('is_cloud_shell'):
-      auth_method = 'adc'
-    else:
-      auth_method = 'oauth'
+    # use ADC by default
+    auth_method = 'adc'
   return auth_method
 
 
