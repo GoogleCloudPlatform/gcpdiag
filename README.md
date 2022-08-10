@@ -41,7 +41,7 @@ optional arguments:
   -h, --help            show this help message and exit
   --auth-adc            Authenticate using Application Default Credentials
   --auth-key FILE       Authenticate using a service account private key file
-  --auth-oauth          Authenticate using OAuth user authentication (default)
+  --auth-oauth          Authenticate using OAuth user authentication (default - currently marked as deprecated, consider using other authentication methods)
   --project P           Project ID of project to inspect
   --billing-project P   Project used for billing/quota of API calls done by gcpdiag (default is the inspected project, requires
                         'serviceusage.services.use' permission)

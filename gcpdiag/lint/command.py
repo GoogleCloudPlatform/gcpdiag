@@ -50,7 +50,8 @@ def _init_args_parser():
 
   parser.add_argument(
       '--auth-oauth',
-      help='Authenticate using OAuth user authentication (default)',
+      help='Authenticate using OAuth user authentication (default - currently '
+      'marked as deprecated, consider using other authentication methods)',
       action='store_true')
 
   parser.add_argument('--project',
@@ -255,6 +256,13 @@ def run(argv) -> int:
   if config.get('verbose') == 0:
     gac_http_logger = logging.getLogger('googleapiclient.http')
     gac_http_logger.setLevel(logging.ERROR)
+
+  # Deprecation warning
+  if config.get('auth_oauth'):
+    logger.warning(
+        'DeprecationWarning: The oauth authentication is '
+        'deprecated and will be removed in the future versions. Consider '
+        'using other authentication methods.')
 
   # Start the reporting
   report.banner()
