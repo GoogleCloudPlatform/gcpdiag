@@ -1,3 +1,21 @@
+## 0.57 (2022-??-??)
+
+#### Deprecation
+
+- Default authentication using OAuth (`--auth-oauth`) is now deprecated and Application Default Credentials (`--auth-adc`) will be used instead. Alternatively you can use Service Account private key (`--auth-key FILE`).
+
+#### New rules
+
+- TBD
+
+#### Enhancements
+
+- TBD
+
+#### Fixes
+
+- TBD
+
 ## 0.56 (2022-07-18)
 
 #### New rules
