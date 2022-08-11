@@ -134,7 +134,7 @@ if ! AUTH_KEY_MOUNT=$(handle_mount_path "$AUTH_KEY"); then
 fi
 
 # shellcheck disable=SC2086
-exec "$RUNTIME" run "$USE_TTY" \
+exec "$RUNTIME" run $USE_TTY \
   --rm \
   -u "$(id -u):$(id -g)" \
   -e "USER=$(id -n -u)" \
