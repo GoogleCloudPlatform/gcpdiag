@@ -112,6 +112,10 @@ class NodeConfig:
   def image_type(self) -> str:
     return self._resource_data['imageType']
 
+  @property
+  def oauth_scopes(self) -> list:
+    return self._resource_data['oauthScopes']
+
 
 class NodePool(models.Resource):
   """Represents a GKE node pool."""
