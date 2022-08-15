@@ -8,6 +8,10 @@ import re
 import sys
 
 clean_maps = {
+    'cloudrun': {
+        '.services.[].creator': 'REDACTED',
+        '.services.[].binaryAuthorization': 'REDACTED'
+    },
     'cloudfunctions': {
         '.cloudfunctions.[].sourceToken': 'REDACTED'
     },
