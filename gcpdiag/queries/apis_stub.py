@@ -61,7 +61,9 @@ JSON_PROJECT_DIR = {
     'gcpdiag-tpu1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/tpu1/json-dumps',
     'gcpdiag-iam1-aaaa':
-        pathlib.Path(__file__).parents[2] / 'test-data/iam1/json-dumps'
+        pathlib.Path(__file__).parents[2] / 'test-data/iam1/json-dumps',
+    'gcpdiag-cloudrun1-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/cloudrun1/json-dumps'
 }
 
 # set to a value higher than 0 to emulate API temp. failure
@@ -277,5 +279,8 @@ def get_api_stub(service_name: str,
   elif service_name == 'artifactregistry':
     from gcpdiag.queries import artifact_registry_stub
     return artifact_registry_stub.ArtifactRegistryApiStub()
+  elif service_name == 'run':
+    from gcpdiag.queries import cloudrun_stub
+    return cloudrun_stub.CloudRunApiStub()
   else:
     raise ValueError('unsupported service: %s' % service_name)

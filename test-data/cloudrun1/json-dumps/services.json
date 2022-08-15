@@ -1,0 +1,343 @@
+{
+  "services": [
+    {
+      "name": "projects/123400010/services/cloudbuild.googleapis.com",
+      "config": {
+        "name": "cloudbuild.googleapis.com",
+        "title": "Cloud Build API",
+        "documentation": {
+          "summary": "Creates and manages builds on Google Cloud Platform."
+        },
+        "quota": {},
+        "authentication": {},
+        "usage": {
+          "requirements": [
+            "serviceusage.googleapis.com/tos/cloud",
+            "serviceusage.googleapis.com/billing-enabled"
+          ]
+        },
+        "monitoring": {}
+      },
+      "state": "ENABLED",
+      "parent": "projects/123400010"
+    },
+    {
+      "name": "projects/123400010/services/containerregistry.googleapis.com",
+      "config": {
+        "name": "containerregistry.googleapis.com",
+        "title": "Container Registry API",
+        "documentation": {
+          "summary": "Google Container Registry provides secure, private Docker image storage on Google Cloud Platform.  Our API follows the Docker Registry API specification, so we are fully compatible with the Docker CLI client, as well as standard tooling using the Docker Registry API."
+        },
+        "quota": {},
+        "authentication": {},
+        "usage": {
+          "requirements": [
+            "serviceusage.googleapis.com/tos/cloud",
+            "serviceusage.googleapis.com/billing-enabled"
+          ]
+        },
+        "monitoring": {}
+      },
+      "state": "ENABLED",
+      "parent": "projects/123400010"
+    },
+    {
+      "name": "projects/123400010/services/logging.googleapis.com",
+      "config": {
+        "name": "logging.googleapis.com",
+        "title": "Cloud Logging API",
+        "documentation": {
+          "summary": "Writes log entries and manages your Cloud Logging configuration."
+        },
+        "quota": {},
+        "authentication": {},
+        "usage": {
+          "requirements": [
+            "serviceusage.googleapis.com/tos/cloud"
+          ]
+        },
+        "monitoredResources": [
+          {
+            "type": "logging.googleapis.com/ChargedProject",
+            "displayName": "Cloud logging target",
+            "description": "A cloud logging specialization target schema of cloud.ChargedProject.",
+            "labels": [
+              {
+                "key": "resource_container",
+                "description": "The monitored resource container. Could be project, workspace, etc."
+              },
+              {
+                "key": "location",
+                "description": "The service-specific notion of location."
+              },
+              {
+                "key": "service",
+                "description": "The name of the API service with which the data is associated (e.g.,'logging.googleapis.com')."
+              }
+            ],
+            "launchStage": "ALPHA"
+          }
+        ],
+        "monitoring": {
+          "consumerDestinations": [
+            {
+              "monitoredResource": "logging.googleapis.com/ChargedProject",
+              "metrics": [
+                "logging.googleapis.com/billing/ingested_bytes"
+              ]
+            }
+          ]
+        }
+      },
+      "state": "ENABLED",
+      "parent": "projects/123400010"
+    },
+    {
+      "name": "projects/123400010/services/pubsub.googleapis.com",
+      "config": {
+        "name": "pubsub.googleapis.com",
+        "title": "Cloud Pub/Sub API",
+        "documentation": {
+          "summary": "Provides reliable, many-to-many, asynchronous messaging between applications.\n"
+        },
+        "quota": {},
+        "authentication": {},
+        "usage": {
+          "requirements": [
+            "serviceusage.googleapis.com/tos/cloud"
+          ]
+        },
+        "monitoring": {}
+      },
+      "state": "ENABLED",
+      "parent": "projects/123400010"
+    },
+    {
+      "name": "projects/123400010/services/run.googleapis.com",
+      "config": {
+        "name": "run.googleapis.com",
+        "title": "Cloud Run Admin API",
+        "documentation": {
+          "summary": "Deploy and manage user provided container images that scale automatically based on incoming requests. The Cloud Run Admin API v1 follows the Knative Serving API specification, while v2 is aligned with Google Cloud AIP-based API standards, as described in https://google.aip.dev/."
+        },
+        "quota": {},
+        "authentication": {},
+        "usage": {
+          "requirements": [
+            "serviceusage.googleapis.com/tos/cloud",
+            "serviceusage.googleapis.com/billing-enabled"
+          ]
+        },
+        "monitoredResources": [
+          {
+            "type": "run.googleapis.com/revision",
+            "labels": [
+              {
+                "key": "cloud.googleapis.com/project"
+              },
+              {
+                "key": "run.googleapis.com/service_name"
+              },
+              {
+                "key": "run.googleapis.com/revision_name"
+              },
+              {
+                "key": "cloud.googleapis.com/location"
+              },
+              {
+                "key": "run.googleapis.com/configuration_name"
+              },
+              {
+                "key": "cloud.googleapis.com/uid"
+              }
+            ]
+          }
+        ],
+        "monitoring": {
+          "consumerDestinations": [
+            {
+              "monitoredResource": "run.googleapis.com/revision",
+              "metrics": [
+                "run.googleapis.com/request_count",
+                "run.googleapis.com/request_latencies",
+                "run.googleapis.com/container/instance_time",
+                "run.googleapis.com/container/cpu/allocation_time",
+                "run.googleapis.com/container/memory/allocation_time",
+                "run.googleapis.com/container/labelled_instance_time",
+                "run.googleapis.com/container/cpu/scaled_usage",
+                "run.googleapis.com/container/memory/utilization",
+                "run.googleapis.com/tenant_project",
+                "run.googleapis.com/internal/eventflow_filter/cloudevent_recordedtime_latencies",
+                "run.googleapis.com/internal/eventflow_filter/cloudevent_time_latencies",
+                "run.googleapis.com/internal/eventflow_filter/transformation_count",
+                "run.googleapis.com/internal/eventflow_filter/transformation_latencies",
+                "run.googleapis.com/internal/pod_service_client/request_count",
+                "run.googleapis.com/internal/pod_service_client/request_latencies"
+              ]
+            }
+          ]
+        }
+      },
+      "state": "ENABLED",
+      "parent": "projects/123400010"
+    },
+    {
+      "name": "projects/123400010/services/storage-api.googleapis.com",
+      "config": {
+        "name": "storage-api.googleapis.com",
+        "title": "Google Cloud Storage JSON API",
+        "documentation": {
+          "summary": "Lets you store and retrieve potentially-large, immutable data objects."
+        },
+        "quota": {},
+        "authentication": {},
+        "usage": {
+          "requirements": [
+            "serviceusage.googleapis.com/tos/cloud"
+          ]
+        },
+        "monitoring": {}
+      },
+      "state": "ENABLED",
+      "parent": "projects/123400010"
+    },
+    {
+      "name": "projects/123400010/services/storage-component.googleapis.com",
+      "config": {
+        "name": "storage-component.googleapis.com",
+        "title": "Cloud Storage",
+        "documentation": {
+          "summary": "Google Cloud Storage is a RESTful service for storing and accessing your data on Google's\n    infrastructure."
+        },
+        "quota": {},
+        "authentication": {},
+        "usage": {
+          "requirements": [
+            "serviceusage.googleapis.com/tos/cloud"
+          ]
+        },
+        "monitoredResources": [
+          {
+            "type": "serviceruntime.googleapis.com/api",
+            "labels": [
+              {
+                "key": "cloud.googleapis.com/location"
+              },
+              {
+                "key": "cloud.googleapis.com/uid"
+              },
+              {
+                "key": "serviceruntime.googleapis.com/api_version"
+              },
+              {
+                "key": "serviceruntime.googleapis.com/api_method"
+              },
+              {
+                "key": "serviceruntime.googleapis.com/consumer_project"
+              },
+              {
+                "key": "cloud.googleapis.com/project"
+              },
+              {
+                "key": "cloud.googleapis.com/service"
+              }
+            ]
+          },
+          {
+            "type": "serviceruntime.googleapis.com/consumer_quota",
+            "labels": [
+              {
+                "key": "cloud.googleapis.com/location"
+              },
+              {
+                "key": "cloud.googleapis.com/uid"
+              },
+              {
+                "key": "cloud.googleapis.com/service"
+              },
+              {
+                "key": "cloud.googleapis.com/resource_id"
+              },
+              {
+                "key": "cloud.googleapis.com/resource_node"
+              },
+              {
+                "key": "cloud.googleapis.com/quota_metric"
+              },
+              {
+                "key": "cloud.googleapis.com/quota_location"
+              }
+            ]
+          },
+          {
+            "type": "serviceruntime.googleapis.com/producer_quota",
+            "labels": [
+              {
+                "key": "cloud.googleapis.com/location"
+              },
+              {
+                "key": "cloud.googleapis.com/uid"
+              },
+              {
+                "key": "cloud.googleapis.com/service"
+              },
+              {
+                "key": "cloud.googleapis.com/resource_id"
+              },
+              {
+                "key": "cloud.googleapis.com/resource_node"
+              },
+              {
+                "key": "cloud.googleapis.com/consumer_resource_node"
+              },
+              {
+                "key": "cloud.googleapis.com/quota_metric"
+              },
+              {
+                "key": "cloud.googleapis.com/quota_location"
+              }
+            ]
+          }
+        ],
+        "monitoring": {
+          "consumerDestinations": [
+            {
+              "monitoredResource": "serviceruntime.googleapis.com/api",
+              "metrics": [
+                "serviceruntime.googleapis.com/api/consumer/request_count",
+                "serviceruntime.googleapis.com/api/consumer/error_count",
+                "serviceruntime.googleapis.com/api/consumer/quota_used_count",
+                "serviceruntime.googleapis.com/api/consumer/quota_refund_count",
+                "serviceruntime.googleapis.com/api/consumer/total_latencies",
+                "serviceruntime.googleapis.com/api/consumer/request_overhead_latencies",
+                "serviceruntime.googleapis.com/api/consumer/backend_latencies",
+                "serviceruntime.googleapis.com/api/consumer/request_sizes",
+                "serviceruntime.googleapis.com/api/consumer/response_sizes",
+                "serviceruntime.googleapis.com/api/consumer/top_request_count_by_end_user",
+                "serviceruntime.googleapis.com/api/consumer/top_request_count_by_end_user_country",
+                "serviceruntime.googleapis.com/api/consumer/top_request_count_by_referer",
+                "serviceruntime.googleapis.com/quota/used",
+                "serviceruntime.googleapis.com/quota/limit",
+                "serviceruntime.googleapis.com/quota/exceeded",
+                "serviceruntime.googleapis.com/allocation/consumer/quota_used_count"
+              ]
+            },
+            {
+              "monitoredResource": "serviceruntime.googleapis.com/consumer_quota",
+              "metrics": [
+                "serviceruntime.googleapis.com/quota/rate/consumer/used_count",
+                "serviceruntime.googleapis.com/quota/rate/consumer/refund_count",
+                "serviceruntime.googleapis.com/quota/allocation/consumer/usage",
+                "serviceruntime.googleapis.com/quota/consumer/limit",
+                "serviceruntime.googleapis.com/quota/consumer/exceeded"
+              ]
+            }
+          ]
+        }
+      },
+      "state": "ENABLED",
+      "parent": "projects/123400010"
+    }
+  ]
+}

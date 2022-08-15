@@ -1,0 +1,75 @@
+{
+  "services": [
+    {
+      "conditions": [
+        {
+          "lastTransitionTime": "2022-08-12T11:55:27.598596Z",
+          "state": "CONDITION_SUCCEEDED",
+          "type": "RoutesReady"
+        },
+        {
+          "lastTransitionTime": "2022-08-12T11:55:26.536145Z",
+          "state": "CONDITION_SUCCEEDED",
+          "type": "ConfigurationsReady"
+        }
+      ],
+      "createTime": "2022-08-12T11:55:14.685868Z",
+      "creator": "REDACTED",
+      "etag": "\"CKL_2JcGEOCHhscC/cHJvamVjdHMvZ2NwZGlhZy1jbG91ZHJ1bjEtNWFlY2xtbHQvbG9jYXRpb25zL3VzLWNlbnRyYWwxL3NlcnZpY2VzL2Nsb3VkcnVuMQ\"",
+      "generation": "1",
+      "ingress": "INGRESS_TRAFFIC_ALL",
+      "lastModifier": "testuser@example.com",
+      "latestCreatedRevision": "projects/gcpdiag-cloudrun1-aaaa/locations/us-central1/services/cloudrun1/revisions/cloudrun1-fzzds",
+      "latestReadyRevision": "projects/gcpdiag-cloudrun1-aaaa/locations/us-central1/services/cloudrun1/revisions/cloudrun1-fzzds",
+      "launchStage": "GA",
+      "name": "projects/gcpdiag-cloudrun1-aaaa/locations/us-central1/services/cloudrun1",
+      "observedGeneration": "1",
+      "template": {
+        "containers": [
+          {
+            "image": "us-docker.pkg.dev/cloudrun/container/hello",
+            "ports": [
+              {
+                "containerPort": 8080,
+                "name": "http1"
+              }
+            ],
+            "resources": {
+              "cpuIdle": true,
+              "limits": {
+                "cpu": "1000m",
+                "memory": "512Mi"
+              }
+            }
+          }
+        ],
+        "maxInstanceRequestConcurrency": 80,
+        "scaling": {
+          "maxInstanceCount": 100
+        },
+        "serviceAccount": "123400010-compute@developer.gserviceaccount.com",
+        "timeout": "300s"
+      },
+      "terminalCondition": {
+        "lastTransitionTime": "2022-08-12T11:55:27.598596Z",
+        "state": "CONDITION_SUCCEEDED",
+        "type": "Ready"
+      },
+      "traffic": [
+        {
+          "percent": 100,
+          "type": "TRAFFIC_TARGET_ALLOCATION_TYPE_REVISION"
+        }
+      ],
+      "trafficStatuses": [
+        {
+          "percent": 100,
+          "type": "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST"
+        }
+      ],
+      "uid": "4d9c2cd0-a23c-499a-adaf-844db1fc7350",
+      "updateTime": "2022-08-12T11:55:14.685868Z",
+      "uri": "https://cloudrun1-vavezhxkqq-uc.a.run.app"
+    }
+  ]
+}
