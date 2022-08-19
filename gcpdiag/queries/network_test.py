@@ -231,8 +231,8 @@ class TestNetwork:
                               network_name=DUMMY_DEFAULT_NETWORK)
     pattern = re.compile(r'k8s-fw-l7-.*')
     rules = net.firewall.get_vpc_ingress_rules(
-        name_pattern=pattern, target_tags=['gke-gke4-93befb7e-node'])
-    assert 'gke-gke4-93befb7e-node' in rules[0].target_tags
+        name_pattern=pattern, target_tags=['gke-gke4-3520a9df-node'])
+    assert 'gke-gke4-3520a9df-node' in rules[0].target_tags
     assert ipaddress.IPv4Network('130.211.0.0/22') in rules[0].source_ranges
 
     pattern = re.compile(r'default-allow-.*')
@@ -242,10 +242,10 @@ class TestNetwork:
     assert 'default-allow-internal' in [r.name for r in rules]
     assert 'default-allow-icmp' in [r.name for r in rules]
 
-    rules = net.firewall.get_vpc_ingress_rules(name='gke-gke3-b4ccfbf1-ssh')
-    assert 'gke-gke3-b4ccfbf1-ssh' == rules[0].name
+    rules = net.firewall.get_vpc_ingress_rules(name='gke-gke3-b46b134d-ssh')
+    assert 'gke-gke3-b46b134d-ssh' == rules[0].name
     assert 'tcp' == rules[0].allowed[0]['IPProtocol']
     assert '22' in rules[0].allowed[0]['ports']
 
     rules = net.firewall.get_vpc_ingress_rules(name='not-existing-rule')
-    assert 'gke-gke3-b4ccfbf1-ssh' not in [r.name for r in rules]
+    assert 'gke-gke3-b46b134d-ssh' not in [r.name for r in rules]

@@ -3,12 +3,20 @@
      release channel: REGULAR
    - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [SKIP]
      release channel: REGULAR
-   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [ OK ] 1.21.9-gke.1002
+   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [FAIL] 1.22.10-gke.600
+     valid versions: 1.23.4-gke.1600, 1.22.7-gke.1500, 1.22.7-gke.1300, 1.22.7-gke.900, 1.22.7-gke.300, 1.21.10-gke.1500, 1.21.10-gke.1300, 1.22.6-gke.300, 1.21.10-gke.400, 1.21.9-gke.1002, 1.20.15-gke.2500, 1.21.5-gke.1805, 1.20.15-gke.1000, 1.20.15-gke.300, 1.20.12-gke.1500, 1.19.16-gke.6800, 1.19.16-gke.6100, 1.22.7-gke.1500, 1.22.7-gke.1300, 1.22.7-gke.900, 1.22.7-gke.300, 1.22.6-gke.1000, 1.22.6-gke.300, 1.21.10-gke.1500, 1.21.10-gke.1300, 1.21.10-gke.400, 1.21.9-gke.1002, 1.21.9-gke.1001, 1.21.9-gke.300, 1.21.6-gke.1503, 1.21.5-gke.1805, 1.20.15-gke.3600, 1.20.15-gke.3400, 1.20.15-gke.2500, 1.20.15-gke.1000, 1.20.15-gke.300, 1.20.12-gke.1500, 1.19.16-gke.9400, 1.19.16-gke.9200, 1.19.16-gke.8300, 1.19.16-gke.6800, 1.19.16-gke.6100
    - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [SKIP]
      release channel: REGULAR
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [ OK ] 1.21.9-gke.1002
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [FAIL] 1.22.10-gke.600
+     valid versions: 1.23.4-gke.1600, 1.22.7-gke.1500, 1.22.7-gke.1300, 1.22.7-gke.900, 1.22.7-gke.300, 1.21.10-gke.1500, 1.21.10-gke.1300, 1.22.6-gke.300, 1.21.10-gke.400, 1.21.9-gke.1002, 1.20.15-gke.2500, 1.21.5-gke.1805, 1.20.15-gke.1000, 1.20.15-gke.300, 1.20.12-gke.1500, 1.19.16-gke.6800, 1.19.16-gke.6100, 1.22.7-gke.1500, 1.22.7-gke.1300, 1.22.7-gke.900, 1.22.7-gke.300, 1.22.6-gke.1000, 1.22.6-gke.300, 1.21.10-gke.1500, 1.21.10-gke.1300, 1.21.10-gke.400, 1.21.9-gke.1002, 1.21.9-gke.1001, 1.21.9-gke.300, 1.21.6-gke.1503, 1.21.5-gke.1805, 1.20.15-gke.3600, 1.20.15-gke.3400, 1.20.15-gke.2500, 1.20.15-gke.1000, 1.20.15-gke.300, 1.20.12-gke.1500, 1.19.16-gke.9400, 1.19.16-gke.9200, 1.19.16-gke.8300, 1.19.16-gke.6800, 1.19.16-gke.6100
    - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [SKIP]
      release channel: REGULAR
    - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [SKIP]
      release channel: REGULAR
+
+   The GKE master version should be a version that is available for new
+   clusters. If a version is not available it could mean that it is deprecated,
+   or possibly retired due to issues with it.
+
+   https://gcpdiag.dev/rules/gke/WARN/2021_001
 

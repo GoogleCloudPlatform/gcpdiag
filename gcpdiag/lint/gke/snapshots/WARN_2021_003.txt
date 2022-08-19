@@ -1,6 +1,6 @@
 *  gke/WARN/2021_003: GKE cluster size close to maximum allowed by pod range
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [ OK ] 2/512 nodes used.
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [ OK ] 2/512 nodes used.
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [ OK ] 0/1 nodes used.
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [ OK ] 0/1 nodes used.
    - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [ OK ] 3/1024 nodes used.
    - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [ OK ] 3/1024 nodes used.
    - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [FAIL] 1/1 nodes used.

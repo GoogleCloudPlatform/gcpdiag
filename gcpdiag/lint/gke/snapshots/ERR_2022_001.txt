@@ -1,6 +1,8 @@
 *  gke/ERR/2022_001: GKE connectivity: pod to pod communication.
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [ OK ]
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [SKIP]
+     no nodepools
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [SKIP]
+     no nodepools
    - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [FAIL]
      connections from 10.4.0.0/14 to tcp:53 blocked by vpc firewall rule: gke-gke2-all-test-deny (node pool: default-pool)
    - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [ OK ]
