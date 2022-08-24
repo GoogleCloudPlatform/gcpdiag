@@ -1,0 +1,34 @@
+{
+  "instances": [
+    {
+      "name": "projects/gcpdiag-datafusion1-aaaa/locations/us-central1/instances/my-instance",
+      "description": "My Data Fusion instance",
+      "type": "BASIC",
+      "enableStackdriverLogging": true,
+      "enableStackdriverMonitoring": true,
+      "privateInstance": true,
+      "networkConfig": {
+        "network": "default",
+        "ipAllocation": "10.89.48.0/22"
+      },
+      "labels": {
+        "gcpdiag": "test"
+      },
+      "createTime": "2022-08-22T01:02:51.254892028Z",
+      "updateTime": "2022-08-22T01:18:39.219561056Z",
+      "state": "ACTIVE",
+      "serviceEndpoint": "https://my-instance-gcpdiag-datafusion1-aaaa-dot-usc1.datafusion.googleusercontent.com",
+      "version": "6.7.1",
+      "serviceAccount": "cloud-datafusion-management-sa@fd736090192f24d58-tp.iam.gserviceaccount.com",
+      "availableVersion": [
+        {
+          "versionNumber": "latest"
+        }
+      ],
+      "apiEndpoint": "https://my-instance-gcpdiag-datafusion1-aaaa-dot-usc1.datafusion.googleusercontent.com/api",
+      "gcsBucket": "gs://df-10083849341129831474-pnatxkzbw4i63fqxaizbbqaaaa",
+      "p4ServiceAccount": "service-12340010@gcp-sa-datafusion.iam.gserviceaccount.com",
+      "tenantProjectId": "fd736090192f24d58-tp"
+    }
+  ]
+}
