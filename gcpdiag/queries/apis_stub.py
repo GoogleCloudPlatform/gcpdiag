@@ -38,6 +38,8 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/gcf1/json-dumps',
     'gcpdiag-gcs1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/gcs1/json-dumps',
+    'gcpdiag-datafusion1-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/datafusion1/json-dumps',
     'gcpdiag-dataproc1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/dataproc1/json-dumps',
     'gcpdiag-apigee1-aaaa':
@@ -248,6 +250,9 @@ def get_api_stub(service_name: str,
   elif service_name == 'cloudfunctions':
     from gcpdiag.queries import gcf_stub
     return gcf_stub.CloudFunctionsApiStub()
+  elif service_name == 'datafusion':
+    from gcpdiag.queries import datafusion_stub
+    return datafusion_stub.DataFusionApiStub()
   elif service_name == 'dataproc':
     from gcpdiag.queries import dataproc_stub
     return dataproc_stub.DataprocApiStub()
