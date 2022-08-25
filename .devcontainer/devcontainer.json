@@ -1,0 +1,37 @@
+{
+	"name": "gcpdiag",
+	"image": "us-docker.pkg.dev/gcpdiag-dist/common/gcpdiag-pipenv-python-3.9:0.7", // Using our current test image - "latest"/"stable" tags do not exist at the moment
+	// Use the following snippet for building the image locally and not pulling it from the remote
+	//"build": {
+	//	"dockerfile": "../docker/pipenv-python-3.9/Dockerfile",
+	//	"context": "../docker/pipenv-python-3.9",
+	//	"args": {}
+	//},
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"python.defaultInterpreterPath": "/usr/local/bin/python",
+				"python.linting.enabled": true,
+				"python.linting.pylintEnabled": true,
+				"python.envFile": "${workspaceFolder}/.devcontainer/.env" // Forcing some specific env settings for debugging any dynmaic python file - normal env vars are not correctly picked up
+			},
+			"extensions": [
+				"ms-python.python",
+				"ms-python.vscode-pylance"
+			]
+		}
+	},
+	"remoteEnv": {
+		"PYTHONPATH": "/workspace" // required for bin/gcpdiag to correctly locate the modules / duplication of the .env file - no other workaround found
+	},
+	"onCreateCommand": "PATH=$HOME/.local/bin:$PATH && pipenv install --dev", // We need to execute the commands very early to allow VS Code (-extensions) to correctly pick up the pipenv venv
+	"postCreateCommand": "pipenv run pre-commit install",
+	"remoteUser": "root",
+	// Podman specfic settings
+	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,Z",
+	"workspaceFolder": "/workspace",
+	//"runArgs": [
+	//	"--userns=keep-id"	// Causes issue with uid mappings on host, which we need for git to work properly - files are owned by random uids due to the uid mapping
+	//],
+	"containerUser": "root"
+}
