@@ -1,6 +1,6 @@
 {
 	"name": "gcpdiag",
-	"image": "us-docker.pkg.dev/gcpdiag-dist/common/gcpdiag-pipenv-python-3.9:0.7", // Using our current test image - "latest"/"stable" tags do not exist at the moment
+	"image": "us-docker.pkg.dev/gcpdiag-dist/common/gcpdiag-pipenv-python-3.9:0.8", // Using our current test image - "latest"/"stable" tags do not exist at the moment
 	// Use the following snippet for building the image locally and not pulling it from the remote
 	//"build": {
 	//	"dockerfile": "../docker/pipenv-python-3.9/Dockerfile",

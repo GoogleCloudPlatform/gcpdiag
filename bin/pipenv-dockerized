@@ -7,7 +7,7 @@ fi
 PYTHON_VERSION="$1"
 shift
 
-IMAGE="us-docker.pkg.dev/gcpdiag-dist/common/gcpdiag-pipenv-python-${PYTHON_VERSION}:0.7"
+IMAGE="us-docker.pkg.dev/gcpdiag-dist/common/gcpdiag-pipenv-python-${PYTHON_VERSION}:0.8"
 
 USE_TTY=""
 CWD=$(pwd)
