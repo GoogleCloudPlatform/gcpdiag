@@ -34,6 +34,7 @@ RUN curl https://releases.hashicorp.com/terraform/1.0.8/terraform_1.0.8_linux_am
     chmod +x /usr/bin/terraform
 
 # gcloud CLI https://cloud.google.com/sdk/docs/install#installation_instructions
+# We need the gcloud CLI to use this image as devcontainer, see: ../../.devcontainer/README.md
 RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg  add - && apt-get update -y && apt-get install google-cloud-cli -y
 
 # Add an entrypoint to create a user in /etc/passwd and /etc/group.

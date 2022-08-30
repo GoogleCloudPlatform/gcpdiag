@@ -1,4 +1,4 @@
-VERSION=0.7
+VERSION=0.8
 IMAGE=us-docker.pkg.dev/gcpdiag-dist/common/gcpdiag-pipenv-python-3.7
 
 build:

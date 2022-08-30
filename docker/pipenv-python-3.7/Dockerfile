@@ -33,8 +33,10 @@ RUN curl https://releases.hashicorp.com/terraform/1.0.8/terraform_1.0.8_linux_am
     gunzip - >/usr/bin/terraform && \
     chmod +x /usr/bin/terraform
 
-# gcloud CLI https://cloud.google.com/sdk/docs/install#installation_instructions
-RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.cloud.google.com/apt cloud-sdk main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list && curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key --keyring /usr/share/keyrings/cloud.google.gpg  add - && apt-get update -y && apt-get install google-cloud-cli -y
+# Note: we install Cloud SDK in the python-3.9 image because we
+# use that image also for interactive development, but we don't need that
+# for the python-3.7 image (and adding Cloud SDK considerably increases the
+# image size).
 
 # Add an entrypoint to create a user in /etc/passwd and /etc/group.
 COPY entrypoint.sh /usr/bin/entrypoint.sh
