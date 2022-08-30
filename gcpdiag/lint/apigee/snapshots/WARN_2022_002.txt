@@ -1,3 +1,10 @@
-*  apigee/WARN/2022_002: Environment groups are created in the Apigee runtime plane.
-   (logging api is disabled)                                              [SKIP]
+*  apigee/WARN/2022_002: Environments are attached to Apigee X instances
+   - organizations/gcpdiag-apigee1-aaaa/environments/gcpdiag-demo-env     [ OK ]
+   - organizations/gcpdiag-apigee1-aaaa/environments/gcpdiag-demo-env-1   [FAIL]
+     Environment: gcpdiag-demo-env-1 is not being attached to any Apigee X instance 
+     All API proxy deployment will fail in this environment
+
+   Verify that environments are attached to Apigee X instances.
+
+   https://gcpdiag.dev/rules/apigee/WARN/2022_002
 

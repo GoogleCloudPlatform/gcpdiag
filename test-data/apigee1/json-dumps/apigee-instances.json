@@ -1,0 +1,22 @@
+{
+  "instances": [
+    {
+      "name": "gcpdiag-apigee1-inst1-aaaa",
+      "location": "us-central1",
+      "host": "10.25.116.2",
+      "port": "443",
+      "description": "Test Apigee Runtime Instance for gcpdiag",
+      "createdAt": "1660444205860",
+      "lastModifiedAt": "1660445744739",
+      "diskEncryptionKeyName": "projects/gcpdiag-apigee1-aaaa/locations/us-central1/keyRings/apigee-keyring/cryptoKeys/apigee-key",
+      "state": "ACTIVE",
+      "peeringCidrRange": "SLASH_22",
+      "runtimeVersion": "1-8-0-apigee-23",
+      "ipRange": "10.25.116.0/28,10.25.116.16/28",
+      "consumerAcceptList": [
+        "gcpdiag-apigee1-aaaa"
+      ],
+      "serviceAttachment": "projects/u97a71f019e4d6615-tp/regions/us-central1/serviceAttachments/apigee-us-central1-41me"
+    }
+  ]
+}
