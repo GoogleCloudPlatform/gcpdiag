@@ -22,6 +22,7 @@ from gcpdiag.queries import apigee, apis_stub
 
 DUMMY_PROJECT_NAME = 'gcpdiag-apigee1-aaaa'
 DUMMY_APIGEE_ORG_NAME = 'gcpdiag-apigee1-aaaa'
+DUMMY_APIGEE_ORG_RUNTIME_TYPE = 'CLOUD'
 DUMMY_APIGEE_ENVGROUP_NAME = 'gcpdiag-demo-envgroup'
 DUMMY_APIGEE_ENVGROUP_FULL_PATH = \
         f'organizations/{DUMMY_APIGEE_ORG_NAME}/envgroups/{DUMMY_APIGEE_ENVGROUP_NAME}'
@@ -30,6 +31,10 @@ DUMMY_APIGEE_ENVGROUP1_ATTACHMENTS_ENV = 'gcpdiag-demo-env-1'
 DUMMY_APIGEE_ENVGROUP1_NAME = 'gcpdiag-demo-envgroup-1'
 DUMMY_APIGEE_ENVGROUP1_FULL_PATH = \
        f'organizations/{DUMMY_APIGEE_ORG_NAME}/envgroups/{DUMMY_APIGEE_ENVGROUP1_NAME}'
+DUMMY_APIGEE_INSTANCE1_NAME = 'gcpdiag-apigee1-inst1-aaaa'
+DUMMY_APIGEE_INSTANCE1_FULL_PATH = \
+        f'organizations/{DUMMY_APIGEE_ORG_NAME}/instances/{DUMMY_APIGEE_INSTANCE1_NAME}'
+DUMMY_APIGEE_INSTANCE1_ATTACHMENTS_ENV = 'gcpdiag-demo-env'
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
@@ -40,13 +45,22 @@ class TestOrganization:
     """ get_org returns the right apigee organization by project name """
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     apigee_org = apigee.get_org(context=context)
-    assert DUMMY_APIGEE_ORG_NAME in apigee_org and len(apigee_org) == 1
+
+    assert apigee_org.name == DUMMY_APIGEE_ORG_NAME
+    assert apigee_org.runtime_type == DUMMY_APIGEE_ORG_RUNTIME_TYPE
+
+    apigee_envs = [e.name for e in apigee_org.environments]
+    assert DUMMY_APIGEE_ENVGROUP1_ATTACHMENTS_ENV in apigee_envs
+    assert DUMMY_APIGEE_INSTANCE1_ATTACHMENTS_ENV in apigee_envs
 
   def test_get_envgroups(self):
-    apigee_envgroups = apigee.get_envgroups(org_name=DUMMY_APIGEE_ORG_NAME)
-    e = apigee_envgroups[DUMMY_APIGEE_ENVGROUP_NAME]
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    apigee_org = apigee.get_org(context=context)
+    apigee_envgroups = apigee.get_envgroups(apigee_org)
     assert len(apigee_envgroups) == 2
     assert DUMMY_APIGEE_ENVGROUP_NAME in apigee_envgroups
+
+    e = apigee_envgroups[DUMMY_APIGEE_ENVGROUP_NAME]
     assert e.full_path == DUMMY_APIGEE_ENVGROUP_FULL_PATH
     assert e.host_names == DUMMY_APIGEE_ENVGROUP_HOST_NAMES
 
@@ -54,3 +68,19 @@ class TestOrganization:
     apigee_envgroups_attachments = apigee.get_envgroups_attachments(
         envgroup_name=DUMMY_APIGEE_ENVGROUP1_FULL_PATH)
     assert DUMMY_APIGEE_ENVGROUP1_ATTACHMENTS_ENV in apigee_envgroups_attachments
+
+  def test_get_instances(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    apigee_org = apigee.get_org(context=context)
+    apigee_instances = apigee.get_instances(apigee_org)
+
+    assert len(apigee_instances) == 1
+    assert DUMMY_APIGEE_INSTANCE1_NAME in apigee_instances
+
+    i = apigee_instances[DUMMY_APIGEE_INSTANCE1_NAME]
+    assert i.full_path == DUMMY_APIGEE_INSTANCE1_FULL_PATH
+
+  def test_get_instances_attachments(self):
+    apigee_instances_attachments = apigee.get_instances_attachments(
+        instance_name=DUMMY_APIGEE_INSTANCE1_FULL_PATH)
+    assert DUMMY_APIGEE_INSTANCE1_ATTACHMENTS_ENV in apigee_instances_attachments

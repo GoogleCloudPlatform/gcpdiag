@@ -26,7 +26,7 @@ ROLE = 'roles/apigee.serviceAgent'
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   apigee_org = apigee.get_org(context)
-  if not apigee_org:
+  if apigee_org is None:
     report.add_skipped(None, 'no Apigee organizations found')
     return
 

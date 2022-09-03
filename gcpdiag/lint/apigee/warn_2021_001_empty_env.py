@@ -11,8 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# Lint as: python3
 """Every environment group contains at least one environment.
 
 An environment must be a member of at least one environment group
@@ -27,10 +25,10 @@ from gcpdiag.queries import apigee
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   apigee_org = apigee.get_org(context)
-  if not apigee_org:
+  if apigee_org is None:
     report.add_skipped(None, 'no Apigee organizations found')
     return
-  envgroup_list = apigee.get_envgroups(apigee_org[context.project_id])
+  envgroup_list = apigee.get_envgroups(apigee_org)
   for envgroup in sorted(envgroup_list.values(),
                          key=lambda envgroup: envgroup.name):
     environments = apigee.get_envgroups_attachments(envgroup.full_path)

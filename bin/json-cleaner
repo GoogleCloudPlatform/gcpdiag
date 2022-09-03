@@ -8,6 +8,10 @@ import re
 import sys
 
 clean_maps = {
+    'apigee': {
+        '.caCertificate': 'REDACTED',
+        '.apigeeProjectId': 'REDACTED'
+    },
     'cloudrun': {
         '.services.[].creator': 'REDACTED',
         '.services.[].binaryAuthorization': 'REDACTED'

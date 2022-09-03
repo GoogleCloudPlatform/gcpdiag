@@ -1,9 +1,9 @@
 {
   "environmentGroupAttachments": [
     {
-      "name": "e3fe4869-e4ea-4fd0-b3d6-11dac1e03855",
+      "name": "eee79bf3-6ee0-488c-aafa-352b560cc54a",
       "environment": "gcpdiag-demo-env-1",
-      "createdAt": "1650010481372",
+      "createdAt": "1660444215777",
       "environmentGroupId": "gcpdiag-demo-envgroup-1"
     }
   ]

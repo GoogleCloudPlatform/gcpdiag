@@ -18,77 +18,100 @@
 Instead of doing real API calls, we return test JSON data.
 """
 
-import json
-import pathlib
 import re
-from typing import Optional
 
 from gcpdiag.queries import apis_stub
 
 # pylint: disable=unused-argument
 
-APIGEE_ORG_DIR = pathlib.Path(
-    __file__).parents[2] / 'test-data/apigee1/json-dumps'
+DUMMY_PROJECT_ID = 'gcpdiag-apigee1-aaaa'
 
 
 class ApigeeApiStub:
   """Mock object to simulate apigee api calls."""
 
-  # mocked methods:
-  # apigee_api.organizations().list().execute()
-  # apigee_api.organizations().envgroups().list().execute()
-  # apigee_api.organizations().envgroups().attachments().list().execute()
-
-  def __init__(self,
-               mock_state='init',
-               organization_name=None,
-               environmentgroup_name=None):
-    self.mock_state = mock_state
-    self.organization_name = organization_name
-    self.environmentgroup_name = environmentgroup_name
+  def __init__(self, project_id=DUMMY_PROJECT_ID):
+    self.project_id = project_id
 
   def organizations(self):
-    return self
+    return ApigeeOraganizationsApiStub()
+
+
+class ApigeeOraganizationsApiStub(ApigeeApiStub):
+  """Mock object to simulate apigee organizations api calls"""
+
+  def list(self, parent):
+    return apis_stub.RestCallStub(self.project_id, 'apigee-organizations')
+
+  def get(self, name):
+    return apis_stub.RestCallStub(self.project_id, 'apigee-organization')
 
   def envgroups(self):
-    return self
+    return ApigeeEnvgroupsApiStub(self.project_id)
+
+  def instances(self):
+    return ApigeeInstancesApiStub(self.project_id)
+
+
+class ApigeeEnvgroupsApiStub(ApigeeApiStub):
+  """Mock object to simulate apigee environment groups api calls"""
+
+  def list(self, parent):
+    return apis_stub.RestCallStub(
+        self.project_id,
+        'apigee-envgroups',
+        default_json_basename='apigee-envgroups-empty')
 
   def attachments(self):
-    return self
+    return ApigeeEnvGroupsAttachmentsApiStub(self.project_id)
 
-  # pylint: disable=invalid-name
-  def list(self, parent, pageSize: Optional[int] = None):
-    if parent == 'organizations':
-      return ApigeeApiStub('organizations')
+  def list_next(self, previous_request, previous_response):
+    return None
+
+
+class ApigeeInstancesApiStub(ApigeeApiStub):
+  """Mock object to simulate apigee instances api calls"""
+
+  def list(self, parent):
+    return apis_stub.RestCallStub(
+        self.project_id,
+        'apigee-instances',
+        default_json_basename='apigee-instances-empty')
+
+  def attachments(self):
+    return ApigeeInstancesAttachmentsApiStub(self.project_id)
+
+  def list_next(self, previous_request, previous_response):
+    return None
+
+
+class ApigeeEnvGroupsAttachmentsApiStub(ApigeeApiStub):
+  """Mock object to simulate apigee environment groups attachments api calls"""
+
+  def list(self, parent):
     m = re.match(r'organizations/([^/]+)/envgroups/(.*)', parent)
     if m:
-      org_name = m.group(1)
       envgroup_name = m.group(2)
-      return ApigeeApiStub('attachments',
-                           organization_name=org_name,
-                           environmentgroup_name=envgroup_name)
-    m = re.match(r'organizations/([^/]+)', parent)
-    if m:
-      org_name = m.group(1)
-      return ApigeeApiStub('envgroups', organization_name=org_name)
+      return apis_stub.RestCallStub(
+          self.project_id,
+          f'apigee-envgroups-{envgroup_name}-attachments',
+          default_json_basename='apigee-envgroups-attachments-empty')
 
-  def execute(self, num_retries=0):
-    if self.organization_name:
-      json_dir = apis_stub.get_json_dir(self.organization_name)
-    if self.mock_state == 'organizations':
-      with open(APIGEE_ORG_DIR / 'apigee-organizations.json',
-                encoding='utf-8') as json_file:
-        return json.load(json_file)
-    elif self.mock_state == 'envgroups':
-      with open(json_dir / 'environment-groups.json',
-                encoding='utf-8') as json_file:
-        return json.load(json_file)
-    elif self.mock_state == 'attachments' and \
-              self.environmentgroup_name == 'gcpdiag-demo-envgroup-1':
-      with open(json_dir / 'environment-group-attachments.json',
-                encoding='utf-8') as json_file:
-        return json.load(json_file)
-    elif self.mock_state == 'attachments' and self.environmentgroup_name == 'gcpdiag-demo-envgroup':
-      with open(json_dir / 'environment-group-empty-attachments.json', \
-              encoding='utf-8') as json_file:
-        return json.load(json_file)
+  def list_next(self, previous_request, previous_response):
+    return None
+
+
+class ApigeeInstancesAttachmentsApiStub(ApigeeApiStub):
+  """Mock object to simulate apigee instances attachments api calls"""
+
+  def list(self, parent):
+    m = re.match(r'organizations/([^/]+)/instances/(.*)', parent)
+    if m:
+      instance_name = m.group(2)
+      return apis_stub.RestCallStub(
+          self.project_id,
+          f'apigee-instances-{instance_name}-attachments',
+          default_json_basename='apigee-instances-attachments-empty')
+
+  def list_next(self, previous_request, previous_response):
+    return None

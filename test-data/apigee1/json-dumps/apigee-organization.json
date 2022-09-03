@@ -1,0 +1,44 @@
+{
+  "addonsConfig": {
+    "advancedApiOpsConfig": {
+      "enabled": true
+    },
+    "connectorsPlatformConfig": {
+      "enabled": true
+    },
+    "integrationConfig": {
+      "enabled": true
+    }
+  },
+  "analyticsRegion": "us-central1",
+  "apigeeProjectId": "REDACTED",
+  "authorizedNetwork": "projects/gcpdiag-apigee1-aaaa/global/networks/apigee-network",
+  "billingType": "EVALUATION",
+  "caCertificate": "REDACTED",
+  "createdAt": "1660444169636",
+  "description": "Test Apigee Org for gcpdiag",
+  "environments": [
+    "gcpdiag-demo-env",
+    "gcpdiag-demo-env-1"
+  ],
+  "expiresAt": "1665627913747",
+  "lastModifiedAt": "1660444192352",
+  "name": "gcpdiag-apigee1-aaaa",
+  "projectId": "gcpdiag-apigee1-aaaa",
+  "properties": {
+    "property": [
+      {
+        "name": "features.hybrid.enabled",
+        "value": "true"
+      },
+      {
+        "name": "features.mart.connect.enabled",
+        "value": "true"
+      }
+    ]
+  },
+  "runtimeDatabaseEncryptionKeyName": "projects/gcpdiag-apigee1-aaaa/locations/us-central1/keyRings/apigee-keyring/cryptoKeys/apigee-key",
+  "runtimeType": "CLOUD",
+  "state": "ACTIVE",
+  "subscriptionType": "TRIAL"
+}
