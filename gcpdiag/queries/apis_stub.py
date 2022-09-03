@@ -24,6 +24,8 @@ import httplib2
 # pylint: disable=unused-argument
 
 JSON_PROJECT_DIR = {
+    'gcpdiag-apigee1-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/apigee1/json-dumps',
     'gcpdiag-gce1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/gce1/json-dumps',
     'gcpdiag-bigquery1-aaaa':
@@ -42,8 +44,6 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/datafusion1/json-dumps',
     'gcpdiag-dataproc1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/dataproc1/json-dumps',
-    'gcpdiag-apigee1-aaaa':
-        pathlib.Path(__file__).parents[2] / 'test-data/apigee1/json-dumps',
     'gcpdiag-composer1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/composer1/json-dumps',
     'gcpdiag-cloudsql1-aaaa':
@@ -133,7 +133,7 @@ class RestCallStub(ApiStub):
       if self.default is not None:
         return self.default
       if self.default_json_basename is not None:
-        with open(self.json_dir / self.default_json_basename + '.json',
+        with open(str(self.json_dir / self.default_json_basename) + '.json',
                   encoding='utf-8') as json_file:
           return json.load(json_file)
       raise
