@@ -6,7 +6,7 @@
 
 #### New rules
 
-- TBD
+- gke/WARN/2022/\_008: GKE connectivity: possible dns timeout in some gke versions
 
 #### Enhancements
 

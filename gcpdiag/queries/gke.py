@@ -319,6 +319,12 @@ class Cluster(models.Resource):
   def has_workload_identity_enabled(self) -> bool:
     return len(self._resource_data.get('workloadIdentityConfig', {})) > 0
 
+  def has_intra_node_visibility_enabled(self) -> bool:
+    if ('networkConfig' in self._resource_data and
+        'enableIntraNodeVisibility' in self._resource_data['networkConfig']):
+      return self._resource_data['networkConfig']['enableIntraNodeVisibility']
+    return False
+
   @property
   def nodepools(self) -> Iterable[NodePool]:
     if self._nodepools is None:
