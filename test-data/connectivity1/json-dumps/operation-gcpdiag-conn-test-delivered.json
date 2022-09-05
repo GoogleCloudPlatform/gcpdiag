@@ -1,0 +1,121 @@
+{
+  "done": true,
+  "metadata": {
+    "@type": "type.googleapis.com/google.cloud.networkmanagement.v1.OperationMetadata",
+    "apiVersion": "v1",
+    "cancelRequested": false,
+    "createTime": "2022-07-29T16:07:31.776546514Z",
+    "endTime": "2022-07-29T16:07:39.514836430Z",
+    "target": "projects/gcpdiag-connectivity1-aaaa/locations/global/connectivityTests/gcpdiag-conn-test-delivered",
+    "verb": "create"
+  },
+  "name": "projects/gcpdiag-connectivity1-aaaa/locations/global/operations/operation-gcpdiag-conn-test-delivered",
+  "response": {
+    "@type": "type.googleapis.com/google.cloud.networkmanagement.v1.ConnectivityTest",
+    "createTime": "2022-07-29T16:07:31.714020077Z",
+    "destination": {
+      "instance": "projects/gcpdiag-connectivity1-aaaa/zones/us-central1-a/instances/dest-vm"
+    },
+    "displayName": "gcpdiag-conn-test-delivered",
+    "name": "projects/gcpdiag-connectivity1-aaaa/locations/global/connectivityTests/gcpdiag-conn-test-delivered",
+    "protocol": "TCP",
+    "reachabilityDetails": {
+      "error": {},
+      "result": "REACHABLE",
+      "traces": [
+        {
+          "endpointInfo": {
+            "destinationIp": "10.128.0.2",
+            "destinationNetworkUri": "projects/gcpdiag-connectivity1-aaaa/global/networks/default",
+            "destinationPort": 80,
+            "protocol": "TCP",
+            "sourceIp": "10.128.0.3",
+            "sourceNetworkUri": "projects/gcpdiag-connectivity1-aaaa/global/networks/default",
+            "sourcePort": 54977
+          },
+          "steps": [
+            {
+              "description": "Initial state: packet originating from a Compute Engine instance.",
+              "instance": {
+                "displayName": "source-vm",
+                "interface": "nic0",
+                "internalIp": "10.128.0.3",
+                "networkUri": "projects/gcpdiag-connectivity1-aaaa/global/networks/default",
+                "uri": "projects/gcpdiag-connectivity1-aaaa/zones/us-central1-a/instances/source-vm"
+              },
+              "projectId": "gcpdiag-connectivity1-aaaa",
+              "state": "START_FROM_INSTANCE"
+            },
+            {
+              "description": "Config checking state: verify default EGRESS firewall rule.",
+              "firewall": {
+                "action": "ALLOW",
+                "direction": "EGRESS",
+                "displayName": "default-allow-egress",
+                "firewallRuleType": "IMPLIED_VPC_FIREWALL_RULE",
+                "networkUri": "projects/gcpdiag-connectivity1-aaaa/global/networks/default",
+                "priority": 65535
+              },
+              "projectId": "gcpdiag-connectivity1-aaaa",
+              "state": "APPLY_EGRESS_FIREWALL_RULE"
+            },
+            {
+              "description": "Config checking state: verify route.",
+              "projectId": "gcpdiag-connectivity1-aaaa",
+              "route": {
+                "destIpRange": "10.128.0.0/20",
+                "displayName": "default-route-dee6b480ed700921",
+                "networkUri": "projects/gcpdiag-connectivity1-aaaa/global/networks/default",
+                "nextHop": "network gateway",
+                "nextHopType": "NEXT_HOP_NETWORK",
+                "routeType": "SUBNET",
+                "uri": "projects/gcpdiag-connectivity1-aaaa/global/routes/default-route-dee6b480ed700921"
+              },
+              "state": "APPLY_ROUTE"
+            },
+            {
+              "description": "Forwarding state: arriving at a Compute Engine instance.",
+              "instance": {
+                "displayName": "dest-vm",
+                "interface": "nic0",
+                "internalIp": "10.128.0.2",
+                "networkUri": "projects/gcpdiag-connectivity1-aaaa/global/networks/default",
+                "uri": "projects/gcpdiag-connectivity1-aaaa/zones/us-central1-a/instances/dest-vm"
+              },
+              "projectId": "gcpdiag-connectivity1-aaaa",
+              "state": "ARRIVE_AT_INSTANCE"
+            },
+            {
+              "description": "Config checking state: verify INGRESS firewall rule.",
+              "firewall": {
+                "action": "ALLOW",
+                "direction": "INGRESS",
+                "displayName": "default-allow-internal",
+                "firewallRuleType": "VPC_FIREWALL_RULE",
+                "networkUri": "projects/gcpdiag-connectivity1-aaaa/global/networks/default",
+                "priority": 65534,
+                "uri": "projects/gcpdiag-connectivity1-aaaa/global/firewalls/default-allow-internal"
+              },
+              "projectId": "gcpdiag-connectivity1-aaaa",
+              "state": "APPLY_INGRESS_FIREWALL_RULE"
+            },
+            {
+              "deliver": {
+                "resourceUri": "projects/gcpdiag-connectivity1-aaaa/zones/us-central1-a/instances/dest-vm",
+                "target": "INSTANCE"
+              },
+              "description": "Final state: packet delivered to instance.",
+              "projectId": "gcpdiag-connectivity1-aaaa",
+              "state": "DELIVER"
+            }
+          ]
+        }
+      ],
+      "verifyTime": "2022-07-29T16:07:39.492749Z"
+    },
+    "source": {
+      "instance": "projects/gcpdiag-connectivity1-aaaa/zones/us-central1-a/instances/source-vm"
+    },
+    "updateTime": "2022-07-29T16:07:31.714020077Z"
+  }
+}
