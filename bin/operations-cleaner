@@ -1,0 +1,54 @@
+#!/usr/bin/env python3
+"""Rename operations to have predictable names"""
+
+# pylint: disable=invalid-name
+
+import json
+import os
+import re
+import sys
+
+
+def clean_connectivity_test_operations(data):
+  # uses connectivity test names to identify operations
+  operations = data.get('operations', [])
+
+  for operation in sorted(
+      operations,
+      key=lambda operation: operation.get('metadata', {}).get('createTime'),
+      reverse=True):
+    target = operation.get('metadata', {}).get('target')
+
+    m = re.match(r'projects/(.*)/locations/global/connectivityTests/(.*)',
+                 target)
+    if m:
+      project_id = m.group(1)
+      test_id = m.group(2)
+
+      if 'gcpdiag-conn-test' not in test_id:
+        continue
+
+      if operation.get('name'):
+        operation['name'] = (
+            f'projects/{project_id}/locations/global/operations/operation-{test_id}'
+        )
+        file_name = os.path.join(os.getcwd(), 'json-dumps',
+                                 f'operation-{test_id}.json')
+        if not os.path.exists(file_name):
+          with open(file_name, 'w', encoding='utf-8') as f:
+            f.write(json.dumps(operation, indent=2))
+
+
+def main():
+  data = json.load(sys.stdin)
+
+  if len(sys.argv) != 2:
+    print('usage: operations-cleaner OPERATION_TYPE')
+    sys.exit(1)
+
+  operation_type = sys.argv[1]
+  if operation_type == 'connectivity':
+    clean_connectivity_test_operations(data)
+
+
+main()
