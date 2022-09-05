@@ -36,6 +36,7 @@ DUMMY_CLUSTER2_SERVICE_ACCOUNT = 'gke2sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.c
 DUMMY_CLUSTER3_NAME = f'projects/{DUMMY_PROJECT_NAME}/locations/europe-west4/clusters/gke3'
 DUMMY_CLUSTER4_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clusters/gke4'
 DUMMY_CLUSTER6_NAME = f'projects/{DUMMY_PROJECT_NAME}/zones/europe-west4-a/clusters/gke6'
+DUMMY_AUTOPILOT_CLUSTER1_NAME = f'projects/{DUMMY_PROJECT_NAME}/locations/europe-west4/clusters/autopilot-gke1'  # pylint: disable=C0301
 DUMMY_DEFAULT_NAME = 'default'
 
 # pylint: disable=consider-iterating-dictionary
@@ -174,6 +175,15 @@ class TestCluster:
     clusters = gke.get_clusters(context)
     c = clusters[DUMMY_CLUSTER1_NAME]
     assert not c.nodepools[0].has_workload_identity_enabled()
+
+  def test_has_intra_node_visibility_enabled(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER3_NAME]
+    assert not c.has_intra_node_visibility_enabled()
+    # Abusing an Autopilot cluster here as I cannot recreate the testfiles at the moment
+    c = clusters[DUMMY_AUTOPILOT_CLUSTER1_NAME]
+    assert c.has_intra_node_visibility_enabled()
 
   def test_no_accelerators(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
