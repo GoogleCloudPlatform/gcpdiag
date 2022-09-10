@@ -79,6 +79,7 @@ class Test:
     assert 'iam' in modules
     assert 'apigee' in modules
     assert 'composer' in modules
+    assert 'datafusion' in modules
     assert 'dataproc' in modules
     assert 'gcs' in modules
     assert 'vpc' in modules

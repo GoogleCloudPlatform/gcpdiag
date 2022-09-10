@@ -27,6 +27,8 @@ PRODUCTS = {
         '[Cloud Run](https://cloud.google.com/run)',
     'cloudsql':
         '[CloudSQL](https://cloud.google.com/sql)',
+    'datafusion':
+        '[Cloud Data Fusion](https://cloud.google.com/data-fusion)',
     'dataproc':
         '[Cloud Dataproc](https://cloud.google.com/dataproc)',
     'gae':

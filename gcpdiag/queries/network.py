@@ -125,6 +125,10 @@ class Peering:
   """VPC Peerings"""
   name: str
   url: str
+  state: str
+  exports_custom_routes: bool
+  imports_custom_routes: bool
+  auto_creates_routes: bool
 
   def __str__(self):
     return self.name
@@ -174,7 +178,9 @@ class Network(models.Resource):
   @property
   def peerings(self) -> List[Peering]:
     return [
-        Peering(peer['name'], peer['network'])
+        Peering(peer['name'], peer['network'], peer['state'],
+                peer['exportCustomRoutes'], peer['importCustomRoutes'],
+                peer['autoCreateRoutes'])
         for peer in self._resource_data.get('peerings', [])
     ]
 

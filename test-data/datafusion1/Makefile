@@ -19,7 +19,9 @@ SED_SUBST_FAKE = sed -e "s/$(PROJECT_ID_SUFFIX)/$(FAKE_PROJECT_ID_SUFFIX)/" \
 all:	\
 	json-dumps/project.json \
 	json-dumps/services.json \
-	json-dumps/datafusion-instances.json
+	json-dumps/datafusion-instances.json \
+	json-dumps/compute-network-default.json \
+	json-dumps/compute-effective-firewalls-default.json
 
 include ../Makefile.inc
 

@@ -21,6 +21,7 @@ hiddenimports = \
   collect_submodules('gcpdiag.lint.bigquery') + \
   collect_submodules('gcpdiag.lint.composer') + \
   collect_submodules('gcpdiag.lint.cloudsql') + \
+  collect_submodules('gcpdiag.lint.datafusion') + \
   collect_submodules('gcpdiag.lint.dataproc') + \
   collect_submodules('gcpdiag.lint.gaes') + \
   collect_submodules('gcpdiag.lint.gcb') + \
