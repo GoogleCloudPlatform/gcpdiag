@@ -18,12 +18,13 @@
 import ipaddress
 import logging
 import re
-from typing import Dict, Mapping
+from typing import Dict, Mapping, Optional
 
 import googleapiclient.errors
 
 from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis, network
+from gcpdiag.utils import Version
 
 
 class Instance(models.Resource):
@@ -87,7 +88,9 @@ class Instance(models.Resource):
 
   @property
   def is_private(self) -> bool:
-    return self._resource_data['privateInstance']
+    if 'privateInstance' in self._resource_data:
+      return self._resource_data['privateInstance']
+    return False
 
   @property
   def status(self) -> str:
@@ -102,8 +105,8 @@ class Instance(models.Resource):
     return self._resource_data['state'] == 'DELETING'
 
   @property
-  def version(self) -> str:
-    return self._resource_data['version']
+  def version(self) -> Version:
+    return Version(self._resource_data['version'])
 
   @property
   def api_service_agent(self) -> str:
@@ -123,28 +126,34 @@ class Instance(models.Resource):
     If shared VPC then 'network_string' = 'projects/{host-project-id}/global/networks/{network}'
     else 'network_string' = {network}
     """
-    network_string = self._resource_data['networkConfig']['network']
-    match = re.match(r'projects/([^/]+)/global/networks/([^/]+)$',
-                     network_string)
-    if match and match.group(1) != self.project_id:
-      return True
+    if 'network' in self._resource_data['networkConfig']:
+      network_string = self._resource_data['networkConfig']['network']
+      match = re.match(r'projects/([^/]+)/global/networks/([^/]+)$',
+                       network_string)
+      if match and match.group(1) != self.project_id:
+        return True
 
     return False
 
   @property
   def network(self) -> network.Network:
-    network_string = self._resource_data['networkConfig']['network']
-    match = re.match(r'projects/([^/]+)/global/networks/([^/]+)$',
-                     network_string)
-    if match:
-      return network.get_network(match.group(1), match.group(2))
-    else:
-      return network.get_network(self.project_id, network_string)
+    if 'network' in self._resource_data['networkConfig']:
+      network_string = self._resource_data['networkConfig']['network']
+      match = re.match(r'projects/([^/]+)/global/networks/([^/]+)$',
+                       network_string)
+      if match:
+        return network.get_network(match.group(1), match.group(2))
+      else:
+        return network.get_network(self.project_id, network_string)
+
+    return network.get_network(self.project_id, 'default')
 
   @property
-  def tp_ipv4_cidr(self) -> ipaddress.IPv4Network:
-    cidr = self._resource_data['networkConfig']['ipAllocation']
-    return ipaddress.ip_network(cidr)
+  def tp_ipv4_cidr(self) -> Optional[ipaddress.IPv4Network]:
+    if 'network' in self._resource_data['networkConfig']:
+      cidr = self._resource_data['networkConfig']['ipAllocation']
+      return ipaddress.ip_network(cidr)
+    return None
 
 
 @caching.cached_api_call
