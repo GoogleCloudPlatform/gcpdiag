@@ -25,6 +25,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   clusters = gke.get_clusters(context)
   if not clusters:
     report.add_skipped(None, 'no clusters found')
+    return
+
   for _, c in sorted(clusters.items()):
     if c.nap_node_image_type is None:
       report.add_skipped(c, 'Node Auto Provisioning Disabled')
