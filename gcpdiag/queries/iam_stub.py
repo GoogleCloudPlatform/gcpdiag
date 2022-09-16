@@ -70,7 +70,7 @@ class IamApiStub:
 
   def get(self, name):
     if self.mock_state == 'serviceaccounts':
-      m = re.match(r'projects/-/serviceAccounts/(.*)', name)
+      m = re.match(r'projects/[^/]+/serviceAccounts/(.*)', name)
       return IamApiStub(self.api_project_id, 'serviceaccounts_get', m.group(1))
     elif self.mock_state == 'roles':
       # roles.get is only used for predefined roles, skip extracting project_id

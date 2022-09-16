@@ -26,21 +26,27 @@ import httplib2
 JSON_PROJECT_DIR = {
     'gcpdiag-apigee1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/apigee1/json-dumps',
+    '12340005':
+        pathlib.Path(__file__).parents[2] / 'test-data/apigee1/json-dumps',
     'gcpdiag-gce1-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/gce1/json-dumps',
+    '12340001':
         pathlib.Path(__file__).parents[2] / 'test-data/gce1/json-dumps',
     'gcpdiag-bigquery1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/bigquery1/json-dumps',
-    '12340001':
-        pathlib.Path(__file__).parents[2] / 'test-data/gce1/json-dumps',
     'gcpdiag-gke1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/gke1/json-dumps',
     '12340002':
         pathlib.Path(__file__).parents[2] / 'test-data/gke1/json-dumps',
     'gcpdiag-gcf1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/gcf1/json-dumps',
+    '12340003':
+        pathlib.Path(__file__).parents[2] / 'test-data/gcf1/json-dumps',
     'gcpdiag-gcs1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/gcs1/json-dumps',
     'gcpdiag-datafusion1-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/datafusion1/json-dumps',
+    '12340010':
         pathlib.Path(__file__).parents[2] / 'test-data/datafusion1/json-dumps',
     'gcpdiag-dataproc1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/dataproc1/json-dumps',
@@ -67,6 +73,8 @@ JSON_PROJECT_DIR = {
     'gcpdiag-iam1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/iam1/json-dumps',
     'gcpdiag-cloudrun1-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/cloudrun1/json-dumps',
+    '123400010':
         pathlib.Path(__file__).parents[2] / 'test-data/cloudrun1/json-dumps',
     'gcpdiag-notebooks1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/notebooks1/json-dumps',

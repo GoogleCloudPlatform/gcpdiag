@@ -23,12 +23,19 @@ from gcpdiag.queries import gce, iam
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-  # Find all instances.
+  # Find all instances which match the context.
   instances = gce.get_instances(context).values()
+  gke_node_counter = 0
+
   if not instances:
-    report.add_skipped(None, 'no instances found')
+    report.add_skipped(None, 'No instances found')
+    return
 
   for instance in sorted(instances, key=lambda i: i.name):
+    if instance.is_gke_node():
+      gke_node_counter += 1
+      continue
+
     # Verify instance has a service account as it may be created without one.
     sa = instance.service_account
     if sa:
@@ -43,3 +50,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
         report.add_ok(instance)
     else:
       report.add_skipped(instance, 'instance does not have a service account')
+
+  if gke_node_counter == len(instances):
+    report.add_skipped(None, 'No relevant GCE instances found')

@@ -67,6 +67,15 @@ TEST_SERVICE_ACCOUNT_PERMISSIONS = [
     'storage.objects.list',
 ]
 
+TEST_DUMMY_SERVICE_ACCOUNT = {
+    'gke2sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com',  # custom service account
+    'gcpdiag-gke1-aaaa@appspot.gserviceaccount.com',  # GAE Default SA
+    '12340002-compute@developer.gserviceaccount.com',  # GCE Default SA
+    # Sample Service Agent
+    'service-12340002@gcp-sa-aiplatform-cc.iam.gserviceaccount.com',
+    'p12340002-123a@gcp-sa-cloud-sql.iam.gserviceaccount.com'
+}
+
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
 @mock.patch('gcpdiag.caching.get_cache', new=get_cache_stub)
@@ -130,3 +139,12 @@ class TestProjectPolicy:
                                        'roles/iam.serviceAccountUser')
     assert not policy.has_role_permissions(
         f'serviceAccount:{TEST_SERVICE_ACCOUNT}', 'roles/monitoring.editor')
+
+  def test_project_id_extraction_from_service_account(self):
+    for sa in TEST_DUMMY_SERVICE_ACCOUNT:
+      extracted_project_id = iam._extract_project_id(sa)
+      assert TEST_PROJECT_ID == extracted_project_id
+
+    # Test exceptional case which should return '-' wildcard
+    wild_card = iam._extract_project_id('random-sa@fake-sa-iam-gservice.com')
+    assert wild_card == '-'
