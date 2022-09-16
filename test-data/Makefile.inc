@@ -10,8 +10,6 @@
 BASEDIR := ../..
 JSON_CLEANER = $(BASEDIR)/bin/json-cleaner
 CURL         = $(BASEDIR)/bin/curl-wrap.sh
-OPERATIONS_CLEANER = ../../bin/operations-cleaner
-
 SED_SUBST_FAKE = sed -e "s/$(PROJECT_ID_SUFFIX)/$(FAKE_PROJECT_ID_SUFFIX)/" \
 		     -e "s/$(PROJECT_NR)/$(FAKE_PROJECT_NR)/" \
 		     -e "s/$(ORG_ID)/$(FAKE_ORG_ID)/" \
@@ -146,11 +144,3 @@ json-dumps/services.json:
 	$(CURL) -fsS \
 	        'https://serviceusage.googleapis.com/v1/projects/$(PROJECT_ID)/services?filter=state:ENABLED' \
 		| $(SED_SUBST_FAKE) >$@
-
-# networkmanagement.googleapis.com
-json-dumps/operations:
-	$(CURL) -fsS \
-	  'https://networkmanagement.googleapis.com/v1/projects/$(PROJECT_ID)/locations/global/operations?filter=done:true' \
-		| $(JSON_CLEANER) other \
-	  | $(SED_SUBST_FAKE) \
-		| $(OPERATIONS_CLEANER) connectivity
