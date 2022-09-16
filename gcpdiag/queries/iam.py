@@ -510,6 +510,9 @@ SERVICE_AGENT_DOMAINS = (
     'system.gserviceaccount.com',
 )
 
+DEFAULT_SERVICE_ACCOUNT_DOMAINS = ('appspot.gserviceaccount.com',
+                                   'developer.gserviceaccount.com')
+
 # The main reason to have two dicts instead of using for example None as value,
 # is that it works better for static typing (i.e. avoiding Optional[]).
 _service_account_cache: Dict[str, ServiceAccount] = {}
@@ -517,7 +520,7 @@ _service_account_cache_fetched: Dict[str, bool] = {}
 _service_account_cache_is_not_found: Dict[str, bool] = {}
 
 
-def _batch_fetch_service_accounts(emails: List[str], project_id: str):
+def _batch_fetch_service_accounts(emails: List[str], billing_project_id: str):
   """Retrieve a list of service accounts.
 
   This function is used when inspecting a project, to retrieve all service accounts
@@ -529,10 +532,12 @@ def _batch_fetch_service_accounts(emails: List[str], project_id: str):
   accounts from other projects in `emails` will be also retrieved.
   """
 
-  iam_api = apis.get_api('iam', 'v1', project_id)
+  iam_api = apis.get_api('iam', 'v1', billing_project_id)
   service_accounts_api = iam_api.projects().serviceAccounts()
+
   requests = [
-      service_accounts_api.get(name='projects/-/serviceAccounts/' + email)
+      service_accounts_api.get(
+          name=f'projects/{_extract_project_id(email)}/serviceAccounts/{email}')
       for email in emails
       if email not in _service_account_cache_fetched
   ]
@@ -560,9 +565,9 @@ def _batch_fetch_service_accounts(emails: List[str], project_id: str):
       elif isinstance(exception, utils.GcpApiError) and exception.status == 404:
         _service_account_cache_is_not_found[email] = True
       else:
-        project_nr = crm.get_project(project_id).number
+        project_nr = crm.get_project(billing_project_id).number
         if re.match(rf'{project_nr}-\w+@', email) \
-            or email.endswith(f'@{project_id}.iam.gserviceaccount.com'):
+            or email.endswith(f'@{billing_project_id}.iam.gserviceaccount.com'):
           # if retrieving service accounts from the project being inspected fails,
           # we need to fail hard because many rules won't work correctly.
           raise exception
@@ -571,6 +576,35 @@ def _batch_fetch_service_accounts(emails: List[str], project_id: str):
     else:
       sa = ServiceAccount(response['projectId'], response)
       _service_account_cache[sa.email] = sa
+
+
+def _extract_project_id(email: str):
+  if email in _service_account_cache:
+    return _service_account_cache[email].project_id
+
+  if email.endswith('.iam.gserviceaccount.com') and \
+    not (email.startswith('service-') or email.split('@')[1].startswith('gcp-sa-')):
+    project_id = re.split(r'[@ .]', email)[1]
+    return project_id
+    # extract project number from service agents and compute default SA
+  elif email.partition('@')[2] in SERVICE_AGENT_DOMAINS or \
+      email.partition('@')[2].startswith('gcp-sa-') or \
+      email.endswith(DEFAULT_SERVICE_ACCOUNT_DOMAINS[1]):
+    # AppEngine Default SA is unqiue
+    if email.endswith(DEFAULT_SERVICE_ACCOUNT_DOMAINS[0]):
+      return email.partition('@')[0]
+
+    m = re.search(r'[\d]+', email.partition('@')[0])
+    if m and (m.group(0) is not None):
+      project_id = crm.get_project(m.group(0)).id
+      return project_id
+  else:
+    # Default to using - wildcard to infer the project.
+    # - wildcard character is unreliable and should be used as last resort
+    # because it can cause response codes to contain misleading error codes
+    # such as 403 for deleted service accounts instead of returning 404
+    # https://cloud.google.com/iam/docs/reference/rest/v1/projects.serviceAccounts/get
+    return '-'
 
 
 def is_service_account_existing(email: str, billing_project_id: str) -> bool:
