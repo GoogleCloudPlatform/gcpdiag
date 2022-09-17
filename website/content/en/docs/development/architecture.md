@@ -186,6 +186,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   clusters = gke.get_clusters(context)
   if not clusters:
     report.add_skipped(None, 'no clusters found')
+    return
+
   for _, c in sorted(clusters.items()):
     if not c.has_logging_enabled():
       report.add_skipped(c, 'logging disabled')
