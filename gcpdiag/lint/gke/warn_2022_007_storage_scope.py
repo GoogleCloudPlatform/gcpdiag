@@ -35,6 +35,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   clusters = gke.get_clusters(context)
   if not clusters:
     report.add_skipped(None, 'no clusters found')
+    return
 
   for cluster in sorted(clusters.values()):
     for nodepool in cluster.nodepools:
