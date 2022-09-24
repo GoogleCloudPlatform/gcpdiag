@@ -28,7 +28,8 @@
       "apiEndpoint": "https://my-instance-gcpdiag-datafusion1-aaaa-dot-usc1.datafusion.googleusercontent.com/api",
       "gcsBucket": "gs://df-10083849341129831474-pnatxkzbw4i63fqxaizbbqaaaa",
       "p4ServiceAccount": "service-12340010@gcp-sa-datafusion.iam.gserviceaccount.com",
-      "tenantProjectId": "fd736090192f24d58-tp"
+      "tenantProjectId": "fd736090192f24d58-tp",
+      "dataprocServiceAccount": "12340010-compute@developer.gserviceaccount.com"
     }
   ]
 }
