@@ -23,7 +23,7 @@ from typing import Dict, Mapping, Optional
 import googleapiclient.errors
 
 from gcpdiag import caching, config, models, utils
-from gcpdiag.queries import apis, network
+from gcpdiag.queries import apis, crm, network
 from gcpdiag.utils import Version
 
 
@@ -114,7 +114,10 @@ class Instance(models.Resource):
 
   @property
   def dataproc_service_account(self) -> str:
-    return self._resource_data['dataprocServiceAccount']
+    sa = self._resource_data.get('dataprocServiceAccount')
+    if sa is None:
+      sa = crm.get_project(self.project_id).default_compute_service_account
+    return sa
 
   @property
   def tenant_project_id(self) -> str:

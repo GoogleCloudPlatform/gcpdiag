@@ -20,6 +20,9 @@ all:	\
 	json-dumps/project.json \
 	json-dumps/services.json \
 	json-dumps/datafusion-instances.json \
+	json-dumps/iam-policy.json \
+    json-dumps/iam-service-accounts.json \
+    json-dumps/iam-service-account-policy.json
 	json-dumps/compute-network-default.json \
 	json-dumps/compute-effective-firewalls-default.json
 
@@ -29,3 +32,23 @@ json-dumps/datafusion-instances.json:
 	$(CURL) -fsS \
 	  	'https://datafusion.googleapis.com/v1/projects/$(PROJECT_ID)/locations/-/instances' \
 		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/iam-policy.json:
+	$(CURL) -fsS \
+	  'https://cloudresourcemanager.googleapis.com/v1/projects/$(PROJECT_ID):getIamPolicy' \
+	  -X POST  --header "Content-Type:text/json" \
+	  -d "" \
+	  | $(JSON_CLEANER) other \
+	  | $(SED_SUBST_FAKE) >$@
+
+json-dumps/iam-service-accounts.json:
+	$(CURL) -fsS \
+	  'https://iam.googleapis.com/v1/projects/$(PROJECT_ID)/serviceAccounts' \
+	  | $(JSON_CLEANER) service-accounts \
+	  | $(SED_SUBST_FAKE) >$@
+
+json-dumps/iam-service-account-policy.json:
+	$(CURL) -fsS \
+	  'https://iam.googleapis.com/v1/projects/$(PROJECT_ID)/serviceAccounts/$(SERVICE_ACCOUNT):getIamPolicy' \
+	  | $(JSON_CLEANER) service-accounts \
+	  | $(SED_SUBST_FAKE) >$@

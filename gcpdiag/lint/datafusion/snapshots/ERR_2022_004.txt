@@ -1,0 +1,4 @@
+*  datafusion/ERR/2022_004: Cloud Data Fusion Service Account permissions
+   - gcpdiag-datafusion1-aaaa                                             [ OK ] 
+service-12340010@gcp-sa-datafusion.iam.gserviceaccount.com has roles/datafusion.serviceAgent
+

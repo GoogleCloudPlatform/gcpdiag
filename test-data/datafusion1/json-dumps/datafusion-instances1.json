@@ -1,0 +1,30 @@
+{
+  "instances": [
+{
+  "name": "projects/gcpdiag-datafusion1-aaaa/locations/us-central1/instances/bug-244411025-instance",
+  "description": "datafusion instance created for b/244411025",
+  "type": "BASIC",
+  "enableStackdriverLogging": true,
+  "enableStackdriverMonitoring": true,
+  "privateInstance": true,
+  "networkConfig": {
+    "network": "default",
+    "ipAllocation": "10.89.48.0/22"
+  },
+  "labels": {
+    "gcpdiag": "test"
+  },
+  "createTime": "2022-09-24T08:55:01.910558135Z",
+  "updateTime": "2022-09-24T09:11:48.951872261Z",
+  "state": "ACTIVE",
+  "serviceEndpoint": "https://bug-244411025-instance-gcpdiag-datafusion1-aaaa-dot-usc1.datafusion.googleusercontent.com",
+  "version": "6.7.1",
+  "serviceAccount": "cloud-datafusion-management-sa@r1718446da669444c-tp.iam.gserviceaccount.com",
+  "apiEndpoint": "https://bug-244411025-instance-gcpdiag-datafusion1-aaaa-dot-usc1.datafusion.googleusercontent.com/api",
+  "gcsBucket": "gs://df-3858180334335634755-7nugtmb344i63jb4aizbbqaaaa",
+  "p4ServiceAccount": "service-12340018@gcp-sa-datafusion.iam.gserviceaccount.com",
+  "tenantProjectId": "r1718446da669444c-tp",
+  "dataprocServiceAccount": "12340018-compute@developer.gserviceaccount.com"
+}
+  ]
+}
