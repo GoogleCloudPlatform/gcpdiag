@@ -1,0 +1,13 @@
+*  dataproc/WARN/2022_003: Dataproc VM Service Account has necessary permissions
+   - gcpdiag-dataproc1-aaaa/us-central1/good                              [FAIL]
+     Service account 12340005-compute@developer.gserviceaccount.com does not have enough permissions
+   - gcpdiag-dataproc1-aaaa/us-central1/test-best-practices-disabled      [FAIL]
+     Service account 12340005-compute@developer.gserviceaccount.com does not have enough permissions
+   - gcpdiag-dataproc1-aaaa/us-central1/test-best-practices-enabled       [ OK ]
+
+   VM Service Account should have required permissions to function correctly.
+   Though required permission may be granted via user-managed role or primitive
+   roles, it is recommended to grant roles/dataproc.worker on project level.
+
+   https://gcpdiag.dev/rules/dataproc/WARN/2022_003
+

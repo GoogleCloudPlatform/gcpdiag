@@ -17,7 +17,7 @@ from typing import Iterable, List
 
 from gcpdiag import caching, config, models
 from gcpdiag.lint import get_executor
-from gcpdiag.queries import apis, gce
+from gcpdiag.queries import apis, crm, gce
 
 
 class Cluster(models.Resource):
@@ -73,6 +73,13 @@ class Cluster(models.Resource):
   @property
   def image_version(self):
     return self._resource_data['config']['softwareConfig']['imageVersion']
+
+  @property
+  def vm_service_account_email(self):
+    sa = self._resource_data['config']['gceClusterConfig'].get('serviceAccount')
+    if sa is None:
+      sa = crm.get_project(self.project_id).default_compute_service_account
+    return sa
 
 
 class Region:
