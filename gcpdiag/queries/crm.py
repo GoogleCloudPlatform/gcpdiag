@@ -60,6 +60,10 @@ class Project(models.Resource):
   def short_path(self) -> str:
     return self._id
 
+  @property
+  def default_compute_service_account(self) -> str:
+    return f'{self.number}-compute@developer.gserviceaccount.com'
+
 
 @caching.cached_api_call
 def get_project(project_id: str) -> Project:

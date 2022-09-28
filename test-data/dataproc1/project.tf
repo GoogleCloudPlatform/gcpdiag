@@ -1,4 +1,4 @@
-resource "random_string" "project_id" {
+resource "random_string" "project_id_suffix" {
   length  = 8
   number  = true
   lower   = true
@@ -8,10 +8,13 @@ resource "random_string" "project_id" {
 
 resource "google_project" "project" {
   name            = "gcpdiag test - dataproc1"
-  project_id      = "gcpdiag-dataproc1-${random_string.project_id.id}"
+  project_id      = "gcpdiag-dataproc1-${random_string.project_id_suffix.id}"
   org_id          = var.folder_id == "" ? var.org_id : null
   folder_id       = var.folder_id != "" ? var.folder_id : null
   billing_account = var.billing_account_id
+  labels = {
+    gcpdiag : "test"
+  }
 }
 
 resource "google_project_service" "dataproc" {
@@ -25,7 +28,7 @@ output "project_id" {
 }
 
 output "project_id_suffix" {
-  value = random_string.project_id.id
+  value = random_string.project_id_suffix.id
 }
 
 output "project_nr" {
