@@ -1,0 +1,9 @@
+*  datafusion/ERR/2022_003: Private Data Fusion instance is peered to the tenant project.
+   - gcpdiag-datafusion1-aaaa/us-central1/my-instance                     [FAIL]
+     private instance network gcpdiag-datafusion1-aaaa/default is not correctly peered to tenant project fd736090192f24d58-tp.
+
+   Private Data Fusion instance requires peered connection to Data Fusion tenant
+   project.
+
+   https://gcpdiag.dev/rules/datafusion/ERR/2022_003
+
