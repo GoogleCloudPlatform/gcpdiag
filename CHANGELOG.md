@@ -1,12 +1,12 @@
-## 0.57 (2022-??-??)
+## 0.58 (2022-??-??)
 
 #### Deprecation
 
-- Default authentication using OAuth (`--auth-oauth`) is now deprecated and Application Default Credentials (`--auth-adc`) will be used instead. Alternatively you can use Service Account private key (`--auth-key FILE`).
+- TBD
 
 #### New rules
 
-- gke/WARN/2022/\_008: GKE connectivity: possible dns timeout in some gke versions
+- TBD
 
 #### Enhancements
 
@@ -15,6 +15,42 @@
 #### Fixes
 
 - TBD
+
+## 0.57 (2022-09-29)
+
+#### Deprecation
+
+- Default authentication using OAuth (`--auth-oauth`) is now deprecated and Application Default Credentials (`--auth-adc`) will be used instead. Alternatively you can use Service Account private key (`--auth-key FILE`).
+
+#### New rules
+
+- apigee/WARN/2022\_001: Verify whether all environments has been attached to Apigee X instances
+- apigee/WARN/2022\_002: Environment groups are created in the Apigee runtime plane
+- cloudrun/ERR/2022\_001: Cloud Run service agent has the run.serviceAgent role
+- datafusion/ERR/2022\_001: Firewall rules allow for Data Fusion to communicate to Dataproc VMs
+- datafusion/ERR/2022\_002: Private Data Fusion instance has valid host VPC IP range
+- dataproc/WARN/2022\_001: Dataproc VM Service Account has necessary permissions
+- dataproc/WARN/2022\_002: Job rate limit was not exceeded
+- gcf/ERR/2022\_002: Cloud Function deployment failure due to Resource Location Constraint
+- gcf/ERR/2022\_003: Function invocation interrupted due to memory limit exceeded
+- gke/WARN/2022/\_008: GKE connectivity: possible dns timeout in some gke versions
+- gke/WARN/2022\_007: GKE nodes need Storage API access scope to retrieve build artifacts
+- gke/WARN/2022\_008: GKE connectivity: possible dns timeout in some gke versions
+
+#### Enhancements
+
+- New product: Cloud Run
+- New product: Data Fusion
+
+#### Fixes
+
+- gcf/WARN/2021\_002: Added check for MATCH_STR
+- gcs/BP/2022\_001: KeyError: 'iamConfiguration'
+- gke/ERR/2022\_003: unhandled exception
+- gke/WARN/2022\_005: Incorrectly report missing "nvidia-driver-installer" daemonset
+- iam/SEC/2021\_001: unhandled exception
+
+
 
 ## 0.56 (2022-07-18)
 
