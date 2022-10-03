@@ -2,4 +2,9 @@
    - gcpdiag-dataproc1-aaaa/us-central1/good                              [ OK ]
    - gcpdiag-dataproc1-aaaa/us-central1/test-best-practices-disabled      [ OK ]
    - gcpdiag-dataproc1-aaaa/us-central1/test-best-practices-enabled       [ OK ]
+   - gcpdiag-dataproc1-aaaa/us-central1/test-deny-icmp                    [FAIL]
+
+   Cluster should normally spend most of the time in RUNNING state.
+
+   https://gcpdiag.dev/rules/dataproc/WARN/2021_001
 

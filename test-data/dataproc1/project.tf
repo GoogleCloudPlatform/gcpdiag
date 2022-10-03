@@ -17,6 +17,12 @@ resource "google_project" "project" {
   }
 }
 
+
+resource "google_project_service" "compute" {
+  project = google_project.project.project_id
+  service = "compute.googleapis.com"
+}
+
 resource "google_project_service" "dataproc" {
   project            = google_project.project.project_id
   service            = "dataproc.googleapis.com"

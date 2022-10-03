@@ -38,7 +38,7 @@ all:	\
 	json-dumps/iam-service-accounts.json \
 	json-dumps/monitoring-query.json \
 	json-dumps/project.json \
-	json-dumps/services.json
+	json-dumps/services.json \
 
 include ../Makefile.inc
 

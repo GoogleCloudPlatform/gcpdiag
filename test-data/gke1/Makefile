@@ -28,7 +28,7 @@ all:	\
 	json-dumps/compute-igs-empty.json \
 	json-dumps/compute-network-default.json \
 	json-dumps/compute-project.json \
-	json-dumps/compute-subnetworks-europe-west4.json \
+	json-dumps/compute-subnetworks-aggregated.json \
 	json-dumps/compute-subnetwork-policy.json \
 	json-dumps/compute-templates.json \
 	json-dumps/compute-regions.json \
@@ -47,6 +47,8 @@ all:	\
 	json-dumps/logging-entries-1.json \
 	json-dumps/project.json \
 	json-dumps/services.json
+
+include ../Makefile.inc
 
 # compute.googleapis.com
 
@@ -109,12 +111,6 @@ json-dumps/compute-templates.json:
 	$(CURL) -fsS \
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/instanceTemplates' \
 		| $(JSON_CLEANER) compute-templates \
-		| $(SED_SUBST_FAKE) >$@
-
-json-dumps/compute-subnetworks-%.json:
-	REGION=$(subst json-dumps/,,$*); \
-	$(CURL) -fsS \
-	        "https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/regions/$$REGION/subnetworks" \
 		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/compute-subnetwork-policy.json:

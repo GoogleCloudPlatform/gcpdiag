@@ -19,7 +19,7 @@ from gcpdiag import models
 from gcpdiag.queries import apis_stub, dataproc
 
 DUMMY_PROJECT_NAME = 'gcpdiag-dataproc1-aaaa'
-NUMBER_OF_CLUSTERS_IN_DATAPROC_JSON_DUMP_FILE = 3
+NUMBER_OF_CLUSTERS_IN_DATAPROC_JSON_DUMP_FILE = 4
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
@@ -65,3 +65,25 @@ class TestDataproc:
 
       if cluster.name == 'test-best-practices-disabled':
         assert not cluster.is_stackdriver_monitoring_enabled()
+
+  def test_zone(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = dataproc.get_clusters(context)
+    for cluster in clusters:
+      if cluster.name == 'test-best-practices-enabled':
+        assert cluster.zone == 'us-central1-b'
+
+  def test_is_gce_cluster(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = dataproc.get_clusters(context)
+    for cluster in clusters:
+      if cluster.name == 'test-best-practices-enabled':
+        assert cluster.is_gce_cluster
+
+  def test_gce_network_uri(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = dataproc.get_clusters(context)
+    uri = 'projects/gcpdiag-dataproc1-aaaa/global/networks/default'
+    for cluster in clusters:
+      if cluster.name == 'test-best-practices-enabled':
+        assert uri in cluster.gce_network_uri

@@ -40,6 +40,7 @@ class NetworkApiStub:
     else:
       self.mock_state = 'get_single_subnetwork'
       self.subnetwork = subnetwork
+      self.region = region or SUBNETWORKS_REGION
     self.project_id = project
     return self
 
@@ -69,10 +70,17 @@ class NetworkApiStub:
   def execute(self, num_retries=0):
     json_dir = apis_stub.get_json_dir(self.project_id)
     if self.mock_state == 'get_single_subnetwork':
-      with open(json_dir / f'compute-subnetworks-{SUBNETWORKS_REGION}.json',
+      with open(json_dir / 'compute-subnetworks-aggregated.json',
                 encoding='utf-8') as json_file:
-        for subnet in json.load(json_file)['items']:
+        items = json.load(json_file)['items']
+        region = 'regions/' + self.region
+        subnets = items[region]['subnetworks']
+        subnet_resp = None
+        for subnet in subnets:
           if subnet['name'] == self.subnetwork:
-            return subnet
-    else:
-      raise ValueError(f'cannot call method {self.mock_state} here')
+            subnet_resp = subnet
+            break
+        if subnet_resp:
+          return subnet_resp
+        else:
+          raise ValueError(f'cannot call method {self.mock_state} here')

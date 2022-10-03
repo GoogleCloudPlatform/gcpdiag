@@ -72,6 +72,10 @@ class Subnetwork(models.Resource):
   def is_private_ip_google_access(self) -> bool:
     return self._resource_data.get('privateIpGoogleAccess', False)
 
+  @property
+  def network(self):
+    return self._resource_data['network']
+
 
 class Router(models.Resource):
   """A VPC Router."""
@@ -259,7 +263,7 @@ def _port_in_port_range(port: int, port_range: str):
     return parts[0] == port
 
 
-def _vpc_allow_deny_match(protocol: str, port: int,
+def _vpc_allow_deny_match(protocol: str, port: Optional[int],
                           allowed: Iterable[Dict[str, Any]],
                           denied: Iterable[Dict[str, Any]]) -> Optional[str]:
   """Match protocol and port to allowed denied structure (VPC firewalls):
@@ -287,9 +291,10 @@ def _vpc_allow_deny_match(protocol: str, port: int,
         continue
       if 'ports' not in l4_rule:
         return action
-      for p_range in l4_rule['ports']:
-        if _port_in_port_range(port, p_range):
-          return action
+      if port is not None:
+        for p_range in l4_rule['ports']:
+          if _port_in_port_range(port, p_range):
+            return action
   return None
 
 
@@ -383,7 +388,7 @@ class _FirewallPolicy:
       *,
       src_ip: IPAddrOrNet,
       ip_protocol: str,
-      port: int,
+      port: Optional[int],
       #target_network: Optional[Network] = None, # useless unless targetResources set by API.
       target_service_account: Optional[str] = None
   ) -> FirewallCheckResult:
@@ -398,7 +403,8 @@ class _FirewallPolicy:
       if not _ip_match(src_ip, rule['match']['srcIpRanges'], ip_match_type):
         continue
       # ip_protocol and port
-      if not _l4_match(ip_protocol, port, rule['match']['layer4Configs']):
+      if port is not None and not _l4_match(ip_protocol, port,
+                                            rule['match']['layer4Configs']):
         continue
       # targetResources doesn't seem to get set. See also b/209450091.
       # if 'targetResources' in rule:
@@ -458,7 +464,8 @@ class _VpcFirewall:
       *,
       src_ip: IPAddrOrNet,
       ip_protocol: str,
-      port: int,
+      port: Optional[int],
+      # dest_ip: Optional[IPAddrOrNet] = None,
       source_service_account: Optional[str] = None,
       target_service_account: Optional[str] = None,
       source_tags: Optional[List[str]] = None,
@@ -555,16 +562,14 @@ class _VpcFirewall:
 
 
 class EffectiveFirewalls:
-  """Effective firewall rules for a VPC network.
+  """Effective firewall rules for a VPC network or Instance.
 
   Includes org/folder firewall policies)."""
   _resource_data: dict
-  _network: Network
   _policies: List[_FirewallPolicy]
   _vpc_firewall: _VpcFirewall
 
-  def __init__(self, network, resource_data):
-    self._network = network
+  def __init__(self, resource_data):
     self._resource_data = resource_data
     self._policies = []
     if 'firewallPolicys' in resource_data:
@@ -577,11 +582,14 @@ class EffectiveFirewalls:
       *,
       src_ip: IPAddrOrNet,
       ip_protocol: str,
-      port: int,
+      port: Optional[int] = None,
       source_service_account: Optional[str] = None,
       source_tags: Optional[List[str]] = None,
       target_service_account: Optional[str] = None,
       target_tags: Optional[List[str]] = None) -> FirewallCheckResult:
+
+    if ip_protocol != 'ICMP' and port is None:
+      raise ValueError('TCP and UDP must have port numbers')
 
     # Firewall policies (organization, folders)
     for p in self._policies:
@@ -631,13 +639,24 @@ class EffectiveFirewalls:
     return self._vpc_firewall.verify_ingress_rule_exists(name)
 
 
+class VPCEffectiveFirewalls(EffectiveFirewalls):
+  """Effective firewall rules for a VPC network.
+
+  Includes org/folder firewall policies)."""
+  _network: Network
+
+  def __init__(self, network, resource_data):
+    super().__init__(resource_data)
+    self._network = network
+
+
 @caching.cached_api_call()
 def _get_effective_firewalls(network: Network):
   compute = apis.get_api('compute', 'v1', network.project_id)
   request = compute.networks().getEffectiveFirewalls(project=network.project_id,
                                                      network=network.name)
   response = request.execute(num_retries=config.API_RETRIES)
-  return EffectiveFirewalls(network, response)
+  return VPCEffectiveFirewalls(network, response)
 
 
 @caching.cached_api_call(in_memory=True)
@@ -647,6 +666,16 @@ def get_network(project_id: str, network_name: str) -> Network:
   request = compute.networks().get(project=project_id, network=network_name)
   response = request.execute(num_retries=config.API_RETRIES)
   return Network(project_id, response)
+
+
+def get_subnetwork_from_url(url: str) -> Subnetwork:
+  """Returns Subnetwork object given subnetwork url"""
+  m = re.match((r'https://www.googleapis.com/compute/v1/projects/'
+                r'([^/]+)/regions/([^/]+)/subnetworks/([^/]+)$'), url)
+  if not m:
+    raise ValueError(f"can't parse network url: {url}")
+  (project_id, region, subnetwork_name) = (m.group(1), m.group(2), m.group(3))
+  return get_subnetwork(project_id, region, subnetwork_name)
 
 
 def get_network_from_url(url: str) -> Network:

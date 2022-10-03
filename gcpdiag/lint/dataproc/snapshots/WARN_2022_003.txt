@@ -4,6 +4,8 @@
    - gcpdiag-dataproc1-aaaa/us-central1/test-best-practices-disabled      [FAIL]
      Service account 12340005-compute@developer.gserviceaccount.com does not have enough permissions
    - gcpdiag-dataproc1-aaaa/us-central1/test-best-practices-enabled       [ OK ]
+   - gcpdiag-dataproc1-aaaa/us-central1/test-deny-icmp                    [FAIL]
+     Service account 12340005-compute@developer.gserviceaccount.com does not have enough permissions
 
    VM Service Account should have required permissions to function correctly.
    Though required permission may be granted via user-managed role or primitive
