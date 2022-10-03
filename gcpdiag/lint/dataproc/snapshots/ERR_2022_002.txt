@@ -2,4 +2,5 @@
    - gcpdiag-dataproc1-aaaa/us-central1/good                              [ OK ]
    - gcpdiag-dataproc1-aaaa/us-central1/test-best-practices-disabled      [ OK ]
    - gcpdiag-dataproc1-aaaa/us-central1/test-best-practices-enabled       [ OK ]
+   - gcpdiag-dataproc1-aaaa/us-central1/test-deny-icmp                    [ OK ]
 

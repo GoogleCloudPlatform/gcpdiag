@@ -230,3 +230,18 @@ class TestGce:
         assert d.in_use is False
       else:
         assert d.in_use is True
+
+  def test_get_instance(self):
+    instance = gce.get_instance(project_id=DUMMY_PROJECT_NAME,
+                                zone=DUMMY_ZONE,
+                                instance_name=DUMMY_INSTANCE1_NAME)
+    assert instance.name == DUMMY_INSTANCE1_NAME
+
+  def test_get_instance_interface_effective_firewalls(self):
+    # use default network interface as nic0
+    instance = gce.get_instance(project_id=DUMMY_PROJECT_NAME,
+                                zone=DUMMY_ZONE,
+                                instance_name=DUMMY_INSTANCE1_NAME)
+    firewalls = gce.get_instance_interface_effective_firewalls(
+        instance=instance, nic='nic0')
+    assert isinstance(firewalls, gce.InstanceEffectiveFirewalls)

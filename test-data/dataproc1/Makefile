@@ -1,10 +1,12 @@
-PROJECT_ID  := $(shell terraform output  project_id)
-PROJECT_ID_SUFFIX := $(shell terraform output project_id_suffix)
-PROJECT_NR  := $(shell terraform output project_nr)
-ORG_ID      := $(shell terraform output org_id)
+PROJECT_ID  := $(shell terraform output -raw project_id)
+PROJECT_ID_SUFFIX := $(shell terraform output -raw project_id_suffix)
+PROJECT_NR  := $(shell terraform output -raw project_nr)
+ORG_ID      := $(shell terraform output -raw org_id)
 CURL         = ../../bin/curl-wrap.sh
 JSON_CLEANER = ../../bin/json-cleaner
 REGION_1     = us-central1
+REGION       = europe-west4
+ZONE         = us-central1-a
 
 FAKE_PROJECT_ID_SUFFIX = aaaa
 FAKE_PROJECT_NR = 12340005
@@ -19,7 +21,11 @@ all:	\
 	json-dumps/dataproc-clusters-$(REGION_1).json \
 	json-dumps/services.json \
 	json-dumps/iam-service-accounts.json \
-	json-dumps/iam-policy.json
+	json-dumps/iam-policy.json \
+	json-dumps/compute-instances-$(ZONE).json \
+	json-dumps/compute-subnetworks-aggregated.json \
+
+include ../Makefile.inc
 
 json-dumps/project.json:
 	$(CURL) -fsS \

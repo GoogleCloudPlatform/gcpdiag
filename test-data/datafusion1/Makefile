@@ -26,7 +26,8 @@ all:	\
 	json-dumps/compute-network-default.json \
 	json-dumps/compute-subnetworks-europe-west4.json \
 	json-dumps/compute-subnetworks-us-central1.json \
-	json-dumps/compute-effective-firewalls-default.json
+	json-dumps/compute-effective-firewalls-default.json \
+	json-dumps/compute-subnetworks-aggregated.json \
 
 include ../Makefile.inc
 

@@ -13,11 +13,12 @@
 # limitations under the License.
 """Queries related to Dataproc."""
 
-from typing import Iterable, List, Mapping
+import re
+from typing import Iterable, List, Mapping, Optional
 
 from gcpdiag import caching, config, models
 from gcpdiag.lint import get_executor
-from gcpdiag.queries import apis, crm, gce
+from gcpdiag.queries import apis, crm, gce, network
 
 
 class Cluster(models.Resource):
@@ -56,6 +57,16 @@ class Cluster(models.Resource):
         '/')[-1][0:-2]
 
   @property
+  def zone(self) -> Optional[str]:
+    zone = self._resource_data.get('config', {}).get('gceClusterConfig',
+                                                     {}).get('zoneUri')
+    if zone:
+      m = re.search(r'/zones/([^/]+)$', zone)
+      if m:
+        return m.group(1)
+    raise RuntimeError(f"can't determine zone for cluster {self.name}")
+
+  @property
   def full_path(self) -> str:
     return f'projects/{self.project_id}/regions/{self.region}/clusters/{self.name}'
 
@@ -80,6 +91,32 @@ class Cluster(models.Resource):
     if sa is None:
       sa = crm.get_project(self.project_id).default_compute_service_account
     return sa
+
+  def is_gce_cluster(self) -> bool:
+    return bool(self._resource_data.get('config', {}).get('gceClusterConfig'))
+
+  @property
+  def gce_network_uri(self) -> Optional[str]:
+    """Get network uri from cluster network or subnetwork"""
+    if not self.is_gce_cluster:
+      raise RuntimeError(
+          'Can not return network URI for a Dataproc on GKE cluster')
+    network_uri = self._resource_data.get('config',
+                                          {}).get('gceClusterConfig',
+                                                  {}).get('networkUri')
+    if not network_uri:
+      subnetwork_uri = self._resource_data.get('config',
+                                               {}).get('gceClusterConfig',
+                                                       {}).get('subnetworkUri')
+      network_uri = network.get_subnetwork_from_url(subnetwork_uri).network
+    return network_uri
+
+  @property
+  def is_single_node_cluster(self) -> bool:
+    workers = self._resource_data.get('config',
+                                      {}).get('workerConfig',
+                                              {}).get('numInstances', 0)
+    return workers == 0
 
 
 class Region:

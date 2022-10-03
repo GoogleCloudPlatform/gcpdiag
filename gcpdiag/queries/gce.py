@@ -271,6 +271,15 @@ class Instance(models.Resource):
             f"can't determine region of instance {self.name}, zone isn't set!")
     return self._region
 
+  @property
+  def zone(self) -> str:
+    zone_uri = self._resource_data['zone']
+    m = re.search(r'/zones/([^/]+)$', zone_uri)
+    if m:
+      return m.group(1)
+    else:
+      raise RuntimeError(f"can't determine zone of instance {self.name}")
+
   def is_serial_port_logging_enabled(self) -> bool:
     value = self.get_metadata('serial-port-logging-enable')
     return bool(value and value.upper() == 'TRUE')
@@ -303,6 +312,18 @@ class Instance(models.Resource):
         ipaddress.ip_address(nic['networkIP'])
         for nic in self._resource_data['networkInterfaces']
     ]
+
+  @property
+  def get_network_interfaces(self):
+    return self._resource_data['networkInterfaces']
+
+  def get_network_ip_for_instance_interface(
+      self, network: str) -> Optional[ipaddress.IPv4Address]:
+    """Get the network ip for a nic given a network name"""
+    for nic in self._resource_data['networkInterfaces']:
+      if nic.get('network') == network:
+        return ipaddress.ip_network(nic.get('networkIP'))
+    return None
 
   def secure_boot_enabled(self) -> bool:
     if 'shieldedInstanceConfig' in self._resource_data:
@@ -437,6 +458,17 @@ def get_gce_zones(project_id: str) -> Set[str]:
     return {item['name'] for item in response['items'] if 'name' in item}
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
+
+
+@caching.cached_api_call(in_memory=True)
+def get_instance(project_id: str, zone: str, instance_name: str) -> Instance:
+  """Returns instance object matching instance name and zone"""
+  compute = apis.get_api('compute', 'v1', project_id)
+  request = compute.instances().get(project=project_id,
+                                    zone=zone,
+                                    instance=instance_name)
+  response = request.execute(num_retries=config.API_RETRIES)
+  return Instance(project_id, resource_data=response)
 
 
 @caching.cached_api_call(in_memory=True)
@@ -658,3 +690,30 @@ def get_all_disks(project_id: str) -> Iterable[Disk]:
 
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
+
+
+class InstanceEffectiveFirewalls(network_q.EffectiveFirewalls):
+  """Effective firewall rules for a network interace on a VM instance.
+
+  Includes org/folder firewall policies)."""
+  _instance: Instance
+  _nic: str
+
+  def __init__(self, instance, nic, resource_data):
+    super().__init__(resource_data)
+    self._instance = instance
+    self._nic = nic
+
+
+@caching.cached_api_call(in_memory=True)
+def get_instance_interface_effective_firewalls(
+    instance: Instance, nic: str) -> InstanceEffectiveFirewalls:
+  """Return effective firewalls for a network interface on the instance"""
+  compute = apis.get_api('compute', 'v1', instance.project_id)
+  request = compute.instances().getEffectiveFirewalls(
+      project=instance.project_id,
+      zone=instance.zone,
+      instance=instance.name,
+      networkInterface=nic)
+  response = request.execute(num_retries=config.API_RETRIES)
+  return InstanceEffectiveFirewalls(Instance, nic, response)

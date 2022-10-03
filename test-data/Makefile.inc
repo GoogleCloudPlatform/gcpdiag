@@ -84,10 +84,11 @@ json-dumps/compute-regions.json:
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/regions' \
 		| $(SED_SUBST_FAKE) >$@
 
-json-dumps/compute-subnetworks-%.json:
+json-dumps/compute-subnetworks-aggregated.json:
 	$(CURL) -fsS \
-	        "https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/regions/$*/subnetworks" \
-		| $(SED_SUBST_FAKE) >$@
+	'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/aggregated/subnetworks' \
+	| $(JSON_CLEANER) other \
+	| $(SED_SUBST_FAKE) >$@
 
 json-dumps/compute-templates.json:
 	$(CURL) -fsS \

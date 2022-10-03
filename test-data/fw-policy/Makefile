@@ -24,7 +24,7 @@ all:	\
 	json-dumps/compute-migs-empty.json \
 	json-dumps/compute-network-default.json \
 	json-dumps/compute-project.json \
-	json-dumps/compute-subnetworks-europe-west4.json \
+	json-dumps/compute-subnetworks-aggregated.json \
 	json-dumps/compute-zones.json \
 	json-dumps/iam-policy.json \
 	json-dumps/iam-roles-custom.json \

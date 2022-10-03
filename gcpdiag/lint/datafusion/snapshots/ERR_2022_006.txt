@@ -1,8 +1,3 @@
 *  datafusion/ERR/2022_006: Private Google Access enabled for private Data Fusion instance subnetwork.
-   - gcpdiag-datafusion1-aaaa/us-central1/my-instance                     [FAIL]
-     Private Google Access is not enabled on subnetwork with region us-central1 in network gcpdiag-datafusion1-aaaa/default
-
-   Private Google Access required on private Data Fusion instance subnetwork.
-
-   https://gcpdiag.dev/rules/datafusion/ERR/2022_006
+   (Error: 'regions/us-east7')                                            [SKIP]
 

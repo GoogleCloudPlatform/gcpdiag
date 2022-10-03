@@ -17,6 +17,7 @@
 
 Instead of doing real API calls, we return test JSON data.
 """
+import json
 
 from gcpdiag.queries import apis_stub, lb_stub, network_stub
 
@@ -35,6 +36,7 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
   # gce_api.instanceGroupManagers().list(project=project_id, zone=zone)
   # gce_api.instanceGroups().list(project=project_id, zone=zone)
   # gce_api.disks().list(project=project_id, zone=zone)
+  # gce_api.instances().get(project=project_id, zone=zone, instance=instance_name)
 
   def __init__(self, mock_state='init', project_id=None, zone=None, page=1):
     self.mock_state = mock_state
@@ -91,9 +93,18 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
       self._fail_count = 0
     return batch_api
 
-  def get(self, project):
+  def get(self, project, zone=None, instance=None):
     if self.mock_state == 'projects':
       return apis_stub.RestCallStub(project, 'compute-project')
+    elif self.mock_state == 'instances':
+      if instance:
+        self.mock_state = 'instance'
+        self.instance = instance
+        self.project = project
+        self.zone = zone
+        return self
+      else:
+        return apis_stub.RestCallStub(project, f'compute-instances-{zone}')
 
   def projects(self):
     return ComputeEngineApiStub('projects')
@@ -111,5 +122,33 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
     return lb_stub.LbApiStub(mock_state='backendServices')
 
   def execute(self, num_retries=0):
+    json_dir = apis_stub.get_json_dir(self.project)
+    with open(json_dir / f'compute-instances-{self.zone}.json',
+              encoding='utf-8') as json_file:
+      instances = json.load(json_file)['items']
+      # get instance
+      if self.mock_state == 'instance':
+        for instance in instances:
+          if instance['name'] == self.instance:
+            return instance
+      # get network interface
+      elif self.mock_state == 'effective_firewalls':
+        for instance in instances:
+          if instance['name'] == self.instance:
+            interfaces = instance['networkInterfaces']
+            if self.network_interface:
+              for interface in interfaces:
+                if interface['name'] == self.network_interface:
+                  return interface
+            else:
+              return interfaces
     raise ValueError(
         f"can't call this method here (mock_state: {self.mock_state}")
+
+  def getEffectiveFirewalls(self, project, zone, instance, networkInterface):
+    self.mock_state = 'effective_firewalls'
+    self.instance = instance
+    self.project = project
+    self.zone = zone
+    self.network_interface = networkInterface
+    return self
