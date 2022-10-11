@@ -1,8 +1,6 @@
 *  gke/WARN/2022_005: NVIDIA GPU device drivers are installed on GKE nodes with GPU
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1/default-pool           [SKIP]
-     no nodes with GPU found
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2/default-pool           [SKIP]
-     no nodes with GPU found
+   (no nodepools found)                                                   [SKIP]
+   (no nodepools found)                                                   [SKIP]
    - gcpdiag-gke1-aaaa/europe-west4/gke2/default-pool                     [SKIP]
      no nodes with GPU found
    - gcpdiag-gke1-aaaa/europe-west4/gke3/default-pool                     [SKIP]

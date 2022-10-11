@@ -1,0 +1,16 @@
+*  gke/BP/2022_004: Enable http load balancing on clusters to use GKE ingress and container-native load balancing.
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [FAIL]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [ OK ]
+
+   If this is disabled GKE ingresses will be stuck in the creating state.
+   Similarly if this is disabled after GKE ingresses have been created but
+   before they are deleted the GKE ingresses will be stuck in the deleting
+   state.
+
+   https://gcpdiag.dev/rules/gke/BP/2022_004
+

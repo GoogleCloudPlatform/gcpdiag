@@ -251,6 +251,12 @@ class Cluster(models.Resource):
   def has_workload_identity_enabled(self) -> bool:
     return len(self._resource_data.get('workloadIdentityConfig', {})) > 0
 
+  def has_http_load_balancing_enabled(self) -> bool:
+    # HTTP load balancing needs to be enabled to use GKE ingress
+    return not (get_path(self._resource_data,
+                         ('addonsConfig', 'httpLoadBalancing', 'disabled'),
+                         default=None) is True)
+
   def has_intra_node_visibility_enabled(self) -> bool:
     if ('networkConfig' in self._resource_data and
         'enableIntraNodeVisibility' in self._resource_data['networkConfig']):

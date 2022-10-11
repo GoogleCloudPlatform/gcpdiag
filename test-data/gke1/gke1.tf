@@ -69,4 +69,9 @@ resource "google_container_cluster" "gke1" {
   resource_labels = {
     foo = "bar"
   }
+  addons_config {
+    http_load_balancing {
+      disabled = true
+    }
+  }
 }
