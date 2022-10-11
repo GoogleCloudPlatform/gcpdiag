@@ -1,7 +1,8 @@
 *  gke/ERR/2021_014: GKE masters of private clusters can reach the nodes.
    - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [SKIP]
-     public cluster
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [ OK ]
+     no nodepools
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [SKIP]
+     no nodepools
    - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [SKIP]
      public cluster
    - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [SKIP]

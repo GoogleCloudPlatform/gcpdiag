@@ -120,6 +120,16 @@ class TestCluster:
     c = clusters[DUMMY_CLUSTER4_NAME]
     assert c.has_workload_identity_enabled()
 
+  def test_has_http_load_balancing_enabled(self):
+    """has_http_load_balancing_enabled should return true if the GKE cluster has
+    http load balancing enabled"""
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    assert not c.has_http_load_balancing_enabled()
+    c = clusters[DUMMY_CLUSTER4_NAME]
+    assert c.has_http_load_balancing_enabled()
+
   def test_has_default_service_account(self):
     """has_default_service_account should return true for GKE node-pools with
     the default GCE SA."""
