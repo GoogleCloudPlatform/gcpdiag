@@ -16,6 +16,7 @@
 """lint command: find potential issues in GCP projects."""
 
 import abc
+import asyncio
 import concurrent.futures
 import dataclasses
 import enum
@@ -27,7 +28,7 @@ import pkgutil
 import re
 import sys
 from collections.abc import Callable
-from typing import Any, Dict, Iterable, Iterator, List, Optional
+from typing import Any, Dict, Iterable, Iterator, List, Optional, Protocol
 
 import googleapiclient.errors
 
@@ -60,7 +61,8 @@ class LintRule:
   rule_id: str
   short_desc: str
   long_desc: str
-  run_rule_f: Callable
+  run_rule_f: Optional[Callable] = None
+  async_run_rule_f: Optional[Callable] = None
   prepare_rule_f: Optional[Callable] = None
   prefetch_rule_f: Optional[Callable] = None
   prefetch_rule_future: Optional[concurrent.futures.Future] = None
@@ -297,14 +299,36 @@ def get_module_function_or_none(module, name):
   return None if len(members) < 1 else members[0][1]
 
 
+class ExecutionStrategy(Protocol):
+
+  def run_rules(self, context: models.Context, report: LintReport,
+                rules: List[LintRule]) -> None:
+    pass
+
+
+class SequentialExecutionStrategy:
+  strategies: List[ExecutionStrategy]
+
+  def __init__(self, strategies: List[ExecutionStrategy]) -> None:
+    self.strategies = strategies
+
+  def run_rules(self, context: models.Context, report: LintReport,
+                rules: List[LintRule]) -> None:
+    for strategy in self.strategies:
+      strategy.run_rules(context, report, rules)
+
+
 class LintRuleRepository:
   """Repository of Lint rule which is also used to run the rules."""
   rules: List[LintRule]
+  execution_strategy: ExecutionStrategy
 
   def __init__(self, load_extended: bool = False):
     self.rules = []
     self.load_extended = load_extended
-    self.execution_strategies = [SyncExecutionStrategy()]
+    self.execution_strategy = SequentialExecutionStrategy(
+        strategies=[SyncExecutionStrategy(),
+                    AsyncExecutionStrategy()])
 
   def register_rule(self, rule: LintRule):
     self.rules.append(rule)
@@ -376,6 +400,7 @@ class LintRuleRepository:
                     rule_class=LintRuleClass(rule_class.upper()),
                     rule_id=rule_id,
                     run_rule_f=run_rule_f,
+                    async_run_rule_f=async_run_rule_f,
                     prepare_rule_f=prepare_rule_f,
                     prefetch_rule_f=prefetch_rule_f,
                     short_desc=short_desc,
@@ -402,8 +427,7 @@ class LintRuleRepository:
     # Make sure the rules are sorted alphabetically
     self.rules.sort(key=str)
     rules_to_run = list(self.list_rules(include, exclude))
-    for execution_strategy in self.execution_strategies:
-      execution_strategy.run_rules(context, report, rules_to_run)
+    self.execution_strategy.run_rules(context, report, rules_to_run)
     return report.finish(context)
 
   def list_rules(
@@ -418,6 +442,58 @@ class LintRuleRepository:
         if any(x.match_rule(rule) for x in exclude):
           continue
       yield rule
+
+
+class DelayedRuleReport:
+  'Helper class to make sure that report is accessed in synchronized manner'
+
+  def __init__(self, report, rule, context):
+    self.report = report
+    self.rule = rule
+    self.context = context
+    self.delayed_report_actions = []
+
+  def append_result(self):
+    rule_report = self.report.rule_start(self.rule, self.context)
+    for action in self.delayed_report_actions:
+      action(rule_report)
+    self.report.rule_end(self.rule, self.context)
+
+  def add_skipped(self,
+                  resource: Optional[models.Resource],
+                  reason: str,
+                  short_info: str = None):
+    self.delayed_report_actions.append(
+        lambda rule_report: rule_report.add_skipped(resource, reason, short_info
+                                                   ))
+
+  def add_ok(self, resource: models.Resource, short_info: str = ''):
+    self.delayed_report_actions.append(
+        lambda rule_report: rule_report.add_ok(resource, short_info))
+
+  def add_failed(self,
+                 resource: models.Resource,
+                 reason: str = None,
+                 short_info: str = None):
+    self.delayed_report_actions.append(lambda rule_report: rule_report.
+                                       add_failed(resource, reason, short_info))
+
+
+class AsyncExecutionStrategy:
+  'Execute async rules'
+
+  def run_rules(self, context, report, rules):
+    rules = [r for r in rules if r.async_run_rule_f]
+    asyncio.run(self._run_all(context, report, rules))
+
+  async def _run_all(self, context, report, rules):
+    awaitables = [self._run_async_rule(r, context, report) for r in rules]
+    await asyncio.gather(*awaitables)
+
+  async def _run_async_rule(self, rule, context, report):
+    rule_report = DelayedRuleReport(report, rule, context)
+    await rule.async_run_rule_f(context, rule_report)
+    rule_report.append_result()
 
 
 class SyncExecutionStrategy:
