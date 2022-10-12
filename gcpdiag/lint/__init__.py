@@ -294,6 +294,7 @@ class LintRuleRepository:
   def __init__(self, load_extended: bool = False):
     self.rules = []
     self.load_extended = load_extended
+    self.execution_strategies = [SyncExecutionStrategy()]
 
   def register_rule(self, rule: LintRule):
     self.rules.append(rule)
@@ -396,9 +397,31 @@ class LintRuleRepository:
 
     # Make sure the rules are sorted alphabetically
     self.rules.sort(key=str)
+    rules_to_run = list(self.list_rules(include, exclude))
+    for execution_strategy in self.execution_strategies:
+      execution_strategy.run_rules(context, report, rules_to_run)
+    return report.finish(context)
 
+  def list_rules(
+      self,
+      include: Iterable[LintRulesPattern] = None,
+      exclude: Iterable[LintRulesPattern] = None) -> Iterator[LintRule]:
+    for rule in self.rules:
+      if include:
+        if not any(x.match_rule(rule) for x in include):
+          continue
+      if exclude:
+        if any(x.match_rule(rule) for x in exclude):
+          continue
+      yield rule
+
+
+class SyncExecutionStrategy:
+  'Execute rules using thread pool'
+
+  def run_rules(self, context, report, rules):
     # Run the "prepare_rule" functions first, in a single thread.
-    for rule in self.list_rules(include, exclude):
+    for rule in rules:
       if rule.prepare_rule_f:
         rule.prepare_rule_f(context)
 
@@ -410,7 +433,7 @@ class LintRuleRepository:
 
     # Run the "prefetch_rule" functions with multiple worker threads to speed up
     # execution of the "run_rule" executions later.
-    for rule in self.list_rules(include, exclude):
+    for rule in rules:
       if rule.prefetch_rule_f:
         rule.prefetch_rule_future = executor.submit(rule.prefetch_rule_f,
                                                     context)
@@ -418,7 +441,7 @@ class LintRuleRepository:
     # While the prefetch_rule functions are still being executed in multiple
     # threads, start executing the rules, but block and wait in case the
     # prefetch for a specific rule is still running.
-    for rule in self.list_rules(include, exclude):
+    for rule in rules:
       rule_report = report.rule_start(rule, context)
 
       try:
@@ -439,17 +462,3 @@ class LintRuleRepository:
                         type(err).__name__, err, rule)
         report.add_skipped(rule, context, None, f'Error: {err}', None)
       report.rule_end(rule, context)
-    return report.finish(context)
-
-  def list_rules(
-      self,
-      include: Iterable[LintRulesPattern] = None,
-      exclude: Iterable[LintRulesPattern] = None) -> Iterator[LintRule]:
-    for rule in self.rules:
-      if include:
-        if not any(x.match_rule(rule) for x in include):
-          continue
-      if exclude:
-        if any(x.match_rule(rule) for x in exclude):
-          continue
-      yield rule
