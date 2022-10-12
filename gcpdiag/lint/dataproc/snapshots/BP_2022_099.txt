@@ -1,1 +1,11 @@
+*  dataproc/BP/2022_099: Dummy async rule
+   - fake resource 1                                                      [ OK ] test ok
+   - fake resource 2                                                      [SKIP]
+     test skipped
+   - fake resource 3                                                      [FAIL]
+     test failed
+
+   Dummy async rule
+
+   https://gcpdiag.dev/rules/dataproc/BP/2022_099
 

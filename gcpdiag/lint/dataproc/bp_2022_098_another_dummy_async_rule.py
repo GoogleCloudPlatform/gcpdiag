@@ -1,6 +1,6 @@
-"""Dummy async rule
+"""Another dummy async rule
 
-Dummy async rule
+Another dummy async rule
 """
 
 import asyncio
@@ -24,8 +24,8 @@ async def async_run_rule(context: models.Context,
                          report: lint.LintReportRuleInterface) -> None:
   # Some async sleep calls to pretend we're doing some work
   await asyncio.sleep(1)
-  report.add_ok(FakeResource(text='fake resource 1'), 'test ok')
+  report.add_ok(FakeResource(text='fake resource 4'), 'test ok')
   await asyncio.sleep(1)
-  report.add_skipped(FakeResource(text='fake resource 2'), 'test skipped')
+  report.add_skipped(FakeResource(text='fake resource 5'), 'test skipped')
   await asyncio.sleep(1)
-  report.add_failed(FakeResource(text='fake resource 3'), 'test failed')
+  report.add_failed(FakeResource(text='fake resource 6'), 'test failed')
