@@ -287,6 +287,16 @@ class NotLintRule(Exception):
   pass
 
 
+def is_function_named(name):
+  return lambda obj: inspect.isfunction(obj) and obj.__name__ == name
+
+
+def get_module_function_or_none(module, name):
+  members = inspect.getmembers(module, is_function_named(name))
+  assert 0 <= len(members) <= 1
+  return None if len(members) < 1 else members[0][1]
+
+
 class LintRuleRepository:
   """Repository of Lint rule which is also used to run the rules."""
   rules: List[LintRule]
@@ -330,27 +340,21 @@ class LintRuleRepository:
     module = importlib.import_module(name)
 
     # Get a reference to the run_rule() function.
-    run_rule_f = None
-    for f_name, f in inspect.getmembers(module, inspect.isfunction):
-      if f_name == 'run_rule':
-        run_rule_f = f
-        break
-    if not run_rule_f:
-      raise RuntimeError(f'module {module} doesn\'t have a run_rule function')
+    run_rule_f = get_module_function_or_none(module, 'run_rule')
+
+    # Get a reference to the async_run_rule() function.
+    async_run_rule_f = get_module_function_or_none(module, 'async_run_rule')
+
+    if not (run_rule_f or async_run_rule_f):
+      raise RuntimeError(
+          f'module {module} doesn\'t have a run_rule or an async_run_rule function'
+      )
 
     # Get a reference to the prepare_rule() function.
-    prepare_rule_f = None
-    for f_name, f in inspect.getmembers(module, inspect.isfunction):
-      if f_name == 'prepare_rule':
-        prepare_rule_f = f
-        break
+    prepare_rule_f = get_module_function_or_none(module, 'prepare_rule')
 
     # Get a reference to the prefetch_rule() function.
-    prefetch_rule_f = None
-    for f_name, f in inspect.getmembers(module, inspect.isfunction):
-      if f_name == 'prefetch_rule':
-        prefetch_rule_f = f
-        break
+    prefetch_rule_f = get_module_function_or_none(module, 'prefetch_rule')
 
     # Get module docstring.
     doc = inspect.getdoc(module)
@@ -420,8 +424,11 @@ class SyncExecutionStrategy:
   'Execute rules using thread pool'
 
   def run_rules(self, context, report, rules):
+
+    rules_to_run = [r for r in rules if r.run_rule_f]
+
     # Run the "prepare_rule" functions first, in a single thread.
-    for rule in rules:
+    for rule in rules_to_run:
       if rule.prepare_rule_f:
         rule.prepare_rule_f(context)
 
@@ -433,7 +440,7 @@ class SyncExecutionStrategy:
 
     # Run the "prefetch_rule" functions with multiple worker threads to speed up
     # execution of the "run_rule" executions later.
-    for rule in rules:
+    for rule in rules_to_run:
       if rule.prefetch_rule_f:
         rule.prefetch_rule_future = executor.submit(rule.prefetch_rule_f,
                                                     context)
@@ -441,7 +448,7 @@ class SyncExecutionStrategy:
     # While the prefetch_rule functions are still being executed in multiple
     # threads, start executing the rules, but block and wait in case the
     # prefetch for a specific rule is still running.
-    for rule in rules:
+    for rule in rules_to_run:
       rule_report = report.rule_start(rule, context)
 
       try:
