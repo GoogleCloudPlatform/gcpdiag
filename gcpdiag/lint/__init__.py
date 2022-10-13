@@ -318,26 +318,61 @@ class SequentialExecutionStrategy:
       strategy.run_rules(context, report, rules)
 
 
+class RuleModule:
+  'Encapsulate actions related to a specific python rule module'
+
+  def __init__(self, python_module):
+    self.module = python_module
+
+  def get_method(self, method_name):
+    return get_module_function_or_none(self.module, method_name)
+
+  def get_module_doc(self):
+    return inspect.getdoc(self.module)
+
+
+class DefaultPythonModulesGateway:
+  'Encapsulate actions related to python rule modules'
+
+  def list_pkg_modules(self, pkg):
+    prefix = pkg.__name__ + '.'
+    return [p[1] for p in pkgutil.iter_modules(pkg.__path__, prefix)]
+
+  def get_module(self, name):
+    python_module = importlib.import_module(name)
+    return RuleModule(python_module)
+
+  def __str__(self):
+    return str(self.module)
+
+
+class PythonModulesGateway(Protocol):
+
+  def list_pkg_modules(self, pkg: str) -> Iterable[str]:
+    pass
+
+  def get_module(self, name: str) -> RuleModule:
+    pass
+
+
 class LintRuleRepository:
   """Repository of Lint rule which is also used to run the rules."""
   rules: List[LintRule]
   execution_strategy: ExecutionStrategy
 
-  def __init__(self, load_extended: bool = False):
+  def __init__(self,
+               load_extended: bool = False,
+               execution_strategy: ExecutionStrategy = None,
+               modules_gateway: PythonModulesGateway = None):
     self.rules = []
     self.load_extended = load_extended
-    self.execution_strategy = SequentialExecutionStrategy(
+    self.execution_strategy = execution_strategy or SequentialExecutionStrategy(
         strategies=[SyncExecutionStrategy(),
                     AsyncExecutionStrategy()])
+    self.modules_gateway = modules_gateway or DefaultPythonModulesGateway()
 
   def register_rule(self, rule: LintRule):
     self.rules.append(rule)
-
-  @staticmethod
-  def _iter_namespace(ns_pkg):
-    prefix = ns_pkg.__name__ + '.'
-    for p in pkgutil.iter_modules(ns_pkg.__path__, prefix):
-      yield p[1]
 
   def get_rule_by_module_name(self, name):
     # Skip code tests
@@ -360,14 +395,13 @@ class LintRuleRepository:
 
     product, rule_class, rule_id = m.group('product', 'class_prefix', 'rule_id')
 
-    # Import the module.
-    module = importlib.import_module(name)
+    module = self.modules_gateway.get_module(name)
 
     # Get a reference to the run_rule() function.
-    run_rule_f = get_module_function_or_none(module, 'run_rule')
+    run_rule_f = module.get_method('run_rule')
 
     # Get a reference to the async_run_rule() function.
-    async_run_rule_f = get_module_function_or_none(module, 'async_run_rule')
+    async_run_rule_f = module.get_method('async_run_rule')
 
     if not (run_rule_f or async_run_rule_f):
       raise RuntimeError(
@@ -375,13 +409,13 @@ class LintRuleRepository:
       )
 
     # Get a reference to the prepare_rule() function.
-    prepare_rule_f = get_module_function_or_none(module, 'prepare_rule')
+    prepare_rule_f = module.get_method('prepare_rule')
 
     # Get a reference to the prefetch_rule() function.
-    prefetch_rule_f = get_module_function_or_none(module, 'prefetch_rule')
+    prefetch_rule_f = module.get_method('prefetch_rule')
 
     # Get module docstring.
-    doc = inspect.getdoc(module)
+    doc = module.get_module_doc()
     if not doc:
       raise RuntimeError(f'module {module} doesn\'t provide a module docstring')
     # The first line is the short "good state description"
@@ -408,7 +442,7 @@ class LintRuleRepository:
     return rule
 
   def load_rules(self, pkg):
-    for name in LintRuleRepository._iter_namespace(pkg):
+    for name in self.modules_gateway.list_pkg_modules(pkg):
       try:
         if '_ext_' in name and not self.load_extended:
           continue
