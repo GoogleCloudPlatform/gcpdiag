@@ -18,7 +18,6 @@
 import json
 import logging
 import os
-import pkgutil
 import sys
 from typing import Optional, Set
 
@@ -27,7 +26,6 @@ import google_auth_httplib2
 import googleapiclient.http
 import httplib2
 from google.auth import exceptions
-from google.auth.transport import requests
 from google_auth_oauthlib import flow
 from googleapiclient import discovery
 
@@ -52,8 +50,6 @@ def _auth_method():
     auth_method = 'key'
   elif config.get('auth_adc'):
     auth_method = 'adc'
-  elif config.get('auth_oauth'):
-    auth_method = 'oauth'
   else:
     # use ADC by default
     auth_method = 'adc'
@@ -107,54 +103,11 @@ def _oauth_flow_prompt(client_config):
           file=sys.stderr)
 
 
-def _get_credentials_oauth():
-  logging.debug('auth: using oauth authentication')
-
-  # If we have no credentials in memory, fetch from the disk cache.
-  global _credentials
-  if not _credentials:
-    with caching.get_cache() as diskcache:
-      _credentials = diskcache.get('credentials')
-
-  # Try to refresh the credentials.
-  if _credentials and _credentials.expired and _credentials.refresh_token:
-    try:
-      logging.debug('refreshing credentials')
-      _credentials.refresh(requests.Request())
-      # Store the refreshed credentials.
-      with caching.get_cache() as diskcache:
-        diskcache.set('credentials', _credentials)
-    except exceptions.RefreshError as e:
-      logging.debug("couldn't refresh token: %s", e)
-
-  # Login using browser and verification code.
-  if not _credentials or not _credentials.valid:
-    # Read client id from json file, or fallback to adc if not found.
-    try:
-      client_config = json.loads(
-          pkgutil.get_data('gcpdiag.queries', 'client_secrets.json'))
-    except FileNotFoundError:
-      logging.warning(
-          'client_secrets.json file not found. Using ADC for authentication.')
-      return _get_credentials_adc()
-
-    logging.debug('No valid credentials found. Initiating auth flow.')
-    _credentials = _oauth_flow_prompt(client_config)
-
-    # Store the credentials in the disk cache.
-    with caching.get_cache() as diskcache:
-      diskcache.set('credentials', _credentials)
-
-  return _credentials
-
-
 def _get_credentials():
   if _auth_method() == 'adc':
     return _get_credentials_adc()
   elif _auth_method() == 'key':
     return _get_credentials_key()
-  elif _auth_method() == 'oauth':
-    return _get_credentials_oauth()
   else:
     raise AssertionError(
         'BUG: AUTH_METHOD method should be one of `adc`, `oauth`, `key`, but got '

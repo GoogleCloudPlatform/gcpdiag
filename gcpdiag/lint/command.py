@@ -49,11 +49,9 @@ def _init_args_parser():
       help='Authenticate using a service account private key file',
       metavar='FILE')
 
-  parser.add_argument(
-      '--auth-oauth',
-      help='Authenticate using OAuth user authentication (currently '
-      'marked as deprecated, consider using other authentication methods)',
-      action='store_true')
+  parser.add_argument('--auth-oauth',
+                      help=argparse.SUPPRESS,
+                      action='store_true')
 
   parser.add_argument('--project',
                       metavar='P',
@@ -260,10 +258,10 @@ def run(argv) -> int:
 
   # Deprecation warning
   if config.get('auth_oauth'):
-    logger.warning(
-        'DeprecationWarning: The oauth authentication is '
-        'deprecated and will be removed in the future versions. Consider '
-        'using other authentication methods.')
+    logger.error(
+        'The oauth authentication has been deprecated and does not work'
+        ' anymore. Consider using other authentication methods.')
+    sys.exit(1)
 
   # Start the reporting
   report.banner()

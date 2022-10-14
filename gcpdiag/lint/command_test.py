@@ -38,7 +38,6 @@ class Test:
     assert args.billing_project is None
     assert args.auth_adc is False
     assert args.auth_key is None
-    assert args.auth_oauth is False
     assert args.verbose == 0
     assert args.within_days == 3
     assert args.include is None
