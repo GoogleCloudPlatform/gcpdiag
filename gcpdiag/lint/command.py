@@ -102,6 +102,11 @@ def _init_args_parser():
                       default=config.get('include_extended'),
                       action='store_true')
 
+  parser.add_argument('--experimental-enable-async-rules',
+                      help='Run experimental async rules (default: False)',
+                      default=config.get('experimental_enable_async_rules'),
+                      action='store_true')
+
   parser.add_argument('-v',
                       '--verbose',
                       action='count',
@@ -232,7 +237,9 @@ def run(argv) -> int:
   exclude_patterns = _parse_rule_patterns(config.get('exclude'))
 
   # Initialize Repository, and Tests.
-  repo = lint.LintRuleRepository(config.get('include_extended'))
+  repo = lint.LintRuleRepository(
+      config.get('include_extended'),
+      run_async=config.get('experimental_enable_async_rules'))
   _load_repository_rules(repo)
 
   # ^^^ If you add rules directory, update also
