@@ -13,7 +13,7 @@
 # limitations under the License.
 """Queries related to Dataproc."""
 
-from typing import Iterable, List
+from typing import Iterable, List, Mapping
 
 from gcpdiag import caching, config, models
 from gcpdiag.lint import get_executor
@@ -23,9 +23,9 @@ from gcpdiag.queries import apis, crm, gce
 class Cluster(models.Resource):
   """ Represents Dataproc Cluster """
   name: str
-  _resource_data: dict
+  _resource_data: Mapping
 
-  def __init__(self, name: str, project_id: str, resource_data: dict):
+  def __init__(self, name: str, project_id: str, resource_data: Mapping):
     super().__init__(project_id)
     self.name = name
     self._resource_data = resource_data
