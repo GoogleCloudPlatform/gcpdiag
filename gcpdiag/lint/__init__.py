@@ -355,6 +355,15 @@ class PythonModulesGateway(Protocol):
     pass
 
 
+def pick_default_execution_strategy(run_async):
+  if run_async:
+    return SequentialExecutionStrategy(
+        strategies=[SyncExecutionStrategy(),
+                    AsyncExecutionStrategy()])
+  else:
+    return SyncExecutionStrategy()
+
+
 class LintRuleRepository:
   """Repository of Lint rule which is also used to run the rules."""
   rules: List[LintRule]
@@ -362,13 +371,13 @@ class LintRuleRepository:
 
   def __init__(self,
                load_extended: bool = False,
+               run_async: bool = False,
                execution_strategy: ExecutionStrategy = None,
                modules_gateway: PythonModulesGateway = None):
     self.rules = []
     self.load_extended = load_extended
-    self.execution_strategy = execution_strategy or SequentialExecutionStrategy(
-        strategies=[SyncExecutionStrategy(),
-                    AsyncExecutionStrategy()])
+    self.execution_strategy = execution_strategy or pick_default_execution_strategy(
+        run_async)
     self.modules_gateway = modules_gateway or DefaultPythonModulesGateway()
 
   def register_rule(self, rule: LintRule):
