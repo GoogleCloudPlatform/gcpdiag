@@ -1,0 +1,23 @@
+{
+  "kind": "compute#subnetworkList",
+  "id": "projects/gcpdiag-datafusion1-aaaa/regions/us-central1/subnetworks",
+  "items": [
+    {
+      "kind": "compute#subnetwork",
+      "id": "1229138953747455592",
+      "creationTimestamp": "2022-09-09T17:55:35.900-07:00",
+      "name": "default",
+      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-datafusion1-aaaa/global/networks/default",
+      "ipCidrRange": "10.128.0.0/20",
+      "gatewayAddress": "10.128.0.1",
+      "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-datafusion1-aaaa/regions/us-central1",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-datafusion1-aaaa/regions/us-central1/subnetworks/default",
+      "privateIpGoogleAccess": false,
+      "fingerprint": "G6chyEnHoHE=",
+      "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+      "purpose": "PRIVATE",
+      "stackType": "IPV4_ONLY"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-datafusion1-aaaa/regions/us-central1/subnetworks"
+}
