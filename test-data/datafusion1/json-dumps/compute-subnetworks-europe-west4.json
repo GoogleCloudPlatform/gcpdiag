@@ -1,0 +1,23 @@
+{
+  "kind": "compute#subnetworkList",
+  "id": "projects/gcpdiag-datafusion1-aaaa/regions/europe-west4/subnetworks",
+  "items": [
+    {
+      "kind": "compute#subnetwork",
+      "id": "7558389635160104551",
+      "creationTimestamp": "2022-09-09T17:55:36.770-07:00",
+      "name": "default",
+      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-datafusion1-aaaa/global/networks/default",
+      "ipCidrRange": "10.164.0.0/20",
+      "gatewayAddress": "10.164.0.1",
+      "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-datafusion1-aaaa/regions/europe-west4",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-datafusion1-aaaa/regions/europe-west4/subnetworks/default",
+      "privateIpGoogleAccess": false,
+      "fingerprint": "mCmeH1kUbwA=",
+      "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+      "purpose": "PRIVATE",
+      "stackType": "IPV4_ONLY"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-datafusion1-aaaa/regions/europe-west4/subnetworks"
+}
