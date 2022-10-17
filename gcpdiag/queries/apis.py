@@ -103,7 +103,7 @@ def _oauth_flow_prompt(client_config):
           file=sys.stderr)
 
 
-def _get_credentials():
+def get_credentials():
   if _auth_method() == 'adc':
     return _get_credentials_adc()
   elif _auth_method() == 'key':
@@ -124,11 +124,11 @@ def _get_project_or_billing_id(project_id: str) -> str:
 
 def login():
   """Force GCP login (this otherwise happens on the first get_api call)."""
-  _get_credentials()
+  get_credentials()
 
 
 def get_user_email() -> str:
-  credentials = _get_credentials()
+  credentials = get_credentials()
   http = google_auth_httplib2.AuthorizedHttp(credentials, http=httplib2.Http())
   resp, content = http.request('https://www.googleapis.com/userinfo/v2/me')
   if resp['status'] != '200':
@@ -144,7 +144,7 @@ def get_api(service_name: str, version: str, project_id: Optional[str] = None):
 
   If project_id is specified, this will be used as the billed project, and usually
   you should put there the project id of the project that you are inspecting."""
-  credentials = _get_credentials()
+  credentials = get_credentials()
 
   def _request_builder(http, *args, **kwargs):
     del http

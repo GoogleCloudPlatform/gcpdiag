@@ -62,6 +62,8 @@ provided as a command arguments.
 
 # Default number of retries for API Calls.
 API_RETRIES = 10
+API_RETRY_SLEEP_MULTIPLIER = 1.4
+API_RETRY_SLEEP_RANDOMNESS_PCT = 0.2
 
 # Cache directory for diskcache.
 CACHE_DIR = appdirs.user_cache_dir('gcpdiag')
