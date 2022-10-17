@@ -1,9 +1,8 @@
 """ Gateway for Dataproc service """
 import asyncio
 import functools
-from typing import Any, Dict, List, Mapping, Optional
+from typing import Any, Dict, Iterable, List, Mapping, Optional, Protocol
 
-from gcpdiag.async_queries import project_regions
 from gcpdiag.async_queries.utils import loader, protocols
 from gcpdiag.queries import dataproc
 
@@ -49,20 +48,25 @@ class Region:
                             resource_data=desc)
 
 
+class ProjectRegions(Protocol):
+
+  async def get_all(self) -> Iterable[str]:
+    pass
+
+
 class Dataproc:
   """ Gateway for Dataproc service """
   _api: protocols.API
   _project_id: str
-  _project_regions: project_regions.ProjectRegions
+  _project_regions: ProjectRegions
   _clusters_by_name: Dict[str, dataproc.Cluster]
   _loader: loader.Loader
 
-  def __init__(
-      self, api: protocols.API, project_id: str,
-      project_regions_object: 'project_regions.ProjectRegions') -> None:
+  def __init__(self, api: protocols.API, project_id: str,
+               project_regions: ProjectRegions) -> None:
     self._api = api
     self._project_id = project_id
-    self._project_regions = project_regions_object
+    self._project_regions = project_regions
     self._clusters_by_name = {}
     self._loader = loader.Loader(self._load)
 
