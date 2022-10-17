@@ -1,9 +1,8 @@
 """ Helper method to initialize Project object """
-from gcpdiag.async_queries import api, creds
+from gcpdiag.async_queries.api import get_api
 from gcpdiag.async_queries.project import project
 
-_creds = creds.GcpdiagCreds()
-_api = api.API(creds=_creds)
+_api = get_api.get_api()
 
 
 def get_project(project_id: str) -> project.Project:

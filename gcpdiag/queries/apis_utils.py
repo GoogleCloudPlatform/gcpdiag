@@ -76,12 +76,17 @@ def batch_list_all(api, requests: list, next_function: Callable, log_text: str):
 # inspired by:
 # https://github.com/googleapis/google-api-python-client/blob/063dc27da5371264d36d299edb0682e63874089b/googleapiclient/http.py#L79
 # but without the json "reason" handling. If we get a 403, we won't retry.
-def _should_retry(resp_status):
+def should_retry(resp_status):
   if resp_status >= 500:
     return True
   if resp_status == 429:  # too many requests
     return True
   return False
+
+
+def get_nth_exponential_random_retry(n, random_pct, mutiplier, random_fn=None):
+  random_fn = random_fn or random.random
+  return (1 - random_fn() * random_pct) * mutiplier**n
 
 
 def batch_execute_all(api, requests: list):
@@ -104,7 +109,7 @@ def batch_execute_all(api, requests: list):
 
     if exception:
       if isinstance(exception, googleapiclient.errors.HttpError) and \
-        _should_retry(exception.status_code) and \
+        should_retry(exception.status_code) and \
         retry_count < config.API_RETRIES:
         logging.debug('received HTTP error status code %d from API, retrying',
                       exception.status_code)
@@ -135,7 +140,7 @@ def batch_execute_all(api, requests: list):
       else:
         error_msg = f'received exception from Batch API: {err}, retrying'
       if (not isinstance(err, googleapiclient.errors.HttpError) or \
-          _should_retry(err.status_code)) \
+          should_retry(err.status_code)) \
           and retry_count < config.API_RETRIES:
         logging.debug(error_msg)
         requests_todo = requests_in_flight
@@ -150,8 +155,11 @@ def batch_execute_all(api, requests: list):
     if not requests_todo:
       break
 
-    # Retry delay: 20% is random, progression: 1, 1.4, 2.0, 2.7, ... 28.9 (10 retries)
-    sleep_time = (1 - random.random() * 0.2) * 1.4**retry_count
+    # for example: retry delay: 20% is random, progression: 1, 1.4, 2.0, 2.7, ... 28.9 (10 retries)
+    sleep_time = get_nth_exponential_random_retry(
+        n=retry_count,
+        random_pct=config.API_RETRY_SLEEP_RANDOMNESS_PCT,
+        mutiplier=config.API_RETRY_SLEEP_MULTIPLIER)
     logging.debug('sleeping %.2f seconds before retry #%d', sleep_time,
                   retry_count + 1)
     time.sleep(sleep_time)

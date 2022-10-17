@@ -5,6 +5,9 @@ SHELL=/bin/bash
 test:
 	pytest -o log_level=DEBUG --cov-config=.coveragerc --cov=gcpdiag --forked
 
+test_async_api:
+	python -m unittest gcpdiag.async_queries.api.api_slowtest
+
 test-mocked:
 	# run gcpdiag-mocked and verify that the exit status is what we expect
 	bin/gcpdiag-mocked lint --auth-adc --project=gcpdiag-gke1-aaaa; \
