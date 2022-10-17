@@ -19,7 +19,7 @@ class Project:
   def dataproc(self) -> dataproc.Dataproc:
     return dataproc.Dataproc(api=self._api,
                              project_id=self._project_id,
-                             project_regions_object=self._project_regions)
+                             project_regions=self._project_regions)
 
   @functools.cached_property
   def _project_regions(self) -> project_regions.ProjectRegions:
