@@ -2,6 +2,7 @@
 
 #### Deprecation
 
+- Python 3.9+ is required for gcpdiag. Python 3.8 and older versions support is deprecated.
 - TBD
 
 #### New rules

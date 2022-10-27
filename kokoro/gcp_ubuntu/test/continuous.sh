@@ -20,15 +20,6 @@ set -x
 PATH="${KOKORO_ARTIFACTS_DIR}/git/gcpdiag/bin:$HOME/.local/bin:$PATH"
 cd "${KOKORO_ARTIFACTS_DIR}/git/gcpdiag"
 
-# Test with Python 3.7
-pipenv-dockerized 3.7 run pipenv install --dev
-pipenv-dockerized 3.7 run make test
-# remove previously installed packages and install only default packages
-rm -rf .pipenv-dockerized/venv-3.7
-pipenv-dockerized 3.7 run pipenv install --ignore-pipfile
-# run gcpdiag-mocked
-pipenv-dockerized 3.7 run make test-mocked
-
 # Test with Python 3.9
 pipenv-dockerized 3.9 run pipenv install --dev
 pipenv-dockerized 3.9 run make test

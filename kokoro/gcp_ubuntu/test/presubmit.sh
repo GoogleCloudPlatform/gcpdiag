@@ -20,15 +20,15 @@ set -x
 PATH="${KOKORO_ARTIFACTS_DIR}/git/gcpdiag/bin:$HOME/.local/bin:$PATH"
 cd "${KOKORO_ARTIFACTS_DIR}/git/gcpdiag"
 
-pipenv-dockerized 3.7 run pipenv install --dev
-pipenv-dockerized 3.7 run make test
+pipenv-dockerized 3.9 run pipenv install --dev
+pipenv-dockerized 3.9 run make test
 # generate API documentation
-pipenv-dockerized 3.7 run bash -c 'cd website; python api_render.py'
+pipenv-dockerized 3.9 run bash -c 'cd website; python api_render.py'
 # remove previously installed packages and install only default packages
-rm -rf .pipenv-dockerized/venv-3.7
-pipenv-dockerized 3.7 run pipenv install --ignore-pipfile
+rm -rf .pipenv-dockerized/venv-3.9
+pipenv-dockerized 3.9 run pipenv install --ignore-pipfile
 # run gcpdiag-mocked
-pipenv-dockerized 3.7 run make test-mocked
+pipenv-dockerized 3.9 run make test-mocked
 
 # Publish staging website (http://staging.gcpdiag.dev)
 cp bin/gcpdiag-dockerized website/static/gcpdiag.sh
