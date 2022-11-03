@@ -1,0 +1,4 @@
+*  apigee/ERR/2022_002: Cloud KMS key is enabled and could be accessed by Apigee Service Agent
+   - projects/gcpdiag-apigee1-aaaa/locations/us-central1/keyRings/apigee-keyring/cryptoKeys/apigee-key [ OK ]
+   - projects/gcpdiag-apigee1-aaaa/locations/us-central1/keyRings/apigee-keyring/cryptoKeys/apigee-key [ OK ]
+

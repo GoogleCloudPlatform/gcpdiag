@@ -1,0 +1,18 @@
+{
+  "name": "projects/gcpdiag-apigee1-aaaa/locations/us-central1/keyRings/apigee-keyring/cryptoKeys/apigee-key",
+  "primary": {
+    "name": "projects/gcpdiag-apigee1-aaaa/locations/us-central1/keyRings/apigee-keyring/cryptoKeys/apigee-key/cryptoKeyVersions/1",
+    "state": "ENABLED",
+    "createTime": "2022-08-14T01:58:59.902530077Z",
+    "protectionLevel": "SOFTWARE",
+    "algorithm": "GOOGLE_SYMMETRIC_ENCRYPTION",
+    "generateTime": "2022-08-14T01:58:59.902530077Z"
+  },
+  "purpose": "ENCRYPT_DECRYPT",
+  "createTime": "2022-08-14T01:58:59.902530077Z",
+  "versionTemplate": {
+    "protectionLevel": "SOFTWARE",
+    "algorithm": "GOOGLE_SYMMETRIC_ENCRYPTION"
+  },
+  "destroyScheduledDuration": "86400s"
+}

@@ -76,6 +76,13 @@ class ApigeeOrganization(models.Resource):
       return ''
     return self._resource_data['runtimeType']
 
+  @property
+  def runtime_database_encryption_key_name(self) -> str:
+    if self._resource_data is None:
+      return ''
+
+    return self._resource_data.get('runtimeDatabaseEncryptionKeyName', '')
+
 
 class EnvironmentGroup(models.Resource):
   """Represents an Apigee Environment Group
@@ -119,6 +126,10 @@ class ApigeeInstance(models.Resource):
   @property
   def full_path(self) -> str:
     return f'organizations/{self.org_name}/instances/{self.name}'
+
+  @property
+  def disk_encryption_key_name(self) -> str:
+    return self._resource_data.get('diskEncryptionKeyName', '')
 
 
 @caching.cached_api_call
