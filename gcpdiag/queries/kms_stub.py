@@ -48,3 +48,7 @@ class KmsApiStub:
     project_id = utils.get_project_by_res_name(name)
     basename = utils.extract_value_from_res_name(name, 'cryptoKeys')
     return apis_stub.RestCallStub(project_id, basename)
+
+  def getIamPolicy(self, resource):
+    project_id = utils.get_project_by_res_name(resource)
+    return apis_stub.RestCallStub(project_id, 'kms-key-iam-policy')

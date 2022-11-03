@@ -20,7 +20,7 @@ import logging
 import googleapiclient.errors
 
 from gcpdiag import caching, config, models, utils
-from gcpdiag.queries import apis
+from gcpdiag.queries import apis, iam
 from gcpdiag.utils import GcpApiError
 
 
@@ -50,6 +50,12 @@ class CryptoKey(models.Resource):
     self._resource_data = resource_data
 
 
+class KMSCryptoKeyIAMPolicy(iam.BaseIAMPolicy):
+
+  def _is_resource_permission(self, permission):
+    return True
+
+
 @caching.cached_api_call
 def get_crypto_key(key_name: str) -> CryptoKey:
   """Get a Crypto Key object by its resource name, caching the result."""
@@ -66,3 +72,15 @@ def get_crypto_key(key_name: str) -> CryptoKey:
   except googleapiclient.errors.HttpError as err:
     raise GcpApiError(err) from err
   return CryptoKey(project_id, resource_data)
+
+
+@caching.cached_api_call
+def get_crypto_key_iam_policy(key_name: str) -> KMSCryptoKeyIAMPolicy:
+
+  project_id = utils.get_project_by_res_name(key_name)
+  kms_api = apis.get_api('cloudkms', 'v1', project_id)
+
+  query = kms_api.projects().locations().keyRings().cryptoKeys().getIamPolicy(
+      resource=key_name)
+  return iam.fetch_iam_policy(query, KMSCryptoKeyIAMPolicy, project_id,
+                              key_name)
