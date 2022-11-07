@@ -3,6 +3,7 @@
 #### Deprecation
 
 - Python 3.9+ is required for gcpdiag. Python 3.8 and older versions support is deprecated.
+- Deprecated authentication using OAuth (`--auth-oauth`) has been removed.
 - TBD
 
 #### New rules
