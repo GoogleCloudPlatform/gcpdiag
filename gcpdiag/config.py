@@ -82,7 +82,6 @@ _project_id: str = ''
 _defaults: Dict[str, Any] = {
     'auth_adc': False,
     'auth_key': None,
-    'auth_oauth': False,
     'billing_project': None,
     'show_skipped': False,
     'hide_ok': False,
