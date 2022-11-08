@@ -1,9 +1,7 @@
-## 0.58 (2022-??-??)
+## 0.59 (2022-??-??)
 
 #### Deprecation
 
-- Python 3.9+ is required for gcpdiag. Python 3.8 and older versions support is deprecated.
-- Deprecated authentication using OAuth (`--auth-oauth`) has been removed.
 - TBD
 
 #### New rules
@@ -17,6 +15,35 @@
 #### Fixes
 
 - TBD
+
+
+
+## 0.58 (2022-11-08)
+
+#### Deprecation
+
+- Python 3.9+ is required for gcpdiag. Python 3.8 and older versions support is deprecated.
+- Deprecated authentication using OAuth (`--auth-oauth`) has been removed.
+
+#### New rules
+
+- apigee/ERR/2022\_002: Verify whether Cloud KMS key is enabled and could be accessed by Apigee Service Agent
+- datafusion/ERR/2022\_003: Private Data Fusion instance is peered to the tenant project
+- datafusion/ERR/2022\_004: Cloud Data Fusion Service Account has necessary permissions
+- datafusion/ERR/2022\_005: Private Data Fusion instance has networking permissions
+- datafusion/ERR/2022\_006: Private Google Access enabled for private Data Fusion instance subnetwork
+- datafusion/ERR/2022\_007: Cloud Data Fusion Service Account exists at a Project
+- gke/BP/2022\_004: GKE clusters should have HTTP load balancing enabled to use GKE ingress
+
+#### Enhancements
+
+- Python dependencies updated
+
+#### Fixes
+
+- gke/ERR/2021\_002: skip if there are no GKE clusters
+
+
 
 ## 0.57 (2022-09-29)
 
