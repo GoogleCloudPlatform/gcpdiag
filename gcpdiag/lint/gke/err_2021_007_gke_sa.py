@@ -28,6 +28,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   clusters = gke.get_clusters(context)
   if not clusters:
     report.add_skipped(None, 'no clusters found')
+    return
 
   project = crm.get_project(context.project_id)
   sa = 'service-{}@container-engine-robot.iam.gserviceaccount.com'.format(
