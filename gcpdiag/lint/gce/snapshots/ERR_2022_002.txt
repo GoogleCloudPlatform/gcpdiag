@@ -1,0 +1,3 @@
+*  gce/ERR/2022_002: Serial logs don't contain Guest OS activation errors
+   (logging api is disabled)                                              [SKIP]
+
