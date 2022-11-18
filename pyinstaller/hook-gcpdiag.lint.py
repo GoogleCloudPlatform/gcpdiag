@@ -29,5 +29,6 @@ hiddenimports = \
   collect_submodules('gcpdiag.lint.gcf') + \
   collect_submodules('gcpdiag.lint.gke') + \
   collect_submodules('gcpdiag.lint.vpc') + \
+  collect_submodules('gcpdiag.lint.lb') + \
   collect_submodules('gcpdiag.lint.iam') + \
   collect_submodules('gcpdiag.lint.tpu')

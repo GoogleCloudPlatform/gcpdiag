@@ -1,0 +1,3 @@
+*  lb/BP/2022_001: LocalityLbPolicy compatible with sessionAffinity
+   - gcpdiag-lb1-aaaa                                                     [ OK ]
+
