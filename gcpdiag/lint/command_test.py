@@ -82,4 +82,5 @@ class Test:
     assert 'dataproc' in modules
     assert 'gcs' in modules
     assert 'vpc' in modules
+    assert 'lb' in modules
     assert 'gcf' in modules
