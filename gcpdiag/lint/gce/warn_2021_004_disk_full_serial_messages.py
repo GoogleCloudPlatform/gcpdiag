@@ -54,7 +54,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     for instance in sorted(instances, key=lambda i: i.name):
       match: Optional[LogEntryShort] = search.get_last_match(
           instance_id=instance.id)
-      if match:
+      if not instance.is_serial_port_logging_enabled():
+        report.add_skipped(instance, 'serial logging disabled')
+      elif match:
         report.add_failed(instance,
                           ('There are messages indicating that the disk might'
                            ' be full in serial output of {}\n{}: "{}"').format(
