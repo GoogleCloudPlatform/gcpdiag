@@ -15,8 +15,11 @@
 
 import logging
 import re
+import sys
 
-from gcpdiag import caching, config, models
+from google.auth import exceptions
+
+from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis
 
 
@@ -67,11 +70,26 @@ class Project(models.Resource):
 
 @caching.cached_api_call
 def get_project(project_id: str) -> Project:
-  logging.info('retrieving project %s', project_id)
-  crm_api = apis.get_api('cloudresourcemanager', 'v3', project_id)
-  request = crm_api.projects().get(name=f'projects/{project_id}')
-  response = request.execute(num_retries=config.API_RETRIES)
-  if response:
-    return Project(resource_data=response)
-  else:
-    raise ValueError(f'unknown project: {project_id}')
+  try:
+    logging.info('retrieving project %s', project_id)
+    crm_api = apis.get_api('cloudresourcemanager', 'v3', project_id)
+    request = crm_api.projects().get(name=f'projects/{project_id}')
+    response = request.execute(num_retries=config.API_RETRIES)
+    if response:
+      return Project(resource_data=response)
+    else:
+      raise ValueError(f'unknown project: {project_id}')
+  except utils.GcpApiError as err:
+    if 'SERVICE_DISABLED' == err.reason and 'serviceusage.googleapis.com' == err.service:
+      print((
+          'ERROR: Service Usage API must be enabled. To enable, execute:\n'
+          f'gcloud services enable serviceusage.googleapis.com --project={project_id}'
+      ),
+            file=sys.stderr)
+    else:
+      print(f'ERROR: can\'t access project {project_id}: {err.message}.',
+            file=sys.stderr)
+    sys.exit(1)
+  except exceptions.GoogleAuthError as err:
+    print(f'ERROR: {err}', file=sys.stderr)
+    sys.exit(1)
