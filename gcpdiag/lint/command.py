@@ -23,7 +23,7 @@ import re
 import sys
 
 from gcpdiag import config, hooks, lint, models
-from gcpdiag.lint import report_csv, report_json, report_terminal
+from gcpdiag.lint.output import csv_output, json_output, terminal_output
 from gcpdiag.queries import apis, crm
 
 
@@ -196,24 +196,26 @@ def _load_repository_rules(repo: lint.LintRuleRepository):
         continue
 
 
-def _initialize_output_formater() -> lint.LintReport:
-  report: lint.LintReport
-  if config.get('output') == 'json':
-    report = report_json.LintReportJson(
-        log_info_for_progress_only=(config.get('verbose') == 0),
-        show_ok=not config.get('hide_ok'),
-        show_skipped=config.get('show_skipped'))
-  elif config.get('output') == 'csv':
-    report = report_csv.LintReportCsv(
-        log_info_for_progress_only=(config.get('verbose') == 0),
-        show_ok=not config.get('hide_ok'),
-        show_skipped=config.get('show_skipped'))
+def _get_output_constructor(output_parameter_value):
+  if output_parameter_value == 'json':
+    return json_output.JSONOutput
+  elif output_parameter_value == 'csv':
+    return csv_output.CSVOutput
   else:
-    report = report_terminal.LintReportTerminal(
-        log_info_for_progress_only=(config.get('verbose') == 0),
-        show_ok=not config.get('hide_ok'),
-        show_skipped=config.get('show_skipped'))
-  return report
+    return terminal_output.TerminalOutput
+
+
+def _initialize_output(output_order):
+  constructor = _get_output_constructor(config.get('output'))
+  kwargs = {
+      'log_info_for_progress_only': (config.get('verbose') == 0),
+      'show_ok': not config.get('hide_ok'),
+      'show_skipped': config.get('show_skipped')
+  }
+  if config.get('output') == 'terminal':
+    kwargs['output_order'] = output_order
+  output = constructor(**kwargs)
+  return output
 
 
 def run(argv) -> int:
@@ -233,7 +235,7 @@ def run(argv) -> int:
   context = models.Context(project_id=project.id)
 
   # Initialize configuration
-  config.init(vars(args), context.project_id, report_terminal.is_cloud_shell())
+  config.init(vars(args), context.project_id, terminal_output.is_cloud_shell())
 
   # Rules name patterns that shall be included or excluded
   include_patterns = _parse_rule_patterns(config.get('include'))
@@ -241,18 +243,22 @@ def run(argv) -> int:
 
   # Initialize Repository, and Tests.
   repo = lint.LintRuleRepository(
-      config.get('include_extended'),
-      run_async=config.get('experimental_enable_async_rules'))
+      load_extended=config.get('include_extended'),
+      run_async=config.get('experimental_enable_async_rules'),
+      exclude=exclude_patterns,
+      include=include_patterns)
   _load_repository_rules(repo)
 
   # ^^^ If you add rules directory, update also
   # pyinstaller/hook-gcpdiag.lint.py and bin/precommit-required-files
 
   # Initialize proper output formater
-  report = _initialize_output_formater()
+  output_order = sorted(str(r) for r in repo.rules_to_run)
+  output = _initialize_output(output_order=output_order)
+  repo.result.add_result_handler(output.result_handler)
 
   # Logging setup.
-  logging_handler = report.get_logging_handler()
+  logging_handler = output.get_logging_handler()
   logger = logging.getLogger()
   # Make sure we are only using our own handler
   logger.handlers = []
@@ -274,16 +280,16 @@ def run(argv) -> int:
     sys.exit(1)
 
   # Start the reporting
-  report.banner()
-  report.lint_start(context)
+  output.display_banner()
+  output.display_header(context)
 
   # Verify that we have access and that the CRM API is enabled
   apis.verify_access(context.project_id)
 
   # Run the tests.
-  exit_code = repo.run_rules(context, report, include_patterns,
-                             exclude_patterns)
-  hooks.post_lint_hook(report)
+  repo.run_rules(context)
+  output.display_footer(repo.result)
+  hooks.post_lint_hook(repo.result.get_rule_statuses())
 
   # Exit 0 if there are no failed rules.
-  sys.exit(exit_code)
+  sys.exit(2 if repo.result.any_failed else 0)
