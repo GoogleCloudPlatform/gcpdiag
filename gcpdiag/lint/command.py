@@ -24,7 +24,7 @@ import sys
 
 from gcpdiag import config, hooks, lint, models
 from gcpdiag.lint import report_csv, report_json, report_terminal
-from gcpdiag.queries import apis
+from gcpdiag.queries import apis, crm
 
 
 def _flatten_multi_arg(arg_list):
@@ -226,8 +226,11 @@ def run(argv) -> int:
   # Allow to change defaults using a hook function.
   hooks.set_lint_args_hook(args)
 
+  # Check if a project number and convert to project id
+  project = crm.get_project(args.project)
+
   # Initialize Context.
-  context = models.Context(project_id=args.project)
+  context = models.Context(project_id=project.id)
 
   # Initialize configuration
   config.init(vars(args), context.project_id, report_terminal.is_cloud_shell())
