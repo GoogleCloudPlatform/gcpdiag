@@ -43,34 +43,40 @@ class FakeModule:
     return self.doc
 
 
-class FakeReport:
-
-  def finish(self, context):
-    pass
-
-
 class FakeExecutionStrategy:
+  """ Simple testing double for ExecutionStrategy """
 
   def __init__(self):
     self.executed_rules = None
 
-  # pylint: disable=unused-argument
-  def run_rules(self, context, report, rules):
+  def filter_runnable_rules(self, rules):
+    return rules
+
+  def run_rules(self, context, result, rules):
+    del context, result
     self.executed_rules = rules
 
 
 class Setup:
   'Helper class to instantiate testing subj and its dependencies'
 
-  def __init__(self, modules_by_name, load_extended=None):
+  def __init__(self,
+               modules_by_name,
+               load_extended=None,
+               include=None,
+               exclude=None):
     self.modules_by_name = modules_by_name
     self.load_extended = load_extended
+    self.include = include
+    self.exclude = exclude
 
   @cached_property
   def repo(self):
     return LintRuleRepository(load_extended=self.load_extended,
                               modules_gateway=self.modules_gw,
-                              execution_strategy=self.execution_strategy)
+                              execution_strategy=self.execution_strategy,
+                              exclude=self.exclude,
+                              include=self.include)
 
   @cached_property
   def modules_gw(self):
@@ -104,7 +110,7 @@ def test_sync_happy_path():
       })
 
   setup.repo.load_rules(FakePyPkg('gcpdiag.lint.fakeprod', 'fake.path'))
-  setup.repo.run_rules(context=None, report=FakeReport())
+  setup.repo.run_rules(context=None)
 
   assert len(setup.execution_strategy.executed_rules) == 2
   executed_run_rule_fs = [
@@ -125,7 +131,7 @@ def test_async_happy_path():
       })
 
   setup.repo.load_rules(FakePyPkg('gcpdiag.lint.fakeprod', 'fake.path'))
-  setup.repo.run_rules(context=None, report=FakeReport())
+  setup.repo.run_rules(context=None)
 
   assert len(setup.execution_strategy.executed_rules) == 2
   executed_run_rule_fs = [
@@ -165,7 +171,7 @@ def test_wrong_module_names_ignored():
   })
 
   setup.repo.load_rules(FakePyPkg('gcpdiag.lint.fakeprod', 'fake.path'))
-  setup.repo.run_rules(context=None, report=FakeReport())
+  setup.repo.run_rules(context=None)
 
   assert len(setup.execution_strategy.executed_rules) == 0
 
@@ -178,7 +184,7 @@ def test_tests_ignored():
   })
 
   setup.repo.load_rules(FakePyPkg('gcpdiag.lint.fakeprod', 'fake.path'))
-  setup.repo.run_rules(context=None, report=FakeReport())
+  setup.repo.run_rules(context=None)
 
   assert len(setup.execution_strategy.executed_rules) == 0
 
@@ -204,7 +210,7 @@ def test_singleline_doc_happy_path():
   })
 
   setup.repo.load_rules(FakePyPkg('gcpdiag.lint.fakeprod', 'fake.path'))
-  setup.repo.run_rules(context=None, report=FakeReport())
+  setup.repo.run_rules(context=None)
 
   assert len(setup.execution_strategy.executed_rules) == 1
   assert setup.execution_strategy.executed_rules[0].short_desc == 'first line'
@@ -221,7 +227,7 @@ def test_multiline_doc_happy_path():
   })
 
   setup.repo.load_rules(FakePyPkg('gcpdiag.lint.fakeprod', 'fake.path'))
-  setup.repo.run_rules(context=None, report=FakeReport())
+  setup.repo.run_rules(context=None)
 
   assert len(setup.execution_strategy.executed_rules) == 1
   assert setup.execution_strategy.executed_rules[0].short_desc == 'first line '
@@ -250,7 +256,7 @@ def test_ext_ignored():
   })
 
   setup.repo.load_rules(FakePyPkg('gcpdiag.lint.fakeprod', 'fake.path'))
-  setup.repo.run_rules(context=None, report=FakeReport())
+  setup.repo.run_rules(context=None)
 
   assert len(setup.execution_strategy.executed_rules) == 0
 
@@ -265,7 +271,7 @@ def test_ext_loaded():
                 })
 
   setup.repo.load_rules(FakePyPkg('gcpdiag.lint.fakeprod', 'fake.path'))
-  setup.repo.run_rules(context=None, report=FakeReport())
+  setup.repo.run_rules(context=None)
 
   assert len(setup.execution_strategy.executed_rules) == 1
 
@@ -274,16 +280,14 @@ def test_include_id():
   fake_module1 = mk_simple_rule_module()
   fake_module2 = mk_simple_rule_module()
 
-  setup = Setup(
-      modules_by_name={
-          'gcpdiag.lint.fakeprod.err_2022_001_hello': fake_module1,
-          'gcpdiag.lint.fakeprod.err_2022_002_world': fake_module2
-      })
+  setup = Setup(include=[LintRulesPattern('fakeprod/ERR/2022_001')],
+                modules_by_name={
+                    'gcpdiag.lint.fakeprod.err_2022_001_hello': fake_module1,
+                    'gcpdiag.lint.fakeprod.err_2022_002_world': fake_module2
+                })
 
   setup.repo.load_rules(FakePyPkg('gcpdiag.lint.fakeprod', 'fake.path'))
-  setup.repo.run_rules(context=None,
-                       report=FakeReport(),
-                       include=[LintRulesPattern('fakeprod/ERR/2022_001')])
+  setup.repo.run_rules(context=None)
 
   assert len(setup.execution_strategy.executed_rules) == 1
   executed_run_rule_fs = [
@@ -297,16 +301,14 @@ def test_include_class():
   fake_module1 = mk_simple_rule_module()
   fake_module2 = mk_simple_rule_module()
 
-  setup = Setup(
-      modules_by_name={
-          'gcpdiag.lint.fakeprod.err_2022_001_hello': fake_module1,
-          'gcpdiag.lint.fakeprod.warn_2022_002_world': fake_module2
-      })
+  setup = Setup(include=[LintRulesPattern('fakeprod/ERR/*')],
+                modules_by_name={
+                    'gcpdiag.lint.fakeprod.err_2022_001_hello': fake_module1,
+                    'gcpdiag.lint.fakeprod.warn_2022_002_world': fake_module2
+                })
 
   setup.repo.load_rules(FakePyPkg('gcpdiag.lint.fakeprod', 'fake.path'))
-  setup.repo.run_rules(context=None,
-                       report=FakeReport(),
-                       include=[LintRulesPattern('fakeprod/ERR/*')])
+  setup.repo.run_rules(context=None)
 
   assert len(setup.execution_strategy.executed_rules) == 1
   executed_run_rule_fs = [
@@ -322,6 +324,7 @@ def test_include_product():
   fake_module3 = mk_simple_rule_module()
 
   setup = Setup(
+      include=[LintRulesPattern('fakeprod/*/*')],
       modules_by_name={
           'gcpdiag.lint.fakeprod.err_2022_001_hello': fake_module1,
           'gcpdiag.lint.fakeprod.err_2022_002_world': fake_module2,
@@ -330,9 +333,7 @@ def test_include_product():
 
   setup.repo.load_rules(FakePyPkg('gcpdiag.lint.fakeprod', 'fake.path'))
   setup.repo.load_rules(FakePyPkg('gcpdiag.lint.anotherfakeprod', 'fake.path'))
-  setup.repo.run_rules(context=None,
-                       report=FakeReport(),
-                       include=[LintRulesPattern('fakeprod/*/*')])
+  setup.repo.run_rules(context=None)
 
   assert len(setup.execution_strategy.executed_rules) == 2
   executed_run_rule_fs = [
@@ -346,16 +347,14 @@ def test_exclude_id():
   fake_module1 = mk_simple_rule_module()
   fake_module2 = mk_simple_rule_module()
 
-  setup = Setup(
-      modules_by_name={
-          'gcpdiag.lint.fakeprod.err_2022_001_hello': fake_module1,
-          'gcpdiag.lint.fakeprod.err_2022_002_world': fake_module2
-      })
+  setup = Setup(exclude=[LintRulesPattern('fakeprod/ERR/2022_002')],
+                modules_by_name={
+                    'gcpdiag.lint.fakeprod.err_2022_001_hello': fake_module1,
+                    'gcpdiag.lint.fakeprod.err_2022_002_world': fake_module2
+                })
 
   setup.repo.load_rules(FakePyPkg('gcpdiag.lint.fakeprod', 'fake.path'))
-  setup.repo.run_rules(context=None,
-                       report=FakeReport(),
-                       exclude=[LintRulesPattern('fakeprod/ERR/2022_002')])
+  setup.repo.run_rules(context=None)
 
   assert len(setup.execution_strategy.executed_rules) == 1
   executed_run_rule_fs = [
@@ -369,16 +368,14 @@ def test_exclude_class():
   fake_module1 = mk_simple_rule_module()
   fake_module2 = mk_simple_rule_module()
 
-  setup = Setup(
-      modules_by_name={
-          'gcpdiag.lint.fakeprod.err_2022_001_hello': fake_module1,
-          'gcpdiag.lint.fakeprod.warn_2022_002_world': fake_module2
-      })
+  setup = Setup(exclude=[LintRulesPattern('fakeprod/WARN/*')],
+                modules_by_name={
+                    'gcpdiag.lint.fakeprod.err_2022_001_hello': fake_module1,
+                    'gcpdiag.lint.fakeprod.warn_2022_002_world': fake_module2
+                })
 
   setup.repo.load_rules(FakePyPkg('gcpdiag.lint.fakeprod', 'fake.path'))
-  setup.repo.run_rules(context=None,
-                       report=FakeReport(),
-                       exclude=[LintRulesPattern('fakeprod/WARN/*')])
+  setup.repo.run_rules(context=None)
 
   assert len(setup.execution_strategy.executed_rules) == 1
   executed_run_rule_fs = [
@@ -394,6 +391,7 @@ def test_exclude_product():
   fake_module3 = mk_simple_rule_module()
 
   setup = Setup(
+      exclude=[LintRulesPattern('fakeprod/*/*')],
       modules_by_name={
           'gcpdiag.lint.fakeprod.err_2022_001_hello': fake_module1,
           'gcpdiag.lint.fakeprod.err_2022_002_world': fake_module2,
@@ -402,9 +400,7 @@ def test_exclude_product():
 
   setup.repo.load_rules(FakePyPkg('gcpdiag.lint.fakeprod', 'fake.path'))
   setup.repo.load_rules(FakePyPkg('gcpdiag.lint.anotherfakeprod', 'fake.path'))
-  setup.repo.run_rules(context=None,
-                       report=FakeReport(),
-                       exclude=[LintRulesPattern('fakeprod/*/*')])
+  setup.repo.run_rules(context=None)
 
   assert len(setup.execution_strategy.executed_rules) == 1
   executed_run_rule_fs = [

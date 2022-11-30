@@ -16,6 +16,11 @@
 from gcpdiag import lint
 from gcpdiag.lint import command
 
+MUST_HAVE_MODULES = {
+    'gke', 'gcb', 'gae', 'gce', 'iam', 'apigee', 'composer', 'datafusion',
+    'dataproc', 'gcs', 'vpc', 'lb', 'gcf'
+}
+
 
 class Test:
   """Unit tests for command."""
@@ -70,17 +75,5 @@ class Test:
   def test_load_repository_rules(self):
     repo = lint.LintRuleRepository()
     command._load_repository_rules(repo)
-    modules = {r.product for r in repo.rules}
-    assert 'gke' in modules
-    assert 'gcb' in modules
-    assert 'gae' in modules
-    assert 'gce' in modules
-    assert 'iam' in modules
-    assert 'apigee' in modules
-    assert 'composer' in modules
-    assert 'datafusion' in modules
-    assert 'dataproc' in modules
-    assert 'gcs' in modules
-    assert 'vpc' in modules
-    assert 'lb' in modules
-    assert 'gcf' in modules
+    modules = {r.product for r in repo.rules_to_run}
+    assert MUST_HAVE_MODULES.issubset(modules)
