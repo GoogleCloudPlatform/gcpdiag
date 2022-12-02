@@ -45,6 +45,8 @@ PRODUCTS = {
         '[Identity and Access Management (IAM)](https://cloud.google.com/iam)',
     'tpu':
         '[Cloud TPU](https://cloud.google.com/tpu)',
+    'vpc':
+        '[Virtual Private Cloud](https://cloud.google.com/vpc)',
 }
 
 RULE_CLASSES = {
