@@ -24,6 +24,8 @@ from gcpdiag.queries import apis_stub
 
 # pylint: disable=unused-argument
 
+DUMMY_PROJECT_ID = 'gcpdiag-billing1-aaaa'
+
 
 class CrmApiStub:
   """Mock object to simulate CRM API calls."""
@@ -36,6 +38,13 @@ class CrmApiStub:
 
   def projects(self):
     return self
+
+  def list(self, parent=None, page_token=None):
+    if not parent:
+      return apis_stub.RestCallStub(DUMMY_PROJECT_ID, 'projects')
+
+  def list_next(self, previous_request, previous_response):
+    return None
 
   # pylint: disable=invalid-name
   def get(self, project_id=None, name=None):

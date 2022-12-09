@@ -1,0 +1,3 @@
+*  billing/WARN/2022_001: Projects have billing enabled
+   - gcpdiag-billing1-aaaa                                                [ OK ]
+

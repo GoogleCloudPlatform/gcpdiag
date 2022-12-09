@@ -1,0 +1,29 @@
+{
+  "billingAccounts": [
+    {
+      "name": "billingAccounts/00262B-00FAKE-123456",
+      "open": true,
+      "displayName": "Monitoring billing account",
+      "masterBillingAccount": ""
+    },
+    {
+      "name": "billingAccounts/005E32-00FAKE-123456",
+      "open": true,
+      "displayName": "Cloud Billing Support billing account",
+      "masterBillingAccount": ""
+    },
+    {
+      "name": "billingAccounts/0072A3-00FAKE-123456",
+      "open": true,
+      "displayName": "BAId for Cloud Support (xxx and others)",
+      "masterBillingAccount": ""
+    },
+    {
+      "name": "billingAccounts/00C931-00FAKE-123456",
+      "open": false,
+      "displayName": "TEST WILL BE DELETED",
+      "masterBillingAccount": ""
+    }
+  ],
+  "nextPageToken": ""
+}
