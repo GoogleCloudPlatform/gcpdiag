@@ -26,13 +26,12 @@ from gcpdiag.queries import gke
 # this should be updated regularly from:
 # https://cloud.google.com/kubernetes-engine/docs/release-schedule#schedule_for_static_no_channel_versions
 EOL_SCHEDULE = {
-    '1.18': datetime.strptime('2022-03', '%Y-%m'),
-    '1.19': datetime.strptime('2022-06', '%Y-%m'),
-    '1.20': datetime.strptime('2022-08', '%Y-%m'),
-    '1.21': datetime.strptime('2022-12', '%Y-%m'),
-    '1.22': datetime.strptime('2023-03', '%Y-%m'),
-    '1.23': datetime.strptime('2023-06', '%Y-%m'),
-    '1.24': datetime.strptime('2023-09', '%Y-%m'),
+    '1.21': datetime.strptime('2023-01', '%Y-%m'),
+    '1.22': datetime.strptime('2023-04', '%Y-%m'),
+    '1.23': datetime.strptime('2023-07', '%Y-%m'),
+    '1.24': datetime.strptime('2023-10', '%Y-%m'),
+    '1.25': datetime.strptime('2024-02', '%Y-%m'),
+    '1.26': datetime.strptime('2024-05', '%Y-%m'),
 }
 
 # how many days before eol rule will start to failing
