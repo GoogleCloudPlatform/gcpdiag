@@ -77,6 +77,53 @@ class Subnetwork(models.Resource):
     return self._resource_data['network']
 
 
+class Route(models.Resource):
+  """A VPC Route."""
+  _resource_data: dict
+
+  def __init__(self, project_id, resource_data):
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+
+  @property
+  def full_path(self) -> str:
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
+                      self.self_link)
+    if result:
+      return result.group(1)
+    else:
+      return f'>> {self.self_link}'
+
+  @property
+  def short_path(self) -> str:
+    path = self.project_id + '/' + self.name
+    return path
+
+  @property
+  def name(self) -> str:
+    return self._resource_data['name']
+
+  @property
+  def self_link(self) -> str:
+    return self._resource_data['selfLink']
+
+  @property
+  def network(self) -> str:
+    return self._resource_data['network']
+
+  @property
+  def dest_range(self) -> str:
+    return self._resource_data['destRange']
+
+  @property
+  def next_hop_gateway(self) -> str:
+    return self._resource_data['nextHopGateway']
+
+  @property
+  def priority(self) -> int:
+    return self._resource_data['priority']
+
+
 class Router(models.Resource):
   """A VPC Router."""
   _resource_data: dict
@@ -733,6 +780,15 @@ def _batch_get_subnetworks(
       continue
     subnets[resp['selfLink']] = Subnetwork(project_id, resp)
   return subnets
+
+
+@caching.cached_api_call(in_memory=True)
+def get_routes(project_id: str) -> List[Route]:
+  logging.info('fetching routes: %s', project_id)
+  compute = apis.get_api('compute', 'v1', project_id)
+  request = compute.routes().list(project=project_id)
+  response = request.execute(num_retries=config.API_RETRIES)
+  return [Route(project_id, item) for item in response.get('items', [])]
 
 
 @caching.cached_api_call(in_memory=True)
