@@ -1,0 +1,13 @@
+*  gcb/ERR/2022_004: Cloud Build Service Agent has the cloudbuild.serviceAgent role.
+   - gcpdiag-gcb1-aaaa                                                    [FAIL]
+     service account: service-12340005@gcp-sa-cloudbuild.iam.gserviceaccount.com
+     missing role: roles/cloudbuild.serviceAgent
+
+   The Cloud Build Service Agent is missing the cloudbuild.serviceAgent role,
+   which gives Cloud Build service account access to managed resources. You can
+   resolve this error by granting the Cloud Build Service Agent
+   (roles/cloudbuild.serviceAgent) IAM role to service-[PROJECT_NUMBER]@gcp-sa-
+   cloudbuild.iam.gserviceaccount.com.
+
+   https://gcpdiag.dev/rules/gcb/ERR/2022_004
+
