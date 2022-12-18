@@ -14,10 +14,10 @@
 
 # Lint as: python3
 """
-Cloud Dataproc Service Account has a Cloud Data Fusion Runner role
+Cloud Dataproc Service Account has a Cloud Data Fusion Runner role.
 
 Cloud Dataproc Service Account is missing a Cloud Data Fusion Runner role
-at the Project's IAM policy
+at the Project's IAM policy.
 """
 
 from gcpdiag import lint, models
