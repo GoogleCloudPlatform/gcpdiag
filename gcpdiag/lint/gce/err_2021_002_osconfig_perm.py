@@ -49,7 +49,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       iam_policy = iam.get_project_policy(i.project_id)
       sa = i.service_account
       if not sa:
-        # if an SA is not attched to the vm check if the service agent has the correct role
+        # if an SA is not attached to the vm check if the service agent has the correct role
         if not iam_policy.has_role_permissions(
             f'serviceAccount:{osconfig_service_account}', ROLE):
           report.add_failed(
