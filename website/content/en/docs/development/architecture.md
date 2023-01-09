@@ -168,7 +168,7 @@ functionality, and that the API calls are cached.
 
 You can see the documentation of this rule [here](https://gcpdiag.dev/rules/gke/ERR/2021_007/) and the github logic for this rule [here](https://github.com/444B/gcpdiag/blob/main/gcpdiag/lint/gke/err_2021_007_gke_sa.py)
 
-Example code: 
+Example code:
 ```python
 """GKE service account permissions.
 Verify that the Google Kubernetes Engine service account exists and has
