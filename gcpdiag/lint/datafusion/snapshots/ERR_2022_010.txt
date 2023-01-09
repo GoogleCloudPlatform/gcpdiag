@@ -1,0 +1,3 @@
+*  datafusion/ERR/2022_010: Cloud Dataproc Service Account has a Dataproc Worker role.
+   - gcpdiag-datafusion1-aaaa/us-central1/my-instance                     [ OK ]
+
