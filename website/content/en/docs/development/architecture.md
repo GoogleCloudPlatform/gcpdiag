@@ -159,55 +159,50 @@ modules. Each rule implements the rule checking logic as Python functions:
     that the `prepare\_rule` for all rules is called first, and not in parallel.
     This is useful for tasks that need to run as early as possible, but don't
     actually take a long time to complete. Currently the only use-case is for
-    defining logs queries (see:
-    [Codelab: Logs-based Rule](codelab-rule-logs.md)).
+    defining logs queries.
 
 Rule modules should **never access the API directly**, but always use query
 modules instead. This ensures proper testing and separation of concerns. Also,
 this way we can make sure that the queries modules cover all the required
 functionality, and that the API calls are cached.
 
+You can see the documentation of this rule [here](https://gcpdiag.dev/rules/gke/ERR/2021_007/) and the github logic for this rule [here](https://github.com/444B/gcpdiag/blob/main/gcpdiag/lint/gke/err_2021_007_gke_sa.py)
+
 Example code:
-
 ```python
-"""GKE nodes service account permissions for logging.
-
-The service account used by GKE nodes should have the logging.logWriter
-role, otherwise ingestion of logs won't work.
+"""GKE service account permissions.
+Verify that the Google Kubernetes Engine service account exists and has
+the Kubernetes Engine Service Agent role on the project.
 """
+from gcpdiag import lint, models
+from gcpdiag.queries import crm, gke, iam
 
-from gcp_doctor import lint, models
-from gcp_doctor.queries import gke, iam
+# defining role
+ROLE = 'roles/container.serviceAgent'
 
-ROLE = 'roles/logging.logWriter'
 
+# creating rule to report if default SA exists
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-  # Find all clusters with logging enabled.
   clusters = gke.get_clusters(context)
   if not clusters:
     report.add_skipped(None, 'no clusters found')
     return
 
-  for _, c in sorted(clusters.items()):
-    if not c.has_logging_enabled():
-      report.add_skipped(c, 'logging disabled')
-    else:
-      iam_policy = iam.get_project_policy(c.project_id)
-      # Verify service-account permissions for every nodepool.
-      for np in c.nodepools:
-        sa = np.service_account
-        if not iam_policy.has_role_permissions(f'serviceAccount:{sa}', ROLE):
-          report.add_failed(np, f'service account: {sa}\nmissing role: {ROLE}')
-        else:
-          report.add_ok(np)
+  project = crm.get_project(context.project_id)
+  sa = 'service-{}@container-engine-robot.iam.gserviceaccount.com'.format(
+      project.number)
+  iam_policy = iam.get_project_policy(context.project_id)
+  if iam_policy.has_role_permissions(f'serviceAccount:{sa}', ROLE):
+    report.add_ok(project)
+  else:
+    report.add_failed(project,
+                      reason=f'service account: {sa}\nmissing role: {ROLE}')
 ```
 
 Metadata about the rule is determined as follows:
 
 -   **Product**: directory where the rule is placed. Example: `gke`.
--   **Class**: filename, e.g.: `gke/bp_2021_001_cloudops_enabled.py` -> class BP
-    (see also:
-    [test product classes and ids](usage.md#test-products-classes-and-ids)).
+-   **Class**: filename, e.g.: `gke/bp_2021_001_cloudops_enabled.py` -> class BP.
 -   **Id**: product+class+id uniquely identify a rule. Also determined by the
     filename, same as class (see above).
 -   **Short description**: the first line of the module docstring is the rule
