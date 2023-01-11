@@ -42,7 +42,7 @@ class VersionComponentsParser:
     return cs
 
   def extract_base_version(self) -> str:
-    m = re.search(r'^[\d\.]+', self.version_str)
+    m = re.search(r'[\d\.]+', self.version_str)
     if m is None:
       raise Exception(f'Can not parse version {self.version_str}')
     return m.group(0)
