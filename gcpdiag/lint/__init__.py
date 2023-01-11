@@ -276,6 +276,7 @@ class NotLintRule(Exception):
   pass
 
 
+# pylint: disable=unsubscriptable-object
 def is_function_named(name: str) -> Callable[[Any], bool]:
   return lambda obj: inspect.isfunction(obj) and obj.__name__ == name
 

@@ -39,5 +39,4 @@ jobs:
       run: pipenv install --deploy --dev
 
     - name: Run pre-commit
-      uses: pre-commit/action@9b88afc9cd57fd75b655d5c71bd38146d07135fe
-      # v2.0.3
+      uses: pre-commit/action@v3.0.0
