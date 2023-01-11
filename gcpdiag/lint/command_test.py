@@ -27,7 +27,7 @@ class Test:
 
   # pylint: disable=protected-access
   def test_flatten_multi_arg(self):
-    assert list(command._flatten_multi_arg([])) == []
+    assert not list(command._flatten_multi_arg([]))
     assert list(command._flatten_multi_arg(['*BP*'])) == ['*BP*']
     assert list(command._flatten_multi_arg(['*BP*',
                                             '*ERR*'])) == ['*BP*', '*ERR*']

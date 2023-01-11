@@ -37,7 +37,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
           c, (f'Cluster "{c.name}" is using Legacy VPC with no'
               f' support for subnets. Suggest change to modern VPC.'))
       continue
-    if subnetwork_config.short_path not in subnets.keys():
+    if subnetwork_config.short_path not in subnets:
       subnets[subnetwork_config.short_path] = c.short_path
       report.add_ok(c)
     else:
