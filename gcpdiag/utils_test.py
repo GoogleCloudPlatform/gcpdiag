@@ -119,3 +119,19 @@ def test_iter_dictlist():
   """Verify that test_iterdictlist iterates correctly."""
   test_dict = {'a': [1, 2], 'b': [3]}
   assert list(utils.iter_dictlist(test_dict)) == [('a', 1), ('a', 2), ('b', 3)]
+
+
+class TestVersionComponentsParser():
+  """Test Class for Version Components Parser."""
+
+  def test_extract_base_version(self):
+    """Verify that the base version can be extracted correctly from a version string."""
+    vcp1 = utils.VersionComponentsParser('1.14.3-asm.1')
+    vcp2 = utils.VersionComponentsParser('release-1.3-20200214-10-15')
+    vcp3 = utils.VersionComponentsParser('gkeVersion')
+    vcp4 = utils.VersionComponentsParser('1.19.13-gke.701')
+    assert vcp1.extract_base_version() == '1.14.3'
+    assert vcp2.extract_base_version() == '1.3'
+    with pytest.raises(Exception):
+      vcp3.extract_base_version()
+    assert vcp4.extract_base_version() == '1.19.13'

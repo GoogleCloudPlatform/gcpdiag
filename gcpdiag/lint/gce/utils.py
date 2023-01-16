@@ -55,13 +55,16 @@ class SerialOutputSearch:
   instances_with_match: Dict[str, LogEntryShort]
   search_is_done: bool
 
-  def __init__(self, context: models.Context, search_strings: Iterable[str]):
+  def __init__(self,
+               context: models.Context,
+               search_strings: Iterable[str],
+               custom_filter: str = None):
     self.search_strings = search_strings
     self.query = logs.query(
         project_id=context.project_id,
         resource_type='gce_instance',
         log_name='log_id("serialconsole.googleapis.com/serial_port_1_output")',
-        filter_str=self._mk_filter())
+        filter_str=custom_filter if custom_filter else self._mk_filter())
     self.instances_with_match = {}
     self.search_is_done = False
 
