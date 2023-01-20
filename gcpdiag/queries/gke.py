@@ -100,6 +100,10 @@ class NodePool(models.Resource):
     sa = self._get_service_account()
     return sa == 'default'
 
+  def has_image_streaming_enabled(self) -> bool:
+    return get_path(self._resource_data, ('config', 'gcfsConfig', 'enabled'),
+                    default=False)
+
   def has_md_concealment_enabled(self) -> bool:
     # Empty ({}) workloadMetadataConfig means that 'Metadata concealment'
     # (predecessor of Workload Identity) is enabled.
@@ -261,6 +265,24 @@ class Cluster(models.Resource):
     if ('networkConfig' in self._resource_data and
         'enableIntraNodeVisibility' in self._resource_data['networkConfig']):
       return self._resource_data['networkConfig']['enableIntraNodeVisibility']
+    return False
+
+  def has_image_streaming_enabled(self) -> bool:
+    """
+    Check if cluster has Image Streaming (aka  Google Container File System)
+    enabled
+    """
+    global_gcsfs = get_path(
+        self._resource_data,
+        ('nodePoolDefaults', 'nodeConfigDefaults', 'gcfsConfig', 'enabled'),
+        default=False)
+    # Check nodePoolDefaults settings
+    if global_gcsfs:
+      return True
+    for np in self.nodepools:
+      # Check if any nodepool has image streaming enabled
+      if np.has_image_streaming_enabled():
+        return True
     return False
 
   @property
