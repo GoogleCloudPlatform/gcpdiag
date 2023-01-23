@@ -128,7 +128,8 @@ def login():
 
 
 def get_user_email() -> str:
-  credentials = get_credentials()
+  credentials = get_credentials().with_quota_project(None)
+
   http = google_auth_httplib2.AuthorizedHttp(credentials, http=httplib2.Http())
   resp, content = http.request('https://www.googleapis.com/userinfo/v2/me')
   if resp['status'] != '200':
