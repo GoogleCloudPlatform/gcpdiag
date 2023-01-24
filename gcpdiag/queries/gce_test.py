@@ -29,6 +29,7 @@ DUMMY_DEFAULT_NAME = 'default'
 DUMMY_INSTANCE1_NAME = 'gce1'
 DUMMY_INSTANCE1_LABELS = {'foo': 'bar'}
 DUMMY_INSTANCE2_NAME = 'gce2'
+DUMMY_INSTANCE3_NAME = 'gke-gke1-default-pool-35923fbc-k05c'
 DUMMY_INSTANCE3_LABELS = {'gcp_doctor_test': 'gke'}
 
 
@@ -107,6 +108,14 @@ class TestGce:
     assert instances_by_name[DUMMY_INSTANCE1_NAME].is_windows_machine() is True
     assert instances_by_name[DUMMY_INSTANCE2_NAME].is_windows_machine() is False
 
+  def test_is_preemptible_vm(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    instances = gce.get_instances(context)
+    instances_by_name = {i.name: i for i in instances.values()}
+    assert instances_by_name[DUMMY_INSTANCE1_NAME].is_preemptible_vm() is True
+    assert instances_by_name[DUMMY_INSTANCE2_NAME].is_preemptible_vm() is True
+    assert instances_by_name[DUMMY_INSTANCE3_NAME].is_preemptible_vm() is False
+
   def test_network(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     instances = gce.get_instances(context)
@@ -122,6 +131,13 @@ class TestGce:
     instances_by_name = {i.name: i for i in instances.values()}
     assert 'secured-instance' in instances_by_name[DUMMY_INSTANCE1_NAME].tags
     assert 'secured-instance' in instances_by_name[DUMMY_INSTANCE2_NAME].tags
+
+  def test_disks(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    instances = gce.get_instances(context)
+    instances_by_name = {i.name: i for i in instances.values()}
+    assert len(instances_by_name[DUMMY_INSTANCE1_NAME].disks) == 1
+    assert len(instances_by_name[DUMMY_INSTANCE2_NAME].disks) == 1
 
   def test_access_scopes(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
