@@ -280,6 +280,12 @@ class Instance(models.Resource):
     else:
       raise RuntimeError(f"can't determine zone of instance {self.name}")
 
+  @property
+  def disks(self) -> list[str]:
+    if 'disks' in self._resource_data:
+      return self._resource_data['disks']
+    return []
+
   def is_serial_port_logging_enabled(self) -> bool:
     value = self.get_metadata('serial-port-logging-enable')
     return bool(value and value.upper() == 'TRUE')
@@ -287,6 +293,11 @@ class Instance(models.Resource):
   def is_gke_node(self) -> bool:
     return 'labels' in self._resource_data and \
            'goog-gke-node' in self._resource_data['labels']
+
+  def is_preemptible_vm(self) -> bool:
+    return 'scheduling' in self._resource_data and \
+      'preemptible' in self._resource_data['scheduling'] and \
+      self._resource_data['scheduling']['preemptible']
 
   def is_windows_machine(self) -> bool:
     if 'disks' in self._resource_data:
