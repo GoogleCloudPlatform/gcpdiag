@@ -1,0 +1,4 @@
+*  dataproc/ERR/2023_001: Dataproc cluster initialization completed by the end of the timeout period.
+   - gcpdiag-dataproc1-aaaa                                               [SKIP]
+     logging api is disabled
+
