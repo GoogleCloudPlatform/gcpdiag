@@ -41,6 +41,10 @@ class NodeConfig:
     return False
 
   @property
+  def machine_type(self) -> str:
+    return self._resource_data['machineType']
+
+  @property
   def image_type(self) -> str:
     return self._resource_data['imageType']
 
@@ -162,6 +166,10 @@ class NodePool(models.Resource):
       return []
     return migs[0].template.tags
 
+  def get_machine_type(self) -> str:
+    """Returns the machine type of the nodepool nodes"""
+    return self.config.machine_type
+
 
 class UndefinedClusterPropertyError(Exception):
   """Thrown when a property of a cluster can't be determined for
@@ -260,6 +268,17 @@ class Cluster(models.Resource):
     return not (get_path(self._resource_data,
                          ('addonsConfig', 'httpLoadBalancing', 'disabled'),
                          default=None) is True)
+
+  def has_network_policy_enabled(self) -> bool:
+    # Network policy enforcement
+    return not (get_path(self._resource_data,
+                         ('addonsConfig', 'networkPolicyConfig', 'disabled'),
+                         default=False) is True)
+
+  def has_dpv2_enabled(self) -> bool:
+    # Checks whether dataplane V2 is enabled in clusters
+    return (get_path(self._resource_data, ('networkConfig', 'datapathProvider'),
+                     default=None) == 'ADVANCED_DATAPATH')
 
   def has_intra_node_visibility_enabled(self) -> bool:
     if ('networkConfig' in self._resource_data and
