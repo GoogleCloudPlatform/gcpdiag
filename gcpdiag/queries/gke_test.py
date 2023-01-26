@@ -310,6 +310,22 @@ class TestCluster:
     assert isinstance(ips[0], ipaddress.IPv4Network)
     assert ips[0].is_private
 
+  def test_has_network_policy_enabled(self):
+    # test for network ploicy enabled and disabled
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    assert not c.has_network_policy_enabled()
+
+  def test_has_dpv2_enabled(self):
+    # test for dpv2 enabled
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER2_NAME]
+    assert not c.has_dpv2_enabled()
+    c2 = clusters[DUMMY_AUTOPILOT_CLUSTER1_NAME]
+    assert c2.has_dpv2_enabled()
+
 
 class TestVersion:
   """ Test GKE Version class """
