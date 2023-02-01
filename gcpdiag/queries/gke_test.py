@@ -20,7 +20,6 @@ import re
 from unittest import mock
 
 import pytest
-from packaging.version import LegacyVersion
 
 from gcpdiag import models
 from gcpdiag.queries import apis_stub, gce, gke
@@ -364,11 +363,6 @@ class TestVersion:
   def test_eq_version(self):
     assert Version('1.19.13-gke.701') == Version('1.19.13-gke.701')
     assert Version('1.19.13-gke.701') != Version('1.19.13-gke.702')
-
-  def test_compatible_with_legacy_version(self):
-    l1 = LegacyVersion(Version('1.19.13-gke.701'))
-    l2 = LegacyVersion(Version('1.19.14-something.else'))
-    assert l1 < l2
 
   def test_compare_lt_gt(self):
     assert Version('1.19.13-gke.701') < Version('2.19.13-gke.701')
