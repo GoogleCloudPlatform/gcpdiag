@@ -281,7 +281,7 @@ class Instance(models.Resource):
       raise RuntimeError(f"can't determine zone of instance {self.name}")
 
   @property
-  def disks(self) -> list[str]:
+  def disks(self) -> List[str]:
     if 'disks' in self._resource_data:
       return self._resource_data['disks']
     return []
