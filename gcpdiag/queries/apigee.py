@@ -15,12 +15,13 @@
 # Lint as: python3
 """Queries related to Apigee."""
 
+import re
 from typing import Dict, Iterable, List, Mapping, Optional
 
 import googleapiclient.errors
 
 from gcpdiag import caching, config, models
-from gcpdiag.queries import apis, apis_utils
+from gcpdiag.queries import apis, apis_utils, network
 from gcpdiag.utils import GcpApiError
 
 
@@ -82,6 +83,30 @@ class ApigeeOrganization(models.Resource):
       return ''
 
     return self._resource_data.get('runtimeDatabaseEncryptionKeyName', '')
+
+  @property
+  def authorized_network(self) -> str:
+    if self._resource_data is None:
+      return ''
+
+    return self._resource_data.get('authorizedNetwork', '')
+
+  @property
+  def network(self) -> network.Network:
+    if self.authorized_network:
+      match = re.match(
+          r'projects/(?P<project>[^/]+)/([^/]+)/networks/(?P<network>[^/]+)$',
+          self.authorized_network)
+      # Check whether the authorized network is a shared VPC network
+      # A shared VPC network is using following format:
+      # `projects/{host-project-id}/{region}/networks/{network-name}`
+      if match:
+        return network.get_network(match.group('project'),
+                                   match.group('network'))
+      else:
+        return network.get_network(self.project_id, self.authorized_network)
+
+    return network.get_network(self.project_id, 'default')
 
 
 class EnvironmentGroup(models.Resource):

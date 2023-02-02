@@ -23,6 +23,7 @@ from gcpdiag.queries import apigee, apis_stub
 DUMMY_PROJECT_NAME = 'gcpdiag-apigee1-aaaa'
 DUMMY_APIGEE_ORG_NAME = 'gcpdiag-apigee1-aaaa'
 DUMMY_APIGEE_ORG_RUNTIME_TYPE = 'CLOUD'
+DUMMY_APIGEE_NETWORK_NAME = 'default'
 DUMMY_APIGEE_ENVGROUP_NAME = 'gcpdiag-demo-envgroup'
 DUMMY_APIGEE_ENVGROUP_FULL_PATH = \
         f'organizations/{DUMMY_APIGEE_ORG_NAME}/envgroups/{DUMMY_APIGEE_ENVGROUP_NAME}'
@@ -48,6 +49,8 @@ class TestOrganization:
 
     assert apigee_org.name == DUMMY_APIGEE_ORG_NAME
     assert apigee_org.runtime_type == DUMMY_APIGEE_ORG_RUNTIME_TYPE
+    assert apigee_org.network.project_id == DUMMY_PROJECT_NAME
+    assert apigee_org.network.name == DUMMY_APIGEE_NETWORK_NAME
 
     apigee_envs = [e.name for e in apigee_org.environments]
     assert DUMMY_APIGEE_ENVGROUP1_ATTACHMENTS_ENV in apigee_envs

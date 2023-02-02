@@ -21,6 +21,7 @@ SED_SUBST_FAKE = sed -e "s/$(PROJECT_ID_SUFFIX)/$(FAKE_PROJECT_ID_SUFFIX)/" \
 all:	\
 	json-dumps/apigee-organizations.json \
 	json-dumps/apigee-organization.json \
+	json-dumps/compute-network-apigee-network.json \
 	json-dumps/apigee-instances.json \
 	json-dumps/apigee-instances-gcpdiag-apigee1-inst1-aaaa-attachments.json \
 	json-dumps/apigee-envgroups.json   \
@@ -60,6 +61,13 @@ json-dumps/services.json:
 	$(CURL) -fsS \
 	  'https://serviceusage.googleapis.com/v1/projects/$(PROJECT_ID)/services?filter=state:ENABLED'  \
 	   | $(SED_SUBST_FAKE) >$@
+
+# compute.googleapis.com
+json-dumps/compute-network-apigee-network.json:
+	$(CURL) -fsS \
+	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/networks/default' \
+		| $(JSON_CLEANER) apigee \
+		| $(SED_SUBST_FAKE) >$@
 
 # cloudkms.googleapis.com
 

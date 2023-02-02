@@ -10,7 +10,10 @@ import sys
 clean_maps = {
     'apigee': {
         '.caCertificate': 'REDACTED',
-        '.apigeeProjectId': 'REDACTED'
+        '.apigeeProjectId': 'REDACTED',
+        '.peerings.[].network':
+            'https://www.googleapis.com/compute/v1/projects/'
+            'REDACTED/global/networks/servicenetworking'
     },
     'cloudrun': {
         '.services.[].creator': 'REDACTED',
