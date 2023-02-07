@@ -124,6 +124,48 @@ class Route(models.Resource):
     return self._resource_data['priority']
 
 
+class ManagedZone(models.Resource):
+  """
+  Represent a DNS zone (public or private
+  https://cloud.google.com/dns/docs/reference/v1beta2/managedZones
+  """
+  _resource_data: dict
+
+  def __init__(self, project_id, resource_data):
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+
+  @property
+  def cloud_logging_config(self) -> bool:
+    return self._resource_data['cloudLoggingConfig'].get('enableLogging', False)
+
+  @property
+  def is_public(self) -> bool:
+    return self._resource_data['visibility'] == 'public'
+
+  @property
+  def name(self) -> str:
+    return self._resource_data['name']
+
+  @property
+  def full_path(self) -> str:
+    result = re.match(r'https://dns.googleapis.com/dns/v1beta2/(.*)',
+                      self.self_link)
+    if result:
+      return result.group(1)
+    else:
+      return f'>> {self.self_link}'
+
+  @property
+  def short_path(self) -> str:
+    path = self.project_id + '/' + self.name
+    return path
+
+  @property
+  def self_link(self) -> str:
+    return self._resource_data['selfLink']
+
+
 class Router(models.Resource):
   """A VPC Router."""
   _resource_data: dict
@@ -789,6 +831,21 @@ def get_routes(project_id: str) -> List[Route]:
   request = compute.routes().list(project=project_id)
   response = request.execute(num_retries=config.API_RETRIES)
   return [Route(project_id, item) for item in response.get('items', [])]
+
+
+@caching.cached_api_call(in_memory=True)
+def get_zones(project_id: str) -> List[ManagedZone]:
+  logging.info('fetching DNS zones: %s', project_id)
+  dns = apis.get_api('dns', 'v1beta2', project_id)
+  request = dns.managedZones().list(project=project_id)
+  response = request.execute(num_retries=config.API_RETRIES)
+  zones = []
+  for zone in response.get('managedZones', []):
+    request2 = dns.managedZones().get(project=project_id,
+                                      managedZone=zone['name'])
+    response2 = request2.execute(num_retries=config.API_RETRIES)
+    zones.append(ManagedZone(project_id, response2))
+  return zones
 
 
 @caching.cached_api_call(in_memory=True)
