@@ -1,0 +1,80 @@
+{
+  "instances": [
+    {
+      "name": "projects/gcpdiag-notebooks1-aaaa/locations/us-west1-a/instances/gcpdiag-notebooks1instance-aaaa",
+      "proxyUri": "44b1bee026df3850-dot-us-west1.notebooks.googleusercontent.com",
+      "serviceAccount": "12340012-compute@developer.gserviceaccount.com",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks1-aaaa/zones/us-west1-a/machineTypes/e2-medium",
+      "state": "ACTIVE",
+      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks1-aaaa/global/networks/default",
+      "subnet": "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks1-aaaa/regions/us-west1/subnetworks/default",
+      "labels": {
+        "consumer-project-id": "notebooks-probe-prod",
+        "goog-caip-notebook": "",
+        "resource-name": "probe-instance-4f0091ac-605c-4ab6-948f-c8c2d8ece6ff"
+      },
+      "metadata": {
+        "serial-port-logging-enable": "true",
+        "version": "103",
+        "framework": "TensorFlow:2.11",
+        "restriction": "",
+        "enable-guest-attributes": "TRUE",
+        "proxy-mode": "service_account",
+        "shutdown-script": "/opt/deeplearning/bin/shutdown_script.sh",
+        "notebooks-api": "PROD",
+        "title": "TensorFlow2.11/Keras.CPU",
+        "proxy-url": "44b1bee026df3850-dot-us-west1.notebooks.googleusercontent.com"
+      },
+      "createTime": "2023-02-06T13:58:15.095719640Z",
+      "updateTime": "2023-02-06T14:00:19.686950128Z",
+      "disks": [
+        {
+          "autoDelete": true,
+          "boot": true,
+          "deviceName": "boot",
+          "diskSizeGb": "150",
+          "guestOsFeatures": [
+            {
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "UEFI_COMPATIBLE"
+            },
+            {
+              "type": "GVNIC"
+            }
+          ],
+          "interface": "SCSI",
+          "kind": "compute#attachedDisk",
+          "licenses": [
+            "https://www.googleapis.com/compute/v1/projects/click-to-deploy-images/global/licenses/c2d-tensorflow",
+            "https://www.googleapis.com/compute/v1/projects/click-to-deploy-images/global/licenses/c2d-dl-platform-gvnic",
+            "https://www.googleapis.com/compute/v1/projects/click-to-deploy-images/global/licenses/c2d-dl-platform-cpu-tensorflow-experimental",
+            "https://www.googleapis.com/compute/v1/projects/click-to-deploy-images/global/licenses/c2d-dl-platform-cpu-tensorflow-2-11",
+            "https://www.googleapis.com/compute/v1/projects/click-to-deploy-images/global/licenses/c2d-dl-platform-debian-10",
+            "https://www.googleapis.com/compute/v1/projects/click-to-deploy-images/global/licenses/c2d-dl-platform-dlvm"
+          ],
+          "mode": "READ_WRITE",
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks1-aaaa/zones/us-west1-a/disks/gcpdiag-notebooks1instance-aaaa-boot",
+          "type": "PERSISTENT"
+        },
+        {
+          "autoDelete": true,
+          "deviceName": "data",
+          "diskSizeGb": "100",
+          "index": "1",
+          "interface": "SCSI",
+          "kind": "compute#attachedDisk",
+          "mode": "READ_WRITE",
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks1-aaaa/zones/us-west1-a/disks/gcpdiag-notebooks1instance-aaaa-data",
+          "type": "PERSISTENT"
+        }
+      ],
+      "shieldedInstanceConfig": {
+        "enableVtpm": true,
+        "enableIntegrityMonitoring": true
+      },
+      "creator": "danelias@google.com"
+    }
+  ]
+}
