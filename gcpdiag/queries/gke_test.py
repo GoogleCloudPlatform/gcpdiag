@@ -206,6 +206,18 @@ class TestCluster:
     c = clusters[DUMMY_CLUSTER6_NAME]
     assert c.nodepools[0].config.has_accelerators()
 
+  def test_no_maintenance_window(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    assert not c.has_maintenance_window()
+
+  def test_maintenance_window(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER6_NAME]
+    assert c.has_maintenance_window()
+
   def test_nodepool_instance_groups(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
