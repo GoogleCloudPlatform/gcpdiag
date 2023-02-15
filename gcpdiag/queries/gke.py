@@ -286,6 +286,13 @@ class Cluster(models.Resource):
       return self._resource_data['networkConfig']['enableIntraNodeVisibility']
     return False
 
+  def has_maintenance_window(self) -> bool:
+    # 'e3b0c442' is a hexadecimal string that represents the value of an empty
+    # string ('') in cryptography. If the maintenance windows are defined, the
+    # value of 'resourceVersion' is not empty ('e3b0c442').
+    return self._resource_data['maintenancePolicy'][
+        'resourceVersion'] != 'e3b0c442'
+
   def has_image_streaming_enabled(self) -> bool:
     """
     Check if cluster has Image Streaming (aka  Google Container File System)

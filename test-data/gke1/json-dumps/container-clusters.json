@@ -1039,7 +1039,16 @@
       },
       "loggingService": "logging.googleapis.com/kubernetes",
       "maintenancePolicy": {
-        "resourceVersion": "e3b0c442"
+        "resourceVersion": "1e9f6cdb",
+        "window": {
+          "recurringWindow": {
+            "recurrence": "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR",
+            "window": {
+              "endTime": "2023-02-01T17:00:00Z",
+              "startTime": "2023-02-01T09:00:00Z"
+            }
+          }
+        }
       },
       "masterAuth": {
         "clusterCaCertificate": "REDACTED"

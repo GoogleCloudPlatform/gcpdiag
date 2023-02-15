@@ -31,6 +31,14 @@ resource "google_container_cluster" "gke6" {
     }
   }
 
+  maintenance_policy {
+    recurring_window {
+      start_time = "2023-02-01T09:00:00Z"
+      end_time   = "2023-02-01T17:00:00Z"
+      recurrence = "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR"
+    }
+  }
+
   resource_labels = {
     gcpdiag_test = "gke"
   }
