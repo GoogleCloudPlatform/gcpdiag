@@ -1,0 +1,20 @@
+*  gke/BP/2023_004: GKE clusters are VPC-native.
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [FAIL]
+      is not VPC-native
+   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [FAIL]
+      is not VPC-native
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [FAIL]
+      is not VPC-native
+
+   It's recommended to use VPC-native clusters. VPC-native clusters use alias IP
+   address ranges on GKE nodes and are required for private GKE clusters and for
+   creating clusters on Shared VPCs, as well as many other features.  VPC-native
+   clusters scale more easily than routes-based clusters without consuming
+   Google Cloud routes and so are less susceptible to hitting routing limits.
+
+   https://gcpdiag.dev/rules/gke/BP/2023_004
+
