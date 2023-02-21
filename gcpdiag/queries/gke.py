@@ -343,7 +343,15 @@ class Cluster(models.Resource):
 
   @property
   def is_private(self) -> bool:
-    return 'privateClusterConfig' in self._resource_data
+    if not 'privateClusterConfig' in self._resource_data:
+      return False
+
+    return self._resource_data['privateClusterConfig'].get(
+        'enablePrivateNodes', False)
+
+  @property
+  def is_vpc_native(self) -> bool:
+    return self._resource_data['ipAllocationPolicy'].get('useIpAliases', False)
 
   @property
   def is_regional(self) -> bool:
