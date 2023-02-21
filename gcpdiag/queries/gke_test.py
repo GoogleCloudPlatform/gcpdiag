@@ -266,6 +266,14 @@ class TestCluster:
     c = clusters[DUMMY_CLUSTER4_NAME]
     assert c.is_private
 
+  def test_cluster_is_vpc_native(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER3_NAME]
+    assert not c.is_vpc_native
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    assert c.is_vpc_native
+
   def test_cluster_is_regional(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
