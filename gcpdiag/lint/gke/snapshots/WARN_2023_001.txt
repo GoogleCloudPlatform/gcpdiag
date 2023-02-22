@@ -1,0 +1,3 @@
+*  gke/WARN/2023_001: Container File System has the required scopes for Image Streaming
+   (logging api is disabled)                                              [SKIP]
+
