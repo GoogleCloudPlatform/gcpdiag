@@ -254,6 +254,10 @@ class Cluster(models.Resource):
   def has_logging_enabled(self) -> bool:
     return self._resource_data['loggingService'] != 'none'
 
+  def enabled_logging_components(self) -> List[str]:
+    return self._resource_data['loggingConfig']['componentConfig'][
+        'enableComponents']
+
   def has_monitoring_enabled(self) -> bool:
     return self._resource_data['monitoringService'] != 'none'
 
