@@ -1,0 +1,4 @@
+*  dataproc/ERR/2023_003: Dataproc cluster service account has required permissions to launch a cluster.
+   - gcpdiag-dataproc1-aaaa                                               [SKIP]
+     logging api is disabled
+
