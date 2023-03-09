@@ -18,9 +18,10 @@
 Builds configured to upload image to Artifact Registry must use service account  that has write
 permission for it.
 """
+import abc
 import dataclasses
 import re
-from typing import Iterable, Tuple
+from typing import Iterable
 
 from gcpdiag import lint, models
 from gcpdiag.queries import artifact_registry, crm, gcb, iam
@@ -45,8 +46,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_failed(
         status.build,
         reason=f'{status.service_account} can not '
-        f'read {status.artifact_repository} registry in '
-        f'{status.artifact_location} in {status.artifact_project} project.',
+        f'read {status.repository.format_message()}',
     )
 
 
@@ -54,9 +54,39 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 class FailedBuildStatus:
   build: gcb.Build
   service_account: str
-  artifact_project: str
-  artifact_location: str
-  artifact_repository: str
+  repository: 'Repository'
+
+
+class Repository(abc.ABC):
+
+  @abc.abstractmethod
+  def can_read_registry(self, service_account_email: str) -> bool:
+    pass
+
+  @abc.abstractmethod
+  def format_message(self) -> str:
+    pass
+
+
+class ArtifactRepository(Repository):
+  """Represents AR docker repository that can be accessed by pkg.dev domain."""
+
+  def __init__(self, project_id: str, location: str, repository: str):
+    self.project_id = project_id
+    self.location = location
+    self.repository = repository
+
+  def can_read_registry(self, service_account_email: str) -> bool:
+    project_policy = iam.get_project_policy(self.project_id)
+    member = f'serviceAccount:{service_account_email}'
+    if project_policy.has_permission(member, PERMISSION):
+      return True
+    registry_policy = artifact_registry.get_registry_iam_policy(
+        self.project_id, self.location, self.repository)
+    return registry_policy.has_permission(member, PERMISSION)
+
+  def format_message(self) -> str:
+    return f'{self.repository} registry in {self.location} in {self.project_id} project.'
 
 
 def find_builds_without_image_upload_permission(
@@ -67,31 +97,20 @@ def find_builds_without_image_upload_permission(
     sa = (build.service_account or default_sa).split('/')[-1]
     if build.status != 'FAILURE':
       continue
-    for project, location, repository in get_used_registries(build.images):
-      if not can_read_registry(sa, project, location, repository):
-        yield FailedBuildStatus(build, sa, project, location, repository)
+    for repository in get_used_registries(build.images):
+      if not repository.can_read_registry(sa):
+        yield FailedBuildStatus(build, sa, repository)
 
 
-def get_used_registries(
-    images: Iterable[str]) -> Iterable[Tuple[str, str, str]]:
+def get_used_registries(images: Iterable[str]) -> Iterable[Repository]:
   result = set()
   for image in images:
     m = re.match('([^.]+)-docker.pkg.dev/([^/]+)/([^/]+)/([^.]+)', image)
     if m:
-      project = m.group(2)
-      location = m.group(1)
-      repository = m.group(3)
-      result.add((project, location, repository))
+      result.add(
+          ArtifactRepository(
+              project_id=m.group(2),
+              location=m.group(1),
+              repository=m.group(3),
+          ))
   return result
-
-
-def can_read_registry(service_account_email: str, project_id: str,
-                      location: str, repository: str):
-  project_policy = iam.get_project_policy(project_id)
-  member = f'serviceAccount:{service_account_email}'
-  if project_policy.has_permission(member, PERMISSION):
-    return True
-  registry_policy = artifact_registry.get_registry_iam_policy(
-      project_id, location, repository)
-  registry_policy.has_permission(member, PERMISSION)
-  return registry_policy.has_permission(member, PERMISSION)
