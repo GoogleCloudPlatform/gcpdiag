@@ -21,12 +21,18 @@ permission for it.
 import abc
 import dataclasses
 import re
-from typing import Iterable
+from typing import Iterable, Set
 
 from gcpdiag import lint, models
 from gcpdiag.queries import artifact_registry, crm, gcb, iam
 
 PERMISSION = 'artifactregistry.repositories.uploadArtifacts'
+GCR_LOCATION_MAP = {
+    'gcr.io': 'us',
+    'asia.gcr.io': 'asia',
+    'eu.gcr.io': 'europe',
+    'us.gcr.io': 'us',
+}
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -68,6 +74,27 @@ class Repository(abc.ABC):
     pass
 
 
+class GcrRepository(Repository):
+  """Represents AR or GCR docker repository that can be accessed by gcr.io domain."""
+
+  def __init__(self, project_id: str, repository: str):
+    self.project_id = project_id
+    self.repository = repository
+
+  def can_read_registry(self, service_account_email: str) -> bool:
+    if not artifact_registry.get_project_settings(
+        self.project_id).legacy_redirect:
+      # In case of failure to upload to gcr.io cloud build provides useful information.
+      return True
+    location = GCR_LOCATION_MAP[self.repository]
+    return ArtifactRepository(
+        self.project_id, location,
+        self.repository).can_read_registry(service_account_email)
+
+  def format_message(self) -> str:
+    return f'{self.repository} registry in {self.project_id} project.'
+
+
 class ArtifactRepository(Repository):
   """Represents AR docker repository that can be accessed by pkg.dev domain."""
 
@@ -103,9 +130,9 @@ def find_builds_without_image_upload_permission(
 
 
 def get_used_registries(images: Iterable[str]) -> Iterable[Repository]:
-  result = set()
+  result: Set[Repository] = set()
   for image in images:
-    m = re.match('([^.]+)-docker.pkg.dev/([^/]+)/([^/]+)/([^.]+)', image)
+    m = re.match('([^.]+)-docker.pkg.dev/([^/]+)/([^/]+)/(?:[^.]+)', image)
     if m:
       result.add(
           ArtifactRepository(
@@ -113,4 +140,10 @@ def get_used_registries(images: Iterable[str]) -> Iterable[Repository]:
               location=m.group(1),
               repository=m.group(3),
           ))
+    m = re.match('((?:[^.]+-)?gcr.io)/([^/]+)/(?:[^.]+)', image)
+    if m:
+      result.add(GcrRepository(
+          project_id=m.group(2),
+          repository=m.group(1),
+      ))
   return result

@@ -27,9 +27,14 @@ DUMMY_POLICY_MEMBER = 'serviceAccount:gcb-custom2@gcpdiag-gcb1-aaaa.iam.gservice
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
 class TestArtifactRegistry:
+  """Test Artifact Registry."""
 
   def test_get_bucket_iam_policy(self):
     policy = artifact_registry.get_registry_iam_policy(DUMMY_PROJECT_NAME,
                                                        DUMMY_REGISTRY_LOCATION,
                                                        DUMMY_REGISTRY_ID)
     assert set(policy.get_members()) == {DUMMY_POLICY_MEMBER}
+
+  def test_get_project_settings(self):
+    settings = artifact_registry.get_project_settings(DUMMY_PROJECT_NAME)
+    assert settings == artifact_registry.ProjectSettings(legacy_redirect=True)

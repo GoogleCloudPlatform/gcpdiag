@@ -16,8 +16,9 @@
 """Queries related to GCP Artifact Registry
 
 """
+import dataclasses
 
-from gcpdiag import caching
+from gcpdiag import caching, config
 from gcpdiag.queries import apis, iam
 
 
@@ -25,6 +26,11 @@ class ArtifactRegistryIAMPolicy(iam.BaseIAMPolicy):
 
   def _is_resource_permission(self, permission):
     return True
+
+
+@dataclasses.dataclass
+class ProjectSettings:
+  legacy_redirect: bool
 
 
 @caching.cached_api_call(in_memory=True)
@@ -37,3 +43,13 @@ def get_registry_iam_policy(project_id: str, location: str,
       resource=registry_id)
   return iam.fetch_iam_policy(request, ArtifactRegistryIAMPolicy, project_id,
                               registry_id)
+
+
+@caching.cached_api_call(in_memory=True)
+def get_project_settings(project_id: str) -> ProjectSettings:
+  ar_api = apis.get_api('artifactregistry', 'v1', project_id)
+  response = ar_api.projects().getProjectSettings(
+      name=f'projects/{project_id}/projectSettings').execute(
+          num_retries=config.API_RETRIES)
+  return ProjectSettings(legacy_redirect=response.get('legacyRedirectionState')
+                         == 'REDIRECTION_FROM_GCR_IO_ENABLED')
