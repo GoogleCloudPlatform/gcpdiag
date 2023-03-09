@@ -8,6 +8,16 @@ resource "local_file" "build1_config" {
   filename = "${path.module}/build_configs/cloudbuild1.yaml"
 }
 
+resource "local_file" "build1b_config" {
+  content = templatefile(
+    "${path.module}/build_configs/cloudbuild1.yaml.tpl",
+    {
+      image = "${local.legacy_repository_url}/image",
+      sa    = google_service_account.service_account_custom1.name
+  })
+  filename = "${path.module}/build_configs/cloudbuild1b.yaml"
+}
+
 resource "local_file" "build2_config" {
   content = templatefile(
     "${path.module}/build_configs/cloudbuild2.yaml.tpl",
@@ -34,6 +44,10 @@ resource "local_file" "build4_config" {
 
 output "build1_config" {
   value = local_file.build1_config.filename
+}
+
+output "build1b_config" {
+  value = local_file.build1b_config.filename
 }
 
 output "build2_config" {

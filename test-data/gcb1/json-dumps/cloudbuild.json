@@ -226,6 +226,79 @@
           "priority": "INFO"
         }
       ]
+    },
+    {
+      "artifacts": {
+        "images": [
+          "gcr.io/gcpdiag-gcb1-aaaa/image"
+        ]
+      },
+      "createTime": "2023-03-09T10:37:31.359018970Z",
+      "failureInfo": {
+        "detail": "Docker image push failure (\"The push refers to repository [gcr.io/gcpdiag-gcb1-aaaa/image]\n71ab6bbb10b7: Preparing\n0517ac42801f: Preparing\n84ff92691f90: Preparing\n90d624ea42b1: Preparing\n0d7cb9e02e7b: Preparing\ndenied: Token exchange failed for project 'gcpdiag-gcb1-aaaa'. Caller does not have permission 'storage.buckets.create'. To configure permissions, follow instructions at: https://cloud.google.com/container-registry/docs/access-control\n\"): You are not authorized to use project gcpdiag-gcb1-aaaa. Request a project owner of gcpdiag-gcb1-aaaa to grant ‘Cloud Build Editor’ IAM role to your 'user' account.",
+        "type": "PUSH_NOT_AUTHORIZED"
+      },
+      "finishTime": "2023-03-09T10:38:12.131615289Z",
+      "id": "d2a2f7f0-f660-40cb-8cb1-574d29832e74",
+      "images": [
+        "gcr.io/gcpdiag-gcb1-aaaa/image"
+      ],
+      "logUrl": "https://console.cloud.google.com/cloud-build/builds/d2a2f7f0-f660-40cb-8cb1-574d29832e74?project=86947272951",
+      "name": "projects/86947272951/locations/global/builds/d2a2f7f0-f660-40cb-8cb1-574d29832e74",
+      "options": {
+        "logging": "CLOUD_LOGGING_ONLY",
+        "pool": {}
+      },
+      "projectId": "gcpdiag-gcb1-aaaa",
+      "queueTtl": "3600s",
+      "results": {
+        "buildStepImages": [
+          "sha256:57a455a66834d73eb387c54bb92fddd707c877ef33863f089b56f86945960afe"
+        ],
+        "buildStepOutputs": [
+          ""
+        ]
+      },
+      "serviceAccount": "projects/gcpdiag-gcb1-aaaa/serviceAccounts/gcb-custom1@gcpdiag-gcb1-aaaa.iam.gserviceaccount.com",
+      "sourceProvenance": {},
+      "startTime": "2023-03-09T10:37:32.033586269Z",
+      "status": "FAILURE",
+      "steps": [
+        {
+          "args": [
+            "tag",
+            "gcr.io/cloud-builders/docker",
+            "gcr.io/gcpdiag-gcb1-aaaa/image"
+          ],
+          "name": "gcr.io/cloud-builders/docker",
+          "pullTiming": {
+            "endTime": "2023-03-09T10:37:33.023325973Z",
+            "startTime": "2023-03-09T10:37:33.020467099Z"
+          },
+          "status": "SUCCESS",
+          "timing": {
+            "endTime": "2023-03-09T10:37:33.986570836Z",
+            "startTime": "2023-03-09T10:37:33.020467099Z"
+          }
+        }
+      ],
+      "timeout": "3600s",
+      "timing": {
+        "BUILD": {
+          "endTime": "2023-03-09T10:37:34.020105149Z",
+          "startTime": "2023-03-09T10:37:32.465794969Z"
+        },
+        "PUSH": {
+          "endTime": "2023-03-09T10:38:11.956215143Z",
+          "startTime": "2023-03-09T10:37:34.020186956Z"
+        }
+      },
+      "warnings": [
+        {
+          "priority": "INFO",
+          "text": "The service account running this build does not have permission to write logs. To fix this, grant the Logs Writer (roles/logging.logWriter) role to the service account."
+        }
+      ]
     }
   ]
 }

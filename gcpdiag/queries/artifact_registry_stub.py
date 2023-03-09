@@ -48,3 +48,12 @@ class ArtifactRegistryApiStub:
       return apis_stub.RestCallStub(project_id, 'artifact-registry-policy')
     else:
       raise ValueError(INCORRECT_RESOURCE_ERROR)
+
+  def getProjectSettings(self, name: str) -> apis_stub.RestCallStub:
+    m = re.match(r'projects/([^/]+)/projectSettings', name)
+    if m:
+      project_id = m.group(1)
+      return apis_stub.RestCallStub(project_id,
+                                    'artifact-registry-project-settings')
+    else:
+      raise ValueError(INCORRECT_RESOURCE_ERROR)

@@ -3,6 +3,7 @@ PROJECT_ID_SUFFIX := $(shell terraform output -raw project_id_suffix)
 PROJECT_NR  := $(shell terraform output -raw project_nr)
 ORG_ID      := $(shell terraform output -raw org_id)
 BUILD1_CONFIG            := $(shell terraform output -raw build1_config)
+BUILD1B_CONFIG           := $(shell terraform output -raw build1b_config)
 BUILD2_CONFIG            := $(shell terraform output -raw build2_config)
 BUILD3_CONFIG            := $(shell terraform output -raw build3_config)
 BUILD4_CONFIG            := $(shell terraform output -raw build4_config)
@@ -27,12 +28,15 @@ all:	\
 	json-dumps/cloudbuild-triggers.json \
 	json-dumps/bucket-gcpdiag-gcb1-bucket1-aaaa.json \
 	json-dumps/artifact-registry-policy.json \
+	json-dumps/artifact-registry-project-settings.json \
 	json-dumps/iam-service-accounts.json \
 	json-dumps/project.json \
 	json-dumps/services.json
 
 run-builds:
 	gcloud builds submit --no-source --config $(BUILD1_CONFIG) \
+		--project $(PROJECT_ID) || true
+	gcloud builds submit --no-source --config $(BUILD1B_CONFIG) \
 		--project $(PROJECT_ID) || true
 	gcloud builds submit --no-source --config $(BUILD2_CONFIG) \
 		--project $(PROJECT_ID) || true
@@ -81,6 +85,11 @@ json-dumps/bucket-gcpdiag-gcb1-bucket1-aaaa.json:
 json-dumps/artifact-registry-policy.json:
 	$(CURL) -fv \
 		'https://artifactregistry.googleapis.com/v1/$(ARTIFACT_REGISTRY):getIamPolicy' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/artifact-registry-project-settings.json:
+	$(CURL) -fv \
+		'https://artifactregistry.googleapis.com/v1/projects/$(PROJECT_ID)/projectSettings' \
 		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/iam-service-accounts.json:

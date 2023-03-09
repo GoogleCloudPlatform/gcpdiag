@@ -38,7 +38,7 @@ class TestCloudBuild:
   def test_get_builds(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     builds = gcb.get_builds(context=context)
-    assert len(builds) == 5
+    assert len(builds) == 6
     assert BUILD_ID_FAILED_STEP in builds
     assert BUIDL_ID_FAILED_LOGGING in builds
     assert BUIDL_ID_SUCCESS_LOGGING in builds
