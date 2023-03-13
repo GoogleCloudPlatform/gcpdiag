@@ -1,0 +1,17 @@
+*  gce/BP_EXT/2023_001: GCE Instances follows access scope best practice
+   - gcpdiag-gce1-aaaa/gce1                                               [FAIL]
+     12340001-compute@developer.gserviceaccount.com has a basic role granted.
+   - gcpdiag-gce1-aaaa/gce2                                               [FAIL]
+     12340001-compute@developer.gserviceaccount.com has a basic role granted.
+   - gcpdiag-gce1-aaaa/mig-4h21                                           [ OK ]
+   - gcpdiag-gce1-aaaa/mig-7pvl                                           [ OK ]
+
+   Google recommends not to rely on access scopes but instead set the cloud-
+   platform access scope and control the service account access by granting
+   fine-grained IAM roles. Enabling a custom service account with very coarse-
+   grained permissions and a very restricted access scope will ensure the
+   connection to or from the VM is limited and implements a security-in-depth
+   strategy where multiple layers of security are used for holistic protection.
+
+   https://gcpdiag.dev/rules/gce/BP_EXT/2023_001
+
