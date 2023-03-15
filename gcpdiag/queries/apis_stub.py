@@ -69,7 +69,10 @@ JSON_PROJECT_DIR = {
     'gcpdiag-cloudrun1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/cloudrun1/json-dumps',
     'gcpdiag-notebooks1-aaaa':
-        pathlib.Path(__file__).parents[2] / 'test-data/notebooks1/json-dumps'
+        pathlib.Path(__file__).parents[2] / 'test-data/notebooks1/json-dumps',
+    'gcpdiag-interconnect1-aaaa':
+        pathlib.Path(__file__).parents[2] /
+        'test-data/interconnect1/json-dumps',
 }
 
 # set to a value higher than 0 to emulate API temp. failure
