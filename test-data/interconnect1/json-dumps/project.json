@@ -1,0 +1,13 @@
+{
+  "name": "projects/123400010",
+  "parent": "folders/1234567",
+  "projectId": "gcpdiag-interconnect1-aaaa",
+  "state": "ACTIVE",
+  "displayName": "gcpdiag test - interconnect1",
+  "createTime": "2022-08-25T14:21:48.527Z",
+  "updateTime": "2022-08-25T14:21:50.098Z",
+  "etag": "TaJ5DhDFtwUvBRUHyHHKpQ==",
+  "labels": {
+    "gcpdiag": "test"
+  }
+}
