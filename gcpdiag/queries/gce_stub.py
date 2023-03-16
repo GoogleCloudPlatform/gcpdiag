@@ -19,7 +19,7 @@ Instead of doing real API calls, we return test JSON data.
 """
 import json
 
-from gcpdiag.queries import apis_stub, lb_stub, network_stub
+from gcpdiag.queries import apis_stub, interconnect_stub, lb_stub, network_stub
 
 # pylint: disable=unused-argument
 # pylint: disable=invalid-name
@@ -120,6 +120,9 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
 
   def backendServices(self):
     return lb_stub.LbApiStub(mock_state='backendServices')
+
+  def interconnects(self):
+    return interconnect_stub.InterconnectApiStub(mock_state='interconnects')
 
   def execute(self, num_retries=0):
     json_dir = apis_stub.get_json_dir(self.project)
