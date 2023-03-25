@@ -22,11 +22,12 @@ from gcpdiag.queries import apis_stub, gcs
 
 DUMMY_PROJECT_NAME = 'gcpdiag-gcs1-aaaa'
 DUMMY_BUCKET_PATH = 'b/gcpdiag-gcs1bucket-aaaa'
+DUMMY_BUCKET_NAME = 'gcpdiag-gcs1bucket-aaaa'
 DUMMY_BUCKET_WITH_RETENTION_NAME = 'gcpdiag-gcs1bucket2-aaaa'
 DUMMY_BUCKET_PERM = 'projectEditor:gcpdiag-gcs1-aaaa'
 DUMMY_BUCKET_LABELS = {
-    'b/gcpdiag-gcs1bucket-aaaa': {},
-    'b/gcpdiag-gcs1bucket-labels-aaaa': {
+    'gcpdiag-gcs1bucket-aaaa': {},
+    'gcpdiag-gcs1bucket-labels-aaaa': {
         'label1': 'value1'
     },
 }
@@ -68,7 +69,7 @@ class TestGcs:
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     buckets = gcs.get_buckets(context=context)
     assert len(buckets) == 3
-    assert DUMMY_BUCKET_PATH in buckets
+    assert DUMMY_BUCKET_NAME in buckets
 
   def test_get_bucket_iam_policy(self):
     policy = gcs.get_bucket_iam_policy(DUMMY_PROJECT_NAME, DUMMY_BUCKET_PATH)

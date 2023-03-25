@@ -179,15 +179,22 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
     if 'instances' not in resp:
       return instances
 
-    for resp_i in resp['instances']:
-      # verify that we have some minimal data that we expect
-      if 'name' not in resp_i:
-        raise RuntimeError(
-            'missing instance name in projects.locations.instances.list response'
-        )
+    for i in resp['instances']:
+      # projects/{project}/locations/{location}/instances/{instance}.
+      result = re.match(r'projects/[^/]+/locations/([^/]+)/instances/([^/]+)',
+                        i['name'])
+      if not result:
+        logging.error('invalid datafusion name: %s', i['name'])
+        continue
+      location = result.group(1)
+      labels = i.get('labels', {})
+      name = result.group(2)
+      if not context.match_project_resource(
+          location=location, labels=labels, resource=name):
+        continue
 
-      i = Instance(project_id=context.project_id, resource_data=resp_i)
-      instances[i.full_path] = i
+      instances[i['name']] = Instance(project_id=context.project_id,
+                                      resource_data=i)
 
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err

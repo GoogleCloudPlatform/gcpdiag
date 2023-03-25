@@ -213,13 +213,23 @@ def get_builds(context: models.Context) -> Mapping[str, Build]:
     location = match.group(2)
     if 'builds' not in response:
       continue
-    for resp_f in response['builds']:
+    for build in response['builds']:
       # verify that we have some minimal data that we expect
-      if 'id' not in resp_f:
+      if 'id' not in build:
         raise RuntimeError(
             'missing data in projects.locations.builds.list response')
-      f = Build(project_id=project_id, location=location, resource_data=resp_f)
-      builds[f.id] = f
+      r = re.search(r'projects/([^/]+)/locations/([^/]+)/builds/([^/]+)',
+                    build['name'])
+      if not r:
+        logging.error('build has invalid data: %s', build['name'])
+        continue
+
+      if not context.match_project_resource(resource=r.group(3)):
+        continue
+
+      builds[build['id']] = Build(project_id=project_id,
+                                  location=location,
+                                  resource_data=build)
   return builds
 
 

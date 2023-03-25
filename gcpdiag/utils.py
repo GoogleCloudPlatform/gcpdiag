@@ -176,6 +176,10 @@ def is_region(name: str) -> bool:
   return bool(re.match(REGION_NAME_MATCH, name))
 
 
+def is_zone(name: str) -> bool:
+  return bool(re.match(ZONE_NAME_MATCH, name))
+
+
 def zone_region(zone: str) -> str:
   """Get region name of a zone."""
   m = re.match(ZONE_NAME_MATCH, zone)

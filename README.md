@@ -33,7 +33,10 @@ Currently gcpdiag mainly supports one subcommand: `lint`, which is used
 to run diagnostics on one or more GCP projects.
 
 ```
-usage: gcpdiag lint --project P [OPTIONS]
+usage:
+
+gcpdiag lint --project P [OPTIONS]
+gcpdiag lint --project P [--name faulty-vm --location us-central1-a --label key:value]
 
 Run diagnostics in GCP projects.
 
@@ -43,6 +46,10 @@ optional arguments:
   --auth-key FILE       Authenticate using a service account private key file
   --auth-oauth          Authenticate using OAuth user authentication (currently marked as deprecated, consider using other authentication methods)
   --project P           Project ID of project to inspect
+  --name n [n ...]      Resource Name(s) to inspect (e.g.: bastion-host,prod-*)
+  --location R [R ...]  Valid GCP region/zone to scope inspection (e.g.: us-central1-a,us-central1)
+  --label key:value     One or more resource labels as key-value pair(s) to scope inspection
+                        (e.g.:  env:prod, type:frontend or env=prod type=frontend)
   --billing-project P   Project used for billing/quota of API calls done by gcpdiag (default is the inspected project, requires
                         'serviceusage.services.use' permission)
   --show-skipped        Show skipped rules
@@ -114,12 +121,12 @@ The **product** is the GCP service that is being tested. Examples: GKE or GCE.
 
 The **class** is what kind of test it is, currently we have:
 
-Class name | Description
----------- | -----------------------------------------------
-BP         | Best practice, opinionated recommendations
-WARN       | Warnings: things that are possibly wrong
-ERR        | Errors: things that are very likely to be wrong
-SEC        | Potential security issues
+| Class name | Description                                     |
+| ---------- | ----------------------------------------------- |
+| BP         | Best practice, opinionated recommendations      |
+| WARN       | Warnings: things that are possibly wrong        |
+| ERR        | Errors: things that are very likely to be wrong |
+| SEC        | Potential security issues                       |
 
 The **ID** is currently formatted as YYYY_NNN, where YYYY is the year the test
 was written, and NNN is a counter. The ID must be unique per product/class

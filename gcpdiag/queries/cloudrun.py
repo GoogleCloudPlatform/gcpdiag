@@ -110,13 +110,23 @@ def get_services(context: models.Context) -> Mapping[str, Service]:
       resp = query.execute(num_retries=config.API_RETRIES)
       if 'services' not in resp:
         continue
-      for resp_s in resp['services']:
-        # verify that we have some minimal data that we expect
-        if 'name' not in resp_s:
+      for s in resp['services']:
+        # projects/{project}/locations/{location}/services/{serviceId}.
+        result = re.match(r'projects/[^/]+/locations/([^/]+)/services/([^/]+)',
+                          s['name'])
+        if not result:
+          logging.error('invalid cloudrun name: %s', s['name'])
           raise RuntimeError(
               'missing data in projects.locations.services.list response')
-        s = Service(project_id=context.project_id, resource_data=resp_s)
-        services[s.id] = s
+        location = result.group(1)
+        labels = s.get('labels', {})
+        name = result.group(2)
+        if not context.match_project_resource(
+            location=location, labels=labels, resource=name):
+          continue
+
+        services[s['uid']] = Service(project_id=context.project_id,
+                                     resource_data=s)
     except googleapiclient.errors.HttpError as err:
       raise utils.GcpApiError(err) from err
   return services

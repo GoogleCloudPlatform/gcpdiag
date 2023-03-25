@@ -101,12 +101,21 @@ def get_services(context: models.Context) -> Mapping[str, Service]:
     resp = query.execute(num_retries=config.API_RETRIES)
     if 'services' not in resp:
       return services
-    for resp_s in resp['services']:
-      # verify that we have some minimal data that we expect
-      if 'name' not in resp_s:
-        raise RuntimeError('missing data in apps.services.list response')
-      s = Service(project_id=context.project_id, resource_data=resp_s)
-      services[s.id] = s
+    for s in resp['services']:
+      # apps/myapp/services/default
+      result = re.match(r'apps/[^/]+/services/([^/]+)', s['name'])
+      if not result:
+        logging.error('invalid appengine data: %s', s['name'])
+        continue
+
+      labels = s.get('labels', {})
+
+      if not context.match_project_resource(resource=result.group(1),
+                                            labels=labels):
+        continue
+
+      services[s['id']] = Service(project_id=context.project_id,
+                                  resource_data=s)
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
   return services

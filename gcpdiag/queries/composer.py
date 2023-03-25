@@ -13,6 +13,7 @@
 # limitations under the License.
 """Queries related to Composer."""
 
+import logging
 import re
 from typing import Iterable, List, Tuple
 
@@ -98,10 +99,24 @@ def _query_regions_envs(regions, api, project_id):
 
 @caching.cached_api_call
 def get_environments(context: models.Context) -> Iterable[Environment]:
+  environments: List[Environment] = []
   if not apis.is_enabled(context.project_id, 'composer'):
-    return []
+    return environments
   api = apis.get_api('composer', 'v1', context.project_id)
-  return [
-      Environment(context.project_id, d)
-      for d in _query_regions_envs(COMPOSER_REGIONS, api, context.project_id)
-  ]
+
+  for env in _query_regions_envs(COMPOSER_REGIONS, api, context.project_id):
+    # projects/{projectId}/locations/{locationId}/environments/{environmentId}.
+    result = re.match(r'projects/[^/]+/locations/([^/]+)/environments/([^/]+)',
+                      env['name'])
+    if not result:
+      logging.error('invalid composer name: %s', env['name'])
+      continue
+    location = result.group(1)
+    labels = env.get('labels', {})
+    name = result.group(2)
+    if not context.match_project_resource(
+        location=location, labels=labels, resource=name):
+      continue
+
+    environments.append(Environment(context.project_id, env))
+  return environments

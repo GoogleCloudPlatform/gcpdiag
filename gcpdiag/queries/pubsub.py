@@ -68,12 +68,21 @@ def get_topics(context: models.Context) -> Mapping[str, Topic]:
     resp = query.execute(num_retries=config.API_RETRIES)
     if 'topics' not in resp:
       return topics
-    for resp_b in resp['topics']:
+    for t in resp['topics']:
       # verify that we have some minimal data that we expect
-      if 'name' not in resp_b:
+      if 'name' not in t:
         raise RuntimeError('missing data in topics response')
-      f = Topic(project_id=context.project_id, resource_data=resp_b)
-      topics[f.full_path] = f
+        # projects/{project}/topics/{topic}
+      result = re.match(r'projects/[^/]+/topics/([^/]+)', t['name'])
+      if not result:
+        logging.error('invalid topic data: %s', t['name'])
+        continue
+
+      if not context.match_project_resource(resource=result.group(1),
+                                            labels=t.get('labels', {})):
+        continue
+
+      topics[t['name']] = Topic(project_id=context.project_id, resource_data=t)
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
   return topics
@@ -151,12 +160,23 @@ def get_subscription(context: models.Context) -> Mapping[str, Subscription]:
     resp = query.execute(num_retries=config.API_RETRIES)
     if 'subscriptions' not in resp:
       return subscription
-    for resp_b in resp['subscriptions']:
+    for s in resp['subscriptions']:
       # verify that we have some minimal data that we expect
-      if 'name' not in resp_b:
+      if 'name' not in s:
         raise RuntimeError('missing data in topics response')
-      f = Subscription(project_id=context.project_id, resource_data=resp_b)
-      subscription[f.full_path] = f
+
+      # projects/{project}/subscriptions/{sub}
+      result = re.match(r'projects/[^/]+/subscriptions/([^/]+)', s['name'])
+      if not result:
+        logging.error('invalid subscription data: %s', s['name'])
+        continue
+
+      if not context.match_project_resource(resource=result.group(1),
+                                            labels=s.get('labels', {})):
+        continue
+
+      subscription[s['name']] = Subscription(project_id=context.project_id,
+                                             resource_data=s)
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
   return subscription
