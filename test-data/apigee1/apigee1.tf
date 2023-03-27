@@ -117,6 +117,61 @@ resource "google_apigee_envgroup_attachment" "env_to_envgroup_attachment" {
   depends_on = [google_project_service.apigee]
 }
 
+resource "google_compute_instance_template" "mig_bridge_template" {
+  project      = google_project.project.project_id
+  name_prefix  = "mig-bridge-us-central1-"
+  machine_type = "e2-small"
+  tags         = ["https-server", "mig-bridge"]
+  disk {
+    source_image = "centos-cloud/centos-7"
+    boot         = true
+    disk_size_gb = 20
+  }
+  network_interface {
+    network = google_compute_network.apigee_network.id
+  }
+  metadata = {
+    ENDPOINT           = google_apigee_instance.apigee_instance.host
+    startup-script-url = "gs://apigee-5g-saas/apigee-envoy-proxy-release/latest/conf/startup-script.sh"
+  }
+  service_account {
+    scopes = ["storage-ro"]
+  }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "google_compute_region_instance_group_manager" "mig_bridge_manager" {
+  name               = "mig-bridge-manager-us-central1"
+  project            = google_project.project.project_id
+  base_instance_name = "mig-bridge-us-central1"
+  region             = "us-central1"
+  version {
+    instance_template = google_compute_instance_template.mig_bridge_template.id
+  }
+  named_port {
+    name = "apigee-https"
+    port = 443
+  }
+}
+
+resource "google_compute_region_autoscaler" "mig_bridge_autoscaler" {
+  name    = "mig-autoscaler-us-central1"
+  project = google_project.project.project_id
+  region  = "us-central1"
+  target  = google_compute_region_instance_group_manager.mig_bridge_manager.id
+  autoscaling_policy {
+    max_replicas    = 10
+    min_replicas    = 2
+    cooldown_period = 90
+    cpu_utilization {
+      target = 0.75
+    }
+  }
+}
+
+
 output "apigee_org_id" {
   value = google_apigee_organization.apigee_org.id
 }

@@ -21,8 +21,11 @@ SED_SUBST_FAKE = sed -e "s/$(PROJECT_ID_SUFFIX)/$(FAKE_PROJECT_ID_SUFFIX)/" \
 all:	\
 	json-dumps/apigee-organizations.json \
 	json-dumps/apigee-organization.json \
+	json-dumps/compute-regions.json \
 	json-dumps/compute-network-apigee-network.json \
 	json-dumps/apigee-instances.json \
+	json-dumps/compute-templates.json  \
+	json-dumps/compute-migs-$(LOCATION_1).json  \
 	json-dumps/apigee-instances-gcpdiag-apigee1-inst1-aaaa-attachments.json \
 	json-dumps/apigee-envgroups.json   \
     json-dumps/apigee-envgroups-attachments-empty.json   \
@@ -67,6 +70,22 @@ json-dumps/compute-network-apigee-network.json:
 	$(CURL) -fsS \
 	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/networks/default' \
 		| $(JSON_CLEANER) apigee \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-regions.json:
+	$(CURL) -fsS \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/regions' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-templates.json:
+	$(CURL) -fsS \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/instanceTemplates' \
+		| $(JSON_CLEANER) compute-templates \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-migs-$(LOCATION_1).json:
+	$(CURL) -fsS \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/regions/$(LOCATION_1)/instanceGroupManagers' \
 		| $(SED_SUBST_FAKE) >$@
 
 # cloudkms.googleapis.com

@@ -15,14 +15,18 @@
 # Lint as: python3
 """Queries related to Apigee."""
 
+import functools
 import re
 from typing import Dict, Iterable, List, Mapping, Optional
 
 import googleapiclient.errors
 
 from gcpdiag import caching, config, models
-from gcpdiag.queries import apis, apis_utils, network
+from gcpdiag.queries import apis, apis_utils, gce, network
 from gcpdiag.utils import GcpApiError
+
+MIG_STARTUP_SCRIPT_URL = \
+    'gs://apigee-5g-saas/apigee-envoy-proxy-release/latest/conf/startup-script.sh'
 
 
 class ApigeeEnvironment(models.Resource):
@@ -156,6 +160,10 @@ class ApigeeInstance(models.Resource):
   def disk_encryption_key_name(self) -> str:
     return self._resource_data.get('diskEncryptionKeyName', '')
 
+  @property
+  def host(self) -> str:
+    return self._resource_data.get('host', '')
+
 
 @caching.cached_api_call
 def get_org(context: models.Context) -> Optional[ApigeeOrganization]:
@@ -256,3 +264,15 @@ def get_instances_attachments(instance_name: str) -> List[str]:
                                          response_keyword='attachments'):
     environments.append(attachments['environment'])
   return environments
+
+
+@functools.lru_cache()
+def get_network_bridge_instance_groups(
+    project_id: str) -> List[gce.ManagedInstanceGroup]:
+  """Get a list of managed instance groups used by Apigee for routing purposes."""
+  migs: List[gce.ManagedInstanceGroup] = []
+  for m in gce.get_region_managed_instance_groups(
+      models.Context(project_id=project_id)).values():
+    if m.template.get_metadata('startup-script-url') == MIG_STARTUP_SCRIPT_URL:
+      migs.append(m)
+  return migs

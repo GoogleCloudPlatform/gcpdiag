@@ -19,7 +19,7 @@ import re
 from unittest import mock
 
 from gcpdiag import models
-from gcpdiag.queries import apis_stub, gce, network
+from gcpdiag.queries import apigee, apis_stub, gce, network
 
 DUMMY_REGION = 'europe-west4'
 DUMMY_ZONE = 'europe-west4-a'
@@ -33,6 +33,9 @@ DUMMY_INSTANCE2_NAME = 'gce2'
 DUMMY_INSTANCE3_NAME = 'gke-gke1-default-pool-35923fbc-k05c'
 DUMMY_INSTANCE3_LABELS = {'gcp_doctor_test': 'gke'}
 DUMMY_INSTANCE4_NAME = 'windows-test'
+
+DUMMY_REGION_MIG_PROJECT_NAME = 'gcpdiag-apigee1-aaaa'
+DUMMY_REGION_MIG_NAME = 'mig-bridge-manager-us-central1'
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
@@ -182,6 +185,18 @@ class TestGce:
     m = next(iter(migs.values()))
     assert m.name == 'mig'
     assert m.is_gke() is False
+
+  def test_get_region_managed_instance_groups(self):
+    context = models.Context(project_id=DUMMY_REGION_MIG_PROJECT_NAME,
+                             regions=['us-central1'])
+    migs = gce.get_region_managed_instance_groups(context)
+    assert len(migs) == 1
+    m = next(iter(migs.values()))
+    assert m.name == DUMMY_REGION_MIG_NAME
+    assert m.template.get_metadata('') == ''
+    assert m.template.get_metadata('non-existing') == ''
+    assert m.template.get_metadata(
+        'startup-script-url') == apigee.MIG_STARTUP_SCRIPT_URL
 
   def test_get_managed_instance_groups_gke(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
