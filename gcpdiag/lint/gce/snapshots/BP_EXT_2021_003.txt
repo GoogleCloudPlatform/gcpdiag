@@ -3,6 +3,7 @@
    - gcpdiag-gce1-aaaa/gce2                                               [FAIL]
    - gcpdiag-gce1-aaaa/mig-4h21                                           [FAIL]
    - gcpdiag-gce1-aaaa/mig-7pvl                                           [FAIL]
+   - gcpdiag-gce1-aaaa/windows-test                                       [FAIL]
 
    Google recommends enabling Secure Boot if you can ensure that it doesn't
    prevent a representative test VM from booting and if it is appropriate for

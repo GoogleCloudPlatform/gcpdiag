@@ -61,6 +61,8 @@ class NetworkApiStub:
                                     f'compute-routers-{SUBNETWORKS_REGION}')
     elif self.mock_state == 'networks':
       return apis_stub.RestCallStub(project, 'compute-network-default')
+    elif self.mock_state == 'routes':
+      return apis_stub.RestCallStub(project, 'compute-network-routes')
     else:
       raise ValueError(f'cannot call method {self.mock_state} here')
 

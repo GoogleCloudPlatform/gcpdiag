@@ -5,6 +5,7 @@
      no service account
    - gcpdiag-gce1-aaaa/mig-7pvl                                           [FAIL]
      no service account
+   - gcpdiag-gce1-aaaa/windows-test                                       [ OK ]
 
    The service account used by GCE instance should have the
    monitoring.metricWriter permission and a GCE instance should have the

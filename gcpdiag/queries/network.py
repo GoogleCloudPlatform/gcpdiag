@@ -23,6 +23,9 @@ from typing import Any, Dict, FrozenSet, Iterable, List, Optional, Union
 from gcpdiag import caching, config, models
 from gcpdiag.queries import apis, apis_utils, iam
 
+IPAddrOrNet = Union[ipaddress.IPv4Address, ipaddress.IPv6Address,
+                    ipaddress.IPv4Network, ipaddress.IPv6Network]
+
 
 class Subnetwork(models.Resource):
   """A VPC subnetwork."""
@@ -112,16 +115,30 @@ class Route(models.Resource):
     return self._resource_data['network']
 
   @property
+  def tags(self) -> List[str]:
+    if 'tags' in self._resource_data:
+      return self._resource_data['tags']
+    return []
+
+  @property
   def dest_range(self) -> str:
     return self._resource_data['destRange']
 
   @property
-  def next_hop_gateway(self) -> str:
-    return self._resource_data['nextHopGateway']
+  def next_hop_gateway(self) -> Optional[str]:
+    if 'nextHopGateway' in self._resource_data:
+      return self._resource_data['nextHopGateway']
+    return None
 
   @property
   def priority(self) -> int:
     return self._resource_data['priority']
+
+  def check_route_match(self, ip1: IPAddrOrNet, ip2: str) -> bool:
+    ip2_list = [ipaddress.ip_network(ip2)]
+    if _ip_match(ip1, ip2_list, 'allow'):
+      return True
+    return False
 
 
 class ManagedZone(models.Resource):
@@ -276,10 +293,6 @@ class Network(models.Resource):
                 peer['autoCreateRoutes'])
         for peer in self._resource_data.get('peerings', [])
     ]
-
-
-IPAddrOrNet = Union[ipaddress.IPv4Address, ipaddress.IPv6Address,
-                    ipaddress.IPv4Network, ipaddress.IPv6Network]
 
 
 def _ip_match(  #
@@ -467,9 +480,9 @@ class _FirewallPolicy:
         if 'srcIpRanges' in rule['match']:
           rule_decoded['match']['srcIpRanges'] = \
             [ipaddress.ip_network(net) for net in rule['match']['srcIpRanges']]
-        if 'dstIpRanges' in rule['match']:
-          rule_decoded['match']['dstIpRanges'] = \
-            [ipaddress.ip_network(net) for net in rule['match']['dstIpRanges']]
+        if 'destIpRanges' in rule['match']:
+          rule_decoded['match']['destIpRanges'] = \
+            [ipaddress.ip_network(net) for net in rule['match']['destIpRanges']]
       self._rules[rule['direction']].append(rule_decoded)
 
   def check_connectivity_ingress(
@@ -496,6 +509,7 @@ class _FirewallPolicy:
                                             rule['match']['layer4Configs']):
         continue
       # targetResources doesn't seem to get set. See also b/209450091.
+      # please also check the check_connectivity_egress for similar issue.
       # if 'targetResources' in rule:
       #   if not target_network:
       #     continue
@@ -520,6 +534,48 @@ class _FirewallPolicy:
     # be a low-priority 'goto_next' rule.
     logging.warning('unexpected no-match in firewall policy %s',
                     self.short_name)
+    return FirewallCheckResult('goto_next')
+
+  def check_connectivity_egress(
+      self,  #
+      *,
+      src_ip: IPAddrOrNet,
+      ip_protocol: str,
+      port: Optional[int],
+      #target_network: Optional[Network] = None, # useless unless targetResources set by API.
+      target_service_account: Optional[str] = None
+  ) -> FirewallCheckResult:
+    for rule in self._rules['EGRESS']:
+      if rule.get('disabled'):
+        continue
+      # To match networks, use 'supernet_of' for deny, because if the network that we
+      # are checking is partially matched by a deny rule, it should still be considered
+      # a match.
+      ip_match_type = 'deny' if rule['action'] == 'deny' else 'allow'
+      # src_ip
+      if not _ip_match(src_ip, rule['match']['destIpRanges'], ip_match_type):
+        continue
+      # ip_protocol and port
+      if port is not None and not _l4_match(ip_protocol, port,
+                                            rule['match']['layer4Configs']):
+        continue
+      # target_service_account
+      if 'targetServiceAccounts' in rule:
+        if not target_service_account:
+          continue
+        if not any(sa == target_service_account
+                   for sa in rule['targetServiceAccounts']):
+          continue
+      logging.debug('policy %s: %s -> %s/%s = %s', self.short_name, src_ip,
+                    port, ip_protocol, rule['action'])
+      return FirewallCheckResult(
+          rule['action'],
+          firewall_policy_name=self.short_name,
+          firewall_policy_rule_description=rule['description'])
+
+    # It should never happen that no rule match, because there should
+    # be a low-priority 'goto_next' rule.
+    logging.debug('unexpected no-match in firewall policy %s', self.short_name)
     return FirewallCheckResult('goto_next')
 
 
@@ -616,9 +672,78 @@ class _VpcFirewall:
                   ip_protocol, 'deny')
     return FirewallCheckResult('deny')
 
+  def check_connectivity_egress(
+      self,
+      *,
+      src_ip: IPAddrOrNet,
+      ip_protocol: str,
+      port: Optional[int],
+      # dest_ip: Optional[IPAddrOrNet] = None,
+      source_service_account: Optional[str] = None,
+      target_service_account: Optional[str] = None,
+      source_tags: Optional[List[str]] = None,
+      target_tags: Optional[List[str]] = None,
+  ) -> FirewallCheckResult:
+    if target_tags is not None and not isinstance(target_tags, list):
+      raise ValueError('Internal error: target_tags must be a list')
+    if source_tags is not None and not isinstance(source_tags, list):
+      raise ValueError('Internal error: source_tags must be a list')
+
+    for rule in self._rules['EGRESS']:
+      # disabled?
+      if rule.get('disabled'):
+        continue
+
+      # ip_protocol and port
+      action = _vpc_allow_deny_match(ip_protocol,
+                                     port,
+                                     allowed=rule.get('allowed', []),
+                                     denied=rule.get('denied', []))
+      if not action:
+        continue
+
+      # source
+      if 'destinationRanges' in rule and \
+          _ip_match(src_ip, rule['destinationRanges'], action):
+        pass
+      elif source_service_account and \
+          source_service_account in rule.get('sourceServiceAccounts', {}):
+        pass
+      elif source_tags and \
+          set(source_tags) & rule.get('sourceTags', set()):
+        pass
+      else:
+        continue
+
+      # target
+      if 'targetServiceAccounts' in rule:
+        if not target_service_account:
+          continue
+        if not target_service_account in rule['targetServiceAccounts']:
+          continue
+      if 'targetTags' in rule:
+        if not target_tags:
+          continue
+        if not set(target_tags) & rule['targetTags']:
+          continue
+
+      logging.debug('vpc firewall: %s -> %s/%s = %s (%s)', src_ip, port,
+                    ip_protocol, action, rule['name'])
+      return FirewallCheckResult(action,
+                                 vpc_firewall_rule_id=rule['id'],
+                                 vpc_firewall_rule_name=rule['name'])
+    # implied deny
+    logging.debug('vpc firewall: %s -> %s/%s = %s (implied rule)', src_ip, port,
+                  ip_protocol, 'deny')
+    return FirewallCheckResult('deny')
+
   def verify_ingress_rule_exists(self, name: str):
     """See documentation for EffectiveFirewalls.verify_ingress_rule_exists()."""
     return any(r['name'] == name for r in self._rules['INGRESS'])
+
+  def verify_egress_rule_exists(self, name: str):
+    """See documentation for EffectiveFirewalls.verify_egress_rule_exists()."""
+    return any(r['name'] == name for r in self._rules['EGRESS'])
 
   def get_vpc_ingress_rules(self,
                             name: Optional[str] = None,
@@ -647,6 +772,35 @@ class _VpcFirewall:
           continue
       rules.append(VpcFirewallRule(rule))
 
+    return rules
+
+  def get_vpc_egress_rules(self,
+                           name: Optional[str] = None,
+                           name_pattern: Optional[Optional[re.Pattern]] = None,
+                           target_tags: Optional[List[str]] = None):
+    """See documentation for EffectiveFirewalls.get_vpc_egress_rules()."""
+    if not (name or name_pattern):
+      raise ValueError('Internal error: name or name_pattern must be provided')
+    if target_tags is not None and not isinstance(target_tags, list):
+      raise ValueError('Internal error: target_tags must be a list')
+
+    rules = []
+    for rule in self._rules['EGRESS']:
+      if name:
+        if not rule['name'] == name:
+          continue
+      elif name_pattern:
+        m = name_pattern.match(rule['name'])
+        if not m:
+          continue
+      # filter by target_tags if needed
+      if target_tags:
+        if not 'targetTags' in rule:
+          continue
+        if not set(target_tags) & rule['targetTags']:
+          continue
+
+      rules.append(VpcFirewallRule(rule))
     return rules
 
 
@@ -701,6 +855,41 @@ class EffectiveFirewalls:
         target_service_account=target_service_account,
         target_tags=target_tags)
 
+  def check_connectivity_egress(
+      self,  #
+      *,
+      src_ip: IPAddrOrNet,
+      ip_protocol: str,
+      port: Optional[int] = None,
+      source_service_account: Optional[str] = None,
+      source_tags: Optional[List[str]] = None,
+      target_service_account: Optional[str] = None,
+      target_tags: Optional[List[str]] = None) -> FirewallCheckResult:
+
+    if ip_protocol != 'ICMP' and port is None:
+      raise ValueError('TCP and UDP must have port numbers')
+
+    # Firewall policies (organization, folders)
+    for p in self._policies:
+      result = p.check_connectivity_egress(
+          src_ip=src_ip,
+          ip_protocol=ip_protocol,
+          port=port,
+          #target_network=self._network,
+          target_service_account=target_service_account)
+      if result.action != 'goto_next':
+        return result
+
+    # VPC firewall rules
+    return self._vpc_firewall.check_connectivity_egress(
+        src_ip=src_ip,
+        ip_protocol=ip_protocol,
+        port=port,
+        source_service_account=source_service_account,
+        source_tags=source_tags,
+        target_service_account=target_service_account,
+        target_tags=target_tags)
+
   def get_vpc_ingress_rules(
       self,
       name: Optional[str] = None,
@@ -721,11 +910,37 @@ class EffectiveFirewalls:
                                                      target_tags)
     return rules
 
+  def get_vpc_egress_rules(
+      self,
+      name: Optional[str] = None,
+      name_pattern: Optional[re.Pattern] = None,
+      target_tags: Optional[List[str]] = None) -> List[VpcFirewallRule]:
+    """Retrive the list of egress firewall rules matching name or name pattern and target tags.
+
+    Args:
+        name (Optional[str], optional): firewall rune name. Defaults to None.
+        name_pattern (Optional[re.Pattern], optional): firewall rule name pattern. Defaults to None.
+        target_tags (Optional[List[str]], optional): firewall target tags
+          (if not specified any tag will match). Defaults to None.
+
+    Returns:
+        List[VpcFirewallRule]: List of egress firewall rules
+    """
+    rules = self._vpc_firewall.get_vpc_egress_rules(name, name_pattern,
+                                                    target_tags)
+    return rules
+
   def verify_ingress_rule_exists(self, name: str):
     """Verify that a certain VPC rule exists. This is useful to verify
     whether maybe a permission was missing on a shared VPC and an
     automatic rule couldn't be created."""
     return self._vpc_firewall.verify_ingress_rule_exists(name)
+
+  def verify_egress_rule_exists(self, name: str):
+    """Verify that a certain VPC rule exists. This is useful to verify
+    whether maybe a permission was missing on a shared VPC and an
+    automatic rule couldn't be created."""
+    return self._vpc_firewall.verify_egress_rule_exists(name)
 
 
 class VPCEffectiveFirewalls(EffectiveFirewalls):

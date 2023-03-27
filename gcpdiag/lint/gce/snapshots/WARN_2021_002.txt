@@ -15,4 +15,6 @@
      no data
    - gcpdiag-gce1-aaaa/mig-7pvl                                           [SKIP]
      no data
+   - gcpdiag-gce1-aaaa/windows-test                                       [SKIP]
+     no data
 

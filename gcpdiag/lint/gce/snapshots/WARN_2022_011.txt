@@ -9,4 +9,5 @@
      instance does not have a service account
    - gcpdiag-gce1-aaaa/mig-7pvl                                           [SKIP]
      instance does not have a service account
+   - gcpdiag-gce1-aaaa/windows-test                                       [ OK ]
 
