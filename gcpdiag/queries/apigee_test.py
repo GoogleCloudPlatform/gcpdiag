@@ -36,6 +36,7 @@ DUMMY_APIGEE_INSTANCE1_NAME = 'gcpdiag-apigee1-inst1-aaaa'
 DUMMY_APIGEE_INSTANCE1_FULL_PATH = \
         f'organizations/{DUMMY_APIGEE_ORG_NAME}/instances/{DUMMY_APIGEE_INSTANCE1_NAME}'
 DUMMY_APIGEE_INSTANCE1_ATTACHMENTS_ENV = 'gcpdiag-demo-env'
+DUMMY_APIGEE_NETWORK_BRIDGE_INSTANCE_GROUP1_NAME = 'mig-bridge-manager-us-central1'
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
@@ -87,3 +88,11 @@ class TestOrganization:
     apigee_instances_attachments = apigee.get_instances_attachments(
         instance_name=DUMMY_APIGEE_INSTANCE1_FULL_PATH)
     assert DUMMY_APIGEE_INSTANCE1_ATTACHMENTS_ENV in apigee_instances_attachments
+
+  def test_get_network_bridge_instance_groups(self):
+    apigee_network_bridge_migs = apigee.get_network_bridge_instance_groups(
+        project_id=DUMMY_PROJECT_NAME)
+
+    assert len(apigee_network_bridge_migs) == 1
+    assert apigee_network_bridge_migs[
+        0].name == DUMMY_APIGEE_NETWORK_BRIDGE_INSTANCE_GROUP1_NAME

@@ -34,6 +34,7 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
   # op1=gce_api.instances().list(project=pid, zone=z)
   # gce_api.new_batch_http_request().add(op1, callback=cb, request_id=id).execute()
   # gce_api.instanceGroupManagers().list(project=project_id, zone=zone)
+  # gce_api.regionInstanceGroupManagers().list(project=project_id, region=region)
   # gce_api.instanceGroups().list(project=project_id, zone=zone)
   # gce_api.disks().list(project=project_id, zone=zone)
   # gce_api.instances().get(project=project_id, zone=zone, instance=instance_name)
@@ -55,7 +56,7 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
 
   def list(self, project, zone=None, returnPartialSuccess=None, fields=None):
     # TODO: implement fields filtering
-    if self.mock_state in ['igs', 'instances', 'migs', 'disks']:
+    if self.mock_state in ['igs', 'instances', 'disks']:
       return apis_stub.RestCallStub(project,
                                     f'compute-{self.mock_state}-{zone}',
                                     default=f'compute-{self.mock_state}-empty')
@@ -78,7 +79,10 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
     return ComputeEngineApiStub('instances')
 
   def instanceGroupManagers(self):
-    return ComputeEngineApiStub('migs')
+    return InstanceGroupManagersApiStub()
+
+  def regionInstanceGroupManagers(self):
+    return RegionInstanceGroupManagersApiStub()
 
   def licenses(self):
     return ComputeEngineApiStub('licenses')
@@ -161,3 +165,21 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
     self.zone = zone
     self.network_interface = networkInterface
     return self
+
+
+class InstanceGroupManagersApiStub(ComputeEngineApiStub):
+  """Mock object to simulate zonal instance group managers api calls"""
+
+  def list(self, project, zone=None):
+    return apis_stub.RestCallStub(project,
+                                  f'compute-migs-{zone}',
+                                  default='compute-migs-empty')
+
+
+class RegionInstanceGroupManagersApiStub(ComputeEngineApiStub):
+  """Mock object to simulate regional instance group managers api calls"""
+
+  def list(self, project, region=None):
+    return apis_stub.RestCallStub(project,
+                                  f'compute-migs-{region}',
+                                  default='compute-migs-empty')

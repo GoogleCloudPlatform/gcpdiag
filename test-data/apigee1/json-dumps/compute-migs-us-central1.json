@@ -1,0 +1,91 @@
+{
+  "kind": "compute#regionInstanceGroupManagerList",
+  "id": "projects/gcpdiag-apigee1-aaaa/regions/us-central1/instanceGroupManagers",
+  "items": [
+    {
+      "kind": "compute#instanceGroupManager",
+      "id": "7058234998406540643",
+      "creationTimestamp": "2023-02-15T22:56:12.305-08:00",
+      "name": "mig-bridge-manager-us-central1",
+      "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/us-central1",
+      "distributionPolicy": {
+        "zones": [
+          {
+            "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/zones/us-central1-c"
+          },
+          {
+            "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/zones/us-central1-b"
+          },
+          {
+            "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/zones/us-central1-f"
+          }
+        ],
+        "targetShape": "EVEN"
+      },
+      "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/global/instanceTemplates/mig-bridge-us-central1-20230216065558150700000001",
+      "versions": [
+        {
+          "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/global/instanceTemplates/mig-bridge-us-central1-20230216065558150700000001",
+          "targetSize": {
+            "calculated": 2
+          }
+        }
+      ],
+      "instanceGroup": "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/us-central1/instanceGroups/mig-bridge-manager-us-central1",
+      "baseInstanceName": "mig-bridge-us-central1",
+      "fingerprint": "DBcjDFoTp5I=",
+      "currentActions": {
+        "none": 2,
+        "creating": 0,
+        "creatingWithoutRetries": 0,
+        "verifying": 0,
+        "recreating": 0,
+        "deleting": 0,
+        "abandoning": 0,
+        "restarting": 0,
+        "refreshing": 0,
+        "suspending": 0,
+        "resuming": 0,
+        "stopping": 0,
+        "starting": 0
+      },
+      "status": {
+        "isStable": true,
+        "versionTarget": {
+          "isReached": true
+        },
+        "stateful": {
+          "hasStatefulConfig": false,
+          "perInstanceConfigs": {
+            "allEffective": true
+          }
+        },
+        "autoscaler": "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/us-central1/autoscalers/mig-autoscaler-us-central1"
+      },
+      "targetSize": 2,
+      "listManagedInstancesResults": "PAGELESS",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/us-central1/instanceGroupManagers/mig-bridge-manager-us-central1",
+      "updatePolicy": {
+        "type": "OPPORTUNISTIC",
+        "instanceRedistributionType": "PROACTIVE",
+        "minimalAction": "REPLACE",
+        "maxSurge": {
+          "fixed": 3,
+          "calculated": 3
+        },
+        "maxUnavailable": {
+          "fixed": 3,
+          "calculated": 3
+        },
+        "replacementMethod": "SUBSTITUTE"
+      },
+      "namedPorts": [
+        {
+          "name": "apigee-https",
+          "port": 443
+        }
+      ]
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/us-central1/instanceGroupManagers"
+}

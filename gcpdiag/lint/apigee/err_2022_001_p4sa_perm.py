@@ -24,6 +24,10 @@ SA = 'service-{project_number}@gcp-sa-apigee.iam.gserviceaccount.com'
 ROLE = 'roles/apigee.serviceAgent'
 
 
+def prefetch_rule(context: models.Context):
+  iam.get_project_policy(context.project_id)
+
+
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   apigee_org = apigee.get_org(context)
   if apigee_org is None:

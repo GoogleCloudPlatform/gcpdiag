@@ -1,0 +1,3 @@
+*  apigee/ERR/2023_002: Network bridge managed instance group is correctly configured.
+   - organizations/gcpdiag-apigee1-aaaa                                   [ OK ]
+
