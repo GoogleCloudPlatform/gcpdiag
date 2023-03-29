@@ -16,7 +16,7 @@ jobs:
       id: setup-python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: 3.9
 
     - name: Install pipenv
       run: python -m pip install --upgrade pipenv==2021.5.29 wheel
