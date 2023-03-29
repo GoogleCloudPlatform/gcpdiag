@@ -16,7 +16,7 @@ jobs:
       id: setup-python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: 3.9
 
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@3d8debd658c92063839bc97da5c2427100420dec
