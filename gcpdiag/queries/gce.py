@@ -536,6 +536,10 @@ class Disk(models.Resource):
   def in_use(self) -> bool:
     return 'users' in self._resource_data
 
+  @property
+  def has_snapshot_schedule(self) -> bool:
+    return 'resourcePolicies' in self._resource_data
+
 
 @caching.cached_api_call(in_memory=True)
 def get_gce_zones(project_id: str) -> Set[str]:

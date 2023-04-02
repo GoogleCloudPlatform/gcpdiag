@@ -1,0 +1,3 @@
+*  gce/WARN/2023_001: GCE snapshot policies are defined only for used disks.
+   - gcpdiag-gce1-aaaa                                                    [ OK ]
+
