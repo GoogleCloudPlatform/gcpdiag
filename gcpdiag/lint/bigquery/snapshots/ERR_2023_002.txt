@@ -1,0 +1,4 @@
+*  bigquery/ERR/2023_002: BigQuery hasn't reported any unknown datasets while performing copy tables operations
+   - gcpdiag-cloudsql1-aaaa                                               [SKIP]
+     Logging api is disabled
+
