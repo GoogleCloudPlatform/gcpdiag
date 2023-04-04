@@ -11,10 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""GKE system logging and monitoring enabled.
+"""GKE logging and monitoring enabled.
 
-Disabling system logging and monitoring (aka "GKE Cloud Operations") impacts the
-ability to troubleshoot any issues that you might have.
+Disabling either one of logging (SYSTEM, WORKLOADS) and
+monitoring (aka "GKE Cloud Operations") impacts the
+ability to effectively and efficiently troubleshoot cluster issues.
 """
 
 from gcpdiag import lint, models
@@ -26,12 +27,18 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not clusters:
     report.add_skipped(None, 'no clusters found')
   for _, c in sorted(clusters.items()):
-    disabled = []
-    if not c.has_logging_enabled():
-      disabled.append('logging')
-    if not c.has_monitoring_enabled():
-      disabled.append('monitoring')
-    if disabled:
-      report.add_failed(c, ' and '.join(disabled) + ' are disabled')
-    else:
-      report.add_ok(c)
+    if not c.is_autopilot:
+      disabled: list[str] = []
+      if c.has_logging_enabled() and \
+        'WORKLOADS' not in c.enabled_logging_components():
+        disabled.append('workload logs')
+      elif not c.has_logging_enabled():
+        disabled.append('logging')
+
+      if not c.has_monitoring_enabled():
+        disabled.append('monitoring')
+
+      if disabled:
+        report.add_failed(c, ' and '.join(disabled) + ' are disabled')
+      else:
+        report.add_ok(c)
