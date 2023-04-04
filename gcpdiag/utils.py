@@ -203,3 +203,7 @@ def iter_dictlist(dictlist: Dict[Any, List[Any]]):
   for (k, v) in dictlist.items():
     for i in v:
       yield (k, i)
+
+
+def format_fault_list(fault_list) -> str:
+  return '\n'.join(fault_list)

@@ -7,6 +7,7 @@
    - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-k05c                [ OK ]
    - gcpdiag-gce1-aaaa/mig-4h21                                           [ OK ]
    - gcpdiag-gce1-aaaa/mig-7pvl                                           [ OK ]
+   - gcpdiag-gce1-aaaa/windows-test                                       [ OK ]
 
    Serial port output can be often useful for troubleshooting, and enabling
    serial logging makes sure that you don't lose the information when the VM is

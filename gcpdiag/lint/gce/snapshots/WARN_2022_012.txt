@@ -1,0 +1,3 @@
+*  gce/WARN/2022_012: Validate if a Microsoft Windows instance is able to activate using GCP PAYG licence.
+   (Error: 'windows-cloud')                                               [SKIP]
+

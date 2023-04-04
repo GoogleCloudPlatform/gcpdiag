@@ -23,6 +23,7 @@ DUMMY_PROJECT_ID = 'gcpdiag-fw-policy-aaaa'
 DUMMY_DEFAULT_NETWORK = 'default'
 DUMMY_DEFAULT_SUBNET = 'default'
 DUMMY_GKE_PROJECT_ID = 'gcpdiag-gke1-aaaa'
+DUMMY_GCE_PROJECT_ID = 'gcpdiag-gce1-aaaa'
 DUMMY_GKE_REGION = 'europe-west4'
 DUMMY_GKE_SUBNET = 'gke1-subnet'
 DUMMY_SERVICE_ACCOUNT = 'gke1sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com'
@@ -249,3 +250,149 @@ class TestNetwork:
 
     rules = net.firewall.get_vpc_ingress_rules(name='not-existing-rule')
     assert 'gke-gke3-b46b134d-ssh' not in [r.name for r in rules]
+
+  def test_egress_deny(self):
+    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
+                              network_name=DUMMY_DEFAULT_NETWORK)
+    r = net.firewall.check_connectivity_egress(
+        src_ip=ipaddress.ip_address('10.0.0.1'),  #
+        ip_protocol='tcp',
+        port=21)
+    assert r.action == 'deny'
+    r = net.firewall.check_connectivity_egress(
+        src_ip=ipaddress.ip_network('10.0.0.0/24'),  #
+        ip_protocol='tcp',
+        port=21)
+    assert r.action == 'deny'
+
+  def test_egress_deny_2(self):
+    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
+                              network_name=DUMMY_DEFAULT_NETWORK)
+    r = net.firewall.check_connectivity_egress(
+        src_ip=ipaddress.ip_network('142.250.125.95/32'),  #
+        ip_protocol='tcp',
+        port=1001)
+    assert r.action == 'allow'
+    assert r.matched_by_str == 'vpc firewall rule: fw-test-925'
+
+  def test_egress_deny_3(self):
+    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
+                              network_name=DUMMY_DEFAULT_NETWORK)
+    r = net.firewall.check_connectivity_egress(
+        src_ip=ipaddress.ip_network('10.0.0.0/8'),  #
+        ip_protocol='tcp',
+        port=1001)
+    assert r.action == 'deny'
+    assert r.matched_by_str == 'vpc firewall rule: fw-test-950'
+
+  def test_egress_allow_src_ip(self):
+    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
+                              network_name=DUMMY_DEFAULT_NETWORK)
+    r = net.firewall.check_connectivity_egress(
+        src_ip=ipaddress.ip_network('35.190.247.13/32'),  #
+        ip_protocol='tcp',
+        port=1688)
+    assert r.action == 'allow'
+    assert r.matched_by_str == 'vpc firewall rule: fw-test-1000'
+
+  def test_egress_allow_src_ip_subnet(self):
+    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
+                              network_name=DUMMY_DEFAULT_NETWORK)
+    r = net.firewall.check_connectivity_egress(
+        src_ip=ipaddress.ip_network('10.100.0.16/30'),  #
+        ip_protocol='tcp',
+        port=1006)
+    assert r.action == 'deny'
+    assert r.matched_by_str == 'vpc firewall rule: fw-test-950'
+
+  def test_egress_allow_source_tags(self):
+    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
+                              network_name=DUMMY_DEFAULT_NETWORK)
+    r = net.firewall.check_connectivity_egress(
+        src_ip=ipaddress.ip_network('45.100.0.0/24'),  #
+        source_tags=['foo'],
+        ip_protocol='tcp',
+        port=2033)
+    assert r.action == 'allow'
+    assert r.matched_by_str == 'vpc firewall rule: fw-test-1050'
+
+  def test_egress_allow_target_tags(self):
+    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
+                              network_name=DUMMY_DEFAULT_NETWORK)
+    r = net.firewall.check_connectivity_egress(
+        src_ip=ipaddress.ip_address('192.168.1.1'),  #
+        target_tags=['bar'],
+        ip_protocol='tcp',
+        port=1234)
+    assert r.action == 'allow'
+    assert r.matched_by_str == 'vpc firewall rule: fw-test-1025'
+
+  def test_egress_allow_source_sa(self):
+    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
+                              network_name=DUMMY_DEFAULT_NETWORK)
+    r = net.firewall.check_connectivity_egress(
+        src_ip=ipaddress.ip_network('10.200.0.16/29'),  #
+        source_service_account=
+        'service-12340002@compute-system.iam.gserviceaccount.com',
+        ip_protocol='tcp',
+        port=4000)
+    assert r.action == 'allow'
+    assert r.matched_by_str == 'vpc firewall rule: fw-test-1075'
+
+  def test_egress_parent_policy_allow(self):
+    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
+                              network_name=DUMMY_DEFAULT_NETWORK)
+    r = net.firewall.check_connectivity_egress(
+        src_ip=ipaddress.ip_network('10.101.0.1/32'),  #
+        ip_protocol='tcp',
+        port=2001)
+    assert r.action == 'allow'
+    assert r.matched_by_str == 'policy: parent-folder-policy'
+
+  def test_egress_sub_policy_allow(self):
+    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
+                              network_name=DUMMY_DEFAULT_NETWORK)
+    r = net.firewall.check_connectivity_egress(
+        src_ip=ipaddress.ip_network('10.102.0.1/32'),  #
+        ip_protocol='tcp',
+        port=2003)
+    assert r.action == 'allow'
+    assert r.matched_by_str == 'policy: sub-folder-policy'
+
+  def test_egress_sub_policy_allow_target_sa(self):
+    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
+                              network_name=DUMMY_DEFAULT_NETWORK)
+    r = net.firewall.check_connectivity_egress(
+        src_ip=ipaddress.ip_network('10.102.0.1/32'),  #
+        ip_protocol='tcp',
+        port=2000,
+        target_service_account=
+        'service-12340002@compute-system.iam.gserviceaccount.com')
+    assert r.action == 'allow'
+    assert r.matched_by_str == 'policy: sub-folder-policy'
+
+  def test_egress_sub_policy_deny_wrong_target_sa(self):
+    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
+                              network_name=DUMMY_DEFAULT_NETWORK)
+    r = net.firewall.check_connectivity_egress(
+        src_ip=ipaddress.ip_network('10.102.0.1/32'),  #
+        ip_protocol='tcp',
+        port=2000,
+        target_service_account='foobar@compute-system.iam.gserviceaccount.com')
+    assert r.action == 'deny'
+
+  def test_get_egress_rules(self):
+    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
+                              network_name=DUMMY_DEFAULT_NETWORK)
+    pattern = re.compile(r'default-allow-.*')
+    rules = net.firewall.get_vpc_egress_rules(name_pattern=pattern)
+    assert 'default-allow-rdp' in [r.name for r in rules]
+    assert 'default-allow-ssh' in [r.name for r in rules]
+
+    rules = net.firewall.get_vpc_egress_rules(name='default-allow-ssh')
+    assert 'default-allow-ssh' == rules[0].name
+    assert 'tcp' == rules[0].allowed[0]['IPProtocol']
+    assert '22' in rules[0].allowed[0]['ports']
+
+    rules = net.firewall.get_vpc_egress_rules(name='not-existing-rule')
+    assert 'default-allow-ssh' not in [r.name for r in rules]

@@ -59,7 +59,7 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
       return apis_stub.RestCallStub(project,
                                     f'compute-{self.mock_state}-{zone}',
                                     default=f'compute-{self.mock_state}-empty')
-    elif self.mock_state in ['regions', 'templates', 'zones']:
+    elif self.mock_state in ['regions', 'templates', 'zones', 'licenses']:
       return apis_stub.RestCallStub(project, f'compute-{self.mock_state}')
     else:
       raise RuntimeError(f"can't list for mock state {self.mock_state}")
@@ -79,6 +79,9 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
 
   def instanceGroupManagers(self):
     return ComputeEngineApiStub('migs')
+
+  def licenses(self):
+    return ComputeEngineApiStub('licenses')
 
   def instanceGroups(self):
     return ComputeEngineApiStub('igs')
@@ -114,6 +117,9 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
 
   def subnetworks(self):
     return network_stub.NetworkApiStub(mock_state='subnetworks')
+
+  def routes(self):
+    return network_stub.NetworkApiStub(mock_state='routes')
 
   def routers(self):
     return network_stub.NetworkApiStub(mock_state='routers')
