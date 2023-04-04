@@ -307,6 +307,22 @@ class Instance(models.Resource):
           return True
     return False
 
+  def is_public_machine(self) -> bool:
+    if 'networkInterfaces' in self._resource_data:
+      return 'natIP' in str(self._resource_data['networkInterfaces'])
+    return False
+
+  def check_license(self, licenses: List[str]) -> bool:
+    """ Checks that a licence is contained in a given license list"""
+    if 'disks' in self._resource_data:
+      for disk in self._resource_data['disks']:
+        if 'license' in str(disk):
+          for license_ in licenses:
+            for attached_license in disk['licenses']:
+              if license_ == attached_license.partition('/global/licenses/')[2]:
+                return True
+    return False
+
   @property
   def network(self) -> network_q.Network:
     # 'https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/global/networks/default'
@@ -327,6 +343,28 @@ class Instance(models.Resource):
   @property
   def get_network_interfaces(self):
     return self._resource_data['networkInterfaces']
+
+  @property
+  def subnetworks(self) -> List[network_q.Subnetwork]:
+    subnetworks = []
+    for nic in self._resource_data['networkInterfaces']:
+      subnetworks.append(network_q.get_subnetwork_from_url(nic['subnetwork']))
+    return subnetworks
+
+  @property
+  def routes(self) -> List[network_q.Route]:
+    routes = []
+    for nic in self._resource_data['networkInterfaces']:
+      for route in network_q.get_routes(self.project_id):
+        if nic['network'] == route.network:
+          if route.tags == []:
+            routes.append(route)
+            continue
+          else:
+            temp = [x for x in self.tags if x in route.tags]
+            if len(temp) > 0:
+              routes.append(route)
+    return routes
 
   def get_network_ip_for_instance_interface(
       self, network: str) -> Optional[ipaddress.IPv4Address]:
@@ -469,6 +507,22 @@ def get_gce_zones(project_id: str) -> Set[str]:
     return {item['name'] for item in response['items'] if 'name' in item}
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
+
+
+def get_gce_public_licences(project_id: str) -> List[str]:
+  """Returns a list of licenses based on publicly available image project"""
+  licenses = []
+  gce_api = apis.get_api('compute', 'v1', project_id)
+  logging.info('listing licenses of project %s', project_id)
+  request = gce_api.licenses().list(project=project_id)
+  while request is not None:
+    response = request.execute()
+    for license_ in response['items']:
+      formatted_license = license_['selfLink'].partition('/global/licenses/')[2]
+      licenses.append(formatted_license)
+    request = gce_api.licenses().list_next(previous_request=request,
+                                           previous_response=response)
+  return licenses
 
 
 @caching.cached_api_call(in_memory=True)

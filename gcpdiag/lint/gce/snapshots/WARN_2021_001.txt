@@ -7,6 +7,7 @@
    - gcpdiag-gce1-aaaa/mig-7pvl                                           [FAIL]
      missing scope: logging.write
      no service account
+   - gcpdiag-gce1-aaaa/windows-test                                       [ OK ]
 
    The service account used by GCE instance should have the logging.logWriter
    permission and a GCE instance should have the logging.write access scope,

@@ -19,10 +19,11 @@ import re
 from unittest import mock
 
 from gcpdiag import models
-from gcpdiag.queries import apis_stub, gce
+from gcpdiag.queries import apis_stub, gce, network
 
 DUMMY_REGION = 'europe-west4'
 DUMMY_ZONE = 'europe-west4-a'
+DUMMY_ZONE2 = 'europe-west1-b'
 DUMMY_PROJECT_NAME = 'gcpdiag-gce1-aaaa'
 DUMMY_PROJECT_NR = '12340001'
 DUMMY_DEFAULT_NAME = 'default'
@@ -31,6 +32,7 @@ DUMMY_INSTANCE1_LABELS = {'foo': 'bar'}
 DUMMY_INSTANCE2_NAME = 'gce2'
 DUMMY_INSTANCE3_NAME = 'gke-gke1-default-pool-35923fbc-k05c'
 DUMMY_INSTANCE3_LABELS = {'gcp_doctor_test': 'gke'}
+DUMMY_INSTANCE4_NAME = 'windows-test'
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
@@ -40,7 +42,7 @@ class TestGce:
   def test_get_instances(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     instances = gce.get_instances(context)
-    assert len(instances) == 8
+    assert len(instances) == 9
     instances_by_name = {i.name: i for i in instances.values()}
     assert DUMMY_INSTANCE1_NAME in instances_by_name
     assert instances_by_name[DUMMY_INSTANCE1_NAME].full_path == \
@@ -55,14 +57,14 @@ class TestGce:
                              regions=['fake-region', DUMMY_REGION])
     instances = gce.get_instances(context)
     instances_by_name = {i.name: i for i in instances.values()}
-    assert DUMMY_INSTANCE1_NAME in instances_by_name and len(instances) == 4
+    assert DUMMY_INSTANCE1_NAME in instances_by_name and len(instances) == 5
 
   def test_get_instances_by_label(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              labels=[DUMMY_INSTANCE1_LABELS])
     instances = gce.get_instances(context)
     instances_by_name = {i.name: i for i in instances.values()}
-    assert DUMMY_INSTANCE1_NAME in instances_by_name and len(instances) == 1
+    assert DUMMY_INSTANCE1_NAME in instances_by_name and len(instances) == 2
 
   def test_get_instances_by_other_region_returns_empty_result(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
@@ -261,3 +263,39 @@ class TestGce:
     firewalls = gce.get_instance_interface_effective_firewalls(
         instance=instance, nic='nic0')
     assert isinstance(firewalls, gce.InstanceEffectiveFirewalls)
+
+  def test_is_public_machine(self):
+    instance = gce.get_instance(project_id=DUMMY_PROJECT_NAME,
+                                zone=DUMMY_ZONE,
+                                instance_name=DUMMY_INSTANCE1_NAME)
+    assert instance.is_public_machine() is False
+    instance = gce.get_instance(project_id=DUMMY_PROJECT_NAME,
+                                zone=DUMMY_ZONE,
+                                instance_name=DUMMY_INSTANCE4_NAME)
+    assert instance.is_public_machine() is True
+
+  def test_check_license(self):
+    licenses = gce.get_gce_public_licences(DUMMY_PROJECT_NAME)
+    payg_licenses = [x for x in licenses if not x.endswith('-byol')]
+    instance = gce.get_instance(project_id=DUMMY_PROJECT_NAME,
+                                zone=DUMMY_ZONE,
+                                instance_name=DUMMY_INSTANCE1_NAME)
+    assert instance.check_license(payg_licenses) is True
+    instance = gce.get_instance(project_id=DUMMY_PROJECT_NAME,
+                                zone=DUMMY_ZONE,
+                                instance_name=DUMMY_INSTANCE4_NAME)
+    assert instance.check_license(payg_licenses) is False
+
+  def test_get_instance_interface_subnetworks(self):
+    instance = gce.get_instance(project_id=DUMMY_PROJECT_NAME,
+                                zone=DUMMY_ZONE,
+                                instance_name=DUMMY_INSTANCE1_NAME)
+    for subnetwork in instance.subnetworks:
+      assert isinstance(subnetwork, network.Subnetwork)
+
+  def test_get_instance_interface_routes(self):
+    instance = gce.get_instance(project_id=DUMMY_PROJECT_NAME,
+                                zone=DUMMY_ZONE,
+                                instance_name=DUMMY_INSTANCE1_NAME)
+    for route in instance.routes:
+      assert isinstance(route, network.Route)

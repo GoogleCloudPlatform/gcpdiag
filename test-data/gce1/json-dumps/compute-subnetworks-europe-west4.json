@@ -1,0 +1,79 @@
+{
+  "kind": "compute#subnetworkList",
+  "id": "projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks",
+  "items": [
+    {
+      "kind": "compute#subnetwork",
+      "id": "4774247690482065659",
+      "creationTimestamp": "2022-03-30T02:08:36.021-07:00",
+      "name": "default",
+      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+      "ipCidrRange": "10.164.0.0/20",
+      "gatewayAddress": "10.164.0.1",
+      "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks/default",
+      "privateIpGoogleAccess": true,
+      "secondaryIpRanges": [
+        {
+          "rangeName": "gke-gke4-services-93befb7e",
+          "ipCidrRange": "10.60.0.0/20"
+        },
+        {
+          "rangeName": "gke-gke4-pods-93befb7e",
+          "ipCidrRange": "10.56.0.0/14"
+        },
+        {
+          "rangeName": "gke-autopilot-gke1-services-19977223",
+          "ipCidrRange": "10.85.128.0/22"
+        },
+        {
+          "rangeName": "gke-autopilot-gke1-pods-19977223",
+          "ipCidrRange": "10.85.0.0/17"
+        },
+        {
+          "rangeName": "gke-autopilot-gke2-pods-65d1ba15",
+          "ipCidrRange": "10.60.128.0/17"
+        },
+        {
+          "rangeName": "gke-autopilot-gke2-services-65d1ba15",
+          "ipCidrRange": "10.60.96.0/22"
+        }
+      ],
+      "fingerprint": "-9hqGif0SQ0=",
+      "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+      "purpose": "PRIVATE",
+      "stackType": "IPV4_ONLY"
+    },
+    {
+      "kind": "compute#subnetwork",
+      "id": "1818761461517361320",
+      "creationTimestamp": "2022-03-30T02:09:27.964-07:00",
+      "name": "gke1-subnet",
+      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+      "ipCidrRange": "192.168.0.0/24",
+      "gatewayAddress": "192.168.0.1",
+      "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks/gke1-subnet",
+      "privateIpGoogleAccess": false,
+      "secondaryIpRanges": [
+        {
+          "rangeName": "gke1-secondary-range-pod",
+          "ipCidrRange": "192.168.1.0/24"
+        },
+        {
+          "rangeName": "gke1-secondary-range-svc",
+          "ipCidrRange": "192.168.2.0/24"
+        }
+      ],
+      "fingerprint": "Ir2p9uebpiE=",
+      "enableFlowLogs": false,
+      "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+      "purpose": "PRIVATE",
+      "logConfig": {
+        "enable": false
+      },
+      "stackType": "IPV4_ONLY"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks"
+}

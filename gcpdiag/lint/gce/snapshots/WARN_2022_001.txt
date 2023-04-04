@@ -9,6 +9,8 @@
    - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-k05c                [ OK ]
    - gcpdiag-gce1-aaaa/mig-4h21                                           [ OK ]
    - gcpdiag-gce1-aaaa/mig-7pvl                                           [ OK ]
+   - gcpdiag-gce1-aaaa/windows-test                                       [FAIL]
+     connections from 35.235.240.0/20 to tcp:3389 blocked by vpc firewall rule: gce-secured-instance-test-deny (instance: windows-test)
 
    Traffic from the IP range 35.235.240.0/20 to VM instances is necessary for
    IAP TCP forwarding to establish an encrypted tunnel over which you can
