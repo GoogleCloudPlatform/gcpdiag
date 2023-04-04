@@ -5,6 +5,8 @@
      12340001-compute@developer.gserviceaccount.com has a basic role granted.
    - gcpdiag-gce1-aaaa/mig-4h21                                           [ OK ]
    - gcpdiag-gce1-aaaa/mig-7pvl                                           [ OK ]
+   - gcpdiag-gce1-aaaa/windows-test                                       [FAIL]
+     12340001-compute@developer.gserviceaccount.com has a basic role granted.
 
    Google recommends not to rely on access scopes but instead set the cloud-
    platform access scope and control the service account access by granting
