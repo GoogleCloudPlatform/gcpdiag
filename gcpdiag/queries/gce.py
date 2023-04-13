@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Lint as: python3
-"""Queries related to GCP Kubernetes Engine clusters."""
+"""Queries related to GCP Compute Engine instances."""
 
 import ipaddress
 import logging
