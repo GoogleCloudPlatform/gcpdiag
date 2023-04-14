@@ -1,4 +1,4 @@
-*  gke/BP/2023_003: GKE maintenance windows are defined
+*  gke/BP_EXT/2023_001: GKE maintenance windows are defined
    - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [FAIL]
       does not configure a maintenance window
    - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [FAIL]
@@ -18,5 +18,5 @@
    the timing and impact of these updates, ensuring minimal disruption to
    running workloads.
 
-   https://gcpdiag.dev/rules/gke/BP/2023_003
+   https://gcpdiag.dev/rules/gke/BP_EXT/2023_001
 
