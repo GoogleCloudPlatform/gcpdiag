@@ -1,22 +1,60 @@
-## 0.59 (2022-??-??)
-
-#### Deprecation
-
-- TBD
+## 0.59 (2023-04-14)
 
 #### New rules
 
-- TBD
+- apigee/ERR/2023\_001: Customer's network is peered to Apigee's network
+- apigee/ERR/2023\_002: Network bridge managed instance group is correctly configured
+- bigquery/WARN/2022\_003: BigQuery copy job does not exceed the daily copy quota
+- bigquery/WARN/2022\_004: BigQuery copy job does not exceed the cross-region daily copy quota
+- bigquery/WARN/2023\_001: BigQuery query job does not time out during execution
+- composer/WARN/2022\_003: Composer scheduler parses all DAG files without overloading
+- datafusion/ERR/2022\_008: Cloud Data Fusion SA has Service Account User permissions on the Dataproc SA
+- datafusion/ERR/2022\_009: Cloud Dataproc Service Account has a Cloud Data Fusion Runner role
+- datafusion/ERR/2022\_010: Cloud Dataproc Service Account has a Dataproc Worker role
+- datafusion/ERR/2022\_011: The Dataproc SA for a CDF instance with version > 6.2.0 has Storage Admin role
+- dataproc/ERR/2022\_004: Dataproc on GCE master VM is able to communicate with atleast one worker VM
+- dataproc/ERR/2023\_001: Dataproc cluster initialization completed by the end of the timeout period
+- dataproc/WARN/2022\_004: Cluster should normally spend most of the time in RUNNING state
+- dataproc/WARN/2023\_001: Concurrent Job limit was not exceeded
+- dataproc/WARN/2023\_002: Master Node System Memory utilization under threshold
+- gae/ERR/2023\_001: App Engine: VPC Connector creation failure due to Org Policy
+- gae/ERR/2023\_002: App Engine: VPC Connector creation due to subnet overlap
+- gcb/ERR/2022\_004: Cloud Build Service Agent has the cloudbuild.serviceAgent role
+- gce/BP/2023\_001: GCE Instances follows access scope best practice
+- gce/BP/2023\_001: Instance time source is configured with Google NTP server
+- gce/ERR/2022\_002: Serial logs don't contain Guest OS activation errors
+- gce/WARN/2022\_010: GCE has enough resources available to fulfill requests
+- gce/WARN/2022\_011: GCE VM service account is valid
+- gce/WARN/2022\_012: Validate if a Microsoft Windows instance is able to activate using GCP PAYG licence
+- gke/BP/2023\_001: GKE network policy minimum requirements
+- gke/BP/2023\_002: Stateful workloads do not run on preemptible node
+- gke/BP/2023\_004: GKE clusters are VPC-native
+- gke/BP_EXT/2023\_003: GKE maintenance windows are defined
+- gke/ERR/2023\_001: Container File System API quota not exceeded
+- gke/ERR/2023\_002: GKE private clusters are VPC-native
+- gke/ERR/2023\_003: containerd config.toml is valid
+- gke/WARN/2023\_001: Container File System has the required scopes for Image Streaming
+- gke/WARN/2023\_002: GKE workload timeout to Compute Engine metadata server
+- lb/BP/2022\_001: LocalityLbPolicy compatible with sessionAffinity
+- notebooks/ERR/2023\_001: Vertex AI Workbench user-managed notebook instances are healthy
+- vpc/BP/2022\_001: Explicit routes for Google APIs if the default route is modified
+- vpc/BP/2023\_001: DNS logging is enabled for public zones
 
 #### Enhancements
 
-- TBD
+- New product: Cloud Load Balancing
+- New product: Vertex AI Workbench Notebooks
+- Experimental asynchronous IO execution (not enabled by default)
+- gcb/ERR/2022\_002: Check access to images hosted in gcr.io repositories
+- Add support for interconnect API
+- Extract project id from email when fetching service accounts instead of using
+  wildcard, making IAM service account checks more reliable.
+- --project now accepts project numbers in addition to project ids
 
 #### Fixes
 
-- TBD
-
-
+- gke/BP/2022\_003: updated EOL schedule for GKE
+- Fix 403 error on userinfo API call
 
 ## 0.58 (2022-11-08)
 
