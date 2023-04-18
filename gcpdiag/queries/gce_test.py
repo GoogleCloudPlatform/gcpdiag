@@ -233,6 +233,19 @@ class TestGce:
     assert len(regions) == 2
     assert 'europe-west1' in [r.name for r in regions]
 
+  def test_count_no_action_instances(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME,
+                             locations=['europe-west4'])
+    migs = gce.get_managed_instance_groups(context)
+    #check for number of migs since I am only checking for a single mig in the region
+    assert len(migs) == 1
+
+    for m in migs.values():
+      print(m)
+      count = m.count_no_action_instances()
+
+    assert count == 2
+
   def test_get_instance_templates(self):
     templates = gce.get_instance_templates(DUMMY_PROJECT_NAME)
     # find the GKE node pool template

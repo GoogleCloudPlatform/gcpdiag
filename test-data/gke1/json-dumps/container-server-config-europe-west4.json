@@ -1,87 +1,5 @@
 {
-  "channels": [
-    {
-      "channel": "RAPID",
-      "defaultVersion": "1.26.3-gke.400",
-      "validVersions": [
-        "1.26.3-gke.1000",
-        "1.26.3-gke.400",
-        "1.25.8-gke.1000",
-        "1.25.8-gke.500",
-        "1.24.12-gke.1000",
-        "1.23.17-gke.2000",
-        "1.23.17-gke.1700",
-        "1.23.17-gke.300",
-        "1.22.17-gke.8000",
-        "1.22.17-gke.7500",
-        "1.21.14-gke.18800"
-      ]
-    },
-    {
-      "channel": "REGULAR",
-      "defaultVersion": "1.25.7-gke.1000",
-      "validVersions": [
-        "1.26.2-gke.1000",
-        "1.25.7-gke.1000",
-        "1.24.11-gke.1000",
-        "1.24.10-gke.2300",
-        "1.23.17-gke.300",
-        "1.22.17-gke.6100",
-        "1.21.14-gke.18800"
-      ]
-    },
-    {
-      "channel": "STABLE",
-      "defaultVersion": "1.24.10-gke.2300",
-      "validVersions": [
-        "1.24.11-gke.1000",
-        "1.24.10-gke.2300",
-        "1.24.9-gke.3200",
-        "1.23.16-gke.1400",
-        "1.22.17-gke.5400",
-        "1.21.14-gke.18100",
-        "1.21.14-gke.15800"
-      ]
-    }
-  ],
   "defaultClusterVersion": "1.25.7-gke.1000",
-  "defaultImageType": "COS_CONTAINERD",
-  "validImageTypes": [
-    "COS_CONTAINERD",
-    "COS",
-    "UBUNTU",
-    "UBUNTU_CONTAINERD",
-    "WINDOWS_LTSC",
-    "WINDOWS_LTSC_CONTAINERD",
-    "WINDOWS_SAC",
-    "WINDOWS_SAC_CONTAINERD"
-  ],
-  "validMasterVersions": [
-    "1.26.3-gke.1000",
-    "1.26.2-gke.1000",
-    "1.25.8-gke.1000",
-    "1.25.8-gke.500",
-    "1.25.7-gke.1000",
-    "1.24.12-gke.1000",
-    "1.24.12-gke.500",
-    "1.24.11-gke.1000",
-    "1.24.10-gke.2300",
-    "1.24.10-gke.1200",
-    "1.24.9-gke.3200",
-    "1.23.17-gke.2000",
-    "1.23.17-gke.1700",
-    "1.23.17-gke.300",
-    "1.23.16-gke.2500",
-    "1.23.16-gke.1400",
-    "1.22.17-gke.8000",
-    "1.22.17-gke.7500",
-    "1.22.17-gke.6100",
-    "1.22.17-gke.5400",
-    "1.21.14-gke.18800",
-    "1.21.14-gke.18100",
-    "1.21.14-gke.15800",
-    "1.21.14-gke.8500"
-  ],
   "validNodeVersions": [
     "1.26.3-gke.1000",
     "1.26.3-gke.400",
@@ -576,5 +494,87 @@
     "1.12.5-gke.5",
     "1.11.10-gke.6",
     "1.11.10-gke.5"
+  ],
+  "defaultImageType": "COS_CONTAINERD",
+  "validImageTypes": [
+    "COS_CONTAINERD",
+    "COS",
+    "UBUNTU",
+    "UBUNTU_CONTAINERD",
+    "WINDOWS_LTSC",
+    "WINDOWS_LTSC_CONTAINERD",
+    "WINDOWS_SAC",
+    "WINDOWS_SAC_CONTAINERD"
+  ],
+  "validMasterVersions": [
+    "1.26.3-gke.1000",
+    "1.26.2-gke.1000",
+    "1.25.8-gke.1000",
+    "1.25.8-gke.500",
+    "1.25.7-gke.1000",
+    "1.24.12-gke.1000",
+    "1.24.12-gke.500",
+    "1.24.11-gke.1000",
+    "1.24.10-gke.2300",
+    "1.24.10-gke.1200",
+    "1.24.9-gke.3200",
+    "1.23.17-gke.2000",
+    "1.23.17-gke.1700",
+    "1.23.17-gke.300",
+    "1.23.16-gke.2500",
+    "1.23.16-gke.1400",
+    "1.22.17-gke.8000",
+    "1.22.17-gke.7500",
+    "1.22.17-gke.6100",
+    "1.22.17-gke.5400",
+    "1.21.14-gke.18800",
+    "1.21.14-gke.18100",
+    "1.21.14-gke.15800",
+    "1.21.14-gke.8500"
+  ],
+  "channels": [
+    {
+      "channel": "RAPID",
+      "defaultVersion": "1.26.3-gke.400",
+      "validVersions": [
+        "1.26.3-gke.1000",
+        "1.26.3-gke.400",
+        "1.25.8-gke.1000",
+        "1.25.8-gke.500",
+        "1.24.12-gke.1000",
+        "1.23.17-gke.2000",
+        "1.23.17-gke.1700",
+        "1.23.17-gke.300",
+        "1.22.17-gke.8000",
+        "1.22.17-gke.7500",
+        "1.21.14-gke.18800"
+      ]
+    },
+    {
+      "channel": "REGULAR",
+      "defaultVersion": "1.25.7-gke.1000",
+      "validVersions": [
+        "1.26.2-gke.1000",
+        "1.25.7-gke.1000",
+        "1.24.11-gke.1000",
+        "1.24.10-gke.2300",
+        "1.23.17-gke.300",
+        "1.22.17-gke.6100",
+        "1.21.14-gke.18800"
+      ]
+    },
+    {
+      "channel": "STABLE",
+      "defaultVersion": "1.24.10-gke.2300",
+      "validVersions": [
+        "1.24.11-gke.1000",
+        "1.24.10-gke.2300",
+        "1.24.9-gke.3200",
+        "1.23.16-gke.1400",
+        "1.22.17-gke.5400",
+        "1.21.14-gke.18100",
+        "1.21.14-gke.15800"
+      ]
+    }
   ]
 }

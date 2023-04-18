@@ -243,8 +243,8 @@ class TestNetwork:
     assert 'default-allow-internal' in [r.name for r in rules]
     assert 'default-allow-icmp' in [r.name for r in rules]
 
-    rules = net.firewall.get_vpc_ingress_rules(name='gke-gke3-b46b134d-ssh')
-    assert 'gke-gke3-b46b134d-ssh' == rules[0].name
+    rules = net.firewall.get_vpc_ingress_rules(name='gke-gke6-44734575-ssh')
+    assert 'gke-gke6-44734575-ssh' == rules[0].name
     assert 'tcp' == rules[0].allowed[0]['IPProtocol']
     assert '22' in rules[0].allowed[0]['ports']
 

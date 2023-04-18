@@ -173,6 +173,19 @@ class TestCluster:
     c = clusters[DUMMY_CLUSTER1_NAME]
     assert c.nodepools[0].pod_ipv4_cidr_size == 24
 
+  def test_np_pod_ipv4_cidr_block(self):
+    """Get the pod cidr range in use by the nodepool."""
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+
+    #cluster 1 is vpc-native and has a value set for the nodepool cidr block
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    assert c.nodepools[0].pod_ipv4_cidr_block.compare_networks(
+        ipaddress.ip_network('192.168.1.0/24')) == 0
+
+    c = clusters[DUMMY_CLUSTER2_NAME]
+    assert c.nodepools[0].pod_ipv4_cidr_block is None
+
   def test_has_md_concealment_enabled(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
@@ -330,9 +343,9 @@ class TestCluster:
     # different for each of them.
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
-    c = clusters[DUMMY_CLUSTER1_NAME]
+    c = clusters[DUMMY_AUTOPILOT_CLUSTER1_NAME]
     ips = c.masters_cidr_list
-    assert len(ips) == 1
+    assert len(ips) == 3
     assert isinstance(ips[0], ipaddress.IPv4Network)
     assert not ips[0].is_private
     c = clusters[DUMMY_CLUSTER4_NAME]
