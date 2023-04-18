@@ -22,6 +22,7 @@ from gcpdiag.queries import apis_stub, interconnect
 
 DUMMY_PROJECT_ID = 'gcpdiag-interconnect1-aaaa'
 DUMMY_INTERCONNECT = 'dummy-interconnect1'
+DUMMY_ATTACHMENT = 'dummy-attachment1'
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
@@ -34,3 +35,28 @@ class TestInterconnect:
                                          interconnect_name=DUMMY_INTERCONNECT)
     assert link.name == DUMMY_INTERCONNECT
     assert len(link.attachments) == 2
+    assert link.metro == 'bos'
+
+  def test_get_interconnects(self):
+    """get interconnects by project."""
+    links = interconnect.get_interconnects(project_id=DUMMY_PROJECT_ID)
+    assert len(links) == 3
+    for link in links:
+      assert link.metro != ''
+
+  def test_get_vlan_attachment(self):
+    """get interconnect by name."""
+    attachment = interconnect.get_vlan_attachment(
+        project_id=DUMMY_PROJECT_ID,
+        region='us-east4',
+        vlan_attachment=DUMMY_ATTACHMENT)
+    assert attachment.name == DUMMY_ATTACHMENT
+    assert attachment.interconnect == DUMMY_INTERCONNECT
+    assert attachment.metro == 'bos'
+
+  def test_get_vlan_attachments(self):
+    """get interconnects by project."""
+    attachments = interconnect.get_vlan_attachments(project_id=DUMMY_PROJECT_ID)
+    assert len(attachments) == 6
+    for attachment in attachments:
+      assert attachment.name != ''

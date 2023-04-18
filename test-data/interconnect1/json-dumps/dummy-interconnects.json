@@ -1,0 +1,92 @@
+[
+  {
+    "adminEnabled": true,
+    "circuitInfos": [
+      {
+        "customerDemarcId": "PEERP:NODEMARC",
+        "googleCircuitId": "GCP-00001",
+        "googleDemarcId": "MARKL: MMR B/ 5th floor cab 10.10.10.10  FP 4 Port 9 Fibers 89,90 -LC"
+      }
+    ],
+    "creationTimestamp": "2021-01-01T00:00:00-00:00",
+    "customerName": "Dummy User",
+    "description": "Dummy Description",
+    "googleReferenceId": "10000000",
+    "id": "70000000000000000007",
+    "interconnectAttachments": [
+      "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4/interconnectAttachments/dummy-interconnect1-vlan1",
+      "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4/interconnectAttachments/dummy-interconnect1-vlan2"
+    ],
+    "interconnectType": "IT_PRIVATE",
+    "kind": "compute#interconnect",
+    "linkType": "LINK_TYPE_ETHERNET_10G_LR",
+    "location": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/interconnectLocations/bos-zone1-219",
+    "name": "dummy-interconnect1",
+    "nocContactEmail": "dummy@example.com",
+    "operationalStatus": "OS_ACTIVE",
+    "provisionedLinkCount": 1,
+    "requestedLinkCount": 2,
+    "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/interconnects/dummy-interconnect2",
+    "state": "ACTIVE"
+  },
+  {
+    "adminEnabled": true,
+    "circuitInfos": [
+      {
+        "customerDemarcId": "PEERP:NODEMARC",
+        "googleCircuitId": "GCP-00001",
+        "googleDemarcId": "MARKL:MMR A/ 4th floor Cab 10.10.10.10 FP 4 Port 3 Fibers 77,78 -LC"
+      }
+    ],
+    "creationTimestamp": "2021-01-01T00:00:00-00:00",
+    "customerName": "Dummy User",
+    "description": "Dummy Description",
+    "googleReferenceId": "10000000",
+    "id": "70000000000000000007",
+    "interconnectAttachments": [
+      "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4/interconnectAttachments/dummy-interconnect2-vlan1",
+      "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4/interconnectAttachments/dummy-interconnect2-vlan2"
+    ],
+    "interconnectType": "IT_PRIVATE",
+    "kind": "compute#interconnect",
+    "linkType": "LINK_TYPE_ETHERNET_10G_LR",
+    "location": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/interconnectLocations/bos-zone2-219",
+    "name": "dummy-interconnect2",
+    "nocContactEmail": "dummy@example.com",
+    "operationalStatus": "OS_ACTIVE",
+    "provisionedLinkCount": 1,
+    "requestedLinkCount": 1,
+    "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/interconnects/dummy-interconnect2",
+    "state": "ACTIVE"
+  },
+  {
+    "adminEnabled": true,
+    "circuitInfos": [
+      {
+        "customerDemarcId": "PEERP:NODEMARC",
+        "googleCircuitId": "GCP-00067",
+        "googleDemarcId": "MARKL: MMR B/ 5th floor cab 05.101.06.101  FP 4 Port 6 Fibers 83,84 -LC"
+      }
+    ],
+    "creationTimestamp": "2021-01-01T00:00:00-00:00",
+    "customerName": "Dummy User",
+    "description": "Dummy Description",
+    "googleReferenceId": "10000000",
+    "id": "70000000000000000007",
+    "interconnectAttachments": [
+      "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east1/interconnectAttachments/dummy-interconnect3-vlan1",
+      "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east1/interconnectAttachments/dummy-interconnect3-vlan2"
+    ],
+    "interconnectType": "IT_PRIVATE",
+    "kind": "compute#interconnect",
+    "linkType": "LINK_TYPE_ETHERNET_10G_LR",
+    "location": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/interconnectLocations/bos-zone1-219",
+    "name": "dummy-interconnect3",
+    "nocContactEmail": "dummy@example.com",
+    "operationalStatus": "OS_ACTIVE",
+    "provisionedLinkCount": 1,
+    "requestedLinkCount": 1,
+    "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/interconnects/dummy-interconnect3",
+    "state": "ACTIVE"
+  }
+]

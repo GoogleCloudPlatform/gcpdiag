@@ -134,6 +134,9 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
   def interconnects(self):
     return interconnect_stub.InterconnectApiStub(mock_state='interconnects')
 
+  def interconnectAttachments(self):
+    return interconnect_stub.VlanAttachmentApiStub(mock_state='vlan_attachment')
+
   def execute(self, num_retries=0):
     json_dir = apis_stub.get_json_dir(self.project)
     with open(json_dir / f'compute-instances-{self.zone}.json',
