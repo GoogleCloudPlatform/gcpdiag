@@ -201,6 +201,10 @@ class ManagedInstanceGroup(models.Resource):
         )
     return self._region
 
+  def count_no_action_instances(self) -> int:
+    """number of instances in the mig that are running and have no scheduled actions."""
+    return self._resource_data['currentActions']['none']
+
   def is_instance_member(self, project_id: str, region: str,
                          instance_name: str):
     """Given the project_id, region and instance name, is it a member of this MIG?"""

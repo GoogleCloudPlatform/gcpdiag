@@ -45,7 +45,9 @@ resource "google_container_cluster" "gke3" {
   depends_on         = [google_project_service.container]
   name               = "gke3"
   location           = "europe-west4"
-  initial_node_count = 1
+  initial_node_count = 5
+  cluster_ipv4_cidr  = "10.1.0.0/19"
+
   authenticator_groups_config {
     security_group = "gke-security-groups@gcpdiag.dev"
   }

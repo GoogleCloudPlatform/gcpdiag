@@ -136,6 +136,18 @@ class NodePool(models.Resource):
     return self._resource_data['podIpv4CidrSize']
 
   @property
+  def pod_ipv4_cidr_block(self) -> Optional[ipaddress.IPv4Network]:
+    # Get the pod cidr range in use by the nodepool
+    pod_cidr = get_path(self._resource_data,
+                        ('networkConfig', 'podIpv4CidrBlock'),
+                        default=None)
+
+    if pod_cidr:
+      return ipaddress.ip_network(pod_cidr)
+    else:
+      return None
+
+  @property
   def cluster(self) -> 'Cluster':
     return self._cluster
 
@@ -355,7 +367,9 @@ class Cluster(models.Resource):
 
   @property
   def is_vpc_native(self) -> bool:
-    return self._resource_data['ipAllocationPolicy'].get('useIpAliases', False)
+    return (get_path(self._resource_data,
+                     ('ipAllocationPolicy', 'useIpAliases'),
+                     default=False))
 
   @property
   def is_regional(self) -> bool:
@@ -387,6 +401,7 @@ class Cluster(models.Resource):
                                ['masterIpv4CidrBlock'])
       ]
     else:
+      #only older clusters still have ssh firewall rules
       if self.current_node_count and not self.cluster_hash:
         logging.warning("couldn't retrieve cluster hash for cluster %s.",
                         self.name)
