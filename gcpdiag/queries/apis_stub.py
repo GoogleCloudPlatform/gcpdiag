@@ -81,6 +81,8 @@ JSON_PROJECT_DIR = {
     'gcpdiag-interconnect1-aaaa':
         pathlib.Path(__file__).parents[2] /
         'test-data/interconnect1/json-dumps',
+    'gcpdiag-dataflow1-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/dataflow1/json-dumps',
 }
 
 # set to a value higher than 0 to emulate API temp. failure
@@ -305,5 +307,8 @@ def get_api_stub(service_name: str,
   elif service_name == 'notebooks':
     from gcpdiag.queries import notebooks_stub
     return notebooks_stub.NotebooksApiStub()
+  elif service_name == 'dataflow':
+    from gcpdiag.queries import dataflow_stub
+    return dataflow_stub.DataflowApiStub()
   else:
     raise ValueError('unsupported service: %s' % service_name)
