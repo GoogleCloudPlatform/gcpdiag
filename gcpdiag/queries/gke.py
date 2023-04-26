@@ -362,6 +362,16 @@ class Cluster(models.Resource):
     return len(self._resource_data['locations']) > 1
 
   @property
+  def cluster_ca_certificate(self) -> str:
+    return self._resource_data['masterAuth']['clusterCaCertificate']
+
+  @property
+  def endpoint(self) -> Optional[str]:
+    if 'endpoint' not in self._resource_data:
+      return None
+    return self._resource_data['endpoint']
+
+  @property
   def is_autopilot(self) -> bool:
     if not 'autopilot' in self._resource_data:
       return False
