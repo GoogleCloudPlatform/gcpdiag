@@ -64,6 +64,28 @@ class BackendServices(models.Resource):
   def locality_lb_policy(self) -> str:
     return self._resource_data.get('localityLbPolicy', 'ROUND_ROBIN')
 
+  @property
+  def is_enable_cdn(self) -> str:
+    return self._resource_data.get('enableCDN', False)
+
+  @property
+  def load_balancing_scheme(self) -> str:
+    return self._resource_data.get('loadBalancingScheme', 'NONE')
+
+  @property
+  def region(self):
+    try:
+      url = self._resource_data.get('region', 'NONE')
+      if url is not None:
+        match = re.search(r'/([^/]+)/?$', url)
+        if match is not None:
+          region = match.group(1)
+          return region
+        else:
+          return 'None'
+    except KeyError:
+      return 'None'
+
 
 @caching.cached_api_call(in_memory=True)
 def get_backend_services(project_id: str) -> List[BackendServices]:

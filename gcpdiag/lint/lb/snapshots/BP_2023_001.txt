@@ -1,0 +1,4 @@
+*  lb/BP/2023_001: Cloud CDN is enabled on backends for global external load balancers
+   - gcpdiag-lb1-aaaa/web-backend-service                                 [SKIP]
+     Non Global HTTP(S) Load balancer backend service
+
