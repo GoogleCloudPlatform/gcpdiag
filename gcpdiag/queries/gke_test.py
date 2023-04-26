@@ -282,6 +282,18 @@ class TestCluster:
     c = clusters[DUMMY_CLUSTER2_NAME]
     assert c.is_regional
 
+  def test_cluster_ca_certificate(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    assert c.cluster_ca_certificate == 'REDACTED'
+
+  def test_cluster_endpoint(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    assert c.endpoint == '192.168.1.1'
+
   def test_node_tag_property(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
