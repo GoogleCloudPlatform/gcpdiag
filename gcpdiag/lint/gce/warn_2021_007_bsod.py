@@ -22,8 +22,9 @@ fatal error occured on a Windows instance.
 from typing import Optional
 
 from gcpdiag import lint, models
-from gcpdiag.lint.gce.utils import LogEntryShort, SerialOutputSearch
-from gcpdiag.queries import apis, gce
+from gcpdiag.lint.gce import utils
+from gcpdiag.queries import gce
+from gcpdiag.queries.logs import LogEntryShort
 
 PANIC_MESSAGES = [
     'Dumping stack trace',  #
@@ -34,14 +35,14 @@ logs_by_project = {}
 
 
 def prepare_rule(context: models.Context):
-  logs_by_project[context.project_id] = SerialOutputSearch(
+  logs_by_project[context.project_id] = utils.SerialOutputSearch(
       context, search_strings=PANIC_MESSAGES)
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-  # skip entire rule is logging disabled
-  if not apis.is_enabled(context.project_id, 'logging'):
-    report.add_skipped(None, 'logging api is disabled')
+  # skip entire rule if serial outputs are unavailabe
+  if not utils.is_serial_port_one_logs_available(context):
+    report.add_skipped(None, 'serial port output is unavailable')
     return
 
   search = logs_by_project[context.project_id]

@@ -47,7 +47,11 @@ def list_all(request,
       break
 
 
-def batch_list_all(api, requests: list, next_function: Callable, log_text: str):
+def batch_list_all(api,
+                   requests: list,
+                   next_function: Callable,
+                   log_text: str,
+                   response_keyword='items'):
   """Similar to list_all but using batch API."""
   pending_requests = requests
 
@@ -68,8 +72,8 @@ def batch_list_all(api, requests: list, next_function: Callable, log_text: str):
       if req:
         pending_requests.append(req)
       # yield items
-      if 'items' in response:
-        yield from response['items']
+      if response_keyword in response:
+        yield from response[response_keyword]
     page += 1
 
 

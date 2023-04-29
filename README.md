@@ -54,6 +54,9 @@ optional arguments:
                         'serviceusage.services.use' permission)
   --show-skipped        Show skipped rules
   --hide-ok             Hide rules with result OK
+  --enable-gce-serial-buffer
+                        Fetch serial port one output directly from the Compute API. Use this flag when not exporting
+                        serial port output to cloud logging.
   --include INCLUDE     Include rule pattern (e.g.: `gke`, `gke/*/2021*`). Multiple pattern can be specified (comma separated, or with multiple
                         arguments)
   --exclude EXCLUDE     Exclude rule pattern (e.g.: `BP`, `*/*/2022*`)

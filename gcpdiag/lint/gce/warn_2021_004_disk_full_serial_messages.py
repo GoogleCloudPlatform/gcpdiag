@@ -22,8 +22,9 @@ in serial output usually indicate that the disk is full.
 from typing import Optional
 
 from gcpdiag import lint, models
-from gcpdiag.lint.gce.utils import LogEntryShort, SerialOutputSearch
-from gcpdiag.queries import apis, gce
+from gcpdiag.lint.gce import utils
+from gcpdiag.queries import gce
+from gcpdiag.queries.logs import LogEntryShort
 
 NO_SPACE_LEFT_MESSAGES = [
     'I/O error',  #
@@ -35,14 +36,14 @@ logs_by_project = {}
 
 
 def prepare_rule(context: models.Context):
-  logs_by_project[context.project_id] = SerialOutputSearch(
+  logs_by_project[context.project_id] = utils.SerialOutputSearch(
       context, search_strings=NO_SPACE_LEFT_MESSAGES)
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-  # skip entire rule is logging disabled
-  if not apis.is_enabled(context.project_id, 'logging'):
-    report.add_skipped(None, 'logging api is disabled')
+  # skip entire rule if serial outputs are unavailabe
+  if not utils.is_serial_port_one_logs_available(context):
+    report.add_skipped(None, 'serial port output is unavailable')
     return
 
   search = logs_by_project[context.project_id]
@@ -54,9 +55,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     for instance in sorted(instances, key=lambda i: i.name):
       match: Optional[LogEntryShort] = search.get_last_match(
           instance_id=instance.id)
-      if not instance.is_serial_port_logging_enabled():
-        report.add_skipped(instance, 'serial logging disabled')
-      elif match:
+      if match:
         report.add_failed(instance,
                           ('There are messages indicating that the disk might'
                            ' be full in serial output of {}\n{}: "{}"').format(

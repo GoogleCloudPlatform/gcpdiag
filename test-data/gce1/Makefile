@@ -13,6 +13,9 @@ FAKE_ORG_ID = 11112222
 
 COMPUTE_INSTANCES_MAXRESULTS=3
 
+INSTANCE_NAME_GCE2=gce2
+INSTANCE_NAME_GCE1=gce1
+
 all:	\
 	json-dumps/compute-effective-firewalls-default.json \
 	json-dumps/compute-igs-$(ZONE_1).json \
@@ -39,6 +42,7 @@ all:	\
 	json-dumps/monitoring-query.json \
 	json-dumps/project.json \
 	json-dumps/services.json \
+	json-dumps/serial-port-logging-entries-1.json
 
 include ../Makefile.inc
 
@@ -56,4 +60,10 @@ json-dumps/monitoring-query.json:
 		'https://monitoring.googleapis.com/v3/projects/$(PROJECT_ID)/timeSeries:query' \
 		--header "Content-Type: application/json" -X POST \
 		--data '$(MONITORING_QUERY)' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-serial-port-output-1.json:
+	$(CURL) -fsS \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_2)/instances/$(INSTANCE_NAME_GCE2)/serialPort?start=-1000000' \
+		--header "Content-Type:text/json" \
 		| $(SED_SUBST_FAKE) >$@

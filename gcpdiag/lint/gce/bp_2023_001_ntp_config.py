@@ -24,8 +24,9 @@ not use external NTP sources with Compute Engine virtual machines.
 from typing import Optional
 
 from gcpdiag import lint, models
-from gcpdiag.lint.gce.utils import LogEntryShort, SerialOutputSearch
-from gcpdiag.queries import apis, gce
+from gcpdiag.lint.gce import utils
+from gcpdiag.queries import gce
+from gcpdiag.queries.logs import LogEntryShort
 
 NTP_TIME_SYNC_MESSAGES = ['Time synchronized with', 'Selected source']
 RECOMMENDED_NTP_SERVERS = [
@@ -37,14 +38,14 @@ logs_by_project = {}
 def prepare_rule(context: models.Context):
   filter_str = '''textPayload:("chronyd" OR "ntpd")
    AND ("Selected source" OR "Time synchronized with")'''
-  logs_by_project[context.project_id] = SerialOutputSearch(
+  logs_by_project[context.project_id] = utils.SerialOutputSearch(
       context, search_strings=NTP_TIME_SYNC_MESSAGES, custom_filter=filter_str)
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-  # skip entire rule is logging disabled
-  if not apis.is_enabled(context.project_id, 'logging'):
-    report.add_skipped(None, 'logging api is disabled')
+  # skip entire rule if serial outputs are unavailabe
+  if not utils.is_serial_port_one_logs_available(context):
+    report.add_skipped(None, 'serial port output is unavailable')
     return
 
   search = logs_by_project[context.project_id]

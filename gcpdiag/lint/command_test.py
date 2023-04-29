@@ -57,6 +57,7 @@ class Test:
     assert args.logging_fetch_max_entries is None
     assert args.logging_fetch_max_time_seconds is None
     assert args.output == 'terminal'
+    assert args.enable_gce_serial_buffer is False
 
   # pylint: disable=protected-access
   def test_provided_init_args_parser(self):

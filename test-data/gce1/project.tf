@@ -58,7 +58,7 @@ data "google_compute_default_service_account" "default" {
 }
 
 data "google_compute_image" "cos" {
-  family  = "cos-85-lts"
+  family  = "cos-101-lts"
   project = "cos-cloud"
 }
 
