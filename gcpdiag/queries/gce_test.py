@@ -15,10 +15,11 @@
 # Lint as: python3
 """Test code in gce.py."""
 
+import concurrent.futures
 import re
 from unittest import mock
 
-from gcpdiag import models
+from gcpdiag import config, models
 from gcpdiag.queries import apigee, apis_stub, gce, network
 
 DUMMY_REGION = 'europe-west4'
@@ -314,3 +315,53 @@ class TestGce:
                                 instance_name=DUMMY_INSTANCE1_NAME)
     for route in instance.routes:
       assert isinstance(route, network.Route)
+
+  def test_is_vm_running(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME,
+                             labels=DUMMY_INSTANCE1_LABELS)
+    instances = gce.get_instances(context)
+    for i in instances.values():
+      if i.status == 'RUNNING':
+        assert i.is_running
+
+  def test_get_serial_port_outputs(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    query = gce.get_instances_serial_port_output(context)
+
+    assert len(query) > 0
+
+    assert len(query) > 0
+
+  def test_fetch_serial_port_outputs(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    query = gce.fetch_serial_port_outputs(context=context)
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+      gce.execute_fetch_serial_port_outputs(executor)
+      # verify that at least one instance serial log (gce2) is present
+      all_entries = list(query.entries)
+
+      assert len(all_entries) > 0
+
+  def test_serial_output_contents_order(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    query = gce.get_instances_serial_port_output(context=context)
+
+    gce2_id = '1010101010'
+    serial_output = next(iter(query))
+
+    assert gce2_id == serial_output.instance_id  # gce2 output
+    assert serial_output.contents
+
+    first_entry = serial_output.contents[0]
+    assert '01H\u001b[=3h\u001b[2J\u001b[01;01HCSM BBS Table full.' in first_entry
+    #
+    last_entry = serial_output.contents[-1]
+    assert '[   20.5] cloud-init[56]: Cloud-init v. 21.4 finished' in last_entry
+
+  def test_is_serial_port_buffer_enabled(self):
+    config.init({'enable_gce_serial_buffer': False}, 'x')
+    assert not gce.is_serial_port_buffer_enabled()
+
+    config.init({'enable_gce_serial_buffer': True}, 'x')
+    assert gce.is_serial_port_buffer_enabled()

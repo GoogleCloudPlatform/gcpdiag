@@ -44,6 +44,7 @@ from typing import Any, Dict, Mapping, Optional, Sequence, Set, Tuple
 
 import dateutil.parser
 import ratelimit
+from boltons.iterutils import get_path
 
 from gcpdiag import caching, config
 from gcpdiag.queries import apis
@@ -80,6 +81,38 @@ class LogsQuery:
 
 
 jobs_todo: Dict[Tuple[str, str, str], _LogsQueryJob] = {}
+
+
+class LogEntryShort:
+  """A common log entry"""
+  _text: str
+  _timestamp: Optional[datetime.datetime]
+
+  def __init__(self, raw_entry):
+    if isinstance(raw_entry, dict):
+      self._text = get_path(raw_entry, ('textPayload',), default='')
+      self._timestamp = log_entry_timestamp(raw_entry)
+
+    if isinstance(raw_entry, str):
+      self._text = raw_entry
+      # we could extract timestamp from serial entries
+      # but they are not always present
+      # and may be unreliable as we don't know the system clock setting
+      self._timestamp = None
+
+  @property
+  def text(self):
+    return self._text
+
+  @property
+  def timestamp(self):
+    return self._timestamp
+
+  @property
+  def timestamp_iso(self):
+    if self._timestamp:
+      return self._timestamp.astimezone().isoformat(sep=' ', timespec='seconds')
+    return None
 
 
 def query(project_id: str, resource_type: str, log_name: str,
@@ -189,7 +222,10 @@ def execute_queries(executor: concurrent.futures.Executor):
 def log_entry_timestamp(log_entry: Mapping[str, Any]) -> datetime.datetime:
   # Use receiveTimestamp so that we don't have any time synchronization issues
   # (i.e. don't trust the timestamp field)
-  return dateutil.parser.parse(log_entry['receiveTimestamp'])
+  timestamp = log_entry.get('receiveTimestamp', None)
+  if timestamp:
+    return dateutil.parser.parse(timestamp)
+  return timestamp
 
 
 def format_log_entry(log_entry: dict) -> str:

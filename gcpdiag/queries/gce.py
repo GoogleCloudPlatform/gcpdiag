@@ -13,19 +13,23 @@
 # limitations under the License.
 
 # Lint as: python3
-"""Queries related to GCP Compute Engine instances."""
+"""Queries related to GCP Compute Engine."""
 
+import concurrent.futures
+import dataclasses
 import ipaddress
 import logging
 import re
 from datetime import datetime, timezone
-from typing import Dict, Iterable, List, Mapping, Optional, Set
+from typing import Dict, Iterable, List, Mapping, Optional, Sequence, Set
 
 import googleapiclient.errors
 
 from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis, apis_utils, crm
 from gcpdiag.queries import network as network_q
+
+POSITIVE_BOOL_VALUES = {'Y', 'YES', 'TRUE', '1'}
 
 
 class InstanceTemplate(models.Resource):
@@ -221,6 +225,28 @@ class ManagedInstanceGroup(models.Resource):
     return templates[template_name]
 
 
+class SerialPortOutput:
+  """Represents the full Serial Port Ouput (/dev/ttyS0 or COM1) of an instance.
+  contents is the full 1MB of the instance.
+  """
+  _project_id: str
+  _instance_id: str
+  _contents: List[str]
+
+  def __init__(self, project_id, instance_id, contents):
+    self._project_id = project_id
+    self._instance_id = instance_id
+    self._contents = contents
+
+  @property
+  def contents(self) -> List[str]:
+    return self._contents
+
+  @property
+  def instance_id(self) -> str:
+    return self._instance_id
+
+
 class Instance(models.Resource):
   """Represents a GCE instance."""
   _resource_data: dict
@@ -294,7 +320,7 @@ class Instance(models.Resource):
 
   def is_serial_port_logging_enabled(self) -> bool:
     value = self.get_metadata('serial-port-logging-enable')
-    return bool(value and value.upper() == 'TRUE')
+    return bool(value and value.upper() in POSITIVE_BOOL_VALUES)
 
   def is_gke_node(self) -> bool:
     return 'labels' in self._resource_data and \
@@ -418,6 +444,16 @@ class Instance(models.Resource):
             self._metadata_dict[item['key']] = item['value']
     project_metadata = get_project_metadata(self.project_id)
     return self._metadata_dict.get(key, project_metadata.get(key))
+
+  @property
+  def status(self) -> str:
+    """VM Status"""
+    return self._resource_data.get('status', None)
+
+  @property
+  def is_running(self) -> bool:
+    """VM Status is indicated as running"""
+    return self._resource_data.get('status', False) == 'RUNNING'
 
   @property  # type: ignore
   @caching.cached_api_call(in_memory=True)
@@ -728,6 +764,70 @@ def get_project_metadata(project_id) -> Mapping[str, str]:
   return mapped_metadata
 
 
+@caching.cached_api_call
+def get_instances_serial_port_output(context: models.Context):
+  """Get a list of serial port output for instances
+  which matche the given context, running and is not
+  exported to cloud logging.
+  """
+  # Create temp storage (diskcache.Deque) for output
+  deque = caching.get_tmp_deque('tmp-gce-serial-output-')
+  if not apis.is_enabled(context.project_id, 'compute'):
+    return deque
+  gce_api = apis.get_api('compute', 'v1', context.project_id)
+
+  # Serial port output are rolled over on day 7 and limited to 1MB.
+  # Fetching serial outputs are very expensive so optimize to fetch.
+  # Only relevant instances as storage size can grow drastically for
+  # massive projects. Think 1MB * N where N is some large number.
+  requests = [
+      gce_api.instances().getSerialPortOutput(
+          project=i.project_id,
+          zone=i.zone,
+          instance=i.id,
+          # To get all 1mb output
+          start=-1000000)
+      for i in get_instances(context).values()
+      # fetch running instances that do not export to cloud logging
+      if not i.is_serial_port_logging_enabled() and i.is_running
+  ]
+  requests_start_time = datetime.now()
+  # Note: We are limited to 1000 calls in a single batch request.
+  # We have to use multiple batch requests in batches of 1000
+  # https://github.com/googleapis/google-api-python-client/blob/main/docs/batch.md
+  batch_size = 1000
+  for i in range(0, len(requests), batch_size):
+    batch_requests = requests[i:i + batch_size]
+    for _, response, exception in apis_utils.batch_execute_all(
+        api=gce_api, requests=batch_requests):
+      if exception:
+        if isinstance(exception, googleapiclient.errors.HttpError):
+          raise utils.GcpApiError(exception) from exception
+        else:
+          raise exception
+
+      if response:
+        result = re.match(
+            r'https://www.googleapis.com/compute/v1/projects/([^/]+)/zones/[^/]+/instances/([^/]+)',
+            response['selfLink'])
+        if not result:
+          logging.error('instance selfLink didn\'t match regexp: %s',
+                        response['selfLink'])
+          return
+
+        project_id = result.group(1)
+        instance_id = result.group(2)
+        deque.appendleft(
+            SerialPortOutput(project_id=project_id,
+                             instance_id=instance_id,
+                             contents=response['contents'].splitlines()))
+  requests_end_time = datetime.now()
+  logging.debug(
+      'total serial logs processing time: %s, number of instances: %s',
+      requests_end_time - requests_start_time, len(requests))
+  return deque
+
+
 class Region(models.Resource):
   """Represents a GCE Region."""
   _resource_data: dict
@@ -845,3 +945,65 @@ def get_instance_interface_effective_firewalls(
       networkInterface=nic)
   response = request.execute(num_retries=config.API_RETRIES)
   return InstanceEffectiveFirewalls(Instance, nic, response)
+
+
+def is_project_serial_port_logging_enabled(project_id: str) -> bool:
+  value = get_project_metadata(
+      project_id=project_id).get('serial-port-logging-enable')
+  return bool(value and value.upper() in POSITIVE_BOOL_VALUES)
+
+
+def is_serial_port_buffer_enabled():
+  return config.get('enable_gce_serial_buffer')
+
+
+@dataclasses.dataclass
+class _SerialOutputJob:
+  """A group of log queries that will be executed with a single API call."""
+  context: models.Context
+  future: Optional[concurrent.futures.Future] = None
+
+  def __init__(self,
+               context,
+               future: Optional[concurrent.futures.Future] = None):
+    self.context = context
+    self.future = future
+
+
+class SerialOutputQuery:
+  """A serial output job that was started with prefetch_logs()."""
+  job: _SerialOutputJob
+
+  def __init__(self, job):
+    self.job = job
+
+  @property
+  def entries(self) -> Sequence:
+    if not self.job.future:
+      raise RuntimeError(
+          'Fetching serial logs wasn\'t executed. did you call execute_get_serial_port_output()?'
+      )
+    elif self.job.future.running():
+      logging.info('waiting for serial output results for project: %s',
+                   self.job.context.project_id)
+    return self.job.future.result()
+
+
+jobs_todo: Dict[models.Context, _SerialOutputJob] = {}
+
+
+def execute_fetch_serial_port_outputs(executor: concurrent.futures.Executor):
+  # start a thread to fetch serial log; processing logs can be large
+  # depending on he number of instances in the project which aren't logging to cloud logging
+  # currently expects only one job but implementing it so support for multple projects is possible.
+  global jobs_todo
+  jobs_executing = jobs_todo
+  jobs_todo = {}
+  for job in jobs_executing.values():
+    job.future = executor.submit(get_instances_serial_port_output, job.context)
+
+
+def fetch_serial_port_outputs(context: models.Context) -> SerialOutputQuery:
+  # Aggregate by context
+  job = jobs_todo.setdefault(context, _SerialOutputJob(context=context))
+  return SerialOutputQuery(job=job)

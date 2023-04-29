@@ -35,7 +35,8 @@ import googleapiclient.errors
 
 from gcpdiag import config, models, utils
 from gcpdiag.executor import get_executor
-from gcpdiag.lint.output import base_output, terminal_output
+# to avoid confusion with gcpdiag.lint.gce
+from gcpdiag.queries import gce as gce_mod
 from gcpdiag.queries import logs
 
 
@@ -551,6 +552,11 @@ class SyncExecutionStrategy:
     # Start fetching any logs queries that were defined in prepare_rule
     # functions.
     logs.execute_queries(executor)
+    # Start fetching any serial output logs if serial ouput to cloud logging
+    # is not enabled on the project/ instance
+    if config.get('enable_gce_serial_buffer'):
+      # execute fetech job
+      gce_mod.execute_fetch_serial_port_outputs(executor)
 
     # Run the "prefetch_rule" functions with multiple worker threads to speed up
     # execution of the "run_rule" executions later.

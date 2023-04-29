@@ -1,3 +1,3 @@
 *  gce/BP/2023_001: Instance time source is configured with Google NTP server
-   (logging api is disabled)                                              [SKIP]
+   (serial port output is unavailable)                                    [SKIP]
 

@@ -24,7 +24,7 @@ import sys
 
 from gcpdiag import config, hooks, lint, models
 from gcpdiag.lint.output import csv_output, json_output, terminal_output
-from gcpdiag.queries import apis, crm
+from gcpdiag.queries import apis, crm, gce
 
 
 class ParseMappingArg(argparse.Action):
@@ -127,6 +127,13 @@ def _init_args_parser():
                       help=argparse.SUPPRESS,
                       action='store_false',
                       dest='hide_ok')
+
+  parser.add_argument(
+      '--enable-gce-serial-buffer',
+      help='Fetch serial port one output directly from the Compute API. '
+      'Use this flag when not exporting serial port output to cloud logging.',
+      action='store_true',
+      dest='enable_gce_serial_buffer')
 
   parser.add_argument(
       '--include',
@@ -331,6 +338,14 @@ def run(argv) -> int:
 
   # Verify that we have access and that the CRM API is enabled
   apis.verify_access(context.project_id)
+
+  # Warn customer to fallback on serial logs buffer if project isn't storing in cloud logging
+  if not gce.is_project_serial_port_logging_enabled(context.project_id) and \
+      not config.get('enable_gce_serial_buffer'):
+    logger.warning(
+        '''Serial output to cloud logging maybe disabled for certain GCE instances.
+          Fallback on serial output buffers by using flag --enable-gce-serial-buffer \n'''
+    )
 
   # Run the tests.
   repo.run_rules(context)

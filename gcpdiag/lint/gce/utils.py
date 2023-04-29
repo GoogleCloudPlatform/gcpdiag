@@ -15,36 +15,13 @@
 # Lint as: python3
 """Various utility functions for GCE linters."""
 
-import datetime
 import re
 from typing import Dict, Iterable, Optional
 
 from boltons.iterutils import get_path
 
-from gcpdiag import models
-from gcpdiag.queries import logs
-
-
-class LogEntryShort:
-  """A common log entry"""
-  _text: str
-  _timestamp: datetime.datetime
-
-  def __init__(self, raw_entry):
-    self._timestamp = logs.log_entry_timestamp(raw_entry)
-    self._text = get_path(raw_entry, ('textPayload',), default='')
-
-  @property
-  def text(self):
-    return self._text
-
-  @property
-  def timestamp(self):
-    return self._timestamp
-
-  @property
-  def timestamp_iso(self):
-    return self._timestamp.astimezone().isoformat(sep=' ', timespec='seconds')
+from gcpdiag import config, models
+from gcpdiag.queries import apis, gce, logs
 
 
 class SerialOutputSearch:
@@ -52,8 +29,9 @@ class SerialOutputSearch:
 
   search_strings: Iterable[str]
   query: logs.LogsQuery
-  instances_with_match: Dict[str, LogEntryShort]
+  instances_with_match: Dict[str, logs.LogEntryShort]
   search_is_done: bool
+  serial_port_outputs: gce.SerialOutputQuery
 
   def __init__(self,
                context: models.Context,
@@ -65,6 +43,9 @@ class SerialOutputSearch:
         resource_type='gce_instance',
         log_name='log_id("serialconsole.googleapis.com/serial_port_1_output")',
         filter_str=custom_filter if custom_filter else self._mk_filter())
+    if config.get('enable_gce_serial_buffer'):
+      self.serial_port_outputs = gce.fetch_serial_port_outputs(context)
+
     self.instances_with_match = {}
     self.search_is_done = False
 
@@ -72,25 +53,34 @@ class SerialOutputSearch:
     combined_filter = ' OR '.join([f'"{s}"' for s in self.search_strings])
     return f'textPayload:({combined_filter})'
 
-  def get_last_match(self, instance_id: str) -> Optional[LogEntryShort]:
+  def get_last_match(self, instance_id: str) -> Optional[logs.LogEntryShort]:
     if not self.search_is_done:
-      for raw_entry in self.query.entries:
-        entry_id = get_path(raw_entry, ('resource', 'labels', 'instance_id'),
-                            default=None)
+      self.get_all_instance_with_match()
+    return self.instances_with_match.get(instance_id, None)
 
-        if not entry_id:
-          continue
-        entry = LogEntryShort(raw_entry)
+  def get_all_instance_with_match(self):
+    for raw_entry in self.query.entries:
+      entry_id = get_path(raw_entry, ('resource', 'labels', 'instance_id'),
+                          default=None)
+      if not entry_id:
+        continue
+      entry = logs.LogEntryShort(raw_entry)
+      if any(f in entry.text for f in self.search_strings):
+        self.instances_with_match[entry_id] = entry
 
-        if any(f in entry.text for f in self.search_strings):
-          self.instances_with_match[entry_id] = entry
+    # If user has enabled direct serial port log fetching
+    if config.get('enable_gce_serial_buffer'):
+      for output in self.serial_port_outputs.entries:
+        # there is no reliable timestamps so we rely on the order the contents were delivered
+        # the order of the output contents is always consistent
+        # start from the buttom for the most recent entry
+        for serial_entry in reversed(output.contents):
+          if not self.instances_with_match.get(output.instance_id):
+            if any(f in serial_entry for f in self.search_strings):
+              self.instances_with_match[
+                  output.instance_id] = logs.LogEntryShort(serial_entry)
 
-      self.search_is_done = True
-
-    try:
-      return self.instances_with_match[instance_id]
-    except KeyError:
-      return None
+    self.search_is_done = True
 
 
 def is_cloudsql_peer_network(url: str) -> bool:
@@ -99,3 +89,9 @@ def is_cloudsql_peer_network(url: str) -> bool:
   pattern_tu = f'{prefix}/.*-tp/servicenetworking'
   return re.match(pattern_non_tu, url) is not None or \
          re.match(pattern_tu, url) is not None
+
+
+def is_serial_port_one_logs_available(context: models.Context):
+  return (apis.is_enabled(context.project_id, 'logging') and \
+    gce.is_project_serial_port_logging_enabled(context.project_id)) or \
+    gce.is_serial_port_buffer_enabled()

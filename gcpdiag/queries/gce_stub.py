@@ -38,6 +38,7 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
   # gce_api.instanceGroups().list(project=project_id, zone=zone)
   # gce_api.disks().list(project=project_id, zone=zone)
   # gce_api.instances().get(project=project_id, zone=zone, instance=instance_name)
+  # gce_api.instances().getSerialPortOutput(project,zone,instance,start)
 
   def __init__(self, mock_state='init', project_id=None, zone=None, page=1):
     self.mock_state = mock_state
@@ -92,6 +93,10 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
 
   def instanceTemplates(self):
     return ComputeEngineApiStub('templates')
+
+  def getSerialPortOutput(self, project, zone, instance, start):
+    return apis_stub.RestCallStub(project_id=project,
+                                  json_basename='compute-serial-port-output-1')
 
   def new_batch_http_request(self):
     batch_api = apis_stub.BatchRequestStub()

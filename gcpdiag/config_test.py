@@ -85,6 +85,7 @@ class Test:
     assert config.get('config') is None
     assert config.get('verbose') == 0
     assert config.get('within_days') == 3
+    assert config.get('enable_gce_serial_buffer') is False
 
   def test_overwrite_dynamic_properties(self):
     config.init(
