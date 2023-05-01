@@ -1,7 +1,19 @@
 resource "google_compute_network" "apigee_network" {
-  project    = google_project.project.project_id
-  name       = "apigee-network"
-  depends_on = [google_project_service.compute]
+  project                 = google_project.project.project_id
+  name                    = "apigee-network"
+  auto_create_subnetworks = false
+  depends_on              = [google_project_service.compute]
+}
+
+resource "google_compute_subnetwork" "apigee_subnetwork" {
+  project                  = google_project.project.project_id
+  name                     = "apigee-subnetwork"
+  region                   = "us-central1"
+  ip_cidr_range            = "10.128.0.0/20"
+  network                  = google_compute_network.apigee_network.id
+  private_ip_google_access = true
+  depends_on = [google_project_service.compute,
+  google_compute_network.apigee_network]
 }
 
 resource "google_compute_global_address" "apigee_range" {
@@ -128,7 +140,8 @@ resource "google_compute_instance_template" "mig_bridge_template" {
     disk_size_gb = 20
   }
   network_interface {
-    network = google_compute_network.apigee_network.id
+    network    = google_compute_network.apigee_network.id
+    subnetwork = google_compute_subnetwork.apigee_subnetwork.id
   }
   metadata = {
     ENDPOINT           = google_apigee_instance.apigee_instance.host
