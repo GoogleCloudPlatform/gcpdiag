@@ -1,6 +1,6 @@
 *  gke/WARN/2022_008: GKE connectivity: possible dns timeout in some gke versions.
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [ OK ] no affected version detected
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [ OK ] no affected version detected
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [ OK ] gke version >= 1.23 unaffected
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [ OK ] gke version >= 1.23 unaffected
    - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [ OK ] intra node visibility disabled -> unaffected
    - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [ OK ] intra node visibility disabled -> unaffected
    - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [ OK ] intra node visibility disabled -> unaffected

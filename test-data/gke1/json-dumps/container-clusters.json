@@ -58,8 +58,8 @@
       "binaryAuthorization": {},
       "clusterIpv4Cidr": "10.85.0.0/17",
       "createTime": "2022-08-19T15:28:56+00:00",
-      "currentMasterVersion": "1.22.10-gke.600",
-      "currentNodeVersion": "1.22.10-gke.600",
+      "currentMasterVersion": "1.26.2-gke.1000",
+      "currentNodeVersion": "1.26.2-gke.1000",
       "databaseEncryption": {
         "state": "DECRYPTED"
       },
@@ -68,7 +68,7 @@
       },
       "endpoint": "192.168.1.1",
       "id": "f7bb291d77f44570ae0359d00e3f2e68f276e232a4b84ff1b1b26b8875b26f46",
-      "initialClusterVersion": "1.22.10-gke.600",
+      "initialClusterVersion": "1.26.2-gke.1000",
       "initialNodeCount": 1,
       "ipAllocationPolicy": {
         "clusterIpv4Cidr": "10.85.0.0/17",
@@ -204,8 +204,8 @@
       "binaryAuthorization": {},
       "clusterIpv4Cidr": "10.60.0.0/17",
       "createTime": "2022-08-19T15:28:56+00:00",
-      "currentMasterVersion": "1.22.10-gke.600",
-      "currentNodeVersion": "1.22.10-gke.600",
+      "currentMasterVersion": "1.26.2-gke.1000",
+      "currentNodeVersion": "1.26.2-gke.1000",
       "databaseEncryption": {
         "state": "DECRYPTED"
       },
@@ -214,7 +214,7 @@
       },
       "endpoint": "192.168.1.1",
       "id": "86b60f8aef344c66be3ce7bddacc99ca28e3b9690a9044e28be4b4c3c7d99941",
-      "initialClusterVersion": "1.22.10-gke.600",
+      "initialClusterVersion": "1.26.2-gke.1000",
       "initialNodeCount": 1,
       "ipAllocationPolicy": {
         "clusterIpv4Cidr": "10.60.0.0/17",
@@ -318,15 +318,15 @@
       "binaryAuthorization": {},
       "clusterIpv4Cidr": "10.4.0.0/14",
       "createTime": "2022-08-19T15:28:56+00:00",
-      "currentMasterVersion": "1.22.10-gke.600",
+      "currentMasterVersion": "1.26.2-gke.1000",
       "currentNodeCount": 3,
-      "currentNodeVersion": "1.22.10-gke.600",
+      "currentNodeVersion": "1.26.2-gke.1000",
       "databaseEncryption": {
         "state": "DECRYPTED"
       },
       "endpoint": "192.168.1.1",
       "id": "12cd17cd70b64fe2b23d17d17898c8161509f72746f94b0b949486fb5e07a22b",
-      "initialClusterVersion": "1.22.10-gke.600",
+      "initialClusterVersion": "1.26.2-gke.1000",
       "initialNodeCount": 1,
       "instanceGroupUrls": [
         "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-b/instanceGroupManagers/gke-gke2-default-pool-091396c6-grp",
@@ -449,7 +449,7 @@
             "maxSurge": 1,
             "strategy": "SURGE"
           },
-          "version": "1.22.10-gke.600"
+          "version": "1.26.2-gke.1000"
         }
       ],
       "notificationConfig": {
@@ -491,15 +491,15 @@
       "binaryAuthorization": {},
       "clusterIpv4Cidr": "10.8.0.0/14",
       "createTime": "2022-08-19T15:28:56+00:00",
-      "currentMasterVersion": "1.22.10-gke.600",
+      "currentMasterVersion": "1.26.2-gke.1000",
       "currentNodeCount": 3,
-      "currentNodeVersion": "1.22.10-gke.600",
+      "currentNodeVersion": "1.26.2-gke.1000",
       "databaseEncryption": {
         "state": "DECRYPTED"
       },
       "endpoint": "192.168.1.1",
       "id": "b46b134d2bb44e5a84e93519d84c75ee445fa0073df14e968156995b4b397301",
-      "initialClusterVersion": "1.22.10-gke.600",
+      "initialClusterVersion": "1.26.2-gke.1000",
       "initialNodeCount": 1,
       "instanceGroupUrls": [
         "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke3-default-pool-39fffb99-grp",
@@ -611,7 +611,7 @@
             "maxSurge": 1,
             "strategy": "SURGE"
           },
-          "version": "1.22.10-gke.600"
+          "version": "1.26.2-gke.1000"
         }
       ],
       "notificationConfig": {
@@ -651,9 +651,9 @@
       "binaryAuthorization": {},
       "clusterIpv4Cidr": "192.168.1.0/24",
       "createTime": "2022-08-19T15:29:00+00:00",
-      "currentMasterVersion": "1.22.10-gke.600",
+      "currentMasterVersion": "1.26.2-gke.1000",
       "currentNodeCount": 1,
-      "currentNodeVersion": "1.22.10-gke.600",
+      "currentNodeVersion": "1.26.2-gke.1000",
       "databaseEncryption": {
         "state": "DECRYPTED"
       },
@@ -662,7 +662,7 @@
       },
       "endpoint": "192.168.1.1",
       "id": "d6be863645404bb88521a81f37386ef7c622e4c5f87f41cb86f12dcdda51b773",
-      "initialClusterVersion": "1.22.10-gke.600",
+      "initialClusterVersion": "1.26.2-gke.1000",
       "initialNodeCount": 1,
       "instanceGroupUrls": [
         "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-0e002f10-grp"
@@ -779,7 +779,7 @@
             "maxSurge": 1,
             "strategy": "SURGE"
           },
-          "version": "1.22.10-gke.600"
+          "version": "1.26.2-gke.1000"
         }
       ],
       "notificationConfig": {
@@ -817,9 +817,9 @@
       "binaryAuthorization": {},
       "clusterIpv4Cidr": "10.56.0.0/14",
       "createTime": "2022-08-19T15:28:56+00:00",
-      "currentMasterVersion": "1.22.10-gke.600",
+      "currentMasterVersion": "1.26.2-gke.1000",
       "currentNodeCount": 1,
-      "currentNodeVersion": "1.22.10-gke.600",
+      "currentNodeVersion": "1.26.2-gke.1000",
       "databaseEncryption": {
         "state": "DECRYPTED"
       },
@@ -828,7 +828,7 @@
       },
       "endpoint": "192.168.1.1",
       "id": "3520a9df187f4f07bb3eb43779a93e2b7f41daea55e74f62a45f6821abd9771e",
-      "initialClusterVersion": "1.22.10-gke.600",
+      "initialClusterVersion": "1.26.2-gke.1000",
       "initialNodeCount": 1,
       "instanceGroupUrls": [
         "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke4-default-pool-4c934268-grp"
@@ -960,7 +960,7 @@
             "maxSurge": 1,
             "strategy": "SURGE"
           },
-          "version": "1.22.10-gke.600"
+          "version": "1.26.2-gke.1000"
         }
       ],
       "notificationConfig": {
@@ -1007,15 +1007,15 @@
       "binaryAuthorization": {},
       "clusterIpv4Cidr": "10.0.0.0/14",
       "createTime": "2022-08-19T15:28:56+00:00",
-      "currentMasterVersion": "1.22.10-gke.600",
+      "currentMasterVersion": "1.26.2-gke.1000",
       "currentNodeCount": 1,
-      "currentNodeVersion": "1.22.10-gke.600",
+      "currentNodeVersion": "1.26.2-gke.1000",
       "databaseEncryption": {
         "state": "DECRYPTED"
       },
       "endpoint": "192.168.1.1",
       "id": "44734575aaac4277b1892e404b07bb7e3e21290026a5498090a21d00a9862ac3",
-      "initialClusterVersion": "1.22.10-gke.600",
+      "initialClusterVersion": "1.26.2-gke.1000",
       "initialNodeCount": 1,
       "instanceGroupUrls": [
         "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke6-default-pool-9727718d-grp"
@@ -1142,7 +1142,7 @@
             "maxSurge": 1,
             "strategy": "SURGE"
           },
-          "version": "1.22.10-gke.600"
+          "version": "1.26.2-gke.1000"
         }
       ],
       "notificationConfig": {
