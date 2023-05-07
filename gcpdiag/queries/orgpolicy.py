@@ -23,7 +23,7 @@ PREFETCH_ORG_CONSTRAINTS = (
     'constraints/compute.disableSerialPortAccess',
     'constraints/compute.requireOsLogin',
     'constraints/compute.requireShieldedVm',
-)
+    'constraints/iam.automaticIamGrantsForDefaultServiceAccounts')
 
 # TODO: list policy constraints of interest (not yet supported)
 # 'constraints/compute.vmCanIpForward'
@@ -86,5 +86,6 @@ def _get_effective_org_policy_all_constraints(
 def get_effective_org_policy(project_id: str, constraint: str):
   all_constraints = _get_effective_org_policy_all_constraints(project_id)
   if constraint not in all_constraints:
-    raise ValueError(f'constraint {constraint} not supported {all_constraints}')
+    raise ValueError(
+        f'constraint {constraint} not supported {list(all_constraints)}')
   return all_constraints[constraint]
