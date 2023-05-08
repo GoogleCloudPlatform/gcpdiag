@@ -18,6 +18,7 @@ GKE cluster version up to date and avoid reaching end of life.
 
 Rule will start failing if scheduled end of life is in less than 30 days.
 """
+
 from datetime import datetime, timedelta
 
 from gcpdiag import lint, models
@@ -26,12 +27,13 @@ from gcpdiag.queries import gke
 # this should be updated regularly from:
 # https://cloud.google.com/kubernetes-engine/docs/release-schedule#schedule_for_static_no_channel_versions
 EOL_SCHEDULE = {
-    '1.21': datetime.strptime('2023-01', '%Y-%m'),
-    '1.22': datetime.strptime('2023-04', '%Y-%m'),
-    '1.23': datetime.strptime('2023-07', '%Y-%m'),
-    '1.24': datetime.strptime('2023-10', '%Y-%m'),
-    '1.25': datetime.strptime('2024-02', '%Y-%m'),
-    '1.26': datetime.strptime('2024-05', '%Y-%m'),
+    '1.21': datetime.strptime('2023-01-31', '%Y-%m-%d'),
+    '1.22': datetime.strptime('2023-04-30', '%Y-%m-%d'),
+    '1.23': datetime.strptime('2023-07-31', '%Y-%m-%d'),
+    '1.24': datetime.strptime('2023-10-31', '%Y-%m-%d'),
+    '1.25': datetime.strptime('2024-02-29', '%Y-%m-%d'),
+    '1.26': datetime.strptime('2024-05-31', '%Y-%m-%d'),
+    '1.27': datetime.strptime('2024-06-28', '%Y-%m-%d'),
 }
 
 # how many days before eol rule will start to failing
@@ -40,9 +42,9 @@ NOTIFY_PERIOD_IN_DAYS = 30
 
 def _notification_required(version: str) -> bool:
   """Validate if notification is required based on the static channel schedule"""
-  notify_date = EOL_SCHEDULE.get(version, None)
-  if notify_date and (datetime.now() <
-                      notify_date + timedelta(days=NOTIFY_PERIOD_IN_DAYS)):
+  eol_date = EOL_SCHEDULE.get(version)
+  if eol_date and (datetime.now() <
+                   eol_date - timedelta(days=NOTIFY_PERIOD_IN_DAYS)):
     return False
   return True
 
