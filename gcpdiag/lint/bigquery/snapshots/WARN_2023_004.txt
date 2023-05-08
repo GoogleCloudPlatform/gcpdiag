@@ -1,0 +1,4 @@
+*  bigquery/WARN/2023_004: BigQuery CMEK-related operations do not fail due to missing permissions
+   - gcpdiag-cloudsql1-aaaa                                               [SKIP]
+     logging api is disabled
+
