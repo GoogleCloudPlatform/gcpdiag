@@ -4,8 +4,8 @@
   "items": [
     {
       "kind": "compute#instanceGroupManager",
-      "id": "7058234998406540643",
-      "creationTimestamp": "2023-02-15T22:56:12.305-08:00",
+      "id": "1113081953745275068",
+      "creationTimestamp": "2023-04-30T20:47:31.305-07:00",
       "name": "mig-bridge-manager-us-central1",
       "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/us-central1",
       "distributionPolicy": {
@@ -22,10 +22,10 @@
         ],
         "targetShape": "EVEN"
       },
-      "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/global/instanceTemplates/mig-bridge-us-central1-20230216065558150700000001",
+      "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/global/instanceTemplates/mig-bridge-us-central1-20230501034633253400000001",
       "versions": [
         {
-          "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/global/instanceTemplates/mig-bridge-us-central1-20230216065558150700000001",
+          "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/global/instanceTemplates/mig-bridge-us-central1-20230501034633253400000001",
           "targetSize": {
             "calculated": 2
           }
@@ -33,7 +33,7 @@
       ],
       "instanceGroup": "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/us-central1/instanceGroups/mig-bridge-manager-us-central1",
       "baseInstanceName": "mig-bridge-us-central1",
-      "fingerprint": "DBcjDFoTp5I=",
+      "fingerprint": "Gjs4KcJJIwA=",
       "currentActions": {
         "none": 2,
         "creating": 0,

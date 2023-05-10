@@ -6,6 +6,8 @@ APIGEE_INSTANCE_ID  := $(shell terraform output apigee_instance_id | sed -e 's|"
 LOCATION_1 = us-central1
 KEYRING_1 = apigee-keyring
 CYRPTOKEY_1 = apigee-key
+COMPUTE_NETWORK_1=apigee-network
+COMPUTE_SUBNETWORK_1=apigee-subnetwork
 ENVIRONMENT_GROUP = gcpdiag-demo-envgroup
 ENVIRONMENT_GROUP_1 = gcpdiag-demo-envgroup-1
 CURL         = ../../bin/curl-wrap.sh
@@ -22,7 +24,8 @@ all:	\
 	json-dumps/apigee-organizations.json \
 	json-dumps/apigee-organization.json \
 	json-dumps/compute-regions.json \
-	json-dumps/compute-network-apigee-network.json \
+	json-dumps/compute-network-$(COMPUTE_NETWORK_1).json \
+	json-dumps/compute-subnetworks-$(COMPUTE_SUBNETWORK_1).json \
 	json-dumps/apigee-instances.json \
 	json-dumps/compute-templates.json  \
 	json-dumps/compute-migs-$(LOCATION_1).json  \
@@ -37,55 +40,17 @@ all:	\
 	json-dumps/kms-key-iam-policy.json \
 	json-dumps/apigee-key.json
 
-
-# cloudresourcemanager.googleapis.com
-
-json-dumps/project.json:
-	$(CURL) -fsS \
-		'https://cloudresourcemanager.googleapis.com/v3/projects/$(PROJECT_ID)'  \
-	    | $(SED_SUBST_FAKE) >$@
-
-json-dumps/iam-policy.json:
-	$(CURL) -fsS \
-	  'https://cloudresourcemanager.googleapis.com/v1/projects/$(PROJECT_ID):getIamPolicy' \
-	  -X POST  --header "Content-Type:text/json" \
-	  -d "" \
-	  | $(JSON_CLEANER) other \
-	  | $(SED_SUBST_FAKE) >$@
-
-json-dumps/iam-service-accounts.json:
-	$(CURL) -fsS \
-		'https://iam.googleapis.com/v1/projects/$(PROJECT_ID)/serviceAccounts' \
-		| $(SED_SUBST_FAKE) >$@
-
-# serviceusage.googleapis.com
-
-json-dumps/services.json:
-	$(CURL) -fsS \
-	  'https://serviceusage.googleapis.com/v1/projects/$(PROJECT_ID)/services?filter=state:ENABLED'  \
-	   | $(SED_SUBST_FAKE) >$@
+include ../Makefile.inc
 
 # compute.googleapis.com
-json-dumps/compute-network-apigee-network.json:
-	$(CURL) -fsS \
-	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/networks/default' \
-		| $(JSON_CLEANER) apigee \
-		| $(SED_SUBST_FAKE) >$@
-
-json-dumps/compute-regions.json:
-	$(CURL) -fsS \
-		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/regions' \
-		| $(SED_SUBST_FAKE) >$@
-
-json-dumps/compute-templates.json:
-	$(CURL) -fsS \
-		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/instanceTemplates' \
-		| $(JSON_CLEANER) compute-templates \
-		| $(SED_SUBST_FAKE) >$@
-
 json-dumps/compute-migs-$(LOCATION_1).json:
 	$(CURL) -fsS \
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/regions/$(LOCATION_1)/instanceGroupManagers' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-subnetworks-$(COMPUTE_SUBNETWORK_1).json:
+	$(CURL) -fsS \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/regions/$(LOCATION_1)/subnetworks/$(COMPUTE_SUBNETWORK_1)' \
 		| $(SED_SUBST_FAKE) >$@
 
 # cloudkms.googleapis.com

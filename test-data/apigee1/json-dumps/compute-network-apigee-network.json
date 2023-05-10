@@ -1,10 +1,9 @@
 {
-  "autoCreateSubnetworks": true,
-  "creationTimestamp": "2022-04-15T01:08:47.470-07:00",
-  "description": "Default network for the project",
-  "id": "734928495892010720",
+  "autoCreateSubnetworks": false,
+  "creationTimestamp": "2023-02-15T22:23:14.098-08:00",
+  "id": "6378627999444530493",
   "kind": "compute#network",
-  "name": "default",
+  "name": "apigee-network",
   "networkFirewallPolicyEnforcementOrder": "AFTER_CLASSIC_FIREWALL",
   "peerings": [
     {
@@ -18,51 +17,15 @@
       "network": "https://www.googleapis.com/compute/v1/projects/REDACTED/global/networks/servicenetworking",
       "stackType": "IPV4_ONLY",
       "state": "ACTIVE",
-      "stateDetails": "[2023-01-23T20:12:59.594-08:00]: Connected."
+      "stateDetails": "[2023-04-27T12:13:45.847-07:00]: Connected."
     }
   ],
   "routingConfig": {
     "routingMode": "REGIONAL"
   },
-  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/global/networks/default",
-  "selfLinkWithId": "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/global/networks/734928495892010720",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/global/networks/apigee-network",
+  "selfLinkWithId": "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/global/networks/6378627999444530493",
   "subnetworks": [
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/asia-east2/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/us-central1/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/asia-northeast2/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/europe-west4/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/europe-west3/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/europe-central2/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/northamerica-northeast2/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/europe-west9/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/europe-west2/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/us-east5/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/us-central1/subnetworks/proxy-only-subnet",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/us-west2/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/us-west3/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/australia-southeast2/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/europe-west1/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/us-east4/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/europe-west8/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/europe-north1/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/asia-south2/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/us-east1/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/southamerica-east1/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/australia-southeast1/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/asia-northeast3/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/europe-southwest1/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/us-east7/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/us-south1/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/asia-southeast1/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/northamerica-northeast1/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/europe-west6/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/southamerica-west1/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/us-west4/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/asia-northeast1/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/us-west1/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/asia-southeast2/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/asia-south1/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/me-west1/subnetworks/default",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/asia-east1/subnetworks/default"
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-apigee1-aaaa/regions/us-central1/subnetworks/apigee-subnetwork"
   ]
 }

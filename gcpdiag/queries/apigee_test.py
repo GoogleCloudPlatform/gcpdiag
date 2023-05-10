@@ -23,7 +23,7 @@ from gcpdiag.queries import apigee, apis_stub
 DUMMY_PROJECT_NAME = 'gcpdiag-apigee1-aaaa'
 DUMMY_APIGEE_ORG_NAME = 'gcpdiag-apigee1-aaaa'
 DUMMY_APIGEE_ORG_RUNTIME_TYPE = 'CLOUD'
-DUMMY_APIGEE_NETWORK_NAME = 'default'
+DUMMY_APIGEE_NETWORK_NAME = 'apigee-network'
 DUMMY_APIGEE_ENVGROUP_NAME = 'gcpdiag-demo-envgroup'
 DUMMY_APIGEE_ENVGROUP_FULL_PATH = \
         f'organizations/{DUMMY_APIGEE_ORG_NAME}/envgroups/{DUMMY_APIGEE_ENVGROUP_NAME}'

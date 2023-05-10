@@ -71,6 +71,7 @@ json-dumps/compute-disks-empty.json: json-dumps/compute-disks-$(ZONE_EMPTY).json
 json-dumps/compute-network-%.json:
 	$(CURL) -fsS \
 	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/networks/$*' \
+		| $(JSON_CLEANER) compute-network \
 		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/compute-project.json:
