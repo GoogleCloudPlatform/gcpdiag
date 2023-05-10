@@ -1,0 +1,4 @@
+*  bigquery/ERR/2023_004: BigQuery query job do not encounter dml concurrency issue when mutating concurrently.
+   - gcpdiag-cloudsql1-aaaa                                               [SKIP]
+     logging api is disabled
+
