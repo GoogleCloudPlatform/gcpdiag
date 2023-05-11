@@ -428,8 +428,10 @@ def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
       if 'name' not in resp_c or 'location' not in resp_c:
         raise RuntimeError(
             'missing data in projects.locations.clusters.list response')
-      if not context.match_project_resource(
-          location=resp_c['location'], labels=resp_c.get('resourceLabels')):
+      if not context.match_project_resource(location=resp_c.get('location', ''),
+                                            labels=resp_c.get(
+                                                'resourceLabels', {}),
+                                            resource=resp_c.get('name', '')):
         continue
       c = Cluster(project_id=context.project_id, resource_data=resp_c)
       clusters[c.full_path] = c

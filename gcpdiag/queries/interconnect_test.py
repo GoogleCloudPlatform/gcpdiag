@@ -17,6 +17,7 @@
 
 from unittest import mock
 
+from gcpdiag import models
 # from gcpdiag import models
 from gcpdiag.queries import apis_stub, interconnect
 
@@ -56,7 +57,8 @@ class TestInterconnect:
 
   def test_get_vlan_attachments(self):
     """get interconnects by project."""
-    attachments = interconnect.get_vlan_attachments(project_id=DUMMY_PROJECT_ID)
+    context = models.Context(project_id=DUMMY_PROJECT_ID)
+    attachments = interconnect.get_vlan_attachments(context=context)
     assert len(attachments) == 6
     for attachment in attachments:
       assert attachment.name != ''

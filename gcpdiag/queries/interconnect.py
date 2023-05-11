@@ -173,9 +173,14 @@ def get_vlan_attachment(project_id: str, region: str,
 
 
 @caching.cached_api_call(in_memory=True)
-def get_vlan_attachments(project_id: str) -> List[VlanAttachment]:
-  logging.info('fetching attachments: %s', project_id)
-  compute = apis.get_api('compute', 'v1', project_id)
-  request = compute.interconnectAttachments().list(project=project_id)
+def get_vlan_attachments(context: models.Context) -> List[VlanAttachment]:
+  logging.info('fetching attachments: %s', context.project_id)
+  compute = apis.get_api('compute', 'v1', context.project_id)
+  request = compute.interconnectAttachments().list(project=context.project_id)
   response = request.execute(num_retries=config.API_RETRIES)
-  return [VlanAttachment(project_id, attachment) for attachment in response]
+  attachments = []
+  for attachment in response:
+    if not context.match_project_resource(resource=attachment.get('name')):
+      continue
+    attachments.append(VlanAttachment(context.project_id, attachment))
+  return attachments

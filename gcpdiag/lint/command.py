@@ -27,6 +27,27 @@ from gcpdiag.lint.output import csv_output, json_output, terminal_output
 from gcpdiag.queries import apis, crm
 
 
+class ParseMappingArg(argparse.Action):
+  """Takes a string argument and parse argument"""
+
+  def __call__(self, parser, namespace, values, option_string):
+    if values:
+      if values[0] == '{' and values[-1] == '}':
+        values = values[1:-1]
+      values = re.split('[ ,]', values)
+      parsed_dict = {}
+      for value in values:
+        if value:
+          try:
+            k, v = re.split('[:=]', value)
+            parsed_dict[k] = v
+          except ValueError:
+            parser.error(
+                f'argument {option_string} expected key:value, received {value}'
+            )
+    setattr(namespace, self.dest, parsed_dict)
+
+
 def _flatten_multi_arg(arg_list):
   """Flatten a list of comma-separated values, like:
   ['a', 'b, c'] -> ['a','b','c']
@@ -57,6 +78,28 @@ def _init_args_parser():
                       metavar='P',
                       required=True,
                       help='Project ID of project to inspect')
+
+  parser.add_argument(
+      '--name',
+      nargs='+',
+      metavar='n',
+      help='Resource Name(s) to inspect (e.g.: bastion-host,prod-*)')
+
+  parser.add_argument(
+      '--location',
+      nargs='+',
+      metavar='R',
+      help=
+      'Valid GCP region/zone to scope inspection (e.g.: us-central1-a,us-central1)'
+  )
+
+  parser.add_argument(
+      '--label',
+      action=ParseMappingArg,
+      metavar='key:value',
+      help=(
+          'One or more resource labels as key-value pair(s) to scope inspection '
+          '(e.g.: env:prod, type:frontend or env=prod type=frontend)'))
 
   parser.add_argument(
       '--billing-project',
@@ -232,7 +275,10 @@ def run(argv) -> int:
   project = crm.get_project(args.project)
 
   # Initialize Context.
-  context = models.Context(project_id=project.id)
+  context = models.Context(project_id=project.id,
+                           locations=args.location,
+                           resources=args.name,
+                           labels=args.label)
 
   # Initialize configuration
   config.init(vars(args), context.project_id, terminal_output.is_cloud_shell())

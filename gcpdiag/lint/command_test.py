@@ -77,3 +77,35 @@ class Test:
     command._load_repository_rules(repo)
     modules = {r.product for r in repo.rules_to_run}
     assert MUST_HAVE_MODULES.issubset(modules)
+
+  def test_parse_label(self):
+    parser = command._init_args_parser()
+    # Test with a single value
+    args = parser.parse_args(['--project', 'x', '--label', 'key=value'])
+    assert args.label == {'key': 'value'}
+
+    # Test with multiple values
+    args = parser.parse_args(
+        ['--project', 'x', '--label', 'key1:value1,  key2=value2'])
+    assert args.label == {'key1': 'value1', 'key2': 'value2'}
+
+    # Test with curly braces
+    args = parser.parse_args(
+        ['--project', 'x', '--label', '{ key1=value1, key2=value2 }'])
+    assert args.label == {'key1': 'value1', 'key2': 'value2'}
+
+    # Test with mapping separated by commas
+    args = parser.parse_args(
+        ['--project', 'x', '--label', 'key1=value1,key2:value2'])
+    assert args.label == {'key1': 'value1', 'key2': 'value2'}
+
+    # Test with values separated by spaces
+    args = parser.parse_args(
+        ['--project', 'x', '--label', '  key1=value1 key2:value2  '])
+    assert args.label == {'key1': 'value1', 'key2': 'value2'}
+
+    # exit if invalid --label value is provided.
+    try:
+      args = parser.parse_args(['--project', 'x', '--label', 'invalid'])
+    except SystemExit as e:
+      assert e.code == 2

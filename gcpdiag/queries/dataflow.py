@@ -43,12 +43,24 @@ class Job(models.Resource):
 
 def get_region_dataflow_jobs(api, context: models.Context,
                              region: str) -> List[Job]:
-  jobs = apis_utils.list_all(
+  response = apis_utils.list_all(
       request=api.projects().locations().jobs().list(
           projectId=context.project_id, location=region),
       next_function=api.projects().locations().jobs().list_next,
       response_keyword='jobs')
-  return [Job(context.project_id, job_desc) for job_desc in jobs]
+  jobs = []
+  for job in response:
+    location = job.get('location', '')
+    labels = job.get('labels', {})
+    name = job.get('name', '')
+    # we could get the specific job but correctly matching the location will take too
+    # much effort. Hence get all the jobs and filter afterwards
+    # https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/list#query-parameters
+    if not context.match_project_resource(
+        location=location, labels=labels, resource=name):
+      continue
+    jobs.append(Job(context.project_id, job))
+  return jobs
 
 
 @caching.cached_api_call

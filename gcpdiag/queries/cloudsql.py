@@ -74,4 +74,14 @@ def get_instances(context: models.Context) -> Iterable[Instance]:
   api = apis.get_api('sqladmin', 'v1', context.project_id)
   query = api.instances().list(project=context.project_id)
   resp = query.execute(num_retries=config.API_RETRIES)
-  return [Instance(context.project_id, d) for d in resp.get('items', [])]
+  databases = []
+  for d in resp.get('items', []):
+    location = d.get('region', '')
+    labels = d.get('userLabels', {})
+    resource = d.get('name', '')
+    if not context.match_project_resource(
+        location=location, labels=labels, resource=resource):
+      continue
+
+    databases.append(Instance(context.project_id, d))
+  return databases

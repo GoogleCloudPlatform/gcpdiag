@@ -128,14 +128,18 @@ class Region:
     self.project_id = project_id
     self.region = region
 
-  def get_clusters(self) -> Iterable[Cluster]:
-    r = []
+  def get_clusters(self, context: models.Context) -> Iterable[Cluster]:
+    clusters = []
     for cluster in self.query_api():
+      if not context.match_project_resource(resource=cluster.get('clusterName'),
+                                            labels=cluster.get('labels', {})):
+        continue
       c = Cluster(name=cluster['clusterName'],
                   project_id=self.project_id,
                   resource_data=cluster)
-      r.append(c)
-    return r
+
+      clusters.append(c)
+    return clusters
 
   def query_api(self) -> Iterable[dict]:
     api = apis.get_api('dataproc', 'v1', self.project_id)
@@ -169,7 +173,7 @@ def get_clusters(context: models.Context) -> Iterable[Cluster]:
   if not dataproc.is_api_enabled():
     return r
   executor = get_executor()
-  for clusters in executor.map(lambda r: r.get_clusters(),
+  for clusters in executor.map(lambda r: r.get_clusters(context),
                                dataproc.get_regions()):
     r += clusters
   return r

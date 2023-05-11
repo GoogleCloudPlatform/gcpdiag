@@ -138,12 +138,20 @@ def get_buckets(context: models.Context) -> Mapping[str, Bucket]:
     resp = query.execute(num_retries=config.API_RETRIES)
     if 'items' not in resp:
       return buckets
-    for resp_b in resp['items']:
+    for b in resp['items']:
       # verify that we have some minimal data that we expect
-      if 'id' not in resp_b:
+      if 'id' not in b:
         raise RuntimeError('missing data in bucket response')
-      f = Bucket(project_id=context.project_id, resource_data=resp_b)
-      buckets[f.full_path] = f
+      # Does not support matching for location for buckets
+      # names are globally unique and should suffice
+      if not context.match_project_resource(
+          resource=b.get('name'),
+          labels=b.get('labels', {}),
+      ):
+        continue
+
+      buckets[b['name']] = Bucket(project_id=context.project_id,
+                                  resource_data=b)
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
   return buckets
