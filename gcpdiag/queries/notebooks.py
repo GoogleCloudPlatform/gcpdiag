@@ -97,14 +97,25 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
     resp = query.execute(num_retries=config.API_RETRIES)
     if INSTANCES_KEY not in resp:
       return instances
-    for resp_i in resp[INSTANCES_KEY]:
+    for i in resp[INSTANCES_KEY]:
       # verify that we have some minimal data that we expect
-      if NAME_KEY not in resp_i:
+      if NAME_KEY not in i:
         raise RuntimeError(
             'missing instance name in projects.locations.instances.list response'
         )
-      i = Instance(project_id=context.project_id, resource_data=resp_i)
-      instances[i.full_path] = i
+      # projects/{projectId}/locations/{location}/instances/{instanceId}
+      result = re.match(r'projects/[^/]+/locations/([^/]+)/instances/([^/]+)',
+                        i['name'])
+      if not result:
+        logging.error('invalid notebook instances data: %s', i['name'])
+        continue
+
+      if not context.match_project_resource(location=result.group(1),
+                                            resource=result.group(2),
+                                            labels=i.get('labels', {})):
+        continue
+      instances[i[NAME_KEY]] = Instance(project_id=context.project_id,
+                                        resource_data=i)
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
   return instances

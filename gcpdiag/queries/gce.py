@@ -569,7 +569,9 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
       continue
     zone = result.group(1)
     labels = i.get('labels', {})
-    if not context.match_project_resource(location=zone, labels=labels):
+    resource = i.get('name', '')
+    if not context.match_project_resource(
+        location=zone, labels=labels, resource=resource):
       continue
     instances[i['id']] = Instance(project_id=context.project_id,
                                   resource_data=i)
@@ -593,6 +595,19 @@ def get_instance_groups(context: models.Context) -> Mapping[str, InstanceGroup]:
       next_function=gce_api.instanceGroups().list_next,
       log_text=f'listing gce instances of project {context.project_id}')
   for i in items:
+    result = re.match(
+        r'https://www.googleapis.com/compute/v1/projects/[^/]+/zones/([^/]+)',
+        i['selfLink'])
+    if not result:
+      logging.error('instance %s selfLink didn\'t match regexp: %s', i['id'],
+                    i['selfLink'])
+      continue
+    zone = result.group(1)
+    labels = i.get('labels', {})
+    resource = i.get('name', '')
+    if not context.match_project_resource(
+        location=zone, labels=labels, resource=resource):
+      continue
     groups[i['name']] = InstanceGroup(context.project_id, i)
   return groups
 
@@ -627,7 +642,9 @@ def get_managed_instance_groups(
       continue
     location = result.group(1)
     labels = i.get('labels', {})
-    if not context.match_project_resource(location=location, labels=labels):
+    resource = i.get('name', '')
+    if not context.match_project_resource(
+        location=location, labels=labels, resource=resource):
       continue
     migs[i['id']] = ManagedInstanceGroup(project_id=context.project_id,
                                          resource_data=i)
@@ -665,7 +682,9 @@ def get_region_managed_instance_groups(
       continue
     location = result.group(1)
     labels = i.get('labels', {})
-    if not context.match_project_resource(location=location, labels=labels):
+    name = i.get('name', '')
+    if not context.match_project_resource(
+        location=location, labels=labels, resource=name):
       continue
     migs[i['id']] = ManagedInstanceGroup(project_id=context.project_id,
                                          resource_data=i)

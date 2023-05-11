@@ -48,14 +48,14 @@ class TestCluster:
   def test_get_clusters_by_label(self):
     """get_clusters returns the right cluster matched by label."""
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
-                             labels=[DUMMY_CLUSTER1_LABELS])
+                             labels=DUMMY_CLUSTER1_LABELS)
     clusters = gke.get_clusters(context)
     assert DUMMY_CLUSTER1_NAME in clusters and len(clusters) == 1
 
   def test_get_clusters_by_region(self):
     """get_clusters returns the right cluster matched by region."""
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
-                             regions=['europe-west4'])
+                             locations=['europe-west4'])
     clusters = gke.get_clusters(context)
     assert DUMMY_CLUSTER1_NAME in clusters and len(clusters) == 7
 

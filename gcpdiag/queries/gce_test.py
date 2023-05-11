@@ -57,27 +57,27 @@ class TestGce:
 
   def test_get_instances_by_region_returns_instance(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
-                             regions=['fake-region', DUMMY_REGION])
+                             locations=['fake-region', DUMMY_REGION])
     instances = gce.get_instances(context)
     instances_by_name = {i.name: i for i in instances.values()}
     assert DUMMY_INSTANCE1_NAME in instances_by_name and len(instances) == 5
 
   def test_get_instances_by_label(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
-                             labels=[DUMMY_INSTANCE1_LABELS])
+                             labels=DUMMY_INSTANCE1_LABELS)
     instances = gce.get_instances(context)
     instances_by_name = {i.name: i for i in instances.values()}
     assert DUMMY_INSTANCE1_NAME in instances_by_name and len(instances) == 2
 
   def test_get_instances_by_other_region_returns_empty_result(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
-                             regions=['fake-region'])
+                             locations=['fake-region'])
     instances = gce.get_instances(context)
     assert len(instances) == 0
 
   def test_is_serial_port_logging_enabled(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
-                             labels=[DUMMY_INSTANCE1_LABELS])
+                             labels=DUMMY_INSTANCE1_LABELS)
     instances = gce.get_instances(context)
     instances_by_name = {i.name: i for i in instances.values()}
     i = instances_by_name[DUMMY_INSTANCE1_NAME]
@@ -93,14 +93,14 @@ class TestGce:
 
   def test_is_gke_node_false(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
-                             labels=[DUMMY_INSTANCE1_LABELS])
+                             labels=DUMMY_INSTANCE1_LABELS)
     instances = gce.get_instances(context)
     instances_by_name = {i.name: i for i in instances.values()}
     assert not instances_by_name[DUMMY_INSTANCE1_NAME].is_gke_node()
 
   def test_is_gke_node_true(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
-                             labels=[DUMMY_INSTANCE3_LABELS])
+                             labels=DUMMY_INSTANCE3_LABELS)
     instances = gce.get_instances(context)
     assert len(instances) == 4
     for n in instances.values():
@@ -146,7 +146,7 @@ class TestGce:
 
   def test_access_scopes(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
-                             labels=[DUMMY_INSTANCE1_LABELS])
+                             labels=DUMMY_INSTANCE1_LABELS)
     instances = gce.get_instances(context)
     instances_by_name = {i.name: i for i in instances.values()}
     assert set(instances_by_name[DUMMY_INSTANCE1_NAME].access_scopes) == {
@@ -159,7 +159,7 @@ class TestGce:
 
   def test_service_account(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
-                             labels=[DUMMY_INSTANCE1_LABELS])
+                             labels=DUMMY_INSTANCE1_LABELS)
     instances = gce.get_instances(context)
     instances_by_name = {i.name: i for i in instances.values()}
     assert instances_by_name[
@@ -168,7 +168,7 @@ class TestGce:
 
   def test_get_instance_groups(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
-                             regions=['europe-west4'])
+                             locations=['europe-west4'])
     groups = gce.get_instance_groups(context)
     assert groups['instance-group-1'].has_named_ports() is True
     assert groups['mig'].has_named_ports() is False
@@ -179,7 +179,7 @@ class TestGce:
 
   def test_get_managed_instance_groups(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
-                             regions=['europe-west4'])
+                             locations=['europe-west4'])
     migs = gce.get_managed_instance_groups(context)
     assert len(migs) == 1
     m = next(iter(migs.values()))
@@ -188,7 +188,7 @@ class TestGce:
 
   def test_get_region_managed_instance_groups(self):
     context = models.Context(project_id=DUMMY_REGION_MIG_PROJECT_NAME,
-                             regions=['us-central1'])
+                             locations=['us-central1'])
     migs = gce.get_region_managed_instance_groups(context)
     assert len(migs) == 1
     m = next(iter(migs.values()))
@@ -200,7 +200,7 @@ class TestGce:
 
   def test_get_managed_instance_groups_gke(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
-                             regions=['europe-west1'])
+                             locations=['europe-west1'])
     migs = gce.get_managed_instance_groups(context)
     assert len(migs) == 1
     m = next(iter(migs.values()))
@@ -208,13 +208,13 @@ class TestGce:
 
   def test_get_managed_instance_groups_empty_result(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
-                             labels=[DUMMY_INSTANCE1_LABELS])
+                             labels=DUMMY_INSTANCE1_LABELS)
     migs = gce.get_managed_instance_groups(context)
     assert len(migs) == 0
 
   def test_mig_property(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
-                             labels=[DUMMY_INSTANCE3_LABELS])
+                             labels=DUMMY_INSTANCE3_LABELS)
     for n in gce.get_instances(context).values():
       assert re.match(r'gke-gke1-default-pool-\w+-grp', n.mig.name)
 
@@ -251,7 +251,7 @@ class TestGce:
 
   def test_mig_template(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
-                             labels=[DUMMY_INSTANCE3_LABELS])
+                             labels=DUMMY_INSTANCE3_LABELS)
     for n in {i.mig for i in gce.get_instances(context).values()}:
       assert n.template.name.startswith('gke-')
 

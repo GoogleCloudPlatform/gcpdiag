@@ -29,6 +29,6 @@ class TestCloudRun:
 
   def test_get_services(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
-                             regions=['us-central1'])
+                             locations=['us-central1'])
     services = cloudrun.get_services(context)
     assert len(services) == 1

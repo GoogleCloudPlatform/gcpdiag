@@ -17,6 +17,8 @@
 
 import abc
 import dataclasses
+import re
+from types import MappingProxyType
 from typing import Iterable, List, Mapping, Optional
 
 from gcpdiag import utils
@@ -31,13 +33,18 @@ class Context:
   """List of resource groups / scopes that should be analyzed."""
   # project_id of project that is being analyzed, mandatory
   project_id: str
-  # list of GCP regions (e.g.: 'us-central1')
-  regions: Optional[List[str]]
-  # list of "label sets" that must match.
-  labels: Optional[List[Mapping[str, str]]]
+  # a pattern of sub project resources that match
+  resources_pattern: Optional[re.Pattern]
+  # list of GCP all locations to use as linting scope
+  # i.e. regions (e.g.: 'us-central1') or zone (e.g.: 'us-central1-a').
+  # a compiled project resources provided by user
+  locations_pattern: Optional[re.Pattern]
 
-  # the selected resources are the intersection of project_id, regions,
-  # and labels(i.e. all must match), but each value in regions, and
+  # list of "label sets" that must match.
+  labels: Optional[Mapping[str, str]]
+
+  # the selected resources are the intersection of project_id, locations,
+  # and labels(i.e. all must match), but each value in locations, and
   # labels is a OR, so it means:
   # project_id AND
   # (region1 OR region2) AND
@@ -45,73 +52,109 @@ class Context:
 
   def __init__(self,
                project_id: str,
-               regions: Optional[Iterable[str]] = None,
-               labels: Optional[Iterable[Mapping[str, str]]] = None):
+               locations: Optional[Iterable[str]] = None,
+               labels: Optional[Mapping[str, str]] = None,
+               resources: Optional[Iterable[str]] = None):
     """Args:
 
       project: project_id of project that should be inspected.
-      regions: only include resources in these GCP regions.
-      labels: only include resources with these labels. Expected is a list
-        (iterable) of dicts, where the dicts represent a set of label=value
-        pairs that must match.
+      locations: only include resources in these GCP locations.
+      labels: only include resources with these labels. Expected
+        is a dict, is a set of key=value pairs that must match.
 
-        Example: `[{'label1'='bla', 'label2'='baz'}, {'label1'='foo'}]`. This
-        will
-        match resources that either have label1=bla and label2=baz, or
-        label1=foo.
+        Example: `{'key1'='bla', 'key2'='baz'}`. This
+        will match resources that either have key1=bla or key2=baz.
+      resources: only include sub project resources with this name attribute.
     """
 
     self.project_id = project_id
 
-    if regions:
-      self.regions = list(regions)
-      for region in self.regions:
-        if not utils.is_region(region):
-          raise ValueError(region + " doesn't look like a region")
+    if locations:
+      if not isinstance(locations, List):
+        raise ValueError(
+            str(locations) + ' did not supply full list of locations')
+      for location in locations:
+        if not (utils.is_region(location) or utils.is_zone(location)):
+          raise ValueError(location + ' does not look like a valid region/zone')
+
+      self.locations_pattern = re.compile('|'.join(locations), re.IGNORECASE)
     else:
-      self.regions = None
+      self.locations_pattern = None
 
     if labels:
-      self.labels = []
-      for l in labels:
-        # pylint: disable=isinstance-second-argument-not-valid-type
-        # (see: https://github.com/PyCQA/pylint/issues/3507)
-        if not isinstance(l, Mapping):
-          raise ValueError('labels must be Iterable[Mapping[str,str]]')
-        self.labels.append(l)
+      if not isinstance(labels, Mapping):
+        raise ValueError('labels must be Mapping[str,str]]')
+
+      self.labels = labels
     else:
       self.labels = None
 
+    if resources:
+      if not isinstance(resources, List):
+        raise ValueError(
+            str(resources) + ' did not supply full list of resources')
+
+      self.resources_pattern = re.compile('|'.join(resources), re.IGNORECASE)
+
+    else:
+      self.resources_pattern = None
+
   def __str__(self):
     string = 'project: ' + self.project_id
-    if self.regions:
-      string += ', regions: ' + ','.join(self.regions)
+    if self.resources_pattern:
+      string += ', resources: ' + self.resources_pattern.pattern
+    if self.locations_pattern:
+      string += ', locations (regions/zones): ' + self.locations_pattern.pattern
     if self.labels:
-      string += ', labels: {' + '},{'.join(
-          _mapping_str(label_set) for label_set in self.labels) + '}'
+      string += ', labels: {' + _mapping_str(self.labels) + '}'
     return string
 
   def __hash__(self):
     return self.__str__().__hash__()
 
-  def match_project_resource(self, location: Optional[str],
-                             labels: Optional[Mapping[str, str]]) -> bool:
-    """Return true if a resource in a project matches with this context."""
+  IGNORELOCATION = 'IGNORELOCATION'
+  IGNORELABEL = MappingProxyType({'IGNORELABEL': 'IGNORELABEL'})
+
+  def match_project_resource(
+      self,
+      resource: Optional[str],
+      location: Optional[str] = IGNORELOCATION,
+      labels: Optional[Mapping[str, str]] = IGNORELABEL,
+  ) -> bool:
+    """Compare resource fields to the name and/or location and/or labels supplied
+    by the user and return a boolean outcome depending on the context.
+
+    Args:
+      rosource: name of the resource under analysis. Always inspected if user
+      supplied a name criteria
+
+      location: region or zone of the resource. IGNORELOCATION completely skips analysis
+      of the location even if user has supplied location criteria
+
+      labels: labels in the resource under inspection. Functions which do not
+      support labels can completely skip checks by providing the IGNORELABEL constant
+
+    Returns:
+      A boolean which indicates the outcome of the analysis
+    """
+
+    # Match resources.
+    if self.resources_pattern:
+      if not resource or not self.resources_pattern.match(resource):
+        return False
 
     # Match location.
-    if self.regions:
-      if not location:
-        return False
-      if not any(location.startswith(reg) for reg in self.regions):
+    if self.locations_pattern and location is not self.IGNORELOCATION:
+      if not location or not self.locations_pattern.match(location):
         return False
 
     # Match labels.
-    if self.labels:
+    if self.labels and labels is not self.IGNORELABEL:
       if not labels:
         return False
-      for label_set in self.labels:
-        if all(labels.get(k) == v for k, v in label_set.items()):
-          break
+
+      if any(labels.get(k) == v for k, v in self.labels.items()):
+        pass
       else:
         return False
 
