@@ -55,6 +55,11 @@ class Instance(models.Resource):
     ]
 
   @property
+  def has_public_ip(self) -> bool:
+    return get_path(self._resource_data,
+                    ('settings', 'ipConfiguration', 'ipv4Enabled'))
+
+  @property
   def self_link(self) -> str:
     return self._resource_data['selfLink']
 
