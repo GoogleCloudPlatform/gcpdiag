@@ -1,13 +1,10 @@
 {
-  "name": "projects/12340005",
+  "name": "projects/12340010",
   "parent": "folders/348077457356",
-  "projectId": "gcpdiag-dataproc1-aaaa",
+  "projectId": "gcpdiag-datafusion1-aaaa",
   "state": "ACTIVE",
-  "displayName": "gcpdiag test - dataproc1",
-  "createTime": "2022-09-26T16:58:36.242Z",
-  "updateTime": "2022-09-26T16:58:38.082Z",
-  "etag": "+VlqI+yEXJcy99GB3Ee0vg==",
-  "labels": {
-    "gcpdiag": "test"
-  }
+  "displayName": "gcpdiag test - datafusion1",
+  "createTime": "2022-08-22T00:30:38.739Z",
+  "updateTime": "2022-08-22T00:30:40.979Z",
+  "etag": "GR9oFf6Dr8RG0RV6c2fhYg=="
 }
