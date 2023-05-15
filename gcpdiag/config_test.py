@@ -79,7 +79,7 @@ class Test:
     assert config.MAX_WORKERS == 10
 
   def test_default_dynamic_properties(self):
-    config.init({'project': 'x'}, 'x')
+    config.init({})
     assert config.get('auth_adc') is False
     assert config.get('include_extended') is False
     assert config.get('config') is None
@@ -88,33 +88,31 @@ class Test:
     assert config.get('enable_gce_serial_buffer') is False
 
   def test_overwrite_dynamic_properties(self):
-    config.init(
-        {
-            'project': 'x',
-            'auth_adc': True,
-            'include_extended': True,
-            'verbose': 3,
-            'within_days': 7
-        }, 'x')
+    config.init({
+        'auth_adc': True,
+        'include_extended': True,
+        'verbose': 3,
+        'within_days': 7
+    })
     assert config.get('auth_adc') is True
     assert config.get('include_extended') is True
     assert config.get('verbose') == 3
     assert config.get('within_days') == 7
 
   def test_include(self):
-    config.init({'project': 'x'}, 'x')
+    config.init({})
     assert config.get('include') is None
-    config.init({'project': 'x', 'include': ['*BP*']}, 'x')
+    config.init({'include': ['*BP*']})
     assert config.get('include') == ['*BP*']
-    config.init({'project': 'x', 'include': ['*BP*', '*ERR*', '*WARN*']}, 'x')
+    config.init({'include': ['*BP*', '*ERR*', '*WARN*']})
     assert config.get('include') == ['*BP*', '*ERR*', '*WARN*']
 
   def test_exclude(self):
-    config.init({'project': 'x'}, 'x')
+    config.init({})
     assert config.get('exclude') is None
-    config.init({'project': 'x', 'exclude': ['*BP*']}, 'x')
+    config.init({'exclude': ['*BP*']})
     assert config.get('exclude') == ['*BP*']
-    config.init({'project': 'x', 'exclude': ['*BP*', '*ERR*', '*WARN*']}, 'x')
+    config.init({'exclude': ['*BP*', '*ERR*', '*WARN*']})
     assert config.get('exclude') == ['*BP*', '*ERR*', '*WARN*']
 
   def test_empty_config(self):
@@ -124,7 +122,7 @@ class Test:
       fp.seek(0)
 
       # load config from file
-      config.init({'project': 'x', 'config': fp.name}, 'x')
+      config.init({'config': fp.name})
       assert config.get('config') == fp.name
       # read value availale only from config
       assert config.get('logging_ratelimit_requests') == 60
@@ -137,7 +135,7 @@ class Test:
       fp.seek(0)
 
       # load config from file
-      config.init({'project': 'x', 'config': fp.name}, 'x')
+      config.init({'config': fp.name})
       assert config.get('config') == fp.name
       assert config.get('billing_project') == 'sample'
       assert config.get('include_extended') is True
@@ -153,7 +151,7 @@ class Test:
       fp.seek(0)
 
       # load config from file
-      config.init({'project': 'x', 'config': fp.name}, 'x')
+      config.init({'config': fp.name}, 'x')
       assert config.get('config') == fp.name
       assert config.get('logging_ratelimit_requests') == 120
       assert config.get('logging_ratelimit_period_seconds') == 120
@@ -168,7 +166,8 @@ class Test:
       fp.seek(0)
 
       # load config from file
-      config.init({'project': 'myproject', 'config': fp.name}, 'myproject')
+      config.init({'config': fp.name})
+      config.set_project_id('myproject')
       assert config.get('config') == fp.name
       assert config.get('billing_project') == 'perproject'
       assert config.get('include_extended') is True
