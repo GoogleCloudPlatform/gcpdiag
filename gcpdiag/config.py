@@ -107,7 +107,7 @@ _defaults: Dict[str, Any] = {
 #
 
 
-def init(args, project_id, is_cloud_shell=False):
+def init(args, is_cloud_shell=False):
   """Load configuration based on provided CLI args.
 
   Args:
@@ -117,10 +117,8 @@ def init(args, project_id, is_cloud_shell=False):
   """
   global _args
   global _config
-  global _project_id
   _args = args if args else {}
   _args.update({'is_cloud_shell': is_cloud_shell})
-  _project_id = project_id
 
   file = args.get('config', None)
   if file:
@@ -141,6 +139,12 @@ def init(args, project_id, is_cloud_shell=False):
         print(f"ERROR: can't parse content of the file as YAML: {err}",
               file=sys.stderr)
         sys.exit(1)
+
+
+def set_project_id(project_id):
+  """Configure project id so that project-id-specific configuration can be retrieved."""
+  global _project_id
+  _project_id = project_id
 
 
 def get(key):

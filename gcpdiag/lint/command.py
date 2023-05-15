@@ -278,17 +278,16 @@ def run(argv) -> int:
   # Allow to change defaults using a hook function.
   hooks.set_lint_args_hook(args)
 
-  # Check if a project number and convert to project id
+  # Initialize configuration
+  config.init(vars(args), terminal_output.is_cloud_shell())
   project = crm.get_project(args.project)
+  config.set_project_id(project.id)
 
   # Initialize Context.
   context = models.Context(project_id=project.id,
                            locations=args.location,
                            resources=args.name,
                            labels=args.label)
-
-  # Initialize configuration
-  config.init(vars(args), context.project_id, terminal_output.is_cloud_shell())
 
   # Rules name patterns that shall be included or excluded
   include_patterns = _parse_rule_patterns(config.get('include'))
