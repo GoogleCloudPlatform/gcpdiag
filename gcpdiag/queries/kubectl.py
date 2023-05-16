@@ -32,8 +32,6 @@ config_path = os.path.expanduser('~') + '/.kube/gcpdiag-config'
 class KubectlExecutor:
   """ Represents a kubectl executor. """
 
-  _cluster: gke.Cluster
-  _kubecontext: str
   lock: threading.Lock
 
   def __init__(self, cluster: gke.Cluster):
