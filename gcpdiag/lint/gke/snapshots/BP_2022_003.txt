@@ -3,22 +3,12 @@
      release channel: REGULAR
    - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [SKIP]
      release channel: REGULAR
-   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [FAIL]
-     cluster version: 1.22
-     scheduled end of life: 2023-04-01 00:00:00
+   - gcpdiag-gke1-aaaa/europe-west4/gke2/default-pool                     [ OK ]
    - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [SKIP]
      release channel: REGULAR
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [FAIL]
-     cluster version: 1.22
-     scheduled end of life: 2023-04-01 00:00:00
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1/default-pool                   [ OK ]
    - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [SKIP]
      release channel: REGULAR
    - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [SKIP]
      release channel: REGULAR
-
-   The GKE clusters should be updated regularly. It is recommended to keep your
-   GKE cluster version up to date and avoid reaching end of life.  Rule will
-   start failing if scheduled end of life is in less than 30 days.
-
-   https://gcpdiag.dev/rules/gke/BP/2022_003
 
