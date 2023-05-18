@@ -60,6 +60,11 @@ class Instance(models.Resource):
                     ('settings', 'ipConfiguration', 'ipv4Enabled'))
 
   @property
+  def has_maintenance_window(self) -> int:
+    return get_path(self._resource_data,
+                    ('settings', 'maintenanceWindow', 'day'))
+
+  @property
   def self_link(self) -> str:
     return self._resource_data['selfLink']
 
