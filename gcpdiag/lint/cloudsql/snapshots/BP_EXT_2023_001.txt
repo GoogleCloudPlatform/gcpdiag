@@ -1,0 +1,3 @@
+*  cloudsql/BP_EXT/2023_001: Cloud SQL is defined with Maintenance Window as any.
+   (Error: could not access 'maintenanceWindow' from path ('settings', 'maintenanceWindow', 'day'), got error: KeyError('maintenanceWindow')) [SKIP]
+
