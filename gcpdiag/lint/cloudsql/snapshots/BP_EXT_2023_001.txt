@@ -1,0 +1,9 @@
+*  cloudsql/BP_EXT/2023_001: Cloud SQL is defined with Maintenance Window as any.
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql1-aaaa/instances/sql1 [FAIL]
+     sql1 is defined with Maintenance Window as Any
+
+   Configure a maintenance window for your primary instance to control when
+   disruptive updates can occur.
+
+   https://gcpdiag.dev/rules/cloudsql/BP_EXT/2023_001
+
