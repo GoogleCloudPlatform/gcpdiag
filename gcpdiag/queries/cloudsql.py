@@ -61,8 +61,11 @@ class Instance(models.Resource):
 
   @property
   def has_maint_window(self) -> int:
-    return get_path(self._resource_data,
-                    ('settings', 'maintenanceWindow', 'day'))
+    try:
+      return get_path(self._resource_data,
+                      ('settings', 'maintenanceWindow', 'day'))
+    except KeyError:
+      return 0
 
   @property
   def self_link(self) -> str:
