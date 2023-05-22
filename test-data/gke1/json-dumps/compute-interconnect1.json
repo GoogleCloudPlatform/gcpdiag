@@ -21,21 +21,21 @@
       "state": "COMPLETED"
     }
   ],
-  "googleReferenceId": "1234567",
-  "id": "1234567",
+  "googleReferenceId": "4774247690472065552",
+  "id": "4774247690472065552",
   "interconnectAttachments": [
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4/interconnectAttachments/dummy-interconnect1-vlan1",
-    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4/interconnectAttachments/dummy-interconnect1-vlan2"
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-east4/interconnectAttachments/dummy-attachment1",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-east4/interconnectAttachments/dummy-attachment2"
   ],
   "interconnectType": "IT_PRIVATE",
   "kind": "compute#interconnect",
   "linkType": "LINK_TYPE_ETHERNET_10G_LR",
-  "location": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/interconnectLocations/bos-zone2-219",
+  "location": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/interconnectLocations/bos-zone1-219",
   "name": "dummy-interconnect1",
   "nocContactEmail": "dummy@example.com",
   "operationalStatus": "OS_ACTIVE",
   "provisionedLinkCount": 1,
   "requestedLinkCount": 1,
-  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/interconnects/dummy-interconnect1",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/interconnects/dummy-interconnect1",
   "state": "ACTIVE"
 }

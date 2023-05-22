@@ -23,6 +23,8 @@ from gcpdiag.lint.output import base_output
 class JSONOutput(base_output.BaseOutput):
   """ Output implementation that prints result in JSON format. """
 
+  _printed_first_result = False
+
   def display_header(self, context: models.Context) -> None:
     super().display_header(context)
     # group output as list - start
@@ -68,6 +70,10 @@ class JSONOutput(base_output.BaseOutput):
       message = '' + short_info
     else:
       message = '-'
+    if self._printed_first_result:
+      self.print_line(',')
+    else:
+      self._printed_first_result = True
     self.print_line(
         json.dumps(
             {
@@ -78,4 +84,4 @@ class JSONOutput(base_output.BaseOutput):
                 'doc_url': rule.doc_url
             },
             ensure_ascii=False,
-            indent=2) + ',')
+            indent=2))
