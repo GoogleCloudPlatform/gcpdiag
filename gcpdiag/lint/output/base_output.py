@@ -83,4 +83,5 @@ class _LoggingHandler(logging.Handler):
       if 'Invalid JSON content from response' in msg:
         return
     with self.output.lock:
-      self.output.print_line(msg)
+      sys.stdout.flush()
+      print(msg, file=sys.stderr)
