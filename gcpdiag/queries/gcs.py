@@ -71,7 +71,7 @@ class Bucket(models.Resource):
   def is_uniform_access(self) -> bool:
     return get_path(self._resource_data,
                     ('iamConfiguration', 'uniformBucketLevelAccess', 'enabled'),
-                    default=False) == {}
+                    default=False)
 
   @property
   def full_path(self) -> str:
