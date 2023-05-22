@@ -1,0 +1,45 @@
+{
+  "gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1": {
+    "resources": [
+      {
+        "kind": "Ingress",
+        "namespace": "default",
+        "name": "ingress-1",
+        "checks": [
+          {
+            "name": "ServiceExistenceCheck",
+            "message": "Service default/svc-1 found",
+            "result": "PASSED"
+          },
+          {
+            "name": "AppProtocolAnnotationCheck",
+            "message": "Service default/svc-1 does not have AppProtocolAnnotation",
+            "result": "SKIPPED"
+          },
+          {
+            "name": "BackendConfigAnnotationCheck",
+            "message": "BackendConfig annotation is valid in service default/svc-1",
+            "result": "PASSED"
+          },
+          {
+            "name": "BackendConfigExistenceCheck",
+            "message": "BackendConfig default/my-backendconfig in service default/svc-1 does not exist",
+            "result": "FAILED"
+          }
+        ]
+      },
+      {
+        "kind": "Ingress",
+        "namespace": "default",
+        "name": "ingress-2",
+        "checks": [
+          {
+            "name": "ServiceExistenceCheck",
+            "message": "Service default/svc-2 does not exist",
+            "result": "FAILED"
+          }
+        ]
+      }
+    ]
+  }
+}

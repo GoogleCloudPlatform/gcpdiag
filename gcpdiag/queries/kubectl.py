@@ -18,7 +18,7 @@
 import functools
 import logging
 import os
-import os.path
+import pathlib
 import subprocess
 import threading
 
@@ -26,7 +26,7 @@ import yaml
 
 from gcpdiag.queries import gke
 
-config_path = os.path.expanduser('~') + '/.kube/gcpdiag-config'
+config_path = str(pathlib.Path(__file__).parents[2]) + '/gcpdiag-config'
 
 
 class KubectlExecutor:
@@ -35,7 +35,7 @@ class KubectlExecutor:
   lock: threading.Lock
 
   def __init__(self, cluster: gke.Cluster):
-    self._cluster = cluster
+    self.cluster = cluster
     self.lock = threading.Lock()
 
   def make_kube_config(self) -> bool:
@@ -61,49 +61,35 @@ class KubectlExecutor:
       with open(config_path, encoding='UTF-8') as f:
         cfg = yaml.safe_load(f)
 
-    if self._cluster.endpoint is None:
+    if self.cluster.endpoint is None:
       logging.warning('No kubernetes API server endpoint found for cluster %s',
-                      self._cluster.short_path)
+                      self.cluster.short_path)
       return False
 
-    kubecontext = 'gcpdiag-ctx-' + self._cluster.name
+    kubecontext = 'gcpdiag-ctx-' + self.cluster.name
 
     cfg['clusters'].append({
         'cluster': {
-            'certificate-authority-data': self._cluster.cluster_ca_certificate,
-            'server': 'https://' + self._cluster.endpoint,
+            'certificate-authority-data': self.cluster.cluster_ca_certificate,
+            'server': 'https://' + self.cluster.endpoint,
         },
-        'name': self._cluster.short_path,
+        'name': self.cluster.short_path,
     })
     cfg['contexts'].append({
         'context': {
-            'cluster': self._cluster.short_path,
+            'cluster': self.cluster.short_path,
             'user': 'gcpdiag',
         },
         'name': kubecontext,
     })
 
-    self._kubecontext = kubecontext
+    self.kubecontext = kubecontext
 
     config_text = yaml.dump(cfg, default_flow_style=False)
     with open(config_path, 'w', encoding='UTF-8') as config_file:
       config_file.write(config_text)
+      config_file.close()
 
-    return True
-
-  def verify_auth(self) -> bool:
-    """ Verify the authentication for kubernetes by running kubeclt cluster-info.
-
-    Will raise a warning and return False if authenticaiton failed.
-    """
-    _, stderr = self.kubectl_execute([
-        'kubectl', 'cluster-info', '--kubeconfig', config_path, '--context',
-        self._kubecontext
-    ])
-    if stderr:
-      logging.warning('Failed to authenticate kubectl for cluster %s: %s',
-                      self._cluster.short_path, stderr.strip('\n'))
-      return False
     return True
 
   def kubectl_execute(self, command_list: list[str]):
@@ -119,6 +105,29 @@ class KubectlExecutor:
     return res.stdout, res.stderr
 
 
+def verify_auth(executor: KubectlExecutor) -> bool:
+  """ Verify the authentication for kubernetes by running kubeclt cluster-info.
+
+  Will raise a warning and return False if authenticaiton failed.
+  """
+  _, stderr = executor.kubectl_execute([
+      'kubectl', 'cluster-info', '--kubeconfig', config_path, '--context',
+      executor.kubecontext
+  ])
+  if stderr:
+    logging.warning('Failed to authenticate kubectl for cluster %s: %s',
+                    executor.cluster.short_path, stderr.strip('\n'))
+    return False
+  return True
+
+
+def check_gke_ingress(executor: KubectlExecutor):
+  return executor.kubectl_execute([
+      'kubectl', 'check-gke-ingress', '--kubeconfig', config_path, '--context',
+      executor.kubecontext
+  ])
+
+
 @functools.lru_cache()
 def get_kubectl_executor(c: gke.Cluster):
   """ Create a kubectl_executor for a GKE cluster. """
@@ -126,7 +135,13 @@ def get_kubectl_executor(c: gke.Cluster):
   with executor.lock:
     if not executor.make_kube_config():
       return None
-  if not executor.verify_auth():
+  try:
+    if not verify_auth(executor):
+      logging.warning('Authentication failed for cluster %s', c.short_path)
+      return None
+  except FileNotFoundError as err:
+    logging.warning('Can not inspect Kubernetes resources: %s: %s',
+                    type(err).__name__, err)
     return None
   return executor
 
@@ -134,3 +149,7 @@ def get_kubectl_executor(c: gke.Cluster):
 def clean_up():
   """ Delete the kubeconfig file generated for gcpdiag. """
   os.remove(config_path)
+
+
+def error_message(rule_name, kind, namespace, name, message) -> str:
+  return f'Check rule {rule_name} on {kind} {namespace}/{name} failed: {message}\n'
