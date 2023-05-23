@@ -27,10 +27,12 @@ class Interconnect(models.Resource):
  """
   _resource_data: dict
   _ead: str
+  _attachments: List[str]
 
   def __init__(self, project_id, resource_data):
     super().__init__(project_id=project_id)
     self._resource_data = resource_data
+    self._attachments = []
     self._ead = ''
 
   @property
@@ -60,8 +62,13 @@ class Interconnect(models.Resource):
     return self._resource_data['selfLink']
 
   @property
-  def attachments(self) -> str:
-    return self._resource_data['interconnectAttachments']
+  def attachments(self) -> List[str]:
+    if not self._attachments:
+      self._attachments = [
+          x.split('/')[-1]
+          for x in self._resource_data['interconnectAttachments']
+      ]
+    return self._attachments
 
   @property
   def ead(self) -> str:
@@ -76,7 +83,7 @@ class Interconnect(models.Resource):
 
 @caching.cached_api_call(in_memory=True)
 def get_interconnect(project_id: str, interconnect_name: str) -> Interconnect:
-  logging.info('fetching interconnect: %s/%s', project_id, interconnect_name)
+  logging.info('fetching interconnect: %s', interconnect_name)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.interconnects().get(project=project_id,
                                         interconnect=interconnect_name)
@@ -86,7 +93,7 @@ def get_interconnect(project_id: str, interconnect_name: str) -> Interconnect:
 
 @caching.cached_api_call(in_memory=True)
 def get_interconnects(project_id: str) -> List[Interconnect]:
-  logging.info('fetching interconnects: %s', project_id)
+  logging.info('fetching interconnects')
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.interconnects().list(project=project_id)
   response = request.execute(num_retries=config.API_RETRIES)
@@ -150,6 +157,14 @@ class VlanAttachment(models.Resource):
     return self._interconnect
 
   @property
+  def router(self) -> str:
+    return self._resource_data['router'].split('/')[-1]
+
+  @property
+  def region(self) -> str:
+    return self._resource_data['region'].split('/')[-1]
+
+  @property
   def ead(self) -> str:
     if not self._ead:
       interconnect_obj = get_interconnect(self.project_id, self.interconnect)
@@ -164,7 +179,7 @@ class VlanAttachment(models.Resource):
 @caching.cached_api_call(in_memory=True)
 def get_vlan_attachment(project_id: str, region: str,
                         vlan_attachment: str) -> VlanAttachment:
-  logging.info('fetching attachment: %s/%s', project_id, vlan_attachment)
+  logging.info('fetching vlan attachment: %s', vlan_attachment)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.interconnectAttachments().get(
       project=project_id, region=region, interconnectAttachment=vlan_attachment)
@@ -173,14 +188,18 @@ def get_vlan_attachment(project_id: str, region: str,
 
 
 @caching.cached_api_call(in_memory=True)
-def get_vlan_attachments(context: models.Context) -> List[VlanAttachment]:
-  logging.info('fetching attachments: %s', context.project_id)
-  compute = apis.get_api('compute', 'v1', context.project_id)
-  request = compute.interconnectAttachments().list(project=context.project_id)
-  response = request.execute(num_retries=config.API_RETRIES)
+def get_vlan_attachments(project_id: str) -> List[VlanAttachment]:
+  logging.info('fetching vlan attachments')
+  compute = apis.get_api('compute', 'v1', project_id)
   attachments = []
-  for attachment in response:
-    if not context.match_project_resource(resource=attachment.get('name')):
+  request = compute.interconnectAttachments().aggregatedList(project=project_id)
+  response = request.execute(num_retries=config.API_RETRIES)
+  attachments_by_regions = response['items']
+  for _, data_ in attachments_by_regions.items():
+    if 'interconnectAttachments' not in data_:
       continue
-    attachments.append(VlanAttachment(context.project_id, attachment))
+    attachments.extend([
+        VlanAttachment(project_id, va)
+        for va in data_['interconnectAttachments']
+    ])
   return attachments

@@ -21,6 +21,7 @@ all:	\
 	json-dumps/compute-effective-firewalls-default.json \
 	json-dumps/compute-instances-$(ZONE_1).json \
 	json-dumps/compute-instances-empty.json \
+	json-dumps/compute-interconnects.json \
 	json-dumps/compute-migs-$(ZONE_1).json \
 	json-dumps/compute-migs-empty.json \
 	json-dumps/compute-disks-$(ZONE_1).json \

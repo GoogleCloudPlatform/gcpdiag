@@ -68,6 +68,10 @@ json-dumps/compute-disks-%.json:
 json-dumps/compute-disks-empty.json: json-dumps/compute-disks-$(ZONE_EMPTY).json
 	ln -sf $(notdir $<) $@
 
+json-dumps/compute-interconnects.json:
+	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/interconnects' \
+		| $(SED_SUBST_FAKE) >$@
+
 json-dumps/compute-network-%.json:
 	$(CURL) -fsS \
 	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/networks/$*' \

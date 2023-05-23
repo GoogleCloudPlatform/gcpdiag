@@ -8,9 +8,9 @@
     "description": "Dummy Description",
     "encryption": "IPSEC",
     "id": "0000000000000000000",
-    "interconnect": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/interconnects/dummy-interconnect1",
+    "interconnect": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/interconnects/dummy-interconnect1",
     "ipsecInternalAddresses": [
-      "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4/addresses/test-tange-1"
+      "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-east4/addresses/test-tange-1"
     ],
     "kind": "compute#interconnectAttachment",
     "name": "dummy-attachment1",
@@ -18,10 +18,10 @@
     "privateInterconnectInfo": {
       "tag8021q": 1101
     },
-    "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4",
-    "router": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4/routers/dummy-router-1",
+    "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-east4",
+    "router": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-east4/routers/dummy-router-1",
     "satisfiesPzs": false,
-    "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4/interconnectAttachments/dummy-attachment1",
+    "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-east4/interconnectAttachments/dummy-attachment1",
     "stackType": "IPV4_ONLY",
     "state": "ACTIVE",
     "type": "DEDICATED",
