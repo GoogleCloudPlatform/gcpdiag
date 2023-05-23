@@ -1,0 +1,7 @@
+*  cloudsql/BP_EXT/2023_002: Cloud SQL should be configured with Deletion Protection
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql1-aaaa/instances/sql1 [FAIL]
+
+   Protect your CloudSQL instance and backups from accidental deletion
+
+   https://gcpdiag.dev/rules/cloudsql/BP_EXT/2023_002
+

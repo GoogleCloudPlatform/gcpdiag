@@ -68,6 +68,11 @@ class Instance(models.Resource):
       return 0
 
   @property
+  def has_del_protection(self) -> bool:
+    return get_path(self._resource_data,
+                    ('settings', 'deletionProtectionEnabled'), False)
+
+  @property
   def self_link(self) -> str:
     return self._resource_data['selfLink']
 
