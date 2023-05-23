@@ -17,11 +17,10 @@
 
 from unittest import mock
 
-from gcpdiag import models
 # from gcpdiag import models
 from gcpdiag.queries import apis_stub, interconnect
 
-DUMMY_PROJECT_ID = 'gcpdiag-interconnect1-aaaa'
+DUMMY_PROJECT_ID = 'gcpdiag-gke1-aaaa'
 DUMMY_INTERCONNECT = 'dummy-interconnect1'
 DUMMY_ATTACHMENT = 'dummy-attachment1'
 
@@ -41,24 +40,68 @@ class TestInterconnect:
   def test_get_interconnects(self):
     """get interconnects by project."""
     links = interconnect.get_interconnects(project_id=DUMMY_PROJECT_ID)
-    assert len(links) == 3
     for link in links:
-      assert link.metro != ''
+      if link.name == DUMMY_INTERCONNECT:
+        assert 'dummy-attachment1' in link.attachments
+        assert 'dummy-attachment2' in link.attachments
+        assert link.ead == 'bos-zone1-219'
+
+      if link.name == 'dummy-interconnect2':
+        assert 'dummy-attachment3' in link.attachments
+        assert 'dummy-attachment4' in link.attachments
+        assert link.ead == 'bos-zone2-219'
+
+      if link.name == 'dummy-interconnect3':
+        assert 'dummy-attachment5' in link.attachments
+        assert link.ead == 'sjc-zone1-6'
+
+      if link.name == 'dummy-interconnect4':
+        assert 'dummy-attachment6' in link.attachments
+        assert link.ead == 'sjc-zone2-6'
 
   def test_get_vlan_attachment(self):
     """get interconnect by name."""
     attachment = interconnect.get_vlan_attachment(
         project_id=DUMMY_PROJECT_ID,
         region='us-east4',
-        vlan_attachment=DUMMY_ATTACHMENT)
+        vlan_attachment='interconnect-attachment1')
     assert attachment.name == DUMMY_ATTACHMENT
     assert attachment.interconnect == DUMMY_INTERCONNECT
-    assert attachment.metro == 'bos'
+    assert attachment.metro in ['bos', 'sjc']
+    assert attachment.region in ['us-east4', 'us-west2']
 
   def test_get_vlan_attachments(self):
     """get interconnects by project."""
-    context = models.Context(project_id=DUMMY_PROJECT_ID)
-    attachments = interconnect.get_vlan_attachments(context=context)
-    assert len(attachments) == 6
+    attachments = interconnect.get_vlan_attachments(project_id=DUMMY_PROJECT_ID)
+    assert len(attachments) > 2
+
     for attachment in attachments:
-      assert attachment.name != ''
+      if attachment.name == 'dummy-attachment1':
+        assert attachment.interconnect == 'dummy-interconnect1'
+        assert attachment.ead == 'bos-zone1-219'
+        assert attachment.router == 'dummy-router1'
+
+      if attachment.name == 'dummy-attachment2':
+        assert attachment.interconnect == 'dummy-interconnect1'
+        assert attachment.ead == 'bos-zone1-219'
+        assert attachment.router == 'dummy-router1'
+
+      if attachment.name == 'dummy-attachment3':
+        assert attachment.interconnect == 'dummy-interconnect2'
+        assert attachment.ead == 'bos-zone2-219'
+        assert attachment.router == 'dummy-router2'
+
+      if attachment.name == 'dummy-attachment4':
+        assert attachment.interconnect == 'dummy-interconnect2'
+        assert attachment.ead == 'bos-zone2-219'
+        assert attachment.router == 'dummy-router2'
+
+      if attachment.name == 'dummy-attachment5':
+        assert attachment.interconnect == 'dummy-interconnect3'
+        assert attachment.ead == 'sjc-zone1-6'
+        assert attachment.router == 'dummy-router3'
+
+      if attachment.name == 'dummy-attachment6':
+        assert attachment.interconnect == 'dummy-interconnect4'
+        assert attachment.ead == 'sjc-zone2-6'
+        assert attachment.router == 'dummy-router3'

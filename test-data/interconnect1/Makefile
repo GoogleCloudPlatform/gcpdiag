@@ -14,11 +14,7 @@ SED_SUBST_FAKE = sed -e "s/$(PROJECT_ID_SUFFIX)/$(FAKE_PROJECT_ID_SUFFIX)/" \
 
 all:	\
 	json-dumps/project.json \
-	json-dumps/compute-project.json \
-	json-dumps/interconnects.json \
-include ../Makefile.inc
+	json-dumps/compute-interconnects.json \
+	json-dumps/compute-project.json
 
-json-dumps/interconnects.json:
-	$(CURL) -fsS \
-	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/interconnects/' \
-		| $(SED_SUBST_FAKE) >$@
+include ../Makefile.inc

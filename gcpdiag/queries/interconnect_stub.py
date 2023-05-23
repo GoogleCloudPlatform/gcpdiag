@@ -23,11 +23,11 @@ from gcpdiag.queries import apis_stub
 # pylint: disable=unused-argument
 # pylint: disable=invalid-name
 
-DUMMY_INTERCONNECTS = 'dummy-interconnects'
-DUMMY_ATTACHMENTS = 'dummy-attachments'
+DUMMY_INTERCONNECTS = 'compute-interconnects'
+DUMMY_ATTACHMENTS = 'interconnect-attachments'
 
 
-class InterconnectApiStub:
+class InterconnectApiStub(apis_stub.ApiStub):
   """Mock object to simulate interconnect api calls.
 
   This object is created by GceApiStub, not used directly in test scripts."""
@@ -38,6 +38,7 @@ class InterconnectApiStub:
   # pylint: disable=redefined-builtin
   def get(self, project, interconnect):
     if self.mock_state == 'interconnects':
+      interconnect = interconnect.replace('dummy-', 'compute-')
       return apis_stub.RestCallStub(project, interconnect)
     else:
       raise ValueError(f'cannot call method {self.mock_state} here')
@@ -50,7 +51,7 @@ class InterconnectApiStub:
       raise ValueError(f'cannot call method {self.mock_state} here')
 
 
-class VlanAttachmentApiStub:
+class VlanAttachmentApiStub(apis_stub.ApiStub):
   """Mock object to simulate interconnect attachment api calls.
 
   This object is created by GceApiStub, not used directly in test scripts."""
@@ -66,7 +67,7 @@ class VlanAttachmentApiStub:
       raise ValueError(f'cannot call method {self.mock_state} here')
 
   # pylint: disable=redefined-builtin
-  def list(self, project):
+  def aggregatedList(self, project):
     if self.mock_state == 'vlan_attachment':
       return apis_stub.RestCallStub(project, DUMMY_ATTACHMENTS)
     else:

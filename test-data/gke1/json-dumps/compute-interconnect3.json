@@ -1,0 +1,40 @@
+{
+  "adminEnabled": true,
+  "circuitInfos": [
+    {
+      "customerDemarcId": "PEERP:NODEMARC",
+      "googleCircuitId": "GCP-00111111",
+      "googleDemarcId": "ABCDEFG"
+    }
+  ],
+  "creationTimestamp": "2021-01-01T00:00:00-00:00",
+  "customerName": "Dummy User",
+  "description": "Dummy Interconnect",
+  "expectedOutages": [
+    {
+      "description": "",
+      "endTime": "1670443549000",
+      "issueType": "IT_OUTAGE",
+      "name": "pcr-639175",
+      "source": "NSRC_GOOGLE",
+      "startTime": "1670424949000",
+      "state": "COMPLETED"
+    }
+  ],
+  "googleReferenceId": "4774247690472065552",
+  "id": "4774247690472065552",
+  "interconnectAttachments": [
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment5"
+  ],
+  "interconnectType": "IT_PRIVATE",
+  "kind": "compute#interconnect",
+  "linkType": "LINK_TYPE_ETHERNET_10G_LR",
+  "location": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/interconnectLocations/sjc-zone1-6",
+  "name": "dummy-interconnect3",
+  "nocContactEmail": "dummy@example.com",
+  "operationalStatus": "OS_ACTIVE",
+  "provisionedLinkCount": 1,
+  "requestedLinkCount": 1,
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/interconnects/dummy-interconnect3",
+  "state": "ACTIVE"
+}
