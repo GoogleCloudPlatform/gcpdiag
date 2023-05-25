@@ -1,0 +1,13 @@
+*  composer/BP_EXT/2023_002: Cloud Composer has higher version than airflow-2.2.3
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [FAIL]
+     env2 image is composer-1.17.10-airflow-1.10.15, which is vulnerable to XSS attack. Upgrade to the latest Cloud Composer version
+   - gcpdiag-composer1-aaaa/us-central1/env1                              [FAIL]
+     env1 image is composer-1.17.10-airflow-1.10.15, which is vulnerable to XSS attack. Upgrade to the latest Cloud Composer version
+
+   Airflow UI in Airflow 2.2.3 or earlier versions is vulnerable to
+   CVE-2021-45229. "Trigger DAG with config" screen was susceptible to XSS
+   attacks through the origin query argument. Highly recommened to upgrade to
+   the latest Cloud Composer version that supports Airflow 2.2.5.
+
+   https://gcpdiag.dev/rules/composer/BP_EXT/2023_002
+
