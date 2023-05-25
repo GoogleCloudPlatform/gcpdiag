@@ -1,0 +1,9 @@
+*  dataflow/ERR/2023_002: Dataflow job does not fail during execution due to IP space exhaustion
+   - gcpdiag-datafusion1-aaaa                                             [FAIL]
+     Some Dataflow jobs failed due to exhaustion of IP Space: 
+
+   A dataflow job runs successfully if subnet has enough ip space for all
+   workers in job, otherwise it fails with IP_SPACE_EXHAUSTED error.
+
+   https://gcpdiag.dev/rules/dataflow/ERR/2023_002
+
