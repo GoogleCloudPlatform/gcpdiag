@@ -59,7 +59,7 @@ def is_relevant(entry, context):
 
 def get_clusters_having_relevant_log_entries(context):
   return {
-      e.cluster_name
+      get_path(e, ('resource', 'labels', 'cluster_name'), default=None)
       for e in logs_by_project[context.project_id].entries
       if is_relevant(e, context)
   }
