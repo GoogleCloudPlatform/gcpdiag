@@ -1,18 +1,19 @@
-*  gke/WARN/2021_003: GKE cluster size close to maximum allowed by pod range
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [ OK ] 0/1 nodes used.
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [ OK ] 0/1 nodes used.
-   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [ OK ] 3/1024 nodes used.
-   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [ OK ] 3/1024 nodes used.
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [FAIL] 1/1 nodes used.
-     Pod CIDR: 192.168.1.0/24. Test threshold: 1 (90%).
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [ OK ] 1/1024 nodes used.
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [ OK ] 1/1024 nodes used.
+*  gke/WARN/2021_003: GKE pod CIDR range utilization close to 100%.
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [FAIL]
+     10.1.0.0/19(94% IPs used): all node pools
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [FAIL]
+     192.168.1.0/24(100% IPs used): default-pool
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [ OK ]
 
    The maximum amount of nodes in a GKE cluster is limited based on its pod CIDR
-   range. This test checks if the cluster is approaching the maximum amount of
-   nodes allowed by the pod range. Users may end up blocked in production if
-   they are not able to scale their cluster due to this hard limit imposed by
-   the pod CIDR.
+   range. This test checks if any of the pod CIDRs in use in the cluster has 80%
+   or more utilization. Note, this is limited to a single cluster although the
+   pod CIDR can be shared across clusters. Enable the network management API to
+   see GKE IP address utilization insights in Network Analyzer.
 
    https://gcpdiag.dev/rules/gke/WARN/2021_003
 

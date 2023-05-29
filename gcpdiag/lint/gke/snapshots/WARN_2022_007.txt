@@ -3,13 +3,5 @@
    - gcpdiag-gke1-aaaa/europe-west4/gke3/default-pool                     [ OK ]
    - gcpdiag-gke1-aaaa/europe-west4-a/gke1/default-pool                   [ OK ]
    - gcpdiag-gke1-aaaa/europe-west4-a/gke4/default-pool                   [ OK ]
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke6/default-pool                   [FAIL]
-
-   GKE nodes must have access to storage.googleapis.com to pull binaries/configs
-   for node bootstrapping process and/or pull build artifacts from private
-   Container or Artifact Registry repositories. Nodes may report connection
-   timeouts during node bootstrapping or `401 Unauthorized` if they cannot pull
-   from a private repositories.
-
-   https://gcpdiag.dev/rules/gke/WARN/2022_007
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke6/default-pool                   [ OK ]
 

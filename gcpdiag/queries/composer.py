@@ -48,6 +48,11 @@ class Environment(models.Resource):
     return f'{self.project_id}/{self.region}/{self.name}'
 
   @property
+  def airflow_config_overrides(self) -> dict:
+    return self._resource_data['config']['softwareConfig'].get(
+        'airflowConfigOverrides', {})
+
+  @property
   def service_account(self) -> str:
     sa = self._resource_data['config']['nodeConfig'].get('serviceAccount')
     if sa is None:
