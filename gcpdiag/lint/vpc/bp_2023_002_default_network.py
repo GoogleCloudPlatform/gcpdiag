@@ -13,8 +13,9 @@ from gcpdiag.queries import network
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   networks = network.get_networks(context.project_id)
+  print(networks)
   if not networks:
-    report.add_skipped(None, 'rule networks found')
+    report.add_skipped(None, 'No networks found')
 
   for networklist in networks:
     if networklist.name == 'default':
