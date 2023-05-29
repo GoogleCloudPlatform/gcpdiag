@@ -294,6 +294,10 @@ class Network(models.Resource):
         for peer in self._resource_data.get('peerings', [])
     ]
 
+  @property
+  def autosubnets(self) -> bool:
+    return self._resource_data['autoCreateSubnetworks']
+
 
 def _ip_match(  #
     ip1: IPAddrOrNet,

@@ -1,0 +1,3 @@
+*  vpc/BP/2023_002: Default VPC Network is present with auto-mode subnets.
+   (rule networks found)                                                  [SKIP]
+
