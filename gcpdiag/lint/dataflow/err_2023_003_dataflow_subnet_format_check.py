@@ -13,10 +13,10 @@
 # limitations under the License.
 
 # Lint as: python3
-"""Dataflow job does not fail during execution due to IP space exhaustion
+"""Dataflow job does not fail during execution due to incorrect specification of subnet
 
-A dataflow job runs successfully if subnet has enough ip space for all workers in job,
-otherwise it fails with IP_SPACE_EXHAUSTED error.
+A dataflow job runs successfully if subnet is properly specified while launching the job,
+otherwise it fails with Invalid subnetwork specified error.
 """
 
 import itertools
@@ -26,7 +26,7 @@ from boltons.iterutils import get_path
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
 
-MATCH_STR = 'IP_SPACE_EXHAUSTED'
+MATCH_STR = 'Workflow failed. Causes: Invalid subnetwork specified'
 
 # Criteria to filter for logs
 LOG_FILTER = ['severity=ERROR', f'textPayload=~"{MATCH_STR}"']
@@ -72,7 +72,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
     if failed_jobs:
       report.add_failed(
-          project, 'Some Dataflow jobs failed due to exhaustion of IP Space: ' +
+          project, 'Some Dataflow jobs failed due to ' +
+          'incorrect formatting of subnet specified while launching: ' +
           ', '.join(itertools.islice(failed_jobs, 20)))
     else:
       report.add_ok(project)
