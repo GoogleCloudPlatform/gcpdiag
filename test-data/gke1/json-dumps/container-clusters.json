@@ -111,7 +111,7 @@
         "resourceVersion": "e3b0c442"
       },
       "masterAuth": {
-        "clusterCaCertificate": "REDACTED"
+        "clusterCaCertificate": "REAL_CERTIFICATE"
       },
       "masterAuthorizedNetworksConfig": {},
       "monitoringConfig": {

@@ -1,0 +1,22 @@
+*  gke/ERR/2023_004: GKE ingresses are well configured.
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [FAIL]
+     Check rule BackendConfigExistenceCheck on Ingress default/ingress-1 failed: BackendConfig default/my-backendconfig in service default/svc-1 does not exist
+     Check rule ServiceExistenceCheck on Ingress default/ingress-2 failed: Service default/svc-2 does not exist
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [SKIP]
+     failed to access k8s cluster
+   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [SKIP]
+     failed to access k8s cluster
+   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [SKIP]
+     failed to access k8s cluster
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [SKIP]
+     failed to access k8s cluster
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [SKIP]
+     failed to access k8s cluster
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [SKIP]
+     failed to access k8s cluster
+
+   Verify that the Google Kubernetes Engine ingresses are well configured. This
+   rule will run a command line tool check-gke-ingress to inspect the ingresses.
+
+   https://gcpdiag.dev/rules/gke/ERR/2023_004
+
