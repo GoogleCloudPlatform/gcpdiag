@@ -5,10 +5,13 @@ from unittest import mock
 
 from gcpdiag import lint, models
 from gcpdiag.lint.output import terminal_output
-from gcpdiag.queries import apis_stub
+from gcpdiag.queries import apis_stub, kubectl_stub
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
+@mock.patch('gcpdiag.queries.kubectl.verify_auth', new=kubectl_stub.verify_auth)
+@mock.patch('gcpdiag.queries.kubectl.check_gke_ingress',
+            new=kubectl_stub.check_gke_ingress)
 class RulesSnapshotTestBase:
   """ Run snapshot test """
 

@@ -24,7 +24,7 @@ import sys
 
 from gcpdiag import config, hooks, lint, models
 from gcpdiag.lint.output import csv_output, json_output, terminal_output
-from gcpdiag.queries import apis, crm, gce
+from gcpdiag.queries import apis, crm, gce, kubectl
 
 
 class ParseMappingArg(argparse.Action):
@@ -350,6 +350,9 @@ def run(argv) -> int:
   repo.run_rules(context)
   output.display_footer(repo.result)
   hooks.post_lint_hook(repo.result.get_rule_statuses())
+
+  # Clean up the kubeconfig file generated for gcpdiag
+  kubectl.clean_up()
 
   # Exit 0 if there are no failed rules.
   sys.exit(2 if repo.result.any_failed else 0)
