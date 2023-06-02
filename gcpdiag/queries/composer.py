@@ -17,6 +17,8 @@ import logging
 import re
 from typing import Iterable, List, Tuple
 
+from boltons.iterutils import get_path
+
 from gcpdiag import caching, config, models
 from gcpdiag.lint import get_executor
 from gcpdiag.queries import apis, crm
@@ -34,6 +36,12 @@ class Environment(models.Resource):
   @property
   def is_running(self) -> bool:
     return self.status == 'RUNNING'
+
+  @property
+  def num_schedulers(self) -> int:
+    return get_path(self._resource_data,
+                    ('config', 'workloadsConfig', 'scheduler', 'count'),
+                    default=1)
 
   @property
   def full_path(self) -> str:
