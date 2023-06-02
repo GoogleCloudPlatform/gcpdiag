@@ -52,6 +52,10 @@ class Environment(models.Resource):
     return self._resource_data['state']
 
   @property
+  def image_version(self) -> str:
+    return self._resource_data['config']['softwareConfig']['imageVersion']
+
+  @property
   def short_path(self) -> str:
     return f'{self.project_id}/{self.region}/{self.name}'
 
