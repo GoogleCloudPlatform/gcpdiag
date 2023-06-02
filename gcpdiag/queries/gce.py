@@ -370,7 +370,7 @@ class Instance(models.Resource):
     return network_q.get_network(m.group(1), m.group(2))
 
   @property
-  def network_ips(self) -> List[ipaddress.IPv4Address]:
+  def network_ips(self) -> List[network_q.IPv4AddrOrIPv6Addr]:
     return [
         ipaddress.ip_address(nic['networkIP'])
         for nic in self._resource_data['networkInterfaces']
@@ -403,7 +403,7 @@ class Instance(models.Resource):
     return routes
 
   def get_network_ip_for_instance_interface(
-      self, network: str) -> Optional[ipaddress.IPv4Address]:
+      self, network: str) -> Optional[network_q.IPv4NetOrIPv6Net]:
     """Get the network ip for a nic given a network name"""
     for nic in self._resource_data['networkInterfaces']:
       if nic.get('network') == network:

@@ -19,7 +19,7 @@ from typing import Iterable
 from boltons.iterutils import get_path
 
 from gcpdiag import caching, config, models
-from gcpdiag.queries import apis
+from gcpdiag.queries import apis, network
 
 
 class Instance(models.Resource):
@@ -48,7 +48,7 @@ class Instance(models.Resource):
                     default='ZONAL') == 'REGIONAL'
 
   @property
-  def ip_addresses(self) -> Iterable[ipaddress.IPv4Address]:
+  def ip_addresses(self) -> Iterable[network.IPv4AddrOrIPv6Addr]:
     return [
         ipaddress.ip_address(nic['ipAddress'])
         for nic in self._resource_data.get('ipAddresses', [])

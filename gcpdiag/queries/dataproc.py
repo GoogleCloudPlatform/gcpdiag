@@ -92,6 +92,7 @@ class Cluster(models.Resource):
       sa = crm.get_project(self.project_id).default_compute_service_account
     return sa
 
+  @property
   def is_gce_cluster(self) -> bool:
     return bool(self._resource_data.get('config', {}).get('gceClusterConfig'))
 
