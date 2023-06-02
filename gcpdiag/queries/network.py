@@ -23,8 +23,9 @@ from typing import Any, Dict, FrozenSet, Iterable, List, Optional, Union
 from gcpdiag import caching, config, models
 from gcpdiag.queries import apis, apis_utils, iam
 
-IPAddrOrNet = Union[ipaddress.IPv4Address, ipaddress.IPv6Address,
-                    ipaddress.IPv4Network, ipaddress.IPv6Network]
+IPv4AddrOrIPv6Addr = Union[ipaddress.IPv4Address, ipaddress.IPv6Address]
+IPv4NetOrIPv6Net = Union[ipaddress.IPv4Network, ipaddress.IPv6Network]
+IPAddrOrNet = Union[IPv4AddrOrIPv6Addr, IPv4NetOrIPv6Net]
 
 
 class Subnetwork(models.Resource):
@@ -58,7 +59,7 @@ class Subnetwork(models.Resource):
     return self._resource_data['selfLink']
 
   @property
-  def ip_network(self) -> ipaddress.IPv4Network:
+  def ip_network(self) -> IPv4NetOrIPv6Net:
     return ipaddress.ip_network(self._resource_data['ipCidrRange'])
 
   @property

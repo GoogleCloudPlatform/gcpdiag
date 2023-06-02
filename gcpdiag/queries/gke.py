@@ -28,6 +28,9 @@ from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis, crm, gce, network
 from gcpdiag.utils import Version
 
+# To avoid name conflict with L342
+IPv4NetOrIPv6Net = network.IPv4NetOrIPv6Net
+
 
 class NodeConfig:
   """Represents a GKE node pool configuration."""
@@ -136,7 +139,7 @@ class NodePool(models.Resource):
     return self._resource_data['podIpv4CidrSize']
 
   @property
-  def pod_ipv4_cidr_block(self) -> Optional[ipaddress.IPv4Network]:
+  def pod_ipv4_cidr_block(self) -> Optional[IPv4NetOrIPv6Net]:
     # Get the pod cidr range in use by the nodepool
     pod_cidr = get_path(self._resource_data,
                         ('networkConfig', 'podIpv4CidrBlock'),
@@ -231,7 +234,7 @@ class Cluster(models.Resource):
     return self._resource_data['location']
 
   @property
-  def pod_ipv4_cidr(self) -> ipaddress.IPv4Network:
+  def pod_ipv4_cidr(self) -> IPv4NetOrIPv6Net:
     cidr = self._resource_data['clusterIpv4Cidr']
     return ipaddress.ip_network(cidr)
 
@@ -392,7 +395,7 @@ class Cluster(models.Resource):
     return self._resource_data['autopilot'].get('enabled', False)
 
   @property
-  def masters_cidr_list(self) -> Iterable[ipaddress.IPv4Network]:
+  def masters_cidr_list(self) -> Iterable[IPv4NetOrIPv6Net]:
     if get_path(self._resource_data,
                 ('privateClusterConfig', 'masterIpv4CidrBlock'),
                 default=None):

@@ -26,6 +26,9 @@ from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis, crm, network
 from gcpdiag.utils import Version
 
+# To avoid name conflict with L145
+IPv4NetOrIPv6Net = network.IPv4NetOrIPv6Net
+
 
 class Instance(models.Resource):
   """Represents a Data Fusion instance.
@@ -152,7 +155,7 @@ class Instance(models.Resource):
     return network.get_network(self.project_id, 'default')
 
   @property
-  def tp_ipv4_cidr(self) -> Optional[ipaddress.IPv4Network]:
+  def tp_ipv4_cidr(self) -> Optional[IPv4NetOrIPv6Net]:
     if 'network' in self._resource_data['networkConfig']:
       cidr = self._resource_data['networkConfig']['ipAllocation']
       return ipaddress.ip_network(cidr)

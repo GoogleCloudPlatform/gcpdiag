@@ -38,11 +38,13 @@ repos:
     args: [--py36-plus]
 
 - repo: https://github.com/pre-commit/mirrors-mypy
-  rev: v0.812
+  rev: v1.2.0
   hooks:
   - id: mypy
     exclude: bin/gcpdiag
-    args: ['--ignore-missing-imports', '--scripts-are-modules']
+    args: ['--ignore-missing-imports', '--scripts-are-modules',
+      '--implicit-optional', '--no-namespace-packages', '--install-types',
+      '--non-interactive']
 
 - repo: https://github.com/timothycrosley/isort
   rev: 5.12.0
