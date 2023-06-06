@@ -1,0 +1,4 @@
+*  composer/WARN/2023_006: Airflow schedulers are healthy for the last hour
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [ OK ]
+   - gcpdiag-composer1-aaaa/us-central1/env1                              [ OK ]
+
