@@ -148,7 +148,11 @@ def get_kubectl_executor(c: gke.Cluster):
 
 def clean_up():
   """ Delete the kubeconfig file generated for gcpdiag. """
-  os.remove(config_path)
+  try:
+    os.remove(config_path)
+  except OSError as err:
+    logging.debug('Error cleaning up kubeconfig file used by gcpdiag: %s: %s',
+                  type(err).__name__, err)
 
 
 def error_message(rule_name, kind, namespace, name, message) -> str:
