@@ -1,0 +1,4 @@
+*  composer/WARN/2023_008: Cloud Composer Airflow database is in healthy state
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [ OK ]
+   - gcpdiag-composer1-aaaa/us-central1/env1                              [ OK ]
+
