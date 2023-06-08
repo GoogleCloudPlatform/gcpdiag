@@ -1,0 +1,4 @@
+*  notebooks/WARN/2023_003: Vertex AI Workbench instance is in healty boot disk space status
+   - gcpdiag-notebooks1-aaaa/us-west1-a/gcpdiag-notebooks1instance-aaaa   [SKIP]
+     No health info found
+

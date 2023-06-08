@@ -1,3 +1,4 @@
 *  notebooks/ERR/2023_003: Vertex AI Workbench account has required permissions to create and use notebooks
-   - gcpdiag-notebooks1-aaaa                                                        [ SKIP ]
-   Logging API is disabled
+   - gcpdiag-notebooks1-aaaa                                              [SKIP]
+     Logging API is disabled
+

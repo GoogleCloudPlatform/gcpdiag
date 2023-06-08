@@ -27,6 +27,7 @@ from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis
 
 HEALTH_STATE_KEY = 'healthState'
+HEALTH_INFO_KEY = 'healthInfo'
 INSTANCES_KEY = 'instances'
 RUNTIMES_KEY = 'runtimes'
 NAME_KEY = 'name'
@@ -148,8 +149,6 @@ class Runtime(models.Resource):
 @caching.cached_api_call
 def get_instances(context: models.Context) -> Mapping[str, Instance]:
   instances: Dict[str, Instance] = {}
-  if not apis.is_enabled(context.project_id, 'notebooks'):
-    return instances
   logging.info(
       'fetching list of Vertex AI Workbench notebook instances in project %s',
       context.project_id)
@@ -186,23 +185,29 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
 
 
 @caching.cached_api_call
-def get_instance_health_state(context: models.Context,
-                              name: str) -> HealthStateEnum:
-  instance_health_state = HealthStateEnum('HEALTH_STATE_UNSPECIFIED')
-  if not apis.is_enabled(context.project_id, 'notebooks'):
-    logging.error('Notebooks API is not enabled')
-    return instance_health_state
-  if not name:
-    logging.error('Instance name not provided')
-    return instance_health_state
+def _get_instance_health(context: models.Context, name: str) -> dict:
   logging.info(
-      'fetching Vertex AI user-managed notebook instance health state in project %s',
-      context.project_id)
+      'fetching Vertex AI user-managed notebook instance health state in '
+      'project %s', context.project_id)
   notebooks_api = apis.get_api('notebooks', 'v1', context.project_id)
   query = notebooks_api.projects().locations().instances().getInstanceHealth(
       name=name)
+  return query.execute(num_retries=config.API_RETRIES)
+
+
+def get_instance_health_info(context: models.Context, name: str) -> dict:
   try:
-    resp = query.execute(num_retries=config.API_RETRIES)
+    return _get_instance_health(context, name).get(HEALTH_INFO_KEY, {})
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
+
+
+def get_instance_health_state(context: models.Context,
+                              name: str) -> HealthStateEnum:
+  instance_health_state = HealthStateEnum('HEALTH_STATE_UNSPECIFIED')
+
+  try:
+    resp = _get_instance_health(context, name)
     if HEALTH_STATE_KEY not in resp:
       raise RuntimeError(
           'missing instance health state in projects.locations.instances:getInstanceHealth response'

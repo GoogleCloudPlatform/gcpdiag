@@ -1,4 +1,5 @@
-# Copyright 2023 Google LLC
+# Copyright 2022 Google LLC
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -10,14 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""Vertex AI Workbench instance is in healty boot disk space status
 
-# Lint as: python3
-"""Vertex AI Workbench user-managed notebook instances are healthy
-
-Rule which verifies the Vertex AI Workbench user-managed notebook instances have
-a healthy state
+The boot disk space status is unhealthy if the disk space is greater than 85%
+full.
 """
-
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, notebooks
 
@@ -34,15 +32,15 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     return
 
   for instance in instances.values():
-    if not instance.name:
-      report.add_skipped(instance, 'Instance name not found')
+    health_info = notebooks.get_instance_health_info(context, instance.name)
+
+    if not health_info:
+      report.add_skipped(instance, 'No health info found')
       continue
 
-    health_state = notebooks.get_instance_health_state(context, instance.name)
-    health_state_message = f'Health state = {health_state}'
-    if health_state == notebooks.HealthStateEnum.HEALTHY:
-      report.add_ok(instance)
-    if health_state == notebooks.HealthStateEnum.UNHEALTHY:
-      report.add_failed(instance, health_state_message)
+    disk_util = int(health_info.get('boot_disk_utilization_percent', '0'))
+
+    if disk_util > 85:
+      report.add_failed(instance)
     else:
-      report.add_skipped(instance, health_state_message)
+      report.add_ok(instance)
