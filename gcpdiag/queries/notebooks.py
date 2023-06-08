@@ -76,6 +76,10 @@ class Instance(models.Resource):
     return path
 
   @property
+  def metadata(self) -> dict:
+    return self._resource_data.get('metadata', {})
+
+  @property
   def name(self) -> str:
     logging.info(self._resource_data)
     return self._resource_data[NAME_KEY]
