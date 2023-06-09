@@ -32,11 +32,6 @@ class TestComposer:
     environments = composer.get_environments(context)
     assert len(environments) == 2
 
-  def test_running(self):
-    context = models.Context(project_id=DUMMY_PROJECT_NAME)
-    environments = composer.get_environments(context)
-    assert ('env1', True) in [(c.name, c.is_running) for c in environments]
-
   def test_service_account(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     environments = composer.get_environments(context)

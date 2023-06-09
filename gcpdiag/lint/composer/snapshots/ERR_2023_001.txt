@@ -1,4 +1,4 @@
-*  composer/WARN/2021_001: Composer environment is in RUNNING state
+*  composer/ERR/2023_001: Cloud Composer is not in ERROR state
    - gcpdiag-composer1-aaaa/us-central1/env2                              [ OK ]
    - gcpdiag-composer1-aaaa/us-central1/env1                              [ OK ]
 

@@ -34,10 +34,6 @@ class Environment(models.Resource):
     self.region, self.name = self.parse_full_path()
 
   @property
-  def is_running(self) -> bool:
-    return self.status == 'RUNNING'
-
-  @property
   def num_schedulers(self) -> int:
     return get_path(self._resource_data,
                     ('config', 'workloadsConfig', 'scheduler', 'count'),
@@ -48,7 +44,7 @@ class Environment(models.Resource):
     return self._resource_data['name']
 
   @property
-  def status(self) -> str:
+  def state(self) -> str:
     return self._resource_data['state']
 
   @property
