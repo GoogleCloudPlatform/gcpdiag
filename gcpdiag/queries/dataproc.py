@@ -22,7 +22,8 @@ from gcpdiag.queries import apis, crm, gce, network
 
 
 class Cluster(models.Resource):
-  """ Represents Dataproc Cluster """
+  """Represents Dataproc Cluster"""
+
   name: str
   _resource_data: Mapping
 
@@ -41,16 +42,17 @@ class Cluster(models.Resource):
   def is_stackdriver_logging_enabled(self) -> bool:
     # Unless overridden during create, properties with default values are not returned,
     # therefore get_software_property should only return when its false
-    return not self.get_software_property(
-        'dataproc:dataproc.logging.stackdriver.enable') == 'false'
+    return (not self.get_software_property(
+        'dataproc:dataproc.logging.stackdriver.enable') == 'false')
 
   def is_stackdriver_monitoring_enabled(self) -> bool:
-    return self.get_software_property(
-        'dataproc:dataproc.monitoring.stackdriver.enable') == 'true'
+    return (self.get_software_property(
+        'dataproc:dataproc.monitoring.stackdriver.enable') == 'true')
 
   @property
   def region(self) -> str:
     """biggest regions have a trailing '-d' at most in its zoneUri
+
     https://www.googleapis.com/compute/v1/projects/dataproc1/zones/us-central1-d
     """
     return self._resource_data['config']['gceClusterConfig']['zoneUri'].split(
@@ -58,8 +60,8 @@ class Cluster(models.Resource):
 
   @property
   def zone(self) -> Optional[str]:
-    zone = self._resource_data.get('config', {}).get('gceClusterConfig',
-                                                     {}).get('zoneUri')
+    zone = (self._resource_data.get('config', {}).get('gceClusterConfig',
+                                                      {}).get('zoneUri'))
     if zone:
       m = re.search(r'/zones/([^/]+)$', zone)
       if m:
@@ -68,7 +70,9 @@ class Cluster(models.Resource):
 
   @property
   def full_path(self) -> str:
-    return f'projects/{self.project_id}/regions/{self.region}/clusters/{self.name}'
+    return (
+        f'projects/{self.project_id}/regions/{self.region}/clusters/{self.name}'
+    )
 
   @property
   def short_path(self) -> str:
@@ -102,26 +106,33 @@ class Cluster(models.Resource):
     if not self.is_gce_cluster:
       raise RuntimeError(
           'Can not return network URI for a Dataproc on GKE cluster')
-    network_uri = self._resource_data.get('config',
-                                          {}).get('gceClusterConfig',
-                                                  {}).get('networkUri')
+    network_uri = (self._resource_data.get('config',
+                                           {}).get('gceClusterConfig',
+                                                   {}).get('networkUri'))
     if not network_uri:
-      subnetwork_uri = self._resource_data.get('config',
-                                               {}).get('gceClusterConfig',
-                                                       {}).get('subnetworkUri')
+      subnetwork_uri = (self._resource_data.get('config', {}).get(
+          'gceClusterConfig', {}).get('subnetworkUri'))
       network_uri = network.get_subnetwork_from_url(subnetwork_uri).network
     return network_uri
 
   @property
   def is_single_node_cluster(self) -> bool:
-    workers = self._resource_data.get('config',
-                                      {}).get('workerConfig',
-                                              {}).get('numInstances', 0)
+    workers = (self._resource_data.get('config',
+                                       {}).get('workerConfig',
+                                               {}).get('numInstances', 0))
     return workers == 0
+
+  @property
+  def is_ha_cluster(self) -> bool:
+    masters = (self._resource_data.get('config',
+                                       {}).get('masterConfig',
+                                               {}).get('numInstances', 1))
+    return masters != 1
 
 
 class Region:
-  """ Represents Dataproc region """
+  """Represents Dataproc region"""
+
   project_id: str
   region: str
 
@@ -135,23 +146,25 @@ class Region:
       if not context.match_project_resource(resource=cluster.get('clusterName'),
                                             labels=cluster.get('labels', {})):
         continue
-      c = Cluster(name=cluster['clusterName'],
-                  project_id=self.project_id,
-                  resource_data=cluster)
-
+      c = Cluster(
+          name=cluster['clusterName'],
+          project_id=self.project_id,
+          resource_data=cluster,
+      )
       clusters.append(c)
     return clusters
 
   def query_api(self) -> Iterable[dict]:
     api = apis.get_api('dataproc', 'v1', self.project_id)
-    query = api.projects().regions().clusters().list(projectId=self.project_id,
-                                                     region=self.region)
+    query = (api.projects().regions().clusters().list(projectId=self.project_id,
+                                                      region=self.region))
     resp = query.execute(num_retries=config.API_RETRIES)
     return resp.get('clusters', [])
 
 
 class Dataproc:
-  """ Represents Dataproc product """
+  """Represents Dataproc product"""
+
   project_id: str
 
   def __init__(self, project_id: str):
