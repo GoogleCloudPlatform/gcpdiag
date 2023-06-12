@@ -18,6 +18,7 @@ build:
 	rm -rf dist
 	mkdir dist
 	cd dist && tar -xf ../../../dist/gcpdiag-$(VERSION).tar.gz --strip 1
+	cd dist && gsutil cp gs://check-gke-ingress-push/kubectl-check_gke_ingress ./ && chmod +x kubectl-check_gke_ingress
 	chmod -R a+rX dist
 	docker build --pull -t $(IMAGE):$(VERSION) .
 	rm -rf dist
