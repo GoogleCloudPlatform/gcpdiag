@@ -78,9 +78,6 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/cloudrun1/json-dumps',
     'gcpdiag-notebooks1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/notebooks1/json-dumps',
-    'gcpdiag-interconnect1-aaaa':
-        pathlib.Path(__file__).parents[2] /
-        'test-data/interconnect1/json-dumps',
     'gcpdiag-dataflow1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/dataflow1/json-dumps',
 }
