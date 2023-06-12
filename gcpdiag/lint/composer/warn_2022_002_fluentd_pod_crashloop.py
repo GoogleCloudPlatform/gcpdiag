@@ -37,6 +37,11 @@ LOG_FILTER = [
 ]
 
 logs_by_project = {}
+envs_by_project = {}
+
+
+def prefetch_rule(context: models.Context):
+  envs_by_project[context.project_id] = composer.get_environments(context)
 
 
 def prepare_rule(context: models.Context):
@@ -55,7 +60,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(project, 'logging api is disabled')
     return
 
-  envs = composer.get_environments(context)
+  envs = envs_by_project[context.project_id]
   name_to_env = {env.name: env for env in envs}
 
   if not envs:

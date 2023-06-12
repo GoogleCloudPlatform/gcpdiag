@@ -21,13 +21,19 @@ schedulers and then monitoring the performance of your environment.
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, composer
 
+envs_by_project = {}
+
+
+def prefetch_rule(context: models.Context):
+  envs_by_project[context.project_id] = composer.get_environments(context)
+
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not apis.is_enabled(context.project_id, 'composer'):
     report.add_skipped(None, 'composer is disabled')
     return
 
-  envs = composer.get_environments(context)
+  envs = envs_by_project[context.project_id]
 
   if not envs:
     report.add_skipped(None, 'no Cloud Composer environments found')

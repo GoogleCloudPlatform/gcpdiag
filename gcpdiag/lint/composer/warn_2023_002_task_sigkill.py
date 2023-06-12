@@ -26,6 +26,11 @@ from gcpdiag.queries import apis, composer, logs
 MATCH_STR = 'Task exited with return code Negsignal.SIGKILL'
 LOG_FILTER = ['severity=INFO', f'textPayload:"{MATCH_STR}"']
 logs_by_project = {}
+envs_by_project = {}
+
+
+def prefetch_rule(context: models.Context):
+  envs_by_project[context.project_id] = composer.get_environments(context)
 
 
 def prepare_rule(context: models.Context):
@@ -45,7 +50,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'logging api is disabled')
     return
 
-  envs = composer.get_environments(context)
+  envs = envs_by_project[context.project_id]
 
   if not envs:
     report.add_skipped(None, 'no Cloud Composer environments found')

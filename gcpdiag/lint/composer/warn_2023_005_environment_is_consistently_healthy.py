@@ -26,9 +26,14 @@ from gcpdiag import lint, models
 from gcpdiag.queries import apis, composer, monitoring
 
 _query_results_per_project_id: dict[str, monitoring.TimeSeriesCollection] = {}
+envs_by_project = {}
 
 
 def prefetch_rule(context: models.Context):
+  envs_by_project[context.project_id] = composer.get_environments(context)
+  if not envs_by_project[context.project_id]:
+    return
+
   _query_results_per_project_id[context.project_id] = monitoring.query(
       context.project_id, """
       fetch cloud_composer_environment
@@ -44,7 +49,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'composer is disabled')
     return
 
-  envs = composer.get_environments(context)
+  envs = envs_by_project[context.project_id]
+
   if not envs:
     report.add_skipped(None, 'no Cloud Composer environments found')
     return
