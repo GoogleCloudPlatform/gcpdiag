@@ -38,8 +38,8 @@ class InterconnectApiStub(apis_stub.ApiStub):
   # pylint: disable=redefined-builtin
   def get(self, project, interconnect):
     if self.mock_state == 'interconnects':
-      interconnect = interconnect.replace('dummy-', 'compute-')
-      return apis_stub.RestCallStub(project, interconnect)
+      interconnect_data = _find_test_data(interconnect)
+      return apis_stub.RestCallStub(project, interconnect_data)
     else:
       raise ValueError(f'cannot call method {self.mock_state} here')
 
@@ -49,6 +49,12 @@ class InterconnectApiStub(apis_stub.ApiStub):
       return apis_stub.RestCallStub(project, DUMMY_INTERCONNECTS)
     else:
       raise ValueError(f'cannot call method {self.mock_state} here')
+
+
+def _find_test_data(interconnect_name):
+  if interconnect_name.startswith('dummy-'):
+    return interconnect_name.replace('dummy-', 'compute-')
+  return interconnect_name
 
 
 class VlanAttachmentApiStub(apis_stub.ApiStub):
