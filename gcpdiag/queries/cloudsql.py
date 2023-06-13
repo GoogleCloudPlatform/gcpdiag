@@ -73,6 +73,11 @@ class Instance(models.Resource):
                     ('settings', 'deletionProtectionEnabled'), False)
 
   @property
+  def is_automated_backup_enabled(self) -> bool:
+    return get_path(self._resource_data,
+                    ('settings', 'backupConfiguration', 'enabled'))
+
+  @property
   def self_link(self) -> str:
     return self._resource_data['selfLink']
 

@@ -1,0 +1,10 @@
+*  cloudsql/BP/2023_002: Cloud SQL is configured with automated backup
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql1-aaaa/instances/sql1 [FAIL]
+
+   Backups help you restore lost data to your Cloud SQL instance. Additionally,
+   if an instance is having a problem, you can restore it to a previous state by
+   using the backup to overwrite it. Enable automated backups for any instance
+   that contains necessary data. Backups protect your data from loss or damage.
+
+   https://gcpdiag.dev/rules/cloudsql/BP/2023_002
+
