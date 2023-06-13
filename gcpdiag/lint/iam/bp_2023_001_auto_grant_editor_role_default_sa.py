@@ -11,10 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-""" Found enforcement of Policy Constraint AutomaticIamGrantsForDefaultServiceAccounts
+"""Policy constraint AutomaticIamGrantsForDefaultServiceAccounts is enforced
 
-Policy Constraint "Automatic Iam Grants For DefaultServiceAccounts" should be set and enforced
-in production projects according to security best practices.
+Policy constraint AutomaticIamGrantsForDefaultServiceAccounts is strongly recommended to be
+enforced in production projects according to security best practices.
 """
 
 from gcpdiag import lint, models
@@ -33,14 +33,8 @@ def prefetch_rule(context: models.Context):
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   project = crm.get_project(context.project_id)
   if not constraints:
-    report.add_failed(
-        project, "policy constraint "
-        "automaticIamGrantsForDefaultServiceAccounts should be set to enforced"
-        " in production projects")
+    report.add_failed(project)
   elif constraints.is_enforced():
     report.add_ok(project)
   else:
-    report.add_failed(
-        project, "policy constraint "
-        "automaticIamGrantsForDefaultServiceAccounts should be set to enforced"
-        " in production projects")
+    report.add_failed(project)
