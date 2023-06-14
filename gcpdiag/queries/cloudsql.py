@@ -82,6 +82,17 @@ class Instance(models.Resource):
     return self.state == 'SUSPENDED'
 
   @property
+  def is_shared_core(self) -> bool:
+    shared_core_tiers = ['db-g1-small', 'db-f1-micro']
+    return get_path(self._resource_data,
+                    ('settings', 'tier')) in shared_core_tiers
+
+  @property
+  def is_high_available(self) -> bool:
+    return get_path(self._resource_data,
+                    ('settings', 'availabilityType')) == 'REGIONAL'
+
+  @property
   def self_link(self) -> str:
     return self._resource_data['selfLink']
 
