@@ -35,7 +35,7 @@ class Instance(models.Resource):
     return self._resource_data['name']
 
   @property
-  def status(self) -> str:
+  def state(self) -> str:
     return self._resource_data['state']
 
   @property
@@ -76,6 +76,10 @@ class Instance(models.Resource):
   def is_automated_backup_enabled(self) -> bool:
     return get_path(self._resource_data,
                     ('settings', 'backupConfiguration', 'enabled'))
+
+  @property
+  def is_suspended_state(self) -> bool:
+    return self.state == 'SUSPENDED'
 
   @property
   def self_link(self) -> str:
