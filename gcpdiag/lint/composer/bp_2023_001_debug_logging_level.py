@@ -24,6 +24,8 @@ to troubleshooting, so it also not recommended.
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, composer
 
+envs_by_project = {}
+
 
 def _check_info_logging_level(config) -> bool:
   # logging section in airflow2, core section in airflow1
@@ -31,12 +33,16 @@ def _check_info_logging_level(config) -> bool:
          config.get('core-logging_level', 'INFO') == 'INFO'
 
 
+def prefetch_rule(context: models.Context):
+  envs_by_project[context.project_id] = composer.get_environments(context)
+
+
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not apis.is_enabled(context.project_id, 'composer'):
     report.add_skipped(None, 'composer is disabled')
     return
 
-  envs = composer.get_environments(context)
+  envs = envs_by_project[context.project_id]
 
   if not envs:
     report.add_skipped(None, 'no Cloud Composer environments found')
