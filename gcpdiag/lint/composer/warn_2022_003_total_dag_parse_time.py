@@ -27,11 +27,12 @@ from gcpdiag.queries import apis, composer, crm, monitoring
 TOTAL_DAG_PARSE_SECONDS = 10
 
 _query_results_per_project_id: Dict[str, monitoring.TimeSeriesCollection] = {}
+envs_by_project = {}
 
 
 def prefetch_rule(context: models.Context):
-  composer_environments = composer.get_environments(context)
-  if not composer_environments:
+  envs_by_project[context.project_id] = composer.get_environments(context)
+  if not envs_by_project[context.project_id]:
     return
 
   within_str = 'within %dd, d\'%s\'' % (config.get('within_days'),
@@ -56,8 +57,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'composer is disabled')
     return
 
-  composer_environments = composer.get_environments(context)
-  if not composer_environments:
+  envs = envs_by_project[context.project_id]
+  if not envs:
     report.add_skipped(project, 'no environments found')
     return
 
@@ -70,14 +71,13 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     except KeyError:
       continue
 
-  for environment in composer_environments:
+  for env in envs:
     try:
-      if metric_values[environment.name] >= TOTAL_DAG_PARSE_SECONDS:
+      if metric_values[env.name] >= TOTAL_DAG_PARSE_SECONDS:
         report.add_failed(
-            environment,
-            f'max total DAG parse time: {metric_values[environment.name]:.2f} seconds'
-        )
+            env,
+            f'max total DAG parse time: {metric_values[env.name]:.2f} seconds')
       else:
-        report.add_ok(environment)
+        report.add_ok(env)
     except KeyError:
-      report.add_skipped(environment, 'no metrics')
+      report.add_skipped(env, 'no metrics')

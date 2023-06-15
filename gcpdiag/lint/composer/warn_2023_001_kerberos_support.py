@@ -19,10 +19,16 @@ Cloud Composer does not support Airflow Kerberos configuration yet.
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, composer
 
+envs_by_project = {}
+
 
 def _check_kerberos_overrides(config) -> bool:
   return config.get('core-security', '') == 'kerberos' or \
      any(key.startswith('kerberos-') for key in config.keys())
+
+
+def prefetch_rule(context: models.Context):
+  envs_by_project[context.project_id] = composer.get_environments(context)
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -30,7 +36,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'composer is disabled')
     return
 
-  envs = composer.get_environments(context)
+  envs = envs_by_project[context.project_id]
 
   if not envs:
     report.add_skipped(None, 'no Cloud Composer environments found')

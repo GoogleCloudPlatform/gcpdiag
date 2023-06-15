@@ -24,7 +24,12 @@ from gcpdiag.queries import apis, composer, logs
 
 MATCH_STR = 'Celery command failed on host'
 LOG_FILTER = ['severity=ERROR', f'textPayload:"{MATCH_STR}"']
+envs_by_project = {}
 logs_by_project = {}
+
+
+def prefetch_rule(context: models.Context):
+  envs_by_project[context.project_id] = composer.get_environments(context)
 
 
 def prepare_rule(context: models.Context):
@@ -44,7 +49,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'logging api is disabled')
     return
 
-  envs = composer.get_environments(context)
+  envs = envs_by_project[context.project_id]
 
   if not envs:
     report.add_skipped(None, 'no Cloud Composer environments found')
