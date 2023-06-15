@@ -1,0 +1,3 @@
+*  apigee/ERR/2023_004: Service Networking API is enabled and SA account has the required role
+   - gcpdiag-apigee1-aaaa                                                 [ OK ]
+
