@@ -68,6 +68,10 @@ class Instance(models.Resource):
       return 0
 
   @property
+  def is_storage_auto_resize_enabled(self) -> bool:
+    return get_path(self._resource_data, ('settings', 'storageAutoResize'))
+
+  @property
   def has_del_protection(self) -> bool:
     return get_path(self._resource_data,
                     ('settings', 'deletionProtectionEnabled'), False)

@@ -1,0 +1,3 @@
+*  cloudsql/BP_EXT/2023_003: Cloud SQL enables automatic storage increases feature
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql1-aaaa/instances/sql1 [ OK ]
+
