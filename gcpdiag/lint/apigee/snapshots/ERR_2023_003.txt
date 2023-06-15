@@ -1,0 +1,3 @@
+*  apigee/ERR/2023_003: Private Google Access (PGA) for subnet of Managed Instance Group is enabled.
+   - gcpdiag-apigee1-aaaa/mig-bridge-manager-us-central1                  [ OK ]
+
