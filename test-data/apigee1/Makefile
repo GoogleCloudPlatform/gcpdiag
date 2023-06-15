@@ -24,6 +24,7 @@ all:	\
 	json-dumps/apigee-organizations.json \
 	json-dumps/apigee-organization.json \
 	json-dumps/compute-regions.json \
+	json-dumps/compute-subnetworks-aggregated.json \
 	json-dumps/compute-network-$(COMPUTE_NETWORK_1).json \
 	json-dumps/compute-subnetworks-$(COMPUTE_SUBNETWORK_1).json \
 	json-dumps/apigee-instances.json \
