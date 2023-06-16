@@ -28,10 +28,11 @@ from gcpdiag.queries import apis
 
 HEALTH_STATE_KEY = 'healthState'
 INSTANCES_KEY = 'instances'
+RUNTIMES_KEY = 'runtimes'
 NAME_KEY = 'name'
 
 
-class InstanceHealthStateEnum(enum.Enum):
+class HealthStateEnum(enum.Enum):
   """Vertex AI Workbench user-managed notebooks instance health states
 
   https://cloud.google.com/vertex-ai/docs/workbench/reference/rest/v1/projects.locations.instances/getInstanceHealth#healthstate
@@ -85,6 +86,49 @@ class Instance(models.Resource):
     return self._resource_data[NAME_KEY]
 
 
+class Runtime(models.Resource):
+  """Represent a Vertex AI Workbench runtime for a managed notebook instance
+
+  https://cloud.google.com/vertex-ai/docs/workbench/reference/rest/v1/projects.locations.runtimes#resource:-runtime
+  """
+
+  _resource_data: dict
+
+  def __init__(self, project_id, resource_data):
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+
+  @property
+  def full_path(self) -> str:
+    """
+    The 'name' of the runtime is already in the full path form
+    projects/{project}/locations/{location}/runtimes/{instance}.
+    """
+    return self._resource_data[NAME_KEY]
+
+  @property
+  def short_path(self) -> str:
+    path = self.full_path
+    path = re.sub(r'^projects/', '', path)
+    path = re.sub(r'/locations/', '/', path)
+    path = re.sub(r'/runtimes/', '/', path)
+    return path
+
+  @property
+  def metadata(self) -> dict:
+    return self._resource_data.get('metadata', {})
+
+  @property
+  def name(self) -> str:
+    logging.info(self._resource_data)
+    return self._resource_data[NAME_KEY]
+
+  @property
+  def health_state(self) -> HealthStateEnum:
+    return self._resource_data.get(HEALTH_STATE_KEY,
+                                   HealthStateEnum.HEALTH_STATE_UNSPECIFIED)
+
+
 @caching.cached_api_call
 def get_instances(context: models.Context) -> Mapping[str, Instance]:
   instances: Dict[str, Instance] = {}
@@ -127,8 +171,8 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
 
 @caching.cached_api_call
 def get_instance_health_state(context: models.Context,
-                              name: str) -> InstanceHealthStateEnum:
-  instance_health_state = InstanceHealthStateEnum('HEALTH_STATE_UNSPECIFIED')
+                              name: str) -> HealthStateEnum:
+  instance_health_state = HealthStateEnum('HEALTH_STATE_UNSPECIFIED')
   if not apis.is_enabled(context.project_id, 'notebooks'):
     logging.error('Notebooks API is not enabled')
     return instance_health_state
@@ -147,8 +191,47 @@ def get_instance_health_state(context: models.Context,
       raise RuntimeError(
           'missing instance health state in projects.locations.instances:getInstanceHealth response'
       )
-    instance_health_state = InstanceHealthStateEnum(resp[HEALTH_STATE_KEY])
+    instance_health_state = HealthStateEnum(resp[HEALTH_STATE_KEY])
     return instance_health_state
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
   return instance_health_state
+
+
+@caching.cached_api_call
+def get_runtimes(context: models.Context) -> Mapping[str, Runtime]:
+  runtimes: Dict[str, Runtime] = {}
+  if not apis.is_enabled(context.project_id, 'notebooks'):
+    return runtimes
+  logging.info(
+      'fetching list of Vertex AI Workbench managed notebook runtimes in project %s',
+      context.project_id)
+  notebooks_api = apis.get_api('notebooks', 'v1', context.project_id)
+  query = notebooks_api.projects().locations().runtimes().list(
+      parent=f'projects/{context.project_id}/locations/-'
+  )  #'-' (wildcard) all regions
+  try:
+    resp = query.execute(num_retries=config.API_RETRIES)
+    if RUNTIMES_KEY not in resp:
+      return runtimes
+    for i in resp[RUNTIMES_KEY]:
+      # verify that we have some minimal data that we expect
+      if NAME_KEY not in i:
+        raise RuntimeError(
+            'missing runtime name in projects.locations.runtimes.list response')
+      # projects/{projectId}/locations/{location}/runtimes/{runtimeId}
+      result = re.match(r'projects/[^/]+/locations/([^/]+)/runtimes/([^/]+)',
+                        i['name'])
+      if not result:
+        logging.error('invalid notebook runtimes data: %s', i['name'])
+        continue
+
+      if not context.match_project_resource(location=result.group(1),
+                                            resource=result.group(2),
+                                            labels=i.get('labels', {})):
+        continue
+      runtimes[i[NAME_KEY]] = Runtime(project_id=context.project_id,
+                                      resource_data=i)
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
+  return runtimes

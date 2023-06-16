@@ -12,9 +12,9 @@
 # limitations under the License.
 
 # Lint as: python3
-"""Vertex AI Workbench user-managed notebook instances are healthy
+"""Vertex AI Workbench runtimes for managed notebooks are healthy
 
-Rule which verifies the Vertex AI Workbench user-managed notebook instances have
+Rule which verifies the Vertex AI Workbench runtimes for managed notebooks have
 a healthy state
 """
 
@@ -23,19 +23,19 @@ from gcpdiag.queries import notebooks
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-  instances = notebooks.get_instances(context)
-  if not instances:
-    report.add_skipped(None, 'No instances found')
+  runtimes = notebooks.get_runtimes(context)
+  if not runtimes:
+    report.add_skipped(None, 'No runtimes for managed notebooks found')
     return
-  for instance in instances.values():
-    if not instance.name:
-      report.add_skipped(instance, 'Instance name not found')
+  for runtime in runtimes.values():
+    if not runtime.name:
+      report.add_skipped(runtime, 'Runtime name not found')
       continue
-    health_state = notebooks.get_instance_health_state(context, instance.name)
+    health_state = runtime.health_state
     health_state_message = f'Health state = {health_state}'
     if health_state == notebooks.HealthStateEnum.HEALTHY:
-      report.add_ok(instance)
+      report.add_ok(runtime)
     if health_state == notebooks.HealthStateEnum.UNHEALTHY:
-      report.add_failed(instance, health_state_message)
+      report.add_failed(runtime, health_state_message)
     else:
-      report.add_skipped(instance, health_state_message)
+      report.add_skipped(runtime, health_state_message)

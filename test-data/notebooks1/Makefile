@@ -5,7 +5,9 @@ ORG_ID      := $(shell terraform output -json org_id)
 CURL         = ../../bin/curl-wrap.sh
 JSON_CLEANER = ../../bin/json-cleaner
 LOCATION     = us-west1-a
+REGION       = us-west1
 INSTANCE_NAME = gcpdiag-notebooks1instance-aaaa
+RUNTIME_NAME = gcpdiag-notebooks1runtime-aaaa
 
 FAKE_PROJECT_ID_SUFFIX = aaaa
 FAKE_PROJECT_NR = 12340012
@@ -18,6 +20,7 @@ all:	\
 	json-dumps/project.json \
 	json-dumps/services.json \
 	json-dumps/instances.json \
+	json-dumps/runtimes.json \
 	json-dumps/health-state.json \
 
 json-dumps/project.json:
@@ -33,6 +36,11 @@ json-dumps/services.json:
 json-dumps/instances.json:
 	$(CURL) -fv \
 		'https://notebooks.googleapis.com/v1/projects/${PROJECT_ID}/locations/${LOCATION}/instances' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/runtimes.json:
+	$(CURL) -fv \
+		'https://notebooks.googleapis.com/v1/projects/${PROJECT_ID}/locations/${REGION}/runtimes' \
 		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/health-state.json:
