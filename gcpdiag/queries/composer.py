@@ -18,6 +18,7 @@ import re
 from typing import Iterable, List, Tuple
 
 from boltons.iterutils import get_path
+from packaging import version
 
 from gcpdiag import caching, config, models
 from gcpdiag.lint import get_executor
@@ -32,12 +33,63 @@ class Environment(models.Resource):
     super().__init__(project_id)
     self._resource_data = resource_data
     self.region, self.name = self.parse_full_path()
+    self.version_pattern = re.compile(r'composer-(.*)-airflow-(.*)')
 
   @property
   def num_schedulers(self) -> int:
     return get_path(self._resource_data,
                     ('config', 'workloadsConfig', 'scheduler', 'count'),
                     default=1)
+
+  @property
+  def worker_cpu(self) -> float:
+    return get_path(self._resource_data,
+                    ('config', 'workloadsConfig', 'worker', 'cpu'))
+
+  @property
+  def worker_memory_gb(self) -> float:
+    return get_path(self._resource_data,
+                    ('config', 'workloadsConfig', 'worker', 'memoryGb'))
+
+  @property
+  def worker_max_count(self) -> int:
+    return get_path(self._resource_data,
+                    ('config', 'workloadsConfig', 'worker', 'maxCount'))
+
+  @property
+  def worker_concurrency(self) -> float:
+
+    def default_value():
+      airflow_version = self.airflow_version
+
+      if version.parse(airflow_version) < version.parse('2.3.3'):
+        return 12 * self.worker_cpu
+      else:
+        return min(32, 12 * self.worker_cpu, 8 * self.worker_memory_gb)
+
+    return float(
+        self.airflow_config_overrides.get('celery-worker_concurrency',
+                                          default_value()))
+
+  @property
+  def parallelism(self) -> float:
+    return float(self.airflow_config_overrides.get('core-parallelism', 'inf'))
+
+  @property
+  def composer_version(self) -> str:
+    v = self.version_pattern.search(self.image_version)
+    assert v is not None
+    return v.group(1)
+
+  @property
+  def airflow_version(self) -> str:
+    v = self.version_pattern.search(self.image_version)
+    assert v is not None
+    return v.group(2)
+
+  @property
+  def is_composer2(self) -> bool:
+    return self.composer_version.startswith('2')
 
   @property
   def full_path(self) -> str:

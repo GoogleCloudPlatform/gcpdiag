@@ -1,0 +1,6 @@
+*  composer/BP/2023_002: Cloud Composer's worker concurrency is not limited by parallelism parameter
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [SKIP]
+     not applicable for composer1
+   - gcpdiag-composer1-aaaa/us-central1/env1                              [SKIP]
+     not applicable for composer1
+
