@@ -1,0 +1,3 @@
+*  cloudsql/BP/2023_003: Cloud SQL instance's log_output flag is not configured as TABLE
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql1-aaaa/instances/sql1 [ OK ]
+

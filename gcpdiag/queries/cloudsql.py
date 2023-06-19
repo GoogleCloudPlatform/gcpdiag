@@ -97,6 +97,15 @@ class Instance(models.Resource):
                     ('settings', 'availabilityType')) == 'REGIONAL'
 
   @property
+  def flags(self) -> dict:
+    flags = get_path(self._resource_data, ('settings', 'databaseFlags'), [])
+    return {flag['name']: flag['value'] for flag in flags}
+
+  @property
+  def is_log_output_configured_as_table(self) -> bool:
+    return self.flags.get('log_output') == 'TABLE'
+
+  @property
   def self_link(self) -> str:
     return self._resource_data['selfLink']
 
