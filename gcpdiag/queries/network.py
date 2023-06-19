@@ -162,6 +162,13 @@ class ManagedZone(models.Resource):
     return self._resource_data['visibility'] == 'public'
 
   @property
+  def vpc_attached(self) -> bool:
+    if 'privateVisibilityConfig' not in self._resource_data:
+      self._resource_data['privateVisibilityConfig'] = {}
+
+    return self._resource_data['privateVisibilityConfig'].get('networks', False)
+
+  @property
   def name(self) -> str:
     return self._resource_data['name']
 
