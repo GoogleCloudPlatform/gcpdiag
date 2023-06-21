@@ -1,0 +1,34 @@
+{
+  "runtimes": [
+    {
+      "name": "projects/gcpdiag-notebooks1-aaaa/locations/us-west1/runtimes/gcpdiag-notebooks1runtime-aaaa",
+      "virtualMachine": {
+        "virtualMachineConfig": {
+          "zone": "us-west1-a",
+          "machineType": "n1-standard-4",
+          "dataDisk": {
+            "initializeParams": {
+              "diskSizeGb": "100",
+              "diskType": "PD_STANDARD"
+            }
+          },
+          "acceleratorConfig": {},
+          "bootImage": {}
+        }
+      },
+      "state": "ACTIVE",
+      "accessConfig": {
+        "accessType": "SINGLE_USER",
+        "proxyUri": "65983399445cabc4-dot-us-west1.notebooks.googleusercontent.com"
+      },
+      "softwareConfig": {
+        "idleShutdown": true,
+        "idleShutdownTimeout": 180,
+        "upgradeable": false,
+        "version": "m109"
+      },
+      "createTime": "2023-06-16T14:23:46.908241072Z",
+      "updateTime": "2023-06-16T14:27:22.889587129Z"
+    }
+  ]
+}

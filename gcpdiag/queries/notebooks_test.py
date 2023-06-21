@@ -24,8 +24,11 @@ DUMMY_PROJECT_NAME = 'gcpdiag-notebooks1-aaaa'
 DUMMY_INSTANCE_NAME = 'gcpdiag-notebooks1instance-aaaa'
 DUMMY_INSTANCE_FULL_PATH_NAME = \
   f'projects/{DUMMY_PROJECT_NAME}/locations/us-west1-a/instances/{DUMMY_INSTANCE_NAME}'
+DUMMY_RUNTIME_NAME = 'gcpdiag-notebooks1runtime-aaaa'
+DUMMY_RUNTIME_FULL_PATH_NAME = \
+  f'projects/{DUMMY_PROJECT_NAME}/locations/us-west1/runtimes/{DUMMY_RUNTIME_NAME}'
 DUMMY_PERM = 'domain:google.com'
-DUMMY_INSTANCE_HEALTH_STATE = notebooks.InstanceHealthStateEnum('UNHEALTHY')
+DUMMY_HEALTH_STATE = notebooks.HealthStateEnum('UNHEALTHY')
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
@@ -37,8 +40,13 @@ class TestNotebooks:
     instances = notebooks.get_instances(context=context)
     assert DUMMY_INSTANCE_FULL_PATH_NAME in instances
 
+  def test_get_runtimes(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    runtimes = notebooks.get_runtimes(context=context)
+    assert DUMMY_RUNTIME_FULL_PATH_NAME in runtimes
+
   def test_get_instance_health(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     instance_health_state = notebooks.get_instance_health_state(
         context=context, name=DUMMY_INSTANCE_FULL_PATH_NAME)
-    assert DUMMY_INSTANCE_HEALTH_STATE == instance_health_state
+    assert DUMMY_HEALTH_STATE == instance_health_state
