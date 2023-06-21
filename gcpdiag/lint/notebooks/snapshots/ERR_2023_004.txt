@@ -1,0 +1,3 @@
+*  notebooks/ERR/2023_004: Vertex AI Workbench runtimes for managed notebooks are healthy
+   - gcpdiag-notebooks1-aaaa/locations/us-west1/runtimes/gcpdiag-notebooks1runtime-aaaa                    [SKIP]
+     Health state = HEALTH_STATE_UNSPECIFIED

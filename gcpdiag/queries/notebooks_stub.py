@@ -28,6 +28,9 @@ from gcpdiag.queries import apis_stub
 NO_INSTANCE_NAME_ERROR = \
   'Not able to call {} without setting instance name for API.'
 
+NO_RUNTIME_NAME_ERROR = \
+  'Not able to call {} without setting runtime name for API.'
+
 
 class NotebooksApiStub:
   """Mock object to simulate notebooks api calls."""
@@ -45,11 +48,17 @@ class NotebooksApiStub:
     self.mock_state = 'instances'
     return self
 
+  def runtimes(self):
+    self.mock_state = 'runtimes'
+    return self
+
   def list(self, parent):
     m = re.match(r'projects/([^/]+)', parent)
     project_id = m.group(1)
     if self.mock_state == 'instances':
       return apis_stub.RestCallStub(project_id, 'instances')
+    if self.mock_state == 'runtimes':
+      return apis_stub.RestCallStub(project_id, 'runtimes')
     else:
       raise ValueError('incorrect value received')
 
