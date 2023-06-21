@@ -11,15 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Cloud Composer has higher version than airflow-2.2.3
+"""Cloud Composer's worker concurrency is not limited by parallelism parameter
 
-Airflow UI in Airflow 2.2.3 or earlier versions is vulnerable to CVE-2021-45229.
-"Trigger DAG with config" screen was susceptible to XSS attacks through the
-origin query argument. Highly recommened to upgrade to the latest Cloud Composer
-version that supports Airflow 2.2.5.
+The parallelism defines the maximum number of task instances that can run
+concurrently in Airflow. Generally, the parameter should be equal or higher than
+the product of maximum number of workers and worker_concurrency. Otherwise,
+resources in workers could not be fully-utilized.
 """
-
-from packaging import version
 
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, composer
@@ -42,12 +40,12 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'no Cloud Composer environments found')
     return
 
-  xss_fixed_version = version.parse('2.2.5')
-
   for env in envs:
-    if version.parse(env.airflow_version) < xss_fixed_version:
-      report.add_failed(
-          env, f'{env.name} image is {env.image_version}, which is vulnerable '
-          'to XSS attack. Upgrade to the latest Cloud Composer version')
+    if not env.is_composer2:
+      report.add_skipped(env, 'not applicable for composer1')
+      continue
+
+    if env.parallelism < (env.worker_max_count * env.worker_concurrency):
+      report.add_failed(env)
     else:
       report.add_ok(env)
