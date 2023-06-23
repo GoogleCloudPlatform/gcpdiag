@@ -1,0 +1,9 @@
+*  apigee/ERR/2023_005: External Load Balancer (XLB) is able to connect to the Managed Instance Group(MIG).
+   - gcpdiag-apigee1-aaaa/mig-bridge-manager-us-central1                  [FAIL]
+     Network connection from 130.211.0.0/22 blocked to MIGgcpdiag-apigee1-aaaa/mig-bridge-manager-us-central1 on port 443
+
+   In order for the Apigee Managed Instance Group (MIG) to work correctly, the
+   External Load Balancer (XLB) network connection to the MIG must be allowed
+
+   https://gcpdiag.dev/rules/apigee/ERR/2023_005
+
