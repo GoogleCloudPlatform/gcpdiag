@@ -25,6 +25,7 @@ all:	\
 	json-dumps/apigee-organization.json \
 	json-dumps/compute-regions.json \
 	json-dumps/compute-subnetworks-aggregated.json \
+	json-dumps/compute-effective-firewalls-apigee-network.json \
 	json-dumps/compute-network-$(COMPUTE_NETWORK_1).json \
 	json-dumps/compute-subnetworks-$(COMPUTE_SUBNETWORK_1).json \
 	json-dumps/apigee-instances.json \
@@ -52,6 +53,11 @@ json-dumps/compute-migs-$(LOCATION_1).json:
 json-dumps/compute-subnetworks-$(COMPUTE_SUBNETWORK_1).json:
 	$(CURL) -fsS \
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/regions/$(LOCATION_1)/subnetworks/$(COMPUTE_SUBNETWORK_1)' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-effective-firewalls-apigee-network.json:
+	$(CURL) -fsS \
+	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/networks/$(COMPUTE_NETWORK_1)/getEffectiveFirewalls' \
 		| $(SED_SUBST_FAKE) >$@
 
 # cloudkms.googleapis.com
