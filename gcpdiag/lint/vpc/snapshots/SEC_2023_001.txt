@@ -1,0 +1,3 @@
+*  vpc/SEC/2023_001: DNSSEC is enabled for public zones.
+   (Error: unsupported service: dns)                                      [SKIP]
+
