@@ -1,0 +1,3 @@
+*  gke/ERR/2023_005: Workloads not reporting misconfigured CNI plugins
+   (logging api is disabled)                                              [SKIP]
+
