@@ -220,6 +220,35 @@ def get_instance_health_state(context: models.Context,
 
 
 @caching.cached_api_call
+def instance_is_upgradeable(context: models.Context,
+                            notebook_instance: str) -> Dict[str, 'str | bool']:
+  is_upgradeable: Dict[str, 'str | bool'] = {}
+  if not apis.is_enabled(context.project_id, 'notebooks'):
+    logging.error('Notebooks API is not enabled')
+    return is_upgradeable
+  if not notebook_instance:
+    logging.error('notebookInstance not provided')
+    return is_upgradeable
+  logging.info(
+      'fetching Vertex AI user-managed notebook instance is upgradeable in project %s',
+      context.project_id)
+  notebooks_api = apis.get_api('notebooks', 'v1', context.project_id)
+  query = notebooks_api.projects().locations().instances().isUpgradeable(
+      notebookInstance=notebook_instance)
+  try:
+    resp = query.execute(num_retries=config.API_RETRIES)
+    if 'upgradeable' not in resp:
+      raise RuntimeError(
+          'missing instance upgradeable data in projects.locations.instances:isUpgradeable response'
+      )
+    is_upgradeable = resp
+    return is_upgradeable
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
+  return is_upgradeable
+
+
+@caching.cached_api_call
 def get_runtimes(context: models.Context) -> Mapping[str, Runtime]:
   runtimes: Dict[str, Runtime] = {}
   if not apis.is_enabled(context.project_id, 'notebooks'):

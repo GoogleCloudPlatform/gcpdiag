@@ -22,6 +22,7 @@ all:	\
 	json-dumps/instances.json \
 	json-dumps/runtimes.json \
 	json-dumps/health-state.json \
+	json-dumps/is-upgradeable.json \
 
 json-dumps/project.json:
 	$(CURL) -fsS \
@@ -46,4 +47,9 @@ json-dumps/runtimes.json:
 json-dumps/health-state.json:
 	$(CURL) -fv \
 		'https://notebooks.googleapis.com/v1/projects/${PROJECT_ID}/locations/${LOCATION}/instances/${INSTANCE_NAME}:getInstanceHealth' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/is-upgradeable.json:
+	$(CURL) -fv \
+		'https://notebooks.googleapis.com/v1/projects/${PROJECT_ID}/locations/${LOCATION}/instances/${INSTANCE_NAME}:isUpgradeable' \
 		| $(SED_SUBST_FAKE) >$@
