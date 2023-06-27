@@ -124,6 +124,22 @@ class Runtime(models.Resource):
     return self._resource_data[NAME_KEY]
 
   @property
+  def software_config(self) -> dict:
+    return self._resource_data.get('softwareConfig', {})
+
+  @property
+  def idle_shutdown(self) -> bool:
+    return self.software_config.get('idleShutdown', False)
+
+  @property
+  def is_upgradeable(self) -> bool:
+    return self.software_config.get('upgradeable', False)
+
+  @property
+  def version(self) -> str:
+    return self.software_config.get('version', '')
+
+  @property
   def health_state(self) -> HealthStateEnum:
     return self._resource_data.get(HEALTH_STATE_KEY,
                                    HealthStateEnum.HEALTH_STATE_UNSPECIFIED)
