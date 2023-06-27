@@ -1,0 +1,9 @@
+*  notebooks/BP/2023_002: Vertex AI Workbench user-managed notebook instances are up to date
+   - gcpdiag-notebooks1-aaaa/us-west1-a/gcpdiag-notebooks1instance-aaaa   [FAIL]
+     Instance is upgradeable - upgradeVersion: "m109", upgradeInfo: "A new image is available for upgrade. Backup user data before upgrading", upgradeImage: https://www.googleapis.com/compute/v1/projects/deeplearning-platform-release/global/images/tf-latest-cpu-v20230615
+
+   Vertex AI Workbench user-managed notebook instance can be upgraded to have
+   latest bug fixes, new capabilities, framework and package updates
+
+   https://gcpdiag.dev/rules/notebooks/BP/2023_002
+

@@ -1,0 +1,6 @@
+{
+  "upgradeable": true,
+  "upgradeVersion": "m109",
+  "upgradeInfo": "A new image is available for upgrade. Backup user data before upgrading",
+  "upgradeImage": "https://www.googleapis.com/compute/v1/projects/deeplearning-platform-release/global/images/tf-latest-cpu-v20230615"
+}

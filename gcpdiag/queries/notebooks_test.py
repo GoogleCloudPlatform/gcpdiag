@@ -29,6 +29,7 @@ DUMMY_RUNTIME_FULL_PATH_NAME = \
   f'projects/{DUMMY_PROJECT_NAME}/locations/us-west1/runtimes/{DUMMY_RUNTIME_NAME}'
 DUMMY_PERM = 'domain:google.com'
 DUMMY_HEALTH_STATE = notebooks.HealthStateEnum('UNHEALTHY')
+DUMMY_IS_UPGRADEABLE = True
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
@@ -50,3 +51,9 @@ class TestNotebooks:
     instance_health_state = notebooks.get_instance_health_state(
         context=context, name=DUMMY_INSTANCE_FULL_PATH_NAME)
     assert DUMMY_HEALTH_STATE == instance_health_state
+
+  def test_instance_is_upgradeable(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    instance_is_upgradeable = notebooks.instance_is_upgradeable(
+        context=context, notebook_instance=DUMMY_INSTANCE_FULL_PATH_NAME)
+    assert DUMMY_IS_UPGRADEABLE == instance_is_upgradeable.get('upgradeable')

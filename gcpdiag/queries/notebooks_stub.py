@@ -69,3 +69,13 @@ class NotebooksApiStub:
       return apis_stub.RestCallStub(project_id, 'health-state')
     else:
       raise ValueError(f'incorrect value received for instance name: {name}')
+
+  def isUpgradeable(self, notebookInstance):
+    m = re.match(r'projects/([^/]+)/locations/([^/]+)/instances/([^/]+)',
+                 notebookInstance)
+    if m:
+      project_id = m.group(1)
+      return apis_stub.RestCallStub(project_id, 'is-upgradeable')
+    else:
+      raise ValueError(
+          f'incorrect value received for notebookInstance: {notebookInstance}')
