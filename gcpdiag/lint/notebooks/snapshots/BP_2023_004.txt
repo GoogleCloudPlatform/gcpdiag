@@ -1,0 +1,3 @@
+*  notebooks/BP/2023_004: Vertex AI Workbench runtimes for managed notebooks enable idle shutdown
+   - gcpdiag-notebooks1-aaaa/us-west1/gcpdiag-notebooks1runtime-aaaa      [ OK ]
+
