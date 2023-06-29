@@ -169,6 +169,13 @@ class ManagedZone(models.Resource):
     return self._resource_data['privateVisibilityConfig'].get('networks', False)
 
   @property
+  def dnssec_config_state(self) -> bool:
+    if 'dnssecConfig' not in self._resource_data:
+      self._resource_data['dnssecConfig'] = {}
+
+    return self._resource_data['dnssecConfig'].get('state', False)
+
+  @property
   def name(self) -> str:
     return self._resource_data['name']
 
