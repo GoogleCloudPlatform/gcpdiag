@@ -1,3 +1,89 @@
+## 0.60 (2023-06-29)
+
+#### New rules
+
+- apigee/ERR/2023\_003: Private Google Access (PGA) for subnet of Managed Instance Group is enabled
+- apigee/ERR/2023\_004: Service Networking API is enabled and SA account has the required role
+- apigee/ERR/2023\_005: External Load Balancer (XLB) is able to connect to the MIG
+- bigquery/ERR/2023\_001: Jobs called via the API are all found
+- bigquery/ERR/2023\_002: BigQuery hasn't reported any unknown datasets
+- bigquery/ERR/2023\_003: BigQuery query job do not encounter resource exceeded error
+- bigquery/ERR/2023\_004: BigQuery query job do not encounter dml concurrency issue
+- bigquery/ERR/2023\_005: Scheduled query not failing due to outdated credentials
+- bigquery/WARN/2023\_003: BigQuery query job does not fail with too many output columns error
+- bigquery/WARN/2023\_004: BigQuery CMEK-related operations do not fail due to missing permissions
+- bigquery/WARN/2023\_005: No errors querying wildcard tables
+- cloudsql/BP/2023\_001: Cloud SQL is not assigned Public IP (github #65)
+- cloudsql/BP/2023\_002: Cloud SQL is configured with automated backup
+- cloudsql/BP\_EXT/2023\_001: Cloud SQL is defined with Maintenance Window as any (github #67)
+- cloudsql/BP\_EXT/2023\_002: Cloud SQL is configured with Deletion Protection (github #68)
+- cloudsql/BP\_EXT/2023\_003: Cloud SQL enables automatic storage increases feature
+- cloudsql/BP\_EXT/2023\_004: Cloud SQL instance is covered by the SLA
+- cloudsql/ERR/2023\_001: Cloud SQL instance should not be in SUSPENDED state
+- cloudsql/WARN/2023\_001: Cloud SQL instance's log_output flag is not configured as TABLE
+- cloudsql/WARN/2023\_002: Cloud SQL instance's avg CPU utilization is not over 98% for 6 hours
+- cloudsql/WARN/2023\_003: Cloud SQL instance's memory usage does not exceed 90%
+- composer/BP/2023\_001: Cloud Composer logging level is set to INFO
+- composer/BP/2023\_002: Cloud Composer's worker concurrency is not limited by parallelism
+- composer/BP/2023\_003: Cloud Composer does not override the StatsD configurations
+- composer/BP\_EXT/2023\_001: Cloud Composer has no more than 2 Airflow schedulers
+- composer/BP\_EXT/2023\_002: Cloud Composer has higher version than airflow-2.2.3
+- composer/ERR/2023\_001: Cloud Composer is not in ERROR state
+- composer/WARN/2023\_001: Cloud Composer does not override Kerberos configurations
+- composer/WARN/2023\_002: Cloud Composer tasks are not interrupted by SIGKILL
+- composer/WARN/2023\_003: Cloud Composer tasks are not failed due to resource pressure
+- composer/WARN/2023\_004: Cloud Composer database CPU usage does not exceed 80%
+- composer/WARN/2023\_005: Cloud Composer is consistently in healthy state
+- composer/WARN/2023\_006: Airflow schedulers are healthy for the last hour
+- composer/WARN/2023\_007: Cloud Composer Scheduler CPU limit exceeded
+- composer/WARN/2023\_008: Cloud Composer Airflow database is in healthy state
+- dataflow/ERR/2023\_001: Dataflow service account has dataflow.serviceAgent role
+- dataflow/ERR/2023\_002: Dataflow job does not fail during execution due to IP space exhaustion
+- dataflow/ERR/2023\_003: Dataflow job does not fail during execution due to incorrect subnet
+- dataflow/ERR/2023\_004: Dataflow job does not fail due to organization policy constraints
+- dataflow/ERR/2023\_005: Dataflow job does not fail during execution due credential or permission issue
+- dataflow/ERR/2023\_006: Dataflow job fails if Private Google Access is disabled on subnetwork
+- dataflow/WARN/2023\_001: Dataflow job does not have a hot key
+- dataproc/ERR/2023\_002: No orphaned YARN application found
+- dataproc/ERR/2023\_003: Dataproc cluster service account permissions
+- dataproc/ERR/2023\_004: Dataproc firewall rules for connectivity between master and worker nodes
+- dataproc/ERR/2023\_005: Dataproc cluster has sufficient quota
+- dataproc/ERR/2023\_006: DataProc cluster user has networking permissions on host project
+- gce/WARN/2023\_001: GCE snapshot policies are defined only for used disks
+- gke/ERR/2023\_004: GKE ingresses are well configured
+- gke/ERR/2023\_005: Workloads not reporting misconfigured CNI plugins
+- iam/BP/2023\_001: Policy constraint 'AutomaticIamGrantsForDefaultServiceAccounts' enforced
+- interconnect/BP/2023\_001: VLAN attachments deployed in same metro are in different EADs
+- lb/BP/2023\_001: Cloud CDN is enabled on backends for global external load balancers
+- notebooks/BP/2023\_001: Vertex AI Workbench instance enables system health report
+- notebooks/BP/2023\_003: Vertex AI Workbench runtimes for managed notebooks are up to date
+- notebooks/ERR/2023\_002: Vertex AI Workbench account has compute.subnetworks permissions
+- notebooks/ERR/2023\_003: Vertex AI Workbench account has permissions to create and use notebooks
+- notebooks/ERR/2023\_004: Vertex AI Workbench runtimes for managed notebooks are healthy
+- notebooks/WARN/2023\_001: Vertex AI Workbench instance is not being OOMKilled
+- notebooks/WARN/2023\_002: Vertex AI Workbench instance is in healty data disk space status
+- notebooks/WARN/2023\_003: Vertex AI Workbench instance is in healty boot disk space status
+- vpc/SEC/2023\_001: DNSSEC is enabled for public zones
+- vpc/WARN/2023\_002: Private zone is attached to a VPC
+
+#### Enhancements
+
+- Support for sub project resource filtering (`--name`, `--location`, `--label`)
+- Support fetching serial port output logs from Compute API (`--enable-gce-serial-buffer`)
+- New product: Cloud Dataflow
+- New product: Cloud Interconnect
+- Add kubectl query module
+- Optimizations for logging based composer rules
+
+#### Fixes
+
+- gke/BP/2022\_003: updated EOL schedule for GKE
+- Fix billing project id not set at startup (github #58)
+- Fix JSON format with --output=json (github #62)
+- Fix GCS uniform bucket access detection (github #69)
+- dataproc/WARN/2022\_002: fix attribute lookup error (github #57)
+- gke/WARN/2021\_003: update GKE pod cidr rule to report values per pod cidr range
+
 ## 0.59 (2023-04-14)
 
 #### New rules
