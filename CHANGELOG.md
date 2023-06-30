@@ -1,3 +1,9 @@
+## 0.61 (2023-06-30)
+
+#### Fixes
+
+- Fix attribute error on dnssec API call
+
 ## 0.60 (2023-06-29)
 
 #### New rules
