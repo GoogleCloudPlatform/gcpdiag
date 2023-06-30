@@ -338,13 +338,15 @@ def run(argv) -> int:
   # Verify that we have access and that the CRM API is enabled
   apis.verify_access(context.project_id)
 
-  # Warn customer to fallback on serial logs buffer if project isn't storing in cloud logging
+  # Warn end user to fallback on serial logs buffer if project isn't storing in cloud logging
   if not gce.is_project_serial_port_logging_enabled(context.project_id) and \
-      not config.get('enable_gce_serial_buffer'):
-    logger.warning(
-        '''Serial output to cloud logging maybe disabled for certain GCE instances.
+    not config.get('enable_gce_serial_buffer'):
+    # Only print the warning if GCE is enabled in the first place
+    if apis.is_enabled(context.project_id, 'compute'):
+      logger.warning(
+          '''Serial output to cloud logging maybe disabled for certain GCE instances.
           Fallback on serial output buffers by using flag --enable-gce-serial-buffer \n'''
-    )
+      )
 
   # Run the tests.
   repo.run_rules(context)

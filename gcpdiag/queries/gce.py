@@ -956,6 +956,9 @@ def get_instance_interface_effective_firewalls(
 
 
 def is_project_serial_port_logging_enabled(project_id: str) -> bool:
+  if not apis.is_enabled(project_id, 'compute'):
+    return False
+
   value = get_project_metadata(
       project_id=project_id).get('serial-port-logging-enable')
   return bool(value and value.upper() in POSITIVE_BOOL_VALUES)
