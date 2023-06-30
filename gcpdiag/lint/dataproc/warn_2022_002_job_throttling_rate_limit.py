@@ -42,6 +42,9 @@ def prepare_rule(context: models.Context):
       resource_type='cloud_dataproc_cluster',
       log_name='log_id("google.dataproc.agent")',
       filter_str=' AND '.join(LOG_FILTER))
+
+
+def prefetch_rule(context: models.Context):
   clusters_by_project[context.project_id] = dataproc.get_clusters(context)
 
 
