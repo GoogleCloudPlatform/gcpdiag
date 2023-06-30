@@ -16,7 +16,7 @@
 import re
 from typing import Iterable, List, Mapping, Optional
 
-from gcpdiag import caching, config, models
+from gcpdiag import caching, models
 from gcpdiag.lint import get_executor
 from gcpdiag.queries import apis, crm, gce, network
 
@@ -158,7 +158,9 @@ class Region:
     api = apis.get_api('dataproc', 'v1', self.project_id)
     query = (api.projects().regions().clusters().list(projectId=self.project_id,
                                                       region=self.region))
-    resp = query.execute(num_retries=config.API_RETRIES)
+    # be careful not to retr too many times because querying all regions
+    # sometimes causes requests to fail permanently
+    resp = query.execute(num_retries=1)
     return resp.get('clusters', [])
 
 
