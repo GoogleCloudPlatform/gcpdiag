@@ -40,6 +40,7 @@ import concurrent.futures
 import dataclasses
 import datetime
 import logging
+import threading
 from typing import Any, Dict, Mapping, Optional, Sequence, Set, Tuple
 
 import dateutil.parser
@@ -140,6 +141,8 @@ def _ratelimited_execute(req):
 
 
 def _execute_query_job(job: _LogsQueryJob):
+  thread = threading.current_thread()
+  thread.name = f'log_query:{job.log_name}'
   logging_api = apis.get_api('logging', 'v2', job.project_id)
 
   # Convert "within" relative time to an absolute timestamp.
