@@ -28,6 +28,7 @@ import threading
 from typing import List
 
 import diskcache
+import googleapiclient.http
 
 from gcpdiag import config
 
@@ -104,12 +105,17 @@ def _make_key(func, args, kwargs):
 
 @contextlib.contextmanager
 def _acquire_timeout(lock, timeout, name):
+  thread = threading.current_thread()
+  orig_thread_name = thread.name
+  thread.name = orig_thread_name + f'(waiting:{name})'
   result = lock.acquire(timeout=timeout)
   if not result:
     raise RuntimeError(f"Couldn't acquire lock for {name}.")
   try:
+    thread.name = orig_thread_name + f'(lock:{name})'
     yield
   finally:
+    thread.name = orig_thread_name
     if result:
       lock.release()
 
@@ -149,14 +155,26 @@ def cached_api_call(expire=None, in_memory=False):
           cached_result = api_cache.get(key, default='no data')
           if cached_result != 'no data':
             logging.debug('returning cached result for %s', func.__name__)
+            if isinstance(cached_result, Exception):
+              raise cached_result
             return cached_result
+
+          # Call the function
           logging.debug('calling function %s (expire=%s, key=%s)',
                         func.__name__, expire, key)
-          result = func(*args, **kwargs)
+          try:
+            result = func(*args, **kwargs)
+            logging.debug('DONE calling function %s (expire=%s, key=%s)',
+                          func.__name__, expire, key)
+          except googleapiclient.errors.HttpError as err:
+            # cache API errors as well
+            result = err
           if expire:
             api_cache.set(key, result, expire=expire)
           else:
             api_cache.set(key, result, tag='tmp')
+          if isinstance(result, Exception):
+            raise result
           return result
 
     return _cached_api_call_wrapper

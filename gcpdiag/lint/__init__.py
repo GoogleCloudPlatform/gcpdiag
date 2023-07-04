@@ -27,6 +27,8 @@ import os
 import pkgutil
 import re
 import sys
+import threading
+import time
 import types
 from collections.abc import Callable
 from typing import Any, Dict, Iterable, Iterator, List, Optional, Protocol, Set
@@ -531,6 +533,13 @@ class AsyncExecutionStrategy:
     return [r for r in rules if r.async_run_rule_f]
 
 
+def wrap_prefetch_rule_f(rule_name, prefetch_rule_f, context):
+  logging.debug('prefetch_rule_f: %s', rule_name)
+  thread = threading.current_thread()
+  thread.name = f'prefetch_rule_f:{rule_name}'
+  prefetch_rule_f(context)
+
+
 class SyncExecutionStrategy:
   """ Execute rules using thread pool """
 
@@ -545,6 +554,7 @@ class SyncExecutionStrategy:
     # Run the "prepare_rule" functions first, in a single thread.
     for rule in rules_to_run:
       if rule.prepare_rule_f:
+        logging.debug('prepare_rule_f: %s', rule)
         rule.prepare_rule_f(context)
 
     # Start multiple threads for logs fetching and prefetch functions.
@@ -562,21 +572,37 @@ class SyncExecutionStrategy:
     # execution of the "run_rule" executions later.
     for rule in rules_to_run:
       if rule.prefetch_rule_f:
-        rule.prefetch_rule_future = executor.submit(rule.prefetch_rule_f,
+        rule.prefetch_rule_future = executor.submit(wrap_prefetch_rule_f,
+                                                    str(rule),
+                                                    rule.prefetch_rule_f,
                                                     context)
 
     # While the prefetch_rule functions are still being executed in multiple
     # threads, start executing the rules, but block and wait in case the
     # prefetch for a specific rule is still running.
+    last_threads_dump = time.time()
     for rule in rules_to_run:
       rule_report = result.create_rule_report(rule)
 
+      # make sure prefetch_rule_f completed
       try:
         if rule.prefetch_rule_future:
           if rule.prefetch_rule_future.running():
-            logging.info('waiting for query results')
-          rule.prefetch_rule_future.result()
-
+            logging.info('waiting for query results (%s)', rule)
+          while True:
+            try:
+              rule.prefetch_rule_future.result(10)
+              break
+            except TimeoutError:
+              pass
+            if config.get('verbose') >= 2:
+              now = time.time()
+              if now - last_threads_dump > 10:
+                logging.debug(
+                    'THREADS: %s',
+                    ', '.join([t.name for t in threading.enumerate()]))
+                last_threads_dump = now
+        # run the rule
         assert rule.run_rule_f is not None
         rule.run_rule_f(context, rule_report)
       except (utils.GcpApiError, googleapiclient.errors.HttpError) as err:
