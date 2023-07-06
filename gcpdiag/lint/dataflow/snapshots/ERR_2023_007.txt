@@ -1,0 +1,3 @@
+*  dataflow/ERR/2023_007: Streaming Dataflow job gets stuck when firewall rules are not configured
+   - gcpdiag-datafusion1-aaaa                                             [ OK ]
+
