@@ -1,3 +1,17 @@
+## 0.62 (2023-07-10)
+
+#### New rules
+
+- cloudsql/SEC/2023\_001: Cloud SQL is not publicly accessible (github #73)
+- dataproc/ERR/2023\_002: Orphaned YARN application
+- dataflow/ERR/2023\_007: Streaming Dataflow doesn't report being stuck because of firewall rules
+
+#### Fixes
+
+- Fix GCE API being erroneously required to run gcpdiag
+- Fix locking issues in multi-threaded code
+- Improve caching of API exceptions
+
 ## 0.61 (2023-06-30)
 
 #### Fixes
