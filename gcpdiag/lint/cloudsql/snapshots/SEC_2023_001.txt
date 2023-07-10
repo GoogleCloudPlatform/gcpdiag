@@ -1,0 +1,3 @@
+*  cloudsql/SEC/2023_001: Cloud SQL is not publicly accessible.
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql1-aaaa/instances/sql1 [ OK ]
+

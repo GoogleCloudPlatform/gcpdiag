@@ -14,7 +14,7 @@
 """Queries related to CloudSQL."""
 
 import ipaddress
-from typing import Iterable
+from typing import Iterable, List
 
 from boltons.iterutils import get_path
 
@@ -75,6 +75,19 @@ class Instance(models.Resource):
   def has_del_protection(self) -> bool:
     return get_path(self._resource_data,
                     ('settings', 'deletionProtectionEnabled'), False)
+
+  @property
+  def authorizednetworks(self) -> List[str]:
+    authorizednetworks = get_path(
+        self._resource_data,
+        ('settings', 'ipConfiguration', 'authorizedNetworks'), [])
+    return [
+        authorizednetwork['value'] for authorizednetwork in authorizednetworks
+    ]
+
+  @property
+  def is_publically_accessible(self) -> List[str]:
+    return self.authorizednetworks
 
   @property
   def is_automated_backup_enabled(self) -> bool:
