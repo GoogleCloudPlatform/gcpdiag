@@ -43,12 +43,12 @@ def prefetch_rule(context: models.Context):
       context.project_id,
       f"""
       fetch cloudsql_database
-       | metric 'cloudsql.googleapis.com/database/memory/components'
-       | group_by 6h, [value_components_aggregate: aggregate(value.components)]
-       | filter metric.component = 'Usage'
-       | every 6h
-       | filter val() >= {MEM_USAGE_THRESHOLD}
-       | {within_str}
+        | metric 'cloudsql.googleapis.com/database/memory/components'
+        | group_by 6h, [value_components_max: max(value.components)]
+        | filter metric.component = 'Usage'
+        | every 6h
+        | filter val() >= {MEM_USAGE_THRESHOLD}
+        | {within_str}
       """)
 
 
