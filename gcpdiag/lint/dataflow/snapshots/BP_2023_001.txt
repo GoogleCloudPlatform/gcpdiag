@@ -1,0 +1,3 @@
+*  dataflow/BP/2023_001: Dataflow job is using supported Apache Beam SDK version
+   - gcpdiag-datafusion1-aaaa                                             [ OK ]
+

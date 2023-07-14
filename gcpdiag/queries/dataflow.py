@@ -34,6 +34,10 @@ class Job(models.Resource):
     return self._resource_data['currentState']
 
   @property
+  def sdk_support_status(self) -> str:
+    return self._resource_data['jobMetadata']['sdkVersion']['sdkSupportStatus']
+
+  @property
   def minutes_in_current_state(self) -> int:
     timestamp = datetime.strptime(self._resource_data['currentStateTime'],
                                   '%Y-%m-%dT%H:%M:%S.%fZ')
