@@ -30,6 +30,10 @@ class Job(models.Resource):
     return self._resource_data['name']
 
   @property
+  def id(self) -> str:
+    return self._resource_data['id']
+
+  @property
   def state(self) -> str:
     return self._resource_data['currentState']
 
@@ -53,6 +57,7 @@ def get_region_dataflow_jobs(api, context: models.Context,
     location = job.get('location', '')
     labels = job.get('labels', {})
     name = job.get('name', '')
+
     # we could get the specific job but correctly matching the location will take too
     # much effort. Hence get all the jobs and filter afterwards
     # https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/list#query-parameters
