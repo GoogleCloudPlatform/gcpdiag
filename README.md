@@ -44,7 +44,6 @@ optional arguments:
   -h, --help            show this help message and exit
   --auth-adc            Authenticate using Application Default Credentials (default)
   --auth-key FILE       Authenticate using a service account private key file
-  --auth-oauth          Authenticate using OAuth user authentication (currently marked as deprecated, consider using other authentication methods)
   --project P           Project ID of project to inspect
   --name n [n ...]      Resource Name(s) to inspect (e.g.: bastion-host,prod-*)
   --location R [R ...]  Valid GCP region/zone to scope inspection (e.g.: us-central1-a,us-central1)

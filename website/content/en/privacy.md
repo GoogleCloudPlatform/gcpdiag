@@ -9,8 +9,8 @@ hide_summary: true
 
 ### Data collected via public APIs
 
-gcpdiag is a command-line tool that uses credentials provided by you (via oauth,
-service account key, or application default credentials) to access your data in
+gcpdiag is a command-line tool that uses credentials provided by you (via
+service account key or application default credentials) to access your data in
 Google Cloud Platform via public APIs.
 
 The collected data is never stored or transmitted anywhere except on the
