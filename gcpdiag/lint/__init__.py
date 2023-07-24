@@ -593,7 +593,7 @@ class SyncExecutionStrategy:
             try:
               rule.prefetch_rule_future.result(10)
               break
-            except TimeoutError:
+            except concurrent.futures.TimeoutError:
               pass
             if config.get('verbose') >= 2:
               now = time.time()
