@@ -80,16 +80,6 @@ optional arguments:
 
 gcpdiag supports authentication using multiple mechanisms:
 
-1. OAuth user consent flow
-
-   gcpdiag uses by default the OAuth user authentication flow, similarly to what
-   gcloud does. It will print a URL that you need to access with a browser, and
-   ask you to enter the token that you receive after you authenticate there.
-
-   The credentials will be cached on disk, so that you can keep running it for 1
-   hour. To remove cached authentication credentials, you can delete the
-   `$HOME/.cache/gcpdiag` directory.
-
 1. Application default credentials
 
    gcpdiag can use Cloud SDK's [Application Default
