@@ -15,7 +15,7 @@
 # Lint as: python3
 """Cloud SQL enables automatic storage increases feature
 
-Configure storage to accomodate critical database maintennance by enabling the
+Configure storage to accommodate critical database maintenance by enabling the
 automatic storage increases feature. Otherwise, ensure that you have at least
 20% available space to accommodate any critical database maintenance operations
 that Cloud SQL may perform. Keep in mind that when an instance becomes unable to
