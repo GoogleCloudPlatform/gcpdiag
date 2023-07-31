@@ -1,0 +1,3 @@
+*  gke/ERR/2023_007: GKE Gateway controller reporting invalid HTTPRoute for Gateway
+   (logging api is disabled)                                              [SKIP]
+
