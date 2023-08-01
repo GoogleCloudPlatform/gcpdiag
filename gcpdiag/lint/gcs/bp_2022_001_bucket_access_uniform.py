@@ -24,7 +24,15 @@ https://cloud.google.com/storage/docs/access-control#choose_between_uniform_and_
 from gcpdiag import lint, models
 from gcpdiag.queries import gcs
 
-IGNORE_WITH_LABELS = {'goog-composer-environment'}
+IGNORE_WITH_LABELS = {'goog-composer-environment', 'goog-dataproc-location'}
+IGNORE_WITH_NAME = ['{project}_cloudbuild', 'artifacts.{project}.appspot.com']
+
+
+def _is_google_managed(bucket):
+  for t in IGNORE_WITH_NAME:
+    if bucket.name == t.format(project=bucket.project_id):
+      return True
+  return bool(set(bucket.labels.keys()) & IGNORE_WITH_LABELS)
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -32,7 +40,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   bucket_count = 0
   for b in buckets.values():
     bucket_count += 1
-    if set(b.labels.keys()) & IGNORE_WITH_LABELS:
+    if _is_google_managed(b):
       report.add_skipped(b, 'Google-managed bucket')
     elif b.is_uniform_access():
       report.add_ok(b)
