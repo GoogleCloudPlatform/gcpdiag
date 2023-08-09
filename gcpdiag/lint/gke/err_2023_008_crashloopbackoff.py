@@ -17,6 +17,7 @@ CrashLoopBackOff indicates that a container is repeatedly crashing after restart
 A container might crash for many reasons, and checking a Pod's logs might aid in
 troubleshooting the root cause.
 """
+import logging
 import re
 
 from gcpdiag import lint, models
@@ -64,7 +65,17 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       pod_names = set()
       for query in logs_by_project.values():
         for log_entry in query.entries:
-          if log_entry['resource']['labels']['cluster_name'] in str(c):
+          try:
+            log_cluster_name = log_entry['resource']['labels']['cluster_name']
+            log_cluster_location = log_entry['resource']['labels']['location']
+          except KeyError:
+            logging.warning(
+                'Skip: Failed to get cluster name/location from log entry %s',
+                log_entry)
+            continue
+
+          if (log_cluster_location == c.location and
+              log_cluster_name == c.name):
             pod_name = re.search(r'pod=\"(.*?\/.*?)-.*?\"',
                                  log_entry['jsonPayload']['MESSAGE'])
             if pod_name:

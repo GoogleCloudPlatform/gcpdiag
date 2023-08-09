@@ -32,8 +32,8 @@ EOL_SCHEDULE = {
     '1.23': datetime.strptime('2023-07-31', '%Y-%m-%d'),
     '1.24': datetime.strptime('2023-10-31', '%Y-%m-%d'),
     '1.25': datetime.strptime('2024-02-29', '%Y-%m-%d'),
-    '1.26': datetime.strptime('2024-05-31', '%Y-%m-%d'),
-    '1.27': datetime.strptime('2024-06-28', '%Y-%m-%d'),
+    '1.26': datetime.strptime('2024-06-30', '%Y-%m-%d'),
+    '1.27': datetime.strptime('2024-08-31', '%Y-%m-%d'),
 }
 
 # how many days before eol rule will start to failing
