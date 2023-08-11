@@ -22,6 +22,7 @@ from unittest import mock
 from gcpdiag import config, models
 from gcpdiag.queries import apigee, apis_stub, gce, network
 
+DATAPROC_LABELS = {'goog-dataproc-cluster-name': 'cluster'}
 DUMMY_REGION = 'europe-west4'
 DUMMY_ZONE = 'europe-west4-a'
 DUMMY_ZONE2 = 'europe-west1-b'
@@ -378,3 +379,23 @@ class TestGce:
 
     config.init({'enable_gce_serial_buffer': True}, 'x')
     assert gce.is_serial_port_buffer_enabled()
+
+  def test_is_dataproc_instance(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME,
+                             labels=DATAPROC_LABELS)
+    instances = gce.get_instances(context)
+    for i in instances.values():
+      assert i.is_dataproc_instance()
+
+    context = models.Context(project_id=DUMMY_PROJECT_NAME,
+                             labels=DUMMY_INSTANCE1_LABELS)
+    instances = gce.get_instances(context)
+    for i in instances.values():
+      assert not i.is_dataproc_instance()
+
+  def test_get_labels(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME,
+                             labels=DUMMY_INSTANCE1_LABELS)
+    instances = gce.get_instances(context)
+    for i in instances.values():
+      assert i.labels == DUMMY_INSTANCE1_LABELS

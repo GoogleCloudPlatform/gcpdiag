@@ -32,6 +32,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   instances_count = 0
   for i in sorted(instances.values(), key=op.attrgetter('project_id', 'name')):
     instances_count += 1
+    if i.is_dataproc_instance():
+      report.add_skipped(i, 'skipping dataproc instance')
+      continue
     if i.is_serial_port_logging_enabled():
       report.add_ok(i)
     else:
