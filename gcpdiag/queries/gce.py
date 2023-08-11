@@ -31,6 +31,8 @@ from gcpdiag.queries import network as network_q
 
 POSITIVE_BOOL_VALUES = {'Y', 'YES', 'TRUE', '1'}
 
+DATAPROC_LABEL = 'goog-dataproc-cluster-name'
+
 
 class InstanceTemplate(models.Resource):
   """Represents a GCE Instance Template."""
@@ -322,6 +324,9 @@ class Instance(models.Resource):
       return self._resource_data['disks']
     return []
 
+  def is_dataproc_instance(self) -> bool:
+    return DATAPROC_LABEL in self.labels
+
   def is_serial_port_logging_enabled(self) -> bool:
     value = self.get_metadata('serial-port-logging-enable')
     return bool(value and value.upper() in POSITIVE_BOOL_VALUES)
@@ -493,6 +498,10 @@ class Instance(models.Resource):
         return mig
 
     raise AttributeError(f'instance {self.id} is not managed by a mig')
+
+  @property
+  def labels(self) -> dict:
+    return self._resource_data.get('labels', {})
 
 
 class Disk(models.Resource):
