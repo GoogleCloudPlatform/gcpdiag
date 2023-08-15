@@ -32,6 +32,7 @@ from gcpdiag.queries import network as network_q
 POSITIVE_BOOL_VALUES = {'Y', 'YES', 'TRUE', '1'}
 
 DATAPROC_LABEL = 'goog-dataproc-cluster-name'
+GKE_LABEL = 'goog-gke-node'
 
 
 class InstanceTemplate(models.Resource):
@@ -324,16 +325,18 @@ class Instance(models.Resource):
       return self._resource_data['disks']
     return []
 
-  def is_dataproc_instance(self) -> bool:
-    return DATAPROC_LABEL in self.labels
-
   def is_serial_port_logging_enabled(self) -> bool:
     value = self.get_metadata('serial-port-logging-enable')
     return bool(value and value.upper() in POSITIVE_BOOL_VALUES)
 
+  def has_label(self, label) -> bool:
+    return label in self.labels
+
+  def is_dataproc_instance(self) -> bool:
+    return self.has_label(DATAPROC_LABEL)
+
   def is_gke_node(self) -> bool:
-    return 'labels' in self._resource_data and \
-           'goog-gke-node' in self._resource_data['labels']
+    return self.has_label(GKE_LABEL)
 
   def is_preemptible_vm(self) -> bool:
     return 'scheduling' in self._resource_data and \
