@@ -1,0 +1,3 @@
+*  apigee/ERR/2023_006: A multi-region setup requires a separate MIG for each region.
+   - organizations/gcpdiag-apigee1-aaaa/instances/gcpdiag-apigee1-inst1-aaaa [ OK ]
+
