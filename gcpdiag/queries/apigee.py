@@ -164,6 +164,10 @@ class ApigeeInstance(models.Resource):
   def host(self) -> str:
     return self._resource_data.get('host', '')
 
+  @property
+  def location(self) -> str:
+    return self._resource_data.get('location', '')
+
 
 @caching.cached_api_call
 def get_org(context: models.Context) -> Optional[ApigeeOrganization]:
