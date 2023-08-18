@@ -20,6 +20,8 @@ ratelimit = "*"
 six = "==1.15.0"
 # Python 3.7 compatibility
 typing-extensions = "*"
+# Python 3.9 compatibility
+exceptiongroup = "*"
 
 [dev-packages]
 astunparse = "*"
