@@ -1,0 +1,410 @@
+{
+  "services": [
+    {
+      "name": "projects/12340015/services/aiplatform.googleapis.com",
+      "config": {
+        "name": "aiplatform.googleapis.com",
+        "title": "Vertex AI API",
+        "documentation": {
+          "summary": "Train high-quality custom machine learning models with minimal machine learning expertise and effort."
+        },
+        "quota": {},
+        "authentication": {},
+        "usage": {
+          "requirements": [
+            "serviceusage.googleapis.com/tos/cloud",
+            "serviceusage.googleapis.com/billing-enabled"
+          ]
+        },
+        "monitoredResources": [
+          {
+            "type": "aiplatform.googleapis.com/DeploymentResourcePool",
+            "displayName": "Vertex AI Deployment Resource Pool",
+            "description": "A Vertex AI Deployment Resource Pool.",
+            "labels": [
+              {
+                "key": "resource_container",
+                "description": "The identifier of the GCP Project owning the Deployment Resource Pool."
+              },
+              {
+                "key": "location",
+                "description": "The region in which the service is running."
+              },
+              {
+                "key": "deployment_resource_pool_id",
+                "description": "The ID of the Deployment Resource Pool."
+              }
+            ],
+            "launchStage": "BETA"
+          },
+          {
+            "type": "aiplatform.googleapis.com/Endpoint",
+            "displayName": "Vertex AI Endpoint",
+            "description": "A Vertex AI API Endpoint where Models are deployed into it.",
+            "labels": [
+              {
+                "key": "resource_container",
+                "description": "The identifier of the GCP Project owning the Endpoint."
+              },
+              {
+                "key": "location",
+                "description": "The region in which the service is running."
+              },
+              {
+                "key": "endpoint_id",
+                "description": "The ID of the Endpoint."
+              }
+            ],
+            "launchStage": "BETA"
+          },
+          {
+            "type": "aiplatform.googleapis.com/Featurestore",
+            "displayName": "Vertex AI Feature Store",
+            "description": "A Vertex AI Feature Store.",
+            "labels": [
+              {
+                "key": "resource_container",
+                "description": "The identifier of the GCP Project owning the Featurestore."
+              },
+              {
+                "key": "location",
+                "description": "The region in which the service is running."
+              },
+              {
+                "key": "featurestore_id",
+                "description": "The ID of the Featurestore."
+              }
+            ],
+            "launchStage": "BETA"
+          },
+          {
+            "type": "aiplatform.googleapis.com/FeatureOnlineStore",
+            "displayName": "Vertex AI Feature Online Store",
+            "description": "A Vertex AI Feature Online Store.",
+            "labels": [
+              {
+                "key": "resource_container",
+                "description": "The identifier of the GCP Project owning the FeatureOnlineStore."
+              },
+              {
+                "key": "location",
+                "description": "The region in which the service is running."
+              },
+              {
+                "key": "feature_online_store_id",
+                "description": "The ID of the Feature Online Store."
+              }
+            ],
+            "launchStage": "BETA"
+          },
+          {
+            "type": "aiplatform.googleapis.com/Index",
+            "displayName": "Matching Engine Index",
+            "description": "An Index built through the cloud Matching Engine service.",
+            "labels": [
+              {
+                "key": "resource_container",
+                "description": "The identifier of the GCP Project owning the Index."
+              },
+              {
+                "key": "location",
+                "description": "The region in which the service is running."
+              },
+              {
+                "key": "index_id",
+                "description": "The ID of the Index."
+              }
+            ],
+            "launchStage": "BETA"
+          },
+          {
+            "type": "aiplatform.googleapis.com/IndexEndpoint",
+            "displayName": "Matching Engine Index Endpoint",
+            "description": "An Endpoint to which Matching Engine Indexes are deployed.",
+            "labels": [
+              {
+                "key": "resource_container",
+                "description": "The identifier of the GCP Project owning the Index."
+              },
+              {
+                "key": "location",
+                "description": "The region in which the service is running."
+              },
+              {
+                "key": "index_endpoint_id",
+                "description": "The ID of the index endpoint."
+              }
+            ],
+            "launchStage": "BETA"
+          },
+          {
+            "type": "aiplatform.googleapis.com/PipelineJob",
+            "displayName": "Vertex Pipelines Job",
+            "description": "A Vertex Pipelines Job.",
+            "labels": [
+              {
+                "key": "resource_container",
+                "description": "The identifier of the GCP project associated with this resource, such as \"my-project\"."
+              },
+              {
+                "key": "location",
+                "description": "The region in which the service is running."
+              },
+              {
+                "key": "pipeline_job_id",
+                "description": "The ID of the PipelineJob."
+              }
+            ],
+            "launchStage": "BETA"
+          },
+          {
+            "type": "aiplatform.googleapis.com/Location",
+            "displayName": "Location",
+            "description": "A Google Cloud Project and region where a job is running.",
+            "labels": [
+              {
+                "key": "resource_container",
+                "description": "The identifier of the GCP project associated with this resource, such as \"my-project\"."
+              },
+              {
+                "key": "location",
+                "description": "The region in which the service is running."
+              }
+            ],
+            "launchStage": "BETA"
+          },
+          {
+            "type": "aiplatform.googleapis.com/Model",
+            "displayName": "Vertex AI Model",
+            "description": "A Vertex AI Model.",
+            "labels": [
+              {
+                "key": "resource_container",
+                "description": "The identifier of the GCP Project owning the Model."
+              },
+              {
+                "key": "location",
+                "description": "The region in which the service is running."
+              },
+              {
+                "key": "model",
+                "description": "The identifier of the Model."
+              }
+            ],
+            "launchStage": "ALPHA"
+          }
+        ],
+        "monitoring": {
+          "consumerDestinations": [
+            {
+              "monitoredResource": "aiplatform.googleapis.com/Endpoint",
+              "metrics": [
+                "aiplatform.googleapis.com/prediction/internal/online/cmle_backend_latencies",
+                "aiplatform.googleapis.com/prediction/internal/online/component_latencies",
+                "aiplatform.googleapis.com/prediction/internal/online/core_infra_latencies",
+                "aiplatform.googleapis.com/prediction/internal/online/custom/istio_request_duration_milliseconds",
+                "aiplatform.googleapis.com/prediction/internal/online/custom/istio_requests_total",
+                "aiplatform.googleapis.com/prediction/internal/online/custom/tfe_ie/tf_exit_total",
+                "aiplatform.googleapis.com/prediction/internal/online/custom/tfe_ie/tf_launch_total",
+                "aiplatform.googleapis.com/prediction/internal/online/custom/dynamic_loading/model_load_latencies",
+                "aiplatform.googleapis.com/prediction/internal/online/custom/dynamic_loading/model_load_count",
+                "aiplatform.googleapis.com/prediction/internal/online/custom/dynamic_loading/model_cache_lookup_count",
+                "aiplatform.googleapis.com/prediction/internal/online/custom/dynamic_loading/model_states",
+                "aiplatform.googleapis.com/prediction/internal/online/directpath_backend_latencies",
+                "aiplatform.googleapis.com/prediction/internal/online/harpoon_backend_latencies",
+                "aiplatform.googleapis.com/prediction/internal/online/internal_error_count",
+                "aiplatform.googleapis.com/prediction/internal/online/prediction_latencies",
+                "aiplatform.googleapis.com/prediction/internal/online/request_byte_count",
+                "aiplatform.googleapis.com/prediction/internal/online/response_count",
+                "aiplatform.googleapis.com/prediction/online/streaming_message_overhead_latencies",
+                "aiplatform.googleapis.com/prediction/online/streaming_message_count",
+                "aiplatform.googleapis.com/prediction/online/streaming_message_bytes_count",
+                "aiplatform.googleapis.com/prediction/online/open_streams",
+                "aiplatform.googleapis.com/prediction/online/error_count",
+                "aiplatform.googleapis.com/prediction/online/prediction_count",
+                "aiplatform.googleapis.com/prediction/online/prediction_latencies",
+                "aiplatform.googleapis.com/prediction/online/response_count",
+                "aiplatform.googleapis.com/prediction/online/replicas",
+                "aiplatform.googleapis.com/prediction/online/target_replicas",
+                "aiplatform.googleapis.com/prediction/internal/online/cpu/utilization",
+                "aiplatform.googleapis.com/prediction/internal/online/memory/bytes_used",
+                "aiplatform.googleapis.com/prediction/internal/online/accelerator/duty_cycle",
+                "aiplatform.googleapis.com/prediction/internal/online/accelerator/memory/bytes_used",
+                "aiplatform.googleapis.com/prediction/internal/online/network/received_bytes_count",
+                "aiplatform.googleapis.com/prediction/internal/online/network/sent_bytes_count",
+                "aiplatform.googleapis.com/prediction/internal/online/llm_backend_latencies",
+                "aiplatform.googleapis.com/prediction/internal/online/concurrent_requests",
+                "aiplatform.googleapis.com/prediction/internal/online/throttled_request_count",
+                "aiplatform.googleapis.com/prediction/internal/online/resource_usage_error_count",
+                "aiplatform.googleapis.com/prediction/internal/online/l2_operator_reconcile_latencies"
+              ]
+            },
+            {
+              "monitoredResource": "aiplatform.googleapis.com/DeploymentResourcePool",
+              "metrics": [
+                "aiplatform.googleapis.com/prediction/online/deployment_resource_pool/replicas",
+                "aiplatform.googleapis.com/prediction/online/deployment_resource_pool/target_replicas",
+                "aiplatform.googleapis.com/prediction/online/deployment_resource_pool/cpu/utilization",
+                "aiplatform.googleapis.com/prediction/online/deployment_resource_pool/memory/bytes_used",
+                "aiplatform.googleapis.com/prediction/online/deployment_resource_pool/accelerator/duty_cycle",
+                "aiplatform.googleapis.com/prediction/online/deployment_resource_pool/accelerator/memory/bytes_used",
+                "aiplatform.googleapis.com/prediction/online/deployment_resource_pool/network/received_bytes_count",
+                "aiplatform.googleapis.com/prediction/online/deployment_resource_pool/network/sent_bytes_count"
+              ]
+            },
+            {
+              "monitoredResource": "aiplatform.googleapis.com/IndexEndpoint",
+              "metrics": [
+                "aiplatform.googleapis.com/scann/query/request_count",
+                "aiplatform.googleapis.com/scann/query/latencies",
+                "aiplatform.googleapis.com/scann/internal/query/latency_bucketized",
+                "aiplatform.googleapis.com/matching_engine/query/request_count",
+                "aiplatform.googleapis.com/matching_engine/query/query_count",
+                "aiplatform.googleapis.com/matching_engine/query/request_count_v2",
+                "aiplatform.googleapis.com/matching_engine/internal/query/request_count",
+                "aiplatform.googleapis.com/matching_engine/query/latencies",
+                "aiplatform.googleapis.com/matching_engine/query/query_latencies",
+                "aiplatform.googleapis.com/matching_engine/internal/query/latency_bucketized",
+                "aiplatform.googleapis.com/matching_engine/internal/query/match_server_request_count",
+                "aiplatform.googleapis.com/matching_engine/internal/query/match_server_latencies"
+              ]
+            },
+            {
+              "monitoredResource": "aiplatform.googleapis.com/IndexEndpoint",
+              "metrics": [
+                "aiplatform.googleapis.com/scann/current_shards",
+                "aiplatform.googleapis.com/scann/current_replicas",
+                "aiplatform.googleapis.com/matching_engine/current_shards",
+                "aiplatform.googleapis.com/matching_engine/current_replicas",
+                "aiplatform.googleapis.com/matching_engine/internal/current_replicas",
+                "aiplatform.googleapis.com/matching_engine/cpu/request_cores",
+                "aiplatform.googleapis.com/matching_engine/cpu/request_utilization",
+                "aiplatform.googleapis.com/matching_engine/memory/used_bytes",
+                "aiplatform.googleapis.com/matching_engine/memory/request_bytes"
+              ]
+            },
+            {
+              "monitoredResource": "aiplatform.googleapis.com/Index",
+              "metrics": [
+                "aiplatform.googleapis.com/matching_engine/stream_update/datapoint_count",
+                "aiplatform.googleapis.com/matching_engine/stream_update/latency",
+                "aiplatform.googleapis.com/matching_engine/stream_update/latencies",
+                "aiplatform.googleapis.com/matching_engine/internal/stream_update/catchup_latency",
+                "aiplatform.googleapis.com/matching_engine/stream_update/request_count",
+                "aiplatform.googleapis.com/matching_engine/index/size",
+                "aiplatform.googleapis.com/matching_engine/index/embeddings",
+                "aiplatform.googleapis.com/matching_engine/index/last_batch_update_time",
+                "aiplatform.googleapis.com/matching_engine/index/last_compaction_time"
+              ]
+            },
+            {
+              "monitoredResource": "aiplatform.googleapis.com/Featurestore",
+              "metrics": [
+                "aiplatform.googleapis.com/featurestore/online_entities_updated",
+                "aiplatform.googleapis.com/featurestore/online_serving/request_count",
+                "aiplatform.googleapis.com/featurestore/online_serving/latencies",
+                "aiplatform.googleapis.com/featurestore/online_serving/response_size",
+                "aiplatform.googleapis.com/featurestore/online_serving/request_bytes_count",
+                "aiplatform.googleapis.com/featurestore/streaming_write/offline_processed_count",
+                "aiplatform.googleapis.com/featurestore/streaming_write/offline_write_delays"
+              ]
+            },
+            {
+              "monitoredResource": "aiplatform.googleapis.com/Featurestore",
+              "metrics": [
+                "aiplatform.googleapis.com/featurestore/storage/stored_bytes",
+                "aiplatform.googleapis.com/featurestore/storage/billable_processed_bytes",
+                "aiplatform.googleapis.com/featurestore/node_count",
+                "aiplatform.googleapis.com/featurestore/cpu_load",
+                "aiplatform.googleapis.com/featurestore/cpu_load_hottest_node"
+              ]
+            },
+            {
+              "monitoredResource": "aiplatform.googleapis.com/FeatureOnlineStore",
+              "metrics": [
+                "aiplatform.googleapis.com/FeatureOnlineStore/online_serving/request_count",
+                "aiplatform.googleapis.com/FeatureOnlineStore/online_serving/serving_bytes_count",
+                "aiplatform.googleapis.com/FeatureOnlineStore/online_serving/serving_latencies",
+                "aiplatform.googleapis.com/FeatureOnlineStore/serving_data_ages",
+                "aiplatform.googleapis.com/FeatureOnlineStore/serving_data_by_sync_time",
+                "aiplatform.googleapis.com/featureonlinestore/online_serving/request_count",
+                "aiplatform.googleapis.com/featureonlinestore/online_serving/serving_bytes_count",
+                "aiplatform.googleapis.com/featureonlinestore/online_serving/serving_latencies",
+                "aiplatform.googleapis.com/featureonlinestore/serving_data_ages",
+                "aiplatform.googleapis.com/featureonlinestore/serving_data_by_sync_time"
+              ]
+            },
+            {
+              "monitoredResource": "aiplatform.googleapis.com/FeatureOnlineStore",
+              "metrics": [
+                "aiplatform.googleapis.com/FeatureOnlineStore/storage/stored_bytes",
+                "aiplatform.googleapis.com/FeatureOnlineStore/storage/bigtable_cpu_load",
+                "aiplatform.googleapis.com/FeatureOnlineStore/storage/bigtable_cpu_load_hottest_node",
+                "aiplatform.googleapis.com/FeatureOnlineStore/storage/bigtable_nodes",
+                "aiplatform.googleapis.com/FeatureOnlineStore/running_sync",
+                "aiplatform.googleapis.com/featureonlinestore/storage/stored_bytes",
+                "aiplatform.googleapis.com/featureonlinestore/storage/bigtable_cpu_load",
+                "aiplatform.googleapis.com/featureonlinestore/storage/bigtable_cpu_load_hottest_node",
+                "aiplatform.googleapis.com/featureonlinestore/storage/bigtable_nodes",
+                "aiplatform.googleapis.com/featureonlinestore/running_sync"
+              ]
+            },
+            {
+              "monitoredResource": "aiplatform.googleapis.com/Location",
+              "metrics": [
+                "aiplatform.googleapis.com/executing_vertexai_pipeline_jobs",
+                "aiplatform.googleapis.com/executing_vertexai_pipeline_tasks"
+              ]
+            },
+            {
+              "monitoredResource": "aiplatform.googleapis.com/Location",
+              "metrics": [
+                "aiplatform.googleapis.com/online_prediction_requests_per_base_model",
+                "aiplatform.googleapis.com/quota/online_prediction_output_tokens_per_minute_per_base_model/exceeded",
+                "aiplatform.googleapis.com/quota/online_prediction_output_tokens_per_minute_per_base_model/usage",
+                "aiplatform.googleapis.com/quota/online_prediction_requests_per_base_model/exceeded",
+                "aiplatform.googleapis.com/quota/online_prediction_requests_per_base_model/usage",
+                "aiplatform.googleapis.com/quota/online_prediction_requests_per_user_per_base_model/exceeded",
+                "aiplatform.googleapis.com/quota/online_prediction_requests_per_user_per_base_model/usage",
+                "aiplatform.googleapis.com/quota/shared_online_prediction_requests_per_base_model/exceeded",
+                "aiplatform.googleapis.com/quota/shared_online_prediction_requests_per_base_model/usage"
+              ]
+            },
+            {
+              "monitoredResource": "aiplatform.googleapis.com/Model",
+              "metrics": [
+                "aiplatform.googleapis.com/ml_monitoring/feature_skew_deviation",
+                "aiplatform.googleapis.com/ml_monitoring/feature_drift_deviation",
+                "aiplatform.googleapis.com/ml_monitoring/feature_attribution_skew_deviation",
+                "aiplatform.googleapis.com/ml_monitoring/feature_attribution_drift_deviation",
+                "aiplatform.googleapis.com/model_monitoring/feature_skew_deviation",
+                "aiplatform.googleapis.com/model_monitoring/feature_drift_deviation",
+                "aiplatform.googleapis.com/model_monitoring/feature_attribution_skew_deviation",
+                "aiplatform.googleapis.com/model_monitoring/feature_attribution_drift_deviation"
+              ]
+            },
+            {
+              "monitoredResource": "aiplatform.googleapis.com/PipelineJob",
+              "metrics": [
+                "aiplatform.googleapis.com/pipelinejob/duration",
+                "aiplatform.googleapis.com/pipelinejob/completed_tasks",
+                "aiplatform.googleapis.com/pipelinejob/task_completed_count"
+              ]
+            },
+            {
+              "monitoredResource": "aiplatform.googleapis.com/Location",
+              "metrics": [
+                "aiplatform.googleapis.com/quota/online_prediction_output_tokens_per_minute_per_base_model/limit",
+                "aiplatform.googleapis.com/quota/online_prediction_requests_per_base_model/limit",
+                "aiplatform.googleapis.com/quota/online_prediction_requests_per_user_per_base_model/limit",
+                "aiplatform.googleapis.com/quota/shared_online_prediction_requests_per_base_model/limit"
+              ]
+            }
+          ]
+        }
+      },
+      "state": "ENABLED",
+      "parent": "projects/12340015"
+    }
+  ]
+}

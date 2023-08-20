@@ -25,6 +25,7 @@ import google.auth
 import google_auth_httplib2
 import googleapiclient.http
 import httplib2
+from google.api_core.client_options import ClientOptions
 from google.auth import exceptions
 from google_auth_oauthlib import flow
 from googleapiclient import discovery
@@ -140,7 +141,10 @@ def get_user_email() -> str:
 
 
 @caching.cached_api_call(in_memory=True)
-def get_api(service_name: str, version: str, project_id: Optional[str] = None):
+def get_api(service_name: str,
+            version: str,
+            project_id: Optional[str] = None,
+            region: Optional[str] = None):
   """Get an API object, as returned by googleapiclient.discovery.build.
 
   If project_id is specified, this will be used as the billed project, and usually
@@ -167,11 +171,16 @@ def get_api(service_name: str, version: str, project_id: Optional[str] = None):
                                                    http=httplib2.Http())
     return googleapiclient.http.HttpRequest(new_http, *args, **kwargs)
 
+  client_options = ClientOptions()
+  if region:
+    client_options.api_endpoint = f'https://{region}-{service_name}.googleapis.com'
+
   api = discovery.build(service_name,
                         version,
                         cache_discovery=False,
                         credentials=credentials,
-                        requestBuilder=_request_builder)
+                        requestBuilder=_request_builder,
+                        client_options=client_options)
   return api
 
 

@@ -1,0 +1,12 @@
+{
+  "featurestores": [
+    {
+      "name": "projects/12340015/locations/us-west1/featurestores/gcpdiag_vertex1featurestore_aaaa",
+      "createTime": "2023-08-18T08:57:10.529141Z",
+      "updateTime": "2023-08-18T08:57:10.634433Z",
+      "etag": "AMEw9yNUiHRCssGYdRqY4e5lYEMsU5Pw4pd_Lli5B3sjnhpSKQ-dY_X56aEECOhyP_UJ",
+      "onlineServingConfig": {},
+      "state": "STABLE"
+    }
+  ]
+}
