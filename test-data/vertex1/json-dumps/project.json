@@ -1,0 +1,13 @@
+{
+  "name": "projects/12340015",
+  "parent": "folders/348077457356",
+  "projectId": "gcpdiag-vertex1-aaaa",
+  "state": "ACTIVE",
+  "displayName": "gcpdiag test - vertex1",
+  "createTime": "2023-08-18T08:45:07.448788Z",
+  "updateTime": "2023-08-18T08:45:07.448788Z",
+  "etag": "W/\"f67f3aafb1347923\"",
+  "labels": {
+    "gcpdiag": "test"
+  }
+}

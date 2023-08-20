@@ -80,6 +80,8 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/notebooks1/json-dumps',
     'gcpdiag-dataflow1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/dataflow1/json-dumps',
+    'gcpdiag-vertex1-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/vertex1/json-dumps',
 }
 
 # set to a value higher than 0 to emulate API temp. failure
@@ -229,7 +231,8 @@ class BatchRequestStub(ApiStub):
 
 def get_api_stub(service_name: str,
                  version: str,
-                 project_id: Optional[str] = None):
+                 project_id: Optional[str] = None,
+                 regional_service_endpoint: Optional[str] = None):
 
   # Avoid circular import dependencies by importing the required modules here.
   # pylint: disable=import-outside-toplevel
@@ -307,5 +310,8 @@ def get_api_stub(service_name: str,
   elif service_name == 'dataflow':
     from gcpdiag.queries import dataflow_stub
     return dataflow_stub.DataflowApiStub()
+  elif 'aiplatform' in service_name:
+    from gcpdiag.queries import vertex_stub
+    return vertex_stub.VertexApiStub()
   else:
     raise ValueError('unsupported service: %s' % service_name)
