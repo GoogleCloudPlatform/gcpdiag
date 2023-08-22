@@ -166,7 +166,7 @@ modules instead. This ensures proper testing and separation of concerns. Also,
 this way we can make sure that the queries modules cover all the required
 functionality, and that the API calls are cached.
 
-You can see the documentation of this rule [here](https://gcpdiag.dev/rules/gke/ERR/2021_007/) and the github logic for this rule [here](https://github.com/444B/gcpdiag/blob/main/gcpdiag/lint/gke/err_2021_007_gke_sa.py)
+You can see the documentation of this rule [here](https://gcpdiag.dev/rules/gke/ERR/2021_007/) and the github logic for this rule [here](https://github.com/GoogleCloudPlatform/gcpdiag/blob/main/gcpdiag/lint/gke/err_2021_007_gke_sa.py)
 
 Example code:
 ```python
