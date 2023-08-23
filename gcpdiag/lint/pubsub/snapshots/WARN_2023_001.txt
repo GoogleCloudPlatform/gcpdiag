@@ -1,0 +1,3 @@
+*  pubsub/WARN/2023_001: Project should not have a detached subscription.
+   - gcpdiag-pubsub1-aaaa/gcpdiag-pubsub1subscription-aaaa                [ OK ]
+

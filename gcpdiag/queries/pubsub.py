@@ -105,7 +105,7 @@ def get_topic_iam_policy(name: str) -> TopicIAMPolicy:
 
 
 class Subscription(models.Resource):
-  """Represent a Subscription"""
+  """Represent a Subscription."""
   _resource_data: dict
 
   def __init__(self, project_id, resource_data):
@@ -144,6 +144,12 @@ class Subscription(models.Resource):
       raise RuntimeError(
           f'Topic {topic_name} for Subscription {self.name} not found')
     return topics[topic_name]
+
+  def is_detached(self) -> bool:
+    """Return if subscription is detached."""
+    if 'detached' in self._resource_data:
+      return bool(self._resource_data['detached'])
+    return False
 
 
 @caching.cached_api_call
