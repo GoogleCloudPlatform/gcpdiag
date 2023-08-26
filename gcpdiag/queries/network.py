@@ -132,6 +132,14 @@ class Route(models.Resource):
     return None
 
   @property
+  def next_hop_vpn_tunnel(self) -> Optional[str]:
+    return self._resource_data.get('nextHopVpnTunnel')
+
+  @property
+  def next_hop_hub(self) -> Optional[str]:
+    return self._resource_data.get('nextHopHub')
+
+  @property
   def priority(self) -> int:
     return self._resource_data['priority']
 
