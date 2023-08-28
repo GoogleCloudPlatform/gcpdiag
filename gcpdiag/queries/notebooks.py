@@ -19,7 +19,7 @@
 import enum
 import logging
 import re
-from typing import Dict, Mapping
+from typing import Dict, Mapping, Union
 
 import googleapiclient.errors
 
@@ -220,9 +220,10 @@ def get_instance_health_state(context: models.Context,
 
 
 @caching.cached_api_call
-def instance_is_upgradeable(context: models.Context,
-                            notebook_instance: str) -> Dict[str, 'str | bool']:
-  is_upgradeable: Dict[str, 'str | bool'] = {}
+def instance_is_upgradeable(
+    context: models.Context,
+    notebook_instance: str) -> Dict[str, Union[str, bool]]:
+  is_upgradeable: Dict[str, Union[str, bool]] = {}
   if not apis.is_enabled(context.project_id, 'notebooks'):
     logging.error('Notebooks API is not enabled')
     return is_upgradeable
