@@ -16,3 +16,4 @@ website/public
 website/resources
 crash.*.log
 gcpdiag-config
+gcpdiag/testpsa.py
