@@ -105,3 +105,11 @@ class TestInterconnect:
         assert attachment.interconnect == 'dummy-interconnect4'
         assert attachment.ead == 'sjc-zone2-6'
         assert attachment.router == 'dummy-router3'
+
+  def test_legacy_dataplane(self):
+    attachments = interconnect.get_vlan_attachments(project_id=DUMMY_PROJECT_ID)
+    for attachment in attachments:
+      if attachment.name == 'dummy-attachment7':
+        assert attachment.legacy_dataplane is True
+      if attachment.name == 'dummy-attachment8':
+        assert attachment.legacy_dataplane is False
