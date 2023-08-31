@@ -19,6 +19,12 @@ full.
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, notebooks
 
+instances_by_project = {}
+
+
+def prefetch_rule(context: models.Context):
+  instances_by_project[context.project_id] = notebooks.get_instances(context)
+
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
@@ -26,7 +32,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'Notebooks API is disabled')
     return
 
-  instances = notebooks.get_instances(context)
+  instances = instances_by_project[context.project_id]
+
   if not instances:
     report.add_skipped(None, 'No instances found')
     return

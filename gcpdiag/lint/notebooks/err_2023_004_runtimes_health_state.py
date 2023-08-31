@@ -19,11 +19,22 @@ a healthy state
 """
 
 from gcpdiag import lint, models
-from gcpdiag.queries import notebooks
+from gcpdiag.queries import apis, notebooks
+
+runtimes_by_project = {}
+
+
+def prefetch_rule(context: models.Context):
+  runtimes_by_project[context.project_id] = notebooks.get_runtimes(context)
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-  runtimes = notebooks.get_runtimes(context)
+  if not apis.is_enabled(context.project_id, 'notebooks'):
+    report.add_skipped(None, 'Notebooks API is disabled')
+    return
+
+  runtimes = runtimes_by_project[context.project_id]
+
   if not runtimes:
     report.add_skipped(None, 'No runtimes for managed notebooks found')
     return
