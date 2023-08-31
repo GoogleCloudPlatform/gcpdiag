@@ -2,7 +2,7 @@
    - gcpdiag-gke1-aaaa                                                    [ OK ] The following vlan attachments could be used to establish 99.99% high avaiablibility:
 
  * region:us-east4 and metro:bos have the following attachments in different EADs: {'bos-zone1-219': ['dummy-attachment1', 'dummy-attachment2'], 'bos-zone2-219': ['dummy-attachment3', 'dummy-attachment4']}
- * region:us-west2 and metro:sjc have the following attachments in different EADs: {'sjc-zone1-6': ['dummy-attachment5'], 'sjc-zone2-6': ['dummy-attachment6']}
+ * region:us-west2 and metro:sjc have the following attachments in different EADs: {'sjc-zone1-6': ['dummy-attachment5'], 'sjc-zone2-6': ['dummy-attachment6', 'dummy-attachment7', 'dummy-attachment8']}
       
 You can use vlan attachments from above list to establsh 99.99% high availability for interconnects, please ensure the following conditions:
           - Two metros are required, each metro has two attachments;

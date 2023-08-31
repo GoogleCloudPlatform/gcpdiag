@@ -175,6 +175,13 @@ class VlanAttachment(models.Resource):
   def metro(self) -> str:
     return _metro(self.ead)
 
+  @property
+  def legacy_dataplane(self) -> bool:
+    if 'dataplaneVersion' not in self._resource_data:
+      self._resource_data['dataplaneVersion'] = {}
+
+    return self._resource_data['dataplaneVersion'] != 2
+
 
 @caching.cached_api_call(in_memory=True)
 def get_vlan_attachment(project_id: str, region: str,
