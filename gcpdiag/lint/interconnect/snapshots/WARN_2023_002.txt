@@ -1,18 +1,17 @@
-*  interconnect/WARN/2023_001: VLAN attachment is using Dataplan V1.
+*  interconnect/WARN/2023_002: VLAN attachment is in a non-functional state.
    - gcpdiag-gke1-aaaa/dummy-attachment1                                  [ OK ]
    - gcpdiag-gke1-aaaa/dummy-attachment2                                  [ OK ]
    - gcpdiag-gke1-aaaa/dummy-attachment3                                  [ OK ]
    - gcpdiag-gke1-aaaa/dummy-attachment4                                  [ OK ]
    - gcpdiag-gke1-aaaa/dummy-attachment5                                  [ OK ]
    - gcpdiag-gke1-aaaa/dummy-attachment6                                  [ OK ]
-   - gcpdiag-gke1-aaaa/dummy-attachment7                                  [FAIL]  this VLAN attachment is using Dataplane V1
+   - gcpdiag-gke1-aaaa/dummy-attachment7                                  [ OK ]
    - gcpdiag-gke1-aaaa/dummy-attachment8                                  [ OK ]
    - gcpdiag-gke1-aaaa/dummy-attachment9                                  [ OK ]
-   - gcpdiag-gke1-aaaa/dummy-attachment10                                 [ OK ]
+   - gcpdiag-gke1-aaaa/dummy-attachment10                                 [FAIL]  this VLAN attachment is in a non-functional state
 
-   Dataplane V1 doesn't support certain feature such as BFD, consider upgrading
-   to Datapalne V2. For more information: https://cloud.google.com/network-
-   connectivity/docs/interconnect/concepts/terminology#dataplaneVersion
+   This could be because the associated Interconnect was removed, or because the
+   other side of a Partner attachment was deleted.
 
-   https://gcpdiag.dev/rules/interconnect/WARN/2023_001
+   https://gcpdiag.dev/rules/interconnect/WARN/2023_002
 

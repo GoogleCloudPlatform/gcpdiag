@@ -182,6 +182,10 @@ class VlanAttachment(models.Resource):
 
     return self._resource_data['dataplaneVersion'] != 2
 
+  @property
+  def defunct_state(self) -> bool:
+    return self._resource_data['state'] == 'DEFUNCT'
+
 
 @caching.cached_api_call(in_memory=True)
 def get_vlan_attachment(project_id: str, region: str,
