@@ -174,7 +174,10 @@ class ManagedZone(models.Resource):
     if 'privateVisibilityConfig' not in self._resource_data:
       self._resource_data['privateVisibilityConfig'] = {}
 
-    return self._resource_data['privateVisibilityConfig'].get('networks', False)
+    return (self._resource_data['privateVisibilityConfig'].get(
+        'networks', False) or
+            self._resource_data['privateVisibilityConfig'].get(
+                'gkeClusters', False))
 
   @property
   def dnssec_config_state(self) -> bool:
