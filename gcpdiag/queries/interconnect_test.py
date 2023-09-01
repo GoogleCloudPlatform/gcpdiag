@@ -113,3 +113,11 @@ class TestInterconnect:
         assert attachment.legacy_dataplane is True
       if attachment.name == 'dummy-attachment8':
         assert attachment.legacy_dataplane is False
+
+  def test_defunct_state(self):
+    attachments = interconnect.get_vlan_attachments(project_id=DUMMY_PROJECT_ID)
+    for attachment in attachments:
+      if attachment.name == 'dummy-attachment9':
+        assert attachment.defunct_state is False
+      if attachment.name == 'dummy-attachment10':
+        assert attachment.defunct_state is True
