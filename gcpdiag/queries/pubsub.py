@@ -19,7 +19,7 @@
 
 import logging
 import re
-from typing import Dict, Mapping
+from typing import Dict, List, Mapping
 
 import googleapiclient.errors
 
@@ -52,6 +52,26 @@ class Topic(models.Resource):
   def short_path(self) -> str:
     path = self.project_id + '/' + self.name
     return path
+
+  @caching.cached_api_call
+  def subscriptions(self, context: models.Context) -> List[str]:
+    subscriptions: List[str] = []
+    pubsub_api = apis.get_api('pubsub', 'v1', context.project_id)
+    logging.info(
+        'fetching list of subscriptions for topic: %s',
+        self._resource_data['name'],
+    )
+    query = (pubsub_api.projects().topics().subscriptions().list(
+        topic=self._resource_data['name']))
+
+    try:
+      response = query.execute(num_retries=config.API_RETRIES)
+      if 'subscriptions' not in response:
+        return subscriptions  # no subscriptions found
+    except googleapiclient.errors.HttpError as err:
+      raise utils.GcpApiError(err) from err
+    subscriptions = response['subscriptions']
+    return subscriptions
 
 
 @caching.cached_api_call
