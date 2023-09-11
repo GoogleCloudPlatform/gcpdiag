@@ -1,3 +1,3 @@
 *  pubsub/WARN/2023_003: Each topic has at least one subscription attached.
-   - gcpdiag-pubsub1-aaaa/gcpdiag-pubsub1topic-aaaa                       [ OK ]
+   - gcpdiag-pubsub1-aaaa                                                 [ OK ] All active topics have subscriptions
 

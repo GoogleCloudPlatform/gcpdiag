@@ -19,7 +19,7 @@
 
 import logging
 import re
-from typing import Dict, List, Mapping
+from typing import Dict, Mapping, Union
 
 import googleapiclient.errors
 
@@ -53,29 +53,10 @@ class Topic(models.Resource):
     path = self.project_id + '/' + self.name
     return path
 
-  @caching.cached_api_call
-  def subscriptions(self, context: models.Context) -> List[str]:
-    subscriptions: List[str] = []
-    pubsub_api = apis.get_api('pubsub', 'v1', context.project_id)
-    logging.info(
-        'fetching list of subscriptions for topic: %s',
-        self._resource_data['name'],
-    )
-    query = (pubsub_api.projects().topics().subscriptions().list(
-        topic=self._resource_data['name']))
-
-    try:
-      response = query.execute(num_retries=config.API_RETRIES)
-      if 'subscriptions' not in response:
-        return subscriptions  # no subscriptions found
-    except googleapiclient.errors.HttpError as err:
-      raise utils.GcpApiError(err) from err
-    subscriptions = response['subscriptions']
-    return subscriptions
-
 
 @caching.cached_api_call
 def get_topics(context: models.Context) -> Mapping[str, Topic]:
+  """Get all topics(Does not include deleted topics)."""
   topics: Dict[str, Topic] = {}
   if not apis.is_enabled(context.project_id, 'pubsub'):
     return topics
@@ -151,9 +132,16 @@ class Subscription(models.Resource):
     return path
 
   @property
-  def topic(self) -> Topic:
+  def topic(self) -> Union[Topic, str]:
+    """
+    Return subscription's topic as a Topic object,
+    or String '_deleted-topic_' if topic is deleted.
+    """
     if 'topic' not in self._resource_data:
       raise RuntimeError('topic not set for subscription {self.name}')
+    elif self._resource_data['topic'] == '_deleted-topic_':
+      return '_deleted_topic_'
+
     m = re.match(r'projects/([^/]+)/topics/([^/]+)',
                  self._resource_data['topic'])
     if not m:
@@ -185,10 +173,10 @@ class Subscription(models.Resource):
 
 
 @caching.cached_api_call
-def get_subscription(context: models.Context) -> Mapping[str, Subscription]:
-  subscription: Dict[str, Subscription] = {}
+def get_subscriptions(context: models.Context) -> Mapping[str, Subscription]:
+  subscriptions: Dict[str, Subscription] = {}
   if not apis.is_enabled(context.project_id, 'pubsub'):
-    return subscription
+    return subscriptions
   pubsub_api = apis.get_api('pubsub', 'v1', context.project_id)
   logging.info('fetching list of PubSub subscriptions in project %s',
                context.project_id)
@@ -197,7 +185,7 @@ def get_subscription(context: models.Context) -> Mapping[str, Subscription]:
   try:
     resp = query.execute(num_retries=config.API_RETRIES)
     if 'subscriptions' not in resp:
-      return subscription
+      return subscriptions
     for s in resp['subscriptions']:
       # verify that we have some minimal data that we expect
       if 'name' not in s:
@@ -213,11 +201,11 @@ def get_subscription(context: models.Context) -> Mapping[str, Subscription]:
                                             labels=s.get('labels', {})):
         continue
 
-      subscription[s['name']] = Subscription(project_id=context.project_id,
-                                             resource_data=s)
+      subscriptions[s['name']] = Subscription(project_id=context.project_id,
+                                              resource_data=s)
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
-  return subscription
+  return subscriptions
 
 
 class SubscriptionIAMPolicy(iam.BaseIAMPolicy):
