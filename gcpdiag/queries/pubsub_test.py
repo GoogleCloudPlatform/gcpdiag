@@ -35,9 +35,9 @@ class TestPubsub:
     topics = pubsub.get_topics(context=context)
     assert DUMMY_TOPIC_NAME in topics
 
-  def test_get_subscription(self):
+  def test_get_subscriptions(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
-    subscription = pubsub.get_subscription(context=context)
+    subscription = pubsub.get_subscriptions(context=context)
     assert DUMMY_SUB_NAME in subscription
 
   def test_get_topic_iam_policy(self):

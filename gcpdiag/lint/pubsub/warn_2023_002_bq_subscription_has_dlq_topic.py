@@ -25,7 +25,7 @@ from gcpdiag.queries import pubsub
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   """Check if the BigQuery subscription has dead-letter topic ."""
-  subscriptions = pubsub.get_subscription(context)
+  subscriptions = pubsub.get_subscriptions(context)
   if not subscriptions:
     report.add_skipped(None, "no subscriptions found")
   for _, subscription in sorted(subscriptions.items()):

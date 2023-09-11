@@ -17,24 +17,29 @@
 
 Without a subscription, subscribers cannot pull messages or receive pushed
 messages published to the topic. At the end of the max message retention period,
-the messages will be discarded from Pub/Sub regardless.
+the messages will be discarded from Pub/Sub regardless, resulting in loss of
+data published to the topic.
 """
 
 from gcpdiag import lint, models
-from gcpdiag.queries import pubsub
+from gcpdiag.queries import crm, pubsub
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-  """Check if topic has a subscription attached."""
+  """Check if a valid topic has a subscription attached."""
   topics = pubsub.get_topics(context)
-  subscriptions = pubsub.get_subscription(context)
+  subscriptions = pubsub.get_subscriptions(context)
 
-  subscription_topics = set()
   for _, subscription in subscriptions.items():
-    subscription_topics.add(subscription.topic.name)
+    if (subscription.topic != "_deleted_topic_" and
+        subscription.topic.full_path in topics):
+      del topics[subscription.topic.full_path]
 
-  for _, topic in topics.items():
-    if topic.name not in subscription_topics:
-      report.add_failed(topic, "has no subscription attached")
-    else:
-      report.add_ok(topic)
+  if topics:
+    for _, topic in topics.items():
+      report.add_failed(topic)
+  else:
+    report.add_ok(
+        crm.get_project(context.project_id),
+        "All active topics have subscriptions",
+    )
