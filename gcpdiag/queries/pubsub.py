@@ -171,6 +171,18 @@ class Subscription(models.Resource):
       return bool(self._resource_data['detached'])
     return False
 
+  def is_big_query_subscription(self) -> bool:
+    """Return Boolean value if subscription is a big query subscription."""
+    if 'bigqueryConfig' in self._resource_data:
+      return bool(self._resource_data['bigqueryConfig']['state'] == 'ACTIVE')
+    return False
+
+  def has_dead_letter_topic(self) -> bool:
+    """Return Truthy value if subscription has a dead-letter topic."""
+    if 'deadLetterPolicy' in self._resource_data:
+      return bool(self._resource_data['deadLetterPolicy']['deadLetterTopic'])
+    return False
+
 
 @caching.cached_api_call
 def get_subscription(context: models.Context) -> Mapping[str, Subscription]:
