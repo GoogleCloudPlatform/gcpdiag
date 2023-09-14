@@ -121,3 +121,16 @@ class TestInterconnect:
         assert attachment.defunct_state is False
       if attachment.name == 'dummy-attachment10':
         assert attachment.defunct_state is True
+
+  def test_under_maintenance(self):
+    links = interconnect.get_links(project_id=DUMMY_PROJECT_ID)
+    for link in links:
+      if link.name == 'dummy-interconnect5':
+        assert link.under_maintenance is True
+
+  def test_get_links(self):
+    links = interconnect.get_links(project_id=DUMMY_PROJECT_ID)
+    assert len(links) > 0
+    for link in links:
+      if link.name == 'dummy-interconnect5':
+        assert link.under_maintenance is True

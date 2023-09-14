@@ -40,6 +40,10 @@ class Interconnect(models.Resource):
     return self._resource_data['name']
 
   @property
+  def under_maintenance(self) -> bool:
+    return self._resource_data['state'] == 'UNDER_MAINTENANCE'
+
+  @property
   def id(self) -> str:
     return self._resource_data['id']
 
@@ -98,6 +102,23 @@ def get_interconnects(project_id: str) -> List[Interconnect]:
   request = compute.interconnects().list(project=project_id)
   response = request.execute(num_retries=config.API_RETRIES)
   return [Interconnect(project_id, link) for link in response]
+
+
+@caching.cached_api_call(in_memory=True)
+def get_links(project_id: str) -> List[Interconnect]:
+  logging.info('fetching interconnects')
+  compute = apis.get_api('compute', 'v1', project_id)
+  request = compute.interconnects().list(project=project_id)
+  response = request.execute(num_retries=config.API_RETRIES)
+  if isinstance(response, dict):
+    # Handle the case when 'response' is a dictionary
+    links = [
+        Interconnect(project_id, name) for name in response.get('items', [])
+    ]
+  elif isinstance(response, list):
+    # Handle the case when 'response' is a list
+    links = [Interconnect(project_id, name) for name in response]
+  return links
 
 
 def _metro(ead: str) -> str:
