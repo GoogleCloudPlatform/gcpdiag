@@ -1,0 +1,3 @@
+*  pubsub/WARN/2023_004: Project should not have a subscription without a topic attached.
+   - gcpdiag-pubsub1-aaaa                                                 [ OK ]
+
