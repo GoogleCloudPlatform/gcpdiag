@@ -1,0 +1,3 @@
+*  gke/ERR/2023_012: Missing request for memory resources.
+   (logging api is disabled)                                              [SKIP]
+
