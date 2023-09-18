@@ -1,3 +1,63 @@
+## 0.65 (2023-09-18)
+
+#### New rules
+
+- apigee/ERR/2023\_006: Multiple migs for multiple regions
+- vertex/WARN/2023\_001: New product: Vertex AI / new rule: check featurestores state
+- pubsub/WARN/2023\_001: Check that the project does not have a detached subscription
+- gke/ERR/2023\_011: GKE Metadata Server isn’t reporting errors for pod IP not found
+- dataflow/WARN/2023\_006: Dataflow job stuck in canceling state for more than half hour
+- vpc/WARN/2023\_001: Private service access not exporting custom routes
+- interconnect/WARN/2023\_001: Interconnect attachment is not using dataplane v1
+- interconnect/WARN/2023\_002: Checking if the VLAN attachment is in a non functional state
+- pubsub/WARN/2023\_003: Topic has at least one attached subscription
+- bigquery/ERR/2023\_007: Data Transfer Service Agent exists and has the required roles
+- bigquery/WARN/2023\_002: BigQuery subscriptions have deadletter topic attached
+- dataproc/ERR/2023\_007: Enough resources in region for dataproc cluster creation
+- interconnect/WARN/2023\_003: Interconnect link is under maintenance
+
+#### Fixes
+
+- Account for GKE zones in vpc/WARN/2023\_002
+- Refactor GCE label reference
+- Update pipenv
+- Fix typing Union in notebooks
+- Add prefetch\_rule to notebooks rules
+- Use more descriptive name for get-subscriptions method and account for deleted topics
+
+
+## 0.64 (2023-08-14)
+
+#### New rules
+
+- gke/bp\_2023\_005\_gateway\_crd: manually installed gateway crd GKE
+- gke/err\_2023\_010\_nodelocal\_timeout: nodelocal dns timeout GKE
+- gke/err\_2023\_009\_missing\_cpu\_req: Missing CPU request GKE
+- gke/err\_2023\_008\_crashloopbackoff: gke cluster had pods in crashloopbackoff error GKE
+- gke/err\_2023\_006\_gw\_controller\_annotation\_error: GKE Gateway controller reporting misconfigured annotations in Gateway resource GKE
+- gke/err\_2023\_007\_gw\_controller\_http\_route\_misconfig: GKE Gateway controller reporting invalid HTTPRoute for Gateway GKE
+- dataflow/bp\_2023\_001\_dataflow\_supported\_sdk\_version\_check: Dataflow job using supported sdk version dataflow
+- cloudsql/warn\_2023\_003\_high\_mem\_usage: Cloud SQL instance's memory usage does not exceed 90%
+- cloudsql/bp\_ext\_2023\_003\_auto\_storage\_increases: Cloud SQL instance autoscaling is enabled
+- gke/warn\_2023\_003\_monitoring\_api\_disabled: Cloud Monitoring API enabled when GKE monitoring is enabled
+
+#### Fixes
+
+- Remove references to deprecated oauth option in docs b/281956212
+- Update diagram titles to remove “gcp doctor” reference
+- Fix wrong cloudsql/WARN/2023\_003 MQL query cloudsql (external submission)
+- gcs/bp\_2022\_001\_bucket\_access\_uniform: skip cloud build and dataproc buckets issue/61 b/293951741
+- gce/warn\_2022\_001\_iap\_tcp\_forwarding: skip check for dataproc cluster vm instances
+- gce/bp\_2021\_001\_serial\_logging\_enabled: skip check for dataproc cluster vm instances
+- gke/bp\_2022\_003\_cluster\_eol: end of life version list dates updated
+
+
+## 0.63 (2023-07-10)
+
+#### Fixes
+
+-  Fix futures timeout error.
+
 ## 0.62 (2023-07-10)
 
 #### New rules
