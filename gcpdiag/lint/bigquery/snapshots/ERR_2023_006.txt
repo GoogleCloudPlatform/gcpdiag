@@ -1,0 +1,4 @@
+*  bigquery/ERR/2023_006: An organization's policy doesn't block the BigQuery user domain.
+   - gcpdiag-cloudsql1-aaaa                                               [SKIP]
+     Logging api is disabled
+
