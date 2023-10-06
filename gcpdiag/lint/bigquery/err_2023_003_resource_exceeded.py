@@ -15,7 +15,7 @@
 # Lint as: python3
 """BigQuery query job do not encounter resource exceeded error
 
-A BigQuery query sometimes could not be executed in the alloted memory
+A BigQuery query sometimes could not be executed in the allotted memory
 """
 
 from boltons.iterutils import get_path

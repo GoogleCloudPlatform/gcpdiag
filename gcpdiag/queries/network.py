@@ -921,7 +921,7 @@ class EffectiveFirewalls:
       name: Optional[str] = None,
       name_pattern: Optional[re.Pattern] = None,
       target_tags: Optional[List[str]] = None) -> List[VpcFirewallRule]:
-    """Retrive the list of ingress firewall rules matching name or name pattern and target tags.
+    """Retrieve the list of ingress firewall rules matching name or name pattern and target tags.
 
     Args:
         name (Optional[str], optional): firewall rune name. Defaults to None.
@@ -941,7 +941,7 @@ class EffectiveFirewalls:
       name: Optional[str] = None,
       name_pattern: Optional[re.Pattern] = None,
       target_tags: Optional[List[str]] = None) -> List[VpcFirewallRule]:
-    """Retrive the list of egress firewall rules matching name or name pattern and target tags.
+    """Retrieve the list of egress firewall rules matching name or name pattern and target tags.
 
     Args:
         name (Optional[str], optional): firewall rune name. Defaults to None.

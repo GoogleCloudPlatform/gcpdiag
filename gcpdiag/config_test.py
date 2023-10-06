@@ -124,7 +124,7 @@ class Test:
       # load config from file
       config.init({'config': fp.name})
       assert config.get('config') == fp.name
-      # read value availale only from config
+      # read value available only from config
       assert config.get('logging_ratelimit_requests') == 60
       assert config.get('logging_fetch_max_time_seconds') == 120
 

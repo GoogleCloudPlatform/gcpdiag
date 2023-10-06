@@ -1,4 +1,4 @@
-""" Class representing different services avaiable within a GCP project """
+""" Class representing different services available within a GCP project """
 import functools
 
 from gcpdiag.async_queries import project_regions
@@ -7,7 +7,7 @@ from gcpdiag.async_queries.utils import protocols
 
 
 class Project:
-  """ Class representing different services avaiable within a GCP project """
+  """ Class representing different services available within a GCP project """
   _project_id: str
   _api: protocols.API
 

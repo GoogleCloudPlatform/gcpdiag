@@ -109,7 +109,7 @@ class GcpApiError(Exception):
     except KeyError:
       return None
 
-  def __init__(self, response='An error occured during the GCP API call'):
+  def __init__(self, response='An error occurred during the GCP API call'):
     self.response = response
     self.reason = None
     self.service = None

@@ -23,7 +23,7 @@ from gcpdiag.queries import apis, network
 
 
 class Instance(models.Resource):
-  """ Represents CloudSQL Instnace"""
+  """ Represents CloudSQL Instance"""
   _resource_data: dict
 
   def __init__(self, project_id: str, resource_data: dict):

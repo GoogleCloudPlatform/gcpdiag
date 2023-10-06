@@ -1,6 +1,6 @@
 """DNS logging is enabled for public zones.
 
-If not enabled, customers wouldn't have visbility to what queries are being made to the zone.
+If not enabled, customers wouldn't have visibility to what queries are being made to the zone.
 """
 
 from gcpdiag import lint, models

@@ -590,7 +590,7 @@ def _extract_project_id(email: str):
   elif email.partition('@')[2] in SERVICE_AGENT_DOMAINS or \
       email.partition('@')[2].startswith('gcp-sa-') or \
       email.endswith(DEFAULT_SERVICE_ACCOUNT_DOMAINS[1]):
-    # AppEngine Default SA is unqiue
+    # AppEngine Default SA is unique
     if email.endswith(DEFAULT_SERVICE_ACCOUNT_DOMAINS[0]):
       return email.partition('@')[0]
 

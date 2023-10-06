@@ -14,7 +14,7 @@
 """GKE Gateway controller reporting misconfigured annnotations in Gateway resource
 
 Gateway controller creates loadbalancing resources based on annotations
-specified in gateway resouces. It expects the user to use correct set of
+specified in gateway resources. It expects the user to use correct set of
 supported annotations name and values.
 """
 
