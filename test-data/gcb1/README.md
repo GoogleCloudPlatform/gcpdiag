@@ -11,5 +11,5 @@ important that running builds happens only once.
 
 If you want to add some data to build history, and you need to retry build
 several times to get desired outcome, then after you got to desired effect
-either run `terraform destroy` and initialize a new project or manualy remove
+either run `terraform destroy` and initialize a new project or manually remove
 older builds from json dump.

@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # Lint as: python3
-"""Region has sufficent resources for user to create a cluster
+"""Region has sufficient resources for user to create a cluster
 
 Region is experiencing a resource stockout while creating the cluster. \n Kindly
-try creating the cluster in another zone or region. \n If the specifed
+try creating the cluster in another zone or region. \n If the specified
 Region/Zone is a must, please reach out to GCP support team with the \n previous
 details provided.
 """

@@ -81,7 +81,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
         continue
       report.add_failed(
           project, 'There may have been a failed VPC \
-            connector creation issue on App Engine due to overlaping subnetworks \
+            connector creation issue on App Engine due to overlapping subnetworks \
               in the range 10.128.0.0/9 [auto-subnetworks]')
       return
 

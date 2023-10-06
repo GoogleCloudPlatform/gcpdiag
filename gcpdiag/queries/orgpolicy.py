@@ -68,7 +68,7 @@ def _get_effective_org_policy_all_constraints(
   logging.info('getting org constraints of %s', project_id)
   for _, result, exception in apis_utils.batch_execute_all(crm_api, requests):
     if exception:
-      logging.warning("can't retrieve org contraint (error: %s)", exception)
+      logging.warning("can't retrieve org constraint (error: %s)", exception)
       continue
     if 'booleanPolicy' in result:
       all_constraints[result['constraint']] = BooleanPolicyConstraint(

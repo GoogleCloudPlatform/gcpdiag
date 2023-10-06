@@ -8,7 +8,7 @@ from gcpdiag.queries import dataproc
 
 
 class Region:
-  """ Helper class encapsulating Dataproc operations withing a region """
+  """ Helper class encapsulating Dataproc operations within a region """
   _api: protocols.API
   _project_id: str
   _region: str

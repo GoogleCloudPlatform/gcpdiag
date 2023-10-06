@@ -46,7 +46,7 @@ def prepare_rule(context: models.Context):
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-  # skip entire rule if serial outputs are unavailabe
+  # skip entire rule if serial outputs are unavailable
   if not utils.is_serial_port_one_logs_available(context):
     report.add_skipped(None, 'serial port output is unavailable')
     return

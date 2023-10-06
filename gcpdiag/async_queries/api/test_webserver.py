@@ -11,7 +11,7 @@ class Response(Protocol):
 
 
 class Success:
-  """ Canned successfull response """
+  """ Canned successful response """
 
   def __init__(self, data: Any) -> None:
     self.data = data

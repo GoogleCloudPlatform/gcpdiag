@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Lint as: python3
-"""fluentd pods in Composer enviroments are not crashing
+"""fluentd pods in Composer environments are not crashing
 
 The fluentd runs as a daemonset and collects logs from all environment
 components and uploads the logs to Cloud Logging. All fluentd pods in an

@@ -14,7 +14,7 @@
 """GKE network policy minimum requirements
 
 The recommended minimum cluster size to run network policy enforcement is three e2-medium
-instances to ensure redundency, high availibilty and to avoid down time due to maintanence
+instances to ensure redundancy, high availability and to avoid down time due to maintenance
 activities.
 
 Network policy is not supported for clusters whose nodes are f1-micro or g1-small instances,
@@ -33,7 +33,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'no clusters found')
 
   for _, c in sorted(clusters.items()):
-    # Skipping check for autopilot clusters as begining from version 1.22.7-gke.1500
+    # Skipping check for autopilot clusters as beginning from version 1.22.7-gke.1500
     # and later and versions 1.23.4-gke.1500 and later have Dataplane V2 enabled by default
 
     # Check if cluster has dataplane V2 which has network ploicy enabled

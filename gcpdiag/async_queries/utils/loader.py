@@ -32,7 +32,7 @@ class Loader:
 
     In this case, it doesn't matter how many clients call
     my_gateway.get_response() concurrently, expensive_api_call() only executed
-    once (and all clients recive results of this call)
+    once (and all clients receive results of this call)
   """
   _load_task: Optional[asyncio.Task]
   _load_coroutine: Optional[Callable[[], Coroutine]]

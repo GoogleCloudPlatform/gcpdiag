@@ -27,7 +27,7 @@ version_ge () {
 }
 
 # Test whether 1st arg (file) was provided and exists, then prepare mount path
-# that will be used inside container with the same path if absolut path was used
+# that will be used inside container with the same path if absolute path was used
 # or inside root folder if relative path was used.
 handle_mount_path () {
   local FILE="$1"
@@ -35,7 +35,7 @@ handle_mount_path () {
   if [ -n "$FILE" ]; then
     if [ -f "$FILE" ]; then
       if [[ "$FILE" = /* ]]; then
-        # absolut path shall be mounted as is
+        # absolute path shall be mounted as is
         MOUNT="-v $FILE:$FILE"
       else
         # local path need to be mounted inside root folder
@@ -112,7 +112,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 # If config argument was provided we need to check if file exists and mount it
-# inside container with the same path if absolut path was used or inside
+# inside container with the same path if absolute path was used or inside
 # root folder if relative path was used.
 if ! CONFIG_MOUNT=$(handle_mount_path "$CONFIG_FILE"); then
     echo
@@ -123,7 +123,7 @@ if ! CONFIG_MOUNT=$(handle_mount_path "$CONFIG_FILE"); then
 fi
 
 # If auth-key argument was provided we need to check if file exists and mount it
-# inside container with the same path if absolut path was used or inside
+# inside container with the same path if absolute path was used or inside
 # root folder if relative path was used.
 if ! AUTH_KEY_MOUNT=$(handle_mount_path "$AUTH_KEY"); then
     echo

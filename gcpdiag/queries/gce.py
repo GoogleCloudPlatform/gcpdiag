@@ -233,7 +233,7 @@ class ManagedInstanceGroup(models.Resource):
 
 
 class SerialPortOutput:
-  """Represents the full Serial Port Ouput (/dev/ttyS0 or COM1) of an instance.
+  """Represents the full Serial Port Output (/dev/ttyS0 or COM1) of an instance.
   contents is the full 1MB of the instance.
   """
   _project_id: str
@@ -1018,7 +1018,7 @@ jobs_todo: Dict[models.Context, _SerialOutputJob] = {}
 def execute_fetch_serial_port_outputs(executor: concurrent.futures.Executor):
   # start a thread to fetch serial log; processing logs can be large
   # depending on he number of instances in the project which aren't logging to cloud logging
-  # currently expects only one job but implementing it so support for multple projects is possible.
+  # currently expects only one job but implementing it so support for multiple projects is possible.
   global jobs_todo
   jobs_executing = jobs_todo
   jobs_todo = {}

@@ -14,7 +14,7 @@
 """GKE Autoscaler isn't reporting scaleup failures.
 
 If the GKE autoscaler reported a problem when trying to add nodes to a cluster,
-it could mean that you don't have enough resources to accomodate for new nodes.
+it could mean that you don't have enough resources to accommodate for new nodes.
 E.g. you might not have enough free IP addresses in the GKE cluster network.
 """
 

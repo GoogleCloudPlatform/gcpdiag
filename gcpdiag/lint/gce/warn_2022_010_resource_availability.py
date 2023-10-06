@@ -15,7 +15,7 @@
 # Lint as: python3
 """GCE has enough resources available to fulfill requests
 
-Resource availablity errors can occur when using GCE resource on demand and a zone
+Resource availability errors can occur when using GCE resource on demand and a zone
 cannot accommodate your request due to resource exhaustion for the specific VM configuration
 
 Consider trying your request in other zones, requesting again with

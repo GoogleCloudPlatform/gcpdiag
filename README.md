@@ -98,7 +98,7 @@ The authenticated principal will need as minimum the following roles granted (bo
 
 - `Viewer` on the inspected project
 - `Service Usage Consumer` on the project used for billing/quota enforcement,
-  which is per default the project being inspected, but can be explicitely set
+  which is per default the project being inspected, but can be explicitly set
   using the `--billing-project` option
 
 The Editor and Owner roles include all the required permissions, but if you use
