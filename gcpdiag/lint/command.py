@@ -304,7 +304,7 @@ def run(argv) -> int:
   # ^^^ If you add rules directory, update also
   # pyinstaller/hook-gcpdiag.lint.py and bin/precommit-required-files
 
-  # Initialize proper output formater
+  # Initialize proper output formatter
   output_order = sorted(str(r) for r in repo.rules_to_run)
   output = _initialize_output(output_order=output_order)
   repo.result.add_result_handler(output.result_handler)

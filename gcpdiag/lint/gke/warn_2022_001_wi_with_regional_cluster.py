@@ -13,7 +13,7 @@
 # limitations under the License.
 """GKE clusters with workload identity are regional.
 
-Workload Identity is higly dependent of the availability of the cluster control
+Workload Identity is highly dependent of the availability of the cluster control
 plane during token fetches. It is recommended to use regional clusters for the
 production workload with Workload Identity enabled.
 """

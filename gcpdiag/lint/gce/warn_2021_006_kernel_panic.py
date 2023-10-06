@@ -16,7 +16,7 @@
 """Serial logs don't contain "Kernel panic" messages
 
 The "Kernel panic" messages in serial output usually indicate that some
-fatal error occured on a Linux instance.
+fatal error occurred on a Linux instance.
 """
 from typing import Optional
 
@@ -38,7 +38,7 @@ def prepare_rule(context: models.Context):
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-  # skip entire rule if serial outputs are unavailabe
+  # skip entire rule if serial outputs are unavailable
   if not utils.is_serial_port_one_logs_available(context):
     report.add_skipped(None, 'serial port output is unavailable')
     return
@@ -55,7 +55,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       if match:
         report.add_failed(
             instance, ('There are messages indicating that '
-                       '"Kernel panic" event occured for {}\n{}: "{}"').format(
+                       '"Kernel panic" event occurred for {}\n{}: "{}"').format(
                            instance.name, match.timestamp_iso, match.text))
       else:
         report.add_ok(instance)

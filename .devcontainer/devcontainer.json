@@ -13,7 +13,7 @@
 				"python.defaultInterpreterPath": "/usr/local/bin/python",
 				"python.linting.enabled": true,
 				"python.linting.pylintEnabled": true,
-				"python.envFile": "${workspaceFolder}/.devcontainer/.env" // Forcing some specific env settings for debugging any dynmaic python file - normal env vars are not correctly picked up
+				"python.envFile": "${workspaceFolder}/.devcontainer/.env" // Forcing some specific env settings for debugging any dynamic python file - normal env vars are not correctly picked up
 			},
 			"extensions": [
 				"ms-python.python",
@@ -27,7 +27,7 @@
 	"onCreateCommand": "PATH=$HOME/.local/bin:$PATH && pipenv install --dev", // We need to execute the commands very early to allow VS Code (-extensions) to correctly pick up the pipenv venv
 	"postCreateCommand": "pipenv run pre-commit install",
 	"remoteUser": "root",
-	// Podman specfic settings
+	// Podman specific settings
 	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,Z",
 	"workspaceFolder": "/workspace",
 	//"runArgs": [

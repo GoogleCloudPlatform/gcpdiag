@@ -148,7 +148,7 @@ class LintReportRuleInterface:
 class LintResultsHandler(Protocol):
   """
   Protocol representing object capable of handling lint results (handlers).
-  Hanlders can be registered with LintResults and react on each rule added
+  Handlers can be registered with LintResults and react on each rule added
   to the LintResults: each time a rule is added to the LintResults
   process_rule_report method of each registered handler is called with
   LintReportRuleInterface, so that handler have access to the results of
@@ -170,7 +170,7 @@ class LintResults:
 
   def add_result_handler(self, handler: LintResultsHandler) -> None:
     """
-    Hanlders can be registered with LintResults and react on each rule added
+    Handlers can be registered with LintResults and react on each rule added
     to the LintResults: each time a rule is added to theLintResults
     process_rule_report method of each registered handler is called with
     LintReportRuleInterface, so that handler have access to the results of
@@ -304,7 +304,7 @@ class ExecutionStrategy(Protocol):
 
 class SequentialExecutionStrategy:
   """
-  Execution strategy that groups multiple execution strageties
+  Execution strategy that groups multiple execution strategies
   and runs them sequentially one after another.
   """
   strategies: List[ExecutionStrategy]
@@ -562,7 +562,7 @@ class SyncExecutionStrategy:
     # Start fetching any logs queries that were defined in prepare_rule
     # functions.
     logs.execute_queries(executor)
-    # Start fetching any serial output logs if serial ouput to cloud logging
+    # Start fetching any serial output logs if serial output to cloud logging
     # is not enabled on the project/ instance
     if config.get('enable_gce_serial_buffer'):
       # execute fetech job

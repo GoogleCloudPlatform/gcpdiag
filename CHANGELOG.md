@@ -141,8 +141,8 @@
 - notebooks/ERR/2023\_003: Vertex AI Workbench account has permissions to create and use notebooks
 - notebooks/ERR/2023\_004: Vertex AI Workbench runtimes for managed notebooks are healthy
 - notebooks/WARN/2023\_001: Vertex AI Workbench instance is not being OOMKilled
-- notebooks/WARN/2023\_002: Vertex AI Workbench instance is in healty data disk space status
-- notebooks/WARN/2023\_003: Vertex AI Workbench instance is in healty boot disk space status
+- notebooks/WARN/2023\_002: Vertex AI Workbench instance is in healthy data disk space status
+- notebooks/WARN/2023\_003: Vertex AI Workbench instance is in healthy boot disk space status
 - vpc/SEC/2023\_001: DNSSEC is enabled for public zones
 - vpc/WARN/2023\_002: Private zone is attached to a VPC
 
@@ -296,7 +296,7 @@
 - bigquery/ERR/2022\_004: BigQuery jobs are not failing due to shuffle operation resources exceeded
 - bigquery/WARN/2022\_002: BigQuery does not violate column level security
 - cloudsql/WARN/2022\_001: Docker bridge network should be avoided
-- composer/WARN/2022\_002: fluentd pods in Composer enviroments are not crashing
+- composer/WARN/2022\_002: fluentd pods in Composer environments are not crashing
 - dataproc/ERR/2022\_003: Dataproc Service Account permissions
 - dataproc/WARN/2022\_001: Dataproc clusters are not failed to stop due to the local SSDs
 - gae/WARN/2022\_002: App Engine Flexible versions don't use deprecated runtimes

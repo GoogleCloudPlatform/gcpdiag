@@ -97,6 +97,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
         ('Missing permissions: '
          '@gcp-sa-notebooks.iam.gserviceaccount.com Service Account must '
          'have "AI Platform Notebooks Service Agent" role and user account '
-         'must have "Service Acount User" role'))
+         'must have "Service Account User" role'))
   else:
     report.add_ok(project)

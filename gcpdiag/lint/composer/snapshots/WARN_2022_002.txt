@@ -1,4 +1,4 @@
-*  composer/WARN/2022_002: fluentd pods in Composer enviroments are not crashing
+*  composer/WARN/2022_002: fluentd pods in Composer environments are not crashing
    - gcpdiag-composer1-aaaa/us-central1/env2                              [ OK ]
    - gcpdiag-composer1-aaaa/us-central1/env1                              [ OK ]
 

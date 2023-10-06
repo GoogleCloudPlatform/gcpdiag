@@ -13,7 +13,7 @@
 # limitations under the License.
 """The interconnect link is undergoing a maintenance window.
 
-Pleaes check the email sent to the technical contacts for further details about the maintenance.
+Please check the email sent to the technical contacts for further details about the maintenance.
 
 """
 

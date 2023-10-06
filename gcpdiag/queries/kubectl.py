@@ -108,7 +108,7 @@ class KubectlExecutor:
 def verify_auth(executor: KubectlExecutor) -> bool:
   """ Verify the authentication for kubernetes by running kubeclt cluster-info.
 
-  Will raise a warning and return False if authenticaiton failed.
+  Will raise a warning and return False if authentication failed.
   """
   _, stderr = executor.kubectl_execute([
       'kubectl', 'cluster-info', '--kubeconfig', config_path, '--context',

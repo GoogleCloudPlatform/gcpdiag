@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Vertex AI Workbench instance is in healty boot disk space status
+"""Vertex AI Workbench instance is in healthy boot disk space status
 
 The boot disk space status is unhealthy if the disk space is greater than 85%
 full.

@@ -7,7 +7,7 @@
    - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [FAIL]
    - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [ OK ]
 
-   Workload Identity is higly dependent of the availability of the cluster
+   Workload Identity is highly dependent of the availability of the cluster
    control plane during token fetches. It is recommended to use regional
    clusters for the production workload with Workload Identity enabled.
 
