@@ -14,6 +14,20 @@
  * limitations under the License.
  */
 
+terraform {
+  required_providers {
+    google = {
+      source  = "hashicorp/google"
+      version = "= 3.46.0"
+    }
+    google-beta = {
+      source  = "hashicorp/google-beta"
+      version = ">= 4.50.0"
+    }
+  }
+}
+
+
 resource "random_string" "project_id_suffix" {
   length  = 8
   number  = true
@@ -38,6 +52,11 @@ resource "google_project_service" "pubsub" {
   service = "pubsub.googleapis.com"
 }
 
+resource "google_project_service" "bigquery" {
+  project = google_project.project.project_id
+  service = "bigquery.googleapis.com"
+}
+
 output "project_id" {
   value = google_project.project.project_id
 }
@@ -60,4 +79,8 @@ output "topic" {
 
 output "subscription" {
   value = google_pubsub_subscription.pubsub1subscription.name
+}
+
+output "bqsubscription" {
+  value = google_pubsub_subscription.pubsub1subscription2.name
 }

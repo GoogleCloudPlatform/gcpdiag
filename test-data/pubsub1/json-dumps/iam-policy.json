@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "etag": "BwYHoa3m14U=",
+  "bindings": [
+    {
+      "role": "roles/bigquery.dataEditor",
+      "members": [
+        "serviceAccount:service-12340014@gcp-sa-pubsub.iam.gserviceaccount.com"
+      ]
+    },
+    {
+      "role": "roles/pubsub.serviceAgent",
+      "members": [
+        "serviceAccount:service-12340014@gcp-sa-pubsub.iam.gserviceaccount.com"
+      ]
+    },
+    {
+      "role": "roles/websecurityscanner.serviceAgent",
+      "members": [
+        "serviceAccount:service-12340014@gcp-sa-websecurityscanner.iam.gserviceaccount.com"
+      ]
+    }
+  ]
+}
