@@ -100,6 +100,7 @@ _defaults: Dict[str, Any] = {
     'logging_fetch_max_entries': 10000,
     'logging_fetch_max_time_seconds': 120,
     'enable_gce_serial_buffer': False,
+    'continuous': False
 }
 
 #

@@ -21,6 +21,7 @@ import sys
 
 from gcpdiag import config
 from gcpdiag.lint import command as lint_command
+from gcpdiag.runbook import command as runbook_command
 
 
 def main(argv):
@@ -41,6 +42,17 @@ def main(argv):
     sys.argv[0] = 'gcpdiag lint'
     try:
       lint_command.run(argv)
+    except KeyboardInterrupt:
+      print(
+          '\n[WARNING] KeyboardInterrupt: Application was interrupted (terminated)',
+          file=sys.stderr)
+      sys.exit(1)
+  elif argv[1] == 'runbook':
+    # Replace argv[0:1] with only argv[0] so that argparse works correctly.
+    sys.argv.pop(0)
+    sys.argv[0] = 'gcpdiag runbook'
+    try:
+      runbook_command.run(argv)
     except KeyboardInterrupt:
       print(
           '\n[WARNING] KeyboardInterrupt: Application was interrupted (terminated)',

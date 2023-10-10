@@ -42,6 +42,8 @@ class Context:
 
   # list of "label sets" that must match.
   labels: Optional[Mapping[str, str]]
+  # list of "runbook parameters sets" that must match.
+  parameters: dict[str, str]
 
   # the selected resources are the intersection of project_id, locations,
   # and labels(i.e. all must match), but each value in locations, and
@@ -54,6 +56,7 @@ class Context:
                project_id: str,
                locations: Optional[Iterable[str]] = None,
                labels: Optional[Mapping[str, str]] = None,
+               parameters: Optional[Mapping[str, str]] = None,
                resources: Optional[Iterable[str]] = None):
     """Args:
 
@@ -99,6 +102,15 @@ class Context:
     else:
       self.resources_pattern = None
 
+    if parameters:
+      if not isinstance(parameters, Mapping):
+        raise ValueError('parameters must be Mapping[str,str]]')
+
+      self.parameters = dict(parameters)
+      self.parameters['project_id'] = self.project_id
+    else:
+      self.parameters = {}
+
   def __str__(self):
     string = 'project: ' + self.project_id
     if self.resources_pattern:
@@ -107,6 +119,8 @@ class Context:
       string += ', locations (regions/zones): ' + self.locations_pattern.pattern
     if self.labels:
       string += ', labels: {' + _mapping_str(self.labels) + '}'
+    if self.parameters:
+      string += ', parameters: {' + _mapping_str(self.parameters) + '}'
     return string
 
   def __hash__(self):
