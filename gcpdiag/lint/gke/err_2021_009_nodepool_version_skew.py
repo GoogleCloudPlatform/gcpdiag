@@ -14,15 +14,20 @@
 """Version skew between cluster and node pool.
 
 Difference between cluster version and node pools version should be no more
-than 2 minor versions.
+than 2 (K8s <v1.28) or 3 (K8s v1.28+) minor versions.
 """
 
 from gcpdiag import lint, models
 from gcpdiag.queries import gke
 
+K8S_MAJOR_WITH_3_VERSIONS_SKEW = 1
+K8S_MINOR_WITH_3_VERSIONS_SKEW = 28
+LEGACY_SKEW = 2
+CURRENT_SKEW = 3
+
 fail_reason_template = (
     "Difference between versions of the node pool ({np_ver}) and cluster ({c_ver}) is"
-    " more than two minor versions")
+    " more than {skew} minor versions")
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -37,12 +42,17 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       c_ver = cluster.master_version
       np_ver = nodepool.version
 
+      skew = LEGACY_SKEW
+      if c_ver.minor >= K8S_MINOR_WITH_3_VERSIONS_SKEW or \
+          c_ver.major > K8S_MAJOR_WITH_3_VERSIONS_SKEW:
+        skew = CURRENT_SKEW
       major_ok = c_ver.same_major(np_ver)
-      minor_ok = c_ver.diff_minor(np_ver) <= 2
+      minor_ok = c_ver.diff_minor(np_ver) <= skew
 
       if major_ok and minor_ok:
         report.add_ok(nodepool)
       else:
         report.add_failed(nodepool,
                           reason=fail_reason_template.format(c_ver=c_ver,
-                                                             np_ver=np_ver))
+                                                             np_ver=np_ver,
+                                                             skew=skew))
