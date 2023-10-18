@@ -366,7 +366,8 @@
       "instanceGroupUrls": [
         "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-b/instanceGroupManagers/gke-gke2-default-pool-091396c6-grp",
         "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke2-default-pool-dabb2ff4-grp",
-        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-c/instanceGroupManagers/gke-gke2-default-pool-a09fb83d-grp"
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-c/instanceGroupManagers/gke-gke2-default-pool-a09fb83d-grp",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-b/instanceGroupManagers/gke-gke2-low-pod-per-node-pool-519eee7b-grp"
       ],
       "ipAllocationPolicy": {
         "podCidrOverprovisionConfig": {},
@@ -490,6 +491,65 @@
           "name": "default-pool",
           "podIpv4CidrSize": 24,
           "selfLink": "https://container.googleapis.com/v1/projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2/nodePools/default-pool",
+          "status": "RUNNING",
+          "upgradeSettings": {
+            "maxSurge": 1,
+            "strategy": "SURGE"
+          },
+          "version": "1.24.10-gke.2300"
+        },
+        {
+          "config": {
+            "diskSizeGb": 100,
+            "diskType": "pd-balanced",
+            "imageType": "COS_CONTAINERD",
+            "loggingConfig": {},
+            "machineType": "e2-medium",
+            "metadata": {
+              "disable-legacy-endpoints": "true"
+            },
+            "oauthScopes": [
+              "https://www.googleapis.com/auth/devstorage.read_only",
+              "https://www.googleapis.com/auth/logging.write",
+              "https://www.googleapis.com/auth/monitoring",
+              "https://www.googleapis.com/auth/service.management.readonly",
+              "https://www.googleapis.com/auth/servicecontrol",
+              "https://www.googleapis.com/auth/trace.append"
+            ],
+            "preemptible": true,
+            "serviceAccount": "default",
+            "shieldedInstanceConfig": {
+              "enableIntegrityMonitoring": true
+            },
+            "windowsNodeConfig": {},
+            "workloadMetadataConfig": {
+              "mode": "GKE_METADATA"
+            }
+          },
+          "etag": "3e7fc5da-4313-4ed0-a3a9-e3707335c456",
+          "initialNodeCount": 1,
+          "instanceGroupUrls": [
+            "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-b/instanceGroupManagers/gke-gke2-low-pod-per-node-pool-519eee7b-grp"
+          ],
+          "locations": [
+            "europe-west4-b"
+          ],
+          "management": {
+            "autoRepair": true,
+            "autoUpgrade": true
+          },
+          "maxPodsConstraint": {
+            "maxPodsPerNode": "8"
+          },
+          "name": "low-pod-per-node-pool",
+          "networkConfig": {
+            "enablePrivateNodes": false,
+            "podIpv4CidrBlock": "10.112.0.0/14",
+            "podIpv4RangeUtilization": 0.0029999999999999996,
+            "podRange": "gke-gke2-pods-e13eff26"
+          },
+          "podIpv4CidrSize": 28,
+          "selfLink": "https://container.googleapis.com/v1/projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2/nodePools/low-pod-per-node-pool",
           "status": "RUNNING",
           "upgradeSettings": {
             "maxSurge": 1,
