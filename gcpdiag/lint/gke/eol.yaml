@@ -1,0 +1,44 @@
+# Auto-generated, DO NOT edit manually
+# Use `make gke-eol-file` from the top level directory
+'1.24':
+  oss_release: 2022-05-03
+  rapid_avail: 2022-06-03
+  regular_avail: 2022-08-19
+  stable_avail: 2022-11-30
+  eol: 2023-10-31
+'1.25':
+  oss_release: 2022-08-23
+  rapid_avail: 2022-09-13
+  regular_avail: 2022-12-08
+  stable_avail: 2023-05-08
+  eol: 2024-02-29
+'1.26':
+  oss_release: 2022-12-06
+  rapid_avail: 2023-01-13
+  regular_avail: 2023-04-14
+  stable_avail: 2023-06-14
+  eol: 2024-06-30
+'1.27':
+  oss_release: 2023-04-11
+  rapid_avail: 2023-05-08
+  regular_avail: 2023-06-14
+  stable_avail: 2023-07-05
+  eol: 2024-08-31
+'1.28':
+  oss_release: 2023-08-15
+  rapid_avail: 2023-09
+  regular_avail: TBD
+  stable_avail: TBD
+  eol: TBD
+'1.29':
+  oss_release: TBD
+  rapid_avail: TBD
+  regular_avail: TBD
+  stable_avail: TBD
+  eol: TBD
+'1.30':
+  oss_release: TBD
+  rapid_avail: TBD
+  regular_avail: TBD
+  stable_avail: TBD
+  eol: TBD

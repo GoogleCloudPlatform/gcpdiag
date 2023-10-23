@@ -18,6 +18,9 @@ test-mocked:
 snapshots:
 	pytest --snapshot-update --forked
 
+gke-eol-file:
+	./gcpdiag/lint/gke/eol_parser.sh > gcpdiag/lint/gke/eol.yaml
+
 version:
 	@echo $(VERSION)
 

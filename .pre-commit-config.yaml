@@ -75,3 +75,9 @@ repos:
     language: script
     files: ^gcpdiag/lint/[^/]+/(bp|warn|err|sec)_.*.py
     exclude: .*_test.py
+- repo: local
+  hooks:
+  - id: gke-eol-file
+    name: Check that gke eol.yaml file is up to date and contains fresh EOL data
+    entry: ./bin/precommit-gke-eol-file.sh
+    language: script
