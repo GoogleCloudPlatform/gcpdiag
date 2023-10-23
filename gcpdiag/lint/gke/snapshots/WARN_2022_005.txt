@@ -3,6 +3,8 @@
    (no nodepools found)                                                   [SKIP]
    - gcpdiag-gke1-aaaa/europe-west4/gke2/default-pool                     [SKIP]
      no nodes with GPU found
+   - gcpdiag-gke1-aaaa/europe-west4/gke2/low-pod-per-node-pool            [SKIP]
+     no nodes with GPU found
    - gcpdiag-gke1-aaaa/europe-west4/gke3/default-pool                     [SKIP]
      no nodes with GPU found
    - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [SKIP]

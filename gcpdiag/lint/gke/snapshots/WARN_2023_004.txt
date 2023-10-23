@@ -1,0 +1,17 @@
+*  gke/WARN/2023_004: A Node Pool doesn't have too low `maxPodsPerNode` number
+   - gcpdiag-gke1-aaaa/europe-west4/gke2/default-pool                     [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/gke2/low-pod-per-node-pool            [FAIL]
+     the nodepool has too low `maxPodsPerNode` number: 8
+   - gcpdiag-gke1-aaaa/europe-west4/gke3/default-pool                     [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1/default-pool                   [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke4/default-pool                   [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke6/default-pool                   [ OK ]
+
+   Modern GKE clusters could run multiple system DaemonSets, and enabling a GKE
+   feature could add another DaemonSet or two. 7+ DaemonSets is the norm for an
+   average GKE cluster. Low `maxPodsPerNode` number could prevent normal
+   workload scheduling as all the available slots could be occupied by system or
+   custom DaemonSet pods. `maxPodsPerNode` >= 16 should be a safer option.
+
+   https://gcpdiag.dev/rules/gke/WARN/2023_004
+

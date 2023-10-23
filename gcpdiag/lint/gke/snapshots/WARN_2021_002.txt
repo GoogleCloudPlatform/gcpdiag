@@ -4,6 +4,7 @@
    - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [SKIP]
      release channel: REGULAR
    - gcpdiag-gke1-aaaa/europe-west4/gke2/default-pool                     [ OK ] 1.24.10-gke.2300
+   - gcpdiag-gke1-aaaa/europe-west4/gke2/low-pod-per-node-pool            [ OK ] 1.24.10-gke.2300
    - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [SKIP]
      release channel: REGULAR
    - gcpdiag-gke1-aaaa/europe-west4-a/gke1/default-pool                   [ OK ] 1.25.7-gke.1000
