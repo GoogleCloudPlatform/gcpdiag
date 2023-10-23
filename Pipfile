@@ -41,3 +41,4 @@ yapf = "*"
 # for vim:
 # pip install 'python-language-server[yapf,pyflakes,mccabe]'
 # pip install pylint
+types-pyyaml = "*"

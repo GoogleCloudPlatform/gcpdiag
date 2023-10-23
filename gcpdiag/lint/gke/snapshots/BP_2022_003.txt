@@ -4,8 +4,9 @@
    - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [SKIP]
      release channel: REGULAR
    - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [FAIL]
-     cluster version: 1.24
-     scheduled end of life: 2023-10-31 00:00:00
+     GKE version 1.24
+
+         scheduled end of life: 2023-10-31
    - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [SKIP]
      release channel: REGULAR
    - gcpdiag-gke1-aaaa/europe-west4-a/gke1/default-pool                   [ OK ]
