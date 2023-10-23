@@ -17,7 +17,7 @@ import logging
 import re
 import sys
 
-from google.auth import exceptions
+import googleapiclient
 
 from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis
@@ -70,26 +70,52 @@ class Project(models.Resource):
 
 @caching.cached_api_call
 def get_project(project_id: str) -> Project:
+  '''Attempts to retrieve project details for the supplied project id or number.
+    If the project is found/accessible, it returns a Project object with the resource data.
+    If the project cannot be retrieved, the application raises one of the execeptions below.
+
+    Args:
+        project_id (str): The project id or number of
+        the project (e.g., "123456789", "example-project").
+
+    Returns:
+        Project: An object representing the project's full details.
+
+    Raises:
+        utils.GcpApiError: If there is an issue calling the GCP/HTTP Error API.
+
+    Usage:
+        When using project identifier from gcpdiag.models.Context
+
+        project = crm.get_project(context.project_id)
+
+        An unknown project identifier
+        try:
+          project = crm.get_project("123456789")
+        except:
+          # Handle exception
+        else:
+          # use project data
+  '''
   try:
-    logging.info('retrieving project %s', project_id)
+    logging.info('retrieving project %s ', project_id)
     crm_api = apis.get_api('cloudresourcemanager', 'v3', project_id)
     request = crm_api.projects().get(name=f'projects/{project_id}')
     response = request.execute(num_retries=config.API_RETRIES)
-    if response:
-      return Project(resource_data=response)
+  except googleapiclient.errors.HttpError as e:
+    error = utils.GcpApiError(response=e)
+    if 'IAM_PERMISSION_DENIED' == error.reason:
+      print(
+          f'[ERROR]:Authenticated account doesn\'t have access to project details of {project_id}.'
+          f'\nExecute:\ngcloud projects add-iam-policy-binding {project_id} --role=roles/viewer'
+          '--member="user|group|serviceAccount:EMAIL_ACCOUNT" ',
+          file=sys.stderr)
     else:
-      raise ValueError(f'unknown project: {project_id}')
-  except utils.GcpApiError as err:
-    if 'SERVICE_DISABLED' == err.reason and 'serviceusage.googleapis.com' == err.service:
-      print((
-          'ERROR: Service Usage API must be enabled. To enable, execute:\n'
-          f'gcloud services enable serviceusage.googleapis.com --project={project_id}'
-      ),
+      print(f'[ERROR]:can\'t access project {project_id}: {error.message}.',
             file=sys.stderr)
-    else:
-      print(f'ERROR: can\'t access project {project_id}: {err.message}.',
-            file=sys.stderr)
-    sys.exit(1)
-  except exceptions.GoogleAuthError as err:
-    print(f'ERROR: {err}', file=sys.stderr)
-    sys.exit(1)
+    print(
+        f'[DEBUG]: An Http Error occured whiles accessing projects.get \n\n{e}',
+        file=sys.stderr)
+    raise error from e
+  else:
+    return Project(resource_data=response)

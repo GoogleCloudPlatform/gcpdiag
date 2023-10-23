@@ -22,7 +22,7 @@ import pkgutil
 import re
 import sys
 
-from gcpdiag import config, hooks, lint, models
+from gcpdiag import config, hooks, lint, models, utils
 from gcpdiag.lint.output import csv_output, json_output, terminal_output
 from gcpdiag.queries import apis, crm, gce, kubectl
 
@@ -280,14 +280,24 @@ def run(argv) -> int:
 
   # Initialize configuration
   config.init(vars(args), terminal_output.is_cloud_shell())
-  project = crm.get_project(args.project)
-  config.set_project_id(project.id)
-
-  # Initialize Context.
-  context = models.Context(project_id=project.id,
-                           locations=args.location,
-                           resources=args.name,
-                           labels=args.label)
+  try:
+    # Users to use either project Number or project id
+    # fetch project details
+    project = crm.get_project(args.project)
+  except utils.GcpApiError:
+    # fail hard as the user typically doesn't have permission
+    # to retrieve details of the project under inspection.
+    print('[ERROR]:exiting program...', file=sys.stderr)
+    sys.exit(1)
+  else:
+    # set the project id in config and context as
+    # remaining code will mainly use project ID
+    config.set_project_id(project.id)
+    # Initialize Context.
+    context = models.Context(project_id=project.id,
+                             locations=args.location,
+                             resources=args.name,
+                             labels=args.label)
 
   # Rules name patterns that shall be included or excluded
   include_patterns = _parse_rule_patterns(config.get('include'))
