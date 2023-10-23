@@ -31,6 +31,8 @@ from gcpdiag.utils import Version
 # To avoid name conflict with L342
 IPv4NetOrIPv6Net = network.IPv4NetOrIPv6Net
 
+DEFAULT_MAX_PODS_PER_NODE = 110
+
 
 class NodeConfig:
   """Represents a GKE node pool configuration."""
@@ -149,6 +151,12 @@ class NodePool(models.Resource):
       return ipaddress.ip_network(pod_cidr)
     else:
       return None
+
+  @property
+  def max_pod_per_node(self) -> int:
+    return int(
+        get_path(self._resource_data, ('maxPodsConstraint', 'maxPodsPerNode'),
+                 default=DEFAULT_MAX_PODS_PER_NODE))
 
   @property
   def cluster(self) -> 'Cluster':

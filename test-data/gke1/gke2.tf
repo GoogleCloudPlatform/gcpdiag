@@ -124,6 +124,17 @@ resource "google_container_cluster" "gke2" {
   }
 }
 
+resource "google_container_node_pool" "low_pod_per_node_pool" {
+  name              = "low-pod-per-node-pool"
+  cluster           = google_container_cluster.gke2.id
+  node_count        = 1
+  max_pods_per_node = 8
+
+  node_config {
+    preemptible = true
+  }
+}
+
 # firewall configuration used for connectivity testing
 
 resource "google_compute_firewall" "vms_test_deny" {

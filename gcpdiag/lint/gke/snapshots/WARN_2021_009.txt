@@ -2,6 +2,7 @@
    (no nodepools found)                                                   [SKIP]
    (no nodepools found)                                                   [SKIP]
    - gcpdiag-gke1-aaaa/europe-west4/gke2/default-pool                     [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/gke2/low-pod-per-node-pool            [ OK ]
    - gcpdiag-gke1-aaaa/europe-west4/gke3/default-pool                     [ OK ]
    - gcpdiag-gke1-aaaa/europe-west4-a/gke1/default-pool                   [ OK ]
    - gcpdiag-gke1-aaaa/europe-west4-a/gke4/default-pool                   [ OK ]
