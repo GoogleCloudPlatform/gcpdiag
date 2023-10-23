@@ -547,13 +547,16 @@ def _batch_fetch_service_accounts(emails: List[str], billing_project_id: str):
   for (request, response,
        exception) in apis_utils.batch_execute_all(iam_api, requests):
     if exception:
-      # extract from uri what the requested email was
-      m = re.search(r'/([^/?]+)(?:\?[^/]*)', request.uri)
+      # Extract the requested service account and its associated project ID
+      # from the URI. This is especially useful when dealing with scenarios
+      #  involving cross-project service accounts within a project.
+      m = re.search(r'/projects/([^/]+)/[^/]+/([^?]+@[^?]+)', request.uri)
       if not m:
         logging.warning("BUG: can't determine SA email from request URI: %s",
                         request.uri)
         continue
-      email = m.group(1)
+      sa_project_id = m.group(1)
+      email = m.group(2)
 
       # 403 or 404 is expected for Google-managed service agents.
       if email.partition('@')[2] in SERVICE_AGENT_DOMAINS or \
@@ -565,12 +568,22 @@ def _batch_fetch_service_accounts(emails: List[str], billing_project_id: str):
       elif isinstance(exception, utils.GcpApiError) and exception.status == 404:
         _service_account_cache_is_not_found[email] = True
       else:
-        project_nr = crm.get_project(billing_project_id).number
-        if re.match(rf'{project_nr}-\w+@', email) \
-            or email.endswith(f'@{billing_project_id}.iam.gserviceaccount.com'):
+        # Determine if the failing service account belongs to a different project.
+        # Retrieving service account details may fail due to various conditions.
+        if sa_project_id != billing_project_id:
+          logging.warning(
+              "can't retrieve service account %s belonging to project %s but used in project: %s",
+              email, sa_project_id, billing_project_id)
+          _service_account_cache_is_not_found[email] = True
+          continue
+
+        project_nr = crm.get_project(sa_project_id).number
+        if ((sa_project_id == billing_project_id) and re.match(rf'{project_nr}-\w+@', email) \
+            or email.endswith(f'@{billing_project_id}.iam.gserviceaccount.com')):
           # if retrieving service accounts from the project being inspected fails,
           # we need to fail hard because many rules won't work correctly.
           raise exception
+
         else:
           logging.warning("can't get service account %s: %s", email, exception)
     else:
@@ -596,14 +609,30 @@ def _extract_project_id(email: str):
 
     m = re.search(r'[\d]+', email.partition('@')[0])
     if m and (m.group(0) is not None):
-      project_id = crm.get_project(m.group(0)).id
-      return project_id
+      try:
+        project_id = crm.get_project(m.group(0)).id
+      except utils.GcpApiError:
+        # Default to using '-' wildcard to infer the project.
+        # - wildcard character is unreliable and should be used as last resort
+        # because it can cause response codes to contain misleading error codes
+        # such as 403 for deleted service accounts instead of returning 404
+        # https://cloud.google.com/iam/docs/reference/rest/v1/projects.serviceAccounts/get
+        logging.warning(
+            'Using "-" wildcard to infer host project for service account: %s. '
+            'Rules which rely on method: projects.serviceAccounts.get to determine '
+            'disabled vrs deleted status of %s may produce misleading results. '
+            'See: https://cloud.google.com/iam/docs/reference/rest/v1/projects.serviceAccounts/get',
+            email, email)
+        return '-'
+      else:
+        return project_id
   else:
-    # Default to using - wildcard to infer the project.
-    # - wildcard character is unreliable and should be used as last resort
-    # because it can cause response codes to contain misleading error codes
-    # such as 403 for deleted service accounts instead of returning 404
-    # https://cloud.google.com/iam/docs/reference/rest/v1/projects.serviceAccounts/get
+    logging.warning(
+        'Using "-" wildcard to infer host project for service account: %s. '
+        'Rules which rely on method: projects.serviceAccounts.get to determine '
+        'disabled vrs deleted status of %s may produce misleading results. '
+        'See: https://cloud.google.com/iam/docs/reference/rest/v1/projects.serviceAccounts/get',
+        email, email)
     return '-'
 
 
