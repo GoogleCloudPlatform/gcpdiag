@@ -1,0 +1,3 @@
+*  asm/ERR/2023_001: ASM traffic indicates Client side requests failure
+   (logging api is disabled)                                              [SKIP]
+
