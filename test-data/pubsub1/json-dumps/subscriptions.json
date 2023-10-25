@@ -8,7 +8,23 @@
       "messageRetentionDuration": "604800s",
       "expirationPolicy": {
         "ttl": "2678400s"
-      }
+      },
+      "state": "ACTIVE"
+    },
+    {
+      "name": "projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-pubsub1subscription2-aaaa",
+      "topic": "projects/gcpdiag-pubsub1-aaaa/topics/gcpdiag-pubsub1topic-aaaa",
+      "pushConfig": {},
+      "ackDeadlineSeconds": 10,
+      "messageRetentionDuration": "604800s",
+      "expirationPolicy": {
+        "ttl": "2678400s"
+      },
+      "bigqueryConfig": {
+        "table": "gcpdiag-pubsub1-aaaa.pubsub1_dataset.pubsub1_table",
+        "state": "ACTIVE"
+      },
+      "state": "ACTIVE"
     }
   ]
 }
