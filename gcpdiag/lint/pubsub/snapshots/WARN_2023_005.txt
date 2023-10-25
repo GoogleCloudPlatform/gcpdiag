@@ -1,0 +1,3 @@
+*  pubsub/WARN/2023_005: Pub/Sub service account has BigQuery Permissions if BigQuery Subscription(s) exist.
+   - gcpdiag-pubsub1-aaaa                                                 [ OK ]
+
