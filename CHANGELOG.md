@@ -1,3 +1,28 @@
+## 0.66 (2023-10-13)
+
+#### Fixes
+- Handle app failure when project policy contains cross-project service accounts
+- Update the version skew for modern versions of Kubernetes. https://kubernetes.io/blog/2023/08/15/kubernetes-v1-28-release/#changes-to-supported-skew-between-control-plane-and-node-versions
+- Updating working and typos in multiple files
+- Update gke test snapshot.
+- added content in md file for rule apigee\_err\_2023\_003
+
+#### New rules
+
+- bigquery/ERR/2023\_008: user not authorized to perform this action
+- pubsub/WARN/2023\_005: bigquery subscription has apt permissions
+- asm/ERR/2023\_001, asm/ERR/2023\_002: Anthos Service mesh
+- gke/BP/2022\_003: Make GKE EOL detection more robust and less hardcoded
+- gke/WARN/2023\_004: Add a check for too low `maxPodsPerNode` number
+- gke/ERR/2023\_012: missing memory request for hpa
+- bigquery/ERR/2023\_006: bigquery policy does not belong to user
+- pubsub/WARN/2023\_00[14]: no subscription without attached topic
+- composer/WARN/2023\_009: Cloud Composer Intermittent Task Failure during Scheduling
+
+#### New module
+- Anthos Service mash
+
+
 ## 0.65 (2023-09-18)
 
 #### New rules
