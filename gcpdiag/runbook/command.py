@@ -38,7 +38,7 @@ class ParseMappingArg(argparse.Action):
       for value in values:
         if value:
           try:
-            k, v = re.split('[:=]', value)
+            k, v = re.split('[=]', value)
             parsed_dict[k] = v
           except ValueError:
             parser.error(
@@ -88,7 +88,7 @@ def _init_runbook_args_parser():
                       type=int,
                       help=(f'How far back to search logs and metrics (default:'
                             f" {config.get('within_days')} days)"),
-                      default=config.get('within_days'))
+                      default=1)
 
   parser.add_argument('--config',
                       metavar='FILE',
@@ -144,10 +144,10 @@ def _init_runbook_args_parser():
        '(e.g.: -p source_ip=xx:xx:xx:xx -p user:user@company.com)'))
 
   parser.add_argument(
-      '-c'
-      '--continuous',
-      help=
-      'Executes runbooks uninterrupted and incomplete tasks are added to the repport',
+      '-a',
+      '--auto',
+      help=('Execute runbook autonomously. Use this to skip human tasks. '
+            'Incomplete tasks are added to the report.'),
       action='store_true')
 
   parser.add_argument(
@@ -215,7 +215,7 @@ def run(argv) -> int:
   args = parser.parse_args()
 
   # Allow to change defaults using a hook function.
-  # hooks.set_lint_args_hook(args)
+  hooks.set_lint_args_hook(args)
 
   # Initialize configuration
   config.init(vars(args), terminal_output.is_cloud_shell())

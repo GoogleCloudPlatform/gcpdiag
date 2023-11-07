@@ -50,7 +50,7 @@ class BaseOutput:
     totals = result.get_totals_by_status()
     state_strs = [
         f'{totals.get(state, 0)} {state}'
-        for state in ['skipped', 'ok', 'failed']
+        for state in ['skipped', 'ok', 'failed', 'uncertain']
     ]
     print(f"Rules summary: {', '.join(state_strs)}", file=sys.stderr)
 

@@ -1,0 +1,5 @@
+{
+  "id": "projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-b/instances",
+  "kind": "compute#instanceList",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-b/instances"
+}

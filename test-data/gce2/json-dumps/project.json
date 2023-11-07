@@ -1,0 +1,13 @@
+{
+  "name": "projects/12345601",
+  "parent": "folders/4333233333",
+  "projectId": "gcpdiag-gce-faultyssh-runbook",
+  "state": "ACTIVE",
+  "displayName": "gcpdiag test - faultyssh",
+  "createTime": "2023-11-03T21:16:55.750643Z",
+  "updateTime": "2023-11-04T04:00:10.466760Z",
+  "etag": "W/\"81c0a9f39ba4a6c9\"",
+  "labels": {
+    "gcpdiag": "test"
+  }
+}

@@ -19,6 +19,7 @@ import importlib
 import inspect
 import json
 import logging
+import os
 import pkgutil
 import re
 import sys
@@ -27,6 +28,7 @@ import threading
 import time
 import types
 from collections.abc import Callable
+from datetime import datetime, timezone
 from typing import Any, Dict, Iterable, Iterator, List, Optional, Protocol, Set
 
 import blessings
@@ -46,8 +48,8 @@ class RunbookRule:
   rule_id: str
   doc: str
   start_f: Callable
-  end_f: Callable
-  req_params: dict
+  end_f: Optional[Callable] = None
+  req_params: Optional[dict] = None
   prepare_rule_f: Optional[Callable] = None
   prefetch_rule_f: Optional[Callable] = None
   prefetch_rule_future: Optional[concurrent.futures.Future] = None
@@ -71,14 +73,22 @@ class RunbookNodeResult:
   node: str
   reason: Optional[str]
   remediation: Optional[str]
+  remediation_skipped: Optional[bool]
 
-  def __init__(self, status: str, resource: Optional[models.Resource],
-               node: str, reason: Optional[str], remediation: Optional[str]):
+  def __init__(self,
+               status: str,
+               resource: Optional[models.Resource],
+               node: str,
+               reason: Optional[str],
+               remediation: Optional[str],
+               remediation_skipped: Optional[bool] = False):
     self.status = status
     self.resource = resource
     self.node = node
     self.reason = reason
     self.remediation = remediation
+    self.remediation_skipped = True if config.get(
+        'auto') else remediation_skipped
 
   def __hash__(self) -> int:
     return str(self.status + str(self.resource or '') + str(self.node) +
@@ -100,15 +110,17 @@ class RunbookInteractionInterface:
   """
   rule: RunbookRule
   results: Set[RunbookNodeResult]
-  _runbook_report: 'RunbookReport'
+  _report: 'RunbookReport'
+  _report_name: str
   line_unfinished: bool
   term: blessings.Terminal
 
   def __init__(self, rule: RunbookRule,
                runbook_report: 'RunbookReport') -> None:
     self.rule = rule
-    self._runbook_report = runbook_report
+    self._report = runbook_report
     self.results = set()
+    self._report_name = ''
     self.term = blessings.Terminal()
 
   @property
@@ -131,8 +143,9 @@ class RunbookInteractionInterface:
 
     short_path = resource.short_path if resource is not None \
                  and resource.short_path is not None else ''
+    self.terminal_print_line()
     self.terminal_print_line('   - ' + short_path.ljust(OUTPUT_WIDTH) + ' [' +
-                             self.term.red('SKIP') + ']')
+                             self.term.yellow('SKIP') + ']')
     if reason:
       self.terminal_print_line('     [' + self.term.green('REASON') + ']')
       self.terminal_print_line(textwrap.indent(reason, '     '))
@@ -152,6 +165,7 @@ class RunbookInteractionInterface:
     node = self.get_calling_method()
     short_path = resource.short_path if resource is not None \
                  and resource.short_path is not None else ''
+    self.terminal_print_line()
     self.terminal_print_line('   - ' + short_path.ljust(OUTPUT_WIDTH) + ' [' +
                              self.term.green('OK') + ']')
     if reason:
@@ -171,56 +185,76 @@ class RunbookInteractionInterface:
       method_name = calling_frame.f_code.co_name
       return method_name
 
-  #TODO moake reason mandatory
   def add_failed(self,
                  resource: models.Resource,
-                 reason: str = None,
-                 remediation: str = None) -> None:
+                 reason: str,
+                 remediation: str,
+                 human_task_msg: str = '') -> Any:
+    """Output test result and registers the result to be used in
+    the runbook report.
+
+    The failure assigned a human task unless program is running
+    autonomously
+    """
     node = self.get_calling_method()
 
     short_path = resource.short_path if resource is not None \
                  and resource.short_path is not None else ''
+    self.terminal_print_line()
     self.terminal_print_line('   - ' + short_path.ljust(OUTPUT_WIDTH) + ' [' +
                              self.term.red('FAIL') + ']')
+    if reason:
+      self.terminal_print_line('     [' + self.term.green('REASON') + ']')
+      self.terminal_print_line(textwrap.indent(f'{reason}', '     '))
+
+    if remediation:
+      self.terminal_print_line('     [' + self.term.green('REMEDIATION') + ']')
+      self.terminal_print_line(textwrap.indent(f'{remediation}', '     '))
+      result = RunbookNodeResult(status='failed',
+                                 resource=resource,
+                                 reason=reason,
+                                 node=node,
+                                 remediation=remediation)
+    self.results.add(result)
+    # assign a human task to be completed
+    if not config.get('auto'):
+      choice = self.prompt(task=self.HUMAN_TASK, message=human_task_msg)
+
+      if choice is self.CONTINUE or choice is self.ABORT:
+        result.remediation_skipped = True
+      return choice
+
+  def add_uncertain(self,
+                    resource: models.Resource,
+                    reason: str,
+                    remediation: str = None,
+                    human_task_msg: str = '') -> None:
+    node = self.get_calling_method()
+
+    short_path = resource.short_path if resource is not None \
+                 and resource.short_path is not None else ''
+    self.terminal_print_line()
+    self.terminal_print_line('   - ' + short_path.ljust(OUTPUT_WIDTH) + ' [' +
+                             self.term.yellow('UNCERTAIN') + ']')
     if reason:
       self.terminal_print_line('     [' + self.term.green('REASON') + ']')
       self.terminal_print_line(textwrap.indent(reason, '     '))
 
     if remediation:
       self.terminal_print_line('     [' + self.term.green('REMEDIATION') + ']')
-      self.terminal_print_line(textwrap.indent(remediation, '     '))
+      self.terminal_print_line(textwrap.indent(f'{remediation}', '     '))
+      result = RunbookNodeResult(status='uncertain',
+                                 resource=resource,
+                                 reason=reason,
+                                 node=node,
+                                 remediation=remediation)
+    self.results.add(result)
+    if not config.get('auto'):
+      choice = self.prompt(task=self.HUMAN_TASK, message=human_task_msg)
 
-    self.results.add(
-        RunbookNodeResult(status='failed',
-                          resource=resource,
-                          reason=reason,
-                          node=node,
-                          remediation=remediation))
-
-  def add_indeterminate(self,
-                        resource: models.Resource,
-                        reason: str,
-                        remediation: str = None) -> None:
-    node = self.get_calling_method()
-
-    short_path = resource.short_path if resource is not None \
-                 and resource.short_path is not None else ''
-    self.terminal_print_line('   - ' + short_path.ljust(OUTPUT_WIDTH) + ' [' +
-                             self.term.red('FAIL') + ']')
-    if reason:
-      self.terminal_print_line('     [' + self.term.green('REASON') + ']')
-      self.terminal_print_line(textwrap.indent(reason, '     '))
-
-    if remediation:
-      self.terminal_print_line('     [' + self.term.green('REMEDIATION') + ']')
-      self.terminal_print_line(textwrap.indent(remediation, '     '))
-
-    self.results.add(
-        RunbookNodeResult(status='indeterminate',
-                          resource=resource,
-                          reason=reason,
-                          node=node,
-                          remediation=remediation))
+      if choice is self.CONTINUE or choice is self.ABORT:
+        result.remediation_skipped = True
+      return choice
 
   def terminal_update_line(self, text: str) -> None:
     """Update the current line on the terminal."""
@@ -247,28 +281,46 @@ class RunbookInteractionInterface:
     self.line_unfinished = False
 
   def generate_report(self):
+    if not self._report_name:
+      date = datetime.now(timezone.utc).strftime('%Y_%m_%d_%H_%M_%S_%Z')
+      self._report_name = f'{self.rule.product}_{self.rule.rule_id}_{date}.json'
 
     def result_to_dict(result: RunbookNodeResult):
-
       return {
-          'node': result.node,
-          'resource': result.resource.full_path if result.resource else '-',
-          'status': result.status,
-          'reason': result.reason,
-          'remediation': result.remediation if result.resource else '-'
+          'node':
+              result.node,
+          'resource':
+              result.resource.short_path if result.resource else '-',
+          'status':
+              result.status,
+          'reason':
+              result.reason,
+          'remediation':
+              result.remediation if result.remediation else '-',
+          'remediation_skipped':
+              False if config.get('auto') else result.remediation_skipped
       }
 
     report = {
-        'runbook_id': self.rule.rule_id,
-        'totals_by_status': self._runbook_report.get_totals_by_status(),
+        'runbook': f'{self.rule.product}/{self.rule.rule_id}',
+        'totals_by_status': self._report.get_totals_by_status(),
+        'execution_mode': 'auto' if config.get('auto') else 'interactive',
         'results': list(self.results)
     }
     results = json.dumps(report,
                          ensure_ascii=False,
                          default=result_to_dict,
                          indent=2)
-    with open('report.json', 'w', encoding='utf-8') as file:
-      file.write(results)
+    with open(self._report_name, 'w', encoding='utf-8') as file:
+      try:
+        file.write(results)
+      except PermissionError as e:
+        logging.error('Permission denied while saving report to file %s', e)
+      except OSError as e:
+        logging.error('Failed to save generated report to file %s', e)
+      else:
+        print(f'\nRunbook report located in: {os.getcwd()}/{self._report_name}',
+              file=sys.stderr)
 
   RETEST = 'RETEST'
   YES = 'YES'
@@ -280,53 +332,67 @@ class RunbookInteractionInterface:
   DECISION = 'DECISION'
   HUMAN_TASK = 'HUMAN_TASK'
   HUMAN_TASK_OPTIONS = {
-      'r': 'Reevaluate failed step.',
-      'c': 'Continue troubleshooting without reassessing current step.',
-      'a': 'Discontinue troubleshooting.'
+      'r': 'Retest current step',
+      'c': 'Continue',
+      'a': 'Abort'
   }
   CONFIRMATION_OPTIONS = {'Yes/Y/y': 'Yes', 'No/N/n': 'No'}
 
-  def prompt(self, message: str, task: str = '', options: dict = None):
+  def prompt(self,
+             message: str,
+             task: str = '',
+             options: dict = None,
+             choice_msg: str = 'Choose an option: '):
     """
     For informational update and getting a response from user
     """
-    # This is just a simply information prompt
-    if not task or task in self.STEP or task in self.DECISION:
-      self.terminal_print_line(text='' + '[' + self.term.green(task or 'INFO') +
-                               ']: ' + f'{message}')
+    # information prompt
+    if not task:
+      self.terminal_print_line(text='' + '[' + self.term.green('INFO') + ']: ' +
+                               f'{message}')
+      return
+    # Step or decision
+    if task and task in self.STEP or task in self.DECISION or \
+    task in self.RETEST:
+      self.terminal_print_line()
+      self.terminal_print_line(text='' + '[' + self.term.green(task) + ']: ' +
+                               f'{message}')
       return
 
     self.default_answer = False
     self.answer = None
+    options_text = '\n'
     try:
-      if task in self.HUMAN_TASK and not options:
-        options_text = ''
+      if task in self.HUMAN_TASK and not options and not config.get('auto'):
         for option, description in self.HUMAN_TASK_OPTIONS.items():
           options_text += '[' + self.term.green(
               f'{option}') + ']' + f' - {description}\n'
-      if task in self.CONFIRMATION and not options:
-        options_text = ''
+      if task in self.CONFIRMATION and not options\
+          and not config.get('auto'):
         for option, description in self.CONFIRMATION_OPTIONS.items():
           options_text += '[' + self.term.green(
               f'{option}') + ']' + f' - {description}\n'
-      if (task in self.CONFIRMATION or task in self.HUMAN_TASK) and options:
+      if (task in self.CONFIRMATION or task in self.HUMAN_TASK) \
+        and options and not config.get('auto'):
         for option, description in options.items():
           options_text += '[' + self.term.green(
               f'{option}') + ']' + f' - {description}\n'
       #TODO: allow to get special data. ex ip or just an error
-      self.terminal_print_line(text=message)
-      self.terminal_print_line(text=options_text)
-      self.answer = input('Choose an option: ')
+      if not config.get('auto'):
+        if message:
+          self.terminal_print_line(text=textwrap.indent(message, '     '))
+        if options_text:
+          self.terminal_print_line(text=textwrap.indent(options_text, '     '))
+          self.answer = input(textwrap.indent(choice_msg, '     '))
     except EOFError:
       return self.answer
     # pylint:disable=g-explicit-bool-comparison, We explicitly want to
     # distinguish between empty string and None.
-
     if self.answer == '':
       # User just hit enter, return default.
       return self.default_answer
     elif self.answer is None:
-      return None
+      return self.answer
     elif self.answer.strip().lower() in ['a', 'abort']:
       return self.ABORT
     elif self.answer.strip().lower() in ['c', 'continue']:
@@ -348,13 +414,13 @@ class RunbookInteractionInterface:
     choice = task()
     while True:
       if choice is self.RETEST:
-        self.prompt(task=self.RETEST, message=f'Reevaluating {task.__name__}.')
+        self.prompt(task=self.RETEST, message='Reevaluating Task.')
         choice = task()
       if choice is self.CONTINUE:
         return choice
       if choice is self.ABORT:
-        logging.info('Terminating Runbook')
-        sys.exit(0)
+        logging.info('Terminating Runbook\n')
+        sys.exit(2)
       elif choice is not self.RETEST and choice is not self.CONTINUE and choice is not self.ABORT:
         return choice
 
@@ -400,7 +466,7 @@ class RunbookReport:
     self._rule_reports.append(report)
     report.terminal_print_line('' +
                                term.yellow(f'{rule.product}/{rule.rule_id}') +
-                               ': ' + f'{rule.doc}\n')
+                               ': ' + f'{rule.doc}')
     return report
 
   def get_totals_by_status(self) -> Dict[str, int]:
@@ -473,6 +539,12 @@ def get_module_function_or_none(module: types.ModuleType,
   return None if len(members) < 1 else members[0][1]
 
 
+def get_module_attr_or_none(module: types.ModuleType,
+                            name: str) -> Optional[Any]:
+  members = inspect.getattr_static(module, name)
+  return members
+
+
 class ExecutionStrategy(Protocol):
 
   def execute(self, context: models.Context, result: RunbookReport,
@@ -490,6 +562,9 @@ class RuleModule:
 
   def __init__(self, python_module: types.ModuleType) -> None:
     self._module = python_module
+
+  def get_attr(self, attr_name: str):
+    return get_module_attr_or_none(self._module, attr_name)
 
   def get_method(self, method_name: str) -> Optional[Callable]:
     return get_module_function_or_none(self._module, method_name)
@@ -531,12 +606,10 @@ class WorkflowEngine:
 
   def filter_runnable_rules(self,
                             rules: Iterable[RunbookRule]) -> List[RunbookRule]:
-    return [r for r in rules if r.start_f is not None and r.end_f is not None]
+    return [r for r in rules if r.start_f is not None]
 
   def execute(self, context: models.Context, report: RunbookReport,
-              rules: Iterable[RunbookRule]) -> None:
-
-    runbooks_to_run = self.filter_runnable_rules(rules)
+              runbooks_to_run: Iterable[RunbookRule]) -> None:
 
     # Run the "prepare_rule" functions first, in a single thread.
     for runbook in runbooks_to_run:
@@ -563,8 +636,19 @@ class WorkflowEngine:
     # prefetch for a specific rule is still running.
     last_threads_dump = time.time()
     for runbook in runbooks_to_run:
+      # Check params
+      if runbook.req_params:
+        missing_param = {
+            key: value
+            for key, value in runbook.req_params.items()
+            if key not in context.parameters
+        }
+        if missing_param:
+          logging.error(
+              'Required paramter(s): `%s` not provided. Exiting program',
+              ' and '.join(iter(missing_param.keys())))
+          sys.exit(2)
       rule_report = report.create_rule_report(runbook)
-
       try:
         if runbook.prefetch_rule_future:
           if runbook.prefetch_rule_future.running():
@@ -583,37 +667,37 @@ class WorkflowEngine:
                     ', '.join([t.name for t in threading.enumerate()]))
                 last_threads_dump = now
         assert runbook.start_f is not None
-        assert runbook.end_f is not None
-
         node = runbook.start_f
-        # Check params
-        req_parmas = runbook.req_params.keys() - context.parameters.keys()
-        if req_parmas:
-          rule_report.prompt(
-              message=
-              f'Paramters {" and ".join(req_parmas)} were not provided. Exiting program'
-          )
-          sys.exit(0)
-      # determine next step
+        # determine next step
         while callable(node):
-          # TODO improve this to differenciate between STEP and DECISION NODE
           rule_report.prompt(task=rule_report.STEP,
                              message=node.__doc__ or
                              node.__name__.replace('_', ' '))
           node = node(context, rule_report)
         else:
-          runbook.end_f(context, rule_report)
+          if runbook.end_f:
+            runbook.end_f(context, rule_report)
+          else:
+            if not config.get('auto'):
+              response = self.prompt(task=self.CONFIRMATION,
+                                     message='Is you issue resolved?')
+              if response == self.NO:
+                self.prompt(message=(
+                    'Contact Google Cloud Support for further investigation.\n'
+                    'https://cloud.google.com/support/docs/customer-care-procedures\n'
+                    'Please submit the generated report to Google cloud support '
+                    'if opening a ticket or refer to our documentation on troubeshooting ssh'
+                    'https://cloud.google.com/compute/docs/troubleshooting/'
+                    'troubleshooting-ssh-errors'))
+            rule_report.generate_report()
 
-      except (utils.GcpApiError, googleapiclient.errors.HttpError) as err:
+      except (utils.GcpApiError, googleapiclient.errors.HttpError, RuntimeError,
+              ValueError, KeyError) as err:
         if isinstance(err, googleapiclient.errors.HttpError):
           err = utils.GcpApiError(err)
         logging.warning('%s: %s while processing runbook rule: %s',
                         type(err).__name__, err, runbook)
         rule_report.add_skipped(None, f'API error: {err}', None)
-      except (RuntimeError, ValueError, KeyError) as err:
-        logging.warning('%s: %s while processing rule: %s',
-                        type(err).__name__, err, runbook)
-        rule_report.add_skipped(None, f'Error: {err}', None)
 
 
 class RunbookRuleRepository:
@@ -666,13 +750,10 @@ class RunbookRuleRepository:
     end_f = module.get_method('end')
     # Perform any prechecks relevant to the runbook
     # ex: check for missint params and give alteratives.
-    req_param = getattr(module, 'REQUIRED_PARAMETERS', {})
-    req_param = getattr(module, 'OPTIONAL_PARAMETERS', {})
+    req_param = dict(module.get_attr('REQUIRED_PARAMETERS'))
 
     if not start_f:
       raise RuntimeError(f'module {module} doesn\'t have a start function')
-    if not end_f:
-      raise RuntimeError(f'module {module} doesn\'t have a end function')
 
     # Get a reference to the prepare_rule() function.
     prepare_rule_f = module.get_method('prepare_rule')
@@ -689,7 +770,7 @@ class RunbookRuleRepository:
     rule = RunbookRule(product=product,
                        rule_id=rule_id,
                        start_f=start_f,
-                       end_f=start_f,
+                       end_f=end_f,
                        req_params=req_param,
                        prepare_rule_f=prepare_rule_f,
                        prefetch_rule_f=prefetch_rule_f,

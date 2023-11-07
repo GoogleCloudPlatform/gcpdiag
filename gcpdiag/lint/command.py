@@ -277,7 +277,6 @@ def run(argv) -> int:
 
   # Allow to change defaults using a hook function.
   hooks.set_lint_args_hook(args)
-
   # Initialize configuration
   config.init(vars(args), terminal_output.is_cloud_shell())
   try:
