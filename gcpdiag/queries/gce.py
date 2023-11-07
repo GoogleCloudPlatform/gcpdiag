@@ -329,6 +329,17 @@ class Instance(models.Resource):
     value = self.get_metadata('serial-port-logging-enable')
     return bool(value and value.upper() in POSITIVE_BOOL_VALUES)
 
+  def is_oslogin_enabled(self) -> bool:
+    value = self.get_metadata('enable-oslogin')
+    return bool(value and value.upper() in POSITIVE_BOOL_VALUES)
+
+  def is_metadata_enabled(self, metadata_name) -> bool:
+    '''
+    Use to check for common boolen metadata value
+    '''
+    value = self.get_metadata(metadata_name)
+    return bool(value and value.upper() in POSITIVE_BOOL_VALUES)
+
   def has_label(self, label) -> bool:
     return label in self.labels
 
@@ -587,13 +598,13 @@ def get_gce_public_licences(project_id: str) -> List[str]:
   return licenses
 
 
-@caching.cached_api_call(in_memory=True)
 def get_instance(project_id: str, zone: str, instance_name: str) -> Instance:
   """Returns instance object matching instance name and zone"""
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.instances().get(project=project_id,
                                     zone=zone,
                                     instance=instance_name)
+
   response = request.execute(num_retries=config.API_RETRIES)
   return Instance(project_id, resource_data=response)
 
@@ -769,7 +780,7 @@ def get_instance_templates(project_id: str) -> Mapping[str, InstanceTemplate]:
 @caching.cached_api_call
 def get_project_metadata(project_id) -> Mapping[str, str]:
   gce_api = apis.get_api('compute', 'v1', project_id)
-  logging.info('fetching metadata of project %s', project_id)
+  logging.info('fetching metadata of project %s\n', project_id)
   query = gce_api.projects().get(project=project_id)
   try:
     response = query.execute(num_retries=config.API_RETRIES)
@@ -846,6 +857,41 @@ def get_instances_serial_port_output(context: models.Context):
       'total serial logs processing time: %s, number of instances: %s',
       requests_end_time - requests_start_time, len(requests))
   return deque
+
+
+def get_instance_serial_port_output(
+    project_id, zone, instance_name) -> Optional[SerialPortOutput]:
+  """Get a list of serial port output for instances
+  which matche the given context, running and is not
+  exported to cloud logging.
+  """
+  # Create temp storage (diskcache.Deque) for output
+  if not apis.is_enabled(project_id, 'compute'):
+    return None
+  gce_api = apis.get_api('compute', 'v1', project_id)
+
+  request = gce_api.instances().getSerialPortOutput(
+      project=project_id,
+      zone=zone,
+      instance=instance_name,
+      # To get all 1mb output
+      start=-1000000)
+  response = request.execute(num_retries=config.API_RETRIES)
+
+  if response:
+    result = re.match(
+        r'https://www.googleapis.com/compute/v1/projects/([^/]+)/zones/[^/]+/instances/([^/]+)',
+        response['selfLink'])
+  if not result:
+    logging.error('instance selfLink didn\'t match regexp: %s',
+                  response['selfLink'])
+    return None
+
+  project_id = result.group(1)
+  instance_id = result.group(2)
+  return SerialPortOutput(project_id,
+                          instance_id=instance_id,
+                          contents=response['contents'].splitlines())
 
 
 class Region(models.Resource):
