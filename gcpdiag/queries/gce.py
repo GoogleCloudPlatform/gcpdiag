@@ -367,6 +367,11 @@ class Instance(models.Resource):
       return 'natIP' in str(self._resource_data['networkInterfaces'])
     return False
 
+  def machine_type(self):
+    if 'machineType' in self._resource_data:
+      return self._resource_data['machineType']
+    return None
+
   def check_license(self, licenses: List[str]) -> bool:
     """ Checks that a licence is contained in a given license list"""
     if 'disks' in self._resource_data:
@@ -473,7 +478,6 @@ class Instance(models.Resource):
     """VM Status"""
     return self._resource_data.get('status', None)
 
-  @property
   def is_running(self) -> bool:
     """VM Status is indicated as running"""
     return self._resource_data.get('status', False) == 'RUNNING'
@@ -876,7 +880,10 @@ def get_instance_serial_port_output(
       instance=instance_name,
       # To get all 1mb output
       start=-1000000)
-  response = request.execute(num_retries=config.API_RETRIES)
+  try:
+    response = request.execute(num_retries=config.API_RETRIES)
+  except googleapiclient.errors.HttpError:
+    return None
 
   if response:
     result = re.match(

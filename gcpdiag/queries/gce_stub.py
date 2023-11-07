@@ -95,8 +95,9 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
     return ComputeEngineApiStub('templates')
 
   def getSerialPortOutput(self, project, zone, instance, start):
-    return apis_stub.RestCallStub(project_id=project,
-                                  json_basename='compute-serial-port-output-1')
+    return apis_stub.RestCallStub(
+        project_id=project,
+        json_basename=f'compute-serial-port-output-{instance}')
 
   def new_batch_http_request(self):
     batch_api = apis_stub.BatchRequestStub()

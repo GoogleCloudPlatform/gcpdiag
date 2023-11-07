@@ -39,7 +39,7 @@
         }
       ],
       "fingerprint": "REDACTED",
-      "id": "1878774279332803390",
+      "id": "1010101012",
       "kind": "compute#instance",
       "labelFingerprint": "1TQLkowq0ZY=",
       "labels": {
@@ -136,7 +136,7 @@
         }
       ],
       "fingerprint": "REDACTED",
-      "id": "1878774279332678590",
+      "id": "1010101013",
       "kind": "compute#instance",
       "labelFingerprint": "1TQLkowq0ZY=",
       "labels": {
@@ -277,7 +277,7 @@
         }
       ],
       "fingerprint": "REDACTED",
-      "id": "32691881179984702",
+      "id": "1010101011",
       "kind": "compute#instance",
       "labelFingerprint": "42WmSpB8rSM=",
       "lastStartTimestamp": "2022-04-26T08:21:01.453-07:00",
@@ -367,7 +367,7 @@
         }
       ],
       "fingerprint": "REDACTED",
-      "id": "4252459586931766017",
+      "id": "1010101014",
       "kind": "compute#instance",
       "labelFingerprint": "42WmSpB8rSM=",
       "lastStartTimestamp": "2022-04-26T08:21:25.221-07:00",

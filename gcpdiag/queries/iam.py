@@ -20,7 +20,7 @@ import functools
 import logging
 import re
 from collections import defaultdict
-from typing import Any, Dict, List, Tuple, Type
+from typing import Any, Dict, List, Optional, Tuple, Type
 
 import googleapiclient
 
@@ -311,6 +311,18 @@ class BaseIAMPolicy(models.Resource):
     """
     return list(self._policy_by_member.keys())
 
+  def get_member_type(self, member) -> Optional[str]:
+    """Returns the IAM members of the project.
+
+    The "member" can be a user or a service account and is specified with
+    the IAM member syntax, i.e. using the prefixes `user:` or `serviceAccount:`.
+    """
+    for m in self._policy_by_member.keys():
+      parts = m.split(':')
+      if member == parts[1]:
+        return parts[0]
+    return None
+
   def has_permission(self, member: str, permission: str) -> bool:
     """Return true if user or service account member has this permission.
 
@@ -324,6 +336,22 @@ class BaseIAMPolicy(models.Resource):
     self._expand_member_policy(member)
     if permission not in self._policy_by_member[member]['permissions']:
       return False
+    return self._is_active_member(member)
+
+  def has_any_permission(self, member: str, permission: set[str]) -> bool:
+    """Return true if user or service account member has any of these permission.
+
+    Note that any indirect bindings, for example through group membership,
+    aren't supported and only direct bindings to this member are checked
+    """
+
+    if member not in self._policy_by_member:
+      return False
+
+    self._expand_member_policy(member)
+    if any(
+        p in self._policy_by_member[member]['permissions'] for p in permission):
+      return True
     return self._is_active_member(member)
 
   def _has_role(self, member: str, role: str) -> bool:
