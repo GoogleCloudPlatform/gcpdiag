@@ -5,7 +5,7 @@
   rapid_avail: 2022-06-03
   regular_avail: 2022-08-19
   stable_avail: 2022-11-30
-  eol: 2023-10-31
+  eol: 2024-01-08
 '1.25':
   oss_release: 2022-08-23
   rapid_avail: 2022-09-13
@@ -26,9 +26,9 @@
   eol: 2024-08-31
 '1.28':
   oss_release: 2023-08-15
-  rapid_avail: 2023-09
-  regular_avail: TBD
-  stable_avail: TBD
+  rapid_avail: 2023-09-05
+  regular_avail: 2023-12
+  stable_avail: 2024-Q1
   eol: TBD
 '1.29':
   oss_release: TBD
