@@ -18,6 +18,8 @@ optional arguments:
   -h, --help            show this help message and exit
   --auth-adc            Authenticate using Application Default Credentials (default)
   --auth-key FILE       Authenticate using a service account private key file
+  --universe_domain DOMAIN
+                       Domain for API endpoint (default 'googleapis.com')
   --project P           Project ID of project to inspect
   --billing-project P   Project used for billing/quota of API calls done by gcpdiag (default is the inspected project, requires
                         'serviceusage.services.use' permission)

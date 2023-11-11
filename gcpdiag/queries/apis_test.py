@@ -1,4 +1,4 @@
-# Copyright 2021 Google LLC
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,8 +13,9 @@
 # limitations under the License.
 """Test code in apis.py."""
 
-from unittest import mock
+from unittest import TestCase, mock
 
+from gcpdiag import config
 from gcpdiag.queries import apis, apis_stub
 
 DUMMY_PROJECT_NAME = 'gcpdiag-gke1-aaaa'
@@ -46,3 +47,34 @@ class Test:
   def test_is_enabled(self):
     assert apis.is_enabled(DUMMY_PROJECT_NAME, 'container')
     assert not apis.is_enabled(DUMMY_PROJECT_NAME, 'containerxyz')
+
+
+class TestTPC(TestCase):
+  """testing for TPC universe domain settings."""
+
+  @mock.patch('gcpdiag.queries.apis.get_credentials')
+  @mock.patch('googleapiclient.discovery.build')
+  def test_tpc_endpoint(self, mock_build, mock_cred):
+    mock_cred.return_value.universe_domain = 'test_domain.goog'
+    config.init({'universe_domain': 'test_domain.goog'}, 'x')
+    _ = apis.get_api('dataproc', 'v1', 'test_project')
+    endpoint = mock_build.call_args[1]['client_options'].api_endpoint
+    assert endpoint.endswith('test_domain.goog')
+
+  @mock.patch('gcpdiag.queries.apis.get_credentials')
+  @mock.patch('googleapiclient.discovery.build')
+  def test_not_tpc_endpoint(self, mock_build, mock_cred):
+    mock_cred.return_value.universe_domain = 'googleapis.com'
+    config.init({'universe_domain': ''}, 'x')
+    _ = apis.get_api('composer', 'v1', 'test_project')
+    endpoint = mock_build.call_args[1]['client_options'].api_endpoint
+    assert endpoint == 'https://composer.googleapis.com'
+
+  @mock.patch('gcpdiag.queries.apis._get_credentials_adc')
+  @mock.patch('googleapiclient.discovery.build')
+  def test_universe_mismatch(self, mock_build, mock_cred):
+    del mock_build
+    mock_cred.return_value.universe_domain = 'googleapis.com.not'
+    config.init({'universe_domain': 'a_mismatching_universe'}, 'x')
+    with self.assertRaises(ValueError):
+      _ = apis.get_api('composer', 'v1', 'test_project')

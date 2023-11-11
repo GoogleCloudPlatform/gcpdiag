@@ -52,6 +52,23 @@ def batch_list_all(api,
                    next_function: Callable,
                    log_text: str,
                    response_keyword='items'):
+  """Similar to list_all but using batch API except in TPC environment."""
+
+  if 'googleapis.com' not in requests[0].uri:
+    #  the api client library does not handle batch api calls for TPC yet, so
+    #  the batch is processed and collected one at a time in that case
+    for req in requests:
+      yield from list_all(req, next_function)
+  else:
+    yield from _original_batch(api, requests, next_function, log_text,
+                               response_keyword)
+
+
+def _original_batch(api,
+                    requests: list,
+                    next_function: Callable,
+                    log_text: str,
+                    response_keyword='items'):
   """Similar to list_all but using batch API."""
   pending_requests = requests
 
@@ -65,6 +82,8 @@ def batch_list_all(api,
       logging.info('%s (page: %d)', log_text, page)
     for (request, response, exception) in batch_execute_all(api, next_requests):
       if exception:
+        logging.info('Exception requesting %s: %s', request.uri,
+                     exception.message)
         raise exception
 
       # add request for next page if required
