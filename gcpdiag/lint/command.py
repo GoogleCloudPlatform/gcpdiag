@@ -75,6 +75,11 @@ def _init_args_parser():
                       help=argparse.SUPPRESS,
                       action='store_true')
 
+  parser.add_argument('--universe-domain',
+                      type=str,
+                      default=config.get('universe_domain'),
+                      help='Domain name of APIs')
+
   parser.add_argument('--project',
                       metavar='P',
                       required=True,

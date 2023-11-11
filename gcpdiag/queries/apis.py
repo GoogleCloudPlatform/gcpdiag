@@ -139,6 +139,8 @@ def login():
 
 
 def get_user_email() -> str:
+  if config.get('universe_domain'):
+    return 'TPC user'
   credentials = get_credentials().with_quota_project(None)
 
   http = google_auth_httplib2.AuthorizedHttp(credentials, http=httplib2.Http())
@@ -181,10 +183,20 @@ def get_api(service_name: str,
                                                    http=httplib2.Http())
     return googleapiclient.http.HttpRequest(new_http, *args, **kwargs)
 
+  universe_domain = config.get('universe_domain') or 'googleapis.com'
+  cred_universe = getattr(credentials, 'universe_domain', 'googleapis.com')
+  if cred_universe != universe_domain:
+    raise ValueError('credential universe_domain mismatch '
+                     f'{cred_universe} != {universe_domain}')
   client_options = ClientOptions()
+  if universe_domain != 'googleapis.com':
+    client_options.universe_domain = universe_domain
   if region:
-    client_options.api_endpoint = f'https://{region}-{service_name}.googleapis.com'
-
+    client_options.api_endpoint = f'https://{region}-{service_name}.{universe_domain}'
+  else:
+    client_options.api_endpoint = f'https://{service_name}.{universe_domain}'
+  if service_name in ['compute']:
+    client_options.api_endpoint += f'/{service_name}/{version}'
   api = discovery.build(service_name,
                         version,
                         cache_discovery=False,

@@ -22,10 +22,15 @@ from gcpdiag.queries import apis_stub, apis_utils
 class RequestMock(apis_stub.ApiStub):
   """Mock a googleapiclient.request object."""
 
-  def __init__(self, n: int, fail_count: int = 0, fail_status: int = 429):
+  def __init__(self,
+               n: int,
+               fail_count: int = 0,
+               fail_status: int = 429,
+               uri: str = 'googleapis.com'):
     self.n = n
     if fail_count:
       self.fail_next(fail_count, fail_status)
+    self.uri = uri
 
   def execute(self, num_retries: int = 0):
     del num_retries
