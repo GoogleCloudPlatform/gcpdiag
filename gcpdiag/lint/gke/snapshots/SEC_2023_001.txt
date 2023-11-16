@@ -1,0 +1,17 @@
+*  gke/SEC/2023_001: GKE Workload Identity is enabled
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [FAIL]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [FAIL]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [FAIL]
+
+   Workload Identity is the recommended way for your workloads running on Google
+   Kubernetes Engine (GKE) to access Google Cloud services in a secure and
+   manageable way. It lets you assign distinct, fine-grained identities and
+   authorization for each application in your cluster. The sensitive node's
+   metadata is also protected by Workload Identity.
+
+   https://gcpdiag.dev/rules/gke/SEC/2023_001
+
