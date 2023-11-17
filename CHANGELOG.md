@@ -1,3 +1,16 @@
+## 0.67 (2023-10-17)
+
+#### Fixes
+- Updating GKE EOL file and snapshot
+- Rewording message triggering internal leak test
+
+#### New Command and Rules
+- Runbook POC with ssh runbook and terraform scripts
+
+#### New rules
+- GKE cluster has workload identity enabled
+- Splunk job uses valid certificate
+
 ## 0.66 (2023-10-13)
 
 #### Fixes
