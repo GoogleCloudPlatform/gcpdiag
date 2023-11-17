@@ -174,7 +174,7 @@ def start(context: models.Context,
             if p_type:
               interface.prompt(
                   f'Checks will use {context.parameters.get(PRINCIPAL_FLAG)} as the authenticated\n'
-                  'principal in Cloud Console / gcloud (incl. impersonated service account'
+                  'principal in Cloud Console / gcloud (incl. impersonated service account)'
               )
             else:
               # groups and org principals are not expanded.
@@ -332,13 +332,12 @@ def check_vm_performance(context: models.Context,
       if 'e2' not in vm.machine_type():
         if instance_serial_log:
           mem_usage = util.search_pattern_in_serial_logs(
-              VM_OOM_PATTERN, ' '.join(instance_serial_log.contents))
+              VM_OOM_PATTERN, instance_serial_log.contents)
 
       if instance_serial_log:
         # All VM types + e2
         disk_usage = util.search_pattern_in_serial_logs(
-            VM_DISK_SPACE_ERROR_PATTERN,
-            '\n'.join(instance_serial_log.contents))
+            VM_DISK_SPACE_ERROR_PATTERN, instance_serial_log.contents)
     # Get Performance issues corrected.
     if cpu_usage:
       response = interface.add_failed(
@@ -350,7 +349,7 @@ def check_vm_performance(context: models.Context,
            'Consider upgrading the CPU specifications for the VM instance and then restart it.\n'
            'For guidance on stopping a VM, refer to the documentation:\n'
            'https://cloud.google.com/compute/docs/instances/stop-start-instance.\n'
-           'For more in-depth investigation, connect via the Serial Console to identify \n'
+           'For more in-depth investigation, connect via the Serial Console to identify\n'
            'the problematic process:\n'
            'https://cloud.google.com/compute/docs/troubleshooting/'
            'troubleshooting-using-serial-console.'))
@@ -390,7 +389,7 @@ def check_vm_performance(context: models.Context,
           remediation=
           ('The VM is experiencing high disk space utilization in the boot disk,\n'
            'potentially causing sluggish SSH connections.\n'
-           'To address this, consider increasing the boot disk size of the VM: \n'
+           'To address this, consider increasing the boot disk size of the VM:\n'
            'https://cloud.google.com/compute/docs/disks/resize-persistent-disk'
            '#increase_the_size_of_a_disk'))
     else:
@@ -437,7 +436,7 @@ def check_user_permissions(context: models.Context,
     else:
       response = interface.add_failed(
           iam_policy,
-          f'To use the Google Cloud console to access Compute Engine, e.g. SSH in browser, \n'
+          f'To use the Google Cloud console to access Compute Engine, e.g. SSH in browser,\n'
           f'principal must have the {console_user_permission} permission.',
           'Refer to the documentation:\n'
           'https://cloud.google.com/compute/docs/access/iam#console_permission')
@@ -483,8 +482,7 @@ def check_user_permissions(context: models.Context,
            'https://cloud.google.com/compute/docs/access/iam#connectinginstanceadmin'
           ))
 
-    if context.parameters.get(
-        LOCAL_USER_FLAG) or not context.parameters.get(OS_LOGIN_FLAG):
+    if not context.parameters.get(OS_LOGIN_FLAG):
       if not vm.is_oslogin_enabled():
         # Oslogin should not be enabled or user is checking for metadata based user
         # on the VM and  oslogin feature is disabled.
@@ -508,30 +506,28 @@ def check_user_permissions(context: models.Context,
              'https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#enable_os_login'
             ))
 
-      # check if the local_user has a valid key and the key is not expired.
-      ssh_keys = vm.get_metadata('ssh-keys').split('\n')
+      # check if the local_user has a valid key
+      ssh_keys = vm.get_metadata('ssh-keys').split('\n') if vm.get_metadata(
+          'ssh-keys') else []
       has_valid_key = util.user_has_valid_ssh_key(
           context.parameters.get(LOCAL_USER_FLAG), ssh_keys)
       if has_valid_key:
         interface.add_ok(
             resource=vm,
             reason=
-            (f'Local user "{context.parameters.get(LOCAL_USER_FLAG)}" has at least one valid SSH '
-             'key within the scope of the VM.'))
+            (f'Local user "{context.parameters.get(LOCAL_USER_FLAG)}" has at least one valid SSH\n'
+             f'key VM: {vm.name}.'))
       else:
         response = interface.add_failed(
             vm,
             reason=
             (f'Local user "{context.parameters.get(LOCAL_USER_FLAG)}" does not have at '
-             'least one valid SSH key for the VM.'),
+             f'least one valid SSH key for the VM. {vm.name}'),
             remediation=
             ('To resolve this issue, add a valid SSH key for the user '
              f'"{context.parameters.get(LOCAL_USER_FLAG)}" by following the instructions:\n'
              'https://cloud.google.com/compute/docs/connect/add-ssh-keys#add_ssh_keys_to'
-             '_instance_metadata\n\n'
-             'Note: You will get a false negative you are not manually uploading your own keys.\n'
-             'SSH-in-Browser and gcloud set 3 mins short-lived SSH Keys'
-             'if using on '))
+             '_instance_metadata\n'))
 
     if context.parameters.get(OS_LOGIN_FLAG):
       # Oslogin should be enabled on the VM if user wants to use oslogin
@@ -739,7 +735,7 @@ def check_linux_guestos_kernel_status(
       # TODO: Improve Search pattern to use cloud logging
       # but also return details for richer feeback to users
       kernel_errors = util.search_pattern_in_serial_logs(
-          BOOT_ERROR_PATTERNS, ' '.join(instance_serial_log.contents))
+          BOOT_ERROR_PATTERNS, instance_serial_log.contents)
       if kernel_errors:
         response = interface.add_failed(
             vm,
@@ -768,7 +764,7 @@ def check_linux_guestos_kernel_status(
         interface.add_ok(
             vm,
             reason=
-            'Linux OS is not experiencing kernel panic issue, GRUB issues \n'
+            'Linux OS is not experiencing kernel panic issue, GRUB issues\n'
             'or guest kernel dropping into emergency/maintenance mode')
     else:
       interface.add_uncertain(
@@ -807,13 +803,13 @@ def verify_linux_sshd_working_correctly(
         zone=context.parameters.get(ZONE_FLAG),
         instance_name=context.parameters.get(NAME_FLAG))
     if instance_serial_log:
-      result = util.search_pattern_in_serial_logs(
-          GOOD_SSHD_PATTERNS, ' '.join(instance_serial_log.contents))
+      result = util.search_pattern_in_serial_logs(GOOD_SSHD_PATTERNS,
+                                                  instance_serial_log.contents)
       if result:
         interface.add_ok(vm, reason='SSHD started correctly')
       else:
         result = util.search_pattern_in_serial_logs(
-            BAD_SSHD_PATTERNS, ' '.join(instance_serial_log.contents))
+            BAD_SSHD_PATTERNS, instance_serial_log.contents)
         if result:
           response = interface.add_failed(
               vm,
@@ -848,8 +844,8 @@ def verify_linux_sshd_working_correctly(
                   'https://cloud.google.com/compute/docs/images/'
                   'support-maintenance-policy#out-of-scope_for_support'))
 
-      result = util.search_pattern_in_serial_logs(
-          SSHGUARD_PATTERNS, ' '.join(instance_serial_log.contents))
+      result = util.search_pattern_in_serial_logs(SSHGUARD_PATTERNS,
+                                                  instance_serial_log.contents)
       if result:
         # todo: check user's src ip is not being blocked
         response = interface.add_failed(
@@ -896,10 +892,9 @@ def check_windows_guestos_status(
         instance_name=context.parameters.get(NAME_FLAG))
 
     if instance_serial_log:
-      result = util.search_pattern_in_serial_logs(
-          WINDOWS_ONLINE_READY,
-          '\n'.join(instance_serial_log.contents),
-          operator='AND')
+      result = util.search_pattern_in_serial_logs(WINDOWS_ONLINE_READY,
+                                                  instance_serial_log.contents,
+                                                  operator='AND')
       if not result:
         response = interface.add_failed(
             vm,
@@ -958,8 +953,7 @@ def check_windows_sshd_metadata(context: models.Context,
 def check_sshd_setup_for_windows(
     context: models.Context, interface: runbook.RunbookInteractionInterface):
   """Manually check ssh reqired Agents are running on the VM
-      Check google-compute-engine-ssh is installed.
-  """
+      Check google-compute-engine-ssh is installed."""
 
   def task():
     response = None

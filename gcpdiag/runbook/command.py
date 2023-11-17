@@ -90,11 +90,6 @@ def _init_runbook_args_parser():
                             f" {config.get('within_days')} days)"),
                       default=1)
 
-  parser.add_argument('--config',
-                      metavar='FILE',
-                      type=str,
-                      help=('Read configuration from FILE'))
-
   parser.add_argument('--logging-ratelimit-requests',
                       metavar='R',
                       type=int,
@@ -129,8 +124,8 @@ def _init_runbook_args_parser():
             f" {config.get('logging_fetch_max_time_seconds')} seconds)"))
 
   parser.add_argument('runbook',
-                      nargs='+',
-                      help=('Runbook to execute in the format product/name'))
+                      nargs=1,
+                      help='Runbook to execute in the format product/name')
   parser.add_argument(
       '-p',
       '--parameter',

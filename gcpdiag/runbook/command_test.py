@@ -13,13 +13,10 @@
 # limitations under the License.
 """Test code in command.py."""
 
-from gcpdiag import lint
-from gcpdiag.lint import command
+from gcpdiag import runbook
+from gcpdiag.runbook import command
 
-MUST_HAVE_MODULES = {
-    'gke', 'gcb', 'gae', 'gce', 'iam', 'apigee', 'composer', 'datafusion',
-    'dataproc', 'gcs', 'vpc', 'lb', 'gcf'
-}
+MUST_HAVE_MODULES = {'gce'}
 
 
 class Test:
@@ -28,52 +25,40 @@ class Test:
   # pylint: disable=protected-access
   def test_flatten_multi_arg(self):
     assert not list(command._flatten_multi_arg([]))
-    assert list(command._flatten_multi_arg(['*BP*'])) == ['*BP*']
-    assert list(command._flatten_multi_arg(['*BP*',
-                                            '*ERR*'])) == ['*BP*', '*ERR*']
-    assert list(command._flatten_multi_arg(['*BP*,*ERR*'])) == ['*BP*', '*ERR*']
-    assert list(command._flatten_multi_arg(['*BP*, *ERR*'
-                                           ])) == ['*BP*', '*ERR*']
+    assert list(command._flatten_multi_arg(['gce/test'])) == ['gce/test']
 
   # pylint: disable=protected-access
   def test_init_args_parser(self):
-    parser = command._init_args_parser()
-    args = parser.parse_args(['--project', 'myproject'])
+    parser = command._init_runbook_args_parser()
+    args = parser.parse_args(['product/runbook', '--project', 'myproject'])
     assert args.project == 'myproject'
+    assert args.runbook == ['product/runbook']
     assert args.billing_project is None
     assert args.auth_adc is False
     assert args.auth_key is None
     assert args.verbose == 0
-    assert args.within_days == 3
-    assert args.include is None
-    assert args.exclude is None
-    assert args.include_extended is False
-    assert args.config is None
-    assert args.show_skipped is False
-    assert args.hide_ok is False
+    assert args.within_days == 1
     assert args.logging_ratelimit_requests is None
     assert args.logging_ratelimit_period_seconds is None
     assert args.logging_page_size is None
     assert args.logging_fetch_max_entries is None
     assert args.logging_fetch_max_time_seconds is None
-    assert args.output == 'terminal'
+    assert args.auto is False
 
   # pylint: disable=protected-access
   def test_provided_init_args_parser(self):
-    parser = command._init_args_parser()
-    args = parser.parse_args(['--project', 'myproject', '--include', '*ERR*'])
-    assert args.include == ['*ERR*']
-    args = parser.parse_args(['--project', 'myproject', '--exclude', '*BP*'])
-    assert args.exclude == ['*BP*']
-    args = parser.parse_args(['--project', 'myproject', '--include-extended'])
-    assert args.include_extended is True
+    parser = command._init_runbook_args_parser()
     args = parser.parse_args(
-        ['--project', 'myproject', '--config', '/path/to/file'])
-    assert args.config == '/path/to/file'
+        ['product/runbook', '--project', 'myproject', '--auto'])
+    assert args.auto is True
+    args = parser.parse_args([
+        'product/runbook', '--project', 'myproject', '--parameter', 'test=test'
+    ])
+    assert args.parameter == {'test': 'test'}
 
   # pylint: disable=protected-access
   def test_load_repository_rules(self):
-    repo = lint.LintRuleRepository()
+    repo = runbook.RunbookRuleRepository()
     command._load_repository_rules(repo)
     modules = {r.product for r in repo.rules_to_run}
     assert MUST_HAVE_MODULES.issubset(modules)

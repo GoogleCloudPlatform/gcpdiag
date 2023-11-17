@@ -14,6 +14,7 @@
       "availableCpuPlatforms": [
         "Intel Broadwell",
         "Intel Cascade Lake",
+        "Intel Emerald Rapids",
         "AMD Genoa",
         "Intel Haswell",
         "Intel Ice Lake",
@@ -38,6 +39,7 @@
       "availableCpuPlatforms": [
         "Intel Broadwell",
         "Intel Cascade Lake",
+        "Intel Emerald Rapids",
         "AMD Genoa",
         "Intel Haswell",
         "Intel Ice Lake",
@@ -87,6 +89,7 @@
       "availableCpuPlatforms": [
         "Intel Broadwell",
         "Intel Cascade Lake",
+        "Intel Emerald Rapids",
         "AMD Genoa",
         "Intel Haswell",
         "Intel Ice Lake",
@@ -112,6 +115,7 @@
       "availableCpuPlatforms": [
         "Intel Broadwell",
         "Intel Cascade Lake",
+        "Intel Emerald Rapids",
         "AMD Genoa",
         "Intel Haswell",
         "Intel Ice Lake",
@@ -137,6 +141,7 @@
       "availableCpuPlatforms": [
         "Intel Broadwell",
         "Intel Cascade Lake",
+        "Intel Emerald Rapids",
         "AMD Genoa",
         "Intel Haswell",
         "Intel Ice Lake",
@@ -219,6 +224,7 @@
         "AMD Milan",
         "AMD Rome",
         "Intel Sandy Bridge",
+        "Intel Sapphire Rapids",
         "Intel Skylake"
       ],
       "supportsPzs": false
@@ -329,6 +335,7 @@
         "Ampere Altra",
         "Intel Broadwell",
         "Intel Cascade Lake",
+        "Intel Emerald Rapids",
         "AMD Genoa",
         "Intel Haswell",
         "Intel Ice Lake",
@@ -354,6 +361,7 @@
         "Ampere Altra",
         "Intel Broadwell",
         "Intel Cascade Lake",
+        "Intel Emerald Rapids",
         "AMD Genoa",
         "Intel Haswell",
         "Intel Ice Lake",
@@ -379,6 +387,7 @@
         "Ampere Altra",
         "Intel Broadwell",
         "Intel Cascade Lake",
+        "Intel Emerald Rapids",
         "AMD Genoa",
         "Intel Haswell",
         "Intel Ice Lake",
@@ -1184,6 +1193,8 @@
         "Intel Cascade Lake",
         "Intel Ice Lake",
         "Intel Ivy Bridge",
+        "AMD Milan",
+        "AMD Rome",
         "Intel Sandy Bridge",
         "Intel Skylake"
       ],
@@ -1920,6 +1931,8 @@
         "Intel Cascade Lake",
         "Intel Ice Lake",
         "Intel Ivy Bridge",
+        "AMD Milan",
+        "AMD Rome",
         "Intel Skylake"
       ],
       "supportsPzs": false
@@ -2268,9 +2281,11 @@
         "Intel Broadwell",
         "Intel Cascade Lake",
         "Intel Haswell",
+        "Intel Ice Lake",
         "Intel Ivy Bridge",
         "AMD Milan",
         "AMD Rome",
+        "Intel Sapphire Rapids",
         "Intel Skylake"
       ],
       "supportsPzs": false
@@ -2390,6 +2405,7 @@
         "Intel Haswell",
         "Intel Ice Lake",
         "Intel Ivy Bridge",
+        "AMD Milan",
         "AMD Rome",
         "Intel Sandy Bridge",
         "Intel Skylake"
