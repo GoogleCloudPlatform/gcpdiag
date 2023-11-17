@@ -9302,7 +9302,7 @@
         {
           "metric": "PREEMPTIBLE_CPUS",
           "limit": 5000,
-          "usage": 4
+          "usage": 3
         },
         {
           "metric": "NVIDIA_K80_GPUS",
@@ -16299,7 +16299,7 @@
         {
           "metric": "SSD_TOTAL_GB",
           "limit": 40960,
-          "usage": 10
+          "usage": 0
         },
         {
           "metric": "INSTANCE_TEMPLATES",
@@ -16324,7 +16324,7 @@
         {
           "metric": "INSTANCES",
           "limit": 6000,
-          "usage": 1
+          "usage": 0
         },
         {
           "metric": "AUTOSCALERS",

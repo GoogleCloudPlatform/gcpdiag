@@ -2,6 +2,24 @@
   "bindings": [
     {
       "members": [
+        "serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com"
+      ],
+      "role": "roles/compute.instanceAdmin.v1"
+    },
+    {
+      "members": [
+        "serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com"
+      ],
+      "role": "roles/compute.osAdminLogin"
+    },
+    {
+      "members": [
+        "serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com"
+      ],
+      "role": "roles/compute.osLogin"
+    },
+    {
+      "members": [
         "serviceAccount:service-12345601@compute-system.iam.gserviceaccount.com"
       ],
       "role": "roles/compute.serviceAgent"
@@ -15,6 +33,19 @@
     },
     {
       "members": [
+        "serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com"
+      ],
+      "role": "roles/iam.serviceAccountUser"
+    },
+    {
+      "members": [
+        "serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com"
+      ],
+      "role": "roles/iap.tunnelResourceAccessor"
+    },
+    {
+      "members": [
+        "serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com",
         "user:testuser@example.com"
       ],
       "role": "roles/owner"
@@ -26,6 +57,6 @@
       "role": "roles/websecurityscanner.serviceAgent"
     }
   ],
-  "etag": "BwYJXsBWINg=",
+  "etag": "BwYKUSKQwSE=",
   "version": 1
 }

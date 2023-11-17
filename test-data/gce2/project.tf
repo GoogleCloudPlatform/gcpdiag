@@ -23,11 +23,11 @@ resource "random_string" "project_id_suffix" {
 }
 
 resource "google_project" "project" {
-  name       = "gcpdiag test - faultyssh"
-  project_id = var.project_id != "" ? var.project_id : "gcpdiag-gce2-${random_string.project_id_suffix.id}"
-  org_id     = var.folder_id == "" ? var.org_id : null
-  folder_id  = var.folder_id != "" ? var.folder_id : null
-  // billing_account = var.billing_account_id
+  name            = "gcpdiag test - faultyssh"
+  project_id      = var.project_id != "" ? var.project_id : "gcpdiag-gce2-${random_string.project_id_suffix.id}"
+  org_id          = var.folder_id == "" ? var.org_id : null
+  folder_id       = var.folder_id != "" ? var.folder_id : null
+  billing_account = var.billing_account_id
   labels = {
     gcpdiag : "test"
   }

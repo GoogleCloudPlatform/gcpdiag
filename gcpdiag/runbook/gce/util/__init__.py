@@ -14,33 +14,35 @@
 
 # Lint as: python3
 """Runbook utility."""
-import json
 import re
-from datetime import datetime, timezone
+from typing import List
 
 
-def search_pattern_in_serial_logs(patterns, contents, operator='OR'):
+def search_pattern_in_serial_logs(patterns, contents: List[str], operator='OR'):
+  # logs are by default sorted from oldest to newest. revert to get the newest first
+  reversed_contents = reversed(contents)
   pattern = ''
   if operator == 'OR':
     pattern = ' | '.join(patterns)
+    regex = re.compile(pattern, re.IGNORECASE)
+    for log in reversed_contents:
+      result = regex.search(log)
+      if result:
+        return True
+
   elif operator == 'AND':
-    pattern_arr = [re.compile(fr'{string}') for string in patterns]
-    if all(p.search(contents) for p in pattern_arr):
+    contents_str = ' '.join(reversed_contents)
+    pattern_arr = [re.compile(string) for string in patterns]
+    if all(p.search(contents_str) for p in pattern_arr):
       return True
-  regex = re.compile(pattern, re.MULTILINE | re.IGNORECASE)
-  result = regex.search(contents)
-  if result:
-    return True
   return False
 
 
-def user_has_valid_ssh_key(local_user, keys, key_type=None) -> bool:
+def user_has_valid_ssh_key(local_user, keys: List[str], key_type=None) -> bool:
   """Given a list of keys, check if it has *at least one* valid SSH
    key for the local_user. A key is valid if:
     - the local_user matches the key username
     - a the key type matches if specified.
-    - key is not expired if present
-
   return:
     True if at least one valid key or False if none is valid
    """

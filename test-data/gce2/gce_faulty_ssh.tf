@@ -24,7 +24,7 @@ resource "google_compute_instance" "faulty_linux_ssh" {
   network_interface {
     network = "default"
   }
-  tags = ["faulty-ssh-instance"]
+  tags = ["faulty-ssh-instance", "gce-secured-instance-test-deny"]
   scheduling {
     preemptible       = true
     automatic_restart = false
@@ -49,6 +49,8 @@ resource "google_compute_instance" "faulty_linux_ssh" {
   }
   metadata_startup_script = <<-EOT
   #!/bin/bash
+  # stop sshd
+  systemctl stop ssh
 
   while true; do
     : # Do nothing, which consumes CPU cycles
@@ -65,13 +67,13 @@ resource "google_compute_instance" "faulty_windows_ssh" {
   project        = google_project.project.project_id
   depends_on     = [google_project_service.compute]
   name           = "faulty-windows-ssh"
-  machine_type   = "f1-micro"
+  machine_type   = "e2-standard-2"
   zone           = "europe-west2-a"
   desired_status = "RUNNING"
   network_interface {
     network = "default"
   }
-  tags = ["faulty-ssh-instance"]
+  tags = ["faulty-ssh-instance", "gce-secured-instance-test-deny"]
   scheduling {
     preemptible       = true
     automatic_restart = false
@@ -95,8 +97,13 @@ resource "google_compute_instance" "faulty_windows_ssh" {
     foo = "bar"
   }
   metadata = {
-    enable-oslogin = false
+    enable-oslogin = true
   }
+  metadata_startup_script = <<-EOT
+  #!/bin/bash
+
+  shutdown -h now
+  EOT
 }
 
 # firewall configuration used for connectivity testing
@@ -104,7 +111,7 @@ resource "google_compute_instance" "faulty_windows_ssh" {
 resource "google_compute_firewall" "secured_instance_test_deny" {
   name    = "gce-secured-instance-test-deny"
   network = "default"
-  project = google_project.project.project_id
+  project = var.project_id
 
   priority = 900
 
@@ -125,15 +132,15 @@ resource "google_compute_firewall" "secured_instance_test_deny" {
 resource "google_service_account" "service_account" {
   account_id   = "cannotssh"
   display_name = "Cannot SSH Service Account"
-  project      = google_project.project.number
+  project      = var.project_id
 }
 
 
 resource "google_compute_project_metadata" "dummy_key" {
+  project = var.project_id
   metadata = {
     ssh-keys = <<EOF
-      dev:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILg6UtHDNyMNAh0GjaytsJdrUxjtLy3APXqZfNZhvCeT dev
-      foo:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILg6UtHDNyMNAh0GjaytsJdrUxjtLy3APXqZfNZhvCeT bar
+      foo:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILg6UtHDNyMNAh0GjaytsJdrUxjtLy3APXqZfNZhvCeT foo
     EOF
   }
 }

@@ -1,10 +1,10 @@
 {
   "commonInstanceMetadata": {
-    "fingerprint": "JAURFP1RwhE=",
+    "fingerprint": "HTt6ps4-I3s=",
     "items": [
       {
-        "key": "serial-port-logging-enable",
-        "value": "true"
+        "key": "ssh-keys",
+        "value": "      foo:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILg6UtHDNyMNAh0GjaytsJdrUxjtLy3APXqZfNZhvCeT foo\n"
       }
     ],
     "kind": "compute#metadata"
@@ -109,7 +109,7 @@
     {
       "limit": 20,
       "metric": "ROUTERS",
-      "usage": 0
+      "usage": 1
     },
     {
       "limit": 100,

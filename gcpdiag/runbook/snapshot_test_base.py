@@ -14,6 +14,7 @@
 """ Base class for snapshot tests """
 import io
 import sys
+import textwrap
 from os import path
 from unittest import mock
 
@@ -35,7 +36,11 @@ class RulesSnapshotTestBase:
       repo = self._mk_repo(rule=rule)
       output_stream = io.StringIO()
       sys.stdout = output_stream
-      repo.run_rules(self._mk_context())
+      for parameter in self.rule_parameters:
+        context = self._mk_context(parameter=parameter)
+        print(textwrap.fill(str(context), 100), file=sys.stdout, end='\n\n')
+        repo.run_rules(context)
+        print('\n')
       snapshot.assert_match(
           output_stream.getvalue(),
           path.join(snapshot.snapshot_dir, f'{rule.rule_id}.txt'))
@@ -43,9 +48,8 @@ class RulesSnapshotTestBase:
   def _list_rules(self):
     return self._mk_repo().rules_to_run
 
-  def _mk_context(self):
-    return models.Context(project_id=self.project_id,
-                          parameters=self.rule_parameters)
+  def _mk_context(self, parameter):
+    return models.Context(project_id=self.project_id, parameters=parameter)
 
   def _mk_repo(self, rule=None):
     if rule is None:

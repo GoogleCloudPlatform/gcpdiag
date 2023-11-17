@@ -44,7 +44,8 @@ class BaseOutput:
     print(f'gcpdiag {config.VERSION}\n', file=sys.stderr)
 
   def display_header(self, context: models.Context) -> None:
-    print(f'Starting runbook inspection ({context})...\n', file=sys.stderr)
+    print(f'Starting runbook inspection [Alpha Release]\n({context})\n',
+          file=sys.stderr)
 
   def display_footer(self, result: 'runbook.RunbookReport') -> None:
     totals = result.get_totals_by_status()

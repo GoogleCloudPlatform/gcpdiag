@@ -66,6 +66,12 @@ resource "google_compute_instance" "valid_linux_ssh" {
   metadata = {
     enable-oslogin = true
   }
+  metadata_startup_script = <<-EOT
+  #!/bin/bash
+
+  curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh
+  sudo bash add-google-cloud-ops-agent-repo.sh --also-install
+  EOT
 }
 
 # Fault windows running ssh
@@ -135,36 +141,13 @@ resource "google_compute_firewall" "secured_instance_test_allow" {
 resource "google_service_account" "canssh_service_account" {
   account_id   = "canssh"
   display_name = "Can SSH Service Account"
-  project      = google_project.project.number
+  project      = var.project_id
 }
 
-data "google_iam_policy" "ssh" {
-  binding {
-    role = "roles/iam.serviceAccountUser"
-
-    members = [
-      "user:canssh@example.com",
-    ]
-  }
-  binding {
-    role = "roles/compute.osLogin"
-
-    members = [
-      "user:canssh@example.com",
-    ]
-  }
-  binding {
-    role = "roles/compute.osLogin"
-
-    members = [
-      "user:canssh@example.com",
-    ]
-  }
-  binding {
-    role = "roles/compute.osLogin"
-
-    members = [
-      "user:canssh@example.com",
-    ]
-  }
+resource "google_project_iam_member" "service_account_member_policy" {
+  for_each   = { for role in var.roles : role => role }
+  project    = var.project_id
+  role       = each.value
+  member     = "serviceAccount:${google_service_account.canssh_service_account.name}"
+  depends_on = [google_service_account.canssh_service_account]
 }

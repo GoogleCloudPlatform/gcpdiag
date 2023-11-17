@@ -1,3 +1,7 @@
+project: gcpdiag-gce-faultyssh-runbook, parameters: {name=faulty-linux-
+ssh,os_login=True,principal=cannotssh@example.com,project_id=gcpdiag-gce-faultyssh-
+runbook,tunnel_through_iap=True,zone=europe-west2-a}
+
 gce/ssh: Analyzes typical factors that might impede SSH connectivity
 
 Investigates the following for a single windows or linux VM:
@@ -29,7 +33,7 @@ Investigates the following for a single windows or linux VM:
      Consider upgrading the CPU specifications for the VM instance and then restart it.
      For guidance on stopping a VM, refer to the documentation:
      https://cloud.google.com/compute/docs/instances/stop-start-instance.
-     For more in-depth investigation, connect via the Serial Console to identify 
+     For more in-depth investigation, connect via the Serial Console to identify
      the problematic process:
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console.
 
@@ -52,7 +56,7 @@ Investigates the following for a single windows or linux VM:
      [REMEDIATION]
      The VM is experiencing high disk space utilization in the boot disk,
      potentially causing sluggish SSH connections.
-     To address this, consider increasing the boot disk size of the VM: 
+     To address this, consider increasing the boot disk size of the VM:
      https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
 
 [STEP]: Checking permissions required for SSH
@@ -61,7 +65,7 @@ Investigates the following for a single windows or linux VM:
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
-     To use the Google Cloud console to access Compute Engine, e.g. SSH in browser, 
+     To use the Google Cloud console to access Compute Engine, e.g. SSH in browser,
      principal must have the compute.projects.get permission.
      [REMEDIATION]
      Refer to the documentation:
@@ -72,7 +76,7 @@ Investigates the following for a single windows or linux VM:
      The authenticated user lacks the required permissions for managing instances.
      Required permissions: compute.instances.get, compute.instances.use.
      [REMEDIATION]
-     Grant principal None:canssh@example.com a role with the following permissions:
+     Grant principal None:cannotssh@example.com a role with the following permissions:
       - compute.instances.get, compute.instances.use
      For instructions, refer to the documentation on connecting with instance admin roles:
      https://cloud.google.com/compute/docs/access/iam#connectinginstanceadmin
@@ -87,10 +91,10 @@ Investigates the following for a single windows or linux VM:
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
-     None:canssh@example.com is missing at least of these required
+     None:cannotssh@example.com is missing at least of these required
      roles/compute.osLogin or roles/compute.osAdminLogin or roles/compute.osAdminLogin
      [REMEDIATION]
-     Grant None:canssh@example.com of the following roles:
+     Grant None:cannotssh@example.com of the following roles:
      roles/compute.osLogin or roles/compute.osAdminLogin
      Help Resources:
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
@@ -98,19 +102,19 @@ Investigates the following for a single windows or linux VM:
 
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [FAIL]
      [REASON]
-     None:canssh@example.com is missingmandatory roles/iam.serviceAccountUser on attached service account 12345601-compute@developer.gserviceaccount.com
+     None:cannotssh@example.com is missingmandatory roles/iam.serviceAccountUser on attached service account 12345601-compute@developer.gserviceaccount.com
      [REMEDIATION]
-     Grant None:canssh@example.com roles/iam.serviceAccountUser
+     Grant None:cannotssh@example.com roles/iam.serviceAccountUser
      Resources:
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
-     None:canssh@example.com is missing mandatory
+     None:cannotssh@example.com is missing mandatory
      roles/iap.tunnelResourceAccessor
      [REMEDIATION]
-     Grant None:canssh@example.com roles/iap.tunnelResourceAccessor
+     Grant None:cannotssh@example.com roles/iap.tunnelResourceAccessor
      Resources: https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 
@@ -128,7 +132,7 @@ Investigates the following for a single windows or linux VM:
 
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [OK]
      [REASON]
-     Linux OS is not experiencing kernel panic issue, GRUB issues 
+     Linux OS is not experiencing kernel panic issue, GRUB issues
      or guest kernel dropping into emergency/maintenance mode
 
 [STEP]: Checking SSHD and SSHGuard
@@ -140,3 +144,275 @@ Investigates the following for a single windows or linux VM:
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [OK]
      [REASON]
      SSHguard not blocking IPs on the VM
+
+
+project: gcpdiag-gce-faultyssh-runbook, parameters: {name=valid-linux-
+ssh,os_login=True,principal=canssh@gcpdiag-gce-faultyssh-
+runbook.iam.gserviceaccount.com,project_id=gcpdiag-gce-faultyssh-
+runbook,tunnel_through_iap=True,zone=europe-west2-a}
+
+gce/ssh: Analyzes typical factors that might impede SSH connectivity
+
+Investigates the following for a single windows or linux VM:
+
+- VM Instance Status: Inspects the VM's lifecycle, CPU, memory, and disk status.
+- User Permissions: Verifies Google Cloud IAM permissions necessary for utilizing
+  OS login and metadata-based SSH keys.
+- VM Configuration: Verifies the presence or absence of required metadata.
+- Network connectivity tests: Inspects firewall rules to ensure user can reach the VM.
+
+[STEP]: Starting SSH diagnostics
+[INFO]: Will check for OS login configuration
+[INFO]: Will check for IAP configuration
+[INFO]: Checks will use serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com as the authenticated
+principal in Cloud Console / gcloud (incl. impersonated service account)
+[INFO]: Will use ops agent metrics for relevant assessments
+
+[STEP]: Checking VM lifecycle state
+
+   - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
+     [REASON]
+     VM: valid-linux-ssh is in a RUNNING state.
+
+[STEP]: Checking VM performance
+
+   - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [FAIL]
+     [REASON]
+     CPU utilization is exceeding optimal levels, potentially impacting connectivity.
+     [REMEDIATION]
+     The VM is experiencing high CPU utilization, potentially causing sluggish connection
+     Consider upgrading the CPU specifications for the VM instance and then restart it.
+     For guidance on stopping a VM, refer to the documentation:
+     https://cloud.google.com/compute/docs/instances/stop-start-instance.
+     For more in-depth investigation, connect via the Serial Console to identify
+     the problematic process:
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console.
+
+   - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [FAIL]
+     [REASON]
+     Memory utilization is exceeding optimal levels, potentially impacting connectivity.
+     [REMEDIATION]
+     VM is experiencing high Memory utilization, potentially causing sluggish connections.
+     Consider upgrading the Memory count for the VM instance and then restart it.
+     Stopping and upgrading machine spec of a VM, refer to the documentation:
+     https://cloud.google.com/compute/docs/instances/stop-start-instance.
+     https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+     For more in-depth investigation, conntect via the Serial Console to resolve
+     the problematic process:
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console.
+
+   - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [FAIL]
+     [REASON]
+     Disk space utilization is exceeding optimal levels, potentially impacting connectivity.
+     [REMEDIATION]
+     The VM is experiencing high disk space utilization in the boot disk,
+     potentially causing sluggish SSH connections.
+     To address this, consider increasing the boot disk size of the VM:
+     https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
+
+[STEP]: Checking permissions required for SSH
+  Note: Only roles granted at the project level are checked. Permissions inherited from
+  ancestor resources such as folder(s) or organization and groups are not checked.
+
+   - projects/gcpdiag-gce-faultyssh-runbook                               [OK]
+     [REASON]
+     User has permission to View the Console and compute resources
+
+   - projects/gcpdiag-gce-faultyssh-runbook                               [OK]
+     [REASON]
+     User has permission to get instance
+
+   - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
+     [REASON]
+     The VM has the `enable-oslogin` flag enabled, allowing OS login.
+
+   - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
+     [REASON]
+     serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com has at least one of the mandatory roles: 
+     roles/compute.osLogin or roles/compute.osAdminLogin or roles/owner
+
+   - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
+     [REASON]
+     VM has a service account and principal serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com has
+     required roles/iam.serviceAccountUser on 12345601-compute@developer.gserviceaccount.com
+
+   - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
+     [REASON]
+     Principal serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com has required roles/iap.tunnelResourceAccessor
+
+[STEP]: Checking VPC network
+
+   - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
+     [REASON]
+     valid-linux-ssh can accept ingress connections from IAP Virtual IP
+     35.235.240.0/20 port tcp:22
+
+[DECISION]: Checking OS Image...
+[INFO]: OS Image: Linux - Checking for linux related SSH issues...
+
+[STEP]: Checking Linux Guest Kernel Status
+
+   - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
+     [REASON]
+     Linux OS is not experiencing kernel panic issue, GRUB issues
+     or guest kernel dropping into emergency/maintenance mode
+
+[STEP]: Checking SSHD and SSHGuard
+
+   - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
+     [REASON]
+     SSHD started correctly
+
+   - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
+     [REASON]
+     SSHguard not blocking IPs on the VM
+
+
+project: gcpdiag-gce-faultyssh-runbook, parameters: {local_user=no_user,name=faulty-windows-
+ssh,os_login=False,principal=cannot@example.com,project_id=gcpdiag-gce-faultyssh-
+runbook,tunnel_through_iap=False,zone=europe-west2-a}
+
+gce/ssh: Analyzes typical factors that might impede SSH connectivity
+
+Investigates the following for a single windows or linux VM:
+
+- VM Instance Status: Inspects the VM's lifecycle, CPU, memory, and disk status.
+- User Permissions: Verifies Google Cloud IAM permissions necessary for utilizing
+  OS login and metadata-based SSH keys.
+- VM Configuration: Verifies the presence or absence of required metadata.
+- Network connectivity tests: Inspects firewall rules to ensure user can reach the VM.
+
+[STEP]: Starting SSH diagnostics
+[INFO]: Will check for Metadata based SSH key configuration
+[INFO]: Will not check for IAP for TCP forwarding configuration
+[INFO]: Local User: no_user will be used examine metadata-based SSH Key configuration
+[INFO]: Will use ops agent metrics for relevant assessments
+
+[STEP]: Checking VM lifecycle state
+
+   - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [FAIL]
+     [REASON]
+     VM faulty-windows-ssh is in TERMINATED state.
+     [REMEDIATION]
+     To initiate the lifecycle transition of Virtual Machine (VM) faulty-windows-ssh to the RUNNING state:
+
+     Start the VM:
+     https://cloud.google.com/compute/docs/instances/stop-start-instance
+     If you encounter any difficulties during the startup process, consult
+     the troubleshooting documentation to identify and resolve potential startup issues:
+     https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting
+
+[STEP]: Checking VM performance
+
+   - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [FAIL]
+     [REASON]
+     CPU utilization is exceeding optimal levels, potentially impacting connectivity.
+     [REMEDIATION]
+     The VM is experiencing high CPU utilization, potentially causing sluggish connection
+     Consider upgrading the CPU specifications for the VM instance and then restart it.
+     For guidance on stopping a VM, refer to the documentation:
+     https://cloud.google.com/compute/docs/instances/stop-start-instance.
+     For more in-depth investigation, connect via the Serial Console to identify
+     the problematic process:
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console.
+
+   - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [FAIL]
+     [REASON]
+     Memory utilization is exceeding optimal levels, potentially impacting connectivity.
+     [REMEDIATION]
+     VM is experiencing high Memory utilization, potentially causing sluggish connections.
+     Consider upgrading the Memory count for the VM instance and then restart it.
+     Stopping and upgrading machine spec of a VM, refer to the documentation:
+     https://cloud.google.com/compute/docs/instances/stop-start-instance.
+     https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+     For more in-depth investigation, conntect via the Serial Console to resolve
+     the problematic process:
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console.
+
+   - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [FAIL]
+     [REASON]
+     Disk space utilization is exceeding optimal levels, potentially impacting connectivity.
+     [REMEDIATION]
+     The VM is experiencing high disk space utilization in the boot disk,
+     potentially causing sluggish SSH connections.
+     To address this, consider increasing the boot disk size of the VM:
+     https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
+
+[STEP]: Checking permissions required for SSH
+  Note: Only roles granted at the project level are checked. Permissions inherited from
+  ancestor resources such as folder(s) or organization and groups are not checked.
+
+   - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
+     [REASON]
+     To use the Google Cloud console to access Compute Engine, e.g. SSH in browser,
+     principal must have the compute.projects.get permission.
+     [REMEDIATION]
+     Refer to the documentation:
+     https://cloud.google.com/compute/docs/access/iam#console_permission
+
+   - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
+     [REASON]
+     The authenticated user lacks the necessary permissions for managing metadata.
+     Required permissions: compute.instances.setMetadata or compute.projects.setCommonInstanceMetadata.
+     [REMEDIATION]
+     To resolve this issue, ensure the user has the following metadata permissions:
+      - Add SSH Key to project-level metadata: https://cloud.google.com/compute/docs/connect/add-ssh-keys#expandable-2
+      - Add SSH Key to instance-level metadata: https://cloud.google.com/compute/docs/connect/add-ssh-keys#expandable-3
+
+   - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
+     [REASON]
+     The authenticated user lacks the required permissions for managing instances.
+     Required permissions: compute.instances.get, compute.instances.use.
+     [REMEDIATION]
+     Grant principal None:cannot@example.com a role with the following permissions:
+      - compute.instances.get, compute.instances.use
+     For instructions, refer to the documentation on connecting with instance admin roles:
+     https://cloud.google.com/compute/docs/access/iam#connectinginstanceadmin
+
+   - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [FAIL]
+     [REASON]
+     OS login is enabled on the VM, for a metadata-based SSH Key approach
+     Note: Metadata-based SSH key authentication will not work on the VM.
+     [REMEDIATION]
+     When you set OS Login metadata, Compute Engine deletes the VM's authorized_keys
+     file and no longer accepts connections using SSH keys stored in project/instance
+     metadata. You must choosing between OS login or metadata based SSH key approach.
+     If you wish to use metadata ssh keys set the metadata `enable-oslogin=False`
+     https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#enable_os_login
+
+   - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [FAIL]
+     [REASON]
+     Local user "no_user" does not have at least one valid SSH key for the VM. faulty-windows-ssh
+     [REMEDIATION]
+     To resolve this issue, add a valid SSH key for the user "no_user" by following the instructions:
+     https://cloud.google.com/compute/docs/connect/add-ssh-keys#add_ssh_keys_to_instance_metadata
+
+
+[STEP]: Checking VPC network
+
+[DECISION]: Checking OS Image...
+[INFO]: OS type Image: Windows - Checking for windows related SSH issues...
+
+[STEP]: Checking windows Guest OS boot up status
+
+   - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [FAIL]
+     [REASON]
+     Windows OS has not booted up correctly
+     [REMEDIATION]
+     Follow this documentation to ensure that VM is fully booted
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-windows
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-rdp#instance_ready
+
+[STEP]: Checking SSH in windows.
+
+   - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [FAIL]
+     [REASON]
+     SSH metadata is not enabled for the windows instance attempting to use SSHD
+     [REMEDIATION]
+     Enable SSH on Windows. Follow this guide:
+     https://cloud.google.com/compute/docs/connect/windows-ssh#enable
+
+[STEP]: Manually check ssh reqired Agents are running on the VM
+      Check google-compute-engine-ssh is installed.
+
+
