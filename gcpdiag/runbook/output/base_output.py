@@ -44,7 +44,7 @@ class BaseOutput:
     print(f'gcpdiag {config.VERSION}\n', file=sys.stderr)
 
   def display_header(self, context: models.Context) -> None:
-    print(f'Starting runbook inspection [Alpha Release]\n({context})\n',
+    print(f'Starting runbook inspection [Alpha Release]\n{context}\n',
           file=sys.stderr)
 
   def display_footer(self, result: 'runbook.RunbookReport') -> None:

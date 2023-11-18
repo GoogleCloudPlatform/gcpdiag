@@ -3,6 +3,7 @@ set -e
 THIS_WRAPPER_VERSION=0.10
 SUPPORTED_RUNTIME="docker podman"
 ARGS="$*"
+DEFAULT_OUTPUT_DIR="$HOME/tmp/gcpdiag"
 
 eval $(curl -sf https://storage.googleapis.com/gcpdiag-dist/release-version|grep -Ei '^\w*=[0-9a-z/\._-]*$')
 
@@ -46,6 +47,33 @@ handle_mount_path () {
       return 1
     fi
   fi
+  return 0
+}
+
+# Test whether 1st arg (abs path to mount) was provided and exists, then prepare mount path
+# If no custom mount point was provided, create and mount the DEFAULT_OUTPUT_DIR
+# that will be used inside container with the same path
+handle_mount_dir() {
+  local DIR_TO_MOUNT="$1"
+  local MOUNT=""
+
+  if [ -z "$DIR_TO_MOUNT" ]; then
+    DIR_TO_MOUNT="$DEFAULT_OUTPUT_DIR"
+
+    if [ -z "$DIR_TO_MOUNT" ]; then
+      # Return an error code if DIR_TO_MOUNT is empty or does not exist
+      return 1
+    else
+      mkdir -p "$DIR_TO_MOUNT"
+    fi
+  elif [ ! -d "$DIR_TO_MOUNT" ] && [[ "$DIR_TO_MOUNT" = /* ]]; then
+    # Create the directory if it doesn't exist and an absolute path is provided
+    mkdir -p "$DIR_TO_MOUNT"
+  fi
+
+  # If it's a directory, mount the entire directory
+  [ -d "$DIR_TO_MOUNT" ] && MOUNT="-v $DIR_TO_MOUNT:$DIR_TO_MOUNT"
+  echo "$MOUNT"
   return 0
 }
 
@@ -93,6 +121,7 @@ fi
 # Check if:
 # - config argument was provided via --config file or --config=file
 # - auth-key argument was provided via --auth-key file or --auth-key=file
+# - report-dir argument was provided via --report-dir path or --report-dir=path
 while [[ $# -gt 0 ]]; do
   case $1 in
     --config=*)
@@ -106,6 +135,12 @@ while [[ $# -gt 0 ]]; do
       ;;
     --auth-key)
       AUTH_KEY="$2"
+      ;;
+    --report-dir=*)
+      REPORT_DIR="${1#*=}"
+      ;;
+    --report-dir)
+      REPORT_DIR="$2"
       ;;
   esac
   shift
@@ -133,6 +168,14 @@ if ! AUTH_KEY_MOUNT=$(handle_mount_path "$AUTH_KEY"); then
     exit 1
 fi
 
+if ! REPORT_DIR_MOUNT=$(handle_mount_dir "$REPORT_DIR"); then
+    echo
+    echo "## ERROR:"
+    echo "## Error creating report dir: $REPORT_DIR"
+    echo
+    exit 1
+fi
+
 # shellcheck disable=SC2086
 exec "$RUNTIME" run $USE_TTY \
   --rm \
@@ -145,4 +188,5 @@ exec "$RUNTIME" run $USE_TTY \
   -v "$HOME/.config/gcloud:$HOME/.config/gcloud" \
   $CONFIG_MOUNT \
   $AUTH_KEY_MOUNT \
+  $REPORT_DIR_MOUNT \
   "$DOCKER_IMAGE:$DOCKER_IMAGE_VERSION" /opt/gcpdiag/bin/gcpdiag $ARGS

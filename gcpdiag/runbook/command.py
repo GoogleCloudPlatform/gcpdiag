@@ -16,6 +16,7 @@
 import argparse
 import importlib
 import logging
+import os
 import pkgutil
 import re
 import sys
@@ -45,6 +46,26 @@ class ParseMappingArg(argparse.Action):
                 f'argument {option_string} expected key:value, received {value}'
             )
     setattr(namespace, self.dest, parsed_dict)
+
+
+def expand_and_validate_path(arg) -> str:
+  # Expand the path and check if it exists
+  expanded_path = os.path.abspath(os.path.expanduser(arg))
+  home_path = os.path.expanduser('~')
+  # Cloud Shell only allows report downloads from paths in user's home
+  # Check if the home directory is already present in the path if not
+  if bool(os.getenv('CLOUD_SHELL')):
+    # If default path append $HOME
+    if arg == config.get('report_dir'):
+      return os.path.join(home_path, expanded_path)
+    # User supplied path
+    elif home_path not in expanded_path:
+      raise argparse.ArgumentTypeError(
+          f'The {arg} folder must be located in your home directory')
+  if not expanded_path or not os.path.exists(expanded_path):
+    raise argparse.ArgumentTypeError(
+        f"Dirctory '{arg}' does not exist. Create one and try again")
+  return expanded_path
 
 
 def _init_runbook_args_parser():
@@ -144,6 +165,22 @@ def _init_runbook_args_parser():
       help=('Execute runbook autonomously. Use this to skip human tasks. '
             'Incomplete tasks are added to the report.'),
       action='store_true')
+
+  parser.add_argument(
+      '--report-dir',
+      metavar='FILE',
+      default=config.get('report_dir'),
+      type=expand_and_validate_path,
+      help=
+      ('Specifies the full path to the directory where reports '
+       'will be saved (default: /tmp/gcpdiag or in Cloud Shell $HOME/tmp/gcpdiag)'
+      ))
+  parser.add_argument(
+      '--interface',
+      metavar='FORMATTER',
+      default='cli',
+      type=str,
+      help=('What interface as one of [cli, api] (default: cli)'))
 
   parser.add_argument(
       '--label',
