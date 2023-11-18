@@ -111,7 +111,7 @@ class RunbookInteractionInterface:
   rule: RunbookRule
   results: Set[RunbookNodeResult]
   _report: 'RunbookReport'
-  _report_name: str
+  _report_path: str
   line_unfinished: bool
   term: blessings.Terminal
 
@@ -120,8 +120,11 @@ class RunbookInteractionInterface:
     self.rule = rule
     self._report = runbook_report
     self.results = set()
-    self._report_name = ''
     self.term = blessings.Terminal()
+
+    date = datetime.now(timezone.utc).strftime('%Y_%m_%d_%H_%M_%S_%Z')
+    report_name = f'runbook_report_{self.rule.product}_{self.rule.rule_id}_{date}.json'
+    self._report_path = os.path.join(config.get('report_dir'), report_name)
 
   @property
   def overall_status(self) -> str:
@@ -281,9 +284,12 @@ class RunbookInteractionInterface:
     self.line_unfinished = False
 
   def generate_report(self):
-    if not self._report_name:
-      date = datetime.now(timezone.utc).strftime('%Y_%m_%d_%H_%M_%S_%Z')
-      self._report_name = f'{self.rule.product}_{self.rule.rule_id}_{date}.json'
+    """Generate Runbook Report"""
+    result = self._generate_json_report()
+    if config.get('interface') == 'cli':
+      self._write_report_to_terminal(result)
+
+  def _generate_json_report(self):
 
     def result_to_dict(result: RunbookNodeResult):
       return {
@@ -307,20 +313,27 @@ class RunbookInteractionInterface:
         'execution_mode': 'auto' if config.get('auto') else 'interactive',
         'results': list(self.results)
     }
-    results = json.dumps(report,
-                         ensure_ascii=False,
-                         default=result_to_dict,
-                         indent=2)
-    with open(self._report_name, 'w', encoding='utf-8') as file:
-      try:
-        file.write(results)
-      except PermissionError as e:
-        logging.error('Permission denied while saving report to file %s', e)
-      except OSError as e:
-        logging.error('Failed to save generated report to file %s', e)
-      else:
-        print(f'\nRunbook report located in: {os.getcwd()}/{self._report_name}',
-              file=sys.stderr)
+    return json.dumps(report,
+                      ensure_ascii=False,
+                      default=result_to_dict,
+                      indent=2)
+
+  def _write_report_to_terminal(self, json_report):
+    try:
+      with open(self._report_path, 'w', encoding='utf-8') as file:
+        file.write(json_report)
+    except PermissionError as e:
+      logging.error(
+          'Permission denied while saving report to file, displaying report')
+      logging.debug(e)
+      print(json_report, file=sys.stderr)
+    except OSError as e:
+      logging.error(
+          'Failed to save generated report to file, displaying report')
+      logging.debug(e)
+      print(json_report, file=sys.stderr)
+    else:
+      print(f'\nRunbook report located in: {file.name}', file=sys.stderr)
 
   RETEST = 'RETEST'
   YES = 'YES'
@@ -685,11 +698,9 @@ class WorkflowEngine:
                 self.prompt(message=(
                     'Contact Google Cloud Support for further investigation.\n'
                     'https://cloud.google.com/support/docs/customer-care-procedures\n'
-                    'Please submit the generated report to Google cloud support '
-                    'if opening a ticket or refer to our documentation on troubeshooting ssh'
-                    'https://cloud.google.com/compute/docs/troubleshooting/'
-                    'troubleshooting-ssh-errors'))
-            rule_report.generate_report()
+                    'Recommended: Submit the generated report to Google cloud support '
+                    'when opening a ticket.'))
+                rule_report.generate_report()
 
       except (utils.GcpApiError, googleapiclient.errors.HttpError, RuntimeError,
               ValueError, KeyError) as err:

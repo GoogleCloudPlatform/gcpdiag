@@ -1011,4 +1011,4 @@ def end(context: models.Context,
           'https://cloud.google.com/support/docs/customer-care-procedures\n'
           'Recommended: Submit the generated report to Google cloud support when opening a ticket.'
       ))
-  interface.generate_report()
+      interface.generate_report()
