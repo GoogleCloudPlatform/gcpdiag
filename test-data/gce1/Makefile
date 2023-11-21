@@ -42,7 +42,9 @@ all:	\
 	json-dumps/monitoring-query.json \
 	json-dumps/project.json \
 	json-dumps/services.json \
-	json-dumps/serial-port-logging-entries-1.json
+	json-dumps/serial-port-logging-entries-1.json \
+	json-dumps/healthChecks.json
+
 
 include ../Makefile.inc
 
@@ -66,4 +68,9 @@ json-dumps/compute-serial-port-output-1.json:
 	$(CURL) -fsS \
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$(ZONE_2)/instances/$(INSTANCE_NAME_GCE2)/serialPort?start=-1000000' \
 		--header "Content-Type:text/json" \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/healthChecks.json:
+	$(CURL) -fsS \
+	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/healthChecks/' \
 		| $(SED_SUBST_FAKE) >$@

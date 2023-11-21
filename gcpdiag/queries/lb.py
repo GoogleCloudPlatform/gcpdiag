@@ -23,6 +23,7 @@ from gcpdiag.queries import apis
 
 class BackendServices(models.Resource):
   """A Backend Service resource."""
+
   _resource_data: dict
   _type: str
 
@@ -71,6 +72,16 @@ class BackendServices(models.Resource):
   @property
   def load_balancing_scheme(self) -> str:
     return self._resource_data.get('loadBalancingScheme', 'NONE')
+
+  @property
+  def health_check(self) -> str:
+    health_check_url = self._resource_data['healthChecks'][0]
+    matches = re.search(r'/([^/]+)$', health_check_url)
+    if matches:
+      healthcheck_name = matches.group(1)
+      return healthcheck_name
+    else:
+      return ''
 
   @property
   def region(self):

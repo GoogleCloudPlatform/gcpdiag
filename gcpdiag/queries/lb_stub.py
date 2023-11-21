@@ -27,7 +27,8 @@ from gcpdiag.queries import apis_stub
 class LbApiStub:
   """Mock object to simulate compute engine networking api calls.
 
-  This object is created by GceApiStub, not used directly in test scripts."""
+  This object is created by GceApiStub, not used directly in test scripts.
+  """
 
   def __init__(self, mock_state):
     self.mock_state = mock_state

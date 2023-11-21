@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# terraform wrapper using docker
+
+USE_TTY=""
+CWD=$(pwd)
+[ -t 0 ] && USE_TTY="-it"
+
+exec docker run $USE_TTY \
+  --rm \
+  -u "$(id -u):$(id -g)" \
+  -e "USER=$(id -n -u)" \
+  -e "GROUP=$(id -n -g)" \
+  -e "HOME=$HOME" \
+  -e "LANG=$LANG" \
+  -e "SHELL=/bin/bash" \
+  -v "$CWD:$CWD" \
+  -v "$HOME/.config/gcloud:/home/.config/gcloud" \
+  -w "$CWD" \
+  mirror.gcr.io/hashicorp/terraform:light "$@"
