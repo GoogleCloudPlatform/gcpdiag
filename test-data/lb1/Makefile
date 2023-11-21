@@ -19,10 +19,16 @@ all:	\
 	json-dumps/compute-project.json \
 	json-dumps/compute-regions.json \
 	json-dumps/backendServices.json \
+	json-dumps/healthChecks.json \
 
 include ../Makefile.inc
 
 json-dumps/backendServices.json:
 	$(CURL) -fsS \
 	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/backendServices/' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/healthChecks.json:
+	$(CURL) -fsS \
+	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/healthChecks/' \
 		| $(SED_SUBST_FAKE) >$@
