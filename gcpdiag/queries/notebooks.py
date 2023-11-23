@@ -149,6 +149,8 @@ class Runtime(models.Resource):
 @caching.cached_api_call
 def get_instances(context: models.Context) -> Mapping[str, Instance]:
   instances: Dict[str, Instance] = {}
+  if not apis.is_enabled(context.project_id, 'notebooks'):
+    return instances
   logging.info(
       'fetching list of Vertex AI Workbench notebook instances in project %s',
       context.project_id)
