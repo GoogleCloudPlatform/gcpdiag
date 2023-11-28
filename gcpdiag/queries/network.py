@@ -56,7 +56,7 @@ class Subnetwork(models.Resource):
 
   @property
   def self_link(self) -> str:
-    return self._resource_data['selfLink']
+    return self._resource_data.get('selfLink', '')
 
   @property
   def ip_network(self) -> IPv4NetOrIPv6Net:
@@ -206,7 +206,7 @@ class ManagedZone(models.Resource):
 
   @property
   def self_link(self) -> str:
-    return self._resource_data['selfLink']
+    return self._resource_data.get('selfLink', '')
 
 
 class Router(models.Resource):
@@ -238,7 +238,7 @@ class Router(models.Resource):
 
   @property
   def self_link(self) -> str:
-    return self._resource_data['selfLink']
+    return self._resource_data.get('selfLink', '')
 
   def subnet_has_nat(self, subnetwork):
     if not self._resource_data.get('nats', []):
@@ -300,7 +300,7 @@ class Network(models.Resource):
 
   @property
   def self_link(self) -> str:
-    return self._resource_data['selfLink']
+    return self._resource_data.get('selfLink', '')
 
   @property
   def firewall(self) -> 'EffectiveFirewalls':

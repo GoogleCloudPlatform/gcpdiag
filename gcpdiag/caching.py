@@ -58,7 +58,7 @@ def get_cache() -> diskcache.Cache:
   """Get a Diskcache.Cache object that can be used to cache data."""
   global _cache
   if not _cache:
-    _cache = diskcache.Cache(config.CACHE_DIR, tag_index=True)
+    _cache = diskcache.Cache(config.get_cache_dir(), tag_index=True)
     # Make sure that we remove any data that wasn't cleaned up correctly for
     # some reason.
     _clean_cache()
@@ -82,7 +82,7 @@ def get_tmp_deque(prefix='tmp-deque-') -> diskcache.Deque:
   arguments:
     prefix: prefix to be added to the temporary directory (default: tmp-deque)
   """
-  tempdir = tempfile.mkdtemp(prefix=prefix, dir=config.CACHE_DIR)
+  tempdir = tempfile.mkdtemp(prefix=prefix, dir=config.get_cache_dir())
   if not deque_tmpdirs:
     atexit.register(_clean_tmp_deque)
   deque_tmpdirs.append(tempdir)

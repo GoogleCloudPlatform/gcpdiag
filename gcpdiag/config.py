@@ -65,8 +65,20 @@ API_RETRIES = 10
 API_RETRY_SLEEP_MULTIPLIER = 1.4
 API_RETRY_SLEEP_RANDOMNESS_PCT = 0.2
 
+_cache_dir = appdirs.user_cache_dir('gcpdiag')
+
+
+def set_cache_dir(path: str):
+  """Set temporary directory for cache."""
+  global _cache_dir
+  _cache_dir = path
+
+
 # Cache directory for diskcache.
-CACHE_DIR = appdirs.user_cache_dir('gcpdiag')
+def get_cache_dir():
+  """Get temporary directory for cache."""
+  return _cache_dir
+
 
 # Number of seconds to wait for the gcpdiag.cache API cache lock to be freed.
 CACHE_LOCK_TIMEOUT = 120
@@ -114,7 +126,7 @@ def init(args, is_cloud_shell=False):
   Args:
       args (Dict): Configuration dictionary.
       project_id (str): Current project id
-      is_cloud_shell (bool, optional): Wheather cloud shell is used. Defaults to False.
+      is_cloud_shell (bool, optional): Whether cloud shell is used. Defaults to False.
   """
   global _args
   global _config
