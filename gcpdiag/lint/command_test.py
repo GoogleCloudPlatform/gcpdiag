@@ -13,13 +13,64 @@
 # limitations under the License.
 """Test code in command.py."""
 
-from gcpdiag import lint
+import sys
+from unittest import TestCase, mock
+
+from gcpdiag import config, lint
 from gcpdiag.lint import command
+from gcpdiag.queries import apis, apis_stub
 
 MUST_HAVE_MODULES = {
     'gke', 'gcb', 'gae', 'gce', 'iam', 'apigee', 'composer', 'datafusion',
     'dataproc', 'gcs', 'vpc', 'lb', 'gcf'
 }
+
+
+@mock.patch('sys.exit', side_effect=lambda x: None)
+@mock.patch.object(apis, 'get_user_email', return_value='someone@company.com')
+@mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
+class TestCommand(TestCase):
+  """Unit tests for overall command execution."""
+
+  def test_run(self, mock_email, mock_api):
+    # pylint: disable=W0613
+
+    sys.argv = [
+        'gcpdiag lint',
+        '--project',
+        '12340001',
+        '--include',
+        'dataproc/BP/2021_001',
+    ]
+    command.run([])
+    assert True
+
+  def test_run_and_get_results(self, mock_email, mock_api):
+    # pylint: disable=W0613
+    sys.argv = [
+        'gcpdiag lint',
+        '--project',
+        '12340001',
+        '--include',
+        'dataproc/BP/2021_001',
+    ]
+    self.assertDictEqual(
+        command.run_and_get_results(None),
+        {
+            'result': [{
+                'doc_url': 'https://gcpdiag.dev/rules/dataproc/BP/2021_001',
+                'reason': 'no dataproc clusters found',
+                'resource': '-',
+                'rule': 'dataproc/BP/2021_001',
+                'short_info': None,
+                'status': 'skipped',
+            }],
+            'summary': {
+                'skipped': 1
+            },
+            'version': config.VERSION,
+        },
+    )
 
 
 class Test:

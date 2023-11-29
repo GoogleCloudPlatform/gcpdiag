@@ -21,6 +21,7 @@ import logging
 import pkgutil
 import re
 import sys
+from typing import Any, Dict, List, Optional
 
 from gcpdiag import config, hooks, lint, models, utils
 from gcpdiag.lint.output import csv_output, json_output, terminal_output
@@ -173,7 +174,7 @@ def _init_args_parser():
   parser.add_argument('--config',
                       metavar='FILE',
                       type=str,
-                      help=('Read configuration from FILE'))
+                      help='Read configuration from FILE')
 
   parser.add_argument('--logging-ratelimit-requests',
                       metavar='R',
@@ -225,9 +226,9 @@ def _parse_rule_patterns(patterns):
     for arg in _flatten_multi_arg(patterns):
       try:
         rules.append(lint.LintRulesPattern(arg))
-      except ValueError:
+      except ValueError as e:
         print(f"ERROR: can't parse rule pattern: {arg}", file=sys.stderr)
-        sys.exit(1)
+        raise e from None
     return rules
   return None
 
@@ -268,12 +269,22 @@ def _initialize_output(output_order):
   return output
 
 
-def run(argv) -> int:
-  del argv
+def _parse_args_run_repo(
+    argv: Optional[List[str]] = None,
+    credentials: Optional[str] = None) -> lint.LintRuleRepository:
+  """Parse the sys.argv command line arguments and execute the lint rules.
 
+  Args: argv: [str]   argument list sys.argv
+        credentials: str json repr of ADC credentials
+
+  Returns: lint.LintRuleRepository with repo results
+  """
   # Initialize argument parser
   parser = _init_args_parser()
-  args = parser.parse_args()
+  args = parser.parse_args(args=argv)
+
+  if credentials:
+    apis.set_credentials(credentials)
 
   # Allow to change defaults using a hook function.
   hooks.set_lint_args_hook(args)
@@ -283,11 +294,11 @@ def run(argv) -> int:
     # Users to use either project Number or project id
     # fetch project details
     project = crm.get_project(args.project)
-  except utils.GcpApiError:
+  except utils.GcpApiError as e:
     # fail hard as the user typically doesn't have permission
     # to retrieve details of the project under inspection.
     print('[ERROR]:exiting program...', file=sys.stderr)
-    sys.exit(1)
+    raise ValueError('error getting project details') from e
   else:
     # set the project id in config and context as
     # remaining code will mainly use project ID
@@ -338,7 +349,7 @@ def run(argv) -> int:
     logger.error(
         'The oauth authentication has been deprecated and does not work'
         ' anymore. Consider using other authentication methods.')
-    sys.exit(1)
+    raise ValueError('oauth authentication is no longer supported')
 
   # Start the reporting
   output.display_banner()
@@ -347,7 +358,8 @@ def run(argv) -> int:
   # Verify that we have access and that the CRM API is enabled
   apis.verify_access(context.project_id)
 
-  # Warn end user to fallback on serial logs buffer if project isn't storing in cloud logging
+  # Warn end user to fallback on serial logs buffer if project isn't storing in
+  # cloud logging
   if not gce.is_project_serial_port_logging_enabled(context.project_id) and \
     not config.get('enable_gce_serial_buffer'):
     # Only print the warning if GCE is enabled in the first place
@@ -365,5 +377,53 @@ def run(argv) -> int:
   # Clean up the kubeconfig file generated for gcpdiag
   kubectl.clean_up()
 
-  # Exit 0 if there are no failed rules.
+  return repo
+
+
+def run(argv) -> int:
+  """Run the overall command line gcpdiag lint command.
+  Parsing the sys.argv and sys.exit on error for failed."""
+  del argv
+
+  try:
+    repo = _parse_args_run_repo()
+  except ValueError as e:
+    print(e, file=sys.stderr)
+    sys.exit(1)
   sys.exit(2 if repo.result.any_failed else 0)
+
+
+def run_and_get_results(argv: List[str],
+                        credentials: str = None) -> Dict[str, Any]:
+  """Run gcpdiag lint as the command line and return a dict with API results.
+
+  Args:
+    argv: [str]  list of arguments like sys.argv,
+    credentials: str, default credentials in json
+
+  Returns: dict
+    {'version': str, 'summary': {'ok': int, 'skipped': int, 'failed': int'},
+     'result': [{'rule': str, 'resource': str, 'status': str, 'reason': str,
+                 'short_info': str, 'doc_url': str}, ...]
+     }
+  """
+
+  repo = _parse_args_run_repo(argv, credentials=credentials)
+  results = []
+  for r in repo.result.get_rule_reports():
+    rule = r.rule
+    rule_id = f'{rule.product}/{rule.rule_class}/{rule.rule_id}'
+    for res in r.results:
+      results.append({
+          'rule': rule_id,
+          'resource': str(res.resource or '-'),
+          'status': res.status,
+          'reason': res.reason,
+          'short_info': res.short_info,
+          'doc_url': rule.doc_url
+      })
+  return {
+      'version': config.VERSION,
+      'summary': repo.result.get_totals_by_status(),
+      'result': results
+  }

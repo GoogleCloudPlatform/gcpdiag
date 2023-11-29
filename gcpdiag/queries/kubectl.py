@@ -18,19 +18,21 @@
 import functools
 import logging
 import os
-import pathlib
 import subprocess
 import threading
 
 import yaml
 
+from gcpdiag import config
 from gcpdiag.queries import gke
 
-config_path = str(pathlib.Path(__file__).parents[2]) + '/gcpdiag-config'
+
+def get_config_path():
+  return config.get_cache_dir() + '/gcpdiag-config'
 
 
 class KubectlExecutor:
-  """ Represents a kubectl executor. """
+  """Represents a kubectl executor."""
 
   lock: threading.Lock
 
@@ -39,10 +41,10 @@ class KubectlExecutor:
     self.lock = threading.Lock()
 
   def make_kube_config(self) -> bool:
-    """ Add a new kubernetes context for kubectl plugin CLIs. """
+    """Add a new kubernetes context for kubectl plugin CLIs."""
 
     cfg: dict = {}
-    if not os.path.isfile(config_path):
+    if not os.path.isfile(get_config_path()):
       cfg['apiVersion'] = 'v1'
       cfg['users'] = [{
           'name': 'gcpdiag',
@@ -58,7 +60,7 @@ class KubectlExecutor:
       cfg['clusters'] = []
       cfg['contexts'] = []
     else:
-      with open(config_path, encoding='UTF-8') as f:
+      with open(get_config_path(), encoding='UTF-8') as f:
         cfg = yaml.safe_load(f)
 
     if self.cluster.endpoint is None:
@@ -86,7 +88,7 @@ class KubectlExecutor:
     self.kubecontext = kubecontext
 
     config_text = yaml.dump(cfg, default_flow_style=False)
-    with open(config_path, 'w', encoding='UTF-8') as config_file:
+    with open(get_config_path(), 'w', encoding='UTF-8') as config_file:
       config_file.write(config_text)
       config_file.close()
 
@@ -111,8 +113,8 @@ def verify_auth(executor: KubectlExecutor) -> bool:
   Will raise a warning and return False if authentication failed.
   """
   _, stderr = executor.kubectl_execute([
-      'kubectl', 'cluster-info', '--kubeconfig', config_path, '--context',
-      executor.kubecontext
+      'kubectl', 'cluster-info', '--kubeconfig',
+      get_config_path(), '--context', executor.kubecontext
   ])
   if stderr:
     logging.warning('Failed to authenticate kubectl for cluster %s: %s',
@@ -123,8 +125,8 @@ def verify_auth(executor: KubectlExecutor) -> bool:
 
 def check_gke_ingress(executor: KubectlExecutor):
   return executor.kubectl_execute([
-      'kubectl', 'check-gke-ingress', '--kubeconfig', config_path, '--context',
-      executor.kubecontext
+      'kubectl', 'check-gke-ingress', '--kubeconfig',
+      get_config_path(), '--context', executor.kubecontext
   ])
 
 
@@ -149,7 +151,7 @@ def get_kubectl_executor(c: gke.Cluster):
 def clean_up():
   """ Delete the kubeconfig file generated for gcpdiag. """
   try:
-    os.remove(config_path)
+    os.remove(get_config_path())
   except OSError as err:
     logging.debug('Error cleaning up kubeconfig file used by gcpdiag: %s: %s',
                   type(err).__name__, err)
