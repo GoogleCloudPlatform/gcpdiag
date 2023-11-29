@@ -168,6 +168,9 @@ class LintResults:
     self._result_handlers = []
     self._rule_reports = []
 
+  def get_rule_reports(self) -> List[LintReportRuleInterface]:
+    return self._rule_reports
+
   def add_result_handler(self, handler: LintResultsHandler) -> None:
     """
     Handlers can be registered with LintResults and react on each rule added
