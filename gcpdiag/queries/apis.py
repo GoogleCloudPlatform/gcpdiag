@@ -27,7 +27,7 @@ import googleapiclient.http
 import httplib2
 from google.api_core.client_options import ClientOptions
 from google.auth import exceptions
-from google.oauth2 import credentials
+from google.oauth2 import credentials as oauth2_credentials
 from google_auth_oauthlib import flow
 from googleapiclient import discovery
 
@@ -108,7 +108,7 @@ def _oauth_flow_prompt(client_config):
 def set_credentials(cred_json):
   global _credentials
   if not _credentials:
-    _credentials = credentials.Credentials.from_authorized_user_info(
+    _credentials = oauth2_credentials.Credentials.from_authorized_user_info(
         json.loads(cred_json))
 
 
@@ -137,9 +137,9 @@ def login():
 
 
 def get_user_email() -> str:
-  cred = get_credentials().with_quota_project(None)
+  credentials = get_credentials().with_quota_project(None)
 
-  http = google_auth_httplib2.AuthorizedHttp(cred, http=httplib2.Http())
+  http = google_auth_httplib2.AuthorizedHttp(credentials, http=httplib2.Http())
   resp, content = http.request('https://www.googleapis.com/userinfo/v2/me')
   if resp['status'] != '200':
     raise RuntimeError(f"can't determine user email. status={resp['status']}")
@@ -157,7 +157,7 @@ def get_api(service_name: str,
 
   If project_id is specified, this will be used as the billed project, and usually
   you should put there the project id of the project that you are inspecting."""
-  cred = get_credentials()
+  credentials = get_credentials()
 
   def _request_builder(http, *args, **kwargs):
     del http
@@ -186,7 +186,7 @@ def get_api(service_name: str,
   api = discovery.build(service_name,
                         version,
                         cache_discovery=False,
-                        credentials=cred,
+                        credentials=credentials,
                         requestBuilder=_request_builder,
                         client_options=client_options)
   return api
