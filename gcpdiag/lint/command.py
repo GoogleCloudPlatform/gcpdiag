@@ -373,7 +373,8 @@ def _parse_args_run_repo(
   repo.run_rules(context)
   output.display_footer(repo.result)
   hooks.post_lint_hook(repo.result.get_rule_statuses())
-
+  if credentials:
+    apis.set_credentials(None)
   # Clean up the kubeconfig file generated for gcpdiag
   kubectl.clean_up()
 
