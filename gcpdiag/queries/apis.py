@@ -107,7 +107,9 @@ def _oauth_flow_prompt(client_config):
 
 def set_credentials(cred_json):
   global _credentials
-  if not _credentials:
+  if cred_json:
+    _credentials = None
+  else:
     _credentials = oauth2_credentials.Credentials.from_authorized_user_info(
         json.loads(cred_json))
 
