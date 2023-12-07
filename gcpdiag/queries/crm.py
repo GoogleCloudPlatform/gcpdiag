@@ -16,11 +16,13 @@
 import logging
 import re
 import sys
+from typing import List
 
 import googleapiclient
 
 from gcpdiag import caching, config, models, utils
-from gcpdiag.queries import apis
+from gcpdiag.queries import apis, apis_utils
+from gcpdiag.queries.billing import ProjectBillingInfo, get_billing_info
 
 
 class Project(models.Resource):
@@ -119,3 +121,19 @@ def get_project(project_id: str) -> Project:
     raise error from e
   else:
     return Project(resource_data=response)
+
+
+@caching.cached_api_call
+def get_all_projects_in_parent() -> List[ProjectBillingInfo]:
+  """Get all projects in the Parent Resource that current user has
+  permission to view"""
+  projects = []
+  api = apis.get_api('cloudresourcemanager', 'v1')
+
+  for project in apis_utils.list_all(request=api.projects().list(),
+                                     next_function=api.projects().list_next,
+                                     response_keyword='projects'):
+    projects.append(
+        ProjectBillingInfo(project['projectId'],
+                           get_billing_info(project['projectId'])))
+  return projects

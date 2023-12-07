@@ -1,0 +1,16 @@
+{
+  "projects": [
+    {
+      "projectNumber": "123456872873",
+      "projectId": "gcpdiag-billing1-aaaa",
+      "lifecycleState": "ACTIVE",
+      "name": "FAKE123f20406d77dp-tp",
+      "createTime": "2022-12-05T21:35:17.970Z",
+      "parent": {
+        "type": "folder",
+        "id": "1234569776913"
+      }
+    }
+  ],
+  "nextPageToken": ""
+}

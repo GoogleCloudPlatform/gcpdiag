@@ -18,3 +18,4 @@ crash.*.log
 gcpdiag-config
 gcpdiag/testpsa.py
 .vscode/launch.json
+**/.DS_STORE
