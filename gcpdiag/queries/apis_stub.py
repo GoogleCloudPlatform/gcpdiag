@@ -88,6 +88,8 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/dataflow1/json-dumps',
     'gcpdiag-vertex1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/vertex1/json-dumps',
+    'gcpdiag-billing1-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/billing1/json-dumps'
 }
 
 # set to a value higher than 0 to emulate API temp. failure
@@ -319,5 +321,11 @@ def get_api_stub(service_name: str,
   elif 'aiplatform' in service_name:
     from gcpdiag.queries import vertex_stub
     return vertex_stub.VertexApiStub()
+  elif service_name == 'recommender':
+    from gcpdiag.queries import billing_stub
+    return billing_stub.RecommenderApiStub()
+  elif service_name == 'cloudbilling':
+    from gcpdiag.queries import billing_stub
+    return billing_stub.BillingApiStub()
   else:
     raise ValueError('unsupported service: %s' % service_name)

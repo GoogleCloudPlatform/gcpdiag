@@ -1,0 +1,10 @@
+{
+  "name": "projects/12340092",
+  "parent": "organizations/11112222",
+  "projectId": "gcpdiag-billing1-aaaa",
+  "state": "ACTIVE",
+  "displayName": "gcpdiag test - billing1",
+  "createTime": "2022-12-05T21:35:36.712Z",
+  "updateTime": "2022-12-05T21:35:38.442Z",
+  "etag": "FklYEDTFd9WSIT9EB76gSg=="
+}

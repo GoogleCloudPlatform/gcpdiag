@@ -1,0 +1,6 @@
+{
+  "name": "projects/gcpdiag-billing1-aaaa/billingInfo",
+  "projectId": "gcpdiag-billing1-aaaa",
+  "billingAccountName": "billingAccounts/005E32-00FAKE-123456",
+  "billingEnabled": true
+}

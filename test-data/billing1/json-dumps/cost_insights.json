@@ -1,0 +1,55 @@
+{
+  "category": "COST",
+  "content": {
+    "additionalDetails": {
+      "link": ""
+    },
+    "anomalyDetails": {
+      "actualCostData": {
+        "cost": {
+          "currencyCode": "USD",
+          "nanos": 945932000,
+          "units": "16"
+        }
+      },
+      "costSlice": {
+        "endTime": "2021-04-21T07:00:00Z",
+        "startTime": "2021-04-20T07:00:00Z"
+      },
+      "forecastedCostData": {
+        "cost": {
+          "currencyCode": "USD",
+          "nanos": 693342000,
+          "units": "80"
+        }
+      },
+      "forecastedCostDataLowerBound": {
+        "cost": {
+          "currencyCode": "USD",
+          "nanos": 517253115,
+          "units": "60"
+        }
+      },
+      "forecastedCostDataUpperBound": {
+        "cost": {
+          "currencyCode": "USD",
+          "nanos": 869430885,
+          "units": "100"
+        }
+      }
+    }
+  },
+  "description": "This is a cost anomaly. The aggregated gross cost for the specified target resource list and cost slice is significantly different from the aggregated forecasted cost.",
+  "etag": "\"6cb9b8034bb8dc7e\"",
+  "insightSubtype": "COST_BELOW_FORECASTED",
+  "lastRefreshTime": "2022-05-06T17:30:09.666556402Z",
+  "name": "projects/12340092/locations/global/insightTypes/google.billing.CostInsight/insights/32ac0d4e-8235-42e2-b34e-384fc2256b3e",
+  "observationPeriod": "7776000s",
+  "severity": "MEDIUM",
+  "stateInfo": {
+    "state": "ACTIVE"
+  },
+  "targetResources": [
+    "//cloudresourcemanager.googleapis.com/projects/12340092"
+  ]
+}
