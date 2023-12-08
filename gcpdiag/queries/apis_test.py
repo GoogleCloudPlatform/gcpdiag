@@ -20,8 +20,28 @@ from gcpdiag.queries import apis, apis_stub
 DUMMY_PROJECT_NAME = 'gcpdiag-gke1-aaaa'
 
 
+class TestCredential:
+  """Test apis set_credentials."""
+
+  def test_set_credential_null(self):
+    # pylint:disable=protected-access
+    apis._credentials = 'something to clear'
+    apis.set_credentials(None)
+    assert apis._credentials is None
+    # pylint:enable=protected-access
+
+  @mock.patch('google.oauth2.credentials.Credentials.from_authorized_user_info')
+  def test_set_credential(self, mock_cred):
+    mock_cred.return_value = 'credential_data'
+    apis.set_credentials('"some json data"')
+    # pylint:disable=protected-access
+    assert apis._credentials == 'credential_data'
+    # pylint:enable=protected-access
+
+
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
 class Test:
+  """Test apis."""
 
   def test_is_enabled(self):
     assert apis.is_enabled(DUMMY_PROJECT_NAME, 'container')
