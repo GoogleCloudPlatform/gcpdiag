@@ -1,0 +1,4 @@
+*  composer/ERR/2023_005: Composer environment deletion not failed due to NAT configuration
+   - gcpdiag-composer1-aaaa/us-central1/env2                              [ OK ]
+   - gcpdiag-composer1-aaaa/us-central1/env1                              [ OK ]
+
