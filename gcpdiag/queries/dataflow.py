@@ -90,8 +90,8 @@ def get_all_dataflow_jobs(context: models.Context) -> List[Job]:
 
   print(f'\n\nFound {len(result)} Dataflow jobs\n')
 
-  # only print one job id
-  if len(result) == 1:
+  # print one Dataflow job id when it is found
+  if context.labels and result and 'id' in context.labels:
     print(f'{result[0].full_path} - {result[0].id}\n')
 
   return result
