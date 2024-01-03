@@ -62,6 +62,9 @@ def get_region_dataflow_jobs(api, context: models.Context,
     labels = job.get('labels', {})
     name = job.get('name', '')
 
+    # add job id as one of labels for filtering
+    labels['id'] = job.get('id', '')
+
     # we could get the specific job but correctly matching the location will take too
     # much effort. Hence get all the jobs and filter afterwards
     # https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs/list#query-parameters
@@ -84,4 +87,11 @@ def get_all_dataflow_jobs(context: models.Context) -> List[Job]:
   for jobs in executor.map(lambda r: get_region_dataflow_jobs(api, context, r),
                            DATAFLOW_REGIONS):
     result += jobs
+
+  print(f'\n\nFound {len(result)} Dataflow jobs\n')
+
+  # print one Dataflow job id when it is found
+  if context.labels and result and 'id' in context.labels:
+    print(f'{result[0].full_path} - {result[0].id}\n')
+
   return result
