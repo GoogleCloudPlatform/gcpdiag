@@ -27,15 +27,15 @@
 '1.28':
   oss_release: 2023-08-15
   rapid_avail: 2023-09-05
-  regular_avail: 2023-12
-  stable_avail: 2024-Q1
-  eol: TBD
+  regular_avail: 2023-12-04
+  stable_avail: 2024-01
+  eol: 2024-11-12
 '1.29':
-  oss_release: TBD
-  rapid_avail: TBD
-  regular_avail: TBD
-  stable_avail: TBD
-  eol: TBD
+  oss_release: 2023-12-13
+  rapid_avail: 2024-01-12
+  regular_avail: 2024-01
+  stable_avail: 2024-Q1
+  eol: 2025-03-21
 '1.30':
   oss_release: TBD
   rapid_avail: TBD
