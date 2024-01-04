@@ -165,6 +165,19 @@ class Subscription(models.Resource):
       return True
     return False
 
+  def is_gcs_subscription(self) -> bool:
+    """Return Boolean value if subscription is a gcs subscription."""
+    if 'cloudStorageConfig' in self._resource_data:
+      return True
+    return False
+
+  def is_push_subscription(self) -> bool:
+    """Return Boolean value if subscription is a push subscription."""
+    if (self._resource_data['pushConfig'] or self.is_big_query_subscription() or
+        self.is_gcs_subscription()):
+      return True
+    return False
+
   def has_dead_letter_topic(self) -> bool:
     """Return Truthy value if subscription has a dead-letter topic."""
     if 'deadLetterPolicy' in self._resource_data:
