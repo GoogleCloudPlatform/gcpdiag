@@ -1,20 +1,20 @@
 {
   "projectBillingInfo": [
     {
-      "name": "projects/google.com:abacab/billingInfo",
-      "projectId": "google.com:abacab",
-      "billingAccountName": "billingAccounts/005E32-00FAKE-123456",
-      "billingEnabled": true
-    },
-    {
-      "name": "projects/google.com:cloud-billing-support/billingInfo",
-      "projectId": "google.com:cloud-billing-support",
-      "billingAccountName": "billingAccounts/005E32-00FAKE-123456",
-      "billingEnabled": true
-    },
-    {
       "name": "projects/gcpdiag-billing1-aaaa/billingInfo",
       "projectId": "gcpdiag-billing1-aaaa",
+      "billingAccountName": "billingAccounts/005E32-00FAKE-123456",
+      "billingEnabled": true
+    },
+    {
+      "name": "projects/gcpdiag-billing2-aaaa/billingInfo",
+      "projectId": "gcpdiag-billing2-aaaa",
+      "billingAccountName": "billingAccounts/005E32-00FAKE-123456",
+      "billingEnabled": true
+    },
+    {
+      "name": "projects/gcpdiag-billing3-aaaa/billingInfo",
+      "projectId": "gcpdiag-billing3-aaaa",
       "billingAccountName": "billingAccounts/005E32-00FAKE-123456",
       "billingEnabled": true
     }

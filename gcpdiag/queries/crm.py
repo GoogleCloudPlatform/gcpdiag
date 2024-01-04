@@ -69,6 +69,10 @@ class Project(models.Resource):
   def default_compute_service_account(self) -> str:
     return f'{self.number}-compute@developer.gserviceaccount.com'
 
+  @property
+  def parent(self) -> str:
+    return self._resource_data['parent']
+
 
 @caching.cached_api_call
 def get_project(project_id: str) -> Project:
@@ -124,16 +128,40 @@ def get_project(project_id: str) -> Project:
 
 
 @caching.cached_api_call
-def get_all_projects_in_parent() -> List[ProjectBillingInfo]:
-  """Get all projects in the Parent Resource that current user has
+def get_all_projects_in_parent(project_id: str) -> List[ProjectBillingInfo]:
+  """Get all projects in the Parent Folder that current user has
   permission to view"""
-  projects = []
-  api = apis.get_api('cloudresourcemanager', 'v1')
+  projects: List[ProjectBillingInfo] = []
+  if (not project_id) or (not apis.is_enabled(project_id, 'cloudbilling')):
+    return projects
+  project = get_project(project_id)
+  p_filter = 'parent.type:'+project.parent.split('/')[0][:-1]\
+    +' parent.id:'+project.parent.split('/')[1] if project.parent else ''
 
-  for project in apis_utils.list_all(request=api.projects().list(),
-                                     next_function=api.projects().list_next,
-                                     response_keyword='projects'):
-    projects.append(
-        ProjectBillingInfo(project['projectId'],
-                           get_billing_info(project['projectId'])))
+  api = apis.get_api('cloudresourcemanager', 'v1')
+  for p in apis_utils.list_all(request=api.projects().list(filter=p_filter),
+                               next_function=api.projects().list_next,
+                               response_keyword='projects'):
+    try:
+      crm_api = apis.get_api('cloudresourcemanager', 'v3', p['projectId'])
+      p_name = 'projects/' + p['projectId'] if 'projects/' not in p[
+          'projectId'] else p['projectId']
+      request = crm_api.projects().get(name=p_name)
+      response = request.execute(num_retries=config.API_RETRIES)
+      projects.append(
+          ProjectBillingInfo(response['projectId'],
+                             get_billing_info(p['projectId'])))
+    except (utils.GcpApiError, googleapiclient.errors.HttpError) as error:
+      if isinstance(error, googleapiclient.errors.HttpError):
+        error = utils.GcpApiError(error)
+      if error.reason in [
+          'IAM_PERMISSION_DENIED', 'USER_PROJECT_DENIED', 'SERVICE_DISABLED'
+      ]:
+        # skip projects that user does not have permissions on
+        continue
+      else:
+        print(
+            f'[ERROR]: An Http Error occured whiles accessing projects.get \n\n{error}',
+            file=sys.stderr)
+      raise error from error
   return projects

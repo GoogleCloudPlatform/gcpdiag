@@ -20,18 +20,24 @@ Check whether all projects the user has permission to view have billing enabled.
 """
 
 from gcpdiag import lint, models
-from gcpdiag.queries import crm
+from gcpdiag.queries import apis, billing, crm
 
 all_project_billing_info = []
 
 
 def prepare_rule(context: models.Context):
-  project = context.project_id
-  if project:
-    all_project_billing_info.extend(crm.get_all_projects_in_parent())
+  all_project_billing_info.extend(
+      crm.get_all_projects_in_parent(context.project_id))
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
+  if not apis.is_enabled(context.project_id, 'cloudbilling'):
+    # an API error is raised
+    billing.get_billing_info(context.project_id)
+    return
+  if len(all_project_billing_info) == 0:
+    report.add_skipped(None, 'Permission Denied')
+    return
   for project_billing_info in all_project_billing_info:
     project = crm.get_project(project_billing_info.project_id)
     if not project_billing_info.is_billing_enabled():
