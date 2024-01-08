@@ -9,7 +9,7 @@ JSON_CLEANER = ../../bin/json-cleaner
 
 TOPIC := $(shell /google/data/ro/teams/terraform/bin/terraform output -json topic)
 SUBSCRIPTION := $(shell /google/data/ro/teams/terraform/bin/terraform output -json subscription | sed -e 's|"||g')
-
+BQ_SUBSCRIPTION := $(shell /google/data/ro/teams/terraform/bin/terraform output -json bqsubscription | sed -e 's|"||g')
 
 FAKE_PROJECT_ID_SUFFIX = aaaa
 FAKE_PROJECT_NR = 12340014
@@ -26,7 +26,8 @@ all:	\
 	json-dumps/subscriptions.json \
 	json-dumps/subscriptions-iam.json \
 	json-dumps/iam-policy.json \
-	json-dumps/iam-service-accounts.json
+	json-dumps/iam-service-accounts.json \
+	json-dumps/monitoring-query.json
 
 json-dumps/project.json:
 	$(CURL) -fsS \
@@ -68,4 +69,22 @@ json-dumps/iam-policy.json:
 json-dumps/iam-service-accounts.json:
 	$(CURL) -fsS \
 		'https://iam.googleapis.com/v1/projects/$(PROJECT_ID)/serviceAccounts' \
+		| $(SED_SUBST_FAKE) >$@
+
+
+define BQ_SUB_PUSH_REQUESTS_QUERY
+{ \
+  "query": "fetch pubsub_subscription::pubsub.googleapis.com/subscription/push_request_count \
+	| filter resource.project_id == '"'"'$(PROJECT_ID)'"'"' && resource.subscription_id == '"'"'$(BQ_SUBSCRIPTION)'"'"'\
+  | within 10m \
+  | group_by [metric.response_class],[value_push_request_count_aggregate: aggregate(value.push_request_count)] \
+	| within 10m \
+  " \
+}
+endef
+json-dumps/monitoring-query.json:
+	$(CURL) -fsS \
+		'https://monitoring.googleapis.com/v3/projects/$(PROJECT_ID)/timeSeries:query'\
+		--header "Content-Type: application/json" -X POST \
+		--data '$(BQ_SUB_PUSH_REQUESTS_QUERY)' \
 		| $(SED_SUBST_FAKE) >$@
