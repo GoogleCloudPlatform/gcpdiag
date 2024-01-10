@@ -1,1 +1,24 @@
-{}
+{
+  "services": [
+    {
+      "name": "projects/12340092/services/cloudbilling.googleapis.com",
+      "config": {
+        "name": "cloudbilling.googleapis.com",
+        "title": "Cloud Billing API",
+        "documentation": {
+          "summary": "Allows developers to manage billing for their Google Cloud Platform projects programmatically."
+        },
+        "quota": {},
+        "authentication": {},
+        "usage": {
+          "requirements": [
+            "serviceusage.googleapis.com/tos/cloud"
+          ]
+        },
+        "monitoring": {}
+      },
+      "state": "ENABLED",
+      "parent": "projects/12340092"
+    }
+  ]
+}

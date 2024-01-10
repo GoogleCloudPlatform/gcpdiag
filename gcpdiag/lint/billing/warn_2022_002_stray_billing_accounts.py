@@ -21,20 +21,28 @@ at least one project associated with them.
 """
 
 from gcpdiag import lint, models
-from gcpdiag.queries import billing, crm
+from gcpdiag.queries import apis, billing, crm
 
 all_account_billing_info = []
 
 
 def prepare_rule(context: models.Context):
-  all_account_billing_info.extend(
-      billing.get_all_billing_accounts(context.project_id))
+  billing_accounts = billing.get_all_billing_accounts(context.project_id)
+  if billing_accounts:
+    all_account_billing_info.extend(billing_accounts)
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
+  if not apis.is_enabled(context.project_id, 'cloudbilling'):
+    # an API error is raised
+    billing.get_billing_info(context.project_id)
+    return
+  if len(all_account_billing_info) == 0:
+    report.add_skipped(None, 'Billing Account Permission Denied')
+    return
   project = crm.get_project(context.project_id)
   for billing_account in all_account_billing_info:
-    if not len(billing_account.list_projects()) > 0:
+    if not len(billing_account.list_projects(context)) > 0:
       report.add_failed(billing_account, 'billing account does not have any '
                         'projects')
       return

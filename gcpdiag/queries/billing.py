@@ -16,11 +16,12 @@
 """Queries related to GCP Billing Accounts."""
 
 import logging
+import sys
 from typing import List, Optional
 
 import googleapiclient.errors
 
-from gcpdiag import caching, config, models
+from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis, apis_utils
 from gcpdiag.utils import GcpApiError
 
@@ -52,8 +53,8 @@ class BillingAccount(models.Resource):
   def is_master(self) -> bool:
     return len(self._resource_data['masterBillingAccount']) > 0
 
-  def list_projects(self) -> list:
-    return get_all_projects_in_billing_account(self.name)
+  def list_projects(self, context) -> list:
+    return get_all_projects_in_billing_account(context, self.name)
 
   def __init__(self, project_id, resource_data):
     super().__init__(project_id=project_id)
@@ -152,7 +153,8 @@ class CostInsights(models.Resource):
 def get_billing_info(project_id):
   """Get Billing Information for a project, caching the result."""
   project_api = apis.get_api('cloudbilling', 'v1', project_id)
-  query = project_api.projects().getBillingInfo(project_id)
+  project_id = 'projects/' + project_id if 'projects/' not in project_id else project_id
+  query = project_api.projects().getBillingInfo(name=project_id)
   logging.info('fetching Billing Information for project %s', project_id)
   try:
     resource_data = query.execute(num_retries=config.API_RETRIES)
@@ -164,7 +166,8 @@ def get_billing_info(project_id):
 @caching.cached_api_call
 def get_billing_account(project_id: str) -> Optional[BillingAccount]:
   """Get a Billing Account object by its project name, caching the result."""
-
+  if not apis.is_enabled(project_id, 'cloudbilling'):
+    return None
   billing_info = ProjectBillingInfo(project_id, get_billing_info(project_id))
   if not billing_info.is_billing_enabled():
     return None
@@ -175,40 +178,74 @@ def get_billing_account(project_id: str) -> Optional[BillingAccount]:
   logging.info('fetching Billing Account for project %s', project_id)
   try:
     resource_data = query.execute(num_retries=config.API_RETRIES)
-  except googleapiclient.errors.HttpError as err:
-    raise GcpApiError(err) from err
+  except googleapiclient.errors.HttpError as error:
+    e = utils.GcpApiError(error)
+    if ('The caller does not have permission'
+        in e.message) or ('PERMISSION_DENIED' in e.reason):
+      # billing rules cannot be tested without permissions on billing account
+      return None
+    else:
+      raise GcpApiError(error) from error
   return BillingAccount(project_id, resource_data)
 
 
 @caching.cached_api_call
-def get_all_billing_accounts(project_id: str) -> List[BillingAccount]:
+def get_all_billing_accounts(project_id: str) -> Optional[List[BillingAccount]]:
   """Get all Billing Accounts that current user has permission to view"""
-  # return _get_all_pages_of_a_resource('billingAccounts', 'v1', project_id,
-  #                                     'billingAccounts', BillingAccount)
   accounts = []
+  if not apis.is_enabled(project_id, 'cloudbilling'):
+    return None
   api = apis.get_api('cloudbilling', API_VERSION, project_id)
 
-  for account in apis_utils.list_all(
-      request=api.billingAccounts().list(),
-      next_function=api.billingAccounts().list_next,
-      response_keyword='billingAccounts'):
-    accounts.append(BillingAccount(project_id, account))
+  try:
+    for account in apis_utils.list_all(
+        request=api.billingAccounts().list(),
+        next_function=api.billingAccounts().list_next,
+        response_keyword='billingAccounts'):
+      accounts.append(BillingAccount(project_id, account))
+  except utils.GcpApiError as e:
+    if ('The caller does not have permission'
+        in e.message) or ('PERMISSION_DENIED' in e.reason):
+      # billing rules cannot be tested without permissions on billing account
+      return None
+    else:
+      raise e
   return accounts
 
 
 @caching.cached_api_call
 def get_all_projects_in_billing_account(
+    context: models.Context,
     billing_account_name: str) -> List[ProjectBillingInfo]:
   """Get all projects associated with the Billing Account that current user has
   permission to view"""
   projects = []
-  api = apis.get_api('cloudbilling', API_VERSION, billing_account_name)
+  api = apis.get_api('cloudbilling', API_VERSION, context.project_id)
 
-  for project in apis_utils.list_all(
-      request=api.billingAccounts().projects().list(),
+  for p in apis_utils.list_all(
+      request=api.billingAccounts().projects().list(name=billing_account_name,),
       next_function=api.billingAccounts().projects().list_next,
       response_keyword='projectBillingInfo'):
-    projects.append(ProjectBillingInfo(project['projectId'], project))
+    try:
+      crm_api = apis.get_api('cloudresourcemanager', 'v3', p['projectId'])
+      p_name = 'projects/' + p['projectId'] if 'projects/' not in p[
+          'projectId'] else p['projectId']
+      request = crm_api.projects().get(name=p_name)
+      response = request.execute(num_retries=config.API_RETRIES)
+      projects.append(ProjectBillingInfo(response['projectId'], p))
+    except (utils.GcpApiError, googleapiclient.errors.HttpError) as error:
+      if isinstance(error, googleapiclient.errors.HttpError):
+        error = utils.GcpApiError(error)
+      if error.reason in [
+          'IAM_PERMISSION_DENIED', 'USER_PROJECT_DENIED', 'SERVICE_DISABLED'
+      ]:
+        # skip projects that user does not have permissions on
+        continue
+      else:
+        print(
+            f'[ERROR]: An Http Error occured whiles accessing projects.get \n\n{error}',
+            file=sys.stderr)
+      raise error from error
   return projects
 
 
@@ -222,12 +259,15 @@ def get_cost_insights_for_a_project(project_id: str):
   if (not billing_account.is_open()) or billing_account.is_master():
     return None
 
-  cost_insights_api = apis.get_api('recommender', 'v1', project_id)
-  query = cost_insights_api.billingAccounts().locations().insightTypes(). \
-    insights().get('google.billing.CostInsight')
-  logging.info('fetching Cost Insights for project %s', project_id)
-  try:
-    resource_data = query.execute(num_retries=config.API_RETRIES)
-  except googleapiclient.errors.HttpError as err:
-    raise GcpApiError(err) from err
-  return CostInsights(project_id, resource_data)
+  api = apis.get_api('recommender', 'v1', project_id)
+
+  insight_name = billing_account.name + '/locations/global/insightTypes/google.billing.CostInsight'
+  insights = []
+  for insight in apis_utils.list_all(
+      request=api.billingAccounts().locations().insightTypes().insights().list(
+          parent=insight_name),
+      next_function=api.billingAccounts().locations().insightTypes().insights(
+      ).list_next,
+      response_keyword='insights'):
+    insights.append(CostInsights(project_id, insight))
+  return insights

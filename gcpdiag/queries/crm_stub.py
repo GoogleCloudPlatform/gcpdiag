@@ -39,7 +39,8 @@ class CrmApiStub:
   def projects(self):
     return self
 
-  def list(self, parent=None, page_token=None):
+  # pylint: disable=redefined-builtin
+  def list(self, parent=None, page_token=None, filter=None):
     if not parent:
       return apis_stub.RestCallStub(DUMMY_PROJECT_ID, 'projects')
 

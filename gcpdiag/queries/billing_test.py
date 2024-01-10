@@ -49,7 +49,7 @@ class TestBilling:
     assert billing_account.display_name == DUMMY_BILLING_ACCOUNT_NAME
     assert billing_account.is_open() == DUMMY_BILLING_ACCOUNT_IS_OPEN
     assert billing_account.is_master() == DUMMY_BILLING_ACCOUNT_IS_MASTER
-    assert (len(billing_account.list_projects()) >
+    assert (len(billing_account.list_projects(context)) >
             0) == DUMMY_BILLING_ACCOUNT_HAS_PROJECTS
 
   def test_get_all_billing_accounts(self):
@@ -62,10 +62,11 @@ class TestBilling:
   def test_get_all_projects_in_billing_account(self):
     context = models.Context(project_id=DUMMY_PROJECT_ID)
     billing_account = billing.get_billing_account(context.project_id)
-    projects = billing.get_all_projects_in_billing_account(billing_account.name)
+    projects = billing.get_all_projects_in_billing_account(
+        context, billing_account.name)
 
     assert len(projects) == DUMMY_NUMBER_ALL_PROJECTS
-    assert projects[-1].project_id == DUMMY_PROJECT_ID
+    assert projects[0].project_id == DUMMY_PROJECT_ID
 
   def test_get_billing_info(self):
     context = models.Context(project_id=DUMMY_PROJECT_ID)
@@ -79,7 +80,8 @@ class TestBilling:
 
   def test_get_cost_insights_for_a_project(self):
     context = models.Context(project_id=DUMMY_PROJECT_ID)
-    cost_insights = billing.get_cost_insights_for_a_project(context.project_id)
+    cost_insights = billing.get_cost_insights_for_a_project(
+        context.project_id)[0]
 
     assert cost_insights.is_anomaly() == DUMMY_COST_INSIGHT_IS_ANOMALY
     assert cost_insights.forecasted_units == DUMMY_COST_INSIGHT_FORCASTED_UNITS
