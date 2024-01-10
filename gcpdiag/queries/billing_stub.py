@@ -42,7 +42,7 @@ class BillingApiStub:
 class ProjectBillingInfo(BillingApiStub):
   """Mock object to simulate Project Billing Info api calls"""
 
-  def getBillingInfo(self, project_id):
+  def getBillingInfo(self, name):
     return apis_stub.RestCallStub(self.project_id, 'project_billing_info')
 
 
@@ -65,7 +65,7 @@ class BillingAccountStub(BillingApiStub):
 class BillingAccountProjectsStub(BillingApiStub):
   """Mock object to simulate Billing Account Projects api calls"""
 
-  def list(self):
+  def list(self, name):
     return apis_stub.RestCallStub(self.project_id,
                                   'all_billing_account_projects')
 
@@ -93,3 +93,9 @@ class RecommenderApiStub:
 
   def get(self, name):
     return apis_stub.RestCallStub(self.project_id, 'cost_insights')
+
+  def list(self, parent):
+    return apis_stub.RestCallStub(self.project_id, 'cost_insights')
+
+  def list_next(self, previous_request, previous_response):
+    return None
