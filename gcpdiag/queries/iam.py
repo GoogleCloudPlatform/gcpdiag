@@ -477,6 +477,10 @@ class ServiceAccount(models.Resource):
     return self._resource_data['email']
 
   @property
+  def unique_id(self) -> str:
+    return self._resource_data['uniqueId']
+
+  @property
   def disabled(self) -> bool:
     return self._resource_data.get('disabled', False)
 
@@ -708,3 +712,20 @@ def get_service_account_iam_policy(
 
   return fetch_iam_policy(request, ServiceAccountIAMPolicy, project_id,
                           resource_name)
+
+
+@caching.cached_api_call(in_memory=True)
+def get_service_account_list(project_id: str) -> List[ServiceAccount]:
+  """Returns list of service accounts"""
+
+  iam_api = apis.get_api('iam', 'v1', project_id)
+  project_name = f'projects/{project_id}'
+  request = iam_api.projects().serviceAccounts().list(name=project_name)
+  try:
+    response = request.execute(num_retries=config.API_RETRIES)
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
+  return [
+      ServiceAccount(project_id, service_account)
+      for service_account in response.get('accounts', [])
+  ]
