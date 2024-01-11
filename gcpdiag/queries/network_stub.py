@@ -34,6 +34,12 @@ class NetworkApiStub:
   def __init__(self, mock_state):
     self.mock_state = mock_state
 
+  def aggregatedList(self, project):
+    if self.mock_state == 'addresses':
+      return apis_stub.RestCallStub(project, 'compute-addresses')
+    else:
+      raise ValueError(f'cannot call method {self.mock_state} here')
+
   def get(self, project, network=None, region=None, subnetwork=None):
     if not subnetwork:
       return apis_stub.RestCallStub(project, f'compute-network-{network}')
