@@ -336,6 +336,9 @@ class RuleModule:
   def __init__(self, python_module: types.ModuleType) -> None:
     self._module = python_module
 
+  def __repr__(self) -> str:
+    return f'RuleModule:{self._module}'
+
   def get_method(self, method_name: str) -> Optional[Callable]:
     return get_module_function_or_none(self._module, method_name)
 
