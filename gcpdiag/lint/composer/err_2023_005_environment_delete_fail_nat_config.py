@@ -28,8 +28,9 @@ MATCH_STR_2 = 'is already being used by'
 MATCH_STR_3 = '-Nat'
 MATCH_STR_4 = 'Composer Backend timed out'
 
+MATCH_METHOD = 'google.cloud.orchestration.airflow.service.v1.Environments.DeleteEnvironment'
 FILTER_1 = [
-    'severity="ERROR"',
+    'severity=ERROR',
     ('protoPayload.methodName="google.cloud.orchestration.airflow.service.'
      'v1.Environments.DeleteEnvironment"'),
     (f'protoPayload.status.message:(("{MATCH_STR_1}" AND "{MATCH_STR_2}" AND'
@@ -51,6 +52,7 @@ def prepare_rule(context: models.Context):
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
+
   if not apis.is_enabled(context.project_id, 'composer'):
     report.add_skipped(None, 'composer is disabled')
     return
@@ -69,12 +71,20 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   if logs_by_project.get(context.project_id) and \
      logs_by_project[context.project_id].entries:
-    # Start Iteration from the latest log entries
-    for log_entry in reversed(logs_by_project[context.project_id].entries):
-      if log_entry['severity'] == 'ERROR':
-        env_name = get_path(log_entry,
-                            ('resource', 'labels', 'environment_name'))
-        env_name_set.add(env_name)
+    for log_entry in logs_by_project[context.project_id].entries:
+      # filter out non -relevant entries
+      logging_check_path = get_path(log_entry,
+                                    ('protoPayload', 'status', 'message'),
+                                    default='')
+      if (log_entry['severity'] != 'ERROR' or
+          log_entry['protoPayload']['methodName'] != MATCH_METHOD or
+          (((MATCH_STR_1 not in logging_check_path) or
+            (MATCH_STR_2 not in logging_check_path) or
+            (MATCH_STR_3 not in logging_check_path)) and
+           (MATCH_STR_4 not in logging_check_path))):
+        continue
+      env_name = get_path(log_entry, ('resource', 'labels', 'environment_name'))
+      env_name_set.add(env_name)
 
   for env in envs:
     if (env.state == 'ERROR') and (env.name in env_name_set):
