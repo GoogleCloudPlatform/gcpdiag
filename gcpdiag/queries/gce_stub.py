@@ -126,6 +126,9 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
   def projects(self):
     return ComputeEngineApiStub('projects')
 
+  def addresses(self):
+    return network_stub.NetworkApiStub(mock_state='addresses')
+
   def networks(self):
     return network_stub.NetworkApiStub(mock_state='networks')
 

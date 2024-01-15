@@ -1119,3 +1119,58 @@ def get_subnetwork_iam_policy(project_id: str, region: str,
 
   return iam.fetch_iam_policy(request, VPCSubnetworkIAMPolicy, project_id,
                               resource_name)
+
+
+class Address(models.Resource):
+  """IP Addresses."""
+  _resource_data: dict
+
+  def __init__(self, project_id, resource_data):
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+
+  @property
+  def full_path(self) -> str:
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
+                      self.self_link)
+    if result:
+      return result.group(1)
+    else:
+      return f'>> {self.self_link}'
+
+  @property
+  def short_path(self) -> str:
+    path = self.project_id + '/' + self.name
+    return path
+
+  @property
+  def name(self) -> str:
+    return self._resource_data['name']
+
+  @property
+  def self_link(self) -> str:
+    return self._resource_data.get('selfLink', '')
+
+  @property
+  def subnetwork(self) -> str:
+    return self._resource_data['subnetwork']
+
+  @property
+  def status(self) -> str:
+    return self._resource_data['status']
+
+
+@caching.cached_api_call(in_memory=True)
+def get_addresses(project_id: str) -> List[Address]:
+  logging.info('fetching addresses list: %s', project_id)
+  compute = apis.get_api('compute', 'v1', project_id)
+  addresses = []
+  request = compute.addresses().aggregatedList(project=project_id)
+  response = request.execute(num_retries=config.API_RETRIES)
+  addresses_by_regions = response['items']
+  for _, data_ in addresses_by_regions.items():
+    if 'addresses' not in data_:
+      continue
+    addresses.extend(
+        [Address(project_id, address) for address in data_['addresses']])
+  return addresses

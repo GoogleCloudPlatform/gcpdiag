@@ -1,0 +1,15 @@
+*  vpc/WARN/2024_001: No Unused reserved IP addresses are found.
+   - gcpdiag-vpc1-aaaa/address1                                           [ OK ]
+   - gcpdiag-vpc1-aaaa/address2                                           [FAIL]
+     Unused Reserved IP address found
+   - gcpdiag-vpc1-aaaa/address3                                           [FAIL]
+     Unused Reserved IP address found
+   - gcpdiag-vpc1-aaaa/address4                                           [FAIL]
+     Unused Reserved IP address found
+
+   We can reserve IP addresses and persists until we explicitly release it.
+   Unused reserved IP addresses over the time will cause extra money. Make sure
+   you identify and release those IP addresses.
+
+   https://gcpdiag.dev/rules/vpc/WARN/2024_001
+
