@@ -27,6 +27,7 @@ DUMMY_GCE_PROJECT_ID = 'gcpdiag-gce1-aaaa'
 DUMMY_GKE_REGION = 'europe-west4'
 DUMMY_GKE_SUBNET = 'gke1-subnet'
 DUMMY_SERVICE_ACCOUNT = 'gke1sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com'
+DUMMY_VPC_PROJECT_ID = 'gcpdiag-vpc1-aaaa'
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
@@ -396,3 +397,21 @@ class TestNetwork:
 
     rules = net.firewall.get_vpc_egress_rules(name='not-existing-rule')
     assert 'default-allow-ssh' not in [r.name for r in rules]
+
+  def test_get_addresses(self):
+    """get addresses by project."""
+    addresses = network.get_addresses(project_id=DUMMY_VPC_PROJECT_ID)
+    assert len(addresses) > 2
+
+    for address in addresses:
+      if address.name == 'address1':
+        assert address.short_path == 'gcpdiag-vpc1-aaaa/address1'
+
+      if address.name == 'address2':
+        assert address.short_path == 'gcpdiag-vpc1-aaaa/address2'
+
+      if address.name == 'address3':
+        assert address.short_path == 'gcpdiag-vpc1-aaaa/address3'
+
+      if address.name == 'address4':
+        assert address.short_path == 'gcpdiag-vpc1-aaaa/address4'

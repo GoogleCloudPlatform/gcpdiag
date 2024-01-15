@@ -1,0 +1,83 @@
+{
+  "kind": "compute#addressAggregatedList",
+  "id": "projects/gcpdiag-vpc1-aaaa/aggregated/addresses",
+  "items": {
+    "regions/us-central1": {
+      "addresses": [
+        {
+          "kind": "compute#address",
+          "id": "7997470120382759841",
+          "creationTimestamp": "2024-01-07T07:03:42.222-08:00",
+          "name": "address1",
+          "description": "",
+          "address": "10.128.0.26",
+          "status": "IN_USE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc1-aaaa/regions/us-central1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc1-aaaa/regions/us-central1/addresses/address1",
+          "users": [
+            "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc1-aaaa/regions/us-central1/forwardingRules/gk3-us-central1-composer-test-7ff47cd0-g-c4d8afc4-8j765f778-pe"
+          ],
+          "networkTier": "PREMIUM",
+          "labelFingerprint": "42WmS008rSM=",
+          "addressType": "INTERNAL",
+          "purpose": "GCE_ENDPOINT",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc1-aaaa/regions/us-central1/subnetworks/default"
+        },
+        {
+          "kind": "compute#address",
+          "id": "5823057272250092066",
+          "creationTimestamp": "2024-01-03T06:53:01.418-08:00",
+          "name": "address2",
+          "description": "",
+          "address": "192.168.0.18",
+          "status": "RESERVED",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc1-aaaa/regions/us-central1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc1-aaaa/regions/us-central1/addresses/address2",
+          "networkTier": "PREMIUM",
+          "labelFingerprint": "42WmS008rSM=",
+          "addressType": "INTERNAL",
+          "purpose": "GCE_ENDPOINT",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc1-aaaa/regions/us-central1/subnetworks/subnet-us1"
+        },
+        {
+          "kind": "compute#address",
+          "id": "2295464241063840289",
+          "creationTimestamp": "2024-01-03T06:53:02.536-08:00",
+          "name": "address3",
+          "description": "",
+          "address": "192.168.0.26",
+          "status": "RESERVED",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc1-aaaa/regions/us-central1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc1-aaaa/regions/us-central1/addresses/address3",
+          "networkTier": "PREMIUM",
+          "labelFingerprint": "42WmS008rSM=",
+          "addressType": "INTERNAL",
+          "purpose": "GCE_ENDPOINT",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc1-aaaa/regions/us-central1/subnetworks/subnet-us1"
+        }
+      ]
+    },
+    "regions/asia-east1": {
+      "addresses": [
+        {
+          "kind": "compute#address",
+          "id": "5969362064718299255",
+          "creationTimestamp": "2024-01-05T00:32:24.377-08:00",
+          "name": "address4",
+          "description": "",
+          "address": "10.0.3.3",
+          "status": "RESERVED",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc1-aaaa/regions/asia-east1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc1-aaaa/regions/asia-east1/addresses/address4",
+          "networkTier": "PREMIUM",
+          "labelFingerprint": "42WmS008rSM=",
+          "ipVersion": "IPV4",
+          "addressType": "INTERNAL",
+          "purpose": "GCE_ENDPOINT",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc1-aaaa/regions/asia-east1/subnetworks/sub-2"
+        }
+      ]
+    }
+  },
+    "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc1-aaaa/aggregated/addresses"
+}
