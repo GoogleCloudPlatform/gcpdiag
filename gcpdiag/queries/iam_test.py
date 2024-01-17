@@ -30,6 +30,7 @@ def get_cache_stub():
 
 
 TEST_PROJECT_ID = 'gcpdiag-gke1-aaaa'
+TEST_PROJECT_IAM_ID = 'gcpdiag-iam1-aaaa'
 TEST_SERVICE_ACCOUNT = 'gke2sa@gcpdiag-gke1-aaaa.iam.gserviceaccount.com'
 TEST_SERVICE_ACCOUNT_ROLE = 'projects/gcpdiag-gke1-aaaa/roles/gke2_custom_role'
 TEST_SERVICE_ACCOUNT_PERMISSIONS = [
@@ -148,3 +149,20 @@ class TestProjectPolicy:
     # Test exceptional case which should return '-' wildcard
     wild_card = iam._extract_project_id('random-sa@fake-sa-iam-gservice.com')
     assert wild_card == '-'
+
+  def test_service_account_list(self):
+    service_accounts = iam.get_service_account_list(TEST_PROJECT_IAM_ID)
+    assert len(service_accounts) > 1
+
+    for account in service_accounts:
+      if account.unique_id == '102417873155869406705':
+        assert (account.email ==
+                'demo2sa@gcpdiag-iam1-aaaa.iam.gserviceaccount.com')
+      if account.unique_id == '112819826788395589395':
+        assert account.email == '12340002-compute@developer.gserviceaccount.com'
+      if account.unique_id == '106302102062593675693':
+        assert (
+            account.email == 'demo1@gcpdiag-iam1-aaaa.iam.gserviceaccount.com')
+      if account.unique_id == '104735732736559639086':
+        assert (
+            account.email == 'demo3@gcpdiag-iam1-aaaa.iam.gserviceaccount.com')

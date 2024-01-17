@@ -97,12 +97,23 @@ class IamApiStub:
       raise ValueError("can't call this method here (mock_state: %s)" %
                        self.mock_state)
 
-  def list(self, parent, view):
-    self.list_page = 1
-    m = re.match(r'projects/([^/]+)', parent)
-    if m:
+  # def list(self, parent, view):
+  #  self.list_page = 1
+  #  m = re.match(r'projects/([^/]+)', parent)
+  #  if m:
+  #    self.project_id = m.group(1)
+  #  return self
+  def list(self, **args):
+    if 'parent' in args:
+      self.list_page = 1
+      m = re.match(r'projects/([^/]+)', args['parent'])
+      if m:
+        self.project_id = m.group(1)
+      return self
+    if self.mock_state == 'serviceaccounts':
+      m = re.match(r'projects/([^/]+)', args['name'])
       self.project_id = m.group(1)
-    return self
+      return self
 
   def list_next(self, previous_request, previous_response):
     self.list_page += 1
@@ -139,6 +150,10 @@ class IamApiStub:
               httplib2.Response({'status': 404}), b'not found')
     elif self.mock_state == 'serviceaccounts_getIamPolicy':
       json_filename = json_dir / 'iam-service-account-policy.json'
+      with open(json_filename, encoding='utf-8') as json_file:
+        return json.load(json_file)
+    elif self.mock_state == 'serviceaccounts':
+      json_filename = json_dir / 'iam-service-accounts.json'
       with open(json_filename, encoding='utf-8') as json_file:
         return json.load(json_file)
     elif self.mock_state == 'roles_get':

@@ -1,0 +1,16 @@
+*  iam/SEC/2024_001: No Unused Service Accounts Found
+   - gcpdiag-iam1-aaaa/demo2sa@gcpdiag-iam1-aaaa.iam.gserviceaccount.com  [FAIL]
+     Unused Service Account Found
+   - gcpdiag-iam1-aaaa/12340002-compute@developer.gserviceaccount.com     [FAIL]
+     Unused Service Account Found
+   - gcpdiag-iam1-aaaa/demo1@gcpdiag-iam1-aaaa.iam.gserviceaccount.com    [FAIL]
+     Unused Service Account Found
+   - gcpdiag-iam1-aaaa/demo3@gcpdiag-iam1-aaaa.iam.gserviceaccount.com    [FAIL]
+     Unused Service Account Found
+
+   Unused service accounts create an unnecessary security risk, so we recommend
+   disabling unused service accounts then deleting the service accounts when you
+   are sure that you no longer need them
+
+   https://gcpdiag.dev/rules/iam/SEC/2024_001
+
