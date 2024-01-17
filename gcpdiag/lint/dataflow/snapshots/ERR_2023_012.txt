@@ -1,0 +1,3 @@
+*  dataflow/ERR/2023_012: Dataflow job writing to spanner did not fail due to OOM.
+   - gcpdiag-datafusion1-aaaa                                             [ OK ]
+
