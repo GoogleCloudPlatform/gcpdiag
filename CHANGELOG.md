@@ -1,4 +1,47 @@
-## 0.67 (2023-10-17)
+## 0.68 (2024-1-17)
+
+#### New Rules
+- gke/bp\_2023\_002 Gke cluster is a private cluster
+- composer/err\_2023\_002 Use allowed IP ranges to create Private IP Cluster
+- compoer/err\_2023\_004 DAG is detected as zombie
+- composer/err\_2023\_003 DAG timeout issue
+- composer/err\_2023\_005 Check NAT config for environment deletion fail
+- bigquery/err\_2023\_009 BigQuery job not failed due to Schedule query with multiple DML
+- gce/warn\_2023\_002 Serial logs don’t contain out-of-memory message due to airflow task run
+- dataflow/err\_2023\_011 Streaming insert mismatch column type
+- dataflow/err\_2023\_012 Spanner OOM
+- dataflow/err\_2023\_013 Spanner deadline error
+- pubsub/warn\_2023\_006 Pubsub push subscriptions have no push errors
+- dataproc/err\_2023\_008 Dataproc cluster disk space issues check and web page
+- composer/err\_2024\_001 Composer not failed due to 'no error was surfaced' error
+- lb/bp\_2023\_002 check that logging is enabled on health checks for load balancer backend
+  services
+- vpc/warn\_2024\_001 Check Unused Reserved IP addresses
+- iam/sec\_2024\_001 Detect unused service accounts
+
+
+#### New module
+- Add billing module query and lint rules
+
+#### Fixes
+- Skip notebook instances query if API is not enabled
+- Update MD formatting for gke/WARN/2023\_004.md
+- Update conflicting credentials import name
+- Updating EOL rule snapshot to match new schedule
+- Update gke eol.yaml
+- add str repr of RuleModule for more info in exceptions loading rules
+- fixed bug in billing change 1673236 - added checks for correct permissions
+- fixed bug in change id 2113602 - updated condition for check NAT config rule
+
+#### Features and Improvements
+- Improved report generation for runbook
+- refactor lint.command.run to return a dict when run from API service
+- Add set\_credentials() method
+- Clear credentials used in API service after request
+- Updated gke eol.yaml
+- Added the id label to filter the Dataflow jobs using the job i
+
+## 0.67 (2023-11-17)
 
 #### Fixes
 - Updating GKE EOL file and snapshot
