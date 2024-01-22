@@ -21,8 +21,8 @@ from gcpdiag import models
 from gcpdiag.queries import apis_stub, pubsub
 
 DUMMY_PROJECT_NAME = 'gcpdiag-pubsub1-aaaa'
-DUMMY_TOPIC_NAME = 'projects/gcpdiag-pubsub1-aaaa/topics/gcpdiag-pubsub1topic-aaaa'
-DUMMY_SUB_NAME = 'projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-pubsub1subscription-aaaa'
+DUMMY_TOPIC_NAME = 'projects/gcpdiag-pubsub1-aaaa/topics/gcpdiag-pubsub1topic-9pm6hng1'
+DUMMY_SUB_NAME = 'projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-pubsub1subscription-9pm6hng1'
 DUMMY_PERM = 'domain:google.com'
 
 

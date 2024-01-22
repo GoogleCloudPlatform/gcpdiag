@@ -84,3 +84,11 @@ output "subscription" {
 output "bqsubscription" {
   value = google_pubsub_subscription.pubsub1subscription2.name
 }
+
+output "gcs_subscription" {
+  value = google_pubsub_subscription.pubsub1subscription3gcs.name
+}
+
+output "gcs_subscription_bucket_name" {
+  value = google_storage_bucket.pubsub_gcs_subscription_bucket.name
+}

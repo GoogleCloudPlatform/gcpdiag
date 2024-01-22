@@ -1,0 +1,34 @@
+{
+  "kind": "storage#policy",
+  "resourceId": "projects/_/buckets/pubsub1_bucket",
+  "version": 1,
+  "etag": "CAE=",
+  "bindings": [
+    {
+      "role": "roles/storage.legacyBucketOwner",
+      "members": [
+        "projectEditor:gcpdiag-pubsub1-aaaa",
+        "projectOwner:gcpdiag-pubsub1-aaaa"
+      ]
+    },
+    {
+      "role": "roles/storage.legacyBucketReader",
+      "members": [
+        "projectViewer:gcpdiag-pubsub1-aaaa"
+      ]
+    },
+    {
+      "role": "roles/storage.legacyObjectOwner",
+      "members": [
+        "projectEditor:gcpdiag-pubsub1-aaaa",
+        "projectOwner:gcpdiag-pubsub1-aaaa"
+      ]
+    },
+    {
+      "role": "roles/storage.legacyObjectReader",
+      "members": [
+        "projectViewer:gcpdiag-pubsub1-aaaa"
+      ]
+    }
+  ]
+}

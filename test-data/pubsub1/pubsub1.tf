@@ -31,8 +31,35 @@ resource "google_pubsub_subscription_iam_policy" "policy1" {
 }
 
 # BQ subscription
+# dlq
+resource "google_project_iam_member" "pubsub_publisher_role" {
+  project  = google_project.project.project_id
+  provider = google-beta
+  role     = "roles/pubsub.publisher"
+  member   = "serviceAccount:service-${google_project.project.number}@gcp-sa-pubsub.iam.gserviceaccount.com"
+}
 
-resource "google_project_iam_member" "editor" {
+resource "google_project_iam_member" "pubsub_subscriber_role" {
+  project  = google_project.project.project_id
+  provider = google-beta
+  role     = "roles/pubsub.subscriber"
+  member   = "serviceAccount:service-${google_project.project.number}@gcp-sa-pubsub.iam.gserviceaccount.com"
+}
+
+resource "google_pubsub_topic" "dlq_bq_topic" {
+  project    = google_project.project.project_id
+  name       = "gcpdiag-bqdlqtopic-${random_string.project_id_suffix.id}"
+  depends_on = [google_project_iam_member.pubsub_publisher_role, google_project_iam_member.pubsub_subscriber_role]
+}
+
+resource "google_pubsub_subscription" "dlq_bq_subscription" {
+  project = google_project.project.project_id
+  name    = "gcpdiag-bqdlqsubscription-${random_string.project_id_suffix.id}"
+  topic   = google_pubsub_topic.dlq_bq_topic.name
+}
+
+# bq
+resource "google_project_iam_member" "bq_editor" {
   project  = google_project.project.project_id
   provider = google-beta
   role     = "roles/bigquery.dataEditor"
@@ -47,11 +74,11 @@ resource "google_bigquery_dataset" "pubsub1_dataset" {
 }
 
 resource "google_bigquery_table" "pubsub1_table" {
-  deletion_protection = false
-  table_id            = "pubsub1_table"
-  project             = google_project.project.project_id
-  dataset_id          = google_bigquery_dataset.pubsub1_dataset.dataset_id
-  provider            = google-beta
+  # deletion_protection = false
+  table_id   = "pubsub1_table"
+  project    = google_project.project.project_id
+  dataset_id = google_bigquery_dataset.pubsub1_dataset.dataset_id
+  provider   = google-beta
 
   schema = <<EOF
 [
@@ -75,5 +102,43 @@ resource "google_pubsub_subscription" "pubsub1subscription2" {
     table = "${google_project.project.project_id}.${google_bigquery_dataset.pubsub1_dataset.dataset_id}.${google_bigquery_table.pubsub1_table.table_id}"
   }
 
-  depends_on = [google_project_iam_member.editor]
+  dead_letter_policy {
+    dead_letter_topic = google_pubsub_topic.dlq_bq_topic.id
+  }
+
+  depends_on = [google_project_iam_member.bq_editor]
+}
+
+# GCS subscription
+resource "google_project_iam_member" "gcs_admin" {
+  project  = google_project.project.project_id
+  provider = google-beta
+  role     = "roles/storage.admin"
+  member   = "serviceAccount:service-${google_project.project.number}@gcp-sa-pubsub.iam.gserviceaccount.com"
+}
+
+resource "google_storage_bucket" "pubsub_gcs_subscription_bucket" {
+  project                     = google_project.project.project_id
+  name                        = "pubsub1_bucket"
+  location                    = "EU"
+  force_destroy               = true
+  uniform_bucket_level_access = true
+}
+
+resource "google_pubsub_subscription" "pubsub1subscription3gcs" {
+  project  = google_project.project.project_id
+  name     = "gcpdiag-pubsub1subscription3gcs-${random_string.project_id_suffix.id}"
+  topic    = google_pubsub_topic.pubsub1topic.name
+  provider = google-beta
+
+  cloud_storage_config {
+    bucket       = google_storage_bucket.pubsub_gcs_subscription_bucket.name
+    max_bytes    = 1000
+    max_duration = "300s"
+  }
+
+  depends_on = [
+    google_project_iam_member.gcs_admin,
+    google_storage_bucket.pubsub_gcs_subscription_bucket
+  ]
 }
