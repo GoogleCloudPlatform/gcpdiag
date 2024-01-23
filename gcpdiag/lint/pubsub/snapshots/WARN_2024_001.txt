@@ -1,0 +1,3 @@
+*  pubsub/WARN/2024_001: Pub/Sub service account has the Publisher and Subscriber Permissions if DLQ exist.
+   (has no dead-letter topic attached)                                    [SKIP]
+
