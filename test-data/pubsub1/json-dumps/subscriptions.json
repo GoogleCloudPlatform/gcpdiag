@@ -1,8 +1,45 @@
 {
   "subscriptions": [
     {
-      "name": "projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-pubsub1subscription-aaaa",
-      "topic": "projects/gcpdiag-pubsub1-aaaa/topics/gcpdiag-pubsub1topic-aaaa",
+      "name": "projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-pubsub1subscription3gcs-9pm6hng1",
+      "topic": "projects/gcpdiag-pubsub1-aaaa/topics/gcpdiag-pubsub1topic-9pm6hng1",
+      "pushConfig": {},
+      "ackDeadlineSeconds": 300,
+      "messageRetentionDuration": "604800s",
+      "expirationPolicy": {
+        "ttl": "2678400s"
+      },
+      "state": "ACTIVE",
+      "cloudStorageConfig": {
+        "bucket": "pubsub1_bucket",
+        "textConfig": {},
+        "maxDuration": "300s",
+        "maxBytes": "1000",
+        "state": "ACTIVE"
+      }
+    },
+    {
+      "name": "projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-pubsub1subscription2-9pm6hng1",
+      "topic": "projects/gcpdiag-pubsub1-aaaa/topics/gcpdiag-pubsub1topic-9pm6hng1",
+      "pushConfig": {},
+      "ackDeadlineSeconds": 10,
+      "messageRetentionDuration": "604800s",
+      "expirationPolicy": {
+        "ttl": "2678400s"
+      },
+      "deadLetterPolicy": {
+        "deadLetterTopic": "projects/gcpdiag-pubsub1-aaaa/topics/gcpdiag-bqdlqtopic-9pm6hng1",
+        "maxDeliveryAttempts": 5
+      },
+      "bigqueryConfig": {
+        "table": "gcpdiag-pubsub1-aaaa.pubsub1_dataset.pubsub1_table",
+        "state": "ACTIVE"
+      },
+      "state": "ACTIVE"
+    },
+    {
+      "name": "projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-pubsub1subscription-9pm6hng1",
+      "topic": "projects/gcpdiag-pubsub1-aaaa/topics/gcpdiag-pubsub1topic-9pm6hng1",
       "pushConfig": {},
       "ackDeadlineSeconds": 10,
       "messageRetentionDuration": "604800s",
@@ -12,17 +49,13 @@
       "state": "ACTIVE"
     },
     {
-      "name": "projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-pubsub1subscription2-aaaa",
-      "topic": "projects/gcpdiag-pubsub1-aaaa/topics/gcpdiag-pubsub1topic-aaaa",
+      "name": "projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-bqdlqsubscription-9pm6hng1",
+      "topic": "projects/gcpdiag-pubsub1-aaaa/topics/gcpdiag-bqdlqtopic-9pm6hng1",
       "pushConfig": {},
       "ackDeadlineSeconds": 10,
       "messageRetentionDuration": "604800s",
       "expirationPolicy": {
         "ttl": "2678400s"
-      },
-      "bigqueryConfig": {
-        "table": "gcpdiag-pubsub1-aaaa.pubsub1_dataset.pubsub1_table",
-        "state": "ACTIVE"
       },
       "state": "ACTIVE"
     }
