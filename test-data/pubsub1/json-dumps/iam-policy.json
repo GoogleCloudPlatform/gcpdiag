@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "etag": "BwYHoa3m14U=",
+  "etag": "BwYPm4/BKyY=",
   "bindings": [
     {
       "role": "roles/bigquery.dataEditor",
@@ -9,7 +9,31 @@
       ]
     },
     {
+      "role": "roles/owner",
+      "members": [
+        "user:mburuian@google.com"
+      ]
+    },
+    {
+      "role": "roles/pubsub.publisher",
+      "members": [
+        "serviceAccount:service-12340014@gcp-sa-pubsub.iam.gserviceaccount.com"
+      ]
+    },
+    {
       "role": "roles/pubsub.serviceAgent",
+      "members": [
+        "serviceAccount:service-12340014@gcp-sa-pubsub.iam.gserviceaccount.com"
+      ]
+    },
+    {
+      "role": "roles/pubsub.subscriber",
+      "members": [
+        "serviceAccount:service-12340014@gcp-sa-pubsub.iam.gserviceaccount.com"
+      ]
+    },
+    {
+      "role": "roles/storage.admin",
       "members": [
         "serviceAccount:service-12340014@gcp-sa-pubsub.iam.gserviceaccount.com"
       ]

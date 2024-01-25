@@ -22,6 +22,7 @@ import re
 from typing import Dict, Mapping, Union
 
 import googleapiclient.errors
+from boltons.iterutils import get_path
 
 from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis, iam
@@ -183,6 +184,12 @@ class Subscription(models.Resource):
     if 'deadLetterPolicy' in self._resource_data:
       return bool(self._resource_data['deadLetterPolicy']['deadLetterTopic'])
     return False
+
+  def gcs_subscription_bucket(self) -> str:
+    """Return the name of the bucket attached to GCS subscription."""
+    if self.is_gcs_subscription():
+      return get_path(self._resource_data, ('cloudStorageConfig', 'bucket'))
+    return ''  # acts as a null return that can be evaluated as a falsy value
 
 
 @caching.cached_api_call

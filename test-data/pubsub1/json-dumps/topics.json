@@ -1,7 +1,10 @@
 {
   "topics": [
     {
-      "name": "projects/gcpdiag-pubsub1-aaaa/topics/gcpdiag-pubsub1topic-aaaa"
+      "name": "projects/gcpdiag-pubsub1-aaaa/topics/gcpdiag-pubsub1topic-9pm6hng1"
+    },
+    {
+      "name": "projects/gcpdiag-pubsub1-aaaa/topics/gcpdiag-bqdlqtopic-9pm6hng1"
     }
   ]
 }
