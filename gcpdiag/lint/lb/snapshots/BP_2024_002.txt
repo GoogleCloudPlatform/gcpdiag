@@ -1,0 +1,3 @@
+*  lb/BP/2024_002: Global Access enabled on Regional Internal Load Balancer.
+   - gcpdiag-lb1-aaaa/forwardingRule1                                     [ OK ]
+

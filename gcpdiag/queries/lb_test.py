@@ -40,3 +40,11 @@ class TestURLMap:
     n = obj_list[0]
     assert n.session_affinity == 'NONE'
     assert n.locality_lb_policy == 'ROUND_ROBIN'
+
+  def test_get_forwarding_rules(self):
+    """get_forwarding_rules returns the right forwarding rules matched by name."""
+    forwarding_rules = lb.get_forwarding_rules(project_id=DUMMY_PROJECT_NAME)
+    assert len(forwarding_rules) == 1
+    forwarding_rule = forwarding_rules[0]
+    assert forwarding_rule.name == 'forwardingRule1'
+    assert forwarding_rule.short_path == 'gcpdiag-lb1-aaaa/forwardingRule1'

@@ -107,3 +107,61 @@ def get_backend_services(project_id: str) -> List[BackendServices]:
   return [
       BackendServices(project_id, item) for item in response.get('items', [])
   ]
+
+
+class ForwardingRules(models.Resource):
+  """A Forwarding Rule resource."""
+  _resource_data: dict
+  _type: str
+
+  def __init__(self, project_id, resource_data):
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+
+  @property
+  def name(self) -> str:
+    return self._resource_data['name']
+
+  @property
+  def id(self) -> str:
+    return self._resource_data['id']
+
+  @property
+  def full_path(self) -> str:
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
+                      self.self_link)
+    if result:
+      return result.group(1)
+    else:
+      return f'>> {self.self_link}'
+
+  @property
+  def short_path(self) -> str:
+    path = self.project_id + '/' + self.name
+    return path
+
+  @property
+  def self_link(self) -> str:
+    return self._resource_data['selfLink']
+
+  @property
+  def is_global_access_allowed(self) -> bool:
+    return self._resource_data.get('allowGlobalAccess', False)
+
+
+@caching.cached_api_call(in_memory=True)
+def get_forwarding_rules(project_id: str) -> List[ForwardingRules]:
+  logging.info('fetching Forwarding Rules: %s', project_id)
+  compute = apis.get_api('compute', 'v1', project_id)
+  forwarding_rules = []
+  request = compute.forwardingRules().aggregatedList(project=project_id)
+  response = request.execute(num_retries=config.API_RETRIES)
+  forwarding_rules_by_region = response['items']
+  for _, data_ in forwarding_rules_by_region.items():
+    if 'forwardingRules' not in data_:
+      continue
+    forwarding_rules.extend([
+        ForwardingRules(project_id, forwarding_rule)
+        for forwarding_rule in data_['forwardingRules']
+    ])
+  return forwarding_rules
