@@ -54,6 +54,10 @@ class Topic(models.Resource):
     path = self.project_id + '/' + self.name
     return path
 
+  @property
+  def kms_key_name(self) -> str:
+    return self._resource_data['kmsKeyName']
+
 
 @caching.cached_api_call
 def get_topics(context: models.Context) -> Mapping[str, Topic]:
