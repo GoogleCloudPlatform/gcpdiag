@@ -113,7 +113,8 @@ _defaults: Dict[str, Any] = {
     'logging_fetch_max_time_seconds': 120,
     'enable_gce_serial_buffer': False,
     'auto': False,
-    'report_dir': '/tmp/gcpdiag'
+    'report_dir': '/tmp/gcpdiag',
+    'interface': 'cli'
 }
 
 #

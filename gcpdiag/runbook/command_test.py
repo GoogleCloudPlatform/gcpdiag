@@ -98,7 +98,8 @@ class Test(unittest.TestCase):
 
   # pylint: disable=protected-access
   def test_load_repository_rules(self):
-    repo = runbook.RunbookRuleRepository()
-    command._load_repository_rules(repo)
-    modules = {r.product for r in repo.rules_to_run}
+    repo = runbook.DiagnosticEngine()
+    command._load_runbook_rules(repo.__module__)
+    assert len(runbook.DiagnosticTreeRegister) > 0
+    modules = {r(None).product for r in runbook.DiagnosticTreeRegister.values()}
     assert MUST_HAVE_MODULES.issubset(modules)

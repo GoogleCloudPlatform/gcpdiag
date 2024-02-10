@@ -35,7 +35,7 @@ class ParseMappingArg(argparse.Action):
         values = values[1:-1]
       if not isinstance(values, list):
         values = re.split('[ ,]', values)
-      parsed_dict = getattr(namespace, self.dest, {})
+      parsed_dict = getattr(namespace, self.dest, models.Parameter())
       for value in values:
         if value:
           try:
@@ -152,7 +152,7 @@ def _init_runbook_args_parser():
       '--parameter',
       action=ParseMappingArg,
       nargs=1,
-      default={},
+      default=models.Parameter(),
       dest='parameter',
       metavar='key:value',
       help=
@@ -178,7 +178,7 @@ def _init_runbook_args_parser():
   parser.add_argument(
       '--interface',
       metavar='FORMATTER',
-      default='cli',
+      default=config.get('interface'),
       type=str,
       help=('What interface as one of [cli, api] (default: cli)'))
 
@@ -201,41 +201,45 @@ def _flatten_multi_arg(arg_list):
     yield from re.split(r'\s*,\s*', arg)
 
 
-def _parse_rule_patterns(patterns):
-  if patterns:
-    rules = []
-    for arg in _flatten_multi_arg(patterns):
-      try:
-        rules.append(runbook.RunbookRulesPattern(arg))
-      except ValueError:
-        print(f"ERROR: can't parse rule pattern: {arg}", file=sys.stderr)
-        sys.exit(1)
-    return rules
+def _validate_rule_pattern(runbook_name: str):
+  runbook_name = runbook_name.lower()
+  m = re.match(r'^([a-z]+)/([a-z/-]+)$', runbook_name, re.IGNORECASE)
+  if m:
+    return runbook_name
   return None
 
 
-def _load_repository_rules(repo: runbook.RunbookRuleRepository):
-  """Find and load all lint rule modules dynamically"""
-  for module in pkgutil.walk_packages(
-      runbook.__path__,  # type: ignore
-      runbook.__name__ + '.'):
-    if module.ispkg:
-      try:
-        m = importlib.import_module(f'{module.name}')
-        repo.load_rules(m)
-      except ImportError as err:
-        print(f"ERROR: can't import module: {err}", file=sys.stderr)
+def _load_runbook_rules(package: str):
+  """Recursively import all submodules under a package, including subpackages."""
+  if isinstance(package, str):
+    pkg = importlib.import_module(package)
+  for _, name, is_pkg in pkgutil.walk_packages(
+      pkg.__path__,  # type: ignore
+      pkg.__name__ + '.'):
+    try:
+      if name.endswith(('_test', 'output')):
         continue
+      importlib.import_module(name)
+    except ImportError as err:
+      print(f"ERROR: can't import module: {err}", file=sys.stderr)
+      continue
+    if is_pkg:
+      _load_runbook_rules(name)
 
 
-def _initialize_output(output_order):
+def _initialize_output():
   constructor = terminal_output.TerminalOutput
   kwargs = {
       'log_info_for_progress_only': (config.get('verbose') == 0),
   }
-  if config.get('output') == 'terminal':
-    kwargs['output_order'] = output_order
-  output = constructor(**kwargs)
+  if config.get('interface') == 'cli':
+    output = constructor(**kwargs)
+    return output
+  elif config.get('interface') == 'api':
+    raise NotImplementedError
+  else:
+    output = constructor(**kwargs)
+  # default to terminal
   return output
 
 
@@ -258,20 +262,18 @@ def run(argv) -> int:
   context = models.Context(project_id=project.id, parameters=args.parameter)
 
   # Rules name patterns that shall be included or excluded
-  runbook_patterns = _parse_rule_patterns(args.runbook)
+  runbook_pattern = _validate_rule_pattern(args.runbook[0])
 
   # Initialize Repository, and Tests.
-  repo = runbook.RunbookRuleRepository(runbook=runbook_patterns)
-  _load_repository_rules(repo)
+  dt_engine = runbook.DiagnosticEngine()
+  _load_runbook_rules(runbook.__name__)
 
   # ^^^ If you add rules directory, update also
   # pyinstaller/hook-gcpdiag.lint.py and bin/precommit-required-files
 
   # Initialize proper output formater
-  output_order = sorted(str(r) for r in repo.rules_to_run)
-  output = _initialize_output(output_order=output_order)
-  repo.report.add_result_handler(output.result_handler)
-
+  output = _initialize_output()
+  dt_engine.interface.output = output
   # Logging setup.
   logging_handler = output.get_logging_handler()
   logger = logging.getLogger()
@@ -295,12 +297,13 @@ def run(argv) -> int:
   apis.verify_access(context.project_id)
 
   # Run the tests.
-  repo.run_rules(context)
-  output.display_footer(repo.report)
-  hooks.post_lint_hook(repo.report.get_rule_statuses())
+  dt_engine.load_rule(runbook_pattern)
+  dt_engine.run_diagnostic_tree(context)
+  output.display_footer(dt_engine.rm)
+  hooks.post_lint_hook(dt_engine.rm.get_totals_by_status())
 
   # Clean up the kubeconfig file generated for gcpdiag
   kubectl.clean_up()
 
   # Exit 0 if there are no failed rules.
-  sys.exit(2 if repo.report.any_failed else 0)
+  sys.exit(2 if dt_engine.rm.any_failed else 0)
