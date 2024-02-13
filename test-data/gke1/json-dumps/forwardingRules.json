@@ -1,0 +1,31 @@
+{
+  "kind": "compute#forwardingRuleAggregatedList",
+  "id": "projects/gcpdiag-gke1-aaaa/aggregated/forwardingRules",
+  "items": {
+    "regions/us-west1": {
+      "forwardingRules": [
+        {
+          "kind": "compute#forwardingRule",
+          "id": "4245322038451922234",
+          "creationTimestamp": "2024-02-02T22:21:59.365-08:00",
+          "name": "forwardingRule1",
+          "description": "",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west1",
+          "IPAddress": "9.1.2.7",
+          "IPProtocol": "TCP",
+          "portRange": "80-80",
+          "target": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west1/targetHttpProxies/forwardingRule1-target-proxy",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west1/forwardingRules/forwardingRule1",
+          "loadBalancingScheme": "INTERNAL_MANAGED",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west1/subnetworks/backend-subnet",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/lb-network",
+          "networkTier": "PREMIUM",
+          "labelFingerprint": "42Wmu7y8rSM=",
+          "fingerprint": "zUL2wdvikcQ=",
+          "allowGlobalAccess": true
+        }
+      ]
+    }
+  },
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/aggregated/forwardingRules"
+}
