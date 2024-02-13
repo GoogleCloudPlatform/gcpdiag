@@ -144,6 +144,9 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
   def backendServices(self):
     return lb_stub.LbApiStub(mock_state='backendServices')
 
+  def forwardingRules(self):
+    return lb_stub.LbApiStub(mock_state='forwardingRules')
+
   def healthChecks(self):
     return HealthCheckApiStub(mock_state='healthChecks')
 

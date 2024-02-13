@@ -33,6 +33,12 @@ class LbApiStub:
   def __init__(self, mock_state):
     self.mock_state = mock_state
 
+  def aggregatedList(self, project):
+    if self.mock_state == 'forwardingRules':
+      return apis_stub.RestCallStub(project, 'forwardingRules')
+    else:
+      raise ValueError(f'cannot call method {self.mock_state} here')
+
   # pylint: disable=redefined-builtin
   def list(self, project, region=None):
     project = 'gcpdiag-lb1-aaaa'
