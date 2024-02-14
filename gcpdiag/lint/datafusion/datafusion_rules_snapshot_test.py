@@ -11,11 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-""" Generalize rule snapshot testing """
+"""Generalize rule snapshot testing"""
+
+from unittest import mock
 
 from gcpdiag.lint import datafusion, snapshot_test_base
+from gcpdiag.queries import datafusion_test
 
 
+@mock.patch(
+    'gcpdiag.queries.datafusion.extract_support_datafusion_version',
+    new=lambda: datafusion_test.SUPPORTED_VERSIONS_DICT,
+)
 class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = datafusion
   project_id = 'gcpdiag-datafusion1-aaaa'

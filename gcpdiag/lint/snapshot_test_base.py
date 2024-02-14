@@ -1,4 +1,5 @@
-""" Base class for snapshot tests """
+"""Base class for snapshot tests"""
+
 import io
 from os import path
 from unittest import mock
@@ -10,10 +11,12 @@ from gcpdiag.queries import apis_stub, kubectl_stub
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
 @mock.patch('gcpdiag.queries.kubectl.verify_auth', new=kubectl_stub.verify_auth)
-@mock.patch('gcpdiag.queries.kubectl.check_gke_ingress',
-            new=kubectl_stub.check_gke_ingress)
+@mock.patch(
+    'gcpdiag.queries.kubectl.check_gke_ingress',
+    new=kubectl_stub.check_gke_ingress,
+)
 class RulesSnapshotTestBase:
-  """ Run snapshot test """
+  """Run snapshot test"""
 
   def test_all_rules(self, snapshot):
     for rule in self._list_rules():
@@ -27,7 +30,8 @@ class RulesSnapshotTestBase:
       snapshot.assert_match(
           output_stream.getvalue(),
           path.join(snapshot.snapshot_dir,
-                    f'{rule.rule_class}_{rule.rule_id}.txt'))
+                    f'{rule.rule_class}_{rule.rule_id}.txt'),
+      )
 
   def _list_rules(self):
     return self._mk_repo().rules_to_run

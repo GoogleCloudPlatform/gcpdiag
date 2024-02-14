@@ -28,6 +28,17 @@ DUMMY_INSTANCE1_LABELS = {'gcpdiag': 'test'}
 GCE_SERVICE_ACCOUNT = '12340010-compute@developer.gserviceaccount.com'
 ENV_SERVICE_ACCOUNT = f'env2sa@{DUMMY_PROJECT_NAME}.iam.gserviceaccount.com'
 NUMBER_OF_INSTANCES_IN_DATAFUSION_JSON_DUMP_FILE = 1
+SUPPORTED_VERSIONS_DICT = {
+    '6.9': '2025-03-31',
+    '6.8': '2024-08-31',
+    '6.7': '2023-02-28',
+    '6.6': '2023-10-31',
+    '6.5': '2023-05-31',
+    '6.4': '2022-11-30',
+    '6.3': '2022-07-31',
+    '6.2': '2022-03-31',
+    '6.1': '2021-06-30'
+}
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
@@ -50,3 +61,20 @@ class TestDataFusion:
     instances = datafusion.get_instances(context)
     assert (DUMMY_INSTANCE1_NAME,
             True) in [(i.name, i.is_private) for k, i in instances.items()]
+
+
+class TestExtractVersionPolicyDict:
+  """Test Http Request and Response."""
+
+  @mock.patch('gcpdiag.queries.datafusion.requests.get', autospec=True)
+  def test_extract_support_datafusion_version(self, mock_get):
+
+    with open(
+        'test-data/datafusion1/html-content/'
+        'version_support_policy.html',
+        encoding='utf-8') as fh:
+      mock_get.return_value.content = fh.read().encode('utf-8')
+      mock_get.return_value.status_code = 200
+
+    response_dict = datafusion.extract_support_datafusion_version()
+    assert response_dict == SUPPORTED_VERSIONS_DICT
