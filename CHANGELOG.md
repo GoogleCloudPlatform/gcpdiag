@@ -1,3 +1,26 @@
+## 0.69 (2024-2-21)
+
+#### New feature
+- add universe\_domain for Trusted Partner Client (TPC)
+
+#### New rules
+- asm/WARN\_2024\_001 Webhook failed
+- lb/BP\_2024\_002 Check if global access is on for the regional iLB
+- pubsub/WARN\_2024\_003 Pub/Sub rule: CMEK - Topic Permissions
+- dataproc/WARN\_2024\_001 dataproc check hdfs safemode status
+- dataproc/WARN\_2024\_002 dataproc hdfs write issues
+- gce/ERR\_2024\_001 GCE rule:Snapshot creation rate limit
+- lb/BP\_2024\_001 session affinity enabled on load balancer
+- pubsub/WARN\_2024\_002 GCS subscription has the apt permissions
+- dataflow/ERR\_2023\_010 missing required field
+- pubsub/WARN\_2024\_001 DLQ Subscription has apt permissions
+
+#### Fixes
+- Update Pull Request and Merge to only run when an update was committed
+- Creating a github action Workflow to automatically update the gke/eol.yaml file
+- Update gke/eol.yaml file
+
+
 ## 0.68 (2024-1-17)
 
 #### New Rules
