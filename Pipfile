@@ -22,6 +22,7 @@ six = "==1.15.0"
 typing-extensions = "*"
 # Python 3.9 compatibility
 exceptiongroup = "*"
+async-timeout = "*"
 
 [dev-packages]
 astunparse = "*"
