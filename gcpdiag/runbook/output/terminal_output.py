@@ -1,4 +1,4 @@
-# Copyright 2021 Google LLC
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,22 +11,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# Lint as: python3
 """ Output implementation that prints result in human-readable format. """
 
-import functools
 import logging
 import os
 import sys
 import textwrap
-from typing import Any, Dict, List, Optional, TextIO
+import threading
+from typing import Optional, TextIO
 
 import blessings
 
 # pylint: disable=unused-import (lint is used in type hints)
 from gcpdiag import config, models, runbook
-from gcpdiag.runbook.output import base_output
+from gcpdiag.runbook import report
+from gcpdiag.runbook.output.base_output import BaseOutput
 
 OUTPUT_WIDTH = 68
 
@@ -43,48 +42,13 @@ def emoji_wrap(char):
     return char
 
 
-class OutputOrderer:
-  """ Helper to maintain sorting order of the rules """
-
-  _result_handler: 'runbook.RunbookResultsHandler'
-  _output_order: List[str]
-  _next_rule_idx: int
-  _rule_reports_ready: Dict[str, 'runbook.RunbookInteractionInterface']
-
-  def __init__(self, result_handler: 'runbook.RunbookResultsHandler',
-               output_order: List[str]) -> None:
-    self._result_handler = result_handler
-    self._output_order = output_order
-    self._next_rule_idx = 0
-    self._rule_reports_ready = {}
-
-  def process_rule_report(self, rule_report: Any) -> None:
-    rule_id = str(rule_report.rule)
-    self._rule_reports_ready[rule_id] = rule_report
-    self._output_ready()
-
-  def _output_ready(self) -> None:
-    while self._has_more_work and self._is_next_rule_ready:
-      rule_report = self._rule_reports_ready[self._next_rule_id]
-      self._result_handler.process_rule_report(rule_report)
-      self._next_rule_idx += 1
-
-  @property
-  def _has_more_work(self) -> bool:
-    return self._next_rule_idx < len(self._output_order)
-
-  @property
-  def _is_next_rule_ready(self) -> bool:
-    return self._next_rule_id in self._rule_reports_ready
-
-  @property
-  def _next_rule_id(self) -> str:
-    return self._output_order[self._next_rule_idx]
-
-
-class TerminalOutput(base_output.BaseOutput):
+class TerminalOutput(BaseOutput):
   """ Output implementation that prints result in human-readable format. """
-  _output_order: Optional[List[str]]
+  file: TextIO
+  show_ok: bool
+  show_skipped: bool
+  log_info_for_progress_only: bool
+  lock: threading.Lock
   line_unfinished: bool
   term: blessings.Terminal
 
@@ -92,52 +56,42 @@ class TerminalOutput(base_output.BaseOutput):
                file: TextIO = sys.stdout,
                log_info_for_progress_only: bool = True,
                show_ok: bool = True,
-               show_skipped: bool = False,
-               output_order: Optional[List[str]] = None):
-    super().__init__(file, log_info_for_progress_only, show_ok, show_skipped)
-    self._output_order = output_order
+               show_skipped: bool = True):
+    self.file = file
+    self.show_ok = show_ok
+    self.show_skipped = show_skipped
+    self.log_info_for_progress_only = log_info_for_progress_only
+    self.lock = threading.Lock()
     self.line_unfinished = False
     self.term = blessings.Terminal()
 
-  @functools.cached_property
-  def result_handler(self) -> 'runbook.RunbookResultsHandler':
-    default_handler = self
-    if self._output_order is None:
-      return default_handler
+  def display_banner(self) -> None:
+    if self.term.does_styling:
+      print(self.term.bold(f"gcpdiag {emoji_wrap('🩺')} {config.VERSION}\n"))
     else:
-      return OutputOrderer(result_handler=default_handler,
-                           output_order=self._output_order)
+      print(f'gcpdiag {config.VERSION}\n', file=sys.stderr)
 
-  def process_rule_report(
-      self, rule_report: 'runbook.RunbookInteractionInterface') -> None:
-    if not self._should_rule_be_skipped(rule_report):
-      with self.lock:
-        self._print_rule_report(rule_report)
+  def display_header(self, context: models.Context) -> None:
+    print(f'Starting runbook inspection [Alpha Release]\n{context}\n',
+          file=sys.stderr)
 
-  def _print_rule_report(
-      self, rule_report: 'runbook.RunbookInteractionInterface') -> None:
-    self._print_rule_header(rule=rule_report.rule)
-    for check_result in rule_report.results:
-      self._handle_rule_report_result(check_result)
-    if rule_report.overall_status == 'failed':
-      self._print_long_desc(rule=rule_report.rule)
-    self.terminal_print_line()
+  def display_runbook_description(self, tree):
+    self.terminal_print_line(f'{self.term.yellow(tree.name)}: {tree.__doc__}')
 
-  def _handle_rule_report_result(
-      self, check_result: 'runbook.RunbookNodeResult') -> None:
-    if check_result.status == 'failed':
-      self._print_failed(resource=check_result.resource,
-                         reason=check_result.reason,
-                         short_info=check_result.remediation)
-    elif check_result.status == 'skipped':
-      self._print_skipped(resource=check_result.resource,
-                          reason=check_result.reason,
-                          short_info=check_result.remediation)
-    elif check_result.status == 'ok':
-      self._print_ok(resource=check_result.resource,
-                     short_info=check_result.remediation)
-    else:
-      raise RuntimeError('Unknown rule report status')
+  def display_footer(self, result: 'report.ReportManager') -> None:
+    totals = result.get_totals_by_status()
+    state_strs = [
+        f'{totals.get(state, 0)} {state}'
+        for state in ['skipped', 'ok', 'failed', 'uncertain']
+    ]
+    print(f"Rules summary: {', '.join(state_strs)}", file=sys.stderr)
+
+  def get_logging_handler(self) -> logging.Handler:
+    return _LoggingHandler(self)
+
+  def print_line(self, text: str = '') -> None:
+    """Write a line to the desired output provided as self.file."""
+    print(text, file=self.file, flush=True)
 
   def _wrap_indent(self, text: str, prefix: str) -> str:
     width = self.term.width or 80
@@ -175,22 +129,16 @@ class TerminalOutput(base_output.BaseOutput):
 
   def terminal_print_line(self, text: str = '') -> None:
     """Write a line to the terminal, replacing any current line content, and add a line feed."""
-    if self.line_unfinished and self.term.width:
+    if self.term.width:
       self.terminal_update_line(text)
-      print(file=self.file)
+      print(file=sys.stdout)
     else:
-      print(text, file=self.file)
+      print(text, file=sys.stdout)
       # flush the output, so that we can more easily grep, tee, etc.
       sys.stdout.flush()
     self.line_unfinished = False
 
-  def display_banner(self) -> None:
-    if self.term.does_styling:
-      print(self.term.bold(f"gcpdiag {emoji_wrap('🩺')} {config.VERSION}\n"))
-    else:
-      print(f'gcpdiag {config.VERSION}\n', file=sys.stderr)
-
-  def _print_rule_header(self, rule: 'runbook.RunbookRule') -> None:
+  def _print_rule_header(self, rule: 'runbook.DiagnosticTree') -> None:
     bullet = ''
     if self.term.does_styling:
       bullet = emoji_wrap('🔎') + ' '
@@ -199,60 +147,165 @@ class TerminalOutput(base_output.BaseOutput):
     self.terminal_print_line(bullet +
                              self.term.yellow(f'{rule.product}/{rule.rule_id}'))
 
-  def _print_long_desc(self, rule: 'runbook.RunbookRule') -> None:
+  def _print_long_desc(self, rule: 'runbook.DiagnosticTree') -> None:
     self.terminal_print_line()
-    doc = rule.doc or ''
-    self.terminal_print_line(self._italic(self._wrap_indent(doc, '   ')))
+    self.terminal_print_line(
+        self._italic(self._wrap_indent(rule.__doc__ or '', '   ')))
     self.terminal_print_line()
     self.terminal_print_line('   ' + rule.doc_url)
 
-  def _print_skipped(self, resource: Optional[models.Resource],
-                     reason: Optional[str], short_info: Optional[str]) -> None:
-    if not self.show_skipped:
-      return
-    if short_info:
-      short_info = ' ' + short_info
-    else:
-      short_info = ''
-    reason = reason or ''
-    if resource:
-      self.terminal_print_line('   - ' +
-                               resource.short_path.ljust(OUTPUT_WIDTH) +
-                               ' [SKIP]' + short_info)
-      self.terminal_print_line(textwrap.indent(reason, '     '))
-    else:
-      self.terminal_print_line('   ' +
-                               ('(' + reason + ')').ljust(OUTPUT_WIDTH + 2) +
-                               ' [SKIP]' + short_info)
+  def print_skipped(self,
+                    resource: Optional[models.Resource],
+                    reason: str,
+                    remediation: str = None) -> None:
 
-  def _print_ok(self, resource: Optional[models.Resource],
-                short_info: Optional[str]) -> None:
+
+    short_path = resource.short_path if resource is not None \
+                 and resource.short_path is not None else ''
+    self.terminal_print_line()
+    self.terminal_print_line('   - ' + short_path.ljust(OUTPUT_WIDTH) + ' [' +
+                             self.term.yellow('SKIP') + ']')
+    if reason:
+      self.terminal_print_line('     [' + self.term.green('REASON') + ']')
+      self.terminal_print_line(textwrap.indent(reason, '     '))
+
+    if remediation:
+      self.terminal_print_line('     [' + self.term.green('REMEDIATION') + ']')
+      self.terminal_print_line(textwrap.indent(remediation, '     '))
+
+  def print_ok(self, resource: models.Resource, reason: str = '') -> None:
     if not self.show_ok:
       return
-    if short_info:
-      short_info = ' ' + str(short_info)
-    else:
-      short_info = ''
     short_path = resource.short_path if resource is not None \
                  and resource.short_path is not None else ''
+    self.terminal_print_line()
     self.terminal_print_line('   - ' + short_path.ljust(OUTPUT_WIDTH) + ' [' +
-                             self.term.green(' OK ') + ']' + short_info)
-
-  def _print_failed(self, resource: Optional[models.Resource],
-                    reason: Optional[str], short_info: Optional[str]) -> None:
-    if short_info:
-      short_info = ' ' + short_info
-    else:
-      short_info = ''
-    short_path = resource.short_path if resource is not None \
-                 and resource.short_path is not None else ''
-    self.terminal_print_line('   - ' + short_path.ljust(OUTPUT_WIDTH) + ' [' +
-                             self.term.red('FAIL') + ']' + short_info)
+                             self.term.green('OK') + ']')
     if reason:
+      self.terminal_print_line('     [' + self.term.green('REASON') + ']')
       self.terminal_print_line(textwrap.indent(reason, '     '))
 
-  def get_logging_handler(self) -> logging.Handler:
-    return _LoggingHandler(self)
+  def print_failed(self, resource: models.Resource, reason: str,
+                   remediation: str) -> None:
+    """Output test result and registers the result to be used in
+    the runbook report.
+
+    The failure assigned a human task unless program is running
+    autonomously
+    """
+
+
+    short_path = resource.short_path if resource is not None \
+                 and resource.short_path is not None else ''
+    self.terminal_print_line()
+    self.terminal_print_line('   - ' + short_path.ljust(OUTPUT_WIDTH) + ' [' +
+                             self.term.red('FAIL') + ']')
+    if reason:
+      self.terminal_print_line('     [' + self.term.green('REASON') + ']')
+      self.terminal_print_line(textwrap.indent(f'{reason}', '     '))
+
+    if remediation:
+      self.terminal_print_line('     [' + self.term.green('REMEDIATION') + ']')
+      self.terminal_print_line(textwrap.indent(f'{remediation}', '     '))
+
+  def print_uncertain(self,
+                      resource: models.Resource,
+                      reason: str,
+                      remediation: str = None) -> None:
+
+    short_path = resource.short_path if resource is not None \
+                 and resource.short_path is not None else ''
+    self.terminal_print_line()
+    self.terminal_print_line('   - ' + short_path.ljust(OUTPUT_WIDTH) + ' [' +
+                             self.term.yellow('UNCERTAIN') + ']')
+    if reason:
+      self.terminal_print_line('     [' + self.term.green('REASON') + ']')
+      self.terminal_print_line(textwrap.indent(reason, '     '))
+
+    if remediation:
+      self.terminal_print_line('     [' + self.term.green('REMEDIATION') + ']')
+      self.terminal_print_line(textwrap.indent(f'{remediation}', '     '))
+
+  def info(self, message: str):
+    """
+    For informational update and getting a response from user
+    """
+    self.terminal_print_line(text='' + '[' + self.term.green('INFO') + ']: ' +
+                             f'{message}')
+
+  def prompt(self,
+             message: str,
+             step: str = '',
+             options: dict = None,
+             choice_msg: str = 'Choose an option: '):
+    """
+    For informational update and getting a response from user
+    """
+    # information prompt
+    if not step:
+      self.terminal_print_line(text='' + '[' + self.term.green('INFO') + ']: ' +
+                               f'{message}')
+      return
+    # Step or decision
+    if step and step in self.STEP or step in self.RETEST:
+      self.terminal_print_line()
+      self.terminal_print_line(text='' + '[' + self.term.green(step) + ']: ' +
+                               f'{message}')
+      return
+
+    self.default_answer = False
+    self.answer = None
+    options_text = '\n'
+    try:
+      if step in self.HUMAN_TASK and not options and not config.get('auto'):
+        for option, description in self.HUMAN_TASK_OPTIONS.items():
+          options_text += '[' + self.term.green(
+              f'{option}') + ']' + f' - {description}\n'
+      if step in self.CONFIRMATION and not options\
+          and not config.get('auto'):
+        for option, description in self.CONFIRMATION_OPTIONS.items():
+          options_text += '[' + self.term.green(
+              f'{option}') + ']' + f' - {description}\n'
+      if (step in self.CONFIRMATION or step in self.HUMAN_TASK) \
+        and options and not config.get('auto'):
+        for option, description in options.items():
+          options_text += '[' + self.term.green(
+              f'{option}') + ']' + f' - {description}\n'
+      #TODO: allow to get special data. ex ip or just an error
+      if not config.get('auto'):
+        if message:
+          self.terminal_print_line(text=textwrap.indent(message, '     '))
+        if options_text:
+          self.terminal_print_line(text=textwrap.indent(options_text, '     '))
+          if choice_msg is None:
+            choice_msg = 'Choose an option: '
+          self.answer = input(textwrap.indent(choice_msg, '     '))
+    except EOFError:
+      return self.answer
+    # pylint:disable=g-explicit-bool-comparison, We explicitly want to
+    # distinguish between empty string and None.
+    if self.answer == '':
+      # User just hit enter, return default.
+      return self.default_answer
+    elif self.answer is None:
+      return self.answer
+    elif self.answer.strip().lower() in ['a', 'abort']:
+      return self.ABORT
+    elif self.answer.strip().lower() in ['c', 'continue']:
+      return self.CONTINUE
+    elif self.answer.strip().lower() in ['u', 'uncertain']:
+      return self.UNCERTAIN
+    elif self.answer.strip().lower() in ['r', 'retest']:
+      return self.RETEST
+    elif self.answer.strip().lower() in ['y', 'yes']:
+      return self.YES
+    elif self.answer.strip().lower() in ['n', 'no']:
+      return self.NO
+    elif self.answer.strip().lower() not in [
+        'a', 'abort', 'c', 'continue', 'r', 'retest'
+    ]:
+      return self.answer.strip()
+    return
 
 
 class _LoggingHandler(logging.Handler):

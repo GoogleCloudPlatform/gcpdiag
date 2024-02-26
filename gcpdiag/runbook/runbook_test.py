@@ -13,72 +13,94 @@
 # limitations under the License.
 """Test code in runbook module"""
 
-import io
 import unittest
-from unittest.mock import mock_open, patch
+from unittest.mock import Mock, patch
 
-from gcpdiag import runbook
+from gcpdiag import models, runbook
+from gcpdiag.runbook.constants import StepType
 
 
-class TestGenerateReport(unittest.TestCase):
-  """Test Report Generation"""
+class TestDiagnosticEngine(unittest.TestCase):
+  """Test Diagnostic Engine"""
 
-  def make_runbook(self):
+  def setUp(self):
+    self.mock_report_manager = Mock(spec=runbook.report.ReportManager)
+    self.de: runbook.DiagnosticEngine = runbook.DiagnosticEngine(
+        rm=self.mock_report_manager)
 
-    rule = runbook.RunbookRule('test', 'test_id', 'doc_str', start_f=None)
-    report = runbook.RunbookReport()
-    interface = runbook.RunbookInteractionInterface(rule=rule,
-                                                    runbook_report=report)
-    return interface
+  def test_initialization_with_default_report_manager(self):
+    engine = runbook.DiagnosticEngine()
+    self.assertIsInstance(engine.rm, runbook.report.TerminalReportManager)
 
-  #pylint:disable=protected-access
-  @patch('builtins.open', new_callable=mock_open)
-  @patch('logging.error')
-  @patch('sys.stderr', new_callable=io.StringIO)
-  def test_report_to_terminal_success(self, mock_stderr, mock_logging_error,
-                                      m_open):
-    instance = self.make_runbook()
-    json_report = '{"key": "test"}'
-    instance._write_report_to_terminal(json_report)
-    m_open.assert_called_once_with(instance._report_path, 'w', encoding='utf-8')
-    handle = m_open.return_value.__enter__.return_value
-    handle.write.assert_called_once_with(json_report)
-    self.assertEqual(mock_logging_error.call_count, 0)
-    self.assertIn('Runbook report located in:', mock_stderr.getvalue())
+  def test_load_rule_valid(self):
+    mock_dt = Mock(parent=runbook.DiagnosticTree)
+    runbook.DiagnosticTreeRegister['product/test-tree'] = mock_dt
+    self.de.load_rule('product/test-tree')
+    # pylint: disable=protected-access
+    self.assertEqual(self.de.dt, mock_dt)
 
-  @patch('builtins.open', side_effect=PermissionError)
-  @patch('logging.error')
-  @patch('sys.stderr', new_callable=io.StringIO)
-  def test_save_report_permission_error(self, mock_stderr, mock_logging_error,
-                                        m_open):
-    json_report = '{"key": "value"}'
-    instance = self.make_runbook()
+  def test_load_rule_invalid(self):
+    with self.assertRaises(SystemExit) as cm:
+      with self.assertRaises(runbook.exceptions.DiagnosticTreeNotFound):
+        self.de.load_rule('invalid_rule_name')
+    # Test program is exited with code 2 when invalid rule name is provided
+    self.assertEqual(cm.exception.code, 2)
 
-    instance._write_report_to_terminal(json_report)
-    m_open.assert_called_once_with(instance._report_path, 'w', encoding='utf-8')
-    handle = m_open.return_value.__enter__.return_value
-    handle.write.assert_not_called()
-    mock_logging_error.assert_called_once()
-    assert 'Permission denied' in mock_logging_error.call_args[0][0]
-    # report is displayed on the terminal
-    self.assertIn(json_report, mock_stderr.getvalue())
-    self.assertNotIn('Runbook report located in', mock_stderr.getvalue())
+  #pylint: disable=protected-access
+  def test_run_diagnostic_tree_missing_parameters(self):
+    with self.assertRaises(SystemExit) as cm:
+      context = models.Context('project_id', parameters={})
+      dt = runbook.DiagnosticTree(context=context)
+      dt.req_params = {'missing_param': None}
+      self.de._check_required_paramaters(dt)
+    self.assertEqual(cm.exception.code, 2)
 
-  @patch('builtins.open', side_effect=OSError)
-  @patch('logging.error')
-  @patch('sys.stderr', new_callable=io.StringIO)
-  def test_write_report_to_terminal_os_error(self, mock_stderr,
-                                             mock_logging_error, m_open):
-    json_report = '{"key": "value"}'
-    instance = self.make_runbook()
+  @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
+  def test_find_path_dfs_normal_operation(self, mock_run_step):
+    context = models.Context('product_id')
+    current_step = Mock(run_id='1')
+    current_step.steps = []
+    visited = set()
 
-    instance._write_report_to_terminal(json_report)
-    m_open.assert_called_once_with(instance._report_path, 'w', encoding='utf-8')
-    handle = m_open.return_value.__enter__.return_value
-    handle.write.assert_not_called()
-    mock_logging_error.assert_called_once()
-    assert 'Failed to save generated report to file' in mock_logging_error.call_args[
-        0][0]
-    # report is displayed on the terminal
-    self.assertIn(json_report, mock_stderr.getvalue())
-    self.assertNotIn('Runbook report located in', mock_stderr.getvalue())
+    self.de.find_path_dfs(context=context,
+                          interface=self.de.interface,
+                          step=current_step,
+                          executed_steps=visited)
+
+    mock_run_step.assert_called()
+    self.assertIn(current_step,
+                  visited)  # Check if the current step was marked as visited
+
+  @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
+  def test_find_path_dfs_finite_loop(self, mock_run_step):
+    context = models.Context('product_id')
+    current_step = Mock(run_id='1', type=StepType.AUTOMATED)
+    current_step.steps = [current_step]
+    visited = set()
+
+    self.de.find_path_dfs(context=context,
+                          step=current_step,
+                          executed_steps=visited)
+
+    mock_run_step.assert_called()
+    self.assertIn(current_step, visited)
+
+  @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
+  def test_find_path_all_child_step_executions(self, mock_run_step):
+    context = models.Context('product_id')
+    first_step = Mock(run_id='1')
+    intermidiate_step = Mock(run_id='2')
+    first_step.steps = [intermidiate_step]
+    last_step = Mock(run_id='3')
+    last_step.steps = []
+    intermidiate_step.steps = [last_step, last_step, last_step, last_step]
+    visited = set()
+
+    self.de.find_path_dfs(context=context,
+                          step=first_step,
+                          executed_steps=visited)
+
+    self.assertIn(first_step, visited)
+    self.assertIn(intermidiate_step, visited)
+    self.assertIn(last_step, visited)
+    self.assertEqual(mock_run_step.call_count, 3)

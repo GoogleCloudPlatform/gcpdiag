@@ -116,3 +116,33 @@ def test_match_project_resource():
   # should fail if it doesn't match context.
   assert not c.match_project_resource(resource='bastion-host',
                                       labels={'IGNORELABEL': 'IGNORELABEL'})
+
+
+def test_generic_declaration():
+  param = models.Parameter({'key': True})
+  assert param.get('key')
+
+
+def test_string_strip_and_lowercase():
+  param = models.Parameter()
+  param['bool_value_true'] = ' TRUE '
+  assert param['bool_value_true'] == 'true'
+
+
+def test_update_method():
+  param = models.Parameter()
+  updates = {'new_string': 'world'}
+  param.update(updates)
+  assert param['new_string'] == 'world'
+
+
+def test_setdefault_existing_key():
+  param = models.Parameter({'existing_key': '100'})
+  old_val = param.setdefault('existing_key', '200')
+  assert old_val == '100'
+
+
+def test_setdefault_non_existing_key():
+  param = models.Parameter()
+  param.setdefault('new_key', '300')
+  assert param['new_key'] == '300'
