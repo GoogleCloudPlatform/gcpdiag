@@ -19,7 +19,7 @@ from gcpdiag.runbook import gce, snapshot_test_base
 class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = gce
   project_id = 'gcpdiag-gce-faultyssh-runbook'
-  config.init({'auto': True}, project_id)
+  config.init({'auto': True, 'interface': 'cli'}, project_id)
 
   rule_parameters = [{
       'name': 'faulty-linux-ssh',

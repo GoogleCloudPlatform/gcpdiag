@@ -20,6 +20,7 @@ from unittest import mock
 
 from gcpdiag import models, runbook
 from gcpdiag.queries import apis_stub, kubectl_stub
+from gcpdiag.runbook import command
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
@@ -30,34 +31,26 @@ class RulesSnapshotTestBase:
   """ Run snapshot test """
 
   def test_all_rules(self, snapshot):
+    self.de = runbook.DiagnosticEngine()
     for rule in self._list_rules():
       snapshot.snapshot_dir = path.join(path.dirname(self.rule_pkg.__file__),
                                         'snapshots')
-      repo = self._mk_repo(rule=rule)
       output_stream = io.StringIO()
       sys.stdout = output_stream
       for parameter in self.rule_parameters:
         context = self._mk_context(parameter=parameter)
+        self.de.dt = rule
         print(textwrap.fill(str(context), 100), file=sys.stdout, end='\n\n')
-        repo.run_rules(context)
+        self.de.run_diagnostic_tree(context)
         print('\n')
       snapshot.assert_match(
           output_stream.getvalue(),
-          path.join(snapshot.snapshot_dir, f'{rule.rule_id}.txt'))
-
-  def _list_rules(self):
-    return self._mk_repo().rules_to_run
+          path.join(snapshot.snapshot_dir, f'{rule(None).rule_id}.txt'))
 
   def _mk_context(self, parameter):
     return models.Context(project_id=self.project_id, parameters=parameter)
 
-  def _mk_repo(self, rule=None):
-    if rule is None:
-      rule_pattern = None
-    else:
-      rule_pattern = [
-          runbook.RunbookRulesPattern(f'{rule.product}/{rule.rule_id}')
-      ]
-    repo = runbook.RunbookRuleRepository(runbook=rule_pattern)
-    repo.load_rules(self.rule_pkg)
-    return repo
+  def _list_rules(self):
+    #pylint: disable=protected-access
+    command._load_runbook_rules(self.rule_pkg.__name__)
+    return runbook.DiagnosticTreeRegister.values()

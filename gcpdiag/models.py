@@ -19,13 +19,49 @@ import abc
 import dataclasses
 import re
 from types import MappingProxyType
-from typing import Iterable, List, Mapping, Optional
+from typing import Any, Generic, Iterable, List, Mapping, Optional, TypeVar
 
 from gcpdiag import utils
 
 
 def _mapping_str(mapping: Mapping[str, str]) -> str:
   return ','.join(f'{k}={v}' for k, v in sorted(mapping.items()))
+
+
+T = TypeVar('T')
+V = TypeVar('V', bound=Any)
+
+
+class Parameter(dict[T, V], Generic[T, V]):
+  """Class to store parameters"""
+
+  def __init__(self, *args, **kwargs):
+    super().__init__()
+    for dict_arg in args:
+      for key, value in dict_arg.items():
+        self[key] = value
+    for key, value in kwargs.items():
+      self[key] = value
+
+  def _parse_value(self, value: str) -> Any:
+    """Make all values lower string and strip whitespaces."""
+    if isinstance(value, str):
+      return value.strip().lower()
+    return value
+
+  def __setitem__(self, key: T, value: V) -> None:
+    super().__setitem__(key, self._parse_value(value))
+
+  def update(self, *args, **kwargs) -> None:
+    for k, v in dict(*args, **kwargs).items():
+      self[k] = v
+
+  def setdefault(self, key: T, default: V = None) -> V:
+    if key not in self:
+      converted_default = self._parse_value(default) if isinstance(
+          default, str) else default
+      self[key] = converted_default
+    return super().setdefault(key, self[key])
 
 
 @dataclasses.dataclass
@@ -43,7 +79,7 @@ class Context:
   # list of "label sets" that must match.
   labels: Optional[Mapping[str, str]]
   # list of "runbook parameters sets" that must match.
-  parameters: dict[str, str]
+  _parameters: Parameter[str, str]
 
   # the selected resources are the intersection of project_id, locations,
   # and labels(i.e. all must match), but each value in locations, and
@@ -56,7 +92,7 @@ class Context:
                project_id: str,
                locations: Optional[Iterable[str]] = None,
                labels: Optional[Mapping[str, str]] = None,
-               parameters: Optional[Mapping[str, str]] = None,
+               parameters: Optional[Parameter[str, str]] = None,
                resources: Optional[Iterable[str]] = None):
     """Args:
 
@@ -106,10 +142,10 @@ class Context:
       if not isinstance(parameters, Mapping):
         raise ValueError('parameters must be Mapping[str,str]]')
 
-      self.parameters = dict(parameters)
-      self.parameters['project_id'] = self.project_id
+      self._parameters = Parameter(parameters)
+      self._parameters['project_id'] = self.project_id
     else:
-      self.parameters = {}
+      self._parameters = Parameter()
 
   def __str__(self):
     string = 'project: ' + self.project_id
@@ -119,8 +155,8 @@ class Context:
       string += ', locations (regions/zones): ' + self.locations_pattern.pattern
     if self.labels:
       string += ', labels: {' + _mapping_str(self.labels) + '}'
-    if self.parameters:
-      string += ', parameters: {' + _mapping_str(self.parameters) + '}'
+    if self._parameters:
+      string += ', parameters: {' + _mapping_str(self._parameters) + '}'
     return string
 
   def __hash__(self):
