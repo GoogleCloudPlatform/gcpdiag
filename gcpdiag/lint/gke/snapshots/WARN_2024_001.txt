@@ -1,0 +1,3 @@
+*  gke/WARN/2024_001: GKE Node Auto Provisioning scales nodes to match workload demands.
+   (logging api is disabled)                                              [SKIP]
+
