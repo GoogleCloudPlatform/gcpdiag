@@ -1,3 +1,51 @@
 {
-  "timeSeriesDescriptor": {}
+  "timeSeriesDescriptor": {
+    "labelDescriptors": [
+      {
+        "key": "resource.project_id"
+      },
+      {
+        "key": "resource.location"
+      },
+      {
+        "key": "resource.cluster_name"
+      }
+    ],
+    "pointDescriptors": [
+      {
+        "key": "value_utilization_max",
+        "valueType": "DOUBLE",
+        "metricKind": "GAUGE",
+        "unit": "1"
+      }
+    ]
+  },
+  "timeSeriesData": [
+    {
+      "labelValues": [
+        {
+          "stringValue": "gcpdiag-composer1-aaaa"
+        },
+        {
+          "stringValue": "us-central1"
+        },
+        {
+          "stringValue": "us-central1-env2-941355a9-gke"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue":0.06922396810093948
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2023-11-06T00:51:33.181476Z",
+            "endTime": "2023-11-06T00:51:33.181476Z"
+          }
+        }
+      ]
+    }
+  ]
 }

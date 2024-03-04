@@ -136,6 +136,10 @@ class Environment(models.Resource):
     return self._resource_data['config']['privateEnvironmentConfig'].get(
         'enablePrivateEnvironment', False)
 
+  @property
+  def gke_cluster(self) -> str:
+    return self._resource_data['config']['gkeCluster']
+
 
 COMPOSER_REGIONS = [
     'asia-northeast2', 'us-central1', 'northamerica-northeast1', 'us-west3',
