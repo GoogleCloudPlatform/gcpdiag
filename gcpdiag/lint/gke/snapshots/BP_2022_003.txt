@@ -9,7 +9,10 @@
          scheduled end of life: 2024-01-08
    - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [SKIP]
      release channel: REGULAR
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke1/default-pool                   [ OK ]
+   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [FAIL]
+     GKE version 1.25
+
+         scheduled end of life: 2024-03-30
    - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [SKIP]
      release channel: REGULAR
    - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [SKIP]
