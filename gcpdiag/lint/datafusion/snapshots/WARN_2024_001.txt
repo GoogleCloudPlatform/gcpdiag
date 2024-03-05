@@ -1,0 +1,12 @@
+*  datafusion/WARN/2024_001: Data Fusion version is supported.
+   - gcpdiag-datafusion1-aaaa/us-central1/my-instance                     [FAIL]
+
+     	Datafusion Version: 6.7.1
+     	Supported till 2023-02-28(Upgrade DataFusion Environment)
+
+   A major or minor version of Cloud Data Fusion environment is supported for a
+   specific period of time after it is released.After that period, instances
+   that continue to use the environment version are no longer supported.
+
+   https://gcpdiag.dev/rules/datafusion/WARN/2024_001
+
