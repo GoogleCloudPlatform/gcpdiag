@@ -15,12 +15,15 @@
 # Lint as: python3
 """Queries related to Data Fusion."""
 
+import datetime
 import ipaddress
 import logging
 import re
 from typing import Dict, Mapping, Optional
 
 import googleapiclient.errors
+import requests
+from bs4 import BeautifulSoup
 
 from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis, crm, network
@@ -203,3 +206,59 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
     raise utils.GcpApiError(err) from err
 
   return instances
+
+
+@caching.cached_api_call
+def extract_support_datafusion_version() -> Dict[str, str]:
+  """Extract the version policy dictionary from the data fusion version support policy page.
+
+  Returns:
+    A dictionary of data fusion versions and their support end dates.
+  """
+  page_url = 'https://cloud.google.com/data-fusion/docs/support/version-support-policy'
+
+  try:
+    response = requests.get(page_url)
+    response.raise_for_status()
+    soup = BeautifulSoup(response.content, 'html.parser')
+    data_fusion_table = soup.find('table')
+    if data_fusion_table:
+      versions = []
+      support_end_dates = []
+      version_policy_dict = {}
+
+      for row in data_fusion_table.find_all('tr')[1:]:
+        columns = row.find_all('td')
+        version = columns[0]
+        support_end_date = columns[2].text.strip()
+        if version.sup:
+          version.sup.decompose()
+
+        version = version.text.strip()
+        try:
+          support_end_date = datetime.datetime.strptime(support_end_date,
+                                                        '%B %d, %Y')
+          support_end_date = datetime.datetime.strftime(support_end_date,
+                                                        '%Y-%m-%d')
+        except ValueError:
+          continue
+
+        versions.append(version)
+        support_end_dates.append(support_end_date)
+
+        version_policy_dict = dict(zip(versions, support_end_dates))
+      return version_policy_dict
+
+    else:
+      return {}
+
+  except (
+      requests.exceptions.RequestException,
+      AttributeError,
+      TypeError,
+      ValueError,
+      IndexError,
+  ) as e:
+    logging.error('Error in extracting data fusion version support policy: %s',
+                  e)
+    return {}
