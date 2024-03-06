@@ -1,0 +1,48 @@
+*  gce/ERR/2024_002: GCE VM is operating within optimal performance thresholds
+   - gcpdiag-gce1-aaaa/gce1                                               [FAIL]
+     CPU utilization is exceeding optimal levels, potentially impacting performance of the instance.
+   - gcpdiag-gce1-aaaa/gce1                                               [FAIL]
+     Memory utilization is exceeding optimal levels(95%), potentially impacting performance of the instance.
+   - gcpdiag-gce1-aaaa/gce1                                               [FAIL]
+     Disk utilization is exceeding optimal levels(95%), potentially impacting performance of the instance.
+   - gcpdiag-gce1-aaaa/gce1                                               [FAIL]
+     Disk IO Latency is exceeding optimal levels, potentially impacting performance of the instance.
+   - gcpdiag-gce1-aaaa/gce2                                               [FAIL]
+     CPU utilization is exceeding optimal levels, potentially impacting performance of the instance.
+   - gcpdiag-gce1-aaaa/gce2                                               [FAIL]
+     Memory utilization is exceeding optimal levels(95%), potentially impacting performance of the instance.
+   - gcpdiag-gce1-aaaa/gce2                                               [FAIL]
+     Disk utilization is exceeding optimal levels(95%), potentially impacting performance of the instance.
+   - gcpdiag-gce1-aaaa/gce2                                               [FAIL]
+     Disk IO Latency is exceeding optimal levels, potentially impacting performance of the instance.
+   - gcpdiag-gce1-aaaa/mig-4h21                                           [FAIL]
+     CPU utilization is exceeding optimal levels, potentially impacting performance of the instance.
+   - gcpdiag-gce1-aaaa/mig-4h21                                           [FAIL]
+     Memory utilization is exceeding optimal levels(95%), potentially impacting performance of the instance.
+   - gcpdiag-gce1-aaaa/mig-4h21                                           [FAIL]
+     Disk utilization is exceeding optimal levels(95%), potentially impacting performance of the instance.
+   - gcpdiag-gce1-aaaa/mig-4h21                                           [FAIL]
+     Disk IO Latency is exceeding optimal levels, potentially impacting performance of the instance.
+   - gcpdiag-gce1-aaaa/mig-7pvl                                           [FAIL]
+     CPU utilization is exceeding optimal levels, potentially impacting performance of the instance.
+   - gcpdiag-gce1-aaaa/mig-7pvl                                           [FAIL]
+     Memory utilization is exceeding optimal levels(95%), potentially impacting performance of the instance.
+   - gcpdiag-gce1-aaaa/mig-7pvl                                           [FAIL]
+     Disk utilization is exceeding optimal levels(95%), potentially impacting performance of the instance.
+   - gcpdiag-gce1-aaaa/mig-7pvl                                           [FAIL]
+     Disk IO Latency is exceeding optimal levels, potentially impacting performance of the instance.
+   - gcpdiag-gce1-aaaa/windows-test                                       [FAIL]
+     CPU utilization is exceeding optimal levels, potentially impacting performance of the instance.
+   - gcpdiag-gce1-aaaa/windows-test                                       [FAIL]
+     Memory utilization is exceeding optimal levels(95%), potentially impacting performance of the instance.
+   - gcpdiag-gce1-aaaa/windows-test                                       [FAIL]
+     Disk utilization is exceeding optimal levels(95%), potentially impacting performance of the instance.
+   - gcpdiag-gce1-aaaa/windows-test                                       [FAIL]
+     Disk IO Latency is exceeding optimal levels, potentially impacting performance of the instance.
+
+   Checks the performance of the GCE instances in a project - CPU Usage, Memory
+   Usage, Disk Usage and Serial port logs erros. Threshold for CPU Usage, Memory
+   Usage, Disk Usage is 95%.
+
+   https://gcpdiag.dev/rules/gce/ERR/2024_002
+
