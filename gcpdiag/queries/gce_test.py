@@ -337,6 +337,8 @@ class TestGce:
     for i in instances.values():
       if i.status == 'RUNNING':
         assert i.is_running
+      else:
+        assert not i.is_running
 
   def test_get_serial_port_outputs(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)

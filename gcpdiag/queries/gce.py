@@ -489,6 +489,7 @@ class Instance(models.Resource):
     """VM Status"""
     return self._resource_data.get('status', None)
 
+  @property
   def is_running(self) -> bool:
     """VM Status is indicated as running"""
     return self._resource_data.get('status', False) == 'RUNNING'
@@ -550,6 +551,25 @@ class Disk(models.Resource):
   @property
   def name(self) -> str:
     return self._resource_data['name']
+
+  @property
+  def type(self) -> str:
+    disk_type = re.search(r'/diskTypes/([^/]+)$', self._resource_data['type'])
+    if not disk_type:
+      raise RuntimeError("can't determine type of the disk %s (%s)" %
+                         (self.name, self._resource_data['type']))
+    return disk_type.group(1)
+
+  @property
+  def users(self) -> list:
+    pattern = r'/instances/(.+)$'
+    # Extracting the instances
+    instances = []
+    for i in self._resource_data.get('users', []):
+      m = re.search(pattern, i)
+      if m:
+        instances.append(m.group(1))
+    return instances
 
   @property
   def zone(self) -> str:

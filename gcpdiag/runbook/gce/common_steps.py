@@ -223,7 +223,7 @@ class GCEInRunningState(runbook.Step):
     vm = gce.get_instance(project_id=self.op.get(gce_param.PROJECT_ID),
                           zone=self.op.get(gce_param.ZONE_FLAG),
                           instance_name=self.op.get(gce_param.NAME_FLAG))
-    if vm and vm.is_running():
+    if vm and vm.is_running:
       self.interface.add_ok(vm,
                             reason=f'VM: {vm.name} is in a {vm.status} state.')
     else:
