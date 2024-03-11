@@ -1,0 +1,4 @@
+*  notebooks/ERR/2024_001: Vertex AI Workbench Notebooks Executor code uses explicit project selection
+   - gcpdiag-notebooks1-aaaa                                              [SKIP]
+     Logging API is disabled
+
