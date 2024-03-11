@@ -10,16 +10,16 @@ jobs:
     timeout-minutes: 10
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Set up Python
       id: setup-python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
         python-version: 3.9
 
     - name: Set up Terraform
-      uses: hashicorp/setup-terraform@3d8debd658c92063839bc97da5c2427100420dec
+      uses: hashicorp/setup-terraform@v3
       # v1.3.2
       with:
         terraform_version: 1.0.6
@@ -29,7 +29,7 @@ jobs:
 
     - name: Restore pipenv cache
       id: cache-pipenv
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: ./.venv
         key: codeanaysis-${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-pipenv-${{ hashFiles('Pipfile.lock') }}
