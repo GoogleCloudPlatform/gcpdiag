@@ -177,7 +177,7 @@ class GCEHighCPUPerformance(runbook.Step):
           self.op.get(gce_param.PROJECT_ID), """
           fetch gce_instance
             | metric 'agent.googleapis.com/cpu/utilization'
-            | filter (resource.instance_id == '{}')
+            | filter (resource.instance_id == '{}') && (metric.cpu_state != 'idle')
             | group_by [resource.instance_id], 3m, [value_utilization_mean: mean(value.utilization)]
             | filter (cast_units(value_utilization_mean,"")/100) >= {}
             | {}
