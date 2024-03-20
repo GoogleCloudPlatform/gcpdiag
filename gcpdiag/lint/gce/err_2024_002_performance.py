@@ -31,7 +31,7 @@ within_str = 'within %dh, d\'%s\'' % (within_hours,
                                       monitoring.period_aligned_now(5))
 
 UTILIZATION_THRESHOLD = 0.95
-IO_LATENCY_THRESHOLD = 100
+IO_LATENCY_THRESHOLD = 1500
 
 mem_search = None
 disk_search = None
@@ -56,7 +56,10 @@ def prepare_rule(context: models.Context):
   filter_disk_str = '''textPayload:("No space left" OR "No usable temporary directory")
   AND ("No space left on device" OR "No usable temporary directory found in"
   OR "disk is at or near capacity"
-  OR "A stop job is running for Security ...")'''
+  OR "A stop job is running for Security ...ing Service ")
+  OR "A stop job is running for Security ...ng Service ")
+  OR "A stop job is running for Security ...diting Service ")
+  OR "A stop job is running for Security ...Auditing Service ")'''
 
   global mem_search
   mem_search = utils.SerialOutputSearch(context,
@@ -106,7 +109,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
             context.project_id, """
           fetch gce_instance
             | metric 'agent.googleapis.com/cpu/utilization'
-            | filter (resource.instance_id == '{}')
+            | filter (resource.instance_id == '{}') && (metric.cpu_state != 'idle')
             | group_by [resource.instance_id], 30m, [value_utilization_mean: mean(value.utilization)]
             | filter (cast_units(value_utilization_mean,"")/100) >= {}
             | {}
@@ -175,7 +178,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
           context.project_id, """
         fetch gce_instance
         | metric 'compute.googleapis.com/instance/disk/average_io_latency'
-        | filter (metric.device_name == '{}')
+        | filter (resource.instance_id == '{}')
         | group_by 1m, [value_average_io_latency_mean: mean(value.average_io_latency)]
         | every 1m
         | group_by [metric.device_name], [value_average_io_latency_mean_percentile: percentile(value_average_io_latency_mean, 99)]
