@@ -19,7 +19,7 @@ import datetime
 import ipaddress
 import logging
 import re
-from typing import Dict, Mapping, Optional
+from typing import Dict, Iterable, List, Mapping, Optional
 
 import googleapiclient.errors
 import requests
@@ -164,6 +164,10 @@ class Instance(models.Resource):
       return ipaddress.ip_network(cidr)
     return None
 
+  @property
+  def api_endpoint(self) -> str:
+    return self._resource_data['apiEndpoint']
+
 
 @caching.cached_api_call
 def get_instances(context: models.Context) -> Mapping[str, Instance]:
@@ -262,3 +266,104 @@ def extract_support_datafusion_version() -> Dict[str, str]:
     logging.error('Error in extracting data fusion version support policy: %s',
                   e)
     return {}
+
+
+class Profile(models.Resource):
+  """Represents a Compute Profile."""
+
+  _resource_data: dict
+
+  def __init__(self, project_id, resource_data):
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+
+  @property
+  def full_path(self) -> str:
+    return self._resource_data['name']
+
+  @property
+  def short_path(self) -> str:
+    path = self.full_path
+    return path
+
+  @property
+  def name(self) -> str:
+    return self._resource_data['name']
+
+  @property
+  def region(self) -> str:
+    for value in self._resource_data['provisioner'].get('properties'):
+      if value.get('name') == 'region' and value.get('value') is not None:
+        return value.get('value')
+    return 'No region defined'
+
+  @property
+  def status(self) -> str:
+    return self._resource_data['status']
+
+  @property
+  def scope(self) -> str:
+    return self._resource_data['scope']
+
+  @property
+  def is_dataproc_provisioner(self) -> bool:
+    return self._resource_data['provisioner']['name'] == 'gcp-dataproc'
+
+  @property
+  def is_existing_dataproc_provisioner(self) -> bool:
+    return self._resource_data['provisioner']['name'] == 'gcp-existing-dataproc'
+
+  @property
+  def autoscaling_enabled(self) -> bool:
+    for value in self._resource_data['provisioner'].get('properties'):
+      if (value.get('name') == 'enablePredefinedAutoScaling' and
+          value.get('value') is not None):
+        return value.get('value') == 'true'
+    return False
+
+  @property
+  def image_version(self) -> str:
+    for value in self._resource_data['provisioner'].get('properties'):
+      if value.get('name') == 'imageVersion' and value.get('value') != '':
+        return value.get('value')
+    return 'No imageVersion defined'
+
+
+@caching.cached_api_call
+def get_instance_system_compute_profile(
+    context: models.Context, instance: Instance) -> Iterable[Profile]:
+  """Get a list of datafusion Instance dataproc System compute profile."""
+  logging.info('fetching dataproc System compute profile list: %s',
+               context.project_id)
+  system_profiles: List[Profile] = []
+  cdap_endpoint = instance.api_endpoint
+  response = apis.make_request('GET', f'{cdap_endpoint}/v3/profiles')
+  if response is not None:
+    for res in response:
+      if (res['provisioner']['name'] == 'gcp-dataproc' or
+          res['provisioner']['name'] == 'gcp-existing-dataproc'):
+        system_profiles.append(Profile(context.project_id, res))
+  return system_profiles
+
+
+@caching.cached_api_call
+def get_instance_user_compute_profile(context: models.Context,
+                                      instance: Instance) -> Iterable[Profile]:
+  """Get a list of datafusion Instance dataproc User compute profile."""
+  logging.info('fetching dataproc User compute profile list: %s',
+               context.project_id)
+  user_profiles: List[Profile] = []
+  cdap_endpoint = instance.api_endpoint
+  response_namespaces = apis.make_request('GET',
+                                          f'{cdap_endpoint}/v3/namespaces')
+  if response_namespaces is not None:
+    for res in response_namespaces:
+      response = apis.make_request(
+          'GET', f"{cdap_endpoint}/v3/namespaces/{res['name']}/profiles")
+      if response is not None:
+        for res in response:
+          if (res['provisioner']['name'] == 'gcp-dataproc' or
+              res['provisioner']['name'] == 'gcp-existing-dataproc'):
+            user_profiles.append(Profile(context.project_id, res))
+      user_profiles = list(filter(bool, user_profiles))
+  return user_profiles

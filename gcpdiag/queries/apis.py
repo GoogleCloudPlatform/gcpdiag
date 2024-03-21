@@ -22,9 +22,11 @@ import sys
 from typing import Optional, Set
 
 import google.auth
+import google.auth.transport.requests
 import google_auth_httplib2
 import googleapiclient.http
 import httplib2
+import requests
 from google.api_core.client_options import ClientOptions
 from google.auth import exceptions
 from google.oauth2 import credentials as oauth2_credentials
@@ -233,45 +235,67 @@ def verify_access(project_id: str):
 
   try:
     if not is_enabled(project_id, 'cloudresourcemanager'):
-      print((
-          'ERROR: Cloud Resource Manager API must be enabled. To enable, execute:\n'
-          f'gcloud services enable cloudresourcemanager.googleapis.com --project={project_id}'
-      ),
-            file=sys.stdout)
+      print(
+          ('ERROR: Cloud Resource Manager API must be enabled. To enable,'
+           ' execute:\ngcloud services enable'
+           f' cloudresourcemanager.googleapis.com --project={project_id}'),
+          file=sys.stdout,
+      )
       sys.exit(1)
 
     if not is_enabled(project_id, 'iam'):
-      print((
-          'ERROR: Identity and Access Management (IAM) API must be enabled. To enable, execute:\n'
-          f'gcloud services enable iam.googleapis.com --project={project_id}'),
-            file=sys.stdout)
+      print(
+          ('ERROR: Identity and Access Management (IAM) API must be'
+           ' enabled. To enable, execute:\ngcloud services enable'
+           f' iam.googleapis.com --project={project_id}'),
+          file=sys.stdout,
+      )
       sys.exit(1)
 
     if not is_enabled(project_id, 'logging'):
-      print((
-          'WARNING: Cloud Logging API is not enabled (related rules will be skipped).'
-          ' To enable, execute:\n'
-          f'gcloud services enable logging.googleapis.com --project={project_id}\n'
-      ),
-            file=sys.stdout)
+      print(
+          ('WARNING: Cloud Logging API is not enabled (related rules will'
+           ' be skipped). To enable, execute:\ngcloud services enable'
+           f' logging.googleapis.com --project={project_id}\n'),
+          file=sys.stdout,
+      )
   except utils.GcpApiError as err:
-    if 'SERVICE_DISABLED' == err.reason and 'serviceusage.googleapis.com' == err.service:
-      print((
-          'ERROR: Service Usage API must be enabled. To enable, execute:\n'
-          f'gcloud services enable serviceusage.googleapis.com --project={project_id}'
-      ),
-            file=sys.stdout)
+    if ('SERVICE_DISABLED' == err.reason and
+        'serviceusage.googleapis.com' == err.service):
+      print(
+          ('ERROR: Service Usage API must be enabled. To enable,'
+           ' execute:\ngcloud services enable serviceusage.googleapis.com'
+           f' --project={project_id}'),
+          file=sys.stdout,
+      )
     else:
-      print(f'ERROR: can\'t access project {project_id}: {err.message}.',
-            file=sys.stdout)
+      print(
+          f"ERROR: can't access project {project_id}: {err.message}.",
+          file=sys.stdout,
+      )
     sys.exit(1)
   except exceptions.GoogleAuthError as err:
     print(f'ERROR: {err}', file=sys.stdout)
     if _auth_method() == 'adc':
-      print(('Error using application default credentials. '
-             'Try running: gcloud auth login --update-adc'),
-            file=sys.stderr)
+      print(
+          ('Error using application default credentials. '
+           'Try running: gcloud auth login --update-adc'),
+          file=sys.stderr,
+      )
     sys.exit(1)
 
   # Plug-in additional authorization verifications
   hooks.verify_access_hook(project_id)
+
+
+def make_request(*args, **kwargs):
+  credentials = get_credentials()
+  if 'headers' not in kwargs:
+    kwargs['headers'] = {}
+    headers = {}
+    headers['Authorization'] = f'Bearer {credentials.token}'
+    kwargs['headers'] = headers
+  response = requests.request(*args, **kwargs)
+
+  if response is not None and response.status_code == 200:
+    return response.json()
