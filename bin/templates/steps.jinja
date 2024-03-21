@@ -1,0 +1,115 @@
+---
+title: "{{ step.product }}/{{ step.label }}"
+linkTitle: "{{ step.label }}"
+weight: 3
+type: docs
+description: >
+  {{ step.short_desc|trim }}
+---
+
+**Product**: {{ PRODUCTS[step.product] }}\
+**Step Type**: {{ step.type.value }}
+
+### Description
+
+{{ step.long_desc|trim }}
+
+{% if msgs['failure_reason'] %}
+### Failure Reason
+
+{{ msgs['failure_reason'] }}
+{% endif %}
+{% if msgs['failure_remediation'] %}
+### Failure Remediation
+
+{{ msgs['failure_remediation'] }}
+{% endif %}
+{% if msgs['success_reason'] %}
+### Success Reason
+
+{{ msgs['success_reason'] }}
+{% endif %}
+{% if msgs['uncertain_reason'] %}
+### Uncertain Reason
+
+{{ msgs['uncertain_reason'] }}
+{% endif %}
+{% if msgs['uncertain_remediation'] %}
+### Uncertain Remediation
+
+{{ msgs['uncertain_remediation'] }}
+{% endif %}
+{% if msgs['skipped_reason'] %}
+### Skipped Reason
+
+{{ msgs['skipped_reason'] }}
+{% endif %}
+
+{% if msgs['failure_reason_a2'] %}
+### Failure Reason [Alternative 2]
+
+{{ msgs['failure_reason_a2'] }}
+{% endif %}
+{% if msgs['failure_remediation_a2'] %}
+### Failure Remediation [Alternative 2]
+
+{{ msgs['failure_remediation_a2'] }}
+{% endif %}
+{% if msgs['success_reason_a2'] %}
+### Success Reason [Alternative 2]
+
+{{ msgs['success_reason_a2'] }}
+{% endif %}
+{% if msgs['uncertain_reason_a2'] %}
+### Uncertain Reason [Alternative 2]
+
+{{ msgs['uncertain_reason_a2'] }}
+{% endif %}
+{% if msgs['uncertain_remediation_a2'] %}
+### Uncertain Remediation [Alternative 2]
+
+{{ msgs['uncertain_remediation_a2'] }}
+{% endif %}
+{% if msgs['skipped_reason_a2'] %}
+### Skipped Reason [Alternative 2]
+
+{{ msgs['skipped_reason_a2'] }}
+{% endif %}
+
+{% if msgs['failure_reason_a3'] %}
+### Failure Reason [Alternative 3]
+
+{{ msgs['failure_reason_a3'] }}
+{% endif %}
+{% if msgs['failure_remediation_a3'] %}
+### Failure Remediation [Alternative 3]
+
+{{ msgs['failure_remediation_a3'] }}
+{% endif %}
+{% if msgs['success_reason_a3'] %}
+### Success Reason [Alternative 3]
+
+{{ msgs['success_reason_a3'] }}
+{% endif %}
+{% if msgs['uncertain_reason_a3'] %}
+### Uncertain Reason [Alternative 3]
+
+{{ msgs['uncertain_reason_a3'] }}
+{% endif %}
+{% if msgs['uncertain_remediation_a3'] %}
+### Uncertain Remediation [Alternative 3]
+
+{{ msgs['uncertain_remediation_a3'] }}
+{% endif %}
+{% if msgs['skipped_reason_a3'] %}
+### Skipped Reason [Alternative 3]
+
+{{ msgs['skipped_reason_a3'] }}
+{% endif %}
+{#- End of template -#}
+<!--
+This file is auto-generated. DO NOT EDIT
+
+Make pages changes in the corresponding jinja template
+or python code
+-->

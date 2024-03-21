@@ -144,9 +144,11 @@ def _init_runbook_args_parser():
       help=('Configure timeout for logging queries (default:'
             f" {config.get('logging_fetch_max_time_seconds')} seconds)"))
 
-  parser.add_argument('runbook',
-                      nargs=1,
-                      help='Runbook to execute in the format product/name')
+  parser.add_argument(
+      'runbook',
+      nargs=1,
+      help=
+      'Runbook to execute in the format product/runbook-name or product/name')
   parser.add_argument(
       '-p',
       '--parameter',

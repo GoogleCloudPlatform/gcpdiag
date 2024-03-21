@@ -1,0 +1,16 @@
+{% block running_success_reason %}
+GCE VM {vm_name} is in a {status} state.
+{% endblock running_success_reason %}
+
+{% block running_failure_reason %}
+GCE VM {vm_name} is in {status} state.
+{% endblock running_failure_reason %}
+
+{% block running_failure_remediation %}
+To initiate the lifecycle transition of Virtual Machine (VM) {vm_name} to the RUNNING state:
+Start the VM:
+https://cloud.google.com/compute/docs/instances/stop-start-instance
+If you encounter any difficulties during the startup process, consult the troubleshooting
+documentation to identify and resolve potential startup issues:
+https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting
+{% endblock running_failure_remediation %}

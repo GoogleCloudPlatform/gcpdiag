@@ -62,3 +62,7 @@ release:
 	git push origin HEAD:refs/for/master
 
 .PHONY: test coverage-report version build bump-version tarfile release
+
+runbook-docs:
+  # Help developers generate and update docs before actually running full precommit
+	pre-commit run gcpdiag-custom-runbook-rule

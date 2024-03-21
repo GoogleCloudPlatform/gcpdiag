@@ -20,7 +20,7 @@ from unittest import mock
 
 from gcpdiag import models, runbook
 from gcpdiag.queries import apis_stub, kubectl_stub
-from gcpdiag.runbook import command
+from gcpdiag.runbook import command, util
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
@@ -45,7 +45,10 @@ class RulesSnapshotTestBase:
         print('\n')
       snapshot.assert_match(
           output_stream.getvalue(),
-          path.join(snapshot.snapshot_dir, f'{rule(None).rule_id}.txt'))
+          path.join(
+              snapshot.snapshot_dir,
+              f'{util.pascal_case_to_snake_case(rule(None).__class__.__name__)}.txt'
+          ))
 
   def _mk_context(self, parameter):
     return models.Context(project_id=self.project_id, parameters=parameter)

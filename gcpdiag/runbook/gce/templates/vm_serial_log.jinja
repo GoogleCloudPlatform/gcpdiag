@@ -1,0 +1,232 @@
+{% block default_failure_reason %}
+Anomalies detected in the serial logs which align with the investigated bad patterns
+{% endblock default_failure_reason %}
+
+{% block default_failure_remediation %}
+Investigate potential issues through the serial console.
+If GRUB_TIMEOUT is greater than 0, access the interactive session for more insights.
+Explore rescue options for inaccessible VMs or review possible guest OS issues,
+- Interactive Serial Console: https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+- Rescuing VMs: https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
+
+If escalating Guest OS related issues to Google Cloud Support
+do check to ensure is in line with GCP's Guest OS support policy
+- GCP Support Scope: https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
+{% endblock default_failure_remediation %}
+
+{% block default_success_reason %}
+The VM's Linux OS shows no signs of interested anomalies,
+indicating a *likely* stable operational state.
+{% endblock default_success_reason %}
+
+{% block default_uncertain_reason %}
+Lack of serial log data prevented a thorough assessment of the VM's operational state. Result is
+inconclusive
+{% endblock default_uncertain_reason %}
+
+{% block default_uncertain_remediation %}
+Confirm the VM's operational status by reviewing available serial logs.
+Address any detected guest OS issues using the provided documentation,
+keeping in mind certain guest OS faults may be beyond GCP's support scope.
+- Viewing Serial Port Output: https://cloud.google.com/compute/docs/troubleshooting/viewing-serial-port-output
+- Resolving Kernel Panic:
+https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error
+- GCP Support Scope: https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
+{% endblock default_uncertain_remediation %}
+
+{% block kernel_panic_step_message %}
+Initiating kernel panic check on the Guest OS.
+{% endblock kernel_panic_step_message %}
+
+{% block kernel_panic_success_reason %}
+Linux OS is not experiencing kernel panic issue, GRUB issues
+or guest kernel dropping into emergency/maintenance mode.
+{% endblock kernel_panic_success_reason %}
+
+{% block kernel_panic_failure_reason %}
+Detected kernel panic on {instance_name}, which may prevent the VM from starting correctly.
+{% endblock kernel_panic_failure_reason %}
+
+{% block kernel_panic_failure_remediation %}
+Address kernel panic by:
+1. Consulting the troubleshooting guide for kernel panic errors.
+2. Examining `/etc/fstab` for file system errors that could halt the boot process.
+3. Utilize the Serial Console for interactive diagnosis if GRUB_TIMEOUT allows.
+4. Optionally, use VM rescue procedures for further analysis.
+- Resolving Kernel Panic:
+https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error
+- Use gce-rescue to recue faulty VMs: https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
+
+Frequently encountered issues.
+- Troubleshooting `/etc/fstab` Errors: https://cloud.google.com/compute/docs/troubleshooting/fstab-errors
+
+Using Interactive Serial console
+- Interactive Serial Console: https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+{% endblock kernel_panic_failure_remediation %}
+
+{% block kernel_panic_uncertain_reason %}
+Lack of serial log data prevented a thorough assessment of the VM's operational state. Result is
+inconclusive
+{% endblock kernel_panic_uncertain_reason %}
+
+{% block kernel_panic_uncertain_remediation %}
+Confirm the VM's operational status by reviewing available serial logs.
+Address any detected guest OS issues using the provided documentation,
+keeping in mind certain guest OS faults may be beyond GCP's support scope.
+- Viewing Serial Port Output: https://cloud.google.com/compute/docs/troubleshooting/viewing-serial-port-output
+- Resolving Kernel Panic:
+https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error
+- GCP Support Scope: https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
+{% endblock kernel_panic_uncertain_remediation %}
+
+{% block sshguard_step_message %}
+Analyzing SSHGuard intrusion detection functionality on the VM (if any)
+{% endblock sshguard_step_message %}
+
+{% block sshguard_failure_reason %}
+SSHGuard is active and may be blocking IP addresses.
+Verify if your IP is blocked by SSHGuard on the VM.
+{% endblock sshguard_failure_reason %}
+
+{% block sshguard_failure_remediation %}
+Note: Issues related to SSHGuard fall outside the standard support scope for GCP.
+Consult the most appropriate team within your organisation to assist with resolution.
+For guest OS issues and SSHGuard configurations, refer to:
+- Support Scope: https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
+- Out of Scope Support: https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support
+{% endblock sshguard_failure_remediation %}
+
+{% block sshguard_success_reason %}
+No IP blockages detected by SSHGuard on the VM (if installed on the VM)
+{% endblock sshguard_success_reason %}
+
+{% block sshguard_uncertain_reason %}
+Unable to confirm SSHGuard activity due to lack of serial log data.
+{% endblock sshguard_uncertain_reason %}
+
+{% block sshguard_uncertain_remediation %}
+If SSHGuard or similar application is a concern,
+manually inspect its configuration via the interactive serial console:
+https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+{% endblock sshguard_uncertain_remediation %}
+
+{% block windows_gce_ssh_agent_instructions_message %}
+Verify if the `google-compute-engine-ssh` agent is installed on the Windows VM.
+{% endblock windows_gce_ssh_agent_instructions_message %}
+
+{% block windows_gce_ssh_agent_step_message %}
+Manually verify if the necessary Google guest agents, especially `google-compute-engine-ssh`,
+are operational on the VM.
+{% endblock windows_gce_ssh_agent_step_message %}
+
+{% block windows_gce_ssh_agent_uncertain_reason %}
+Uncertain if the `google-compute-engine-ssh` agent is installed on the VM.
+{% endblock windows_gce_ssh_agent_uncertain_reason %}
+
+{% block windows_gce_ssh_agent_uncertain_remediation %}
+Utilize RDP or a startup script to check for the presence and functionality of the
+`google-compute-engine-ssh` agent. For instructions on implementing startup scripts, refer to:
+https://cloud.google.com/compute/docs/connect/windows-ssh#startup-script
+{% endblock windows_gce_ssh_agent_uncertain_remediation %}
+
+{% block windows_gce_ssh_agent_success_reason %}
+Successfully confirmed the installation of the `google-compute-engine-ssh` agent on the Windows VM.
+{% endblock windows_gce_ssh_agent_success_reason %}
+
+{% block windows_gce_ssh_agent_failure_reason %}
+Unable to confirm the installation of the `google-compute-engine-ssh` agent on the VM.
+{% endblock windows_gce_ssh_agent_failure_reason %}
+
+{% block windows_gce_ssh_agent_failure_remediation %}
+Ensure the `google-compute-engine-ssh` agent is correctly installed and configured.
+Consult the following guide for assistance with agent installation and configuration:
+https://cloud.google.com/compute/docs/connect/windows-ssh#startup-script
+{% endblock windows_gce_ssh_agent_failure_remediation %}
+
+
+{% block sshd_step_message %}
+Examining SSHD functionality via serial logs.
+{% endblock sshd_step_message %}
+
+{% block sshd_failure_reason %}
+SSHD issues detected in the VM, potentially affecting SSH access.
+{% endblock sshd_failure_reason %}
+
+{% block sshd_failure_remediation %}
+For SSHD troubleshooting:
+1. Refer to common Linux SSH errors and their solutions.
+2. Check for warning messages that might indicate SSH connection issues in cloud serial console logs.
+- Troubleshooting SSH Errors:
+https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-ssh-errors#linux_errors
+- Serial Console Troubleshooting:
+https://cloud.google.com/knowledge/kb/ssh-in-cloud-serial-console-fails-with-warning-message-000004554
+{% endblock sshd_failure_remediation %}
+
+{% block sshd_success_reason %}
+Detected that SSHD is running within the VM
+{% endblock sshd_success_reason %}
+
+{% block sshd_uncertain_reason %}
+No serial logs data to examine.
+{% endblock sshd_uncertain_reason %}
+
+{% block sshd_uncertain_remediation %}
+Resources on how to fix SSHD issues:
+https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-ssh-errors#linux_errors
+https://cloud.google.com/knowledge/kb/ssh-in-cloud-serial-console-fails-with-warning-message-000004554
+Use gce-rescue to get your VM into emergency mode: https://github.com/GoogleCloudPlatform/gce-rescue
+NOTE: Guest related issues is Out of Support Scope
+See GCP support policy on Guest OS
+https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
+https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support
+{% endblock sshd_uncertain_remediation %}
+
+{% block windows_bootup_step_message %}
+Verifying bootup pr
+{% endblock windows_bootup_step_message %}
+
+{% block windows_bootup_success_reason %}
+Confirmed the expected guest agent serial console logs is present.
+{% endblock windows_bootup_success_reason %}
+
+{% block windows_bootup_failure_reason %}
+Can not find the expected guest agent serial console logs outputted upon guest agent start up.
+{% endblock windows_bootup_failure_reason %}
+
+{% block windows_bootup_failure_remediation %}
+Leverage the following troubleshooting guide to investigate windows boot up issues. [1][2]
+
+Objective: Fix any boot issues preventing a clean boot up. Typically should show the
+follow output if gce agents are installed on the VM [3]
+
+Resources:
+[1] https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-windows
+
+Connecting to the Windows Special Administrative Console (SAC) to troubleshoot bootup issues.
+[2] https://cloud.google.com/compute/docs/instances/connecting-to-sac
+[3] https://cloud.google.com/compute/docs/images/install-guest-environment#windows:~:text=Engine%20Shutdown%20Scripts-,Windows,-GCEGuestAgent%3A%20GCE%20Agent
+[4] https://cloud.google.com/compute/docs/instances/connecting-to-windows
+[5] https://cloud.google.com/compute/docs/connect/windows-ssh
+[6] https://cloud.google.com/compute/docs/instances/windows/connecting-powershell
+
+GCP Support Scope
+https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
+{% endblock windows_bootup_failure_remediation %}
+
+{% block windows_bootup_uncertain_reason %}
+Lack of serial log data prevented a thorough assessment of the VM's operational state. Result is
+inconclusive
+{% endblock windows_bootup_uncertain_reason %}
+
+{% block windows_bootup_uncertain_remediation %}
+Consulting the troubleshooting guide to investigate windows boot up issues. [1][2]
+
+Resources:
+[1] https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-windows
+
+Connecting to the Windows Special Administrative Console (SAC) to troubleshoot bootup issues.
+[2] https://cloud.google.com/compute/docs/instances/connecting-to-sac
+
+GCP Support Scope
+https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
+{% endblock windows_bootup_uncertain_remediation %}

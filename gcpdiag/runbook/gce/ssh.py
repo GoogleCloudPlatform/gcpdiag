@@ -18,135 +18,198 @@ import googleapiclient.errors
 
 from gcpdiag import config, runbook
 from gcpdiag.queries import crm, gce, iam, monitoring
-from gcpdiag.runbook import PyDiagnosticTreeBuilder
-from gcpdiag.runbook import common_steps as global_cs
-from gcpdiag.runbook.gce import common_steps as gce_cs
+from gcpdiag.runbook import generalized_steps as platform_gs
 from gcpdiag.runbook.gce import constants as gce_const
+from gcpdiag.runbook.gce import flags
+from gcpdiag.runbook.gce import generalized_steps as gce_gs
 from gcpdiag.runbook.gce import util
-# pylint: disable=unused-wildcard-import
-# pylint: disable=wildcard-import
-from gcpdiag.runbook.gce.parameters import *
 
 
 class Ssh(runbook.DiagnosticTree):
-  """Analyzes typical factors that might impede SSH connectivity
+  """Provides a comprehensive analysis of common issues which affects SSH connectivity to VMs.
 
-  Investigates the following for a single windows or linux VM:
+  This runbook focuses on a range of potential problems for both Windows and Linux VMs on
+  Google Cloud Platform. By conducting a series of checks, the runbook aims to pinpoint the
+  root cause of SSH access difficulties.
 
-  - VM Instance Status: Inspects the VM's lifecycle, CPU, memory, and disk status.
-  - User Permissions: Verifies Google Cloud IAM permissions necessary for utilizing
-    OS login and metadata-based SSH keys.
-  - VM Configuration: Verifies the presence or absence of required metadata.
-  - GCE Network connectivity tests: Inspects firewall rules to ensure user can reach the VM.
-  - Internal GuestOS checks: Checks for signs of internal Guest OS issues.
-  """
-  req_params = {
-      NAME_FLAG: 'Instance Name',
-      ZONE_FLAG: 'Zone of the instance',
-      PRINCIPAL_FLAG: 'User or service account email address'
+  The following areas are examined:
+
+  - VM Instance Status: Evaluates the VM's current state, performance - ensuring that it is running
+    and not impaired by high CPU usage, insufficient memory, or disk space issues that might disrupt
+    normal SSH operations.
+
+  - User Permissions: Checks for the necessary Google Cloud IAM permissions that are required to
+    leverage OS Login features and to use metadata-based SSH keys for authentication.
+
+  - VM Configuration: Analyzes the VM's metadata settings to confirm the inclusion of SSH keys,
+    flags and other essential configuration details that facilitate SSH access.
+
+  - GCE Network Connectivity Tests: Reviews applicable firewall rules to verify that there are no
+    network barriers preventing SSH access to the VM.
+
+  - Internal Guest OS Checks: Analysis available Guest OS metrics or logs to detect any
+    misconfigurations or service disruptions that could be obstructing SSH functionality.
+    """
+  # Specify parameters common to all steps in the diagnostic tree class.
+  parameters = {
+      flags.PROJECT_ID: {
+          'type': str,
+          'help': 'The ID of the project hosting the VM',
+          'required': True
+      },
+      flags.NAME: {
+          'type': str,
+          'help': 'The name or instance ID of the target VM',
+          'required': True
+      },
+      flags.ZONE: {
+          'type': str,
+          'help': 'The zone of the target VM',
+          'required': True
+      },
+      flags.PRINCIPAL: {
+          'type': str,
+          'help': ('The user or service account principal initiating '
+                   'the SSH connection this user should be authenticated in '
+                   'gcloud/cloud console when sshing into to the GCE. '
+                   'For service account impersonation, it should be the '
+                   'service account\'s email'),
+          'required': True
+      },
+      flags.LOCAL_USER: {
+          'type': str,
+          'help': 'Poxis User on the VM',
+          'required': False
+      },
+      flags.TUNNEL_THROUGH_IAP: {
+          'type': bool,
+          'help':
+              ('A boolean parameter (true or false) indicating whether ',
+               'Identity-Aware Proxy should be used for establishing the SSH '
+               'connection.'),
+          'default': True,
+          'required': False
+      },
+      flags.CHECK_OS_LOGIN: {
+          'type': bool,
+          'help': ('A boolean value (true or false) indicating whether OS '
+                   'Login should be used for SSH authentication'),
+          'default': True,
+          'required': False
+      },
+      flags.SRC_IP: {
+          'type': ipaddress.IPv4Address,
+          'help': (
+              'Source IP address. Workstation connecting from workstation,'
+              'Ip of the bastion/jumphost if currently on logged on a basition/jumphost '
+          ),
+          'default': gce_const.IAP_FW_VIP,
+          'required': False
+      }
   }
 
   def build_tree(self):
-    builder = PyDiagnosticTreeBuilder(tree=self)
-    start = SshStartStep()
-    lifecycle_check = gce_cs.GCEInRunningState()
-    performance_check = CheckVMPerformance()
-    gce_permission_check = GCESshUserPermission()
-    gce_firewall_check = GCEFirewallNetworkAllowsSsh()
-    guestos_gateway = GuestOSType(paths={
-        LINUX: LinuxGuestOsChecks(),
-        WINDOWS: WindowsGuestOSChecks()
-    })
+    start = SshStart()
+    lifecycle_check = gce_gs.VmLifecycleState()
+    performance_check = VmPerformanceChecks()
+    gce_permission_check = GcpSshPermissions()
+    gce_firewall_check = GceFirewallAllowsSsh()
     # Prepare parameters given by the user
     # Inform the user values that will be used.
-    builder.add_start(step=start)
+    self.add_start(step=start)
     # First check VM is running
-    builder.add_step(parent=start, child=lifecycle_check)
+    self.add_step(parent=start, child=lifecycle_check)
     # Only check performance if VM is up and running.
-    builder.add_step(parent=lifecycle_check, child=performance_check)
+    self.add_step(parent=lifecycle_check, child=performance_check)
     # Check the state of the guest os after performance checks
-    builder.add_step(parent=lifecycle_check, child=guestos_gateway)
+    self.add_step(parent=lifecycle_check, child=VmGuestOsType())
     # gce_* checks are not depend on the lifecycle, performnce or guest of the VM
     # assign add as a child of start
-    builder.add_step(parent=start, child=gce_permission_check)
-    builder.add_step(parent=start, child=gce_firewall_check)
-    builder.add_end(step=SshEndStep())
-    # Build the tree
-    return builder.build()
+    self.add_step(parent=start, child=gce_permission_check)
+    self.add_step(parent=start, child=gce_firewall_check)
+    self.add_end(step=SshEnd())
 
 
-class SshStartStep(runbook.StartStep):
-  """Prepare SSH start"""
+class SshStart(runbook.StartStep):
+  """Initiates diagnostics for SSH connectivity issues.
+
+  This step prepares the environment for SSH diagnostics by gathering necessary
+  information about the target VM. It verifies the existence of the VM, checks
+  user-supplied parameters for validity, and sets up initial conditions for further
+  diagnostic steps.
+  """
 
   def execute(self):
     """Starting SSH diagnostics"""
-    project = crm.get_project(self.op.get(PROJECT_ID))
+    project = crm.get_project(self.op.get(flags.PROJECT_ID))
 
     try:
-      vm = gce.get_instance(project_id=self.op.get(PROJECT_ID),
-                            zone=self.op.get(ZONE_FLAG),
-                            instance_name=self.op.get(NAME_FLAG))
+      vm = gce.get_instance(project_id=self.op.get(flags.PROJECT_ID),
+                            zone=self.op.get(flags.ZONE),
+                            instance_name=self.op.get(flags.NAME))
     except googleapiclient.errors.HttpError:
       self.interface.add_skipped(
           project,
           reason=('Instance {} does not exist in zone {} or project {}').format(
-              self.op.get(NAME_FLAG), self.op.get(ZONE_FLAG),
-              self.op.get(PROJECT_ID)))
+              self.op.get(flags.NAME), self.op.get(flags.ZONE),
+              self.op.get(flags.PROJECT_ID)))
     else:
       if vm:
         # check if user supplied an instance id or a name.
-        if self.op[NAME_FLAG].isdigit():
-          self.op[NAME_FLAG] = vm.name
+        if self.op[flags.NAME].isdigit():
+          self.op[flags.NAME] = vm.name
         # Perform basic parameter checks and parse
         # string boolean into boolean values
-        if gce_const.BOOL_VALUES[self.op.get(OS_LOGIN_FLAG)]:
-          self.op[OS_LOGIN_FLAG] = True
+        if gce_const.BOOL_VALUES[self.op.get(flags.CHECK_OS_LOGIN)]:
+          self.op[flags.CHECK_OS_LOGIN] = True
           self.interface.info('Will check for OS login configuration')
         else:
-          self.op[OS_LOGIN_FLAG] = False
+          self.op[flags.CHECK_OS_LOGIN] = False
           self.interface.info(
               'Will check for Metadata based SSH key configuration')
-        if self.op.get(SRC_IP_FLAG):
+        if self.op.get(flags.SRC_IP):
           try:
-            ip = ipaddress.ip_network(self.op.get(SRC_IP_FLAG))
+            ip = ipaddress.ip_network(self.op.get(flags.SRC_IP))
           except ValueError:
             self.interface.add_skipped(
                 project,
                 reason=
                 ('src_ip {} is not a valid IPv4/IPv6 address or CIDR range. Provide a'
                  ' Valid IPv4/IPv6 Address or CIDR range').format(
-                     self.op.get(SRC_IP_FLAG)))
+                     self.op.get(flags.SRC_IP)))
           else:
-            self.op[SRC_IP_FLAG] = ip
+            self.op[flags.SRC_IP] = ip
             self.interface.info('Checks will use ip {} as the source IP'.format(
-                self.op.get(SRC_IP_FLAG)))
-        elif (not self.op.get(SRC_IP_FLAG) and not self.op.get(TTI_FLAG) and
+                self.op.get(flags.SRC_IP)))
+        elif (not self.op.get(flags.SRC_IP) and
+              not self.op.get(flags.TUNNEL_THROUGH_IAP) and
               vm.is_public_machine()):
-          self.op[SRC_IP_FLAG] = gce_const.UNSPECIFIED_ADDRESS
-        if gce_const.BOOL_VALUES[self.op.get(TTI_FLAG)]:
-          self.op[TTI_FLAG] = True
+          self.op[flags.SRC_IP] = gce_const.UNSPECIFIED_ADDRESS
+        if gce_const.BOOL_VALUES[self.op.get(flags.TUNNEL_THROUGH_IAP)]:
+          self.op[flags.TUNNEL_THROUGH_IAP] = True
           # set IAP VIP as the source to the VM
-          self.op[SRC_IP_FLAG] = gce_const.IAP_FW_VIP
+          self.op[flags.SRC_IP] = gce_const.IAP_FW_VIP
           self.interface.info('Will check for IAP configuration')
         else:
-          self.op[TTI_FLAG] = False
+          self.op[flags.TUNNEL_THROUGH_IAP] = False
           self.interface.info(
               'Will not check for IAP for TCP forwarding configuration')
-        if self.op.get(LOCAL_USER_FLAG):
-          self.op[LOCAL_USER_FLAG] = self.op.get(LOCAL_USER_FLAG)
+        if self.op.get(flags.LOCAL_USER):
+          self.op[flags.LOCAL_USER] = self.op.get(flags.LOCAL_USER)
           self.interface.info(
-              f'Local User: {self.op.get(LOCAL_USER_FLAG)} will be used '
+              f'Local User: {self.op.get(flags.LOCAL_USER)} will be used '
               f'examine metadata-based SSH Key configuration')
-        if self.op.get(PRINCIPAL_FLAG):
-          email_only = len(self.op.get(PRINCIPAL_FLAG).split(':')) == 1
+        if self.op.get(flags.PRINCIPAL):
+          email_only = len(self.op.get(flags.PRINCIPAL).split(':')) == 1
           if email_only:
             # Get the type
             p_policy = iam.get_project_policy(vm.project_id)
-            p_type = p_policy.get_member_type(self.op.get(PRINCIPAL_FLAG))
-            self.op[PRINCIPAL_FLAG] = f'{p_type}:{self.op.get(PRINCIPAL_FLAG)}'
+            p_type = p_policy.get_member_type(self.op.get(flags.PRINCIPAL))
+            self.op[
+                flags.PRINCIPAL] = f'{p_type}:{self.op.get(flags.PRINCIPAL)}'
             if p_type:
               self.interface.info(
-                  f'Checks will use {self.op.get(PRINCIPAL_FLAG)} as the authenticated\n'
+                  f'Checks will use {self.op.get(flags.PRINCIPAL)} as the authenticated\n'
                   'principal in Cloud Console / gcloud (incl. impersonated service account)'
               )
             else:
@@ -155,129 +218,129 @@ class SshStartStep(runbook.StartStep):
               # for projects.
               pass
         # Set IP protocol
-        self.op[PROTOCOL_TYPE] = 'tcp'
-        if not self.op.get(PORT_FLAG):
-          self.op[PORT_FLAG] = gce_const.DEFAULT_SSHD_PORT
+        self.op[flags.PROTOCOL_TYPE] = 'tcp'
+        if not self.op.get(flags.PORT):
+          self.op[flags.PORT] = gce_const.DEFAULT_SSHD_PORT
 
     ops_agent_q = monitoring.query(
-        self.op.get(PROJECT_ID), """
+        self.op.get(flags.PROJECT_ID), """
               fetch gce_instance
               | metric 'agent.googleapis.com/agent/uptime'
               | filter (metadata.system_labels.name == '{}')
               | align rate(5m)
               | every 5m
               | {}
-            """.format(self.op.get(NAME_FLAG), gce_cs.within_str))
+            """.format(self.op.get(flags.NAME), gce_gs.within_str))
     if ops_agent_q:
       self.interface.info('Will use ops agent metrics for relevant assessments')
-      self.op[OPS_AGENT_INSTALLED] = True
+      self.op[flags.OPS_AGENT_EXPORTING_METRICS] = True
 
 
-LINUX = 'linux-distro'
-WINDOWS = 'windows'
+class VmGuestOsType(runbook.Gateway):
+  """Distinguishes between Windows and Linux operating systems on a VM to guide further diagnostics.
 
-
-class GuestOSType(runbook.Gateway):
-  """Checking Guest OS Type Used on VM"""
+  Based on the OS type, it directs the diagnostic process towards OS-specific checks,
+  ensuring relevancy and efficiency in troubleshooting efforts.
+  """
 
   def execute(self):
-    """Checking Guest OS Type Used on VM"""
-    vm = gce.get_instance(project_id=self.op.get(PROJECT_ID),
-                          zone=self.op.get(ZONE_FLAG),
-                          instance_name=self.op.get(NAME_FLAG))
+    """Identifying Guest OS type..."""
+    vm = gce.get_instance(project_id=self.op.get(flags.PROJECT_ID),
+                          zone=self.op.get(flags.ZONE),
+                          instance_name=self.op.get(flags.NAME))
     if not vm.is_windows_machine():
       self.interface.info(
-          'Guest Os is a Linux VM. Investigating Linux related issues')
-      self.add_step(self.paths[LINUX])
+          'Detected Linux VM. Proceeding with Linux-specific diagnostics.')
+      self.add_child(LinuxGuestOsChecks())
     else:
       self.interface.info(
-          'Guest Os is a Windows VM. Investigating Windows related issues')
-      self.add_step(self.paths[WINDOWS])
+          'Detected Windows VM. Proceeding with Windows-specific diagnostics.')
+      self.add_child(WindowsGuestOsChecks())
 
 
-class SshEndStep(runbook.EndStep):
-  """End step for SSH"""
+class SshEnd(runbook.EndStep):
+  """Concludes the SSH diagnostics process, offering guidance based on the user's feedback.
+
+  If SSH issues persist, it directs the user to helpful resources and
+  suggests contacting support with a detailed report.
+  """
 
   def execute(self):
-    """End step for SSH"""
-    if not config.get(AUTO):
+    """Finalizing SSH diagnostics..."""
+    if not config.get(flags.AUTO):
       response = self.interface.prompt(
           step=self.interface.output.CONFIRMATION,
-          message=f'Are you able to SSH into VM {self.op.get(NAME_FLAG)}?')
+          message=f'Are you able to SSH into VM {self.op.get(flags.NAME)}?')
       if response == self.interface.output.NO:
-        self.interface.info(message=(
-            'Refer to our documentation on troubleshooting SSH\n'
-            'https://cloud.google.com/compute/docs/trouble'
-            'shooting/troubleshooting-ssh-errors\n\n'
-            'Contact Google Cloud Support for further investigation.\n'
-            'https://cloud.google.com/support/docs/customer-care-procedures\n'
-            'Recommended: Submit the generated report to Google cloud support if opening a ticket.'
-        ))
+        self.interface.info(message=gce_const.END_MESSAGE)
 
 
-class GCESshUserPermission(runbook.CompositeStep):
-  """Checking overall GCP permissions required for provided parameters"""
+class GcpSshPermissions(runbook.CompositeStep):
+  """Evaluates the user's GCP permissions against the requirements for accessing a VM via SSH.
+
+  This step checks if the user has the necessary project-level roles
+  for both traditional SSH access and OS Login methods. It does not consider permissions inherited
+  from higher-level resources such as folders, organizations, or groups.
+  """
 
   def execute(self):
-    """Checking overall GCP permissions required for provided parameters
+    """Verifying overall user permissions for SSH access...
+
     Note: Only roles granted at the project level are checked. Permissions inherited from
     ancestor resources such as folder(s) or organization and groups are not checked."""
     # Check user has permisssion to access the VM in the first place
-    self.add_step(gce_cs.UserCanViewCloudConsole())
+    self.add_child(gce_gs.AuthPrincipalCloudConsolePermissionCheck())
     # Both OS login and gcloud key based require this.
-    self.add_step(UserHasPermissionToFetchVM())
+    self.add_child(AuthPrincipalHasPermissionToFetchVmCheck())
+    # Check OS login or Key based auth preference.
+    self.add_child(OsLoginStatusCheck())
 
-    if not self.op.get(OS_LOGIN_FLAG):
-      self.add_step(AuthUserHasComputeMetadataPermissions())
-      os_login_check = gce_cs.GCEBooleanMetadataCheck()
-      os_login_check.prompts[gce_const.FAILURE_REASON] = (
-          'OS login is enabled on the VM, for a metadata-based SSH Key approach\n'
-          'Note: Metadata-based SSH key authentication will not work on the VM.'
-      )
-      os_login_check.prompts[gce_const.FAILURE_REMEDIATION] = (
-          'When you set OS Login metadata, Compute Engine deletes the VM\'s authorized_keys\n'
-          'file and no longer accepts connections using SSH keys stored in project/instance\n'
-          'metadata. You must choosing between OS login or metadata based SSH key approach.\n'
-          'If you wish to use metadata ssh keys set the metadata `enable-oslogin=False`\n'
-          'https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#enable_os_login'
-      )
-      os_login_check.prompts[gce_const.SUCCESS_REASON] = (
-          'User does not intend to use OS Login, and the `enable-oslogin`\n'
-          'flag is not enabled on the VM.')
-      os_login_check.METADATA_KEY = 'enable-oslogin'
-      os_login_check.METADATA_VALUE = False
-      os_login_check.prompts[
-          gce_const.STEP_MESSAGE] = 'Checking OS Login Feature is enabled on VM'
-      self.add_step(os_login_check)
-      self.add_step(PoxisUserHasValidSSHKey())
+    if self.op.get(flags.TUNNEL_THROUGH_IAP):
+      self.add_child(AuthPrincipalHasIapTunnelUserPermissionsCheck())
 
+
+class OsLoginStatusCheck(runbook.Gateway):
+  """Checks for OS Login setup and and non OS login setup on a VM to guide further diagnostics.
+
+  If using OS Login investiages OS Login related configuration and permission and if not
+  Checks Keybased Configuration.
+  """
+
+  def execute(self):
+    """Identifying OS Login Setup."""
     # User intends to use OS login
-    if self.op.get(OS_LOGIN_FLAG):
-      os_login_check = gce_cs.GCEBooleanMetadataCheck()
-      os_login_check.prompts[
-          gce_const.
-          FAILURE_REASON] = 'The user intends to use OS login, but OS login is currently disabled.'
-      os_login_check.prompts[gce_const.FAILURE_REMEDIATION] = (
-          'To enable OS login, add the `enable-oslogin` flag to the VM\'s metadata.\n'
-          'This is required for using OS login.\n'
-          'https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#enable_os_login'
-      )
-      os_login_check.prompts[gce_const.SUCCESS_REASON] = (
-          'The VM has the `enable-oslogin` flag enabled, allowing OS login.')
-      os_login_check.METADATA_KEY = 'enable-oslogin'
-      os_login_check.METADATA_VALUE = True
-      os_login_check.prompts[
-          gce_const.STEP_MESSAGE] = 'Checking OS Login Feature is enabled on VM'
-      self.add_step(os_login_check)
-      self.add_step(AuthUserHasOSLoginPermissions())
-      self.add_step(AuthUserHasServiceAccountUser())
+    if self.op.get(flags.CHECK_OS_LOGIN):
+      self.interface.info(
+          'OS login setup is desired, Hence OS login related configurations')
+      os_login_check = gce_gs.VmMetadataCheck()
+      os_login_check.template = 'vm_metadata::os_login_enabled'
+      os_login_check.metadata_key = 'enable-oslogin'
+      os_login_check.expected_value = True
+      self.add_child(os_login_check)
+      self.add_child(AuthPrincipalHasOsLoginPermissionsCheck())
+      self.add_child(AuthPrincipalHasServiceAccountUserCheck())
 
-    if self.op.get(TTI_FLAG):
-      self.add_step(AuthUserHasIAPTunnelUserPermissions())
+      if not self.op.get(flags.CHECK_OS_LOGIN):
+        self.interface.info(
+            'Key Based ssh authentication desired, Hence investing Key based SSH configuration.'
+        )
+        self.add_child(AuthPrincipalHasComputeMetadataPermissionsCheck())
+        os_login_check = gce_gs.VmMetadataCheck()
+        os_login_check.template = 'vm_metadata::no_os_login'
+        os_login_check.metadata_key = 'enable_oslogin'
+        os_login_check.expected_value = False
+        self.add_child(os_login_check)
+        self.add_child(PoxisUserHasValidSshKeyCheck())
 
 
-class AuthUserHasComputeMetadataPermissions(runbook.Step):
-  """Checks required for update SSH metadata in Project or instance"""
+class AuthPrincipalHasComputeMetadataPermissionsCheck(runbook.Step):
+  """Verifies if the authenticated user has permissions to update SSH metadata.
+
+  This step checks if the user has the necessary permissions to modify SSH metadata at
+  the project or instance level. It focuses on project-level permissions and does not consider
+  permissions inherited from ancestor resources like folders or organizations.
+  """
+  template = 'gce_permissions::can_set_metadata'
 
   metadata_permissions = [
       'compute.instances.setMetadata',
@@ -285,402 +348,344 @@ class AuthUserHasComputeMetadataPermissions(runbook.Step):
   ]
 
   def execute(self):
-    """Checking permissions required for update SSH metadata in a project or instance
-    Note: Only roles granted at the project level are checked. Permissions inherited from
-    ancestor resources such as folder(s) or organization and groups are not checked."""
+    """Verifying SSH metadata update permissions..."""
 
-    iam_policy = iam.get_project_policy(self.op.get(PROJECT_ID))
+    iam_policy = iam.get_project_policy(self.op.get(flags.PROJECT_ID))
 
-    auth_user = self.op.get(PRINCIPAL_FLAG)
+    auth_user = self.op.get(flags.PRINCIPAL)
     can_set_metadata = iam_policy.has_any_permission(auth_user,
                                                      self.metadata_permissions)
     if can_set_metadata:
-      self.interface.add_ok(
-          resource=iam_policy,
-          reason=
-          (f'{auth_user} has permission to set instance or project metadata (ssh keys)'
-          ))
+      self.interface.add_ok(resource=iam_policy,
+                            reason=self.op.get_msg(gce_const.SUCCESS_REASON,
+                                                   auth_user=auth_user))
     else:
       self.interface.add_failed(
           iam_policy,
-          reason=
-          (f'The authenticated user lacks the necessary permissions for managing metadata.\n'
-           f'Required permissions: {" or ".join(self.metadata_permissions)}.'),
-          # TODO: find better resource talking about how metadata permission works
-          remediation=
-          ('To resolve this issue, ensure the user has the following metadata permissions:\n'
-           ' - Add SSH Key to project-level metadata: https://cloud.google.com/'
-           'compute/docs/connect/add-ssh-keys#expandable-2\n'
-           ' - Add SSH Key to instance-level metadata: https://cloud.google.com/'
-           'compute/docs/connect/add-ssh-keys#expandable-3'))
+          reason=self.op.get_msg(
+              gce_const.FAILURE_REASON,
+              metadata_permissions=self.metadata_permissions),
+          remediation=self.op.get_msg(gce_const.FAILURE_REMEDIATION))
 
 
-class UserHasPermissionToFetchVM(runbook.Step):
-  """Checking permissions required to fetch an instance"""
+class AuthPrincipalHasPermissionToFetchVmCheck(runbook.Step):
+  """Validates if a user has the necessary permissions to retrieve information about a GCE instance.
+
+  This step checks for specific permissions related to instance retrieval.
+  It is critical for ensuring that the user executing the SSH command with gcloud or console has
+  the ability to access detailed information about the instance in question."""
 
   # Instance related permissions variables
   instance_permissions = ['compute.instances.get', 'compute.instances.use']
 
+  template = 'gce_permissions::instances_get'
+
   def execute(self):
-    """Checking permissions required to fetch an instance
-    Note: Only roles granted at the project level are checked. Permissions inherited from
-    ancestor resources such as folder(s) or organization and groups are not checked."""
+    """Verifying instance retrieval permissions..."""
 
-    iam_policy = iam.get_project_policy(self.op.get(PROJECT_ID))
+    iam_policy = iam.get_project_policy(self.op.get(flags.PROJECT_ID))
 
-    auth_user = self.op.get(PRINCIPAL_FLAG)
+    auth_user = self.op.get(flags.PRINCIPAL)
     if iam_policy.has_any_permission(auth_user, self.instance_permissions):
       self.interface.add_ok(resource=iam_policy,
-                            reason='User has permission to get instance')
+                            reason=self.op.get_msg(gce_const.SUCCESS_REASON,
+                                                   auth_user=auth_user))
     else:
       self.interface.add_failed(
           iam_policy,
-          reason=
-          ('The authenticated user lacks the required permissions for managing instances.\n'
-           f'Required permissions: {", ".join(self.instance_permissions)}.'),
-          remediation=
-          (f'Grant principal {auth_user} a role with the following permissions:\n'
-           f' - {", ".join(self.instance_permissions)}\n'
-           'For instructions, refer to the documentation on connecting with instance admin roles:\n'
-           'https://cloud.google.com/compute/docs/access/iam#connectinginstanceadmin'
-          ))
+          reason=self.op.get_msg(
+              gce_const.FAILURE_REASON,
+              auth_user=auth_user,
+              instance_permissions=self.instance_permissions),
+          remediation=self.op.get_msg(
+              gce_const.FAILURE_REMEDIATION,
+              auth_user=auth_user,
+              instance_permissions=self.instance_permissions))
 
 
-class PoxisUserHasValidSSHKey(runbook.Step):
-  """Checking if the Local User provided has a valid SSH key
-    Note: Only roles granted at the project level are checked. Permissions inherited from
-    ancestor resources such as folder(s) or organization and groups are not checked."""
+class PoxisUserHasValidSshKeyCheck(runbook.Step):
+  """Verifies the existence of a valid SSH key for the specified local Poxis user on a (VM).
+
+  Ensures that the local user has at least one valid SSH key configured in the VM's metadata, which
+  is essential for secure SSH access. The check is performed against the SSH keys stored within
+  the VM's metadata. A successful verification indicates that the user is likely able to SSH into
+  the VM using their key.
+  """
+
+  template = 'vm_metadata::valid_ssh_key'
 
   def execute(self):
-    """Checking if the Local User provided has a valid SSH key
-    Note: Only roles granted at the project level are checked. Permissions inherited from
-    ancestor resources such as folder(s) or organization and groups are not checked."""
+    """Validating SSH key for local user..."""
 
-    vm = gce.get_instance(project_id=self.op.get(PROJECT_ID),
-                          zone=self.op.get(ZONE_FLAG),
-                          instance_name=self.op.get(NAME_FLAG))
+    vm = gce.get_instance(project_id=self.op.get(flags.PROJECT_ID),
+                          zone=self.op.get(flags.ZONE),
+                          instance_name=self.op.get(flags.NAME))
 
-    # check if the local_user has a valid key
+    # Check if the local_user has a valid key in the VM's metadata.
     ssh_keys = vm.get_metadata('ssh-keys').split('\n') if vm.get_metadata(
         'ssh-keys') else []
-    has_valid_key = util.user_has_valid_ssh_key(self.op.get(LOCAL_USER_FLAG),
+    has_valid_key = util.user_has_valid_ssh_key(self.op.get(flags.LOCAL_USER),
                                                 ssh_keys)
     if has_valid_key:
-      self.interface.add_ok(
-          resource=vm,
-          reason=
-          (f'Local user "{self.op.get(LOCAL_USER_FLAG)}" has at least one valid SSH\n'
-           f'key VM: {vm.name}.'))
+      self.interface.add_ok(resource=vm,
+                            reason=self.op.get_msg(gce_const.SUCCESS_REASON,
+                                                   local_user=self.op.get(
+                                                       flags.LOCAL_USER),
+                                                   vm_name=vm.name))
     else:
       self.interface.add_failed(
           vm,
-          reason=(
-              f'Local user "{self.op.get(LOCAL_USER_FLAG)}" does not have at '
-              f'least one valid SSH key for the VM. {vm.name}'),
-          remediation=
-          ('To resolve this issue, add a valid SSH key for the user '
-           f'"{self.op.get(LOCAL_USER_FLAG)}" by following the instructions:\n'
-           'https://cloud.google.com/compute/docs/connect/add-ssh-keys#add_ssh_keys_to'
-           '_instance_metadata\n'))
+          reason=self.op.get_msg(gce_const.FAILURE_REASON,
+                                 local_user=self.op.get(flags.LOCAL_USER),
+                                 vm_name=vm.name),
+          remediation=self.op.get_msg(gce_const.FAILURE_REMEDIATION,
+                                      local_user=self.op.get(flags.LOCAL_USER)))
 
 
-class AuthUserHasOSLoginPermissions(runbook.Step):
-  """Checking permissions required to use OSlogin"""
+class AuthPrincipalHasOsLoginPermissionsCheck(runbook.Step):
+  """Evaluates whether the user has the necessary IAM roles to use OS Login access a GCE instance.
+
+  This step ensures the user possesses one of the required roles: OS Login User, OS Login Admin,
+  or Project Owner, which are essential for accessing instances via the OS Login feature.
+  A failure indicates the need to adjust IAM policies.
+  """
+  template = 'gce_permissions::has_os_login'
 
   def execute(self):
-    """Checking permissions required to use OSlogin
-    Note: Only roles granted at the project level are checked. Permissions inherited from
-    ancestor resources such as folder(s) or organization and groups are not checked."""
+    """Evaluating OS Login permissions for the user..."""
 
-    vm = gce.get_instance(project_id=self.op.get(PROJECT_ID),
-                          zone=self.op.get(ZONE_FLAG),
-                          instance_name=self.op.get(NAME_FLAG))
-    iam_policy = iam.get_project_policy(self.op.get(PROJECT_ID))
+    vm = gce.get_instance(project_id=self.op.get(flags.PROJECT_ID),
+                          zone=self.op.get(flags.ZONE),
+                          instance_name=self.op.get(flags.NAME))
+    iam_policy = iam.get_project_policy(self.op.get(flags.PROJECT_ID))
 
-    auth_user = self.op.get(PRINCIPAL_FLAG)
+    auth_user = self.op.get(flags.PRINCIPAL)
 
     # Does the instance have a service account?
     # Then users needs to have permissions to user the service account
     if not (iam_policy.has_role_permissions(
-        f'{auth_user}',
-        gce_const.OSLOGIN_ROLE) or iam_policy.has_role_permissions(
-            auth_user, gce_const.OSLOGIN_ADMIN_ROLE or
-            iam_policy.has_role_permissions(auth_user, gce_const.OWNER_ROLE))):
+        auth_user, gce_const.OSLOGIN_ROLE) or iam_policy.has_role_permissions(
+            auth_user, gce_const.OSLOGIN_ADMIN_ROLE) or
+            iam_policy.has_role_permissions(auth_user, gce_const.OWNER_ROLE)):
       self.interface.add_failed(
           iam_policy,
-          reason=(f'{auth_user} is missing at least of these required\n'
-                  f'{gce_const.OSLOGIN_ROLE} or {gce_const.OSLOGIN_ADMIN_ROLE} '
-                  f'or {gce_const.OSLOGIN_ADMIN_ROLE}'),
-          remediation=(
-              f'Grant {auth_user} of the following roles:'
-              f'\n{gce_const.OSLOGIN_ROLE} or {gce_const.OSLOGIN_ADMIN_ROLE}'
-              f'\nHelp Resources:\n'
-              'https://cloud.google.com/compute/docs/oslogin/'
-              'set-up-oslogin#configure_users\n'
-              'https://cloud.google.com/iam/docs/manage-access'
-              '-service-accounts#grant-single-role'))
+          reason=self.op.get_msg(
+              gce_const.FAILURE_REASON,
+              auth_user=auth_user,
+              os_login_role=gce_const.OSLOGIN_ROLE,
+              os_login_admin_role=gce_const.OSLOGIN_ADMIN_ROLE,
+              owner_role=gce_const.OWNER_ROLE),
+          remediation=self.op.get_msg(
+              gce_const.FAILURE_REMEDIATION,
+              auth_user=auth_user,
+              os_login_role=gce_const.OSLOGIN_ROLE,
+              os_login_admin_role=gce_const.OSLOGIN_ADMIN_ROLE))
     else:
       self.interface.add_ok(
           resource=vm,
-          reason=(f'{auth_user} has at least one of the mandatory roles: \n'
-                  f'{gce_const.OSLOGIN_ROLE} or {gce_const.OSLOGIN_ADMIN_ROLE} '
-                  f' or {gce_const.OWNER_ROLE}'))
+          reason=self.op.get_msg(
+              gce_const.SUCCESS_REASON,
+              auth_user=auth_user,
+              os_login_role=gce_const.OSLOGIN_ROLE,
+              os_login_admin_role=gce_const.OSLOGIN_ADMIN_ROLE,
+              owner_role=gce_const.OWNER_ROLE))
 
 
-class AuthUserHasServiceAccountUser(runbook.Step):
-  """Checking permissions required to use a VM with service account attached"""
+class AuthPrincipalHasServiceAccountUserCheck(runbook.Step):
+  """Verifies if the user has the 'Service Account User' role for a VM's attached service account.
+
+  This step is crucial for scenarios where a VM utilizes a service account for various operations.
+  It ensures the user performing the diagnostics has adequate permissions to use the service account
+  attached to the specified VM. Note: This check focuses on project-level roles and does not account
+  for permissions inherited from higher-level resources such as folders or organizations.
+  """
+  template = 'gce_permissions::sa_user_role'
 
   def execute(self):
-    """Checking permissions required to use a VM with service account attached
-    Note: Only roles granted at the project level are checked. Permissions inherited from
-    ancestor resources such as folder(s) or organization and groups are not checked."""
+    """Evaluating user permissions for the service account..."""
 
-    vm = gce.get_instance(project_id=self.op.get(PROJECT_ID),
-                          zone=self.op.get(ZONE_FLAG),
-                          instance_name=self.op.get(NAME_FLAG))
+    vm = gce.get_instance(project_id=self.op.get(flags.PROJECT_ID),
+                          zone=self.op.get(flags.ZONE),
+                          instance_name=self.op.get(flags.NAME))
     iam_policy = iam.get_project_policy(vm.project_id)
 
-    auth_user = self.op.get(PRINCIPAL_FLAG)
+    auth_user = self.op.get(flags.PRINCIPAL)
 
     if vm.service_account:
       if not iam_policy.has_role_permissions(auth_user, gce_const.SA_USER_ROLE):
         self.interface.add_failed(
             vm,
-            reason=f'{auth_user} is missing'
-            f'mandatory {gce_const.SA_USER_ROLE} on attached service account {vm.service_account}',
-            remediation=(f'Grant {auth_user} {gce_const.SA_USER_ROLE}\n'
-                         'Resources:\n'
-                         'https://cloud.google.com/compute/docs/oslogin/'
-                         'set-up-oslogin#configure_users\n'
-                         'https://cloud.google.com/iam/docs/manage-access'
-                         '-service-accounts#grant-single-role'))
+            reason=self.op.get_msg(gce_const.FAILURE_REASON,
+                                   auth_user=auth_user,
+                                   sa_user_role=gce_const.SA_USER_ROLE,
+                                   service_account=vm.service_account),
+            remediation=self.op.get_msg(gce_const.FAILURE_REMEDIATION,
+                                        auth_user=auth_user,
+                                        sa_user_role=gce_const.SA_USER_ROLE))
       else:
-        self.interface.add_ok(
-            resource=vm,
-            reason=(
-                f'VM has a service account and principal {auth_user} has\n'
-                f'required {gce_const.SA_USER_ROLE} on {vm.service_account}'))
+        self.interface.add_ok(resource=vm,
+                              reason=self.op.get_msg(
+                                  gce_const.SUCCESS_REASON,
+                                  auth_user=auth_user,
+                                  sa_user_role=gce_const.SA_USER_ROLE,
+                                  service_account=vm.service_account))
 
 
-class AuthUserHasIAPTunnelUserPermissions(runbook.Step):
-  """Checking permissions required to tunnel via IAP to a VM"""
+class AuthPrincipalHasIapTunnelUserPermissionsCheck(runbook.Step):
+  """Verifies if the authenticated user has the required IAP roles to establish a tunnel to a VM.
+
+  This step examines scenarios where users need to tunnel into a VM via IAP. It checks if the
+  user has the 'roles/iap.tunnelResourceAccessor' role at the project level, necessary for
+  initiating an Identity-Aware Proxy tunnel. The check focuses on project-level roles, not
+  considering more granular permissions that might be assigned directly to the VM or inherited
+  from higher-level resources.
+  """
+  template = 'gce_permissions::iap_role'
 
   def execute(self):
-    """Checking permissions required to tunnel via IAP to a VM
-    Note: Only roles granted at the project level are checked. Permissions inherited from
-    ancestor resources such as folder(s) or organization and groups are not checked."""
+    """Evaluating IAP Tunnel user permissions..."""
 
-    vm = gce.get_instance(project_id=self.op.get(PROJECT_ID),
-                          zone=self.op.get(ZONE_FLAG),
-                          instance_name=self.op.get(NAME_FLAG))
-    iam_policy = iam.get_project_policy(self.op.get(PROJECT_ID))
+    vm = gce.get_instance(project_id=self.op.get(flags.PROJECT_ID),
+                          zone=self.op.get(flags.ZONE),
+                          instance_name=self.op.get(flags.NAME))
+    iam_policy = iam.get_project_policy(self.op.get(flags.PROJECT_ID))
 
-    auth_user = self.op.get(PRINCIPAL_FLAG)
+    auth_user = self.op.get(flags.PRINCIPAL)
     # Check for IAP config
     # TODO improve this to check that it affects the
     #  interested instance. because IAP and Service account roles can be scoped to VM
-    if not iam_policy.has_role_permissions(f'{auth_user}', gce_const.IAP_ROLE):
+    if auth_user and not iam_policy.has_role_permissions(
+        f'{auth_user}', gce_const.IAP_ROLE):
       self.interface.add_failed(
           iam_policy,
-          reason=f'{auth_user} is missing mandatory\n{gce_const.IAP_ROLE}',
-          remediation=(f'Grant {auth_user} {gce_const.IAP_ROLE}\n'
-                       'Resources: '
-                       'https://cloud.google.com/compute/docs/oslogin/'
-                       'set-up-oslogin#configure_users\n'
-                       'https://cloud.google.com/iam/docs/manage-access'
-                       '-service-accounts#grant-single-role'))
+          reason=self.op.get_msg(gce_const.FAILURE_REASON,
+                                 auth_user=auth_user,
+                                 iap_role=gce_const.IAP_ROLE),
+          remediation=self.op.get_msg(gce_const.FAILURE_REMEDIATION,
+                                      auth_user=auth_user,
+                                      iap_role=gce_const.IAP_ROLE))
     else:
-      self.interface.add_ok(
-          resource=vm,
-          reason=(f'Principal {auth_user} has required {gce_const.IAP_ROLE}'))
+      self.interface.add_ok(resource=vm,
+                            reason=self.op.get_msg(gce_const.SUCCESS_REASON,
+                                                   auth_user=auth_user,
+                                                   iap_role=gce_const.IAP_ROLE))
 
 
-class GCEFirewallNetworkAllowsSsh(runbook.CompositeStep):
-  """Checking Overall VPC network Configuration"""
+class GceFirewallAllowsSsh(runbook.CompositeStep):
+  """Assesses the VPC network configuration to ensure it allows SSH traffic to the target VM.
+
+  This diagnostic step checks for ingress firewall rules that permit SSH traffic based on
+  the operational context, such as the use of IAP for SSH or direct access from a specified
+  source IP. It helps identify network configurations that might block SSH connections."""
 
   def execute(self):
-    """Checking Overall VPC network Configuration"""
-    vm = gce.get_instance(project_id=self.op.get(PROJECT_ID),
-                          zone=self.op.get(ZONE_FLAG),
-                          instance_name=self.op.get(NAME_FLAG))
+    """Evaluating VPC network firewall rules for SSH access..."""
+    vm = gce.get_instance(project_id=self.op.get(flags.PROJECT_ID),
+                          zone=self.op.get(flags.ZONE),
+                          instance_name=self.op.get(flags.NAME))
 
-    if self.op.get(TTI_FLAG):
-      ingress_check = gce_cs.IngressTrafficAllowedForGCEInstance()
+    if self.op.get(flags.TUNNEL_THROUGH_IAP):
+      tti_ingress_check = gce_gs.GceVpcConnectivityCheck()
+      tti_ingress_check.traffic = 'ingress'
       # Check IAP Firewall rule if specified
-      ingress_check.prompts[gce_const.FAILURE_REMEDIATION] = (
-          'Allow ingress traffic from the VIP range 35.235.240.0/20\n'
-          'https://cloud.google.com/compute/docs/troubleshooting/'
-          'troubleshooting-ssh-errors#diagnosis_methods_for_linux_and_windows_vms'
-      )
+      tti_ingress_check.template = 'vpc_connectivity::tti_ingress'
+      self.add_child(tti_ingress_check)
+    if (not self.op.get(flags.SRC_IP) and
+        not self.op.get(flags.TUNNEL_THROUGH_IAP) and vm.is_public_machine()):
+      default_ingress_check = gce_gs.GceVpcConnectivityCheck()
+      default_ingress_check.traffic = 'ingress'
+      default_ingress_check.template = 'vpc_connectivity::default_ingress'
 
-      self.add_step(ingress_check)
-    if (not self.op.get(SRC_IP_FLAG) and not self.op.get(TTI_FLAG) and
-        vm.is_public_machine()):
-      tti_ingress_check = gce_cs.IngressTrafficAllowedForGCEInstance()
-      tti_ingress_check.prompts[gce_const.FAILURE_REMEDIATION] = (
-          'Consider using our recommended methods for connecting Compute Engine virtual\n'
-          'machine (VM) instance through its internal IP address:\n'
-          'https://cloud.google.com/compute/docs/connect/ssh-internal-ip')
-      self.add_step(ingress_check)
+      self.add_child(default_ingress_check)
 
     # Check provided source IP has access
-    if self.op.get(SRC_IP_FLAG):
-      self.add_step(gce_cs.IngressTrafficAllowedForGCEInstance())
+    if self.op.get(flags.SRC_IP) and not self.op.get(flags.TUNNEL_THROUGH_IAP):
+      custom_ip_ingress_check = gce_gs.GceVpcConnectivityCheck()
+      custom_ip_ingress_check.traffic = 'ingress'
+      custom_ip_ingress_check.template = 'vpc_connectivity::default_ingress'
+      self.add_child(custom_ip_ingress_check)
 
-    # TODO: add egress checks
 
+class VmPerformanceChecks(runbook.CompositeStep):
+  """Assesses the overall performance of a VM by evaluating its memory, CPU, and disk utilization.
 
-class CheckVMPerformance(runbook.CompositeStep):
-  """Checking Overall VM Performance"""
+  This composite diagnostic step sequentially checks for high memory utilization, high disk
+  utilization, and CPU performance issues. It adds specific child steps designed to identify and
+  report potential performance bottlenecks that could impact the VM's operation and efficiency.
+  """
 
   def execute(self):
-    """Checking Memory, CPU and Disk performance"""
-    self.add_step(gce_cs.GCEHighMemoryUtilization())
-    self.add_step(gce_cs.GCEHighDiskUtilization())
-    self.add_step(gce_cs.GCEHighCPUPerformance())
+    """Evaluating VM memory, CPU, and disk performance..."""
+    self.add_child(child=gce_gs.HighVmMemoryUtilization())
+    self.add_child(child=gce_gs.HighVmDiskUtilization())
+    self.add_child(child=gce_gs.HighVmCpuUtilization())
 
 
 class LinuxGuestOsChecks(runbook.CompositeStep):
-  """Checking Linux OS & application issues through logs present in Serial Logs"""
+  """Examines Linux-based guest OS's serial log entries for guest os level issues.
+
+  This composite step scrutinizes the VM's serial logs for patterns indicative of kernel panics,
+  problems with the SSH daemon, and blocks by SSH Guard - each of which could signify underlying
+  issues affecting the VM's stability and accessibility. By identifying these specific patterns,
+  the step aims to isolate common Linux OS and application issues, facilitating targeted
+  troubleshooting.
+  """
 
   def execute(self):
-    """Checking Linux OS & application issues through logs present in Serial Logs"""
+    """Analyzing serial logs for common linux guest os and application issues..."""
 
-    grub_check = gce_cs.GCESerialLogsCheck()
-    # Failed boot logs
-    grub_check.BAD_PATTERN = gce_const.KERNEL_PANIC_LOGS
-    grub_check.prompts[
-        gce_const.STEP_MESSAGE] = 'Checking Linux Guest Kernel Status'
-    grub_check.prompts[
-        gce_const.FAILURE_REASON] = gce_const.KERNEL_PANIC_FAILURE_REASON
-    grub_check.prompts[
-        gce_const.
-        FAILURE_REMEDIATION] = gce_const.KERNEL_PANIC_FAILURE_REMEDIATION
-    grub_check.prompts[
-        gce_const.SUCCESS_REASON] = gce_const.KERNEL_PANIC_SUCCESS_REASON
-    grub_check.prompts[
-        gce_const.UNCERTAIN_REASON] = gce_const.KERNEL_PANIC_UNCERTAIN_REASON
-    grub_check.prompts[
-        gce_const.
-        UNCERTAIN_REASON] = gce_const.KERNEL_PANIC_UNCERTAIN_REMEDIATION
-    self.add_step(grub_check)
+    # Check for kernel panic patterns in serial logs.
+    kernel_panic = gce_gs.VmSerialLogsCheck()
+    kernel_panic.template = 'vm_serial_log::kernel_panic'
+    kernel_panic.negative_pattern = gce_const.KERNEL_PANIC_LOGS
+    self.add_child(kernel_panic)
 
-    sshd_check = gce_cs.GCESerialLogsCheck()
-    # Failed boot logs
-    sshd_check.BAD_PATTERN = gce_const.BAD_SSHD_PATTERNS
-    sshd_check.GOOD_PATTERN = gce_const.GOOD_SSHD_PATTERNS
+    # Check for issues in SSHD configuration or behavior.
+    sshd_check = gce_gs.VmSerialLogsCheck()
+    sshd_check.template = 'vm_serial_log::sshd'
+    sshd_check.negative_pattern = gce_const.BAD_SSHD_PATTERNS
+    sshd_check.positive_pattern = gce_const.GOOD_SSHD_PATTERNS
+    self.add_child(sshd_check)
 
-    sshd_check.prompts[
-        gce_const.STEP_MESSAGE] = 'Checking SSH Server Status via Serial Logs'
-    sshd_check.prompts[gce_const.FAILURE_REASON] = gce_const.SSHD_FAILURE_REASON
-    sshd_check.prompts[
-        gce_const.FAILURE_REMEDIATION] = gce_const.SSHD_FAILURE_REMEDIATION
-    sshd_check.prompts[gce_const.SUCCESS_REASON] = gce_const.SSHD_SUCCESS_REASON
-    sshd_check.prompts[
-        gce_const.UNCERTAIN_REASON] = gce_const.SSHD_UNCERTAIN_REASON
-    sshd_check.prompts[
-        gce_const.UNCERTAIN_REASON] = gce_const.SSHD_UNCERTAIN_REMEDIATION
-
-    self.add_step(sshd_check)
-
-    sshd_guard = gce_cs.GCESerialLogsCheck()
-    # Failed boot logs
-    sshd_guard.prompts[
-        gce_const.
-        STEP_MESSAGE] = 'Checking Intrusion Detection Software: SSH Guard'
-    sshd_guard.prompts[
-        gce_const.FAILURE_REASON] = gce_const.SSHGUARD_FAILURE_REASON
-    sshd_guard.prompts[
-        gce_const.FAILURE_REMEDIATION] = gce_const.SSHGUARD_FAILURE_REMEDIATION
-    sshd_guard.prompts[
-        gce_const.SUCCESS_REASON] = gce_const.SSHGUARD_SUCCESS_REASON
-    sshd_guard.prompts[
-        gce_const.UNCERTAIN_REASON] = gce_const.SSHGUARD_UNCERTAIN_REASON
-    sshd_guard.prompts[
-        gce_const.UNCERTAIN_REASON] = gce_const.SSHGUARD_UNCERTAIN_REMEDIATION
-
-    sshd_guard.BAD_PATTERN = gce_const.SSHGUARD_PATTERNS
-    self.add_step(sshd_guard)
+    # Check for SSH Guard blocks that might be preventing SSH access.
+    sshd_guard = gce_gs.VmSerialLogsCheck()
+    sshd_guard.template = 'vm_serial_log::sshguard'
+    sshd_guard.negative_pattern = gce_const.SSHGUARD_PATTERNS
+    self.add_child(sshd_guard)
 
 
-class WindowsGuestOSChecks(runbook.CompositeStep):
-  """Checks issues related to windows Guest OS"""
+class WindowsGuestOsChecks(runbook.CompositeStep):
+  """Diagnoses common issues related to Windows Guest OS, focusing on boot-up processes and SSHD.
 
-  # Typical logs of a fully booted windows VM
-  GOOD_WINDOWS_BOOT_LOGS_READY = [
-      'BdsDxe: starting',
-      'UEFI: Attempting to start image',
-      'Description: Windows Boot Manager',
-      'GCEGuestAgent: GCE Agent Started',
-      'OSConfigAgent Info: OSConfig Agent',
-      'GCEMetadataScripts: Starting startup scripts',
-  ]
+  This composite diagnostic step evaluates the VM's metadata to ensure SSH is enabled for Windows,
+  checks serial logs for successful boot-up patterns, and involves a manual check on the Windows SSH
+  agent status. It aims to identify and help troubleshoot potential issues that could impact the
+  VM's accessibility via SSHD.
+  """
 
   def execute(self):
-    """Checking issues related windows Guest OS boot up and ssh agents"""
+    """Analyzing Windows Guest OS boot-up and SSH agent status..."""
     # Check Windows Metadata enabling ssh is set as this is required for windows
-    windows_ssh_md = gce_cs.GCEBooleanMetadataCheck()
-    windows_ssh_md.prompts[
-        gce_const.FAILURE_REASON] = gce_const.WINDOWS_SSH_MD_FAILURE_REASON
-    windows_ssh_md.prompts[
-        gce_const.
-        FAILURE_REMEDIATION] = gce_const.WINDOWS_SSH_MD_FAILURE_REMEDIATION
-    windows_ssh_md.prompts[
-        gce_const.SUCCESS_REASON] = gce_const.WINDOWS_SSH_MD_SUCCESS_REASON
-    windows_ssh_md.METADATA_KEY = 'enable-windows-ssh'
-    windows_ssh_md.METADATA_VALUE = True
-    self.add_step(windows_ssh_md)
+    windows_ssh_md = gce_gs.VmMetadataCheck()
+    windows_ssh_md.template = 'vm_metadata::windows_ssh_md'
+    windows_ssh_md.metadata_key = 'enable-windows-ssh'
+    windows_ssh_md.expected_value = True
+    self.add_child(windows_ssh_md)
 
-    windows_good_bootup = gce_cs.GCESerialLogsCheck()
-    # Failed boot logs
-    windows_good_bootup.prompts[
-        gce_const.STEP_MESSAGE] = 'Checking Windows OS has booted status'
-    windows_good_bootup.prompts[
-        gce_const.FAILURE_REASON] = gce_const.WINDOWS_BOOTUP_FAILURE_REASON
-    windows_good_bootup.prompts[
-        gce_const.
-        FAILURE_REMEDIATION] = gce_const.WINDOWS_BOOTUP_FAILURE_REMEDIATION
-    windows_good_bootup.prompts[
-        gce_const.SUCCESS_REASON] = gce_const.WINDOWS_BOOTUP_SUCCESS_REASON
-    windows_good_bootup.prompts[
-        gce_const.UNCERTAIN_REASON] = gce_const.WINDOWS_BOOTUP_UNCERTAIN_REASON
-    windows_good_bootup.prompts[
-        gce_const.
-        UNCERTAIN_REASON] = gce_const.WINDOWS_BOOTUP_UNCERTAIN_REMEDIATION
+    windows_good_bootup = gce_gs.VmSerialLogsCheck()
+    windows_good_bootup.template = 'vm_serial_log::windows_bootup'
+    windows_good_bootup.positive_pattern = gce_const.GOOD_WINDOWS_BOOT_LOGS_READY
+    self.add_child(windows_good_bootup)
 
-    windows_good_bootup.GOOD_PATTERN = self.GOOD_WINDOWS_BOOT_LOGS_READY
-    self.add_step(windows_good_bootup)
-
-    check_windows_ssh_agent = global_cs.HumanTask()
-    vm = gce.get_instance(project_id=self.op.get(PROJECT_ID),
-                          zone=self.op.get(ZONE_FLAG),
-                          instance_name=self.op.get(NAME_FLAG))
+    check_windows_ssh_agent = platform_gs.HumanTask()
+    vm = gce.get_instance(project_id=self.op.get(flags.PROJECT_ID),
+                          zone=self.op.get(flags.ZONE),
+                          instance_name=self.op.get(flags.NAME))
     check_windows_ssh_agent.resource = vm
-    check_windows_ssh_agent.prompts[
-        gce_const.
-        STEP_MESSAGE] = '''Manually check ssh reqired Agents are running on the VM
-      Check google-compute-engine-ssh is installed.'''
-    check_windows_ssh_agent.prompts[
-        gce_const.
-        INSTRUCTIONS_MESSAGE] = 'Is SSHD agent `google-compute-engine-ssh` installed on the VM'
     check_windows_ssh_agent.prompts[gce_const.INSTRUCTIONS_CHOICE_OPTIONS] = {
         'y': 'Yes',
         'n': 'No',
         'u': 'Unsure'
     }
-    check_windows_ssh_agent.prompts[
-        gce_const.
-        FAILURE_REASON] = gce_const.WINDOWS_GCE_SSH_AGENT_FAILURE_REASON
-    check_windows_ssh_agent.prompts[
-        gce_const.
-        FAILURE_REMEDIATION] = gce_const.WINDOWS_GCE_SSH_AGENT_FAILURE_REMEDIATION
-    check_windows_ssh_agent.prompts[
-        gce_const.
-        SUCCESS_REASON] = gce_const.WINDOWS_GCE_SSH_AGENT_SUCCESS_REASON
-    check_windows_ssh_agent.prompts[
-        gce_const.
-        UNCERTAIN_REASON] = gce_const.WINDOWS_GCE_SSH_AGENT_UNCERTAIN_REASON
-    check_windows_ssh_agent.prompts[
-        gce_const.
-        UNCERTAIN_REASON] = gce_const.WINDOWS_GCE_SSH_AGENT_UNCERTAIN_REMEDIATION
-    self.add_step(check_windows_ssh_agent)
+    check_windows_ssh_agent.template = 'gcpdiag.runbook.gce::vm_serial_log::windows_gce_ssh_agent'
+    self.add_child(check_windows_ssh_agent)

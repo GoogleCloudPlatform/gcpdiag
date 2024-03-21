@@ -16,7 +16,7 @@
 from gcpdiag import config, models, runbook
 from gcpdiag.models import Resource
 from gcpdiag.runbook import constants
-from gcpdiag.runbook.parameters import AUTO
+from gcpdiag.runbook.flags import AUTO
 
 
 class HumanTask(runbook.Step):

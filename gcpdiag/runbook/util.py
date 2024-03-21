@@ -13,9 +13,23 @@
 # limitations under the License.
 """Helpful functions used in different parts of the runbook command"""
 
+import importlib
+import os
 import random
 import re
 import string
+from datetime import datetime, timezone
+
+import dateutil
+from jinja2 import Environment, FileSystemLoader, select_autoescape
+
+from gcpdiag.runbook import constants
+
+env = Environment(trim_blocks=True,
+                  lstrip_blocks=True,
+                  autoescape=select_autoescape())
+
+step_outcomes = constants.StepConstants.keys()
 
 
 def generate_random_string(length: int = 4) -> str:
@@ -24,6 +38,105 @@ def generate_random_string(length: int = 4) -> str:
                                 k=length)).lower()
 
 
-def camel_to_kebab(camel_case_str: str) -> str:
-  """Converts camelCase to kebab-case."""
-  return re.sub(r'(?<!^)(?=[A-Z])', '-', camel_case_str).lower()
+def pascal_case_to_kebab_case(s):
+  """
+  Converts a PascalCase string to kebab-case.
+
+  Args:
+      s (str): The string to convert from PascalCase to kebab-case.
+
+  Returns:
+      str: The converted string in kebab-case.
+  """
+  return re.sub(r'(?<!^)(?=[A-Z])', '-', s).lower()
+
+
+def pascal_case_to_snake_case(s):
+  """
+  Converts a PascalCase string to snake_case.
+
+  Args:
+      s (str): The string to convert from PascalCase to snake_case.
+
+  Returns:
+      str: The converted string in snake_case.
+  """
+  return re.sub(r'(?<!^)(?=[A-Z])', '_', s).lower()
+
+
+def runbook_name_parser(s):
+  """
+  Converts a string from PascalCase or kebab-case to snake_case.
+
+  Args:
+      s (str): The string to convert from PascalCase or kebab-case to snake_case.
+
+  Returns:
+      str: The converted string in snake_case
+  """
+  # Replace kebab-case with snake_case
+  s = s.replace('-', '_')
+  # Convert PascalCase to snake_case
+  s = re.sub('([a-z0-9])([A-Z])', r'\1_\2', s).lower()
+  return s
+
+
+def pascal_case_to_title(s):
+  """
+  Converts a PascalCase string to Title Case (each word's first letter is capitalized).
+
+  Args:
+      s (str): The string to convert from PascalCase to Title Case.
+
+  Returns:
+      str: The converted string in Title Case.
+  """
+  words = re.sub(r'(?<!^)(?=[A-Z])', ' ', s).lower()
+  return words.title()
+
+
+def load_template_block(module_name, file_name, block_name):
+  """
+  Load specified blocks from a Jinja2 template.
+
+  block_name: Load blocks with this prefix
+  module_name: Ref to module
+  """
+  module = importlib.import_module(module_name)
+
+  current_dir = os.path.dirname(os.path.abspath(module.__file__))
+  template_file = os.path.join(current_dir, 'templates', f'{file_name}.jinja')
+
+  env.loader = FileSystemLoader(os.path.dirname(template_file))
+  template = env.get_template(os.path.basename(template_file))
+  prompts = {}
+
+  for entry in step_outcomes:
+    t_block_name = f'{block_name}_{entry}'
+    # Attempt to load each sub-block if it exists within the main block
+    if t_block_name in template.blocks:
+      prompts[entry] = ''.join(template.blocks[t_block_name](
+          template.new_context()))
+  return prompts
+
+
+def render_template_to_md(file_dir, file_name_with_ext, context):
+  """
+  Load specified blocks from a Jinja2 template.
+
+  template_path: Path to the Jinja2 template file.
+  main_block_name: The main block name to load sub-blocks from.
+  sub_block_names: A list of sub-block names to load.
+  A dictionary with the loaded block contents.
+  """
+  env.loader = FileSystemLoader(file_dir)
+  content = env.get_template(f'{file_name_with_ext}').render(context)
+  return content
+
+
+def parse_time_input(time_str):
+  """Parse RFC3339 or epoch time input to datetime object."""
+  if time_str.isdigit():  # Epoch time
+    return datetime.fromtimestamp(float(time_str), timezone.utc)
+  else:  # Assume RFC3339 format
+    return dateutil.parser.isoparse(time_str)
