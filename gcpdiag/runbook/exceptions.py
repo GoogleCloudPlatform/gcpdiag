@@ -16,17 +16,23 @@
 
 class InvalidDiagnosticTree(Exception):
   """Exception raised for invalid diagnostic tree definition"""
-  pass
+
+  def __init__(self, message: str):
+    super().__init__(message)
 
 
 class InvalidStepOperation(Exception):
   """Exception raised for invalid operations on a diagnostic step."""
-  pass
+
+  def __init__(self, message: str):
+    super().__init__(message)
 
 
 class DiagnosticTreeNotFound(Exception):
   """Exception raised when a diagnostic tree cannot be found."""
-  pass
+
+  def __init__(self):
+    super().__init__('Diagnostic tree cannot be found.')
 
 
 class DiagnosticTreeConstructionError(Exception):

@@ -1,0 +1,63 @@
+{#- Prepare the tree traversal part -#}
+{% macro traverse_dt(step, ROOT_DIR) %}
+  {% set dt_path = '/steps/' ~ step.product ~ '/' ~ step.doc_file_name %}
+  {% if ROOT_DIR ~ '/' ~ dt_path %}
+  - [{{ util.pascal_case_to_title(step.__class__.__name__)}}](/runbook/{{ dt_path }})
+  {% endif %}
+
+  {% for child in step.steps %}
+    {{- traverse_dt(child, ROOT_DIR) -}}
+  {% endfor %}
+{% endmacro %}
+
+{#- The main part of the template -#}
+---
+title: "{{ rule.product }}/{{ title }}"
+linkTitle: "{{ rule.name }}"
+weight: 3
+type: docs
+description: >
+  {{ rule.short_desc|trim }}
+---
+
+**Product**: {{ PRODUCTS[rule.product]|trim }}
+**Kind**: Debugging Tree
+
+### Description
+
+{{ rule.long_desc|trim }}
+
+### Executing this runbook
+
+```shell
+gcpdiag runbook {{rule.name}} \
+{% for name, _ in rule.parameters.items() %}
+  {% if not loop.last %}
+  -p {{ name }} = value \
+  {% else %}
+  -p {{ name }} = value
+  {% endif %}
+{% endfor %}
+```
+
+#### Parameters
+
+| Name | Required | Default | Type | Help |
+|------|----------|---------|------|------|
+{% for n, d in rule.parameters.items() %}
+| `{{ n }}` | {{ d.get('required', False) }} | {{ d.get('default', 'None') }} | {{ d['type'].__name__ }} | {{ d['help']
+}} |
+{% endfor %}
+
+Get help on available commands
+
+```shell
+gcpdiag runbook --help
+```
+
+### Potential Steps
+
+{{ traverse_dt(rule.start, ROOT_DIR) }}
+<!--
+This file is auto-generated. DO NOT EDIT.
+-->

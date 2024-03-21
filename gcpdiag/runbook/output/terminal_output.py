@@ -144,8 +144,7 @@ class TerminalOutput(BaseOutput):
       bullet = emoji_wrap('🔎') + ' '
     else:
       bullet = '*  '
-    self.terminal_print_line(bullet +
-                             self.term.yellow(f'{rule.product}/{rule.rule_id}'))
+    self.terminal_print_line(bullet + self.term.yellow(rule.name))
 
   def _print_long_desc(self, rule: 'runbook.DiagnosticTree') -> None:
     self.terminal_print_line()

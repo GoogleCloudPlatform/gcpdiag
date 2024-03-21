@@ -1,6 +1,6 @@
 {
     "editor.codeActionsOnSave": {
-        "source.organizeImports": true
+        "source.organizeImports": "always"
     },
     "editor.formatOnSave": true,
     "editor.insertSpaces": true,

@@ -3,6 +3,9 @@
 
 # pylint: disable=invalid-name
 
+import importlib
+import inspect
+import os
 import pathlib
 import re
 import subprocess
@@ -10,10 +13,16 @@ import sys
 import textwrap
 from os import path
 
-from gcpdiag import lint
+from jinja2 import TemplateNotFound, UndefinedError
 
+from gcpdiag import lint, runbook
+from gcpdiag.runbook import util
+
+#Lint Rules Doc
 WEBSITE_RULES_DIR = 'website/content/en/rules'
 LINT_RULES_DIR = 'gcpdiag/lint'
+# Runbook Docs
+WEBSITE_RUNBOOK_DIR = 'website/content/en/runbook'
 
 # update also pyinstaller/hook-gcpdiag.lint.py
 PRODUCTS = {
@@ -122,6 +131,221 @@ def gen_rule_page(rule, rule_page_path):
           file=f)
 
 
+def check_runbook(files):
+  """Check runbook files to automatically update or generate docs for DTs and it steps."""
+  # Initialize variables to hold the diagnostic tree and in-scope steps.
+  dt = None
+  in_scope_steps = {}
+
+  # Process each file path provided.
+  for file_path in files:
+    # Use regular expression to parse relevant information from the file path.
+    match = re.match(r'gcpdiag/runbook/([^/]+)/(.*)\.py', file_path)
+    if not match:
+      continue
+
+    rule_dir, rule_basename = match.groups()
+    rule_module_name = f'gcpdiag.runbook.{rule_dir}.{rule_basename}'
+    try:
+      module = importlib.import_module(rule_module_name)
+    except ImportError:
+      continue
+
+    for name, obj in inspect.getmembers(module, inspect.isclass):
+      # Handle DiagnosticTree classes.
+      if issubclass(
+          obj, runbook.DiagnosticTree) and obj is not runbook.DiagnosticTree:
+        if dt:
+          raise RuntimeError(
+              f'Multiple Diagnostic Trees found in {file_path}\n'
+              f'For readability each Diagnostic Tree should have it own file'
+              f'Only keep custom steps for this Diagnostic Tree in the file')
+        dt = obj(None)
+
+      # Store Step classes that have possibly been modified.
+      elif issubclass(obj, runbook.Step) and obj is not runbook.Step:
+        in_scope_steps[name] = obj
+
+  if dt:
+    gen_dt_rule_and_steps_page(dt, in_scope_steps)
+
+
+def gen_dt_rule_and_steps_page(dt, in_scope_steps):
+  """Generate documentation pages for a diagnostic tree and its steps.
+
+  Args:
+    dt: The diagnostic tree object to process.
+    in_scope_steps: A dictionary of steps that are in scope for documentation.
+  """
+  # Expand the full diagnostic tree from the AST nodes.
+  # Used to draw graphviz images and document the child steps.
+  builder = runbook.ExpandTreeFromAst(dt.__class__)
+  expanded_dt = builder.visit_ast_nodes(dt.build_tree)
+
+  # Function to recursively traverse and generate documentation for all steps in the tree.
+  def traverse_all_steps(step):
+    gen_step_page(step)
+    # Remove generated steps from the in_scope_steps dict.
+    in_scope_steps.pop(step.__class__.__name__, None)
+    for child in step.steps:
+      traverse_all_steps(child)
+
+  traverse_all_steps(expanded_dt.start)
+  # Generate pages for any remaining steps not directly part of the diagnostic tree.
+  for step in in_scope_steps.values():
+    gen_step_page(step())
+
+  # Create dt product directory if doesn't exist and sub folder images.
+  try:
+    dt_dir = pathlib.Path(f'{WEBSITE_RUNBOOK_DIR}/diagnostic-trees')
+    # Make both diagnostic-trees
+    dt_dir.mkdir(parents=True)
+    with open(dt_dir / '_index.md', 'w', encoding='utf-8') as f:
+      print(textwrap.dedent('''\
+          ---
+          title: "Debugging Trees"
+          linkTitle: "Debugging Trees"
+          type: docs
+          weight: 1
+          ---
+          '''),
+            file=f,
+            end='')
+  except FileExistsError:
+    pass
+
+  # Create dt product directory if doesn't exist and sub folder images.
+  try:
+    product_dt_dir = pathlib.Path(
+        f'{WEBSITE_RUNBOOK_DIR}/diagnostic-trees/{dt.product}')
+    # Make both diagnostic-trees
+    product_dt_dir.mkdir(parents=True)
+    with open(product_dt_dir / '_index.md', 'w', encoding='utf-8') as f:
+      print(textwrap.dedent(f'''\
+          ---
+          title: "{dt.product.upper()}"
+          linkTitle: "{dt.product}"
+          type: docs
+          weight: 2
+          ---
+
+          All diagnostic tree available in {dt.product}
+          '''),
+            file=f,
+            end='')
+  except FileExistsError:
+    pass
+
+  try:
+    img_dir = pathlib.Path(f'{str(product_dt_dir)}/images')
+    img_dir.mkdir(parents=True)
+  except FileExistsError:
+    pass
+
+  context = {
+      'rule': expanded_dt,
+      'util': util,
+      'title': util.pascal_case_to_title(dt.__class__.__name__),
+      'PRODUCTS': PRODUCTS,
+      'ROOT_DIR': WEBSITE_RUNBOOK_DIR
+  }
+  # Render the template with the context
+  rendered_content = runbook.util.render_template_to_md(
+      'bin/templates', 'diagnostic-tree.jinja', context).rstrip('\n')
+  dt_path = f'{dt_dir}/{expanded_dt.name}.md'
+  md_page_content = ''
+  if os.path.exists(dt_path):
+    # Check if the content changed.
+    md_page_content = runbook.util.render_template_to_md(
+        dt_dir, f'{expanded_dt.name}.md', {})
+  if rendered_content != md_page_content:
+    with open(dt_path, 'w', encoding='utf-8') as f:
+      f.write(rendered_content)
+      f.write('\n')
+
+
+def gen_step_page(step: runbook.Step):
+  """Generates a Markdown page for a given diagnostic step.
+
+  Creates a Markdown file for the specified step in the
+  diagnostic process, using a template to render the step's details into a
+  human-readable format. It ensures that each step has its own dedicated page.
+
+  Args:
+    step (runbook.Step): The diagnostic step instance to generate the page.
+  """
+  try:
+    steps_dir = pathlib.Path(f'{WEBSITE_RUNBOOK_DIR}/steps')
+    steps_dir.mkdir(parents=True)
+    with open(steps_dir / '_index.md', 'w', encoding='utf-8') as f:
+      print(textwrap.dedent('''\
+          ---
+          title: "All Steps"
+          linkTitle: "steps"
+          type: docs
+          weight: 1
+          ---
+
+          All steps available in the runbook by products
+          '''),
+            file=f,
+            end='')
+  except FileExistsError:
+    pass
+
+  try:
+    product_steps_dir = pathlib.Path(
+        f'{WEBSITE_RUNBOOK_DIR}/steps/{step.product}')
+    product_steps_dir.mkdir()
+    with open(product_steps_dir / '_index.md', 'w', encoding='utf-8') as f:
+      print(textwrap.dedent(f'''\
+          ---
+          title: "{step.product.upper()}"
+          linkTitle: "{step.product}"
+          type: docs
+          weight: 2
+          ---
+
+          All steps available in {step.product}
+          '''),
+            file=f,
+            end='')
+  except FileExistsError:
+    pass
+
+  msgs = {}
+  try:
+    filepath, block_prefix = step.template.split('::')
+    msgs = runbook.util.load_template_block(module_name=step.__module__,
+                                            file_name=filepath,
+                                            block_name=block_prefix)
+  except UndefinedError as e:
+    raise e
+  except TemplateNotFound as e:
+    raise e
+  except AttributeError as e:
+    pass
+
+  context = {'step': step, 'msgs': msgs, 'PRODUCTS': PRODUCTS}
+  step_page = f'{product_steps_dir}/{step.doc_file_name}.md'
+  rendered_content = runbook.util.render_template_to_md('bin/templates/',
+                                                        'steps.jinja', context)
+  # For some reason there are \n at the end dispite striping new line and block lines
+  # Many strip it if any still exists at the end.
+  rendered_content = rendered_content.rstrip('\n')
+  md_page_content = ''
+
+  if os.path.exists(step_page):
+    # Check if the content changed.
+    md_page_content = runbook.util.render_template_to_md(
+        product_steps_dir, f'{step.doc_file_name}.md', {})
+
+  if rendered_content != md_page_content:
+    with open(step_page, 'w', encoding='utf-8') as f:
+      f.write(rendered_content)
+      f.write('\n')
+
+
 def check_rule_page(rule):
   rule_page_path = f'{WEBSITE_RULES_DIR}/{rule.product}/{rule.rule_class}/{rule.rule_id}.md'
   # check that rule page exists and is staged
@@ -191,4 +415,7 @@ def check(files):
 if __name__ == '__main__':
   if len(sys.argv) < 2:
     usage()
-  check(sys.argv[1:])
+  elif sys.argv[1] == 'lint':
+    check(sys.argv[2:])
+  elif sys.argv[1] == 'runbook':
+    check_runbook(sys.argv[2:])

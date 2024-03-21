@@ -1,0 +1,60 @@
+{% block high_cpu_utilization_failure_reason %}
+CPU utilization on this VM has surpassed recommended operational levels,
+which may affect its performance and SSH connectivity.
+{% endblock high_cpu_utilization_failure_reason %}
+
+{% block high_cpu_utilization_failure_remediation %}
+Excessive CPU usage can lead to performance bottlenecks. Consider resizing the VM to a more
+powerful machine type with higher CPU capabilities.
+Detailed instructions for resizing and restarting VMs are available here:
+- Stopping a VM: https://cloud.google.com/compute/docs/instances/stop-start-instance
+- Resizing a VM: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+Additionally, use the GCE observability metrics for an in-depth analysis to pinpoint high-usage processes:
+https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics
+https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization
+
+Alternatively, you can connect via serial console if SSH is unvailable to stop offending processes
+https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console.
+{% endblock high_cpu_utilization_failure_remediation %}
+
+{% block high_cpu_utilization_success_reason %}
+This VM currently has CPU utilization within the optimal range, indicating healthy performance.
+{% endblock high_cpu_utilization_success_reason %}
+
+{% block high_disk_utilization_failure_reason %}
+Disk utilization on this VM's boot disk is critically high,
+potentially affecting application performance.
+{% endblock high_disk_utilization_failure_reason %}
+
+{% block high_disk_utilization_failure_remediation %}
+To mitigate high disk usage, consider expanding the VM's boot disk capacity.
+This action can help avoid performance issues and ensure smoother SSH connections.
+Follow the guide to increase disk size:
+https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
+{% endblock high_disk_utilization_failure_remediation %}
+
+{% block high_disk_utilization_success_reason %}
+The VM's disk space usage is within optimal levels.
+{% endblock high_disk_utilization_success_reason %}
+
+{% block high_memory_utilization_failure_reason %}
+Memory utilization on this VM has reached levels that may compromise its VM application performance.
+{% endblock high_memory_utilization_failure_reason %}
+
+{% block high_memory_utilization_failure_remediation %}
+Elevated memory usage can result in slow or unresponsive or termimated applications.
+Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
+Guidance on stopping and changing the machine type can be found here:
+- Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+For deeper analysis of memory issues:
+
+Additionally, use the GCE observability metrics for an in-depth analysis to pinpoint high-usage processes:
+https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization
+
+Or connect via the Serial Console if SSH is not available to mitigate the issue.
+https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+{% endblock high_memory_utilization_failure_remediation %}
+
+{% block high_memory_utilization_success_reason %}
+Memory utilization on this VM is within optimal range.
+{% endblock high_memory_utilization_success_reason %}
