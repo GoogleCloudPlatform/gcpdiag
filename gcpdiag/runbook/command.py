@@ -192,6 +192,11 @@ def _init_runbook_args_parser():
           'One or more resource labels as key-value pair(s) to scope inspection '
           '(e.g.: env:prod, type:frontend or env=prod type=frontend)'))
 
+  parser.add_argument('--universe-domain',
+                      type=str,
+                      default=config.get('universe_domain'),
+                      help='Domain name of APIs')
+
   return parser
 
 
