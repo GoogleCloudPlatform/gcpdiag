@@ -1,0 +1,241 @@
+[
+  {
+  "name": "namespace_profile",
+  "label": "namespace_profile",
+  "description": "namespace_profile",
+  "scope": "USER",
+  "status": "ENABLED",
+  "provisioner": {
+    "name": "gcp-dataproc",
+    "properties": [
+      {
+        "name": "accountKey",
+        "value": "",
+        "isEditable": true
+      },
+      {
+        "name": "region",
+        "value": "us-east1",
+        "isEditable": true
+      },
+      {
+        "name": "zone",
+        "value": "",
+        "isEditable": true
+      },
+      {
+        "name": "network",
+        "value": "default",
+        "isEditable": true
+      },
+      {
+        "name": "networkHostProjectId",
+        "value": "",
+        "isEditable": true
+      },
+      {
+        "name": "subnet",
+        "value": "",
+        "isEditable": true
+      },
+      {
+        "name": "serviceAccount",
+        "value": "",
+        "isEditable": true
+      },
+      {
+        "name": "masterNumNodes",
+        "value": "1",
+        "isEditable": true
+      },
+      {
+        "name": "masterMachineType",
+        "value": "e2",
+        "isEditable": true
+      },
+      {
+        "name": "masterCPUs",
+        "value": "2",
+        "isEditable": true
+      },
+      {
+        "name": "masterMemoryMB",
+        "value": "8192",
+        "isEditable": true
+      },
+      {
+        "name": "masterDiskGB",
+        "value": "1000",
+        "isEditable": true
+      },
+      {
+        "name": "masterDiskType",
+        "value": "pd-standard",
+        "isEditable": true
+      },
+      {
+        "name": "workerMachineType",
+        "value": "e2",
+        "isEditable": true
+      },
+      {
+        "name": "workerCPUs",
+        "value": "2",
+        "isEditable": true
+      },
+      {
+        "name": "workerMemoryMB",
+        "value": "8192",
+        "isEditable": true
+      },
+      {
+        "name": "workerDiskGB",
+        "value": "1000",
+        "isEditable": true
+      },
+      {
+        "name": "workerDiskType",
+        "value": "pd-standard",
+        "isEditable": true
+      },
+      {
+        "name": "enablePredefinedAutoScaling",
+        "value": "true",
+        "isEditable": true
+      },
+      {
+        "name": "clusterMetaData",
+        "value": "",
+        "isEditable": true
+      },
+      {
+        "name": "networkTags",
+        "value": "",
+        "isEditable": true
+      },
+      {
+        "name": "secureBootEnabled",
+        "value": "false",
+        "isEditable": true
+      },
+      {
+        "name": "vTpmEnabled",
+        "value": "false",
+        "isEditable": true
+      },
+      {
+        "name": "integrityMonitoringEnabled",
+        "value": "false",
+        "isEditable": true
+      },
+      {
+        "name": "imageVersion",
+        "value": "",
+        "isEditable": true
+      },
+      {
+        "name": "customImageUri",
+        "value": "",
+        "isEditable": true
+      },
+      {
+        "name": "gcsBucket",
+        "value": "",
+        "isEditable": true
+      },
+      {
+        "name": "tempBucket",
+        "value": "",
+        "isEditable": true
+      },
+      {
+        "name": "encryptionKeyName",
+        "value": "",
+        "isEditable": true
+      },
+      {
+        "name": "scopes",
+        "value": "",
+        "isEditable": true
+      },
+      {
+        "name": "initActions",
+        "value": "",
+        "isEditable": true
+      },
+      {
+        "name": "clusterProperties",
+        "value": "",
+        "isEditable": true
+      },
+      {
+        "name": "labels",
+        "value": "",
+        "isEditable": true
+      },
+      {
+        "name": "clusterLabels",
+        "value": "",
+        "isEditable": true
+      },
+      {
+        "name": "idleTTL",
+        "value": "30",
+        "isEditable": true
+      },
+      {
+        "name": "skipDelete",
+        "value": "false",
+        "isEditable": true
+      },
+      {
+        "name": "stackdriverLoggingEnabled",
+        "value": "true",
+        "isEditable": true
+      },
+      {
+        "name": "stackdriverMonitoringEnabled",
+        "value": "true",
+        "isEditable": true
+      },
+      {
+        "name": "componentGatewayEnabled",
+        "value": "false",
+        "isEditable": true
+      },
+      {
+        "name": "launchMode",
+        "value": "cluster",
+        "isEditable": true
+      },
+      {
+        "name": "preferExternalIP",
+        "value": "false",
+        "isEditable": true
+      },
+      {
+        "name": "pollCreateDelay",
+        "value": "60",
+        "isEditable": true
+      },
+      {
+        "name": "pollCreateJitter",
+        "value": "20",
+        "isEditable": true
+      },
+      {
+        "name": "pollDeleteDelay",
+        "value": "30",
+        "isEditable": true
+      },
+      {
+        "name": "pollInterval",
+        "value": "2",
+        "isEditable": true
+      }
+    ],
+    "totalProcessingCpusLabel": "Up to 84"
+  },
+  "created": 1710745601
+}
+]
