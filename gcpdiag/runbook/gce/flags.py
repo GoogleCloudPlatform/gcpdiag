@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Paramaters applicable to GCE runbooks."""
-# pylint: disable=unused-wildcard-import
-# pylint: disable=wildcard-import
-from gcpdiag.runbook.flags import *
+# pylint: disable=wildcard-import, unused-wildcard-import
+from gcpdiag.runbook.gcp.flags import *
+from gcpdiag.runbook.iam.flags import *
 
 OPS_AGENT_EXPORTING_METRICS = False
 PROTOCOL_TYPE = 'protocol_type'

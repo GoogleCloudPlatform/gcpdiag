@@ -18,8 +18,9 @@ from datetime import datetime, timedelta, timezone
 from unittest.mock import Mock, patch
 
 from gcpdiag import models, runbook
-from gcpdiag.runbook import flags
 from gcpdiag.runbook.constants import StepType
+from gcpdiag.runbook.gcp import flags
+from gcpdiag.runbook.operations import Operation
 
 
 class TestDiagnosticEngine(unittest.TestCase):
@@ -60,12 +61,12 @@ class TestDiagnosticEngine(unittest.TestCase):
   @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
   def test_find_path_dfs_normal_operation(self, mock_run_step):
     context = models.Context('product_id')
+    op = Operation(context=context, interface=None)
     current_step = Mock(run_id='1')
     current_step.steps = []
     visited = set()
 
-    self.de.find_path_dfs(context=context,
-                          interface=self.de.interface,
+    self.de.find_path_dfs(operation=op,
                           step=current_step,
                           executed_steps=visited)
 
@@ -76,11 +77,12 @@ class TestDiagnosticEngine(unittest.TestCase):
   @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
   def test_find_path_dfs_finite_loop(self, mock_run_step):
     context = models.Context('product_id')
+    op = Operation(context=context, interface=None)
     current_step = Mock(run_id='1', type=StepType.AUTOMATED)
     current_step.steps = [current_step]
     visited = set()
 
-    self.de.find_path_dfs(context=context,
+    self.de.find_path_dfs(operation=op,
                           step=current_step,
                           executed_steps=visited)
 
@@ -90,6 +92,7 @@ class TestDiagnosticEngine(unittest.TestCase):
   @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
   def test_find_path_all_child_step_executions(self, mock_run_step):
     context = models.Context('product_id')
+    op = Operation(context=context, interface=None)
     first_step = Mock(run_id='1')
     intermidiate_step = Mock(run_id='2')
     first_step.steps = [intermidiate_step]
@@ -98,9 +101,7 @@ class TestDiagnosticEngine(unittest.TestCase):
     intermidiate_step.steps = [last_step, last_step, last_step, last_step]
     visited = set()
 
-    self.de.find_path_dfs(context=context,
-                          step=first_step,
-                          executed_steps=visited)
+    self.de.find_path_dfs(operation=op, step=first_step, executed_steps=visited)
 
     self.assertIn(first_step, visited)
     self.assertIn(intermidiate_step, visited)
@@ -119,10 +120,10 @@ class TestSetDefaultParameters(unittest.TestCase):
     self.de.dt.context = models.Context('project')
 
   def test_no_parameters_set(self):
-    self.de.set_default_parameters(self.de.dt)
+    self.de.dt.parameters = {}
+    self.de.parse_parameters(self.de.dt)
     self.assertIn(flags.END_TIME_UTC, self.de.dt.context.parameters)
     self.assertIn(flags.START_TIME_UTC, self.de.dt.context.parameters)
-
     end_time = self.de.dt.context.parameters[flags.END_TIME_UTC]
     start_time = self.de.dt.context.parameters[flags.START_TIME_UTC]
 
@@ -136,8 +137,8 @@ class TestSetDefaultParameters(unittest.TestCase):
   def test_end_time_provided_in_rfc3339(self):
     end_t_str = '2024-03-20T15:00:00Z'
     self.de.dt.context.parameters[flags.END_TIME_UTC] = end_t_str
-
-    self.de.set_default_parameters(self.de.dt)
+    self.de.dt.parameters = {}
+    self.de.parse_parameters(self.de.dt)
     end_time = self.de.dt.context.parameters[flags.END_TIME_UTC]
     start_time = self.de.dt.context.parameters[flags.START_TIME_UTC]
 
@@ -149,8 +150,8 @@ class TestSetDefaultParameters(unittest.TestCase):
   def test_only_start_time_provided_in_rfc3339(self):
     start_t_str = '2024-03-20T07:00:00Z'
     self.de.dt.context.parameters[flags.START_TIME_UTC] = start_t_str
-
-    self.de.set_default_parameters(self.de.dt)
+    self.de.dt.parameters = {}
+    self.de.parse_parameters(self.de.dt)
     start_time = self.de.dt.context.parameters[flags.START_TIME_UTC]
     end_time = self.de.dt.context.parameters[flags.END_TIME_UTC]
 
@@ -164,8 +165,8 @@ class TestSetDefaultParameters(unittest.TestCase):
     end_time_str = '2024-03-20T15:00:00Z'
     self.de.dt.context.parameters[flags.START_TIME_UTC] = start_time_str
     self.de.dt.context.parameters[flags.END_TIME_UTC] = end_time_str
-
-    self.de.set_default_parameters(self.de.dt)
+    self.de.dt.parameters = {}
+    self.de.parse_parameters(self.de.dt)
     start_time = self.de.dt.context.parameters[flags.START_TIME_UTC]
     end_time = self.de.dt.context.parameters[flags.END_TIME_UTC]
 
@@ -181,14 +182,14 @@ class TestSetDefaultParameters(unittest.TestCase):
     end_time_epoch = '1601485200'  # 2020-09-30 17:00:00 UTC
     self.de.dt.context.parameters[flags.START_TIME_UTC] = start_time_epoch
     self.de.dt.context.parameters[flags.END_TIME_UTC] = end_time_epoch
-
-    self.de.set_default_parameters(self.de.dt)
+    self.de.dt.parameters = {}
+    self.de.parse_parameters(self.de.dt)
     start_time = self.de.dt.context.parameters[flags.START_TIME_UTC]
     end_time = self.de.dt.context.parameters[flags.END_TIME_UTC]
 
-    expected_start_time = datetime.fromtimestamp(int(start_time_epoch),
+    expected_start_time = datetime.fromtimestamp(float(start_time_epoch),
                                                  tz=timezone.utc)
-    expected_end_time = datetime.fromtimestamp(int(end_time_epoch),
+    expected_end_time = datetime.fromtimestamp(float(end_time_epoch),
                                                tz=timezone.utc)
     self.assertEqual(start_time, expected_start_time)
     self.assertEqual(end_time, expected_end_time)
@@ -198,6 +199,6 @@ class TestSetDefaultParameters(unittest.TestCase):
     end_time_invalid = 'invalid_end_time'
     self.de.dt.context.parameters[flags.START_TIME_UTC] = start_time_invalid
     self.de.dt.context.parameters[flags.END_TIME_UTC] = end_time_invalid
-
+    self.de.dt.parameters = {}
     with self.assertRaises(ValueError):
-      self.de.set_default_parameters(self.de.dt)
+      self.de.parse_parameters(self.de.dt)

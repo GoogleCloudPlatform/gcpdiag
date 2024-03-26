@@ -42,6 +42,7 @@ STEP_MESSAGE_ALT3 = f'{STEP_MESSAGE}_a3'
 INSTRUCTIONS_MESSAGE = 'instruction_message'
 STEP_LABEL = 'label'
 INSTRUCTIONS_CHOICE_OPTIONS = 'instructions_choice_options'
+RCA = 'rca'
 
 StepConstants = {
     STEP_LABEL:
@@ -87,7 +88,9 @@ StepConstants = {
     INSTRUCTIONS_MESSAGE:
         'Instruction on a manual task.',
     INSTRUCTIONS_CHOICE_OPTIONS:
-        'Options available in this manual task.'
+        'Options available in this manual task.',
+    RCA:
+        'Root cause analysis.'
 }
 
 
@@ -125,3 +128,15 @@ END_MESSAGE = (
     'report to facilitate a quicker resolution by the Google Cloud support team.'
     'For more information on how to get the best out of our support services visit:\n'
     'https://cloud.google.com/support/docs/customer-care-procedures\n\n')
+
+BOOL_VALUES = {
+    'y': True,
+    'yes': True,
+    'true': True,
+    '1': True,
+    'n': False,
+    'no': False,
+    'false': False,
+    '0': False,
+    None: False
+}

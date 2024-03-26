@@ -1,0 +1,30 @@
+<!--
+This file is auto-generated. DO NOT EDIT
+
+Make pages changes in the corresponding jinja template
+or python code
+-->
+---
+title: "gce/Vm Termination Start"
+linkTitle: "Vm Termination Start"
+weight: 3
+type: docs
+description: >
+  Start VM Termination Checks
+---
+
+**Product**: [Compute Engine](https://cloud.google.com/compute)\
+**Step Type**: START
+
+### Description
+
+None
+
+
+
+<!--
+This file is auto-generated. DO NOT EDIT
+
+Make pages changes in the corresponding jinja template
+or python code
+-->

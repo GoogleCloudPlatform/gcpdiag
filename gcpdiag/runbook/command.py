@@ -64,7 +64,8 @@ def expand_and_validate_path(arg) -> str:
           f'The {arg} folder must be located in your home directory')
   if not expanded_path or not os.path.exists(expanded_path):
     raise argparse.ArgumentTypeError(
-        f"Dirctory '{arg}' does not exist. Create one and try again")
+        f"Dirctory '{arg}' does not exist. Create one mkdir -p {arg} and try again"
+    )
   return expanded_path
 
 

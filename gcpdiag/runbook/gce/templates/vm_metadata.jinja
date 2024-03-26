@@ -1,3 +1,19 @@
+{% block default_failure_reason %}
+GCE VM metadata `{metadata_key}` doesn't have the expected value: {expected_value}
+of type {expected_value_type}
+{% endblock default_failure_reason %}
+
+{% block default_failure_remediation %}
+Update the metadata `{metadata_key}` to have the expected value {expected_value}
+Follow guide [1] one to update the a metadata value.
+[1] https://cloud.google.com/compute/docs/metadata/setting-custom-metadata#gcloud
+{% endblock default_failure_remediation %}
+
+{% block default_success_reason %}
+GCE VM metadata `{metadata_key}` has the expected value: {expected_value}
+of type {expected_value_type}
+{% endblock default_success_reason %}
+
 {% block windows_ssh_md_failure_reason %}
 SSH metadata `enable-windows-ssh` is not configured for this Windows VM,
 preventing SSH access.

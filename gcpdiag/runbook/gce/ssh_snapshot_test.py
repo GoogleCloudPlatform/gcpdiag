@@ -26,7 +26,7 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
       'zone': 'europe-west2-a',
       'principal': 'cannotssh@example.com',
       'tunnel_through_iap': 'True',
-      'os_login': 'True'
+      'check_os_login': 'True'
   }, {
       'name':
           'valid-linux-ssh',
@@ -36,13 +36,14 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
           'canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com',
       'tunnel_through_iap':
           'True',
-      'os_login':
+      'check_os_login':
           'True'
   }, {
       'name': 'faulty-windows-ssh',
       'zone': 'europe-west2-a',
       'principal': 'cannot@example.com',
       'tunnel_through_iap': 'False',
-      'os_login': 'False',
+      'src_ip': '0.0.0.0',
+      'check_os_login': 'False',
       'local_user': 'no_user'
   }]

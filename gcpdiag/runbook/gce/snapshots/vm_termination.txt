@@ -1,0 +1,138 @@
+project: gcpdiag-gce-faultyssh-runbook, parameters: {check_os_login=true,name=faulty-linux-
+ssh,principal=cannotssh@example.com,project_id=gcpdiag-gce-faultyssh-
+runbook,tunnel_through_iap=true,zone=europe-west2-a}
+
+gce/vm_termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
+
+  This runbook is designed to assist you in investigating and understanding the underlying reasons
+  behind the unexpected termination or reboot of your GCE Virtual Machines (VMs) within Google
+  Cloud Platform.
+
+  Key Investigation Areas:
+
+  System Event-Triggered Shutdowns/Reboots: Identifies terminations initiated by internal Google
+  Cloud systems due to system maintenance events, normal hardware failures,
+  resource constraints.
+
+  System Admin Activities-Triggered Shutdowns/Reboots: Investigates terminations caused by
+  direct actions, such as API calls made by users or service accounts. These actions
+  may include manual shutdowns, restarts, or automated processes impacting VM states.
+
+  RCA Text Generation: Provides a detailed Root Cause Analysis text, outlining the identified
+  cause of termination, the involved systems or activities, and recommendations
+  to prevent future occurrences where applicaable.
+  
+[START]: Starting VM Termination diagnostics
+[GATEWAY]: Determining whether to investigate one or more terminations
+[AUTOMATED STEP]: Investigating VM termination reason...
+[INFO]: 
+
+
+No GCE VM was terminated between {start_time_utc} and {end_time_utc}
+
+[AUTOMATED STEP]: Verifying that the terminated VM is currently running...
+
+
+   - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [OK]
+     [REASON]
+     The terminated VM is currently up and running indicating proper functionality.
+
+[END]: Finalizing VM terminations diagnostics...
+
+
+project: gcpdiag-gce-faultyssh-runbook, parameters: {check_os_login=true,name=valid-linux-
+ssh,principal=canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com,project_id=gcpdiag-gce-
+faultyssh-runbook,tunnel_through_iap=true,zone=europe-west2-a}
+
+gce/vm_termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
+
+  This runbook is designed to assist you in investigating and understanding the underlying reasons
+  behind the unexpected termination or reboot of your GCE Virtual Machines (VMs) within Google
+  Cloud Platform.
+
+  Key Investigation Areas:
+
+  System Event-Triggered Shutdowns/Reboots: Identifies terminations initiated by internal Google
+  Cloud systems due to system maintenance events, normal hardware failures,
+  resource constraints.
+
+  System Admin Activities-Triggered Shutdowns/Reboots: Investigates terminations caused by
+  direct actions, such as API calls made by users or service accounts. These actions
+  may include manual shutdowns, restarts, or automated processes impacting VM states.
+
+  RCA Text Generation: Provides a detailed Root Cause Analysis text, outlining the identified
+  cause of termination, the involved systems or activities, and recommendations
+  to prevent future occurrences where applicaable.
+  
+[START]: Starting VM Termination diagnostics
+[GATEWAY]: Determining whether to investigate one or more terminations
+[AUTOMATED STEP]: Investigating VM termination reason...
+[INFO]: 
+
+
+No GCE VM was terminated between {start_time_utc} and {end_time_utc}
+
+[AUTOMATED STEP]: Verifying that the terminated VM is currently running...
+
+
+   - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
+     [REASON]
+     The terminated VM is currently up and running indicating proper functionality.
+
+[END]: Finalizing VM terminations diagnostics...
+
+
+project: gcpdiag-gce-faultyssh-runbook, parameters:
+{check_os_login=false,local_user=no_user,name=faulty-windows-
+ssh,principal=cannot@example.com,project_id=gcpdiag-gce-faultyssh-
+runbook,src_ip=0.0.0.0,tunnel_through_iap=false,zone=europe-west2-a}
+
+gce/vm_termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
+
+  This runbook is designed to assist you in investigating and understanding the underlying reasons
+  behind the unexpected termination or reboot of your GCE Virtual Machines (VMs) within Google
+  Cloud Platform.
+
+  Key Investigation Areas:
+
+  System Event-Triggered Shutdowns/Reboots: Identifies terminations initiated by internal Google
+  Cloud systems due to system maintenance events, normal hardware failures,
+  resource constraints.
+
+  System Admin Activities-Triggered Shutdowns/Reboots: Investigates terminations caused by
+  direct actions, such as API calls made by users or service accounts. These actions
+  may include manual shutdowns, restarts, or automated processes impacting VM states.
+
+  RCA Text Generation: Provides a detailed Root Cause Analysis text, outlining the identified
+  cause of termination, the involved systems or activities, and recommendations
+  to prevent future occurrences where applicaable.
+  
+[START]: Starting VM Termination diagnostics
+[GATEWAY]: Determining whether to investigate one or more terminations
+[AUTOMATED STEP]: Investigating VM termination reason...
+[INFO]: 
+
+
+No GCE VM was terminated between {start_time_utc} and {end_time_utc}
+
+[AUTOMATED STEP]: Verifying that the terminated VM is currently running...
+
+
+   - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [FAIL]
+     [REASON]
+     The terminated VM is still shutdown. You can turn it on if there are no other concerns.
+
+     [REMEDIATION]
+     This step failed because GCE Virtual Machine faulty-windows-ssh is expected to be in a RUNNING state:
+
+     To initiate the lifecycle transition from TERMINATED to RUNNING state follow guide [1]
+
+     If you encounter any difficulties during the startup process, consult the troubleshooting
+     documentation to identify and resolve potential startup issues [2]
+     Resources:
+     [1] https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm
+     [2] https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting
+
+[END]: Finalizing VM terminations diagnostics...
+
+

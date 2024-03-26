@@ -12,11 +12,12 @@ import subprocess
 import sys
 import textwrap
 from os import path
+from typing import List
 
 from jinja2 import TemplateNotFound, UndefinedError
 
 from gcpdiag import lint, runbook
-from gcpdiag.runbook import util
+from gcpdiag.runbook import DiagnosticTree, util
 
 #Lint Rules Doc
 WEBSITE_RULES_DIR = 'website/content/en/rules'
@@ -134,7 +135,7 @@ def gen_rule_page(rule, rule_page_path):
 def check_runbook(files):
   """Check runbook files to automatically update or generate docs for DTs and it steps."""
   # Initialize variables to hold the diagnostic tree and in-scope steps.
-  dt = None
+  inscope_dts: List[DiagnosticTree] = []
   in_scope_steps = {}
 
   # Process each file path provided.
@@ -151,23 +152,25 @@ def check_runbook(files):
     except ImportError:
       continue
 
+    mod_dt_count = 0
     for name, obj in inspect.getmembers(module, inspect.isclass):
       # Handle DiagnosticTree classes.
       if issubclass(
           obj, runbook.DiagnosticTree) and obj is not runbook.DiagnosticTree:
-        if dt:
+        mod_dt_count += 1
+        if mod_dt_count > 1:
           raise RuntimeError(
               f'Multiple Diagnostic Trees found in {file_path}\n'
               f'For readability each Diagnostic Tree should have it own file'
               f'Only keep custom steps for this Diagnostic Tree in the file')
-        dt = obj(None)
+        inscope_dts.append(obj)
 
       # Store Step classes that have possibly been modified.
       elif issubclass(obj, runbook.Step) and obj is not runbook.Step:
         in_scope_steps[name] = obj
 
-  if dt:
-    gen_dt_rule_and_steps_page(dt, in_scope_steps)
+  for dt in inscope_dts:
+    gen_dt_rule_and_steps_page(dt(None), in_scope_steps)
 
 
 def gen_dt_rule_and_steps_page(dt, in_scope_steps):
@@ -250,14 +253,15 @@ def gen_dt_rule_and_steps_page(dt, in_scope_steps):
       'ROOT_DIR': WEBSITE_RUNBOOK_DIR
   }
   # Render the template with the context
-  rendered_content = runbook.util.render_template_to_md(
-      'bin/templates', 'diagnostic-tree.jinja', context).rstrip('\n')
+  rendered_content = runbook.util.render_template('bin/templates',
+                                                  'diagnostic-tree.jinja',
+                                                  context).rstrip('\n')
   dt_path = f'{dt_dir}/{expanded_dt.name}.md'
   md_page_content = ''
   if os.path.exists(dt_path):
     # Check if the content changed.
-    md_page_content = runbook.util.render_template_to_md(
-        dt_dir, f'{expanded_dt.name}.md', {})
+    md_page_content = runbook.util.render_template(dt_dir,
+                                                   f'{expanded_dt.name}.md', {})
   if rendered_content != md_page_content:
     with open(dt_path, 'w', encoding='utf-8') as f:
       f.write(rendered_content)
@@ -320,16 +324,16 @@ def gen_step_page(step: runbook.Step):
                                             file_name=filepath,
                                             block_name=block_prefix)
   except UndefinedError as e:
-    raise e
+    print(e)
   except TemplateNotFound as e:
-    raise e
+    print(e)
   except AttributeError as e:
     pass
 
   context = {'step': step, 'msgs': msgs, 'PRODUCTS': PRODUCTS}
   step_page = f'{product_steps_dir}/{step.doc_file_name}.md'
-  rendered_content = runbook.util.render_template_to_md('bin/templates/',
-                                                        'steps.jinja', context)
+  rendered_content = runbook.util.render_template('bin/templates/',
+                                                  'steps.jinja', context)
   # For some reason there are \n at the end dispite striping new line and block lines
   # Many strip it if any still exists at the end.
   rendered_content = rendered_content.rstrip('\n')
@@ -337,8 +341,9 @@ def gen_step_page(step: runbook.Step):
 
   if os.path.exists(step_page):
     # Check if the content changed.
-    md_page_content = runbook.util.render_template_to_md(
-        product_steps_dir, f'{step.doc_file_name}.md', {})
+    md_page_content = runbook.util.render_template(product_steps_dir,
+                                                   f'{step.doc_file_name}.md',
+                                                   {})
 
   if rendered_content != md_page_content:
     with open(step_page, 'w', encoding='utf-8') as f:

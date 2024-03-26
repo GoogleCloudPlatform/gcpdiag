@@ -14,6 +14,7 @@
 """Runbook command: find potential issues in GCP projects."""
 
 import ast
+import builtins
 import inspect
 import logging
 import sys
@@ -26,8 +27,9 @@ import googleapiclient.errors
 
 from gcpdiag import caching, config, models, utils
 from gcpdiag.runbook import exceptions, flags, report, util
-from gcpdiag.runbook.constants import (END_MESSAGE, STEP_LABEL, STEP_MESSAGE,
-                                       StepType)
+from gcpdiag.runbook.constants import (BOOL_VALUES, END_MESSAGE, STEP_LABEL,
+                                       STEP_MESSAGE, StepType)
+from gcpdiag.runbook.operations import Operation
 
 DiagnosticTreeRegister: Dict[str, 'DiagnosticTree'] = {}
 
@@ -37,14 +39,12 @@ class Step:
   Represents a step in a diagnostic or runbook process.
   """
   steps: List['Step']
-  interface: report.InteractionInterface
+  op: Operation
   template: str
+  parameters: dict
 
   def __init__(self,
                parent: 'Step' = None,
-               context=None,
-               interface=None,
-               parameters: models.Parameter = None,
                step_type=StepType.AUTOMATED,
                name=None):
     """
@@ -52,12 +52,8 @@ class Step:
     """
     self.name = name or util.generate_random_string()
     self.steps = []
-    self.context = context
-    self._parameters = parameters
-    self.interface = interface
     self.type = step_type
     self.prompts: models.Messages = models.Messages()
-    self.output = None
     self.product = self.__module__.split('.')[-2]
     self.id = '.'.join([self.__module__, self.__class__.__name__])
     self.doc_file_name = util.pascal_case_to_kebab_case(self.__class__.__name__)
@@ -70,12 +66,8 @@ class Step:
   def run_id(self):
     return '.'.join([self.id, self.name])
 
-  @property
-  def op(self) -> models.Operation:
-    return self._operation
-
   @final
-  def hook_execute(self, context: models.Context, interface):
+  def hook_execute(self, operation: Operation):
     """
     Executes the step using the given context and interface.
 
@@ -83,12 +75,10 @@ class Step:
         context: The context in which the step is executed.
         interface: The interface used for interactions during execution.
     """
-    self.context = context if context else self.context
-    self._parameters = context.parameters  # pylint: disable=protected-access
-    self.interface = interface if interface else self.interface
     self.load_prompts()
-    self._operation = models.Operation(message=self.prompts,
-                                       parameters=self._parameters)
+    self.op = operation
+    self.op.set_messages(messages=self.prompts)
+    self.op.info(step_type=self.type.value, message=self.execution_message)
     self.execute()
 
   def execute(self):
@@ -96,7 +86,6 @@ class Step:
     pass
 
   def set_prompts(self, prompt: models.Messages = None):
-
     # override existing messages
     if prompt:
       self.prompts.update(prompt)
@@ -151,6 +140,16 @@ class Step:
     return label
 
   @property
+  def execution_message(self):
+    attributes = vars(self)
+    if self.prompts.get(STEP_MESSAGE):
+      return self.prompts[STEP_MESSAGE].format(attributes)
+    else:
+      if self.execute.__doc__:
+        return self.execute.__doc__.format(attributes)
+      raise ValueError('No Step introductory message defined.')
+
+  @property
   def long_desc(self):
     long_desc = None
     doc_lines = self.__doc__.splitlines()
@@ -175,37 +174,25 @@ class Step:
 class StartStep(Step):
   """Start Event of a Diagnotic tree"""
 
-  def __init__(self,
-               context=None,
-               interface=None,
-               parameters: models.Parameter = None):
-    super().__init__(context, interface, parameters, step_type=StepType.START)
+  def __init__(self):
+    super().__init__(step_type=StepType.START)
 
 
 class CompositeStep(Step):
   """Composite Events of a Diagnotic tree"""
 
-  def __init__(self,
-               context=None,
-               interface=None,
-               parameters: models.Parameter = None):
-    super().__init__(context,
-                     interface,
-                     parameters,
-                     step_type=StepType.COMPOSITE)
+  def __init__(self):
+    super().__init__(step_type=StepType.COMPOSITE)
 
 
 class EndStep(Step):
   """End Event of a Diagnostic Tree"""
 
-  def __init__(self,
-               context=None,
-               interface=None,
-               parameters: models.Parameter = None):
-    super().__init__(context, interface, parameters, step_type=StepType.END)
+  def __init__(self):
+    super().__init__(step_type=StepType.END)
 
   def execute(self):
-    if not config.get(flags.AUTO):
+    if not config.get(flags.INTERACTIVE_MODE):
       response = self.interface.prompt(task=self.interface.CONFIRMATION,
                                        message='Is your issue resolved?')
       if response == self.interface.NO:
@@ -217,14 +204,11 @@ class Gateway(Step):
   Represents a decision point in a workflow, determining which path to take based on a condition.
   """
 
-  def __init__(self, step_type=StepType.GATEWAY, context=None, interface=None):
+  def __init__(self):
     """
     Initializes a new instance of the Gateway step.
     """
-    super().__init__(context=context,
-                     interface=interface,
-                     step_type=StepType.GATEWAY)
-    self.type = step_type
+    super().__init__(step_type=StepType.GATEWAY)
 
 
 class RunbookRule(type):
@@ -363,6 +347,7 @@ class DiagnosticEngine:
     """Initializes the DiagnosticEngine with required managers."""
     self.rm = rm or report.TerminalReportManager()
     self.interface = interface or report.InteractionInterface()
+    self.finalize = False
 
   def load_rule(self, name: str) -> None:
     """Loads a diagnostic tree by name ex gce/ssh.
@@ -383,8 +368,10 @@ class DiagnosticEngine:
       if not self.dt:
         raise exceptions.DiagnosticTreeNotFound
     except exceptions.DiagnosticTreeNotFound as e:
-      logging.error(e)
+      logging.error('Issues locating runbook: %s : %s', e, name)
       sys.exit(2)
+    except AttributeError:
+      logging.error('Invalid runbook name provided')
 
   def _check_required_paramaters(self, tree: DiagnosticTree):
     missing_parameters = {
@@ -402,23 +389,94 @@ class DiagnosticEngine:
           missing_param_str)
       sys.exit(2)
 
-  def set_default_parameters(self, dt):
-    '''Get start and end times from user input or set to defaults.'''
+  def _set_default_parameters(self, dt: DiagnosticTree):
+    # set default parameters
+    dt.parameters.setdefault(flags.START_TIME_UTC, {
+        'type': datetime,
+        'help': 'Beginning Timeframe to scope investigation.'
+    })
+    dt.parameters.setdefault(flags.END_TIME_UTC, {
+        'type': datetime,
+        'help': 'End timeframe'
+    })
 
-    end_time = dt.context.parameters.get(flags.END_TIME_UTC,
-                                         datetime.now(timezone.utc))
-    # Convert from string/epoch to datetime if necessary
-    if isinstance(end_time, str):
-      end_time = util.parse_time_input(end_time)
+  def parse_parameters(self, dt: DiagnosticTree):
+    """Set to defaults parameters and convert datatypes"""
 
-    start_time = dt.context.parameters.get(flags.START_TIME_UTC,
-                                           end_time - timedelta(hours=8))
+    def is_builtin_type(target_type):
+      """Check if the object's type is a built-in type."""
+      return target_type in vars(builtins).values()
 
-    if isinstance(start_time, str):
-      start_time = util.parse_time_input(start_time)
+    def cast_to_type(param_val, target_type):
+      """Attempt to cast the object to the target built-in type if possible.
 
-    dt.context.parameters[flags.END_TIME_UTC] = end_time
-    dt.context.parameters[flags.START_TIME_UTC] = start_time
+      Args:
+          obj: The object to cast.
+          target_type: The target built-in type to cast the object to.
+
+      Returns:
+          The object cast to the target type if the original object's type and the target type are
+          built-in types and the cast is possible. Otherwise, returns the original object.
+      """
+      if is_builtin_type(target_type) and target_type != bool:
+        try:
+          return target_type(param_val)
+        except ValueError:
+          print(f'Cannot cast {param_val} to type {target_type}.')
+      elif target_type == bool:
+        try:
+          return BOOL_VALUES[param_val]
+        except KeyError:
+          print(f'Cannot cast {param_val} to type {target_type}.')
+      else:
+        if target_type == datetime:
+          if isinstance(param_val, target_type):
+            return param_val
+          return util.parse_time_input(param_val.upper())
+        try:
+          return target_type(param_val)
+        except ValueError:
+          print(f'Cannot cast {param_val} to type {target_type}.')
+
+    self._set_default_parameters(dt)
+    # convert data types and set defaults for non exist parameters
+    for k, _ in dt.parameters.items():
+      # Set default if not provided by user
+      dt_param = dt.parameters.get(k)
+      user_provided_param = dt.context.parameters.get(k)
+      if k not in dt.context.parameters and dt_param and dt_param.get(
+          'default'):
+        dt.context.parameters[k] = dt_param['default']
+        continue
+
+      if dt_param and dt_param.get('type') == datetime:
+        if k == flags.END_TIME_UTC:
+          end_time = dt.context.parameters.get(flags.END_TIME_UTC,
+                                               datetime.now(timezone.utc))
+          dt.context.parameters[flags.END_TIME_UTC] = cast_to_type(
+              end_time, dt_param['type'])
+        if k == flags.START_TIME_UTC:
+          end_time = dt.context.parameters.get(flags.END_TIME_UTC,
+                                               datetime.now(timezone.utc))
+          dt.context.parameters[flags.END_TIME_UTC] = cast_to_type(
+              end_time, dt_param['type'])
+          parsed_end_time = dt.context.parameters[flags.END_TIME_UTC]
+          start_time = dt.context.parameters.get(
+              flags.START_TIME_UTC, parsed_end_time - timedelta(hours=8))
+          dt.context.parameters[flags.START_TIME_UTC] = cast_to_type(
+              start_time, dt_param['type'])
+        if k != flags.START_TIME_UTC or k == flags.END_TIME_UTC:
+          date_string = dt.context.parameters.get(k)
+          if date_string:
+            dt.context.parameters[k] = cast_to_type(date_string,
+                                                    dt_param['type'])
+
+      # DT specified a type for the param and it's not a string.
+      # cast the parameter to the type specified by the runbook.
+      if (dt_param and dt_param.get('type') and dt_param['type'] != str and
+          user_provided_param):
+        dt.context.parameters[k] = cast_to_type(user_provided_param,
+                                                dt_param['type'])
 
   def run_diagnostic_tree(self, context: models.Context) -> None:
     """Executes the loaded diagnostic tree within a given context.
@@ -436,7 +494,7 @@ class DiagnosticEngine:
     dt = self.dt(context)
 
     self._check_required_paramaters(dt)
-    self.set_default_parameters(dt)
+    self.parse_parameters(dt)
     self.rm.tree = dt
     self.interface.set_dt(dt)
     self.interface.rm = self.rm
@@ -444,7 +502,11 @@ class DiagnosticEngine:
 
     try:
       dt.hook_build_tree()
-      self.find_path_dfs(step=dt.start, context=context)
+      operation = Operation(context=context, interface=self.interface)
+      self.finalize = False
+      self.find_path_dfs(step=dt.start,
+                         operation=operation,
+                         executed_steps=set())
 
     except (utils.GcpApiError, googleapiclient.errors.HttpError, RuntimeError,
             ValueError, KeyError, exceptions.InvalidDiagnosticTree) as err:
@@ -453,78 +515,63 @@ class DiagnosticEngine:
       logging.warning('%s: %s while processing runbook rule: %s',
                       type(err).__name__, err, dt)
 
-  def find_path_dfs(self,
-                    step: Step,
-                    context: models.Context,
-                    interface=None,
-                    executed_steps: Set = None):
+  def find_path_dfs(self, step: Step, operation: Operation,
+                    executed_steps: Set):
     """Depth-first search to traverse and execute steps in the diagnostic tree.
 
     Args:
       step: The current step to execute.
       context: The execution context.
-      interface: The interface managing user interactions.
       executed_steps: A set of executed step IDs to avoid cycles.
     """
-    if executed_steps is None:
-      executed_steps = set()
+    if not self.finalize:
+      self.run_step(step=step, operation=operation)
+      executed_steps.add(step)
+      for child in step.steps:  # Iterate over the children of the current step
+        if child not in executed_steps:
+          self.find_path_dfs(step=child,
+                             operation=operation,
+                             executed_steps=executed_steps)
 
-    if not interface:
-      interface = self.interface
+      return executed_steps
 
-    self.run_step(step=step, context=context, interface=interface)
-    executed_steps.add(step)
-    for child in step.steps:  # Iterate over the children of the current step
-      if child not in executed_steps:
-        self.find_path_dfs(step=child,
-                           context=context,
-                           interface=interface,
-                           executed_steps=executed_steps)
-
-    return executed_steps
-
-  def run_step(self, step: Step, context: models.Context, interface):
+  def run_step(self, step: Step, operation: Operation):
     """Executes a single step, handling user decisions for step re-evaluation or termination.
 
     Args:
       step: The diagnostic step to execute.
-      context: The execution context.
-      interface: The interface for interaction.
+      operation: The execution operations object containing the context.
     """
-    if step.prompts.get(STEP_MESSAGE):
-      step_message = step.prompts[STEP_MESSAGE]
-    else:
-      step_message = step.execute.__doc__
-    interface.output.prompt(step=step.type.value, message=step_message)
 
-    user_input = self._run(step, context, interface)
+    user_input = self._run(step, operation)
     while True:
-      if user_input is interface.output.RETEST:
-        interface.output.prompt(step=interface.output.RETEST,
-                                message='Re-evaluating recent failed step')
+      if user_input is operation.interface.output.RETEST:
+        operation.info(step_type=operation.interface.output.RETEST,
+                       message='Re-evaluating recent failed step')
         with caching.bypass_cache():
-          user_input = self._run(step, context, interface)
+          user_input = self._run(step, operation=operation)
       elif step.type == StepType.END:
         self.rm.generate_report()
+        self.finalize = True
         break
-      elif user_input is interface.output.ABORT:
-        logging.info('Terminating Runbook\n')
+      elif user_input is operation.interface.output.STOP:
+        logging.info('Exiting Runbook Execution \n')
         sys.exit(2)
       elif step.type == StepType.START and (
         self.rm.results.get(step.run_id) is not None and \
           self.rm.results[step.run_id].status == 'skipped'):
         logging.info('Start Step was skipped. Can\'t proceed ...\n')
         sys.exit(2)
-      elif user_input is interface.output.CONTINUE:
+      elif user_input is operation.interface.output.CONTINUE:
         break
-      elif (user_input is not interface.output.RETEST and
-            user_input is not interface.output.CONTINUE and
-            user_input is not interface.output.ABORT):
+      elif (user_input is not operation.interface.output.RETEST and
+            user_input is not operation.interface.output.CONTINUE and
+            user_input is not operation.interface.output.STOP):
         return user_input
 
-  def _run(self, step: Step, context: models.Context, interface):
+  def _run(self, step: Step, operation: Operation):
     start = datetime.now(timezone.utc).timestamp()
-    step.hook_execute(context, interface)
+    step.hook_execute(operation)
     end = datetime.now(timezone.utc).timestamp()
     if self.rm.results.get(step.run_id):
       self.rm.results[step.run_id].start_time_utc = start

@@ -1,3 +1,6 @@
+<!--
+This file is auto-generated. DO NOT EDIT.
+-->
 ---
 title: "gce/Ssh"
 linkTitle: "gce/ssh"
@@ -69,43 +72,43 @@ gcpdiag runbook --help
 
 ### Potential Steps
 
-  - [Ssh Start](/runbook//steps/gce/ssh-start)
+  - [Ssh Start](/runbook/steps/gce/ssh-start)
 
-  - [Vm Lifecycle State](/runbook//steps/gce/vm-lifecycle-state)
+  - [Vm Lifecycle State](/runbook/steps/gce/vm-lifecycle-state)
 
-  - [Vm Performance Checks](/runbook//steps/gce/vm-performance-checks)
+  - [Vm Performance Checks](/runbook/steps/gce/vm-performance-checks)
 
-  - [High Vm Memory Utilization](/runbook//steps/gce/high-vm-memory-utilization)
+  - [High Vm Memory Utilization](/runbook/steps/gce/high-vm-memory-utilization)
 
-  - [High Vm Disk Utilization](/runbook//steps/gce/high-vm-disk-utilization)
+  - [High Vm Disk Utilization](/runbook/steps/gce/high-vm-disk-utilization)
 
-  - [High Vm Cpu Utilization](/runbook//steps/gce/high-vm-cpu-utilization)
+  - [High Vm Cpu Utilization](/runbook/steps/gce/high-vm-cpu-utilization)
 
-  - [Vm Guest Os Type](/runbook//steps/gce/vm-guest-os-type)
+  - [Vm Guest Os Type](/runbook/steps/gce/vm-guest-os-type)
 
-  - [Linux Guest Os Checks](/runbook//steps/gce/linux-guest-os-checks)
+  - [Linux Guest Os Checks](/runbook/steps/gce/linux-guest-os-checks)
 
-  - [Windows Guest Os Checks](/runbook//steps/gce/windows-guest-os-checks)
+  - [Windows Guest Os Checks](/runbook/steps/gce/windows-guest-os-checks)
 
-  - [Gcp Ssh Permissions](/runbook//steps/gce/gcp-ssh-permissions)
+  - [Gcp Ssh Permissions](/runbook/steps/gce/gcp-ssh-permissions)
 
-  - [Auth Principal Cloud Console Permission Check](/runbook//steps/gce/auth-principal-cloud-console-permission-check)
+  - [Auth Principal Cloud Console Permission Check](/runbook/steps/gce/auth-principal-cloud-console-permission-check)
 
-  - [Auth Principal Has Permission To Fetch Vm Check](/runbook//steps/gce/auth-principal-has-permission-to-fetch-vm-check)
+  - [Auth Principal Has Permission To Fetch Vm Check](/runbook/steps/gce/auth-principal-has-permission-to-fetch-vm-check)
 
-  - [Os Login Status Check](/runbook//steps/gce/os-login-status-check)
+  - [Os Login Status Check](/runbook/steps/gce/os-login-status-check)
 
-  - [Auth Principal Has Iap Tunnel User Permissions Check](/runbook//steps/gce/auth-principal-has-iap-tunnel-user-permissions-check)
+  - [Auth Principal Has Iap Tunnel User Permissions Check](/runbook/steps/gce/auth-principal-has-iap-tunnel-user-permissions-check)
 
-  - [Gce Firewall Allows Ssh](/runbook//steps/gce/gce-firewall-allows-ssh)
+  - [Gce Firewall Allows Ssh](/runbook/steps/gce/gce-firewall-allows-ssh)
 
-  - [Gce Vpc Connectivity Check](/runbook//steps/gce/gce-vpc-connectivity-check)
+  - [Gce Vpc Connectivity Check](/runbook/steps/gce/gce-vpc-connectivity-check)
 
-  - [Gce Vpc Connectivity Check](/runbook//steps/gce/gce-vpc-connectivity-check)
+  - [Gce Vpc Connectivity Check](/runbook/steps/gce/gce-vpc-connectivity-check)
 
-  - [Gce Vpc Connectivity Check](/runbook//steps/gce/gce-vpc-connectivity-check)
+  - [Gce Vpc Connectivity Check](/runbook/steps/gce/gce-vpc-connectivity-check)
 
-  - [Ssh End](/runbook//steps/gce/ssh-end)
+  - [Ssh End](/runbook/steps/gce/ssh-end)
 
 
 <!--

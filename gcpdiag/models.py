@@ -72,30 +72,6 @@ class Parameter(dict[T, V], Generic[T, V]):
     return super().setdefault(key, self[key])
 
 
-class Operation(dict):
-  """ Operation Object to help with getting parameters and templates"""
-  messages: Messages
-  parameters: Parameter
-
-  def __init__(self, message: Messages, parameters: Parameter):
-    self.messages = message
-    self.parameters = parameters
-
-  def get_msg(self, key, **kwargs):
-    return self.messages.get_msg(key, **kwargs)
-
-  def get(self, key):
-    return self.parameters.get(key)
-
-  def __getitem__(self, key):
-    # Redirect item access to parameters
-    return self.parameters[key]
-
-  def __setitem__(self, key, value):
-    # Redirect item setting to parameters
-    self.parameters[key] = value
-
-
 @dataclasses.dataclass
 class Context:
   """List of resource groups / scopes that should be analyzed."""
@@ -111,7 +87,7 @@ class Context:
   # list of "label sets" that must match.
   labels: Optional[Mapping[str, str]]
   # list of "runbook parameters sets" that must match.
-  parameters: Parameter[str, str]
+  parameters: Parameter[str, Any]
 
   # the selected resources are the intersection of project_id, locations,
   # and labels(i.e. all must match), but each value in locations, and

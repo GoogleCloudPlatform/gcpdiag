@@ -214,6 +214,68 @@ def _execute_query_job(job: _LogsQueryJob):
   return deque
 
 
+def realtime_query(project_id, filter_str, start_time_utc, end_time_utc):
+  """Inteded for use in only runbooks. use logs.query() for lint rules."""
+  thread = threading.current_thread()
+  thread.name = f'log_query:{project_id}'
+  logging_api = apis.get_api('logging', 'v2', project_id)
+
+  # Convert "within" relative time to an absolute timestamp.
+  filter_lines = [filter_str]
+  filter_lines.append('timestamp>"%s"' %
+                      start_time_utc.isoformat(timespec='seconds'))
+  filter_lines.append('timestamp<"%s"' %
+                      end_time_utc.isoformat(timespec='seconds'))
+  filter_str = '\n'.join(filter_lines)
+  logging.info('searching logs in project %s for logs between %s and %s',
+               project_id, str(start_time_utc), str(end_time_utc))
+  # Fetch all logs and put the results in temporary storage (diskcache.Deque)
+  deque = caching.get_tmp_deque('tmp-logs-')
+  req = logging_api.entries().list(
+      body={
+          'resourceNames': [f'projects/{project_id}'],
+          'filter': filter_str,
+          'orderBy': 'timestamp desc',
+          'pageSize': config.get('logging_page_size')
+      })
+  fetched_entries_count = 0
+  query_pages = 0
+  query_start_time = datetime.datetime.now()
+  while req is not None:
+    query_pages += 1
+    res = _ratelimited_execute(req)
+    if 'entries' in res:
+      for e in res['entries']:
+        fetched_entries_count += 1
+        deque.appendleft(e)
+
+    # Verify that we aren't above limits, exit otherwise.
+    if fetched_entries_count > config.get('logging_fetch_max_entries'):
+      logging.warning(
+          'maximum number of log entries (%d) reached (project: %s, query: %s).',
+          config.get('logging_fetch_max_entries'), project_id,
+          filter_str.replace('\n', ' AND '))
+      return deque
+    run_time = (datetime.datetime.now() - query_start_time).total_seconds()
+    if run_time >= config.get('logging_fetch_max_time_seconds'):
+      logging.warning(
+          'maximum query runtime for log query reached (project: %s, query: %s).',
+          project_id, filter_str.replace('\n', ' AND '))
+      return deque
+    req = logging_api.entries().list_next(req, res)
+    if req is not None:
+      logging.info('still fetching logs (project: %s, max wait: %ds)',
+                   project_id,
+                   config.get('logging_fetch_max_time_seconds') - run_time)
+
+  query_end_time = datetime.datetime.now()
+  logging.debug('logging query run time: %s, pages: %d, query: %s',
+                query_end_time - query_start_time, query_pages,
+                filter_str.replace('\n', ' AND '))
+
+  return deque
+
+
 def execute_queries(executor: concurrent.futures.Executor):
   global jobs_todo
   jobs_executing = jobs_todo

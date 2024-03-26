@@ -1,0 +1,29 @@
+{% block default_success_reason %}
+The expected good value is present within the checked metric collection.
+{% endblock default_success_reason %}
+
+{% block default_failure_reason %}
+A known bad value is present within the checked metric collection indicating a problem
+{% endblock default_failure_reason %}
+
+{% block default_failure_remediation %}
+View Cloud Monitoring to get more details of how to what is causing this issue.
+
+Run the following cloud logging query in GCP.
+
+Query:
+{query}
+{% endblock default_failure_remediation %}
+
+{% block default_uncertain_reason %}
+We are not sure of the outcome manually check this cloud logging
+{% endblock default_uncertain_reason %}
+
+{% block default_uncertain_remediation %}
+View Cloud logging to get more details of how to what is causing this issue.
+
+Run the following cloud logging query in GCP.
+
+Query:
+{query}
+{% endblock default_uncertain_remediation %}

@@ -23,7 +23,8 @@ PREFETCH_ORG_CONSTRAINTS = (
     'constraints/compute.disableSerialPortAccess',
     'constraints/compute.requireOsLogin',
     'constraints/compute.requireShieldedVm',
-    'constraints/iam.automaticIamGrantsForDefaultServiceAccounts')
+    'constraints/iam.automaticIamGrantsForDefaultServiceAccounts',
+    'constraints/compute.disableSerialPortLogging')
 
 # TODO: list policy constraints of interest (not yet supported)
 # 'constraints/compute.vmCanIpForward'
