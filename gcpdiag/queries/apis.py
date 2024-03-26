@@ -19,7 +19,7 @@ import json
 import logging
 import os
 import sys
-from typing import Optional, Set
+from typing import Dict, Optional, Set
 
 import google.auth
 import google.auth.transport.requests
@@ -185,8 +185,8 @@ def get_api(service_name: str,
                                                    http=httplib2.Http())
     return googleapiclient.http.HttpRequest(new_http, *args, **kwargs)
 
-  universe_domain = config.get('universe_domain') or 'googleapis.com'
-  cred_universe = getattr(credentials, 'universe_domain', 'googleapis.com')
+  universe_domain = config.get('universe_domain')
+  cred_universe = getattr(credentials, 'universe_domain')
   if cred_universe != universe_domain:
     raise ValueError('credential universe_domain mismatch '
                      f'{cred_universe} != {universe_domain}')
@@ -228,6 +228,23 @@ def _list_apis(project_id: str) -> Set[str]:
 
 def is_enabled(project_id: str, service_name: str) -> bool:
   return f'{service_name}.googleapis.com' in _list_apis(project_id)
+
+
+@caching.cached_api_call(in_memory=True)
+def list_services_with_state(project_id: str) -> Dict[str, str]:
+  logging.debug('listing all APIs with their state')
+  serviceusage = get_api('serviceusage', 'v1', project_id)
+  request = serviceusage.services().list(parent=f'projects/{project_id}')
+  apis_state: Dict[str, str] = {}
+  try:
+    while request is not None:
+      response = request.execute(num_retries=config.API_RETRIES)
+      for service in response['services']:
+        apis_state.setdefault(service['config']['name'], service['state'])
+      request = serviceusage.services().list_next(request, response)
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
+  return apis_state
 
 
 def verify_access(project_id: str):

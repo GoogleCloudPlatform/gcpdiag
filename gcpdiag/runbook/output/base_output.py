@@ -15,7 +15,7 @@
 from typing import Optional
 
 from gcpdiag import models
-from gcpdiag.runbook.constants import StepType
+from gcpdiag.runbook.gcp.constants import StepType
 
 
 class BaseOutput:
@@ -27,14 +27,14 @@ class BaseOutput:
   UNCERTAIN = 'UNCERTAIN'
   CONTINUE = 'CONTINUE'
   CONFIRMATION = 'CONFIRMATION'
-  ABORT = 'ABORT'
+  STOP = 'STOP'
   STEP = StepType.to_list()
   DECISION = 'DECISION'
-  HUMAN_TASK = 'HUMAN_TASK'
+  HUMAN_TASK = 'Choice'
   HUMAN_TASK_OPTIONS = {
       'r': 'Retest current step',
       'c': 'Continue',
-      'a': 'Abort'
+      's': 'Stop Runbook'
   }
   CONFIRMATION_OPTIONS = {'Yes/Y/y': 'Yes', 'No/N/n': 'No'}
 
@@ -61,10 +61,11 @@ class BaseOutput:
              message: str,
              step: str = '',
              options: dict = None,
-             choice_msg: str = ''):
+             choice_msg: str = '',
+             non_interactive: bool = None):
     pass
 
-  def info(self, message: str):
+  def info(self, message: str, step_type='INFO'):
     pass
 
   def display_runbook_description(self, tree) -> None:

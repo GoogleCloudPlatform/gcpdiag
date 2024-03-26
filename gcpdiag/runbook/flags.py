@@ -11,26 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Common parameter flags applicable to any runbook"""
-PROJECT_ID = 'project_id'
-PROJECT_NUMBER = 'project_number'
-FOLDER_ID = 'folder_id'
-ORG_ID = 'org_id'
-NAME = 'name'
-REGION = 'region'
-ZONE = 'zone'
-# unique flags belong to this runbook
-TUNNEL_THROUGH_IAP = 'tunnel_through_iap'
-PRINCIPAL = 'principal'
-SRC_IP = 'src_ip'
-DEST_IP = 'dest_ip'
-CHECK_OS_LOGIN = 'check_os_login'
-LOCAL_USER = 'local_user'
-PORT = 'port'
-PROTOCOL_TYPE = 'protocol_type'
+"""Common flags applicable to any runbook"""
+
+# Runbook command specific flags
+INTERACTIVE_MODE = 'auto'
 START_TIME_UTC = 'start_time_utc'
 END_TIME_UTC = 'end_time_utc'
-
-# Runbook Flags
-# Move this into superclass when using classes
-AUTO = 'auto'
+START_TIME = 'start_time'
+END_TIME = 'end_time'
+TIMEZONE = 'timezone'

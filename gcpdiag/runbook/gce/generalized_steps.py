@@ -12,15 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Contains Resueable Steps for GCE related Diagnostic Trees"""
+
 import logging
 import math
 from typing import Any, List
 
 from gcpdiag import runbook
 from gcpdiag.queries import gce, iam, monitoring
-from gcpdiag.runbook import constants as const
+from gcpdiag.runbook import constants as r_const
 from gcpdiag.runbook.gce import constants as gce_const
 from gcpdiag.runbook.gce import flags, util
+from gcpdiag.runbook.gcp import constants as const
 
 UTILIZATION_THRESHOLD = 0.99
 within_hours = 8
@@ -90,12 +92,11 @@ class HighVmMemoryUtilization(runbook.Step):
 
     # Get Performance issues corrected.
     if mem_usage_metrics:
-      self.interface.add_failed(vm,
-                                reason=self.op.get_msg(const.FAILURE_REASON),
-                                remediation=self.op.get_msg(
-                                    const.FAILURE_REMEDIATION))
+      self.op.add_failed(vm,
+                         reason=self.op.get_msg(const.FAILURE_REASON),
+                         remediation=self.op.get_msg(const.FAILURE_REMEDIATION))
     else:
-      self.interface.add_ok(vm, reason=self.op.get_msg(const.SUCCESS_REASON))
+      self.op.add_ok(vm, reason=self.op.get_msg(const.SUCCESS_REASON))
 
 
 class HighVmDiskUtilization(runbook.Step):
@@ -147,12 +148,12 @@ class HighVmDiskUtilization(runbook.Step):
             self.disk_exhaustion_error_pattern, instance_serial_log.contents)
 
       if disk_usage_metrics:
-        self.interface.add_failed(vm,
-                                  reason=self.op.get_msg(const.FAILURE_REASON),
-                                  remediation=self.op.get_msg(
-                                      const.FAILURE_REMEDIATION))
+        self.op.add_failed(vm,
+                           reason=self.op.get_msg(const.FAILURE_REASON),
+                           remediation=self.op.get_msg(
+                               const.FAILURE_REMEDIATION))
       else:
-        self.interface.add_ok(vm, reason=self.op.get_msg(const.SUCCESS_REASON))
+        self.op.add_ok(vm, reason=self.op.get_msg(const.SUCCESS_REASON))
 
 
 class HighVmCpuUtilization(runbook.Step):
@@ -197,12 +198,11 @@ class HighVmCpuUtilization(runbook.Step):
             """.format(vm.id, UTILIZATION_THRESHOLD, within_str))
     # Get Performance issues corrected.
     if cpu_usage_metrics:
-      self.interface.add_failed(vm,
-                                reason=self.op.get_msg(const.FAILURE_REASON),
-                                remediation=self.op.get_msg(
-                                    const.FAILURE_REMEDIATION))
+      self.op.add_failed(vm,
+                         reason=self.op.get_msg(const.FAILURE_REASON),
+                         remediation=self.op.get_msg(const.FAILURE_REMEDIATION))
     else:
-      self.interface.add_ok(vm, reason=self.op.get_msg(const.SUCCESS_REASON))
+      self.op.add_ok(vm, reason=self.op.get_msg(const.SUCCESS_REASON))
 
 
 class VmLifecycleState(runbook.Step):
@@ -222,18 +222,19 @@ class VmLifecycleState(runbook.Step):
                           zone=self.op.get(flags.ZONE),
                           instance_name=self.op.get(flags.NAME))
     if vm and vm.is_running:
-      self.interface.add_ok(vm,
-                            reason=self.op.get_msg(gce_const.SUCCESS_REASON,
-                                                   vm_name=vm.name,
-                                                   status=vm.status))
+      self.op.add_ok(vm,
+                     reason=self.op.get_msg(gce_const.SUCCESS_REASON,
+                                            vm_name=vm.name,
+                                            status=vm.status))
     else:
-      self.interface.add_failed(vm,
-                                reason=self.op.get_msg(gce_const.FAILURE_REASON,
-                                                       vm_name=vm.name,
-                                                       status=vm.status),
-                                remediation=self.op.get_msg(
-                                    gce_const.FAILURE_REMEDIATION,
-                                    vm_name=vm.name))
+      self.op.add_failed(vm,
+                         reason=self.op.get_msg(gce_const.FAILURE_REASON,
+                                                vm_name=vm.name,
+                                                status=vm.status),
+                         remediation=self.op.get_msg(
+                             gce_const.FAILURE_REMEDIATION,
+                             vm_name=vm.name,
+                             status=vm.status))
 
 
 class VmSerialLogsCheck(runbook.Step):
@@ -273,8 +274,7 @@ class VmSerialLogsCheck(runbook.Step):
             instance_serial_log.contents,
             operator=self.positive_pattern_operator)
         if good_pattern_detected:
-          self.interface.add_ok(vm,
-                                reason=self.op.get_msg(const.SUCCESS_REASON))
+          self.op.add_ok(vm, reason=self.op.get_msg(const.SUCCESS_REASON))
       elif self.negative_pattern:
         # Check for bad patterns
         bad_pattern_detected = util.search_pattern_in_serial_logs(
@@ -282,18 +282,17 @@ class VmSerialLogsCheck(runbook.Step):
             instance_serial_log.contents,
             operator=self.negative_pattern_operator)
         if bad_pattern_detected:
-          self.interface.add_failed(
-              vm,
-              reason=self.op.get_msg(const.FAILURE_REASON),
-              remediation=self.op.get_msg(const.FAILURE_REMEDIATION))
+          self.op.add_failed(vm,
+                             reason=self.op.get_msg(const.FAILURE_REASON),
+                             remediation=self.op.get_msg(
+                                 const.FAILURE_REMEDIATION))
       if not good_pattern_detected and not bad_pattern_detected:
-        self.interface.add_uncertain(
-            vm,
-            reason=self.op.get_msg(const.UNCERTAIN_REASON),
-            remediation=self.op.get_msg(const.UNCERTAIN_REMEDIATION))
+        self.op.add_uncertain(vm,
+                              reason=self.op.get_msg(const.UNCERTAIN_REASON),
+                              remediation=self.op.get_msg(
+                                  const.UNCERTAIN_REMEDIATION))
     else:
-      self.interface.add_skipped(vm,
-                                 reason=self.op.get_msg(const.SKIPPED_REASON))
+      self.op.add_skipped(vm, reason=self.op.get_msg(const.SKIPPED_REASON))
 
 
 class AuthPrincipalCloudConsolePermissionCheck(runbook.Step):
@@ -313,13 +312,12 @@ class AuthPrincipalCloudConsolePermissionCheck(runbook.Step):
     auth_user = self.op.get(flags.PRINCIPAL)
     # Check user has permisssion to access the VM in the first place
     if iam_policy.has_permission(auth_user, self.console_user_permission):
-      self.interface.add_ok(resource=iam_policy,
-                            reason=self.op.get_msg(const.SUCCESS_REASON))
+      self.op.add_ok(resource=iam_policy,
+                     reason=self.op.get_msg(const.SUCCESS_REASON))
     else:
-      self.interface.add_failed(iam_policy,
-                                reason=self.op.get_msg(const.FAILURE_REASON),
-                                remediation=self.op.get_msg(
-                                    const.FAILURE_REMEDIATION))
+      self.op.add_failed(iam_policy,
+                         reason=self.op.get_msg(const.FAILURE_REASON),
+                         remediation=self.op.get_msg(const.FAILURE_REMEDIATION))
 
 
 class VmMetadataCheck(runbook.Step):
@@ -327,6 +325,8 @@ class VmMetadataCheck(runbook.Step):
 
   This step checks if the VM's metadata contains a specified key with the expected boolean value,
   facilitating configuration verification and compliance checks."""
+
+  template: str = 'vm_metadata::default'
   # key to inspect
   metadata_key: str
   # desired value.
@@ -349,8 +349,7 @@ class VmMetadataCheck(runbook.Step):
     # Determine the type of the expected value
     if isinstance(self.expected_value, bool):
       # Convert the string metadata value to a bool for comparison
-      return gce_const.BOOL_VALUES.get(actual_value,
-                                       False) == self.expected_value
+      return r_const.BOOL_VALUES.get(actual_value, False) == self.expected_value
     elif isinstance(self.expected_value, str):
       # Directly compare string values
       return actual_value == self.expected_value
@@ -375,12 +374,24 @@ class VmMetadataCheck(runbook.Step):
                           instance_name=self.op.get(flags.NAME))
 
     if self.is_expected_md_value(vm.get_metadata(self.metadata_key)):
-      self.interface.add_ok(vm, self.op.get_msg(const.SUCCESS_REASON))
+      self.op.add_ok(
+          vm,
+          self.op.get_msg(const.SUCCESS_REASON,
+                          metadata_key=self.metadata_key,
+                          expected_value=self.expected_value,
+                          expected_value_type=self.expected_value_type))
     else:
-      self.interface.add_failed(vm,
-                                reason=self.op.get_msg(const.FAILURE_REASON),
-                                remediation=self.op.get_msg(
-                                    const.FAILURE_REMEDIATION))
+      self.op.add_failed(vm,
+                         reason=self.op.get_msg(
+                             const.FAILURE_REASON,
+                             metadata_key=self.metadata_key,
+                             expected_value=self.expected_value,
+                             expected_value_type=self.expected_value_type),
+                         remediation=self.op.get_msg(
+                             const.FAILURE_REMEDIATION,
+                             metadata_key=self.metadata_key,
+                             expected_value=self.expected_value,
+                             expected_value_type=self.expected_value_type))
 
 
 class GceVpcConnectivityCheck(runbook.Step):
@@ -412,17 +423,17 @@ class GceVpcConnectivityCheck(runbook.Step):
           target_service_account=vm.service_account,
           target_tags=vm.tags)
     if result.action == 'deny':
-      self.interface.add_failed(
-          vm,
-          reason=self.op.get_msg(gce_const.FAILURE_REASON,
-                                 address=self.op.get(flags.SRC_IP),
-                                 protocol=self.op.get(flags.PROTOCOL_TYPE),
-                                 port=self.op.get(flags.PORT),
-                                 name=vm.name,
-                                 result=result.matched_by_str),
-          remediation=self.op.get_msg(const.FAILURE_REMEDIATION))
+      self.op.add_failed(vm,
+                         reason=self.op.get_msg(
+                             gce_const.FAILURE_REASON,
+                             address=self.op.get(flags.SRC_IP),
+                             protocol=self.op.get(flags.PROTOCOL_TYPE),
+                             port=self.op.get(flags.PORT),
+                             name=vm.name,
+                             result=result.matched_by_str),
+                         remediation=self.op.get_msg(const.FAILURE_REMEDIATION))
     elif result.action == 'allow':
-      self.interface.add_ok(
+      self.op.add_ok(
           vm,
           self.op.get_msg(gce_const.SUCCESS_REASON,
                           address=self.op.get(flags.SRC_IP),

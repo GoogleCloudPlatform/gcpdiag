@@ -2,7 +2,7 @@
 {% macro traverse_dt(step, ROOT_DIR) %}
   {% set dt_path = '/steps/' ~ step.product ~ '/' ~ step.doc_file_name %}
   {% if ROOT_DIR ~ '/' ~ dt_path %}
-  - [{{ util.pascal_case_to_title(step.__class__.__name__)}}](/runbook/{{ dt_path }})
+  - [{{ util.pascal_case_to_title(step.__class__.__name__)}}](/runbook{{ dt_path }})
   {% endif %}
 
   {% for child in step.steps %}
@@ -11,6 +11,10 @@
 {% endmacro %}
 
 {#- The main part of the template -#}
+
+<!--
+This file is auto-generated. DO NOT EDIT.
+-->
 ---
 title: "{{ rule.product }}/{{ title }}"
 linkTitle: "{{ rule.name }}"

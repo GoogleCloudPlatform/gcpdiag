@@ -14,22 +14,10 @@
 """Constants applicable relevant to only gce implementation"""
 import ipaddress
 
-# pylint: disable=unused-wildcard-import
-# pylint: disable=wildcard-import
-from gcpdiag.runbook.constants import *
+# pylint: disable=unused-wildcard-import, wildcard-import
+from gcpdiag.runbook.gcp.constants import *
 from gcpdiag.runbook.iam.constants import *
 
-BOOL_VALUES = {
-    'y': True,
-    'yes': True,
-    'true': True,
-    '1': True,
-    'n': False,
-    'no': False,
-    'false': False,
-    '0': False,
-    None: False
-}
 # Os login Permissions
 OSLOGIN_ROLE = 'roles/compute.osLogin'
 OSLOGIN_ADMIN_ROLE = 'roles/compute.osAdminLogin'

@@ -20,7 +20,7 @@ import re
 import string
 from datetime import datetime, timezone
 
-import dateutil
+from dateutil import parser
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 from gcpdiag.runbook import constants
@@ -120,7 +120,11 @@ def load_template_block(module_name, file_name, block_name):
   return prompts
 
 
-def render_template_to_md(file_dir, file_name_with_ext, context):
+def render_template(file_dir,
+                    file_name_with_ext,
+                    context,
+                    block_prefix=None,
+                    block_suffix=None):
   """
   Load specified blocks from a Jinja2 template.
 
@@ -130,13 +134,25 @@ def render_template_to_md(file_dir, file_name_with_ext, context):
   A dictionary with the loaded block contents.
   """
   env.loader = FileSystemLoader(file_dir)
+  context['render_block'] = f'{block_prefix}_{block_suffix}'
   content = env.get_template(f'{file_name_with_ext}').render(context)
   return content
 
 
 def parse_time_input(time_str):
-  """Parse RFC3339 or epoch time input to datetime object."""
-  if time_str.isdigit():  # Epoch time
-    return datetime.fromtimestamp(float(time_str), timezone.utc)
-  else:  # Assume RFC3339 format
-    return dateutil.parser.isoparse(time_str)
+  """Parse RFC3339, ISO 8601, or epoch time input to datetime object."""
+  # Try parsing as a float (epoch timestamp) first
+  try:
+    epoch = float(time_str)
+    return datetime.fromtimestamp(epoch, tz=timezone.utc)
+  except ValueError:
+    pass  # Not an epoch timestamp
+
+  # Then, try parsing as ISO 8601 / RFC 3339 using dateutil for broader support
+  try:
+    return parser.isoparse(time_str)
+  except ValueError:
+    pass
+  # Not an ISO 8601 / RFC 3339 formatted date
+  # If none of the formats matched, raise an exception
+  raise ValueError(f'Date format not recognized: {time_str}')

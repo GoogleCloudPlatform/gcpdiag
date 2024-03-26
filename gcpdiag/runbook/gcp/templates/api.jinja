@@ -1,0 +1,27 @@
+{% block default_success_reason %}
+The `{service}` service is currently in the expected `{expected_state}`.
+{% endblock default_success_reason %}
+
+{% block default_failure_reason %}
+The `{service}` service is not in the exptected state `{expected_state}`
+{% endblock default_failure_reason %}
+
+{% block default_failure_remediation %}
+This service is expected to be enabled.
+Execute the command below to enable {service_name} in {project_id}
+
+gcloud services enable {service_name} --project={project_id}
+
+Resources
+https://cloud.google.com/service-usage/docs/enable-disable#enabling
+{% endblock default_failure_remediation %}
+
+{% block default_failure_remediation_a1 %}
+This service is expected to be disabled.
+Execute the command below to disable {service_name} in {project_id}
+
+gcloud services disable {service_name} --project={project_id}
+
+Resources
+https://cloud.google.com/service-usage/docs/enable-disable#disabling
+{% endblock default_failure_remediation_a1 %}

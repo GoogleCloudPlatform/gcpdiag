@@ -48,7 +48,7 @@ class Test(unittest.TestCase):
       assert args.logging_fetch_max_entries is None
       assert args.logging_fetch_max_time_seconds is None
       assert args.auto is False
-      assert args.report_dir == '/tmp/gcpdiag'
+      assert args.report_dir == '/tmp'
       assert args.interface == 'cli'
 
   # pylint: disable=protected-access
@@ -69,11 +69,11 @@ class Test(unittest.TestCase):
       assert args.report_dir == os.path.expanduser('~')
 
     # Test user provided path in cloud shell in present in home.
-    with mock.patch('os.getenv',
-                    return_value='true'), self.assertRaises(SystemExit) as se:
+    with mock.patch('os.getenv', return_value='true'):
       args = parser.parse_args(
           ['product/runbook', '--project', 'myproject', '--report-dir', '/tmp'])
-      self.assertEqual(se.exception.code, 2)
+      assert args.report_dir == os.path.join(os.path.expanduser('~'),
+                                             config.get('report_dir'))
 
     with mock.patch('os.getenv', return_value='false'):
       args = parser.parse_args(['product/runbook', '--project', 'myproject'])

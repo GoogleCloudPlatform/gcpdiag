@@ -25,6 +25,7 @@ import blessings
 # pylint: disable=unused-import (lint is used in type hints)
 from gcpdiag import config, models, runbook
 from gcpdiag.runbook import report
+from gcpdiag.runbook.flags import INTERACTIVE_MODE
 from gcpdiag.runbook.output.base_output import BaseOutput
 
 OUTPUT_WIDTH = 68
@@ -225,60 +226,49 @@ class TerminalOutput(BaseOutput):
       self.terminal_print_line('     [' + self.term.green('REMEDIATION') + ']')
       self.terminal_print_line(textwrap.indent(f'{remediation}', '     '))
 
-  def info(self, message: str):
+  def info(self, message: str, step_type='INFO'):
     """
     For informational update and getting a response from user
     """
-    self.terminal_print_line(text='' + '[' + self.term.green('INFO') + ']: ' +
-                             f'{message}')
+    self.terminal_print_line(text='' + '[' + self.term.green(step_type) +
+                             ']: ' + f'{message}')
 
   def prompt(self,
              message: str,
              step: str = '',
              options: dict = None,
-             choice_msg: str = 'Choose an option: '):
+             choice_msg: str = 'Choose an option: ',
+             non_interactive: bool = None):
     """
     For informational update and getting a response from user
     """
-    # information prompt
-    if not step:
-      self.terminal_print_line(text='' + '[' + self.term.green('INFO') + ']: ' +
-                               f'{message}')
+    non_interactive = non_interactive or config.get(INTERACTIVE_MODE)
+    if non_interactive:
       return
-    # Step or decision
-    if step and step in self.STEP or step in self.RETEST:
-      self.terminal_print_line()
-      self.terminal_print_line(text='' + '[' + self.term.green(step) + ']: ' +
-                               f'{message}')
-      return
+    self.terminal_print_line(text='' + '[' + self.term.green(step) + ']: ' +
+                             f'{message}')
 
     self.default_answer = False
     self.answer = None
     options_text = '\n'
     try:
-      if step in self.HUMAN_TASK and not options and not config.get('auto'):
+      if step in self.HUMAN_TASK and not options:
         for option, description in self.HUMAN_TASK_OPTIONS.items():
           options_text += '[' + self.term.green(
               f'{option}') + ']' + f' - {description}\n'
-      if step in self.CONFIRMATION and not options\
-          and not config.get('auto'):
+      if step in self.CONFIRMATION and not options:
         for option, description in self.CONFIRMATION_OPTIONS.items():
           options_text += '[' + self.term.green(
               f'{option}') + ']' + f' - {description}\n'
       if (step in self.CONFIRMATION or step in self.HUMAN_TASK) \
-        and options and not config.get('auto'):
+        and options:
         for option, description in options.items():
           options_text += '[' + self.term.green(
               f'{option}') + ']' + f' - {description}\n'
-      #TODO: allow to get special data. ex ip or just an error
-      if not config.get('auto'):
-        if message:
-          self.terminal_print_line(text=textwrap.indent(message, '     '))
-        if options_text:
-          self.terminal_print_line(text=textwrap.indent(options_text, '     '))
-          if choice_msg is None:
-            choice_msg = 'Choose an option: '
-          self.answer = input(textwrap.indent(choice_msg, '     '))
+
+      if options_text:
+        self.terminal_print_line(text=textwrap.indent(options_text, '     '))
+        self.answer = input(textwrap.indent(choice_msg, '     '))
     except EOFError:
       return self.answer
     # pylint:disable=g-explicit-bool-comparison, We explicitly want to
@@ -288,8 +278,8 @@ class TerminalOutput(BaseOutput):
       return self.default_answer
     elif self.answer is None:
       return self.answer
-    elif self.answer.strip().lower() in ['a', 'abort']:
-      return self.ABORT
+    elif self.answer.strip().lower() in ['s', 'stop']:
+      return self.STOP
     elif self.answer.strip().lower() in ['c', 'continue']:
       return self.CONTINUE
     elif self.answer.strip().lower() in ['u', 'uncertain']:
@@ -301,7 +291,7 @@ class TerminalOutput(BaseOutput):
     elif self.answer.strip().lower() in ['n', 'no']:
       return self.NO
     elif self.answer.strip().lower() not in [
-        'a', 'abort', 'c', 'continue', 'r', 'retest'
+        's', 'stop', 'c', 'continue', 'r', 'retest'
     ]:
       return self.answer.strip()
     return

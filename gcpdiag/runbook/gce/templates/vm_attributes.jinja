@@ -1,16 +1,62 @@
+{% block has_service_account_step_message %}
+Checking if VM has a Service Account..
+{% endblock has_service_account_step_message %}
+
+{% block has_service_account_failure_reason %}
+Ops agent in {vm_name} has not {sa} to use when exporting logs/metrics
+{% endblock has_service_account_failure_reason %}
+
+{% block has_service_account_failure_remediation %}
+Instance {name} has no service account to export logs and metrics.
+Follow [1] and [2] to verify service account name
+[1] https://cloud.google.com/docs/authentication/application-default-credentials
+[2] https://cloud.google.com/monitoring/agent/ops-agent/authorization#set-gac
+{% endblock has_service_account_failure_remediation %}
+
+{% block has_service_account_success_reason %}
+Ops agent in {vm_name} has {sa} to use when exporting logs/metrics
+{% endblock has_service_account_success_reason %}
+
 {% block running_success_reason %}
-GCE VM {vm_name} is in a {status} state.
+The GCE VM {vm_name} is in the expected state: {status}.
 {% endblock running_success_reason %}
 
 {% block running_failure_reason %}
-GCE VM {vm_name} is in {status} state.
+The GCE VM {vm_name} is in an undesired state: {status}.
 {% endblock running_failure_reason %}
 
 {% block running_failure_remediation %}
-To initiate the lifecycle transition of Virtual Machine (VM) {vm_name} to the RUNNING state:
-Start the VM:
-https://cloud.google.com/compute/docs/instances/stop-start-instance
+This step failed because GCE Virtual Machine {vm_name} is expected to be in a RUNNING state:
+
+To initiate the lifecycle transition from {status} to RUNNING state follow guide [1]
+
 If you encounter any difficulties during the startup process, consult the troubleshooting
-documentation to identify and resolve potential startup issues:
-https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting
+documentation to identify and resolve potential startup issues [2]
+Resources:
+[1] https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm
+[2] https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting
 {% endblock running_failure_remediation %}
+
+{% block terminated_vm_running_step_message %}
+Verifying that the terminated VM is currently running...
+{% endblock terminated_vm_running_step_message %}
+
+{% block terminated_vm_running_success_reason %}
+The terminated VM is currently up and running indicating proper functionality.
+{% endblock terminated_vm_running_success_reason %}
+
+{% block terminated_vm_running_failure_reason %}
+The terminated VM is still shutdown. You can turn it on if there are no other concerns.
+{% endblock terminated_vm_running_failure_reason %}
+
+{% block terminated_vm_running_failure_remediation %}
+This step failed because GCE Virtual Machine {vm_name} is expected to be in a RUNNING state:
+
+To initiate the lifecycle transition from {status} to RUNNING state follow guide [1]
+
+If you encounter any difficulties during the startup process, consult the troubleshooting
+documentation to identify and resolve potential startup issues [2]
+Resources:
+[1] https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm
+[2] https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting
+{% endblock terminated_vm_running_failure_remediation %}
