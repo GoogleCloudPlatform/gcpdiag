@@ -1,3 +1,28 @@
+## 0.70 (2024-3-27)
+
+#### New lint rules
+- pubsub/ERR\_2024\_001 bq subscription table not found
+- composer/WARN\_2024\_001 low scheduler cpu usuage
+- datafusion/WARN\_2024\_001 data fusion version
+- composer/WARN\_2024\_002 worker pod eviction
+- gce/ERR\_2024\_002 performance
+- notebooks/ERR\_2024\_001 executor explicit project permissions
+- dataflow/WARN\_2024\_001 dataflow operation ongoing
+- dataflow/ERR\_2024\_001 dataflow gce quotas
+- dataflow/WARN\_2024\_002 dataflow streaming appliance commit failed
+- dataflow/ERR\_2024\_002 dataflow key commit
+- gke/WARN\_2024\_001 cluster nap limits prevent autoscaling
+
+#### New query
+- datafusion\_cdap API query implementation - provides CDAP profile metadata
+
+#### Fixes
+- Updated pipenv packages, Pipenv.lock dependencies
+- Updated github action workflow versions to stop warnings about node v10 and v10
+- Refactor Runbook: Implemented a modular, class-based design to facilitate a
+  more configurable method for tree construction.
+
+
 ## 0.69 (2024-2-21)
 
 #### New feature
