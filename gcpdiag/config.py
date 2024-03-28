@@ -23,7 +23,7 @@ import appdirs
 import yaml
 
 # gcpdiag version (not configurable, but useful to have here)
-VERSION = '0.70-test'
+VERSION = '0.70'
 """
 Configuration properties are divided into 3 main categories:
 - static (class properties) which values cannot be changed or provided
