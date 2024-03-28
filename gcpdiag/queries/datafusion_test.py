@@ -85,14 +85,18 @@ class TestExtractVersionPolicyDict:
 class TestComputeProfile:
   """Test Compute Profile"""
 
-  def test_get_instance_system_compute_profile(self):
+  @mock.patch('gcpdiag.queries.apis.get_credentials')
+  def test_get_instance_system_compute_profile(self, mock_cred):
+    mock_cred.return_value.token = 'testing'
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     instances = datafusion.get_instances(context)
     instance = list(instances.values())[0]
     profiles = datafusion.get_instance_system_compute_profile(context, instance)
     assert len(profiles) == 2
 
-  def test_get_instance_user_compute_profile(self):
+  @mock.patch('gcpdiag.queries.apis.get_credentials')
+  def test_get_instance_user_compute_profile(self, mock_cred):
+    mock_cred.return_value.token = 'testing'
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     instances = datafusion.get_instances(context)
     instance = list(instances.values())[0]
