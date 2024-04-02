@@ -33,6 +33,35 @@ import googleapiclient.http
 from gcpdiag import config
 
 _cache = None
+_bypass_cache = False
+
+
+def _set_bypass_cache(value: bool):
+  """Sets the cache bypass flag for the current thread.
+  Only set this for code that need to re-fetch fresh data
+  regardless or expiry and state of cached data.
+  """
+  thread = threading.current_thread()
+  setattr(thread, '_bypass_cache', value)
+
+
+def _get_bypass_cache():
+  """Gets the cache bypass flag for the current thread. By default should always use cache"""
+  return getattr(threading.current_thread(), '_bypass_cache', False)
+
+
+@contextlib.contextmanager
+def bypass_cache():
+  """
+  A thread-safe context manager to temporarily set the cache bypass to True
+  for the current thread, ensuring it is reverted back when the context exits.
+  """
+  original_value = _get_bypass_cache()
+  _set_bypass_cache(True)
+  try:
+    yield
+  finally:
+    _set_bypass_cache(original_value)
 
 
 def _clean_cache():
@@ -148,16 +177,24 @@ def cached_api_call(expire=None, in_memory=False):
       lock = lockdict[key]
       with _acquire_timeout(lock, config.CACHE_LOCK_TIMEOUT, func.__name__):
         if in_memory:
+          if _get_bypass_cache():
+            logging.debug('Cache bypassed for %s, fetching fresh data.',
+                          func.__name__)
+            lru_cached_func.cache_clear()
           return lru_cached_func(*args, **kwargs)
         else:
           api_cache = get_cache()
-          # We use 'no data' to be able to cache calls that returned None.
-          cached_result = api_cache.get(key, default='no data')
-          if cached_result != 'no data':
-            logging.debug('returning cached result for %s', func.__name__)
-            if isinstance(cached_result, Exception):
-              raise cached_result
-            return cached_result
+          if _get_bypass_cache():
+            logging.debug('Cache bypassed for %s, fetching fresh data.',
+                          func.__name__)
+          else:
+            # We use 'no data' to be able to cache calls that returned None.
+            cached_result = api_cache.get(key, default='no data')
+            if cached_result != 'no data':
+              logging.debug('returning cached result for %s', func.__name__)
+              if isinstance(cached_result, Exception):
+                raise cached_result
+              return cached_result
 
           # Call the function
           logging.debug('calling function %s (expire=%s, key=%s)',
