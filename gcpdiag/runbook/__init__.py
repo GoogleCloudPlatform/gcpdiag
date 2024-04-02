@@ -24,7 +24,7 @@ from typing import Dict, List, Set, final
 
 import googleapiclient.errors
 
-from gcpdiag import config, models, utils
+from gcpdiag import caching, config, models, utils
 from gcpdiag.runbook import exceptions, flags, report, util
 from gcpdiag.runbook.constants import (END_MESSAGE, STEP_LABEL, STEP_MESSAGE,
                                        StepType)
@@ -497,16 +497,17 @@ class DiagnosticEngine:
       step_message = step.execute.__doc__
     interface.output.prompt(step=step.type.value, message=step_message)
 
-    choice = self._run(step, context, interface)
+    user_input = self._run(step, context, interface)
     while True:
-      if choice is interface.output.RETEST:
+      if user_input is interface.output.RETEST:
         interface.output.prompt(step=interface.output.RETEST,
                                 message='Re-evaluating recent failed step')
-        choice = self._run(step, context, interface)
+        with caching.bypass_cache():
+          user_input = self._run(step, context, interface)
       elif step.type == StepType.END:
         self.rm.generate_report()
         break
-      elif choice is interface.output.ABORT:
+      elif user_input is interface.output.ABORT:
         logging.info('Terminating Runbook\n')
         sys.exit(2)
       elif step.type == StepType.START and (
@@ -514,12 +515,12 @@ class DiagnosticEngine:
           self.rm.results[step.run_id].status == 'skipped'):
         logging.info('Start Step was skipped. Can\'t proceed ...\n')
         sys.exit(2)
-      elif choice is interface.output.CONTINUE:
+      elif user_input is interface.output.CONTINUE:
         break
-      elif (choice is not interface.output.RETEST and
-            choice is not interface.output.CONTINUE and
-            choice is not interface.output.ABORT):
-        return choice
+      elif (user_input is not interface.output.RETEST and
+            user_input is not interface.output.CONTINUE and
+            user_input is not interface.output.ABORT):
+        return user_input
 
   def _run(self, step: Step, context: models.Context, interface):
     start = datetime.now(timezone.utc).timestamp()
