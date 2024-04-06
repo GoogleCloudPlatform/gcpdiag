@@ -1,9 +1,3 @@
-<!--
-This file is auto-generated. DO NOT EDIT
-
-Make pages changes in the corresponding jinja template
-or python code
--->
 ---
 title: "gce/Single Termination Check"
 linkTitle: "Single Termination Check"
@@ -22,7 +16,7 @@ It analyzes log entries to identify whether the termination was normal or abnorm
     and prepares a Root Cause Analysis (RCA) based on the findings.
 
     The investigation focuses on the first occurring termination, assuming that any subsequent
-    terminations are inconsequential.
+    terminations are inconsequential
 
 ### Success Reason
 

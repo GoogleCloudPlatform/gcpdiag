@@ -1,9 +1,3 @@
-<!--
-This file is auto-generated. DO NOT EDIT
-
-Make pages changes in the corresponding jinja template
-or python code
--->
 ---
 title: "gce/Windows Guest Os Checks"
 linkTitle: "Windows Guest Os Checks"
@@ -21,7 +15,7 @@ description: >
 This composite diagnostic step evaluates the VM's metadata to ensure SSH is enabled for Windows,
   checks serial logs for successful boot-up patterns, and involves a manual check on the Windows SSH
   agent status. It aims to identify and help troubleshoot potential issues that could impact the
-  VM's accessibility via SSHD
+  VM's accessibility via SSHD.
 
 
 

@@ -1,9 +1,3 @@
-<!--
-This file is auto-generated. DO NOT EDIT
-
-Make pages changes in the corresponding jinja template
-or python code
--->
 ---
 title: "gce/Vm Termination Start"
 linkTitle: "Vm Termination Start"

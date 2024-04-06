@@ -636,7 +636,7 @@ class WindowsGuestOsChecks(runbook.CompositeStep):
   This composite diagnostic step evaluates the VM's metadata to ensure SSH is enabled for Windows,
   checks serial logs for successful boot-up patterns, and involves a manual check on the Windows SSH
   agent status. It aims to identify and help troubleshoot potential issues that could impact the
-  VM's accessibility via SSHD
+  VM's accessibility via SSHD.
   """
 
   def execute(self):
