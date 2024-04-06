@@ -1,9 +1,3 @@
-<!--
-This file is auto-generated. DO NOT EDIT
-
-Make pages changes in the corresponding jinja template
-or python code
--->
 ---
 title: "gce/Gce Vpc Connectivity Check"
 linkTitle: "Gce Vpc Connectivity Check"

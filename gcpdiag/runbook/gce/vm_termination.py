@@ -159,7 +159,7 @@ class SingleTerminationCheck(runbook.Step):
     and prepares a Root Cause Analysis (RCA) based on the findings.
 
     The investigation focuses on the first occurring termination, assuming that any subsequent
-    terminations are inconsequential.
+    terminations are inconsequential
   """
 
   template = 'rca::vm_termination'

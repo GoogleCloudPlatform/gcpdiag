@@ -1,6 +1,3 @@
-<!--
-This file is auto-generated. DO NOT EDIT.
--->
 ---
 title: "gce/Vm Termination"
 linkTitle: "gce/vm_termination"
