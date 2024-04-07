@@ -61,8 +61,12 @@ release:
 	bumpversion --commit minor
 	git push origin HEAD:refs/for/master
 
-.PHONY: test coverage-report version build bump-version tarfile release
-
 runbook-docs:
   # Help developers generate and update docs before actually running full precommit
 	pre-commit run gcpdiag-custom-runbook-rule
+
+runbook-starter-code:
+	@[ "$(name)" ] || (echo "name is not set. Usage: make $@ name=product/runbook-id" && false)
+	python bin/runbook-starter-code-generator $(name)
+
+.PHONY: test coverage-report version build bump-version tarfile release runbook-docs runbook-starter-code
