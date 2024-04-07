@@ -33,20 +33,20 @@ class TestStringConversions(unittest.TestCase):
   def test_runbook_name_parser(self):
     self.assertEqual(util.runbook_name_parser('product/word'), 'product/word')
     self.assertEqual(util.runbook_name_parser('product/kebab-case'),
-                     'product/kebab_case')
-    self.assertEqual(util.runbook_name_parser('product/kebab-case-name'),
-                     'product/kebab_case_name')
+                     'product/kebab-case')
+    self.assertEqual(util.runbook_name_parser('product/kebab_case_name'),
+                     'product/kebab-case-name')
     self.assertEqual(util.runbook_name_parser('Product/PascalCase'),
-                     'product/pascal_case')
+                     'product/pascal-case')
     self.assertEqual(util.runbook_name_parser('Product/PascalCase'),
-                     'product/pascal_case')
+                     'product/pascal-case')
 
-    self.assertEqual(util.runbook_name_parser('PascalCase'), 'pascal_case')
-    self.assertEqual(util.runbook_name_parser('snake_case'), 'snake_case')
+    self.assertEqual(util.runbook_name_parser('PascalCase'), 'pascal-case')
+    self.assertEqual(util.runbook_name_parser('snake_case'), 'snake-case')
     self.assertEqual(util.runbook_name_parser('pascal-snake_case'),
-                     'pascal_snake_case')
+                     'pascal-snake-case')
     self.assertEqual(util.runbook_name_parser('MixAnd-Match_Examplev3'),
-                     'mix_and_match_examplev3')
+                     'mix-and-match-examplev3')
 
   def test_parse_rfc3339_format(self):
     test_str = '2024-03-20T07:00:00Z'

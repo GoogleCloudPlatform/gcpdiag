@@ -44,7 +44,8 @@ https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-ro
 {% endblock sa_user_role_failure_remediation %}
 
 {% block sa_user_role_success_reason %}
-"{auth_user}" has the "{sa_user_role}" required to impersonate the service account {service_account}.
+"{auth_user}" has the "{sa_user_role}"
+required to impersonate the service account {service_account}.
 {% endblock sa_user_role_success_reason %}
 
 {% block iap_role_failure_reason %}
@@ -58,7 +59,7 @@ https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-ro
 {% endblock iap_role_failure_remediation %}
 
 {% block iap_role_success_reason %}
-"{auth_user}" has the requisite "{iap_role}" role to tunell through IAP.
+"{auth_user}" has the requisite "{iap_role}" role to tunnel through IAP.
 {% endblock iap_role_success_reason %}
 
 {% block console_view_permission_failure_reason %}

@@ -39,9 +39,14 @@ UNCERTAIN_REMEDIATION_ALT3 = f'{UNCERTAIN_REMEDIATION}_a3'
 SKIPPED_REASON_ALT3 = f'{SKIPPED_REASON}_a3'
 STEP_MESSAGE_ALT3 = f'{STEP_MESSAGE}_a3'
 
-INSTRUCTIONS_MESSAGE = 'instruction_message'
+INSTRUCTIONS_MESSAGE = 'instructions_message'
 STEP_LABEL = 'label'
 INSTRUCTIONS_CHOICE_OPTIONS = 'instructions_choice_options'
+DEFAULT_INSTRUCTIONS_OPTIONS = {
+    'y': 'Yes, Issue is not happening',
+    'n': 'No, Issue is occuring',
+    'u': 'Unsure'
+}
 RCA = 'rca'
 
 StepConstants = {
@@ -140,3 +145,20 @@ BOOL_VALUES = {
     '0': False,
     None: False
 }
+
+RETEST = 'RETEST'
+YES = 'YES'
+NO = 'NO'
+UNCERTAIN = 'UNCERTAIN'
+CONTINUE = 'CONTINUE'
+CONFIRMATION = 'CONFIRMATION'
+STOP = 'STOP'
+STEP = StepType.to_list()
+DECISION = 'DECISION'
+HUMAN_TASK = 'Choose the next action'
+HUMAN_TASK_OPTIONS = {
+    'r': 'Retest current step',
+    'c': 'Continue',
+    's': 'Stop Runbook'
+}
+CONFIRMATION_OPTIONS = {'Yes/Y/y': 'Yes', 'No/N/n': 'No'}

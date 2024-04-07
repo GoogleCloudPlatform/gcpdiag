@@ -15,7 +15,8 @@
 from gcpdiag import runbook
 from gcpdiag.models import Resource
 from gcpdiag.queries import monitoring
-from gcpdiag.runbook.gcp import constants, flags
+from gcpdiag.runbook import op
+from gcpdiag.runbook.gcp import flags
 
 
 class TimeSeriesCheck(runbook.Step):
@@ -33,14 +34,12 @@ class TimeSeriesCheck(runbook.Step):
   def execute(self):
     """Verifying if expected metrics value is present or not"""
     metrics = None
-    metrics = monitoring.query(self.op.get(flags.PROJECT_ID),
+    metrics = monitoring.query(op.get(flags.PROJECT_ID),
                                self.query.format(self.query_kwargs))
 
     if metrics:
-      self.interface.add_failed(
-          self.resource,
-          reason=self.op.get_msg(constants.FAILURE_REASON),
-          remediation=self.op.get_msg(constants.FAILURE_REMEDIATION))
+      op.add_failed(self.resource,
+                    reason=op.prep_msg(op.FAILURE_REASON),
+                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
-      self.interface.add_ok(self.resource,
-                            reason=self.op.get_msg(constants.SUCCESS_REASON))
+      op.add_ok(self.resource, reason=op.prep_msg(op.SUCCESS_REASON))
