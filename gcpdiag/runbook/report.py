@@ -19,13 +19,12 @@ import inspect
 import json
 import logging
 import os
-import re
 import sys
 from datetime import datetime, timezone
 from typing import Any, Dict, Optional
 
 from gcpdiag import config, models
-from gcpdiag.runbook import util
+from gcpdiag.runbook import constants, util
 from gcpdiag.runbook.flags import INTERACTIVE_MODE
 from gcpdiag.runbook.output.base_output import BaseOutput
 from gcpdiag.runbook.output.terminal_output import TerminalOutput
@@ -218,27 +217,22 @@ class InteractionInterface:
            resource=None,
            store_in_report=False,
            step_type='INFO') -> None:
-    step = step_type or self.get_calling_step()
+    step = step_type or util.get_caller_object(2)
     self.output.info(message=message, step_type=step_type)
     if store_in_report:
       self.rm.add_step_result(
           StepResult(status='info',
                      resource=resource,
-                     step=step,
+                     step=step.run_id,
                      reason=message,
                      remediation=''))
 
   def prepare_rca(self, resource: Optional[models.Resource], template, suffix,
                   context) -> None:
-    step = self.get_calling_step()
+    step = util.get_caller_object(2)
     try:
-      pattern = r'([a-z]+)\.([a-z]+)\.([a-z]+)'
-      m = re.search(pattern, step)
-      if m is not None:
-        module_str = m.group(0)
-      if module_str is not None:
-        module = importlib.import_module(module_str)
-        file_name = module.__file__
+      module = importlib.import_module(step.__module__)
+      file_name = module.__file__
     except ImportError as e:
       logging.error(e)
     except AttributeError as e:
@@ -253,28 +247,28 @@ class InteractionInterface:
         self.rm.add_step_result(
             StepResult(status='rca',
                        resource=resource,
-                       step=step,
+                       step=step.run_id,
                        reason=rca,
                        remediation=''))
 
   def add_skipped(self, resource: Optional[models.Resource],
                   reason: str) -> None:
-    step = self.get_calling_step()
+    step = util.get_caller_object(2)
     self.output.print_skipped(resource=resource, reason=reason)
     self.rm.add_step_result(
         StepResult(status='skipped',
                    resource=resource,
-                   step=step,
+                   step=step.run_id,
                    reason=reason,
                    remediation=''))
 
   def add_ok(self, resource: models.Resource, reason: str = '') -> None:
-    step = self.get_calling_step()
+    step = util.get_caller_object(2)
     self.output.print_ok(resource=resource, reason=reason)
     self.rm.add_step_result(
         StepResult(status='ok',
                    resource=resource,
-                   step=step,
+                   step=step.run_id,
                    reason=reason,
                    remediation=''))
 
@@ -289,24 +283,24 @@ class InteractionInterface:
     The failure assigned a human task unless program is running
     autonomously
     """
-    step = self.get_calling_step()
+    step = util.get_caller_object(2)
     self.output.print_failed(resource=resource,
                              reason=reason,
                              remediation=remediation)
     result = StepResult(status='failed',
                         resource=resource,
                         reason=reason,
-                        step=step,
+                        step=step.run_id,
                         remediation=remediation)
     # Add results to report manager so other dependent features can act on it.
     self.rm.add_step_result(result)
     # assign a human task to be completed
-    choice = self.output.prompt(step=self.output.HUMAN_TASK,
+    choice = self.output.prompt(step=constants.HUMAN_TASK,
                                 message=human_task_msg)
     if not config.get(INTERACTIVE_MODE):
       result.prompt_response = choice
 
-      if choice is self.output.CONTINUE or choice is self.output.STOP:
+      if choice is constants.CONTINUE or choice is constants.STOP:
         result.remediation_skipped = True
       return choice
 
@@ -315,22 +309,21 @@ class InteractionInterface:
                     reason: str,
                     remediation: str = None,
                     human_task_msg: str = '') -> Any:
-    step = self.get_calling_step()
+    step = util.get_caller_object(2)
     self.output.print_uncertain(reason=reason,
                                 resource=resource,
                                 remediation=remediation)
     result = StepResult(status='uncertain',
                         resource=resource,
                         reason=reason,
-                        step=step,
+                        step=step.run_id,
                         remediation=remediation)
     self.rm.add_step_result(result)
-    choice = self.output.prompt(step=self.output.HUMAN_TASK,
+    choice = self.output.prompt(step=constants.HUMAN_TASK,
                                 message=human_task_msg)
 
     if not config.get(INTERACTIVE_MODE):
       result.prompt_response = choice
-
-      if choice is self.output.CONTINUE or choice is self.output.STOP:
+      if choice is constants.CONTINUE or choice is constants.STOP:
         result.remediation_skipped = True
       return choice

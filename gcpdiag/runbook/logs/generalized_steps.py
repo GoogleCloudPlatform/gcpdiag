@@ -19,7 +19,8 @@ from boltons.iterutils import get_path
 from gcpdiag import runbook
 from gcpdiag.models import Resource
 from gcpdiag.queries import logs
-from gcpdiag.runbook.gcp import constants, flags
+from gcpdiag.runbook import op
+from gcpdiag.runbook.gcp import flags
 
 
 class LogsCheck(runbook.Step):
@@ -38,19 +39,19 @@ class LogsCheck(runbook.Step):
 
   def execute(self):
     """Inspecting cloud logging for good or bad patterns"""
-    fetched_logs = logs.realtime_query(
-        project_id=self.op.get(flags.PROJECT_ID),
-        filter_str=self.filter_str,
-        start_time_utc=self.op.get(flags.START_TIME_UTC),
-        end_time_utc=self.op.get(flags.END_TIME_UTC))
+    fetched_logs = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
+                                       filter_str=self.filter_str,
+                                       start_time_utc=op.get(
+                                           flags.START_TIME_UTC),
+                                       end_time_utc=op.get(flags.END_TIME_UTC))
     for entry in fetched_logs:
       actual_value = get_path(entry, self.attribute, None)
 
       if re.match(self.bad_pattern, actual_value, re.IGNORECASE):
-        self.interface.add_failed(
-            self.resource,
-            reason=self.op.get_msg(constants.FAILURE_REASON),
-            remediation=self.op.get_msg(constants.FAILURE_REMEDIATION))
+        self.interface.add_failed(self.resource,
+                                  reason=op.prep_msg(op.FAILURE_REASON),
+                                  remediation=op.prep_msg(
+                                      op.FAILURE_REMEDIATION))
       elif re.match(self.good_pattern, actual_value, re.IGNORECASE):
         self.interface.add_ok(self.resource,
-                              reason=self.op.get_msg(constants.SUCCESS_REASON))
+                              reason=op.prep_msg(op.SUCCESS_REASON))

@@ -18,6 +18,7 @@ import os
 import random
 import re
 import string
+import sys
 from datetime import datetime, timezone
 
 from dateutil import parser
@@ -74,10 +75,9 @@ def runbook_name_parser(s):
   Returns:
       str: The converted string in snake_case
   """
-  # Replace kebab-case with snake_case
-  s = s.replace('-', '_')
+  s = s.replace('_', '-')
   # Convert PascalCase to snake_case
-  s = re.sub('([a-z0-9])([A-Z])', r'\1_\2', s).lower()
+  s = re.sub('([a-z0-9])([A-Z])', r'\1-\2', s).lower()
   return s
 
 
@@ -156,3 +156,10 @@ def parse_time_input(time_str):
   # Not an ISO 8601 / RFC 3339 formatted date
   # If none of the formats matched, raise an exception
   raise ValueError(f'Date format not recognized: {time_str}')
+
+
+# pylint: disable=protected-access
+def get_caller_object(index: int):
+  # Attempt to get the 'self' variable from the caller's frame.
+  # plus one for this current method
+  return sys._getframe(index + 1).f_locals.get('self')

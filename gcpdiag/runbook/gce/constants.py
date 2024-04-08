@@ -63,3 +63,4 @@ BAD_SSHD_PATTERNS = ['Failed to start OpenBSD Secure Shell server']
 
 # SSHD Guard blocking logs
 SSHGUARD_PATTERNS = [r'sshguard\[\d+\]: Blocking (\d+\.\d+\.\d+\.\d+)']
+GCE_CLUSTER_MANAGER_EMAIL = 'cloud-cluster-manager@prod.google.com'

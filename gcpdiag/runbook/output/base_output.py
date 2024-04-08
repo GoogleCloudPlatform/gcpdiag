@@ -15,28 +15,10 @@
 from typing import Optional
 
 from gcpdiag import models
-from gcpdiag.runbook.gcp.constants import StepType
 
 
 class BaseOutput:
   """ Base class for different output implementations """
-
-  RETEST = 'RETEST'
-  YES = 'YES'
-  NO = 'NO'
-  UNCERTAIN = 'UNCERTAIN'
-  CONTINUE = 'CONTINUE'
-  CONFIRMATION = 'CONFIRMATION'
-  STOP = 'STOP'
-  STEP = StepType.to_list()
-  DECISION = 'DECISION'
-  HUMAN_TASK = 'Choice'
-  HUMAN_TASK_OPTIONS = {
-      'r': 'Retest current step',
-      'c': 'Continue',
-      's': 'Stop Runbook'
-  }
-  CONFIRMATION_OPTIONS = {'Yes/Y/y': 'Yes', 'No/N/n': 'No'}
 
   def print_ok(self, resource: models.Resource, reason: str = '') -> None:
     pass

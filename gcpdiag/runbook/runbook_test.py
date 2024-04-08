@@ -20,7 +20,7 @@ from unittest.mock import Mock, patch
 from gcpdiag import models, runbook
 from gcpdiag.runbook.constants import StepType
 from gcpdiag.runbook.gcp import flags
-from gcpdiag.runbook.operations import Operation
+from gcpdiag.runbook.op import Operator
 
 
 class TestDiagnosticEngine(unittest.TestCase):
@@ -37,8 +37,8 @@ class TestDiagnosticEngine(unittest.TestCase):
 
   def test_load_rule_valid(self):
     mock_dt = Mock(parent=runbook.DiagnosticTree)
-    runbook.DiagnosticTreeRegister['product.test_tree'] = mock_dt
-    self.de.load_rule('product.test_tree')
+    runbook.DiagnosticTreeRegister['product.test-tree'] = mock_dt
+    self.de.load_rule('product.test-tree')
     # pylint: disable=protected-access
     self.assertEqual(self.de.dt, mock_dt)
 
@@ -61,12 +61,12 @@ class TestDiagnosticEngine(unittest.TestCase):
   @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
   def test_find_path_dfs_normal_operation(self, mock_run_step):
     context = models.Context('product_id')
-    op = Operation(context=context, interface=None)
+    op = Operator(c=context, i=None)
     current_step = Mock(run_id='1')
     current_step.steps = []
     visited = set()
 
-    self.de.find_path_dfs(operation=op,
+    self.de.find_path_dfs(operator=op,
                           step=current_step,
                           executed_steps=visited)
 
@@ -77,12 +77,12 @@ class TestDiagnosticEngine(unittest.TestCase):
   @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
   def test_find_path_dfs_finite_loop(self, mock_run_step):
     context = models.Context('product_id')
-    op = Operation(context=context, interface=None)
+    op = Operator(c=context, i=None)
     current_step = Mock(run_id='1', type=StepType.AUTOMATED)
     current_step.steps = [current_step]
     visited = set()
 
-    self.de.find_path_dfs(operation=op,
+    self.de.find_path_dfs(operator=op,
                           step=current_step,
                           executed_steps=visited)
 
@@ -92,7 +92,7 @@ class TestDiagnosticEngine(unittest.TestCase):
   @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
   def test_find_path_all_child_step_executions(self, mock_run_step):
     context = models.Context('product_id')
-    op = Operation(context=context, interface=None)
+    op = Operator(c=context, i=None)
     first_step = Mock(run_id='1')
     intermidiate_step = Mock(run_id='2')
     first_step.steps = [intermidiate_step]
@@ -101,7 +101,7 @@ class TestDiagnosticEngine(unittest.TestCase):
     intermidiate_step.steps = [last_step, last_step, last_step, last_step]
     visited = set()
 
-    self.de.find_path_dfs(operation=op, step=first_step, executed_steps=visited)
+    self.de.find_path_dfs(operator=op, step=first_step, executed_steps=visited)
 
     self.assertIn(first_step, visited)
     self.assertIn(intermidiate_step, visited)

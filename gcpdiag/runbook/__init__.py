@@ -26,10 +26,7 @@ from typing import Dict, List, Set, final
 import googleapiclient.errors
 
 from gcpdiag import caching, config, models, utils
-from gcpdiag.runbook import exceptions, flags, report, util
-from gcpdiag.runbook.constants import (BOOL_VALUES, END_MESSAGE, STEP_LABEL,
-                                       STEP_MESSAGE, StepType)
-from gcpdiag.runbook.operations import Operation
+from gcpdiag.runbook import constants, exceptions, flags, op, report, util
 
 DiagnosticTreeRegister: Dict[str, 'DiagnosticTree'] = {}
 
@@ -39,13 +36,13 @@ class Step:
   Represents a step in a diagnostic or runbook process.
   """
   steps: List['Step']
-  op: Operation
+  _operator: op.Operator
   template: str
   parameters: dict
 
   def __init__(self,
                parent: 'Step' = None,
-               step_type=StepType.AUTOMATED,
+               step_type=constants.StepType.AUTOMATED,
                name=None):
     """
     Initializes a new instance of the Step class.
@@ -67,7 +64,7 @@ class Step:
     return '.'.join([self.id, self.name])
 
   @final
-  def hook_execute(self, operation: Operation):
+  def hook_execute(self, operator: op.Operator):
     """
     Executes the step using the given context and interface.
 
@@ -76,9 +73,10 @@ class Step:
         interface: The interface used for interactions during execution.
     """
     self.load_prompts()
-    self.op = operation
-    self.op.set_messages(messages=self.prompts)
-    self.op.info(step_type=self.type.value, message=self.execution_message)
+    self._operator = operator
+    operator.set_messages(m=self.prompts)
+    operator.interface.info(step_type=self.type.value,
+                            message=self.execution_message)
     self.execute()
 
   def execute(self):
@@ -111,7 +109,7 @@ class Step:
 
   def add_child(self, child):
     """Child steps"""
-    if self.steps and self.steps[-1].type == StepType.END:
+    if self.steps and self.steps[-1].type == constants.StepType.END:
       raise exceptions.InvalidStepOperation(
           'Unable to add a new intermediary step. The last step in the parent sequence is '
           f'{self.steps[-1].__class__.__name__}, indicating the sequence has already been '
@@ -134,7 +132,7 @@ class Step:
 
   @property
   def label(self):
-    label = self.prompts.get_msg(STEP_LABEL)
+    label = self.prompts.get_msg(constants.STEP_LABEL)
     if 'NOTICE' in label:
       label = util.pascal_case_to_title(self.__class__.__name__)
     return label
@@ -142,8 +140,11 @@ class Step:
   @property
   def execution_message(self):
     attributes = vars(self)
-    if self.prompts.get(STEP_MESSAGE):
-      return self.prompts[STEP_MESSAGE].format(attributes)
+    if self.prompts.get(constants.STEP_MESSAGE):
+      formatted_message = self.prompts[constants.STEP_MESSAGE].format(
+          attributes)
+      formatted_message = formatted_message.rstrip('\n')
+      return formatted_message.format(attributes)
     else:
       if self.execute.__doc__:
         return self.execute.__doc__.format(attributes)
@@ -175,28 +176,28 @@ class StartStep(Step):
   """Start Event of a Diagnotic tree"""
 
   def __init__(self):
-    super().__init__(step_type=StepType.START)
+    super().__init__(step_type=constants.StepType.START)
 
 
 class CompositeStep(Step):
   """Composite Events of a Diagnotic tree"""
 
   def __init__(self):
-    super().__init__(step_type=StepType.COMPOSITE)
+    super().__init__(step_type=constants.StepType.COMPOSITE)
 
 
 class EndStep(Step):
   """End Event of a Diagnostic Tree"""
 
   def __init__(self):
-    super().__init__(step_type=StepType.END)
+    super().__init__(step_type=constants.StepType.END)
 
   def execute(self):
     if not config.get(flags.INTERACTIVE_MODE):
       response = self.interface.prompt(task=self.interface.CONFIRMATION,
                                        message='Is your issue resolved?')
       if response == self.interface.NO:
-        self.interface.prompt(message=END_MESSAGE)
+        self.interface.prompt(message=constants.END_MESSAGE)
 
 
 class Gateway(Step):
@@ -208,7 +209,7 @@ class Gateway(Step):
     """
     Initializes a new instance of the Gateway step.
     """
-    super().__init__(step_type=StepType.GATEWAY)
+    super().__init__(step_type=constants.StepType.GATEWAY)
 
 
 class RunbookRule(type):
@@ -269,7 +270,7 @@ class DiagnosticTree(metaclass=RunbookRule):
   def add_end(self, step: EndStep):
     """Adds the default end step of this tree which is invoked iff all child steps are exectued."""
     if self.start and self.start.steps:
-      if self.start.steps[-1].type == StepType.END:
+      if self.start.steps[-1].type == constants.StepType.END:
         raise ValueError('end already exist')
     self.start.add_child(child=step)
 
@@ -296,7 +297,7 @@ class DiagnosticTree(metaclass=RunbookRule):
           'between the Start method and the end point.')
     # if the tree hasn't be concluded with an endstep.
     # Add the default step
-    if self.start.steps[-1].type != StepType.END:
+    if self.start.steps[-1].type != constants.StepType.END:
       self.start.add_child(EndStep())
 
   def build_tree(self):
@@ -370,8 +371,6 @@ class DiagnosticEngine:
     except exceptions.DiagnosticTreeNotFound as e:
       logging.error('Issues locating runbook: %s : %s', e, name)
       sys.exit(2)
-    except AttributeError:
-      logging.error('Invalid runbook name provided')
 
   def _check_required_paramaters(self, tree: DiagnosticTree):
     missing_parameters = {
@@ -381,9 +380,10 @@ class DiagnosticEngine:
     }
     if missing_parameters:
       missing_param_str = '\n'.join(
-          f"`{key}`: '{value}'" for key, value in missing_parameters.items())
+          f'Help: {value}\n-p {key}=value\n'
+          for key, value in missing_parameters.items())
       logging.error(
-          'Missing %s required %s. Please provide the following:\n\n%s\n\nExiting program',
+          'Missing %s required %s. Please provide the following:\n\n%s\nExiting program',
           len(missing_parameters),
           'parameter' if len(missing_parameters) == 1 else 'parameters',
           missing_param_str)
@@ -425,7 +425,7 @@ class DiagnosticEngine:
           print(f'Cannot cast {param_val} to type {target_type}.')
       elif target_type == bool:
         try:
-          return BOOL_VALUES[param_val]
+          return constants.BOOL_VALUES[param_val]
         except KeyError:
           print(f'Cannot cast {param_val} to type {target_type}.')
       else:
@@ -502,11 +502,9 @@ class DiagnosticEngine:
 
     try:
       dt.hook_build_tree()
-      operation = Operation(context=context, interface=self.interface)
+      operator = op.Operator(c=context, i=self.interface)
       self.finalize = False
-      self.find_path_dfs(step=dt.start,
-                         operation=operation,
-                         executed_steps=set())
+      self.find_path_dfs(step=dt.start, operator=operator, executed_steps=set())
 
     except (utils.GcpApiError, googleapiclient.errors.HttpError, RuntimeError,
             ValueError, KeyError, exceptions.InvalidDiagnosticTree) as err:
@@ -515,7 +513,7 @@ class DiagnosticEngine:
       logging.warning('%s: %s while processing runbook rule: %s',
                       type(err).__name__, err, dt)
 
-  def find_path_dfs(self, step: Step, operation: Operation,
+  def find_path_dfs(self, step: Step, operator: op.Operator,
                     executed_steps: Set):
     """Depth-first search to traverse and execute steps in the diagnostic tree.
 
@@ -525,53 +523,54 @@ class DiagnosticEngine:
       executed_steps: A set of executed step IDs to avoid cycles.
     """
     if not self.finalize:
-      self.run_step(step=step, operation=operation)
+      with op.operator_context(operator):
+        self.run_step(step=step, operator=operator)
+
       executed_steps.add(step)
       for child in step.steps:  # Iterate over the children of the current step
         if child not in executed_steps:
           self.find_path_dfs(step=child,
-                             operation=operation,
+                             operator=operator,
                              executed_steps=executed_steps)
-
       return executed_steps
 
-  def run_step(self, step: Step, operation: Operation):
+  def run_step(self, step: Step, operator: op.Operator):
     """Executes a single step, handling user decisions for step re-evaluation or termination.
 
     Args:
       step: The diagnostic step to execute.
-      operation: The execution operations object containing the context.
+      operator: The execution operations object containing the context.
     """
 
-    user_input = self._run(step, operation)
+    user_input = self._run(step, operator)
     while True:
-      if user_input is operation.interface.output.RETEST:
-        operation.info(step_type=operation.interface.output.RETEST,
-                       message='Re-evaluating recent failed step')
+      if user_input is constants.RETEST:
+        operator.interface.info(step_type=constants.RETEST,
+                                message='Re-evaluating recent failed step')
         with caching.bypass_cache():
-          user_input = self._run(step, operation=operation)
-      elif step.type == StepType.END:
+          user_input = self._run(step, operator=operator)
+      elif step.type == constants.StepType.END:
         self.rm.generate_report()
         self.finalize = True
         break
-      elif user_input is operation.interface.output.STOP:
+      elif user_input is constants.STOP:
         logging.info('Exiting Runbook Execution \n')
         sys.exit(2)
-      elif step.type == StepType.START and (
+      elif step.type == constants.StepType.START and (
         self.rm.results.get(step.run_id) is not None and \
           self.rm.results[step.run_id].status == 'skipped'):
         logging.info('Start Step was skipped. Can\'t proceed ...\n')
         sys.exit(2)
-      elif user_input is operation.interface.output.CONTINUE:
+      elif user_input is constants.CONTINUE:
         break
-      elif (user_input is not operation.interface.output.RETEST and
-            user_input is not operation.interface.output.CONTINUE and
-            user_input is not operation.interface.output.STOP):
+      elif (user_input is not constants.RETEST and
+            user_input is not constants.CONTINUE and
+            user_input is not constants.STOP):
         return user_input
 
-  def _run(self, step: Step, operation: Operation):
+  def _run(self, step: Step, operator: op.Operator):
     start = datetime.now(timezone.utc).timestamp()
-    step.hook_execute(operation)
+    step.hook_execute(operator)
     end = datetime.now(timezone.utc).timestamp()
     if self.rm.results.get(step.run_id):
       self.rm.results[step.run_id].start_time_utc = start

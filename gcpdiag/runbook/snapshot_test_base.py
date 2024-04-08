@@ -32,28 +32,27 @@ class RulesSnapshotTestBase:
 
   def test_all_rules(self, snapshot):
     self.de = runbook.DiagnosticEngine()
-    for rule in self._list_rules():
-      snapshot.snapshot_dir = path.join(path.dirname(self.rule_pkg.__file__),
-                                        'snapshots')
-      output_stream = io.StringIO()
-      sys.stdout = output_stream
-      for parameter in self.rule_parameters:
-        context = self._mk_context(parameter=parameter)
-        self.de.dt = rule
-        print(textwrap.fill(str(context), 100), file=sys.stdout, end='\n\n')
-        self.de.run_diagnostic_tree(context)
-        print('\n')
-      snapshot.assert_match(
-          output_stream.getvalue(),
-          path.join(
-              snapshot.snapshot_dir,
-              f'{util.pascal_case_to_snake_case(rule(None).__class__.__name__)}.txt'
-          ))
+    rule = runbook.DiagnosticTreeRegister.get(self.runbook_name)
+    snapshot.snapshot_dir = path.join(path.dirname(self.rule_pkg.__file__),
+                                      'snapshots')
+    output_stream = io.StringIO()
+    sys.stdout = output_stream
+    for parameter in self.rule_parameters:
+      context = self._mk_context(parameter=parameter)
+      self.de.dt = rule
+      print(textwrap.fill(str(context), 100), file=sys.stdout, end='\n\n')
+      self.de.run_diagnostic_tree(context)
+      print('\n')
+    snapshot.assert_match(
+        output_stream.getvalue(),
+        path.join(
+            snapshot.snapshot_dir,
+            f'{util.pascal_case_to_snake_case(rule(None).__class__.__name__)}.txt'
+        ))
 
   def _mk_context(self, parameter):
     return models.Context(project_id=self.project_id, parameters=parameter)
 
-  def _list_rules(self):
-    #pylint: disable=protected-access
-    command._load_runbook_rules(self.rule_pkg.__name__)
-    return runbook.DiagnosticTreeRegister.values()
+
+#pylint: disable=protected-access
+command._load_runbook_rules(runbook.__name__)

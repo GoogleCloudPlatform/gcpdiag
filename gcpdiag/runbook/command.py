@@ -212,9 +212,12 @@ def _flatten_multi_arg(arg_list):
 def _validate_rule_pattern(runbook_name: str):
   runbook_name = runbook_name.lower()
   m = re.match(r'^([a-z]+)/([a-z/-]+)$', runbook_name, re.IGNORECASE)
-  if m:
-    return runbook_name
-  return None
+  if not m:
+    logging.error(
+        'Invalid runbook name: %s should be `gcpdiag runbook product/runbook-id`',
+        runbook_name)
+    sys.exit(2)
+  return runbook_name
 
 
 def _load_runbook_rules(package: str):

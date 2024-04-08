@@ -17,7 +17,8 @@ from typing import Optional, Set
 
 from gcpdiag import runbook
 from gcpdiag.queries import iam
-from gcpdiag.runbook.iam import constants, flags
+from gcpdiag.runbook import op
+from gcpdiag.runbook.iam import flags
 
 
 class VmHasAnActiveServiceAccount(runbook.Step):
@@ -42,8 +43,8 @@ class VmHasAnActiveServiceAccount(runbook.Step):
 
   def execute(self):
     """Verifying if the specified service account is active..."""
-    sa = self.service_account or self.op.get(flags.SERVICE_ACCOUNT)
-    project_id = self.project_id or self.op.get(flags.PROJECT_ID)
+    sa = self.service_account or op.get(flags.SERVICE_ACCOUNT)
+    project_id = self.project_id or op.get(flags.PROJECT_ID)
 
     if sa and project_id:
       sa_resource = next(
@@ -51,33 +52,26 @@ class VmHasAnActiveServiceAccount(runbook.Step):
                  iam.get_service_account_list(project_id)), None)
       # Verify service account exists
       if not iam.is_service_account_existing(sa, project_id):
-        self.op.add_failed(sa_resource,
-                           reason=self.op.get_msg(constants.FAILURE_REASON,
-                                                  sa=sa),
-                           remediation=self.op.get_msg(
-                               constants.FAILURE_REMEDIATION))
+        op.add_failed(sa_resource,
+                      reason=op.prep_msg(op.FAILURE_REASON, sa=sa),
+                      remediation=op.prep_msg(op.FAILURE_REMEDIATION))
       # Verify service account exists
       elif not iam.is_service_account_enabled(sa, project_id):
-        self.op.add_failed(sa_resource,
-                           reason=self.op.get_msg(
-                               constants.FAILURE_REASON,
-                               remediation=self.op.get_msg(
-                                   constants.FAILURE_REMEDIATION_ALT1),
-                               sa=sa))
+        op.add_failed(resource=sa_resource,
+                      reason=op.prep_msg(op.FAILURE_REASON),
+                      remediation=op.prep_msg(op.FAILURE_REMEDIATION_ALT1,
+                                              sa=sa))
       elif (iam.is_service_account_existing(sa, project_id) and
             iam.is_service_account_enabled(sa, project_id)):
-        self.op.add_ok(sa_resource,
-                       self.op.get_msg(constants.SUCCESS_REASON, sa=sa))
+        op.add_ok(sa_resource, op.prep_msg(op.SUCCESS_REASON, sa=sa))
       else:
-        self.op.add_uncertain(None,
-                              reason=constants.UNCERTAIN_REASON,
-                              remediation=self.op.get_msg(
-                                  constants.UNCERTAIN_REMEDIATION))
+        op.add_uncertain(None,
+                         reason=op.UNCERTAIN_REASON,
+                         remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION))
     else:
-      self.op.add_uncertain(None,
-                            reason=constants.UNCERTAIN_REASON,
-                            remediation=self.op.get_msg(
-                                constants.UNCERTAIN_REMEDIATION))
+      op.add_uncertain(None,
+                       reason=op.UNCERTAIN_REASON,
+                       remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION))
 
 
 class IamPolicyCheck(runbook.Step):
@@ -106,8 +100,8 @@ class IamPolicyCheck(runbook.Step):
 
   def execute(self):
     """Verifying IAM policy"""
-    iam_policy = iam.get_project_policy(self.op.get(flags.PROJECT_ID))
-    principal = self.principal or self.op.get(flags.PRINCIPAL)
+    iam_policy = iam.get_project_policy(op.get(flags.PROJECT_ID))
+    principal = self.principal or op.get(flags.PRINCIPAL)
     present_permissions_or_roles = set()
     missing_permissions_or_roles = set()
     items = self.permissions or self.roles or set()
@@ -129,19 +123,18 @@ class IamPolicyCheck(runbook.Step):
     permissions_or_roles = 'permissions' if self.permissions else 'roles'
 
     if outcome:
-      self.op.add_ok(resource=iam_policy,
-                     reason=self.op.get_msg(
-                         constants.SUCCESS_REASON,
-                         principal=self.principal,
-                         permissions_or_roles=permissions_or_roles,
-                         present_permissions_or_roles=', '.join(
-                             present_permissions_or_roles)))
+      op.add_ok(resource=iam_policy,
+                reason=op.prep_msg(op.SUCCESS_REASON,
+                                   principal=self.principal,
+                                   permissions_or_roles=permissions_or_roles,
+                                   present_permissions_or_roles=', '.join(
+                                       present_permissions_or_roles)))
     else:
-      self.op.add_failed(
-          resource=iam_policy,
-          reason=self.op.get_msg(constants.FAILURE_REASON,
-                                 principal=self.principal,
-                                 permissions_or_roles=permissions_or_roles,
-                                 missing_permissions_or_roles=', '.join(
-                                     missing_permissions_or_roles)),
-          remediation=self.op.get_msg(constants.FAILURE_REMEDIATION))
+      op.add_failed(resource=iam_policy,
+                    reason=op.prep_msg(
+                        op.FAILURE_REASON,
+                        principal=self.principal,
+                        permissions_or_roles=permissions_or_roles,
+                        missing_permissions_or_roles=', '.join(
+                            missing_permissions_or_roles)),
+                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
