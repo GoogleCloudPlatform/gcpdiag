@@ -1,0 +1,125 @@
+#!/usr/bin/env python3
+"""Generate runbook starter code"""
+
+import os
+import re
+import subprocess
+import sys
+from datetime import datetime
+
+ALLOWED_PRODUCTS = {
+    'gke', 'gcb', 'gae', 'gce', 'iam', 'apigee', 'composer', 'datafusion',
+    'dataproc', 'gcs', 'vpc', 'lb', 'gcf','crm', 'bigquery','cdn','vertex',
+    'tpu','pubsub','sql','functions',
+}
+
+
+def _get_active_gcloud_project():
+  try:
+    # Run the gcloud command to get the current project
+    result = subprocess.run(["gcloud", "config", "get-value", "project"],
+                            check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    project_id = result.stdout.strip()
+  except subprocess.CalledProcessError:
+    pass
+  else:
+    print(f'Found project {_color(project_id,"blue")}; will use it arg for `--project`')
+    return project_id
+
+
+def _color(text, color):
+  colors = {
+      'green': '\033[92m',
+      'blue': '\033[94m',
+      'magenta': '\033[95m',
+      'cyan': '\033[96m',
+      'reset': '\033[0m'
+  }
+  return f"{colors[color]}{text}{colors['reset']}"
+
+def gen_starter_code(arg):
+  # Extract product and Runbook ID
+  parts = arg.split('/')
+  product = parts[0]
+  id_ = parts[1]
+
+  if product not in ALLOWED_PRODUCTS:
+    print(f'Product {product} is not supported yet. ')
+    return
+
+  dir_path = f'gcpdiag/runbook/{product}'
+  filename = id_.replace('-', '_')
+  dt_name = re.sub(r'(^|-)([a-z])', lambda match: match.group(2).upper(), id_)
+
+  # Create necessary directories
+  os.makedirs(os.path.join(dir_path, 'templates'), exist_ok=True)
+  os.makedirs(os.path.join(dir_path, 'snapshots'), exist_ok=True)
+  open(os.path.join(dir_path, '__init__.py'), 'a', encoding='utf-8').close()
+
+  file_path = os.path.join(dir_path, f'{filename}.py')
+  print(_color('\nGenerating Your Runbook','blue'))
+  print(_color('=======================','blue'))
+  if not os.path.exists(file_path):
+    # Process the runbook starter code template
+    with open('bin/templates/runbook-starter-code.py.tpl', 'r', encoding='utf-8') as template_file:
+      template_content = template_file.read()
+
+    template_content = template_content.replace('TreeName', dt_name)
+    template_content = template_content.replace('[YEAR]', str(datetime.now().year))
+
+    with open(file_path, 'w', encoding='utf-8') as output_file:
+      output_file.write(template_content)
+  else:
+    print(f'{file_path} already exists.')
+    print('Verify if runbook already exist')
+    print(f'Doc: https://gcpdiag.dev/runbook/diagnostic-trees/{product}/{id_}')
+    print(f'File: gcpdiag/runbook/{product}/{id_}.py')
+    return
+
+  # Process additional template files
+  for file in ['constants.py', 'flags.py', 'generalized_steps.py']:
+    file_path = os.path.join(dir_path, file)
+    if not os.path.exists(file_path):
+      with open('bin/templates/python-file.py.tpl', 'r', encoding='utf-8') as template_file:
+        content = template_file.read()
+
+      content = content.replace('[YEAR]', str(datetime.now().year))
+
+      with open(file_path, 'w', encoding='utf-8') as output_file:
+        output_file.write(content)
+        print(f'Created {file_path}.')
+
+  print(f'Created runbook in {_color(f"{dir_path}/{filename}.py", "magenta")}. Happy Coding! 💻 🚀')
+
+  print(_color('\nGenerating Test Class','blue'))
+  print(_color('=====================','blue'))
+  file_path = os.path.join(dir_path, f'{filename}_test.py')
+  if not os.path.exists(file_path):
+    # Process the runbook starter code template
+    with open('bin/templates/runbook-test.py.tpl', 'r', encoding='utf-8') as template_file:
+      template_content = template_file.read()
+
+    template_content = template_content.replace('TreeName', dt_name)
+    template_content = template_content.replace('PRODUCT', product)
+    template_content = template_content.replace('RULE', arg)
+    template_content = template_content.replace('[YEAR]', str(datetime.now().year))
+
+    with open(file_path, 'w', encoding='utf-8') as output_file:
+      output_file.write(template_content)
+      print(f'Created runbook test in {_color(f"{file_path}", "magenta")}. ✅ 🎉')
+  else:
+    print(f'Strange, test class {file_path} already exists.')
+
+  print(_color('\nRunning Your Runbook in Local Development','blue'))
+  print(_color('=========================================','blue'))
+  proj = _get_active_gcloud_project() or 'REPLACE_PROJECT_ID'
+  print('Run the runbook in interactive mode')
+  print(_color(f'bin/gcpdiag runbook {arg} -p custom_flag={product} --project={proj}', 'green'))
+  print(f'Use {_color("--auto", "magenta")} to run the runbook in a non-interactive mode')
+  print(_color(f'bin/gcpdiag runbook {arg} -p custom_flag={product} --project={proj} --auto','green'))
+
+if __name__ == '__main__':
+  if len(sys.argv) != 2:
+    print('Usage: python runbook-starter-code-generator "product/runbook-id"')
+  else:
+    gen_starter_code(sys.argv[1])

@@ -83,7 +83,6 @@ gce/ssh: Provides a comprehensive analysis of common issues which affects SSH co
 [COMPOSITE STEP]: Analyzing serial logs for common linux guest os and application issues...
 [AUTOMATED STEP]: Initiating kernel panic check on the Guest OS.
 
-
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [UNCERTAIN]
      [REASON]
      Lack of serial log data prevented a thorough assessment of the VM's operational state. Result is
@@ -100,13 +99,11 @@ gce/ssh: Provides a comprehensive analysis of common issues which affects SSH co
 
 [AUTOMATED STEP]: Examining SSHD functionality via serial logs.
 
-
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [OK]
      [REASON]
      Detected that SSHD is running within the VM
 
 [AUTOMATED STEP]: Analyzing SSHGuard intrusion detection functionality on the VM (if any)
-
 
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [UNCERTAIN]
      [REASON]
@@ -148,7 +145,6 @@ gce/ssh: Provides a comprehensive analysis of common issues which affects SSH co
 [GATEWAY]: Identifying OS Login Setup.
 [INFO]: OS login setup is desired, Hence OS login related configurations
 [AUTOMATED STEP]: Verifying that OS Login is set to `True` for the VM.
-
 
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [FAIL]
      [REASON]
@@ -294,7 +290,6 @@ principal in Cloud Console / gcloud (incl. impersonated service account)
 [COMPOSITE STEP]: Analyzing serial logs for common linux guest os and application issues...
 [AUTOMATED STEP]: Initiating kernel panic check on the Guest OS.
 
-
    - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [UNCERTAIN]
      [REASON]
      Lack of serial log data prevented a thorough assessment of the VM's operational state. Result is
@@ -311,13 +306,11 @@ principal in Cloud Console / gcloud (incl. impersonated service account)
 
 [AUTOMATED STEP]: Examining SSHD functionality via serial logs.
 
-
    - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
      [REASON]
      Detected that SSHD is running within the VM
 
 [AUTOMATED STEP]: Analyzing SSHGuard intrusion detection functionality on the VM (if any)
-
 
    - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [UNCERTAIN]
      [REASON]
@@ -359,7 +352,6 @@ principal in Cloud Console / gcloud (incl. impersonated service account)
 [GATEWAY]: Identifying OS Login Setup.
 [INFO]: OS login setup is desired, Hence OS login related configurations
 [AUTOMATED STEP]: Verifying that OS Login is set to `True` for the VM.
-
 
    - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
      [REASON]
@@ -524,7 +516,6 @@ gce/ssh: Provides a comprehensive analysis of common issues which affects SSH co
 
 [AUTOMATED STEP]: Verifying bootup pr
 
-
    - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [UNCERTAIN]
      [REASON]
      Lack of serial log data prevented a thorough assessment of the VM's operational state. Result is
@@ -544,11 +535,6 @@ gce/ssh: Provides a comprehensive analysis of common issues which affects SSH co
 
 [MANUAL STEP]: Manually verify if the necessary Google guest agents, especially `google-compute-engine-ssh`,
 are operational on the VM.
-
-
-   -                                                                      [SKIP]
-     [REASON]
-     Human Tasks was skipped as runbook is running autonomous mode
 [COMPOSITE STEP]: Verifying overall user permissions for SSH access...
 
     Note: Only roles granted at the project level are checked. Permissions inherited from

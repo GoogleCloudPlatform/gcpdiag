@@ -15,6 +15,7 @@
 
 from gcpdiag import runbook
 from gcpdiag.queries import crm, orgpolicy
+from gcpdiag.runbook import op
 from gcpdiag.runbook.iam import constants, flags
 
 
@@ -29,9 +30,9 @@ class OrgPolicyCheck(runbook.Step):
 
   def execute(self):
     """Checking Organisation policy"""
-    project = crm.get_project(self.op.get(flags.PROJECT_ID))
-    constraint = orgpolicy.get_effective_org_policy(
-        self.op.get(flags.PROJECT_ID), self.constraint)
+    project = crm.get_project(op.get(flags.PROJECT_ID))
+    constraint = orgpolicy.get_effective_org_policy(op.get(flags.PROJECT_ID),
+                                                    self.constraint)
 
     enforced_or_not = 'enforced' if self.is_enforced else 'not enforced'
 
@@ -39,19 +40,18 @@ class OrgPolicyCheck(runbook.Step):
     if (self.is_enforced and
         constraint.is_enforced()) or (not self.is_enforced and
                                       not constraint.is_enforced()):
-      self.op.add_ok(resource=project,
-                     reason=self.op.get_msg(
-                         constants.SUCCESS_REASON,
-                         constraint=self.constraint,
-                         enforced_or_not=enforced_or_not,
-                     ))
+      op.add_ok(resource=project,
+                reason=op.prep_msg(
+                    op.SUCCESS_REASON,
+                    constraint=self.constraint,
+                    enforced_or_not=enforced_or_not,
+                ))
 
     # Is effected to be enforced and is enforce or vice versa
     elif (self.is_enforced and not constraint) or (not self.is_enforced and
                                                    not constraint):
-      self.op.add_failed(
-          resource=project,
-          reason=self.op.get_msg(constants.FAILURE_REASON,
-                                 constraint=self.constraint,
-                                 enforced_or_not=enforced_or_not),
-          remediation=self.op.get_msg(constants.FAILURE_REMEDIATION))
+      op.add_failed(resource=project,
+                    reason=op.prep_msg(constants.FAILURE_REASON,
+                                       constraint=self.constraint,
+                                       enforced_or_not=enforced_or_not),
+                    remediation=op.prep_msg(constants.FAILURE_REMEDIATION))

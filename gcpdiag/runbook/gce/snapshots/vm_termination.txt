@@ -1,8 +1,7 @@
-project: gcpdiag-gce-faultyssh-runbook, parameters: {check_os_login=true,name=faulty-linux-
-ssh,principal=cannotssh@example.com,project_id=gcpdiag-gce-faultyssh-
-runbook,tunnel_through_iap=true,zone=europe-west2-a}
+project: gcpdiag-gce-faultyssh-runbook, parameters: {name=faulty-linux-ssh,project_id=gcpdiag-gce-
+faultyssh-runbook,zone=europe-west2-a}
 
-gce/vm_termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
+gce/vm-termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
 
   This runbook is designed to assist you in investigating and understanding the underlying reasons
   behind the unexpected termination or reboot of your GCE Virtual Machines (VMs) within Google
@@ -31,7 +30,6 @@ gce/vm_termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
 No GCE VM was terminated between {start_time_utc} and {end_time_utc}
 
 [AUTOMATED STEP]: Verifying that the terminated VM is currently running...
-
 
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [OK]
      [REASON]
@@ -40,11 +38,10 @@ No GCE VM was terminated between {start_time_utc} and {end_time_utc}
 [END]: Finalizing VM terminations diagnostics...
 
 
-project: gcpdiag-gce-faultyssh-runbook, parameters: {check_os_login=true,name=valid-linux-
-ssh,principal=canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com,project_id=gcpdiag-gce-
-faultyssh-runbook,tunnel_through_iap=true,zone=europe-west2-a}
+project: gcpdiag-gce-faultyssh-runbook, parameters: {name=valid-linux-ssh,project_id=gcpdiag-gce-
+faultyssh-runbook,zone=europe-west2-a}
 
-gce/vm_termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
+gce/vm-termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
 
   This runbook is designed to assist you in investigating and understanding the underlying reasons
   behind the unexpected termination or reboot of your GCE Virtual Machines (VMs) within Google
@@ -73,7 +70,6 @@ gce/vm_termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
 No GCE VM was terminated between {start_time_utc} and {end_time_utc}
 
 [AUTOMATED STEP]: Verifying that the terminated VM is currently running...
-
 
    - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
      [REASON]
@@ -82,12 +78,10 @@ No GCE VM was terminated between {start_time_utc} and {end_time_utc}
 [END]: Finalizing VM terminations diagnostics...
 
 
-project: gcpdiag-gce-faultyssh-runbook, parameters:
-{check_os_login=false,local_user=no_user,name=faulty-windows-
-ssh,principal=cannot@example.com,project_id=gcpdiag-gce-faultyssh-
-runbook,src_ip=0.0.0.0,tunnel_through_iap=false,zone=europe-west2-a}
+project: gcpdiag-gce-faultyssh-runbook, parameters: {name=faulty-windows-ssh,project_id=gcpdiag-gce-
+faultyssh-runbook,zone=europe-west2-a}
 
-gce/vm_termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
+gce/vm-termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
 
   This runbook is designed to assist you in investigating and understanding the underlying reasons
   behind the unexpected termination or reboot of your GCE Virtual Machines (VMs) within Google
@@ -116,7 +110,6 @@ gce/vm_termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
 No GCE VM was terminated between {start_time_utc} and {end_time_utc}
 
 [AUTOMATED STEP]: Verifying that the terminated VM is currently running...
-
 
    - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [FAIL]
      [REASON]

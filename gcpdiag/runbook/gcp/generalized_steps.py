@@ -21,70 +21,106 @@ from boltons.iterutils import get_path
 from gcpdiag import config, models, runbook
 from gcpdiag.models import Resource
 from gcpdiag.queries import apis
-from gcpdiag.runbook import flags
+from gcpdiag.runbook import flags, op
 from gcpdiag.runbook.gcp import constants
-from gcpdiag.runbook.gcp.flags import INTERACTIVE_MODE
 
 
 class HumanTask(runbook.Step):
-  """Manual Step where a human simply accesses and confirms an issue."""
-  resource: Resource
+  """Defines a manual approach verification step involving human intervention.
 
-  def __init__(self,
-               resource=lambda: None,
-               step_type=constants.StepType.MANUAL):
-    super().__init__(step_type=step_type)
-    self.resource = resource
+    This is special step in a runbook designed for situations where automated
+    verification is not possible, and human judgment is required. It prompts
+    the operator (a human user) to manually check and confirm whether an issue is occurring.
+    This can involve accessing a system, reviewing configurations, or validating the state
+    of a resource based on provided instructions.
+  """
+  resource: Resource
+  instructions: str = ''
+  options: dict = {}
+
+  def __init__(self, name=None, parent=None, step_type=op.StepType.MANUAL):
+    super().__init__(step_type=step_type, name=name, parent=parent)
 
   def execute(self):
-    """Human Task"""
-    if config.get(INTERACTIVE_MODE):
-      self.op.add_skipped(None, reason=self.prompts[constants.SKIPPED_REASON])
-      return
+    """Human task: Follow the guide below and confirm if issue is occuring or not."""
 
-    response = self.guide()
-    if response == self.op.output.UNCERTAIN:
-      response = self.op.add_uncertain(
-          self.resource,
-          reason=self.prompts[constants.UNCERTAIN_REASON],
-          remediation=self.prompts[constants.UNCERTAIN_REMEDIATION])
-    elif response == self.op.output.YES:
-      self.op.add_ok(self.resource, self.prompts[constants.SUCCESS_REASON])
-    elif response == self.op.output.NO:
-      self.op.add_failed(
-          self.resource,
-          reason=self.prompts[constants.FAILURE_REASON],
-          remediation=self.prompts[constants.FAILURE_REMEDIATION])
-
-  def guide(self):
-    if callable(self.resource):
-      self.resource = self.resource()
-    response = self.op.prompt(
-        step=self.op.output.CONFIRMATION,
-        message=self.prompts[constants.INSTRUCTIONS_MESSAGE],
-        options=constants.INSTRUCTIONS_CHOICE_OPTIONS)
-    return response
-
-  def set_prompts(self):
-    self.prompts = {
-        constants.SKIPPED_REASON:
-            'Human Tasks was skipped as runbook is running autonomous mode'
-    }
+    instructions = self.instructions or op.prep_msg(op.INSTRUCTIONS_MESSAGE)
+    options = self.options or op.DEFAULT_INSTRUCTIONS_OPTIONS
+    if instructions:
+      response = op.prompt(step=op.CONFIRMATION,
+                           message=instructions,
+                           options=options)
+      if response == op.UNCERTAIN:
+        response = op.add_uncertain(resource=self.resource,
+                                    reason=op.prep_msg(op.UNCERTAIN_REASON),
+                                    remediation=op.prep_msg(
+                                        op.UNCERTAIN_REMEDIATION))
+      elif response == op.YES:
+        op.add_ok(self.resource, op.prep_msg(op.SUCCESS_REASON))
+      elif response == op.NO:
+        op.add_failed(self.resource,
+                      reason=op.prep_msg(op.FAILURE_REASON),
+                      remediation=op.prep_msg(op.FAILURE_REMEDIATION))
 
 
 class ResourceAttributeCheck(runbook.Step):
-  """Check of a gcp resource has the expected attribute for a resource.
+  """Generalized step used to verify the value of a GCP resource's attribute.
 
-  TODO: explain what this does.
+    This step enables the flexible verification of attributes within any JSON-viewable GCP
+    resource, such as GCE instances or Cloud Storage buckets. It checks if a specific resource's
+    attribute matches an expected value and optionally supports custom evaluation logic for
+    more complex verification scenarios.
+
+    Attributes:
+      resource_query (Callable): Function to fetch the target GCP resource. Must return
+          a `Resource` object. Typically, this is one of the `gcpdiag.queries.*` methods.
+      query_kwargs (dict): Keyword arguments to pass to `resource_query`.
+      resource (Resource): The GCP resource fetched by `resource_query`.
+      attribute (Optional[tuple]): Path to the nested attribute within the resource to be
+          verified, represented as a tuple of strings. Utilizes `boltons.iterutils.get_path`
+          for navigation.
+      evaluator (Optional[Callable]): A custom function for performing complex evaluations
+          on a resource attribute.
+          Should return a dict:
+            {'success_reason': {'key1': 'value1', ...}, 'failure_reason': {...}}
+      expected_value (str): The expected value of the target attribute.
+      expected_value_type (type): Data type of the expected attribute value. Defaults to `str`.
+      extract_args (dict): Configuration for extracting additional information for message
+          formatting, with keys specifying the argument name and values specifying the source
+          and attribute path.
+      message_args (dict): Extracted arguments used for formatting outcome messages.
+
+    Usage:
+      An example to check the status of a GCE instance:
+
+      ```python
+      status_check = ResourceAttributeCheck()
+      status_check.resource_query = gce.get_instance
+      status_check.query_kwargs = {
+          'project_id': op.get(flags.PROJECT_ID),
+          'zone': op.get(flags.ZONE),
+          'instance_name': op.get(flags.NAME)
+      }
+      status_check.attribute = ('status',)
+      status_check.expected_value = 'RUNNING'
+      status_check.extract_args = {
+          'vm_name': {'source': models.Resource, 'attribute': 'name'},
+          'status': {'source': models.Resource, 'attribute': 'status'},
+          'resource_project_id': {'source': models.Parameter, 'attribute': 'project_id'}
+      }
+      ```
+
+    `get_path`: https://boltons.readthedocs.io/en/latest/_modules/boltons/iterutils.html#get_path
   """
   resource_query: typing.Callable
   query_kwargs: dict
-  evaluator = None
+  evaluator: typing.Callable
   attribute: tuple
   expected_value: str
   expected_value_type: type = str
   extract_args: dict = {}
   message_args: dict = {}
+  template = 'resource_attribute::default'
 
   resource: Resource
 
@@ -94,10 +130,9 @@ class ResourceAttributeCheck(runbook.Step):
       self.resource = self.resource_query(**self.query_kwargs)
       # TODO: change this.
     except googleapiclient.errors.HttpError:
-      self.op.add_uncertain(self.resource,
-                            reason=self.op.get_msg(constants.UNCERTAIN_REASON),
-                            remediation=self.op.get_msg(
-                                constants.UNCERTAIN_REMEDIATION))
+      op.add_uncertain(self.resource,
+                       reason=op.prep_msg(op.UNCERTAIN_REASON),
+                       remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION))
 
     if self.extract_args is not None:
       for k, v in self.extract_args.items():
@@ -107,34 +142,32 @@ class ResourceAttributeCheck(runbook.Step):
                                           v['attribute'],
                                           default=v.get('default'))
         if v['source'] == models.Parameter:
-          self.message_args[k] = self.op.get(v['attribute'])
+          self.message_args[k] = op.get(v['attribute'])
 
-    if self.evaluator is not None:
+    if hasattr(self, 'evaluator'):
       res = self.evaluator(self.resource)
-      if res[constants.SUCCESS_REASON]:
-        self.op.add_ok(self.resource, self.op.get_msg(constants.SUCCESS_REASON))
-      elif res[constants.FAILURE_REASON]:
-        self.op.add_failed(self.resource,
-                           reason=self.op.get_msg(constants.FAILURE_REASON),
-                           remediation=self.op.get_msg(
-                               constants.FAILURE_REMEDIATION))
-    if self.attribute:
+      if op.SUCCESS_REASON in res:
+        kwargs = res.get(op.SUCCESS_REASON) or self.message_args
+        op.add_ok(self.resource, op.prep_msg(op.SUCCESS_REASON, **kwargs))
+      elif res.get(op.FAILURE_REASON):
+        kwargs = res.get(op.FAILURE_REASON) or self.message_args
+        op.add_failed(self.resource,
+                      reason=op.prep_msg(op.FAILURE_REASON, **kwargs),
+                      remediation=op.prep_msg(op.FAILURE_REMEDIATION, **kwargs))
+    if hasattr(self, 'attribute'):
       # pylint:disable=protected-access
       actual_value = get_path(self.resource._resource_data,
                               self.attribute,
                               default=None)
-      actual_value = self.expected_value_type(actual_value)
       if self.expected_value == actual_value:
-        self.op.add_ok(
-            self.resource,
-            self.op.get_msg(constants.SUCCESS_REASON, **self.message_args))
+        op.add_ok(self.resource,
+                  op.prep_msg(op.SUCCESS_REASON, **self.message_args))
       else:
-        self.op.add_failed(self.resource,
-                           reason=self.op.get_msg(constants.FAILURE_REASON,
-                                                  **self.message_args),
-                           remediation=self.op.get_msg(
-                               constants.FAILURE_REMEDIATION,
-                               **self.message_args))
+        op.add_failed(self.resource,
+                      reason=op.prep_msg(op.FAILURE_REASON,
+                                         **self.message_args),
+                      remediation=op.prep_msg(op.FAILURE_REMEDIATION,
+                                              **self.message_args))
 
 
 class ServiceApiStatusCheck(runbook.Step):
@@ -157,24 +190,24 @@ class ServiceApiStatusCheck(runbook.Step):
 
   def execute(self):
     """Verifying Cloud API state of {api_name}..."""
-    services = apis.list_services_with_state(self.op[flags.PROJECT_ID])
+    services = apis.list_services_with_state(op.get(flags.PROJECT_ID))
     service_name = f'{self.api_name}.{config.get("universe_domain")}'
     actual_state = services.get(service_name)
     if self.expected_state == actual_state:
-      self.op.add_ok(
+      op.add_ok(
           self.resource,
-          self.op.get_msg(constants.SUCCESS_REASON,
-                          service_name=service_name,
-                          expected_state=self.expected_state))
+          op.prep_msg(op.SUCCESS_REASON,
+                      service_name=service_name,
+                      expected_state=self.expected_state))
     else:
       if self.expected_state == constants.APIState.ENABLED:
-        remediation = self.op.get_msg(constants.FAILURE_REMEDIATION,
-                                      service_name=service_name,
-                                      project_id=self.op[flags.PROJECT_ID])
+        remediation = op.prep_msg(op.FAILURE_REMEDIATION,
+                                  service_name=service_name,
+                                  project_id=op.get(flags.PROJECT_ID))
       if self.expected_state == constants.APIState.DISABLED:
-        remediation = self.op.get_msg(constants.FAILURE_REMEDIATION_ALT1,
-                                      service_name=service_name,
-                                      project_id=self.op[flags.PROJECT_ID])
-      self.op.add_failed(self.resource,
-                         reason=self.op.get_msg(constants.FAILURE_REASON),
-                         remediation=remediation)
+        remediation = op.prep_msg(op.FAILURE_REMEDIATION_ALT1,
+                                  service_name=service_name,
+                                  project_id=op.get(flags.PROJECT_ID))
+      op.add_failed(self.resource,
+                    reason=op.prep_msg(op.FAILURE_REASON),
+                    remediation=remediation)

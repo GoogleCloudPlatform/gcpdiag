@@ -31,7 +31,8 @@ https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-ro
 
 ### Success Reason
 
-"{auth_user}" has the "{sa_user_role}" required to impersonate the service account {service_account}.
+"{auth_user}" has the "{sa_user_role}"
+required to impersonate the service account {service_account}.
 
 
 

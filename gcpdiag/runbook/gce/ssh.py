@@ -18,11 +18,12 @@ import googleapiclient.errors
 
 from gcpdiag import config, runbook
 from gcpdiag.queries import crm, gce, iam, monitoring
+from gcpdiag.runbook import op
 from gcpdiag.runbook.gce import constants as gce_const
 from gcpdiag.runbook.gce import flags
 from gcpdiag.runbook.gce import generalized_steps as gce_gs
 from gcpdiag.runbook.gce import util
-from gcpdiag.runbook.gcp import generalized_steps as platform_gs
+from gcpdiag.runbook.gcp import generalized_steps as gcp_gs
 
 
 class Ssh(runbook.DiagnosticTree):
@@ -137,58 +138,53 @@ class SshStart(runbook.StartStep):
 
   def execute(self):
     """Starting SSH diagnostics"""
-    project = crm.get_project(self.op.get(flags.PROJECT_ID))
+    project = crm.get_project(op.get(flags.PROJECT_ID))
     try:
-      vm = gce.get_instance(project_id=self.op.get(flags.PROJECT_ID),
-                            zone=self.op.get(flags.ZONE),
-                            instance_name=self.op.get(flags.NAME))
+      vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
+                            zone=op.get(flags.ZONE),
+                            instance_name=op.get(flags.NAME))
     except googleapiclient.errors.HttpError:
-      self.op.add_skipped(
+      op.add_skipped(
           project,
           reason=('Instance {} does not exist in zone {} or project {}').format(
-              self.op.get(flags.NAME), self.op.get(flags.ZONE),
-              self.op.get(flags.PROJECT_ID)))
+              op.get(flags.NAME), op.get(flags.ZONE), op.get(flags.PROJECT_ID)))
     else:
       if vm:
         # check if user supplied an instance id or a name.
-        if self.op[flags.NAME].isdigit():
-          self.op[flags.NAME] = vm.name
+        if op.get(flags.NAME).isdigit():
+          op.put(flags.NAME, vm.name)
         # Perform basic parameter checks and parse
         # string boolean into boolean values
-        if self.op.get(flags.CHECK_OS_LOGIN):
-          self.op.info('Will check for OS login configuration')
+        if op.get(flags.CHECK_OS_LOGIN):
+          op.info('Will check for OS login configuration')
         else:
-          self.op.info('Will check for Metadata based SSH key configuration')
+          op.info('Will check for Metadata based SSH key configuration')
 
-        if (not self.op.get(flags.SRC_IP) and
-            not self.op.get(flags.TUNNEL_THROUGH_IAP) and
-            vm.is_public_machine()):
-          self.op[flags.SRC_IP] = gce_const.UNSPECIFIED_ADDRESS
-        self.op.info('Checks will use ip {} as the source IP'.format(
-            self.op.get(flags.SRC_IP)))
-        if self.op.get(flags.TUNNEL_THROUGH_IAP):
+        if (not op.get(flags.SRC_IP) and
+            not op.get(flags.TUNNEL_THROUGH_IAP) and vm.is_public_machine()):
+          op.put(flags.SRC_IP, gce_const.UNSPECIFIED_ADDRESS)
+        op.info('Checks will use ip {} as the source IP'.format(
+            op.get(flags.SRC_IP)))
+        if op.get(flags.TUNNEL_THROUGH_IAP):
           # set IAP VIP as the source to the VM
-          self.op[flags.SRC_IP] = gce_const.IAP_FW_VIP
-          self.op.info('Will check for IAP configuration')
+          op.put(flags.SRC_IP, gce_const.IAP_FW_VIP)
+          op.info('Will check for IAP configuration')
         else:
-          self.op.info(
-              'Will not check for IAP for TCP forwarding configuration')
-        if self.op.get(flags.LOCAL_USER):
-          self.op[flags.LOCAL_USER] = self.op.get(flags.LOCAL_USER)
-          self.op.info(
-              f'Local User: {self.op.get(flags.LOCAL_USER)} will be used '
-              f'examine metadata-based SSH Key configuration')
-        if self.op.get(flags.PRINCIPAL):
-          email_only = len(self.op.get(flags.PRINCIPAL).split(':')) == 1
+          op.info('Will not check for IAP for TCP forwarding configuration')
+        if op.get(flags.LOCAL_USER):
+          op.put(flags.LOCAL_USER, op.get(flags.LOCAL_USER))
+          op.info(f'Local User: {op.get(flags.LOCAL_USER)} will be used '
+                  f'examine metadata-based SSH Key configuration')
+        if op.get(flags.PRINCIPAL):
+          email_only = len(op.get(flags.PRINCIPAL).split(':')) == 1
           if email_only:
             # Get the type
             p_policy = iam.get_project_policy(vm.project_id)
-            p_type = p_policy.get_member_type(self.op.get(flags.PRINCIPAL))
-            self.op[
-                flags.PRINCIPAL] = f'{p_type}:{self.op.get(flags.PRINCIPAL)}'
+            p_type = p_policy.get_member_type(op.get(flags.PRINCIPAL))
+            op.put(flags.PRINCIPAL, f'{p_type}:{op.get(flags.PRINCIPAL)}')
             if p_type:
-              self.op.info(
-                  f'Checks will use {self.op.get(flags.PRINCIPAL)} as the authenticated\n'
+              op.info(
+                  f'Checks will use {op.get(flags.PRINCIPAL)} as the authenticated\n'
                   'principal in Cloud Console / gcloud (incl. impersonated service account)'
               )
             else:
@@ -197,22 +193,22 @@ class SshStart(runbook.StartStep):
               # for projects.
               pass
         # Set IP protocol
-        self.op[flags.PROTOCOL_TYPE] = 'tcp'
-        if not self.op.get(flags.PORT):
-          self.op[flags.PORT] = gce_const.DEFAULT_SSHD_PORT
+        op.put(flags.PROTOCOL_TYPE, 'tcp')
+        if not op.get(flags.PORT):
+          op.put(flags.PORT, gce_const.DEFAULT_SSHD_PORT)
 
     ops_agent_q = monitoring.query(
-        self.op.get(flags.PROJECT_ID), """
+        op.get(flags.PROJECT_ID), """
               fetch gce_instance
               | metric 'agent.googleapis.com/agent/uptime'
               | filter (metadata.system_labels.name == '{}')
               | align rate(5m)
               | every 5m
               | {}
-            """.format(self.op.get(flags.NAME), gce_gs.within_str))
+            """.format(op.get(flags.NAME), gce_gs.within_str))
     if ops_agent_q:
-      self.op.info('Will use ops agent metrics for relevant assessments')
-      self.op[flags.OPS_AGENT_EXPORTING_METRICS] = True
+      op.info('Will use ops agent metrics for relevant assessments')
+      op.put(flags.OPS_AGENT_EXPORTING_METRICS, True)
 
 
 class VmGuestOsType(runbook.Gateway):
@@ -224,15 +220,14 @@ class VmGuestOsType(runbook.Gateway):
 
   def execute(self):
     """Identifying Guest OS type..."""
-    vm = gce.get_instance(project_id=self.op.get(flags.PROJECT_ID),
-                          zone=self.op.get(flags.ZONE),
-                          instance_name=self.op.get(flags.NAME))
+    vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
+                          zone=op.get(flags.ZONE),
+                          instance_name=op.get(flags.NAME))
     if not vm.is_windows_machine():
-      self.op.info(
-          'Detected Linux VM. Proceeding with Linux-specific diagnostics.')
+      op.info('Detected Linux VM. Proceeding with Linux-specific diagnostics.')
       self.add_child(LinuxGuestOsChecks())
     else:
-      self.op.info(
+      op.info(
           'Detected Windows VM. Proceeding with Windows-specific diagnostics.')
       self.add_child(WindowsGuestOsChecks())
 
@@ -247,11 +242,11 @@ class SshEnd(runbook.EndStep):
   def execute(self):
     """Finalizing SSH diagnostics..."""
     if not config.get(flags.INTERACTIVE_MODE):
-      response = self.op.prompt(
-          step=self.op.interface.output.CONFIRMATION,
-          message=f'Are you able to SSH into VM {self.op.get(flags.NAME)}?')
-      if response == self.op.interface.output.NO:
-        self.op.info(message=gce_const.END_MESSAGE)
+      response = op.prompt(
+          step=op.CONFIRMATION,
+          message=f'Are you able to SSH into VM {op.get(flags.NAME)}?')
+      if response == op.NO:
+        op.info(message=op.END_MESSAGE)
 
 
 class GcpSshPermissions(runbook.CompositeStep):
@@ -274,7 +269,7 @@ class GcpSshPermissions(runbook.CompositeStep):
     # Check OS login or Key based auth preference.
     self.add_child(OsLoginStatusCheck())
 
-    if self.op.get(flags.TUNNEL_THROUGH_IAP):
+    if op.get(flags.TUNNEL_THROUGH_IAP):
       self.add_child(AuthPrincipalHasIapTunnelUserPermissionsCheck())
 
 
@@ -288,8 +283,8 @@ class OsLoginStatusCheck(runbook.Gateway):
   def execute(self):
     """Identifying OS Login Setup."""
     # User intends to use OS login
-    if self.op.get(flags.CHECK_OS_LOGIN):
-      self.op.info(
+    if op.get(flags.CHECK_OS_LOGIN):
+      op.info(
           'OS login setup is desired, Hence OS login related configurations')
       os_login_check = gce_gs.VmMetadataCheck()
       os_login_check.template = 'vm_metadata::os_login_enabled'
@@ -299,8 +294,8 @@ class OsLoginStatusCheck(runbook.Gateway):
       self.add_child(AuthPrincipalHasOsLoginPermissionsCheck())
       self.add_child(AuthPrincipalHasServiceAccountUserCheck())
 
-      if not self.op.get(flags.CHECK_OS_LOGIN):
-        self.op.info(
+      if not op.get(flags.CHECK_OS_LOGIN):
+        op.info(
             'Key Based ssh authentication desired, Hence investing Key based SSH configuration.'
         )
         self.add_child(AuthPrincipalHasComputeMetadataPermissionsCheck())
@@ -329,22 +324,20 @@ class AuthPrincipalHasComputeMetadataPermissionsCheck(runbook.Step):
   def execute(self):
     """Verifying SSH metadata update permissions..."""
 
-    iam_policy = iam.get_project_policy(self.op.get(flags.PROJECT_ID))
+    iam_policy = iam.get_project_policy(op.get(flags.PROJECT_ID))
 
-    auth_user = self.op.get(flags.PRINCIPAL)
+    auth_user = op.get(flags.PRINCIPAL)
     can_set_metadata = iam_policy.has_any_permission(auth_user,
                                                      self.metadata_permissions)
     if can_set_metadata:
-      self.op.add_ok(resource=iam_policy,
-                     reason=self.op.get_msg(gce_const.SUCCESS_REASON,
-                                            auth_user=auth_user))
+      op.add_ok(resource=iam_policy,
+                reason=op.prep_msg(op.SUCCESS_REASON, auth_user=auth_user))
     else:
-      self.op.add_failed(iam_policy,
-                         reason=self.op.get_msg(
-                             gce_const.FAILURE_REASON,
-                             metadata_permissions=self.metadata_permissions),
-                         remediation=self.op.get_msg(
-                             gce_const.FAILURE_REMEDIATION))
+      op.add_failed(iam_policy,
+                    reason=op.prep_msg(
+                        op.FAILURE_REASON,
+                        metadata_permissions=self.metadata_permissions),
+                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
 
 
 class AuthPrincipalHasPermissionToFetchVmCheck(runbook.Step):
@@ -362,23 +355,22 @@ class AuthPrincipalHasPermissionToFetchVmCheck(runbook.Step):
   def execute(self):
     """Verifying instance retrieval permissions..."""
 
-    iam_policy = iam.get_project_policy(self.op.get(flags.PROJECT_ID))
+    iam_policy = iam.get_project_policy(op.get(flags.PROJECT_ID))
 
-    auth_user = self.op.get(flags.PRINCIPAL)
+    auth_user = op.get(flags.PRINCIPAL)
     if iam_policy.has_any_permission(auth_user, self.instance_permissions):
-      self.op.add_ok(resource=iam_policy,
-                     reason=self.op.get_msg(gce_const.SUCCESS_REASON,
-                                            auth_user=auth_user))
+      op.add_ok(resource=iam_policy,
+                reason=op.prep_msg(op.SUCCESS_REASON, auth_user=auth_user))
     else:
-      self.op.add_failed(iam_policy,
-                         reason=self.op.get_msg(
-                             gce_const.FAILURE_REASON,
-                             auth_user=auth_user,
-                             instance_permissions=self.instance_permissions),
-                         remediation=self.op.get_msg(
-                             gce_const.FAILURE_REMEDIATION,
-                             auth_user=auth_user,
-                             instance_permissions=self.instance_permissions))
+      op.add_failed(iam_policy,
+                    reason=op.prep_msg(
+                        op.FAILURE_REASON,
+                        auth_user=auth_user,
+                        instance_permissions=self.instance_permissions),
+                    remediation=op.prep_msg(
+                        op.FAILURE_REMEDIATION,
+                        auth_user=auth_user,
+                        instance_permissions=self.instance_permissions))
 
 
 class PoxisUserHasValidSshKeyCheck(runbook.Step):
@@ -395,29 +387,28 @@ class PoxisUserHasValidSshKeyCheck(runbook.Step):
   def execute(self):
     """Validating SSH key for local user..."""
 
-    vm = gce.get_instance(project_id=self.op.get(flags.PROJECT_ID),
-                          zone=self.op.get(flags.ZONE),
-                          instance_name=self.op.get(flags.NAME))
+    vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
+                          zone=op.get(flags.ZONE),
+                          instance_name=op.get(flags.NAME))
 
     # Check if the local_user has a valid key in the VM's metadata.
     ssh_keys = vm.get_metadata('ssh-keys').split('\n') if vm.get_metadata(
         'ssh-keys') else []
-    has_valid_key = util.user_has_valid_ssh_key(self.op.get(flags.LOCAL_USER),
+    has_valid_key = util.user_has_valid_ssh_key(op.get(flags.LOCAL_USER),
                                                 ssh_keys)
     if has_valid_key:
-      self.op.add_ok(resource=vm,
-                     reason=self.op.get_msg(gce_const.SUCCESS_REASON,
-                                            local_user=self.op.get(
-                                                flags.LOCAL_USER),
-                                            vm_name=vm.name))
+      op.add_ok(resource=vm,
+                reason=op.prep_msg(op.SUCCESS_REASON,
+                                   local_user=op.get(flags.LOCAL_USER),
+                                   vm_name=vm.name))
     else:
-      self.op.add_failed(
-          vm,
-          reason=self.op.get_msg(gce_const.FAILURE_REASON,
-                                 local_user=self.op.get(flags.LOCAL_USER),
-                                 vm_name=vm.name),
-          remediation=self.op.get_msg(gce_const.FAILURE_REMEDIATION,
-                                      local_user=self.op.get(flags.LOCAL_USER)))
+      op.add_failed(vm,
+                    reason=op.prep_msg(op.FAILURE_REASON,
+                                       local_user=op.get(flags.LOCAL_USER),
+                                       vm_name=vm.name),
+                    remediation=op.prep_msg(op.FAILURE_REMEDIATION,
+                                            local_user=op.get(
+                                                flags.LOCAL_USER)))
 
 
 class AuthPrincipalHasOsLoginPermissionsCheck(runbook.Step):
@@ -432,12 +423,12 @@ class AuthPrincipalHasOsLoginPermissionsCheck(runbook.Step):
   def execute(self):
     """Evaluating OS Login permissions for the user..."""
 
-    vm = gce.get_instance(project_id=self.op.get(flags.PROJECT_ID),
-                          zone=self.op.get(flags.ZONE),
-                          instance_name=self.op.get(flags.NAME))
-    iam_policy = iam.get_project_policy(self.op.get(flags.PROJECT_ID))
+    vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
+                          zone=op.get(flags.ZONE),
+                          instance_name=op.get(flags.NAME))
+    iam_policy = iam.get_project_policy(op.get(flags.PROJECT_ID))
 
-    auth_user = self.op.get(flags.PRINCIPAL)
+    auth_user = op.get(flags.PRINCIPAL)
 
     # Does the instance have a service account?
     # Then users needs to have permissions to user the service account
@@ -445,26 +436,26 @@ class AuthPrincipalHasOsLoginPermissionsCheck(runbook.Step):
         auth_user, gce_const.OSLOGIN_ROLE) or iam_policy.has_role_permissions(
             auth_user, gce_const.OSLOGIN_ADMIN_ROLE) or
             iam_policy.has_role_permissions(auth_user, gce_const.OWNER_ROLE)):
-      self.op.add_failed(iam_policy,
-                         reason=self.op.get_msg(
-                             gce_const.FAILURE_REASON,
-                             auth_user=auth_user,
-                             os_login_role=gce_const.OSLOGIN_ROLE,
-                             os_login_admin_role=gce_const.OSLOGIN_ADMIN_ROLE,
-                             owner_role=gce_const.OWNER_ROLE),
-                         remediation=self.op.get_msg(
-                             gce_const.FAILURE_REMEDIATION,
-                             auth_user=auth_user,
-                             os_login_role=gce_const.OSLOGIN_ROLE,
-                             os_login_admin_role=gce_const.OSLOGIN_ADMIN_ROLE))
+      op.add_failed(iam_policy,
+                    reason=op.prep_msg(
+                        op.FAILURE_REASON,
+                        auth_user=auth_user,
+                        os_login_role=gce_const.OSLOGIN_ROLE,
+                        os_login_admin_role=gce_const.OSLOGIN_ADMIN_ROLE,
+                        owner_role=gce_const.OWNER_ROLE),
+                    remediation=op.prep_msg(
+                        op.FAILURE_REMEDIATION,
+                        auth_user=auth_user,
+                        os_login_role=gce_const.OSLOGIN_ROLE,
+                        os_login_admin_role=gce_const.OSLOGIN_ADMIN_ROLE))
     else:
-      self.op.add_ok(resource=vm,
-                     reason=self.op.get_msg(
-                         gce_const.SUCCESS_REASON,
-                         auth_user=auth_user,
-                         os_login_role=gce_const.OSLOGIN_ROLE,
-                         os_login_admin_role=gce_const.OSLOGIN_ADMIN_ROLE,
-                         owner_role=gce_const.OWNER_ROLE))
+      op.add_ok(resource=vm,
+                reason=op.prep_msg(
+                    op.SUCCESS_REASON,
+                    auth_user=auth_user,
+                    os_login_role=gce_const.OSLOGIN_ROLE,
+                    os_login_admin_role=gce_const.OSLOGIN_ADMIN_ROLE,
+                    owner_role=gce_const.OWNER_ROLE))
 
 
 class AuthPrincipalHasServiceAccountUserCheck(runbook.Step):
@@ -479,32 +470,30 @@ class AuthPrincipalHasServiceAccountUserCheck(runbook.Step):
 
   def execute(self):
     """Evaluating user permissions for the service account..."""
-
-    vm = gce.get_instance(project_id=self.op.get(flags.PROJECT_ID),
-                          zone=self.op.get(flags.ZONE),
-                          instance_name=self.op.get(flags.NAME))
+    vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
+                          zone=op.get(flags.ZONE),
+                          instance_name=op.get(flags.NAME))
     iam_policy = iam.get_project_policy(vm.project_id)
 
-    auth_user = self.op.get(flags.PRINCIPAL)
+    auth_user = op.get(flags.PRINCIPAL)
 
     if vm.service_account:
       if not iam_policy.has_role_permissions(auth_user, gce_const.SA_USER_ROLE):
-        self.op.add_failed(
-            vm,
-            reason=self.op.get_msg(gce_const.FAILURE_REASON,
-                                   auth_user=auth_user,
-                                   sa_user_role=gce_const.SA_USER_ROLE,
-                                   service_account=vm.service_account),
-            remediation=self.op.get_msg(gce_const.FAILURE_REMEDIATION,
-                                        auth_user=auth_user,
-                                        sa_user_role=gce_const.SA_USER_ROLE))
+        op.add_failed(vm,
+                      reason=op.prep_msg(op.FAILURE_REASON,
+                                         auth_user=auth_user,
+                                         sa_user_role=gce_const.SA_USER_ROLE,
+                                         service_account=vm.service_account),
+                      remediation=op.prep_msg(
+                          op.FAILURE_REMEDIATION,
+                          auth_user=auth_user,
+                          sa_user_role=gce_const.SA_USER_ROLE))
       else:
-        self.op.add_ok(resource=vm,
-                       reason=self.op.get_msg(
-                           gce_const.SUCCESS_REASON,
-                           auth_user=auth_user,
-                           sa_user_role=gce_const.SA_USER_ROLE,
-                           service_account=vm.service_account))
+        op.add_ok(resource=vm,
+                  reason=op.prep_msg(op.SUCCESS_REASON,
+                                     auth_user=auth_user,
+                                     sa_user_role=gce_const.SA_USER_ROLE,
+                                     service_account=vm.service_account))
 
 
 class AuthPrincipalHasIapTunnelUserPermissionsCheck(runbook.Step):
@@ -521,30 +510,29 @@ class AuthPrincipalHasIapTunnelUserPermissionsCheck(runbook.Step):
   def execute(self):
     """Evaluating IAP Tunnel user permissions..."""
 
-    vm = gce.get_instance(project_id=self.op.get(flags.PROJECT_ID),
-                          zone=self.op.get(flags.ZONE),
-                          instance_name=self.op.get(flags.NAME))
-    iam_policy = iam.get_project_policy(self.op.get(flags.PROJECT_ID))
+    vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
+                          zone=op.get(flags.ZONE),
+                          instance_name=op.get(flags.NAME))
+    iam_policy = iam.get_project_policy(op.get(flags.PROJECT_ID))
 
-    auth_user = self.op.get(flags.PRINCIPAL)
+    auth_user = op.get(flags.PRINCIPAL)
     # Check for IAP config
     # TODO improve this to check that it affects the
     #  interested instance. because IAP and Service account roles can be scoped to VM
     if auth_user and not iam_policy.has_role_permissions(
         f'{auth_user}', gce_const.IAP_ROLE):
-      self.op.add_failed(iam_policy,
-                         reason=self.op.get_msg(gce_const.FAILURE_REASON,
-                                                auth_user=auth_user,
-                                                iap_role=gce_const.IAP_ROLE),
-                         remediation=self.op.get_msg(
-                             gce_const.FAILURE_REMEDIATION,
-                             auth_user=auth_user,
-                             iap_role=gce_const.IAP_ROLE))
-    else:
-      self.op.add_ok(resource=vm,
-                     reason=self.op.get_msg(gce_const.SUCCESS_REASON,
+      op.add_failed(iam_policy,
+                    reason=op.prep_msg(op.FAILURE_REASON,
+                                       auth_user=auth_user,
+                                       iap_role=gce_const.IAP_ROLE),
+                    remediation=op.prep_msg(op.FAILURE_REMEDIATION,
                                             auth_user=auth_user,
                                             iap_role=gce_const.IAP_ROLE))
+    else:
+      op.add_ok(resource=vm,
+                reason=op.prep_msg(op.SUCCESS_REASON,
+                                   auth_user=auth_user,
+                                   iap_role=gce_const.IAP_ROLE))
 
 
 class GceFirewallAllowsSsh(runbook.CompositeStep):
@@ -556,18 +544,18 @@ class GceFirewallAllowsSsh(runbook.CompositeStep):
 
   def execute(self):
     """Evaluating VPC network firewall rules for SSH access..."""
-    vm = gce.get_instance(project_id=self.op.get(flags.PROJECT_ID),
-                          zone=self.op.get(flags.ZONE),
-                          instance_name=self.op.get(flags.NAME))
+    vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
+                          zone=op.get(flags.ZONE),
+                          instance_name=op.get(flags.NAME))
 
-    if self.op.get(flags.TUNNEL_THROUGH_IAP):
+    if op.get(flags.TUNNEL_THROUGH_IAP):
       tti_ingress_check = gce_gs.GceVpcConnectivityCheck()
       tti_ingress_check.traffic = 'ingress'
       # Check IAP Firewall rule if specified
       tti_ingress_check.template = 'vpc_connectivity::tti_ingress'
       self.add_child(tti_ingress_check)
-    if (not self.op.get(flags.SRC_IP) and
-        not self.op.get(flags.TUNNEL_THROUGH_IAP) and vm.is_public_machine()):
+    if (not op.get(flags.SRC_IP) and not op.get(flags.TUNNEL_THROUGH_IAP) and
+        vm.is_public_machine()):
       default_ingress_check = gce_gs.GceVpcConnectivityCheck()
       default_ingress_check.traffic = 'ingress'
       default_ingress_check.template = 'vpc_connectivity::default_ingress'
@@ -575,7 +563,7 @@ class GceFirewallAllowsSsh(runbook.CompositeStep):
       self.add_child(default_ingress_check)
 
     # Check provided source IP has access
-    if self.op.get(flags.SRC_IP) and not self.op.get(flags.TUNNEL_THROUGH_IAP):
+    if op.get(flags.SRC_IP) and not op.get(flags.TUNNEL_THROUGH_IAP):
       custom_ip_ingress_check = gce_gs.GceVpcConnectivityCheck()
       custom_ip_ingress_check.traffic = 'ingress'
       custom_ip_ingress_check.template = 'vpc_connectivity::default_ingress'
@@ -653,15 +641,10 @@ class WindowsGuestOsChecks(runbook.CompositeStep):
     windows_good_bootup.positive_pattern = gce_const.GOOD_WINDOWS_BOOT_LOGS_READY
     self.add_child(windows_good_bootup)
 
-    check_windows_ssh_agent = platform_gs.HumanTask()
-    vm = gce.get_instance(project_id=self.op.get(flags.PROJECT_ID),
-                          zone=self.op.get(flags.ZONE),
-                          instance_name=self.op.get(flags.NAME))
+    check_windows_ssh_agent = gcp_gs.HumanTask()
+    vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
+                          zone=op.get(flags.ZONE),
+                          instance_name=op.get(flags.NAME))
     check_windows_ssh_agent.resource = vm
-    check_windows_ssh_agent.prompts[gce_const.INSTRUCTIONS_CHOICE_OPTIONS] = {
-        'y': 'Yes',
-        'n': 'No',
-        'u': 'Unsure'
-    }
     check_windows_ssh_agent.template = 'gcpdiag.runbook.gce::vm_serial_log::windows_gce_ssh_agent'
     self.add_child(check_windows_ssh_agent)

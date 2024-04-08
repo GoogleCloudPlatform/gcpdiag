@@ -24,7 +24,7 @@ import blessings
 
 # pylint: disable=unused-import (lint is used in type hints)
 from gcpdiag import config, models, runbook
-from gcpdiag.runbook import report
+from gcpdiag.runbook import constants, report
 from gcpdiag.runbook.flags import INTERACTIVE_MODE
 from gcpdiag.runbook.output.base_output import BaseOutput
 
@@ -252,15 +252,15 @@ class TerminalOutput(BaseOutput):
     self.answer = None
     options_text = '\n'
     try:
-      if step in self.HUMAN_TASK and not options:
-        for option, description in self.HUMAN_TASK_OPTIONS.items():
+      if step in constants.HUMAN_TASK and not options:
+        for option, description in constants.HUMAN_TASK_OPTIONS.items():
           options_text += '[' + self.term.green(
               f'{option}') + ']' + f' - {description}\n'
-      if step in self.CONFIRMATION and not options:
-        for option, description in self.CONFIRMATION_OPTIONS.items():
+      if step in constants.CONFIRMATION and not options:
+        for option, description in constants.CONFIRMATION_OPTIONS.items():
           options_text += '[' + self.term.green(
               f'{option}') + ']' + f' - {description}\n'
-      if (step in self.CONFIRMATION or step in self.HUMAN_TASK) \
+      if (step in constants.CONFIRMATION or step in constants.HUMAN_TASK) \
         and options:
         for option, description in options.items():
           options_text += '[' + self.term.green(
@@ -279,17 +279,17 @@ class TerminalOutput(BaseOutput):
     elif self.answer is None:
       return self.answer
     elif self.answer.strip().lower() in ['s', 'stop']:
-      return self.STOP
+      return constants.STOP
     elif self.answer.strip().lower() in ['c', 'continue']:
-      return self.CONTINUE
+      return constants.CONTINUE
     elif self.answer.strip().lower() in ['u', 'uncertain']:
-      return self.UNCERTAIN
+      return constants.UNCERTAIN
     elif self.answer.strip().lower() in ['r', 'retest']:
-      return self.RETEST
+      return constants.RETEST
     elif self.answer.strip().lower() in ['y', 'yes']:
-      return self.YES
+      return constants.YES
     elif self.answer.strip().lower() in ['n', 'no']:
-      return self.NO
+      return constants.NO
     elif self.answer.strip().lower() not in [
         's', 'stop', 'c', 'continue', 'r', 'retest'
     ]:

@@ -22,7 +22,7 @@ from boltons.iterutils import get_path
 from gcpdiag import runbook
 from gcpdiag.models import Resource
 from gcpdiag.queries import crm, gce, logs
-from gcpdiag.runbook import constants as const
+from gcpdiag.runbook import op
 from gcpdiag.runbook.gce import flags
 from gcpdiag.runbook.gcp import generalized_steps as gcp_gs
 
@@ -110,29 +110,28 @@ class VmTerminationStart(runbook.StartStep):
 
   def execute(self):
     """Starting VM Termination diagnostics"""
-    project = crm.get_project(self.op.get(flags.PROJECT_ID))
+    project = crm.get_project(op.get(flags.PROJECT_ID))
 
     try:
-      name = self.op.get(flags.NAME) or self.op.get(flags.ID)
-      if name and self.op.get(flags.ZONE):
+      name = op.get(flags.NAME) or op.get(flags.ID)
+      if name and op.get(flags.ZONE):
         # check VM exists if user provided one
-        vm = gce.get_instance(project_id=self.op.get(flags.PROJECT_ID),
-                              zone=self.op.get(flags.ZONE),
-                              instance_name=self.op.get(flags.NAME))
-      elif self.op.get(flags.NAME) and not self.op.get(flags.ZONE):
-        vm = gce.get_instances(self.op.context)[flags.NAME]
+        vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
+                              zone=op.get(flags.ZONE),
+                              instance_name=op.get(flags.NAME))
+      elif op.get(flags.NAME) and not op.get(flags.ZONE):
+        vm = gce.get_instances(op.context)[flags.NAME]
     except (googleapiclient.errors.HttpError, KeyError):
-      self.op.add_skipped(
+      op.add_skipped(
           project,
           reason=('Instance {} does not exist in zone {} or project {}').format(
-              self.op.get(flags.NAME), self.op.get(flags.ZONE),
-              self.op.get(flags.PROJECT_ID)))
+              op.get(flags.NAME), op.get(flags.ZONE), op.get(flags.PROJECT_ID)))
     else:
       if name.isdigit():
-        self.op[flags.NAME] = vm.name
+        op.put(flags.NAME, vm.name)
       else:
-        self.op[flags.ID] = vm.id
-      self.op[SCOPE_TO_SINGLE_VM] = True
+        op.put(flags.ID, vm.id)
+      op.put(SCOPE_TO_SINGLE_VM, True)
 
 
 class NumberOfTerminations(runbook.Gateway):
@@ -146,7 +145,7 @@ class NumberOfTerminations(runbook.Gateway):
 
   def execute(self):
     """Determining whether to investigate one or more terminations"""
-    if self.op[SCOPE_TO_SINGLE_VM]:
+    if op.get(SCOPE_TO_SINGLE_VM):
       self.add_child(SingleTerminationCheck())
     else:
       self.add_child(MultipleTerminationCheck())
@@ -166,16 +165,16 @@ class SingleTerminationCheck(runbook.Step):
 
   def execute(self):
     """Investigating VM termination reason..."""
-    vm = gce.get_instance(project_id=self.op.get(flags.PROJECT_ID),
-                          zone=self.op.get(flags.ZONE),
-                          instance_name=self.op.get(flags.NAME))
+    vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
+                          zone=op.get(flags.ZONE),
+                          instance_name=op.get(flags.NAME))
 
     log_entries = logs.realtime_query(
-        project_id=self.op.get(flags.PROJECT_ID),
+        project_id=op.get(flags.PROJECT_ID),
         filter_str=
-        f'{LOGGING_FILTER}\nresource.labels.instance_id="{self.op.get(flags.ID)}"',
-        start_time_utc=self.op.get(flags.START_TIME_UTC),
-        end_time_utc=self.op.get(flags.END_TIME_UTC))
+        f'{LOGGING_FILTER}\nresource.labels.instance_id="{op.get(flags.ID)}"',
+        start_time_utc=op.get(flags.START_TIME_UTC),
+        end_time_utc=op.get(flags.END_TIME_UTC))
 
     termination_details: Dict[str, set] = {}
     # TODO: implement https://cloud.google.com/compute/shielded-vm/
@@ -198,24 +197,23 @@ class SingleTerminationCheck(runbook.Step):
             insert_id, principal_email, reason, timestamp
         }
     if termination_details:
-      self.op.prepare_rca(vm,
-                          self.template,
-                          suffix=const.RCA,
-                          context={'termination_details': termination_details})
+      op.prep_rca(vm,
+                  self.template,
+                  suffix=op.RCA,
+                  kwarg={'termination_details': termination_details})
     else:
-      self.op.add_ok(resource=vm,
-                     reason=self.op.get_msg(
-                         const.SUCCESS_REASON,
-                         start_time_utc=self.op.get(flags.START_TIME_UTC),
-                         end_time_utc=self.op.get(flags.END_TIME_UTC)))
+      op.add_ok(resource=vm,
+                reason=op.prep_msg(op.SUCCESS_REASON,
+                                   start_time_utc=op.get(flags.START_TIME_UTC),
+                                   end_time_utc=op.get(flags.END_TIME_UTC)))
 
     status_check = gcp_gs.ResourceAttributeCheck()
     status_check.name = 'terminated_vm_status'
     status_check.resource_query = gce.get_instance
     status_check.query_kwargs = {
-        'project_id': self.op.get(flags.PROJECT_ID),
-        'zone': self.op.get(flags.ZONE),
-        'instance_name': self.op.get(flags.NAME)
+        'project_id': op.get(flags.PROJECT_ID),
+        'zone': op.get(flags.ZONE),
+        'instance_name': op.get(flags.NAME)
     }
     status_check.attribute = ('status')
     status_check.expected_value = 'RUNNING'
@@ -246,17 +244,16 @@ class MultipleTerminationCheck(runbook.Step):
 
   def execute(self):
     """Investigating Reasons for multiple VM termination..."""
-    log_entries = logs.realtime_query(
-        project_id=self.op.get(flags.PROJECT_ID),
-        filter_str=LOGGING_FILTER,
-        start_time_utc=self.op.get(flags.START_TIME_UTC),
-        end_time_utc=self.op.get(flags.END_TIME_UTC))
+    log_entries = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
+                                      filter_str=LOGGING_FILTER,
+                                      start_time_utc=op.get(
+                                          flags.START_TIME_UTC),
+                                      end_time_utc=op.get(flags.END_TIME_UTC))
 
     termination_details: Dict[str, set] = {}
 
-    self.op.info(
-        f'{len(log_entries)} instance (s) terminated within the timeframe',
-        store_in_report=True)
+    op.info(f'{len(log_entries)} instance (s) terminated within the timeframe',
+            store_in_report=True)
 
     for log_entry in log_entries:
       method = get_path(log_entry, ('protoPayload', 'methodName'), default='')
@@ -290,9 +287,9 @@ class VmTerminationEnd(runbook.EndStep):
 
   def execute(self):
     """Finalizing VM terminations diagnostics..."""
-    response = self.op.prompt(
-        step=self.op.interface.output.CONFIRMATION,
+    response = op.prompt(
+        step=op.CONFIRMATION,
         message='Are you satisfied with the VM termination RCA performed?')
-    if response == self.op.interface.output.NO:
-      self.op.info(message=const.END_MESSAGE)
-      self.op.interface.rm.generate_report()
+    if response == op.NO:
+      op.info(message=op.END_MESSAGE)
+      op.interface.rm.generate_report()

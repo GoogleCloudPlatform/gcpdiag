@@ -1,4 +1,4 @@
-# Copyright 2022 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,39 +11,24 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-""" Generalize rule snapshot testing """
+"""Snapshot testing and unittest """
 from gcpdiag import config
 from gcpdiag.runbook import gce, snapshot_test_base
 
 
 class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = gce
+  runbook_name = 'gce/vm-termination'
   project_id = 'gcpdiag-gce-faultyssh-runbook'
   config.init({'auto': True, 'interface': 'cli'}, project_id)
 
   rule_parameters = [{
       'name': 'faulty-linux-ssh',
-      'zone': 'europe-west2-a',
-      'principal': 'cannotssh@example.com',
-      'tunnel_through_iap': 'True',
-      'check_os_login': 'True'
+      'zone': 'europe-west2-a'
   }, {
-      'name':
-          'valid-linux-ssh',
-      'zone':
-          'europe-west2-a',
-      'principal':
-          'canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com',
-      'tunnel_through_iap':
-          'True',
-      'check_os_login':
-          'True'
+      'name': 'valid-linux-ssh',
+      'zone': 'europe-west2-a'
   }, {
       'name': 'faulty-windows-ssh',
-      'zone': 'europe-west2-a',
-      'principal': 'cannot@example.com',
-      'tunnel_through_iap': 'False',
-      'src_ip': '0.0.0.0',
-      'check_os_login': 'False',
-      'local_user': 'no_user'
+      'zone': 'europe-west2-a'
   }]
