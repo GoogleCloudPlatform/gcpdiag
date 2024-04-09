@@ -20,9 +20,9 @@ from boltons.iterutils import get_path
 
 from gcpdiag import config, models, runbook
 from gcpdiag.models import Resource
-from gcpdiag.queries import apis
-from gcpdiag.runbook import flags, op
-from gcpdiag.runbook.gcp import constants
+from gcpdiag.queries import apis, crm
+from gcpdiag.runbook import op
+from gcpdiag.runbook.gcp import constants, flags
 
 
 class HumanTask(runbook.Step):
@@ -185,20 +185,21 @@ class ServiceApiStatusCheck(runbook.Step):
 
   """
   api_name: str
-  expected_state: str
+  expected_state: constants.APIState
   template: str = 'api::default'
 
   def execute(self):
-    """Verifying Cloud API state of {api_name}..."""
-    services = apis.list_services_with_state(op.get(flags.PROJECT_ID))
+    """Verifying Cloud API state..."""
+    project = crm.get_project(op.get(flags.PROJECT_ID))
+    is_enabled = apis.is_enabled(op.get(flags.PROJECT_ID), self.api_name)
     service_name = f'{self.api_name}.{config.get("universe_domain")}'
-    actual_state = services.get(service_name)
+    actual_state = constants.APIState.ENABLED if is_enabled else constants.APIState.DISABLED
     if self.expected_state == actual_state:
       op.add_ok(
-          self.resource,
+          project,
           op.prep_msg(op.SUCCESS_REASON,
                       service_name=service_name,
-                      expected_state=self.expected_state))
+                      expected_state=self.expected_state.value))
     else:
       if self.expected_state == constants.APIState.ENABLED:
         remediation = op.prep_msg(op.FAILURE_REMEDIATION,
@@ -208,6 +209,9 @@ class ServiceApiStatusCheck(runbook.Step):
         remediation = op.prep_msg(op.FAILURE_REMEDIATION_ALT1,
                                   service_name=service_name,
                                   project_id=op.get(flags.PROJECT_ID))
-      op.add_failed(self.resource,
-                    reason=op.prep_msg(op.FAILURE_REASON),
+      op.add_failed(project,
+                    reason=op.prep_msg(
+                        op.FAILURE_REASON,
+                        service_name=service_name,
+                        expected_state=self.expected_state.value),
                     remediation=remediation)

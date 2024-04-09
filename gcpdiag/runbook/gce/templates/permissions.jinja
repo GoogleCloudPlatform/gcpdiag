@@ -1,65 +1,66 @@
 {% block instances_get_failure_reason %}
-The authenticated user {auth_user} does not have the permissions needed to manage instances.
-The following permissions are required: {instance_permissions}.
+The authenticated user {principal} does not have the permissions needed to manage instances.
+The following permissions are required: {permissions_or_roles}.
 {% endblock instances_get_failure_reason %}
 
 {% block instances_get_failure_remediation %}
-To remedy this, ensure the user {auth_user} is granted a role encompassing the necessary permissions:
-- Permissions needed: {instance_permissions}
+To remedy this, ensure the user {principal} is granted a role encompassing the necessary permissions:
+- Permissions needed: {missing_permissions_or_roles}
 For guidance on assigning instance admin roles, consult:
 https://cloud.google.com/compute/docs/access/iam#connectinginstanceadmin
 {% endblock instances_get_failure_remediation %}
 
 {% block instances_get_success_reason %}
-The user {auth_user} possesses the appropriate permissions to fetch instance details.
+The user {principal} possesses the appropriate {permissions_or_roles} to fetch instance details.
 {% endblock instances_get_success_reason %}
 
 {% block has_os_login_success_reason %}
-"{auth_user}" possesses at least one of the required OS Login roles:
-{os_login_role}, {os_login_admin_role}, or {owner_role}.
+"{principal}" possesses at least one of the required OS Login roles:
+{present_permissions_or_roles}.
 {% endblock has_os_login_success_reason %}
 
 {% block has_os_login_failure_reason %}
-"{auth_user}" is missing at least one of the required OS Login roles:
-{os_login_role}, {os_login_admin_role}, or {owner_role}.
+"{principal}" is missing at least one of the required OS Login roles:
+{missing_permissions_or_roles}.
 {% endblock has_os_login_failure_reason %}
 
 {% block has_os_login_failure_remediation %}
-Assign "{auth_user}" one of the role required to have OS Login privileges.
+Assign the principal one of the role required to have OS Login privileges.
 For more information:
 https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
 https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 {% endblock has_os_login_failure_remediation %}
 
 {% block sa_user_role_failure_reason %}
-"{auth_user}" does not have the "{sa_user_role}" role or custom roles which has the
-constituent permissions required to be able to impersonate the service account "{service_account}".
+"{principal}" does not have the "{missing_permissions_or_roles}" role or custom roles which has the
+constituent permissions required to be able to impersonate the attached service account.
 {% endblock sa_user_role_failure_reason %}
 
 {% block sa_user_role_failure_remediation %}
-Assign the "{sa_user_role}" role to "{auth_user}".
+Assign the "roles/iam.serviceAccountUser" role to "{principal}".
 Guidelines:
 https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
 https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 {% endblock sa_user_role_failure_remediation %}
 
 {% block sa_user_role_success_reason %}
-"{auth_user}" has the "{sa_user_role}"
-required to impersonate the service account {service_account}.
+"{principal}" has the "{present_permissions_or_roles}"
+required to impersonate the attached service account.
 {% endblock sa_user_role_success_reason %}
 
 {% block iap_role_failure_reason %}
-"{auth_user}" lacks the "{iap_role}" role necessary to Tunnel through IAP for access.
+"{principal}" lacks the "{missing_permissions_or_roles}" role necessary to Tunnel through IAP for access.
 {% endblock iap_role_failure_reason %}
 
 {% block iap_role_failure_remediation %}
-Ensure "{auth_user}" is granted the "{iap_role}" role. Resource guide:
+Ensure "{principal}" is granted the "roles/iap.tunnelResourceAccessor" role.
+Resource guide:
 https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
 https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 {% endblock iap_role_failure_remediation %}
 
 {% block iap_role_success_reason %}
-"{auth_user}" has the requisite "{iap_role}" role to tunnel through IAP.
+"{principal}" has the requisite "{present_permissions_or_roles}" role to tunnel through IAP.
 {% endblock iap_role_success_reason %}
 
 {% block console_view_permission_failure_reason %}
@@ -77,7 +78,7 @@ The user is authorized to view the Google Cloud console which will allow SSH-in-
 {% endblock console_view_permission_success_reason %}
 
 {% block can_set_metadata_success_reason %}
-{auth_user} is authorized to update instance or project metadata, including SSH keys.
+{principal} is authorized to update instance or project metadata, including SSH keys.
 This enables gcloud and cloud console to update temporary SSH access to the VM or configure
 personal SSH keys if needed.
 {% endblock can_set_metadata_success_reason %}

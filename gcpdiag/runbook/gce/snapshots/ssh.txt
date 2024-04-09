@@ -2,13 +2,12 @@ project: gcpdiag-gce-faultyssh-runbook, parameters: {check_os_login=true,name=fa
 ssh,principal=cannotssh@example.com,project_id=gcpdiag-gce-faultyssh-
 runbook,tunnel_through_iap=true,zone=europe-west2-a}
 
-gce/ssh: Provides a comprehensive analysis of common issues which affects SSH connectivity to VMs.
+gce/ssh: A comprehensive troubleshooting guide for common issues which affects SSH connectivity to VMs.
 
-  This runbook focuses on a range of potential problems for both Windows and Linux VMs on
-  Google Cloud Platform. By conducting a series of checks, the runbook aims to pinpoint the
-  root cause of SSH access difficulties.
+  This runbook focuses on investigating components required for ssh on either Windows and Linux VMs
+  hosted on Google Cloud Platform and pinpoint misconfigurations.
 
-  The following areas are examined:
+  Areas Examined:
 
   - VM Instance Status: Evaluates the VM's current state, performance - ensuring that it is running
     and not impaired by high CPU usage, insufficient memory, or disk space issues that might disrupt
@@ -25,12 +24,16 @@ gce/ssh: Provides a comprehensive analysis of common issues which affects SSH co
 
   - Internal Guest OS Checks: Analysis available Guest OS metrics or logs to detect any
     misconfigurations or service disruptions that could be obstructing SSH functionality.
+
+  - SSH in Brower Checks: Checks if the autenticated user has relevants permissions and
+    the organisation policies permits SSH in Browser.
     
 [START]: Starting SSH diagnostics
-[INFO]: Will check for OS login configuration
-[INFO]: Checks will use ip 35.235.240.0/20 as the source IP
 [INFO]: Will check for IAP configuration
-[INFO]: Will use ops agent metrics for relevant assessments
+[INFO]: Runbook will use Protocol tcp,Port 22 and ip 35.235.240.0/20 as the source IP
+[INFO]: Runbook will check if OS login is correctly configured to permit SSH
+[INFO]: Runbook will not investigate components required for SSH in browser
+[INFO]: Runbook Will use ops agent metrics for VM Performance investigation
 [AUTOMATED STEP]: Verifying VM is in the RUNNING state...
 
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [OK]
@@ -58,6 +61,18 @@ gce/ssh: Provides a comprehensive analysis of common issues which affects SSH co
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
 [AUTOMATED STEP]: Verifying VM's Boot disk space utilization is within optimal levels.
+
+   - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [FAIL]
+     [REASON]
+     Disk utilization on this VM's boot disk is critically high,
+     potentially affecting application performance.
+
+     [REMEDIATION]
+     To mitigate high disk usage, consider expanding the VM's boot disk capacity.
+     This action can help avoid performance issues and ensure smoother SSH connections.
+     Follow the guide to increase disk size:
+     https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
+
 [AUTOMATED STEP]: Verifying VM CPU utilization is within optimal levels
 
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [FAIL]
@@ -83,19 +98,12 @@ gce/ssh: Provides a comprehensive analysis of common issues which affects SSH co
 [COMPOSITE STEP]: Analyzing serial logs for common linux guest os and application issues...
 [AUTOMATED STEP]: Initiating kernel panic check on the Guest OS.
 
-   - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [UNCERTAIN]
+   - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [OK]
      [REASON]
-     Lack of serial log data prevented a thorough assessment of the VM's operational state. Result is
-     inconclusive
-
-     [REMEDIATION]
-     Confirm the VM's operational status by reviewing available serial logs.
-     Address any detected guest OS issues using the provided documentation,
-     keeping in mind certain guest OS faults may be beyond GCP's support scope.
-     - Viewing Serial Port Output: https://cloud.google.com/compute/docs/troubleshooting/viewing-serial-port-output
-     - Resolving Kernel Panic:
-     https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error
-     - GCP Support Scope: https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
+     No signs of Linux OS experiencing kernel panic or GRUB issues.
+     Guest kernel has not dropped into emergency/maintenance mode
+     in recent logs
+     In addition, we see that applications like systemd is running
 
 [AUTOMATED STEP]: Examining SSHD functionality via serial logs.
 
@@ -107,7 +115,9 @@ gce/ssh: Provides a comprehensive analysis of common issues which affects SSH co
 
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [UNCERTAIN]
      [REASON]
-     Unable to confirm SSHGuard activity due to lack of serial log data.
+     The logs retrieved does not contain positive or negative entries which
+     would help make conclusive assessment. You will need to double check
+     This if it's a likely cause.
 
      [REMEDIATION]
      If SSHGuard or similar application is a concern,
@@ -118,32 +128,20 @@ gce/ssh: Provides a comprehensive analysis of common issues which affects SSH co
 
     Note: Only roles granted at the project level are checked. Permissions inherited from
     ancestor resources such as folder(s) or organization and groups are not checked.
-[AUTOMATED STEP]: Verifying user access to Cloud Console...
-
-   - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
-     [REASON]
-     To access Compute Engine via the Google Cloud console (i.e. SSH-in-browser),
-     the user must have "compute.projects.get" permission.
-
-     [REMEDIATION]
-     Review the permissions guide for accessing Compute Engine resources:
-     https://cloud.google.com/compute/docs/access/iam#console_permission
-
-[AUTOMATED STEP]: Verifying instance retrieval permissions...
+[AUTOMATED STEP]: Verifying IAM policy
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
      The authenticated user none:cannotssh@example.com does not have the permissions needed to manage instances.
-     The following permissions are required: ['compute.instances.get', 'compute.instances.use'].
+     The following permissions are required: permissions.
 
      [REMEDIATION]
      To remedy this, ensure the user none:cannotssh@example.com is granted a role encompassing the necessary permissions:
-     - Permissions needed: ['compute.instances.get', 'compute.instances.use']
+     - Permissions needed: compute.instances.get, compute.instances.use
      For guidance on assigning instance admin roles, consult:
      https://cloud.google.com/compute/docs/access/iam#connectinginstanceadmin
 
 [GATEWAY]: Identifying OS Login Setup.
-[INFO]: OS login setup is desired, Hence OS login related configurations
 [AUTOMATED STEP]: Verifying that OS Login is set to `True` for the VM.
 
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [FAIL]
@@ -155,25 +153,25 @@ gce/ssh: Provides a comprehensive analysis of common issues which affects SSH co
      metadata to `TRUE`.For detailed instructions on enabling OS Login,
      refer to: https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#enable_os_login
 
-[AUTOMATED STEP]: Evaluating OS Login permissions for the user...
+[AUTOMATED STEP]: Verifying IAM policy
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
      "none:cannotssh@example.com" is missing at least one of the required OS Login roles:
-     roles/compute.osLogin, roles/compute.osAdminLogin, or roles/owner.
+     roles/compute.osAdminLogin, roles/compute.osLogin, roles/owner.
 
      [REMEDIATION]
-     Assign "none:cannotssh@example.com" one of the role required to have OS Login privileges.
+     Assign the principal one of the role required to have OS Login privileges.
      For more information:
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 
-[AUTOMATED STEP]: Evaluating user permissions for the service account...
+[AUTOMATED STEP]: Verifying IAM policy
 
-   - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [FAIL]
+   - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
      "none:cannotssh@example.com" does not have the "roles/iam.serviceAccountUser" role or custom roles which has the
-     constituent permissions required to be able to impersonate the service account "12345601-compute@developer.gserviceaccount.com".
+     constituent permissions required to be able to impersonate the attached service account.
 
      [REMEDIATION]
      Assign the "roles/iam.serviceAccountUser" role to "none:cannotssh@example.com".
@@ -181,14 +179,15 @@ gce/ssh: Provides a comprehensive analysis of common issues which affects SSH co
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 
-[AUTOMATED STEP]: Evaluating IAP Tunnel user permissions...
+[AUTOMATED STEP]: Verifying IAM policy
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
      "none:cannotssh@example.com" lacks the "roles/iap.tunnelResourceAccessor" role necessary to Tunnel through IAP for access.
 
      [REMEDIATION]
-     Ensure "none:cannotssh@example.com" is granted the "roles/iap.tunnelResourceAccessor" role. Resource guide:
+     Ensure "none:cannotssh@example.com" is granted the "roles/iap.tunnelResourceAccessor" role.
+     Resource guide:
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 
@@ -200,6 +199,7 @@ gce/ssh: Provides a comprehensive analysis of common issues which affects SSH co
      Ingress Traffic from source IP/CIDR 35.235.240.0/20, tcp:22 to the GCE
      instance faulty-linux-ssh is allowed by: vpc firewall rule: gce-secured-instance-test-allow
 
+[COMPOSITE STEP]: SSH in browser required?
 [END]: Finalizing SSH diagnostics...
 
 
@@ -207,13 +207,12 @@ project: gcpdiag-gce-faultyssh-runbook, parameters: {check_os_login=true,name=va
 ssh,principal=canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com,project_id=gcpdiag-gce-
 faultyssh-runbook,tunnel_through_iap=true,zone=europe-west2-a}
 
-gce/ssh: Provides a comprehensive analysis of common issues which affects SSH connectivity to VMs.
+gce/ssh: A comprehensive troubleshooting guide for common issues which affects SSH connectivity to VMs.
 
-  This runbook focuses on a range of potential problems for both Windows and Linux VMs on
-  Google Cloud Platform. By conducting a series of checks, the runbook aims to pinpoint the
-  root cause of SSH access difficulties.
+  This runbook focuses on investigating components required for ssh on either Windows and Linux VMs
+  hosted on Google Cloud Platform and pinpoint misconfigurations.
 
-  The following areas are examined:
+  Areas Examined:
 
   - VM Instance Status: Evaluates the VM's current state, performance - ensuring that it is running
     and not impaired by high CPU usage, insufficient memory, or disk space issues that might disrupt
@@ -230,14 +229,18 @@ gce/ssh: Provides a comprehensive analysis of common issues which affects SSH co
 
   - Internal Guest OS Checks: Analysis available Guest OS metrics or logs to detect any
     misconfigurations or service disruptions that could be obstructing SSH functionality.
+
+  - SSH in Brower Checks: Checks if the autenticated user has relevants permissions and
+    the organisation policies permits SSH in Browser.
     
 [START]: Starting SSH diagnostics
-[INFO]: Will check for OS login configuration
-[INFO]: Checks will use ip 35.235.240.0/20 as the source IP
-[INFO]: Will check for IAP configuration
 [INFO]: Checks will use serviceaccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com as the authenticated
 principal in Cloud Console / gcloud (incl. impersonated service account)
-[INFO]: Will use ops agent metrics for relevant assessments
+[INFO]: Will check for IAP configuration
+[INFO]: Runbook will use Protocol tcp,Port 22 and ip 35.235.240.0/20 as the source IP
+[INFO]: Runbook will check if OS login is correctly configured to permit SSH
+[INFO]: Runbook will not investigate components required for SSH in browser
+[INFO]: Runbook Will use ops agent metrics for VM Performance investigation
 [AUTOMATED STEP]: Verifying VM is in the RUNNING state...
 
    - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
@@ -265,6 +268,18 @@ principal in Cloud Console / gcloud (incl. impersonated service account)
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
 [AUTOMATED STEP]: Verifying VM's Boot disk space utilization is within optimal levels.
+
+   - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [FAIL]
+     [REASON]
+     Disk utilization on this VM's boot disk is critically high,
+     potentially affecting application performance.
+
+     [REMEDIATION]
+     To mitigate high disk usage, consider expanding the VM's boot disk capacity.
+     This action can help avoid performance issues and ensure smoother SSH connections.
+     Follow the guide to increase disk size:
+     https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
+
 [AUTOMATED STEP]: Verifying VM CPU utilization is within optimal levels
 
    - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [FAIL]
@@ -290,19 +305,12 @@ principal in Cloud Console / gcloud (incl. impersonated service account)
 [COMPOSITE STEP]: Analyzing serial logs for common linux guest os and application issues...
 [AUTOMATED STEP]: Initiating kernel panic check on the Guest OS.
 
-   - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [UNCERTAIN]
+   - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
      [REASON]
-     Lack of serial log data prevented a thorough assessment of the VM's operational state. Result is
-     inconclusive
-
-     [REMEDIATION]
-     Confirm the VM's operational status by reviewing available serial logs.
-     Address any detected guest OS issues using the provided documentation,
-     keeping in mind certain guest OS faults may be beyond GCP's support scope.
-     - Viewing Serial Port Output: https://cloud.google.com/compute/docs/troubleshooting/viewing-serial-port-output
-     - Resolving Kernel Panic:
-     https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error
-     - GCP Support Scope: https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
+     No signs of Linux OS experiencing kernel panic or GRUB issues.
+     Guest kernel has not dropped into emergency/maintenance mode
+     in recent logs
+     In addition, we see that applications like systemd is running
 
 [AUTOMATED STEP]: Examining SSHD functionality via serial logs.
 
@@ -314,7 +322,9 @@ principal in Cloud Console / gcloud (incl. impersonated service account)
 
    - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [UNCERTAIN]
      [REASON]
-     Unable to confirm SSHGuard activity due to lack of serial log data.
+     The logs retrieved does not contain positive or negative entries which
+     would help make conclusive assessment. You will need to double check
+     This if it's a likely cause.
 
      [REMEDIATION]
      If SSHGuard or similar application is a concern,
@@ -325,58 +335,46 @@ principal in Cloud Console / gcloud (incl. impersonated service account)
 
     Note: Only roles granted at the project level are checked. Permissions inherited from
     ancestor resources such as folder(s) or organization and groups are not checked.
-[AUTOMATED STEP]: Verifying user access to Cloud Console...
-
-   - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
-     [REASON]
-     To access Compute Engine via the Google Cloud console (i.e. SSH-in-browser),
-     the user must have "compute.projects.get" permission.
-
-     [REMEDIATION]
-     Review the permissions guide for accessing Compute Engine resources:
-     https://cloud.google.com/compute/docs/access/iam#console_permission
-
-[AUTOMATED STEP]: Verifying instance retrieval permissions...
+[AUTOMATED STEP]: Verifying IAM policy
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
      The authenticated user serviceaccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com does not have the permissions needed to manage instances.
-     The following permissions are required: ['compute.instances.get', 'compute.instances.use'].
+     The following permissions are required: permissions.
 
      [REMEDIATION]
      To remedy this, ensure the user serviceaccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com is granted a role encompassing the necessary permissions:
-     - Permissions needed: ['compute.instances.get', 'compute.instances.use']
+     - Permissions needed: compute.instances.get, compute.instances.use
      For guidance on assigning instance admin roles, consult:
      https://cloud.google.com/compute/docs/access/iam#connectinginstanceadmin
 
 [GATEWAY]: Identifying OS Login Setup.
-[INFO]: OS login setup is desired, Hence OS login related configurations
 [AUTOMATED STEP]: Verifying that OS Login is set to `True` for the VM.
 
    - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
      [REASON]
-     OS Login is active on this VM, as indicated by the `enable-oslogin` flag being set to `True`.
-     Your VM can use OS Login-based access.
+     OS Login is active on this VM, as indicated by the `enable-oslogin`
+     flag being set to `True`. Your VM can use OS Login-based access.
 
-[AUTOMATED STEP]: Evaluating OS Login permissions for the user...
+[AUTOMATED STEP]: Verifying IAM policy
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
      "serviceaccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com" is missing at least one of the required OS Login roles:
-     roles/compute.osLogin, roles/compute.osAdminLogin, or roles/owner.
+     roles/compute.osAdminLogin, roles/compute.osLogin, roles/owner.
 
      [REMEDIATION]
-     Assign "serviceaccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com" one of the role required to have OS Login privileges.
+     Assign the principal one of the role required to have OS Login privileges.
      For more information:
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 
-[AUTOMATED STEP]: Evaluating user permissions for the service account...
+[AUTOMATED STEP]: Verifying IAM policy
 
-   - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [FAIL]
+   - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
      "serviceaccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com" does not have the "roles/iam.serviceAccountUser" role or custom roles which has the
-     constituent permissions required to be able to impersonate the service account "12345601-compute@developer.gserviceaccount.com".
+     constituent permissions required to be able to impersonate the attached service account.
 
      [REMEDIATION]
      Assign the "roles/iam.serviceAccountUser" role to "serviceaccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com".
@@ -384,14 +382,15 @@ principal in Cloud Console / gcloud (incl. impersonated service account)
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 
-[AUTOMATED STEP]: Evaluating IAP Tunnel user permissions...
+[AUTOMATED STEP]: Verifying IAM policy
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
      "serviceaccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com" lacks the "roles/iap.tunnelResourceAccessor" role necessary to Tunnel through IAP for access.
 
      [REMEDIATION]
-     Ensure "serviceaccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com" is granted the "roles/iap.tunnelResourceAccessor" role. Resource guide:
+     Ensure "serviceaccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com" is granted the "roles/iap.tunnelResourceAccessor" role.
+     Resource guide:
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 
@@ -403,6 +402,7 @@ principal in Cloud Console / gcloud (incl. impersonated service account)
      Ingress Traffic from source IP/CIDR 35.235.240.0/20, tcp:22 to the GCE
      instance valid-linux-ssh is allowed by: vpc firewall rule: default-allow-ssh
 
+[COMPOSITE STEP]: SSH in browser required?
 [END]: Finalizing SSH diagnostics...
 
 
@@ -411,13 +411,12 @@ project: gcpdiag-gce-faultyssh-runbook, parameters:
 ssh,principal=cannot@example.com,project_id=gcpdiag-gce-faultyssh-
 runbook,src_ip=0.0.0.0,tunnel_through_iap=false,zone=europe-west2-a}
 
-gce/ssh: Provides a comprehensive analysis of common issues which affects SSH connectivity to VMs.
+gce/ssh: A comprehensive troubleshooting guide for common issues which affects SSH connectivity to VMs.
 
-  This runbook focuses on a range of potential problems for both Windows and Linux VMs on
-  Google Cloud Platform. By conducting a series of checks, the runbook aims to pinpoint the
-  root cause of SSH access difficulties.
+  This runbook focuses on investigating components required for ssh on either Windows and Linux VMs
+  hosted on Google Cloud Platform and pinpoint misconfigurations.
 
-  The following areas are examined:
+  Areas Examined:
 
   - VM Instance Status: Evaluates the VM's current state, performance - ensuring that it is running
     and not impaired by high CPU usage, insufficient memory, or disk space issues that might disrupt
@@ -434,13 +433,17 @@ gce/ssh: Provides a comprehensive analysis of common issues which affects SSH co
 
   - Internal Guest OS Checks: Analysis available Guest OS metrics or logs to detect any
     misconfigurations or service disruptions that could be obstructing SSH functionality.
+
+  - SSH in Brower Checks: Checks if the autenticated user has relevants permissions and
+    the organisation policies permits SSH in Browser.
     
 [START]: Starting SSH diagnostics
-[INFO]: Will check for Metadata based SSH key configuration
-[INFO]: Checks will use ip 0.0.0.0 as the source IP
 [INFO]: Will not check for IAP for TCP forwarding configuration
+[INFO]: Runbook will use Protocol tcp,Port 22 and ip 0.0.0.0 as the source IP
+[INFO]: Runbook will check if Key-based SSH approached is are correctly configured
 [INFO]: Local User: no_user will be used examine metadata-based SSH Key configuration
-[INFO]: Will use ops agent metrics for relevant assessments
+[INFO]: Runbook will not investigate components required for SSH in browser
+[INFO]: Runbook Will use ops agent metrics for VM Performance investigation
 [AUTOMATED STEP]: Verifying VM is in the RUNNING state...
 
    - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [FAIL]
@@ -479,6 +482,18 @@ gce/ssh: Provides a comprehensive analysis of common issues which affects SSH co
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
 [AUTOMATED STEP]: Verifying VM's Boot disk space utilization is within optimal levels.
+
+   - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [FAIL]
+     [REASON]
+     Disk utilization on this VM's boot disk is critically high,
+     potentially affecting application performance.
+
+     [REMEDIATION]
+     To mitigate high disk usage, consider expanding the VM's boot disk capacity.
+     This action can help avoid performance issues and ensure smoother SSH connections.
+     Follow the guide to increase disk size:
+     https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
+
 [AUTOMATED STEP]: Verifying VM CPU utilization is within optimal levels
 
    - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [FAIL]
@@ -539,27 +554,16 @@ are operational on the VM.
 
     Note: Only roles granted at the project level are checked. Permissions inherited from
     ancestor resources such as folder(s) or organization and groups are not checked.
-[AUTOMATED STEP]: Verifying user access to Cloud Console...
-
-   - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
-     [REASON]
-     To access Compute Engine via the Google Cloud console (i.e. SSH-in-browser),
-     the user must have "compute.projects.get" permission.
-
-     [REMEDIATION]
-     Review the permissions guide for accessing Compute Engine resources:
-     https://cloud.google.com/compute/docs/access/iam#console_permission
-
-[AUTOMATED STEP]: Verifying instance retrieval permissions...
+[AUTOMATED STEP]: Verifying IAM policy
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
      The authenticated user none:cannot@example.com does not have the permissions needed to manage instances.
-     The following permissions are required: ['compute.instances.get', 'compute.instances.use'].
+     The following permissions are required: permissions.
 
      [REMEDIATION]
      To remedy this, ensure the user none:cannot@example.com is granted a role encompassing the necessary permissions:
-     - Permissions needed: ['compute.instances.get', 'compute.instances.use']
+     - Permissions needed: compute.instances.get, compute.instances.use
      For guidance on assigning instance admin roles, consult:
      https://cloud.google.com/compute/docs/access/iam#connectinginstanceadmin
 
@@ -571,6 +575,7 @@ are operational on the VM.
      [REASON]
      Ingress Traffic from source IP/CIDR 0.0.0.0, tcp:22 to the GCE instance faulty-windows-ssh is allowed by: vpc firewall rule: gce-secured-instance-test-allow
 
+[COMPOSITE STEP]: SSH in browser required?
 [END]: Finalizing SSH diagnostics...
 
 

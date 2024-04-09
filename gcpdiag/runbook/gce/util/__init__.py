@@ -18,7 +18,9 @@ import re
 from typing import List
 
 
-def search_pattern_in_serial_logs(patterns, contents: List[str], operator='OR'):
+def search_pattern_in_serial_logs(patterns: List,
+                                  contents: List[str],
+                                  operator='OR'):
   # logs are by default sorted from oldest to newest. revert to get the newest first
   reversed_contents = reversed(contents)
   pattern = ''
