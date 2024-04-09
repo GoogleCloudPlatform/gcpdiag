@@ -99,7 +99,7 @@ class CustomStep(runbook.Step):
     else:
       op.add_failed(project,
                          reason='Your project name and id are different',
-                         remediation='different name and id is fine too. ')
+                         remediation='Different name and id is fine too. Please enter "c" to continue. ')
 
 
 class TreeNameGateway(runbook.Gateway):
@@ -121,7 +121,7 @@ class TreeNameGateway(runbook.Gateway):
       num = len(pubsub.get_topics(op.context))
       op.info(f'Your project has {num} Pubsub Topic{"" if num==1 else "s"} 🔥')
     else:
-      num = len(iam.get(op.context.project_id))
+      num = len(iam.get_service_account_list(op.context.project_id))
       op.info(f'Your project has {num} service account{"" if num==1 else "s"} 🔥')
 
 
