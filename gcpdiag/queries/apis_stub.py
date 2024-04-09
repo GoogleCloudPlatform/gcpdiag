@@ -93,7 +93,9 @@ JSON_PROJECT_DIR = {
     'gcpdiag-billing2-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/billing1/json-dumps',
     'gcpdiag-billing3-aaaa':
-        pathlib.Path(__file__).parents[2] / 'test-data/billing1/json-dumps'
+        pathlib.Path(__file__).parents[2] / 'test-data/billing1/json-dumps',
+    'gcpdiag-osconfig1-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/osconfig1/json-dumps',
 }
 
 # set to a value higher than 0 to emulate API temp. failure
@@ -331,5 +333,8 @@ def get_api_stub(service_name: str,
   elif service_name == 'cloudbilling':
     from gcpdiag.queries import billing_stub
     return billing_stub.BillingApiStub()
+  elif service_name == 'osconfig':
+    from gcpdiag.queries import osconfig_stub
+    return osconfig_stub.OSConfigStub()
   else:
     raise ValueError('unsupported service: %s' % service_name)
