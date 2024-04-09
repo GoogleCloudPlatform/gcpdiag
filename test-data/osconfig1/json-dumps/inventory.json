@@ -1,0 +1,4436 @@
+{
+  "osInfo": {
+    "longName": "Debian GNU/Linux 10 (buster)",
+    "shortName": "debian",
+    "version": "10",
+    "architecture": "x86_64",
+    "kernelVersion": "#1 SMP Debian 4.19.304-1 (2024-01-09)",
+    "kernelRelease": "4.19.0-26-cloud-amd64",
+    "osconfigAgentVersion": "20231207.01-g1",
+    "hostname": "fake-instance"
+  },
+  "items": {
+    "installedPackage-libassuan0:x86_64:2.5.2-1": {
+      "id": "installedPackage-libassuan0:x86_64:2.5.2-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.5.2-1",
+          "packageName": "libassuan0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556110Z"
+    },
+    "installedPackage-libgpm2:x86_64:1.20.7-5": {
+      "id": "installedPackage-libgpm2:x86_64:1.20.7-5",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.20.7-5",
+          "packageName": "libgpm2"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556143Z"
+    },
+    "installedPackage-python3-debian:all:0.1.35": {
+      "id": "installedPackage-python3-debian:all:0.1.35",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "0.1.35",
+          "packageName": "python3-debian"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556218Z"
+    },
+    "installedPackage-linux-base:all:4.6": {
+      "id": "installedPackage-linux-base:all:4.6",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "4.6",
+          "packageName": "linux-base"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556197Z"
+    },
+    "installedPackage-libext2fs2:x86_64:1.44.5-1+deb10u3": {
+      "id": "installedPackage-libext2fs2:x86_64:1.44.5-1+deb10u3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.44.5-1+deb10u3",
+          "packageName": "libext2fs2"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556134Z"
+    },
+    "installedPackage-procps:x86_64:2:3.3.15-2": {
+      "id": "installedPackage-procps:x86_64:2:3.3.15-2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2:3.3.15-2",
+          "packageName": "procps"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556213Z"
+    },
+    "installedPackage-libc6:x86_64:2.28-10+deb10u2": {
+      "id": "installedPackage-libc6:x86_64:2.28-10+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.28-10+deb10u2",
+          "packageName": "libc6"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556124Z"
+    },
+    "installedPackage-python3-pysimplesoap:all:1.16.2-1": {
+      "id": "installedPackage-python3-pysimplesoap:all:1.16.2-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "1.16.2-1",
+          "packageName": "python3-pysimplesoap"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556222Z"
+    },
+    "installedPackage-libgcrypt20:x86_64:1.8.4-5+deb10u1": {
+      "id": "installedPackage-libgcrypt20:x86_64:1.8.4-5+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.8.4-5+deb10u1",
+          "packageName": "libgcrypt20"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556139Z"
+    },
+    "installedPackage-kmod:x86_64:26-1": {
+      "id": "installedPackage-kmod:x86_64:26-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "26-1",
+          "packageName": "kmod"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556106Z"
+    },
+    "installedPackage-libidn11:x86_64:1.33-2.2": {
+      "id": "installedPackage-libidn11:x86_64:1.33-2.2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.33-2.2",
+          "packageName": "libidn11"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556146Z"
+    },
+    "installedPackage-python3-apt:x86_64:1.8.4.3": {
+      "id": "installedPackage-python3-apt:x86_64:1.8.4.3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.8.4.3",
+          "packageName": "python3-apt"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556215Z"
+    },
+    "installedPackage-libexpat1:x86_64:2.2.6-2+deb10u7": {
+      "id": "installedPackage-libexpat1:x86_64:2.2.6-2+deb10u7",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.2.6-2+deb10u7",
+          "packageName": "libexpat1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556133Z"
+    },
+    "installedPackage-dmidecode:x86_64:3.2-1": {
+      "id": "installedPackage-dmidecode:x86_64:3.2-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "3.2-1",
+          "packageName": "dmidecode"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556076Z"
+    },
+    "installedPackage-dash:x86_64:0.5.10.2-5": {
+      "id": "installedPackage-dash:x86_64:0.5.10.2-5",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "0.5.10.2-5",
+          "packageName": "dash"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556071Z"
+    },
+    "installedPackage-libargon2-1:x86_64:0~20171227-0.2": {
+      "id": "installedPackage-libargon2-1:x86_64:0~20171227-0.2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "0~20171227-0.2",
+          "packageName": "libargon2-1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556109Z"
+    },
+    "installedPackage-gpgconf:x86_64:2.2.12-1+deb10u2": {
+      "id": "installedPackage-gpgconf:x86_64:2.2.12-1+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.2.12-1+deb10u2",
+          "packageName": "gpgconf"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556093Z"
+    },
+    "installedPackage-libmariadb3:x86_64:1:10.3.39-0+deb10u2": {
+      "id": "installedPackage-libmariadb3:x86_64:1:10.3.39-0+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:10.3.39-0+deb10u2",
+          "packageName": "libmariadb3"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556161Z"
+    },
+    "installedPackage-libfribidi0:x86_64:1.0.5-3.1+deb10u2": {
+      "id": "installedPackage-libfribidi0:x86_64:1.0.5-3.1+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.0.5-3.1+deb10u2",
+          "packageName": "libfribidi0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556136Z"
+    },
+    "installedPackage-google-compute-engine-oslogin:x86_64:1:20231004.00-g1+deb10": {
+      "id": "installedPackage-google-compute-engine-oslogin:x86_64:1:20231004.00-g1+deb10",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:20231004.00-g1+deb10",
+          "packageName": "google-compute-engine-oslogin"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556088Z"
+    },
+    "installedPackage-python3:x86_64:3.7.3-1": {
+      "id": "installedPackage-python3:x86_64:3.7.3-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "3.7.3-1",
+          "packageName": "python3"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556215Z"
+    },
+    "installedPackage-libltdl7:x86_64:2.4.6-9": {
+      "id": "installedPackage-libltdl7:x86_64:2.4.6-9",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.4.6-9",
+          "packageName": "libltdl7"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556157Z"
+    },
+    "installedPackage-libmnl0:x86_64:1.0.4-2": {
+      "id": "installedPackage-libmnl0:x86_64:1.0.4-2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.0.4-2",
+          "packageName": "libmnl0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556161Z"
+    },
+    "installedPackage-libapt-pkg5.0:x86_64:1.8.2.3": {
+      "id": "installedPackage-libapt-pkg5.0:x86_64:1.8.2.3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.8.2.3",
+          "packageName": "libapt-pkg5.0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556109Z"
+    },
+    "installedPackage-libpython2.7-minimal:x86_64:2.7.16-2+deb10u4": {
+      "id": "installedPackage-libpython2.7-minimal:x86_64:2.7.16-2+deb10u4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.7.16-2+deb10u4",
+          "packageName": "libpython2.7-minimal"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556180Z"
+    },
+    "installedPackage-gpgv:x86_64:2.2.12-1+deb10u2": {
+      "id": "installedPackage-gpgv:x86_64:2.2.12-1+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.2.12-1+deb10u2",
+          "packageName": "gpgv"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556094Z"
+    },
+    "installedPackage-bsdutils:x86_64:1:2.33.1-0.1+deb10u1": {
+      "id": "installedPackage-bsdutils:x86_64:1:2.33.1-0.1+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:2.33.1-0.1+deb10u1",
+          "packageName": "bsdutils"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556066Z"
+    },
+    "installedPackage-libblkid1:x86_64:2.33.1-0.1+deb10u1": {
+      "id": "installedPackage-libblkid1:x86_64:2.33.1-0.1+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.33.1-0.1+deb10u1",
+          "packageName": "libblkid1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556122Z"
+    },
+    "installedPackage-libnettle6:x86_64:3.4.1-1+deb10u1": {
+      "id": "installedPackage-libnettle6:x86_64:3.4.1-1+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "3.4.1-1+deb10u1",
+          "packageName": "libnettle6"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556164Z"
+    },
+    "installedPackage-e2fsprogs:x86_64:1.44.5-1+deb10u3": {
+      "id": "installedPackage-e2fsprogs:x86_64:1.44.5-1+deb10u3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.44.5-1+deb10u3",
+          "packageName": "e2fsprogs"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556077Z"
+    },
+    "installedPackage-libksba8:x86_64:1.3.5-2+deb10u2": {
+      "id": "installedPackage-libksba8:x86_64:1.3.5-2+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.3.5-2+deb10u2",
+          "packageName": "libksba8"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556154Z"
+    },
+    "installedPackage-publicsuffix:all:20220811.1734-0+deb10u1": {
+      "id": "installedPackage-publicsuffix:all:20220811.1734-0+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "20220811.1734-0+deb10u1",
+          "packageName": "publicsuffix"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556214Z"
+    },
+    "installedPackage-findutils:x86_64:4.6.0+git+20190209-2": {
+      "id": "installedPackage-findutils:x86_64:4.6.0+git+20190209-2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "4.6.0+git+20190209-2",
+          "packageName": "findutils"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556081Z"
+    },
+    "installedPackage-python3-debianbts:all:2.8.2": {
+      "id": "installedPackage-python3-debianbts:all:2.8.2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "2.8.2",
+          "packageName": "python3-debianbts"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556218Z"
+    },
+    "installedPackage-libpython2.7-stdlib:x86_64:2.7.16-2+deb10u4": {
+      "id": "installedPackage-libpython2.7-stdlib:x86_64:2.7.16-2+deb10u4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.7.16-2+deb10u4",
+          "packageName": "libpython2.7-stdlib"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556181Z"
+    },
+    "installedPackage-libsasl2-2:x86_64:2.1.27+dfsg-1+deb10u2": {
+      "id": "installedPackage-libsasl2-2:x86_64:2.1.27+dfsg-1+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.1.27+dfsg-1+deb10u2",
+          "packageName": "libsasl2-2"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556184Z"
+    },
+    "installedPackage-libsepol1:x86_64:2.8-1": {
+      "id": "installedPackage-libsepol1:x86_64:2.8-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.8-1",
+          "packageName": "libsepol1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556188Z"
+    },
+    "installedPackage-vim-common:all:2:8.1.0875-5+deb10u6": {
+      "id": "installedPackage-vim-common:all:2:8.1.0875-5+deb10u6",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "2:8.1.0875-5+deb10u6",
+          "packageName": "vim-common"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556238Z"
+    },
+    "installedPackage-libestr0:x86_64:0.1.10-2.1": {
+      "id": "installedPackage-libestr0:x86_64:0.1.10-2.1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "0.1.10-2.1",
+          "packageName": "libestr0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556132Z"
+    },
+    "installedPackage-ncurses-base:all:6.1+20181013-2+deb10u5": {
+      "id": "installedPackage-ncurses-base:all:6.1+20181013-2+deb10u5",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "6.1+20181013-2+deb10u5",
+          "packageName": "ncurses-base"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556206Z"
+    },
+    "installedPackage-hostname:x86_64:3.21": {
+      "id": "installedPackage-hostname:x86_64:3.21",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "3.21",
+          "packageName": "hostname"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556100Z"
+    },
+    "installedPackage-libunistring2:x86_64:0.9.10-1": {
+      "id": "installedPackage-libunistring2:x86_64:0.9.10-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "0.9.10-1",
+          "packageName": "libunistring2"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556194Z"
+    },
+    "installedPackage-libapt-inst2.0:x86_64:1.8.2.3": {
+      "id": "installedPackage-libapt-inst2.0:x86_64:1.8.2.3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.8.2.3",
+          "packageName": "libapt-inst2.0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556108Z"
+    },
+    "installedPackage-libnghttp2-14:x86_64:1.36.0-2+deb10u2": {
+      "id": "installedPackage-libnghttp2-14:x86_64:1.36.0-2+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.36.0-2+deb10u2",
+          "packageName": "libnghttp2-14"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556166Z"
+    },
+    "installedPackage-lsb-release:all:10.2019051400": {
+      "id": "installedPackage-lsb-release:all:10.2019051400",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "10.2019051400",
+          "packageName": "lsb-release"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556200Z"
+    },
+    "installedPackage-initramfs-tools:all:0.133+deb10u1": {
+      "id": "installedPackage-initramfs-tools:all:0.133+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "0.133+deb10u1",
+          "packageName": "initramfs-tools"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556102Z"
+    },
+    "installedPackage-libgmp10:x86_64:2:6.1.2+dfsg-4+deb10u1": {
+      "id": "installedPackage-libgmp10:x86_64:2:6.1.2+dfsg-4+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2:6.1.2+dfsg-4+deb10u1",
+          "packageName": "libgmp10"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556141Z"
+    },
+    "installedPackage-google-cloud-packages-archive-keyring:all:1.2-614705963": {
+      "id": "installedPackage-google-cloud-packages-archive-keyring:all:1.2-614705963",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "1.2-614705963",
+          "packageName": "google-cloud-packages-archive-keyring"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556087Z"
+    },
+    "installedPackage-libnfnetlink0:x86_64:1.0.1-3+b1": {
+      "id": "installedPackage-libnfnetlink0:x86_64:1.0.1-3+b1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.0.1-3+b1",
+          "packageName": "libnfnetlink0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556165Z"
+    },
+    "installedPackage-libunbound8:x86_64:1.9.0-2+deb10u4": {
+      "id": "installedPackage-libunbound8:x86_64:1.9.0-2+deb10u4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.9.0-2+deb10u4",
+          "packageName": "libunbound8"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556194Z"
+    },
+    "installedPackage-python3-distro-info:all:0.21+deb10u1": {
+      "id": "installedPackage-python3-distro-info:all:0.21+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "0.21+deb10u1",
+          "packageName": "python3-distro-info"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556219Z"
+    },
+    "installedPackage-mime-support:all:3.62": {
+      "id": "installedPackage-mime-support:all:3.62",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "3.62",
+          "packageName": "mime-support"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556203Z"
+    },
+    "installedPackage-libdbus-1-3:x86_64:1.12.28-0+deb10u1": {
+      "id": "installedPackage-libdbus-1-3:x86_64:1.12.28-0+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.12.28-0+deb10u1",
+          "packageName": "libdbus-1-3"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556128Z"
+    },
+    "installedPackage-libudev1:x86_64:241-7~deb10u10": {
+      "id": "installedPackage-libudev1:x86_64:241-7~deb10u10",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "241-7~deb10u10",
+          "packageName": "libudev1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556193Z"
+    },
+    "installedPackage-exim4-daemon-light:x86_64:4.92-8+deb10u9": {
+      "id": "installedPackage-exim4-daemon-light:x86_64:4.92-8+deb10u9",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "4.92-8+deb10u9",
+          "packageName": "exim4-daemon-light"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556080Z"
+    },
+    "installedPackage-libidn2-0:x86_64:2.0.5-1+deb10u1": {
+      "id": "installedPackage-libidn2-0:x86_64:2.0.5-1+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.0.5-1+deb10u1",
+          "packageName": "libidn2-0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556146Z"
+    },
+    "installedPackage-gpgsm:x86_64:2.2.12-1+deb10u2": {
+      "id": "installedPackage-gpgsm:x86_64:2.2.12-1+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.2.12-1+deb10u2",
+          "packageName": "gpgsm"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556093Z"
+    },
+    "installedPackage-libp11-kit0:x86_64:0.23.15-2+deb10u1": {
+      "id": "installedPackage-libp11-kit0:x86_64:0.23.15-2+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "0.23.15-2+deb10u1",
+          "packageName": "libp11-kit0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556172Z"
+    },
+    "installedPackage-grub-pc-bin:x86_64:2.06-3~deb10u4": {
+      "id": "installedPackage-grub-pc-bin:x86_64:2.06-3~deb10u4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.06-3~deb10u4",
+          "packageName": "grub-pc-bin"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556097Z"
+    },
+    "installedPackage-libfdisk1:x86_64:2.33.1-0.1+deb10u1": {
+      "id": "installedPackage-libfdisk1:x86_64:2.33.1-0.1+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.33.1-0.1+deb10u1",
+          "packageName": "libfdisk1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556135Z"
+    },
+    "installedPackage-perl-base:x86_64:5.28.1-6+deb10u1": {
+      "id": "installedPackage-perl-base:x86_64:5.28.1-6+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "5.28.1-6+deb10u1",
+          "packageName": "perl-base"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556212Z"
+    },
+    "installedPackage-gcc-8-base:x86_64:8.3.0-6": {
+      "id": "installedPackage-gcc-8-base:x86_64:8.3.0-6",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "8.3.0-6",
+          "packageName": "gcc-8-base"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556082Z"
+    },
+    "installedPackage-libcap2:x86_64:1:2.25-2": {
+      "id": "installedPackage-libcap2:x86_64:1:2.25-2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:2.25-2",
+          "packageName": "libcap2"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556125Z"
+    },
+    "installedPackage-libtasn1-6:x86_64:4.13-3+deb10u1": {
+      "id": "installedPackage-libtasn1-6:x86_64:4.13-3+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "4.13-3+deb10u1",
+          "packageName": "libtasn1-6"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556192Z"
+    },
+    "installedPackage-iproute2:x86_64:4.20.0-2+deb10u1": {
+      "id": "installedPackage-iproute2:x86_64:4.20.0-2+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "4.20.0-2+deb10u1",
+          "packageName": "iproute2"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556103Z"
+    },
+    "installedPackage-libldap-common:all:2.4.47+dfsg-3+deb10u7": {
+      "id": "installedPackage-libldap-common:all:2.4.47+dfsg-3+deb10u7",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "2.4.47+dfsg-3+deb10u7",
+          "packageName": "libldap-common"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556156Z"
+    },
+    "installedPackage-systemd-sysv:x86_64:241-7~deb10u10": {
+      "id": "installedPackage-systemd-sysv:x86_64:241-7~deb10u10",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "241-7~deb10u10",
+          "packageName": "systemd-sysv"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556232Z"
+    },
+    "installedPackage-login:x86_64:1:4.5-1.1": {
+      "id": "installedPackage-login:x86_64:1:4.5-1.1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:4.5-1.1",
+          "packageName": "login"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556199Z"
+    },
+    "installedPackage-grub-cloud-amd64:x86_64:0.0.4": {
+      "id": "installedPackage-grub-cloud-amd64:x86_64:0.0.4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "0.0.4",
+          "packageName": "grub-cloud-amd64"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556095Z"
+    },
+    "installedPackage-chrony:x86_64:3.4-4+deb10u2": {
+      "id": "installedPackage-chrony:x86_64:3.4-4+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "3.4-4+deb10u2",
+          "packageName": "chrony"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556068Z"
+    },
+    "installedPackage-gzip:x86_64:1.9-3+deb10u1": {
+      "id": "installedPackage-gzip:x86_64:1.9-3+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.9-3+deb10u1",
+          "packageName": "gzip"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556099Z"
+    },
+    "availablePackage-google-cloud-cli:x86_64:471.0.0-0": {
+      "id": "availablePackage-google-cloud-cli:x86_64:471.0.0-0",
+      "originType": "INVENTORY_REPORT",
+      "type": "AVAILABLE_PACKAGE",
+      "availablePackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "471.0.0-0",
+          "packageName": "google-cloud-cli"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556043Z"
+    },
+    "installedPackage-libhogweed4:x86_64:3.4.1-1+deb10u1": {
+      "id": "installedPackage-libhogweed4:x86_64:3.4.1-1+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "3.4.1-1+deb10u1",
+          "packageName": "libhogweed4"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556145Z"
+    },
+    "installedPackage-libicu63:x86_64:63.1-6+deb10u3": {
+      "id": "installedPackage-libicu63:x86_64:63.1-6+deb10u3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "63.1-6+deb10u3",
+          "packageName": "libicu63"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556145Z"
+    },
+    "installedPackage-grep:x86_64:3.3-1": {
+      "id": "installedPackage-grep:x86_64:3.3-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "3.3-1",
+          "packageName": "grep"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556094Z"
+    },
+    "installedPackage-libc-bin:x86_64:2.28-10+deb10u2": {
+      "id": "installedPackage-libc-bin:x86_64:2.28-10+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.28-10+deb10u2",
+          "packageName": "libc-bin"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556123Z"
+    },
+    "installedPackage-grub-common:x86_64:2.06-3~deb10u4": {
+      "id": "installedPackage-grub-common:x86_64:2.06-3~deb10u4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.06-3~deb10u4",
+          "packageName": "grub-common"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556096Z"
+    },
+    "installedPackage-gpg-wks-server:x86_64:2.2.12-1+deb10u2": {
+      "id": "installedPackage-gpg-wks-server:x86_64:2.2.12-1+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.2.12-1+deb10u2",
+          "packageName": "gpg-wks-server"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556092Z"
+    },
+    "installedPackage-libpam-modules:x86_64:1.3.1-5": {
+      "id": "installedPackage-libpam-modules:x86_64:1.3.1-5",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.3.1-5",
+          "packageName": "libpam-modules"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556172Z"
+    },
+    "installedPackage-uuid-runtime:x86_64:2.33.1-0.1+deb10u1": {
+      "id": "installedPackage-uuid-runtime:x86_64:2.33.1-0.1+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.33.1-0.1+deb10u1",
+          "packageName": "uuid-runtime"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556237Z"
+    },
+    "installedPackage-libkrb5-3:x86_64:1.17-3+deb10u6": {
+      "id": "installedPackage-libkrb5-3:x86_64:1.17-3+deb10u6",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.17-3+deb10u6",
+          "packageName": "libkrb5-3"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556153Z"
+    },
+    "installedPackage-librtmp1:x86_64:2.4+20151223.gitfa8646d.1-2": {
+      "id": "installedPackage-librtmp1:x86_64:2.4+20151223.gitfa8646d.1-2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.4+20151223.gitfa8646d.1-2",
+          "packageName": "librtmp1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556184Z"
+    },
+    "installedPackage-google-fluentd-catch-all-config:all:0.8.0": {
+      "id": "installedPackage-google-fluentd-catch-all-config:all:0.8.0",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "0.8.0",
+          "packageName": "google-fluentd-catch-all-config"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556089Z"
+    },
+    "installedPackage-libpam-runtime:all:1.3.1-5": {
+      "id": "installedPackage-libpam-runtime:all:1.3.1-5",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "1.3.1-5",
+          "packageName": "libpam-runtime"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556173Z"
+    },
+    "installedPackage-libmagic1:x86_64:1:5.35-4+deb10u2": {
+      "id": "installedPackage-libmagic1:x86_64:1:5.35-4+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:5.35-4+deb10u2",
+          "packageName": "libmagic1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556160Z"
+    },
+    "installedPackage-libgeoip1:x86_64:1.6.12-1": {
+      "id": "installedPackage-libgeoip1:x86_64:1.6.12-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.6.12-1",
+          "packageName": "libgeoip1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556140Z"
+    },
+    "installedPackage-libpam-cap:x86_64:1:2.25-2": {
+      "id": "installedPackage-libpam-cap:x86_64:1:2.25-2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:2.25-2",
+          "packageName": "libpam-cap"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556172Z"
+    },
+    "installedPackage-bash:x86_64:5.0-4": {
+      "id": "installedPackage-bash:x86_64:5.0-4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "5.0-4",
+          "packageName": "bash"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556063Z"
+    },
+    "installedPackage-gnupg-utils:x86_64:2.2.12-1+deb10u2": {
+      "id": "installedPackage-gnupg-utils:x86_64:2.2.12-1+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.2.12-1+deb10u2",
+          "packageName": "gnupg-utils"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556086Z"
+    },
+    "availablePackage-google-osconfig-agent:x86_64:1:20240320.00-g1": {
+      "id": "availablePackage-google-osconfig-agent:x86_64:1:20240320.00-g1",
+      "originType": "INVENTORY_REPORT",
+      "type": "AVAILABLE_PACKAGE",
+      "availablePackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:20240320.00-g1",
+          "packageName": "google-osconfig-agent"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556052Z"
+    },
+    "installedPackage-shim-signed:x86_64:1.39~1+deb10u1+15.7-1~deb10u1": {
+      "id": "installedPackage-shim-signed:x86_64:1.39~1+deb10u1+15.7-1~deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.39~1+deb10u1+15.7-1~deb10u1",
+          "packageName": "shim-signed"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556229Z"
+    },
+    "installedPackage-libsemanage-common:all:2.8-2": {
+      "id": "installedPackage-libsemanage-common:all:2.8-2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "2.8-2",
+          "packageName": "libsemanage-common"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556187Z"
+    },
+    "installedPackage-libcap-ng0:x86_64:0.7.9-2": {
+      "id": "installedPackage-libcap-ng0:x86_64:0.7.9-2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "0.7.9-2",
+          "packageName": "libcap-ng0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556124Z"
+    },
+    "installedPackage-shim-signed-common:all:1.39~1+deb10u1+15.7-1~deb10u1": {
+      "id": "installedPackage-shim-signed-common:all:1.39~1+deb10u1+15.7-1~deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "1.39~1+deb10u1+15.7-1~deb10u1",
+          "packageName": "shim-signed-common"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556229Z"
+    },
+    "installedPackage-gpg-agent:x86_64:2.2.12-1+deb10u2": {
+      "id": "installedPackage-gpg-agent:x86_64:2.2.12-1+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.2.12-1+deb10u2",
+          "packageName": "gpg-agent"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556092Z"
+    },
+    "installedPackage-libbsd0:x86_64:0.9.1-2+deb10u1": {
+      "id": "installedPackage-libbsd0:x86_64:0.9.1-2+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "0.9.1-2+deb10u1",
+          "packageName": "libbsd0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556122Z"
+    },
+    "installedPackage-nano:x86_64:3.2-3": {
+      "id": "installedPackage-nano:x86_64:3.2-3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "3.2-3",
+          "packageName": "nano"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556205Z"
+    },
+    "installedPackage-libgcc1:x86_64:1:8.3.0-6": {
+      "id": "installedPackage-libgcc1:x86_64:1:8.3.0-6",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:8.3.0-6",
+          "packageName": "libgcc1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556138Z"
+    },
+    "installedPackage-mailutils:x86_64:1:3.5-4": {
+      "id": "installedPackage-mailutils:x86_64:1:3.5-4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:3.5-4",
+          "packageName": "mailutils"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556201Z"
+    },
+    "installedPackage-tar:x86_64:1.30+dfsg-6+deb10u1": {
+      "id": "installedPackage-tar:x86_64:1.30+dfsg-6+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.30+dfsg-6+deb10u1",
+          "packageName": "tar"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556233Z"
+    },
+    "installedPackage-dirmngr:x86_64:2.2.12-1+deb10u2": {
+      "id": "installedPackage-dirmngr:x86_64:2.2.12-1+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.2.12-1+deb10u2",
+          "packageName": "dirmngr"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556075Z"
+    },
+    "installedPackage-apt-listchanges:all:3.19": {
+      "id": "installedPackage-apt-listchanges:all:3.19",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "3.19",
+          "packageName": "apt-listchanges"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556060Z"
+    },
+    "installedPackage-libwrap0:x86_64:7.6.q-28": {
+      "id": "installedPackage-libwrap0:x86_64:7.6.q-28",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "7.6.q-28",
+          "packageName": "libwrap0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556195Z"
+    },
+    "installedPackage-pinentry-curses:x86_64:1.1.0-2": {
+      "id": "installedPackage-pinentry-curses:x86_64:1.1.0-2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.1.0-2",
+          "packageName": "pinentry-curses"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556213Z"
+    },
+    "installedPackage-ucf:all:3.0038+nmu1": {
+      "id": "installedPackage-ucf:all:3.0038+nmu1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "3.0038+nmu1",
+          "packageName": "ucf"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556235Z"
+    },
+    "installedPackage-libprotobuf-c1:x86_64:1.3.1-1+b1": {
+      "id": "installedPackage-libprotobuf-c1:x86_64:1.3.1-1+b1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.3.1-1+b1",
+          "packageName": "libprotobuf-c1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556179Z"
+    },
+    "installedPackage-dmsetup:x86_64:2:1.02.155-3": {
+      "id": "installedPackage-dmsetup:x86_64:2:1.02.155-3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2:1.02.155-3",
+          "packageName": "dmsetup"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556076Z"
+    },
+    "installedPackage-libgpg-error0:x86_64:1.35-1": {
+      "id": "installedPackage-libgpg-error0:x86_64:1.35-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.35-1",
+          "packageName": "libgpg-error0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556142Z"
+    },
+    "installedPackage-gdisk:x86_64:1.0.3-1.1": {
+      "id": "installedPackage-gdisk:x86_64:1.0.3-1.1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.0.3-1.1",
+          "packageName": "gdisk"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556083Z"
+    },
+    "installedPackage-openssh-sftp-server:x86_64:1:7.9p1-10+deb10u4": {
+      "id": "installedPackage-openssh-sftp-server:x86_64:1:7.9p1-10+deb10u4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:7.9p1-10+deb10u4",
+          "packageName": "openssh-sftp-server"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556209Z"
+    },
+    "installedPackage-libattr1:x86_64:1:2.4.48-4": {
+      "id": "installedPackage-libattr1:x86_64:1:2.4.48-4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:2.4.48-4",
+          "packageName": "libattr1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556113Z"
+    },
+    "installedPackage-libfreetype6:x86_64:2.9.1-3+deb10u3": {
+      "id": "installedPackage-libfreetype6:x86_64:2.9.1-3+deb10u3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.9.1-3+deb10u3",
+          "packageName": "libfreetype6"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556136Z"
+    },
+    "installedPackage-python3-certifi:all:2018.8.24-1": {
+      "id": "installedPackage-python3-certifi:all:2018.8.24-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "2018.8.24-1",
+          "packageName": "python3-certifi"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556216Z"
+    },
+    "installedPackage-libpython2.7:x86_64:2.7.16-2+deb10u4": {
+      "id": "installedPackage-libpython2.7:x86_64:2.7.16-2+deb10u4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.7.16-2+deb10u4",
+          "packageName": "libpython2.7"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556180Z"
+    },
+    "installedPackage-libseccomp2:x86_64:2.3.3-4": {
+      "id": "installedPackage-libseccomp2:x86_64:2.3.3-4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.3.3-4",
+          "packageName": "libseccomp2"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556186Z"
+    },
+    "installedPackage-sudo:x86_64:1.8.27-1+deb10u6": {
+      "id": "installedPackage-sudo:x86_64:1.8.27-1+deb10u6",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.8.27-1+deb10u6",
+          "packageName": "sudo"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556231Z"
+    },
+    "installedPackage-python3-debconf:all:1.5.71+deb10u1": {
+      "id": "installedPackage-python3-debconf:all:1.5.71+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "1.5.71+deb10u1",
+          "packageName": "python3-debconf"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556217Z"
+    },
+    "installedPackage-unattended-upgrades:all:1.11.2": {
+      "id": "installedPackage-unattended-upgrades:all:1.11.2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "1.11.2",
+          "packageName": "unattended-upgrades"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556236Z"
+    },
+    "installedPackage-gnupg-l10n:all:2.2.12-1+deb10u2": {
+      "id": "installedPackage-gnupg-l10n:all:2.2.12-1+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "2.2.12-1+deb10u2",
+          "packageName": "gnupg-l10n"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556085Z"
+    },
+    "installedPackage-libpipeline1:x86_64:1.5.1-2": {
+      "id": "installedPackage-libpipeline1:x86_64:1.5.1-2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.5.1-2",
+          "packageName": "libpipeline1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556177Z"
+    },
+    "installedPackage-exim4-base:x86_64:4.92-8+deb10u9": {
+      "id": "installedPackage-exim4-base:x86_64:4.92-8+deb10u9",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "4.92-8+deb10u9",
+          "packageName": "exim4-base"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556079Z"
+    },
+    "installedPackage-python3-minimal:x86_64:3.7.3-1": {
+      "id": "installedPackage-python3-minimal:x86_64:3.7.3-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "3.7.3-1",
+          "packageName": "python3-minimal"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556221Z"
+    },
+    "installedPackage-libmagic-mgc:x86_64:1:5.35-4+deb10u2": {
+      "id": "installedPackage-libmagic-mgc:x86_64:1:5.35-4+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:5.35-4+deb10u2",
+          "packageName": "libmagic-mgc"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556159Z"
+    },
+    "installedPackage-python3-reportbug:all:7.5.3~deb10u2": {
+      "id": "installedPackage-python3-reportbug:all:7.5.3~deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "7.5.3~deb10u2",
+          "packageName": "python3-reportbug"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556223Z"
+    },
+    "installedPackage-reportbug:all:7.5.3~deb10u2": {
+      "id": "installedPackage-reportbug:all:7.5.3~deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "7.5.3~deb10u2",
+          "packageName": "reportbug"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556226Z"
+    },
+    "installedPackage-libkeyutils1:x86_64:1.6-6": {
+      "id": "installedPackage-libkeyutils1:x86_64:1.6-6",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.6-6",
+          "packageName": "libkeyutils1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556152Z"
+    },
+    "installedPackage-libpam-systemd:x86_64:241-7~deb10u10": {
+      "id": "installedPackage-libpam-systemd:x86_64:241-7~deb10u10",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "241-7~deb10u10",
+          "packageName": "libpam-systemd"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556174Z"
+    },
+    "installedPackage-mount:x86_64:2.33.1-0.1+deb10u1": {
+      "id": "installedPackage-mount:x86_64:2.33.1-0.1+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.33.1-0.1+deb10u1",
+          "packageName": "mount"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556204Z"
+    },
+    "installedPackage-bash-completion:all:1:2.8-6": {
+      "id": "installedPackage-bash-completion:all:1:2.8-6",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "1:2.8-6",
+          "packageName": "bash-completion"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556064Z"
+    },
+    "installedPackage-libpam-modules-bin:x86_64:1.3.1-5": {
+      "id": "installedPackage-libpam-modules-bin:x86_64:1.3.1-5",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.3.1-5",
+          "packageName": "libpam-modules-bin"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556173Z"
+    },
+    "installedPackage-exim4-config:all:4.92-8+deb10u9": {
+      "id": "installedPackage-exim4-config:all:4.92-8+deb10u9",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "4.92-8+deb10u9",
+          "packageName": "exim4-config"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556079Z"
+    },
+    "installedPackage-libuchardet0:x86_64:0.0.6-3": {
+      "id": "installedPackage-libuchardet0:x86_64:0.0.6-3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "0.0.6-3",
+          "packageName": "libuchardet0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556193Z"
+    },
+    "installedPackage-libxml2:x86_64:2.9.4+dfsg1-7+deb10u6": {
+      "id": "installedPackage-libxml2:x86_64:2.9.4+dfsg1-7+deb10u6",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.9.4+dfsg1-7+deb10u6",
+          "packageName": "libxml2"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556196Z"
+    },
+    "installedPackage-libpopt0:x86_64:1.16-12": {
+      "id": "installedPackage-libpopt0:x86_64:1.16-12",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.16-12",
+          "packageName": "libpopt0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556178Z"
+    },
+    "installedPackage-libkyotocabinet16v5:x86_64:1.2.76-4.2+b1": {
+      "id": "installedPackage-libkyotocabinet16v5:x86_64:1.2.76-4.2+b1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.2.76-4.2+b1",
+          "packageName": "libkyotocabinet16v5"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556154Z"
+    },
+    "installedPackage-whiptail:x86_64:0.52.20-8": {
+      "id": "installedPackage-whiptail:x86_64:0.52.20-8",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "0.52.20-8",
+          "packageName": "whiptail"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556240Z"
+    },
+    "installedPackage-libnewt0.52:x86_64:0.52.20-8": {
+      "id": "installedPackage-libnewt0.52:x86_64:0.52.20-8",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "0.52.20-8",
+          "packageName": "libnewt0.52"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556165Z"
+    },
+    "installedPackage-libgc1c2:x86_64:1:7.6.4-0.4": {
+      "id": "installedPackage-libgc1c2:x86_64:1:7.6.4-0.4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:7.6.4-0.4",
+          "packageName": "libgc1c2"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556138Z"
+    },
+    "installedPackage-libpcre2-8-0:x86_64:10.32-5+deb10u1": {
+      "id": "installedPackage-libpcre2-8-0:x86_64:10.32-5+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "10.32-5+deb10u1",
+          "packageName": "libpcre2-8-0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556176Z"
+    },
+    "installedPackage-ncurses-bin:x86_64:6.1+20181013-2+deb10u5": {
+      "id": "installedPackage-ncurses-bin:x86_64:6.1+20181013-2+deb10u5",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "6.1+20181013-2+deb10u5",
+          "packageName": "ncurses-bin"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556206Z"
+    },
+    "installedPackage-screen:x86_64:4.6.2-3+deb10u1": {
+      "id": "installedPackage-screen:x86_64:4.6.2-3+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "4.6.2-3+deb10u1",
+          "packageName": "screen"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556227Z"
+    },
+    "installedPackage-libbz2-1.0:x86_64:1.0.6-9.2~deb10u2": {
+      "id": "installedPackage-libbz2-1.0:x86_64:1.0.6-9.2~deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.0.6-9.2~deb10u2",
+          "packageName": "libbz2-1.0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556123Z"
+    },
+    "installedPackage-libsmartcols1:x86_64:2.33.1-0.1+deb10u1": {
+      "id": "installedPackage-libsmartcols1:x86_64:2.33.1-0.1+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.33.1-0.1+deb10u1",
+          "packageName": "libsmartcols1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556189Z"
+    },
+    "installedPackage-dpkg:x86_64:1.19.8": {
+      "id": "installedPackage-dpkg:x86_64:1.19.8",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.19.8",
+          "packageName": "dpkg"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556077Z"
+    },
+    "installedPackage-systemd:x86_64:241-7~deb10u10": {
+      "id": "installedPackage-systemd:x86_64:241-7~deb10u10",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "241-7~deb10u10",
+          "packageName": "systemd"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556231Z"
+    },
+    "installedPackage-liblwres161:x86_64:1:9.11.5.P4+dfsg-5.1+deb10u10": {
+      "id": "installedPackage-liblwres161:x86_64:1:9.11.5.P4+dfsg-5.1+deb10u10",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:9.11.5.P4+dfsg-5.1+deb10u10",
+          "packageName": "liblwres161"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556158Z"
+    },
+    "installedPackage-python3-pycurl:x86_64:7.43.0.2-0.1": {
+      "id": "installedPackage-python3-pycurl:x86_64:7.43.0.2-0.1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "7.43.0.2-0.1",
+          "packageName": "python3-pycurl"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556222Z"
+    },
+    "installedPackage-debian-archive-keyring:all:2019.1+deb10u2": {
+      "id": "installedPackage-debian-archive-keyring:all:2019.1+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "2019.1+deb10u2",
+          "packageName": "debian-archive-keyring"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556073Z"
+    },
+    "installedPackage-man-db:x86_64:2.8.5-2+deb10u1": {
+      "id": "installedPackage-man-db:x86_64:2.8.5-2+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.8.5-2+deb10u1",
+          "packageName": "man-db"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556202Z"
+    },
+    "installedPackage-tzdata:all:2021a-0+deb10u12": {
+      "id": "installedPackage-tzdata:all:2021a-0+deb10u12",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "2021a-0+deb10u12",
+          "packageName": "tzdata"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556235Z"
+    },
+    "installedPackage-vim-runtime:all:2:8.1.0875-5+deb10u6": {
+      "id": "installedPackage-vim-runtime:all:2:8.1.0875-5+deb10u6",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "2:8.1.0875-5+deb10u6",
+          "packageName": "vim-runtime"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556239Z"
+    },
+    "installedPackage-python3-httplib2:all:0.11.3-2": {
+      "id": "installedPackage-python3-httplib2:all:0.11.3-2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "0.11.3-2",
+          "packageName": "python3-httplib2"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556220Z"
+    },
+    "installedPackage-libldap-2.4-2:x86_64:2.4.47+dfsg-3+deb10u7": {
+      "id": "installedPackage-libldap-2.4-2:x86_64:2.4.47+dfsg-3+deb10u7",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.4.47+dfsg-3+deb10u7",
+          "packageName": "libldap-2.4-2"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556155Z"
+    },
+    "installedPackage-groff-base:x86_64:1.22.4-3+deb10u1": {
+      "id": "installedPackage-groff-base:x86_64:1.22.4-3+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.22.4-3+deb10u1",
+          "packageName": "groff-base"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556095Z"
+    },
+    "installedPackage-libisccc161:x86_64:1:9.11.5.P4+dfsg-5.1+deb10u10": {
+      "id": "installedPackage-libisccc161:x86_64:1:9.11.5.P4+dfsg-5.1+deb10u10",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:9.11.5.P4+dfsg-5.1+deb10u10",
+          "packageName": "libisccc161"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556149Z"
+    },
+    "installedPackage-netbase:all:5.6": {
+      "id": "installedPackage-netbase:all:5.6",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "5.6",
+          "packageName": "netbase"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556207Z"
+    },
+    "installedPackage-python3-urllib3:all:1.24.1-1+deb10u2": {
+      "id": "installedPackage-python3-urllib3:all:1.24.1-1+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "1.24.1-1+deb10u2",
+          "packageName": "python3-urllib3"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556224Z"
+    },
+    "installedPackage-libbind9-161:x86_64:1:9.11.5.P4+dfsg-5.1+deb10u10": {
+      "id": "installedPackage-libbind9-161:x86_64:1:9.11.5.P4+dfsg-5.1+deb10u10",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:9.11.5.P4+dfsg-5.1+deb10u10",
+          "packageName": "libbind9-161"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556121Z"
+    },
+    "installedPackage-python3.7-minimal:x86_64:3.7.3-2+deb10u7": {
+      "id": "installedPackage-python3.7-minimal:x86_64:3.7.3-2+deb10u7",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "3.7.3-2+deb10u7",
+          "packageName": "python3.7-minimal"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556225Z"
+    },
+    "installedPackage-psmisc:x86_64:23.2-1+deb10u1": {
+      "id": "installedPackage-psmisc:x86_64:23.2-1+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "23.2-1+deb10u1",
+          "packageName": "psmisc"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556213Z"
+    },
+    "installedPackage-liblmdb0:x86_64:0.9.22-1": {
+      "id": "installedPackage-liblmdb0:x86_64:0.9.22-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "0.9.22-1",
+          "packageName": "liblmdb0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556156Z"
+    },
+    "installedPackage-liblzo2-2:x86_64:2.10-0.1": {
+      "id": "installedPackage-liblzo2-2:x86_64:2.10-0.1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.10-0.1",
+          "packageName": "liblzo2-2"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556159Z"
+    },
+    "installedPackage-libaudit-common:all:1:2.8.4-3": {
+      "id": "installedPackage-libaudit-common:all:1:2.8.4-3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "1:2.8.4-3",
+          "packageName": "libaudit-common"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556113Z"
+    },
+    "installedPackage-iputils-ping:x86_64:3:20180629-2+deb10u2": {
+      "id": "installedPackage-iputils-ping:x86_64:3:20180629-2+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "3:20180629-2+deb10u2",
+          "packageName": "iputils-ping"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556104Z"
+    },
+    "installedPackage-libssl1.1:x86_64:1.1.1n-0+deb10u6": {
+      "id": "installedPackage-libssl1.1:x86_64:1.1.1n-0+deb10u6",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.1.1n-0+deb10u6",
+          "packageName": "libssl1.1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556190Z"
+    },
+    "installedPackage-python-apt-common:all:1.8.4.3": {
+      "id": "installedPackage-python-apt-common:all:1.8.4.3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "1.8.4.3",
+          "packageName": "python-apt-common"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556214Z"
+    },
+    "installedPackage-libstdc++6:x86_64:8.3.0-6": {
+      "id": "installedPackage-libstdc++6:x86_64:8.3.0-6",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "8.3.0-6",
+          "packageName": "libstdc++6"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556191Z"
+    },
+    "installedPackage-traceroute:x86_64:1:2.1.0-2": {
+      "id": "installedPackage-traceroute:x86_64:1:2.1.0-2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:2.1.0-2",
+          "packageName": "traceroute"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556234Z"
+    },
+    "installedPackage-openssh-client:x86_64:1:7.9p1-10+deb10u4": {
+      "id": "installedPackage-openssh-client:x86_64:1:7.9p1-10+deb10u4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:7.9p1-10+deb10u4",
+          "packageName": "openssh-client"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556208Z"
+    },
+    "installedPackage-cron:x86_64:3.0pl1-134+deb10u1": {
+      "id": "installedPackage-cron:x86_64:3.0pl1-134+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "3.0pl1-134+deb10u1",
+          "packageName": "cron"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556070Z"
+    },
+    "installedPackage-gce-disk-expand:all:1:20200716.00-g1": {
+      "id": "installedPackage-gce-disk-expand:all:1:20200716.00-g1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "1:20200716.00-g1",
+          "packageName": "gce-disk-expand"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556082Z"
+    },
+    "installedPackage-libffi6:x86_64:3.2.1-9": {
+      "id": "installedPackage-libffi6:x86_64:3.2.1-9",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "3.2.1-9",
+          "packageName": "libffi6"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556136Z"
+    },
+    "installedPackage-liblz4-1:x86_64:1.8.3-1+deb10u1": {
+      "id": "installedPackage-liblz4-1:x86_64:1.8.3-1+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.8.3-1+deb10u1",
+          "packageName": "liblz4-1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556158Z"
+    },
+    "installedPackage-libgnutls30:x86_64:3.6.7-4+deb10u12": {
+      "id": "installedPackage-libgnutls30:x86_64:3.6.7-4+deb10u12",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "3.6.7-4+deb10u12",
+          "packageName": "libgnutls30"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556142Z"
+    },
+    "installedPackage-parted:x86_64:3.2-25": {
+      "id": "installedPackage-parted:x86_64:3.2-25",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "3.2-25",
+          "packageName": "parted"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556211Z"
+    },
+    "installedPackage-rsyslog:x86_64:8.1901.0-1+deb10u2": {
+      "id": "installedPackage-rsyslog:x86_64:8.1901.0-1+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "8.1901.0-1+deb10u2",
+          "packageName": "rsyslog"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556227Z"
+    },
+    "installedPackage-libsystemd0:x86_64:241-7~deb10u10": {
+      "id": "installedPackage-libsystemd0:x86_64:241-7~deb10u10",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "241-7~deb10u10",
+          "packageName": "libsystemd0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556191Z"
+    },
+    "installedPackage-python3-dbus:x86_64:1.2.8-3": {
+      "id": "installedPackage-python3-dbus:x86_64:1.2.8-3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.2.8-3",
+          "packageName": "python3-dbus"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556217Z"
+    },
+    "installedPackage-python3-idna:all:2.6-1": {
+      "id": "installedPackage-python3-idna:all:2.6-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "2.6-1",
+          "packageName": "python3-idna"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556220Z"
+    },
+    "installedPackage-libgnutls-dane0:x86_64:3.6.7-4+deb10u12": {
+      "id": "installedPackage-libgnutls-dane0:x86_64:3.6.7-4+deb10u12",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "3.6.7-4+deb10u12",
+          "packageName": "libgnutls-dane0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556141Z"
+    },
+    "installedPackage-libsasl2-modules-db:x86_64:2.1.27+dfsg-1+deb10u2": {
+      "id": "installedPackage-libsasl2-modules-db:x86_64:2.1.27+dfsg-1+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.1.27+dfsg-1+deb10u2",
+          "packageName": "libsasl2-modules-db"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556185Z"
+    },
+    "installedPackage-libisccfg163:x86_64:1:9.11.5.P4+dfsg-5.1+deb10u10": {
+      "id": "installedPackage-libisccfg163:x86_64:1:9.11.5.P4+dfsg-5.1+deb10u10",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:9.11.5.P4+dfsg-5.1+deb10u10",
+          "packageName": "libisccfg163"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556150Z"
+    },
+    "installedPackage-adduser:all:3.118": {
+      "id": "installedPackage-adduser:all:3.118",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "3.118",
+          "packageName": "adduser"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556057Z"
+    },
+    "installedPackage-init-system-helpers:all:1.56+nmu1": {
+      "id": "installedPackage-init-system-helpers:all:1.56+nmu1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "1.56+nmu1",
+          "packageName": "init-system-helpers"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556101Z"
+    },
+    "installedPackage-gettext-base:x86_64:0.19.8.1-9": {
+      "id": "installedPackage-gettext-base:x86_64:0.19.8.1-9",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "0.19.8.1-9",
+          "packageName": "gettext-base"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556083Z"
+    },
+    "installedPackage-libefivar1:x86_64:37-2+deb10u1": {
+      "id": "installedPackage-libefivar1:x86_64:37-2+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "37-2+deb10u1",
+          "packageName": "libefivar1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556131Z"
+    },
+    "installedPackage-libjson-c3:x86_64:0.12.1+ds-2+deb10u1": {
+      "id": "installedPackage-libjson-c3:x86_64:0.12.1+ds-2+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "0.12.1+ds-2+deb10u1",
+          "packageName": "libjson-c3"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556150Z"
+    },
+    "installedPackage-linux-image-4.19.0-26-cloud-amd64:x86_64:4.19.304-1": {
+      "id": "installedPackage-linux-image-4.19.0-26-cloud-amd64:x86_64:4.19.304-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "4.19.304-1",
+          "packageName": "linux-image-4.19.0-26-cloud-amd64"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556198Z"
+    },
+    "installedPackage-debconf:all:1.5.71+deb10u1": {
+      "id": "installedPackage-debconf:all:1.5.71+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "1.5.71+deb10u1",
+          "packageName": "debconf"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556073Z"
+    },
+    "installedPackage-libk5crypto3:x86_64:1.17-3+deb10u6": {
+      "id": "installedPackage-libk5crypto3:x86_64:1.17-3+deb10u6",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.17-3+deb10u6",
+          "packageName": "libk5crypto3"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556151Z"
+    },
+    "installedPackage-libevent-2.1-6:x86_64:2.1.8-stable-4": {
+      "id": "installedPackage-libevent-2.1-6:x86_64:2.1.8-stable-4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.1.8-stable-4",
+          "packageName": "libevent-2.1-6"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556133Z"
+    },
+    "installedPackage-apt:x86_64:1.8.2.3": {
+      "id": "installedPackage-apt:x86_64:1.8.2.3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.8.2.3",
+          "packageName": "apt"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556059Z"
+    },
+    "installedPackage-dbus:x86_64:1.12.28-0+deb10u1": {
+      "id": "installedPackage-dbus:x86_64:1.12.28-0+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.12.28-0+deb10u1",
+          "packageName": "dbus"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556071Z"
+    },
+    "installedPackage-libgdbm6:x86_64:1.18.1-4": {
+      "id": "installedPackage-libgdbm6:x86_64:1.18.1-4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.18.1-4",
+          "packageName": "libgdbm6"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556139Z"
+    },
+    "installedPackage-util-linux:x86_64:2.33.1-0.1+deb10u1": {
+      "id": "installedPackage-util-linux:x86_64:2.33.1-0.1+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.33.1-0.1+deb10u1",
+          "packageName": "util-linux"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556237Z"
+    },
+    "installedPackage-libgssapi-krb5-2:x86_64:1.17-3+deb10u6": {
+      "id": "installedPackage-libgssapi-krb5-2:x86_64:1.17-3+deb10u6",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.17-3+deb10u6",
+          "packageName": "libgssapi-krb5-2"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556144Z"
+    },
+    "installedPackage-libncursesw6:x86_64:6.1+20181013-2+deb10u5": {
+      "id": "installedPackage-libncursesw6:x86_64:6.1+20181013-2+deb10u5",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "6.1+20181013-2+deb10u5",
+          "packageName": "libncursesw6"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556163Z"
+    },
+    "installedPackage-os-prober:x86_64:1.77": {
+      "id": "installedPackage-os-prober:x86_64:1.77",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.77",
+          "packageName": "os-prober"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556210Z"
+    },
+    "installedPackage-libdns-export1104:x86_64:1:9.11.5.P4+dfsg-5.1+deb10u10": {
+      "id": "installedPackage-libdns-export1104:x86_64:1:9.11.5.P4+dfsg-5.1+deb10u10",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:9.11.5.P4+dfsg-5.1+deb10u10",
+          "packageName": "libdns-export1104"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556129Z"
+    },
+    "installedPackage-sysvinit-utils:x86_64:2.93-8": {
+      "id": "installedPackage-sysvinit-utils:x86_64:2.93-8",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.93-8",
+          "packageName": "sysvinit-utils"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556233Z"
+    },
+    "installedPackage-libdb5.3:x86_64:5.3.28+dfsg1-0.5": {
+      "id": "installedPackage-libdb5.3:x86_64:5.3.28+dfsg1-0.5",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "5.3.28+dfsg1-0.5",
+          "packageName": "libdb5.3"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556127Z"
+    },
+    "installedPackage-libatm1:x86_64:1:2.5.1-2": {
+      "id": "installedPackage-libatm1:x86_64:1:2.5.1-2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:2.5.1-2",
+          "packageName": "libatm1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556112Z"
+    },
+    "installedPackage-linux-image-cloud-amd64:x86_64:4.19+105+deb10u21": {
+      "id": "installedPackage-linux-image-cloud-amd64:x86_64:4.19+105+deb10u21",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "4.19+105+deb10u21",
+          "packageName": "linux-image-cloud-amd64"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556199Z"
+    },
+    "installedPackage-logrotate:x86_64:3.14.0-4": {
+      "id": "installedPackage-logrotate:x86_64:3.14.0-4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "3.14.0-4",
+          "packageName": "logrotate"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556199Z"
+    },
+    "installedPackage-udev:x86_64:241-7~deb10u10": {
+      "id": "installedPackage-udev:x86_64:241-7~deb10u10",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "241-7~deb10u10",
+          "packageName": "udev"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556236Z"
+    },
+    "installedPackage-libcryptsetup12:x86_64:2:2.1.0-5+deb10u2": {
+      "id": "installedPackage-libcryptsetup12:x86_64:2:2.1.0-5+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2:2.1.0-5+deb10u2",
+          "packageName": "libcryptsetup12"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556126Z"
+    },
+    "installedPackage-initramfs-tools-core:all:0.133+deb10u1": {
+      "id": "installedPackage-initramfs-tools-core:all:0.133+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "0.133+deb10u1",
+          "packageName": "initramfs-tools-core"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556102Z"
+    },
+    "installedPackage-vim-tiny:x86_64:2:8.1.0875-5+deb10u6": {
+      "id": "installedPackage-vim-tiny:x86_64:2:8.1.0875-5+deb10u6",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2:8.1.0875-5+deb10u6",
+          "packageName": "vim-tiny"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556239Z"
+    },
+    "installedPackage-libslang2:x86_64:2.3.2-2": {
+      "id": "installedPackage-libslang2:x86_64:2.3.2-2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.3.2-2",
+          "packageName": "libslang2"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556188Z"
+    },
+    "installedPackage-socat:x86_64:1.7.3.2-2": {
+      "id": "installedPackage-socat:x86_64:1.7.3.2-2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.7.3.2-2",
+          "packageName": "socat"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556230Z"
+    },
+    "installedPackage-debianutils:x86_64:4.8.6.1": {
+      "id": "installedPackage-debianutils:x86_64:4.8.6.1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "4.8.6.1",
+          "packageName": "debianutils"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556074Z"
+    },
+    "installedPackage-libxtables12:x86_64:1.8.2-4": {
+      "id": "installedPackage-libxtables12:x86_64:1.8.2-4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.8.2-4",
+          "packageName": "libxtables12"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556196Z"
+    },
+    "installedPackage-libpci3:x86_64:1:3.5.2-1": {
+      "id": "installedPackage-libpci3:x86_64:1:3.5.2-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:3.5.2-1",
+          "packageName": "libpci3"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556176Z"
+    },
+    "installedPackage-python3-requests:all:2.21.0-1+deb10u1": {
+      "id": "installedPackage-python3-requests:all:2.21.0-1+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "2.21.0-1+deb10u1",
+          "packageName": "python3-requests"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556223Z"
+    },
+    "installedPackage-libdns1104:x86_64:1:9.11.5.P4+dfsg-5.1+deb10u10": {
+      "id": "installedPackage-libdns1104:x86_64:1:9.11.5.P4+dfsg-5.1+deb10u10",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:9.11.5.P4+dfsg-5.1+deb10u10",
+          "packageName": "libdns1104"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556130Z"
+    },
+    "installedPackage-shim-helpers-amd64-signed:x86_64:1+15.7+1~deb10u1": {
+      "id": "installedPackage-shim-helpers-amd64-signed:x86_64:1+15.7+1~deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1+15.7+1~deb10u1",
+          "packageName": "shim-helpers-amd64-signed"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556228Z"
+    },
+    "installedPackage-wget:x86_64:1.20.1-1.1": {
+      "id": "installedPackage-wget:x86_64:1.20.1-1.1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.20.1-1.1",
+          "packageName": "wget"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556240Z"
+    },
+    "installedPackage-gpg-wks-client:x86_64:2.2.12-1+deb10u2": {
+      "id": "installedPackage-gpg-wks-client:x86_64:2.2.12-1+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.2.12-1+deb10u2",
+          "packageName": "gpg-wks-client"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556092Z"
+    },
+    "installedPackage-apparmor:x86_64:2.13.2-10": {
+      "id": "installedPackage-apparmor:x86_64:2.13.2-10",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.13.2-10",
+          "packageName": "apparmor"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556058Z"
+    },
+    "installedPackage-libip6tc0:x86_64:1.8.2-4": {
+      "id": "installedPackage-libip6tc0:x86_64:1.8.2-4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.8.2-4",
+          "packageName": "libip6tc0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556147Z"
+    },
+    "installedPackage-libkrb5support0:x86_64:1.17-3+deb10u6": {
+      "id": "installedPackage-libkrb5support0:x86_64:1.17-3+deb10u6",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.17-3+deb10u6",
+          "packageName": "libkrb5support0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556154Z"
+    },
+    "installedPackage-libnetfilter-conntrack3:x86_64:1.0.7-1": {
+      "id": "installedPackage-libnetfilter-conntrack3:x86_64:1.0.7-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.0.7-1",
+          "packageName": "libnetfilter-conntrack3"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556164Z"
+    },
+    "installedPackage-ethtool:x86_64:1:4.19-1": {
+      "id": "installedPackage-ethtool:x86_64:1:4.19-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:4.19-1",
+          "packageName": "ethtool"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556079Z"
+    },
+    "installedPackage-libacl1:x86_64:2.2.53-4": {
+      "id": "installedPackage-libacl1:x86_64:2.2.53-4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.2.53-4",
+          "packageName": "libacl1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556107Z"
+    },
+    "installedPackage-libpng16-16:x86_64:1.6.36-6": {
+      "id": "installedPackage-libpng16-16:x86_64:1.6.36-6",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.6.36-6",
+          "packageName": "libpng16-16"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556178Z"
+    },
+    "installedPackage-libpam0g:x86_64:1.3.1-5": {
+      "id": "installedPackage-libpam0g:x86_64:1.3.1-5",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.3.1-5",
+          "packageName": "libpam0g"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556174Z"
+    },
+    "installedPackage-mailutils-common:all:1:3.5-4": {
+      "id": "installedPackage-mailutils-common:all:1:3.5-4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "1:3.5-4",
+          "packageName": "mailutils-common"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556201Z"
+    },
+    "installedPackage-bind9-host:x86_64:1:9.11.5.P4+dfsg-5.1+deb10u10": {
+      "id": "installedPackage-bind9-host:x86_64:1:9.11.5.P4+dfsg-5.1+deb10u10",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:9.11.5.P4+dfsg-5.1+deb10u10",
+          "packageName": "bind9-host"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556065Z"
+    },
+    "installedPackage-libefiboot1:x86_64:37-2+deb10u1": {
+      "id": "installedPackage-libefiboot1:x86_64:37-2+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "37-2+deb10u1",
+          "packageName": "libefiboot1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556131Z"
+    },
+    "installedPackage-apt-transport-https:all:1.8.2.3": {
+      "id": "installedPackage-apt-transport-https:all:1.8.2.3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "1.8.2.3",
+          "packageName": "apt-transport-https"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556061Z"
+    },
+    "installedPackage-guile-2.2-libs:x86_64:2.2.4+1-2+deb10u1": {
+      "id": "installedPackage-guile-2.2-libs:x86_64:2.2.4+1-2+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.2.4+1-2+deb10u1",
+          "packageName": "guile-2.2-libs"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556098Z"
+    },
+    "installedPackage-libdevmapper1.02.1:x86_64:2:1.02.155-3": {
+      "id": "installedPackage-libdevmapper1.02.1:x86_64:2:1.02.155-3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2:1.02.155-3",
+          "packageName": "libdevmapper1.02.1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556129Z"
+    },
+    "installedPackage-python3-six:all:1.12.0-1": {
+      "id": "installedPackage-python3-six:all:1.12.0-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "1.12.0-1",
+          "packageName": "python3-six"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556224Z"
+    },
+    "installedPackage-pciutils:x86_64:1:3.5.2-1": {
+      "id": "installedPackage-pciutils:x86_64:1:3.5.2-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:3.5.2-1",
+          "packageName": "pciutils"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556212Z"
+    },
+    "installedPackage-libpython3.7-stdlib:x86_64:3.7.3-2+deb10u7": {
+      "id": "installedPackage-libpython3.7-stdlib:x86_64:3.7.3-2+deb10u7",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "3.7.3-2+deb10u7",
+          "packageName": "libpython3.7-stdlib"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556182Z"
+    },
+    "installedPackage-zlib1g:x86_64:1:1.2.11.dfsg-1+deb10u2": {
+      "id": "installedPackage-zlib1g:x86_64:1:1.2.11.dfsg-1+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:1.2.11.dfsg-1+deb10u2",
+          "packageName": "zlib1g"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556242Z"
+    },
+    "installedPackage-grub-efi-amd64-bin:x86_64:2.06-3~deb10u4": {
+      "id": "installedPackage-grub-efi-amd64-bin:x86_64:2.06-3~deb10u4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.06-3~deb10u4",
+          "packageName": "grub-efi-amd64-bin"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556096Z"
+    },
+    "installedPackage-gnupg:all:2.2.12-1+deb10u2": {
+      "id": "installedPackage-gnupg:all:2.2.12-1+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "2.2.12-1+deb10u2",
+          "packageName": "gnupg"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556084Z"
+    },
+    "installedPackage-libmpdec2:x86_64:2.4.2-2": {
+      "id": "installedPackage-libmpdec2:x86_64:2.4.2-2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.4.2-2",
+          "packageName": "libmpdec2"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556162Z"
+    },
+    "installedPackage-libutempter0:x86_64:1.1.6-3": {
+      "id": "installedPackage-libutempter0:x86_64:1.1.6-3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.1.6-3",
+          "packageName": "libutempter0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556195Z"
+    },
+    "installedPackage-diffutils:x86_64:1:3.7-3": {
+      "id": "installedPackage-diffutils:x86_64:1:3.7-3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:3.7-3",
+          "packageName": "diffutils"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556074Z"
+    },
+    "installedPackage-manpages:all:4.16-2": {
+      "id": "installedPackage-manpages:all:4.16-2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "4.16-2",
+          "packageName": "manpages"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556202Z"
+    },
+    "installedPackage-libip4tc0:x86_64:1.8.2-4": {
+      "id": "installedPackage-libip4tc0:x86_64:1.8.2-4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.8.2-4",
+          "packageName": "libip4tc0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556147Z"
+    },
+    "installedPackage-libcom-err2:x86_64:1.44.5-1+deb10u3": {
+      "id": "installedPackage-libcom-err2:x86_64:1.44.5-1+deb10u3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.44.5-1+deb10u3",
+          "packageName": "libcom-err2"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556125Z"
+    },
+    "installedPackage-google-cloud-cli:x86_64:468.0.0-0": {
+      "id": "installedPackage-google-cloud-cli:x86_64:468.0.0-0",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "468.0.0-0",
+          "packageName": "google-cloud-cli"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556087Z"
+    },
+    "installedPackage-grub2-common:x86_64:2.06-3~deb10u4": {
+      "id": "installedPackage-grub2-common:x86_64:2.06-3~deb10u4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.06-3~deb10u4",
+          "packageName": "grub2-common"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556098Z"
+    },
+    "installedPackage-ca-certificates:all:20200601~deb10u2": {
+      "id": "installedPackage-ca-certificates:all:20200601~deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "20200601~deb10u2",
+          "packageName": "ca-certificates"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556068Z"
+    },
+    "installedPackage-google-fluentd:x86_64:1.10.1-1": {
+      "id": "installedPackage-google-fluentd:x86_64:1.10.1-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.10.1-1",
+          "packageName": "google-fluentd"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556089Z"
+    },
+    "installedPackage-libnpth0:x86_64:1.6-1": {
+      "id": "installedPackage-libnpth0:x86_64:1.6-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.6-1",
+          "packageName": "libnpth0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556171Z"
+    },
+    "installedPackage-mariadb-common:all:1:10.3.39-0+deb10u2": {
+      "id": "installedPackage-mariadb-common:all:1:10.3.39-0+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "1:10.3.39-0+deb10u2",
+          "packageName": "mariadb-common"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556203Z"
+    },
+    "installedPackage-liblzma5:x86_64:5.2.4-1+deb10u1": {
+      "id": "installedPackage-liblzma5:x86_64:5.2.4-1+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "5.2.4-1+deb10u1",
+          "packageName": "liblzma5"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556158Z"
+    },
+    "installedPackage-libnftnl11:x86_64:1.1.2-2": {
+      "id": "installedPackage-libnftnl11:x86_64:1.1.2-2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.1.2-2",
+          "packageName": "libnftnl11"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556166Z"
+    },
+    "installedPackage-apt-utils:x86_64:1.8.2.3": {
+      "id": "installedPackage-apt-utils:x86_64:1.8.2.3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.8.2.3",
+          "packageName": "apt-utils"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556061Z"
+    },
+    "installedPackage-libmailutils5:x86_64:1:3.5-4": {
+      "id": "installedPackage-libmailutils5:x86_64:1:3.5-4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:3.5-4",
+          "packageName": "libmailutils5"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556160Z"
+    },
+    "installedPackage-libprocps7:x86_64:2:3.3.15-2": {
+      "id": "installedPackage-libprocps7:x86_64:2:3.3.15-2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2:3.3.15-2",
+          "packageName": "libprocps7"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556178Z"
+    },
+    "installedPackage-openssh-server:x86_64:1:7.9p1-10+deb10u4": {
+      "id": "installedPackage-openssh-server:x86_64:1:7.9p1-10+deb10u4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:7.9p1-10+deb10u4",
+          "packageName": "openssh-server"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556209Z"
+    },
+    "installedPackage-libsasl2-modules:x86_64:2.1.27+dfsg-1+deb10u2": {
+      "id": "installedPackage-libsasl2-modules:x86_64:2.1.27+dfsg-1+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.1.27+dfsg-1+deb10u2",
+          "packageName": "libsasl2-modules"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556185Z"
+    },
+    "installedPackage-tcpdump:x86_64:4.9.3-1~deb10u2": {
+      "id": "installedPackage-tcpdump:x86_64:4.9.3-1~deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "4.9.3-1~deb10u2",
+          "packageName": "tcpdump"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556234Z"
+    },
+    "installedPackage-libparted2:x86_64:3.2-25": {
+      "id": "installedPackage-libparted2:x86_64:3.2-25",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "3.2-25",
+          "packageName": "libparted2"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556175Z"
+    },
+    "installedPackage-mysql-common:all:5.8+1.0.5": {
+      "id": "installedPackage-mysql-common:all:5.8+1.0.5",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "5.8+1.0.5",
+          "packageName": "mysql-common"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556205Z"
+    },
+    "installedPackage-libfstrm0:x86_64:0.4.0-1": {
+      "id": "installedPackage-libfstrm0:x86_64:0.4.0-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "0.4.0-1",
+          "packageName": "libfstrm0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556137Z"
+    },
+    "installedPackage-libzstd1:x86_64:1.3.8+dfsg-3+deb10u2": {
+      "id": "installedPackage-libzstd1:x86_64:1.3.8+dfsg-3+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.3.8+dfsg-3+deb10u2",
+          "packageName": "libzstd1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556197Z"
+    },
+    "installedPackage-python3-chardet:all:3.0.4-3": {
+      "id": "installedPackage-python3-chardet:all:3.0.4-3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "3.0.4-3",
+          "packageName": "python3-chardet"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556216Z"
+    },
+    "installedPackage-libedit2:x86_64:3.1-20181209-1": {
+      "id": "installedPackage-libedit2:x86_64:3.1-20181209-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "3.1-20181209-1",
+          "packageName": "libedit2"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556130Z"
+    },
+    "installedPackage-fdisk:x86_64:2.33.1-0.1+deb10u1": {
+      "id": "installedPackage-fdisk:x86_64:2.33.1-0.1+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.33.1-0.1+deb10u1",
+          "packageName": "fdisk"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556080Z"
+    },
+    "installedPackage-libisc-export1100:x86_64:1:9.11.5.P4+dfsg-5.1+deb10u10": {
+      "id": "installedPackage-libisc-export1100:x86_64:1:9.11.5.P4+dfsg-5.1+deb10u10",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:9.11.5.P4+dfsg-5.1+deb10u10",
+          "packageName": "libisc-export1100"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556148Z"
+    },
+    "installedPackage-bzip2:x86_64:1.0.6-9.2~deb10u2": {
+      "id": "installedPackage-bzip2:x86_64:1.0.6-9.2~deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.0.6-9.2~deb10u2",
+          "packageName": "bzip2"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556067Z"
+    },
+    "installedPackage-libgsasl7:x86_64:1.8.0-8+deb10u1": {
+      "id": "installedPackage-libgsasl7:x86_64:1.8.0-8+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.8.0-8+deb10u1",
+          "packageName": "libgsasl7"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556143Z"
+    },
+    "installedPackage-init:x86_64:1.56+nmu1": {
+      "id": "installedPackage-init:x86_64:1.56+nmu1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.56+nmu1",
+          "packageName": "init"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556101Z"
+    },
+    "installedPackage-libhavege1:x86_64:1.9.1-7": {
+      "id": "installedPackage-libhavege1:x86_64:1.9.1-7",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.9.1-7",
+          "packageName": "libhavege1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556144Z"
+    },
+    "installedPackage-net-tools:x86_64:1.60+git20180626.aebd88e-1": {
+      "id": "installedPackage-net-tools:x86_64:1.60+git20180626.aebd88e-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.60+git20180626.aebd88e-1",
+          "packageName": "net-tools"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556207Z"
+    },
+    "installedPackage-libpcre3:x86_64:2:8.39-12": {
+      "id": "installedPackage-libpcre3:x86_64:2:8.39-12",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2:8.39-12",
+          "packageName": "libpcre3"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556177Z"
+    },
+    "installedPackage-libntlm0:x86_64:1.5-1+deb10u1": {
+      "id": "installedPackage-libntlm0:x86_64:1.5-1+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.5-1+deb10u1",
+          "packageName": "libntlm0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556171Z"
+    },
+    "installedPackage-lsb-base:all:10.2019051400": {
+      "id": "installedPackage-lsb-base:all:10.2019051400",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "10.2019051400",
+          "packageName": "lsb-base"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556200Z"
+    },
+    "installedPackage-libcurl3-gnutls:x86_64:7.64.0-4+deb10u9": {
+      "id": "installedPackage-libcurl3-gnutls:x86_64:7.64.0-4+deb10u9",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "7.64.0-4+deb10u9",
+          "packageName": "libcurl3-gnutls"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556126Z"
+    },
+    "installedPackage-liblognorm5:x86_64:2.0.5-1": {
+      "id": "installedPackage-liblognorm5:x86_64:2.0.5-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.0.5-1",
+          "packageName": "liblognorm5"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556157Z"
+    },
+    "installedPackage-haveged:x86_64:1.9.1-7": {
+      "id": "installedPackage-haveged:x86_64:1.9.1-7",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.9.1-7",
+          "packageName": "haveged"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556099Z"
+    },
+    "installedPackage-libaudit1:x86_64:1:2.8.4-3": {
+      "id": "installedPackage-libaudit1:x86_64:1:2.8.4-3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:2.8.4-3",
+          "packageName": "libaudit1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556121Z"
+    },
+    "installedPackage-python3.7:x86_64:3.7.3-2+deb10u7": {
+      "id": "installedPackage-python3.7:x86_64:3.7.3-2+deb10u7",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "3.7.3-2+deb10u7",
+          "packageName": "python3.7"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556225Z"
+    },
+    "installedPackage-libcurl4:x86_64:7.64.0-4+deb10u9": {
+      "id": "installedPackage-libcurl4:x86_64:7.64.0-4+deb10u9",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "7.64.0-4+deb10u9",
+          "packageName": "libcurl4"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556127Z"
+    },
+    "installedPackage-libselinux1:x86_64:2.8-1+b1": {
+      "id": "installedPackage-libselinux1:x86_64:2.8-1+b1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.8-1+b1",
+          "packageName": "libselinux1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556186Z"
+    },
+    "installedPackage-readline-common:all:7.0-5": {
+      "id": "installedPackage-readline-common:all:7.0-5",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "7.0-5",
+          "packageName": "readline-common"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556226Z"
+    },
+    "installedPackage-sensible-utils:all:0.0.12": {
+      "id": "installedPackage-sensible-utils:all:0.0.12",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "0.0.12",
+          "packageName": "sensible-utils"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556228Z"
+    },
+    "installedPackage-isc-dhcp-client:x86_64:4.4.1-2+deb10u3": {
+      "id": "installedPackage-isc-dhcp-client:x86_64:4.4.1-2+deb10u3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "4.4.1-2+deb10u3",
+          "packageName": "isc-dhcp-client"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556105Z"
+    },
+    "installedPackage-xxd:x86_64:2:8.1.0875-5+deb10u6": {
+      "id": "installedPackage-xxd:x86_64:2:8.1.0875-5+deb10u6",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2:8.1.0875-5+deb10u6",
+          "packageName": "xxd"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556241Z"
+    },
+    "installedPackage-libpython3.7-minimal:x86_64:3.7.3-2+deb10u7": {
+      "id": "installedPackage-libpython3.7-minimal:x86_64:3.7.3-2+deb10u7",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "3.7.3-2+deb10u7",
+          "packageName": "libpython3.7-minimal"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556182Z"
+    },
+    "availablePackage-google-cloud-packages-archive-keyring:all:1.2-622881512": {
+      "id": "availablePackage-google-cloud-packages-archive-keyring:all:1.2-622881512",
+      "originType": "INVENTORY_REPORT",
+      "type": "AVAILABLE_PACKAGE",
+      "availablePackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "1.2-622881512",
+          "packageName": "google-cloud-packages-archive-keyring"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556051Z"
+    },
+    "installedPackage-file:x86_64:1:5.35-4+deb10u2": {
+      "id": "installedPackage-file:x86_64:1:5.35-4+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:5.35-4+deb10u2",
+          "packageName": "file"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556081Z"
+    },
+    "installedPackage-libcap2-bin:x86_64:1:2.25-2": {
+      "id": "installedPackage-libcap2-bin:x86_64:1:2.25-2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:2.25-2",
+          "packageName": "libcap2-bin"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556125Z"
+    },
+    "installedPackage-libsemanage1:x86_64:2.8-2": {
+      "id": "installedPackage-libsemanage1:x86_64:2.8-2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.8-2",
+          "packageName": "libsemanage1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556187Z"
+    },
+    "installedPackage-efibootmgr:x86_64:15-1": {
+      "id": "installedPackage-efibootmgr:x86_64:15-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "15-1",
+          "packageName": "efibootmgr"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556078Z"
+    },
+    "installedPackage-google-compute-engine:all:1:20240307.00-g1": {
+      "id": "installedPackage-google-compute-engine:all:1:20240307.00-g1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "1:20240307.00-g1",
+          "packageName": "google-compute-engine"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556088Z"
+    },
+    "installedPackage-grub-efi-amd64-signed:x86_64:1+2.06+3~deb10u4": {
+      "id": "installedPackage-grub-efi-amd64-signed:x86_64:1+2.06+3~deb10u4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1+2.06+3~deb10u4",
+          "packageName": "grub-efi-amd64-signed"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556097Z"
+    },
+    "installedPackage-libfastjson4:x86_64:0.99.8-2+deb10u1": {
+      "id": "installedPackage-libfastjson4:x86_64:0.99.8-2+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "0.99.8-2+deb10u1",
+          "packageName": "libfastjson4"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556135Z"
+    },
+    "installedPackage-libelf1:x86_64:0.176-1.1+deb10u1": {
+      "id": "installedPackage-libelf1:x86_64:0.176-1.1+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "0.176-1.1+deb10u1",
+          "packageName": "libelf1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556132Z"
+    },
+    "installedPackage-klibc-utils:x86_64:2.0.6-1+deb10u1": {
+      "id": "installedPackage-klibc-utils:x86_64:2.0.6-1+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.0.6-1+deb10u1",
+          "packageName": "klibc-utils"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556106Z"
+    },
+    "installedPackage-passwd:x86_64:1:4.5-1.1": {
+      "id": "installedPackage-passwd:x86_64:1:4.5-1.1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:4.5-1.1",
+          "packageName": "passwd"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556211Z"
+    },
+    "installedPackage-google-guest-agent:x86_64:1:20240109.00-g1": {
+      "id": "installedPackage-google-guest-agent:x86_64:1:20240109.00-g1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:20240109.00-g1",
+          "packageName": "google-guest-agent"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556090Z"
+    },
+    "installedPackage-isc-dhcp-common:x86_64:4.4.1-2+deb10u3": {
+      "id": "installedPackage-isc-dhcp-common:x86_64:4.4.1-2+deb10u3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "4.4.1-2+deb10u3",
+          "packageName": "isc-dhcp-common"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556105Z"
+    },
+    "installedPackage-gpg:x86_64:2.2.12-1+deb10u2": {
+      "id": "installedPackage-gpg:x86_64:2.2.12-1+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.2.12-1+deb10u2",
+          "packageName": "gpg"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556091Z"
+    },
+    "installedPackage-iptables:x86_64:1.8.2-4": {
+      "id": "installedPackage-iptables:x86_64:1.8.2-4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.8.2-4",
+          "packageName": "iptables"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556104Z"
+    },
+    "installedPackage-krb5-locales:all:1.17-3+deb10u6": {
+      "id": "installedPackage-krb5-locales:all:1.17-3+deb10u6",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "1.17-3+deb10u6",
+          "packageName": "krb5-locales"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556107Z"
+    },
+    "installedPackage-xz-utils:x86_64:5.2.4-1+deb10u1": {
+      "id": "installedPackage-xz-utils:x86_64:5.2.4-1+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "5.2.4-1+deb10u1",
+          "packageName": "xz-utils"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556241Z"
+    },
+    "installedPackage-ifupdown:x86_64:0.8.35": {
+      "id": "installedPackage-ifupdown:x86_64:0.8.35",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "0.8.35",
+          "packageName": "ifupdown"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556100Z"
+    },
+    "installedPackage-openssl:x86_64:1.1.1n-0+deb10u6": {
+      "id": "installedPackage-openssl:x86_64:1.1.1n-0+deb10u6",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.1.1n-0+deb10u6",
+          "packageName": "openssl"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556210Z"
+    },
+    "installedPackage-vim:x86_64:2:8.1.0875-5+deb10u6": {
+      "id": "installedPackage-vim:x86_64:2:8.1.0875-5+deb10u6",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2:8.1.0875-5+deb10u6",
+          "packageName": "vim"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556238Z"
+    },
+    "installedPackage-libglib2.0-0:x86_64:2.58.3-2+deb10u5": {
+      "id": "installedPackage-libglib2.0-0:x86_64:2.58.3-2+deb10u5",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.58.3-2+deb10u5",
+          "packageName": "libglib2.0-0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556140Z"
+    },
+    "installedPackage-libklibc:x86_64:2.0.6-1+deb10u1": {
+      "id": "installedPackage-libklibc:x86_64:2.0.6-1+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.0.6-1+deb10u1",
+          "packageName": "libklibc"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556152Z"
+    },
+    "installedPackage-distro-info-data:all:0.41+deb10u8": {
+      "id": "installedPackage-distro-info-data:all:0.41+deb10u8",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "0.41+deb10u8",
+          "packageName": "distro-info-data"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556075Z"
+    },
+    "installedPackage-libdebconfclient0:x86_64:0.249": {
+      "id": "installedPackage-libdebconfclient0:x86_64:0.249",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "0.249",
+          "packageName": "libdebconfclient0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556128Z"
+    },
+    "installedPackage-libapparmor1:x86_64:2.13.2-10": {
+      "id": "installedPackage-libapparmor1:x86_64:2.13.2-10",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.13.2-10",
+          "packageName": "libapparmor1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556108Z"
+    },
+    "installedPackage-libpython3-stdlib:x86_64:3.7.3-1": {
+      "id": "installedPackage-libpython3-stdlib:x86_64:3.7.3-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "3.7.3-1",
+          "packageName": "libpython3-stdlib"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556181Z"
+    },
+    "installedPackage-nvme-cli:x86_64:1.7-1": {
+      "id": "installedPackage-nvme-cli:x86_64:1.7-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.7-1",
+          "packageName": "nvme-cli"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556208Z"
+    },
+    "installedPackage-bsdmainutils:x86_64:11.1.2+b1": {
+      "id": "installedPackage-bsdmainutils:x86_64:11.1.2+b1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "11.1.2+b1",
+          "packageName": "bsdmainutils"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556066Z"
+    },
+    "installedPackage-libuuid1:x86_64:2.33.1-0.1+deb10u1": {
+      "id": "installedPackage-libuuid1:x86_64:2.33.1-0.1+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.33.1-0.1+deb10u1",
+          "packageName": "libuuid1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556195Z"
+    },
+    "installedPackage-curl:x86_64:7.64.0-4+deb10u9": {
+      "id": "installedPackage-curl:x86_64:7.64.0-4+deb10u9",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "7.64.0-4+deb10u9",
+          "packageName": "curl"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556070Z"
+    },
+    "installedPackage-base-files:x86_64:10.3+deb10u13": {
+      "id": "installedPackage-base-files:x86_64:10.3+deb10u13",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "10.3+deb10u13",
+          "packageName": "base-files"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556062Z"
+    },
+    "installedPackage-libss2:x86_64:1.44.5-1+deb10u3": {
+      "id": "installedPackage-libss2:x86_64:1.44.5-1+deb10u3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.44.5-1+deb10u3",
+          "packageName": "libss2"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556190Z"
+    },
+    "installedPackage-libtinfo6:x86_64:6.1+20181013-2+deb10u5": {
+      "id": "installedPackage-libtinfo6:x86_64:6.1+20181013-2+deb10u5",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "6.1+20181013-2+deb10u5",
+          "packageName": "libtinfo6"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556192Z"
+    },
+    "installedPackage-libreadline7:x86_64:7.0-5": {
+      "id": "installedPackage-libreadline7:x86_64:7.0-5",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "7.0-5",
+          "packageName": "libreadline7"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556183Z"
+    },
+    "installedPackage-google-osconfig-agent:x86_64:1:20231207.01-g1": {
+      "id": "installedPackage-google-osconfig-agent:x86_64:1:20231207.01-g1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:20231207.01-g1",
+          "packageName": "google-osconfig-agent"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556091Z"
+    },
+    "installedPackage-mokutil:x86_64:0.6.0-2~deb10u1": {
+      "id": "installedPackage-mokutil:x86_64:0.6.0-2~deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "0.6.0-2~deb10u1",
+          "packageName": "mokutil"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556204Z"
+    },
+    "installedPackage-libiptc0:x86_64:1.8.2-4": {
+      "id": "installedPackage-libiptc0:x86_64:1.8.2-4",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.8.2-4",
+          "packageName": "libiptc0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556148Z"
+    },
+    "installedPackage-less:x86_64:487-0.1+b1": {
+      "id": "installedPackage-less:x86_64:487-0.1+b1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "487-0.1+b1",
+          "packageName": "less"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556107Z"
+    },
+    "installedPackage-libmount1:x86_64:2.33.1-0.1+deb10u1": {
+      "id": "installedPackage-libmount1:x86_64:2.33.1-0.1+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.33.1-0.1+deb10u1",
+          "packageName": "libmount1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556162Z"
+    },
+    "installedPackage-coreutils:x86_64:8.30-3": {
+      "id": "installedPackage-coreutils:x86_64:8.30-3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "8.30-3",
+          "packageName": "coreutils"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556069Z"
+    },
+    "installedPackage-libsqlite3-0:x86_64:3.27.2-3+deb10u2": {
+      "id": "installedPackage-libsqlite3-0:x86_64:3.27.2-3+deb10u2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "3.27.2-3+deb10u2",
+          "packageName": "libsqlite3-0"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556189Z"
+    },
+    "installedPackage-mawk:x86_64:1.3.3-17+b3": {
+      "id": "installedPackage-mawk:x86_64:1.3.3-17+b3",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.3.3-17+b3",
+          "packageName": "mawk"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556203Z"
+    },
+    "installedPackage-base-passwd:x86_64:3.5.46": {
+      "id": "installedPackage-base-passwd:x86_64:3.5.46",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "3.5.46",
+          "packageName": "base-passwd"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556062Z"
+    },
+    "installedPackage-libisc1100:x86_64:1:9.11.5.P4+dfsg-5.1+deb10u10": {
+      "id": "installedPackage-libisc1100:x86_64:1:9.11.5.P4+dfsg-5.1+deb10u10",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1:9.11.5.P4+dfsg-5.1+deb10u10",
+          "packageName": "libisc1100"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556149Z"
+    },
+    "installedPackage-libkmod2:x86_64:26-1": {
+      "id": "installedPackage-libkmod2:x86_64:26-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "26-1",
+          "packageName": "libkmod2"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556153Z"
+    },
+    "installedPackage-libfuse2:x86_64:2.9.9-1+deb10u1": {
+      "id": "installedPackage-libfuse2:x86_64:2.9.9-1+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.9.9-1+deb10u1",
+          "packageName": "libfuse2"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556137Z"
+    },
+    "installedPackage-libpcap0.8:x86_64:1.8.1-6+deb10u1": {
+      "id": "installedPackage-libpcap0.8:x86_64:1.8.1-6+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.8.1-6+deb10u1",
+          "packageName": "libpcap0.8"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556175Z"
+    },
+    "installedPackage-libssh2-1:x86_64:1.8.0-2.1+deb10u1": {
+      "id": "installedPackage-libssh2-1:x86_64:1.8.0-2.1+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "1.8.0-2.1+deb10u1",
+          "packageName": "libssh2-1"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556190Z"
+    },
+    "installedPackage-python3-pkg-resources:all:40.8.0-1": {
+      "id": "installedPackage-python3-pkg-resources:all:40.8.0-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "all",
+          "version": "40.8.0-1",
+          "packageName": "python3-pkg-resources"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556221Z"
+    },
+    "installedPackage-sed:x86_64:4.7-1": {
+      "id": "installedPackage-sed:x86_64:4.7-1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "4.7-1",
+          "packageName": "sed"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556228Z"
+    },
+    "installedPackage-cpio:x86_64:2.12+dfsg-9+deb10u1": {
+      "id": "installedPackage-cpio:x86_64:2.12+dfsg-9+deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "2.12+dfsg-9+deb10u1",
+          "packageName": "cpio"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556069Z"
+    },
+    "installedPackage-libncurses6:x86_64:6.1+20181013-2+deb10u5": {
+      "id": "installedPackage-libncurses6:x86_64:6.1+20181013-2+deb10u5",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "6.1+20181013-2+deb10u5",
+          "packageName": "libncurses6"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556162Z"
+    },
+    "installedPackage-libpsl5:x86_64:0.20.2-2": {
+      "id": "installedPackage-libpsl5:x86_64:0.20.2-2",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "0.20.2-2",
+          "packageName": "libpsl5"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556179Z"
+    },
+    "installedPackage-shim-unsigned:x86_64:15.7-1~deb10u1": {
+      "id": "installedPackage-shim-unsigned:x86_64:15.7-1~deb10u1",
+      "originType": "INVENTORY_REPORT",
+      "type": "INSTALLED_PACKAGE",
+      "installedPackage": {
+        "aptPackage": {
+          "architecture": "x86_64",
+          "version": "15.7-1~deb10u1",
+          "packageName": "shim-unsigned"
+        }
+      },
+      "createTime": "2024-04-08T17:39:06.556230Z"
+    }
+  },
+  "name": "projects/12340051/locations/us-central1-a/instances/5086889629880924895/inventory",
+  "updateTime": "2024-04-08T20:49:06.619439Z"
+}

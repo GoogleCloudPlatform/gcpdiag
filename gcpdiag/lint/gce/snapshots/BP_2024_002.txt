@@ -1,0 +1,17 @@
+*  gce/BP/2024_002: GCE VM instances should not have legacy Logging Agent installed.
+   - gcpdiag-gce1-aaaa/gce1                                               [SKIP] Not able to detect legacy Logging Agent
+     Unable to confirm the presence of legacy Logging Agent on the VM: gce1, in zone: europe-west4-a.
+     Please enable OS Config API: https://cloud.google.com/compute/docs/manage-os#enable-service-api on your project and run the rule again.
+   - gcpdiag-gce1-aaaa/gce2                                               [SKIP] Not able to detect legacy Logging Agent
+     Unable to confirm the presence of legacy Logging Agent on the VM: gce2, in zone: europe-west4-a.
+     Please enable OS Config API: https://cloud.google.com/compute/docs/manage-os#enable-service-api on your project and run the rule again.
+   - gcpdiag-gce1-aaaa/mig-4h21                                           [SKIP] Not able to detect legacy Logging Agent
+     Unable to confirm the presence of legacy Logging Agent on the VM: mig-4h21, in zone: europe-west4-a.
+     Please enable OS Config API: https://cloud.google.com/compute/docs/manage-os#enable-service-api on your project and run the rule again.
+   - gcpdiag-gce1-aaaa/mig-7pvl                                           [SKIP] Not able to detect legacy Logging Agent
+     Unable to confirm the presence of legacy Logging Agent on the VM: mig-7pvl, in zone: europe-west4-a.
+     Please enable OS Config API: https://cloud.google.com/compute/docs/manage-os#enable-service-api on your project and run the rule again.
+   - gcpdiag-gce1-aaaa/windows-test                                       [SKIP] Not able to detect legacy Logging Agent
+     Unable to confirm the presence of legacy Logging Agent on the VM: windows-test, in zone: europe-west4-a.
+     Please enable OS Config API: https://cloud.google.com/compute/docs/manage-os#enable-service-api on your project and run the rule again.
+
