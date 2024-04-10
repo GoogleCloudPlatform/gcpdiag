@@ -7,10 +7,10 @@ import subprocess
 import sys
 from datetime import datetime
 
-ALLOWED_PRODUCTS = {
-    'gke', 'gcb', 'gae', 'gce', 'iam', 'apigee', 'composer', 'datafusion',
-    'dataproc', 'gcs', 'vpc', 'lb', 'gcf','crm', 'bigquery','cdn','vertex',
-    'tpu','pubsub','sql','functions',
+SUPPORTED_PRODUCTS = {
+    'apigee','billing','bigquery','cdn','cloudrun','crm','composer', 'datafusion','dataflow',
+    'dataproc','kms','gar','gke', 'gcb','gcf', 'gae', 'gce', 'iam','interconnect',
+    'gcs', 'lb','logs','tpu','pubsub','sql','vertex','vpc'
 }
 
 
@@ -43,7 +43,7 @@ def gen_starter_code(arg):
   product = parts[0]
   id_ = parts[1]
 
-  if product not in ALLOWED_PRODUCTS:
+  if product not in SUPPORTED_PRODUCTS:
     print(f'Product {product} is not supported yet. ')
     return
 
