@@ -15,11 +15,13 @@
 
 import argparse
 import importlib
+import json
 import logging
 import os
 import pkgutil
 import re
 import sys
+from typing import Tuple
 
 from gcpdiag import config, hooks, models, runbook
 from gcpdiag.queries import apis, crm, kubectl
@@ -254,12 +256,10 @@ def _initialize_output():
   return output
 
 
-def run(argv) -> int:
-  del argv
-
+def run_and_get_report(argv) -> Tuple[int, dict]:
   # Initialize argument parser
   parser = _init_runbook_args_parser()
-  args = parser.parse_args()
+  args = parser.parse_args(argv)
 
   # Allow to change defaults using a hook function.
   hooks.set_lint_args_hook(args)
@@ -316,5 +316,19 @@ def run(argv) -> int:
   # Clean up the kubeconfig file generated for gcpdiag
   kubectl.clean_up()
 
+  # Read report and return the content
+  if hasattr(dt_engine.rm, 'report_path'):
+    with open(dt_engine.rm.report_path, encoding='utf-8') as f:
+      report = json.load(f)
+  else:
+    report = {}
+  report['version'] = config.VERSION
+  code = 2 if dt_engine.rm.any_failed else 0
+  return code, report
+
+
+def run(argv) -> None:
+  code, report = run_and_get_report(argv)
+  del report
   # Exit 0 if there are no failed rules.
-  sys.exit(2 if dt_engine.rm.any_failed else 0)
+  sys.exit(code)
