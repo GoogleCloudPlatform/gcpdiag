@@ -1,0 +1,11 @@
+*  gce/ERR/2024_003: GCE Shielded VM secure boot validations
+   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-2xxp                [ OK ]
+   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-c12f                [ OK ]
+   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-fv50                [ OK ]
+   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-k05c                [ OK ]
+   - gcpdiag-gce1-aaaa/gce1                                               [ OK ]
+   - gcpdiag-gce1-aaaa/gce2                                               [ OK ]
+   - gcpdiag-gce1-aaaa/mig-4h21                                           [ OK ]
+   - gcpdiag-gce1-aaaa/mig-7pvl                                           [ OK ]
+   - gcpdiag-gce1-aaaa/windows-test                                       [ OK ]
+

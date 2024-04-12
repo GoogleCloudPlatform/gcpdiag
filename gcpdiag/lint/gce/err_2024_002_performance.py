@@ -13,9 +13,9 @@
 # limitations under the License.
 """ GCE VM is operating within optimal performance thresholds
 
-    Checks the performance of the GCE instances in a project -
-    CPU Usage, Memory Usage, Disk Usage and Serial port logs erros.
-    Threshold for CPU Usage, Memory Usage, Disk Usage is 95%.
+Checks the performance of the GCE instances in a project -
+CPU Usage, Memory Usage, Disk Usage and Serial port logs erros.
+Threshold for CPU Usage, Memory Usage, Disk Usage is 95%.
 """
 
 import operator as op

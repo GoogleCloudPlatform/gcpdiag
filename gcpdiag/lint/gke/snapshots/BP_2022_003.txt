@@ -6,7 +6,7 @@
    - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [FAIL]
      GKE version 1.24
 
-         scheduled end of life: 2024-01-08
+         scheduled end of life: already reached EOL
    - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [SKIP]
      release channel: REGULAR
    - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [FAIL]

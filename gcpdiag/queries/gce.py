@@ -338,6 +338,10 @@ class Instance(models.Resource):
       return self._resource_data['disks']
     return []
 
+  @property
+  def startrestricted(self) -> bool:
+    return self._resource_data['startRestricted']
+
   def is_serial_port_logging_enabled(self) -> bool:
     value = self.get_metadata('serial-port-logging-enable')
     return bool(value and value.upper() in POSITIVE_BOOL_VALUES)

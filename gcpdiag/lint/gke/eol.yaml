@@ -1,11 +1,5 @@
 # Auto-generated, DO NOT edit manually
 # Use `make gke-eol-file` from the top level directory
-'1.24':
-  oss_release: 2022-05-03
-  rapid_avail: 2022-06-03
-  regular_avail: 2022-08-19
-  stable_avail: 2022-11-30
-  eol: 2024-01-08
 '1.25':
   oss_release: 2022-08-23
   rapid_avail: 2022-09-13
