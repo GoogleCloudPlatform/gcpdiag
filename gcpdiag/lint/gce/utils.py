@@ -83,6 +83,41 @@ class SerialOutputSearch:
     self.search_is_done = True
 
 
+class QueryCloudLogs:
+  """ Query Cloud Logging for strings/methods/payloads etc. """
+
+  query: logs.LogsQuery
+  instances_with_match: Dict[str, logs.LogEntryShort]
+
+  def __init__(self,
+               project_id: str,
+               resource_type: str,
+               filter_log: Iterable[str],
+               logid: Iterable[str] = None):
+
+    self.filter_log = ' OR '.join([f'{s}' for s in filter_log])
+    self.log_id = self._mk_filter(logid)
+
+    self.log_query = logs.query(project_id=project_id,
+                                resource_type=resource_type,
+                                log_name=self.log_id,
+                                filter_str=self.filter_log)
+
+  def _mk_filter(self, logid) -> str:
+    combined_filter = ' OR '.join([f'"{s}"' for s in logid])
+    return f'log_id({combined_filter})'
+
+  def get_entries(self, instance_id: str) -> dict:
+    self.instances_with_match = {}
+    raw_entry = None
+    for raw_entry in self.log_query.entries:
+      entry_id = get_path(raw_entry, ('resource', 'labels', 'instance_id'),
+                          default=None)
+      if entry_id == instance_id:
+        self.instances_with_match[instance_id] = raw_entry
+    return self.instances_with_match
+
+
 def is_cloudsql_peer_network(url: str) -> bool:
   prefix = 'https://www.googleapis.com/compute/v1/projects'
   pattern_non_tu = f'{prefix}/speckle-umbrella.*/cloud-sql-network-.*'
