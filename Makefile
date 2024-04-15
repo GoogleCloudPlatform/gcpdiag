@@ -67,6 +67,12 @@ runbook-docs:
 
 runbook-starter-code:
 	@[ "$(name)" ] || (echo "name is not set. Usage: make $@ name=product/runbook-id" && false)
-	python bin/runbook-starter-code-generator $(name)
+	@PYTHON=`which python3 || which python`;\
+	if [ -z "$$PYTHON" ]; then \
+		echo "Python is not installed or not found in PATH"; \
+		exit 1; \
+	fi;\
+	echo "Using Python at $$PYTHON"; \
+	$$PYTHON bin/runbook-starter-code-generator py_path=$$PYTHON name=$(name) prepenv=$(prepenv)
 
 .PHONY: test coverage-report version build bump-version tarfile release runbook-docs runbook-starter-code
