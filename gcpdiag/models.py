@@ -151,9 +151,9 @@ class Context:
         raise ValueError('parameters must be Mapping[str,str]]')
 
       self.parameters = Parameter(parameters)
-      self.parameters['project_id'] = self.project_id
     else:
       self.parameters = Parameter()
+    self.parameters['project_id'] = self.project_id
 
   def __str__(self):
     string = 'project: ' + self.project_id

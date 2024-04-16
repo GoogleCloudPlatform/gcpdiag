@@ -29,30 +29,35 @@ def test_context_region_exception():
 def test_context_to_string():
   """Verify stringification of Context with and without regions/labels."""
   c = models.Context(project_id='project1')
-  assert str(c) == 'project: project1'
+  assert str(c) == 'project: project1, parameters: {project_id=project1}'
 
   c = models.Context(project_id='project1', locations=[])
-  assert str(c) == 'project: project1'
+  assert str(c) == 'project: project1, parameters: {project_id=project1}'
 
   c = models.Context(project_id='project1', locations=['us-central1'])
-  assert str(c) == 'project: project1, locations (regions/zones): us-central1'
+  assert str(c) == (
+      'project: project1, locations (regions/zones): us-central1, '
+      'parameters: {project_id=project1}')
 
   c = models.Context(project_id='project1',
                      locations=['us-west1', 'us-west2'],
                      resources=['dev-1', 'prod-1'])
-  assert str(c) == \
-    'project: project1, resources: dev-1|prod-1, locations (regions/zones): us-west1|us-west2'
+  assert str(c) == (
+      'project: project1, resources: dev-1|prod-1, locations '
+      '(regions/zones): us-west1|us-west2, parameters: {project_id=project1}')
 
   c = models.Context(project_id='project1', labels={'A': 'B', 'X': 'Y'})
-  assert str(c) == 'project: project1, labels: {A=B,X=Y}'
+  assert str(
+      c
+  ) == 'project: project1, labels: {A=B,X=Y}, parameters: {project_id=project1}'
 
   c = models.Context(project_id='project1',
                      locations=['us-central1'],
                      labels={'X': 'Y'},
                      resources=['name'])
-  assert str(
-      c
-  ) == 'project: project1, resources: name, locations (regions/zones): us-central1, labels: {X=Y}'
+  assert str(c) == (
+      'project: project1, resources: name, locations (regions/zones): us-central1, '
+      'labels: {X=Y}, parameters: {project_id=project1}')
 
 
 def test_match_project_resource():
