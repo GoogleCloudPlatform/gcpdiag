@@ -256,10 +256,10 @@ def _initialize_output():
   return output
 
 
-def run_and_get_report(argv) -> Tuple[int, dict]:
+def run_and_get_report(argv=None) -> Tuple[int, dict]:
   # Initialize argument parser
   parser = _init_runbook_args_parser()
-  args = parser.parse_args(argv)
+  args = parser.parse_args(argv[1:])
 
   # Allow to change defaults using a hook function.
   hooks.set_lint_args_hook(args)
