@@ -1,0 +1,16 @@
+{
+  "roles": [
+    {
+      "name": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/roles/CustomKubernetesEngineClusterV",
+      "title": "Custom GKE Viewer",
+      "description": "Created on: 2023-09-08 Based on: Kubernetes Engine Cluster Viewer",
+      "includedPermissions": [
+        "container.clusters.get",
+        "container.clusters.list",
+        "container.pods.list",
+        "resourcemanager.projects.get"
+      ],
+      "etag": "BwYFEGlPX0c="
+    }
+  ]
+}

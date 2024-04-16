@@ -1,0 +1,864 @@
+{
+  "id": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/aggregated/subnetworks",
+  "items": {
+    "regions/africa-south1": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-11-09T23:52:02.807-08:00",
+          "fingerprint": "4VSv8H1H1lE=",
+          "gatewayAddress": "10.218.0.1",
+          "id": "673487854833262541",
+          "ipCidrRange": "10.218.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/africa-south1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/africa-south1/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/asia-east1": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:58.285-07:00",
+          "fingerprint": "WcIGvkdYbJI=",
+          "gatewayAddress": "10.140.0.1",
+          "id": "7568045662190086781",
+          "ipCidrRange": "10.140.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/asia-east1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/asia-east1/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/asia-east2": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:58.436-07:00",
+          "fingerprint": "L0EfUsthWHk=",
+          "gatewayAddress": "10.170.0.1",
+          "id": "8406943145505761917",
+          "ipCidrRange": "10.170.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/asia-east2",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/asia-east2/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/asia-northeast1": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:58.155-07:00",
+          "fingerprint": "VShMuLeTwio=",
+          "gatewayAddress": "10.146.0.1",
+          "id": "5786172346507635325",
+          "ipCidrRange": "10.146.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": true,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/asia-northeast1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/asia-northeast1/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/asia-northeast2": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:58.225-07:00",
+          "fingerprint": "9pjY364j_cU=",
+          "gatewayAddress": "10.174.0.1",
+          "id": "7497066646109334141",
+          "ipCidrRange": "10.174.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/asia-northeast2",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/asia-northeast2/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/asia-northeast3": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:58.338-07:00",
+          "fingerprint": "Ffkfa7eYmeo=",
+          "gatewayAddress": "10.178.0.1",
+          "id": "7192919653734591101",
+          "ipCidrRange": "10.178.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/asia-northeast3",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/asia-northeast3/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/asia-south1": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:59.707-07:00",
+          "fingerprint": "B45OPn2Buyw=",
+          "gatewayAddress": "10.160.0.1",
+          "id": "2613108967022701180",
+          "ipCidrRange": "10.160.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/asia-south1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/asia-south1/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/asia-south2": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:59.373-07:00",
+          "fingerprint": "35s09c20cV0=",
+          "gatewayAddress": "10.190.0.1",
+          "id": "7989961894771731068",
+          "ipCidrRange": "10.190.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/asia-south2",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/asia-south2/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/asia-southeast1": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:58.785-07:00",
+          "fingerprint": "sWTfb8Q0Nd4=",
+          "gatewayAddress": "10.148.0.1",
+          "id": "5711462206437501565",
+          "ipCidrRange": "10.148.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/asia-southeast1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/asia-southeast1/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/asia-southeast2": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:58.995-07:00",
+          "fingerprint": "7k-YQ5Ovu-8=",
+          "gatewayAddress": "10.184.0.1",
+          "id": "2474765575042542205",
+          "ipCidrRange": "10.184.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/asia-southeast2",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/asia-southeast2/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/australia-southeast1": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:59.310-07:00",
+          "fingerprint": "08dVKgSafnI=",
+          "gatewayAddress": "10.152.0.1",
+          "id": "6937579531545258620",
+          "ipCidrRange": "10.152.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/australia-southeast1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/australia-southeast1/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/australia-southeast2": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:58.795-07:00",
+          "fingerprint": "oBTkqlK7Fcs=",
+          "gatewayAddress": "10.192.0.1",
+          "id": "1408639960713964157",
+          "ipCidrRange": "10.192.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/australia-southeast2",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/australia-southeast2/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/europe-central2": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:57.785-07:00",
+          "fingerprint": "zw_hkLZSOJI=",
+          "gatewayAddress": "10.186.0.1",
+          "id": "1077978447298865790",
+          "ipCidrRange": "10.186.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-central2",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-central2/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/europe-north1": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:58.037-07:00",
+          "fingerprint": "80uA2JRBgYo=",
+          "gatewayAddress": "10.166.0.1",
+          "id": "2809449870791191165",
+          "ipCidrRange": "10.166.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": true,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-north1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-north1/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/europe-southwest1": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:57.190-07:00",
+          "fingerprint": "NNPblI1jl5o=",
+          "gatewayAddress": "10.204.0.1",
+          "id": "2215376217816083070",
+          "ipCidrRange": "10.204.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-southwest1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-southwest1/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/europe-west1": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:57.112-07:00",
+          "fingerprint": "rKu-QZ58MyY=",
+          "gatewayAddress": "10.132.0.1",
+          "id": "723826645345413758",
+          "ipCidrRange": "10.132.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": true,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-west1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-west1/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/europe-west10": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-06-29T10:57:35.308-07:00",
+          "fingerprint": "HwI0WItrEcM=",
+          "gatewayAddress": "10.214.0.1",
+          "id": "6322359151811918048",
+          "ipCidrRange": "10.214.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": true,
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-west10",
+          "secondaryIpRanges": [
+            {
+              "ipCidrRange": "10.40.0.0/14",
+              "rangeName": "gke-gcp-cluster-pods-1d08860d",
+              "reservedInternalRange": "https://networkconnectivity.googleapis.com/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/locations/global/internalRanges/gke-gcp-cluster-pods-1d08860d"
+            },
+            {
+              "ipCidrRange": "10.108.192.0/20",
+              "rangeName": "gke-gcp-cluster-services-1d08860d",
+              "reservedInternalRange": "https://networkconnectivity.googleapis.com/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/locations/global/internalRanges/gke-gcp-cluster-services-1d08860d"
+            },
+            {
+              "ipCidrRange": "10.100.0.0/14",
+              "rangeName": "gke-gcp-cluster-pods-714df7d8",
+              "reservedInternalRange": "https://networkconnectivity.googleapis.com/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/locations/global/internalRanges/gke-gcp-cluster-pods-714df7d8"
+            },
+            {
+              "ipCidrRange": "10.110.80.0/20",
+              "rangeName": "gke-gcp-cluster-services-714df7d8",
+              "reservedInternalRange": "https://networkconnectivity.googleapis.com/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/locations/global/internalRanges/gke-gcp-cluster-services-714df7d8"
+            }
+          ],
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-west10/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/europe-west12": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:57.795-07:00",
+          "fingerprint": "HyQJqn3kjSk=",
+          "gatewayAddress": "10.210.0.1",
+          "id": "7360532775390587518",
+          "ipCidrRange": "10.210.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-west12",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-west12/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/europe-west2": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:57.196-07:00",
+          "fingerprint": "9DCzARTgL5o=",
+          "gatewayAddress": "10.154.0.1",
+          "id": "2308300210381957758",
+          "ipCidrRange": "10.154.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-west2",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-west2/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/europe-west3": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:57.677-07:00",
+          "fingerprint": "CXU9NWt0mK4=",
+          "gatewayAddress": "10.156.0.1",
+          "id": "7671705028591528574",
+          "ipCidrRange": "10.156.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-west3",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-west3/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/europe-west4": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:57.691-07:00",
+          "fingerprint": "CK3vcBW1_KQ=",
+          "gatewayAddress": "10.164.0.1",
+          "id": "5418214698598705790",
+          "ipCidrRange": "10.164.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": true,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-west4",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-west4/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/europe-west6": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:57.713-07:00",
+          "fingerprint": "MQ9geHGNqEg=",
+          "gatewayAddress": "10.172.0.1",
+          "id": "382151822171089534",
+          "ipCidrRange": "10.172.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-west6",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-west6/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/europe-west8": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:57.768-07:00",
+          "fingerprint": "2K_gL14tmvo=",
+          "gatewayAddress": "10.198.0.1",
+          "id": "3183935100190894718",
+          "ipCidrRange": "10.198.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-west8",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-west8/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/europe-west9": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:57.615-07:00",
+          "fingerprint": "Y7pYVq5lePM=",
+          "gatewayAddress": "10.200.0.1",
+          "id": "1534621049541798526",
+          "ipCidrRange": "10.200.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-west9",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-west9/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/me-central1": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:58.482-07:00",
+          "fingerprint": "6y0p9ptuH8w=",
+          "gatewayAddress": "10.212.0.1",
+          "id": "2502464596523526781",
+          "ipCidrRange": "10.212.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/me-central1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/me-central1/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/me-central2": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-09-19T08:38:42.393-07:00",
+          "fingerprint": "YS907XyPIgQ=",
+          "gatewayAddress": "10.216.0.1",
+          "id": "3967899440704159341",
+          "ipCidrRange": "10.216.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/me-central2",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/me-central2/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/me-west1": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:58.047-07:00",
+          "fingerprint": "0gEAcJTlZyk=",
+          "gatewayAddress": "10.208.0.1",
+          "id": "8633821816504625789",
+          "ipCidrRange": "10.208.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/me-west1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/me-west1/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/northamerica-northeast1": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:57.455-07:00",
+          "fingerprint": "7UaO_Av4mwY=",
+          "gatewayAddress": "10.162.0.1",
+          "id": "6752088844742863486",
+          "ipCidrRange": "10.162.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": true,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/northamerica-northeast1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/northamerica-northeast1/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/northamerica-northeast2": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:57.183-07:00",
+          "fingerprint": "9FoebQ7DjTA=",
+          "gatewayAddress": "10.188.0.1",
+          "id": "3529922439897590398",
+          "ipCidrRange": "10.188.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/northamerica-northeast2",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/northamerica-northeast2/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/southamerica-east1": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:58.519-07:00",
+          "fingerprint": "fk_3Vjsdn5Y=",
+          "gatewayAddress": "10.158.0.1",
+          "id": "936347794724530813",
+          "ipCidrRange": "10.158.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/southamerica-east1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/southamerica-east1/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/southamerica-west1": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:58.049-07:00",
+          "fingerprint": "2NleeFOtqnY=",
+          "gatewayAddress": "10.194.0.1",
+          "id": "1775999955333720701",
+          "ipCidrRange": "10.194.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/southamerica-west1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/southamerica-west1/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/us-central1": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:57.009-07:00",
+          "fingerprint": "pLUyQdHdyB8=",
+          "gatewayAddress": "10.128.0.1",
+          "id": "1675478041067170430",
+          "ipCidrRange": "10.128.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": true,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/us-central1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/us-central1/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/us-east1": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:56.955-07:00",
+          "fingerprint": "_cYESLbgvfw=",
+          "gatewayAddress": "10.142.0.1",
+          "id": "370369824935029375",
+          "ipCidrRange": "10.142.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": true,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/us-east1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/us-east1/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/us-east4": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:57.096-07:00",
+          "fingerprint": "kb4FaBPcmVo=",
+          "gatewayAddress": "10.150.0.1",
+          "id": "3506313880844806782",
+          "ipCidrRange": "10.150.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": true,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/us-east4",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/us-east4/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/us-east5": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:57.225-07:00",
+          "fingerprint": "fNs1wcyiH1U=",
+          "gatewayAddress": "10.202.0.1",
+          "id": "2258599725005974142",
+          "ipCidrRange": "10.202.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/us-east5",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/us-east5/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/us-east7": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T17:06:37.584-07:00",
+          "fingerprint": "c4xUfWHOO30=",
+          "gatewayAddress": "10.196.0.1",
+          "id": "5645870084367957346",
+          "ipCidrRange": "10.196.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/us-east7",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/us-east7/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/us-south1": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:57.211-07:00",
+          "fingerprint": "9QmgcF7dz30=",
+          "gatewayAddress": "10.206.0.1",
+          "id": "8521904271670028926",
+          "ipCidrRange": "10.206.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/us-south1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/us-south1/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/us-west1": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:57.513-07:00",
+          "fingerprint": "7ca57iXVJFY=",
+          "gatewayAddress": "10.138.0.1",
+          "id": "5152948421657012862",
+          "ipCidrRange": "10.138.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": true,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/us-west1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/us-west1/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/us-west2": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:57.634-07:00",
+          "fingerprint": "6O1DqoZGA0k=",
+          "gatewayAddress": "10.168.0.1",
+          "id": "1831725790199720574",
+          "ipCidrRange": "10.168.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/us-west2",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/us-west2/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/us-west3": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:57.386-07:00",
+          "fingerprint": "BzGlp8r_xWo=",
+          "gatewayAddress": "10.180.0.1",
+          "id": "864414196392438398",
+          "ipCidrRange": "10.180.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/us-west3",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/us-west3/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/us-west4": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-05-22T00:06:57.607-07:00",
+          "fingerprint": "YVpv95djrGA=",
+          "gatewayAddress": "10.182.0.1",
+          "id": "4328457199249959550",
+          "ipCidrRange": "10.182.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/us-west4",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/us-west4/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/us-west8": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2023-11-16T13:27:45.680-08:00",
+          "fingerprint": "Q3c9r2xwLzc=",
+          "gatewayAddress": "10.220.0.1",
+          "id": "9169510117869828030",
+          "ipCidrRange": "10.220.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/us-west8",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/us-west8/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    }
+  },
+  "kind": "compute#subnetworkAggregatedList",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/aggregated/subnetworks"
+}

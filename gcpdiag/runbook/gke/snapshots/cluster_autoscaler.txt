@@ -1,0 +1,121 @@
+project: gcpdiag-gke-cluster-autoscaler-rrrr, parameters: {location=europe-west10,name=gcp-
+cluster,project_id=gcpdiag-gke-cluster-autoscaler-rrrr}
+
+gke/cluster-autoscaler: Analyses logs in the project where the cluster is running.
+
+  If there are log entries that contain messages listed in the public documentation
+  https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-autoscaler-visibility#messages
+  then provide details on how each particular issue can be solved.
+
+  The following ScaleUP logs messages are covered:
+  - scale.up.error.out.of.resources
+  - scale.up.error.quota.exceeded
+  - scale.up.error.waiting.for.instances.timeout
+  - scale.up.error.ip.space.exhausted
+  - scale.up.error.service.account.deleted
+
+  The following ScaleDown logs messages are covered:
+  - scale.down.error.failed.to.evict.pods
+  - no.scale.down.node.node.group.min.size.reached
+  
+[START]: 
+    Check the provided parameters.
+    
+[AUTOMATED STEP]: 
+    Check for "scale.up.error.out.of.resources" log entries
+    
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     The scaleUp event failed because some of the MIGs could not be increased due to lack of resources.
+     Example log entry that would help identify involved objects:
+     {'protoPayload': {'@type': 'type.googleapis.com/google.cloud.audit.AuditLog', 'authenticationInfo': {'principalEmail': 'service-12340002@container-engine-robot.iam.gserviceaccount.com'}, 'requestMetadata': {'callerIp': '2002:a17:907:3ea4::', 'callerSuppliedUserAgent': 'google-api-go-client/0.5 GoogleContainerEngine/v1'}, 'serviceName': 'compute.googleapis.com', 'methodName': 'beta.compute.instanceGroupManagers.insert', 'resourceName': 'projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-dc4a8b29-grp', 'request': {'@type': 'type.googleapis.com/compute.instanceGroupManagers.insert'}}, 'insertId': '-tt9mudi768', 'resource': {'type': 'gce_instance_group_manager', 'labels': {'location': 'europe-west4-a', 'instance_group_manager_id': '318228385164940970', 'project_id': 'gcpdiag-gke1-aaaa', 'instance_group_manager_name': 'gke-gke1-default-pool-dc4a8b29-grp'}}, 'timestamp': '2021-11-24T16:29:21.943390Z', 'severity': 'NOTICE', 'logName': 'projects/gcpdiag-gke1-aaaa/logs/cloudaudit.googleapis.com%2Factivity', 'operation': {'id': 'operation-1637771331527-5d18b5a706163-f238dbec-106555c8', 'producer': 'compute.googleapis.com', 'last': True}, 'receiveTimestamp': '2021-11-24T16:29:22.710110506Z'}
+
+     [REMEDIATION]
+     Follow the documentation:
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-vm-creation#resource_availability
+
+[AUTOMATED STEP]: 
+    Check for "scale.up.error.quota.exceeded" log entries
+    
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     The scaleUp event failed because some of the MIGs could not be increased, due to exceeded Compute Engine quota.
+     Example log entry that would help identify involved objects:
+     {'protoPayload': {'@type': 'type.googleapis.com/google.cloud.audit.AuditLog', 'authenticationInfo': {'principalEmail': 'service-12340002@container-engine-robot.iam.gserviceaccount.com'}, 'requestMetadata': {'callerIp': '2002:a17:907:3ea4::', 'callerSuppliedUserAgent': 'google-api-go-client/0.5 GoogleContainerEngine/v1'}, 'serviceName': 'compute.googleapis.com', 'methodName': 'beta.compute.instanceGroupManagers.insert', 'resourceName': 'projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-dc4a8b29-grp', 'request': {'@type': 'type.googleapis.com/compute.instanceGroupManagers.insert'}}, 'insertId': '-tt9mudi768', 'resource': {'type': 'gce_instance_group_manager', 'labels': {'location': 'europe-west4-a', 'instance_group_manager_id': '318228385164940970', 'project_id': 'gcpdiag-gke1-aaaa', 'instance_group_manager_name': 'gke-gke1-default-pool-dc4a8b29-grp'}}, 'timestamp': '2021-11-24T16:29:21.943390Z', 'severity': 'NOTICE', 'logName': 'projects/gcpdiag-gke1-aaaa/logs/cloudaudit.googleapis.com%2Factivity', 'operation': {'id': 'operation-1637771331527-5d18b5a706163-f238dbec-106555c8', 'producer': 'compute.googleapis.com', 'last': True}, 'receiveTimestamp': '2021-11-24T16:29:22.710110506Z'}
+
+     [REMEDIATION]
+     Check the Errors tab of the MIG in Google Cloud console to see what quota is being exceeded. Follow the instructions to request a quota increase:
+     https://cloud.google.com/compute/quotas#requesting_additional_quota
+
+[AUTOMATED STEP]: 
+    Check for "scale.up.error.waiting.for.instances.timeout" log entries
+    
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     The scaleUp event failed because instances in some of the MIGs failed to appear in time.
+     Example log entry that would help identify involved objects:
+     {'protoPayload': {'@type': 'type.googleapis.com/google.cloud.audit.AuditLog', 'authenticationInfo': {'principalEmail': 'service-12340002@container-engine-robot.iam.gserviceaccount.com'}, 'requestMetadata': {'callerIp': '2002:a17:907:3ea4::', 'callerSuppliedUserAgent': 'google-api-go-client/0.5 GoogleContainerEngine/v1'}, 'serviceName': 'compute.googleapis.com', 'methodName': 'beta.compute.instanceGroupManagers.insert', 'resourceName': 'projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-dc4a8b29-grp', 'request': {'@type': 'type.googleapis.com/compute.instanceGroupManagers.insert'}}, 'insertId': '-tt9mudi768', 'resource': {'type': 'gce_instance_group_manager', 'labels': {'location': 'europe-west4-a', 'instance_group_manager_id': '318228385164940970', 'project_id': 'gcpdiag-gke1-aaaa', 'instance_group_manager_name': 'gke-gke1-default-pool-dc4a8b29-grp'}}, 'timestamp': '2021-11-24T16:29:21.943390Z', 'severity': 'NOTICE', 'logName': 'projects/gcpdiag-gke1-aaaa/logs/cloudaudit.googleapis.com%2Factivity', 'operation': {'id': 'operation-1637771331527-5d18b5a706163-f238dbec-106555c8', 'producer': 'compute.googleapis.com', 'last': True}, 'receiveTimestamp': '2021-11-24T16:29:22.710110506Z'}
+
+     [REMEDIATION]
+     This message is transient. If it persists, engage Google Cloud Support for further investigation.
+
+[AUTOMATED STEP]: 
+    Check for "scale.up.error.ip.space.exhausted" log entries
+    
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     The scaleUp event failed because the cluster doesn't have enough unallocated IP address space to use to add new nodes or Pods.
+     Example log entry that would help identify involved objects:
+     {'protoPayload': {'@type': 'type.googleapis.com/google.cloud.audit.AuditLog', 'authenticationInfo': {'principalEmail': 'service-12340002@container-engine-robot.iam.gserviceaccount.com'}, 'requestMetadata': {'callerIp': '2002:a17:907:3ea4::', 'callerSuppliedUserAgent': 'google-api-go-client/0.5 GoogleContainerEngine/v1'}, 'serviceName': 'compute.googleapis.com', 'methodName': 'beta.compute.instanceGroupManagers.insert', 'resourceName': 'projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-dc4a8b29-grp', 'request': {'@type': 'type.googleapis.com/compute.instanceGroupManagers.insert'}}, 'insertId': '-tt9mudi768', 'resource': {'type': 'gce_instance_group_manager', 'labels': {'location': 'europe-west4-a', 'instance_group_manager_id': '318228385164940970', 'project_id': 'gcpdiag-gke1-aaaa', 'instance_group_manager_name': 'gke-gke1-default-pool-dc4a8b29-grp'}}, 'timestamp': '2021-11-24T16:29:21.943390Z', 'severity': 'NOTICE', 'logName': 'projects/gcpdiag-gke1-aaaa/logs/cloudaudit.googleapis.com%2Factivity', 'operation': {'id': 'operation-1637771331527-5d18b5a706163-f238dbec-106555c8', 'producer': 'compute.googleapis.com', 'last': True}, 'receiveTimestamp': '2021-11-24T16:29:22.710110506Z'}
+
+     [REMEDIATION]
+     Refer to the troubleshooting steps to address the lack of IP address space for the nodes or pods.
+     https://cloud.google.com/kubernetes-engine/docs/how-to/alias-ips#not_enough_space
+
+[AUTOMATED STEP]: 
+    Check for "scale.up.error.service.account.deleted" log entries
+    
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     The scaleUp event failed because a service account used by Cluster Autoscaler has been deleted.
+     Example log entry that would help identify involved objects:
+     {'protoPayload': {'@type': 'type.googleapis.com/google.cloud.audit.AuditLog', 'authenticationInfo': {'principalEmail': 'service-12340002@container-engine-robot.iam.gserviceaccount.com'}, 'requestMetadata': {'callerIp': '2002:a17:907:3ea4::', 'callerSuppliedUserAgent': 'google-api-go-client/0.5 GoogleContainerEngine/v1'}, 'serviceName': 'compute.googleapis.com', 'methodName': 'beta.compute.instanceGroupManagers.insert', 'resourceName': 'projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-dc4a8b29-grp', 'request': {'@type': 'type.googleapis.com/compute.instanceGroupManagers.insert'}}, 'insertId': '-tt9mudi768', 'resource': {'type': 'gce_instance_group_manager', 'labels': {'location': 'europe-west4-a', 'instance_group_manager_id': '318228385164940970', 'project_id': 'gcpdiag-gke1-aaaa', 'instance_group_manager_name': 'gke-gke1-default-pool-dc4a8b29-grp'}}, 'timestamp': '2021-11-24T16:29:21.943390Z', 'severity': 'NOTICE', 'logName': 'projects/gcpdiag-gke1-aaaa/logs/cloudaudit.googleapis.com%2Factivity', 'operation': {'id': 'operation-1637771331527-5d18b5a706163-f238dbec-106555c8', 'producer': 'compute.googleapis.com', 'last': True}, 'receiveTimestamp': '2021-11-24T16:29:22.710110506Z'}
+
+     [REMEDIATION]
+     Engage Google Cloud Support for further investigation.
+
+[AUTOMATED STEP]: 
+    Check for "no.scale.down.node.node.group.min.size.reached" log entries
+    
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     Node cannot be removed because its node group is already at its minimum size.
+     Example log entry that would help identify involved objects:
+     {'protoPayload': {'@type': 'type.googleapis.com/google.cloud.audit.AuditLog', 'authenticationInfo': {'principalEmail': 'service-12340002@container-engine-robot.iam.gserviceaccount.com'}, 'requestMetadata': {'callerIp': '2002:a17:907:3ea4::', 'callerSuppliedUserAgent': 'google-api-go-client/0.5 GoogleContainerEngine/v1'}, 'serviceName': 'compute.googleapis.com', 'methodName': 'beta.compute.instanceGroupManagers.insert', 'resourceName': 'projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-dc4a8b29-grp', 'request': {'@type': 'type.googleapis.com/compute.instanceGroupManagers.insert'}}, 'insertId': '-tt9mudi768', 'resource': {'type': 'gce_instance_group_manager', 'labels': {'location': 'europe-west4-a', 'instance_group_manager_id': '318228385164940970', 'project_id': 'gcpdiag-gke1-aaaa', 'instance_group_manager_name': 'gke-gke1-default-pool-dc4a8b29-grp'}}, 'timestamp': '2021-11-24T16:29:21.943390Z', 'severity': 'NOTICE', 'logName': 'projects/gcpdiag-gke1-aaaa/logs/cloudaudit.googleapis.com%2Factivity', 'operation': {'id': 'operation-1637771331527-5d18b5a706163-f238dbec-106555c8', 'producer': 'compute.googleapis.com', 'last': True}, 'receiveTimestamp': '2021-11-24T16:29:22.710110506Z'}
+
+     [REMEDIATION]
+     Review and adjust the minimum value set for node pool autoscaling.
+     https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-autoscaler#resizing_a_node_pool
+
+[AUTOMATED STEP]: 
+    Check for "scale.down.error.failed.to.evict.pods" log entries
+    
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     The scaleDown event failed because some of the Pods could not be evicted from a node.
+     Example log entry that would help identify involved objects:
+     {'protoPayload': {'@type': 'type.googleapis.com/google.cloud.audit.AuditLog', 'authenticationInfo': {'principalEmail': 'service-12340002@container-engine-robot.iam.gserviceaccount.com'}, 'requestMetadata': {'callerIp': '2002:a17:907:3ea4::', 'callerSuppliedUserAgent': 'google-api-go-client/0.5 GoogleContainerEngine/v1'}, 'serviceName': 'compute.googleapis.com', 'methodName': 'beta.compute.instanceGroupManagers.insert', 'resourceName': 'projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-dc4a8b29-grp', 'request': {'@type': 'type.googleapis.com/compute.instanceGroupManagers.insert'}}, 'insertId': '-tt9mudi768', 'resource': {'type': 'gce_instance_group_manager', 'labels': {'location': 'europe-west4-a', 'instance_group_manager_id': '318228385164940970', 'project_id': 'gcpdiag-gke1-aaaa', 'instance_group_manager_name': 'gke-gke1-default-pool-dc4a8b29-grp'}}, 'timestamp': '2021-11-24T16:29:21.943390Z', 'severity': 'NOTICE', 'logName': 'projects/gcpdiag-gke1-aaaa/logs/cloudaudit.googleapis.com%2Factivity', 'operation': {'id': 'operation-1637771331527-5d18b5a706163-f238dbec-106555c8', 'producer': 'compute.googleapis.com', 'last': True}, 'receiveTimestamp': '2021-11-24T16:29:22.710110506Z'}
+
+     [REMEDIATION]
+     Review best practices for Pod Disruption Budgets to ensure that the rules allow for eviction of application replicas when acceptable.
+     https://cloud.google.com/architecture/best-practices-for-running-cost-effective-kubernetes-applications-on-gke#add-pod_disruption_budget-to-your-application
+
+
+

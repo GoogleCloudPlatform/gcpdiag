@@ -1,0 +1,267 @@
+{
+  "auditConfigs": [
+    {
+      "auditLogConfigs": [
+        {
+          "logType": "ADMIN_READ"
+        },
+        {
+          "logType": "DATA_READ"
+        },
+        {
+          "logType": "DATA_WRITE"
+        }
+      ],
+      "service": "container.googleapis.com"
+    }
+  ],
+  "bindings": [
+    {
+      "members": [
+        "serviceAccount:service-1234000173@gcp-sa-anthosaudit.iam.gserviceaccount.com"
+      ],
+      "role": "roles/anthosaudit.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-1234000173@gcp-sa-anthospolicycontroller.iam.gserviceaccount.com"
+      ],
+      "role": "roles/anthospolicycontroller.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-1234000173@gcp-sa-artifactregistry.iam.gserviceaccount.com"
+      ],
+      "role": "roles/artifactregistry.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:anthos-lab-usage-metering-sa@gcpdiag-gke-cluster-autoscaler-rrrr.iam.gserviceaccount.com"
+      ],
+      "role": "roles/bigquery.dataEditor"
+    },
+    {
+      "members": [
+        "serviceAccount:1234000173@cloudbuild.gserviceaccount.com"
+      ],
+      "role": "roles/cloudbuild.builds.builder"
+    },
+    {
+      "members": [
+        "serviceAccount:service-1234000173@gcp-sa-cloudbuild.iam.gserviceaccount.com"
+      ],
+      "role": "roles/cloudbuild.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-1234000173@gcf-admin-robot.iam.gserviceaccount.com"
+      ],
+      "role": "roles/cloudfunctions.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-1234000173@gcp-sa-cloudkms.iam.gserviceaccount.com"
+      ],
+      "role": "roles/cloudkms.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-1234000173@cloudcomposer-accounts.iam.gserviceaccount.com"
+      ],
+      "role": "roles/composer.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-1234000173@compute-system.iam.gserviceaccount.com"
+      ],
+      "role": "roles/compute.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-1234000173@container-engine-robot.iam.gserviceaccount.com"
+      ],
+      "role": "roles/container.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-1234000173@container-analysis.iam.gserviceaccount.com"
+      ],
+      "role": "roles/containeranalysis.ServiceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-1234000173@containerregistry.iam.gserviceaccount.com"
+      ],
+      "role": "roles/containerregistry.ServiceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-1234000173@gcp-sa-ktd-control.iam.gserviceaccount.com"
+      ],
+      "role": "roles/containerthreatdetection.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:1234000173-compute@developer.gserviceaccount.com",
+        "serviceAccount:1234000173@cloudservices.gserviceaccount.com",
+        "serviceAccount:kcc-sa@gcpdiag-gke-cluster-autoscaler-rrrr.iam.gserviceaccount.com",
+        "serviceAccount:gcpdiag-gke-cluster-autoscaler-rrrr@appspot.gserviceaccount.com"
+      ],
+      "role": "roles/editor"
+    },
+    {
+      "members": [
+        "serviceAccount:anthos-lab-connect-register-sa@gcpdiag-gke-cluster-autoscaler-rrrr.iam.gserviceaccount.com"
+      ],
+      "role": "roles/gkehub.admin"
+    },
+    {
+      "members": [
+        "serviceAccount:anthos-lab-connect-register-sa@gcpdiag-gke-cluster-autoscaler-rrrr.iam.gserviceaccount.com"
+      ],
+      "role": "roles/gkehub.connect"
+    },
+    {
+      "members": [
+        "serviceAccount:service-1234000173@gcp-sa-gkehub.iam.gserviceaccount.com"
+      ],
+      "role": "roles/gkehub.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-1234000173@gcp-sa-gkeonprem.iam.gserviceaccount.com"
+      ],
+      "role": "roles/gkeonprem.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:anthos-lab-component-access-sa@gcpdiag-gke-cluster-autoscaler-rrrr.iam.gserviceaccount.com"
+      ],
+      "role": "roles/iam.roleViewer"
+    },
+    {
+      "members": [
+        "serviceAccount:anthos-on-vmware-sa@gcpdiag-gke-cluster-autoscaler-rrrr.iam.gserviceaccount.com"
+      ],
+      "role": "roles/iam.securityAdmin"
+    },
+    {
+      "members": [
+        "serviceAccount:anthos-on-vmware-sa@gcpdiag-gke-cluster-autoscaler-rrrr.iam.gserviceaccount.com"
+      ],
+      "role": "roles/iam.serviceAccountAdmin"
+    },
+    {
+      "members": [
+        "serviceAccount:anthos-lab-component-access-sa@gcpdiag-gke-cluster-autoscaler-rrrr.iam.gserviceaccount.com"
+      ],
+      "role": "roles/iam.serviceAccountCreator"
+    },
+    {
+      "members": [
+        "serviceAccount:anthos-on-vmware-sa@gcpdiag-gke-cluster-autoscaler-rrrr.iam.gserviceaccount.com"
+      ],
+      "role": "roles/iam.serviceAccountKeyAdmin"
+    },
+    {
+      "members": [
+        "serviceAccount:service-1234000173@gcp-sa-krmapihosting.iam.gserviceaccount.com"
+      ],
+      "role": "roles/krmapihosting.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:anthos-lab-stackdriver-sa@gcpdiag-gke-cluster-autoscaler-rrrr.iam.gserviceaccount.com",
+        "serviceAccount:kubernetes-engine-node-sa@gcpdiag-gke-cluster-autoscaler-rrrr.iam.gserviceaccount.com"
+      ],
+      "role": "roles/logging.logWriter"
+    },
+    {
+      "members": [
+        "serviceAccount:anthos-lab-stackdriver-sa@gcpdiag-gke-cluster-autoscaler-rrrr.iam.gserviceaccount.com"
+      ],
+      "role": "roles/monitoring.dashboardEditor"
+    },
+    {
+      "members": [
+        "serviceAccount:anthos-lab-stackdriver-sa@gcpdiag-gke-cluster-autoscaler-rrrr.iam.gserviceaccount.com",
+        "serviceAccount:kubernetes-engine-node-sa@gcpdiag-gke-cluster-autoscaler-rrrr.iam.gserviceaccount.com"
+      ],
+      "role": "roles/monitoring.metricWriter"
+    },
+    {
+      "members": [
+        "serviceAccount:kubernetes-engine-node-sa@gcpdiag-gke-cluster-autoscaler-rrrr.iam.gserviceaccount.com"
+      ],
+      "role": "roles/monitoring.viewer"
+    },
+    {
+      "members": [
+        "serviceAccount:service-1234000173@gcp-sa-mcmetering.iam.gserviceaccount.com"
+      ],
+      "role": "roles/multiclustermetering.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-1234000173@gcp-sa-networkconnectivity.iam.gserviceaccount.com"
+      ],
+      "role": "roles/networkconnectivity.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-1234000173@gcp-sa-networkmanagement.iam.gserviceaccount.com"
+      ],
+      "role": "roles/networkmanagement.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:anthos-lab-stackdriver-sa@gcpdiag-gke-cluster-autoscaler-rrrr.iam.gserviceaccount.com"
+      ],
+      "role": "roles/opsconfigmonitoring.resourceMetadata.writer"
+    },
+    {
+      "members": [
+        "user:testuser@example.com"
+      ],
+      "role": "roles/owner"
+    },
+    {
+      "members": [
+        "serviceAccount:service-1234000173@gcp-sa-pubsub.iam.gserviceaccount.com"
+      ],
+      "role": "roles/pubsub.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:anthos-on-vmware-sa@gcpdiag-gke-cluster-autoscaler-rrrr.iam.gserviceaccount.com"
+      ],
+      "role": "roles/serviceusage.serviceUsageAdmin"
+    },
+    {
+      "members": [
+        "serviceAccount:anthos-lab-component-access-sa@gcpdiag-gke-cluster-autoscaler-rrrr.iam.gserviceaccount.com"
+      ],
+      "role": "roles/serviceusage.serviceUsageViewer"
+    },
+    {
+      "members": [
+        "serviceAccount:anthos-lab-stackdriver-sa@gcpdiag-gke-cluster-autoscaler-rrrr.iam.gserviceaccount.com"
+      ],
+      "role": "roles/stackdriver.resourceMetadata.writer"
+    },
+    {
+      "members": [
+        "serviceAccount:anthos-on-vmware-sa@gcpdiag-gke-cluster-autoscaler-rrrr.iam.gserviceaccount.com"
+      ],
+      "role": "roles/storage.admin"
+    },
+    {
+      "members": [
+        "serviceAccount:service-1234000173@gcp-sa-websecurityscanner.iam.gserviceaccount.com"
+      ],
+      "role": "roles/websecurityscanner.serviceAgent"
+    }
+  ],
+  "etag": "BwYTiuJ1iQc=",
+  "version": 1
+}

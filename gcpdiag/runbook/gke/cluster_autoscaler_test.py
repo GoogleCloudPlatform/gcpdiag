@@ -11,12 +11,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Contains GKE specific flags"""
+"""Test class for gke/ClusterAutoscaler"""
 
-PROJECT_ID = 'project_id'
-# cluster name
-NAME = 'name'
-# cluster zone or region
-LOCATION = 'location'
-START_TIME_UTC = 'start_time_utc'
-END_TIME_UTC = 'end_time_utc'
+from gcpdiag import config
+from gcpdiag.runbook import gke, snapshot_test_base
+
+
+class Test(snapshot_test_base.RulesSnapshotTestBase):
+  rule_pkg = gke
+  runbook_name = 'gke/cluster-autoscaler'
+  project_id = 'gcpdiag-gke-cluster-autoscaler-rrrr'
+  config.init({'auto': True, 'interface': 'cli'}, project_id)
+
+  rule_parameters = [{
+      'project_id': 'gcpdiag-gke-cluster-autoscaler-rrrr',
+      'name': 'gcp-cluster',
+      'location': 'europe-west10'
+  }]

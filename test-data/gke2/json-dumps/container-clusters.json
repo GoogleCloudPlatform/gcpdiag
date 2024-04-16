@@ -1,0 +1,451 @@
+{
+  "clusters": [
+    {
+      "addonsConfig": {
+        "dnsCacheConfig": {},
+        "gcePersistentDiskCsiDriverConfig": {
+          "enabled": true
+        },
+        "gcsFuseCsiDriverConfig": {},
+        "horizontalPodAutoscaling": {},
+        "httpLoadBalancing": {},
+        "kubernetesDashboard": {
+          "disabled": true
+        },
+        "networkPolicyConfig": {
+          "disabled": true
+        }
+      },
+      "authenticatorGroupsConfig": {},
+      "autopilot": {},
+      "autoscaling": {
+        "autoscalingProfile": "BALANCED"
+      },
+      "binaryAuthorization": {
+        "evaluationMode": "DISABLED"
+      },
+      "clusterIpv4Cidr": "10.40.0.0/14",
+      "createTime": "2024-04-09T11:03:09+00:00",
+      "currentMasterVersion": "1.27.8-gke.1067004",
+      "currentNodeCount": 3,
+      "currentNodeVersion": "1.27.8-gke.1067004",
+      "databaseEncryption": {
+        "state": "DECRYPTED"
+      },
+      "defaultMaxPodsConstraint": {
+        "maxPodsPerNode": "110"
+      },
+      "endpoint": "192.168.1.1",
+      "enterpriseConfig": {
+        "clusterTier": "STANDARD"
+      },
+      "etag": "7fbb04ca-73b8-4f61-96e3-eb0afc4bb00f",
+      "id": "1d08860da6b04fe29851304466f250cc1da7a37bc1034b42bde224b67e87fdc8",
+      "initialClusterVersion": "1.27.8-gke.1067004",
+      "instanceGroupUrls": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/instanceGroupManagers/gke-gcp-cluster-default-pool-c7891c09-grp"
+      ],
+      "ipAllocationPolicy": {
+        "clusterIpv4Cidr": "10.40.0.0/14",
+        "clusterIpv4CidrBlock": "10.40.0.0/14",
+        "clusterSecondaryRangeName": "gke-gcp-cluster-pods-1d08860d",
+        "defaultPodIpv4RangeUtilization": 0.0029,
+        "podCidrOverprovisionConfig": {},
+        "servicesIpv4Cidr": "10.108.192.0/20",
+        "servicesIpv4CidrBlock": "10.108.192.0/20",
+        "servicesSecondaryRangeName": "gke-gcp-cluster-services-1d08860d",
+        "stackType": "IPV4",
+        "useIpAliases": true
+      },
+      "labelFingerprint": "a9dc16a7",
+      "legacyAbac": {},
+      "location": "europe-west10-a",
+      "locations": [
+        "europe-west10-a"
+      ],
+      "loggingConfig": {
+        "componentConfig": {
+          "enableComponents": [
+            "APISERVER",
+            "CONTROLLER_MANAGER",
+            "SCHEDULER",
+            "SYSTEM_COMPONENTS",
+            "WORKLOADS"
+          ]
+        }
+      },
+      "loggingService": "logging.googleapis.com/kubernetes",
+      "maintenancePolicy": {
+        "resourceVersion": "e3b0c442"
+      },
+      "masterAuth": {
+        "clusterCaCertificate": "REDACTED"
+      },
+      "masterAuthorizedNetworksConfig": {
+        "gcpPublicCidrsAccessEnabled": true
+      },
+      "monitoringConfig": {
+        "advancedDatapathObservabilityConfig": {},
+        "componentConfig": {
+          "enableComponents": [
+            "SYSTEM_COMPONENTS"
+          ]
+        },
+        "managedPrometheusConfig": {
+          "enabled": true
+        }
+      },
+      "monitoringService": "monitoring.googleapis.com/kubernetes",
+      "name": "gcp-cluster",
+      "network": "default",
+      "networkConfig": {
+        "datapathProvider": "LEGACY_DATAPATH",
+        "defaultSnatStatus": {},
+        "network": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+        "serviceExternalIpsConfig": {},
+        "subnetwork": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-west10/subnetworks/default"
+      },
+      "nodeConfig": {
+        "diskSizeGb": 100,
+        "diskType": "pd-balanced",
+        "imageType": "COS_CONTAINERD",
+        "machineType": "n2-standard-2",
+        "metadata": {
+          "disable-legacy-endpoints": "true"
+        },
+        "oauthScopes": [
+          "https://www.googleapis.com/auth/devstorage.read_only",
+          "https://www.googleapis.com/auth/logging.write",
+          "https://www.googleapis.com/auth/monitoring",
+          "https://www.googleapis.com/auth/servicecontrol",
+          "https://www.googleapis.com/auth/service.management.readonly",
+          "https://www.googleapis.com/auth/trace.append"
+        ],
+        "serviceAccount": "default",
+        "shieldedInstanceConfig": {
+          "enableIntegrityMonitoring": true
+        },
+        "windowsNodeConfig": {}
+      },
+      "nodePoolDefaults": {
+        "nodeConfigDefaults": {
+          "loggingConfig": {
+            "variantConfig": {
+              "variant": "DEFAULT"
+            }
+          }
+        }
+      },
+      "nodePools": [
+        {
+          "autoscaling": {
+            "enabled": true,
+            "locationPolicy": "BALANCED",
+            "maxNodeCount": 100,
+            "minNodeCount": 3
+          },
+          "config": {
+            "diskSizeGb": 100,
+            "diskType": "pd-balanced",
+            "imageType": "COS_CONTAINERD",
+            "machineType": "n2-standard-2",
+            "metadata": {
+              "disable-legacy-endpoints": "true"
+            },
+            "oauthScopes": [
+              "https://www.googleapis.com/auth/devstorage.read_only",
+              "https://www.googleapis.com/auth/logging.write",
+              "https://www.googleapis.com/auth/monitoring",
+              "https://www.googleapis.com/auth/servicecontrol",
+              "https://www.googleapis.com/auth/service.management.readonly",
+              "https://www.googleapis.com/auth/trace.append"
+            ],
+            "serviceAccount": "default",
+            "shieldedInstanceConfig": {
+              "enableIntegrityMonitoring": true
+            },
+            "windowsNodeConfig": {}
+          },
+          "etag": "b3894954-021a-4318-87bb-042b3518be33",
+          "initialNodeCount": 1,
+          "instanceGroupUrls": [
+            "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/instanceGroupManagers/gke-gcp-cluster-default-pool-c7891c09-grp"
+          ],
+          "locations": [
+            "europe-west10-a"
+          ],
+          "management": {
+            "autoRepair": true,
+            "autoUpgrade": true
+          },
+          "maxPodsConstraint": {
+            "maxPodsPerNode": "110"
+          },
+          "name": "default-pool",
+          "networkConfig": {
+            "enablePrivateNodes": false,
+            "podIpv4CidrBlock": "10.40.0.0/14",
+            "podIpv4RangeUtilization": 0.0029,
+            "podRange": "gke-gcp-cluster-pods-1d08860d"
+          },
+          "podIpv4CidrSize": 24,
+          "queuedProvisioning": {},
+          "selfLink": "https://container.googleapis.com/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/clusters/gcp-cluster/nodePools/default-pool",
+          "status": "RUNNING",
+          "upgradeSettings": {
+            "maxSurge": 1,
+            "strategy": "SURGE"
+          },
+          "version": "1.27.8-gke.1067004"
+        }
+      ],
+      "notificationConfig": {
+        "pubsub": {}
+      },
+      "privateClusterConfig": {
+        "privateEndpoint": "10.214.0.2",
+        "publicEndpoint": "34.32.43.168"
+      },
+      "releaseChannel": {
+        "channel": "REGULAR"
+      },
+      "securityPostureConfig": {
+        "mode": "BASIC",
+        "vulnerabilityMode": "VULNERABILITY_DISABLED"
+      },
+      "selfLink": "https://container.googleapis.com/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/clusters/gcp-cluster",
+      "servicesIpv4Cidr": "10.108.192.0/20",
+      "shieldedNodes": {
+        "enabled": true
+      },
+      "status": "RUNNING",
+      "subnetwork": "default",
+      "zone": "europe-west10-a"
+    },
+    {
+      "addonsConfig": {
+        "dnsCacheConfig": {},
+        "gcePersistentDiskCsiDriverConfig": {
+          "enabled": true
+        },
+        "gcsFuseCsiDriverConfig": {},
+        "horizontalPodAutoscaling": {},
+        "httpLoadBalancing": {},
+        "kubernetesDashboard": {
+          "disabled": true
+        },
+        "networkPolicyConfig": {
+          "disabled": true
+        }
+      },
+      "authenticatorGroupsConfig": {},
+      "autopilot": {},
+      "autoscaling": {
+        "autoscalingProfile": "BALANCED"
+      },
+      "binaryAuthorization": {
+        "evaluationMode": "DISABLED"
+      },
+      "clusterIpv4Cidr": "10.100.0.0/14",
+      "createTime": "2024-04-09T12:07:08+00:00",
+      "currentMasterVersion": "1.27.8-gke.1067004",
+      "currentNodeCount": 3,
+      "currentNodeVersion": "1.27.8-gke.1067004",
+      "databaseEncryption": {
+        "state": "DECRYPTED"
+      },
+      "defaultMaxPodsConstraint": {
+        "maxPodsPerNode": "110"
+      },
+      "endpoint": "192.168.1.1",
+      "enterpriseConfig": {
+        "clusterTier": "STANDARD"
+      },
+      "etag": "a02a32a5-a762-4c32-87fd-e00ae08751d3",
+      "id": "714df7d8dc294225a17ea008c20ab288ee3e6b41b24c4527b8d418cb1a8cf3c4",
+      "initialClusterVersion": "1.27.8-gke.1067004",
+      "instanceGroupUrls": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/instanceGroupManagers/gke-gcp-cluster-default-pool-82e0c046-grp",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-c/instanceGroupManagers/gke-gcp-cluster-default-pool-a66c21d9-grp",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-b/instanceGroupManagers/gke-gcp-cluster-default-pool-2b1e5c3e-grp"
+      ],
+      "ipAllocationPolicy": {
+        "clusterIpv4Cidr": "10.100.0.0/14",
+        "clusterIpv4CidrBlock": "10.100.0.0/14",
+        "clusterSecondaryRangeName": "gke-gcp-cluster-pods-714df7d8",
+        "defaultPodIpv4RangeUtilization": 0.0029,
+        "podCidrOverprovisionConfig": {},
+        "servicesIpv4Cidr": "10.110.80.0/20",
+        "servicesIpv4CidrBlock": "10.110.80.0/20",
+        "servicesSecondaryRangeName": "gke-gcp-cluster-services-714df7d8",
+        "stackType": "IPV4",
+        "useIpAliases": true
+      },
+      "labelFingerprint": "a9dc16a7",
+      "legacyAbac": {},
+      "location": "europe-west10",
+      "locations": [
+        "europe-west10-a",
+        "europe-west10-c",
+        "europe-west10-b"
+      ],
+      "loggingConfig": {
+        "componentConfig": {
+          "enableComponents": [
+            "APISERVER",
+            "CONTROLLER_MANAGER",
+            "SCHEDULER",
+            "SYSTEM_COMPONENTS",
+            "WORKLOADS"
+          ]
+        }
+      },
+      "loggingService": "logging.googleapis.com/kubernetes",
+      "maintenancePolicy": {
+        "resourceVersion": "e3b0c442"
+      },
+      "masterAuth": {
+        "clusterCaCertificate": "REDACTED"
+      },
+      "masterAuthorizedNetworksConfig": {
+        "gcpPublicCidrsAccessEnabled": true
+      },
+      "monitoringConfig": {
+        "advancedDatapathObservabilityConfig": {},
+        "componentConfig": {
+          "enableComponents": [
+            "SYSTEM_COMPONENTS"
+          ]
+        },
+        "managedPrometheusConfig": {
+          "enabled": true
+        }
+      },
+      "monitoringService": "monitoring.googleapis.com/kubernetes",
+      "name": "gcp-cluster",
+      "network": "default",
+      "networkConfig": {
+        "datapathProvider": "LEGACY_DATAPATH",
+        "defaultSnatStatus": {},
+        "network": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/networks/default",
+        "serviceExternalIpsConfig": {},
+        "subnetwork": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/regions/europe-west10/subnetworks/default"
+      },
+      "nodeConfig": {
+        "diskSizeGb": 100,
+        "diskType": "pd-balanced",
+        "imageType": "COS_CONTAINERD",
+        "machineType": "e2-medium",
+        "metadata": {
+          "disable-legacy-endpoints": "true"
+        },
+        "oauthScopes": [
+          "https://www.googleapis.com/auth/devstorage.read_only",
+          "https://www.googleapis.com/auth/logging.write",
+          "https://www.googleapis.com/auth/monitoring",
+          "https://www.googleapis.com/auth/servicecontrol",
+          "https://www.googleapis.com/auth/service.management.readonly",
+          "https://www.googleapis.com/auth/trace.append"
+        ],
+        "serviceAccount": "default",
+        "shieldedInstanceConfig": {
+          "enableIntegrityMonitoring": true
+        },
+        "windowsNodeConfig": {}
+      },
+      "nodePoolDefaults": {
+        "nodeConfigDefaults": {
+          "loggingConfig": {
+            "variantConfig": {
+              "variant": "DEFAULT"
+            }
+          }
+        }
+      },
+      "nodePools": [
+        {
+          "autoscaling": {},
+          "config": {
+            "diskSizeGb": 100,
+            "diskType": "pd-balanced",
+            "imageType": "COS_CONTAINERD",
+            "machineType": "e2-medium",
+            "metadata": {
+              "disable-legacy-endpoints": "true"
+            },
+            "oauthScopes": [
+              "https://www.googleapis.com/auth/devstorage.read_only",
+              "https://www.googleapis.com/auth/logging.write",
+              "https://www.googleapis.com/auth/monitoring",
+              "https://www.googleapis.com/auth/servicecontrol",
+              "https://www.googleapis.com/auth/service.management.readonly",
+              "https://www.googleapis.com/auth/trace.append"
+            ],
+            "serviceAccount": "default",
+            "shieldedInstanceConfig": {
+              "enableIntegrityMonitoring": true
+            },
+            "windowsNodeConfig": {}
+          },
+          "etag": "eecf33ae-1417-4032-9f42-e756e450361f",
+          "initialNodeCount": 1,
+          "instanceGroupUrls": [
+            "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/instanceGroupManagers/gke-gcp-cluster-default-pool-82e0c046-grp",
+            "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-c/instanceGroupManagers/gke-gcp-cluster-default-pool-a66c21d9-grp",
+            "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-b/instanceGroupManagers/gke-gcp-cluster-default-pool-2b1e5c3e-grp"
+          ],
+          "locations": [
+            "europe-west10-a",
+            "europe-west10-c",
+            "europe-west10-b"
+          ],
+          "management": {
+            "autoRepair": true,
+            "autoUpgrade": true
+          },
+          "maxPodsConstraint": {
+            "maxPodsPerNode": "110"
+          },
+          "name": "default-pool",
+          "networkConfig": {
+            "enablePrivateNodes": false,
+            "podIpv4CidrBlock": "10.100.0.0/14",
+            "podIpv4RangeUtilization": 0.0029,
+            "podRange": "gke-gcp-cluster-pods-714df7d8"
+          },
+          "podIpv4CidrSize": 24,
+          "queuedProvisioning": {},
+          "selfLink": "https://container.googleapis.com/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/locations/europe-west10/clusters/gcp-cluster/nodePools/default-pool",
+          "status": "RUNNING",
+          "upgradeSettings": {
+            "maxSurge": 1,
+            "strategy": "SURGE"
+          },
+          "version": "1.27.8-gke.1067004"
+        }
+      ],
+      "notificationConfig": {
+        "pubsub": {}
+      },
+      "privateClusterConfig": {
+        "privateEndpoint": "10.214.0.8",
+        "publicEndpoint": "34.32.54.186"
+      },
+      "releaseChannel": {
+        "channel": "REGULAR"
+      },
+      "securityPostureConfig": {
+        "mode": "BASIC",
+        "vulnerabilityMode": "VULNERABILITY_DISABLED"
+      },
+      "selfLink": "https://container.googleapis.com/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/locations/europe-west10/clusters/gcp-cluster",
+      "servicesIpv4Cidr": "10.110.80.0/20",
+      "shieldedNodes": {
+        "enabled": true
+      },
+      "status": "RUNNING",
+      "subnetwork": "default",
+      "zone": "europe-west10"
+    }
+  ]
+}
