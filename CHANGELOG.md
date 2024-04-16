@@ -1,3 +1,54 @@
+## 0.71 (2024-4-17)
+
+#### New lint rules
+- datafusion/err\_2024\_001\_delete\_operation\_failing datafusion
+  deletion operation
+- gce/err\_2024\_003\_vm\_secure\_boot\_failures GCE Lint rule for boot
+  failures for Shielded VM
+- gce/bp\_2024\_001\_legacy\_monitoring\_agent GCE Legacy Monitoring Agent
+  is not installed
+- gce/bp\_2024\_002\_legacy\_logging\_agent GCE Legacy Logging Agent is not
+  be installed
+- gce/bp\_ext\_2024\_001\_no\_public\_ip.py GCE SSH in Browser: SSH Button
+  Disabled
+- pubsub/bp\_2024\_001\_ouma\_less\_one\_day Oldest Unacked Message Age
+  Value less than 24 hours
+- bigquery/err\_2024\_001\_query\_too\_complex query is too complex
+- bigquery/warn\_2024\_001\_imports\_or\_query\_appends\_per\_table table
+  exceeds limit for imports or query appends
+
+#### New query
+- osconfig
+
+  "OS management tools that can be used for patch management, patch compliance,
+  and configuration management on VM instances."
+    https://cloud.google.com/compute/docs/osconfig/rest
+
+#### New runbook
+- gce/vm\_termination assist investigating underlying reasons behind
+  termination or reboot
+- gke/cluster\_autoscaler GKE Cluster autoscaler error messages check
+
+#### New features
+- Add cache bypass option for runbook steps
+- Add runbook starter code generator; updates to code generator
+- Add API for runbook command
+
+#### Fixes
+- Add mock data for datafusion API testing
+- Correct runbook documentation generation output
+- Improve runbook operator functions usage
+- Add dataflow and other components to supported runbook component list
+- Remove duplicate vm\_termination.py script
+- Add jinja templates to docker image on cloud shell
+- correct argv passed for parsing in runbook command
+- Adding pipenv and git checks to help beginners get started easily on runbook
+  generator
+- update idna pipenv CVE-2024-3651 Moderate severity
+- SSH runbook enhancements
+- runbook fixes - catch missing template errors, include project id when no
+  parameters
+
 ## 0.70 (2024-3-27)
 
 #### New lint rules
