@@ -149,7 +149,6 @@ def _init_runbook_args_parser():
 
   parser.add_argument(
       'runbook',
-      nargs=1,
       help=
       'Runbook to execute in the format product/runbook-name or product/name')
   parser.add_argument(
@@ -201,14 +200,6 @@ def _init_runbook_args_parser():
                       help='Domain name of APIs')
 
   return parser
-
-
-def _flatten_multi_arg(arg_list):
-  """Flatten a list of comma-separated values, like:
-  ['a', 'b, c'] -> ['a','b','c']
-  """
-  for arg in arg_list:
-    yield from re.split(r'\s*,\s*', arg)
 
 
 def _validate_rule_pattern(runbook_name: str):
@@ -273,7 +264,7 @@ def run_and_get_report(argv=None) -> Tuple[int, dict]:
   context = models.Context(project_id=project.id, parameters=args.parameter)
 
   # Rules name patterns that shall be included or excluded
-  runbook_pattern = _validate_rule_pattern(args.runbook[0])
+  runbook_pattern = _validate_rule_pattern(args.runbook)
 
   # Initialize Repository, and Tests.
   dt_engine = runbook.DiagnosticEngine()

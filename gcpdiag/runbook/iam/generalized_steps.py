@@ -93,7 +93,7 @@ class IamPolicyCheck(runbook.Step):
   """
   template = 'permissions::default'
 
-  principal: str
+  principal: str = ''
   permissions: Optional[Set[str]] = None
   roles: Optional[Set[str]] = None
   require_all: bool = False
@@ -125,16 +125,22 @@ class IamPolicyCheck(runbook.Step):
     if outcome:
       op.add_ok(resource=iam_policy,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   principal=self.principal,
+                                   principal=principal,
                                    permissions_or_roles=permissions_or_roles,
                                    present_permissions_or_roles=', '.join(
-                                       present_permissions_or_roles)))
+                                       sorted(present_permissions_or_roles))))
     else:
-      op.add_failed(resource=iam_policy,
-                    reason=op.prep_msg(
-                        op.FAILURE_REASON,
-                        principal=self.principal,
-                        permissions_or_roles=permissions_or_roles,
-                        missing_permissions_or_roles=', '.join(
-                            missing_permissions_or_roles)),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+          resource=iam_policy,
+          reason=op.prep_msg(op.FAILURE_REASON,
+                             principal=principal,
+                             permissions_or_roles=permissions_or_roles,
+                             missing_permissions_or_roles=', '.join(
+                                 sorted(missing_permissions_or_roles))),
+          remediation=op.prep_msg(op.FAILURE_REMEDIATION,
+                                  principal=principal,
+                                  permissions_or_roles=permissions_or_roles,
+                                  present_permissions_or_roles=', '.join(
+                                      sorted(present_permissions_or_roles)),
+                                  missing_permissions_or_roles=', '.join(
+                                      sorted(missing_permissions_or_roles))))

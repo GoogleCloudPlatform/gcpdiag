@@ -39,45 +39,70 @@ Initiating kernel panic check on the Guest OS.
 {% endblock kernel_panic_step_message %}
 
 {% block kernel_panic_success_reason %}
-Linux OS is not experiencing kernel panic issue, GRUB issues
-or guest kernel dropping into emergency/maintenance mode.
+No signs of Linux OS experiencing kernel panic or GRUB issues.
+Guest kernel has not dropped into emergency/maintenance mode
+in recent logs
+In addition, we see that applications like systemd is running
 {% endblock kernel_panic_success_reason %}
 
 {% block kernel_panic_failure_reason %}
-Detected kernel panic on {instance_name}, which may prevent the VM from starting correctly.
+Detected kernel panic logs in {instance_name} serial logs,
+which is likely preventing the VM from booting up correctly.
 {% endblock kernel_panic_failure_reason %}
 
 {% block kernel_panic_failure_remediation %}
-Address kernel panic by:
-1. Consulting the troubleshooting guide for kernel panic errors.
-2. Examining `/etc/fstab` for file system errors that could halt the boot process.
-3. Utilize the Serial Console for interactive diagnosis if GRUB_TIMEOUT allows.
-4. Optionally, use VM rescue procedures for further analysis.
-- Resolving Kernel Panic:
-https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error
-- Use gce-rescue to recue faulty VMs: https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
+Address underlying issues leading to bootup issues:
+Consult the troubleshooting guide for kernel panic errors [1]
 
-Frequently encountered issues.
-- Troubleshooting `/etc/fstab` Errors: https://cloud.google.com/compute/docs/troubleshooting/fstab-errors
+Common causes of kernel panic within linux guest os
+File system errors
+Examining `/etc/fstab` for file system errors that could halt the boot process. [2]
 
-Using Interactive Serial console
-- Interactive Serial Console: https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+Use gce-rescue available in cloud shell [2] rescue faulty VMs:
+https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
+https://www.youtube.com/watch?v=oD6IFpjEtEw
+
+GCP Support Scope:
+https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
+
+[1] https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error
+[2] https://cloud.google.com/compute/docs/troubleshooting/fstab-errors
+
 {% endblock kernel_panic_failure_remediation %}
 
 {% block kernel_panic_uncertain_reason %}
-Lack of serial log data prevented a thorough assessment of the VM's operational state. Result is
-inconclusive
+The logs retrieved does not contain positive or negative entries which
+would help make conclusive assessment. You will need to double check
+This if it's a likely cause.
 {% endblock kernel_panic_uncertain_reason %}
 
 {% block kernel_panic_uncertain_remediation %}
-Confirm the VM's operational status by reviewing available serial logs.
-Address any detected guest OS issues using the provided documentation,
-keeping in mind certain guest OS faults may be beyond GCP's support scope.
-- Viewing Serial Port Output: https://cloud.google.com/compute/docs/troubleshooting/viewing-serial-port-output
-- Resolving Kernel Panic:
-https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error
-- GCP Support Scope: https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
+Manually view the serial logs [0] to assess if there is kernel Panic
+issues
+
+Address underlying issues leading to bootup issues:
+Consult the troubleshooting guide for kernel panic errors [1]
+
+Common causes of kernel panic within linux guest os
+File system errors
+Examining `/etc/fstab` for file system errors that could halt the boot process. [2]
+
+Use gce-rescue available in cloud shell [2] rescue faulty VMs:
+https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
+https://www.youtube.com/watch?v=oD6IFpjEtEw
+
+GCP Support Scope:
+https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
+
+[0] https://cloud.google.com/compute/docs/troubleshooting/viewing-serial-port-output
+[1] https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error
+[2] https://cloud.google.com/compute/docs/troubleshooting/fstab-errors
 {% endblock kernel_panic_uncertain_remediation %}
+
+{% block kernel_panic_skipped_reason %}
+There are no logs to analyize
+{% endblock kernel_panic_skipped_reason %}
+
 
 {% block sshguard_step_message %}
 Analyzing SSHGuard intrusion detection functionality on the VM (if any)
@@ -97,11 +122,13 @@ For guest OS issues and SSHGuard configurations, refer to:
 {% endblock sshguard_failure_remediation %}
 
 {% block sshguard_success_reason %}
-No IP blockages detected by SSHGuard on the VM (if installed on the VM)
+SSHGuard doesn't appear to be blockaging IPs on the VM (if installed on the VM)
 {% endblock sshguard_success_reason %}
 
 {% block sshguard_uncertain_reason %}
-Unable to confirm SSHGuard activity due to lack of serial log data.
+The logs retrieved does not contain positive or negative entries which
+would help make conclusive assessment. You will need to double check
+This if it's a likely cause.
 {% endblock sshguard_uncertain_reason %}
 
 {% block sshguard_uncertain_remediation %}
@@ -167,7 +194,9 @@ Detected that SSHD is running within the VM
 {% endblock sshd_success_reason %}
 
 {% block sshd_uncertain_reason %}
-No serial logs data to examine.
+The logs retrieved does not contain positive or negative entries which
+would help make a conclusive assessment. You will need to double check
+This if it's a likely cause.
 {% endblock sshd_uncertain_reason %}
 
 {% block sshd_uncertain_remediation %}

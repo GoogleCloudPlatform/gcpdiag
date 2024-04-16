@@ -26,17 +26,12 @@ class Test(unittest.TestCase):
   """Unit tests for command."""
 
   # pylint: disable=protected-access
-  def test_flatten_multi_arg(self):
-    assert not list(command._flatten_multi_arg([]))
-    assert list(command._flatten_multi_arg(['gce/test'])) == ['gce/test']
-
-  # pylint: disable=protected-access
   def test_init_args_parser(self):
     with mock.patch('os.path.exists', return_value=True):
       parser = command._init_runbook_args_parser()
       args = parser.parse_args(['product/runbook', '--project', 'myproject'])
       assert args.project == 'myproject'
-      assert args.runbook == ['product/runbook']
+      assert args.runbook == 'product/runbook'
       assert args.billing_project is None
       assert args.auth_adc is False
       assert args.auth_key is None
