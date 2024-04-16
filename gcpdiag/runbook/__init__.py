@@ -24,6 +24,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Set, final
 
 import googleapiclient.errors
+from jinja2 import TemplateNotFound
 
 from gcpdiag import caching, config, models, utils
 from gcpdiag.runbook import constants, exceptions, flags, op, report, util
@@ -62,6 +63,9 @@ class Step:
   @property
   def run_id(self):
     return '.'.join([self.id, self.name])
+
+  def __str__(self):
+    return self.run_id
 
   @final
   def hook_execute(self, operator: op.Operator):
@@ -148,7 +152,9 @@ class Step:
     else:
       if self.execute.__doc__:
         return self.execute.__doc__.format(attributes)
-      raise ValueError('No Step introductory message defined.')
+      raise exceptions.InvalidStepOperation(
+          '''No Step introductory message. execute method
+                                            should have a string doc.''')
 
   @property
   def long_desc(self):
@@ -524,7 +530,12 @@ class DiagnosticEngine:
     """
     if not self.finalize:
       with op.operator_context(operator):
-        self.run_step(step=step, operator=operator)
+        try:
+          self.run_step(step=step, operator=operator)
+        except TemplateNotFound:
+          logging.error('could not load messages linked to step: %s', step)
+        except exceptions.InvalidStepOperation:
+          logging.error('Invalid step operation: %s', step)
 
       executed_steps.add(step)
       for child in step.steps:  # Iterate over the children of the current step
