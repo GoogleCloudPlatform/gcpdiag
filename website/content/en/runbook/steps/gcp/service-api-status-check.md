@@ -24,7 +24,7 @@ Checks is a Cloud API service is enabled or not. Guides the user to enable
 
 ### Failure Reason
 
-The `{service}` service is not in the exptected state `{expected_state}`
+The `{service_name}` service is not in the exptected state `{expected_state}`
 
 ### Failure Remediation
 
@@ -38,7 +38,7 @@ https://cloud.google.com/service-usage/docs/enable-disable#enabling
 
 ### Success Reason
 
-The `{service}` service is currently in the expected `{expected_state}`.
+The `{service_name}` service is currently in the expected state: `{expected_state}`.
 
 
 

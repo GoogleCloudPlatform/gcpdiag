@@ -23,6 +23,14 @@ UNCERTAIN_REMEDIATION = 'uncertain_remediation'
 SKIPPED_REASON = 'skipped_reason'
 STEP_MESSAGE = 'step_message'
 
+FAILURE_REASON_ALT1 = f'{FAILURE_REASON}_a1'
+FAILURE_REMEDIATION_ALT1 = f'{FAILURE_REMEDIATION}_a1'
+SUCCESS_REASON_ALT1 = f'{SUCCESS_REASON}_a1'
+UNCERTAIN_REASON_ALT1 = f'{UNCERTAIN_REASON}_a1'
+UNCERTAIN_REMEDIATION_ALT1 = f'{UNCERTAIN_REMEDIATION}_a1'
+SKIPPED_REASON_ALT1 = f'{SKIPPED_REASON}_a1'
+STEP_MESSAGE_ALT1 = f'{STEP_MESSAGE}_a1'
+
 FAILURE_REASON_ALT2 = f'{FAILURE_REASON}_a2'
 FAILURE_REMEDIATION_ALT2 = f'{FAILURE_REMEDIATION}_a2'
 SUCCESS_REASON_ALT2 = f'{SUCCESS_REASON}_a2'
@@ -66,6 +74,18 @@ StepConstants = {
         'How to address uncertainty in the outcome.',
     SKIPPED_REASON:
         'The reason why this step was skipped.',
+    FAILURE_REASON_ALT1:
+        'The failure reason for Scenario 1 step.',
+    FAILURE_REMEDIATION_ALT1:
+        'How to solve the main failure scenario in Scenario 1.',
+    SUCCESS_REASON_ALT1:
+        'The reason why Scenario 1 is considered a success.',
+    UNCERTAIN_REASON_ALT1:
+        'The reason for uncertainty in the Scenario 1 outcome.',
+    UNCERTAIN_REMEDIATION_ALT1:
+        'How to address uncertainty in the Scenario 1 outcome.',
+    SKIPPED_REASON_ALT1:
+        'The reason why Scenario 1 was skipped.',
     FAILURE_REASON_ALT2:
         'The failure reason for Scenario 2 step.',
     FAILURE_REMEDIATION_ALT2:

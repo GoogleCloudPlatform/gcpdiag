@@ -14,6 +14,9 @@
 """Common constants available at gcp platform level"""
 from enum import Enum
 
+# pylint:disable=wildcard-import,unused-wildcard-import
+from gcpdiag.runbook.constants import *
+
 
 class APIState(Enum):
   """Enum for representing the state of a service API.

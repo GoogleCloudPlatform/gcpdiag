@@ -126,9 +126,9 @@ class HighVmDiskUtilization(runbook.Step):
     if op.get(flags.OPS_AGENT_EXPORTING_METRICS):
       disk_usage_metrics = monitoring.query(
           op.get(flags.PROJECT_ID), """
-        fetch gce_instance
+          fetch gce_instance
             | metric 'agent.googleapis.com/disk/percent_used'
-            | filter (resource.instance_id == '{}')
+            | filter (resource.instance_id == '{}' && metric.device !~ '/dev/loop.*' && metric.state == 'used')
             | group_by [resource.instance_id], 3m, [percent_used: mean(value.percent_used)]
             | filter (cast_units(percent_used,"")/100) >= {}
             | {}
@@ -145,12 +145,12 @@ class HighVmDiskUtilization(runbook.Step):
         disk_usage_metrics = util.search_pattern_in_serial_logs(
             self.disk_exhaustion_error_pattern, instance_serial_log.contents)
 
-      if disk_usage_metrics:
-        op.add_failed(vm,
-                      reason=op.prep_msg(op.FAILURE_REASON),
-                      remediation=op.prep_msg(op.FAILURE_REMEDIATION))
-      else:
-        op.add_ok(vm, reason=op.prep_msg(op.SUCCESS_REASON))
+    if disk_usage_metrics:
+      op.add_failed(vm,
+                    reason=op.prep_msg(op.FAILURE_REASON),
+                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+    else:
+      op.add_ok(vm, reason=op.prep_msg(op.SUCCESS_REASON))
 
 
 class HighVmCpuUtilization(runbook.Step):
@@ -244,9 +244,9 @@ class VmSerialLogsCheck(runbook.Step):
   template = 'vm_serial_log::default'
 
   # Typical logs of a fully booted windows VM
-  positive_pattern: List = []
+  positive_pattern: List
   positive_pattern_operator = 'OR'
-  negative_pattern: List = []
+  negative_pattern: List
   negative_pattern_operator = 'OR'
 
   def execute(self):
@@ -264,18 +264,18 @@ class VmSerialLogsCheck(runbook.Step):
         instance_name=op.get(flags.NAME))
 
     if instance_serial_log:
-      if self.positive_pattern:
+      if hasattr(self, 'positive_pattern'):
         good_pattern_detected = util.search_pattern_in_serial_logs(
-            self.positive_pattern,
-            instance_serial_log.contents,
+            patterns=self.positive_pattern,
+            contents=instance_serial_log.contents,
             operator=self.positive_pattern_operator)
         if good_pattern_detected:
           op.add_ok(vm, reason=op.prep_msg(op.SUCCESS_REASON))
-      elif self.negative_pattern:
+      if hasattr(self, 'negative_pattern'):
         # Check for bad patterns
         bad_pattern_detected = util.search_pattern_in_serial_logs(
-            self.negative_pattern,
-            instance_serial_log.contents,
+            patterns=self.negative_pattern,
+            contents=instance_serial_log.contents,
             operator=self.negative_pattern_operator)
         if bad_pattern_detected:
           op.add_failed(vm,
