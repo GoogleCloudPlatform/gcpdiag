@@ -1,0 +1,271 @@
+{
+  "kind": "compute#diskList",
+  "id": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/disks",
+  "items": [
+    {
+      "kind": "compute#disk",
+      "id": "7236257982545695066",
+      "creationTimestamp": "2024-04-09T05:08:22.957-07:00",
+      "name": "gke-gcp-cluster-default-pool-82e0c046-8m8b",
+      "sizeGb": "100",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/disks/gke-gcp-cluster-default-pool-82e0c046-8m8b",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/images/gke-1278-gke1067004-cos-105-17412-226-62-c-pre",
+      "sourceImageId": "8380329917531566231",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/diskTypes/pd-balanced",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos-pcid",
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos",
+        "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/licenses/gke-node",
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud-shielded/global/licenses/shielded-cos"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "SEV_SNP_CAPABLE"
+        },
+        {
+          "type": "SEV_LIVE_MIGRATABLE_V2"
+        },
+        {
+          "type": "SECURE_BOOT"
+        },
+        {
+          "type": "SEV_CAPABLE"
+        },
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "SEV_LIVE_MIGRATABLE"
+        },
+        {
+          "type": "GVNIC"
+        }
+      ],
+      "lastAttachTimestamp": "2024-04-09T05:08:22.958-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/instances/gke-gcp-cluster-default-pool-82e0c046-8m8b"
+      ],
+      "labels": {
+        "goog-gke-node": "",
+        "goog-gke-volume": "",
+        "goog-k8s-cluster-location": "europe-west10",
+        "goog-k8s-cluster-name": "gcp-cluster",
+        "goog-k8s-node-pool-name": "default-pool"
+      },
+      "labelFingerprint": "F5KkOPA8K4w=",
+      "licenseCodes": [
+        "6880041984096540132",
+        "1001010",
+        "1001003",
+        "166739712233658766"
+      ],
+      "physicalBlockSizeBytes": "4096",
+      "satisfiesPzi": true,
+      "architecture": "X86_64"
+    },
+    {
+      "kind": "compute#disk",
+      "id": "1694979954220712298",
+      "creationTimestamp": "2024-04-10T05:01:10.021-07:00",
+      "name": "gke-gcp-cluster-default-pool-c7891c09-b4qc",
+      "sizeGb": "100",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/disks/gke-gcp-cluster-default-pool-c7891c09-b4qc",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/images/gke-1278-gke1067004-cos-105-17412-226-62-c-pre",
+      "sourceImageId": "8380329917531566231",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/diskTypes/pd-balanced",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos-pcid",
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos",
+        "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/licenses/gke-node",
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud-shielded/global/licenses/shielded-cos"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "SEV_SNP_CAPABLE"
+        },
+        {
+          "type": "SEV_LIVE_MIGRATABLE_V2"
+        },
+        {
+          "type": "SECURE_BOOT"
+        },
+        {
+          "type": "SEV_CAPABLE"
+        },
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "SEV_LIVE_MIGRATABLE"
+        },
+        {
+          "type": "GVNIC"
+        }
+      ],
+      "lastAttachTimestamp": "2024-04-10T05:01:10.021-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/instances/gke-gcp-cluster-default-pool-c7891c09-b4qc"
+      ],
+      "labels": {
+        "goog-gke-node": "",
+        "goog-gke-volume": "",
+        "goog-k8s-cluster-location": "europe-west10-a",
+        "goog-k8s-cluster-name": "gcp-cluster",
+        "goog-k8s-node-pool-name": "default-pool"
+      },
+      "labelFingerprint": "SThA_aBnyNs=",
+      "licenseCodes": [
+        "6880041984096540132",
+        "1001010",
+        "1001003",
+        "166739712233658766"
+      ],
+      "physicalBlockSizeBytes": "4096",
+      "satisfiesPzi": true,
+      "architecture": "X86_64"
+    },
+    {
+      "kind": "compute#disk",
+      "id": "8808034279930501129",
+      "creationTimestamp": "2024-04-09T04:30:46.825-07:00",
+      "name": "gke-gcp-cluster-default-pool-c7891c09-ck7c",
+      "sizeGb": "100",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/disks/gke-gcp-cluster-default-pool-c7891c09-ck7c",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/images/gke-1278-gke1067004-cos-105-17412-226-62-c-pre",
+      "sourceImageId": "8380329917531566231",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/diskTypes/pd-balanced",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos-pcid",
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos",
+        "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/licenses/gke-node",
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud-shielded/global/licenses/shielded-cos"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "SEV_SNP_CAPABLE"
+        },
+        {
+          "type": "SEV_LIVE_MIGRATABLE_V2"
+        },
+        {
+          "type": "SECURE_BOOT"
+        },
+        {
+          "type": "SEV_CAPABLE"
+        },
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "SEV_LIVE_MIGRATABLE"
+        },
+        {
+          "type": "GVNIC"
+        }
+      ],
+      "lastAttachTimestamp": "2024-04-09T04:30:46.825-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/instances/gke-gcp-cluster-default-pool-c7891c09-ck7c"
+      ],
+      "labels": {
+        "goog-gke-node": "",
+        "goog-gke-volume": "",
+        "goog-k8s-cluster-location": "europe-west10-a",
+        "goog-k8s-cluster-name": "gcp-cluster",
+        "goog-k8s-node-pool-name": "default-pool"
+      },
+      "labelFingerprint": "SThA_aBnyNs=",
+      "licenseCodes": [
+        "6880041984096540132",
+        "1001010",
+        "1001003",
+        "166739712233658766"
+      ],
+      "physicalBlockSizeBytes": "4096",
+      "satisfiesPzi": true,
+      "architecture": "X86_64"
+    },
+    {
+      "kind": "compute#disk",
+      "id": "3727191795301916253",
+      "creationTimestamp": "2024-04-09T04:04:20.364-07:00",
+      "name": "gke-gcp-cluster-default-pool-c7891c09-z2wh",
+      "sizeGb": "100",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/disks/gke-gcp-cluster-default-pool-c7891c09-z2wh",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/images/gke-1278-gke1067004-cos-105-17412-226-62-c-pre",
+      "sourceImageId": "8380329917531566231",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/diskTypes/pd-balanced",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos-pcid",
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos",
+        "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/licenses/gke-node",
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud-shielded/global/licenses/shielded-cos"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "SEV_SNP_CAPABLE"
+        },
+        {
+          "type": "SEV_LIVE_MIGRATABLE_V2"
+        },
+        {
+          "type": "SECURE_BOOT"
+        },
+        {
+          "type": "SEV_CAPABLE"
+        },
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "SEV_LIVE_MIGRATABLE"
+        },
+        {
+          "type": "GVNIC"
+        }
+      ],
+      "lastAttachTimestamp": "2024-04-09T04:04:20.364-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/instances/gke-gcp-cluster-default-pool-c7891c09-z2wh"
+      ],
+      "labels": {
+        "goog-gke-node": "",
+        "goog-gke-volume": "",
+        "goog-k8s-cluster-location": "europe-west10-a",
+        "goog-k8s-cluster-name": "gcp-cluster",
+        "goog-k8s-node-pool-name": "default-pool"
+      },
+      "labelFingerprint": "SThA_aBnyNs=",
+      "licenseCodes": [
+        "6880041984096540132",
+        "1001010",
+        "1001003",
+        "166739712233658766"
+      ],
+      "physicalBlockSizeBytes": "4096",
+      "satisfiesPzi": true,
+      "architecture": "X86_64"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/disks"
+}

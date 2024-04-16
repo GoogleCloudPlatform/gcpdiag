@@ -1,0 +1,102 @@
+{% block out_of_resources_failure_reason %}
+The scaleUp event failed because some of the MIGs could not be increased due to lack of resources.
+Example log entry that would help identify involved objects:
+{LOG_ENTRY}
+{% endblock out_of_resources_failure_reason %}
+
+{% block out_of_resources_failure_remediation %}
+Follow the documentation:
+https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-vm-creation#resource_availability
+{% endblock out_of_resources_failure_remediation %}
+
+{% block out_of_resources_success_reason %}
+No "scale.up.error.out.of.resources" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+{% endblock out_of_resources_success_reason %}
+
+{% block quota_exceeded_failure_reason %}
+The scaleUp event failed because some of the MIGs could not be increased, due to exceeded Compute Engine quota.
+Example log entry that would help identify involved objects:
+{LOG_ENTRY}
+{% endblock quota_exceeded_failure_reason %}
+
+{% block quota_exceeded_failure_remediation %}
+Check the Errors tab of the MIG in Google Cloud console to see what quota is being exceeded. Follow the instructions to request a quota increase:
+https://cloud.google.com/compute/quotas#requesting_additional_quota
+{% endblock quota_exceeded_failure_remediation %}
+
+{% block quota_exceeded_success_reason %}
+No "scale.up.error.quota.exceeded errors" found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+{% endblock quota_exceeded_success_reason %}
+
+{% block instance_timeout_failure_reason %}
+The scaleUp event failed because instances in some of the MIGs failed to appear in time.
+Example log entry that would help identify involved objects:
+{LOG_ENTRY}
+{% endblock instance_timeout_failure_reason %}
+
+{% block instance_timeout_failure_remediation %}
+This message is transient. If it persists, engage Google Cloud Support for further investigation.
+{% endblock instance_timeout_failure_remediation %}
+
+{% block instance_timeout_success_reason %}
+No "scale.up.error.waiting.for.instances.timeout" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+{% endblock instance_timeout_success_reason %}
+
+{% block ip_space_exhausted_failure_reason %}
+The scaleUp event failed because the cluster doesn't have enough unallocated IP address space to use to add new nodes or Pods.
+Example log entry that would help identify involved objects:
+{LOG_ENTRY}
+{% endblock ip_space_exhausted_failure_reason %}
+
+{% block ip_space_exhausted_failure_remediation %}
+Refer to the troubleshooting steps to address the lack of IP address space for the nodes or pods.
+https://cloud.google.com/kubernetes-engine/docs/how-to/alias-ips#not_enough_space
+{% endblock ip_space_exhausted_failure_remediation %}
+
+{% block ip_space_exhausted_success_reason %}
+No "scale.up.error.ip.space.exhausted" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+{% endblock ip_space_exhausted_success_reason %}
+
+{% block service_account_deleted_failure_reason %}
+The scaleUp event failed because a service account used by Cluster Autoscaler has been deleted.
+Example log entry that would help identify involved objects:
+{LOG_ENTRY}
+{% endblock service_account_deleted_failure_reason %}
+
+{% block service_account_deleted_failure_remediation %}
+Engage Google Cloud Support for further investigation.
+{% endblock service_account_deleted_failure_remediation %}
+
+{% block service_account_deleted_success_reason %}
+No "scale.up.error.service.account.deleted" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+{% endblock service_account_deleted_success_reason %}
+
+{% block min_size_reached_failure_reason %}
+Node cannot be removed because its node group is already at its minimum size.
+Example log entry that would help identify involved objects:
+{LOG_ENTRY}
+{% endblock min_size_reached_failure_reason %}
+
+{% block min_size_reached_failure_remediation %}
+Review and adjust the minimum value set for node pool autoscaling.
+https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-autoscaler#resizing_a_node_pool
+{% endblock min_size_reached_failure_remediation %}
+
+{% block min_size_reached_success_reason %}
+No "no.scale.down.node.node.group.min.size.reached" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+{% endblock min_size_reached_success_reason %}
+
+{% block failed_evict_pods_failure_reason %}
+The scaleDown event failed because some of the Pods could not be evicted from a node.
+Example log entry that would help identify involved objects:
+{LOG_ENTRY}
+{% endblock failed_evict_pods_failure_reason %}
+
+{% block failed_evict_pods_failure_remediation %}
+Review best practices for Pod Disruption Budgets to ensure that the rules allow for eviction of application replicas when acceptable.
+https://cloud.google.com/architecture/best-practices-for-running-cost-effective-kubernetes-applications-on-gke#add-pod_disruption_budget-to-your-application
+{% endblock failed_evict_pods_failure_remediation %}
+
+{% block failed_evict_pods_success_reason %}
+No "scale.down.error.failed.to.evict.pods" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+{% endblock failed_evict_pods_success_reason %}

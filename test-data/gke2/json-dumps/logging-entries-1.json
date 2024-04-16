@@ -1,0 +1,1008 @@
+{
+  "entries": [
+    {
+      "insertId": "cc5cb99e-cace-43b4-8174-cf7b51dddef7@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713254064"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "cluster_name": "gcp-cluster",
+          "location": "europe-west10"
+        }
+      },
+      "timestamp": "2024-04-16T07:54:24.474532887Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:54:24.839523570Z"
+    },
+    {
+      "insertId": "2cb3b514-7b3e-4fa1-9dbc-b6de209655a5@a1",
+      "jsonPayload": {
+        "status": {
+          "autoscaledNodesCount": 3,
+          "measureTime": "1713253987",
+          "autoscaledNodesTarget": 3
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "cluster_name": "gcp-cluster",
+          "location": "europe-west10-a"
+        }
+      },
+      "timestamp": "2024-04-16T07:53:08.027461145Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:53:08.199038369Z"
+    },
+    {
+      "insertId": "0ef96ed7-3974-4736-b5a5-c3b4ef0653b2@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713253884"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "location": "europe-west10",
+          "cluster_name": "gcp-cluster"
+        }
+      },
+      "timestamp": "2024-04-16T07:51:24.069275390Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:51:24.447813749Z"
+    },
+    {
+      "insertId": "f74b0bd0-6ca6-4b5a-b921-2b1e1db39377@a1",
+      "jsonPayload": {
+        "status": {
+          "autoscaledNodesTarget": 3,
+          "autoscaledNodesCount": 3,
+          "measureTime": "1713253805"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "location": "europe-west10-a",
+          "cluster_name": "gcp-cluster",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr"
+        }
+      },
+      "timestamp": "2024-04-16T07:50:05.808946813Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:50:06.090576895Z"
+    },
+    {
+      "insertId": "088a12cf-2718-4db7-bf7d-9f187b17a025@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713253703"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "location": "europe-west10",
+          "cluster_name": "gcp-cluster",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr"
+        }
+      },
+      "timestamp": "2024-04-16T07:48:23.580469122Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:48:23.884426860Z"
+    },
+    {
+      "insertId": "542b53d0-5295-4999-b562-66a5805db58e@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713253623",
+          "autoscaledNodesTarget": 3,
+          "autoscaledNodesCount": 3
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "cluster_name": "gcp-cluster",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "location": "europe-west10-a"
+        }
+      },
+      "timestamp": "2024-04-16T07:47:03.360777736Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:47:04.511188266Z"
+    },
+    {
+      "insertId": "8ab8a088-7d19-4ac5-90c4-b95998618c01@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713253523"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "cluster_name": "gcp-cluster",
+          "location": "europe-west10",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr"
+        }
+      },
+      "timestamp": "2024-04-16T07:45:23.157167995Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:45:23.302369850Z"
+    },
+    {
+      "insertId": "8de1960f-100a-4f52-b8d7-3188b4a7607d@a1",
+      "jsonPayload": {
+        "status": {
+          "autoscaledNodesCount": 3,
+          "autoscaledNodesTarget": 3,
+          "measureTime": "1713253441"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "location": "europe-west10-a",
+          "cluster_name": "gcp-cluster",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr"
+        }
+      },
+      "timestamp": "2024-04-16T07:44:01.424098796Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:44:01.659770667Z"
+    },
+    {
+      "insertId": "19ba2baf-30cd-4dcd-b34a-ebca098689c1@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713253342"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "cluster_name": "gcp-cluster",
+          "location": "europe-west10"
+        }
+      },
+      "timestamp": "2024-04-16T07:42:22.741799603Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:42:23.083076869Z"
+    },
+    {
+      "insertId": "e5030ae3-622f-4b0e-b75c-e4e065286ea8@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713253259",
+          "autoscaledNodesTarget": 3,
+          "autoscaledNodesCount": 3
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "location": "europe-west10-a",
+          "cluster_name": "gcp-cluster",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr"
+        }
+      },
+      "timestamp": "2024-04-16T07:40:59.252525620Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:41:00.228174873Z"
+    },
+    {
+      "insertId": "1a746a32-be85-407f-b4b1-fd175c81ff25@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713253162"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "cluster_name": "gcp-cluster",
+          "location": "europe-west10",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr"
+        }
+      },
+      "timestamp": "2024-04-16T07:39:22.347720468Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:39:22.492013808Z"
+    },
+    {
+      "insertId": "bf54ad5d-5199-4a9e-b87c-1502d3a434f5@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713253076",
+          "autoscaledNodesTarget": 3,
+          "autoscaledNodesCount": 3
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "location": "europe-west10-a",
+          "cluster_name": "gcp-cluster",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr"
+        }
+      },
+      "timestamp": "2024-04-16T07:37:57.080981086Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:37:57.377132245Z"
+    },
+    {
+      "insertId": "81b9f4e5-b36e-451b-a679-9392f5264b95@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713252981"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "cluster_name": "gcp-cluster",
+          "location": "europe-west10",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr"
+        }
+      },
+      "timestamp": "2024-04-16T07:36:21.959120683Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:36:22.256575324Z"
+    },
+    {
+      "insertId": "3174c974-da20-43b0-bca1-cd715f282749@a1",
+      "jsonPayload": {
+        "status": {
+          "autoscaledNodesTarget": 3,
+          "measureTime": "1713252894",
+          "autoscaledNodesCount": 3
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "cluster_name": "gcp-cluster",
+          "location": "europe-west10-a"
+        }
+      },
+      "timestamp": "2024-04-16T07:34:55.040217795Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:34:55.402988864Z"
+    },
+    {
+      "insertId": "946d8e36-dc2f-4647-88c7-747b8a8f6d6f@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713252801"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "cluster_name": "gcp-cluster",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "location": "europe-west10"
+        }
+      },
+      "timestamp": "2024-04-16T07:33:21.434319267Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:33:21.649895269Z"
+    },
+    {
+      "insertId": "60923e06-5a95-40ae-a812-71a66f9256b3@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713252712",
+          "autoscaledNodesTarget": 3,
+          "autoscaledNodesCount": 3
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "location": "europe-west10-a",
+          "cluster_name": "gcp-cluster",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr"
+        }
+      },
+      "timestamp": "2024-04-16T07:31:52.970655113Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:31:53.455066914Z"
+    },
+    {
+      "insertId": "f9166a86-b30f-467b-ad3f-114dd017019c@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713252620"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "location": "europe-west10",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "cluster_name": "gcp-cluster"
+        }
+      },
+      "timestamp": "2024-04-16T07:30:20.777644523Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:30:20.875245183Z"
+    },
+    {
+      "insertId": "656a0f38-ed7d-4ba5-9ca0-11006b964f7f@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713252530",
+          "autoscaledNodesCount": 3,
+          "autoscaledNodesTarget": 3
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "cluster_name": "gcp-cluster",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "location": "europe-west10-a"
+        }
+      },
+      "timestamp": "2024-04-16T07:28:51.057124219Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:28:51.122226697Z"
+    },
+    {
+      "insertId": "58d3dfd0-8c93-4083-8330-79f87b2957d8@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713252440"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "cluster_name": "gcp-cluster",
+          "location": "europe-west10"
+        }
+      },
+      "timestamp": "2024-04-16T07:27:20.332499155Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:27:20.970366850Z"
+    },
+    {
+      "insertId": "3a41f2e0-d97b-4bb0-9256-d4e17fd2ee1c@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713252348",
+          "autoscaledNodesTarget": 3,
+          "autoscaledNodesCount": 3
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "cluster_name": "gcp-cluster",
+          "location": "europe-west10-a",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr"
+        }
+      },
+      "timestamp": "2024-04-16T07:25:48.935544011Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:25:49.302553027Z"
+    },
+    {
+      "insertId": "cbf19ed9-b9ec-4db6-b98d-e66f9abe6e34@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713252259"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "location": "europe-west10",
+          "cluster_name": "gcp-cluster"
+        }
+      },
+      "timestamp": "2024-04-16T07:24:19.934675611Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:24:20.149532201Z"
+    },
+    {
+      "insertId": "9bf42455-3633-4806-a100-503c41184bb4@a1",
+      "jsonPayload": {
+        "status": {
+          "autoscaledNodesTarget": 3,
+          "measureTime": "1713252166",
+          "autoscaledNodesCount": 3
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "location": "europe-west10-a",
+          "cluster_name": "gcp-cluster",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr"
+        }
+      },
+      "timestamp": "2024-04-16T07:22:46.900388496Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:22:47.222181762Z"
+    },
+    {
+      "insertId": "a856bd7a-01d1-4ffe-ac1d-4407d2cf2c8d@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713252079"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "cluster_name": "gcp-cluster",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "location": "europe-west10"
+        }
+      },
+      "timestamp": "2024-04-16T07:21:19.519661139Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:21:19.994594643Z"
+    },
+    {
+      "insertId": "d0ef9780-0218-419f-9e7b-d7c5af909536@a1",
+      "jsonPayload": {
+        "status": {
+          "autoscaledNodesTarget": 3,
+          "autoscaledNodesCount": 3,
+          "measureTime": "1713251984"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "location": "europe-west10-a",
+          "cluster_name": "gcp-cluster"
+        }
+      },
+      "timestamp": "2024-04-16T07:19:44.489915919Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:19:45.185445052Z"
+    },
+    {
+      "insertId": "2250166b-d616-41cf-83e1-8e18c9215f2d@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713251899"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "location": "europe-west10",
+          "cluster_name": "gcp-cluster",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr"
+        }
+      },
+      "timestamp": "2024-04-16T07:18:19.102664062Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:18:19.414431070Z"
+    },
+    {
+      "insertId": "a79ed887-5c41-490e-97fb-a5a6af4362f9@a1",
+      "jsonPayload": {
+        "status": {
+          "autoscaledNodesTarget": 3,
+          "measureTime": "1713251802",
+          "autoscaledNodesCount": 3
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "location": "europe-west10-a",
+          "cluster_name": "gcp-cluster"
+        }
+      },
+      "timestamp": "2024-04-16T07:16:42.512084341Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:16:42.683140937Z"
+    },
+    {
+      "insertId": "12d67070-6c7c-4e54-9203-5082fcccce76@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713251718"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "cluster_name": "gcp-cluster",
+          "location": "europe-west10"
+        }
+      },
+      "timestamp": "2024-04-16T07:15:18.648274383Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:15:18.698568270Z"
+    },
+    {
+      "insertId": "1f0ea7d0-5593-49e5-a236-c99737072214@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713251620",
+          "autoscaledNodesCount": 3,
+          "autoscaledNodesTarget": 3
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "location": "europe-west10-a",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "cluster_name": "gcp-cluster"
+        }
+      },
+      "timestamp": "2024-04-16T07:13:40.500110234Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:13:41.384244009Z"
+    },
+    {
+      "insertId": "68a401cc-2af8-4c2d-8917-8dfdca0e76d2@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713251538"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "cluster_name": "gcp-cluster",
+          "location": "europe-west10",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr"
+        }
+      },
+      "timestamp": "2024-04-16T07:12:18.210105366Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:12:18.619530209Z"
+    },
+    {
+      "insertId": "52898a6b-ebbf-4137-aa8d-7d8a96e5d2f5@a1",
+      "jsonPayload": {
+        "status": {
+          "autoscaledNodesCount": 3,
+          "measureTime": "1713251438",
+          "autoscaledNodesTarget": 3
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "cluster_name": "gcp-cluster",
+          "location": "europe-west10-a",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr"
+        }
+      },
+      "timestamp": "2024-04-16T07:10:38.509499679Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:10:38.630317048Z"
+    },
+    {
+      "insertId": "d2b1ca88-f15a-46f8-9996-916712c5e1d6@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713251357"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "location": "europe-west10",
+          "cluster_name": "gcp-cluster"
+        }
+      },
+      "timestamp": "2024-04-16T07:09:17.794298213Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:09:18.113432653Z"
+    },
+    {
+      "insertId": "71455d6a-d380-48aa-a066-d29b3d1558fd@a1",
+      "jsonPayload": {
+        "status": {
+          "autoscaledNodesTarget": 3,
+          "measureTime": "1713251256",
+          "autoscaledNodesCount": 3
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "location": "europe-west10-a",
+          "cluster_name": "gcp-cluster"
+        }
+      },
+      "timestamp": "2024-04-16T07:07:36.604154605Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:07:36.678409201Z"
+    },
+    {
+      "insertId": "34e9f0a5-0d47-4a48-a002-84a5a70bb65d@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713251177"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "location": "europe-west10",
+          "cluster_name": "gcp-cluster"
+        }
+      },
+      "timestamp": "2024-04-16T07:06:17.327961544Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:06:17.800825364Z"
+    },
+    {
+      "insertId": "351cb7e2-605c-4664-916f-d3b2061f9381@a1",
+      "jsonPayload": {
+        "status": {
+          "autoscaledNodesTarget": 3,
+          "measureTime": "1713251074",
+          "autoscaledNodesCount": 3
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "cluster_name": "gcp-cluster",
+          "location": "europe-west10-a"
+        }
+      },
+      "timestamp": "2024-04-16T07:04:34.385943210Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:04:34.664509066Z"
+    },
+    {
+      "insertId": "77cc1436-9dd4-43a2-ae7d-e361b4eb64d5@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713250996"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "cluster_name": "gcp-cluster",
+          "location": "europe-west10",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr"
+        }
+      },
+      "timestamp": "2024-04-16T07:03:16.930947986Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:03:17.039725159Z"
+    },
+    {
+      "insertId": "a9607742-1030-4cde-b94c-8af61ca7b021@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713250892",
+          "autoscaledNodesTarget": 3,
+          "autoscaledNodesCount": 3
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "cluster_name": "gcp-cluster",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "location": "europe-west10-a"
+        }
+      },
+      "timestamp": "2024-04-16T07:01:32.417080320Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:01:32.721522079Z"
+    },
+    {
+      "insertId": "090e9ca1-3572-419a-a0fe-1c5f4c1857d4@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713250816"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "location": "europe-west10",
+          "cluster_name": "gcp-cluster"
+        }
+      },
+      "timestamp": "2024-04-16T07:00:16.511737538Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T07:00:16.719125828Z"
+    },
+    {
+      "insertId": "375392bd-b998-46c3-87ab-df6ecf135a93@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713250710",
+          "autoscaledNodesTarget": 3,
+          "autoscaledNodesCount": 3
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "location": "europe-west10-a",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "cluster_name": "gcp-cluster"
+        }
+      },
+      "timestamp": "2024-04-16T06:58:30.270887027Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T06:58:31.028895724Z"
+    },
+    {
+      "insertId": "77cfb94b-99e9-4ecb-b5a7-09727bde1708@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713250635"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "location": "europe-west10",
+          "cluster_name": "gcp-cluster"
+        }
+      },
+      "timestamp": "2024-04-16T06:57:15.874233410Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T06:57:15.983440671Z"
+    },
+    {
+      "insertId": "ab4e3d99-f07e-45d2-b452-7154eeb6803d@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713250528",
+          "autoscaledNodesCount": 3,
+          "autoscaledNodesTarget": 3
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "location": "europe-west10-a",
+          "cluster_name": "gcp-cluster"
+        }
+      },
+      "timestamp": "2024-04-16T06:55:28.384588011Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T06:55:28.929701542Z"
+    },
+    {
+      "insertId": "602b44ea-e958-4d0f-b16c-135ffe02b57c@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713250455"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "cluster_name": "gcp-cluster",
+          "location": "europe-west10"
+        }
+      },
+      "timestamp": "2024-04-16T06:54:15.467610500Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T06:54:15.831441628Z"
+    },
+    {
+      "insertId": "756736c3-3d24-4597-a96e-d21886db343c@a1",
+      "jsonPayload": {
+        "status": {
+          "autoscaledNodesTarget": 3,
+          "measureTime": "1713250346",
+          "autoscaledNodesCount": 3
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "cluster_name": "gcp-cluster",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "location": "europe-west10-a"
+        }
+      },
+      "timestamp": "2024-04-16T06:52:26.475702416Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T06:52:27.272387992Z"
+    },
+    {
+      "insertId": "3905e0ca-68f0-4023-a66a-9c826392cc82@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713250274"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "cluster_name": "gcp-cluster",
+          "location": "europe-west10",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr"
+        }
+      },
+      "timestamp": "2024-04-16T06:51:15.018023431Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T06:51:15.307529929Z"
+    },
+    {
+      "insertId": "ef84e2bf-77d0-409e-a752-0f3c6c2e1838@a1",
+      "jsonPayload": {
+        "status": {
+          "autoscaledNodesTarget": 3,
+          "autoscaledNodesCount": 3,
+          "measureTime": "1713250164"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "location": "europe-west10-a",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "cluster_name": "gcp-cluster"
+        }
+      },
+      "timestamp": "2024-04-16T06:49:24.229209223Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T06:49:24.846523357Z"
+    },
+    {
+      "insertId": "46989f57-e0eb-47c9-a96d-246206167c56@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713250094"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "cluster_name": "gcp-cluster",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "location": "europe-west10"
+        }
+      },
+      "timestamp": "2024-04-16T06:48:14.511878815Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T06:48:14.648925791Z"
+    },
+    {
+      "insertId": "e9c91939-7c1d-4432-bf64-52c1bdb43a56@a1",
+      "jsonPayload": {
+        "status": {
+          "autoscaledNodesTarget": 3,
+          "measureTime": "1713249982",
+          "autoscaledNodesCount": 3
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "location": "europe-west10-a",
+          "cluster_name": "gcp-cluster",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr"
+        }
+      },
+      "timestamp": "2024-04-16T06:46:22.224974370Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T06:46:23.016182375Z"
+    },
+    {
+      "insertId": "b63a387a-128a-44b2-a93c-402c1ab0c7fb@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713249914"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "cluster_name": "gcp-cluster",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "location": "europe-west10"
+        }
+      },
+      "timestamp": "2024-04-16T06:45:14.138355792Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T06:45:14.412439155Z"
+    },
+    {
+      "insertId": "9f63928e-8429-46fc-aa18-3793dec41dd5@a1",
+      "jsonPayload": {
+        "resultInfo": {
+          "measureTime": "1713249799",
+          "results": [
+            {
+              "eventId": "bd49a9b9-cb93-4a63-9e01-c7dad8388e46"
+            }
+          ]
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "cluster_name": "gcp-cluster",
+          "location": "europe-west10-a",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr"
+        }
+      },
+      "timestamp": "2024-04-16T06:43:20.087589358Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T06:43:20.945243741Z"
+    },
+    {
+      "insertId": "b3ca168f-2c96-4cbb-9ec6-940e7675e406@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713249799",
+          "autoscaledNodesCount": 3,
+          "autoscaledNodesTarget": 3
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr",
+          "cluster_name": "gcp-cluster",
+          "location": "europe-west10-a"
+        }
+      },
+      "timestamp": "2024-04-16T06:43:20.058407752Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T06:43:20.841392577Z"
+    },
+    {
+      "insertId": "723c3b02-33b8-4c98-845c-96a1db67a232@a1",
+      "jsonPayload": {
+        "status": {
+          "measureTime": "1713249733"
+        }
+      },
+      "resource": {
+        "type": "k8s_cluster",
+        "labels": {
+          "location": "europe-west10",
+          "cluster_name": "gcp-cluster",
+          "project_id": "gcpdiag-gke-cluster-autoscaler-rrrr"
+        }
+      },
+      "timestamp": "2024-04-16T06:42:13.681003867Z",
+      "logName": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/logs/container.googleapis.com%2Fcluster-autoscaler-visibility",
+      "receiveTimestamp": "2024-04-16T06:42:14.064936857Z"
+    }
+  ],
+  "nextPageToken": "EAE4uNqXj7-6yeW3AUqaBiI5IikKJzcyM2MzYjAyLTMzYjgtNGM5OC04NDVjLTk2YTFkYjY3YTIzMkBhMSoMCMW7-LAGENuW3cQCStwFCrQFSrEFANAvIAYL0jJ0gOXc2YNOd0XW4fG0cnrcNtX1k2Is32J3EWC38bukkQPqiYsIwuXTMDm2kB456uPKnVaUCpZd7KdGbYaIys_v_MTmhuu4M2uBUUXnvkfqw9Q6gxiZR3g-Ax5gzt1BtIIdyE-UeRPK_56A4Qn7xdQfY_MYU24fvadX2XjJHXS4O59CjPZLRLvC2wQ5cYPd9NDgvQdRUx3QbCoi0AVcD9e1O7kSlzEfPQygPA_Py8c28qH_cNjJAqaEQUqZTYVoMF--eL1q55idApYROWtD3-u-s9MZqLC1LIxd-7piNKPbDhRAxGIEjEPDc4zMCm2b4ayr1sGcY0_i_OogxiqmF3K1F3jw9wMA_msvyex2ERJV1hCVoDEBIafWVZBdVsbS1oIE9nemH_4H_DZG6cPn4n4lCTw5rH7avRbiz45ms7MlPdGxbBehT2WgmZILmwBV1FccbD044uBrgxIj5pWVwfCPLYECson8xqEjiIHFQCBk0I4iaJv2LQAUzxP7B0sXbKybD__nOG2jl843wP1ZxgfpCTMQhRS1uzR9R4omgzu7rRCNS0n2j4em7Obp2NBYNHIe9jJw7I4MMvaGiKrGfNr4DM0Y_TnVS_NP1zaPfCBsNuapoSu5RVQpaPyWjJhi8bn3duFaw4B_Z3xovJX_A0tT8BHa2lIYa_2ZExo_PEmwRFVb8An3DRhxpQ0Nsw-NQ-OT3F2FiVfyudjBbM1ZFG6jOjZ4QA2KvQmuKjpZJxz2_WnIIMinkF20DPkdKhozKBXDQV-3IOj8UYRD5QzE9mHvkXE7fW40x84DOEucREKkPPece3L6n3v-XuRZmWqjSdx4Q2blRcm9oQNJRe341lxm9llK6wJhxmjd2jhZrjfOdSnrfki681GOG8WQfARPbVFpgLil33XsaNMSGBoICID_9rAGEAEiDAj_wPqwBhD_k-vcA1DY16Hg2fS6hLABUgcIv5vfjrYfYJvr-vy7lazezAFqGgoLCIbe-LAGEOKLlRESBwgBEJzcs2EYMiAA"
+}

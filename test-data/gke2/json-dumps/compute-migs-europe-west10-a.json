@@ -1,0 +1,145 @@
+{
+  "id": "projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/instanceGroupManagers",
+  "items": [
+    {
+      "kind": "compute#instanceGroupManager",
+      "id": "4388285445108699464",
+      "creationTimestamp": "2024-04-09T05:08:07.388-07:00",
+      "name": "gke-gcp-cluster-default-pool-82e0c046-grp",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a",
+      "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/instanceTemplates/gke-gcp-cluster-default-pool-82e0c046",
+      "versions": [
+        {
+          "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/instanceTemplates/gke-gcp-cluster-default-pool-82e0c046",
+          "targetSize": {
+            "calculated": 1
+          }
+        }
+      ],
+      "instanceGroup": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/instanceGroups/gke-gcp-cluster-default-pool-82e0c046-grp",
+      "baseInstanceName": "gke-gcp-cluster-default-pool-82e0c046",
+      "fingerprint": "uvMBzl8LNAk=",
+      "currentActions": {
+        "none": 1,
+        "creating": 0,
+        "creatingWithoutRetries": 0,
+        "verifying": 0,
+        "recreating": 0,
+        "deleting": 0,
+        "abandoning": 0,
+        "restarting": 0,
+        "refreshing": 0,
+        "suspending": 0,
+        "resuming": 0,
+        "stopping": 0,
+        "starting": 0
+      },
+      "status": {
+        "isStable": true,
+        "allInstancesConfig": {
+          "effective": true
+        },
+        "versionTarget": {
+          "isReached": true
+        },
+        "stateful": {
+          "hasStatefulConfig": false,
+          "perInstanceConfigs": {
+            "allEffective": true
+          }
+        }
+      },
+      "targetSize": 1,
+      "listManagedInstancesResults": "PAGELESS",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/instanceGroupManagers/gke-gcp-cluster-default-pool-82e0c046-grp",
+      "updatePolicy": {
+        "type": "OPPORTUNISTIC",
+        "minimalAction": "REPLACE",
+        "maxSurge": {
+          "fixed": 1,
+          "calculated": 1
+        },
+        "maxUnavailable": {
+          "fixed": 1,
+          "calculated": 1
+        },
+        "replacementMethod": "SUBSTITUTE"
+      },
+      "instanceLifecyclePolicy": {
+        "forceUpdateOnRepair": "NO",
+        "defaultActionOnFailure": "REPAIR"
+      }
+    },
+    {
+      "kind": "compute#instanceGroupManager",
+      "id": "4504168043621424718",
+      "creationTimestamp": "2024-04-09T04:04:01.286-07:00",
+      "name": "gke-gcp-cluster-default-pool-c7891c09-grp",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a",
+      "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/instanceTemplates/gke-gcp-cluster-default-pool-c7891c09",
+      "versions": [
+        {
+          "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/global/instanceTemplates/gke-gcp-cluster-default-pool-c7891c09",
+          "targetSize": {
+            "calculated": 3
+          }
+        }
+      ],
+      "instanceGroup": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/instanceGroups/gke-gcp-cluster-default-pool-c7891c09-grp",
+      "baseInstanceName": "gke-gcp-cluster-default-pool-c7891c09",
+      "fingerprint": "77OP2eJ9NzY=",
+      "currentActions": {
+        "none": 3,
+        "creating": 0,
+        "creatingWithoutRetries": 0,
+        "verifying": 0,
+        "recreating": 0,
+        "deleting": 0,
+        "abandoning": 0,
+        "restarting": 0,
+        "refreshing": 0,
+        "suspending": 0,
+        "resuming": 0,
+        "stopping": 0,
+        "starting": 0
+      },
+      "status": {
+        "isStable": true,
+        "allInstancesConfig": {
+          "effective": true
+        },
+        "versionTarget": {
+          "isReached": true
+        },
+        "stateful": {
+          "hasStatefulConfig": false,
+          "perInstanceConfigs": {
+            "allEffective": true
+          }
+        }
+      },
+      "targetSize": 3,
+      "listManagedInstancesResults": "PAGELESS",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/instanceGroupManagers/gke-gcp-cluster-default-pool-c7891c09-grp",
+      "updatePolicy": {
+        "type": "OPPORTUNISTIC",
+        "minimalAction": "REPLACE",
+        "maxSurge": {
+          "fixed": 1,
+          "calculated": 1
+        },
+        "maxUnavailable": {
+          "fixed": 1,
+          "calculated": 1
+        },
+        "replacementMethod": "SUBSTITUTE"
+      },
+      "instanceLifecyclePolicy": {
+        "forceUpdateOnRepair": "NO",
+        "defaultActionOnFailure": "REPAIR"
+      }
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke-cluster-autoscaler-rrrr/zones/europe-west10-a/instanceGroupManagers",
+  "kind": "compute#instanceGroupManagerList"
+}
