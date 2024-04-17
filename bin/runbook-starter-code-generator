@@ -9,9 +9,10 @@ from datetime import datetime
 import textwrap
 
 SUPPORTED_PRODUCTS = {
-    'apigee','billing','bigquery','cdn','cloudrun','crm','composer', 'datafusion','dataflow',
-    'dataproc','kms','gar','gke', 'gcb','gcf', 'gae', 'gce', 'iam','interconnect',
-    'gcs', 'lb','logs','tpu','pubsub','sql','vertex','vpc'
+    'apigee', 'billing', 'bigquery', 'cdn', 'cloudrun', 'crm', 'composer',
+    'datafusion', 'dataflow', 'dataproc', 'kms', 'gar', 'gke', 'gcb', 'gcf',
+    'gae', 'gce', 'iam', 'interconnect', 'gcs', 'lb', 'logs', 'tpu', 'pubsub',
+    'sql', 'vertex', 'vpc'
 }
 
 
@@ -19,12 +20,17 @@ def _get_active_gcloud_project():
   try:
     # Run the gcloud command to get the current project
     result = subprocess.run(['gcloud', 'config', 'get-value', 'project'],
-                            check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                            check=True,
+                            stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE,
+                            text=True)
     project_id = result.stdout.strip()
   except subprocess.CalledProcessError:
     pass
   else:
-    print(f'Found project {_color(project_id,"blue")}; will use it arg for `--project`')
+    print(
+        f'Found project {_color(project_id,"blue")}; will use it arg for `--project`'
+    )
     return project_id
 
 
@@ -37,6 +43,7 @@ def _color(text, color):
       'reset': '\033[0m'
   }
   return f"{colors[color]}{text}{colors['reset']}"
+
 
 def _git_operations(runbook_name):
   try:
@@ -53,109 +60,115 @@ def _git_operations(runbook_name):
       _create_new_or_switch_branch(runbook_name)
       current_branch = _get_current_branch()
 
-    print(f'You can run `git stash pop` if you want the stashed changes in branch {runbook_name}')
+    print(
+        f'You can run `git stash pop` if you want the stashed changes in branch {runbook_name}'
+    )
   except subprocess.CalledProcessError as e:
     print('An error occurred during git operations:')
     print(e)
 
+
 def _get_current_branch():
-  result = subprocess.run(
-      ['git', 'rev-parse', '--abbrev-ref', 'HEAD'],
-      check=True,
-      text=True,
-      capture_output=True
-  )
+  result = subprocess.run(['git', 'rev-parse', '--abbrev-ref', 'HEAD'],
+                          check=True,
+                          text=True,
+                          capture_output=True)
   branch = result.stdout.strip()
   print(f'Currently on branch "{branch}"')
   return branch
 
+
 def _stash_changes(runbook_name):
   try:
     # Attempt to stash changes
-    result = subprocess.run(
-          ['git', 'stash', 'push', '-m', f'Auto-stash during {runbook_name} generation'],
-          text=True,
-          capture_output=True,
-          check=True
-      ).stdout.strip()
+    result = subprocess.run([
+        'git', 'stash', 'push', '-m',
+        f'Auto-stash during {runbook_name} generation'
+    ],
+                            text=True,
+                            capture_output=True,
+                            check=True).stdout.strip()
     if 'no local changes to save' in result.lower():
       print('No changes to stash.')
     else:
-      print('Detected uncommitted changes in the working directory and stashed them!')
+      print(
+          'Detected uncommitted changes in the working directory and stashed them!'
+      )
 
   except subprocess.CalledProcessError as e:
     print('Failed to stash changes:')
     print(e)
 
+
 def _switch_to_master(current_branch):
-  print(f'Switching from branch "{current_branch}" to "master" to sync environment...')
-  subprocess.run(
-      ['git', 'checkout', 'master'],
-      check=True,
-      text=True,
-      capture_output=True
-  ).stdout.strip()
+  print(
+      f'Switching from branch "{current_branch}" to "master" to sync environment...'
+  )
+  subprocess.run(['git', 'checkout', 'master'],
+                 check=True,
+                 text=True,
+                 capture_output=True).stdout.strip()
+
 
 def _update_repository(current_branch):
-  print(f'On "{current_branch}" branch; syncing with remote branch `origin/master`...')
-  subprocess.run(
-      ['git', 'pull', 'origin', 'master', '--rebase'],
-      check=True,
-      text=True,
-      capture_output=True
+  print(
+      f'On "{current_branch}" branch; syncing with remote branch `origin/master`...'
   )
+  subprocess.run(['git', 'pull', 'origin', 'master', '--rebase'],
+                 check=True,
+                 text=True,
+                 capture_output=True)
   print('Repository updated with: `git pull origin master --rebase`')
 
+
 def _create_new_or_switch_branch(runbook_name):
-  command= ['git', 'checkout', '-b', runbook_name]
+  command = ['git', 'checkout', '-b', runbook_name]
   # First, check if the branch already exists
-  existing_branches = subprocess.run(
-      ['git', 'branch', '--list', runbook_name],
-      check=False,
-      text=True,
-      capture_output=True
-  ).stdout.strip()
+  existing_branches = subprocess.run(['git', 'branch', '--list', runbook_name],
+                                     check=False,
+                                     text=True,
+                                     capture_output=True).stdout.strip()
 
   # If the branch already exists, print a message and do not attempt to create it
   if existing_branches:
-    print(f'Branch "{runbook_name}" already exists. Switching to existing branch')
+    print(
+        f'Branch "{runbook_name}" already exists. Switching to existing branch')
     command.remove('-b')
   else:
     print(f'Creating new branch "{runbook_name}"...')
   try:
     # Attempt to create the branch since it does not exist
-    subprocess.run(
-        command,
-        check=True,
-        text=True,
-        capture_output=True
-    ).stdout.strip()
+    subprocess.run(command, check=True, text=True,
+                   capture_output=True).stdout.strip()
   except subprocess.CalledProcessError as e:
     # Handle possible errors during branch creation (e.g., due to local modifications)
     print('Failed to create new branch:')
     print(e)
 
 
-
 def check_and_activate_shell(command, py_path, name, prepenv):
   # Check if the VIRTUAL_ENV environment variable is set
-  print(_color('\nPreparing your python virtual environment','blue'))
-  print(_color('=========================================','blue'))
+  print(_color('\nPreparing your python virtual environment', 'blue'))
+  print(_color('=========================================', 'blue'))
   if 'VIRTUAL_ENV' in os.environ:
-    print('Virtual environment is already activated. Generating starter code...')
-    gen_starter_code({'name':name, 'prepenv':prepenv})
+    print(
+        'Virtual environment is already activated. Generating starter code...')
+    gen_starter_code({'name': name, 'prepenv': prepenv})
   else:
     # Check current directory and subfolders
     current_directory = os.getcwd()
-    if 'gcpdiag' in current_directory and os.path.isdir('gcpdiag') and os.path.isdir('bin'):
+    if 'gcpdiag' in current_directory and os.path.isdir(
+        'gcpdiag') and os.path.isdir('bin'):
       print('Attempting to activate the virtual environment for "gcpdiag"...')
       print('Virtual environment activated...')
-      gen_starter_code({'name':name, 'prepenv':prepenv})
+      gen_starter_code({'name': name, 'prepenv': prepenv})
       if not _activate_virtual_environment():
         print('Failed to activate the venv. Manually run it `pipenv shell`.')
     else:
-      print('Not in an appropriate location to activate the virtual environment.')
+      print(
+          'Not in an appropriate location to activate the virtual environment.')
       print('Current directory:', current_directory)
+
 
 def _activate_virtual_environment():
   try:
@@ -165,7 +178,8 @@ def _activate_virtual_environment():
   except subprocess.CalledProcessError:
     return False
 
-def gen_starter_code(args_:dict):
+
+def gen_starter_code(args_: dict):
   # Extract product and Runbook ID
   runbook_name = args_['name']
   parts = runbook_name.split('/')
@@ -177,8 +191,8 @@ def gen_starter_code(args_:dict):
     return
 
   if args_['prepenv']:
-    print(_color('\nPreparing your local git repository','blue'))
-    print(_color('===================================','blue'))
+    print(_color('\nPreparing your local git repository', 'blue'))
+    print(_color('===================================', 'blue'))
     _git_operations(runbook_name)
   dir_path = f'gcpdiag/runbook/{product}'
   filename = id_.replace('-', '_')
@@ -190,32 +204,42 @@ def gen_starter_code(args_:dict):
   open(os.path.join(dir_path, '__init__.py'), 'a', encoding='utf-8').close()
 
   file_path = os.path.join(dir_path, f'{filename}.py')
-  print(_color('\nGenerating Your Runbook','blue'))
-  print(_color('=======================','blue'))
+  print(_color('\nGenerating Your Runbook', 'blue'))
+  print(_color('=======================', 'blue'))
   if not os.path.exists(file_path):
     # Process the runbook starter code template
-    with open('bin/templates/runbook-starter-code.py.tpl', 'r', encoding='utf-8') as template_file:
+    with open('bin/templates/runbook-starter-code.py.tpl',
+              'r',
+              encoding='utf-8') as template_file:
       template_content = template_file.read()
 
     template_content = template_content.replace('TreeName', dt_name)
-    template_content = template_content.replace('[YEAR]', str(datetime.now().year))
+    template_content = template_content.replace('[YEAR]',
+                                                str(datetime.now().year))
 
     with open(file_path, 'w', encoding='utf-8') as output_file:
       output_file.write(template_content)
-      print(f'Created runbook in {_color(f"{dir_path}/{filename}.py", "magenta")}. Happy Coding! 💻 🚀')
+      print(
+          f'Created runbook in {_color(f"{dir_path}/{filename}.py", "magenta")}. Happy Coding! 💻 🚀'
+      )
   else:
-    print(f'{file_path} already exists. Will not be generating starter code for: {runbook_name}')
+    print(
+        f'{file_path} already exists. Will not be generating starter code for: {runbook_name}'
+    )
     print('Verify if runbook already exist')
     print(f'Doc: https://gcpdiag.dev/runbook/diagnostic-trees/{product}/{id_}')
     print(f'File: gcpdiag/runbook/{product}/{id_}.py')
 
-  print(_color('\nVerifying & Generating runbook product files','blue'))
-  print(_color('============================================','blue'))
+  print(_color('\nVerifying & Generating runbook product files', 'blue'))
+  print(_color('============================================', 'blue'))
   # Process additional template files
-  for file in ['constants', 'flags', 'generalized_steps', 'generalized_steps_test']:
+  for file in [
+      'constants', 'flags', 'generalized_steps', 'generalized_steps_test'
+  ]:
     file_path = os.path.join(dir_path, f'{file}.py')
     if not os.path.exists(file_path):
-      with open('bin/templates/python-file.py.tpl', 'r', encoding='utf-8') as template_file:
+      with open('bin/templates/python-file.py.tpl', 'r',
+                encoding='utf-8') as template_file:
         content = template_file.read()
 
       content = content.replace('[YEAR]', str(datetime.now().year))
@@ -225,25 +249,28 @@ def gen_starter_code(args_:dict):
         print(f'Created {file_path}.')
       if file in ('constants', 'flags'):
         with open(file_path, 'a', encoding='utf-8') as output_file:
-          output_file.write(textwrap.dedent(f'''\
+          output_file.write(
+              textwrap.dedent(f'''\
                             # pylint: disable=unused-wildcard-import, wildcard-import
                             from gcpdiag.runbook.gcp.{file} import *
                             from gcpdiag.runbook.iam.{file} import *
                             '''))
   print('Ok!')
 
-  print(_color('\nGenerating Test Class','blue'))
-  print(_color('=====================','blue'))
+  print(_color('\nGenerating Test Class', 'blue'))
+  print(_color('=====================', 'blue'))
   file_path = os.path.join(dir_path, f'{filename}_test.py')
   if not os.path.exists(file_path):
     # Process the runbook starter code template
-    with open('bin/templates/runbook-test.py.tpl', 'r', encoding='utf-8') as template_file:
+    with open('bin/templates/runbook-test.py.tpl', 'r',
+              encoding='utf-8') as template_file:
       template_content = template_file.read()
 
     template_content = template_content.replace('TreeName', dt_name)
     template_content = template_content.replace('PRODUCT', product)
     template_content = template_content.replace('RULE', runbook_name)
-    template_content = template_content.replace('[YEAR]', str(datetime.now().year))
+    template_content = template_content.replace('[YEAR]',
+                                                str(datetime.now().year))
 
     with open(file_path, 'w', encoding='utf-8') as output_file:
       output_file.write(template_content)
@@ -251,13 +278,22 @@ def gen_starter_code(args_:dict):
   else:
     print(f'Strange, test class {file_path} already exists.')
 
-  print(_color(f'\nHow to run {runbook_name} in local development','blue'))
-  print(_color('===============================================','blue'))
+  print(_color(f'\nHow to run {runbook_name} in local development', 'blue'))
+  print(_color('===============================================', 'blue'))
   proj = _get_active_gcloud_project() or 'REPLACE_PROJECT_ID'
   print('Run the runbook in interactive mode')
-  print(_color(f'bin/gcpdiag runbook {runbook_name} -p custom_flag={product} --project={proj}', 'green'))
-  print(f'Use {_color("--auto", "magenta")} to run the runbook in a non-interactive mode')
-  print(_color(f'bin/gcpdiag runbook {runbook_name} -p custom_flag={product} --project={proj} --auto','green'))
+  print(
+      _color(
+          f'bin/gcpdiag runbook {runbook_name} -p custom_flag={product} --project={proj}',
+          'green'))
+  print(
+      f'Use {_color("--auto", "magenta")} to run the runbook in a non-interactive mode'
+  )
+  print(
+      _color(
+          f'bin/gcpdiag runbook {runbook_name} -p custom_flag={product} --project={proj} --auto',
+          'green'))
+
 
 def _parse_kwargs(argv):
   kwargs = {}
@@ -267,14 +303,17 @@ def _parse_kwargs(argv):
       kwargs[key] = value.strip()
   return kwargs
 
+
 if __name__ == '__main__':
   args = _parse_kwargs(sys.argv[1::])
   args['command'] = sys.argv[1]
-  if args.get('prepenv').lower() in ('0','n','no','false',''):
+  if args.get('prepenv').lower() in ('0', 'n', 'no', 'false', ''):
     args['prepenv'] = False
     gen_starter_code(args)
-  elif args.get('prepenv').lower() in ('1','y','yes','true'):
+  elif args.get('prepenv').lower() in ('1', 'y', 'yes', 'true'):
     args['prepenv'] = True
     check_and_activate_shell(**args)
   else:
-    print('Usage: python runbook-starter-code-generator name=product/runbook-id prepenv=true')
+    print(
+        'Usage: python runbook-starter-code-generator name=product/runbook-id prepenv=true'
+    )
