@@ -1,0 +1,20 @@
+*  gce/ERR/2024_004: Verify Ops Agent is installed on GCE VMs and is sending logs and metrics.
+   - gcpdiag-gce1-aaaa/gce1                                               [SKIP] Unable to confirm Ops Agent installation
+     VM Manager is needed for the ops agent detection. Please enable it at: https://cloud.google.com/compute/docs/manage-os#automatic and run this check again.
+   - gcpdiag-gce1-aaaa/windows-test                                       [SKIP] Unable to confirm Ops Agent installation
+     VM Manager is needed for the ops agent detection. Please enable it at: https://cloud.google.com/compute/docs/manage-os#automatic and run this check again.
+   - gcpdiag-gce1-aaaa/gce2                                               [SKIP] Unable to confirm Ops Agent installation
+     VM Manager is needed for the ops agent detection. Please enable it at: https://cloud.google.com/compute/docs/manage-os#automatic and run this check again.
+   - gcpdiag-gce1-aaaa/mig-4h21                                           [SKIP] Unable to confirm Ops Agent installation
+     VM Manager is needed for the ops agent detection. Please enable it at: https://cloud.google.com/compute/docs/manage-os#automatic and run this check again.
+   - gcpdiag-gce1-aaaa/mig-7pvl                                           [SKIP] Unable to confirm Ops Agent installation
+     VM Manager is needed for the ops agent detection. Please enable it at: https://cloud.google.com/compute/docs/manage-os#automatic and run this check again.
+   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-2xxp                [SKIP] Unable to confirm Ops Agent installation
+     VM Manager is needed for the ops agent detection. Please enable it at: https://cloud.google.com/compute/docs/manage-os#automatic and run this check again.
+   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-c12f                [SKIP] Unable to confirm Ops Agent installation
+     VM Manager is needed for the ops agent detection. Please enable it at: https://cloud.google.com/compute/docs/manage-os#automatic and run this check again.
+   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-fv50                [SKIP] Unable to confirm Ops Agent installation
+     VM Manager is needed for the ops agent detection. Please enable it at: https://cloud.google.com/compute/docs/manage-os#automatic and run this check again.
+   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-k05c                [SKIP] Unable to confirm Ops Agent installation
+     VM Manager is needed for the ops agent detection. Please enable it at: https://cloud.google.com/compute/docs/manage-os#automatic and run this check again.
+
