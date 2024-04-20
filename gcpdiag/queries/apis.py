@@ -186,7 +186,7 @@ def get_api(service_name: str,
     return googleapiclient.http.HttpRequest(new_http, *args, **kwargs)
 
   universe_domain = config.get('universe_domain')
-  cred_universe = getattr(credentials, 'universe_domain')
+  cred_universe = getattr(credentials, 'universe_domain', 'googleapis.com')
   if cred_universe != universe_domain:
     raise ValueError('credential universe_domain mismatch '
                      f'{cred_universe} != {universe_domain}')
