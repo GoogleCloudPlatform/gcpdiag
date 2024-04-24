@@ -11,13 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""GCE VM instances don't have legacy Monitoring Agent installed.
+"""Verify that GCE VM Instances Don't Have Legacy Monitoring Agent Installed.
 
-Verify that GCE VMs in this project do not have the legacy Monitoring Agent
-installed. Please uninstall the legacy Monitoring Agent from any VMs where it's
+Please uninstall the legacy monitoring agent from any VMs where it's
 detected and install the Ops Agent.
 
-To uninstall legacy Monitoring Agent, please follow:
+To uninstall legacy monitoring agent, please follow:
 https://cloud.google.com/monitoring/agent/monitoring/installation#uninstall.
 
 To install the latest version of Ops Agent, please follow:
@@ -25,17 +24,22 @@ https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/installatio
 """
 
 import operator as op
-from datetime import datetime, timedelta
 from typing import Dict
 
 from gcpdiag import lint, models
-from gcpdiag.queries import crm, gce, monitoring, osconfig
+from gcpdiag.queries import gce, monitoring, osconfig
 
 _query_results_project_id: Dict[str, monitoring.TimeSeriesCollection] = {}
 
-INSTANCE_MIN_AGE = timedelta(hours=1)
 LEGACY_MONITORING_AGENT_PACKAGE_NAME = 'stackdriver-agent'
 LEGACY_MONITORING_AGENT_METRICS_LABEL = 'stackdriver_agent'
+LEGACY_AGENT_NOT_DETECTED = 'Legacy monitoring agent not installed on the VM'
+UNABLE_TO_DETECT = 'Unable to confirm legacy monitoring agent installation'
+UNABLE_TO_DETECT_EXPLANATION = (
+    'VM Manager is needed for the legacy agent detection. Please enable it at:'
+    ' https://cloud.google.com/compute/docs/manage-os#automatic and run this'
+    ' check again.')
+LEGACY_AGENT_DETECTED = 'Legacy monitoring agent installed on the VM'
 
 
 def prefetch_rule(context: models.Context):
@@ -52,8 +56,6 @@ fetch gce_instance
   for i in gce.get_instances(context).values():
     osconfig.get_inventory(context, i.zone, i.name)
 
-  crm.get_project(context.project_id)
-
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   instances = list(gce.get_instances(context).values())
@@ -63,7 +65,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     return
 
   instances_without_osinventory = []
-  all_ok = True
   for i in sorted(instances, key=op.attrgetter('project_id', 'name')):
     if i.is_gke_node():
       continue
@@ -75,11 +76,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       if LEGACY_MONITORING_AGENT_PACKAGE_NAME in pkg_name:
         report.add_failed(
             i,
-            f'Legacy Monitoring Agent installed on VM: {i.name} in zone:'
-            f' {i.zone}.',
-            'Legacy Monitoring Agent present on the VM',
+            '',
+            LEGACY_AGENT_DETECTED,
         )
-        all_ok = False
         break
 
   query = _query_results_project_id[context.project_id]
@@ -92,12 +91,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     for i in instances_without_osinventory:
       report.add_skipped(
           i,
-          'Unable to confirm the presence of legacy Monitoring Agent on the'
-          f' VM: {i.name}, in zone: {i.zone}.\n'
-          'Please enable OS Config API: '
-          'https://cloud.google.com/compute/docs/manage-os#enable-service-api'
-          ' on your project and run the rule again.',
-          'Not able to detect legacy Monitoring Agent',
+          UNABLE_TO_DETECT_EXPLANATION,
+          UNABLE_TO_DETECT,
       )
     return
 
@@ -107,36 +102,18 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   ):
     if i.is_gke_node():
       continue
-    if datetime.utcnow() - i.creation_timestamp < INSTANCE_MIN_AGE:
-      # instance is less than 1 hour of creation agent data might not be accurate yet
-      report.add_skipped(
-          i,
-          'Unable to confirm the presence of legacy Monitoring Agent on'
-          f' recently created VM: {i.name}, in zone: {i.zone}.',
-          'Not able to detect legacy Monitoring Agent',
-      )
-      continue
     if i.id in vms_agents:
       if LEGACY_MONITORING_AGENT_METRICS_LABEL in vms_agents[i.id]:
         report.add_failed(
             i,
-            f'Legacy Monitoring Agent installed on VM: {i.name} in zone:'
-            f' {i.zone}.',
-            'Legacy Monitoring Agent present on the VM',
+            '',
+            LEGACY_AGENT_DETECTED,
         )
-        all_ok = False
+      else:
+        report.add_ok(i, LEGACY_AGENT_NOT_DETECTED)
     else:
-      all_ok = False
       report.add_skipped(
           i,
-          'Unable to confirm the presence of legacy Monitoring Agent on the'
-          f' VM: {i.name}, in zone: {i.zone}.\n'
-          'Please enable OS Config API: '
-          'https://cloud.google.com/compute/docs/manage-os#enable-service-api'
-          ' on your project and run the rule again.',
-          'Not able to detect legacy Monitoring Agent',
+          UNABLE_TO_DETECT_EXPLANATION,
+          UNABLE_TO_DETECT,
       )
-
-  if all_ok:
-    project = crm.get_project(context.project_id)
-    report.add_ok(project)

@@ -1,17 +1,12 @@
-*  gce/BP/2024_001: GCE VM instances don't have legacy Monitoring Agent installed.
-   - gcpdiag-gce1-aaaa/gce1                                               [SKIP] Not able to detect legacy Monitoring Agent
-     Unable to confirm the presence of legacy Monitoring Agent on the VM: gce1, in zone: europe-west4-a.
-     Please enable OS Config API: https://cloud.google.com/compute/docs/manage-os#enable-service-api on your project and run the rule again.
-   - gcpdiag-gce1-aaaa/gce2                                               [SKIP] Not able to detect legacy Monitoring Agent
-     Unable to confirm the presence of legacy Monitoring Agent on the VM: gce2, in zone: europe-west4-a.
-     Please enable OS Config API: https://cloud.google.com/compute/docs/manage-os#enable-service-api on your project and run the rule again.
-   - gcpdiag-gce1-aaaa/mig-4h21                                           [SKIP] Not able to detect legacy Monitoring Agent
-     Unable to confirm the presence of legacy Monitoring Agent on the VM: mig-4h21, in zone: europe-west4-a.
-     Please enable OS Config API: https://cloud.google.com/compute/docs/manage-os#enable-service-api on your project and run the rule again.
-   - gcpdiag-gce1-aaaa/mig-7pvl                                           [SKIP] Not able to detect legacy Monitoring Agent
-     Unable to confirm the presence of legacy Monitoring Agent on the VM: mig-7pvl, in zone: europe-west4-a.
-     Please enable OS Config API: https://cloud.google.com/compute/docs/manage-os#enable-service-api on your project and run the rule again.
-   - gcpdiag-gce1-aaaa/windows-test                                       [SKIP] Not able to detect legacy Monitoring Agent
-     Unable to confirm the presence of legacy Monitoring Agent on the VM: windows-test, in zone: europe-west4-a.
-     Please enable OS Config API: https://cloud.google.com/compute/docs/manage-os#enable-service-api on your project and run the rule again.
+*  gce/BP/2024_001: Verify that GCE VM Instances Don't Have Legacy Monitoring Agent Installed.
+   - gcpdiag-gce1-aaaa/gce1                                               [SKIP] Unable to confirm legacy monitoring agent installation
+     VM Manager is needed for the legacy agent detection. Please enable it at: https://cloud.google.com/compute/docs/manage-os#automatic and run this check again.
+   - gcpdiag-gce1-aaaa/gce2                                               [SKIP] Unable to confirm legacy monitoring agent installation
+     VM Manager is needed for the legacy agent detection. Please enable it at: https://cloud.google.com/compute/docs/manage-os#automatic and run this check again.
+   - gcpdiag-gce1-aaaa/mig-4h21                                           [SKIP] Unable to confirm legacy monitoring agent installation
+     VM Manager is needed for the legacy agent detection. Please enable it at: https://cloud.google.com/compute/docs/manage-os#automatic and run this check again.
+   - gcpdiag-gce1-aaaa/mig-7pvl                                           [SKIP] Unable to confirm legacy monitoring agent installation
+     VM Manager is needed for the legacy agent detection. Please enable it at: https://cloud.google.com/compute/docs/manage-os#automatic and run this check again.
+   - gcpdiag-gce1-aaaa/windows-test                                       [SKIP] Unable to confirm legacy monitoring agent installation
+     VM Manager is needed for the legacy agent detection. Please enable it at: https://cloud.google.com/compute/docs/manage-os#automatic and run this check again.
 

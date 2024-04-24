@@ -111,8 +111,6 @@ def get_inventory(context: models.Context, location: str,
     resp = query.execute(num_retries=config.API_RETRIES)
   except googleapiclient.errors.HttpError as err:
     if err.resp.status in [404]:
-      logging.warning('os inventory info not found for VM instance: %s',
-                      instance_name)
       return None
     raise utils.GcpApiError(err) from err
   return Inventory(context.project_id, resource_data=resp)
