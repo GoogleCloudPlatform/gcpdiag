@@ -97,6 +97,22 @@ class TestCluster:
     c = clusters[DUMMY_CLUSTER2_NAME]
     assert c.has_logging_enabled()
 
+  def test_has_monitoring_enabled_false(self):
+    """has_monitoring_enabled should return false for GKE cluster with monitoring disabled."""
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    assert DUMMY_CLUSTER1_NAME in clusters.keys()
+    c = clusters[DUMMY_CLUSTER1_NAME]
+    assert not c.has_monitoring_enabled()
+
+  def test_has_monitoring_enabled_true(self):
+    """has_monitoring_enabled should return true for GKE cluster with monitoring enabled."""
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+    assert DUMMY_CLUSTER2_NAME in clusters.keys()
+    c = clusters[DUMMY_CLUSTER2_NAME]
+    assert c.has_monitoring_enabled()
+
   def test_has_authenticator_group_enabled(self):
     """""has_authenticator_group_enabled should return true for GKE cluster with Groups for RBAC
     enabled."""
