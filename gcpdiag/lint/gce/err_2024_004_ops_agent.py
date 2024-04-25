@@ -228,7 +228,10 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
         None, f'No VM instances found in project: {context.project_id}.')
     return
 
-  instances = [Instance(context.project_id, i) for i in instances]
+  instances = [
+      Instance(context.project_id, i)
+      for i in sorted(instances, key=op.attrgetter('project_id', 'name'))
+  ]
   confirm_agent_installation_via_os_config(context, report, instances)
   confirm_agent_installation_via_uptime_metrics(context, report, instances)
   log_entries = format_log_entries(

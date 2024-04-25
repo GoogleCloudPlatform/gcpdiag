@@ -1,16 +1,19 @@
-*  gce/WARN/2021_003: GCE instance service account permissions for monitoring.
+*  gce/WARN/2021_003: GCE VM Instance Access Scope, GCE VM Attached Service Account Permissions and APIs Required for Monitoring.
    - gcpdiag-gce1-aaaa/gce1                                               [ OK ]
    - gcpdiag-gce1-aaaa/gce2                                               [ OK ]
-   - gcpdiag-gce1-aaaa/mig-4h21                                           [FAIL]
-     no service account
-   - gcpdiag-gce1-aaaa/mig-7pvl                                           [FAIL]
-     no service account
+   - gcpdiag-gce1-aaaa/mig-4h21                                           [FAIL] VM does not have a Service Account attached
+     Follow https://cloud.google.com/compute/docs/instances/change-service-account
+     to attach a Service Account to the VM mig-4h21.
+   - gcpdiag-gce1-aaaa/mig-7pvl                                           [FAIL] VM does not have a Service Account attached
+     Follow https://cloud.google.com/compute/docs/instances/change-service-account
+     to attach a Service Account to the VM mig-7pvl.
    - gcpdiag-gce1-aaaa/windows-test                                       [ OK ]
 
-   The service account used by GCE instance should have the
-   monitoring.metricWriter permission and a GCE instance should have the
-   monitoring.write access scope, otherwise, if you install the ops or
-   monitoring agent, it won't be able to send the metrics to Cloud Monitoring.
+   A GCP project should have Cloud Monitoring API enabled. The service account
+   attached to the GCE VM instances should have the monitoring.metricWriter IAM
+   role permission. Also, a GCE instance should have the monitoring.write access
+   scope. Without these, Ops Agent won't be able to collect metrics from GCE VMs
+   and display on Metrics Explorer.
 
    https://gcpdiag.dev/rules/gce/WARN/2021_003
 
