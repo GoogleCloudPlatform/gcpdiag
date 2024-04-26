@@ -72,6 +72,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     if inventory is None:
       instances_without_osinventory.append(i)
       continue
+    legacy_agent_found = False
     for pkg_name in inventory.installed_packages:
       if LEGACY_LOGGING_AGENT in pkg_name:
         report.add_failed(
@@ -79,8 +80,10 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
             '',
             LEGACY_AGENT_DETECTED,
         )
+        legacy_agent_found = True
         break
-
+    if not legacy_agent_found:
+      report.add_ok(i, LEGACY_AGENT_NOT_DETECTED)
   query = _query_results_project_id[context.project_id]
   try:
     vms_agents = {
