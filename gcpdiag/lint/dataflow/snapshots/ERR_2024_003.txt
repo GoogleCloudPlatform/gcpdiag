@@ -1,0 +1,3 @@
+*  dataflow/ERR/2024_003: Streaming Dataflow jobs are not using WRITE_TRUNCATE when working with unbounded PCollections.
+   - gcpdiag-datafusion1-aaaa                                             [ OK ]
+
