@@ -16,9 +16,12 @@
 Instead of doing real API calls, we return test JSON data.
 """
 
+import re
+
 from gcpdiag.queries import apis_stub
 
 #pylint: disable=unused-argument
+#pylint: disable=invalid-name
 
 
 class DataprocApiStub:
@@ -30,8 +33,16 @@ class DataprocApiStub:
   def regions(self):
     return self
 
+  def autoscalingPolicies(self):
+    return self
+
   def clusters(self):
     return self
+
+  def get(self, name):
+    m = re.match(r'projects/([^/]+)', name)
+    project_id = m.group(1)
+    return apis_stub.RestCallStub(project_id, 'autoscaling-policy')
 
   # pylint: disable=invalid-name
   def list(self, projectId, region):

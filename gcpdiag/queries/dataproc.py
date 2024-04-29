@@ -16,7 +16,7 @@
 import re
 from typing import Iterable, List, Mapping, Optional
 
-from gcpdiag import caching, models
+from gcpdiag import caching, config, models
 from gcpdiag.lint import get_executor
 from gcpdiag.queries import apis, crm, gce, network
 
@@ -193,3 +193,45 @@ def get_clusters(context: models.Context) -> Iterable[Cluster]:
                                dataproc.get_regions()):
     r += clusters
   return r
+
+
+class AutoScalingPolicy(models.Resource):
+  """AutoScalingPolicy."""
+  _resource_data: dict
+
+  def __init__(self, project_id, resource_data, region):
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+    self.region = region
+
+  @property
+  def policy_id(self) -> str:
+    return self._resource_data['id']
+
+  @property
+  def full_path(self) -> str:
+    return self._resource_data['name']
+
+  @property
+  def short_path(self) -> str:
+    return f'{self.project_id}/{self.region}/{self.policy_id}'
+
+  @property
+  def name(self) -> str:
+    return self._resource_data['name']
+
+  @property
+  def scale_down_factor(self) -> float:
+    return self._resource_data['basicAlgorithm']['yarnConfig'].get(
+        'scaleDownFactor', 0.0)
+
+
+@caching.cached_api_call
+def get_auto_scaling_policy(project_id: str, region: str,
+                            policy_id: str) -> AutoScalingPolicy:
+  # logging.info('fetching autoscalingpolicy: %s', project_id)
+  dataproc = apis.get_api('dataproc', 'v1', project_id)
+  name = f'projects/{project_id}/regions/{region}/autoscalingPolicies/{policy_id}'
+  request = dataproc.projects().regions().autoscalingPolicies().get(name=name)
+  response = request.execute(num_retries=config.API_RETRIES)
+  return AutoScalingPolicy(project_id, response, region)
