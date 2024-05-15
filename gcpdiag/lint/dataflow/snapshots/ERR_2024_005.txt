@@ -1,0 +1,3 @@
+*  dataflow/ERR/2024_005: Dataflow and its controller service account have the necessary permissions to interact with Pub/Sub topics.
+   - gcpdiag-datafusion1-aaaa                                             [ OK ]
+
