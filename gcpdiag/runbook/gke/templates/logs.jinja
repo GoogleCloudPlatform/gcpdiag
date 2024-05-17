@@ -1,0 +1,59 @@
+{% block project_logging_check_failure_reason %}
+The logging health check failed because the Cloud Logging API is not enabled for the project.
+{% endblock project_logging_check_failure_reason %}
+
+{% block project_logging_check_failure_remediation %}
+Enable the Cloud Logging API for your project through the Google Cloud Console or relevant API calls. See instructions: https://cloud.google.com/kubernetes-engine/docs/troubleshooting/logging#verify_logging_is_enabled_in_the_project
+{% endblock project_logging_check_failure_remediation %}
+
+{% block project_logging_check_success_reason %}
+The Cloud Logging API is enabled for the project.
+{% endblock project_logging_check_success_reason %}
+
+{% block cluster_logging_check_failure_reason %}
+The logging health check failed because cluster-level logging is not enabled.
+{% endblock cluster_logging_check_failure_reason %}
+
+{% block cluster_logging_check_failure_remediation %}
+Enable cluster-level logging for your Kubernetes cluster. This can be done through the Google Cloud Console or GKE-specific tools. See instructions: https://cloud.google.com/kubernetes-engine/docs/troubleshooting/logging#verify_logging_is_enabled_on_the_cluster
+{% endblock cluster_logging_check_failure_remediation %}
+
+{% block cluster_logging_check_success_reason %}
+Cluster-level logging is enabled for the cluster.
+{% endblock cluster_logging_check_success_reason %}
+
+{% block node_pool_access_scope_check_failure_reason %}
+The logging health check failed because node pools have insufficient access scope for Cloud Logging.
+{% endblock node_pool_access_scope_check_failure_reason %}
+
+{% block node_pool_access_scope_check_failure_remediation %}
+Adjust node pool access scope to grant necessary logging permissions. See instructions: https://cloud.google.com/kubernetes-engine/docs/troubleshooting/logging#verify_nodes_in_the_node_pools_have_access_scope
+{% endblock node_pool_access_scope_check_failure_remediation %}
+
+{% block node_pool_access_scope_check_success_reason %}
+Node pools have sufficient access scope for Cloud Logging.
+{% endblock node_pool_access_scope_check_success_reason %}
+
+{% block service_account_permissions_check_failure_reason %}
+The logging health check failed because the service account lacks necessary permissions to write logs.
+{% endblock service_account_permissions_check_failure_reason %}
+
+{% block service_account_permissions_check_failure_remediation %}
+Grant the service account the 'roles/logging.logWriter' role or equivalent permissions. See instructions: https://cloud.google.com/kubernetes-engine/docs/troubleshooting/logging#verify_the_node_pools_service_account_has_a_role_with_the_correct_permissions
+{% endblock service_account_permissions_check_failure_remediation %}
+
+{% block service_account_permissions_check_success_reason %}
+The service account has necessary permissions to write logs.
+{% endblock service_account_permissions_check_success_reason %}
+
+{% block logging_write_api_quota_exceeded_check_failure_reason %}
+The logging health check failed because your project has exceeded its Cloud Logging Write API quota.
+{% endblock logging_write_api_quota_exceeded_check_failure_reason %}
+
+{% block logging_write_api_quota_exceeded_check_failure_remediation %}
+Review your logging usage and either reduce log volume or request a quota increase. See instructions: https://cloud.google.com/kubernetes-engine/docs/troubleshooting/logging#verify_that_write_api_quotas_have_not_been_reached
+{% endblock logging_write_api_quota_exceeded_check_failure_remediation %}
+
+{% block logging_write_api_quota_exceeded_check_success_reason %}
+The project is within its Cloud Logging Write API quota between {START_TIME_UTC} and {END_TIME_UTC} UTC.
+{% endblock logging_write_api_quota_exceeded_check_success_reason %}

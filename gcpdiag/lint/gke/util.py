@@ -167,3 +167,22 @@ def gke_logs_find_bad_clusters(context: models.Context,
       except _CantMapLogEntry:
         continue
   return bad_clusters
+
+
+def get_cluster_object(cluster_dict, partial_path):
+  """Retrieves a GKE Cluster object from a dictionary based on a partial path.
+
+  Args:
+      cluster_dict: A dictionary where keys are full GCP resource paths and values
+      are Cluster objects.
+      partial_path: A string representing the partial path to the cluster.
+
+  Returns:
+      The matching GKE Cluster object, or None if not found.
+  """
+
+  for full_path, cluster_obj in cluster_dict.items():
+    if partial_path in full_path:
+      return cluster_obj
+
+  return None  # Cluster not found

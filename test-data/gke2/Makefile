@@ -41,6 +41,7 @@ all:	\
 	json-dumps/iam-service-accounts.json \
 	json-dumps/iam-service-account-policy.json \
 	json-dumps/logging-entries-1.json \
+	json-dumps/monitoring-query.json \
 	json-dumps/project.json \
 	json-dumps/services.json
 
@@ -225,4 +226,22 @@ json-dumps/logging-entries-1.json:
 		--header 'Accept: application/json' \
 		--header 'Content-Type: application/json' \
 		--data '${LOGGING_ENTRIES_BODY}' \
+		| $(SED_SUBST_FAKE) >$@
+
+define MONITORING_QUERY
+{ \
+  "query": "fetch consumer_quota \
+| metric 'serviceruntime.googleapis.com/quota/exceeded' \
+| group_by 1h, [value_exceeded_count_true: count_true(value.exceeded)] \
+| within 1d \
+" \
+}
+endef
+export MONITORING_QUERY
+
+json-dumps/monitoring-query.json:
+	$(CURL) -fsS \
+		'https://monitoring.googleapis.com/v3/projects/$(PROJECT_ID)/timeSeries:query' \
+		--header "Content-Type: application/json" -X POST \
+		--data '$(MONITORING_QUERY)' \
 		| $(SED_SUBST_FAKE) >$@

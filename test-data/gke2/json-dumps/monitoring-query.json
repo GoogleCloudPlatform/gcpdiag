@@ -1,0 +1,63 @@
+{
+  "timeSeriesDescriptor": {
+    "labelDescriptors": [
+      {
+        "key": "resource.project_id"
+      },
+      {
+        "key": "resource.service"
+      },
+      {
+        "key": "resource.location"
+      },
+      {
+        "key": "metric.limit_name"
+      },
+      {
+        "key": "metric.quota_metric"
+      }
+    ],
+    "pointDescriptors": [
+      {
+        "key": "value_exceeded_count_true",
+        "valueType": "INT64",
+        "metricKind": "GAUGE",
+        "unit": "1"
+      }
+    ]
+  },
+  "timeSeriesData": [
+    {
+      "labelValues": [
+        {
+          "stringValue": "gcpdiag-gke-cluster-autoscaler-rrrr"
+        },
+        {
+          "stringValue": "logging.googleapis.com"
+        },
+        {
+          "stringValue": "global"
+        },
+        {
+          "stringValue": "WriteRequestsPerMinutePerProject"
+        },
+        {
+          "stringValue": "logging.googleapis.com/write_requests"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "int64Value": "96"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-05-15T16:04:06.985676Z",
+            "endTime": "2024-05-15T16:04:06.985676Z"
+          }
+        }
+      ]
+    }
+  ]
+}

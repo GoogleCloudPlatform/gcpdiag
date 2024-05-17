@@ -1,0 +1,63 @@
+project: gcpdiag-gke-cluster-autoscaler-rrrr, parameters: {location=europe-west10,name=gcp-
+cluster,project_id=gcpdiag-gke-cluster-autoscaler-rrrr}
+
+gke/logs: Provides a methodical approach to troubleshooting GKE logging issues.
+
+  This runbook guides you through a systematic investigation of potential
+  causes when logs from the Google Kubernetes Engine (GKE) cluster are missing
+  or incomplete. The focus is on core configuration settings that are essential
+  for proper logging functionality.
+
+  The following areas are examined:
+
+  - **Project-Level Logging:** Ensures that the Google Cloud project housing
+  the GKE cluster has the Cloud Logging API enabled.
+
+  - **Cluster-Level Logging:** Verifies that logging is explicitly enabled
+  within the GKE cluster's configuration.
+
+  - **Node Pool Permissions:** Confirms that the nodes within the cluster's
+  node pools have the 'Cloud Logging Write' scope enabled, allowing them to send
+  log data.
+
+  - **Service Account Permissions:** Validates that the service account used
+  by the node pools possesses the necessary IAM permissions to interact with
+  Cloud Logging. Specifically, the "roles/logging.logWriter" role is typically
+  required.
+
+  - **Cloud Logging API Wtite Quotas:** Verifies that Cloud Logging API Write
+  quotas have not been exceeded within the specified timeframe.
+  
+[START]: Checks the provided parameters.
+[AUTOMATED STEP]: Checks if logging API is disabled in the project.
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [OK]
+     [REASON]
+     The logging API is enabled in your project.
+[AUTOMATED STEP]: Checks if GKE level logging is disabled
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr/europe-west10/gcp-cluster        [OK]
+     [REASON]
+      GKE level logging is enabled for the cluster projects/gcpdiag-gke-cluster-autoscaler-rrrr/locations/europe-west10/clusters/gcp-cluster.
+[AUTOMATED STEP]: Verifies the node pools have Cloud Logging access scope
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr/europe-west10/gcp-cluster/default-pool [OK]
+     [REASON]
+     The node pool projects/gcpdiag-gke-cluster-autoscaler-rrrr/locations/europe-west10/clusters/gcp-cluster/nodePools/default-pool has the correct Cloud Logging access scope.
+[AUTOMATED STEP]: 
+    Verifies the node pool's service account has a role with the correct logging IAM permissions
+    
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr/europe-west10/gcp-cluster/default-pool [OK]
+     [REASON]
+     Service account: 1234000173-compute@developer.gserviceaccount.com has the correct logging permissions.
+[AUTOMATED STEP]: Checks if Cloud Logging API write quotas have been exceeded
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     Project gcpdiag-gke-cluster-autoscaler-rrrr has recently exceeded the following quotas: WriteRequestsPerMinutePerProject.
+     [REMEDIATION]
+     Please check the project gcpdiag-gke-cluster-autoscaler-rrrr for the Cloud Logging API quotas WriteRequestsPerMinutePerProject which have been reached
+[END]: Finalizing `GKE logs` diagnostics...
+
+
