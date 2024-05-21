@@ -94,6 +94,7 @@ class ClusterAutoscaler(runbook.DiagnosticTree):
     service_account_deleted = CaServiceAccountDeleted()
     min_size_reached = CaMinSizeReached()
     failed_to_evict_pods = CaFailedToEvictPods()
+    end = ClusterAutoscalerEnd()
 
     self.add_start(step=start)
     self.add_step(parent=start, child=out_of_resources)
@@ -103,6 +104,7 @@ class ClusterAutoscaler(runbook.DiagnosticTree):
     self.add_step(parent=ip_space_exhausted, child=service_account_deleted)
     self.add_step(parent=service_account_deleted, child=min_size_reached)
     self.add_step(parent=min_size_reached, child=failed_to_evict_pods)
+    self.add_end(step=end)
 
 
 class ClusterAutoscalerStart(runbook.StartStep):
@@ -411,3 +413,24 @@ class CaFailedToEvictPods(runbook.Step):
                 reason=op.prep_msg(op.SUCCESS_REASON,
                                    START_TIME_UTC=op.get(flags.START_TIME_UTC),
                                    END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+
+
+class ClusterAutoscalerEnd(runbook.EndStep):
+  """Finalizes the diagnostics process for `Cluster Autoscaler`.
+
+  This step prompts the user to confirm satisfaction with the Root Cause Analysis (RCA)
+  performed for `Cluster Autoscaler`.
+
+  Depending on the user's response, it may conclude the runbook execution or trigger additional
+  steps, such as generating a report of the findings.
+  """
+
+  def execute(self):
+    """Finalizing `Cluster Autoscaler` diagnostics..."""
+    response = op.prompt(
+        step=op.CONFIRMATION,
+        message=
+        'Are you satisfied with the `GKE Cluster Autoscaler` RCA performed?')
+    if response == op.NO:
+      op.info(message=op.END_MESSAGE)
+      op.interface.rm.generate_report()

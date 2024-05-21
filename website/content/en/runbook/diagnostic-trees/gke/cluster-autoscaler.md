@@ -68,6 +68,8 @@ gcpdiag runbook --help
 
   - [Ca Failed To Evict Pods](/runbook/steps/gke/ca-failed-to-evict-pods)
 
+  - [Cluster Autoscaler End](/runbook/steps/gke/cluster-autoscaler-end)
+
 
 <!--
 This file is auto-generated. DO NOT EDIT.
