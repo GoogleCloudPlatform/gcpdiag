@@ -8,6 +8,7 @@ import sys
 from datetime import datetime
 import textwrap
 
+# update pyinstaller/hook-gcpdiag-runbook.py when adding any new modules
 SUPPORTED_PRODUCTS = {
     'apigee', 'billing', 'bigquery', 'cdn', 'cloudrun', 'crm', 'composer',
     'datafusion', 'dataflow', 'dataproc', 'kms', 'gar', 'gke', 'gcb', 'gcf',
