@@ -163,8 +163,9 @@ class Step:
     if len(doc_lines) >= 3:
       if doc_lines[1]:
         raise ValueError(
-            f'DT {self.__class__.__name__} has a non-empty second line in the module docstring'
-        )
+            f'Step {self.__class__.__name__} has a non-empty second line '
+            'in the class docstring. Ensure the step\'s class docstring '
+            'contains a one-line summary followed by an empty second line.')
       long_desc = '\n'.join(doc_lines[2:])
     return long_desc
 
@@ -323,8 +324,8 @@ class DiagnosticTree(metaclass=RunbookRule):
     if len(doc_lines) >= 3:
       if doc_lines[1]:
         raise ValueError(
-            f'DT {self.__class__.__name__} has a non-empty second line in the module docstring'
-        )
+            f'Diagnostic Tree {self.__class__.__name__} has a non-empty second '
+            'line in the class docstring')
       long_desc = '\n'.join(doc_lines[2:])
     return long_desc
 
@@ -368,14 +369,13 @@ class DiagnosticEngine:
       name: The name of the diagnostic tree to load.
     """
     try:
-      # allow users to use pascal, snake , camel case to locate a rule
-      # ex: product/gce-runbook, product.gce_runbook, product.gce_runbook,
+      # ex: product/gce-runbook
       name = util.runbook_name_parser(name)
       self.dt = DiagnosticTreeRegister.get(name)
       if not self.dt:
         raise exceptions.DiagnosticTreeNotFound
     except exceptions.DiagnosticTreeNotFound as e:
-      logging.error('Issues locating runbook: %s : %s', e, name)
+      logging.error('%s: %s', name, e)
       sys.exit(2)
 
   def _check_required_paramaters(self, tree: DiagnosticTree):
@@ -431,7 +431,7 @@ class DiagnosticEngine:
           print(f'Cannot cast {param_val} to type {target_type}.')
       elif target_type == bool:
         try:
-          return constants.BOOL_VALUES[param_val]
+          return constants.BOOL_VALUES[str(param_val).lower()]
         except KeyError:
           print(f'Cannot cast {param_val} to type {target_type}.')
       else:
@@ -533,9 +533,9 @@ class DiagnosticEngine:
         try:
           self.run_step(step=step, operator=operator)
         except TemplateNotFound:
-          logging.error('could not load messages linked to step: %s', step)
-        except exceptions.InvalidStepOperation:
-          logging.error('Invalid step operation: %s', step)
+          logging.error('could not load messages linked to step: %s', step.name)
+        except exceptions.InvalidStepOperation as err:
+          logging.error('Invalid `%s` operation: %s', step.name, err)
 
       executed_steps.add(step)
       for child in step.steps:  # Iterate over the children of the current step

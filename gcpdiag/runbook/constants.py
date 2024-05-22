@@ -163,7 +163,7 @@ BOOL_VALUES = {
     'no': False,
     'false': False,
     '0': False,
-    None: False
+    'none': False
 }
 
 RETEST = 'RETEST'

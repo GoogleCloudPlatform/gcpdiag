@@ -32,7 +32,10 @@ class DiagnosticTreeNotFound(Exception):
   """Exception raised when a diagnostic tree cannot be found."""
 
   def __init__(self):
-    super().__init__('Diagnostic tree cannot be found.')
+    super().__init__(
+        'Diagnostic Tree has not been registered or does not exist. '
+        'Please verify the product and class name, and ensure the file containing '
+        'the class does not have any syntax errors.')
 
 
 class DiagnosticTreeConstructionError(Exception):

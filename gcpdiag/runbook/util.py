@@ -67,13 +67,13 @@ def pascal_case_to_snake_case(s):
 
 def runbook_name_parser(s):
   """
-  Converts a string from PascalCase or kebab-case to snake_case.
+  Converts a string from PascalCase or kebab-case.
 
   Args:
-      s (str): The string to convert from PascalCase or kebab-case to snake_case.
+      s (str): The string to convert from PascalCase to kebab-case.
 
   Returns:
-      str: The converted string in snake_case
+      str: The converted string in kebab-case
   """
   s = s.replace('_', '-')
   # Convert PascalCase to snake_case

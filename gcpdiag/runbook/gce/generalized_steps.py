@@ -342,7 +342,8 @@ class VmMetadataCheck(runbook.Step):
     # Determine the type of the expected value
     if isinstance(self.expected_value, bool):
       # Convert the string metadata value to a bool for comparison
-      return op.BOOL_VALUES.get(actual_value, False) == self.expected_value
+      return op.BOOL_VALUES.get(str(actual_value).lower(),
+                                False) == self.expected_value
     elif isinstance(self.expected_value, str):
       # Directly compare string values
       return actual_value == self.expected_value
