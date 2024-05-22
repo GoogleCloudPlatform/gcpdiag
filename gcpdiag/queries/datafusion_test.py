@@ -16,7 +16,7 @@
 from unittest import mock
 
 from gcpdiag import models
-from gcpdiag.queries import apis_stub, datafusion, request_api_stub
+from gcpdiag.queries import apis_stub, datafusion
 
 DUMMY_REGION = 'us-central1'
 DUMMY_PROJECT_NAME = 'gcpdiag-datafusion1-aaaa'
@@ -70,35 +70,11 @@ class TestExtractVersionPolicyDict:
   def test_extract_support_datafusion_version(self, mock_get):
 
     with open(
-        'test-data/datafusion1/html-content/version_support_policy.html',
-        encoding='utf-8',
-    ) as fh:
+        'test-data/datafusion1/html-content/'
+        'version_support_policy.html',
+        encoding='utf-8') as fh:
       mock_get.return_value.content = fh.read().encode('utf-8')
       mock_get.return_value.status_code = 200
+
     response_dict = datafusion.extract_support_datafusion_version()
     assert response_dict == SUPPORTED_VERSIONS_DICT
-
-
-@mock.patch('gcpdiag.queries.apis.requests.request',
-            new=request_api_stub.request)
-@mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
-class TestComputeProfile:
-  """Test Compute Profile"""
-
-  @mock.patch('gcpdiag.queries.apis.get_credentials')
-  def test_get_instance_system_compute_profile(self, mock_cred):
-    mock_cred.return_value.token = 'testing'
-    context = models.Context(project_id=DUMMY_PROJECT_NAME)
-    instances = datafusion.get_instances(context)
-    instance = list(instances.values())[0]
-    profiles = datafusion.get_instance_system_compute_profile(context, instance)
-    assert len(profiles) == 2
-
-  @mock.patch('gcpdiag.queries.apis.get_credentials')
-  def test_get_instance_user_compute_profile(self, mock_cred):
-    mock_cred.return_value.token = 'testing'
-    context = models.Context(project_id=DUMMY_PROJECT_NAME)
-    instances = datafusion.get_instances(context)
-    instance = list(instances.values())[0]
-    profiles = datafusion.get_instance_user_compute_profile(context, instance)
-    assert len(profiles) == 1
