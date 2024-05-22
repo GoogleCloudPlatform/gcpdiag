@@ -1,3 +1,0 @@
-*  datafusion/WARN/2024_002: Scaling down is disabled for the Compute Profile for Dataproc.
-   (No compute profile found)                                             [SKIP]
-

@@ -328,13 +328,6 @@ class Profile(models.Resource):
         return value.get('value')
     return 'No imageVersion defined'
 
-  @property
-  def auto_scaling_policy(self) -> str:
-    for value in self._resource_data['provisioner'].get('properties'):
-      if value.get('name') == 'autoScalingPolicy' and value.get('value') != '':
-        return value.get('value')
-    return 'No autoScalingPolicy defined'
-
 
 @caching.cached_api_call
 def get_instance_system_compute_profile(
