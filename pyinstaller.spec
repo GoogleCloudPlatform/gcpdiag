@@ -13,6 +13,14 @@ a = Analysis(['bin/gcpdiag'],
              win_private_assemblies=False,
              cipher=block_cipher,
              noarchive=False)
+
+# add runbook templates as data
+for root, dirs, files in os.walk("gcpdiag/runbook"):
+  for f in files:
+    if f.endswith("jinja"):
+      path = os.path.join(root, f)
+      a.datas.append((path, path, 'DATA'))
+
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
