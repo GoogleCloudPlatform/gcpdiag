@@ -431,7 +431,8 @@ def confirm_agent_telemetry_transmission(
     report: lint.LintReportRuleInterface,
     instances: List[Instance],
 ):
-  # For all VMs with Ops Agent installed, verify both subagents are transmitting telemtry.
+  # For all VMs with Ops Agent installed, verify both subagents are transmitting
+  # telemetry.
   for i in sorted(
       instances,
       key=op.attrgetter('project_id', 'name'),

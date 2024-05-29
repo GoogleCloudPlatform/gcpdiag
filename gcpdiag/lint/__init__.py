@@ -571,7 +571,7 @@ class SyncExecutionStrategy:
     # Start fetching any serial output logs if serial output to cloud logging
     # is not enabled on the project/ instance
     if config.get('enable_gce_serial_buffer'):
-      # execute fetech job
+      # execute fetch job
       gce_mod.execute_fetch_serial_port_outputs(executor)
 
     # Run the "prefetch_rule" functions with multiple worker threads to speed up

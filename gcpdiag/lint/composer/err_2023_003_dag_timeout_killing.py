@@ -16,7 +16,7 @@
 Sometimes we can see dag processor logs with task time out error. "Processor
 for/home/airflow/gcs/dags/exampledagname.py with PID 12345678 started at
 <DataTime>has timed out, killing it." In an ideal composer environment this
-error shouldnot occur as it is a cause of scheduler resource constarint and
+error shouldnot occur as it is a cause of scheduler resource constraint and
 complex DAGparsing implementation.
 """
 from boltons.iterutils import get_path

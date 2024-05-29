@@ -180,14 +180,14 @@ class Step:
 
 
 class StartStep(Step):
-  """Start Event of a Diagnotic tree"""
+  """Start Event of a Diagnostic tree"""
 
   def __init__(self):
     super().__init__(step_type=constants.StepType.START)
 
 
 class CompositeStep(Step):
-  """Composite Events of a Diagnotic tree"""
+  """Composite Events of a Diagnostic tree"""
 
   def __init__(self):
     super().__init__(step_type=constants.StepType.COMPOSITE)
@@ -254,7 +254,7 @@ class DiagnosticTree(metaclass=RunbookRule):
     self.context = context
 
   def add_step(self, parent: Step, child: Step):
-    """Adds an intermidate diagnostic step to the tree."""
+    """Adds an intermediate diagnostic step to the tree."""
     if self.start is None:
       raise ValueError('Start step is empty. Set start step with'
                        ' builder.add_start() or tree.add_start()')
@@ -275,7 +275,7 @@ class DiagnosticTree(metaclass=RunbookRule):
     self.start = step
 
   def add_end(self, step: EndStep):
-    """Adds the default end step of this tree which is invoked iff all child steps are exectued."""
+    """Adds the default end step of this tree which is invoked iff all child steps are executed."""
     if self.start and self.start.steps:
       if self.start.steps[-1].type == constants.StepType.END:
         raise ValueError('end already exist')
@@ -667,7 +667,7 @@ class ExpandTreeFromAst(ast.NodeVisitor):
               clazz = clazz() if isinstance(clazz, type) else clazz
               self.instances.setdefault(step.func.id, clazz)
               child = clazz  # This is a direct class name
-            # if argment of call is instantiated directly and has module attr.
+            # if argument of call is instantiated directly and has module attr.
             elif isinstance(step, ast.Call) and hasattr(step.func, 'attr'):
               clazz = self.instances.get(step.func.attr)
               if not clazz:

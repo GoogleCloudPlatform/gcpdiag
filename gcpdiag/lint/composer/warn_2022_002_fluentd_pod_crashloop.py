@@ -18,7 +18,7 @@
 The fluentd runs as a daemonset and collects logs from all environment
 components and uploads the logs to Cloud Logging. All fluentd pods in an
 environment could be stuck in a CrashLoopBackOff state after upgrading the
-enviromennt and no logs appear in the Cloud Logging.
+environment and no logs appear in the Cloud Logging.
 """
 from boltons.iterutils import get_path
 

@@ -19,7 +19,7 @@ from gcpdiag.runbook import util
 
 
 class TestStringConversions(unittest.TestCase):
-  """Test case type converstion used for Runbook and step name converstions"""
+  """Test case type conversion used for Runbook and step name conversions."""
 
   def test_pascal_case_to_kebab_case(self):
     self.assertEqual(util.pascal_case_to_kebab_case('PascalCase'),

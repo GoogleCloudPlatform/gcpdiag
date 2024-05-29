@@ -15,6 +15,9 @@ test-mocked:
 	  if [ $$EXIT_CODE != 2 ]; then echo "incorrect exit code $$EXIT_CODE" >&2; exit 1; fi; \
 	  exit 0
 
+spelling:
+	 pip install -U PyEnchant; pylint --disable all --enable spelling --spelling-dict en_US gcpdiag
+
 snapshots:
 	pytest --snapshot-update --forked
 
@@ -76,4 +79,4 @@ runbook-starter-code:
 	echo "Using Python at $$PYTHON"; \
 	$$PYTHON bin/runbook-starter-code-generator py_path=$$PYTHON name=$(name) prepenv=$(prepenv)
 
-.PHONY: test coverage-report version build bump-version tarfile release runbook-docs runbook-starter-code
+.PHONY: test coverage-report version build bump-version tarfile release runbook-docs runbook-starter-code spelling

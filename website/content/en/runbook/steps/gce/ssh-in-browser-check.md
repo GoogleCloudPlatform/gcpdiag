@@ -4,7 +4,7 @@ linkTitle: "Ssh In Browser Check"
 weight: 3
 type: docs
 description: >
-  Investigate SSH in Browser compoments
+  Investigate SSH in Browser components
 ---
 
 **Product**: [Compute Engine](https://cloud.google.com/compute)\

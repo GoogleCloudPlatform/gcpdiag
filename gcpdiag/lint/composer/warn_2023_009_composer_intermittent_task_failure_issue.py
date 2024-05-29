@@ -62,7 +62,7 @@ def get_dag_task(error_message: str):
     error_message: string containing the error log message
 
   Returns:
-    dag, task: airflow dag name amd airflow task name
+    dag, task: airflow dag name and airflow task name
   """
 
   parts = error_message.split()

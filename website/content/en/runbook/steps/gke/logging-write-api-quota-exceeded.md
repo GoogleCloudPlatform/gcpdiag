@@ -13,7 +13,7 @@ description: >
 ### Description
 
 Checks if the project has exceeded any Cloud Logging write quotas within
-  the defined timeframe. Quota exceedance could prevent nodes from sending
+  the defined timeframe. Exceeding the quota could prevent nodes from sending
   log data, even if other configurations are correct.
 
 ### Failure Reason

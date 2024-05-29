@@ -55,7 +55,7 @@ class VmTermination(runbook.DiagnosticTree):
 
   RCA Text Generation: Provides a detailed Root Cause Analysis text, outlining the identified
   cause of termination, the involved systems or activities, and recommendations
-  to prevent future occurrences where applicaable.
+  to prevent future occurrences where applicable.
   """
   parameters = {
       flags.PROJECT_ID: {

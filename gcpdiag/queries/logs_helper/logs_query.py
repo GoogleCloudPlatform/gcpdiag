@@ -11,7 +11,7 @@ class LogsQuery:
   of gcpdiag's logs module query we might face unrelated log entries. So
   we have to filter entries again.
 
-  This helper class helps with accoplishing this double filtering.
+  This helper class helps with accomplishing this double filtering.
 
   It receives a parameter search_exprs, which contains a list of classes
   (see logs_helper/logs_query.py) encapsulating search operations both

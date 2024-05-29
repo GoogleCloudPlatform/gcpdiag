@@ -47,7 +47,7 @@ class Logs(runbook.DiagnosticTree):
   Cloud Logging. Specifically, the "roles/logging.logWriter" role is typically
   required.
 
-  - **Cloud Logging API Wtite Quotas:** Verifies that Cloud Logging API Write
+  - **Cloud Logging API Write Quotas:** Verifies that Cloud Logging API Write
   quotas have not been exceeded within the specified timeframe.
   """
 
@@ -309,7 +309,7 @@ class LoggingWriteApiQuotaExceeded(runbook.Step):
   """Verifies that Cloud Logging API write quotas have not been exceeded.
 
   Checks if the project has exceeded any Cloud Logging write quotas within
-  the defined timeframe. Quota exceedance could prevent nodes from sending
+  the defined timeframe. Exceeding the quota could prevent nodes from sending
   log data, even if other configurations are correct.
   """
 

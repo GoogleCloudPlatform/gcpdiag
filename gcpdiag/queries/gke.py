@@ -504,7 +504,7 @@ def get_valid_node_versions(project_id: str, location: str) -> List[str]:
   server_config = _get_server_config(project_id, location)
   versions: List[str] = []
 
-  # See explanaition in get_valid_master_versions
+  # See explanation in get_valid_master_versions
   for c in server_config['channels']:
     versions += c['validVersions']
 

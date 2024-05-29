@@ -183,7 +183,7 @@ class Context:
     by the user and return a boolean outcome depending on the context.
 
     Args:
-      rosource: name of the resource under analysis. Always inspected if user
+      resource: name of the resource under analysis. Always inspected if user
       supplied a name criteria
 
       location: region or zone of the resource. IGNORELOCATION completely skips analysis

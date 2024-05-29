@@ -1,3 +1,3 @@
-*  dataflow/WARN/2023_006: A Dataflow job doesn't stuck in the cancelling state
+*  dataflow/WARN/2023_006: A Dataflow job is not stuck in the canceling state
    - gcpdiag-datafusion1-aaaa                                             [ OK ]
 

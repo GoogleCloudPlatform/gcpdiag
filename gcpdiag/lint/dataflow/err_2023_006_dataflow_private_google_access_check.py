@@ -17,7 +17,7 @@
 
 Dataflow job fails when the subnetwork does not have Private Google Access which is
 required for usage of private IP addresses by the Dataflow workers for accessing
-Google API's & Services
+Google APIs & Services
 """
 
 import itertools

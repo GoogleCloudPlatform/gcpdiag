@@ -215,7 +215,7 @@ def _execute_query_job(job: _LogsQueryJob):
 
 
 def realtime_query(project_id, filter_str, start_time_utc, end_time_utc):
-  """Inteded for use in only runbooks. use logs.query() for lint rules."""
+  """Intended for use in only runbooks. use logs.query() for lint rules."""
   thread = threading.current_thread()
   thread.name = f'log_query:{project_id}'
   logging_api = apis.get_api('logging', 'v2', project_id)

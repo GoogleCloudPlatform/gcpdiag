@@ -12,7 +12,7 @@ description: >
 
 ### Description
 
-If using OS Login investiages OS Login related configuration and permission and if not
+If using OS Login investigates OS Login related configuration and permission and if not
   Checks Keybased Configuration.
 
 

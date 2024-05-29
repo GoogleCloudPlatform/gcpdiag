@@ -25,8 +25,8 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
   - Internal Guest OS Checks: Analysis available Guest OS metrics or logs to detect any
     misconfigurations or service disruptions that could be obstructing SSH functionality.
 
-  - SSH in Brower Checks: Checks if the autenticated user has relevants permissions and
-    the organisation policies permits SSH in Browser.
+  - SSH in Browser Checks: Checks if the authenticated user has relevant permissions and
+    the organization policies permits SSH in Browser.
     
 [START]: Starting SSH diagnostics
 [INFO]: Will check for IAP configuration
@@ -230,8 +230,8 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
   - Internal Guest OS Checks: Analysis available Guest OS metrics or logs to detect any
     misconfigurations or service disruptions that could be obstructing SSH functionality.
 
-  - SSH in Brower Checks: Checks if the autenticated user has relevants permissions and
-    the organisation policies permits SSH in Browser.
+  - SSH in Browser Checks: Checks if the authenticated user has relevant permissions and
+    the organization policies permits SSH in Browser.
     
 [START]: Starting SSH diagnostics
 [INFO]: Checks will use serviceaccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com as the authenticated
@@ -434,8 +434,8 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
   - Internal Guest OS Checks: Analysis available Guest OS metrics or logs to detect any
     misconfigurations or service disruptions that could be obstructing SSH functionality.
 
-  - SSH in Brower Checks: Checks if the autenticated user has relevants permissions and
-    the organisation policies permits SSH in Browser.
+  - SSH in Browser Checks: Checks if the authenticated user has relevant permissions and
+    the organization policies permits SSH in Browser.
     
 [START]: Starting SSH diagnostics
 [INFO]: Will not check for IAP for TCP forwarding configuration

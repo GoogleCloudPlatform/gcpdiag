@@ -388,7 +388,7 @@ class Instance(models.Resource):
     return None
 
   def check_license(self, licenses: List[str]) -> bool:
-    """Checks that a licence is contained in a given license list"""
+    """Checks that a license is contained in a given license list"""
     if 'disks' in self._resource_data:
       for disk in self._resource_data['disks']:
         if 'license' in str(disk):
@@ -849,7 +849,7 @@ def get_project_metadata(project_id) -> Mapping[str, str]:
 def get_instances_serial_port_output(context: models.Context):
   """Get a list of serial port output for instances
 
-  which matche the given context, running and is not
+  which matches the given context, running and is not
   exported to cloud logging.
   """
   # Create temp storage (diskcache.Deque) for output
@@ -920,7 +920,7 @@ def get_instance_serial_port_output(
     project_id, zone, instance_name) -> Optional[SerialPortOutput]:
   """Get a list of serial port output for instances
 
-  which matche the given context, running and is not
+  which matches the given context, running and is not
   exported to cloud logging.
   """
   # Create temp storage (diskcache.Deque) for output
@@ -1054,7 +1054,7 @@ def get_all_disks(project_id: str) -> Iterable[Disk]:
 
 
 class InstanceEffectiveFirewalls(network_q.EffectiveFirewalls):
-  """Effective firewall rules for a network interace on a VM instance.
+  """Effective firewall rules for a network interface on a VM instance.
 
   Includes org/folder firewall policies).
   """

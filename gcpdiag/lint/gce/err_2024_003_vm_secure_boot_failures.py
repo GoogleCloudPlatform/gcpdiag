@@ -48,7 +48,7 @@ def prepare_rule(context: models.Context):
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-  # Analysing logs for all the instances
+  # Analyzing logs for all the instances
   instances = gce.get_instances(context).values()
   if not instances:
     report.add_skipped(None, 'no instances found')

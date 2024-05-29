@@ -158,7 +158,7 @@ class Region:
     api = apis.get_api('dataproc', 'v1', self.project_id)
     query = (api.projects().regions().clusters().list(projectId=self.project_id,
                                                       region=self.region))
-    # be careful not to retr too many times because querying all regions
+    # be careful not to retry too many times because querying all regions
     # sometimes causes requests to fail permanently
     resp = query.execute(num_retries=1)
     return resp.get('clusters', [])

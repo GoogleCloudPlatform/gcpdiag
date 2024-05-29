@@ -1,6 +1,6 @@
 """
   Simple wrapper for asyncio.sleep
-  (mosly needed to replace it with testing double during unit testing)
+  (mostly needed to replace it with testing double during unit testing)
 """
 import asyncio
 

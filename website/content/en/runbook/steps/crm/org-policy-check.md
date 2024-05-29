@@ -4,7 +4,7 @@ linkTitle: "Org Policy Check"
 weight: 3
 type: docs
 description: >
-  Checks if an organisation policy is effective in a project
+  Checks if an organization policy is effective in a project
 ---
 
 **Product**: \

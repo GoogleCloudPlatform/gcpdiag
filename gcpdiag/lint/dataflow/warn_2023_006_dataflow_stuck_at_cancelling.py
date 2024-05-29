@@ -13,9 +13,9 @@
 # limitations under the License.
 
 # Lint as: python3
-"""A Dataflow job doesn't stuck in the cancelling state
+"""A Dataflow job is not stuck in the canceling state
 
-A Dataflow job may get stuck in the cancelling state if
+A Dataflow job may get stuck in the canceling state if
 it is requested to cancel while a snapshot is in progress.
 """
 

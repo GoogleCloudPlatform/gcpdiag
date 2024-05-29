@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Contains Resueable Steps for GCE related Diagnostic Trees"""
+"""Contains Reusable Steps for GCE related Diagnostic Trees"""
 
 import logging
 import math
@@ -337,7 +337,7 @@ class VmMetadataCheck(runbook.Step):
     - actual_value: The actual value present on resource.
 
     Returns:
-    - True if the acutual metadata value matches the expected value, False otherwise.
+    - True if the actual metadata value matches the expected value, False otherwise.
     """
     # Determine the type of the expected value
     if isinstance(self.expected_value, bool):

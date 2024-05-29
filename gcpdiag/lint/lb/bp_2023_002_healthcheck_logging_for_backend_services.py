@@ -41,7 +41,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not backend_services:
     report.add_skipped(None, 'no backend services found')
     return
-  # get the health check resouce object for each backend service
+  # get the health check resource object for each backend service
   for bs in backend_services:
     if bs.health_check:
       health_check = gce.get_health_check(context.project_id, bs.health_check)

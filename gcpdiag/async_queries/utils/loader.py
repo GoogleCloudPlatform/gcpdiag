@@ -1,5 +1,5 @@
 """
-  Helper class to optimise gateway objects loading
+  Helper class to optimize gateway objects loading
   so that data only loaded once
 """
 import asyncio
@@ -8,10 +8,10 @@ from typing import Callable, Coroutine, Optional
 
 class Loader:
   """
-    Helper class to optimise gateway objects loading
+    Helper class to optimize gateway objects loading
     so that data only loaded once
 
-    Initialised with coroutine (async method) that should be run only once
+    Initialized with coroutine (async method) that should be run only once
     All clients are expected to await ensure_loaded method
 
     class MyGateway:

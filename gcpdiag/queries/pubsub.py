@@ -193,7 +193,7 @@ class Subscription(models.Resource):
     """Return the name of the bucket attached to GCS subscription."""
     if self.is_gcs_subscription():
       return get_path(self._resource_data, ('cloudStorageConfig', 'bucket'))
-    return ''  # acts as a null return that can be evaluated as a falsy value
+    return ''  # acts as a null return that can be evaluated as a false value
 
 
 @caching.cached_api_call

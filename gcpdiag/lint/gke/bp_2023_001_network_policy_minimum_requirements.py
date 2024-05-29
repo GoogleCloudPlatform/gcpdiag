@@ -36,7 +36,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     # Skipping check for autopilot clusters as beginning from version 1.22.7-gke.1500
     # and later and versions 1.23.4-gke.1500 and later have Dataplane V2 enabled by default
 
-    # Check if cluster has dataplane V2 which has network ploicy enabled
+    # Check if cluster has dataplane V2 which has network policy enabled
     if c.has_dpv2_enabled():
       report.add_skipped(c, 'Dataplane V2 is enabled in the cluster')
       continue

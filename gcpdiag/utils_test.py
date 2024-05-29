@@ -49,7 +49,7 @@ def test_is_region():
 
 
 def test_is_full_res_name():
-  """is_full_res_name() should return correct result for a valid/unvalid full resource name."""
+  """is_full_res_name() should return correct result for a valid/invalid full resource name."""
   assert utils.is_full_res_name(
       'https://library.googleapis.com/shelves/shelf1/books/book2')
   assert utils.is_full_res_name('//googleapis.com/shelves/shelf1/books/book2')
@@ -57,7 +57,7 @@ def test_is_full_res_name():
 
 
 def test_is_rel_res_name():
-  """is_rel_res_name() should return correct result for a valid/unvalid relative resource name."""
+  """is_rel_res_name() should return correct result for a valid/invalid relative resource name."""
   assert not utils.is_rel_res_name(
       '//library.googleapis.com/shelves/shelf1/books/book2')
   assert utils.is_rel_res_name(
@@ -65,7 +65,7 @@ def test_is_rel_res_name():
 
 
 def test_is_valid_res_name():
-  """is_valid_res_name() should return correct result for a valid/unvalid resource name."""
+  """is_valid_res_name() should return correct result for a valid/invalid resource name."""
   assert utils.is_valid_res_name('//googleapis.com/shelves/shelf1/books/book2')
   assert utils.is_valid_res_name('//googleapis.com/shelves/shelf1/books/2')
   assert utils.is_valid_res_name('shelves/shelf1/books/book2')

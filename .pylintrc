@@ -122,6 +122,7 @@ disable=abstract-method,
         round-builtin,
         setslice-method,
         signature-differs,
+	spelling,
         standarderror-builtin,
         suppressed-message,
         sys-max-int,
@@ -349,7 +350,10 @@ ignore-imports=no
 
 
 [SPELLING]
-
+# run with "make spelling" or a command like:
+#  pip install PyEnchant
+#  pylint --disable all --enable spelling --spelling-dict en_US gcpdiag
+#
 # Spelling dictionary name. Available dictionaries: none. To make it working
 # install python-enchant package.
 spelling-dict=
@@ -358,7 +362,7 @@ spelling-dict=
 spelling-ignore-words=
 
 # A path to a file that contains private dictionary; one word per line.
-spelling-private-dict-file=
+spelling-private-dict-file=.pylint-dictionary.txt
 
 # Tells whether to store unknown words to indicated private dictionary in
 # --spelling-private-dict-file option instead of raising a message.

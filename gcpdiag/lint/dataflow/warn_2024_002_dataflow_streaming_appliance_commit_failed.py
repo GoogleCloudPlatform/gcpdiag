@@ -17,7 +17,7 @@
 """Dataflow job using Streaming Appliance is not getting stuck due to Commit failed: computation doesn't have the state family.
 
 Flatten operations should not be followed by a ParDo that uses a side input,
-doing so will return the above warning and cuase the job to get stuck while
+doing so will return the above warning and cause the job to get stuck while
 running. The recommendation is restructuring the pipeline so that the ParDos
 with side inputs should come before any flatten operations.
 """

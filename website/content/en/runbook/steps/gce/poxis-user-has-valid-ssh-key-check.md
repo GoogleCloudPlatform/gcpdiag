@@ -4,7 +4,7 @@ linkTitle: "Poxis User Has Valid Ssh Key Check"
 weight: 3
 type: docs
 description: >
-  Verifies the existence of a valid SSH key for the specified local Poxis user on a (VM).
+  Verifies the existence of a valid SSH key for the specified local Proxy user on a (VM).
 ---
 
 **Product**: [Compute Engine](https://cloud.google.com/compute)\

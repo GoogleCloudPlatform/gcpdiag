@@ -28,7 +28,7 @@ This runbook is designed to assist you in investigating and understanding the un
 
   RCA Text Generation: Provides a detailed Root Cause Analysis text, outlining the identified
   cause of termination, the involved systems or activities, and recommendations
-  to prevent future occurrences where applicaable.
+  to prevent future occurrences where applicable.
 
 ### Executing this runbook
 

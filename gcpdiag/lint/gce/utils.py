@@ -73,7 +73,7 @@ class SerialOutputSearch:
       for output in self.serial_port_outputs.entries:
         # there is no reliable timestamps so we rely on the order the contents were delivered
         # the order of the output contents is always consistent
-        # start from the buttom for the most recent entry
+        # start from the button for the most recent entry
         for serial_entry in reversed(output.contents):
           if not self.instances_with_match.get(output.instance_id):
             if any(f in serial_entry for f in self.search_strings):

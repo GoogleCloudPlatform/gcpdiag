@@ -56,8 +56,8 @@ class Ssh(runbook.DiagnosticTree):
   - Internal Guest OS Checks: Analysis available Guest OS metrics or logs to detect any
     misconfigurations or service disruptions that could be obstructing SSH functionality.
 
-  - SSH in Brower Checks: Checks if the autenticated user has relevants permissions and
-    the organisation policies permits SSH in Browser.
+  - SSH in Browser Checks: Checks if the authenticated user has relevant permissions and
+    the organization policies permits SSH in Browser.
     """
   # Specify parameters common to all steps in the diagnostic tree class.
   parameters = {
@@ -290,7 +290,7 @@ class SshEnd(runbook.EndStep):
 
 
 class SshInBrowserCheck(runbook.CompositeStep):
-  """Investigate SSH in Browser compoments
+  """Investigate SSH in Browser components
 
   SSH can be done via SSH in Browser feature, if desired by user,
   check components required for SSH in browser to work correctly
@@ -304,7 +304,7 @@ class SshInBrowserCheck(runbook.CompositeStep):
       ssh_in_browser_orgpolicy_check.constraint = 'constraints/compute.disableSshInBrowser'
       ssh_in_browser_orgpolicy_check.is_enforced = False
       self.add_child(ssh_in_browser_orgpolicy_check)
-      # add check constraints/compute.vmExternalIpAccess when list orpolicies are allowed.
+      # add check constraints/compute.vmExternalIpAccess when list org policies are allowed.
 
 
 class GcpSshPermissions(runbook.CompositeStep):
@@ -350,7 +350,7 @@ class GcpSshPermissions(runbook.CompositeStep):
 class OsLoginStatusCheck(runbook.Gateway):
   """Checks for OS Login setup and and non OS login setup on a VM to guide further diagnostics.
 
-  If using OS Login investiages OS Login related configuration and permission and if not
+  If using OS Login investigates OS Login related configuration and permission and if not
   Checks Keybased Configuration.
   """
 
@@ -396,7 +396,7 @@ class OsLoginStatusCheck(runbook.Gateway):
 
 
 class PoxisUserHasValidSshKeyCheck(runbook.Step):
-  """Verifies the existence of a valid SSH key for the specified local Poxis user on a (VM).
+  """Verifies the existence of a valid SSH key for the specified local Proxy user on a (VM).
 
   Ensures that the local user has at least one valid SSH key configured in the VM's metadata, which
   is essential for secure SSH access. The check is performed against the SSH keys stored within

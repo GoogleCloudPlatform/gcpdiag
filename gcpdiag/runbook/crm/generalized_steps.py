@@ -20,7 +20,7 @@ from gcpdiag.runbook.iam import constants, flags
 
 
 class OrgPolicyCheck(runbook.Step):
-  """Checks if an organisation policy is effective in a project
+  """Checks if an organization policy is effective in a project
 
   Supports only boolean constraints and not list constraints.
   """
@@ -29,7 +29,7 @@ class OrgPolicyCheck(runbook.Step):
   is_enforced: bool = True
 
   def execute(self):
-    """Checking Organisation policy"""
+    """Checking Organization policy"""
     project = crm.get_project(op.get(flags.PROJECT_ID))
     constraint = orgpolicy.get_effective_org_policy(op.get(flags.PROJECT_ID),
                                                     self.constraint)

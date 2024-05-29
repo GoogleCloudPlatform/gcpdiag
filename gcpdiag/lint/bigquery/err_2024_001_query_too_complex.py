@@ -18,7 +18,7 @@ The query is failing with Resources exceeded during query execution. This
 usually happens when VIEWs, WITH clauses and SQL UDFs are inlined/expanded in
 query and then we measure query complexity. Nested inlining could cause
 exponential growth in complexity,Sometimes customers use WITH clause as
-substitution for temp tables. It is not a good practie and they could use
+substitution for temp tables. It is not a good practice and they could use
 scripts and temp tables instead.
 """
 from boltons.iterutils import get_path

@@ -78,7 +78,7 @@ class Project(models.Resource):
 def get_project(project_id: str) -> Project:
   '''Attempts to retrieve project details for the supplied project id or number.
     If the project is found/accessible, it returns a Project object with the resource data.
-    If the project cannot be retrieved, the application raises one of the execeptions below.
+    If the project cannot be retrieved, the application raises one of the exceptions below.
 
     Args:
         project_id (str): The project id or number of

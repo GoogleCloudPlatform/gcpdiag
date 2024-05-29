@@ -77,7 +77,7 @@ def _estimate_gke_eol_date(version: Version, eol_schedule: Dict):
   Estimate End Of Life date for a given GKE version
 
   After a OSS K8s version is released it hits GKE Rapid channel in ~30 days.
-  It's being promoted to GKE Regular chennel in ~90 days.
+  It's being promoted to GKE Regular channel in ~90 days.
   After a version hits Regular channel it's supported for 14 months.
   """
 

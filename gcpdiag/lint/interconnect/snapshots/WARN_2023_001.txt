@@ -1,4 +1,4 @@
-*  interconnect/WARN/2023_001: VLAN attachment is using Dataplan V1.
+*  interconnect/WARN/2023_001: VLAN attachment is using Dataplane V1.
    - gcpdiag-gke1-aaaa/dummy-attachment1                                  [ OK ]
    - gcpdiag-gke1-aaaa/dummy-attachment2                                  [ OK ]
    - gcpdiag-gke1-aaaa/dummy-attachment3                                  [ OK ]
@@ -11,7 +11,7 @@
    - gcpdiag-gke1-aaaa/dummy-attachment10                                 [ OK ]
 
    Dataplane V1 doesn't support certain feature such as BFD, consider upgrading
-   to Datapalne V2. For more information: https://cloud.google.com/network-
+   to Dataplane V2. For more information: https://cloud.google.com/network-
    connectivity/docs/interconnect/concepts/terminology#dataplaneVersion
 
    https://gcpdiag.dev/rules/interconnect/WARN/2023_001

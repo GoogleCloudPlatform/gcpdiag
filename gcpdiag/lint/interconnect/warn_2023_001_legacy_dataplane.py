@@ -11,9 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""VLAN attachment is using Dataplan V1.
+"""VLAN attachment is using Dataplane V1.
 
-Dataplane V1 doesn't support certain feature such as BFD, consider upgrading to Datapalne V2.
+Dataplane V1 doesn't support certain feature such as BFD, consider upgrading to Dataplane V2.
 For more information:
 https://cloud.google.com/network-connectivity/docs/interconnect/concepts/terminology#dataplaneVersion
 """

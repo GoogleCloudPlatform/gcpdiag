@@ -33,8 +33,8 @@ This runbook focuses on investigating components required for ssh on either Wind
   - Internal Guest OS Checks: Analysis available Guest OS metrics or logs to detect any
     misconfigurations or service disruptions that could be obstructing SSH functionality.
 
-  - SSH in Brower Checks: Checks if the autenticated user has relevants permissions and
-    the organisation policies permits SSH in Browser.
+  - SSH in Browser Checks: Checks if the authenticated user has relevant permissions and
+    the organization policies permits SSH in Browser.
 
 ### Executing this runbook
 

@@ -19,7 +19,7 @@ gce/vm-termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
 
   RCA Text Generation: Provides a detailed Root Cause Analysis text, outlining the identified
   cause of termination, the involved systems or activities, and recommendations
-  to prevent future occurrences where applicaable.
+  to prevent future occurrences where applicable.
   
 [START]: Starting VM Termination diagnostics
 [GATEWAY]: Determining whether to investigate one or more terminations
@@ -59,7 +59,7 @@ gce/vm-termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
 
   RCA Text Generation: Provides a detailed Root Cause Analysis text, outlining the identified
   cause of termination, the involved systems or activities, and recommendations
-  to prevent future occurrences where applicaable.
+  to prevent future occurrences where applicable.
   
 [START]: Starting VM Termination diagnostics
 [GATEWAY]: Determining whether to investigate one or more terminations
@@ -99,7 +99,7 @@ gce/vm-termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
 
   RCA Text Generation: Provides a detailed Root Cause Analysis text, outlining the identified
   cause of termination, the involved systems or activities, and recommendations
-  to prevent future occurrences where applicaable.
+  to prevent future occurrences where applicable.
   
 [START]: Starting VM Termination diagnostics
 [GATEWAY]: Determining whether to investigate one or more terminations

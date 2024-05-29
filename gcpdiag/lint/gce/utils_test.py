@@ -60,7 +60,7 @@ class TestUtils:
   def test_query_order_with_buffer_enabled(self, mock_logs_query_entries,
                                            mock_serial_output_query_entries):
 
-    # Test when customer has provied the `--enable_gce_serial_buffer` flag
+    # Test when customer has provided the `--enable_gce_serial_buffer` flag
     config.init({'enable_gce_serial_buffer': True}, 'x')
     search = SerialOutputSearch(context=self.context,
                                 search_strings=['entry_one', 'entry_two'])

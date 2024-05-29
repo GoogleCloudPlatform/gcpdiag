@@ -120,7 +120,7 @@ StepConstants = {
 
 
 class StepType(Enum):
-  """Types of Diagnotic Tree Steps"""
+  """Types of Diagnostic Tree Steps"""
   START = 'START'
   END = 'END'
   AUTOMATED = 'AUTOMATED STEP'

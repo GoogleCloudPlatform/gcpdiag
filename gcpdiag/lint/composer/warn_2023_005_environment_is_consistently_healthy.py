@@ -17,7 +17,7 @@ Cloud Composer runs a liveness DAG named airflow_monitoring, which runs on a
 schedule and reports environment health. If the liveness DAG run finishes
 successfully, the health status is True, which means healthy. Otherwise, the
 health status is False. Note that the environment health could be intermittently
-unhealthy due to events like scheduled maintenances. However, overall it should
+unhealthy due to events like scheduled maintenance. However, overall it should
 be healthy.
 """
 from boltons.iterutils import get_path

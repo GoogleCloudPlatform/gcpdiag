@@ -34,7 +34,7 @@ This runbook guides you through a systematic investigation of potential
   Cloud Logging. Specifically, the "roles/logging.logWriter" role is typically
   required.
 
-  - **Cloud Logging API Wtite Quotas:** Verifies that Cloud Logging API Write
+  - **Cloud Logging API Write Quotas:** Verifies that Cloud Logging API Write
   quotas have not been exceeded within the specified timeframe.
 
 ### Executing this runbook

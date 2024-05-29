@@ -49,7 +49,7 @@ def user_has_valid_ssh_key(local_user, keys: List[str], key_type=None) -> bool:
     True if at least one valid key or False if none is valid
    """
   pattern = r'(?P<user>\w+):(?P<type>[\w-]+) \S+(?: \S+|)(?: google-ssh {"userName":"\S+","expireOn":"(?P<expire_on>[^"]+)"}|$)'  # pylint:disable=line-too-long
-  # patten the input string into key_value and if formated the ssh info
+  # pattern the input string into key_value and if formatted the ssh info
   for key in keys:
     key = key.strip()
     m = re.search(pattern, key)

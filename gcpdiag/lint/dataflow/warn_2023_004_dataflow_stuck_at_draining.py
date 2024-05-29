@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Lint as: python3
-"""Dataflow job doen't stuck at draining state for more than 3 hours
+"""Dataflow job are not stuck at draining state for more than 3 hours
 
 A Dataflow job might got stuck at draining as
 draining doesn't fix stuck pipelines.

@@ -182,7 +182,7 @@ class TestCluster:
     assert c.current_node_count == 3
 
   def test_np_pod_ipv4_cidr_size(self):
-    """resturn correct pod CIDR size per allocated to node pool."""
+    """return correct pod CIDR size per allocated to node pool."""
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     # cluster 1
@@ -371,7 +371,7 @@ class TestCluster:
     assert ips[0].is_private
 
   def test_has_network_policy_enabled(self):
-    # test for network ploicy enabled and disabled
+    # test for network policy enabled and disabled
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = gke.get_clusters(context)
     c = clusters[DUMMY_CLUSTER1_NAME]

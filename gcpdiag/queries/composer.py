@@ -153,7 +153,7 @@ COMPOSER_REGIONS = [
 def _query_region_envs(region, api, project_id):
   query = api.projects().locations().environments().list(
       parent=f'projects/{project_id}/locations/{region}')
-  # be careful not to retr too many times because querying all regions
+  # be careful not to retry too many times because querying all regions
   # sometimes causes requests to fail permanently
   resp = query.execute(num_retries=1)
   return resp.get('environments', [])

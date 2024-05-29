@@ -15,7 +15,7 @@
    A private cluster is a type of VPC-native cluster that only depends on
    internal IP addresses. Nodes, Pods, and Services in a private cluster require
    unique subnet IP address ranges.  Private clusters are used when the
-   applicationas and services are needed to be isolated from the outside
+   applications and services are needed to be isolated from the outside
    connections completely. This ensures the workloads are private and not
    exposed to untrusted sources.
 
