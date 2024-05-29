@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "ms-python.pylint",
+    "ms-python.mypy-type-checker",
+    "eeyore.yapf"
+  ]
+}

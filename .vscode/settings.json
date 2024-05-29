@@ -1,18 +1,19 @@
 {
-    "editor.codeActionsOnSave": {
-        "source.organizeImports": "always"
-    },
     "editor.formatOnSave": true,
     "editor.insertSpaces": true,
     "editor.tabSize": 2,
     "files.insertFinalNewline": true,
     "files.trimTrailingWhitespace": true,
-    "python.formatting.provider": "yapf",
-    "python.linting.enabled": true,
-    "python.linting.pylintEnabled": true,
-    "python.linting.pylintPath": "pylint",
-    "python.linting.mypyEnabled": true,
-    "python.linting.mypyArgs": [
+    "[python]": {
+        "editor.defaultFormatter": "eeyore.yapf",
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "always"
+        },
+    },
+    "pylint.severity": {
+        "refactor": "Warning",
+    },
+    "mypy-type-checker.args": [
         "--follow-imports=silent",
         "--ignore-missing-imports",
         "--show-column-numbers",
@@ -20,9 +21,8 @@
         "--scripts-are-modules"
     ],
     "python.terminal.activateEnvInCurrentTerminal": true,
-    "python.linting.pylintCategorySeverity.refactor": "Warning",
     "python.testing.pytestArgs": [
-      "gcpdiag"
+        "gcpdiag"
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
