@@ -201,10 +201,10 @@ class EndStep(Step):
 
   def execute(self):
     if not config.get(flags.INTERACTIVE_MODE):
-      response = self.interface.prompt(task=self.interface.CONFIRMATION,
-                                       message='Is your issue resolved?')
-      if response == self.interface.NO:
-        self.interface.prompt(message=constants.END_MESSAGE)
+      response = op.prompt(step=op.CONFIRMATION,
+                           message='Is your issue resolved?')
+      if response == op.NO:
+        op.operator.interface.prompt(message=constants.END_MESSAGE)
 
 
 class Gateway(Step):
@@ -507,15 +507,13 @@ class DiagnosticEngine:
     self.interface.output.display_runbook_description(dt)
 
     try:
-      dt.hook_build_tree()
       operator = op.Operator(c=context, i=self.interface)
+      with op.operator_context(operator):
+        dt.hook_build_tree()
       self.finalize = False
       self.find_path_dfs(step=dt.start, operator=operator, executed_steps=set())
 
-    except (utils.GcpApiError, googleapiclient.errors.HttpError, RuntimeError,
-            ValueError, KeyError, exceptions.InvalidDiagnosticTree) as err:
-      if isinstance(err, googleapiclient.errors.HttpError):
-        err = utils.GcpApiError(err)
+    except (RuntimeError, exceptions.InvalidDiagnosticTree) as err:
       logging.warning('%s: %s while processing runbook rule: %s',
                       type(err).__name__, err, dt)
 
@@ -532,12 +530,23 @@ class DiagnosticEngine:
       with op.operator_context(operator):
         try:
           self.run_step(step=step, operator=operator)
+          executed_steps.add(step)
         except TemplateNotFound:
           logging.error('could not load messages linked to step: %s', step.name)
         except exceptions.InvalidStepOperation as err:
           logging.error('Invalid `%s` operation: %s', step.name, err)
+        except (ValueError, KeyError) as err:
+          logging.error('`%s`: %s', step.name, err)
+        except (utils.GcpApiError, googleapiclient.errors.HttpError) as error:
+          error = utils.GcpApiError(error)
+          if error.status == 403:
+            logging.error(('%s: %s user does not sufficient permissions '
+                           'to perform operations in step: %s'),
+                          type(error).__name__, error, step.id)
+            return
+          logging.error('%s: %s while processing step: %s',
+                        type(error).__name__, error, step.id)
 
-      executed_steps.add(step)
       for child in step.steps:  # Iterate over the children of the current step
         if child not in executed_steps:
           self.find_path_dfs(step=child,

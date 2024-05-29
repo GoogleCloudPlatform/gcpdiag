@@ -152,7 +152,9 @@ class Ssh(runbook.DiagnosticTree):
     # assign add as a child of start
     self.add_step(parent=start, child=gce_permission_check)
     self.add_step(parent=start, child=gce_firewall_check)
-    self.add_step(parent=start, child=SshInBrowserCheck())
+    # users wants to use SSH in Browser
+    if op.get(CHECK_SSH_IN_BROWSER):
+      self.add_step(parent=start, child=SshInBrowserCheck())
     self.add_end(step=SshEnd())
 
 
@@ -298,13 +300,11 @@ class SshInBrowserCheck(runbook.CompositeStep):
 
   def execute(self):
     """SSH in browser required?"""
-    # users wants to use SSH in Browser
-    if op.get(CHECK_SSH_IN_BROWSER):
-      ssh_in_browser_orgpolicy_check = crm_gs.OrgPolicyCheck()
-      ssh_in_browser_orgpolicy_check.constraint = 'constraints/compute.disableSshInBrowser'
-      ssh_in_browser_orgpolicy_check.is_enforced = False
-      self.add_child(ssh_in_browser_orgpolicy_check)
-      # add check constraints/compute.vmExternalIpAccess when list org policies are allowed.
+    ssh_in_browser_orgpolicy_check = crm_gs.OrgPolicyCheck()
+    ssh_in_browser_orgpolicy_check.constraint = 'constraints/compute.disableSshInBrowser'
+    ssh_in_browser_orgpolicy_check.is_enforced = False
+    self.add_child(ssh_in_browser_orgpolicy_check)
+    # add check constraints/compute.vmExternalIpAccess when list orpolicies are allowed.
 
 
 class GcpSshPermissions(runbook.CompositeStep):
@@ -433,7 +433,7 @@ class PoxisUserHasValidSshKeyCheck(runbook.Step):
                                                 flags.LOCAL_USER)))
 
 
-class GceFirewallAllowsSsh(runbook.CompositeStep):
+class GceFirewallAllowsSsh(runbook.Gateway):
   """Assesses the VPC network configuration to ensure it allows SSH traffic to the target VM.
 
   This diagnostic step checks for ingress firewall rules that permit SSH traffic based on

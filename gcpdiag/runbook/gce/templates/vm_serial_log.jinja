@@ -100,7 +100,7 @@ https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-
 {% endblock kernel_panic_uncertain_remediation %}
 
 {% block kernel_panic_skipped_reason %}
-There are no logs to analyize
+There are no logs to examine
 {% endblock kernel_panic_skipped_reason %}
 
 
@@ -136,6 +136,10 @@ If SSHGuard or similar application is a concern,
 manually inspect its configuration via the interactive serial console:
 https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 {% endblock sshguard_uncertain_remediation %}
+
+{% block sshguard_skipped_reason %}
+There are no logs to examine
+{% endblock sshguard_skipped_reason %}
 
 {% block windows_gce_ssh_agent_instructions_message %}
 Verify if the `google-compute-engine-ssh` agent is installed on the Windows VM.
@@ -209,6 +213,10 @@ See GCP support policy on Guest OS
 https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
 https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support
 {% endblock sshd_uncertain_remediation %}
+
+{% block sshd_skipped_reason %}
+There are no logs to examine
+{% endblock sshd_skipped_reason %}
 
 {% block windows_bootup_step_message %}
 Verifying bootup pr

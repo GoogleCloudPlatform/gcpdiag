@@ -433,4 +433,4 @@ class ClusterAutoscalerEnd(runbook.EndStep):
         'Are you satisfied with the `GKE Cluster Autoscaler` RCA performed?')
     if response == op.NO:
       op.info(message=op.END_MESSAGE)
-      op.interface.rm.generate_report()
+      op.operator.interface.rm.generate_report()

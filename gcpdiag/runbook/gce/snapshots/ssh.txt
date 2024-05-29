@@ -191,7 +191,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 
-[COMPOSITE STEP]: Evaluating VPC network firewall rules for SSH access...
+[GATEWAY]: Evaluating VPC network firewall rules for SSH access...
 [AUTOMATED STEP]: Evaluating VPC network traffic rules...
 
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [OK]
@@ -199,7 +199,6 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      Ingress Traffic from source IP/CIDR 35.235.240.0/20, tcp:22 to the GCE
      instance faulty-linux-ssh is allowed by: vpc firewall rule: gce-secured-instance-test-allow
 
-[COMPOSITE STEP]: SSH in browser required?
 [END]: Finalizing SSH diagnostics...
 
 
@@ -394,7 +393,7 @@ principal in Cloud Console / gcloud (incl. impersonated service account)
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 
-[COMPOSITE STEP]: Evaluating VPC network firewall rules for SSH access...
+[GATEWAY]: Evaluating VPC network firewall rules for SSH access...
 [AUTOMATED STEP]: Evaluating VPC network traffic rules...
 
    - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
@@ -402,7 +401,6 @@ principal in Cloud Console / gcloud (incl. impersonated service account)
      Ingress Traffic from source IP/CIDR 35.235.240.0/20, tcp:22 to the GCE
      instance valid-linux-ssh is allowed by: vpc firewall rule: default-allow-ssh
 
-[COMPOSITE STEP]: SSH in browser required?
 [END]: Finalizing SSH diagnostics...
 
 
@@ -568,14 +566,13 @@ are operational on the VM.
      https://cloud.google.com/compute/docs/access/iam#connectinginstanceadmin
 
 [GATEWAY]: Identifying OS Login Setup.
-[COMPOSITE STEP]: Evaluating VPC network firewall rules for SSH access...
+[GATEWAY]: Evaluating VPC network firewall rules for SSH access...
 [AUTOMATED STEP]: Evaluating VPC network traffic rules...
 
    - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [OK]
      [REASON]
      Ingress Traffic from source IP/CIDR 0.0.0.0, tcp:22 to the GCE instance faulty-windows-ssh is allowed by: vpc firewall rule: gce-secured-instance-test-allow
 
-[COMPOSITE STEP]: SSH in browser required?
 [END]: Finalizing SSH diagnostics...
 
 

@@ -8,7 +8,7 @@ description: >
 ---
 
 **Product**: [Compute Engine](https://cloud.google.com/compute)\
-**Step Type**: COMPOSITE STEP
+**Step Type**: GATEWAY
 
 ### Description
 
