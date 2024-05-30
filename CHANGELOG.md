@@ -1,3 +1,46 @@
+## 0.72 (2024-5-30)
+
+#### Fixes
+
+- update pyinstaller to include runbook command and templates in x20 binary
+  build
+- Update pylint configuration files
+- Update GKE EOL file
+- fix case sensitive runbook bug with bool value interpretation
+- Revert "new rule: datafusion\_cdap\_api\_call\_implementation"
+- Revert "new rule:check scale down disabled for the compute profiles in the
+  datafusion instance
+- Update pipenv dependencies.
+- pipenv upgrade idna and aiohttp per reported security vulnerabilities
+- Removed cloud resource manager dependency from gce/bp\_2024\_001 and
+  gce/bp\_2024\_002 Rules. Improved error reporting.
+- default universe\_domain, credentials for runbook API, handle template path
+  for runbook from API service
+- fix title for BP\_EXT/2024\_001.md conflict with BP/2024\_001.md
+- GCE lint legacy monitoring and agent: Report ok when VM manager (os config
+  API) does not detect legacy agent packages on the GCE VM.
+
+#### New Features
+- added spell check and corrections of existing misspelled words
+
+#### New Runbook
+- new runbook: GKE logs
+- new runbook: GKE cluster autoscaler
+
+#### New Lint Rule
+- dataflow/err\_2024\_004\_missing\_gce\_permission\_temp\_bucket The Dataflow
+  job has the necessary GCS permissions for the temporary bucket
+- gce/err\_2024\_003\_dataflow\_write\_truncate\_unbounded streaming dataflow
+  jobs are not using write\_truncate when working with unbounded pcollections
+- gce/err\_2024\_004\_ops\_agent In additional to access scope and iam roles,
+  the monitoring API and logging API should also be enabled on the project, for
+  Ops Agent to send metrics and logs respectively.
+- gce/err\_2024\_004\_ops\_agent The rules verifies that the Ops Agent is
+  installed on a GCE VM and is sending logs and metrics to gcloud backend.
+- gke/warn\_2024\_002\_ksa\_exceeded GKE KSA exceeded 3000 in WI enabled
+  clusters.
+
+
 ## 0.71 (2024-4-17)
 
 #### New lint rules
