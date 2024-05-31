@@ -55,22 +55,27 @@ class TestCommand(TestCase):
         'dataproc/BP/2021_001',
     ]
     self.assertDictEqual(
-        command.run_and_get_results(None),
-        {
+        command.run_and_get_results(None), {
             'result': [{
                 'doc_url': 'https://gcpdiag.dev/rules/dataproc/BP/2021_001',
-                'reason': 'no dataproc clusters found',
-                'resource': '-',
+                'long_doc': 'Enabling stackdriver logging for your Dataproc '
+                            'cluster impacts the ability\n'
+                            'to troubleshoot any issues that you might have.',
+                'result': [{
+                    'reason': 'no dataproc clusters found',
+                    'resource': '-',
+                    'status': 'skipped'
+                }],
                 'rule': 'dataproc/BP/2021_001',
-                'short_info': None,
-                'status': 'skipped',
+                'short_doc':
+                    'Check if logging is enabled : Stackdriver Logging '
+                    'enabled'
             }],
             'summary': {
                 'skipped': 1
             },
-            'version': config.VERSION,
-        },
-    )
+            'version': config.VERSION
+        })
 
 
 class Test:

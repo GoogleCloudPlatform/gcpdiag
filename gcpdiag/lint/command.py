@@ -419,15 +419,20 @@ def run_and_get_results(argv: List[str],
   for r in repo.result.get_rule_reports():
     rule = r.rule
     rule_id = f'{rule.product}/{rule.rule_class}/{rule.rule_id}'
+    rule_result = []
     for res in r.results:
-      results.append({
-          'rule': rule_id,
+      rule_result.append({
           'resource': str(res.resource or '-'),
           'status': res.status,
           'reason': res.reason,
-          'short_info': res.short_info,
-          'doc_url': rule.doc_url
       })
+    results.append({
+        'rule': rule_id,
+        'long_doc': rule.long_desc,
+        'short_doc': rule.short_desc,
+        'doc_url': rule.doc_url,
+        'result': rule_result,
+    })
   return {
       'version': config.VERSION,
       'summary': repo.result.get_totals_by_status(),
