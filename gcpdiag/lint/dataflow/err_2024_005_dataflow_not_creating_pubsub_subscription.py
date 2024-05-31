@@ -59,7 +59,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   """
   project = crm.get_project(context.project_id)
 
-  # skip entire rule if Logging or Dataflow API's are disabled
+  # skip entire rule if Logging or Dataflow APIs are disabled
   if not apis.is_enabled(context.project_id, 'logging'):
     report.add_skipped(project, 'logging api is disabled')
     return

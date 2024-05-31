@@ -304,7 +304,7 @@ class SshInBrowserCheck(runbook.CompositeStep):
     ssh_in_browser_orgpolicy_check.constraint = 'constraints/compute.disableSshInBrowser'
     ssh_in_browser_orgpolicy_check.is_enforced = False
     self.add_child(ssh_in_browser_orgpolicy_check)
-    # add check constraints/compute.vmExternalIpAccess when list orpolicies are allowed.
+    # add check constraints/compute.vmExternalIpAccess when list org policies are allowed.
 
 
 class GcpSshPermissions(runbook.CompositeStep):
