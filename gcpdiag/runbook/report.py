@@ -123,13 +123,12 @@ class TerminalReportManager(ReportManager):
 
   def generate_report(self):
     """Generate Runbook Report"""
-    # Only generate a report i
-    if self.any_failed:
-      if not self.report_path:
-        self.get_report_path()
-      result = self._generate_json_report()
-      if config.get('interface') == 'cli':
-        self._write_report_to_terminal(result)
+    # Always generate a report to avoid FileNotFound, even if there are no failed rules
+    if not self.report_path:
+      self.get_report_path()
+    result = self._generate_json_report()
+    if config.get('interface') == 'cli':
+      self._write_report_to_terminal(result)
 
   def _generate_json_report(self):
 
