@@ -153,8 +153,8 @@ class Step:
       if self.execute.__doc__:
         return self.execute.__doc__.format(attributes)
       raise exceptions.InvalidStepOperation(
-          '''No Step introductory message. execute method
-                                            should have a string doc.''')
+          f'Step {self} does not have an introductory message. '
+          'Make sure execute() method has a docstring on the first line.')
 
   @property
   def long_desc(self):
@@ -200,6 +200,7 @@ class EndStep(Step):
     super().__init__(step_type=constants.StepType.END)
 
   def execute(self):
+    """Finalizing runbook investigations..."""
     if not config.get(flags.INTERACTIVE_MODE):
       response = op.prompt(step=op.CONFIRMATION,
                            message='Is your issue resolved?')
