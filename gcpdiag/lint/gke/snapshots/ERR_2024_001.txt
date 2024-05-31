@@ -1,0 +1,3 @@
+*  gke/ERR/2024_001: Checking for no Pod Security Admission violations in the project.
+   (logging api is disabled)                                              [SKIP]
+

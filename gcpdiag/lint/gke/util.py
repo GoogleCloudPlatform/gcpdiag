@@ -95,6 +95,37 @@ def _gke_node_of_log_entry(context, log_entry):
     raise _CantMapLogEntry()
 
 
+def _gke_pod_of_log_entry(context, log_entry):
+  """Retrieves a GKE Pod name from a log entry.
+
+  Args:
+      context: The context object.
+      log_entry: A log entry.
+
+  Returns:
+      A tuple of GKE Cluster and Pod objects.
+
+  Raises:
+      _CantMapLogEntry: If the log entry cannot be mapped to a GKE Pod.
+  """
+  try:
+    labels = log_entry['resource']['labels']
+    project_id = labels['project_id']
+
+    # using entire resource name as it contains namespace as well as pod name
+    pod_name = log_entry['protoPayload']['resourceName']
+  except KeyError:
+    logging.warning('log entry without project_id label: %s', log_entry)
+    raise _CantMapLogEntry() from KeyError
+
+  try:
+    c = _clusters_by_name[context][(project_id, labels['location'],
+                                    labels['cluster_name'])]
+    return (c, pod_name)
+  except KeyError as err:
+    raise _CantMapLogEntry() from err
+
+
 def _gke_cluster_of_log_entry(context, log_entry):
 
   try:
@@ -118,7 +149,8 @@ def gke_logs_find_bad_nodes(context: models.Context,
   """Go through logs and find GKE node-level issues.
 
   Returns dict with clusters as key and node list of "bad nodes" as
-  value."""
+  value.
+  """
   _initialize_clusters_by_name(context)
   _initialize_clusters_by_instance_id(context)
 
@@ -145,7 +177,8 @@ def gke_logs_find_bad_clusters(context: models.Context,
   """Go through logs and find GKE cluster-level issues.
 
   Returns dict with clusters as key and first matched log entry as
-  value."""
+  value.
+  """
 
   _initialize_clusters_by_name(context)
 
@@ -173,8 +206,8 @@ def get_cluster_object(cluster_dict, partial_path):
   """Retrieves a GKE Cluster object from a dictionary based on a partial path.
 
   Args:
-      cluster_dict: A dictionary where keys are full GCP resource paths and values
-      are Cluster objects.
+      cluster_dict: A dictionary where keys are full GCP resource paths and
+      values are Cluster objects.
       partial_path: A string representing the partial path to the cluster.
 
   Returns:
@@ -186,3 +219,39 @@ def get_cluster_object(cluster_dict, partial_path):
       return cluster_obj
 
   return None  # Cluster not found
+
+
+def gke_logs_find_bad_pods(
+    context: models.Context,
+    logs_by_project: Dict[str, logs.LogsQuery],
+    filter_f: Callable,
+) -> Dict[gke.Cluster, Any]:
+  """Go through logs and find GKE pod-level issues.
+
+  Args:
+      context: The context object.
+      logs_by_project: A dictionary of logs.LogsQuery objects.
+      filter_f: A function that takes a log entry and returns True if it
+        matches the filter.
+
+  Returns:
+      A dictionary of GKE Cluster objects to a list of "bad pods".
+  """
+
+  _initialize_clusters_by_name(context)
+
+  # Process the log entries.
+  bad_pods_by_cluster = collections.defaultdict(set)
+  for query in logs_by_project.values():
+    for log_entry in query.entries:
+      # Retrieved logs may not contain what we defined as
+      # "filter_str", so we need to filter out what isn't ours.
+      if not filter_f(log_entry):
+        continue
+      try:
+        (c, pod_name) = _gke_pod_of_log_entry(context, log_entry)
+        bad_pods_by_cluster[c].add(pod_name)
+      except _CantMapLogEntry:
+        continue
+
+  return bad_pods_by_cluster
