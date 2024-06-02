@@ -25,6 +25,7 @@ typing-extensions = "*"
 exceptiongroup = "*"
 beautifulsoup4 = "*"
 async-timeout = "*"
+bs4 = "*"
 
 [dev-packages]
 astunparse = "*"

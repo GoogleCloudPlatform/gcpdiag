@@ -1,0 +1,373 @@
+{
+  "id": "projects/gcpdiag-vpc2-runbook/zones/us-central1-a/instances",
+  "items": [
+    {
+      "canIpForward": false,
+      "cpuPlatform": "Intel Haswell",
+      "creationTimestamp": "2024-06-02T19:10:04.195-07:00",
+      "deletionProtection": false,
+      "disks": [
+        {
+          "architecture": "X86_64",
+          "autoDelete": true,
+          "boot": true,
+          "deviceName": "persistent-disk-0",
+          "diskSizeGb": "10",
+          "guestOsFeatures": [
+            {
+              "type": "UEFI_COMPATIBLE"
+            },
+            {
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "GVNIC"
+            },
+            {
+              "type": "SEV_CAPABLE"
+            }
+          ],
+          "index": 0,
+          "interface": "SCSI",
+          "kind": "compute#attachedDisk",
+          "licenses": [
+            "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-11-bullseye"
+          ],
+          "mode": "READ_WRITE",
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/zones/us-central1-a/disks/private-linux-faulty",
+          "type": "PERSISTENT"
+        }
+      ],
+      "fingerprint": "REDACTED",
+      "id": "342964849769224982",
+      "kind": "compute#instance",
+      "labelFingerprint": "1TQLkowq0ZY=",
+      "labels": {
+        "foo": "bar"
+      },
+      "lastStartTimestamp": "2024-06-02T19:10:10.535-07:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/zones/us-central1-a/machineTypes/f1-micro",
+      "metadata": {
+        "fingerprint": "REDACTED",
+        "kind": "compute#metadata"
+      },
+      "name": "private-linux-faulty",
+      "networkInterfaces": [
+        {
+          "fingerprint": "REDACTED",
+          "kind": "compute#networkInterface",
+          "name": "nic0",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/global/networks/default",
+          "networkIP": "10.10.0.2",
+          "stackType": "IPV4_ONLY",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/regions/us-central1/subnetworks/private-subnet"
+        }
+      ],
+      "satisfiesPzi": false,
+      "scheduling": {
+        "automaticRestart": false,
+        "onHostMaintenance": "TERMINATE",
+        "preemptible": true
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/zones/us-central1-a/instances/private-linux-faulty",
+      "shieldedInstanceConfig": {
+        "enableIntegrityMonitoring": true,
+        "enableSecureBoot": false,
+        "enableVtpm": true
+      },
+      "shieldedInstanceIntegrityPolicy": {
+        "updateAutoLearnPolicy": true
+      },
+      "startRestricted": false,
+      "status": "RUNNING",
+      "tags": {
+        "fingerprint": "REDACTED",
+        "items": [
+          "faulty-vpc-instance-private"
+        ]
+      },
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/zones/us-central1-a"
+    },
+    {
+      "canIpForward": false,
+      "cpuPlatform": "Intel Haswell",
+      "creationTimestamp": "2024-06-02T19:10:03.767-07:00",
+      "deletionProtection": false,
+      "disks": [
+        {
+          "architecture": "X86_64",
+          "autoDelete": true,
+          "boot": true,
+          "deviceName": "persistent-disk-0",
+          "diskSizeGb": "10",
+          "guestOsFeatures": [
+            {
+              "type": "UEFI_COMPATIBLE"
+            },
+            {
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "GVNIC"
+            },
+            {
+              "type": "SEV_CAPABLE"
+            }
+          ],
+          "index": 0,
+          "interface": "SCSI",
+          "kind": "compute#attachedDisk",
+          "licenses": [
+            "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-11-bullseye"
+          ],
+          "mode": "READ_WRITE",
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/zones/us-central1-a/disks/private-linux-valid",
+          "type": "PERSISTENT"
+        }
+      ],
+      "fingerprint": "REDACTED",
+      "id": "7242411489568529174",
+      "kind": "compute#instance",
+      "labelFingerprint": "1TQLkowq0ZY=",
+      "labels": {
+        "foo": "bar"
+      },
+      "lastStartTimestamp": "2024-06-02T19:10:10.031-07:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/zones/us-central1-a/machineTypes/f1-micro",
+      "metadata": {
+        "fingerprint": "REDACTED",
+        "kind": "compute#metadata"
+      },
+      "name": "private-linux-valid",
+      "networkInterfaces": [
+        {
+          "fingerprint": "REDACTED",
+          "kind": "compute#networkInterface",
+          "name": "nic0",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/global/networks/default",
+          "networkIP": "10.10.0.3",
+          "stackType": "IPV4_ONLY",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/regions/us-central1/subnetworks/private-subnet"
+        }
+      ],
+      "satisfiesPzi": false,
+      "scheduling": {
+        "automaticRestart": false,
+        "onHostMaintenance": "TERMINATE",
+        "preemptible": true
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/zones/us-central1-a/instances/private-linux-valid",
+      "shieldedInstanceConfig": {
+        "enableIntegrityMonitoring": true,
+        "enableSecureBoot": false,
+        "enableVtpm": true
+      },
+      "shieldedInstanceIntegrityPolicy": {
+        "updateAutoLearnPolicy": true
+      },
+      "startRestricted": false,
+      "status": "RUNNING",
+      "tags": {
+        "fingerprint": "REDACTED",
+        "items": [
+          "valid-vpc-instance-private"
+        ]
+      },
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/zones/us-central1-a"
+    },
+    {
+      "canIpForward": false,
+      "cpuPlatform": "Intel Haswell",
+      "creationTimestamp": "2024-06-02T19:10:04.424-07:00",
+      "deletionProtection": false,
+      "disks": [
+        {
+          "architecture": "X86_64",
+          "autoDelete": true,
+          "boot": true,
+          "deviceName": "persistent-disk-0",
+          "diskSizeGb": "10",
+          "guestOsFeatures": [
+            {
+              "type": "UEFI_COMPATIBLE"
+            },
+            {
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "GVNIC"
+            },
+            {
+              "type": "SEV_CAPABLE"
+            }
+          ],
+          "index": 0,
+          "interface": "SCSI",
+          "kind": "compute#attachedDisk",
+          "licenses": [
+            "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-11-bullseye"
+          ],
+          "mode": "READ_WRITE",
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/zones/us-central1-a/disks/public-linux-faulty",
+          "type": "PERSISTENT"
+        }
+      ],
+      "fingerprint": "REDACTED",
+      "id": "2168525421735353110",
+      "kind": "compute#instance",
+      "labelFingerprint": "1TQLkowq0ZY=",
+      "labels": {
+        "foo": "bar"
+      },
+      "lastStartTimestamp": "2024-06-02T19:10:09.875-07:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/zones/us-central1-a/machineTypes/f1-micro",
+      "metadata": {
+        "fingerprint": "REDACTED",
+        "kind": "compute#metadata"
+      },
+      "name": "public-linux-faulty",
+      "networkInterfaces": [
+        {
+          "accessConfigs": [
+            {
+              "kind": "compute#accessConfig",
+              "name": "external-nat",
+              "natIP": "35.238.187.232",
+              "networkTier": "PREMIUM",
+              "type": "ONE_TO_ONE_NAT"
+            }
+          ],
+          "fingerprint": "REDACTED",
+          "kind": "compute#networkInterface",
+          "name": "nic0",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/global/networks/default",
+          "networkIP": "10.0.0.3",
+          "stackType": "IPV4_ONLY",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/regions/us-central1/subnetworks/public-subnet"
+        }
+      ],
+      "satisfiesPzi": false,
+      "scheduling": {
+        "automaticRestart": false,
+        "onHostMaintenance": "TERMINATE",
+        "preemptible": true
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/zones/us-central1-a/instances/public-linux-faulty",
+      "shieldedInstanceConfig": {
+        "enableIntegrityMonitoring": true,
+        "enableSecureBoot": false,
+        "enableVtpm": true
+      },
+      "shieldedInstanceIntegrityPolicy": {
+        "updateAutoLearnPolicy": true
+      },
+      "startRestricted": false,
+      "status": "RUNNING",
+      "tags": {
+        "fingerprint": "REDACTED",
+        "items": [
+          "faulty-vpc-instance"
+        ]
+      },
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/zones/us-central1-a"
+    },
+    {
+      "canIpForward": false,
+      "cpuPlatform": "Intel Haswell",
+      "creationTimestamp": "2024-06-02T19:10:02.494-07:00",
+      "deletionProtection": false,
+      "disks": [
+        {
+          "architecture": "X86_64",
+          "autoDelete": true,
+          "boot": true,
+          "deviceName": "persistent-disk-0",
+          "diskSizeGb": "10",
+          "guestOsFeatures": [
+            {
+              "type": "UEFI_COMPATIBLE"
+            },
+            {
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "GVNIC"
+            },
+            {
+              "type": "SEV_CAPABLE"
+            }
+          ],
+          "index": 0,
+          "interface": "SCSI",
+          "kind": "compute#attachedDisk",
+          "licenses": [
+            "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-11-bullseye"
+          ],
+          "mode": "READ_WRITE",
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/zones/us-central1-a/disks/public-linux-valid",
+          "type": "PERSISTENT"
+        }
+      ],
+      "fingerprint": "REDACTED",
+      "id": "3614107599914441494",
+      "kind": "compute#instance",
+      "labelFingerprint": "1TQLkowq0ZY=",
+      "labels": {
+        "foo": "bar"
+      },
+      "lastStartTimestamp": "2024-06-02T19:10:10.182-07:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/zones/us-central1-a/machineTypes/f1-micro",
+      "metadata": {
+        "fingerprint": "REDACTED",
+        "kind": "compute#metadata"
+      },
+      "name": "public-linux-valid",
+      "networkInterfaces": [
+        {
+          "accessConfigs": [
+            {
+              "kind": "compute#accessConfig",
+              "name": "external-nat",
+              "natIP": "34.172.48.224",
+              "networkTier": "PREMIUM",
+              "type": "ONE_TO_ONE_NAT"
+            }
+          ],
+          "fingerprint": "REDACTED",
+          "kind": "compute#networkInterface",
+          "name": "nic0",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/global/networks/default",
+          "networkIP": "10.0.0.2",
+          "stackType": "IPV4_ONLY",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/regions/us-central1/subnetworks/public-subnet"
+        }
+      ],
+      "satisfiesPzi": false,
+      "scheduling": {
+        "automaticRestart": false,
+        "onHostMaintenance": "TERMINATE",
+        "preemptible": true
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/zones/us-central1-a/instances/public-linux-valid",
+      "shieldedInstanceConfig": {
+        "enableIntegrityMonitoring": true,
+        "enableSecureBoot": false,
+        "enableVtpm": true
+      },
+      "shieldedInstanceIntegrityPolicy": {
+        "updateAutoLearnPolicy": true
+      },
+      "startRestricted": false,
+      "status": "RUNNING",
+      "tags": {
+        "fingerprint": "REDACTED",
+        "items": [
+          "valid-vpc-instance"
+        ]
+      },
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/zones/us-central1-a"
+    }
+  ],
+  "kind": "compute#instanceList",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/zones/us-central1-a/instances"
+}

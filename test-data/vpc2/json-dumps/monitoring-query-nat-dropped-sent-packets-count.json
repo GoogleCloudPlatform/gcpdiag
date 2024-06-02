@@ -1,0 +1,59 @@
+{
+  "timeSeriesDescriptor": {
+    "labelDescriptors": [
+      {
+        "key": "metric.reason"
+      }
+    ],
+    "pointDescriptors": [
+      {
+        "key": "value_dropped_sent_packets_count_aggregate",
+        "valueType": "DOUBLE",
+        "metricKind": "GAUGE",
+        "unit": "{packet}/s"
+      }
+    ]
+  },
+  "timeSeriesData": [
+    {
+      "labelValues": [
+        {
+          "stringValue": "ENDPOINT_INDEPENDENCE_CONFLICT"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 0
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-06-03T22:37:27.897428Z",
+            "endTime": "2024-06-03T22:37:27.897428Z"
+          }
+        }
+      ]
+    },
+    {
+      "labelValues": [
+        {
+          "stringValue": "OUT_OF_RESOURCES"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 0
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-06-03T22:37:27.897428Z",
+            "endTime": "2024-06-03T22:37:27.897428Z"
+          }
+        }
+      ]
+    }
+  ]
+}

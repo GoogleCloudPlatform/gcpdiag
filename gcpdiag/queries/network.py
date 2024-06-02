@@ -18,7 +18,10 @@ import dataclasses
 import ipaddress
 import logging
 import re
+import time
 from typing import Any, Dict, FrozenSet, Iterable, List, Optional, Union
+
+import googleapiclient.errors
 
 from gcpdiag import caching, config, models
 from gcpdiag.queries import apis, apis_utils, iam
@@ -30,6 +33,7 @@ IPAddrOrNet = Union[IPv4AddrOrIPv6Addr, IPv4NetOrIPv6Net]
 
 class Subnetwork(models.Resource):
   """A VPC subnetwork."""
+
   _resource_data: dict
 
   def __init__(self, project_id, resource_data):
@@ -83,6 +87,7 @@ class Subnetwork(models.Resource):
 
 class Route(models.Resource):
   """A VPC Route."""
+
   _resource_data: dict
 
   def __init__(self, project_id, resource_data):
@@ -106,6 +111,10 @@ class Route(models.Resource):
   @property
   def name(self) -> str:
     return self._resource_data['name']
+
+  @property
+  def kind(self) -> str:
+    return self._resource_data['kind']
 
   @property
   def self_link(self) -> str:
@@ -143,6 +152,24 @@ class Route(models.Resource):
   def priority(self) -> int:
     return self._resource_data['priority']
 
+  def get_next_hop(self) -> Union[Dict[str, Any], Optional[str]]:
+    hop_types = {
+        'nextHopGateway': 'nextHopGateway',
+        'nextHopVpnTunnel': 'nextHopVpnTunnel',
+        'nextHopHub': 'nextHopHub',
+        'nextHopInstance': 'nextHopInstance',
+        'nextHopAddress': 'nextHopAddress',
+        'nextHopPeering': 'nextHopPeering',
+        'nextHopIlb': 'nextHopIlb',
+        'nextHopNetwork': 'nextHopNetwork',
+        'nextHopIp': 'nextHopIp'
+    }
+
+    for hop_type, value in hop_types.items():
+      if self._resource_data.get(hop_type):
+        return {'type': value, 'link': self._resource_data[hop_type]}
+    return None
+
   def check_route_match(self, ip1: IPAddrOrNet, ip2: str) -> bool:
     ip2_list = [ipaddress.ip_network(ip2)]
     if _ip_match(ip1, ip2_list, 'allow'):
@@ -153,6 +180,7 @@ class Route(models.Resource):
 class ManagedZone(models.Resource):
   """
   Represent a DNS zone (public or private
+
   https://cloud.google.com/dns/docs/reference/v1beta2/managedZones
   """
   _resource_data: dict
@@ -211,6 +239,7 @@ class ManagedZone(models.Resource):
 
 class Router(models.Resource):
   """A VPC Router."""
+
   _resource_data: dict
 
   def __init__(self, project_id, resource_data):
@@ -259,6 +288,7 @@ class Router(models.Resource):
 @dataclasses.dataclass
 class Peering:
   """VPC Peerings"""
+
   name: str
   url: str
   state: str
@@ -429,6 +459,7 @@ def _vpc_allow_deny_match(protocol: str, port: Optional[int],
 @dataclasses.dataclass
 class FirewallCheckResult:
   """The result of a firewall connectivity check."""
+
   action: str
   firewall_policy_name: Optional[str] = None
   firewall_policy_rule_description: Optional[str] = None
@@ -490,7 +521,10 @@ class _FirewallPolicy:
 
   @property
   def short_name(self):
-    return self._resource_data['shortName']
+    if self._resource_data.get('shortName'):
+      return self._resource_data.get('shortName')
+    else:
+      return self._resource_data.get('name')
 
   def __init__(self, resource_data):
     self._resource_data = resource_data
@@ -572,7 +606,8 @@ class _FirewallPolicy:
       target_service_account: Optional[str] = None
   ) -> FirewallCheckResult:
     for rule in self._rules['EGRESS']:
-      if rule.get('disabled'):
+      # Do not evaluate disabled rules or automatically created rules
+      if rule.get('disabled') or not rule.get('match', {}).get('destIpRanges'):
         continue
       # To match networks, use 'supernet_of' for deny, because if the network that we
       # are checking is partially matched by a deny rule, it should still be considered
@@ -758,10 +793,10 @@ class _VpcFirewall:
       return FirewallCheckResult(action,
                                  vpc_firewall_rule_id=rule['id'],
                                  vpc_firewall_rule_name=rule['name'])
-    # implied deny
+    # implied allow egress
     logging.debug('vpc firewall: %s -> %s/%s = %s (implied rule)', src_ip, port,
-                  ip_protocol, 'deny')
-    return FirewallCheckResult('deny')
+                  ip_protocol, 'allow')
+    return FirewallCheckResult('allow')
 
   def verify_ingress_rule_exists(self, name: str):
     """See documentation for EffectiveFirewalls.verify_ingress_rule_exists()."""
@@ -1174,3 +1209,98 @@ def get_addresses(project_id: str) -> List[Address]:
     addresses.extend(
         [Address(project_id, address) for address in data_['addresses']])
   return addresses
+
+
+@caching.cached_api_call(in_memory=False)
+def run_connectivity_test(project_id: str, src_ip: str, dest_ip: str,
+                          dest_port: int, protocol: str, test_id):
+  """Method to create/run an idempotent connectivity test"""
+  # initialize the networkmanagement api
+  networkmanagement = apis.get_api('networkmanagement', 'v1', project_id)
+  # check that there is no existing connectivity test with the test_id
+  try:
+    logging.warning('Checking for already existing connectivity test...')
+    res = (networkmanagement.projects().locations().global_().connectivityTests(
+    ).get(name=
+          f'projects/{project_id}/locations/global/connectivityTests/{test_id}')
+          ).execute()
+    # delete the existing connectivity test
+    if res:
+      logging.warning('Deleting existing connectivity test...')
+      delete_request = (networkmanagement.projects().locations().global_(
+      ).connectivityTests().delete(
+          name=
+          f'projects/{project_id}/locations/global/connectivityTests/{test_id}')
+                       ).execute()
+      # Wait for delete operation to complete for a maximum of 1min and
+      # verify that exisiting connectivity test is deleted.
+      delete_count = 0
+      delete_status = networkmanagement.projects().locations().global_(
+      ).operations().get(name=delete_request['name']).execute()
+      while not delete_status['done'] and delete_count <= 15:
+        time.sleep(4)
+        delete_count += 1
+        delete_status = networkmanagement.projects().locations().global_(
+        ).operations().get(name=delete_request['name']).execute()
+  except googleapiclient.errors.HttpError:
+    logging.warning('Proceeding to create a connectivity test...')
+
+  # test input
+  test_input = {
+      'source': {
+          'ipAddress': src_ip,
+          'networkType': 'GCP_NETWORK'
+      },
+      'destination': {
+          'ipAddress': dest_ip,
+          'port': dest_port
+      },
+      'protocol': protocol
+  }
+
+  create_request = (networkmanagement.projects().locations().global_(
+  ).connectivityTests().create(parent=f'projects/{project_id}/locations/global',
+                               testId=test_id,
+                               body=test_input)).execute()
+  logging.warning('Creating a new connectivity test..')
+
+  # try to fetch the request_status for 5 seconds.
+  count = 0
+  create_status = networkmanagement.projects().locations().global_().operations(
+  ).get(name=create_request['name']).execute()
+  while not create_status['done'] and count <= 15:
+    time.sleep(4)
+    create_status = networkmanagement.projects().locations().global_(
+    ).operations().get(name=create_request['name']).execute()
+    count += 1
+
+  if create_status['done']:
+    # get the result of the connectivity test
+    res = (networkmanagement.projects().locations().global_().connectivityTests(
+    ).get(
+        name=
+        f'projects/{project_id}/locations/global/connectivityTests/{test_id}'))
+    result = res.execute()
+
+    # delete the connectivity test to clean up
+    logging.warning('Cleaning up the connectivity test...')
+    delete_request = (networkmanagement.projects().locations().global_(
+    ).connectivityTests().delete(
+        name=
+        f'projects/{project_id}/locations/global/connectivityTests/{test_id}')
+                     ).execute()
+    # Wait for delete operation to complete for a maximum of 1min
+    # and verify that exisiting connectivity test is deleted.
+    delete_count = 0
+    delete_status = networkmanagement.projects().locations().global_(
+    ).operations().get(name=delete_request['name']).execute()
+    while not delete_status['done'] and delete_count <= 15:
+      time.sleep(4)
+      delete_count += 1
+      delete_status = networkmanagement.projects().locations().global_(
+      ).operations().get(name=delete_request['name']).execute()
+    # return the result
+    return result
+  else:
+    logging.warning('Timeout running the connectivity test...')
+  return None

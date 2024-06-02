@@ -1,0 +1,67 @@
+{
+  "timeSeriesDescriptor": {
+    "labelDescriptors": [
+      {
+        "key": "resource.project_id"
+      },
+      {
+        "key": "resource.region"
+      },
+      {
+        "key": "resource.router_id"
+      },
+      {
+        "key": "resource.gateway_name"
+      }
+    ],
+    "pointDescriptors": [
+      {
+        "key": "value.nat_allocation_failed",
+        "valueType": "BOOL",
+        "metricKind": "GAUGE"
+      }
+    ]
+  },
+  "timeSeriesData": [
+    {
+      "labelValues": [
+        {
+          "stringValue": "gcpdiag-vpc2-runbook"
+        },
+        {
+          "stringValue": "us-central1"
+        },
+        {
+          "stringValue": "3282795716781579009"
+        },
+        {
+          "stringValue": "nat-gateway"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "boolValue": false
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-06-03T02:12:00Z",
+            "endTime": "2024-06-03T02:12:00Z"
+          }
+        },
+        {
+          "values": [
+            {
+              "boolValue": false
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-06-03T02:11:00Z",
+            "endTime": "2024-06-03T02:11:00Z"
+          }
+        }
+      ]
+    }
+  ]
+}

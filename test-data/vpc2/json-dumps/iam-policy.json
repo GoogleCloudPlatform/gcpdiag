@@ -1,0 +1,55 @@
+{
+  "bindings": [
+    {
+      "members": [
+        "serviceAccount:service-12345601@compute-system.iam.gserviceaccount.com"
+      ],
+      "role": "roles/compute.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345601@container-engine-robot.iam.gserviceaccount.com"
+      ],
+      "role": "roles/container.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345601@containerregistry.iam.gserviceaccount.com"
+      ],
+      "role": "roles/containerregistry.ServiceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:12345601-compute@developer.gserviceaccount.com",
+        "serviceAccount:12345601@cloudservices.gserviceaccount.com"
+      ],
+      "role": "roles/editor"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345601@gcp-sa-networkmanagement.iam.gserviceaccount.com"
+      ],
+      "role": "roles/networkmanagement.serviceAgent"
+    },
+    {
+      "members": [
+        "user:testuser@example.com"
+      ],
+      "role": "roles/owner"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345601@gcp-sa-pubsub.iam.gserviceaccount.com"
+      ],
+      "role": "roles/pubsub.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345601@gcp-sa-websecurityscanner.iam.gserviceaccount.com"
+      ],
+      "role": "roles/websecurityscanner.serviceAgent"
+    }
+  ],
+  "etag": "BwYZxH9u9WI=",
+  "version": 1
+}

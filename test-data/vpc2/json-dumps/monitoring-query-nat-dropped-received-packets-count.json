@@ -1,0 +1,29 @@
+{
+  "timeSeriesDescriptor": {
+    "pointDescriptors": [
+      {
+        "key": "value_dropped_received_packets_count_aggregate",
+        "valueType": "DOUBLE",
+        "metricKind": "GAUGE",
+        "unit": "{packet}/s"
+      }
+    ]
+  },
+  "timeSeriesData": [
+    {
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 0
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-06-03T22:38:30.599128Z",
+            "endTime": "2024-06-03T22:38:30.599128Z"
+          }
+        }
+      ]
+    }
+  ]
+}

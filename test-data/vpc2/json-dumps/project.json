@@ -1,0 +1,13 @@
+{
+  "name": "projects/12345602",
+  "parent": "folders/222222222222",
+  "projectId": "gcpdiag-vpc2-runbook",
+  "state": "ACTIVE",
+  "displayName": "gcpdiag-vpc2-runbook",
+  "createTime": "2024-05-31T04:17:56.682276Z",
+  "updateTime": "2024-05-31T04:17:56.682276Z",
+  "etag": "W/\"c4bf534f1f39f587\"",
+  "labels": {
+    "gcpdiag": "test"
+  }
+}

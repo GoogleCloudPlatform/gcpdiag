@@ -100,6 +100,10 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/gke2/json-dumps',
     '1234000173':
         pathlib.Path(__file__).parents[2] / 'test-data/gke2/json-dumps',
+    'gcpdiag-vpc2-runbook':
+        pathlib.Path(__file__).parents[2] / 'test-data/vpc2/json-dumps',
+    '12345602':
+        pathlib.Path(__file__).parents[2] / 'test-data/vpc2/json-dumps',
 }
 
 # set to a value higher than 0 to emulate API temp. failure
@@ -340,5 +344,8 @@ def get_api_stub(service_name: str,
   elif service_name == 'osconfig':
     from gcpdiag.queries import osconfig_stub
     return osconfig_stub.OSConfigStub()
+  elif service_name == 'networkmanagement':
+    from gcpdiag.queries import networkmanagement_stub
+    return networkmanagement_stub.NetworkManagementApiStub()
   else:
     raise ValueError('unsupported service: %s' % service_name)

@@ -1,0 +1,77 @@
+
+  #############################################################
+  #          Messages for NAT IP Exhaustion Check             #
+  #############################################################
+
+  {% block nat_ip_exhaustion_check_success_reason %}
+   No IP exhaustion issues found on the NAT GW {nat_gateway_name}
+  {% endblock nat_ip_exhaustion_check_success_reason %}
+
+  {% block nat_ip_exhaustion_check_failure_reason %}
+   NAT IP allocation failure found on the NAT GW {nat_gateway_name}
+  {% endblock nat_ip_exhaustion_check_failure_reason %}
+
+  {% block nat_ip_exhaustion_check_failure_remediation %}
+   IP exhaustion issues on {nat_gateway_name} can be remediated by taking the following steps in [1]:
+   [1] https://cloud.google.com/knowledge/kb/cloud-nat-is-dropping-or-limiting-egress-connectivity-000004263#:~:text=If%20the%20metric%20indicates%20that,on%20the%20Port%20reservation%20procedure.
+  {% endblock nat_ip_exhaustion_check_failure_remediation %}
+
+  #############################################################
+  #          Messages for Resource Exhaustion Check           #
+  #############################################################
+
+  {% block nat_resource_exhaustion_check_success_reason %}
+   No {metric_reason} issues on the dropped_sent_packet metric for the NAT GW {nat_gateway_name} seen.
+  {% endblock nat_resource_exhaustion_check_success_reason %}
+
+  {% block nat_resource_exhaustion_check_failure_reason %}
+   {metric_reason} issue found on the dropped_sent_packet metric on the NAT GW {nat_gateway_name}
+  {% endblock nat_resource_exhaustion_check_failure_reason %}
+
+  {% block nat_resource_exhaustion_check_failure_remediation %}
+   Resource exhaustion issues can be remediated by taking the following steps in [1]:
+   [1] https://cloud.google.com/knowledge/kb/cloud-nat-is-dropping-or-limiting-egress-connectivity-000004263#:~:text=If%20the%20metric%20indicates%20that,on%20the%20Port%20reservation%20procedure
+  {% endblock nat_resource_exhaustion_check_failure_remediation %}
+
+  #############################################################
+  #          Messages for NAT received packet drop check      #
+  #############################################################
+
+  {% block nat_dropped_received_packet_check_success_reason %}
+   No received_packet_drop on NAT GW {nat_gateway_name} seen.
+  {% endblock nat_dropped_received_packet_check_success_reason %}
+
+  {% block nat_dropped_received_packet_check_uncertain_reason %}
+   Elevated received_packet_drop_count metric noticed for NAT GW {nat_gateway_name}
+   dropped_received_packet: {metric_value}
+  {% endblock nat_dropped_received_packet_check_uncertain_reason %}
+
+  {% block nat_dropped_received_packet_check_uncertain_remediation %}
+   NAT gateways could be dropping packets for various reasons; however, the drops are not always indicative of an issue.
+   Checking received_packet_drop metrics at the VM level as well. Open a case to GCP Support for confirmation
+   of the reason for the drops
+   See more on troubleshooting cloud NAT reducing the drops here [1] and [2]:
+   [1] https://cloud.google.com/nat/docs/troubleshooting
+   [2] https://cloud.google.com/knowledge/kb/reduce-received-packets-dropped-count-on-cloud-nat-000006744
+  {% endblock nat_dropped_received_packet_check_uncertain_remediation %}
+
+  #############################################################
+  #          Messages for VM received packet drop check       #
+  #############################################################
+
+  {% block vm_dropped_received_packet_check_success_reason %}
+   No received_packet_drop on NAT GW {nat_gateway_name} seen.
+  {% endblock vm_dropped_received_packet_check_success_reason %}
+
+  {% block vm_dropped_received_packet_check_uncertain_reason %}
+   Elevated received_packet_drop_count metric noticed for following VMs
+   {vm_drop_list}
+  {% endblock vm_dropped_received_packet_check_uncertain_reason %}
+
+  {% block vm_dropped_received_packet_check_uncertain_remediation %}
+   VMs could be dropping packets for various reasons; however, the drops are not always indicative of an issue.
+   See more on troubleshooting cloud NAT and reducing the drops here [1] and [2]:
+   Open a case to GCP Support for justification for the packet drops.
+   [1] https://cloud.google.com/nat/docs/troubleshooting
+   [2] https://cloud.google.com/knowledge/kb/reduce-received-packets-dropped-count-on-cloud-nat-000006744
+  {% endblock vm_dropped_received_packet_check_uncertain_remediation %}
