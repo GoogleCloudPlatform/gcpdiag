@@ -98,3 +98,29 @@ class Test(unittest.TestCase):
     assert len(runbook.DiagnosticTreeRegister) > 0
     modules = {r(None).product for r in runbook.DiagnosticTreeRegister.values()}
     assert MUST_HAVE_MODULES.issubset(modules)
+
+  def test_validate_rule_pattern(self):
+    # Valid patterns
+    self.assertEqual('gcp/runbook-id',
+                     command._validate_rule_pattern('gcp/runbook-id'))
+    self.assertEqual('gcp/runbook-id',
+                     command._validate_rule_pattern('GCP/runbook-id'))
+    self.assertEqual('gcp/runbook-id-one',
+                     command._validate_rule_pattern('gcp/runbook-id-one'))
+
+    # Invalid patterns
+    with self.assertRaises(SystemExit) as e:
+      command._validate_rule_pattern('gcp')
+    self.assertEqual(2, e.exception.code)
+    with self.assertRaises(SystemExit) as e:
+      command._validate_rule_pattern('runbook-id')
+    self.assertEqual(2, e.exception.code)
+    with self.assertRaises(SystemExit) as e:
+      command._validate_rule_pattern('gcp/runbook-id/1/2/3/4')
+    self.assertEqual(2, e.exception.code)
+    with self.assertRaises(SystemExit) as e:
+      command._validate_rule_pattern('gcp/runbook_id')
+    self.assertEqual(2, e.exception.code)
+    with self.assertRaises(SystemExit) as e:
+      command._validate_rule_pattern(r'gcp/runbook\id')
+    self.assertEqual(2, e.exception.code)

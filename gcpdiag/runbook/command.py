@@ -204,7 +204,7 @@ def _init_runbook_args_parser():
 
 def _validate_rule_pattern(runbook_name: str):
   runbook_name = runbook_name.lower()
-  m = re.match(r'^([a-z]+)/([a-z/-_]+)$', runbook_name, re.IGNORECASE)
+  m = re.match(r'^([a-z]+)/([a-z\-]+)$', runbook_name)
   if not m:
     logging.error(
         'Invalid runbook name: %s should be `gcpdiag runbook product/runbook-id`',
