@@ -102,12 +102,7 @@ def load_template_block(module_name, file_name, block_name):
   block_name: Load blocks with this prefix
   module_name: Ref to module
   """
-  try:
-    module = importlib.import_module(module_name)
-  except (ImportError, ModuleNotFoundError):
-    # when running in API environment
-    module_name = re.sub('^gcpdiag', 'google.cloud.gcpdiag', module_name)
-    module = importlib.import_module(module_name)
+  module = importlib.import_module(module_name)
 
   current_dir = os.path.dirname(os.path.abspath(module.__file__))
   template_file = os.path.join(current_dir, 'templates', f'{file_name}.jinja')
