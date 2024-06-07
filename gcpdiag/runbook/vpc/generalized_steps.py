@@ -149,7 +149,7 @@ class VmExternalIpConnectivityTest(runbook.Step):
     # If there is no result from the connectivity test, prompt to rerun/retest
     if not result:
       response = op.prompt(
-          step=op.HUMAN_TASK,
+          kind=op.HUMAN_TASK,
           message='The connectivity test did not run successfully: No result '
           'returned. Do you want to rerun the connectivity test?',
           choice_msg='Enter an option: ')

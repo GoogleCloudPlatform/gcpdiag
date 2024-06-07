@@ -11,28 +11,25 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Test class for vpc/VmExternalIpConnectivity"""
+"""Test class for gce/OpsAgent"""
 
 from gcpdiag import config
-from gcpdiag.runbook import snapshot_test_base, vpc
+from gcpdiag.runbook import gce, snapshot_test_base
 
 
 class Test(snapshot_test_base.RulesSnapshotTestBase):
-  rule_pkg = vpc
-  runbook_name = 'vpc/vm-external-ip-connectivity'
-  project_id = 'gcpdiag-vpc2-runbook'
+  rule_pkg = gce
+  runbook_name = 'gce/ops-agent'
+  project_id = 'gcpdiag-gce3-aaaa'
   config.init({'auto': True, 'interface': 'cli'}, project_id)
 
   rule_parameters = [{
-      'name': 'public-linux-valid',
-      'zone': 'us-central1-a',
-      'dest_ip': '151.101.3.5',
-      'src_nic': 'nic0',
-      'dest_port': '443'
+      'name': 'faulty-opsagent',
+      'zone': 'europe-west2-a'
   }, {
-      'name': 'public-linux-faulty',
-      'zone': 'us-central1-a',
-      'dest_ip': '151.101.3.5',
-      'src_nic': 'nic0',
-      'dest_port': '443'
+      'name': 'faulty-opsagent-no-sa',
+      'zone': 'europe-west2-a'
+  }, {
+      'name': 'working-opsagent',
+      'zone': 'europe-west2-a'
   }]

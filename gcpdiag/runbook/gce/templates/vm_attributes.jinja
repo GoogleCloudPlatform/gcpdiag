@@ -1,21 +1,46 @@
-{% block has_service_account_step_message %}
-Checking if VM has a Service Account..
-{% endblock has_service_account_step_message %}
-
-{% block has_service_account_failure_reason %}
-Ops agent in {vm_name} has not {sa} to use when exporting logs/metrics
-{% endblock has_service_account_failure_reason %}
-
-{% block has_service_account_failure_remediation %}
-Instance {name} has no service account to export logs and metrics.
-Follow [1] and [2] to verify service account name
-[1] https://cloud.google.com/docs/authentication/application-default-credentials
-[2] https://cloud.google.com/monitoring/agent/ops-agent/authorization#set-gac
-{% endblock has_service_account_failure_remediation %}
-
-{% block has_service_account_success_reason %}
+{% block service_account_exists_success_reason %}
 Ops agent in {vm_name} has {sa} to use when exporting logs/metrics
-{% endblock has_service_account_success_reason %}
+{% endblock service_account_exists_success_reason %}
+
+{% block service_account_exists_failure_reason %}
+Ops agent in {vm_name} doesn't have a service account to use when
+exporting logs/metrics.
+{% endblock service_account_exists_failure_reason %}
+
+{% block service_account_exists_failure_remediation %}
+Follow [1] to attach an active service account to this GCE VM.
+Read more on how to properly authorize ops agent.
+[1] https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes
+[2] https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/authorization#authorize_with_an_attached_service_account
+{% endblock service_account_exists_failure_remediation %}
+
+{% block service_account_exists_step_message %}
+Verifying Service Account exists...
+{% endblock service_account_exists_step_message %}
+
+{% block access_scope_step_message %}
+Verifying GCE Insatnce has sufficient access scope
+{% endblock access_scope_step_message %}
+
+{% block access_scope_success_reason %}
+GCE instance {vm_name} has at least one of the required scope:
+{present_access_scopes}
+{% endblock access_scope_success_reason %}
+
+{% block access_scope_failure_reason %}
+GCE Instance {vm_name} doesn't have any of the required access scopes:
+{required_access_scope}
+{% endblock access_scope_failure_reason %}
+
+{% block access_scope_failure_remediation %}
+Access scopes are the legacy method of specifying authorization for your VM instance.
+They define the default OAuth scopes used in requests from the gcloud CLI or the client libraries.
+Access scopes don't apply for calls made using gRPC.
+
+Update `{vm_name}` to enable at least one of the following access scopes:
+{required_access_scope}
+[1] https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes
+{% endblock access_scope_failure_remediation %}
 
 {% block running_success_reason %}
 The GCE VM {vm_name} is in the expected state: {status}.

@@ -1,0 +1,446 @@
+{
+  "auditConfigs": [
+    {
+      "auditLogConfigs": [
+        {
+          "logType": "ADMIN_READ"
+        },
+        {
+          "logType": "DATA_READ"
+        },
+        {
+          "logType": "DATA_WRITE"
+        }
+      ],
+      "service": "datapipelines.googleapis.com"
+    },
+    {
+      "auditLogConfigs": [
+        {
+          "logType": "DATA_READ"
+        },
+        {
+          "logType": "DATA_WRITE"
+        }
+      ],
+      "service": "compute.googleapis.com"
+    },
+    {
+      "auditLogConfigs": [
+        {
+          "logType": "ADMIN_READ"
+        },
+        {
+          "logType": "DATA_READ"
+        },
+        {
+          "logType": "DATA_WRITE"
+        }
+      ],
+      "service": "osconfig.googleapis.com"
+    },
+    {
+      "auditLogConfigs": [
+        {
+          "logType": "DATA_WRITE"
+        }
+      ],
+      "service": "monitoring.googleapis.com"
+    }
+  ],
+  "bindings": [
+    {
+      "members": [
+        "serviceAccount:service-12345001@compute-system.iam.gserviceaccount.com"
+      ],
+      "role": "projects/gcpdiag-gce3-aaaa/roles/instanceschedulerole"
+    },
+    {
+      "members": [
+        "user:testuser@example.com"
+      ],
+      "role": "roles/aiplatform.admin"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-aiplatform-cc.iam.gserviceaccount.com"
+      ],
+      "role": "roles/aiplatform.customCodeServiceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-aiplatform-vm.iam.gserviceaccount.com"
+      ],
+      "role": "roles/aiplatform.notebookServiceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-aiplatform.iam.gserviceaccount.com"
+      ],
+      "role": "roles/aiplatform.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-apigee.iam.gserviceaccount.com"
+      ],
+      "role": "roles/apigee.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-gae-service.iam.gserviceaccount.com"
+      ],
+      "role": "roles/appengine.serviceAgent"
+    },
+    {
+      "members": [
+        "user:testuser@example.com"
+      ],
+      "role": "roles/artifactregistry.admin"
+    },
+    {
+      "members": [
+        "user:testuser@example.com"
+      ],
+      "role": "roles/artifactregistry.repoAdmin"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-artifactregistry.iam.gserviceaccount.com"
+      ],
+      "role": "roles/artifactregistry.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-bigquerydatatransfer.iam.gserviceaccount.com"
+      ],
+      "role": "roles/bigquerydatatransfer.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-cloudasset.iam.gserviceaccount.com"
+      ],
+      "role": "roles/cloudasset.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:12345001@cloudbuild.gserviceaccount.com"
+      ],
+      "role": "roles/cloudbuild.builds.builder"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-cloudbuild.iam.gserviceaccount.com"
+      ],
+      "role": "roles/cloudbuild.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcf-admin-robot.iam.gserviceaccount.com"
+      ],
+      "role": "roles/cloudfunctions.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-cloudiot.iam.gserviceaccount.com"
+      ],
+      "role": "roles/cloudiot.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-cloudscheduler.iam.gserviceaccount.com"
+      ],
+      "role": "roles/cloudscheduler.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@cloudcomposer-accounts.iam.gserviceaccount.com"
+      ],
+      "role": "roles/composer.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:12345001@cloudbuild.gserviceaccount.com",
+        "user:testuser@example.com"
+      ],
+      "role": "roles/compute.admin"
+    },
+    {
+      "members": [
+        "user:testuser@example.com"
+      ],
+      "role": "roles/compute.networkAdmin"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@compute-system.iam.gserviceaccount.com"
+      ],
+      "role": "roles/compute.serviceAgent"
+    },
+    {
+      "members": [
+        "user:testuser@example.com"
+      ],
+      "role": "roles/container.admin"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-gkenode.iam.gserviceaccount.com"
+      ],
+      "role": "roles/container.nodeServiceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@container-engine-robot.iam.gserviceaccount.com"
+      ],
+      "role": "roles/container.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@container-analysis.iam.gserviceaccount.com"
+      ],
+      "role": "roles/containeranalysis.ServiceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@containerregistry.iam.gserviceaccount.com"
+      ],
+      "role": "roles/containerregistry.ServiceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-containerscanning.iam.gserviceaccount.com"
+      ],
+      "role": "roles/containerscanning.ServiceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-ktd-control.iam.gserviceaccount.com"
+      ],
+      "role": "roles/containerthreatdetection.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@dataflow-service-producer-prod.iam.gserviceaccount.com"
+      ],
+      "role": "roles/dataflow.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-dataform.iam.gserviceaccount.com"
+      ],
+      "role": "roles/dataform.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-datafusion.iam.gserviceaccount.com"
+      ],
+      "role": "roles/datafusion.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-datamigration.iam.gserviceaccount.com"
+      ],
+      "role": "roles/datamigration.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@dataproc-accounts.iam.gserviceaccount.com"
+      ],
+      "role": "roles/dataproc.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:12345001@cloudservices.gserviceaccount.com",
+        "serviceAccount:gcpdiag-gce3-aaaa@appspot.gserviceaccount.com"
+      ],
+      "role": "roles/editor"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@firebase-rules.iam.gserviceaccount.com"
+      ],
+      "role": "roles/firebaserules.system"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-firestore.iam.gserviceaccount.com"
+      ],
+      "role": "roles/firestore.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-gkebackup.iam.gserviceaccount.com"
+      ],
+      "role": "roles/gkebackup.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-healthcare.iam.gserviceaccount.com"
+      ],
+      "role": "roles/healthcare.serviceAgent"
+    },
+    {
+      "members": [
+        "user:testuser@example.com"
+      ],
+      "role": "roles/iam.serviceAccountAdmin"
+    },
+    {
+      "members": [
+        "user:testuser@example.com"
+      ],
+      "role": "roles/iam.serviceAccountTokenCreator"
+    },
+    {
+      "members": [
+        "serviceAccount:12345001-compute@developer.gserviceaccount.com",
+        "serviceAccount:12345001@cloudbuild.gserviceaccount.com",
+        "user:testuser@example.com"
+      ],
+      "role": "roles/iam.serviceAccountUser"
+    },
+    {
+      "members": [
+        "user:testuser@example.com"
+      ],
+      "role": "roles/iap.tunnelResourceAccessor"
+    },
+    {
+      "members": [
+        "serviceAccount:12345001-compute@developer.gserviceaccount.com"
+      ],
+      "role": "roles/logging.admin"
+    },
+    {
+      "members": [
+        "serviceAccount:12345001-compute@developer.gserviceaccount.com"
+      ],
+      "role": "roles/logging.logWriter"
+    },
+    {
+      "members": [
+        "user:testuser@example.com"
+      ],
+      "role": "roles/logging.viewer"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-mi.iam.gserviceaccount.com"
+      ],
+      "role": "roles/managedidentities.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:12345001-compute@developer.gserviceaccount.com"
+      ],
+      "role": "roles/monitoring.admin"
+    },
+    {
+      "members": [
+        "serviceAccount:12345001-compute@developer.gserviceaccount.com"
+      ],
+      "role": "roles/monitoring.metricWriter"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-mcmetering.iam.gserviceaccount.com"
+      ],
+      "role": "roles/multiclustermetering.serviceAgent"
+    },
+    {
+      "members": [
+        "user:testuser@example.com"
+      ],
+      "role": "roles/networkmanagement.admin"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-networkmanagement.iam.gserviceaccount.com"
+      ],
+      "role": "roles/networkmanagement.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-notebooks.iam.gserviceaccount.com"
+      ],
+      "role": "roles/notebooks.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-osconfig.iam.gserviceaccount.com"
+      ],
+      "role": "roles/osconfig.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:12345001-compute@developer.gserviceaccount.com",
+        "user:testuser@example.com",
+        "user:testuser@example.com"
+      ],
+      "role": "roles/owner"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@cloud-redis.iam.gserviceaccount.com"
+      ],
+      "role": "roles/redis.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@serverless-robot-prod.iam.gserviceaccount.com"
+      ],
+      "role": "roles/run.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@service-networking.iam.gserviceaccount.com"
+      ],
+      "role": "roles/servicenetworking.serviceAgent"
+    },
+    {
+      "members": [
+        "user:testuser@example.com"
+      ],
+      "role": "roles/serviceusage.serviceUsageConsumer"
+    },
+    {
+      "members": [
+        "user:testuser@example.com"
+      ],
+      "role": "roles/storage.admin"
+    },
+    {
+      "members": [
+        "serviceAccount:gce-diagnostics-extract-logs@gcpdiag-gce3-aaaa.iam.gserviceaccount.com"
+      ],
+      "role": "roles/storage.objectCreator"
+    },
+    {
+      "members": [
+        "serviceAccount:gce-diagnostics-extract-logs@gcpdiag-gce3-aaaa.iam.gserviceaccount.com",
+        "serviceAccount:service-12345001@gcp-sa-artifactregistry.iam.gserviceaccount.com"
+      ],
+      "role": "roles/storage.objectViewer"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-vpcaccess.iam.gserviceaccount.com"
+      ],
+      "role": "roles/vpcaccess.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-websecurityscanner.iam.gserviceaccount.com"
+      ],
+      "role": "roles/websecurityscanner.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345001@gcp-sa-workstations.iam.gserviceaccount.com"
+      ],
+      "role": "roles/workstations.serviceAgent"
+    }
+  ],
+  "etag": "BwYZh3AG4OA=",
+  "version": 1
+}

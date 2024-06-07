@@ -1,0 +1,508 @@
+{
+  "timeSeriesDescriptor": {
+    "labelDescriptors": [
+      {
+        "key": "resource.zone"
+      },
+      {
+        "key": "metric.instance_name"
+      }
+    ],
+    "pointDescriptors": [
+      {
+        "key": "value_uptime_total_aggregate_mean",
+        "valueType": "DOUBLE",
+        "metricKind": "GAUGE",
+        "unit": "s"
+      },
+      {
+        "key": "value_uptime_total_aggregate_count",
+        "valueType": "INT64",
+        "metricKind": "GAUGE",
+        "unit": "1"
+      }
+    ]
+  },
+  "timeSeriesData": [
+    {
+      "labelValues": [
+        {
+          "stringValue": "europe-west3-b"
+        },
+        {
+          "stringValue": "instance-20240219-145338"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 8575322
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-05-28T21:00:53.403141Z",
+            "endTime": "2024-05-28T21:00:53.403141Z"
+          }
+        },
+        {
+          "values": [
+            {
+              "doubleValue": 8575022
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-05-28T20:55:53.403141Z",
+            "endTime": "2024-05-28T20:55:53.403141Z"
+          }
+        }
+      ]
+    },
+    {
+      "labelValues": [
+        {
+          "stringValue": "europe-west2-b"
+        },
+        {
+          "stringValue": "instance1"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 4143969
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-05-28T21:00:53.403141Z",
+            "endTime": "2024-05-28T21:00:53.403141Z"
+          }
+        },
+        {
+          "values": [
+            {
+              "doubleValue": 4143669
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-05-28T20:55:53.403141Z",
+            "endTime": "2024-05-28T20:55:53.403141Z"
+          }
+        }
+      ]
+    },
+    {
+      "labelValues": [
+        {
+          "stringValue": "europe-west2-b"
+        },
+        {
+          "stringValue": "rhel"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 556620
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-05-28T21:00:53.403141Z",
+            "endTime": "2024-05-28T21:00:53.403141Z"
+          }
+        },
+        {
+          "values": [
+            {
+              "doubleValue": 556320
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-05-28T20:55:53.403141Z",
+            "endTime": "2024-05-28T20:55:53.403141Z"
+          }
+        }
+      ]
+    },
+    {
+      "labelValues": [
+        {
+          "stringValue": "europe-west2-a"
+        },
+        {
+          "stringValue": "instance-20240325-194207"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 1150989
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-05-28T21:00:53.403141Z",
+            "endTime": "2024-05-28T21:00:53.403141Z"
+          }
+        },
+        {
+          "values": [
+            {
+              "doubleValue": 1150689
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-05-28T20:55:53.403141Z",
+            "endTime": "2024-05-28T20:55:53.403141Z"
+          }
+        }
+      ]
+    },
+    {
+      "labelValues": [
+        {
+          "stringValue": "europe-west2-a"
+        },
+        {
+          "stringValue": "faulty-opsagent-no-sa"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 11460
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-05-28T21:00:53.403141Z",
+            "endTime": "2024-05-28T21:00:53.403141Z"
+          }
+        },
+        {
+          "values": [
+            {
+              "doubleValue": 11160
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-05-28T20:55:53.403141Z",
+            "endTime": "2024-05-28T20:55:53.403141Z"
+          }
+        }
+      ]
+    },
+    {
+      "labelValues": [
+        {
+          "stringValue": "europe-west2-a"
+        },
+        {
+          "stringValue": "working-opsagent"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 11520
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-05-28T21:00:53.403141Z",
+            "endTime": "2024-05-28T21:00:53.403141Z"
+          }
+        },
+        {
+          "values": [
+            {
+              "doubleValue": 11220
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-05-28T20:55:53.403141Z",
+            "endTime": "2024-05-28T20:55:53.403141Z"
+          }
+        }
+      ]
+    },
+    {
+      "labelValues": [
+        {
+          "stringValue": "europe-west2-a"
+        },
+        {
+          "stringValue": "faulty-opsagent"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 10320
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-05-28T21:00:53.403141Z",
+            "endTime": "2024-05-28T21:00:53.403141Z"
+          }
+        },
+        {
+          "values": [
+            {
+              "doubleValue": 10020
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-05-28T20:55:53.403141Z",
+            "endTime": "2024-05-28T20:55:53.403141Z"
+          }
+        }
+      ]
+    },
+    {
+      "labelValues": [
+        {
+          "stringValue": "europe-west2-a"
+        },
+        {
+          "stringValue": "sles-12"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 7888851
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-05-28T21:00:53.403141Z",
+            "endTime": "2024-05-28T21:00:53.403141Z"
+          }
+        },
+        {
+          "values": [
+            {
+              "doubleValue": 7888551
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-05-28T20:55:53.403141Z",
+            "endTime": "2024-05-28T20:55:53.403141Z"
+          }
+        }
+      ]
+    },
+    {
+      "labelValues": [
+        {
+          "stringValue": "us-central1-c"
+        },
+        {
+          "stringValue": "gke-cluster-1-default-pool-2df647f2-ybkj"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 911237
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-05-28T21:00:53.403141Z",
+            "endTime": "2024-05-28T21:00:53.403141Z"
+          }
+        },
+        {
+          "values": [
+            {
+              "doubleValue": 910937
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-05-28T20:55:53.403141Z",
+            "endTime": "2024-05-28T20:55:53.403141Z"
+          }
+        }
+      ]
+    },
+    {
+      "labelValues": [
+        {
+          "stringValue": "us-central1-c"
+        },
+        {
+          "stringValue": "gke-cluster-1-default-pool-2df647f2-hl7o"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 911552
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-05-28T21:00:53.403141Z",
+            "endTime": "2024-05-28T21:00:53.403141Z"
+          }
+        },
+        {
+          "values": [
+            {
+              "doubleValue": 911252
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-05-28T20:55:53.403141Z",
+            "endTime": "2024-05-28T20:55:53.403141Z"
+          }
+        }
+      ]
+    },
+    {
+      "labelValues": [
+        {
+          "stringValue": "us-central1-c"
+        },
+        {
+          "stringValue": "gke-cluster-1-default-pool-2df647f2-ct8v"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 911406
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-05-28T21:00:53.403141Z",
+            "endTime": "2024-05-28T21:00:53.403141Z"
+          }
+        },
+        {
+          "values": [
+            {
+              "doubleValue": 911106
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-05-28T20:55:53.403141Z",
+            "endTime": "2024-05-28T20:55:53.403141Z"
+          }
+        }
+      ]
+    },
+    {
+      "labelValues": [
+        {
+          "stringValue": "us-central1-a"
+        },
+        {
+          "stringValue": "instance-20240523-113600"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 465680
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-05-28T21:00:53.403141Z",
+            "endTime": "2024-05-28T21:00:53.403141Z"
+          }
+        },
+        {
+          "values": [
+            {
+              "doubleValue": 465380
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-05-28T20:55:53.403141Z",
+            "endTime": "2024-05-28T20:55:53.403141Z"
+          }
+        }
+      ]
+    }
+  ]
+}

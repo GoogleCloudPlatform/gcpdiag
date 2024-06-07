@@ -1,0 +1,12 @@
+{% block opsagent_installed_success_reason %}
+GCE VM "{vm_name}" has {subagent} agent installed and currently exporting data
+{% endblock opsagent_installed_success_reason %}
+
+{% block opsagent_installed_failure_reason %}
+GCE VM "{vm_name}" does not have {subagent} agent installed and the subagent is not exporting data
+{% endblock opsagent_installed_failure_reason %}
+
+{% block opsagent_installed_failure_remediation %}
+GCE VM "{vm_name}" does not have {subagent} agent installed and the subagent is not exporting data
+https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/troubleshoot-run-ingest
+{% endblock opsagent_installed_failure_remediation %}

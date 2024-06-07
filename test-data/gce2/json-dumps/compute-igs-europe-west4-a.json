@@ -1,0 +1,66 @@
+{
+  "kind": "compute#instanceGroupList",
+  "id": "projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroups",
+  "items": [
+    {
+      "kind": "compute#instanceGroup",
+      "id": "3671191198561055498",
+      "creationTimestamp": "2022-04-26T08:21:09.998-07:00",
+      "name": "instance-group-1",
+      "description": "",
+      "namedPorts": [
+        {
+          "name": "http",
+          "port": 8080
+        },
+        {
+          "name": "http",
+          "port": 8443
+        }
+      ],
+      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/global/networks/default",
+      "fingerprint": "bPhGeNqJuxo=",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroups/instance-group-1",
+      "size": 1,
+      "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/europe-west4/subnetworks/default"
+    },
+    {
+      "kind": "compute#instanceGroup",
+      "id": "2978499701990863624",
+      "creationTimestamp": "2022-04-26T08:21:11.396-07:00",
+      "name": "instance-group-2",
+      "description": "",
+      "namedPorts": [
+        {
+          "name": "http",
+          "port": 8080
+        },
+        {
+          "name": "https",
+          "port": 8443
+        }
+      ],
+      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/global/networks/default",
+      "fingerprint": "OMWWjJuNHl0=",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroups/instance-group-2",
+      "size": 1,
+      "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/europe-west4/subnetworks/default"
+    },
+    {
+      "kind": "compute#instanceGroup",
+      "id": "4528539620862178056",
+      "creationTimestamp": "2022-04-26T08:21:11.080-07:00",
+      "name": "mig",
+      "description": "This instance group is controlled by Instance Group Manager 'mig'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/global/networks/default",
+      "fingerprint": "42WmSpB8rSM=",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroups/mig",
+      "size": 2,
+      "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/europe-west4/subnetworks/default"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroups"
+}

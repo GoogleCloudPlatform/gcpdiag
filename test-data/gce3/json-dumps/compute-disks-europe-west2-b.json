@@ -1,0 +1,97 @@
+{
+  "kind": "compute#diskList",
+  "id": "projects/gcpdiag-gce3-aaaa/zones/europe-west2-b/disks",
+  "items": [
+    {
+      "kind": "compute#disk",
+      "id": "7166944352958546654",
+      "creationTimestamp": "2024-02-01T07:43:45.923-08:00",
+      "name": "instance1",
+      "sizeGb": "10",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce3-aaaa/zones/europe-west2-b",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce3-aaaa/zones/europe-west2-b/disks/instance1",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-12-bookworm-v20240110",
+      "sourceImageId": "7748237884069727279",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce3-aaaa/zones/europe-west2-b/diskTypes/pd-balanced",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-12-bookworm"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "GVNIC"
+        },
+        {
+          "type": "SEV_CAPABLE"
+        }
+      ],
+      "lastAttachTimestamp": "2024-02-01T07:43:45.923-08:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce3-aaaa/zones/europe-west2-b/instances/instance1"
+      ],
+      "labelFingerprint": "42WmSpB8rSM=",
+      "licenseCodes": [
+        "2147286739765738111"
+      ],
+      "physicalBlockSizeBytes": "4096",
+      "architecture": "X86_64"
+    },
+    {
+      "kind": "compute#disk",
+      "id": "5777026617345865792",
+      "creationTimestamp": "2024-05-22T03:19:28.097-07:00",
+      "name": "rhel",
+      "sizeGb": "20",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce3-aaaa/zones/europe-west2-b",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce3-aaaa/zones/europe-west2-b/disks/rhel",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/rhel-cloud/global/images/rhel-8-v20240515",
+      "sourceImageId": "5034192189344274413",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce3-aaaa/zones/europe-west2-b/diskTypes/pd-balanced",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/rhel-cloud/global/licenses/rhel-8-server"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "SEV_CAPABLE"
+        },
+        {
+          "type": "SEV_SNP_CAPABLE"
+        },
+        {
+          "type": "SEV_LIVE_MIGRATABLE"
+        },
+        {
+          "type": "SEV_LIVE_MIGRATABLE_V2"
+        },
+        {
+          "type": "GVNIC"
+        }
+      ],
+      "lastAttachTimestamp": "2024-05-22T03:19:28.097-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce3-aaaa/zones/europe-west2-b/instances/rhel"
+      ],
+      "labelFingerprint": "42WmSpB8rSM=",
+      "licenseCodes": [
+        "601259152637613565"
+      ],
+      "physicalBlockSizeBytes": "4096",
+      "satisfiesPzi": false,
+      "architecture": "X86_64"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce3-aaaa/zones/europe-west2-b/disks"
+}

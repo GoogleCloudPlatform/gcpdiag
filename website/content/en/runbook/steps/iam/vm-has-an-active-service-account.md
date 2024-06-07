@@ -41,7 +41,7 @@ Follow [1] to and [2] to verify service account is deleted.
 
 ### Success Reason
 
-Service account: {sa} to use when exporting logs/metrics
+Service account: {sa} is currently in active
 
 ### Uncertain Reason
 

@@ -15,10 +15,13 @@
 
 import logging
 import math
-from typing import Any, List
+from datetime import datetime
+from typing import Any, List, Set
+
+from boltons.iterutils import get_path
 
 from gcpdiag import runbook
-from gcpdiag.queries import gce, iam, monitoring
+from gcpdiag.queries import gce, iam, logs, monitoring
 from gcpdiag.runbook import op
 from gcpdiag.runbook.gce import flags, util
 
@@ -433,3 +436,162 @@ class GceVpcConnectivityCheck(runbook.Step):
                       port=op.get(flags.PORT),
                       name=vm.name,
                       result=result.matched_by_str))
+
+
+class VmScope(runbook.Step):
+  """Verifies that a GCE VM has at least one of a list of required access scopes
+
+  Confirms that the VM has the necessary OAuth scope
+  https://cloud.google.com/compute/docs/access/service-accounts#accesscopesiam
+
+  Attributes
+   - Use `access_scopes` to specify eligible access scopes
+   - Set `require_all` to True if the VM should have all the required access. False (default)
+     means to check if it has at least one of the required access scopes
+  """
+
+  template = 'vm_attributes::access_scope'
+  access_scopes: Set = set()
+  require_all = False
+
+  def execute(self):
+    """Verifying GCE VM access scope"""
+    instance = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
+                                zone=op.get(flags.ZONE),
+                                instance_name=op.get(flags.NAME))
+    present_access_scopes = set()
+    missing_access_scopes = set()
+    has_item = False
+    for scope in self.access_scopes:
+      if scope in instance.access_scopes:
+        has_item = True
+
+      if has_item:
+        present_access_scopes.add(scope)
+      else:
+        missing_access_scopes.add(scope)
+      # Reset to false after tracking
+      has_item = False
+
+    all_present = not missing_access_scopes
+    any_present = bool(present_access_scopes)
+    outcome = all_present if self.require_all else any_present
+
+    if outcome:
+      op.add_ok(resource=instance,
+                reason=op.prep_msg(op.SUCCESS_REASON,
+                                   vm_name=instance.name,
+                                   present_access_scopes=', '.join(
+                                       sorted(present_access_scopes))))
+    else:
+      op.add_failed(
+          resource=instance,
+          reason=op.prep_msg(
+              op.FAILURE_REASON,
+              vm_name=instance.name,
+              required_access_scope=', '.join(sorted(self.access_scopes)),
+              missing_access_scopes=', '.join(sorted(missing_access_scopes))),
+          remediation=op.prep_msg(
+              op.FAILURE_REMEDIATION,
+              vm_name=instance.name,
+              required_access_scope=', '.join(sorted(self.access_scopes)),
+              present_access_scopes=', '.join(sorted(present_access_scopes)),
+              missing_access_scopes=', '.join(sorted(missing_access_scopes))))
+
+
+class VmHasOpsAgent(runbook.Step):
+  """Verifies that a GCE VM has at ops agent installed and
+
+  You can check for sub agents for logging and metrics
+
+  Attributes
+   - Set `check_logging` to check for logging sub agent. Defaults is True
+   - Set `check_metrics` to check for metrics sub agent. Default is True
+  """
+
+  template = 'vm_ops::opsagent_installed'
+  check_logging: bool = True
+  check_metrics: bool = True
+  start_time_utc: datetime
+  end_time_utc: datetime
+
+  def _has_ops_agent_subagent(self, metric_data):
+    """Checks if ops agent logging agent and metric agent is installed"""
+    subagents = {
+        'metrics_subagent_installed': False,
+        'logging_subagent_installed': False
+    }
+    if not metric_data:
+      return {
+          'metrics_subagent_installed': False,
+          'logging_subagent_installed': False
+      }
+
+    for entry in metric_data.values():
+      version = get_path(entry, ('labels', 'metric.version'), '')
+      if 'google-cloud-ops-agent-metrics' in version:
+        subagents['metrics_subagent_installed'] = True
+      if 'google-cloud-ops-agent-logging' in version:
+        subagents['logging_subagent_installed'] = True
+
+    return subagents
+
+  def execute(self):
+    """Verifying GCE VM's has ops agent installed and currently active"""
+    self.end_time_utc = getattr(self, 'end_time_utc', None) or op.get(
+        flags.END_TIME_UTC)
+    self.start_time_utc = getattr(self, 'start_time_utc', None) or op.get(
+        flags.START_TIME_UTC)
+    instance = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
+                                zone=op.get(flags.ZONE),
+                                instance_name=op.get(flags.NAME) or
+                                op.get(flags.ID))
+    if self.check_logging:
+      serial_log_entries = logs.realtime_query(
+          project_id=op.get(flags.PROJECT_ID),
+          filter_str='''resource.type="gce_instance"
+                          log_name="projects/{}/logs/ops-agent-health"
+                          resource.labels.instance_id="{}"
+                          "LogPingOpsAgent"'''.format(op.get(flags.PROJECT_ID),
+                                                      op.get(flags.ID)),
+          start_time_utc=self.start_time_utc,
+          end_time_utc=self.end_time_utc)
+      if serial_log_entries:
+        op.add_ok(resource=instance,
+                  reason=op.prep_msg(op.SUCCESS_REASON,
+                                     vm_name=instance.name,
+                                     subagent='logging'))
+      else:
+        op.add_failed(resource=instance,
+                      reason=op.prep_msg(op.FAILURE_REASON,
+                                         vm_name=instance.name,
+                                         subagent='logging'),
+                      remediation=op.prep_msg(op.FAILURE_REMEDIATION,
+                                              vm_name=instance.name,
+                                              subagent='logging'))
+
+    if self.check_metrics:
+      ops_agent_uptime = monitoring.query(
+          op.get(flags.PROJECT_ID), """
+                fetch gce_instance
+                | metric 'agent.googleapis.com/agent/uptime'
+                | filter (resource.instance_id == '{}')
+                | align rate(1m)
+                | every 1m
+                | group_by [resource.instance_id, metric.version],
+                    [value_uptime_aggregate: aggregate(value.uptime)]
+              """.format(op.get(flags.ID)))
+      subagents = self._has_ops_agent_subagent(ops_agent_uptime)
+      if subagents['metrics_subagent_installed']:
+        op.add_ok(resource=instance,
+                  reason=op.prep_msg(op.SUCCESS_REASON,
+                                     vm_name=instance.name,
+                                     subagent='metrics'))
+      else:
+        op.add_failed(resource=instance,
+                      reason=op.prep_msg(op.FAILURE_REASON,
+                                         vm_name=instance.name,
+                                         subagent='metrics'),
+                      remediation=op.prep_msg(op.FAILURE_REMEDIATION,
+                                              vm_name=instance.name,
+                                              subagent='metrics'))

@@ -1,0 +1,20 @@
+{
+  "kind": "compute#instanceGroupList",
+  "id": "projects/gcpdiag-gce1-aaaa/zones/europe-west1-b/instanceGroups",
+  "items": [
+    {
+      "kind": "compute#instanceGroup",
+      "id": "4752839275668943076",
+      "creationTimestamp": "2022-04-26T08:21:47.107-07:00",
+      "name": "gke-gke1-default-pool-35923fbc-grp",
+      "description": "This instance group is controlled by Instance Group Manager 'gke-gke1-default-pool-35923fbc-grp'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/global/networks/default",
+      "fingerprint": "42WmSpB8rSM=",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west1-b",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west1-b/instanceGroups/gke-gke1-default-pool-35923fbc-grp",
+      "size": 4,
+      "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/regions/europe-west1/subnetworks/default"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west1-b/instanceGroups"
+}

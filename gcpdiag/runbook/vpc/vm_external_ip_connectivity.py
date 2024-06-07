@@ -211,7 +211,7 @@ class VmExternalIpConnectivityEnd(runbook.EndStep):
     """Finalizing VM external connectivity diagnostics..."""
     if not config.get(flags.INTERACTIVE_MODE):
       response = op.prompt(
-          step=op.CONFIRMATION,
+          kind=op.CONFIRMATION,
           message=
           f'Are you able to connect to external IP from the VM {op.get(flags.NAME)}?',
           choice_msg='Enter an option: ')

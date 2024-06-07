@@ -1,0 +1,65 @@
+{
+  "kind": "compute#healthCheckList",
+  "id": "projects/gcpdiag-gce1-aaaa/global/healthChecks/",
+  "items": [
+    {
+      "kind": "compute#healthCheck",
+      "id": "6570916794820924287",
+      "creationTimestamp": "2023-11-22T17:40:32.481-08:00",
+      "name": "http-basic-check",
+      "checkIntervalSec": 5,
+      "timeoutSec": 5,
+      "unhealthyThreshold": 2,
+      "healthyThreshold": 2,
+      "type": "HTTP",
+      "httpHealthCheck": {
+        "port": 80,
+        "portSpecification": "USE_FIXED_PORT",
+        "requestPath": "/",
+        "proxyHeader": "NONE"
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/global/healthChecks/http-basic-check",
+      "logConfig": {
+        "enable": true
+      }
+    },
+    {
+      "kind": "compute#healthCheck",
+      "id": "2011808073814110499",
+      "creationTimestamp": "2023-11-22T11:00:28.722-08:00",
+      "name": "http-basic-check-2",
+      "checkIntervalSec": 5,
+      "timeoutSec": 5,
+      "unhealthyThreshold": 2,
+      "healthyThreshold": 2,
+      "type": "HTTP",
+      "httpHealthCheck": {
+        "port": 80,
+        "portSpecification": "USE_FIXED_PORT",
+        "requestPath": "/",
+        "proxyHeader": "NONE"
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/global/healthChecks/http-basic-check-2"
+    },
+    {
+      "kind": "compute#healthCheck",
+      "id": "4700445592381550883",
+      "creationTimestamp": "2023-11-22T11:00:28.748-08:00",
+      "name": "tcp-basic-check-1",
+      "checkIntervalSec": 5,
+      "timeoutSec": 5,
+      "unhealthyThreshold": 2,
+      "healthyThreshold": 2,
+      "type": "TCP",
+      "tcpHealthCheck": {
+        "port": 80,
+        "proxyHeader": "NONE"
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/global/healthChecks/tcp-basic-check-1",
+      "logConfig": {
+        "enable": true
+      }
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/global/healthChecks/"
+}

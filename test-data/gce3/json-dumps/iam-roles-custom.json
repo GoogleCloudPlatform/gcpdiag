@@ -1,0 +1,42 @@
+{
+  "roles": [
+    {
+      "name": "projects/gcpdiag-gce3-aaaa/roles/CustomRole",
+      "title": "Impersonate",
+      "description": "Created on: 2022-06-30",
+      "includedPermissions": [
+        "iam.serviceAccounts.actAs"
+      ],
+      "stage": "GA",
+      "etag": "BwXiptUg0eA="
+    },
+    {
+      "name": "projects/gcpdiag-gce3-aaaa/roles/developerNoAccelerator",
+      "title": "gce-developer-no-accelerator",
+      "description": "gce roles",
+      "includedPermissions": [
+        "compute.addresses.get",
+        "compute.addresses.list",
+        "compute.addresses.use",
+        "compute.autoscalers.create",
+        "compute.autoscalers.delete",
+        "compute.autoscalers.get",
+        "compute.autoscalers.list",
+        "compute.autoscalers.update"
+      ],
+      "stage": "GA",
+      "etag": "BwWxnPlh5ng="
+    },
+    {
+      "name": "projects/gcpdiag-gce3-aaaa/roles/instanceschedulerole",
+      "title": "Instance Schedule role",
+      "description": "Created on: 2022-02-01",
+      "includedPermissions": [
+        "compute.instances.start",
+        "compute.instances.stop"
+      ],
+      "stage": "GA",
+      "etag": "BwXW6kp9+Xc="
+    }
+  ]
+}

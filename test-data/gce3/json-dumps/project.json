@@ -1,0 +1,10 @@
+{
+  "name": "projects/12345001",
+  "parent": "folders/12345001",
+  "projectId": "gcpdiag-gce3-aaaa",
+  "state": "ACTIVE",
+  "displayName": "gcpdiag-gce3-aaaa",
+  "createTime": "2020-08-06T19:08:55.510Z",
+  "updateTime": "2023-12-06T05:00:08.691346Z",
+  "etag": "W/\"f7696af71a06f1fc\""
+}

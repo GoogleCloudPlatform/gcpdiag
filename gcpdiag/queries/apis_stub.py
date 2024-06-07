@@ -104,6 +104,10 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/vpc2/json-dumps',
     '12345602':
         pathlib.Path(__file__).parents[2] / 'test-data/vpc2/json-dumps',
+    'gcpdiag-gce3-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/gce3/json-dumps',
+    '12345001':
+        pathlib.Path(__file__).parents[2] / 'test-data/gce3/json-dumps',
 }
 
 # set to a value higher than 0 to emulate API temp. failure
