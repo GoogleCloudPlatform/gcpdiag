@@ -12,7 +12,9 @@
 # limitations under the License.
 
 # Lint as: python3
-"""Validate if a Microsoft Windows instance is able to activate using GCP PAYG license.
+"""PAYG licensed Windows instance can reach KMS to activate
+
+Validate if a Microsoft Windows instance is able to activate using GCP PAYG license.
 """
 import ipaddress
 import operator as op

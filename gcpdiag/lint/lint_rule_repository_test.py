@@ -42,6 +42,9 @@ class FakeModule:
   def get_module_doc(self):
     return self.doc
 
+  def get_attr(self, attribute):
+    return attribute
+
 
 class FakeExecutionStrategy:
   """ Simple testing double for ExecutionStrategy """
@@ -214,7 +217,7 @@ def test_singleline_doc_happy_path():
 
   assert len(setup.execution_strategy.executed_rules) == 1
   assert setup.execution_strategy.executed_rules[0].short_desc == 'first line'
-  assert setup.execution_strategy.executed_rules[0].long_desc is None
+  assert setup.execution_strategy.executed_rules[0].long_desc == ''
 
 
 def test_multiline_doc_happy_path():

@@ -65,7 +65,8 @@ class LintRule:
   rule_class: LintRuleClass
   rule_id: str
   short_desc: str
-  long_desc: Optional[str]
+  long_desc: str
+  keywords: List[str]
   run_rule_f: Optional[Callable] = None
   async_run_rule_f: Optional[Callable] = None
   prepare_rule_f: Optional[Callable] = None
@@ -342,6 +343,9 @@ class RuleModule:
   def get_method(self, method_name: str) -> Optional[Callable]:
     return get_module_function_or_none(self._module, method_name)
 
+  def get_attr(self, attribute_name: str) -> Optional[Any]:
+    return getattr(self._module, attribute_name, None)
+
   def get_module_doc(self) -> Optional[str]:
     return inspect.getdoc(self._module)
 
@@ -456,6 +460,9 @@ class LintRuleRepository:
     # Get a reference to the prefetch_rule() function.
     prefetch_rule_f = module.get_method('prefetch_rule')
 
+    # Get a reference to the keywords list.
+    keywords: List = module.get_attr('keywords') or []
+
     # Get module docstring.
     doc = module.get_module_doc()
     if not doc:
@@ -463,7 +470,7 @@ class LintRuleRepository:
     # The first line is the short "good state description"
     doc_lines = doc.splitlines()
     short_desc = doc_lines[0]
-    long_desc = None
+    long_desc = ''
     if len(doc_lines) >= 3:
       if doc_lines[1]:
         raise RuntimeError(
@@ -480,7 +487,8 @@ class LintRuleRepository:
                     prepare_rule_f=prepare_rule_f,
                     prefetch_rule_f=prefetch_rule_f,
                     short_desc=short_desc,
-                    long_desc=long_desc)
+                    long_desc=long_desc,
+                    keywords=keywords)
     return rule
 
   def load_rules(self, pkg: types.ModuleType) -> None:

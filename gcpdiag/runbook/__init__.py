@@ -241,6 +241,7 @@ class DiagnosticTree(metaclass=RunbookRule):
   start: StartStep
   parameters: Dict[str, Dict]
   steps: List[Step]
+  keywords: List[str]
 
   def __init__(self, context: models.Context):
     self.id = f'{self.__module__}.{self.__class__.__name__}'
@@ -536,7 +537,7 @@ class DiagnosticEngine:
         except TemplateNotFound:
           logging.error('could not load messages linked to step: %s', step.name)
         except exceptions.InvalidStepOperation as err:
-          logging.error('Invalid `%s` operation: %s', step.name, err)
+          logging.error('Invalid step operation: %s', err)
         except (ValueError, KeyError) as err:
           logging.error('`%s`: %s', step.name, err)
         except (utils.GcpApiError, googleapiclient.errors.HttpError) as error:

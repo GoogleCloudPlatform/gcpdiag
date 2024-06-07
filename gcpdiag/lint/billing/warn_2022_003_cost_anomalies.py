@@ -14,6 +14,12 @@
 
 # Lint as: python3
 """Check for any billing anomalies using cost insights
+
+Cost insights are part of the Recommender service, and you can use them to find important patterns
+in your costs. For example, you see a cost insight in the Insights API if your costs for a day are
+significantly higher or lower than your typical daily costs. You can use this information to find
+out if some of your resources are getting more usage than expected, and take action to optimize
+your costs.
 """
 
 from gcpdiag import lint, models

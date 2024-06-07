@@ -4,7 +4,12 @@ Cost Below forcast, Forecasted: 80 USD, Actual: 16 USD
 Anomaly Period From: 2021-04-20T07:00:00Z, To: 2021-04-21T07:00:00Z
      Cost Anomaly Found
 
-
+   Cost insights are part of the Recommender service, and you can use them to
+   find important patterns in your costs. For example, you see a cost insight in
+   the Insights API if your costs for a day are significantly higher or lower
+   than your typical daily costs. You can use this information to find out if
+   some of your resources are getting more usage than expected, and take action
+   to optimize your costs.
 
    https://gcpdiag.dev/rules/billing/WARN/2022_003
 
