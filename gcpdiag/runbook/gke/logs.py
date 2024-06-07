@@ -374,7 +374,7 @@ class LogsEnd(runbook.EndStep):
   def execute(self):
     """Finalizing `GKE logs` diagnostics..."""
     response = op.prompt(
-        step=op.CONFIRMATION,
+        kind=op.CONFIRMATION,
         message='Are you satisfied with the `GKE logs` RCA performed?')
     if response == op.NO:
       op.info(message=op.END_MESSAGE)

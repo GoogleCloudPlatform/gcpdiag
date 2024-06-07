@@ -203,11 +203,11 @@ class InteractionInterface:
 
   def prompt(self,
              message: str,
-             step: str = '',
+             kind: str = '',
              options: dict = None,
              choice_msg: str = '') -> None:
     return self.output.prompt(message=message,
-                              step=step,
+                              kind=kind,
                               options=options,
                               choice_msg=choice_msg)
 
@@ -294,7 +294,7 @@ class InteractionInterface:
     # Add results to report manager so other dependent features can act on it.
     self.rm.add_step_result(result)
     # assign a human task to be completed
-    choice = self.output.prompt(step=constants.HUMAN_TASK,
+    choice = self.output.prompt(kind=constants.HUMAN_TASK,
                                 message=human_task_msg)
     if not config.get(INTERACTIVE_MODE):
       result.prompt_response = choice
@@ -318,7 +318,7 @@ class InteractionInterface:
                         step=step.run_id,
                         remediation=remediation)
     self.rm.add_step_result(result)
-    choice = self.output.prompt(step=constants.HUMAN_TASK,
+    choice = self.output.prompt(kind=constants.HUMAN_TASK,
                                 message=human_task_msg)
 
     if not config.get(INTERACTIVE_MODE):

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """ Base class for different output implementations """
-from typing import Optional
+from typing import Any, Optional
 
 from gcpdiag import models
 
@@ -41,10 +41,10 @@ class BaseOutput:
 
   def prompt(self,
              message: str,
-             step: str = '',
+             kind: str = '',
              options: dict = None,
              choice_msg: str = '',
-             non_interactive: bool = None):
+             non_interactive: bool = None) -> Any:
     pass
 
   def info(self, message: str, step_type='INFO'):

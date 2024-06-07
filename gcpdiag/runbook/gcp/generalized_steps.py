@@ -47,7 +47,7 @@ class HumanTask(runbook.Step):
     instructions = self.instructions or op.prep_msg(op.INSTRUCTIONS_MESSAGE)
     options = self.options or op.DEFAULT_INSTRUCTIONS_OPTIONS
     if instructions:
-      response = op.prompt(step=op.CONFIRMATION,
+      response = op.prompt(kind=op.CONFIRMATION,
                            message=instructions,
                            options=options)
       if response == op.UNCERTAIN:

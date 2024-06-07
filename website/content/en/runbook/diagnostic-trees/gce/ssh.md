@@ -68,7 +68,7 @@ gcpdiag runbook gce/ssh \
 | `check_os_login` | False | True | bool | A boolean value (true or false) indicating whether OS Login should be used for SSH authentication |
 | `src_ip` | False | None | IPv4Address | Source IP address. Workstation connecting from workstation,Ip of the bastion/jumphost if currently on logged on a basition/jumphost  |
 | `protocol_type` | False | tcp | str | Protocol used to connect to SSH |
-| `port` | False | 22 | str | Port used to connect to SSH |
+| `port` | False | 22 | int | Port used to connect to SSH |
 | `check_ssh_in_browser` | False | False | bool | Check that SSH in Browser is feasible |
 
 Get help on available commands

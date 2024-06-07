@@ -18,7 +18,7 @@ import os
 import sys
 import textwrap
 import threading
-from typing import Optional, TextIO
+from typing import Any, Optional, TextIO
 
 import blessings
 
@@ -235,32 +235,32 @@ class TerminalOutput(BaseOutput):
 
   def prompt(self,
              message: str,
-             step: str = '',
+             kind: str = '',
              options: dict = None,
              choice_msg: str = 'Choose an option: ',
-             non_interactive: bool = None):
+             non_interactive: bool = None) -> Any:
     """
     For informational update and getting a response from user
     """
     non_interactive = non_interactive or config.get(INTERACTIVE_MODE)
     if non_interactive:
       return
-    self.terminal_print_line(text='' + '[' + self.term.green(step) + ']: ' +
+    self.terminal_print_line(text='' + '[' + self.term.green(kind) + ']: ' +
                              f'{message}')
 
     self.default_answer = False
     self.answer = None
     options_text = '\n'
     try:
-      if step in constants.HUMAN_TASK and not options:
+      if kind in constants.HUMAN_TASK and not options:
         for option, description in constants.HUMAN_TASK_OPTIONS.items():
           options_text += '[' + self.term.green(
               f'{option}') + ']' + f' - {description}\n'
-      if step in constants.CONFIRMATION and not options:
+      if kind in constants.CONFIRMATION and not options:
         for option, description in constants.CONFIRMATION_OPTIONS.items():
           options_text += '[' + self.term.green(
               f'{option}') + ']' + f' - {description}\n'
-      if (step in constants.CONFIRMATION or step in constants.HUMAN_TASK) \
+      if (kind in constants.CONFIRMATION or kind in constants.HUMAN_TASK) \
         and options:
         for option, description in options.items():
           options_text += '[' + self.term.green(

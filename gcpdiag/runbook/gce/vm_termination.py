@@ -288,7 +288,7 @@ class VmTerminationEnd(runbook.EndStep):
   def execute(self):
     """Finalizing VM terminations diagnostics..."""
     response = op.prompt(
-        step=op.CONFIRMATION,
+        kind=op.CONFIRMATION,
         message='Are you satisfied with the VM termination RCA performed?')
     if response == op.NO:
       op.info(message=op.END_MESSAGE)

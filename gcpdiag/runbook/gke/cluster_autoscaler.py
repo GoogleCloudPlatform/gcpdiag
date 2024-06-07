@@ -428,7 +428,7 @@ class ClusterAutoscalerEnd(runbook.EndStep):
   def execute(self):
     """Finalizing `Cluster Autoscaler` diagnostics..."""
     response = op.prompt(
-        step=op.CONFIRMATION,
+        kind=op.CONFIRMATION,
         message=
         'Are you satisfied with the `GKE Cluster Autoscaler` RCA performed?')
     if response == op.NO:

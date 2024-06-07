@@ -122,7 +122,7 @@ class Ssh(runbook.DiagnosticTree):
           'default': 'tcp',
       },
       flags.PORT: {
-          'type': str,
+          'type': int,
           'help': 'Port used to connect to SSH',
           'default': gce_const.DEFAULT_SSHD_PORT
       },
@@ -284,7 +284,7 @@ class SshEnd(runbook.EndStep):
     """Finalizing SSH diagnostics..."""
     if not config.get(flags.INTERACTIVE_MODE):
       response = op.prompt(
-          step=op.CONFIRMATION,
+          kind=op.CONFIRMATION,
           message=f'Are you able to SSH into VM {op.get(flags.NAME)}?',
           choice_msg='Enter an option: ')
       if response == op.NO:
