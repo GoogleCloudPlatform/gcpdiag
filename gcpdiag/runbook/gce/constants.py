@@ -80,13 +80,13 @@ NETWORK_ERRORS = [
 ]
 
 TIME_SYNC_ERROR = [
-    # NTP related error msg:
+    # NTP related error message:
     'time may be out of sync',
     'System clock is unsynchronized',
     'Time drift detected',
     'no servers can be used, system clock unsynchronized',
     'time reset',  # sudden jump in time
-    # Chrony-Related error msg:
+    # Chrony-Related error message:
     'System clock unsynchronized',
     'Time offset too large',
     r'Can\'t synchronise: no selectable sources',

@@ -19,7 +19,7 @@ import re
 from gcpdiag.queries import network
 
 
-# check that nic is a vaild nic
+# check that nic is a valid nic
 def is_valid_nic(nic: str):
   pattern = r'^nic([0-7])$'
   return bool(re.match(pattern, nic))
@@ -59,7 +59,7 @@ def get_network_from_url(url):
     raise ValueError('Could not get network from the network URL')
 
 
-# get the routes for the nic sorted in desc order of destRange prefix length
+# get the routes for the nic sorted in descending order of destRange prefix length
 def get_selected_route_for_dest_ip(project, net, dest_ip):
   routes = network.get_routes(project)
   nic_routes = [

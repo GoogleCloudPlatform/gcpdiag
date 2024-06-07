@@ -153,7 +153,7 @@ class VmExternalIpConnectivityStart(runbook.StartStep):
           network_ip = interface['networkIP']
           op.put(flags.SRC_IP, network_ip)
 
-    # Check that the user has provided a valid external IP adddress.
+    # Check that the user has provided a valid external IP address.
     if op.get(flags.DEST_IP):
       if ipaddress.IPv4Address(op.get(flags.DEST_IP)).is_private:
         op.add_failed(
@@ -173,7 +173,7 @@ class VmExternalIpConnectivityStart(runbook.StartStep):
 class VmHasExternalIp(runbook.Gateway):
   """Checks if the source NIC provided has an external IP address or not.
 
-  Based on the source NIC, IP adddress type, diagnostic process would be directed towards
+  Based on the source NIC, IP address type, diagnostic process would be directed towards
   troubleshooting NATGW or direct external connectivity
   """
 
@@ -222,7 +222,7 @@ class VmExternalIpConnectivityEnd(runbook.EndStep):
 class ExternalInterfaceCheck(runbook.CompositeStep):
   """Check connectivity to external endpoint when the VM has an external IP address.
 
-  This step checks firewall and routing rules exist to allow for connnectity to the
+  This step checks firewall and routing rules exist to allow for connectivity to the
   external IP address. It also runs and reports a connectivity test.
   """
 
@@ -249,7 +249,7 @@ class ExternalInterfaceCheck(runbook.CompositeStep):
 class InternalInterfaceCheck(runbook.CompositeStep):
   """Check connectivity to external endpoint when the VM source NIC is an internal interface.
 
-  This step checks firewall and routing rules exist to allow for connnectity to the external
+  This step checks firewall and routing rules exist to allow for connectivity to the external
   IP address. It also runs and reports a connectivity test.
   """
 

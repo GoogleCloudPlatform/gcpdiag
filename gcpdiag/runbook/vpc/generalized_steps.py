@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Contains Resueable Steps for VPC related Diagnostic Trees"""
+"""Contains Reusable Steps for VPC related Diagnostic Trees"""
 
 import json
 
@@ -75,8 +75,8 @@ class VpcFirewallCheck(runbook.Step):
 class VpcRouteCheck(runbook.Step):
   """Checks VPC route for routing rule exists to the destination IP address.
 
-  Evalutes the VPC routing rules for the most specific route that
-  - matches the destination IP addresson the VPC route selection order.
+  Evaluates the VPC routing rules for the most specific route that
+  - matches the destination IP address on the VPC route selection order.
   """
 
   def execute(self):

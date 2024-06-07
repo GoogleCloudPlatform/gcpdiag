@@ -200,7 +200,7 @@ class TestRankingFunctions(unittest.TestCase):
     self.assertEqual(name, 'prod/class1/rule1')
     self.assertEqual(
         -score, 10
-    )  # 3 for keyword 'issue-kw', 'issue-kw2' and 2 for 'issue-kw2' in desc
+    )  # 3 for keyword 'issue-kw', 'issue-kw2' and 2 for 'issue-kw2' in description
 
   def test_rank_lint_rules_max_heap(self):
     """Test case for ensuring max-heap behavior in lint rules ranking."""

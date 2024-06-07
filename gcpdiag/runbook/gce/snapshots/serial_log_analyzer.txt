@@ -1,7 +1,7 @@
 project: gcpdiag-gce-faulty-serial-log-runbook, parameters: {name=faulty-linux-
 ssh,project_id=gcpdiag-gce-faulty-serial-log-runbook,zone=europe-west2-a}
 
-gce/serial-log-analyser:  GCE VM Serial log analyser
+gce/serial-log-analyzer:  GCE VM Serial log analyzer
 
     This runbook is designed to assist you in investigating the serial console logs of a vm.
 
@@ -22,10 +22,10 @@ gce/serial-log-analyser:  GCE VM Serial log analyser
         - Check if there are any time sync related errors.
 
     SSHD checks:
-        - Check if we have logs related to scuccessful startup of SSHD service.
+        - Check if we have logs related to successful startup of SSHD service.
 
     Google Guest Agent checks:
-        - Check if we have logs related to scuccessful startup of Google Guest Agent.
+        - Check if we have logs related to successful startup of Google Guest Agent.
     
 [START]: Fetching VM details
 [AUTOMATED STEP]: Checking if all logs available since last boot of the instance
@@ -43,7 +43,7 @@ gce/serial-log-analyser:  GCE VM Serial log analyser
 project: gcpdiag-gce-faulty-serial-log-runbook, parameters: {name=valid-linux-
 ssh,project_id=gcpdiag-gce-faulty-serial-log-runbook,zone=europe-west2-a}
 
-gce/serial-log-analyser:  GCE VM Serial log analyser
+gce/serial-log-analyzer:  GCE VM Serial log analyzer
 
     This runbook is designed to assist you in investigating the serial console logs of a vm.
 
@@ -64,10 +64,10 @@ gce/serial-log-analyser:  GCE VM Serial log analyser
         - Check if there are any time sync related errors.
 
     SSHD checks:
-        - Check if we have logs related to scuccessful startup of SSHD service.
+        - Check if we have logs related to successful startup of SSHD service.
 
     Google Guest Agent checks:
-        - Check if we have logs related to scuccessful startup of Google Guest Agent.
+        - Check if we have logs related to successful startup of Google Guest Agent.
     
 [START]: Fetching VM details
 [AUTOMATED STEP]: Checking if all logs available since last boot of the instance

@@ -10,7 +10,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Module containing steps to analyse knowns issue logged into Serial Console logs"""
+"""Module containing steps to analyze known issues logged to Serial Console logs"""
 
 import mimetypes
 
@@ -24,8 +24,8 @@ from gcpdiag.runbook.gce import flags
 from gcpdiag.runbook.gce import generalized_steps as gce_gs
 
 
-class SerialLogAnalyser(runbook.DiagnosticTree):
-  """ GCE VM Serial log analyser
+class SerialLogAnalyzer(runbook.DiagnosticTree):
+  """ GCE VM Serial log analyzer
 
     This runbook is designed to assist you in investigating the serial console logs of a vm.
 
@@ -46,10 +46,10 @@ class SerialLogAnalyser(runbook.DiagnosticTree):
         - Check if there are any time sync related errors.
 
     SSHD checks:
-        - Check if we have logs related to scuccessful startup of SSHD service.
+        - Check if we have logs related to successful startup of SSHD service.
 
     Google Guest Agent checks:
-        - Check if we have logs related to scuccessful startup of Google Guest Agent.
+        - Check if we have logs related to successful startup of Google Guest Agent.
     """
 
   # Specify parameters common to all steps in the diagnostic tree class.

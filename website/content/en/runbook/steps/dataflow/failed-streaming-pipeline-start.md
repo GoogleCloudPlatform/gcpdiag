@@ -15,7 +15,7 @@ description: >
 Gets the job and confirms it exists.
   Usually this will be logged in Dataflow Monitoring Interface, but may not be
   logged if the job
-  graph is not contructed.
+  graph is not constructed.
 
 ### Failure Reason
 

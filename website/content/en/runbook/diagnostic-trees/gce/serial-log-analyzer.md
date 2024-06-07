@@ -1,10 +1,10 @@
 ---
-title: "gce/Serial Log Analyser"
-linkTitle: "gce/serial-log-analyser"
+title: "gce/Serial Log Analyzer"
+linkTitle: "gce/serial-log-analyzer"
 weight: 3
 type: docs
 description: >
-  GCE VM Serial log analyser
+  GCE VM Serial log analyzer
 ---
 
 **Product**: [Compute Engine](https://cloud.google.com/compute)
@@ -31,15 +31,15 @@ This runbook is designed to assist you in investigating the serial console logs 
         - Check if there are any time sync related errors.
 
     SSHD checks:
-        - Check if we have logs related to scuccessful startup of SSHD service.
+        - Check if we have logs related to successful startup of SSHD service.
 
     Google Guest Agent checks:
-        - Check if we have logs related to scuccessful startup of Google Guest Agent.
+        - Check if we have logs related to successful startup of Google Guest Agent.
 
 ### Executing this runbook
 
 ```shell
-gcpdiag runbook gce/serial-log-analyser \
+gcpdiag runbook gce/serial-log-analyzer \
   -p project_id=value \
   -p name=value \
   -p id=value \

@@ -46,6 +46,7 @@ cb
 CDF
 CDN
 cgroup
+Chrony
 cidr
 cli
 cloudaudit
@@ -56,6 +57,7 @@ cloudsql
 CLUSTERHASH
 CLUSTERNAME
 CNI
+computeProfiles
 config
 configs
 conntrack
@@ -97,6 +99,7 @@ DNS
 docstring
 DT
 Ee
+EFI
 eg
 elif
 Enablement
@@ -153,6 +156,7 @@ Globals
 googleapiclient
 googleapis
 gserviceaccount
+gzip
 healthcheck
 healthcheckpolicies
 HEC
@@ -180,8 +184,11 @@ IPs
 isclose
 istio
 Istio
+istiod
 Iterable
+Jinja
 json
+jupyter
 Jupyter
 Jupyterlab
 Kerberos
@@ -199,6 +206,7 @@ Kubectl
 Kubelet
 kubernetes
 Kubernetes
+kwargs
 lifecycle
 linters
 LintRuleRepository
@@ -228,14 +236,18 @@ myapp
 mysql
 namespace
 namespaces
+nat
 Negsignal
+networkmanagement
 nic
 nodepool
 nodepools
 notpresent
 NTP
+OAuth
 occuring
 ok
+onboarding
 onload
 OOM
 organizationAdmin
@@ -283,6 +295,7 @@ resourcemanager
 retryable
 ru
 runbook
+runbook's
 runbooks
 runnable
 runtimeId
@@ -319,6 +332,7 @@ stdout
 stockout
 str
 stringification
+subagent
 subagents
 subclassed
 subclasses
@@ -335,6 +349,7 @@ subqueries
 supernet
 sys
 syslog
+syslogs
 systemd
 targetResources
 TBD
@@ -363,6 +378,8 @@ unittest
 unknowd
 untrusted
 updateing
+upgradability
+upgradable
 uptime
 Uptime
 uri
@@ -391,5 +408,6 @@ worklaods
 writeable
 XLB
 XSS
+xz
 yaml
 Yaml

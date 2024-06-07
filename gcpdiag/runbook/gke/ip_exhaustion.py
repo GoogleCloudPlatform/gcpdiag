@@ -90,7 +90,7 @@ class IpExhaustionStart(runbook.StartStep):
   """Start IP Exhaustion Checks"""
 
   def execute(self):
-    """Starting the IP Exhaustion dignostics"""
+    """Starting the IP Exhaustion diagnostics"""
 
     project = crm.get_project(op.get(flags.PROJECT_ID))
     try:

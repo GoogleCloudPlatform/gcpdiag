@@ -19,7 +19,7 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
   4. Scope of Investigation:
     - Note that this runbook does not include internal VM checks, such as guest OS investigations.
   
-[START]: Verifiying context and parameters required for Ops Agent runbook checks
+[START]: Verifying context and parameters required for Ops Agent runbook checks
 [AUTOMATED STEP]: Verifying Service Account exists...
 
    - gcpdiag-gce3-aaaa/faulty-opsagent                                    [OK]
@@ -189,7 +189,7 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
   4. Scope of Investigation:
     - Note that this runbook does not include internal VM checks, such as guest OS investigations.
   
-[START]: Verifiying context and parameters required for Ops Agent runbook checks
+[START]: Verifying context and parameters required for Ops Agent runbook checks
 [AUTOMATED STEP]: Verifying Service Account exists...
 
    - gcpdiag-gce3-aaaa/faulty-opsagent-no-sa                              [OK]
@@ -339,7 +339,7 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
   4. Scope of Investigation:
     - Note that this runbook does not include internal VM checks, such as guest OS investigations.
   
-[START]: Verifiying context and parameters required for Ops Agent runbook checks
+[START]: Verifying context and parameters required for Ops Agent runbook checks
 [AUTOMATED STEP]: Verifying Service Account exists...
 
    - gcpdiag-gce3-aaaa/working-opsagent                                   [OK]

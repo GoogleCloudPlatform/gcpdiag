@@ -12,7 +12,7 @@ description: >
 
 ### Description
 
-Verifies Organisation policy and VM configuraion to issue serial port logging
+Verifies Organization policy and VM configuration to issue serial port logging
   to Stackdriver from Compute Engine VMs is feasible.
 
 

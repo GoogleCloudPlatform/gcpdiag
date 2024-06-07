@@ -12,8 +12,8 @@ description: >
 
 ### Description
 
-Evalutes the VPC routing rules for the most specific route that
-  - matches the destination IP addresson the VPC route selection order.
+Evaluates the VPC routing rules for the most specific route that
+  - matches the destination IP address on the VPC route selection order.
 
 
 

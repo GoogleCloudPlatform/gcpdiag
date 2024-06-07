@@ -94,7 +94,7 @@ class WorkbenchInstanceStuckInProvisioning(runbook.DiagnosticTree):
   }
 
   def build_tree(self):
-    """Desribes step relationships"""
+    """Describes step relationships"""
     start = WorkbenchInstanceStuckInProvisioningStart()
     check_custom_container = CheckWorkbenchInstanceUsingCustomContainer()
     check_workbench_instance_image = vertex_gs.CheckWorkbenchInstanceUsingOfficialImage(

@@ -125,7 +125,7 @@ class HighVmDiskUtilization(runbook.Step):
             | {}
           """.format(vm.id, UTILIZATION_THRESHOLD, within_str))
     else:
-      # Fallback to heck for fs utilization related messages in Serial logs
+      # Fallback to check for filesystem utilization related messages in Serial logs
       fs_util = VmSerialLogsCheck()
       fs_util.template = 'vm_performance::high_disk_utilization'
       fs_util.negative_pattern = constants.DISK_EXHAUSTION_ERRORS

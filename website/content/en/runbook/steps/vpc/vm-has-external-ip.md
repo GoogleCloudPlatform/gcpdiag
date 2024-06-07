@@ -12,7 +12,7 @@ description: >
 
 ### Description
 
-Based on the source NIC, IP adddress type, diagnostic process would be directed towards
+Based on the source NIC, IP address type, diagnostic process would be directed towards
   troubleshooting NATGW or direct external connectivity
 
 

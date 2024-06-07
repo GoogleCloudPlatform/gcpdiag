@@ -159,7 +159,7 @@ def info(message: str,
          resource=None,
          store_in_report=False,
          step_type='INFO') -> None:
-  """Send an infomrmal message to the user"""
+  """Send an informational message to the user"""
   operator.interface.info(message, resource, store_in_report, step_type)
 
 
@@ -197,8 +197,8 @@ def get_step_outcome(run_id):
   """Returns the overall evaluation result of a step
 
   You can only check for steps that have already been executed.
-  It is not possible to get the status of the current step, it's decendants or steps
-  in unexecuted branches.
+  It is not possible to get the status of the current step, it's descendants or steps
+  in branches not yet executed.
 
   Returns:
     a string representing outcome of a step or None if the step hasn't been executed.

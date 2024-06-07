@@ -104,7 +104,7 @@ class OpsAgent(runbook.DiagnosticTree):
   }
 
   def build_tree(self):
-    """Desribes step relationships"""
+    """Describes step relationships"""
     # Instantiate your start class
     start = OpsAgentStart()
     # add it to your tree
@@ -124,7 +124,7 @@ class OpsAgentStart(runbook.StartStep):
   """
 
   def execute(self):
-    """Verifiying context and parameters required for Ops Agent runbook checks"""
+    """Verifying context and parameters required for Ops Agent runbook checks"""
     project = crm.get_project(op.get(flags.PROJECT_ID))
 
     try:
@@ -139,7 +139,7 @@ class OpsAgentStart(runbook.StartStep):
                                     instance_name=op.get(flags.NAME) or
                                     op.get(flags.ID))
       elif (op.get(flags.NAME) or op.get(flags.ID)) and not op.get(flags.ZONE):
-        # find the insstance if we only know the instance ID or name
+        # find the instance if we only know the instance ID or name
         instances = gce.get_instances(op.context)
         if op.get(flags.ID):
           instance = instances.get(op.get(flags.ID))
@@ -165,7 +165,7 @@ class OpsAgentStart(runbook.StartStep):
 
 
 class VmHasAServiceAccount(runbook.Step):
-  """Verifies the existance of a service account for the Ops Agent to use.
+  """Verifies the existence of a service account for the Ops Agent to use.
 
   This investigation only happens from the perspective googleapis and
   user provided input. We don't look inside the VM for cases like
@@ -281,7 +281,7 @@ class InvestigateLoggingMonitoring(runbook.Gateway):
 class CheckSerialPortLogging(runbook.CompositeStep):
   """Checks if ops agent serial port logging
 
-  Verifies Organisation policy and VM configuraion to issue serial port logging
+  Verifies Organization policy and VM configuration to issue serial port logging
   to Stackdriver from Compute Engine VMs is feasible.
   """
 

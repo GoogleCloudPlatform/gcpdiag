@@ -4,7 +4,7 @@ linkTitle: "Vm Has A Service Account"
 weight: 3
 type: docs
 description: >
-  Verifies the existance of a service account for the Ops Agent to use.
+  Verifies the existence of a service account for the Ops Agent to use.
 ---
 
 **Product**: [Compute Engine](https://cloud.google.com/compute)\

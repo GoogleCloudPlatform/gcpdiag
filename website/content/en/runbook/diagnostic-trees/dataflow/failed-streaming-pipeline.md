@@ -23,9 +23,9 @@ Provides a DiagnosticTree to check for issues related to failed streaming
 
 ```shell
 gcpdiag runbook dataflow/failed-streaming-pipeline \
-  -p project_id = value \
-  -p job_id = value \
-  -p job_region = value
+  -p project_id=value \
+  -p job_id=value \
+  -p job_region=value
 ```
 
 #### Parameters

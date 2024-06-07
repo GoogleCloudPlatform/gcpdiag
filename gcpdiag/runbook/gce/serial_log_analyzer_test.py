@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Test class for gce/serial-log-analyser"""
+"""Test class for gce/serial-log-analyzer"""
 
 from gcpdiag import config
 from gcpdiag.runbook import gce, snapshot_test_base
@@ -19,7 +19,7 @@ from gcpdiag.runbook import gce, snapshot_test_base
 
 class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = gce
-  runbook_name = 'gce/serial-log-analyser'
+  runbook_name = 'gce/serial-log-analyzer'
   project_id = 'gcpdiag-gce-faulty-serial-log-runbook'
   config.init({'auto': True, 'interface': 'cli'}, project_id)
 

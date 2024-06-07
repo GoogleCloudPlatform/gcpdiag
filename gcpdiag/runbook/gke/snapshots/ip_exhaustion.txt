@@ -14,7 +14,7 @@ gke/ip-exhaustion: Troubleshooting ip exhaustion issues on GKE clusters.
 
   - Stackdriver logs
     
-[START]: Starting the IP Exhaustion dignostics
+[START]: Starting the IP Exhaustion diagnostics
 
    - gcpdiag-gke3-gggg                                                    [OK]
      [REASON]

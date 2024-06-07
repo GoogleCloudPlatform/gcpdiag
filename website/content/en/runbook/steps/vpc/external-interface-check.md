@@ -12,7 +12,7 @@ description: >
 
 ### Description
 
-This step checks firewall and routing rules exist to allow for connnectity to the
+This step checks firewall and routing rules exist to allow for connectivity to the
   external IP address. It also runs and reports a connectivity test.
 
 

@@ -27,11 +27,11 @@ This runbook investigates the gke cluster for ip exhaustion issues and recommend
 
 ```shell
 gcpdiag runbook gke/ip-exhaustion \
-  -p project_id = value \
-  -p name = value \
-  -p location = value \
-  -p start_time_utc = value \
-  -p end_time_utc = value
+  -p project_id=value \
+  -p name=value \
+  -p location=value \
+  -p start_time_utc=value \
+  -p end_time_utc=value
 ```
 
 #### Parameters

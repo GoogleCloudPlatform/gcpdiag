@@ -1233,7 +1233,7 @@ def run_connectivity_test(project_id: str, src_ip: str, dest_ip: str,
           f'projects/{project_id}/locations/global/connectivityTests/{test_id}')
                        ).execute()
       # Wait for delete operation to complete for a maximum of 1min and
-      # verify that exisiting connectivity test is deleted.
+      # verify that existing connectivity test is deleted.
       delete_count = 0
       delete_status = networkmanagement.projects().locations().global_(
       ).operations().get(name=delete_request['name']).execute()
@@ -1290,7 +1290,7 @@ def run_connectivity_test(project_id: str, src_ip: str, dest_ip: str,
         f'projects/{project_id}/locations/global/connectivityTests/{test_id}')
                      ).execute()
     # Wait for delete operation to complete for a maximum of 1min
-    # and verify that exisiting connectivity test is deleted.
+    # and verify that existing connectivity test is deleted.
     delete_count = 0
     delete_status = networkmanagement.projects().locations().global_(
     ).operations().get(name=delete_request['name']).execute()

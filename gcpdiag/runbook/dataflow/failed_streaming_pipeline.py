@@ -77,7 +77,7 @@ class FailedStreamingPipelineStart(runbook.StartStep):
   Gets the job and confirms it exists.
   Usually this will be logged in Dataflow Monitoring Interface, but may not be
   logged if the job
-  graph is not contructed.
+  graph is not constructed.
   """
 
   template = 'generics::failed_streaming_pipeline_job_found'
