@@ -18,6 +18,7 @@ SUPPORTED_PRODUCTS = {
 
 
 def _get_active_gcloud_project():
+  """Best effort check to retrieve the project id currently configured on gcloud."""
   try:
     # Run the gcloud command to get the current project
     result = subprocess.run(['gcloud', 'config', 'get-value', 'project'],
@@ -26,8 +27,8 @@ def _get_active_gcloud_project():
                             stderr=subprocess.PIPE,
                             text=True)
     project_id = result.stdout.strip()
-  except subprocess.CalledProcessError:
-    pass
+  except (subprocess.CalledProcessError, OSError, FileNotFoundError):
+    return None
   else:
     print(
         f'Found project {_color(project_id,"blue")}; will use it arg for `--project`'
@@ -67,6 +68,8 @@ def _git_operations(runbook_name):
   except subprocess.CalledProcessError as e:
     print('An error occurred during git operations:')
     print(e)
+  except OSError:
+    pass
 
 
 def _get_current_branch():
@@ -253,7 +256,6 @@ def gen_starter_code(args_: dict):
           output_file.write(
               textwrap.dedent(f'''\
                             # pylint: disable=unused-wildcard-import, wildcard-import
-                            from gcpdiag.runbook.gcp.{file} import *
                             from gcpdiag.runbook.iam.{file} import *
                             '''))
   print('Ok!')

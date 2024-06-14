@@ -185,6 +185,10 @@ class StartStep(Step):
   def __init__(self):
     super().__init__(step_type=constants.StepType.START)
 
+  def execute(self):
+    """Executing default start step for runbooks..."""
+    pass
+
 
 class CompositeStep(Step):
   """Composite Events of a Diagnostic tree"""
@@ -202,11 +206,10 @@ class EndStep(Step):
   def execute(self):
     """Finalizing runbook investigations..."""
     if not config.get(flags.INTERACTIVE_MODE):
-      response = self.interface.prompt(task=self.interface.CONFIRMATION,
-                                       message='Is your issue resolved?')
-      if response == self.interface.NO:
-        self.interface.prompt(kind=op.CONFIRMATION,
-                              message=constants.END_MESSAGE)
+      response = op.operator.interface.prompt(kind=op.CONFIRMATION,
+                                              message='Is your issue resolved?')
+      if response == op.NO:
+        op.operator.interface.info(message=constants.END_MESSAGE)
 
 
 class Gateway(Step):
