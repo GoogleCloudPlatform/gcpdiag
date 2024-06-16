@@ -21,6 +21,7 @@ Instead of doing real API calls, we return test JSON data.
 # pylint: disable=unused-argument
 # pylint: disable=invalid-name
 
+from gcpdiag import utils
 from gcpdiag.queries import apis_stub
 
 GKE1_PROJECT = 'gcpdiag-gke1-aaaa'
@@ -38,7 +39,8 @@ class LoggingApiStub:
   def list(self, body):
     global logging_body
     logging_body = body
-    return apis_stub.RestCallStub(GKE1_PROJECT, 'logging-entries-1')
+    project = utils.get_project_by_res_name(body['resourceNames'][0])
+    return apis_stub.RestCallStub(project, 'logging-entries-1')
 
   def list_next(self, req, res):
     del req, res
