@@ -1,0 +1,4 @@
+*  pubsub/ERR/2024_003: Snapshot should be created before it expires in less than 1hour of creation.
+   - gcpdiag-pubsub1-aaaa                                                 [SKIP]
+     logging api is disabled
+
