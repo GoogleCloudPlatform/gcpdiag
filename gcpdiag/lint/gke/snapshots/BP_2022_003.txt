@@ -12,7 +12,7 @@
    - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [FAIL]
      GKE version 1.25
 
-         scheduled end of life: 2024-03-30
+         scheduled end of life: 2024-02-06 (estimation)
    - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [SKIP]
      release channel: REGULAR
    - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [SKIP]
