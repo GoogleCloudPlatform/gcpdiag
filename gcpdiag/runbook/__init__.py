@@ -113,12 +113,6 @@ class Step:
 
   def add_child(self, child):
     """Child steps"""
-    if self.steps and self.steps[-1].type == constants.StepType.END:
-      raise exceptions.InvalidStepOperation(
-          'Unable to add a new intermediary step. The last step in the parent sequence is '
-          f'{self.steps[-1].__class__.__name__}, indicating the sequence has already been '
-          'concluded. A step cannot be added after a terminal step like '
-          f'{self.steps[-1].__class__.__name__}.')
     self.steps.append(child)
 
   def find_step(self, step: 'Step'):
