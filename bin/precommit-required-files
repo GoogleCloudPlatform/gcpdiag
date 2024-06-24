@@ -61,6 +61,8 @@ PRODUCTS = {
         '[Cloud TPU](https://cloud.google.com/tpu)',
     'vpc':
         '[Virtual Private Cloud](https://cloud.google.com/vpc)',
+    'vertex':
+        '[Vertex AI](https://cloud.google.com/vertex-ai)',
 }
 
 RULE_CLASSES = {

@@ -1,0 +1,44 @@
+{% block provisioning_stuck_success_reason %}
+OK! Workbench Instance {instance_name} is already in ACTIVE state.
+WARNING: This runbook is intended for instances that are stuck in PROVISIONING state.
+{% endblock provisioning_stuck_success_reason %}
+
+{% block provisioning_stuck_success_reason_a1 %}
+OK! Workbench Instance {instance_name} is in PROVISIONING, STARTING or INITIALIZING state.
+{% endblock provisioning_stuck_success_reason_a1 %}
+
+{% block provisioning_stuck_success_reason_a2 %}
+OK! Workbench Instance {instance_name} is already in ACTIVE state.
+The issue is solved!!!
+{% endblock provisioning_stuck_success_reason_a2 %}
+
+{% block provisioning_stuck_failure_reason %}
+Workbench Instance {instance_name} not in PROVISIONING, STARTING or INITIALIZING state.
+{% endblock provisioning_stuck_failure_reason %}
+
+{% block provisioning_stuck_failure_remediation %}
+Try to start the instance.
+{% endblock provisioning_stuck_failure_remediation %}
+
+{% block provisioning_stuck_uncertain_reason %}
+Workbench Instance {instance_name} not in PROVISIONING, STARTING or INITIALIZING state.
+{% endblock provisioning_stuck_uncertain_reason %}
+
+{% block provisioning_stuck_uncertain_remediation %}
+Try to start the instance.
+{% endblock provisioning_stuck_uncertain_remediation %}
+
+{% block provisioning_stuck_failure_reason_a1 %}
+Workbench Instance {instance_name} still in PROVISIONING, STARTING or INITIALIZING state.
+{% endblock provisioning_stuck_failure_reason_a1 %}
+
+{% block provisioning_stuck_failure_remediation_a1 %}
+Restart the instance. If the issue persists:
+
+1. Recover data by diagnosing the instance with the --enable-copy-home-files [1]
+2. Inspect the diagnostics output logs to find issues
+3. Create a new Instance and migrate your data [2]
+
+[1] https://cloud.google.com/sdk/gcloud/reference/workbench/instances/diagnose
+[2] https://cloud.google.com/vertex-ai/docs/workbench/instances/migrate
+{% endblock provisioning_stuck_failure_remediation_a1 %}

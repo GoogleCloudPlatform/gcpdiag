@@ -1,0 +1,176 @@
+{
+  "instances": [
+    {
+      "name": "projects/gcpdiag-notebooks2-aaaa/locations/us-west1-a/instances/notebooks2instance-provisioning-stuck",
+      "gceSetup": {
+        "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks2-aaaa/zones/us-west1-a/machineTypes/e2-standard-4",
+        "serviceAccounts": [
+          {
+            "email": "12340012-compute@developer.gserviceaccount.com",
+            "scopes": [
+              "https://www.googleapis.com/auth/cloud-platform",
+              "https://www.googleapis.com/auth/userinfo.email"
+            ]
+          }
+        ],
+        "containerImage": {
+          "repository": "us-docker.pkg.dev/deeplearning-platform-release/gcr.io/base-cu113.py310",
+          "tag": "m118"
+        },
+        "bootDisk": {
+          "diskSizeGb": "150",
+          "diskEncryption": "GMEK"
+        },
+        "dataDisks": [
+          {
+            "diskSizeGb": "100",
+            "diskEncryption": "GMEK"
+          }
+        ],
+        "shieldedInstanceConfig": {
+          "enableVtpm": true,
+          "enableIntegrityMonitoring": true
+        },
+        "networkInterfaces": [
+          {
+            "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks2-aaaa/global/networks/wbi-test-default",
+            "subnet": "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks2-aaaa/regions/us-west1/subnetworks/wbi-test-default"
+          }
+        ],
+        "disablePublicIp": true,
+        "tags": [
+          "deeplearning-vm",
+          "notebook-instance"
+        ],
+        "metadata": {
+          "enable-guest-attributes": "TRUE",
+          "post-startup-script": "#! /bin/bash",
+          "user-data": "#include file:///mnt/stateful_partition/workbench/cloud-config.yaml",
+          "serial-port-logging-enable": "true",
+          "report-event-url": "https://notebooks.googleapis.com/projects/gcpdiag-notebooks2-aaaa/zones/us-west1-a/instances/notebooks2instance-provisioning-stuck:reportInfoSystem",
+          "disable-mixer": "true",
+          "notebooks-api": "PROD",
+          "google-logging-enabled": "true",
+          "disable-swap-binaries": "true",
+          "terraform": "true",
+          "report-event-health": "true",
+          "service-account-mode": "true",
+          "enable-oslogin": "TRUE",
+          "proxy-mode": "service_account",
+          "shutdown-script": "/opt/deeplearning/bin/shutdown_script.sh",
+          "custom-container-payload": "us-docker.pkg.dev/deeplearning-platform-release/gcr.io/base-cu113.py310:m118",
+          "report-dns-resolution": "true",
+          "cos-update-strategy": "update_disabled",
+          "proxy-registration-url": "https://us-west1.notebooks.cloud.google.com/tun/m/4592f092208ecc84946b8f8f8016274df1b36a14",
+          "proxy-backend-id": "1b1dcbcb4ec643e8",
+          "proxy-url": "1b1dcbcb4ec643e8-dot-us-west1.notebooks.googleusercontent.com",
+          "notebooks-api-version": "v2",
+          "container": "us-docker.pkg.dev/deeplearning-platform-release/gcr.io/base-cu113.py310:m118",
+          "custom-container-image": "true",
+          "proxy-byoid-url": "1b1dcbcb4ec643e8-dot-us-west1.notebooks.byoid.googleusercontent.com"
+        },
+        "gpuDriverConfig": {}
+      },
+      "proxyUri": "1b1dcbcb4ec643e8-dot-us-west1.notebooks.googleusercontent.com",
+      "state": "PROVISIONING",
+      "id": "66917948-86fd-40c0-b6ac-50e599bdd4e8",
+      "createTime": "2024-06-25T00:45:45.057675437Z",
+      "updateTime": "2024-06-25T00:46:02.584714415Z",
+      "labels": {
+        "consumer-project-id": "gcpdiag-notebooks2-aaaa",
+        "consumer-project-number": "12340012",
+        "notebooks-product": "workbench-instances",
+        "resource-name": "notebooks2instance-provisioning-stuck"
+      },
+      "thirdPartyProxyUrl": "1b1dcbcb4ec643e8-dot-us-west1.notebooks.byoid.googleusercontent.com",
+      "satisfiesPzi": true
+    },
+    {
+      "name": "projects/gcpdiag-notebooks2-aaaa/locations/us-west1-a/instances/notebooks2instance-ok",
+      "gceSetup": {
+        "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks2-aaaa/zones/us-west1-a/machineTypes/e2-standard-4",
+        "serviceAccounts": [
+          {
+            "email": "12340012-compute@developer.gserviceaccount.com",
+            "scopes": [
+              "https://www.googleapis.com/auth/cloud-platform",
+              "https://www.googleapis.com/auth/userinfo.email"
+            ]
+          }
+        ],
+        "bootDisk": {
+          "diskSizeGb": "150",
+          "diskEncryption": "GMEK"
+        },
+        "dataDisks": [
+          {
+            "diskSizeGb": "100",
+            "diskEncryption": "GMEK"
+          }
+        ],
+        "shieldedInstanceConfig": {
+          "enableVtpm": true,
+          "enableIntegrityMonitoring": true
+        },
+        "networkInterfaces": [
+          {
+            "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks2-aaaa/global/networks/default",
+            "subnet": "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks2-aaaa/regions/us-west1/subnetworks/default"
+          }
+        ],
+        "tags": [
+          "deeplearning-vm",
+          "notebook-instance"
+        ],
+        "metadata": {
+          "version": "122",
+          "restriction": "",
+          "serial-port-logging-enable": "true",
+          "disable-swap-binaries": "true",
+          "shutdown-script": "/opt/deeplearning/bin/shutdown_script.sh",
+          "terraform": "true",
+          "title": "workbench",
+          "proxy-byoid-url": "341a9c04117d5a9e-dot-us-west1.notebooks.byoid.googleusercontent.com",
+          "proxy-registration-url": "https://us-west1.notebooks.cloud.google.com/tun/m/4592f092208ecc84946b8f8f8016274df1b36a14",
+          "proxy-backend-id": "341a9c04117d5a9e",
+          "report-event-health": "true",
+          "idle-timeout-seconds": "10800",
+          "notebooks-api": "PROD",
+          "proxy-url": "341a9c04117d5a9e-dot-us-west1.notebooks.googleusercontent.com",
+          "report-dns-resolution": "true",
+          "proxy-mode": "service_account",
+          "enable-oslogin": "TRUE",
+          "notebooks-api-version": "v2",
+          "enable-guest-attributes": "TRUE",
+          "disable-mixer": "true",
+          "framework": "workbench"
+        },
+        "gpuDriverConfig": {}
+      },
+      "proxyUri": "341a9c04117d5a9e-dot-us-west1.notebooks.googleusercontent.com",
+      "state": "ACTIVE",
+      "id": "2a0b7e06-ddcc-4530-acbf-cf76b78a3e80",
+      "healthState": "HEALTHY",
+      "healthInfo": {
+        "docker_proxy_agent_status": "1",
+        "jupyterlab_status": "1",
+        "jupyterlab_api_status": "1",
+        "notebooks_api_dns": "1",
+        "proxy_registration_dns": "1",
+        "last_updated": "2024-06-25T00:57:20+00:00",
+        "system_health": "1",
+        "docker_status": "1"
+      },
+      "createTime": "2024-06-25T00:27:07.479890065Z",
+      "updateTime": "2024-06-25T00:57:20.945822754Z",
+      "labels": {
+        "notebooks-product": "workbench-instances",
+        "resource-name": "notebooks2instance-ok",
+        "consumer-project-id": "gcpdiag-notebooks2-aaaa",
+        "consumer-project-number": "12340012"
+      },
+      "thirdPartyProxyUrl": "341a9c04117d5a9e-dot-us-west1.notebooks.byoid.googleusercontent.com",
+      "satisfiesPzi": true
+    }
+  ]
+}

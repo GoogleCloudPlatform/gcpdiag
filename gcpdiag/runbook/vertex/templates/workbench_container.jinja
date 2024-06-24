@@ -1,0 +1,12 @@
+{% block custom_success_reason %}
+OK! Workbench Instance {instance_name} is not using a custom container.
+{% endblock custom_success_reason %}
+
+{% block custom_uncertain_reason %}
+WARNING: This runbook may not be applicable for Workbench Instances created with a custom container.
+{% endblock custom_uncertain_reason %}
+
+{% block custom_uncertain_remediation %}
+Follow the documentation to create a Workbench Instance with a custom container [1]
+[1] https://cloud.google.com/vertex-ai/docs/workbench/instances/create-custom-container
+{% endblock custom_uncertain_remediation %}

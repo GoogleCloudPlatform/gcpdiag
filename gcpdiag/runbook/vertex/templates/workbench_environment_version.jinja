@@ -1,0 +1,45 @@
+{% block upgradable_step_message %}
+Checking if Workbench Instance is using the latest environment version...
+{% endblock upgradable_step_message %}
+
+{% block upgradable_success_reason %}
+OK! Workbench Instance {instance_name} is using the latest environment version M{environment_version}
+{% endblock upgradable_success_reason %}
+
+{% block upgradable_uncertain_reason %}
+Workbench Instance {instance_name} should be in STOPPED state to check its upgradability.
+Upgradability info: {upgrade_info}
+{% endblock upgradable_uncertain_reason %}
+
+{% block upgradable_uncertain_remediation %}
+Stop the instance.
+{% endblock upgradable_uncertain_remediation %}
+
+{% block upgradable_uncertain_reason_a1 %}
+Workbench Instance {instance_name} has not been assigned an environment version yet.
+Upgradability info: {upgrade_info}
+{% endblock upgradable_uncertain_reason_a1 %}
+
+{% block upgradable_uncertain_remediation_a1 %}
+Make sure instance was created with the latest environment version.
+{% endblock upgradable_uncertain_remediation_a1 %}
+
+{% block upgradable_uncertain_reason_a2 %}
+Workbench Instance {instance_name} upgradability info:
+{upgrade_info}
+{% endblock upgradable_uncertain_reason_a2 %}
+
+{% block upgradable_uncertain_remediation_a2 %}
+Make sure instance has the latest environment version.
+{% endblock upgradable_uncertain_remediation_a2 %}
+
+{% block upgradable_failure_reason %}
+Workbench Instance {instance_name} is using a previous environment version M{environment_version}
+{% endblock upgradable_failure_reason %}
+
+{% block upgradable_failure_remediation %}
+Upgrade the instance to use the latest version {upgrade_version} which has the latest updates and fixes [1]
+Upgrade version image: {upgrade_image}
+Remember to backup your data before an upgrade.
+[1] https://cloud.google.com/vertex-ai/docs/workbench/instances/upgrade
+{% endblock upgradable_failure_remediation %}

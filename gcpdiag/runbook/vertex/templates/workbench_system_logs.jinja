@@ -1,0 +1,29 @@
+{% block enabled_success_reason %}
+OK! Workbench Instance {instance_name} Serial Port Logging is enabled and instance is initializing.
+Checking Workbench Instance syslogs for issues...
+{% endblock enabled_success_reason %}
+
+{% block enabled_uncertain_reason %}
+Workbench Instance {instance_name} Serial Port Logging is disabled by org constraint '{constraint}'
+{% endblock enabled_uncertain_reason %}
+
+{% block enabled_uncertain_remediation %}
+Remove org constraint '{constraint}' to analyze Workbench Instance system serial port logs.
+{% endblock enabled_uncertain_remediation %}
+
+{% block enabled_uncertain_reason_a1 %}
+Workbench Instance {instance_name} Serial Port Logging is disabled by metadata '{metadata}': '{metadata_value}'
+{% endblock enabled_uncertain_reason_a1 %}
+
+{% block enabled_uncertain_remediation_a1 %}
+Set '{metadata}' to 'True' to analyze Workbench Instance system serial port logs.
+{% endblock enabled_uncertain_remediation_a1 %}
+
+{% block enabled_uncertain_reason_a2 %}
+Workbench Instance {instance_name} not in PROVISIONING, STARTING or INITIALIZING state.
+Current state: {state}
+{% endblock enabled_uncertain_reason_a2 %}
+
+{% block enabled_uncertain_remediation_a2 %}
+Try to start the instance.
+{% endblock enabled_uncertain_remediation_a2 %}

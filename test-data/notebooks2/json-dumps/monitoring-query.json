@@ -1,0 +1,86 @@
+{
+  "timeSeriesDescriptor": {
+    "labelDescriptors": [
+      {
+        "key": "resource.project_id"
+      },
+      {
+        "key": "resource.zone"
+      },
+      {
+        "key": "resource.instance_id"
+      },
+      {
+        "key": "metric.instance_name"
+      }
+    ],
+    "pointDescriptors": [
+      {
+        "key": "value_utilization_max",
+        "valueType": "DOUBLE",
+        "metricKind": "GAUGE",
+        "unit": "10^2.%"
+      }
+    ]
+  },
+  "timeSeriesData": [
+    {
+      "labelValues": [
+        {
+          "stringValue": "gcpdiag-notebooks2-aaaa"
+        },
+        {
+          "stringValue": "us-west1-a"
+        },
+        {
+          "stringValue": "7519326121542266893"
+        },
+        {
+          "stringValue": "notebooks2instance-ok"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 0.022391958608412092
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-06-25T04:56:24.619964Z",
+            "endTime": "2024-06-25T04:56:24.619964Z"
+          }
+        }
+      ]
+    },
+    {
+      "labelValues": [
+        {
+          "stringValue": "gcpdiag-notebooks2-aaaa"
+        },
+        {
+          "stringValue": "us-west1-a"
+        },
+        {
+          "stringValue": "4775836342981993096"
+        },
+        {
+          "stringValue": "notebooks2instance-provisioning-stuck"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 0.019849973913744635
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-06-25T04:56:24.619964Z",
+            "endTime": "2024-06-25T04:56:24.619964Z"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{% block ssh_success_reason %}
+OK! User can SHH and open a terminal in the Workbench Instance {instance_name}'s Compute Engine VM.
+{% endblock ssh_success_reason %}
+
+{% block ssh_uncertain_reason %}
+Workbench Instance {instance_name}'s Compute Engine VM is not running.
+Status: {status}
+You cannot ssh to use terminal access and check for certain issues in the VM.
+For example, space in "/home/jupyter" directory should remain below 85%
+{% endblock ssh_uncertain_reason %}
+
+{% block ssh_uncertain_remediation %}
+Try restarting your instance or start your instance's VM via Compute Engine
+{% endblock ssh_uncertain_remediation %}
+
+{% block ssh_uncertain_reason_a1 %}
+Without terminal access to the Workbench Instance {instance_name}'s Compute Engine VM you cannot check for certain issues.
+For example, space in "/home/jupyter" should remain below 85%
+{% endblock ssh_uncertain_reason_a1 %}
+
+{% block ssh_uncertain_remediation_a1 %}
+Configure your instance to allow SSH access or contact the Compute Engine administrator.
+{% endblock ssh_uncertain_remediation_a1 %}

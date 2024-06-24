@@ -1,0 +1,13 @@
+{
+  "name": "projects/12340012",
+  "parent": "folders/135791208641",
+  "projectId": "gcpdiag-notebooks2-aaaa",
+  "state": "ACTIVE",
+  "displayName": "gcpdiag test - notebooks2",
+  "createTime": "2024-06-24T23:13:18.062235Z",
+  "updateTime": "2024-06-24T23:13:18.062235Z",
+  "etag": "W/\"5da8435414a342b0\"",
+  "labels": {
+    "gcpdiag": "test"
+  }
+}

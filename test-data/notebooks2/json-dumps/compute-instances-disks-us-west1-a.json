@@ -1,0 +1,163 @@
+{
+  "kind": "compute#diskList",
+  "id": "projects/gcpdiag-notebooks2-aaaa/zones/us-west1-a/disks",
+  "items": [
+    {
+      "kind": "compute#disk",
+      "id": "5823248711787458573",
+      "creationTimestamp": "2024-06-24T17:27:17.216-07:00",
+      "name": "notebooks2instance-ok-boot",
+      "sizeGb": "150",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks2-aaaa/zones/us-west1-a",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks2-aaaa/zones/us-west1-a/disks/notebooks2instance-ok-boot",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/cloud-notebooks-managed/global/images/workbench-instances-v20240613",
+      "sourceImageId": "8939839224153148113",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks2-aaaa/zones/us-west1-a/diskTypes/pd-balanced",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/click-to-deploy-images/global/licenses/c2d-tensorflow",
+        "https://www.googleapis.com/compute/v1/projects/click-to-deploy-images/global/licenses/c2d-dl-platform-gvnic",
+        "https://www.googleapis.com/compute/v1/projects/click-to-deploy-images/global/licenses/c2d-dl-platform-workbench-instances",
+        "https://www.googleapis.com/compute/v1/projects/click-to-deploy-images/global/licenses/c2d-dl-platform-debian-11",
+        "https://www.googleapis.com/compute/v1/projects/click-to-deploy-images/global/licenses/c2d-dl-platform-dlvm"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "GVNIC"
+        }
+      ],
+      "lastAttachTimestamp": "2024-06-24T17:27:17.216-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks2-aaaa/zones/us-west1-a/instances/notebooks2instance-ok"
+      ],
+      "labels": {
+        "consumer-project-id": "gcpdiag-notebooks2-aaaa",
+        "consumer-project-number": "12340012",
+        "notebooks-product": "workbench-instances",
+        "resource-name": "notebooks2instance-ok"
+      },
+      "labelFingerprint": "EShFsrA9YYA=",
+      "licenseCodes": [
+        "5638175847114525401",
+        "1045467480970708420",
+        "5827808631348907538",
+        "5836218392066113222",
+        "5592494605997326117"
+      ],
+      "physicalBlockSizeBytes": "4096",
+      "enableConfidentialCompute": false,
+      "satisfiesPzi": true
+    },
+    {
+      "kind": "compute#disk",
+      "id": "5914438366494437389",
+      "creationTimestamp": "2024-06-24T17:27:17.219-07:00",
+      "name": "notebooks2instance-ok-data-workspace",
+      "sizeGb": "100",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks2-aaaa/zones/us-west1-a",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks2-aaaa/zones/us-west1-a/disks/notebooks2instance-ok-data-workspace",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks2-aaaa/zones/us-west1-a/diskTypes/pd-balanced",
+      "lastAttachTimestamp": "2024-06-24T17:27:17.220-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks2-aaaa/zones/us-west1-a/instances/notebooks2instance-ok"
+      ],
+      "labels": {
+        "consumer-project-id": "gcpdiag-notebooks2-aaaa",
+        "consumer-project-number": "12340012",
+        "notebooks-product": "workbench-instances",
+        "resource-name": "notebooks2instance-ok"
+      },
+      "labelFingerprint": "EShFsrA9YYA=",
+      "physicalBlockSizeBytes": "4096",
+      "enableConfidentialCompute": false,
+      "satisfiesPzi": true
+    },
+    {
+      "kind": "compute#disk",
+      "id": "3682754809529082504",
+      "creationTimestamp": "2024-06-24T18:24:57.206-07:00",
+      "name": "notebooks2instance-provisioning-stuck-boot",
+      "sizeGb": "150",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks2-aaaa/zones/us-west1-a",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks2-aaaa/zones/us-west1-a/disks/notebooks2instance-provisioning-stuck-boot",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/deeplearning-platform-release/global/images/tf-2-11-cu113-notebooks-v20240613-debian-11-py310",
+      "sourceImageId": "4888085334736329368",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks2-aaaa/zones/us-west1-a/diskTypes/pd-balanced",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/click-to-deploy-images/global/licenses/c2d-tensorflow",
+        "https://www.googleapis.com/compute/v1/projects/click-to-deploy-images/global/licenses/c2d-dl-platform-gvnic",
+        "https://www.googleapis.com/compute/v1/projects/click-to-deploy-images/global/licenses/c2d-dl-platform-gpu-tensorflow-2-11",
+        "https://www.googleapis.com/compute/v1/projects/click-to-deploy-images/global/licenses/c2d-dl-platform-gpu-tensorflow-experimental",
+        "https://www.googleapis.com/compute/v1/projects/click-to-deploy-images/global/licenses/c2d-dl-platform-debian-11",
+        "https://www.googleapis.com/compute/v1/projects/click-to-deploy-images/global/licenses/c2d-dl-platform-notebooks"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "GVNIC"
+        }
+      ],
+      "lastAttachTimestamp": "2024-06-24T18:24:57.206-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks2-aaaa/zones/us-west1-a/instances/notebooks2instance-provisioning-stuck"
+      ],
+      "labels": {
+        "consumer-project-id": "gcpdiag-notebooks2-aaaa",
+        "consumer-project-number": "12340012",
+        "notebooks-product": "workbench-instances",
+        "resource-name": "notebooks2instance-provisioning-stuck"
+      },
+      "labelFingerprint": "8SWlKftMsi8=",
+      "licenseCodes": [
+        "5638175847114525401",
+        "1045467480970708420",
+        "101762042003655628",
+        "2336113588774204348",
+        "5836218392066113222",
+        "241948068456683562"
+      ],
+      "physicalBlockSizeBytes": "4096",
+      "enableConfidentialCompute": false,
+      "satisfiesPzi": true
+    },
+    {
+      "kind": "compute#disk",
+      "id": "3306109417737921160",
+      "creationTimestamp": "2024-06-24T18:24:57.208-07:00",
+      "name": "notebooks2instance-provisioning-stuck-data-workspace",
+      "sizeGb": "100",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks2-aaaa/zones/us-west1-a",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks2-aaaa/zones/us-west1-a/disks/notebooks2instance-provisioning-stuck-data-workspace",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks2-aaaa/zones/us-west1-a/diskTypes/pd-balanced",
+      "lastAttachTimestamp": "2024-06-24T18:24:57.209-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks2-aaaa/zones/us-west1-a/instances/notebooks2instance-provisioning-stuck"
+      ],
+      "labels": {
+        "consumer-project-id": "gcpdiag-notebooks2-aaaa",
+        "consumer-project-number": "12340012",
+        "notebooks-product": "workbench-instances",
+        "resource-name": "notebooks2instance-provisioning-stuck"
+      },
+      "labelFingerprint": "8SWlKftMsi8=",
+      "physicalBlockSizeBytes": "4096",
+      "enableConfidentialCompute": false,
+      "satisfiesPzi": true
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks2-aaaa/zones/us-west1-a/disks"
+}

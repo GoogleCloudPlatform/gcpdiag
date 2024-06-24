@@ -333,7 +333,7 @@ class Instance(models.Resource):
       raise RuntimeError(f"can't determine zone of instance {self.name}")
 
   @property
-  def disks(self) -> List[str]:
+  def disks(self) -> List[dict]:
     if 'disks' in self._resource_data:
       return self._resource_data['disks']
     return []
@@ -397,6 +397,22 @@ class Instance(models.Resource):
               if license_ == attached_license.partition('/global/licenses/')[2]:
                 return True
     return False
+
+  def get_boot_disk_image(self) -> str:
+    """Get VM's boot disk image"""
+    boot_disk_image: str = ''
+    for disk in self.disks:
+      if disk.get('boot', False):
+        disk_source = disk.get('source', '')
+        m = re.search(r'/disks/([^/]+)$', disk_source)
+        if not m:
+          raise RuntimeError(f"can't determine name of boot disk {disk_source}")
+        disk_name = m.group(1)
+        gce_disk: Disk = get_disk(self.project_id,
+                                  zone=self.zone,
+                                  disk_name=disk_name)
+        return gce_disk.source_image
+    return boot_disk_image
 
   @property
   def is_sole_tenant_vm(self) -> bool:
@@ -588,6 +604,10 @@ class Disk(models.Resource):
     return m.group(1)
 
   @property
+  def source_image(self) -> str:
+    return self._resource_data.get('sourceImage', '')
+
+  @property
   def full_path(self) -> str:
     result = re.match(
         r'https://www.googleapis.com/compute/v1/(.*)',
@@ -654,6 +674,15 @@ def get_instance(project_id: str, zone: str, instance_name: str) -> Instance:
 
   response = request.execute(num_retries=config.API_RETRIES)
   return Instance(project_id, resource_data=response)
+
+
+@caching.cached_api_call(in_memory=True)
+def get_disk(project_id: str, zone: str, disk_name: str) -> Disk:
+  """Returns disk object matching disk name and zone"""
+  compute = apis.get_api('compute', 'v1', project_id)
+  request = compute.disks().get(project=project_id, zone=zone, disk=disk_name)
+  response = request.execute(num_retries=config.API_RETRIES)
+  return Disk(project_id, resource_data=response)
 
 
 @caching.cached_api_call(in_memory=True)

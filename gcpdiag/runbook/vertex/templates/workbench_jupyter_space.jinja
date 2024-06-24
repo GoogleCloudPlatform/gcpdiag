@@ -1,0 +1,14 @@
+{% block available_success_reason %}
+OK! Workbench Instance {instance_name}'s "/home/jupyter" space usage is below 85%
+{% endblock available_success_reason %}
+
+{% block available_failure_reason %}
+Workbench Instance {instance_name}'s space in "/home/jupyter" should remain below 85%
+This will allow the instance to start correctly.
+{% endblock available_failure_reason %}
+
+{% block available_failure_remediation %}
+Delete large files in "/home/jupyter" and restart the instance.
+You may also run the following command to list large cache files and then manually delete them.
+- "du -h /home/jupyter/.cache | sort -h"
+{% endblock available_failure_remediation %}

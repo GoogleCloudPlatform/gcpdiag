@@ -110,7 +110,7 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
       self._fail_count = 0
     return batch_api
 
-  def get(self, project, zone=None, instance=None):
+  def get(self, project, zone=None, instance=None, disk=None):
     if self.mock_state == 'projects':
       return apis_stub.RestCallStub(project, 'compute-project')
     elif self.mock_state == 'instances':
@@ -122,6 +122,17 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
         return self
       else:
         return apis_stub.RestCallStub(project, f'compute-instances-{zone}')
+    elif self.mock_state == 'disks':
+      if disk:
+        self.mock_state = 'disk'
+        self.instance = instance
+        self.project = project
+        self.zone = zone
+        self.disk = disk
+        return self
+      else:
+        return apis_stub.RestCallStub(project,
+                                      f'compute-instances-disks-{zone}')
 
   def projects(self):
     return ComputeEngineApiStub('projects')
@@ -177,8 +188,16 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
                   return interface
             else:
               return interfaces
-    raise ValueError(
-        f"can't call this method here (mock_state: {self.mock_state}")
+      elif self.mock_state == 'disk':
+        with open(json_dir / f'compute-instances-disks-{self.zone}.json',
+                  encoding='utf-8') as json_file:
+          disks = json.load(json_file)['items']
+          for disk in disks:
+            if disk['name'] == self.disk:
+              return disk
+      else:
+        raise ValueError(
+            f"can't call this method here (mock_state: {self.mock_state}")
 
   def getEffectiveFirewalls(self, project, zone, instance, networkInterface):
     self.mock_state = 'effective_firewalls'

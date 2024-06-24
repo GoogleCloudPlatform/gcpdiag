@@ -1,0 +1,6 @@
+{
+  "upgradeable": true,
+  "upgradeVersion": "m122",
+  "upgradeInfo": "A new image is available for upgrade. Backup user data before upgrading",
+  "upgradeImage": "https://www.googleapis.com/compute/v1/projects/cloud-notebooks-managed/global/images/workbench-instances-v20240613"
+}

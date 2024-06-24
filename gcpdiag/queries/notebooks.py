@@ -49,6 +49,28 @@ class HealthStateEnum(enum.Enum):
     return str(self.value)
 
 
+class StateEnum(enum.Enum):
+  """Vertex AI Workbench instance states
+
+  https://cloud.google.com/vertex-ai/docs/workbench/reference/rest/v2/projects.locations.instances#state
+  """
+
+  STATE_UNSPECIFIED = 'STATE_UNSPECIFIED'
+  STARTING = 'STARTING'
+  PROVISIONING = 'PROVISIONING'
+  ACTIVE = 'ACTIVE'
+  STOPPING = 'STOPPING'
+  STOPPED = 'STOPPED'
+  DELETED = 'DELETED'
+  UPGRADING = 'UPGRADING'
+  INITIALIZING = 'INITIALIZING'
+  SUSPENDING = 'SUSPENDING'
+  SUSPENDED = 'SUSPENDED'
+
+  def __str__(self):
+    return str(self.value)
+
+
 class Instance(models.Resource):
   """Represent a Vertex AI Workbench user-managed notebook instance
 
@@ -144,6 +166,119 @@ class Runtime(models.Resource):
   def health_state(self) -> HealthStateEnum:
     return self._resource_data.get(HEALTH_STATE_KEY,
                                    HealthStateEnum.HEALTH_STATE_UNSPECIFIED)
+
+
+class WorkbenchInstance(Instance):
+  """Represent a Vertex AI Workbench Instance
+
+  https://cloud.google.com/vertex-ai/docs/workbench/reference/rest/v2/projects.locations.instances#Instance
+  """
+
+  _resource_data: dict
+
+  def __init__(self, project_id, resource_data):
+    super().__init__(project_id=project_id, resource_data=resource_data)
+    self._resource_data = resource_data
+
+  @property
+  def state(self) -> StateEnum:
+    return StateEnum[self._resource_data.get('state', 'STATE_UNSPECIFIED')]
+
+  @property
+  def gce_setup(self) -> dict:
+    return self._resource_data.get('gceSetup', {})
+
+  @property
+  def gce_service_account_email(self) -> str:
+    gce_setup_service_accounts = self.gce_setup.get('serviceAccounts', [])
+    return gce_setup_service_accounts[0].get(
+        'email', '') if len(gce_setup_service_accounts) > 0 else ''
+
+  @property
+  def network(self) -> str:
+    gce_setup_network_interfaces = self.gce_setup.get('networkInterfaces', [])
+    return gce_setup_network_interfaces[0].get(
+        'network', '') if len(gce_setup_network_interfaces) > 0 else ''
+
+  @property
+  def subnet(self) -> str:
+    gce_setup_network_interfaces = self.gce_setup.get('networkInterfaces', [])
+    return gce_setup_network_interfaces[0].get(
+        'subnet', '') if len(gce_setup_network_interfaces) > 0 else ''
+
+  @property
+  def disable_public_ip(self) -> bool:
+    return self.gce_setup.get('disablePublicIp', False)
+
+  @property
+  def metadata(self) -> dict:
+    # https://cloud.google.com/vertex-ai/docs/workbench/instances/manage-metadata#keys
+    return self.gce_setup.get('metadata', {})
+
+  @property
+  def environment_version(self) -> int:
+    return int(self.metadata.get('version', '0'))
+
+  @property
+  def disable_mixer(self) -> bool:
+    return self.metadata.get('disable-mixer', '').lower() == 'true'
+
+  @property
+  def serial_port_logging_enabled(self) -> bool:
+    return self.metadata.get('serial-port-logging-enable', '').lower() == 'true'
+
+  @property
+  def report_event_health(self) -> bool:
+    return self.metadata.get('report-event-health', '').lower() == 'true'
+
+  @property
+  def post_startup_script(self) -> str:
+    return self.metadata.get('post-startup-script', '')
+
+  @property
+  def startup_script(self) -> str:
+    return self.metadata.get('startup-script', '')
+
+  @property
+  def startup_script_url(self) -> str:
+    return self.metadata.get('startup-script-url', '')
+
+  @property
+  def health_state(self) -> HealthStateEnum:
+    return self._resource_data.get(HEALTH_STATE_KEY,
+                                   HealthStateEnum.HEALTH_STATE_UNSPECIFIED)
+
+  @property
+  def health_info(self) -> dict:
+    return self._resource_data.get(HEALTH_INFO_KEY, {})
+
+  @property
+  def is_jupyterlab_status_healthy(self) -> bool:
+    return self.health_info.get('jupyterlab_status', '') == '1'
+
+  @property
+  def is_jupyterlab_api_status_healthy(self) -> bool:
+    return self.health_info.get('jupyterlab_api_status', '') == '1'
+
+  @property
+  def is_notebooks_api_dns_healthy(self) -> bool:
+    return self.health_info.get('notebooks_api_dns', '') == '1'
+
+  @property
+  def is_proxy_registration_dns_healthy(self) -> bool:
+    return self.health_info.get('proxy_registration_dns', '') == '1'
+
+  @property
+  def is_system_healthy(self) -> bool:
+    return self.health_info.get('system_health', '') == '1'
+
+  @property
+  def is_docker_status_healthy(self) -> bool:
+    return self.health_info.get('docker_status', '') == '1'
+
+  @property
+  def is_docker_proxy_agent_status_healthy(self) -> bool:
+    return self.metadata.get('docker_proxy_agent_status', '') == '1'
 
 
 @caching.cached_api_call
@@ -288,3 +423,52 @@ def get_runtimes(context: models.Context) -> Mapping[str, Runtime]:
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
   return runtimes
+
+
+@caching.cached_api_call
+def get_workbench_instance(project_id: str, zone: str,
+                           instance_name: str) -> Instance:
+  """Returns workbench instance object matching instance name and zone
+  https://cloud.google.com/vertex-ai/docs/workbench/reference/rest/v2/projects.locations.instances/get
+  """
+  workbench_instance: WorkbenchInstance = WorkbenchInstance(
+      project_id=project_id, resource_data={})
+  if not apis.is_enabled(project_id, 'notebooks'):
+    return workbench_instance
+  notebooks_api = apis.get_api('notebooks', 'v2', project_id)
+  name = f'projects/{project_id}/locations/{zone}/instances/{instance_name}'
+  query = notebooks_api.projects().locations().instances().get(name=name)
+  try:
+    response = query.execute(num_retries=config.API_RETRIES)
+    workbench_instance = WorkbenchInstance(project_id=project_id,
+                                           resource_data=response)
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
+  return workbench_instance
+
+
+@caching.cached_api_call
+def workbench_instance_check_upgradability(
+    project_id: str,
+    workbench_instance_name: str) -> Dict[str, Union[str, bool]]:
+  """Returns if workbench instance is upgradable and upgrade details
+  https://cloud.google.com/vertex-ai/docs/workbench/reference/rest/v2/projects.locations.instances/checkUpgradability"""
+  check_upgradability: Dict[str, Union[str, bool]] = {}
+  if not apis.is_enabled(project_id, 'notebooks'):
+    logging.error('Notebooks API is not enabled')
+    return check_upgradability
+  if not workbench_instance_name:
+    logging.error('Workbench Instance name not provided')
+    return check_upgradability
+  logging.info(
+      'fetching Vertex AI Workbench Instance is upgradeable in project %s',
+      project_id)
+  notebooks_api = apis.get_api('notebooks', 'v2', project_id)
+  query = notebooks_api.projects().locations().instances().checkUpgradability(
+      notebookInstance=workbench_instance_name)
+  try:
+    response = query.execute(num_retries=config.API_RETRIES)
+    return response
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
+  return check_upgradability

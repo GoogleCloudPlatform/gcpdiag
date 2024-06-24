@@ -1,0 +1,1005 @@
+{
+  "entries": [
+    {
+      "textPayload": "Jun 25 05:01:24 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26593",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "instance_id": "4775836342981993096",
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "zone": "us-west1-a"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:25.019326264Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:26.021123060Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:23 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26592",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "zone": "us-west1-a",
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "instance_id": "4775836342981993096"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:24.015424685Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:26.021123060Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:22 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26591",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "instance_id": "4775836342981993096",
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "zone": "us-west1-a"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:23.011486858Z",
+      "severity": "INFO",
+      "labels": {
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck",
+        "is_text_escaped": "true"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:23.123629089Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:21 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26590",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "zone": "us-west1-a",
+          "instance_id": "4775836342981993096",
+          "project_id": "gcpdiag-notebooks2-aaaa"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:22.007674712Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:23.123629089Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:20 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26589",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "zone": "us-west1-a",
+          "instance_id": "4775836342981993096"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:21.003805645Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:23.123629089Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:20 notebooks2instance-provisioning-stuck systemd[1]: Finished Checks whether to shutdown the instance based on idle schedule..\\r\\n",
+      "insertId": "26588",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "instance_id": "4775836342981993096",
+          "zone": "us-west1-a"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:20.852022546Z",
+      "severity": "INFO",
+      "labels": {
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck",
+        "is_text_escaped": "true"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:21.002864105Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:20 notebooks2instance-provisioning-stuck systemd[1]: google-wi-idle-shutdown.service: Succeeded.\\r\\n",
+      "insertId": "26587",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "zone": "us-west1-a",
+          "instance_id": "4775836342981993096",
+          "project_id": "gcpdiag-notebooks2-aaaa"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:20.852016984Z",
+      "severity": "INFO",
+      "labels": {
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck",
+        "is_text_escaped": "true"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:21.002864105Z"
+    },
+    {
+      "textPayload": "[\\x1b[0;32m  OK  \\x1b[0m] Finished \\x1b[0;1;39mChecks whether to\\xe2\\x80\\xa6tance based on idle schedule.\\x1b[0m.\\r\\n",
+      "insertId": "26586",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "instance_id": "4775836342981993096",
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "zone": "us-west1-a"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:20.851995310Z",
+      "severity": "INFO",
+      "labels": {
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck",
+        "is_text_escaped": "true"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:21.002864105Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:20 notebooks2instance-provisioning-stuck check_idle_shutdown.sh[64573]: Setting last notebook activity timestamp 1719289611 at 1719291680 for the following reason: Reason - latest session activity - replaced by later instance creation date\\r\\n",
+      "insertId": "26585",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "zone": "us-west1-a",
+          "instance_id": "4775836342981993096"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:20.771896545Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:21.002864105Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:19 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26584",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "instance_id": "4775836342981993096",
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "zone": "us-west1-a"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:20.024434863Z",
+      "severity": "INFO",
+      "labels": {
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck",
+        "is_text_escaped": "true"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:21.002864105Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:19 notebooks2instance-provisioning-stuck systemd[1]: Starting Checks whether to shutdown the instance based on idle schedule....\\r\\n",
+      "insertId": "26583",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "zone": "us-west1-a",
+          "instance_id": "4775836342981993096",
+          "project_id": "gcpdiag-notebooks2-aaaa"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:19.964365625Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:21.002864105Z"
+    },
+    {
+      "textPayload": "         Starting \\x1b[0;1;39mChecks whether to\\xe2\\x80\\xa6nce based on idle schedule.\\x1b[0m...\\r\\n",
+      "insertId": "26582",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "instance_id": "4775836342981993096",
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "zone": "us-west1-a"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:19.964319264Z",
+      "severity": "INFO",
+      "labels": {
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck",
+        "is_text_escaped": "true"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:21.002864105Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:19 notebooks2instance-provisioning-stuck systemd[1]: Finished Removes premium features from DLVM..\\r\\n",
+      "insertId": "26581",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "zone": "us-west1-a",
+          "instance_id": "4775836342981993096",
+          "project_id": "gcpdiag-notebooks2-aaaa"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:19.964314267Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:21.002864105Z"
+    },
+    {
+      "textPayload": "[\\x1b[0;32m  OK  \\x1b[0m] Finished \\x1b[0;1;39mRemoves premium features from DLVM.\\x1b[0m.\\r\\n",
+      "insertId": "26580",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "zone": "us-west1-a",
+          "instance_id": "4775836342981993096"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:19.964309451Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:21.002864105Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:19 notebooks2instance-provisioning-stuck systemd[1]: google-wi-promote-premium.service: Succeeded.\\r\\n",
+      "insertId": "26579",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "instance_id": "4775836342981993096",
+          "zone": "us-west1-a",
+          "project_id": "gcpdiag-notebooks2-aaaa"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:19.964289488Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:21.002864105Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:19 notebooks2instance-provisioning-stuck systemd[1]: Starting Removes premium features from DLVM....\\r\\n",
+      "insertId": "26578",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "zone": "us-west1-a",
+          "instance_id": "4775836342981993096",
+          "project_id": "gcpdiag-notebooks2-aaaa"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:19.400598116Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:21.002864105Z"
+    },
+    {
+      "textPayload": "         Starting \\x1b[0;1;39mRemoves premium features from DLVM.\\x1b[0m...\\r\\n",
+      "insertId": "26577",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "instance_id": "4775836342981993096",
+          "zone": "us-west1-a"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:19.400573245Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:21.002864105Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:18 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26576",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "instance_id": "4775836342981993096",
+          "zone": "us-west1-a",
+          "project_id": "gcpdiag-notebooks2-aaaa"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:18.995325845Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:21.002864105Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:17 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26575",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "zone": "us-west1-a",
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "instance_id": "4775836342981993096"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:17.991408536Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:18.071819208Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:16 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26574",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "instance_id": "4775836342981993096",
+          "zone": "us-west1-a",
+          "project_id": "gcpdiag-notebooks2-aaaa"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:16.987681579Z",
+      "severity": "INFO",
+      "labels": {
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck",
+        "is_text_escaped": "true"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:18.071819208Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:15 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26573",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "zone": "us-west1-a",
+          "instance_id": "4775836342981993096",
+          "project_id": "gcpdiag-notebooks2-aaaa"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:15.983641704Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:18.071819208Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:14 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26572",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "zone": "us-west1-a",
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "instance_id": "4775836342981993096"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:14.979702034Z",
+      "severity": "INFO",
+      "labels": {
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck",
+        "is_text_escaped": "true"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:15.983655097Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:13 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26571",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "zone": "us-west1-a",
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "instance_id": "4775836342981993096"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:13.975818805Z",
+      "severity": "INFO",
+      "labels": {
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck",
+        "is_text_escaped": "true"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:15.983655097Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:12 notebooks2instance-provisioning-stuck dhclient[516]: XMT: Solicit on ens4, interval 130330ms.\\r\\n",
+      "insertId": "26570",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "zone": "us-west1-a",
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "instance_id": "4775836342981993096"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:13.034607081Z",
+      "severity": "INFO",
+      "labels": {
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck",
+        "is_text_escaped": "true"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:13.072088477Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:12 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26569",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "zone": "us-west1-a",
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "instance_id": "4775836342981993096"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:12.971756669Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:13.072088477Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:11 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26568",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "zone": "us-west1-a",
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "instance_id": "4775836342981993096"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:11.967750132Z",
+      "severity": "INFO",
+      "labels": {
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck",
+        "is_text_escaped": "true"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:13.072088477Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:10 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26567",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "instance_id": "4775836342981993096",
+          "zone": "us-west1-a",
+          "project_id": "gcpdiag-notebooks2-aaaa"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:10.963794256Z",
+      "severity": "INFO",
+      "labels": {
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck",
+        "is_text_escaped": "true"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:13.072088477Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:09 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26566",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "zone": "us-west1-a",
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "instance_id": "4775836342981993096"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:09.959868489Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:10.964031236Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:08 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26565",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "instance_id": "4775836342981993096",
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "zone": "us-west1-a"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:08.955971670Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:10.964031236Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:07 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26564",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "instance_id": "4775836342981993096",
+          "zone": "us-west1-a",
+          "project_id": "gcpdiag-notebooks2-aaaa"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:07.952058605Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:08.092070476Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:06 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26563",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "zone": "us-west1-a",
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "instance_id": "4775836342981993096"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:06.948285968Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:08.092070476Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:05 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26562",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "zone": "us-west1-a",
+          "instance_id": "4775836342981993096",
+          "project_id": "gcpdiag-notebooks2-aaaa"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:05.944452821Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:08.092070476Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:04 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26561",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "instance_id": "4775836342981993096",
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "zone": "us-west1-a"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:04.940586550Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:05.944943116Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:03 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26560",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "zone": "us-west1-a",
+          "instance_id": "4775836342981993096",
+          "project_id": "gcpdiag-notebooks2-aaaa"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:03.936888786Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:05.944943116Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:02 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26559",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "zone": "us-west1-a",
+          "instance_id": "4775836342981993096",
+          "project_id": "gcpdiag-notebooks2-aaaa"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:02.933016353Z",
+      "severity": "INFO",
+      "labels": {
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck",
+        "is_text_escaped": "true"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:03.023621061Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:01 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26558",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "instance_id": "4775836342981993096",
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "zone": "us-west1-a"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:01.928431247Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:03.023621061Z"
+    },
+    {
+      "textPayload": "Jun 25 05:01:00 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26557",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "instance_id": "4775836342981993096",
+          "zone": "us-west1-a"
+        }
+      },
+      "timestamp": "2024-06-25T05:01:00.924089164Z",
+      "severity": "INFO",
+      "labels": {
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck",
+        "is_text_escaped": "true"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:03.023621061Z"
+    },
+    {
+      "textPayload": "Jun 25 05:00:59 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26556",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "zone": "us-west1-a",
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "instance_id": "4775836342981993096"
+        }
+      },
+      "timestamp": "2024-06-25T05:00:59.920196314Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:00.921812339Z"
+    },
+    {
+      "textPayload": "Jun 25 05:00:58 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26555",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "zone": "us-west1-a",
+          "instance_id": "4775836342981993096",
+          "project_id": "gcpdiag-notebooks2-aaaa"
+        }
+      },
+      "timestamp": "2024-06-25T05:00:58.916399036Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:01:00.921812339Z"
+    },
+    {
+      "textPayload": "Jun 25 05:00:57 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26554",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "zone": "us-west1-a",
+          "instance_id": "4775836342981993096"
+        }
+      },
+      "timestamp": "2024-06-25T05:00:57.912540886Z",
+      "severity": "INFO",
+      "labels": {
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck",
+        "is_text_escaped": "true"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:00:57.992679861Z"
+    },
+    {
+      "textPayload": "Jun 25 05:00:56 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26553",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "instance_id": "4775836342981993096",
+          "zone": "us-west1-a"
+        }
+      },
+      "timestamp": "2024-06-25T05:00:56.908743292Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:00:57.992679861Z"
+    },
+    {
+      "textPayload": "Jun 25 05:00:55 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26552",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "zone": "us-west1-a",
+          "instance_id": "4775836342981993096",
+          "project_id": "gcpdiag-notebooks2-aaaa"
+        }
+      },
+      "timestamp": "2024-06-25T05:00:55.904734458Z",
+      "severity": "INFO",
+      "labels": {
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck",
+        "is_text_escaped": "true"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:00:57.992679861Z"
+    },
+    {
+      "textPayload": "Jun 25 05:00:54 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26551",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "instance_id": "4775836342981993096",
+          "zone": "us-west1-a"
+        }
+      },
+      "timestamp": "2024-06-25T05:00:54.900946570Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:00:55.904110127Z"
+    },
+    {
+      "textPayload": "Jun 25 05:00:53 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26550",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "instance_id": "4775836342981993096",
+          "zone": "us-west1-a",
+          "project_id": "gcpdiag-notebooks2-aaaa"
+        }
+      },
+      "timestamp": "2024-06-25T05:00:53.896997162Z",
+      "severity": "INFO",
+      "labels": {
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck",
+        "is_text_escaped": "true"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:00:55.904110127Z"
+    },
+    {
+      "textPayload": "Jun 25 05:00:52 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26549",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "zone": "us-west1-a",
+          "instance_id": "4775836342981993096",
+          "project_id": "gcpdiag-notebooks2-aaaa"
+        }
+      },
+      "timestamp": "2024-06-25T05:00:52.892964823Z",
+      "severity": "INFO",
+      "labels": {
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck",
+        "is_text_escaped": "true"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:00:52.942276713Z"
+    },
+    {
+      "textPayload": "Jun 25 05:00:51 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26548",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "instance_id": "4775836342981993096",
+          "zone": "us-west1-a",
+          "project_id": "gcpdiag-notebooks2-aaaa"
+        }
+      },
+      "timestamp": "2024-06-25T05:00:51.889167231Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:00:52.942276713Z"
+    },
+    {
+      "textPayload": "Jun 25 05:00:50 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26547",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "zone": "us-west1-a",
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "instance_id": "4775836342981993096"
+        }
+      },
+      "timestamp": "2024-06-25T05:00:50.885166842Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:00:52.942276713Z"
+    },
+    {
+      "textPayload": "Jun 25 05:00:49 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26546",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "zone": "us-west1-a",
+          "instance_id": "4775836342981993096"
+        }
+      },
+      "timestamp": "2024-06-25T05:00:49.881122588Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:00:50.883735865Z"
+    },
+    {
+      "textPayload": "Jun 25 05:00:48 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26545",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "zone": "us-west1-a",
+          "instance_id": "4775836342981993096"
+        }
+      },
+      "timestamp": "2024-06-25T05:00:48.877068714Z",
+      "severity": "INFO",
+      "labels": {
+        "is_text_escaped": "true",
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:00:50.883735865Z"
+    },
+    {
+      "textPayload": "Jun 25 05:00:47 notebooks2instance-provisioning-stuck report_startup.sh[448]: Waiting for ready status...\\r\\n",
+      "insertId": "26544",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "project_id": "gcpdiag-notebooks2-aaaa",
+          "instance_id": "4775836342981993096",
+          "zone": "us-west1-a"
+        }
+      },
+      "timestamp": "2024-06-25T05:00:47.873047535Z",
+      "severity": "INFO",
+      "labels": {
+        "compute.googleapis.com/resource_name": "notebooks2instance-provisioning-stuck",
+        "is_text_escaped": "true"
+      },
+      "logName": "projects/gcpdiag-notebooks2-aaaa/logs/serialconsole.googleapis.com%2Fserial_port_1_output",
+      "receiveTimestamp": "2024-06-25T05:00:47.960381575Z"
+    }
+  ],
+  "nextPageToken": "EAE4ysPH7dz8q7m4AUrHBSIXIgcKBTI2NTQ0KgwI_53pswYQ78umoANKqwUKgwVKgAUA0C8gBmi8iFXVzjOdm7N1z5DmODJFQejepzHKgu0Iw9KrTGr5Ae-Nh785SZPkUu9PDwPCV-H9o-Wks0jmeomniac9fnr_2axu19hkyOU9opUpr7IQOKVDIrc5pQj8tWGGJnD-Xx5KYcmeBX5pcwKKIn--E_aXqgNYAdIVIDy08KF9_STjtVCY5Qp-vUgNg8w37d29RsIjTYYXFvfmAv4L5S62OytDzt7iicLHma7jkdO-rqQxo2A2S83m408ZWlTt9dUz0hatHOr6HRzr7V-VIbUrKogsrnDGJmm0GmwOqA7mtef5Ss_jAIfDhTde75hxitq8VoBrqs08qBSCgvlG29hLv7rHQh87o7-cHG_PJn8skssDxjYDBccgHS1xVZcEev6rjJzO9eYJXHuZRVyw8pwxvaj7HeuJZk1uj4wGqtgFXSW5m2OKYvAVuexmfwd5xwBk4ZDQOBIkDro7ymKcJdsk2CBw-JKW4kw9c1agshET55fM9Eq6oyKfkh_P8ez1VcJHa1digVP5_uNYu6cYfxBgyBwNrWQ0tnChJqQ3Bhanuxz9cW8BzJ-2poIAB4DGm-9p7R5Lcxo517FH6R2vA_F01qvjpB07V5DPUH16573nzrjQCdkWOOJRKvfihwPtQ-yf4X8GCwPq0Rndhuka5qjKBbJkmbwWNuSXqGOgTfsqqkNd-YA5MuM0Whb4mqw-BnWUa4_v0-gNkpzQg5QEZnLWcVqlAGCvTjxeOGEsTqReUiZzQOe6sJNT8_c8T8umQFXz-SdDg09UXk6lNs5JjipsdRx2WsB-0hVzCiRbxD3OMz6q2Id5rpJnD9nTOB_M8hzEZEEZFWaEsUb5AO1zEhgaCAjw9OezBhABIgwI79XpswYQ_5Pr3ANQ2Neh4Nn0uoSwAVIHCNC9jc_ZGmDT_vSmkJXozvcBahsKDAiqnumzBhC6zaaCAxIHCAEQr_27BhgyIAA"
+}
