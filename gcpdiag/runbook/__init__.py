@@ -32,7 +32,16 @@ from gcpdiag.runbook import constants, exceptions, flags, op, report, util
 DiagnosticTreeRegister: Dict[str, 'DiagnosticTree'] = {}
 
 
-class Step:
+class MetaStep(type):
+  """Metaclass for Steps in runbook"""
+
+  @property
+  def id(cls):
+    """Class Id of a step"""
+    return '.'.join([cls.__module__, cls.__name__])
+
+
+class Step(metaclass=MetaStep):
   """
   Represents a step in a diagnostic or runbook process.
   """
@@ -53,12 +62,17 @@ class Step:
     self.type = step_type
     self.prompts: models.Messages = models.Messages()
     self.product = self.__module__.split('.')[-2]
-    self.id = '.'.join([self.__module__, self.__class__.__name__])
     self.doc_file_name = util.pascal_case_to_kebab_case(self.__class__.__name__)
     # allow developers to set this
+
     if parent:
       parent.add_child(child=self)
     self.set_prompts()
+
+  @property
+  def id(self):
+    """Class Id of a step"""
+    return self.__class__.id
 
   @property
   def run_id(self):

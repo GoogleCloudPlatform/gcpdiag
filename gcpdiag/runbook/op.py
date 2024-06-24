@@ -191,3 +191,58 @@ def add_uncertain(resource: models.Resource,
   """Sends an inconclusive message for a step to the user and store it in the report"""
   return operator.interface.add_uncertain(resource, reason, remediation,
                                           human_task_msg)
+
+
+def get_step_outcome(run_id):
+  """Returns the overall evaluation result of a step
+
+  You can only check for steps that have already been executed.
+  It is not possible to get the status of the current step, it's decendants or steps
+  in unexecuted branches.
+
+  Returns:
+    a string representing outcome of a step or None if the step hasn't been executed.
+
+  Usage:
+    if op.get_step_outcome(run_id) == 'ok':
+      # child step to execute if some step was successful
+      self.add_child(ChildClass())
+    elif op.get_step_outcome(run_id) == 'skipped':
+      # child step to execute if some step was skipped
+      self.add_child(ChildClass())
+    elif op.get_step_outcome(run_id) == 'failed':
+      # child step to execute if some step failed it analysis
+      self.add_child(FailureChildClass())
+    elif not op.get_step_outcome(run_id):
+      # child step to execute if step with run_id didn't get executed.
+      self.add_child(SomeChildClass())
+  """
+  step_result = operator.interface.rm.results.get(run_id)
+  if not step_result:
+    return None
+  return step_result.status
+
+
+def step_ok(run_id) -> bool:
+  """Checks if the step with the provided run id passed evaluation"""
+  return get_step_outcome(run_id) == 'ok'
+
+
+def step_failed(run_id) -> bool:
+  """Checks if the step with the provided run id failed evaluation"""
+  return get_step_outcome(run_id) == 'failed'
+
+
+def step_uncertain(run_id) -> bool:
+  """Checks if the step with the provided run id has an indeterminate evaluation"""
+  return get_step_outcome(run_id) == 'uncertain'
+
+
+def step_skipped(run_id) -> bool:
+  """Checks if the step with the provided run id was skipped"""
+  return get_step_outcome(run_id) == 'skipped'
+
+
+def step_unexecuted(run_id) -> bool:
+  """Checks if the step with the provided run id was never executed"""
+  return get_step_outcome(run_id) is None
