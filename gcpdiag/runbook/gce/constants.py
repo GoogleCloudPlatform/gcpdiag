@@ -39,13 +39,61 @@ KERNEL_PANIC_LOGS = [
     'Failed to load image',
     # OS emergency mode (emergency.target in systemd).
     'You are now being dropped into an emergency shell',
-    'You are in (rescue|emergency) mode',
+    r'You are in (rescue|emergency) mode',
     r'Started \x1b?\[?.*Emergency Shell',
     r'Reached target \x1b?\[?.*Emergency Mode',
     # GRUB emergency shell.
     'Minimal BASH-like line editing is supported',
+    # Grub/EFI corruption check
+    r'grub2 error: symbol \'grub_calloc\' not found',
+    r'error: symbol \'grub_verify_string\' not found',
     # Typical Kernel logs
     'Kernel panic',
+    'Give root password for maintenance',
+    r'\(or press Control-D to continue\):',
+    'Boot failed: not a bootable disk',
+]
+
+SERIAL_LOG_START_POINT = [
+    r'Command line: BOOT_IMAGE=\([^()]+\)/boot/vmlinuz-\S+',
+    r'Command line: BOOT_IMAGE=/boot/vmlinuz-\S+',  # SUSE
+]
+
+FS_CORRUPTION_MSG = [
+    'Corruption of in-memory data detected. Shutting down filesystem',
+    'Corruption of in-memory data detected', 'warning: mounting fs with errors',
+    'Failed to mount', r'A stop job is running for Security \.\.\..* Service '
+]
+
+OOM_PATTERNS = [
+    r'Out of memory: Kill(ed)? process',
+    r'Kill(ed)? process',
+    'Memory cgroup out of memory',
+    'invoked oom-killer',
+]
+
+NETWORK_ERRORS = [
+    'dial tcp 169.254.169.254:80: connect: network is unreachable',
+    'dial tcp 169.254.169.254:80: i/o timeout',
+    'dial tcp metadata.goog:80: connect: network is unreachable',
+    'dial tcp metadata.google.internal:80: connect: network is unreachable',
+]
+
+TIME_SYNC_ERROR = [
+    # NTP related error msg:
+    'time may be out of sync',
+    'System clock is unsynchronized',
+    'Time drift detected',
+    'no servers can be used, system clock unsynchronized',
+    'time reset',  # sudden jump in time
+    # Chrony-Related error msg:
+    'System clock unsynchronized',
+    'Time offset too large',
+    r'Can\'t synchronise: no selectable sources',
+    # General Errors:
+    'Clock skew detected',  # make, ssh
+    'Clock skew too great',  # Kerberos
+    'Could not receive latest log timestamp from server',  # PostgreSQL replication
 ]
 
 # Typical logs of a fully booted windows VM
@@ -58,9 +106,29 @@ GOOD_WINDOWS_BOOT_LOGS_READY = [
     'GCEMetadataScripts: Starting startup scripts',
 ]
 
-GOOD_SSHD_PATTERNS = ['Starting OpenBSD Secure Shell server']
-BAD_SSHD_PATTERNS = ['Failed to start OpenBSD Secure Shell server']
+DISK_EXHAUSTION_ERRORS = [
+    'No space left on device',
+    'No usable temporary directory found',
+    r'A stop job is running for Security \.\.\..* Service ',
+    # windows
+    'disk is at or near capacity'
+]
+
+GOOD_SSHD_PATTERNS = [
+    'Started OpenBSD Secure Shell server', 'Started OpenSSH server daemon',
+    'Started OpenSSH Daemon'
+]
+
+BAD_SSHD_PATTERNS = [
+    'Failed to start OpenBSD Secure Shell server',
+    'Failed to start OpenSSH server', 'Failed to start OpenSSH Daemon'
+]
 
 # SSHD Guard blocking logs
 SSHGUARD_PATTERNS = [r'sshguard\[\d+\]: Blocking (\d+\.\d+\.\d+\.\d+)']
 GCE_CLUSTER_MANAGER_EMAIL = 'cloud-cluster-manager@prod.google.com'
+
+GUEST_AGENT_STATUS_MSG = [
+    'Started Google Compute Engine Guest Agent',
+    r'google_guest_agent\[\d+\]: GCE Agent Started'
+]

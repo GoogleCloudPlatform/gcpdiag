@@ -2,6 +2,10 @@
 Anomalies detected in the serial logs which align with the investigated bad patterns
 {% endblock default_failure_reason %}
 
+{% block default_skipped_reason %}
+There are no logs to examine !
+{% endblock default_skipped_reason %}
+
 {% block default_failure_remediation %}
 Investigate potential issues through the serial console.
 If GRUB_TIMEOUT is greater than 0, access the interactive session for more insights.
@@ -68,6 +72,13 @@ https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-
 [1] https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error
 [2] https://cloud.google.com/compute/docs/troubleshooting/fstab-errors
 
+More articles to refer to:
+  Redhat:
+  - https://access.redhat.com/solutions/2515741
+  - https://access.redhat.com/solutions/6932631
+
+  SUSE:
+  - https://www.suse.com/support/kb/doc/?id=000018523
 {% endblock kernel_panic_failure_remediation %}
 
 {% block kernel_panic_uncertain_reason %}
@@ -100,7 +111,7 @@ https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-
 {% endblock kernel_panic_uncertain_remediation %}
 
 {% block kernel_panic_skipped_reason %}
-There are no logs to examine
+There are no logs to examine !
 {% endblock kernel_panic_skipped_reason %}
 
 
@@ -208,7 +219,7 @@ Resources on how to fix SSHD issues:
 https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-ssh-errors#linux_errors
 https://cloud.google.com/knowledge/kb/ssh-in-cloud-serial-console-fails-with-warning-message-000004554
 Use gce-rescue to get your VM into emergency mode: https://github.com/GoogleCloudPlatform/gce-rescue
-NOTE: Guest related issues is Out of Support Scope
+NOTE: Guest related issues are Out of Support Scope
 See GCP support policy on Guest OS
 https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
 https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support
@@ -267,3 +278,133 @@ Connecting to the Windows Special Administrative Console (SAC) to troubleshoot b
 GCP Support Scope
 https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
 {% endblock windows_bootup_uncertain_remediation %}
+
+
+{% block serial_log_start_point_step_message %}
+Checking if all logs available since last boot of the instance
+{% endblock serial_log_start_point_step_message %}
+
+{% block serial_log_start_point_success_reason %}
+Found all logs since last boot of the VM.
+{% endblock serial_log_start_point_success_reason %}
+
+{% block serial_log_start_point_failure_reason %}
+We do not have full serial console logs availabe since the instance's startup due to auto purge,
+hence the check might not have correct results.
+{% endblock serial_log_start_point_failure_reason %}
+
+{% block serial_log_start_point_failure_remediation %}
+You might want to restart the instance and then run the gcpdiag to analyse Serial console logs.
+{% endblock serial_log_start_point_failure_remediation %}
+
+{% block serial_log_start_point_skipped_reason %}
+There are no logs to examine !
+{% endblock serial_log_start_point_skipped_reason %}
+
+
+{% block  time_sync_issue_step_message %}
+Checking for Time Sync related errors
+{% endblock  time_sync_issue_step_message %}
+
+{% block time_sync_issue_failure_reason %}
+Found time sync error messages in Serial console logs. It looks like VM's time is out of syc.
+{% endblock time_sync_issue_failure_reason %}
+
+{% block time_sync_issue_failure_remediation %}
+Please check if your NTP server config on your instance is as per GCP standards
+https://cloud.google.com/compute/docs/instances/configure-ntp.
+{% endblock time_sync_issue_failure_remediation %}
+
+{% block time_sync_issue_skipped_reason %}
+There are no logs to examine !
+{% endblock time_sync_issue_skipped_reason %}
+
+
+
+{% block  guest_agent_step_message %}
+Checking for Guest Agent startup logs
+{% endblock  guest_agent_step_message %}
+
+{% block guest_agent_failure_reason %}
+Could not find the Google Guest Agent startup log in Serial console logs.
+{% endblock guest_agent_failure_reason %}
+
+{% block guest_agent_failure_remediation %}
+The google-guest-agent contains the guest agent and metadata script executables which
+runs on the guest OS to support the Compute Engine features. These features include account
+management, OS Login integration, clock skew, network interface management, and instance setup.
+
+In case Guest Agent is not started during instance startup, you might face login issues.
+
+The google-guest-agent.service service should be in running state.
+If the service is disabled, enable and start the service, by running the following commands:
+
+systemctl enable google-guest-agent.service
+systemctl start google-guest-agent.service
+
+Verify that the Linux Google Agent scripts are installed and running. If the Linux Google
+Agent is not installed, re-install it.
+{% endblock guest_agent_failure_remediation %}
+
+{% block guest_agent_success_reason %}
+Detected that Google Guest Agent is running within the VM
+{% endblock guest_agent_success_reason %}
+
+{% block guest_agent_skipped_reason %}
+There are no logs to examine !
+{% endblock guest_agent_skipped_reason %}
+
+
+
+{% block  network_errors_step_message %}
+Checking for network related errors
+{% endblock  network_errors_step_message %}
+
+{% block network_errors_failure_reason %}
+The metadata server(169.254.169.254) is unreachable from the insatnce.
+The instance might not have IP assigned to its primary NIC.
+{% endblock network_errors_failure_reason %}
+
+{% block network_errors_failure_remediation %}
+Please try to login via Serial console using password and check Network stack status.
+If login via Serial console is not possible, You might want to restart the instance.
+If issue persists post reboot as well, you may follow the steps
+https://cloud.google.com/compute/docs/troubleshooting/rescue-vm to rescue the vm and
+troubleshoot further.
+
+Additionally, this document shows you how to resolve issues with the Compute Engine metadata server.
+https://cloud.google.com/compute/docs/troubleshooting/troubleshoot-metadata-server
+{% endblock network_errors_failure_remediation %}
+
+{% block network_errors_skipped_reason %}
+There are no logs to examine !
+{% endblock network_errors_skipped_reason %}
+
+
+{% block  linux_fs_corruption_step_message %}
+Checking if Filesystem corruption is causing issues with system boot.
+{% endblock  linux_fs_corruption_step_message %}
+
+{% block linux_fs_corruption_failure_reason %}
+Possibe filesystem corruption detected.
+{% endblock linux_fs_corruption_failure_reason %}
+
+{% block linux_fs_corruption_failure_remediation %}
+To fix the filesystem correuption, you may use gce-rescue[1] available in cloud shell to
+rescue faulty VMs or go via manual mathod[2] to repair the filesystem.
+
+More articles you may refer:
+https://access.redhat.com/solutions/1750923
+
+
+[1]
+https://github.com/GoogleCloudPlatform/gce-rescue
+
+[2]
+https://cloud.google.com/compute/docs/troubleshooting/rescue-vm ,
+https://www.youtube.com/watch?v=oD6IFpjEtEw
+{% endblock linux_fs_corruption_failure_remediation %}
+
+{% block linux_fs_corruption_skipped_reason %}
+There are no logs to examine !
+{% endblock linux_fs_corruption_skipped_reason %}

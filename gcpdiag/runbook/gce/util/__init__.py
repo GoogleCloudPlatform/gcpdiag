@@ -25,7 +25,7 @@ def search_pattern_in_serial_logs(patterns: List,
   reversed_contents = reversed(contents)
   pattern = ''
   if operator == 'OR':
-    pattern = ' | '.join(patterns)
+    pattern = '|'.join(patterns)
     regex = re.compile(pattern, re.IGNORECASE)
     for log in reversed_contents:
       result = regex.search(log)

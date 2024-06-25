@@ -14,7 +14,7 @@
 """ GCE Shielded VM secure boot validations
 
 Identifies if Shielded VMs are facing boot issues due to Secure boot
-configurations and if there are Secure boot related fail events in
+configurations or if there are Secure boot related fail events in
 cloud logging.
 """
 
@@ -55,31 +55,34 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     return
 
   for i in sorted(instances):
-    temp = None
-    if shutdown_logs:
-      temp = shutdown_logs.get_entries(i.id).values()
-    if temp:
-      for log_entry in temp:
-        earlybootreportevent: str = ''
-        latebootreportevent: str = ''
-        earlybootreportevent = get_path(
-            log_entry,
-            ('jsonPayload', 'earlyBootReportEvent', 'policyEvaluationPassed'),
-            default='')
-        latebootreportevent = get_path(
-            log_entry,
-            ('jsonPayload', 'lateBootReportEvent', 'policyEvaluationPassed'),
-            default='')
+    if i.secure_boot_enabled():
+      temp = None
+      if shutdown_logs:
+        temp = shutdown_logs.get_entries(i.id).values()
+      if temp:
+        for log_entry in temp:
+          earlybootreportevent: str = ''
+          latebootreportevent: str = ''
+          earlybootreportevent = get_path(
+              log_entry,
+              ('jsonPayload', 'earlyBootReportEvent', 'policyEvaluationPassed'),
+              default='')
+          latebootreportevent = get_path(
+              log_entry,
+              ('jsonPayload', 'lateBootReportEvent', 'policyEvaluationPassed'),
+              default='')
 
-        if earlybootreportevent is False or latebootreportevent is False:
-          if (i.startrestricted is True) or (boot_fail_event.get_last_match(
-              i.id)):
-            report.add_failed(
-                i,
-                'Instance has been restricted to boot due to Sheilded VM policy violations'
-            )
-          else:
-            report.add_failed(
-                i, 'Instance is Sheilded VM, has Secure boot failures events')
+          if earlybootreportevent is False or latebootreportevent is False:
+            if (i.startrestricted is True) or (boot_fail_event.get_last_match(
+                i.id)):
+              report.add_failed(
+                  i,
+                  'Instance has been restricted to boot due to Sheilded VM policy violations'
+              )
+            else:
+              report.add_failed(
+                  i, 'Instance is Sheilded VM, has Secure boot failures events')
+      else:
+        report.add_ok(i)
     else:
-      report.add_ok(i)
+      report.add_skipped(i, reason='Secure Boot is disabled for the instance')

@@ -56,9 +56,9 @@ def prepare_rule(context: models.Context):
   filter_disk_str = '''textPayload:("No space left" OR "No usable temporary directory")
   AND ("No space left on device" OR "No usable temporary directory found in"
   OR "disk is at or near capacity"
-  OR "A stop job is running for Security ...ing Service ")
-  OR "A stop job is running for Security ...ng Service ")
-  OR "A stop job is running for Security ...diting Service ")
+  OR "A stop job is running for Security ...ing Service "
+  OR "A stop job is running for Security ...ng Service "
+  OR "A stop job is running for Security ...diting Service "
   OR "A stop job is running for Security ...Auditing Service ")'''
 
   global mem_search

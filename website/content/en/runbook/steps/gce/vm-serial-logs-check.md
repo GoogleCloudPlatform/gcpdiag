@@ -52,6 +52,10 @@ keeping in mind certain guest OS faults may be beyond GCP's support scope.
 https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error
 - GCP Support Scope: https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
 
+### Skipped Reason
+
+There are no logs to examine !
+
 
 
 <!--

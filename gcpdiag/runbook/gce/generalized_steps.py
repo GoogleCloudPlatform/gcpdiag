@@ -23,7 +23,7 @@ from boltons.iterutils import get_path
 from gcpdiag import runbook
 from gcpdiag.queries import gce, iam, logs, monitoring
 from gcpdiag.runbook import op
-from gcpdiag.runbook.gce import flags, util
+from gcpdiag.runbook.gce import constants, flags, util
 
 UTILIZATION_THRESHOLD = 0.99
 within_hours = 8
@@ -40,11 +40,8 @@ class HighVmMemoryUtilization(runbook.Step):
   memory utilization.
   """
   template = 'vm_performance::high_memory_utilization'
+
   # Typcial Memory exhaustion logs in serial console.
-  oom_pattern = [
-      'Out of memory: Kill process', 'Kill process',
-      'Memory cgroup out of memory'
-  ]
 
   def execute(self):
     """Verifying VM memory utilization is within optimal levels..."""
@@ -80,16 +77,14 @@ class HighVmMemoryUtilization(runbook.Step):
                 | filter ram_left >= {}
                 | {}
               """.format(vm.id, UTILIZATION_THRESHOLD, within_str))
-      # fallback on serial logs to see if there are OOM logs
-      instance_serial_log = gce.get_instance_serial_port_output(
-          project_id=op.get(flags.PROJECT_ID),
-          zone=op.get(flags.ZONE),
-          instance_name=op.get(flags.NAME))
 
+      # fallback on serial logs to see if there are OOM logs
       if 'e2' not in vm.machine_type():
-        if instance_serial_log:
-          mem_usage_metrics = util.search_pattern_in_serial_logs(
-              self.oom_pattern, instance_serial_log.contents)
+        # Checking for OOM related errors
+        oom_errors = VmSerialLogsCheck()
+        oom_errors.template = 'vm_performance::high_memory_utilization'
+        oom_errors.negative_pattern = constants.OOM_PATTERNS
+        self.add_child(oom_errors)
 
     # Get Performance issues corrected.
     if mem_usage_metrics:
@@ -109,13 +104,6 @@ class HighVmDiskUtilization(runbook.Step):
   including VMs without metrics data.
   """
   template = 'vm_performance::high_disk_utilization'
-
-  disk_exhaustion_error_pattern = [
-      'No space left on device',
-      'No usable temporary directory found in'
-      # windows
-      'disk is at or near capacity'
-  ]
 
   def execute(self):
     """Verifying VM's Boot disk space utilization is within optimal levels."""
@@ -137,16 +125,12 @@ class HighVmDiskUtilization(runbook.Step):
             | {}
           """.format(vm.id, UTILIZATION_THRESHOLD, within_str))
     else:
-      # fallback on serial logs to see if there are OOM logs
-      instance_serial_log = gce.get_instance_serial_port_output(
-          project_id=op.get(flags.PROJECT_ID),
-          zone=op.get(flags.ZONE),
-          instance_name=op.get(flags.NAME))
-
-      if instance_serial_log:
-        # All VM types + e2
-        disk_usage_metrics = util.search_pattern_in_serial_logs(
-            self.disk_exhaustion_error_pattern, instance_serial_log.contents)
+      # Fallback to heck for fs utilization related messages in Serial logs
+      fs_util = VmSerialLogsCheck()
+      fs_util.template = 'vm_performance::high_disk_utilization'
+      fs_util.negative_pattern = constants.DISK_EXHAUSTION_ERRORS
+      fs_util.uncertain_remediation = False
+      self.add_child(fs_util)
 
     if disk_usage_metrics:
       op.add_failed(vm,
@@ -257,39 +241,55 @@ class VmSerialLogsCheck(runbook.Step):
     # All kernel failures.
     good_pattern_detected = False
     bad_pattern_detected = False
+    serial_log_file_content = []
+    instance_serial_logs = None
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
                           instance_name=op.get(flags.NAME))
 
-    instance_serial_log = gce.get_instance_serial_port_output(
-        project_id=op.get(flags.PROJECT_ID),
-        zone=op.get(flags.ZONE),
-        instance_name=op.get(flags.NAME))
+    if op.get(flags.SERIAL_CONSOLE_FILE):
+      for files in op.get(flags.SERIAL_CONSOLE_FILE).split(','):
+        with open(files, encoding='utf-8') as file:
+          serial_log_file_content = file.readlines()
+        serial_log_file_content = serial_log_file_content + serial_log_file_content
+    else:
+      instance_serial_logs = gce.get_instance_serial_port_output(
+          project_id=op.get(flags.PROJECT_ID),
+          zone=op.get(flags.ZONE),
+          instance_name=op.get(flags.NAME))
 
-    if instance_serial_log:
+    if instance_serial_logs or serial_log_file_content:
+      instance_serial_log = instance_serial_logs.contents if \
+        instance_serial_logs else serial_log_file_content
+
       if hasattr(self, 'positive_pattern'):
         good_pattern_detected = util.search_pattern_in_serial_logs(
             patterns=self.positive_pattern,
-            contents=instance_serial_log.contents,
+            contents=instance_serial_log,
             operator=self.positive_pattern_operator)
         if good_pattern_detected:
-          op.add_ok(vm, reason=op.prep_msg(op.SUCCESS_REASON))
+          op.add_ok(vm,
+                    reason=op.prep_msg(op.SUCCESS_REASON,
+                                       instance_name=vm.name))
       if hasattr(self, 'negative_pattern'):
         # Check for bad patterns
         bad_pattern_detected = util.search_pattern_in_serial_logs(
             patterns=self.negative_pattern,
-            contents=instance_serial_log.contents,
+            contents=instance_serial_log,
             operator=self.negative_pattern_operator)
         if bad_pattern_detected:
           op.add_failed(vm,
-                        reason=op.prep_msg(op.FAILURE_REASON),
+                        reason=op.prep_msg(op.FAILURE_REASON,
+                                           instance_name=vm.name),
                         remediation=op.prep_msg(op.FAILURE_REMEDIATION))
       if not good_pattern_detected and not bad_pattern_detected:
         op.add_uncertain(vm,
                          reason=op.prep_msg(op.UNCERTAIN_REASON),
                          remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION))
     else:
-      op.add_skipped(vm, reason=op.prep_msg(op.SKIPPED_REASON))
+      op.add_skipped(vm,
+                     reason=op.prep_msg(op.SKIPPED_REASON,
+                                        instance_name=vm.name))
 
 
 class AuthPrincipalCloudConsolePermissionCheck(runbook.Step):

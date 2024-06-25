@@ -24,6 +24,7 @@ NAME = 'name'
 ID = 'id'
 REGION = 'region'
 ZONE = 'zone'
+SERIAL_CONSOLE_FILE = 'serial_console_file'
 # unique flags belong to this runbook
 TUNNEL_THROUGH_IAP = 'tunnel_through_iap'
 PRINCIPAL = 'principal'

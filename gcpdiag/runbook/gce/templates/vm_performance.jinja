@@ -33,6 +33,11 @@ Follow the guide to increase disk size:
 https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
 {% endblock high_disk_utilization_failure_remediation %}
 
+
+{% block high_disk_utilization_step_message %}
+Checking if VM's Boot disk space utilization is within optimal levels.
+{% endblock high_disk_utilization_step_message %}
+
 {% block high_disk_utilization_success_reason %}
 The VM's disk space usage is within optimal levels.
 {% endblock high_disk_utilization_success_reason %}
@@ -58,3 +63,61 @@ https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-seri
 {% block high_memory_utilization_success_reason %}
 Memory utilization on this VM is within optimal range.
 {% endblock high_memory_utilization_success_reason %}
+
+{% block memory_error_skipped_reason %}
+There are no logs to examine !
+{% endblock memory_error_skipped_reason %}
+
+{% block memory_error_step_message %}
+Checking if there are any memory related errors in Serial logs
+{% endblock memory_error_step_message %}
+
+{% block memory_error_success_reason %}
+No memory related errors found in Serial console logs.
+{% endblock memory_error_success_reason %}
+
+{% block memory_error_failure_reason %}
+We have found high disk utilisation related errors in Serial console logs.
+The patterns we looked for :
+    'Out of memory: Kill(ed)? process', 'Kill(ed)? process',
+    'Memory cgroup out of memory', 'invoked oom-killer',
+{% endblock memory_error_failure_reason %}
+
+{% block memory_error_failure_remediation %}
+We have found memory related errors in Serial console logs.
+
+Please use the GCE observability metrics for an in-depth analysis to pinpoint high-usage processes:
+https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization
+
+Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
+Guidance on stopping and changing the machine type can be found here:
+- Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+For deeper analysis of memory issues:
+
+Or connect via the Serial Console if SSH is not available to mitigate the issue.
+https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+{% endblock memory_error_failure_remediation %}
+
+
+{% block high_disk_utilization_error_failure_reason %}
+We have found high disk utilisation related errors in Serial console logs.
+The patterns we looked for :
+    'No space left on device', 'No usable temporary directory found',
+    'A stop job is running for Security \.\.\..* Service ',
+    'disk is at or near capacity'
+{% endblock high_disk_utilization_error_failure_reason %}
+
+{% block high_disk_utilization_error_failure_remediation %}
+To mitigate high disk usage, consider expanding the VM's boot disk capacity.
+This action can help avoid performance issues and ensure accessibility of the VM.
+Follow the guide to increase disk size:
+https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
+{% endblock high_disk_utilization_error_failure_remediation %}
+
+{% block high_disk_utilization_error_step_message %}
+Checking for high disk utilization related logs in serial console logs
+{% endblock high_disk_utilization_error_step_message %}
+
+{% block high_disk_utilization_error_success_reason %}
+No high disk utilisation related errors found in Serial console logs.
+{% endblock high_disk_utilization_error_success_reason %}

@@ -60,7 +60,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      Or connect via the Serial Console if SSH is not available to mitigate the issue.
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
-[AUTOMATED STEP]: Verifying VM's Boot disk space utilization is within optimal levels.
+[AUTOMATED STEP]: Checking if VM's Boot disk space utilization is within optimal levels.
 
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [FAIL]
      [REASON]
@@ -266,7 +266,7 @@ principal in Cloud Console / gcloud (incl. impersonated service account)
      Or connect via the Serial Console if SSH is not available to mitigate the issue.
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
-[AUTOMATED STEP]: Verifying VM's Boot disk space utilization is within optimal levels.
+[AUTOMATED STEP]: Checking if VM's Boot disk space utilization is within optimal levels.
 
    - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [FAIL]
      [REASON]
@@ -479,7 +479,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      Or connect via the Serial Console if SSH is not available to mitigate the issue.
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
-[AUTOMATED STEP]: Verifying VM's Boot disk space utilization is within optimal levels.
+[AUTOMATED STEP]: Checking if VM's Boot disk space utilization is within optimal levels.
 
    - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [FAIL]
      [REASON]

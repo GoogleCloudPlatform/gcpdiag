@@ -399,6 +399,10 @@ class Instance(models.Resource):
     return False
 
   @property
+  def is_sole_tenant_vm(self) -> bool:
+    return bool('nodeAffinities' in self._resource_data['scheduling'])
+
+  @property
   def network(self) -> network_q.Network:
     # 'https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/global/networks/default'
     network_string = self._resource_data['networkInterfaces'][0]['network']
@@ -916,6 +920,7 @@ def get_instances_serial_port_output(context: models.Context):
   return deque
 
 
+@caching.cached_api_call
 def get_instance_serial_port_output(
     project_id, zone, instance_name) -> Optional[SerialPortOutput]:
   """Get a list of serial port output for instances

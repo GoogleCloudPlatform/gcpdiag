@@ -1,0 +1,84 @@
+project: gcpdiag-gce-faulty-serial-log-runbook, parameters: {name=faulty-linux-
+ssh,project_id=gcpdiag-gce-faulty-serial-log-runbook,zone=europe-west2-a}
+
+gce/serial-log-analyser:  GCE VM Serial log analyser
+
+    This runbook is designed to assist you in investigating the serial console logs of a vm.
+
+    Key Investigation Areas:
+
+    Boot Issues:
+        - Check for Boot issues happening due to Kernel Panics
+        - Check for GRUB related issues.
+        - Check if system failed to find boot disk.
+        - Check if Filesystem corruption is causing issues with system boot.
+        - Check if "/" Filesystem consumption is causing issues with system boot.
+
+    Memory crunch issues:
+        - Check if OOM kills happened on the VM or any other memory related issues.
+
+    Network related issues:
+        - Check if metadata server became unreachable since last boot.
+        - Check if there are any time sync related errors.
+
+    SSHD checks:
+        - Check if we have logs related to scuccessful startup of SSHD service.
+
+    Google Guest Agent checks:
+        - Check if we have logs related to scuccessful startup of Google Guest Agent.
+    
+[START]: Fetching VM details
+[AUTOMATED STEP]: Checking if all logs available since last boot of the instance
+[AUTOMATED STEP]: Initiating kernel panic check on the Guest OS.
+[AUTOMATED STEP]: Checking if Filesystem corruption is causing issues with system boot.
+[AUTOMATED STEP]: Checking for high disk utilization related logs in serial console logs
+[AUTOMATED STEP]: Checking if there are any memory related errors in Serial logs
+[AUTOMATED STEP]: Checking for network related errors
+[AUTOMATED STEP]: Checking for Time Sync related errors
+[AUTOMATED STEP]: Examining SSHD functionality via serial logs.
+[AUTOMATED STEP]: Checking for Guest Agent startup logs
+[END]: Finalizing Serial console Log Analysis...
+
+
+project: gcpdiag-gce-faulty-serial-log-runbook, parameters: {name=valid-linux-
+ssh,project_id=gcpdiag-gce-faulty-serial-log-runbook,zone=europe-west2-a}
+
+gce/serial-log-analyser:  GCE VM Serial log analyser
+
+    This runbook is designed to assist you in investigating the serial console logs of a vm.
+
+    Key Investigation Areas:
+
+    Boot Issues:
+        - Check for Boot issues happening due to Kernel Panics
+        - Check for GRUB related issues.
+        - Check if system failed to find boot disk.
+        - Check if Filesystem corruption is causing issues with system boot.
+        - Check if "/" Filesystem consumption is causing issues with system boot.
+
+    Memory crunch issues:
+        - Check if OOM kills happened on the VM or any other memory related issues.
+
+    Network related issues:
+        - Check if metadata server became unreachable since last boot.
+        - Check if there are any time sync related errors.
+
+    SSHD checks:
+        - Check if we have logs related to scuccessful startup of SSHD service.
+
+    Google Guest Agent checks:
+        - Check if we have logs related to scuccessful startup of Google Guest Agent.
+    
+[START]: Fetching VM details
+[AUTOMATED STEP]: Checking if all logs available since last boot of the instance
+[AUTOMATED STEP]: Initiating kernel panic check on the Guest OS.
+[AUTOMATED STEP]: Checking if Filesystem corruption is causing issues with system boot.
+[AUTOMATED STEP]: Checking for high disk utilization related logs in serial console logs
+[AUTOMATED STEP]: Checking if there are any memory related errors in Serial logs
+[AUTOMATED STEP]: Checking for network related errors
+[AUTOMATED STEP]: Checking for Time Sync related errors
+[AUTOMATED STEP]: Examining SSHD functionality via serial logs.
+[AUTOMATED STEP]: Checking for Guest Agent startup logs
+[END]: Finalizing Serial console Log Analysis...
+
+
