@@ -22,7 +22,7 @@ from typing import Dict, Mapping, Optional
 import googleapiclient.errors
 
 from gcpdiag import caching, config, models, utils
-from gcpdiag.queries import apis
+from gcpdiag.queries import apis, apis_utils
 
 
 class Inventory(models.Resource):
@@ -47,6 +47,11 @@ class Inventory(models.Resource):
     path = re.sub(r'/locations/', '/', path)
     path = re.sub(r'/instances/', '/', path)
     return path
+
+  # e.g: '5221437597918447050'
+  @property
+  def instance_id(self) -> str:
+    return self._resource_data['name'].split('/')[-2]
 
   # e.g: debian, windows.
   @property
@@ -88,6 +93,44 @@ class Inventory(models.Resource):
           installed_packages[p.get('displayName',
                                    '')] = p.get('displayVersion', '')
     return installed_packages
+
+
+@caching.cached_api_call(in_memory=True)
+def list_inventories(
+    context: models.Context,
+    location: str,
+) -> Mapping[str, Inventory]:
+  inventories: Dict[str, Inventory] = {}
+  if not apis.is_enabled(context.project_id, 'osconfig'):
+    return inventories
+  osconfig_api = apis.get_api('osconfig', 'v1', context.project_id)
+  logging.info(
+      'fetching inventory data for all VMs under zone %s in project %s',
+      location,
+      context.project_id,
+  )
+  query = osconfig_api.projects().locations().instances().inventories()
+
+  try:
+    resp = apis_utils.list_all(
+        query.list(
+            parent=(
+                f'projects/{context.project_id}/locations/{location}/instances/-'
+            ),
+            view='FULL',
+        ),
+        query.list_next,
+        'inventories',
+    )
+  except googleapiclient.errors.HttpError as err:
+    if err.resp.status in [404]:
+      return inventories
+    raise utils.GcpApiError(err) from err
+
+  for i in resp:
+    inventory = Inventory(context.project_id, resource_data=i)
+    inventories[inventory.instance_id] = inventory
+  return inventories
 
 
 @caching.cached_api_call(in_memory=True)

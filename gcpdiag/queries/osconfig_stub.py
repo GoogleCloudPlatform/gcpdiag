@@ -48,6 +48,16 @@ class OSConfigStub:
     self.mock_state = 'inventory'
     return self
 
+  def list_next(self, previous_request, previous_response):
+    return None
+
+  def list(self, parent, **kwargs):
+    if self.mock_state == 'inventory':
+      stub = apis_stub.RestCallStub(DUMMY_PROJECT_NAME, 'inventories')
+      return stub
+    else:
+      raise ValueError('incorrect value received')
+
   def get(self, name, **kwargs):
     m = re.match(r'([\w].+)/instances/([^/]+)', name)
     instance_name = m.group(2)

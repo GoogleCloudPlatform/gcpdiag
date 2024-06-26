@@ -185,10 +185,12 @@ fetch gce_instance
 | every 4m
   """,
   )
-
-  # Fetch os inventory info for all VM instances.
+  unique_zones = set()
+  # Fetch os inventory info for all VM instances by zones.
   for i in gce.get_instances(context).values():
-    osconfig.get_inventory(context, i.zone, i.name)
+    unique_zones.add(i.zone)
+  for zone in unique_zones:
+    osconfig.list_inventories(context, zone)
 
   # Fetch logs from syslog, windows event log, and ops agent health log.
   now = datetime.now(timezone.utc)
@@ -220,7 +222,6 @@ fetch gce_instance
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-
   # Fetch all GCE VM instances from the inspected project.
   instances = list(gce.get_instances(context).values())
   if not instances:
@@ -232,6 +233,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       Instance(context.project_id, i)
       for i in sorted(instances, key=op.attrgetter('project_id', 'name'))
   ]
+
   confirm_agent_installation_via_os_config(context, report, instances)
   confirm_agent_installation_via_uptime_metrics(context, report, instances)
   log_entries = format_log_entries(
@@ -252,11 +254,19 @@ def confirm_agent_installation_via_os_config(
     report: lint.LintReportRuleInterface,
     instances: List[Instance],
 ):
+  unique_zones = set()
+  for i in instances:
+    unique_zones.add(i.zone)
+
+  inventories: Dict[str, osconfig.Inventory] = {}
+  for zone in unique_zones:
+    inventories.update(osconfig.list_inventories(context, zone))
+
   for i in sorted(instances, key=op.attrgetter('project_id', 'name')):
     if i.is_gke_node:
       continue
 
-    inventory = osconfig.get_inventory(context, i.zone, i.name)
+    inventory = inventories.get(i.id)
     if inventory is None:
       i.has_os_inventory = False
       continue
@@ -266,7 +276,6 @@ def confirm_agent_installation_via_os_config(
       if OPS_AGENT_PACKAGE_NAME in pkg_name:
         i.ops_agent_installed = True
         break
-
     if not i.ops_agent_installed:
       report.add_failed(
           i.gce_instance,

@@ -54,3 +54,20 @@ class TestOSConfig:
         instance_name=DUMMY_NON_EXISTENT_INSTANCE_NAME,
     )
     assert inventory is None
+
+  def test_list_inventories(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    inventories = osconfig.list_inventories(
+        context=context,
+        location=DUMMY_LOCATION,
+    )
+    assert len(inventories) == 4
+    instance_id = '730128809742038298'
+    project_number = 12340051
+    assert instance_id in inventories
+    inventory = inventories[instance_id]
+    assert 'windows' == inventory.os_shortname
+    assert '10.0.20348' == inventory.os_version
+    assert 'GooGet - google-cloud-ops-agent' in inventory.installed_packages
+    assert (inventory.short_path ==
+            f'{project_number}/us-central1-a/{instance_id}/inventory')
