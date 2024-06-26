@@ -26,7 +26,7 @@ class TimeSeriesCheck(runbook.Step):
   - Currently checks if metrics exists indicating a problem
   - Improve to be more flexible.
   """
-  template = 'metric::default'
+  template = 'metrics::default'
   query: str
   query_kwargs: dict
   resource: Resource

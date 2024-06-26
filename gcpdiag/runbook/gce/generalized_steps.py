@@ -21,7 +21,7 @@ from typing import Any, List, Set
 from boltons.iterutils import get_path
 
 from gcpdiag import runbook
-from gcpdiag.queries import gce, iam, logs, monitoring
+from gcpdiag.queries import gce, logs, monitoring
 from gcpdiag.runbook import op
 from gcpdiag.runbook.gce import constants, flags, util
 
@@ -290,30 +290,6 @@ class VmSerialLogsCheck(runbook.Step):
       op.add_skipped(vm,
                      reason=op.prep_msg(op.SKIPPED_REASON,
                                         instance_name=vm.name))
-
-
-class AuthPrincipalCloudConsolePermissionCheck(runbook.Step):
-  """Validates if the user has the 'compute.projects.get' permission within the GCP Project.
-
-  This permission is essential to be able to use SSH in browser and
-  viewing the Compute Engine resources in the Cloud Console.
-  """
-
-  console_user_permission = 'compute.projects.get'
-  template = 'gce_permissions::console_view_permission'
-
-  def execute(self):
-    """Verifying user access to Cloud Console..."""
-    iam_policy = iam.get_project_policy(op.get(flags.PROJECT_ID))
-
-    auth_user = op.get(flags.PRINCIPAL)
-    # Check user has permisssion to access the VM in the first place
-    if iam_policy.has_permission(auth_user, self.console_user_permission):
-      op.add_ok(resource=iam_policy, reason=op.prep_msg(op.SUCCESS_REASON))
-    else:
-      op.add_failed(iam_policy,
-                    reason=op.prep_msg(op.FAILURE_REASON),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
 
 
 class VmMetadataCheck(runbook.Step):
