@@ -1,0 +1,9 @@
+{% block deployment_working_failure_remediation %}
+The container failed to start. Please check
+https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start
+for the next steps.
+{% endblock %}
+
+{% block deployment_working_failure_reason %}
+Container failed to start in service {{ name }}
+{% endblock %}

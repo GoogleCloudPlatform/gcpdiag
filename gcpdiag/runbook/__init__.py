@@ -661,7 +661,7 @@ class ExpandTreeFromAst(ast.NodeVisitor):
         node.keywords.append(ast.keyword('step', node.args[0]))
       if len(node.args) == 2:
         node.keywords.append(ast.keyword('parent', node.args[0]))
-        node.keywords.append(ast.keyword('child', node.args[0]))
+        node.keywords.append(ast.keyword('child', node.args[1]))
       if node.keywords:
         for kw in node.keywords:
           arg_name = kw.arg

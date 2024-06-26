@@ -1,0 +1,13 @@
+{
+  "name": "projects/123400010",
+  "parent": "folders/373737373737",
+  "projectId": "gcpdiag-cloudrun2-aaaa",
+  "state": "ACTIVE",
+  "displayName": "gcpdiag test - cloudrun2 ",
+  "createTime": "2024-06-20T14:48:05.952136Z",
+  "updateTime": "2024-06-20T14:55:46.631667Z",
+  "etag": "W/\"77494eee40d241da\"",
+  "labels": {
+    "gcpdiag": "test"
+  }
+}

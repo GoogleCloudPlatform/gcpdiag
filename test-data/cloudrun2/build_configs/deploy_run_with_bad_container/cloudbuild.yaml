@@ -1,0 +1,22 @@
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - ${_IMAGE}
+      - .
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - ${_IMAGE}
+  - name: gcr.io/cloud-builders/gcloud
+    args:
+      - run
+      - deploy
+      - invalid-container
+      - --region
+      - us-central1
+      - --image
+      - ${_IMAGE}
+      - --no-allow-unauthenticated
+    allowFailure: true

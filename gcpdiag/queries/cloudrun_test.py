@@ -32,3 +32,9 @@ class TestCloudRun:
                              locations=['us-central1'])
     services = cloudrun.get_services(context)
     assert len(services) == 1
+
+  def test_get_service(self):
+    service = cloudrun.get_service(DUMMY_PROJECT_NAME, 'us-central1',
+                                   'cloudrun1')
+    expected = 'projects/gcpdiag-cloudrun1-aaaa/locations/us-central1/services/cloudrun1'
+    assert service.full_path == expected

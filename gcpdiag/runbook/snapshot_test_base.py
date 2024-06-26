@@ -36,7 +36,7 @@ class RulesSnapshotTestBase:
     snapshot.snapshot_dir = path.join(path.dirname(self.rule_pkg.__file__),
                                       'snapshots')
     output_stream = io.StringIO()
-    sys.stdout = output_stream
+    sys.stdout = _Tee(output_stream, sys.stdout)
     for parameter in self.rule_parameters:
       context = self._mk_context(parameter=parameter)
       self.de.dt = rule
@@ -52,6 +52,22 @@ class RulesSnapshotTestBase:
 
   def _mk_context(self, parameter):
     return models.Context(project_id=self.project_id, parameters=parameter)
+
+
+class _Tee:
+  """Helper class to direct the same output to two file like objects at the same time."""
+
+  def __init__(self, string_io1, string_io2):
+    self.string_io1 = string_io1
+    self.string_io2 = string_io2
+
+  def write(self, data):
+    self.string_io1.write(data)
+    self.string_io2.write(data)
+
+  def flush(self):
+    self.string_io1.flush()
+    self.string_io2.flush()
 
 
 #pylint: disable=protected-access

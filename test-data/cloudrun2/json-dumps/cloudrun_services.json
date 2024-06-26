@@ -1,0 +1,83 @@
+{
+  "services": [
+    {
+      "client": "gcloud",
+      "clientVersion": "480.0.0",
+      "conditions": [
+        {
+          "lastTransitionTime": "2024-06-24T13:49:28.648385Z",
+          "message": "Revision 'invalid-container-00001-lgk' is not ready and cannot serve traffic. The user-provided container failed to start and listen on the port defined provided by the PORT=8080 environment variable. Logs for this revision might contain more information.\n\nLogs URL: https://console.cloud.google.com/logs/viewer?project=gcpdiag-cloudrun2-aaaa&resource=cloud_run_revision/service_name/invalid-container/revision_name/invalid-container-00001-lgk&advancedFilter=resource.type%3D%22cloud_run_revision%22%0Aresource.labels.service_name%3D%22invalid-container%22%0Aresource.labels.revision_name%3D%22invalid-container-00001-lgk%22 \nFor more troubleshooting guidance, see https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start",
+          "revisionReason": "HEALTH_CHECK_CONTAINER_ERROR",
+          "state": "CONDITION_FAILED",
+          "type": "RoutesReady"
+        },
+        {
+          "lastTransitionTime": "2024-06-24T13:48:37.898163Z",
+          "state": "CONDITION_SUCCEEDED",
+          "type": "ConfigurationsReady"
+        }
+      ],
+      "createTime": "2024-06-24T13:48:37.465296Z",
+      "creator": "REDACTED",
+      "etag": "\"CLXy5bMGEIC1790B/cHJvamVjdHMvZ2NwZGlhZy1jbG91ZHJ1bjItNGZvYXMzbWovbG9jYXRpb25zL3VzLWNlbnRyYWwxL3NlcnZpY2VzL2ludmFsaWQtY29udGFpbmVy\"",
+      "generation": "1",
+      "ingress": "INGRESS_TRAFFIC_ALL",
+      "lastModifier": "123400010-compute@developer.gserviceaccount.com",
+      "latestCreatedRevision": "projects/gcpdiag-cloudrun2-aaaa/locations/us-central1/services/invalid-container/revisions/invalid-container-00001-lgk",
+      "latestReadyRevision": "projects/gcpdiag-cloudrun2-aaaa/locations/us-central1/services/invalid-container/revisions/invalid-container-00001-lgk",
+      "launchStage": "GA",
+      "name": "projects/gcpdiag-cloudrun2-aaaa/locations/us-central1/services/invalid-container",
+      "observedGeneration": "1",
+      "template": {
+        "containers": [
+          {
+            "image": "us-central1-docker.pkg.dev/gcpdiag-cloudrun2-aaaa/cloudrun-repository/not_http_image",
+            "ports": [
+              {
+                "containerPort": 8080,
+                "name": "http1"
+              }
+            ],
+            "resources": {
+              "cpuIdle": true,
+              "limits": {
+                "cpu": "1000m",
+                "memory": "512Mi"
+              },
+              "startupCpuBoost": true
+            },
+            "startupProbe": {
+              "failureThreshold": 1,
+              "periodSeconds": 240,
+              "tcpSocket": {
+                "port": 8080
+              },
+              "timeoutSeconds": 240
+            }
+          }
+        ],
+        "maxInstanceRequestConcurrency": 80,
+        "scaling": {
+          "maxInstanceCount": 100
+        },
+        "serviceAccount": "123400010-compute@developer.gserviceaccount.com",
+        "timeout": "300s"
+      },
+      "terminalCondition": {
+        "lastTransitionTime": "2024-06-24T13:49:28.648385Z",
+        "message": "Revision 'invalid-container-00001-lgk' is not ready and cannot serve traffic. The user-provided container failed to start and listen on the port defined provided by the PORT=8080 environment variable. Logs for this revision might contain more information.\n\nLogs URL: https://console.cloud.google.com/logs/viewer?project=gcpdiag-cloudrun2-aaaa&resource=cloud_run_revision/service_name/invalid-container/revision_name/invalid-container-00001-lgk&advancedFilter=resource.type%3D%22cloud_run_revision%22%0Aresource.labels.service_name%3D%22invalid-container%22%0Aresource.labels.revision_name%3D%22invalid-container-00001-lgk%22 \nFor more troubleshooting guidance, see https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start",
+        "revisionReason": "HEALTH_CHECK_CONTAINER_ERROR",
+        "state": "CONDITION_FAILED",
+        "type": "Ready"
+      },
+      "traffic": [
+        {
+          "percent": 100,
+          "type": "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST"
+        }
+      ],
+      "uid": "98761cde-71d3-4c06-9286-f6c7f21a7289",
+      "updateTime": "2024-06-24T13:48:37.465296Z"
+    }
+  ]
+}

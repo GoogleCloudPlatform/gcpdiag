@@ -50,9 +50,28 @@ class Service(models.Resource):
     return self._resource_data['name']
 
   @property
+  def conditions(self) -> Dict[str, 'ServiceCondition']:
+    return {
+        condition['type']: ServiceCondition(condition)
+        for condition in self._resource_data['conditions']
+    }
+
+  @property
   def short_path(self) -> str:
     path = self.project_id + '/' + self.id
     return path
+
+
+class ServiceCondition:
+  """Represents Cloud Run service status condition."""
+  _resource_data: dict
+
+  def __init__(self, resource_data):
+    self._resource_data = resource_data
+
+  @property
+  def message(self) -> str:
+    return self._resource_data.get('message', '')
 
 
 def get_all_locations(project_id: str) -> Iterable[str]:
@@ -130,3 +149,11 @@ def get_services(context: models.Context) -> Mapping[str, Service]:
     except googleapiclient.errors.HttpError as err:
       raise utils.GcpApiError(err) from err
   return services
+
+
+def get_service(project_id: str, region: str, service_name: str) -> Service:
+  cloudrun_api = apis.get_api('run', 'v2', project_id)
+  request = cloudrun_api.projects().locations().services().get(
+      name=f'projects/{project_id}/locations/{region}/services/{service_name}')
+  response = request.execute(num_retries=config.API_RETRIES)
+  return Service(project_id, response)

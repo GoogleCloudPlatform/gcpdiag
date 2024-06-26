@@ -1,0 +1,225 @@
+{
+  "locations": [
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/africa-south1",
+      "locationId": "africa-south1",
+      "displayName": "Johannesburg"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/asia-east1",
+      "locationId": "asia-east1",
+      "displayName": "Taiwan"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/asia-east2",
+      "labels": {
+        "run.googleapis.com/supportsPzs": "true"
+      },
+      "locationId": "asia-east2",
+      "displayName": "Hong Kong"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/asia-northeast1",
+      "locationId": "asia-northeast1",
+      "displayName": "Tokyo"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/asia-northeast2",
+      "locationId": "asia-northeast2",
+      "displayName": "Osaka"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/asia-northeast3",
+      "locationId": "asia-northeast3",
+      "displayName": "Seoul"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/asia-south1",
+      "locationId": "asia-south1",
+      "displayName": "Mumbai"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/asia-south2",
+      "locationId": "asia-south2",
+      "displayName": "Delhi"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/asia-southeast1",
+      "locationId": "asia-southeast1",
+      "displayName": "Singapore"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/asia-southeast2",
+      "locationId": "asia-southeast2",
+      "displayName": "Jakarta"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/australia-southeast1",
+      "labels": {
+        "run.googleapis.com/supportsPzs": "true"
+      },
+      "locationId": "australia-southeast1",
+      "displayName": "Sydney"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/australia-southeast2",
+      "locationId": "australia-southeast2",
+      "displayName": "Melbourne"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/europe-central2",
+      "locationId": "europe-central2",
+      "displayName": "Warsaw"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/europe-north1",
+      "locationId": "europe-north1",
+      "displayName": "Finland"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/europe-southwest1",
+      "locationId": "europe-southwest1",
+      "displayName": "Madrid"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/europe-west1",
+      "locationId": "europe-west1",
+      "displayName": "Belgium"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/europe-west10",
+      "locationId": "europe-west10",
+      "displayName": "Berlin"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/europe-west12",
+      "locationId": "europe-west12",
+      "displayName": "Turin"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/europe-west2",
+      "labels": {
+        "run.googleapis.com/supportsPzs": "true"
+      },
+      "locationId": "europe-west2",
+      "displayName": "London"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/europe-west3",
+      "labels": {
+        "run.googleapis.com/supportsPzs": "true"
+      },
+      "locationId": "europe-west3",
+      "displayName": "Frankfurt"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/europe-west4",
+      "locationId": "europe-west4",
+      "displayName": "Netherlands"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/europe-west6",
+      "locationId": "europe-west6",
+      "displayName": "Zurich"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/europe-west8",
+      "locationId": "europe-west8",
+      "displayName": "Milan"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/europe-west9",
+      "locationId": "europe-west9",
+      "displayName": "Paris"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/me-central1",
+      "locationId": "me-central1",
+      "displayName": "Doha"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/me-central2",
+      "locationId": "me-central2",
+      "displayName": "Dammam"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/me-west1",
+      "locationId": "me-west1",
+      "displayName": "Tel Aviv"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/northamerica-northeast1",
+      "locationId": "northamerica-northeast1",
+      "displayName": "Montréal"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/northamerica-northeast2",
+      "locationId": "northamerica-northeast2",
+      "displayName": "Toronto"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/southamerica-east1",
+      "locationId": "southamerica-east1",
+      "displayName": "São Paulo"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/southamerica-west1",
+      "locationId": "southamerica-west1",
+      "displayName": "Santiago"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/us-central1",
+      "labels": {
+        "initialized": "true"
+      },
+      "locationId": "us-central1",
+      "displayName": "Iowa"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/us-east1",
+      "locationId": "us-east1",
+      "displayName": "South Carolina"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/us-east4",
+      "labels": {
+        "run.googleapis.com/supportsPzs": "true"
+      },
+      "locationId": "us-east4",
+      "displayName": "Northern Virginia"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/us-east5",
+      "locationId": "us-east5",
+      "displayName": "Columbus"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/us-south1",
+      "locationId": "us-south1",
+      "displayName": "Dallas"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/us-west1",
+      "locationId": "us-west1",
+      "displayName": "Oregon"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/us-west2",
+      "locationId": "us-west2",
+      "displayName": "Los Angeles"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/us-west3",
+      "labels": {
+        "run.googleapis.com/supportsPzs": "true"
+      },
+      "locationId": "us-west3",
+      "displayName": "Salt Lake City"
+    },
+    {
+      "name": "gcpdiag-cloudrun2-aaaa/locations/us-west4",
+      "locationId": "us-west4",
+      "displayName": "Las Vegas"
+    }
+  ]
+}
