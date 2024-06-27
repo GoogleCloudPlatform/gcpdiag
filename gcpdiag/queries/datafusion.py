@@ -19,7 +19,7 @@ import datetime
 import ipaddress
 import logging
 import re
-from typing import Dict, Mapping, Optional
+from typing import Dict, Iterable, List, Mapping, Optional
 
 import googleapiclient.errors
 import requests
@@ -27,6 +27,7 @@ from bs4 import BeautifulSoup
 
 from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis, crm, network
+from gcpdiag.queries.generic_api.api_build import get_generic
 from gcpdiag.utils import Version
 
 # To avoid name conflict with L145
@@ -164,6 +165,10 @@ class Instance(models.Resource):
       return ipaddress.ip_network(cidr)
     return None
 
+  @property
+  def api_endpoint(self) -> str:
+    return self._resource_data['apiEndpoint']
+
 
 @caching.cached_api_call
 def get_instances(context: models.Context) -> Mapping[str, Instance]:
@@ -262,3 +267,122 @@ def extract_support_datafusion_version() -> Dict[str, str]:
     logging.error('Error in extracting data fusion version support policy: %s',
                   e)
     return {}
+
+
+class Profile(models.Resource):
+  """Represents a Compute Profile."""
+
+  _resource_data: dict
+
+  def __init__(self, project_id, instance_name, resource_data):
+    super().__init__(project_id=project_id)
+    self.instance_name = instance_name
+    self._resource_data = resource_data
+
+  @property
+  def full_path(self) -> str:
+    """The full path form :
+
+    projects/{project}/instances/{instance}/computeProfiles/{profile}.
+    """
+    return (f'projects/{self.project_id}/instances/{self.instance_name}'
+            f'/computeProfiles/{self._resource_data["name"]}')
+
+  @property
+  def short_path(self) -> str:
+    """The short path form :
+
+    {project}/{instance}/{profile}.
+    """
+    return (
+        f'{self.project_id}/{self.instance_name}/{self._resource_data["name"]}')
+
+  @property
+  def name(self) -> str:
+    return self._resource_data['name']
+
+  @property
+  def region(self) -> str:
+    for value in self._resource_data['provisioner'].get('properties'):
+      if value.get('name') == 'region' and value.get('value') is not None:
+        return value.get('value')
+    return 'No region defined'
+
+  @property
+  def status(self) -> str:
+    return self._resource_data['status']
+
+  @property
+  def scope(self) -> str:
+    return self._resource_data['scope']
+
+  @property
+  def is_dataproc_provisioner(self) -> bool:
+    return self._resource_data['provisioner']['name'] == 'gcp-dataproc'
+
+  @property
+  def is_existing_dataproc_provisioner(self) -> bool:
+    return self._resource_data['provisioner']['name'] == 'gcp-existing-dataproc'
+
+  @property
+  def autoscaling_enabled(self) -> bool:
+    for value in self._resource_data['provisioner'].get('properties'):
+      if (value.get('name') == 'enablePredefinedAutoScaling' and
+          value.get('value') is not None):
+        return value.get('value') == 'true'
+    return False
+
+  @property
+  def image_version(self) -> str:
+    for value in self._resource_data['provisioner'].get('properties'):
+      if value.get('name') == 'imageVersion' and value.get('value') != '':
+        return value.get('value')
+    return 'No imageVersion defined'
+
+  @property
+  def auto_scaling_policy(self) -> str:
+    for value in self._resource_data['provisioner'].get('properties'):
+      if value.get('name') == 'autoScalingPolicy' and value.get('value') != '':
+        return value.get('value')
+    return 'No autoScalingPolicy defined'
+
+
+@caching.cached_api_call
+def get_instance_system_compute_profile(
+    context: models.Context, instance: Instance) -> Iterable[Profile]:
+  """Get a list of datafusion Instance dataproc System compute profile."""
+  logging.info('fetching dataproc System compute profile list: %s',
+               context.project_id)
+  system_profiles: List[Profile] = []
+  cdap_endpoint = instance.api_endpoint
+  datafusion = get_generic.get_generic_api('datafusion', cdap_endpoint)
+  response = datafusion.get_system_profiles()
+  if response is not None:
+    for res in response:
+      if (res['provisioner']['name'] == 'gcp-dataproc' or
+          res['provisioner']['name'] == 'gcp-existing-dataproc'):
+        system_profiles.append(Profile(context.project_id, instance.name, res))
+  return system_profiles
+
+
+@caching.cached_api_call
+def get_instance_user_compute_profile(context: models.Context,
+                                      instance: Instance) -> Iterable[Profile]:
+  """Get a list of datafusion Instance dataproc User compute profile."""
+  logging.info('fetching dataproc User compute profile list: %s',
+               context.project_id)
+  user_profiles: List[Profile] = []
+  cdap_endpoint = instance.api_endpoint
+  datafusion = get_generic.get_generic_api('datafusion', cdap_endpoint)
+  response_namespaces = datafusion.get_all_namespaces()
+  if response_namespaces is not None:
+    for res in response_namespaces:
+      response = datafusion.get_user_profiles(namespace=res['name'])
+      if response is not None:
+        for res in response:
+          if (res['provisioner']['name'] == 'gcp-dataproc' or
+              res['provisioner']['name'] == 'gcp-existing-dataproc'):
+            user_profiles.append(Profile(context.project_id, instance.name,
+                                         res))
+      user_profiles = list(filter(bool, user_profiles))
+  return user_profiles

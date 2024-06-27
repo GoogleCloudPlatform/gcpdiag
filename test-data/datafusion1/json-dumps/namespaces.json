@@ -1,0 +1,10 @@
+[
+  {
+    "name": "default",
+    "description": "This is the default namespace, which is automatically created, and is always available.",
+    "generation": 0,
+    "config": {
+      "scheduler.queue.name": ""
+    }
+  }
+]

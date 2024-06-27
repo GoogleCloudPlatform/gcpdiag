@@ -23,6 +23,7 @@ from unittest import mock
 from gcpdiag import config
 from gcpdiag.lint import command as lint_command
 from gcpdiag.queries import apis_stub, kubectl_stub
+from gcpdiag.queries.generic_api.api_build import generic_api_stub
 
 
 def noop(*args):
@@ -35,6 +36,10 @@ def noop(*args):
 @mock.patch('gcpdiag.queries.kubectl.verify_auth', new=kubectl_stub.verify_auth)
 @mock.patch('gcpdiag.queries.kubectl.check_gke_ingress',
             new=kubectl_stub.check_gke_ingress)
+@mock.patch(
+    'gcpdiag.queries.generic_api.api_build.get_generic.get_generic_api',
+    new=generic_api_stub.get_generic_api_stub,
+)
 def main(argv):
   # A very simple command-line parser to determine what subcommand is called.
   # Proper argument parsing will be done in the subcommands.

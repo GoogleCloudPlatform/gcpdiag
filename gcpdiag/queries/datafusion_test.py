@@ -17,6 +17,7 @@ from unittest import mock
 
 from gcpdiag import models
 from gcpdiag.queries import apis_stub, datafusion
+from gcpdiag.queries.generic_api.api_build import generic_api_stub
 
 DUMMY_REGION = 'us-central1'
 DUMMY_PROJECT_NAME = 'gcpdiag-datafusion1-aaaa'
@@ -78,3 +79,24 @@ class TestExtractVersionPolicyDict:
 
     response_dict = datafusion.extract_support_datafusion_version()
     assert response_dict == SUPPORTED_VERSIONS_DICT
+
+
+@mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
+@mock.patch('gcpdiag.queries.generic_api.api_build.get_generic.get_generic_api',
+            new=generic_api_stub.get_generic_api_stub)
+class TestComputeProfile:
+  """Test Compute Profile"""
+
+  def test_get_instance_system_compute_profile(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    instances = datafusion.get_instances(context)
+    instance = list(instances.values())[0]
+    profiles = datafusion.get_instance_system_compute_profile(context, instance)
+    assert len(profiles) == 2
+
+  def test_get_instance_user_compute_profile(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    instances = datafusion.get_instances(context)
+    instance = list(instances.values())[0]
+    profiles = datafusion.get_instance_user_compute_profile(context, instance)
+    assert len(profiles) == 1
