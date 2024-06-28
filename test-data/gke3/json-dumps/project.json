@@ -1,0 +1,13 @@
+{
+  "name": "projects/12340032",
+  "parent": "folders/348077457356",
+  "projectId": "gcpdiag-gke3-gggg",
+  "state": "ACTIVE",
+  "displayName": "gcpdiag-gke3-runbook",
+  "createTime": "2024-06-30T13:58:04.756870Z",
+  "updateTime": "2024-06-30T13:58:04.756870Z",
+  "etag": "W/\"1fdd0dc4fcdba7ec\"",
+  "labels": {
+    "gcpdiag": "test"
+  }
+}

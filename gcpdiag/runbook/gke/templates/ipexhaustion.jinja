@@ -1,0 +1,38 @@
+  #########################################################
+  #          messages for the pod IP exhaustion           #
+  #########################################################
+  # messages for pod IP exhaustion
+  {% block pod_ip_exhaustion_failure_reason %}
+  Pod IP exhaustion is detected in the cluster {cluster_name}
+  {% endblock pod_ip_exhaustion_failure_reason %}
+
+
+  {% block pod_ip_exhaustion_failure_remediation %}
+  Follow [1] to add ipv4 range to the autopilot cluster and [2] to add ipv4 pod range to a standard cluster to mitgate the issue.
+  [1] https://cloud.google.com/kubernetes-engine/docs/how-to/multi-pod-cidr#add-pod-ipv4-range-in-autopilot-cluster
+  [2] https://cloud.google.com/kubernetes-engine/docs/how-to/multi-pod-cidr#cluster-add-pod-ipv4-range
+  {% endblock pod_ip_exhaustion_failure_remediation %}
+
+  #############################################################
+  #          Messages for Node IP exhaustion                  #
+  #############################################################
+  # messages for pod IP exhaustion
+  {% block node_ip_exhaustion_success_reason %}
+  Node IP exhaustion is detected in the cluster {cluster_name}:
+
+  {status_message}
+
+  {% endblock node_ip_exhaustion_success_reason %}
+
+  {% block node_ip_exhaustion_failure_reason %}
+  Node IP exhaustion is detected in the cluster {cluster_name}:
+
+  {status_message}
+
+  {% endblock node_ip_exhaustion_failure_reason %}
+
+  {% block node_ip_exhaustion_failure_remediation %}
+  Follow [1] to expand the ip range of the node subnet.
+
+  [1] https://cloud.google.com/vpc/docs/create-modify-vpc-networks#expand-subnet
+  {% endblock node_ip_exhaustion_failure_remediation %}

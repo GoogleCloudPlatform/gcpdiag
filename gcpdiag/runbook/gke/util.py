@@ -1,4 +1,4 @@
-# Copyright 2024 Google LLC
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,16 +11,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Contains GKE specific flags"""
+"""Helpful functions used in different parts of the gke runbooks"""
 
-OPS_AGENT_EXPORTING_METRICS = False
-PROTOCOL_TYPE = 'protocol_type'
 
-PROJECT_ID = 'project_id'
-# cluster name
-NAME = 'name'
-# cluster zone or region
-LOCATION = 'location'
-START_TIME_UTC = 'start_time_utc'
-END_TIME_UTC = 'end_time_utc'
-INTERACTIVE_MODE = 'auto'
+def is_pod_range_exhausted(ip_space_exhausted_pod_range_log_entries):
+  count = len(ip_space_exhausted_pod_range_log_entries)
+  pod_range_exhausted = False
+  while count:
+    log_entry = ip_space_exhausted_pod_range_log_entries.pop()
+    if 'GKE_IP_UTILIZATION_POD_RANGES_ALLOCATION_HIGH' in str(log_entry):
+      pod_range_exhausted = True
+      return pod_range_exhausted
+    count -= 1
+  return pod_range_exhausted

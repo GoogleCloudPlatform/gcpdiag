@@ -269,6 +269,14 @@ class Cluster(models.Resource):
   def app_layer_sec_key(self) -> str:
     return self._resource_data['databaseEncryption'].get('keyName')
 
+  @property
+  def status(self) -> str:
+    return self._resource_data['status']
+
+  @property
+  def status_message(self) -> str:
+    return self._resource_data.get('statusMessage', None)
+
   def has_app_layer_enc_enabled(self) -> bool:
     # state := 'DECRYPTED' | 'ENCRYPTED', keyName := 'full_path_to_key_resouce'
     return get_path(self._resource_data, ('databaseEncryption', 'state'),
@@ -468,6 +476,27 @@ def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
   return clusters
+
+
+@caching.cached_api_call
+def get_cluster(context: models.Context, cluster_id, zone) -> Cluster:
+  """Get a Cluster from project_id of a context."""
+  if not apis.is_enabled(context.project_id, 'container'):
+    raise RuntimeError('container api is not enabled. Enable the container api')
+  container_api = apis.get_api('container', 'v1', context.project_id)
+  logging.info('fetching the GKE cluster %s in project %s', cluster_id,
+               context.project_id)
+  query = container_api.projects().locations().clusters().get(
+      name=
+      f'projects/{context.project_id}/locations/{zone}/clusters/{cluster_id}')
+  try:
+    resp = query.execute(num_retries=config.API_RETRIES)
+    if cluster_id not in str(resp):
+      raise RuntimeError(
+          'missing data in projects.locations.clusters.list response')
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
+  return Cluster(project_id=context.project_id, resource_data=resp)
 
 
 @caching.cached_api_call

@@ -1,0 +1,228 @@
+{
+  "addonsConfig": {
+    "gcePersistentDiskCsiDriverConfig": {
+      "enabled": true
+    },
+    "kubernetesDashboard": {
+      "disabled": true
+    },
+    "networkPolicyConfig": {}
+  },
+  "autopilot": {},
+  "autoscaling": {
+    "autoscalingProfile": "BALANCED"
+  },
+  "binaryAuthorization": {},
+  "clusterIpv4Cidr": "10.40.0.0/14",
+  "conditions": [
+    {
+      "canonicalCode": "RESOURCE_EXHAUSTED",
+      "message": "[IP_SPACE_EXHAUSTED]: Instance 'gke-cluster-1-default-pool-a6ea5e55-h1ms' creation failed: IP space of 'projects/gcpdiag-gke3-gggg/regions/us-central1/subnetworks/public-subnet' is exhausted. "
+    },
+    {
+      "canonicalCode": "RESOURCE_EXHAUSTED",
+      "message": "Requested resource is exhausted: Not all instances running in IGM after 50.049254938s. Expected 4, running 3, transitioning 1. Current errors: [IP_SPACE_EXHAUSTED]: Instance 'gke-cluster-1-default-pool-a6ea5e55-h1ms' creation failed: IP space of 'projects/gcpdiag-gke3-gggg/regions/us-central1/subnetworks/public-subnet' is exhausted. ."
+    }
+  ],
+  "createTime": "2024-06-30T14:14:28+00:00",
+  "currentMasterVersion": "1.29.4-gke.1043002",
+  "currentNodeCount": 4,
+  "currentNodeVersion": "1.29.4-gke.1043002",
+  "databaseEncryption": {
+    "currentState": "CURRENT_STATE_DECRYPTED",
+    "state": "DECRYPTED"
+  },
+  "defaultMaxPodsConstraint": {
+    "maxPodsPerNode": "110"
+  },
+  "endpoint": "35.239.14.64",
+  "enterpriseConfig": {
+    "clusterTier": "STANDARD"
+  },
+  "etag": "21e8b973-68bf-485b-84c9-ad5029ac0e01",
+  "expireTime": "2024-07-14T14:20:47+00:00",
+  "id": "e478debbaec74a638eb439fbae5ac7cb4c51ffa27b3049868a20bc5aa1d3c64c",
+  "initialClusterVersion": "1.29.4-gke.1043002",
+  "initialNodeCount": 4,
+  "instanceGroupUrls": [
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke3-gggg/zones/us-central1-c/instanceGroupManagers/gke-cluster-1-default-pool-a6ea5e55-grp"
+  ],
+  "ipAllocationPolicy": {
+    "clusterIpv4Cidr": "10.40.0.0/14",
+    "clusterIpv4CidrBlock": "10.40.0.0/14",
+    "clusterSecondaryRangeName": "gke-cluster-1-pods-e478debb",
+    "podCidrOverprovisionConfig": {},
+    "servicesIpv4Cidr": "34.118.224.0/20",
+    "servicesIpv4CidrBlock": "34.118.224.0/20",
+    "stackType": "IPV4",
+    "useIpAliases": true
+  },
+  "labelFingerprint": "a9dc16a7",
+  "legacyAbac": {},
+  "location": "us-central1-c",
+  "locations": [
+    "us-central1-c"
+  ],
+  "loggingConfig": {
+    "componentConfig": {
+      "enableComponents": [
+        "SYSTEM_COMPONENTS",
+        "WORKLOADS"
+      ]
+    }
+  },
+  "loggingService": "logging.googleapis.com/kubernetes",
+  "maintenancePolicy": {
+    "resourceVersion": "e3b0c442"
+  },
+  "masterAuth": {
+    "clientCertificateConfig": {},
+    "clusterCaCertificate": "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVMVENDQXBXZ0F3SUJBZ0lSQUlmRVdNQ3I5RkE2dzVhOWI2ZjJUUjh3RFFZSktvWklodmNOQVFFTEJRQXcKTHpFdE1Dc0dBMVVFQXhNa05qRXhaV1JoTUdNdE4yWTBZaTAwWVRkaExUbG1NREV0TVRnMVlUQXhaVEl3TldObQpNQ0FYRFRJME1EWXpNREV6TVRReU9Gb1lEekl3TlRRd05qSXpNVFF4TkRJNFdqQXZNUzB3S3dZRFZRUURFeVEyCk1URmxaR0V3WXkwM1pqUmlMVFJoTjJFdE9XWXdNUzB4T0RWaE1ERmxNakExWTJZd2dnR2lNQTBHQ1NxR1NJYjMKRFFFQkFRVUFBNElCandBd2dnR0tBb0lCZ1FDdCtkUXlmZVBJa0tmbXd3RVRjR2Y1MDREbHJqZURhSW9UTUVBSApLZTN6bDErMkltb2lJVFgwdTNZRjFXNlhFMU9odktVRTB2bzNIMW0wdFMrTzBIWVdyNDdobklqZWVDNXA1RnVnCnM5NDRqakdyR3kvZDVSWjJDODRTYjlhYVpld3cxb242QXJVY0FSTnJycm9VTkVreithWExMNXp5VkJBYW1IRFAKanJVMkJmenE2OWMzT21wUDRyc3dkYmpsSHRHTXZjL1Z0RVJ4VGRRd01BMnlZRkVHME5ISFFSSlUwN0l5TzBKZQovRVk0M2NRdSsxN0VLMjVHaWVHNGxtd3FqNnpjaERmTkdNZ1dwK2k5elNNQjVMUjBYYkNQU1NaRTNhNFN6L1VCCk9TeTVnc0U1QzJBdmRCd3d5UktFaVBMbFZkamd2dTg0U0JnYmtoZERQQ1FvSGtqKzBIRUdaaE52Tnl3Z3JFMEcKVk1IVW9OM2R0MjQwL0JCR2JGT0x3Ly9WLzY1L3JxWUlMVS9QMmVmc0VIaWtJb3JlYzlMTTlvU3hmUHNGVWZEawo5eHI3VmFvaHNRRlA0SmwybzMyNHI0cW9OL3lJRmVDUmNiZkhNNTdwYlFoWjVmajNIa25zNEZMaDRDZnNrOUp2CkVMSGw0QzBLcXE4cVd6aVdPZmNMWDhkVFM0Y0NBd0VBQWFOQ01FQXdEZ1lEVlIwUEFRSC9CQVFEQWdJRU1BOEcKQTFVZEV3RUIvd1FGTUFNQkFmOHdIUVlEVlIwT0JCWUVGQ1BOTmhTbTg2VEdQRmR0S09KYjhzWWNoU0J4TUEwRwpDU3FHU0liM0RRRUJDd1VBQTRJQmdRQWxkM0k1aU9pMEV3SEZ4THB0M3FYdi9mQkdicVV3LzA1bEsxbTMyQnY5ClpOL2RNa3VXMlFYNXRIcElRUDh2SGlubGZSSjhlL0pKbFhSa09HYjRJSzBjdEtCMFUveUk0NUFkc3NTSDlXankKMEJGWWZtVlNqTVRBdFo2RDN6bkVkdllvK09WUk52bDZSYjJoZG5pcUNwYUNteHMrZktrbWthZFN5cTJ6YldJdgpBNUJXcE5pT2EvUkhzd01DVkFaOUhpUFRlZ0NlMmFYcE1kRU5VdTBFMFNuelpNTW9wTlU1eDkwRW5SajFzdERKCm1JWnBGeGRob0pxV2FSdENDVDloS0hUdmFpdFJ4MGN4TlFqajBSRjhsRzNxMzk1VWJnZ0pDekQ2dWlsejM3dXgKR1lKdTEzWno5UjlFRzJxWFhCU25FbEVSNU96RjhheVplT0Y4a2xRWUN1dU5RazgvSmgyamhyVjdFOG5mVk1KcwpDWldYR2dMcWxRMFFXZmZ6OGV2LzVYVlVlRUlSWld2Ym1Vc01QTEtseWFoU05neWYxQzhweEJlY3ZxWGhrdk80CnB0MS8raXJrTDdkaWZIdGwzVTJkdW8vUFdBM2FHUGpWL3BVN3A0ZjM3Ukd4M1Q0UTNHekUvdzRRZmQxMlBtdWIKWEwyWnl3c1R2WG1sV3AxR2NHVGRyc2M9Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K"
+  },
+  "masterAuthorizedNetworksConfig": {
+    "gcpPublicCidrsAccessEnabled": true
+  },
+  "monitoringConfig": {
+    "advancedDatapathObservabilityConfig": {},
+    "componentConfig": {
+      "enableComponents": [
+        "SYSTEM_COMPONENTS"
+      ]
+    },
+    "managedPrometheusConfig": {
+      "enabled": true
+    }
+  },
+  "monitoringService": "monitoring.googleapis.com/kubernetes",
+  "name": "cluster-1",
+  "network": "default",
+  "networkConfig": {
+    "defaultSnatStatus": {},
+    "network": "projects/gcpdiag-gke3-gggg/global/networks/default",
+    "serviceExternalIpsConfig": {},
+    "subnetwork": "projects/gcpdiag-gke3-gggg/regions/us-central1/subnetworks/public-subnet"
+  },
+  "networkPolicy": {
+    "enabled": true
+  },
+  "nodeConfig": {
+    "diskSizeGb": 100,
+    "diskType": "pd-balanced",
+    "imageType": "COS_CONTAINERD",
+    "machineType": "e2-medium",
+    "metadata": {
+      "disable-legacy-endpoints": "true"
+    },
+    "oauthScopes": [
+      "https://www.googleapis.com/auth/devstorage.read_only",
+      "https://www.googleapis.com/auth/logging.write",
+      "https://www.googleapis.com/auth/monitoring",
+      "https://www.googleapis.com/auth/service.management.readonly",
+      "https://www.googleapis.com/auth/servicecontrol",
+      "https://www.googleapis.com/auth/trace.append"
+    ],
+    "serviceAccount": "default",
+    "shieldedInstanceConfig": {
+      "enableIntegrityMonitoring": true
+    },
+    "windowsNodeConfig": {}
+  },
+  "nodePoolDefaults": {
+    "nodeConfigDefaults": {
+      "loggingConfig": {
+        "variantConfig": {
+          "variant": "DEFAULT"
+        }
+      }
+    }
+  },
+  "nodePools": [
+    {
+      "conditions": [
+        {
+          "canonicalCode": "RESOURCE_EXHAUSTED",
+          "message": "[IP_SPACE_EXHAUSTED]: Instance 'gke-cluster-1-default-pool-a6ea5e55-h1ms' creation failed: IP space of 'projects/gcpdiag-gke3-gggg/regions/us-central1/subnetworks/public-subnet' is exhausted. "
+        },
+        {
+          "canonicalCode": "RESOURCE_EXHAUSTED",
+          "message": "Requested resource is exhausted: Not all instances running in IGM after 50.049254938s. Expected 4, running 3, transitioning 1. Current errors: [IP_SPACE_EXHAUSTED]: Instance 'gke-cluster-1-default-pool-a6ea5e55-h1ms' creation failed: IP space of 'projects/gcpdiag-gke3-gggg/regions/us-central1/subnetworks/public-subnet' is exhausted. ."
+        }
+      ],
+      "config": {
+        "diskSizeGb": 100,
+        "diskType": "pd-balanced",
+        "imageType": "COS_CONTAINERD",
+        "machineType": "e2-medium",
+        "metadata": {
+          "disable-legacy-endpoints": "true"
+        },
+        "oauthScopes": [
+          "https://www.googleapis.com/auth/devstorage.read_only",
+          "https://www.googleapis.com/auth/logging.write",
+          "https://www.googleapis.com/auth/monitoring",
+          "https://www.googleapis.com/auth/service.management.readonly",
+          "https://www.googleapis.com/auth/servicecontrol",
+          "https://www.googleapis.com/auth/trace.append"
+        ],
+        "serviceAccount": "default",
+        "shieldedInstanceConfig": {
+          "enableIntegrityMonitoring": true
+        },
+        "windowsNodeConfig": {}
+      },
+      "etag": "4f4a8d8f-c3cf-41f8-8825-19eba6fdc455",
+      "initialNodeCount": 4,
+      "instanceGroupUrls": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke3-gggg/zones/us-central1-c/instanceGroupManagers/gke-cluster-1-default-pool-a6ea5e55-grp"
+      ],
+      "locations": [
+        "us-central1-c"
+      ],
+      "management": {
+        "autoRepair": true,
+        "autoUpgrade": true
+      },
+      "maxPodsConstraint": {
+        "maxPodsPerNode": "110"
+      },
+      "name": "default-pool",
+      "networkConfig": {
+        "enablePrivateNodes": false,
+        "podIpv4CidrBlock": "10.40.0.0/14",
+        "podRange": "gke-cluster-1-pods-e478debb"
+      },
+      "podIpv4CidrSize": 24,
+      "selfLink": "https://container.googleapis.com/v1/projects/gcpdiag-gke3-gggg/zones/us-central1-c/clusters/cluster-1/nodePools/default-pool",
+      "status": "ERROR",
+      "statusMessage": "Requested resource is exhausted: Not all instances running in IGM after 50.049254938s. Expected 4, running 3, transitioning 1. Current errors: [IP_SPACE_EXHAUSTED]: Instance 'gke-cluster-1-default-pool-a6ea5e55-h1ms' creation failed: IP space of 'projects/gcpdiag-gke3-gggg/regions/us-central1/subnetworks/public-subnet' is exhausted. .",
+      "upgradeSettings": {
+        "maxSurge": 1,
+        "strategy": "SURGE"
+      },
+      "version": "1.29.4-gke.1043002"
+    }
+  ],
+  "notificationConfig": {
+    "pubsub": {}
+  },
+  "privateClusterConfig": {
+    "privateEndpoint": "10.0.0.2",
+    "publicEndpoint": "35.239.14.64"
+  },
+  "releaseChannel": {
+    "channel": "REGULAR"
+  },
+  "securityPostureConfig": {
+    "mode": "BASIC",
+    "vulnerabilityMode": "VULNERABILITY_MODE_UNSPECIFIED"
+  },
+  "selfLink": "https://container.googleapis.com/v1/projects/gcpdiag-gke3-gggg/zones/us-central1-c/clusters/cluster-1",
+  "servicesIpv4Cidr": "34.118.224.0/20",
+  "shieldedNodes": {
+    "enabled": true
+  },
+  "status": "ERROR",
+  "statusMessage": "Requested resource is exhausted: Not all instances running in IGM after 50.049254938s. Expected 4, running 3, transitioning 1. Current errors: [IP_SPACE_EXHAUSTED]: Instance 'gke-cluster-1-default-pool-a6ea5e55-h1ms' creation failed: IP space of 'projects/gcpdiag-gke3-gggg/regions/us-central1/subnetworks/public-subnet' is exhausted. .",
+  "subnetwork": "public-subnet",
+  "zone": "us-central1-c"
+}

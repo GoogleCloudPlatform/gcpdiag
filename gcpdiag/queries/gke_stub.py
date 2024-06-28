@@ -53,3 +53,9 @@ class ContainerApiStub(apis_stub.ApiStub):
     m = re.match(r'projects/([^/]+)/', parent)
     project_id = m.group(1)
     return apis_stub.RestCallStub(project_id, 'container-clusters')
+
+  def get(self, name):
+    m = re.match(r'projects/([^/]+)/locations/([^/]+)/clusters/([^/]+)', name)
+    project_id = m.group(1)
+    cluster = m.group(3)
+    return apis_stub.RestCallStub(project_id, f'container-cluster-{cluster}')

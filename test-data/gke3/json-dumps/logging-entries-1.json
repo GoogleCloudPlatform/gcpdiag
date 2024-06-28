@@ -1,0 +1,231 @@
+{
+  "entries": [
+    {
+      "protoPayload": {
+        "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+        "status": {
+          "code": 8,
+          "message": "Requested resource is exhausted: Not all instances running in IGM after 50.049254938s. Expected 4, running 3, transitioning 1. Current errors: [IP_SPACE_EXHAUSTED]: Instance 'gke-cluster-1-default-pool-a6ea5e55-h1ms' creation failed: IP space of 'projects/gcpdiag-gke3-gggg/regions/us-central1/subnetworks/public-subnet' is exhausted. ."
+        },
+        "serviceName": "container.googleapis.com",
+        "methodName": "google.container.v1.ClusterManager.CreateCluster",
+        "resourceName": "projects/gcpdiag-gke3-gggg/zones/us-central1-c/clusters/cluster-1",
+        "metadata": {
+          "operationType": "CREATE_CLUSTER"
+        },
+        "resourceLocation": {
+          "currentLocations": [
+            "us-central1-c"
+          ]
+        },
+        "policyViolationInfo": {
+          "orgPolicyViolationInfo": {}
+        }
+      },
+      "insertId": "1vz9lr0ddn5x",
+      "resource": {
+        "type": "gke_cluster",
+        "labels": {
+          "cluster_name": "cluster-1",
+          "location": "us-central1-c",
+          "project_id": "gcpdiag-gke3-gggg"
+        }
+      },
+      "timestamp": "2024-06-30T14:20:47.243847225Z",
+      "severity": "ERROR",
+      "logName": "projects/gcpdiag-gke3-gggg/logs/cloudaudit.googleapis.com%2Factivity",
+      "operation": {
+        "id": "operation-1719756871219-5ff98f7e-b0ce-474c-9bb4-589539c82f8b",
+        "producer": "container.googleapis.com",
+        "last": true
+      },
+      "receiveTimestamp": "2024-06-30T14:20:47.628381432Z"
+    },
+    {
+      "protoPayload": {
+        "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+        "status": {
+          "code": 8,
+          "message": "IP_SPACE_EXHAUSTED",
+          "details": [
+            {
+              "@type": "type.googleapis.com/google.protobuf.Struct",
+              "value": {
+                "ipSpaceExhausted": {
+                  "networkOrSubnetworkResource": {
+                    "resourceType": "SUBNETWORK",
+                    "resourceName": "public-subnet",
+                    "project": {
+                      "canonicalProjectId": "12340032"
+                    },
+                    "scope": {
+                      "scopeType": "REGION",
+                      "scopeName": "us-central1"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "authenticationInfo": {
+          "principalEmail": "12340032@cloudservices.gserviceaccount.com"
+        },
+        "requestMetadata": {
+          "callerSuppliedUserAgent": "GCE Managed Instance Group for GKE"
+        },
+        "serviceName": "compute.googleapis.com",
+        "methodName": "v1.compute.instances.insert",
+        "resourceName": "projects/12340032/zones/us-central1-c/instances/gke-cluster-1-default-pool-a6ea5e55-h1ms",
+        "request": {
+          "@type": "type.googleapis.com/compute.instances.insert"
+        }
+      },
+      "insertId": "-1xf12idklrw",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "instance_id": "859073022264137727",
+          "zone": "us-central1-c",
+          "project_id": "gcpdiag-gke3-gggg"
+        }
+      },
+      "timestamp": "2024-06-30T14:18:11.532599Z",
+      "severity": "ERROR",
+      "labels": {
+        "compute.googleapis.com/root_trigger_id": "55a7363f-a765-44ee-b5d0-bb202ad26028"
+      },
+      "logName": "projects/gcpdiag-gke3-gggg/logs/cloudaudit.googleapis.com%2Factivity",
+      "operation": {
+        "id": "operation-1719757072726-61c1c256b7a14-81165a82-dcab802f",
+        "producer": "compute.googleapis.com",
+        "last": true
+      },
+      "receiveTimestamp": "2024-06-30T14:18:11.809687227Z"
+    },
+    {
+      "protoPayload": {
+        "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+        "status": {
+          "code": 8,
+          "message": "IP_SPACE_EXHAUSTED",
+          "details": [
+            {
+              "@type": "type.googleapis.com/google.protobuf.Struct",
+              "value": {
+                "ipSpaceExhausted": {
+                  "networkOrSubnetworkResource": {
+                    "resourceType": "SUBNETWORK",
+                    "resourceName": "public-subnet",
+                    "project": {
+                      "canonicalProjectId": "12340032"
+                    },
+                    "scope": {
+                      "scopeType": "REGION",
+                      "scopeName": "us-central1"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "authenticationInfo": {
+          "principalEmail": "12340032@cloudservices.gserviceaccount.com"
+        },
+        "requestMetadata": {
+          "callerSuppliedUserAgent": "GCE Managed Instance Group for GKE"
+        },
+        "serviceName": "compute.googleapis.com",
+        "methodName": "v1.compute.instances.insert",
+        "resourceName": "projects/12340032/zones/us-central1-c/instances/gke-cluster-1-default-pool-a6ea5e55-h1ms",
+        "request": {
+          "@type": "type.googleapis.com/compute.instances.insert"
+        }
+      },
+      "insertId": "-dldtrdddavm",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "instance_id": "5206188492617209421",
+          "project_id": "gcpdiag-gke3-gggg",
+          "zone": "us-central1-c"
+        }
+      },
+      "timestamp": "2024-06-30T14:16:19.902626Z",
+      "severity": "ERROR",
+      "labels": {
+        "compute.googleapis.com/root_trigger_id": "55a7363f-a765-44ee-b5d0-bb202ad26028"
+      },
+      "logName": "projects/gcpdiag-gke3-gggg/logs/cloudaudit.googleapis.com%2Factivity",
+      "operation": {
+        "id": "operation-1719756962352-61c1c1ed74e79-90b4d504-11598e65",
+        "producer": "compute.googleapis.com",
+        "last": true
+      },
+      "receiveTimestamp": "2024-06-30T14:16:20.907825734Z"
+    },
+    {
+      "protoPayload": {
+        "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+        "status": {
+          "code": 8,
+          "message": "IP_SPACE_EXHAUSTED",
+          "details": [
+            {
+              "@type": "type.googleapis.com/google.protobuf.Struct",
+              "value": {
+                "ipSpaceExhausted": {
+                  "networkOrSubnetworkResource": {
+                    "resourceType": "SUBNETWORK",
+                    "resourceName": "public-subnet",
+                    "project": {
+                      "canonicalProjectId": "12340032"
+                    },
+                    "scope": {
+                      "scopeType": "REGION",
+                      "scopeName": "us-central1"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "authenticationInfo": {
+          "principalEmail": "12340032@cloudservices.gserviceaccount.com"
+        },
+        "requestMetadata": {
+          "callerSuppliedUserAgent": "GCE Managed Instance Group for GKE"
+        },
+        "serviceName": "compute.googleapis.com",
+        "methodName": "v1.compute.instances.insert",
+        "resourceName": "projects/12340032/zones/us-central1-c/instances/gke-cluster-1-default-pool-a6ea5e55-h1ms",
+        "request": {
+          "@type": "type.googleapis.com/compute.instances.insert"
+        }
+      },
+      "insertId": "63u9b7dsccm",
+      "resource": {
+        "type": "gce_instance",
+        "labels": {
+          "instance_id": "1365058717064418922",
+          "zone": "us-central1-c",
+          "project_id": "gcpdiag-gke3-gggg"
+        }
+      },
+      "timestamp": "2024-06-30T14:15:58.474282Z",
+      "severity": "ERROR",
+      "labels": {
+        "compute.googleapis.com/root_trigger_id": "55a7363f-a765-44ee-b5d0-bb202ad26028"
+      },
+      "logName": "projects/gcpdiag-gke3-gggg/logs/cloudaudit.googleapis.com%2Factivity",
+      "operation": {
+        "id": "operation-1719756933300-61c1c1d1c0293-95105895-9001d39a",
+        "producer": "compute.googleapis.com",
+        "last": true
+      },
+      "receiveTimestamp": "2024-06-30T14:15:59.430056173Z"
+    }
+  ]
+}
