@@ -23,7 +23,17 @@ class TestInvalidContainer(snapshot_test_base.RulesSnapshotTestBase):
   project_id = 'gcpdiag-cloudrun2-aaaa'
   config.init({'auto': True, 'interface': 'cli'}, project_id)
 
-  rule_parameters = [{
-      'service_name': 'invalid-container',
-      'region': 'us-central1',
-  }]
+  rule_parameters = [
+      {
+          'service_name': 'invalid-container',
+          'region': 'us-central1',
+      },
+      {
+          'service_name': 'image-does-not-exist',
+          'region': 'us-central1',
+      },
+      {
+          'service_name': 'no-image-permission',
+          'region': 'us-central1',
+      },
+  ]

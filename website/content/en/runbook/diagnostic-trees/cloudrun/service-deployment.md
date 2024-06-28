@@ -56,6 +56,10 @@ gcpdiag runbook --help
 
   - [Container Failed To Start Step](/runbook/steps/cloudrun/container-failed-to-start-step)
 
+  - [Image Was Not Found Step](/runbook/steps/cloudrun/image-was-not-found-step)
+
+  - [No Permission For Image Step](/runbook/steps/cloudrun/no-permission-for-image-step)
+
 
 <!--
 This file is auto-generated. DO NOT EDIT.

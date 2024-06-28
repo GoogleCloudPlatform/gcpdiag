@@ -15,6 +15,71 @@ cloudrun/service-deployment: Investigates the necessary GCP components searching
 [START]: Verifying context and parameters required for deployment runbook checks.
 [COMPOSITE STEP]: Checking for common container and code issues.
 [AUTOMATED STEP]: Verifying if there is an error that container failed to start.
+[AUTOMATED STEP]: Verifying if specified image exists.
+[AUTOMATED STEP]: Verifying if Cloud Run service agent can fetch the image.
+[END]: Finalizing runbook investigations...
+
+
+project: gcpdiag-cloudrun2-aaaa, parameters: {project_id=gcpdiag-cloudrun2-aaaa,region=us-
+central1,service_name=image-does-not-exist}
+
+cloudrun/service-deployment: Investigates the necessary GCP components searching for reasons for deployment errors.
+
+  This runbook will examine the following key areas:
+
+  1. Container and code Checks.
+    - Ensures the Container is in correct state to run in Cloud Run
+
+  Scope of Investigation:
+    - Note that this runbook does not provide troubleshooting steps for errors
+      caused by the code running in the container.
+  
+[START]: Verifying context and parameters required for deployment runbook checks.
+[COMPOSITE STEP]: Checking for common container and code issues.
+[AUTOMATED STEP]: Verifying if there is an error that container failed to start.
+[AUTOMATED STEP]: Verifying if specified image exists.
+
+   - gcpdiag-cloudrun2-aaaa/37324495-a964-42ce-a080-2995f68c8f35          [FAIL]
+     [REASON]
+     Provided image us-central1-docker.pkg.dev/gcpdiag-cloudrun2-aaaa/cloudrun-repository/missing-image does not exist.
+
+     [REMEDIATION]
+     The provided image does not exist. Make sure that it is correct. Try following
+     quickstart guide and see how to correctly specify image names. https://cloud.google.com/run/docs/quickstarts
+
+[AUTOMATED STEP]: Verifying if Cloud Run service agent can fetch the image.
+[END]: Finalizing runbook investigations...
+
+
+project: gcpdiag-cloudrun2-aaaa, parameters: {project_id=gcpdiag-cloudrun2-aaaa,region=us-
+central1,service_name=no-image-permission}
+
+cloudrun/service-deployment: Investigates the necessary GCP components searching for reasons for deployment errors.
+
+  This runbook will examine the following key areas:
+
+  1. Container and code Checks.
+    - Ensures the Container is in correct state to run in Cloud Run
+
+  Scope of Investigation:
+    - Note that this runbook does not provide troubleshooting steps for errors
+      caused by the code running in the container.
+  
+[START]: Verifying context and parameters required for deployment runbook checks.
+[COMPOSITE STEP]: Checking for common container and code issues.
+[AUTOMATED STEP]: Verifying if there is an error that container failed to start.
+[AUTOMATED STEP]: Verifying if specified image exists.
+[AUTOMATED STEP]: Verifying if Cloud Run service agent can fetch the image.
+
+   - gcpdiag-cloudrun2-aaaa/7af8a1c8-8758-48d4-9476-024c0f62c4d7          [FAIL]
+     [REASON]
+     Cloud Run Service agent service-123400010@serverless-robot-prod.iam.gserviceaccount.com does not have permissions to read image gcr.io/private-project/image..
+
+     [REMEDIATION]
+     Please make sure that service-123400010@serverless-robot-prod.iam.gserviceaccount.com has roles/storage.objectViewer role if the image is stored in Container
+     Registry or roles/artifactregistry.reader if in Artifact Registry. Please note that the role needs to be granted in the
+     project where the image is stored.
+
 [END]: Finalizing runbook investigations...
 
 

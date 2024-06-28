@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""TODO: String doc"""
+"""Cloud Run runbook flags"""
 # pylint: disable=unused-wildcard-import, wildcard-import
-from gcpdiag.runbook.iam.flags import *
+from gcpdiag.runbook.gcp.flags import *
+
+SERVICE_NAME = 'service_name'

@@ -2,29 +2,29 @@
   "services": [
     {
       "client": "gcloud",
-      "clientVersion": "480.0.0",
+      "clientVersion": "481.0.0",
       "conditions": [
         {
-          "lastTransitionTime": "2024-06-24T13:49:28.648385Z",
-          "message": "Revision 'invalid-container-00001-lgk' is not ready and cannot serve traffic. The user-provided container failed to start and listen on the port defined provided by the PORT=8080 environment variable. Logs for this revision might contain more information.\n\nLogs URL: https://console.cloud.google.com/logs/viewer?project=gcpdiag-cloudrun2-aaaa&resource=cloud_run_revision/service_name/invalid-container/revision_name/invalid-container-00001-lgk&advancedFilter=resource.type%3D%22cloud_run_revision%22%0Aresource.labels.service_name%3D%22invalid-container%22%0Aresource.labels.revision_name%3D%22invalid-container-00001-lgk%22 \nFor more troubleshooting guidance, see https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start",
+          "lastTransitionTime": "2024-06-28T14:22:04.115832Z",
+          "message": "Revision 'invalid-container-00001-glb' is not ready and cannot serve traffic. The user-provided container failed to start and listen on the port defined provided by the PORT=8080 environment variable. Logs for this revision might contain more information.\n\nLogs URL: https://console.cloud.google.com/logs/viewer?project=gcpdiag-cloudrun2-aaaa&resource=cloud_run_revision/service_name/invalid-container/revision_name/invalid-container-00001-glb&advancedFilter=resource.type%3D%22cloud_run_revision%22%0Aresource.labels.service_name%3D%22invalid-container%22%0Aresource.labels.revision_name%3D%22invalid-container-00001-glb%22 \nFor more troubleshooting guidance, see https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start",
           "revisionReason": "HEALTH_CHECK_CONTAINER_ERROR",
           "state": "CONDITION_FAILED",
           "type": "RoutesReady"
         },
         {
-          "lastTransitionTime": "2024-06-24T13:48:37.898163Z",
+          "lastTransitionTime": "2024-06-28T14:21:58.515179Z",
           "state": "CONDITION_SUCCEEDED",
           "type": "ConfigurationsReady"
         }
       ],
-      "createTime": "2024-06-24T13:48:37.465296Z",
+      "createTime": "2024-06-28T14:21:58.431731Z",
       "creator": "REDACTED",
-      "etag": "\"CLXy5bMGEIC1790B/cHJvamVjdHMvZ2NwZGlhZy1jbG91ZHJ1bjItNGZvYXMzbWovbG9jYXRpb25zL3VzLWNlbnRyYWwxL3NlcnZpY2VzL2ludmFsaWQtY29udGFpbmVy\"",
+      "etag": "\"CIaO-7MGELji7s0B/cHJvamVjdHMvZ2NwZGlhZy1jbG91ZHJ1bjItNGZvYXMzbWovbG9jYXRpb25zL3VzLWNlbnRyYWwxL3NlcnZpY2VzL2ludmFsaWQtY29udGFpbmVy\"",
       "generation": "1",
       "ingress": "INGRESS_TRAFFIC_ALL",
       "lastModifier": "123400010-compute@developer.gserviceaccount.com",
-      "latestCreatedRevision": "projects/gcpdiag-cloudrun2-aaaa/locations/us-central1/services/invalid-container/revisions/invalid-container-00001-lgk",
-      "latestReadyRevision": "projects/gcpdiag-cloudrun2-aaaa/locations/us-central1/services/invalid-container/revisions/invalid-container-00001-lgk",
+      "latestCreatedRevision": "projects/gcpdiag-cloudrun2-aaaa/locations/us-central1/services/invalid-container/revisions/invalid-container-00001-glb",
+      "latestReadyRevision": "projects/gcpdiag-cloudrun2-aaaa/locations/us-central1/services/invalid-container/revisions/invalid-container-00001-glb",
       "launchStage": "GA",
       "name": "projects/gcpdiag-cloudrun2-aaaa/locations/us-central1/services/invalid-container",
       "observedGeneration": "1",
@@ -64,8 +64,8 @@
         "timeout": "300s"
       },
       "terminalCondition": {
-        "lastTransitionTime": "2024-06-24T13:49:28.648385Z",
-        "message": "Revision 'invalid-container-00001-lgk' is not ready and cannot serve traffic. The user-provided container failed to start and listen on the port defined provided by the PORT=8080 environment variable. Logs for this revision might contain more information.\n\nLogs URL: https://console.cloud.google.com/logs/viewer?project=gcpdiag-cloudrun2-aaaa&resource=cloud_run_revision/service_name/invalid-container/revision_name/invalid-container-00001-lgk&advancedFilter=resource.type%3D%22cloud_run_revision%22%0Aresource.labels.service_name%3D%22invalid-container%22%0Aresource.labels.revision_name%3D%22invalid-container-00001-lgk%22 \nFor more troubleshooting guidance, see https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start",
+        "lastTransitionTime": "2024-06-28T14:22:04.115832Z",
+        "message": "Revision 'invalid-container-00001-glb' is not ready and cannot serve traffic. The user-provided container failed to start and listen on the port defined provided by the PORT=8080 environment variable. Logs for this revision might contain more information.\n\nLogs URL: https://console.cloud.google.com/logs/viewer?project=gcpdiag-cloudrun2-aaaa&resource=cloud_run_revision/service_name/invalid-container/revision_name/invalid-container-00001-glb&advancedFilter=resource.type%3D%22cloud_run_revision%22%0Aresource.labels.service_name%3D%22invalid-container%22%0Aresource.labels.revision_name%3D%22invalid-container-00001-glb%22 \nFor more troubleshooting guidance, see https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start",
         "revisionReason": "HEALTH_CHECK_CONTAINER_ERROR",
         "state": "CONDITION_FAILED",
         "type": "Ready"
@@ -76,8 +76,164 @@
           "type": "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST"
         }
       ],
-      "uid": "98761cde-71d3-4c06-9286-f6c7f21a7289",
-      "updateTime": "2024-06-24T13:48:37.465296Z"
+      "uid": "4ca2c930-7962-4fce-9470-987642372120",
+      "updateTime": "2024-06-28T14:21:58.431731Z"
+    },
+    {
+      "client": "gcloud",
+      "clientVersion": "482.0.0",
+      "conditions": [
+        {
+          "lastTransitionTime": "2024-06-28T14:21:38.354602Z",
+          "message": "Revision 'no-image-permission-00001-fst' is not ready and cannot serve traffic. Google Cloud Run Service Agent service-123400010@serverless-robot-prod.iam.gserviceaccount.com must have permission to read the image, gcr.io/private-project/image. Ensure that the provided container image URL is correct and that the above account has permission to access the image. If you just enabled the Cloud Run API, the permissions might take a few minutes to propagate. Note that the image is from project [private-project], which is not the same as this project [gcpdiag-cloudrun2-aaaa]. Permission must be granted to the Google Cloud Run Service Agent service-1076942843663@serverless-robot-prod.iam.gserviceaccount.com from this project. See https://cloud.google.com/run/docs/deploying#other-projects",
+          "reason": "CONTAINER_PERMISSION_DENIED",
+          "state": "CONDITION_FAILED",
+          "type": "RoutesReady"
+        },
+        {
+          "lastTransitionTime": "2024-06-28T14:21:38.119970Z",
+          "state": "CONDITION_SUCCEEDED",
+          "type": "ConfigurationsReady"
+        }
+      ],
+      "createTime": "2024-06-28T14:21:38.037709Z",
+      "creator": "REDACTED",
+      "etag": "\"CPKN-7MGEMjJ_RE/cHJvamVjdHMvZ2NwZGlhZy1jbG91ZHJ1bjItNGZvYXMzbWovbG9jYXRpb25zL3VzLWNlbnRyYWwxL3NlcnZpY2VzL25vLWltYWdlLXBlcm1pc3Npb24\"",
+      "generation": "1",
+      "ingress": "INGRESS_TRAFFIC_ALL",
+      "lastModifier": "testuser@example.com",
+      "latestCreatedRevision": "projects/gcpdiag-cloudrun2-aaaa/locations/us-central1/services/no-image-permission/revisions/no-image-permission-00001-fst",
+      "launchStage": "GA",
+      "name": "projects/gcpdiag-cloudrun2-aaaa/locations/us-central1/services/no-image-permission",
+      "observedGeneration": "1",
+      "template": {
+        "containers": [
+          {
+            "image": "gcr.io/private-project/image",
+            "ports": [
+              {
+                "containerPort": 8080,
+                "name": "http1"
+              }
+            ],
+            "resources": {
+              "cpuIdle": true,
+              "limits": {
+                "cpu": "1000m",
+                "memory": "512Mi"
+              },
+              "startupCpuBoost": true
+            },
+            "startupProbe": {
+              "failureThreshold": 1,
+              "periodSeconds": 240,
+              "tcpSocket": {
+                "port": 8080
+              },
+              "timeoutSeconds": 240
+            }
+          }
+        ],
+        "maxInstanceRequestConcurrency": 80,
+        "scaling": {
+          "maxInstanceCount": 100
+        },
+        "serviceAccount": "123400010-compute@developer.gserviceaccount.com",
+        "timeout": "300s"
+      },
+      "terminalCondition": {
+        "lastTransitionTime": "2024-06-28T14:21:38.354602Z",
+        "message": "Revision 'no-image-permission-00001-fst' is not ready and cannot serve traffic. Google Cloud Run Service Agent service-123400010@serverless-robot-prod.iam.gserviceaccount.com must have permission to read the image, gcr.io/private-project/image. Ensure that the provided container image URL is correct and that the above account has permission to access the image. If you just enabled the Cloud Run API, the permissions might take a few minutes to propagate. Note that the image is from project [private-project], which is not the same as this project [gcpdiag-cloudrun2-aaaa]. Permission must be granted to the Google Cloud Run Service Agent service-1076942843663@serverless-robot-prod.iam.gserviceaccount.com from this project. See https://cloud.google.com/run/docs/deploying#other-projects",
+        "reason": "CONTAINER_PERMISSION_DENIED",
+        "state": "CONDITION_FAILED",
+        "type": "Ready"
+      },
+      "traffic": [
+        {
+          "percent": 100,
+          "type": "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST"
+        }
+      ],
+      "uid": "7af8a1c8-8758-48d4-9476-024c0f62c4d7",
+      "updateTime": "2024-06-28T14:21:38.037709Z"
+    },
+    {
+      "client": "gcloud",
+      "clientVersion": "482.0.0",
+      "conditions": [
+        {
+          "lastTransitionTime": "2024-06-28T14:21:38.873277Z",
+          "message": "Revision 'image-does-not-exist-00001-5w5' is not ready and cannot serve traffic. Image 'us-central1-docker.pkg.dev/gcpdiag-cloudrun2-aaaa/cloudrun-repository/missing-image' not found.",
+          "reason": "REVISION_FAILED",
+          "state": "CONDITION_FAILED",
+          "type": "RoutesReady"
+        },
+        {
+          "lastTransitionTime": "2024-06-28T14:21:37.988614Z",
+          "state": "CONDITION_SUCCEEDED",
+          "type": "ConfigurationsReady"
+        }
+      ],
+      "createTime": "2024-06-28T14:21:37.899709Z",
+      "creator": "REDACTED",
+      "etag": "\"CPGN-7MGEMjwga0D/cHJvamVjdHMvZ2NwZGlhZy1jbG91ZHJ1bjItNGZvYXMzbWovbG9jYXRpb25zL3VzLWNlbnRyYWwxL3NlcnZpY2VzL2ltYWdlLWRvZXMtbm90LWV4aXN0\"",
+      "generation": "1",
+      "ingress": "INGRESS_TRAFFIC_ALL",
+      "lastModifier": "testuser@example.com",
+      "latestCreatedRevision": "projects/gcpdiag-cloudrun2-aaaa/locations/us-central1/services/image-does-not-exist/revisions/image-does-not-exist-00001-5w5",
+      "launchStage": "GA",
+      "name": "projects/gcpdiag-cloudrun2-aaaa/locations/us-central1/services/image-does-not-exist",
+      "observedGeneration": "1",
+      "template": {
+        "containers": [
+          {
+            "image": "us-central1-docker.pkg.dev/gcpdiag-cloudrun2-aaaa/cloudrun-repository/missing-image",
+            "ports": [
+              {
+                "containerPort": 8080,
+                "name": "http1"
+              }
+            ],
+            "resources": {
+              "cpuIdle": true,
+              "limits": {
+                "cpu": "1000m",
+                "memory": "512Mi"
+              },
+              "startupCpuBoost": true
+            },
+            "startupProbe": {
+              "failureThreshold": 1,
+              "periodSeconds": 240,
+              "tcpSocket": {
+                "port": 8080
+              },
+              "timeoutSeconds": 240
+            }
+          }
+        ],
+        "maxInstanceRequestConcurrency": 80,
+        "scaling": {
+          "maxInstanceCount": 100
+        },
+        "serviceAccount": "123400010-compute@developer.gserviceaccount.com",
+        "timeout": "300s"
+      },
+      "terminalCondition": {
+        "lastTransitionTime": "2024-06-28T14:21:38.873277Z",
+        "message": "Revision 'image-does-not-exist-00001-5w5' is not ready and cannot serve traffic. Image 'us-central1-docker.pkg.dev/gcpdiag-cloudrun2-aaaa/cloudrun-repository/missing-image' not found.",
+        "reason": "REVISION_FAILED",
+        "state": "CONDITION_FAILED",
+        "type": "Ready"
+      },
+      "traffic": [
+        {
+          "percent": 100,
+          "type": "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST"
+        }
+      ],
+      "uid": "37324495-a964-42ce-a080-2995f68c8f35",
+      "updateTime": "2024-06-28T14:21:37.899709Z"
     }
   ]
 }
