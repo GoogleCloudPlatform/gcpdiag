@@ -103,15 +103,15 @@ SSH access to the VM especially if using gcloud / cloud console.
 {% endblock can_set_metadata_failure_remediation %}
 
 {% block valid_ssh_key_success_reason %}
-The local user "{{ local_user }}" is confirmed to have at least one valid SSH key
-configured on the GCE VM: "{{ vm_name }}".
+The local user "{local_user}" is confirmed to have at least one valid SSH key
+configured on the GCE VM: "{vm_name}".
 {% endblock valid_ssh_key_success_reason %}
 
 {% block valid_ssh_key_failure_reason %}
-The local user "{{ local_user }}" lacks at least one valid SSH key for VM: "{{ vm_name }}".
+The local user "{local_user}" lacks at least one valid SSH key for VM: "{vm_name}".
 {% endblock valid_ssh_key_failure_reason %}
 
 {% block valid_ssh_key_failure_remediation %}
-Ensure "{{ local_user }}" has a valid SSH key by following the guide:
+Ensure "{local_user}" has a valid SSH key by following the guide:
 https://cloud.google.com/compute/docs/connect/add-ssh-keys#add_ssh_keys_to_instance_metadata
 {% endblock valid_ssh_key_failure_remediation %}

@@ -33,9 +33,12 @@ class DiagnosticTreeNotFound(Exception):
 
   def __init__(self):
     super().__init__(
-        'Diagnostic Tree has not been registered or does not exist. '
-        'Please verify the product and class name, and ensure the file containing '
-        'the class does not have any syntax errors.')
+        'Diagnostic Tree has not been registered or does not exist.\n'
+        'Verify the following:\n'
+        '1. The product module and class name exist. e.g. "product/class-name-in-pascal-case" '
+        'should have a class "ClassNameInPascalCase" in module "product"\n'
+        '2. The class definition relevant steps should have no the syntax errors.'
+    )
 
 
 class DiagnosticTreeConstructionError(Exception):

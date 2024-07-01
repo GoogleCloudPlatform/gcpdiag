@@ -35,14 +35,14 @@ This runbook investigates components required for VMs to establish connectivity
 
 ```shell
 gcpdiag runbook vpc/vm-external-ip-connectivity \
-  -p project_id = value \
-  -p name = value \
-  -p id = value \
-  -p dest_ip = value \
-  -p dest_port = value \
-  -p protocol_type = value \
-  -p src_nic = value \
-  -p zone = value
+  -p project_id=value \
+  -p name=value \
+  -p id=value \
+  -p dest_ip=value \
+  -p dest_port=value \
+  -p protocol_type=value \
+  -p src_nic=value \
+  -p zone=value
 ```
 
 #### Parameters

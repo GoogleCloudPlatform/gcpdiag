@@ -41,9 +41,9 @@ This runbook guides you through a systematic investigation of potential
 
 ```shell
 gcpdiag runbook gke/logs \
-  -p project_id = value \
-  -p name = value \
-  -p location = value
+  -p project_id=value \
+  -p name=value \
+  -p location=value
 ```
 
 #### Parameters

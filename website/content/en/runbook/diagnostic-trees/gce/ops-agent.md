@@ -32,16 +32,16 @@ This runbook will examine the following key areas:
 
 ```shell
 gcpdiag runbook gce/ops-agent \
-  -p project_id = value \
-  -p name = value \
-  -p id = value \
-  -p zone = value \
-  -p start_time_utc = value \
-  -p end_time_utc = value \
-  -p gac_service_account = value \
-  -p check_logging = value \
-  -p check_monitoring = value \
-  -p check_serial_port_logging = value
+  -p project_id=value \
+  -p name=value \
+  -p id=value \
+  -p zone=value \
+  -p start_time_utc=value \
+  -p end_time_utc=value \
+  -p gac_service_account=value \
+  -p check_logging=value \
+  -p check_monitoring=value \
+  -p check_serial_port_logging=value
 ```
 
 #### Parameters

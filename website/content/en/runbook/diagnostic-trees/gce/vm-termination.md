@@ -34,12 +34,12 @@ This runbook is designed to assist you in investigating and understanding the un
 
 ```shell
 gcpdiag runbook gce/vm-termination \
-  -p project_id = value \
-  -p name = value \
-  -p id = value \
-  -p zone = value \
-  -p start_time_utc = value \
-  -p end_time_utc = value
+  -p project_id=value \
+  -p name=value \
+  -p id=value \
+  -p zone=value \
+  -p start_time_utc=value \
+  -p end_time_utc=value
 ```
 
 #### Parameters

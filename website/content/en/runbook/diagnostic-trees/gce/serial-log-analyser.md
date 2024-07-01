@@ -40,11 +40,11 @@ This runbook is designed to assist you in investigating the serial console logs 
 
 ```shell
 gcpdiag runbook gce/serial-log-analyser \
-  -p project_id = value \
-  -p name = value \
-  -p id = value \
-  -p zone = value \
-  -p serial_console_file = value
+  -p project_id=value \
+  -p name=value \
+  -p id=value \
+  -p zone=value \
+  -p serial_console_file=value
 ```
 
 #### Parameters

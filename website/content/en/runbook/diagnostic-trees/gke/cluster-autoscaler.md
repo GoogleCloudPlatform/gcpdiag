@@ -31,9 +31,9 @@ If there are log entries that contain messages listed in the public documentatio
 
 ```shell
 gcpdiag runbook gke/cluster-autoscaler \
-  -p project_id = value \
-  -p name = value \
-  -p location = value
+  -p project_id=value \
+  -p name=value \
+  -p location=value
 ```
 
 #### Parameters

@@ -325,14 +325,19 @@ def gen_step_page(step: runbook.Step):
   try:
     filepath, block_prefix = step.template.split('::')
     msgs = runbook.util.load_template_block(module_name=step.__module__,
-                                            file_name=filepath,
-                                            block_name=block_prefix)
+                                            file_name=filepath.strip(),
+                                            block_name=block_prefix.strip())
   except UndefinedError as e:
-    print(e)
+    print(f'Encounted a block error while parsing {e} used in step {step.id}')
   except TemplateNotFound as e:
-    print(e)
+    print(
+        f'Step "{step.id}" is using a non-existent jinja file with the name: {e}'
+    )
   except AttributeError as e:
     pass
+  except ValueError as e:
+    print('Ensure that your template string uses '
+          f'the following format "template_file::block_name":{e}')
 
   context = {'step': step, 'msgs': msgs, 'PRODUCTS': PRODUCTS}
   step_page = f'{product_steps_dir}/{step.doc_file_name}.md'

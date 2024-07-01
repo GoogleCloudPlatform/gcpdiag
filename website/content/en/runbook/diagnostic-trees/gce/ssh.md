@@ -40,18 +40,18 @@ This runbook focuses on investigating components required for ssh on either Wind
 
 ```shell
 gcpdiag runbook gce/ssh \
-  -p project_id = value \
-  -p name = value \
-  -p id = value \
-  -p zone = value \
-  -p principal = value \
-  -p local_user = value \
-  -p tunnel_through_iap = value \
-  -p check_os_login = value \
-  -p src_ip = value \
-  -p protocol_type = value \
-  -p port = value \
-  -p check_ssh_in_browser = value
+  -p project_id=value \
+  -p name=value \
+  -p id=value \
+  -p zone=value \
+  -p principal=value \
+  -p local_user=value \
+  -p tunnel_through_iap=value \
+  -p check_os_login=value \
+  -p src_ip=value \
+  -p protocol_type=value \
+  -p port=value \
+  -p check_ssh_in_browser=value
 ```
 
 #### Parameters

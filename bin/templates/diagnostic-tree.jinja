@@ -33,9 +33,9 @@ description: >
 gcpdiag runbook {{rule.name}} \
 {% for name, _ in rule.parameters.items() %}
   {% if not loop.last %}
-  -p {{ name }} = value \
+  -p {{ name }}=value \
   {% else %}
-  -p {{ name }} = value
+  -p {{ name }}=value
   {% endif %}
 {% endfor %}
 ```

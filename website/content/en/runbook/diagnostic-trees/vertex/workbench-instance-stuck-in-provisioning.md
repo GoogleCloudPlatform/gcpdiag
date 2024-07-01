@@ -51,11 +51,11 @@ This runbook investigates root causes for the Workbench Instance to be stuck in 
 
 ```shell
 gcpdiag runbook vertex/workbench-instance-stuck-in-provisioning \
-  -p project_id = value \
-  -p instance_name = value \
-  -p zone = value \
-  -p start_time_utc = value \
-  -p end_time_utc = value
+  -p project_id=value \
+  -p instance_name=value \
+  -p zone=value \
+  -p start_time_utc=value \
+  -p end_time_utc=value
 ```
 
 #### Parameters
