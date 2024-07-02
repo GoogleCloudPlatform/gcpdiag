@@ -44,3 +44,6 @@ class LoggingApiStub:
 
   def list_next(self, req, res):
     del req, res
+
+  def exclusions(self):
+    return apis_stub.RestCallStub(self, 'logging-exclusions-1')

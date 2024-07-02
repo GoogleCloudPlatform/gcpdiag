@@ -1,16 +1,14 @@
-#terraform config for gcpdiag
-# To run the commands use: /google/data/ro/teams/terraform/bin/terraform
-PROJECT_ID := $(shell /google/data/ro/teams/terraform/bin/terraform output project_id | sed -e 's|"||g')
-PROJECT_ID_SUFFIX := $(shell /google/data/ro/teams/terraform/bin/terraform output -json project_id_suffix)
-PROJECT_NR  := $(shell /google/data/ro/teams/terraform/bin/terraform output -json project_nr | sed -e 's|"||g')
-ORG_ID      := $(shell /google/data/ro/teams/terraform/bin/terraform output -json org_id)
+PROJECT_ID := $(shell terraform output project_id | sed -e 's|"||g')
+PROJECT_ID_SUFFIX := $(shell terraform output -json project_id_suffix)
+PROJECT_NR  := $(shell terraform output -json project_nr | sed -e 's|"||g')
+ORG_ID      := $(shell terraform output -json org_id)
 CURL         = ../../bin/curl-wrap.sh
 JSON_CLEANER = ../../bin/json-cleaner
 
-TOPIC := $(shell /google/data/ro/teams/terraform/bin/terraform output -json topic | sed -e 's|"||g')
-SUBSCRIPTION := $(shell /google/data/ro/teams/terraform/bin/terraform output -json subscription | sed -e 's|"||g')
-BQ_SUBSCRIPTION := $(shell /google/data/ro/teams/terraform/bin/terraform output -json bqsubscription | sed -e 's|"||g')
-BUCKET_ID := $(shell /google/data/ro/teams/terraform/bin/terraform output -json gcs_subscription_bucket_name | sed -e 's|"||g')
+TOPIC := $(shell terraformm output -json topic | sed -e 's|"||g')
+SUBSCRIPTION := $(shell terraform output -json subscription | sed -e 's|"||g')
+BQ_SUBSCRIPTION := $(shell terraform output -json bqsubscription | sed -e 's|"||g')
+BUCKET_ID := $(shell terraform output -json gcs_subscription_bucket_name | sed -e 's|"||g')
 
 FAKE_PROJECT_ID_SUFFIX = aaaa
 FAKE_PROJECT_NR = 12340014

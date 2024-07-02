@@ -1,58 +1,148 @@
 {
   "jobs": [
     {
-      "id": "2022-09-19_09_20_57-11848816011797209899",
+      "id": "2024-06-19_09_43_07-14927685200167458422",
       "projectId": "gcpdiag-dataflow1-aaaa",
-      "name": "wordcount",
-      "type": "JOB_TYPE_BATCH",
-      "currentState": "JOB_STATE_DONE",
-      "currentStateTime": "2022-09-19T16:23:51.766605Z",
-      "createTime": "2022-09-19T16:20:58.448930Z",
+      "name": "gcs_to_pubsub",
+      "type": "JOB_TYPE_STREAMING",
+      "currentState": "JOB_STATE_RUNNING",
+      "currentStateTime": "2024-06-19T16:43:28.116816Z",
+      "createTime": "2024-06-19T16:43:08.018899Z",
       "location": "us-central1",
       "jobMetadata": {
         "sdkVersion": {
-          "version": "2.39.0",
+          "version": "2.56.0",
           "versionDisplayName": "Apache Beam SDK for Java",
-          "sdkSupportStatus": "STALE"
+          "sdkSupportStatus": "SUPPORTED"
         }
       },
-      "startTime": "2022-09-19T16:20:58.448930Z"
+      "startTime": "2024-06-19T16:43:08.018899Z"
     },
     {
-      "id": "2022-09-19_09_15_24-12805761811204869324",
+      "id": "2024-06-19_09_41_43-15216240402532481212",
       "projectId": "gcpdiag-dataflow1-aaaa",
       "name": "wordcount",
       "type": "JOB_TYPE_BATCH",
-      "currentState": "JOB_STATE_DONE",
-      "currentStateTime": "2022-09-19T16:18:13.224071Z",
-      "createTime": "2022-09-19T16:15:24.618746Z",
+      "currentState": "JOB_STATE_RUNNING",
+      "currentStateTime": "2024-06-19T16:42:05.007311Z",
+      "createTime": "2024-06-19T16:41:44.282745Z",
       "location": "us-central1",
       "jobMetadata": {
         "sdkVersion": {
-          "version": "2.39.0",
+          "version": "2.56.0",
           "versionDisplayName": "Apache Beam SDK for Java",
-          "sdkSupportStatus": "STALE"
+          "sdkSupportStatus": "SUPPORTED"
         }
       },
-      "startTime": "2022-09-19T16:15:24.618746Z"
+      "startTime": "2024-06-19T16:41:44.282745Z"
     },
     {
-      "id": "2022-09-19_09_12_26-12495171855913447835",
+      "id": "2024-06-19_08_10_38-15531843170089278179",
       "projectId": "gcpdiag-dataflow1-aaaa",
       "name": "wordcount",
       "type": "JOB_TYPE_BATCH",
       "currentState": "JOB_STATE_DONE",
-      "currentStateTime": "2022-09-19T16:15:21.758504Z",
-      "createTime": "2022-09-19T16:12:27.712941Z",
+      "currentStateTime": "2024-06-19T15:14:14.365221Z",
+      "createTime": "2024-06-19T15:10:38.936010Z",
       "location": "us-central1",
       "jobMetadata": {
         "sdkVersion": {
-          "version": "2.39.0",
+          "version": "2.56.0",
           "versionDisplayName": "Apache Beam SDK for Java",
-          "sdkSupportStatus": "STALE"
+          "sdkSupportStatus": "SUPPORTED"
         }
       },
-      "startTime": "2022-09-19T16:12:27.712941Z"
+      "startTime": "2024-06-19T15:10:38.936010Z"
+    },
+    {
+      "id": "2024-06-19_07_59_26-766567214503751731",
+      "projectId": "gcpdiag-dataflow1-aaaa",
+      "name": "wordcount",
+      "type": "JOB_TYPE_BATCH",
+      "currentState": "JOB_STATE_DONE",
+      "currentStateTime": "2024-06-19T15:03:16.392683Z",
+      "createTime": "2024-06-19T14:59:27.276728Z",
+      "location": "us-central1",
+      "jobMetadata": {
+        "sdkVersion": {
+          "version": "2.56.0",
+          "versionDisplayName": "Apache Beam SDK for Java",
+          "sdkSupportStatus": "SUPPORTED"
+        }
+      },
+      "startTime": "2024-06-19T14:59:27.276728Z"
+    },
+    {
+      "id": "2024-06-19_07_51_58-13902424742190346031",
+      "projectId": "gcpdiag-dataflow1-aaaa",
+      "name": "wordcount",
+      "type": "JOB_TYPE_BATCH",
+      "currentState": "JOB_STATE_DONE",
+      "currentStateTime": "2024-06-19T14:55:38.822058Z",
+      "createTime": "2024-06-19T14:51:58.893292Z",
+      "location": "us-central1",
+      "jobMetadata": {
+        "sdkVersion": {
+          "version": "2.56.0",
+          "versionDisplayName": "Apache Beam SDK for Java",
+          "sdkSupportStatus": "SUPPORTED"
+        }
+      },
+      "startTime": "2024-06-19T14:51:58.893292Z"
+    },
+    {
+      "id": "2024-06-19_07_42_27-12921783906907618720",
+      "projectId": "gcpdiag-dataflow1-aaaa",
+      "name": "wordcount",
+      "type": "JOB_TYPE_BATCH",
+      "currentState": "JOB_STATE_DONE",
+      "currentStateTime": "2024-06-19T14:45:58.411614Z",
+      "createTime": "2024-06-19T14:42:28.343181Z",
+      "location": "us-central1",
+      "jobMetadata": {
+        "sdkVersion": {
+          "version": "2.56.0",
+          "versionDisplayName": "Apache Beam SDK for Java",
+          "sdkSupportStatus": "SUPPORTED"
+        }
+      },
+      "startTime": "2024-06-19T14:42:28.343181Z"
+    },
+    {
+      "id": "2024-06-19_07_37_46-7047804751824995263",
+      "projectId": "gcpdiag-dataflow1-aaaa",
+      "name": "wordcount",
+      "type": "JOB_TYPE_BATCH",
+      "currentState": "JOB_STATE_DONE",
+      "currentStateTime": "2024-06-19T14:41:25.220041Z",
+      "createTime": "2024-06-19T14:37:46.585152Z",
+      "location": "us-central1",
+      "jobMetadata": {
+        "sdkVersion": {
+          "version": "2.56.0",
+          "versionDisplayName": "Apache Beam SDK for Java",
+          "sdkSupportStatus": "SUPPORTED"
+        }
+      },
+      "startTime": "2024-06-19T14:37:46.585152Z"
+    },
+    {
+      "id": "2024-06-19_07_33_03-9867569406752004768",
+      "projectId": "gcpdiag-dataflow1-aaaa",
+      "name": "wordcount",
+      "type": "JOB_TYPE_BATCH",
+      "currentState": "JOB_STATE_DONE",
+      "currentStateTime": "2024-06-19T14:37:09.875218Z",
+      "createTime": "2024-06-19T14:33:04.923545Z",
+      "location": "us-central1",
+      "jobMetadata": {
+        "sdkVersion": {
+          "version": "2.56.0",
+          "versionDisplayName": "Apache Beam SDK for Java",
+          "sdkSupportStatus": "SUPPORTED"
+        }
+      },
+      "startTime": "2024-06-19T14:33:04.923545Z"
     }
   ]
 }

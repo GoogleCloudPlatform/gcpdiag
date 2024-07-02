@@ -1,0 +1,175 @@
+{
+  "id": "2024-06-19_09_43_07-14927685200167458422",
+  "projectId": "gcpdiag-dataflow1-aaaa",
+  "name": "gcs_to_pubsub",
+  "type": "JOB_TYPE_STREAMING",
+  "environment": {
+    "userAgent": {
+      "fnapi.environment.major.version": "8",
+      "fnapi.container.version": "2.56.0",
+      "container.base_repository": "gcr.io/cloud-dataflow/v1beta3",
+      "os.arch": "amd64",
+      "os.name": "Linux",
+      "os.version": "5.15.0-1058-gcp",
+      "java.vendor": "Eclipse Adoptium",
+      "version": "2.56.0",
+      "name": "Apache Beam SDK for Java",
+      "legacy.container.version": "2.56.0",
+      "legacy.environment.major.version": "8",
+      "java.version": "11.0.23"
+    },
+    "version": {
+      "major": "8",
+      "job_type": "STREAMING"
+    }
+  },
+  "currentState": "JOB_STATE_RUNNING",
+  "currentStateTime": "2024-06-19T16:43:28.116816Z",
+  "createTime": "2024-06-19T16:43:08.018899Z",
+  "labels": {
+    "goog-dataflow-provided-template-name": "stream_gcs_text_to_cloud_pubsub",
+    "goog-dataflow-provided-template-type": "legacy",
+    "goog-dataflow-provided-template-version": "2024-06-11-00_rc00"
+  },
+  "location": "us-central1",
+  "stageStates": [
+    {
+      "executionStageName": "topology_init_attach_disk_input_step",
+      "executionStageState": "JOB_STATE_PENDING",
+      "currentStateTime": "2024-06-19T16:43:28.105Z"
+    },
+    {
+      "executionStageName": "success45",
+      "executionStageState": "JOB_STATE_PENDING",
+      "currentStateTime": "2024-06-19T16:43:28.105Z"
+    },
+    {
+      "executionStageName": "move_stop_computation_step39",
+      "executionStageState": "JOB_STATE_PENDING",
+      "currentStateTime": "2024-06-19T16:43:28.105Z"
+    },
+    {
+      "executionStageName": "setup_resource_disks_harness33",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2024-06-19T16:43:28.476Z"
+    },
+    {
+      "executionStageName": "init_attach_disk_step36",
+      "executionStageState": "JOB_STATE_PENDING",
+      "currentStateTime": "2024-06-19T16:43:28.105Z"
+    },
+    {
+      "executionStageName": "failure46",
+      "executionStageState": "JOB_STATE_PENDING",
+      "currentStateTime": "2024-06-19T16:43:28.105Z"
+    },
+    {
+      "executionStageName": "F27",
+      "executionStageState": "JOB_STATE_RUNNING",
+      "currentStateTime": "2024-06-19T16:43:28.254Z"
+    },
+    {
+      "executionStageName": "topology_move_in_disk_input_step",
+      "executionStageState": "JOB_STATE_PENDING",
+      "currentStateTime": "2024-06-19T16:43:28.105Z"
+    },
+    {
+      "executionStageName": "teardown_resource_disks_harness34",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2024-06-19T16:43:28.509Z"
+    },
+    {
+      "executionStageName": "pause_stop_computation_step43",
+      "executionStageState": "JOB_STATE_PENDING",
+      "currentStateTime": "2024-06-19T16:43:28.105Z"
+    },
+    {
+      "executionStageName": "setup_resource_global_gce_worker_pool31",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2024-06-19T16:43:28.393Z"
+    },
+    {
+      "executionStageName": "teardown_resource_global_gce_worker_pool32",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2024-06-19T16:43:28.445Z"
+    },
+    {
+      "executionStageName": "topology_move_out_disk_input_step",
+      "executionStageState": "JOB_STATE_PENDING",
+      "currentStateTime": "2024-06-19T16:43:28.105Z"
+    },
+    {
+      "executionStageName": "F30",
+      "executionStageState": "JOB_STATE_RUNNING",
+      "currentStateTime": "2024-06-19T16:43:28.332Z"
+    },
+    {
+      "executionStageName": "F29",
+      "executionStageState": "JOB_STATE_RUNNING",
+      "currentStateTime": "2024-06-19T16:43:28.305Z"
+    },
+    {
+      "executionStageName": "move_detach_disks_step40",
+      "executionStageState": "JOB_STATE_PENDING",
+      "currentStateTime": "2024-06-19T16:43:28.105Z"
+    },
+    {
+      "executionStageName": "init_start_computation_step37",
+      "executionStageState": "JOB_STATE_PENDING",
+      "currentStateTime": "2024-06-19T16:43:28.105Z"
+    },
+    {
+      "executionStageName": "F26",
+      "executionStageState": "JOB_STATE_RUNNING",
+      "currentStateTime": "2024-06-19T16:43:28.227Z"
+    },
+    {
+      "executionStageName": "setup_windmill35",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2024-06-19T16:43:28.414Z"
+    },
+    {
+      "executionStageName": "move_attach_disks_step41",
+      "executionStageState": "JOB_STATE_PENDING",
+      "currentStateTime": "2024-06-19T16:43:28.105Z"
+    },
+    {
+      "executionStageName": "start47",
+      "executionStageState": "JOB_STATE_DONE",
+      "currentStateTime": "2024-06-19T16:43:28.212Z"
+    },
+    {
+      "executionStageName": "topology_pause_input_step",
+      "executionStageState": "JOB_STATE_PENDING",
+      "currentStateTime": "2024-06-19T16:43:28.105Z"
+    },
+    {
+      "executionStageName": "F28",
+      "executionStageState": "JOB_STATE_RUNNING",
+      "currentStateTime": "2024-06-19T16:43:28.278Z"
+    },
+    {
+      "executionStageName": "move_wait_windmill_setup_step38",
+      "executionStageState": "JOB_STATE_PENDING",
+      "currentStateTime": "2024-06-19T16:43:28.105Z"
+    },
+    {
+      "executionStageName": "move_start_computation_step42",
+      "executionStageState": "JOB_STATE_PENDING",
+      "currentStateTime": "2024-06-19T16:43:28.105Z"
+    },
+    {
+      "executionStageName": "pause_detach_disk_step44",
+      "executionStageState": "JOB_STATE_PENDING",
+      "currentStateTime": "2024-06-19T16:43:28.105Z"
+    }
+  ],
+  "jobMetadata": {
+    "sdkVersion": {
+      "version": "2.56.0",
+      "versionDisplayName": "Apache Beam SDK for Java",
+      "sdkSupportStatus": "SUPPORTED"
+    }
+  },
+  "startTime": "2024-06-19T16:43:08.018899Z"
+}

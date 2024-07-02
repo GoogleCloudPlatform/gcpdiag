@@ -1,11 +1,13 @@
 """Queries related to Dataflow."""
 
 from datetime import datetime
-from typing import List
+from typing import List, Union
 
-from gcpdiag import caching, models
+import googleapiclient.errors
+
+from gcpdiag import caching, config, models, utils
 from gcpdiag.lint import get_executor
-from gcpdiag.queries import apis, apis_utils
+from gcpdiag.queries import apis, apis_utils, logs
 
 DATAFLOW_REGIONS = [
     'asia-northeast2', 'us-central1', 'northamerica-northeast1', 'us-west3',
@@ -17,7 +19,19 @@ DATAFLOW_REGIONS = [
 
 
 class Job(models.Resource):
-  """ Represents Dataflow job """
+  """Represents Dataflow job.
+
+  resource_data is of the form similar to:
+  {'id': 'my_job_id',
+  'projectId': 'my_project_id',
+  'name': 'pubsubtogcs-20240328-122953',
+  'environment': {},
+  'currentState': 'JOB_STATE_FAILED',
+  'currentStateTime': '2024-03-28T12:34:27.383249Z',
+  'createTime': '2024-03-28T12:29:55.284524Z',
+  'location': 'europe-west2',
+  'startTime': '2024-03-28T12:29:55.284524Z'}
+  """
   _resource_data: dict
   project_id: str
 
@@ -38,8 +52,17 @@ class Job(models.Resource):
     return self._resource_data['currentState']
 
   @property
+  def job_type(self) -> str:
+    return self._resource_data['type']
+
+  @property
   def sdk_support_status(self) -> str:
     return self._resource_data['jobMetadata']['sdkVersion']['sdkSupportStatus']
+
+  @property
+  def sdk_language(self) -> str:
+    return self._resource_data['jobMetadata']['sdkVersion'][
+        'versionDisplayName']
 
   @property
   def minutes_in_current_state(self) -> int:
@@ -95,3 +118,38 @@ def get_all_dataflow_jobs(context: models.Context) -> List[Job]:
     print(f'{result[0].full_path} - {result[0].id}\n')
 
   return result
+
+
+@caching.cached_api_call
+def get_job(project_id: str, job: str, region: str) -> Union[Job, None]:
+  """Fetch a specific Dataflow job."""
+  api = apis.get_api('dataflow', 'v1b3', project_id)
+
+  if not apis.is_enabled(project_id, 'dataflow'):
+    return None
+
+  query = (api.projects().locations().jobs().get(projectId=project_id,
+                                                 location=region,
+                                                 jobId=job))
+  try:
+    resp = query.execute(num_retries=config.API_RETRIES)
+    return Job(project_id, resp)
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
+
+
+@caching.cached_api_call
+def logs_excluded(project_id: str) -> Union[bool, None]:
+  """Check if Dataflow Logs are excluded."""
+
+  if not apis.is_enabled(project_id, 'dataflow'):
+    return None
+
+  exclusions = logs.exclusions(project_id)
+  if exclusions is None:
+    return None
+  else:
+    for log_exclusion in exclusions:
+      if 'resource.type="dataflow_step"' in log_exclusion.filter and log_exclusion.disabled:
+        return True
+  return False

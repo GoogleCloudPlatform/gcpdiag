@@ -7,13 +7,16 @@ resource "random_string" "project_id_suffix" {
 }
 
 resource "google_project" "project" {
-  name            = "gcpdiag test - dataflow1"
-  project_id      = "gcpdiag-dataflow1-${random_string.project_id_suffix.id}"
-  org_id          = var.folder_id == "" ? var.org_id : null
-  folder_id       = var.folder_id != "" ? var.folder_id : null
-  billing_account = var.billing_account_id
+  name       = "gcpdiag test - dataflow1"
+  project_id = "gcpdiag-dataflow1-${random_string.project_id_suffix.id}"
+  org_id     = var.folder_id == "" ? var.org_id : null
+  folder_id  = var.folder_id != "" ? var.folder_id : null
+  # billing_account = var.billing_account_id
   labels = {
     gcpdiag : "test"
+  }
+  lifecycle {
+    ignore_changes = all
   }
 }
 
@@ -41,4 +44,8 @@ output "project_nr" {
 
 output "org_id" {
   value = var.org_id
+}
+
+output "job_id" {
+  value = google_dataflow_job.gcs_to_pubsub_dataflow_streaming.id
 }

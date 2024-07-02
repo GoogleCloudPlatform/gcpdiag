@@ -41,13 +41,14 @@ import dataclasses
 import datetime
 import logging
 import threading
-from typing import Any, Dict, Mapping, Optional, Sequence, Set, Tuple
+from typing import (Any, Dict, List, Mapping, Optional, Sequence, Set, Tuple,
+                    Union)
 
 import dateutil.parser
 import ratelimit
 from boltons.iterutils import get_path
 
-from gcpdiag import caching, config
+from gcpdiag import caching, config, models
 from gcpdiag.queries import apis
 
 
@@ -114,6 +115,30 @@ class LogEntryShort:
     if self._timestamp:
       return self._timestamp.astimezone().isoformat(sep=' ', timespec='seconds')
     return None
+
+
+class LogExclusion(models.Resource):
+  """A log exclusion entry"""
+  _resource_data: dict
+  project_id: str
+
+  def __init__(self, project_id: str, resource_data: dict):
+    super().__init__(project_id)
+    self._resource_data = resource_data
+
+  @property
+  def full_path(self) -> str:
+    return self._resource_data['name']
+
+  @property
+  def filter(self) -> str:
+    return self._resource_data['filter']
+
+  @property
+  def disabled(self) -> bool:
+    if 'disabled' in self._resource_data:
+      return self._resource_data['disabled']
+    return False
 
 
 def query(project_id: str, resource_type: str, log_name: str,
@@ -307,3 +332,26 @@ def format_log_entry(log_entry: dict) -> str:
   log_date = log_entry_timestamp(log_entry)
   log_date_str = log_date.astimezone().isoformat(sep=' ', timespec='seconds')
   return f'{log_date_str}: {log_message}'
+
+
+def exclusions(project_id: str) -> Union[List[LogExclusion], None]:
+  logging_api = apis.get_api('logging', 'v2', project_id)
+  if not apis.is_enabled(project_id, 'logging'):
+    return None
+
+  log_exclusions: List[LogExclusion] = []
+
+  fetched_entries_count = 0
+  req = logging_api.exclusions().list(parent=f'projects/{project_id}')
+  while req is not None:
+    res = req.execute(num_retries=config.API_RETRIES)
+    fetched_entries_count += 1
+    if res:
+      for log_exclusion_resp in res['exclusions']:
+        log_exclusions.append(LogExclusion(project_id, log_exclusion_resp))
+    req = logging_api.exclusions().list_next(req, res)
+    if req is not None:
+      # pylint: disable=logging-fstring-interpolation
+      logging.info(f'still fetching log exclusions for project {project_id}')
+      # pylint: enable=logging-fstring-interpolation
+  return log_exclusions

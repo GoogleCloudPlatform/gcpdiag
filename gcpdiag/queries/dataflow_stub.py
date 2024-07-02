@@ -15,10 +15,11 @@ class DataflowApiStub(apis_stub.ApiStub):
     return self
 
   def jobs(self):
-    return DataflowJobsListStub()
+    return DataflowJobsStub()
 
 
-class DataflowJobsListStub:
+class DataflowJobsStub:
+  """Stub for Testing Dataflow."""
 
   # pylint: disable=invalid-name
   def list(self, projectId, location):
@@ -28,3 +29,11 @@ class DataflowJobsListStub:
 
   def list_next(self, previous_request, previous_response):
     pass
+
+  # pylint: disable=unused-argument
+  def get(self, projectId, location, jobId):
+    return apis_stub.RestCallStub(projectId,
+                                  f'dataflow-jobs-{location}-streaming')
+
+  # pylint: disable=unused-argument
+  # pylint: enable=invalid-name

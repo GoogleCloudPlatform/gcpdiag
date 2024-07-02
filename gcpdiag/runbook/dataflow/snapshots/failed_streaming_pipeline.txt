@@ -1,0 +1,36 @@
+project: gcpdiag-dataflow1-aaaa, parameters:
+{job_id=2024-06-19_09_43_07-14927685200167458422,job_region=us-central1,project_id=gcpdiag-
+dataflow1-aaaa}
+
+dataflow/failed-streaming-pipeline: Diagnostic checks for failed Dataflow Streaming Pipelines.
+
+  Provides a DiagnosticTree to check for issues related to failed streaming
+  pipelines.
+
+  - Examples:
+    - Pipeline failed to launch
+    - Workers not starting
+  
+[START]: Start Step for failed streaming pipelines runbook.
+[INFO]: name: gcpdiag test - datafusion1: id: gcpdiag-datafusion1-aaaa
+
+   - gcs_to_pubsub                                                        [OK]
+     [REASON]
+       Successful found job 2024-06-19_09_43_07-14927685200167458422 in region us-central1
+
+[AUTOMATED STEP]: Checks if a Dataflow job is indeed a streaming job by field JobType.
+
+   - gcs_to_pubsub                                                        [OK]
+     [REASON]
+     Job is of type streaming
+[AUTOMATED STEP]: Checks SDK is not in the list that might trigger known SDK issues.
+
+   - gcs_to_pubsub                                                        [OK]
+     [REASON]
+     Dataflow job Beam SDK is supported.
+[GATEWAY]: Checks if a Dataflow job graph is successfully constructed.
+[AUTOMATED STEP]: Checks if a Dataflow job has visible logs.
+[END]: End step.
+[INFO]: No more checks to perform.
+
+
