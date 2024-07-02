@@ -1,0 +1,85 @@
+project: gcpdiag-gke4-runbook, parameters: {dest_ip=8.8.8.8,name=gke1,project_id=gcpdiag-
+gke4-runbook}
+
+gke/gke-ip-masq-standard: This runbook will analyze symptoms for IP Masquerading issues on GKE Cluster.
+
+  It examines the following:
+
+  - Are there any traffic logs to destination IP?
+  - Is ip-masq-agent DaemonSet in kube-system namespace?
+  - Is ip-masq-agent Configmap in kube-system namespace?
+  - Is GKE node IP and Pod IP are under nonMasquerade CIDR?
+  - Is Destination IP is under are under nonMasquerade CIDR?
+  
+[START]: Lets check the provided parameters...
+
+   - gcpdiag-gke4-aaaa                                                    [OK]
+     [REASON]
+     Cluster with name gke1 exist in project gcpdiag-gke4-runbook
+[AUTOMATED STEP]: Are you seeing issue from GKE NODE as well?
+[AUTOMATED STEP]: Lets check if Daemon set present..
+
+   - gcpdiag-gke4-aaaa                                                    [UNCERTAIN]
+     [REASON]
+     Check for ip-masq-agent daemonSet is deployed in the Cluster. If yes follow check next step.
+
+     [REMEDIATION]
+     If No, please follow [1] to deploy ip-masq-agent DaemonSet in the kube-system namespace and wait for around 5 minutes for the DaemonSet to be ready.
+
+     [1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#checking_the_ip-masq-agent_daemonset
+
+[AUTOMATED STEP]: Lets confirm if config map  is configure..
+
+   - gcpdiag-gke4-aaaa                                                    [UNCERTAIN]
+     [REASON]
+     When ip-masq-agent daemonset is deployed without a configmap, it uses the default non-masq destinations [1].
+
+     [1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap
+
+     [REMEDIATION]
+     If you needs to customize the configmap, then follow the steps [1] to deploy ip-masq-agent ConfigMap in the kube-system namespace.
+     [1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap
+
+[AUTOMATED STEP]: Lets check pod ip present..
+
+   - gcpdiag-gke4-aaaa                                                    [UNCERTAIN]
+     [REASON]
+     When ip-masq-agent daemonset is deployed without a configmap, it uses the default non-masq destinations [1].
+
+     [1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap
+
+     [REMEDIATION]
+     Follow the steps for including the pod IP CIDRs in nonMasqueradeCIDRs [1].
+
+     [1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#edit-ip-masq-agent-configmap
+
+[AUTOMATED STEP]: Lets check node IP is present under non-masq cidr...
+
+   - gcpdiag-gke4-aaaa                                                    [UNCERTAIN]
+     [REASON]
+     When ip-masq-agent daemonset is deployed without a configmap, it uses the default non-masq destinations [1].
+
+     [1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap
+
+     [REMEDIATION]
+     Follow the steps for including the Node IP CIDRs in nonMasqueradeCIDRs [1].
+
+     [1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#edit-ip-masq-agent-configmap
+
+[AUTOMATED STEP]: Lets check if pod ip address is present.
+
+   - gcpdiag-gke4-aaaa                                                    [UNCERTAIN]
+     [REASON]
+     When ip-masq-agent daemonset is deployed without a configmap, it uses the default non-masq destinations [1].
+
+     [1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap
+
+     [REMEDIATION]
+     Follow the steps for including the Destination IP CIDRs in nonMasqueradeCIDRs [1].
+
+     [1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#edit-ip-masq-agent-configmap
+
+[END]: Finalizing connectivity diagnostics..
+[INFO]: If all check passed consider please contact support for further troubleshooting
+
+

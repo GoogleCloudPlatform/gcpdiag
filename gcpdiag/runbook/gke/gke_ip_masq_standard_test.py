@@ -11,22 +11,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Contains GKE specific flags"""
-# pylint: disable=wildcard-import, unused-wildcard-import
-from gcpdiag.runbook.gcp.flags import *
-# pylint: disable=wildcard-import, unused-wildcard-import
-from gcpdiag.runbook.iam.flags import *
+"""Test class for gke/GkeIpMasqStandard"""
 
-LOCATION = 'location'
-NODE = 'node'
-NODEPOOL = 'nodepool'
+from gcpdiag import config
+from gcpdiag.runbook import gke, snapshot_test_base
 
-OPS_AGENT_EXPORTING_METRICS = False
-PROTOCOL_TYPE = 'protocol_type'
-INTERACTIVE_MODE = 'auto'
-# cluster zone or region
-LOCATION = 'location'
-POD_IP = 'pod_ip'
-GKE_NODE_IP = 'node_ip'
-SRC_IP = 'src_ip'
-DEST_IP = 'dest_ip'
+
+class Test(snapshot_test_base.RulesSnapshotTestBase):
+  rule_pkg = gke
+  runbook_name = 'gke/gke-ip-masq-standard'
+  project_id = 'gcpdiag-gke4-runbook'
+  config.init({'auto': True, 'interface': 'cli'}, project_id)
+
+  rule_parameters = [{
+      'project_id': 'gcpdiag-gke4-runbook',
+      'name': 'gke1',
+      'dest_ip': '8.8.8.8'
+  }]

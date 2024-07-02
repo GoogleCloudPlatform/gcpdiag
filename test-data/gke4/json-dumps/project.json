@@ -1,0 +1,14 @@
+{
+  "name": "projects/12340033",
+  "parent": "folders/348077457356",
+  "projectId": "gcpdiag-gke4-aaaa",
+  "state": "ACTIVE",
+  "displayName": "gcpdiag-gke4-runbook",
+  "createTime": "2024-08-26T23:36:42.760158Z",
+  "updateTime": "2024-08-26T23:36:42.760158Z",
+  "etag": "W/\"8342a04021413768\"",
+  "labels": {
+    "gcpdiag": "test",
+    "goog-terraform-provisioned": "true"
+  }
+}
