@@ -1,0 +1,4 @@
+*  bigquery/WARN/2024_003: BigQuery job does not fail due to Maximum API requests per user per method exceeded.
+   - gcpdiag-cloudsql1-aaaa                                               [SKIP]
+     logging api is disabled
+
