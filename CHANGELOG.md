@@ -1,3 +1,47 @@
+## 0.73 (2024-7-8)
+
+#### New Feature
+- Added search command to scale the docstrings for lint rules or runbooks to
+  match keywords
+- added runbook check step outcome: step\_ok, step\_failed, etc.
+- Added a zonal endpoint in osconfig library. It returns inventories for all VMs under a certain zone
+
+#### Fixes
+- Create runbook report regardless of the number of failed steps
+- Improve introductory error message for new runbooks
+- Update lint command API return value for display of resources in each rule
+- General spelling corrections
+- Add documentation for runbook operator methods
+- Remove unneeded google path reference in loading template block contenta
+- Update runbook name validation
+- Handle when gcloud command is not installed when running runbook generator
+- Allow to query logs for each test data separately in logs\_stub
+- Update GKE EOL date
+- Relax contraints on location of end steps in runbook
+- Update pip dependencies; security fix for pdoc
+- Added monitoring to the list of supported products runbook steps
+- generic\_api/datafusion apis.make\_request() re-implementation
+- Update and improve runbook error handling
+
+#### New Lint Rule
+- gke/err\_2024\_001\_psa\_violations Checking for no Pod Security Admission violations in the project
+- bigquery/warn\_2024\_002\_invalid\_external\_connection BigQuery external
+  connection with Cloud SQL does not fail
+- pubsub/err\_2024\_003\_snapshot\_creation\_fails snapshot creation fails if
+  backlog is too old
+- pubsub/err\_2024\_002\_vpc\_sc\_new\_subs\_create\_policy\_violated check for
+  pubsub error due to organization policy
+- bigquery/warn\_2024\_0003 BigQuery job does not fail due to Maximum API requests per user per method exceeded
+
+#### New Runbook
+- gce/ops\_agent Ops Agent Onboarding runbook
+- gcp/serial\_log\_analyzer runbook to analyse known issues logged into Serial Console logs
+- vertex/workbench\_instance\_stuck\_in\_provisioning Runbook to Troubleshoot Issue: Vertex AI Workbench Instance Stuck in Provisioning State
+- cloudrun/service\_deployment Cloud Run deployment runbook
+- gke/ip\_exhaustion gke ip exhaustion runbook
+- dataflow/failed\_streaming\_pipeline Diagnostic checks for failed Dataflow Streaming Pipelines
+- nat/out\_of\_resources vm external ip connectivity runbook
+
 ## 0.72 (2024-5-30)
 
 #### Fixes
