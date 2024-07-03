@@ -1,0 +1,3 @@
+*  asm/ERR/2024_001: Getting timed out error for secret not found for ingress gateway
+   (logging api is disabled)                                              [SKIP]
+
