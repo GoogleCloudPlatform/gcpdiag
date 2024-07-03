@@ -18,10 +18,7 @@ import dataclasses
 import ipaddress
 import logging
 import re
-import time
 from typing import Any, Dict, FrozenSet, Iterable, List, Optional, Union
-
-import googleapiclient.errors
 
 from gcpdiag import caching, config, models
 from gcpdiag.queries import apis, apis_utils, iam
@@ -1209,98 +1206,3 @@ def get_addresses(project_id: str) -> List[Address]:
     addresses.extend(
         [Address(project_id, address) for address in data_['addresses']])
   return addresses
-
-
-@caching.cached_api_call(in_memory=False)
-def run_connectivity_test(project_id: str, src_ip: str, dest_ip: str,
-                          dest_port: int, protocol: str, test_id):
-  """Method to create/run an idempotent connectivity test"""
-  # initialize the networkmanagement api
-  networkmanagement = apis.get_api('networkmanagement', 'v1', project_id)
-  # check that there is no existing connectivity test with the test_id
-  try:
-    logging.warning('Checking for already existing connectivity test...')
-    res = (networkmanagement.projects().locations().global_().connectivityTests(
-    ).get(name=
-          f'projects/{project_id}/locations/global/connectivityTests/{test_id}')
-          ).execute()
-    # delete the existing connectivity test
-    if res:
-      logging.warning('Deleting existing connectivity test...')
-      delete_request = (networkmanagement.projects().locations().global_(
-      ).connectivityTests().delete(
-          name=
-          f'projects/{project_id}/locations/global/connectivityTests/{test_id}')
-                       ).execute()
-      # Wait for delete operation to complete for a maximum of 1min and
-      # verify that existing connectivity test is deleted.
-      delete_count = 0
-      delete_status = networkmanagement.projects().locations().global_(
-      ).operations().get(name=delete_request['name']).execute()
-      while not delete_status['done'] and delete_count <= 15:
-        time.sleep(4)
-        delete_count += 1
-        delete_status = networkmanagement.projects().locations().global_(
-        ).operations().get(name=delete_request['name']).execute()
-  except googleapiclient.errors.HttpError:
-    logging.warning('Proceeding to create a connectivity test...')
-
-  # test input
-  test_input = {
-      'source': {
-          'ipAddress': src_ip,
-          'networkType': 'GCP_NETWORK'
-      },
-      'destination': {
-          'ipAddress': dest_ip,
-          'port': dest_port
-      },
-      'protocol': protocol
-  }
-
-  create_request = (networkmanagement.projects().locations().global_(
-  ).connectivityTests().create(parent=f'projects/{project_id}/locations/global',
-                               testId=test_id,
-                               body=test_input)).execute()
-  logging.warning('Creating a new connectivity test..')
-
-  # try to fetch the request_status for 5 seconds.
-  count = 0
-  create_status = networkmanagement.projects().locations().global_().operations(
-  ).get(name=create_request['name']).execute()
-  while not create_status['done'] and count <= 15:
-    time.sleep(4)
-    create_status = networkmanagement.projects().locations().global_(
-    ).operations().get(name=create_request['name']).execute()
-    count += 1
-
-  if create_status['done']:
-    # get the result of the connectivity test
-    res = (networkmanagement.projects().locations().global_().connectivityTests(
-    ).get(
-        name=
-        f'projects/{project_id}/locations/global/connectivityTests/{test_id}'))
-    result = res.execute()
-
-    # delete the connectivity test to clean up
-    logging.warning('Cleaning up the connectivity test...')
-    delete_request = (networkmanagement.projects().locations().global_(
-    ).connectivityTests().delete(
-        name=
-        f'projects/{project_id}/locations/global/connectivityTests/{test_id}')
-                     ).execute()
-    # Wait for delete operation to complete for a maximum of 1min
-    # and verify that existing connectivity test is deleted.
-    delete_count = 0
-    delete_status = networkmanagement.projects().locations().global_(
-    ).operations().get(name=delete_request['name']).execute()
-    while not delete_status['done'] and delete_count <= 15:
-      time.sleep(4)
-      delete_count += 1
-      delete_status = networkmanagement.projects().locations().global_(
-      ).operations().get(name=delete_request['name']).execute()
-    # return the result
-    return result
-  else:
-    logging.warning('Timeout running the connectivity test...')
-  return None

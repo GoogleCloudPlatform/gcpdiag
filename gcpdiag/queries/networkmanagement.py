@@ -54,7 +54,7 @@ def run_connectivity_test(project_id: str, src_ip: str, dest_ip: str,
                                body=test_input)).execute()
   logging.info('Running a new connectivity test..')
 
-  # try to fetch the request_status for 5 seconds.
+  # Wait a max of 60 seconds to fetch the request_status.
   count = 0
   create_status = networkmanagement.projects().locations().global_().operations(
   ).get(name=create_request['name']).execute()
