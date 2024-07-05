@@ -1,0 +1,17 @@
+*  datafusion/WARN/2024_003: Scaling down is disabled for the Compute Profile for Dataproc.
+   - gcpdiag-datafusion1-aaaa/us-central1/my-instance                     [ OK ] 
+	projects/gcpdiag-datafusion1-aaaa/instances/my-instance/computeProfiles/autoscaling-dataproc
+
+   - gcpdiag-datafusion1-aaaa/us-central1/my-instance                     [ OK ] 
+	projects/gcpdiag-datafusion1-aaaa/instances/my-instance/computeProfiles/dataproc
+
+   - gcpdiag-datafusion1-aaaa/us-central1/my-instance                     [FAIL]
+       projects/gcpdiag-datafusion1-aaaa/instances/my-instance/computeProfiles/namespace_profile : autoscaling down enabled
+
+
+   Autoscaling is not recommended for scaling down. Decreasing the cluster size
+   with autoscaling removes nodes that hold intermediate data, which might cause
+   your pipelines to run slowly or fail in datafusion.
+
+   https://gcpdiag.dev/rules/datafusion/WARN/2024_003
+

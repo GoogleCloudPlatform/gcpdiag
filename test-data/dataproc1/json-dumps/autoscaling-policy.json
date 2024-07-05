@@ -1,0 +1,22 @@
+{
+  "id": "CDF_AUTOSCALING_POLICY_V1",
+  "name": "projects/gcpdiag-dataproc1-aaaa/regions/us-central1/autoscalingPolicies/CDF_AUTOSCALING_POLICY_V1",
+  "basicAlgorithm": {
+    "yarnConfig": {
+      "scaleUpFactor": 0.2,
+      "scaleDownFactor": 1.0,
+      "scaleUpMinWorkerFraction": 0.75,
+      "gracefulDecommissionTimeout": "86400s"
+    },
+    "cooldownPeriod": "120s"
+  },
+  "workerConfig": {
+    "minInstances": 2,
+    "maxInstances": 2,
+    "weight": 1
+  },
+  "secondaryWorkerConfig": {
+    "maxInstances": 40,
+    "weight": 1
+  }
+}
