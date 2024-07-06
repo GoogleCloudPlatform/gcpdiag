@@ -1,0 +1,7 @@
+{
+  "kind": "compute#serialPortOutput",
+  "contents": "empty\nempty",
+  "start": "0",
+  "next": "311872",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west2-a/instances/faulty-windows-ssh/serialPortOutput"
+}

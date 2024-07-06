@@ -1,0 +1,13 @@
+{
+  "name": "projects/123456270",
+  "parent": "folders/123456012",
+  "projectId": "gcpdiag-gce-vm-performance",
+  "state": "ACTIVE",
+  "displayName": "gcpdiag test - vm performance",
+  "createTime": "2023-11-03T21:16:55.750643Z",
+  "updateTime": "2023-11-04T04:00:10.466760Z",
+  "etag": "W/\"80b0d9f39ba4a6c9\"",
+  "labels": {
+    "gcpdiag": "test"
+  }
+}

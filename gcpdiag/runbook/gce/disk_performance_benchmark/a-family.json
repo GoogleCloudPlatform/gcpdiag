@@ -1,0 +1,241 @@
+{
+  "A2 Standard VMs": {
+    "pd-balanced": [
+      {
+        "Machine type": "a2-highgpu-1g",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 15000,
+        "Maximum write throughput (MiBps)": 800,
+        "Maximum read throughput (MiBps)": 800
+      },
+      {
+        "Machine type": "a2-highgpu-2g",
+        "Maximum write IOPS": 20000,
+        "Maximum read IOPS": 20000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "a2-highgpu-4g",
+        "Maximum write IOPS": 50000,
+        "Maximum read IOPS": 50000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "a2-highgpu-8g",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "a2-megagpu-16g",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      }
+    ],
+    "pd-ssd": [
+      {
+        "Machine type": "a2-highgpu-1g",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 15000,
+        "Maximum write throughput (MiBps)": 800,
+        "Maximum read throughput (MiBps)": 800
+      },
+      {
+        "Machine type": "a2-highgpu-2g",
+        "Maximum write IOPS": 25000,
+        "Maximum read IOPS": 25000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "a2-highgpu-4g",
+        "Maximum write IOPS": 60000,
+        "Maximum read IOPS": 60000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "a2-highgpu-8g",
+        "Maximum write IOPS": 100000,
+        "Maximum read IOPS": 100000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "a2-megagpu-16g",
+        "Maximum write IOPS": 100000,
+        "Maximum read IOPS": 100000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      }
+    ],
+    "pd-standard": [
+      {
+        "Machine type": "a2-highgpu-1g",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 5000,
+        "Maximum write throughput (MiBps)": 400,
+        "Maximum read throughput (MiBps)": 800
+      },
+      {
+        "Machine type": "a2-highgpu-2g",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 7500,
+        "Maximum write throughput (MiBps)": 400,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "a2-highgpu-4g",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 7500,
+        "Maximum write throughput (MiBps)": 400,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "a2-highgpu-8g",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 7500,
+        "Maximum write throughput (MiBps)": 400,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "a2-megagpu-16g",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 7500,
+        "Maximum write throughput (MiBps)": 400,
+        "Maximum read throughput (MiBps)": 1200
+      }
+    ]
+  },
+  "A2 Ultra VMs": {
+    "pd-balanced": [
+      {
+        "Machine type": "a2-ultragpu-1g",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 15000,
+        "Maximum write throughput (MiBps)": 800,
+        "Maximum read throughput (MiBps)": 800
+      },
+      {
+        "Machine type": "a2-ultragpu-2g",
+        "Maximum write IOPS": 20000,
+        "Maximum read IOPS": 20000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "a2-ultragpu-4g",
+        "Maximum write IOPS": 50000,
+        "Maximum read IOPS": 50000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "a2-ultragpu-8g",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      }
+    ],
+    "pd-ssd": [
+      {
+        "Machine type": "a2-ultragpu-1g",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 15000,
+        "Maximum write throughput (MiBps)": 800,
+        "Maximum read throughput (MiBps)": 800
+      },
+      {
+        "Machine type": "a2-ultragpu-2g",
+        "Maximum write IOPS": 25000,
+        "Maximum read IOPS": 25000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "a2-ultragpu-4g",
+        "Maximum write IOPS": 60000,
+        "Maximum read IOPS": 60000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "a2-ultragpu-8g",
+        "Maximum write IOPS": 100000,
+        "Maximum read IOPS": 100000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      }
+    ],
+    "pd-standard": [
+      {
+        "Machine type": "a2-ultragpu-1g",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 5000,
+        "Maximum write throughput (MiBps)": 400,
+        "Maximum read throughput (MiBps)": 800
+      },
+      {
+        "Machine type": "a2-ultragpu-2g",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 7500,
+        "Maximum write throughput (MiBps)": 400,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "a2-ultragpu-4g",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 7500,
+        "Maximum write throughput (MiBps)": 400,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "a2-ultragpu-8g",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 7500,
+        "Maximum write throughput (MiBps)": 400,
+        "Maximum read throughput (MiBps)": 1
+      }
+    ]
+  },
+  "A3 VMs": {
+    "pd-balanced": [
+      {
+        "Machine type": "a3-megagpu-8g",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MB/s)": 1200,
+        "Maximum read throughput (MB/s)": 1200
+      },
+      {
+        "Machine type": "a3-highgpu-8g",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MB/s)": 1200,
+        "Maximum read throughput (MB/s)": 1200
+      }
+    ],
+    "pd-ssd": [
+      {
+        "Machine type": "a3-megagpu-8g",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MB/s)": 1200,
+        "Maximum read throughput (MB/s)": 1200
+      },
+      {
+        "Machine type": "a3-highgpu-8g",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MB/s)": 1200,
+        "Maximum read throughput (MB/s)": 1200
+      }
+    ]
+  }
+}

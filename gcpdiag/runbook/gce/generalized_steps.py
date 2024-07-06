@@ -25,7 +25,7 @@ from gcpdiag.queries import gce, logs, monitoring
 from gcpdiag.runbook import op
 from gcpdiag.runbook.gce import constants, flags, util
 
-UTILIZATION_THRESHOLD = 0.99
+UTILIZATION_THRESHOLD = 0.95
 within_hours = 8
 within_str = 'within %dh, d\'%s\'' % (within_hours,
                                       monitoring.period_aligned_now(5))
@@ -46,13 +46,15 @@ class HighVmMemoryUtilization(runbook.Step):
   def execute(self):
     """Verifying VM memory utilization is within optimal levels..."""
 
+    mark_no_ops_agent = False
+
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
                           instance_name=op.get(flags.NAME))
 
     mem_usage_metrics = None
 
-    if op.get(flags.OPS_AGENT_EXPORTING_METRICS):
+    if util.ops_agent_installed(op.get(flags.PROJECT_ID), vm.id):
       mem_usage_metrics = monitoring.query(
           op.get(flags.PROJECT_ID), """
           fetch gce_instance
@@ -62,11 +64,9 @@ class HighVmMemoryUtilization(runbook.Step):
             | filter (cast_units(percent_used,"")/100) >= {}
             | {}
           """.format(vm.id, UTILIZATION_THRESHOLD, within_str))
-
-    else:
-      if 'e2' in vm.machine_type():
-        mem_usage_metrics = monitoring.query(
-            op.get(flags.PROJECT_ID), """
+    elif 'e2' in vm.machine_type():
+      mem_usage_metrics = monitoring.query(
+          op.get(flags.PROJECT_ID), """
               fetch gce_instance
                 | {{ metric 'compute.googleapis.com/instance/memory/balloon/ram_used'
                 ; metric 'compute.googleapis.com/instance/memory/balloon/ram_size' }}
@@ -77,22 +77,27 @@ class HighVmMemoryUtilization(runbook.Step):
                 | filter ram_left >= {}
                 | {}
               """.format(vm.id, UTILIZATION_THRESHOLD, within_str))
+    else:
+      mark_no_ops_agent = True
 
-      # fallback on serial logs to see if there are OOM logs
-      if 'e2' not in vm.machine_type():
-        # Checking for OOM related errors
-        oom_errors = VmSerialLogsCheck()
-        oom_errors.template = 'vm_performance::high_memory_utilization'
-        oom_errors.negative_pattern = constants.OOM_PATTERNS
-        self.add_child(oom_errors)
-
-    # Get Performance issues corrected.
     if mem_usage_metrics:
       op.add_failed(vm,
                     reason=op.prep_msg(op.FAILURE_REASON),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+    elif mark_no_ops_agent:
+      op.add_skipped(vm,
+                     reason='Ops Agent not installed on the VM, '
+                     'Unable to fetch memory utilisation data via metrics'
+                     'Falling back to check for Memory related error messages '
+                     'in Serial logs')
     else:
       op.add_ok(vm, reason=op.prep_msg(op.SUCCESS_REASON))
+
+    # Checking for OOM related errors
+    oom_errors = VmSerialLogsCheck()
+    oom_errors.template = 'vm_performance::memory_error'
+    oom_errors.negative_pattern = constants.OOM_PATTERNS
+    self.add_child(oom_errors)
 
 
 class HighVmDiskUtilization(runbook.Step):
@@ -108,13 +113,15 @@ class HighVmDiskUtilization(runbook.Step):
   def execute(self):
     """Verifying VM's Boot disk space utilization is within optimal levels."""
 
+    mark_no_ops_agent = False
+
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
                           instance_name=op.get(flags.NAME))
 
     disk_usage_metrics = None
 
-    if op.get(flags.OPS_AGENT_EXPORTING_METRICS):
+    if util.ops_agent_installed(op.get(flags.PROJECT_ID), vm.id):
       disk_usage_metrics = monitoring.query(
           op.get(flags.PROJECT_ID), """
           fetch gce_instance
@@ -125,17 +132,23 @@ class HighVmDiskUtilization(runbook.Step):
             | {}
           """.format(vm.id, UTILIZATION_THRESHOLD, within_str))
     else:
-      # Fallback to check for filesystem utilization related messages in Serial logs
-      fs_util = VmSerialLogsCheck()
-      fs_util.template = 'vm_performance::high_disk_utilization'
-      fs_util.negative_pattern = constants.DISK_EXHAUSTION_ERRORS
-      fs_util.uncertain_remediation = False
-      self.add_child(fs_util)
+      mark_no_ops_agent = True
 
     if disk_usage_metrics:
       op.add_failed(vm,
                     reason=op.prep_msg(op.FAILURE_REASON),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+    elif mark_no_ops_agent:
+      op.add_skipped(vm,
+                     reason='Ops Agent not installed on the VM, '
+                     'Unable to fetch disk utilisation data via metrics. '
+                     'Falling back to check for filesystem utilization related'
+                     ' messages in Serial logs')
+      # Fallback to check for filesystem utilization related messages in Serial logs
+      fs_util = VmSerialLogsCheck()
+      fs_util.template = 'vm_performance::high_disk_utilization_error'
+      fs_util.negative_pattern = constants.DISK_EXHAUSTION_ERRORS
+      self.add_child(fs_util)
     else:
       op.add_ok(vm, reason=op.prep_msg(op.SUCCESS_REASON))
 
@@ -159,7 +172,7 @@ class HighVmCpuUtilization(runbook.Step):
                           instance_name=op.get(flags.NAME))
     cpu_usage_metrics = None
 
-    if op.get(flags.OPS_AGENT_EXPORTING_METRICS):
+    if util.ops_agent_installed(op.get(flags.PROJECT_ID), vm.id):
       cpu_usage_metrics = monitoring.query(
           op.get(flags.PROJECT_ID), """
           fetch gce_instance
@@ -282,7 +295,20 @@ class VmSerialLogsCheck(runbook.Step):
                         reason=op.prep_msg(op.FAILURE_REASON,
                                            instance_name=vm.name),
                         remediation=op.prep_msg(op.FAILURE_REMEDIATION))
-      if not good_pattern_detected and not bad_pattern_detected:
+
+      if hasattr(self, 'positive_pattern') and not hasattr(
+          self, 'negative_pattern') and good_pattern_detected is False:
+        op.add_uncertain(vm,
+                         reason=op.prep_msg(op.UNCERTAIN_REASON),
+                         remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION))
+      elif hasattr(self, 'negative_pattern') and not hasattr(
+          self, 'positive_pattern') and bad_pattern_detected is False:
+        op.add_uncertain(vm,
+                         reason=op.prep_msg(op.UNCERTAIN_REASON),
+                         remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION))
+      elif (hasattr(self, 'positive_pattern') and
+            good_pattern_detected is False) and (hasattr(
+                self, 'negative_pattern') and bad_pattern_detected is False):
         op.add_uncertain(vm,
                          reason=op.prep_msg(op.UNCERTAIN_REASON),
                          remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION))

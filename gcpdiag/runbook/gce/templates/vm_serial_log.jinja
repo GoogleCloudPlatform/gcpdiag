@@ -319,6 +319,17 @@ https://cloud.google.com/compute/docs/instances/configure-ntp.
 There are no logs to examine !
 {% endblock time_sync_issue_skipped_reason %}
 
+{% block time_sync_issue_uncertain_reason %}
+We did not find any Time sync related errors in Serial console logs.
+{% endblock time_sync_issue_uncertain_reason %}
+
+{% block time_sync_issue_uncertain_remediation %}
+To verify, please check your system Logs for below patterns:
+    'time may be out of sync',
+    'System clock is unsynchronized',
+    'Time drift detected',
+    'no servers can be used, system clock unsynchronized'
+{% endblock time_sync_issue_uncertain_remediation %}
 
 
 {% block  guest_agent_step_message %}
@@ -397,11 +408,19 @@ There are no logs to examine !
 
 
 {% block  linux_fs_corruption_step_message %}
-Checking if Filesystem corruption is causing issues with system boot.
+Checking if any Filesystem corruption related errors in Serial console logs
 {% endblock  linux_fs_corruption_step_message %}
 
 {% block linux_fs_corruption_failure_reason %}
 Possibe filesystem corruption detected.
+
+The patterns we looked for :
+    'Corruption of in-memory data detected. Shutting down filesystem',
+    'Corruption of in-memory data detected', 'warning: mounting fs with errors',
+    'Failed to mount /',
+    'A stop job is running for Security \.\.\..* Service ',
+    'I/O Error Detected. Shutting down filesystem',
+    'metadata I/O error in'
 {% endblock linux_fs_corruption_failure_reason %}
 
 {% block linux_fs_corruption_failure_remediation %}
@@ -471,3 +490,11 @@ To check if sshd_auth_failures are happening due to wrong directory permissions:
    'Authentication refused: bad ownership or modes for directory'
    'Error updating SSH keys for user1: mkdir /home/USER/.ssh: no such file or directory'
 {% endblock sshd_auth_failure_uncertain_remediation %}
+
+{% block linux_fs_corruption_uncertain_reason %}
+We did not find any Filesystem corruption related errors in Serial console logs
+{% endblock linux_fs_corruption_uncertain_reason %}
+
+{% block linux_fs_corruption_uncertain_remediation %}
+
+{% endblock linux_fs_corruption_uncertain_remediation %}

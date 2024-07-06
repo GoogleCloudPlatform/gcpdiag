@@ -1,0 +1,46 @@
+{
+  "kind": "compute#routeList",
+  "id": "projects/gcpdiag-gce-vm-performance/global/routes",
+  "items": [
+    {
+      "kind": "compute#route",
+      "id": "2670539294019165993",
+      "creationTimestamp": "2023-03-15T03:45:27.008-07:00",
+      "name": "default",
+      "description": "",
+      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/networks/default",
+      "destRange": "0.0.0.0/0",
+      "priority": 1,
+      "nextHopGateway": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/gateways/default-internet-gateway",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/routes/default"
+    },
+    {
+      "kind": "compute#route",
+      "id": "2178241415220915600",
+      "creationTimestamp": "2023-02-09T03:05:35.107-08:00",
+      "name": "peering-route-299fcb697f2532b0",
+      "description": "Auto generated route via peering [peering-r544dd974f1bc5396-tp-default].",
+      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/networks/default",
+      "destRange": "192.168.0.0/26",
+      "priority": 0,
+      "nextHopPeering": "peering-r544dd974f1bc5396-tp-default",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/routes/peering-route-299fcb697f2532b0"
+    },
+    {
+      "kind": "compute#route",
+      "id": "8223547831511088095",
+      "creationTimestamp": "2023-03-10T06:56:48.979-08:00",
+      "name": "real-allow-kms",
+      "description": "",
+      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/networks/default",
+      "tags": [
+        "windows"
+      ],
+      "destRange": "35.190.247.13/32",
+      "priority": 1,
+      "nextHopGateway": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/gateways/default-internet-gateway",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/routes/real-allow-kms"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/routes"
+}

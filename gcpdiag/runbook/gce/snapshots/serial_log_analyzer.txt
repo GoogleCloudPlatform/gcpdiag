@@ -33,8 +33,9 @@ gce/serial-log-analyzer:  GCE VM Serial log analyzer
 [START]: Fetching VM details
 [AUTOMATED STEP]: Checking if all logs available since last boot of the instance
 [AUTOMATED STEP]: Initiating kernel panic check on the Guest OS.
-[AUTOMATED STEP]: Checking if Filesystem corruption is causing issues with system boot.
+[AUTOMATED STEP]: Checking if any Filesystem corruption related errors in Serial console logs
 [AUTOMATED STEP]: Checking for high disk utilization related logs in serial console logs
+[AUTOMATED STEP]: Checking if any slow Disk operations related errors in Serial console logs
 [AUTOMATED STEP]: Checking if there are any memory related errors in Serial logs
 [AUTOMATED STEP]: Checking for network related errors
 [AUTOMATED STEP]: Checking for Time Sync related errors
@@ -80,8 +81,9 @@ gce/serial-log-analyzer:  GCE VM Serial log analyzer
 [START]: Fetching VM details
 [AUTOMATED STEP]: Checking if all logs available since last boot of the instance
 [AUTOMATED STEP]: Initiating kernel panic check on the Guest OS.
-[AUTOMATED STEP]: Checking if Filesystem corruption is causing issues with system boot.
+[AUTOMATED STEP]: Checking if any Filesystem corruption related errors in Serial console logs
 [AUTOMATED STEP]: Checking for high disk utilization related logs in serial console logs
+[AUTOMATED STEP]: Checking if any slow Disk operations related errors in Serial console logs
 [AUTOMATED STEP]: Checking if there are any memory related errors in Serial logs
 [AUTOMATED STEP]: Checking for network related errors
 [AUTOMATED STEP]: Checking for Time Sync related errors

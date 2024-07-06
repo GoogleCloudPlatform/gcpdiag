@@ -1,0 +1,478 @@
+{
+  "C2 VMs": {
+    "pd-balanced": [
+      {
+        "VM vCPU count": "4",
+        "Maximum write IOPS": 4000,
+        "Maximum read IOPS": 4000,
+        "Maximum write throughput (MiBps)": 240,
+        "Maximum read throughput (MiBps)": 240
+      },
+      {
+        "VM vCPU count": "8",
+        "Maximum write IOPS": 4000,
+        "Maximum read IOPS": 4000,
+        "Maximum write throughput (MiBps)": 240,
+        "Maximum read throughput (MiBps)": 240
+      },
+      {
+        "VM vCPU count": "16",
+        "Maximum write IOPS": 4000,
+        "Maximum read IOPS": 8000,
+        "Maximum write throughput (MiBps)": 480,
+        "Maximum read throughput (MiBps)": 600
+      },
+      {
+        "VM vCPU count": "30",
+        "Maximum write IOPS": 8000,
+        "Maximum read IOPS": 15000,
+        "Maximum write throughput (MiBps)": 480,
+        "Maximum read throughput (MiBps)": 600
+      },
+      {
+        "VM vCPU count": "60",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 15000,
+        "Maximum write throughput (MiBps)": 800,
+        "Maximum read throughput (MiBps)": 1200
+      }
+    ],
+    "pd-ssd": [
+      {
+        "VM vCPU count": "4",
+        "Maximum write IOPS": 4000,
+        "Maximum read IOPS": 4000,
+        "Maximum write throughput (MiBps)": 240,
+        "Maximum read throughput (MiBps)": 240
+      },
+      {
+        "VM vCPU count": "8",
+        "Maximum write IOPS": 4000,
+        "Maximum read IOPS": 4000,
+        "Maximum write throughput (MiBps)": 240,
+        "Maximum read throughput (MiBps)": 240
+      },
+      {
+        "VM vCPU count": "16",
+        "Maximum write IOPS": 4000,
+        "Maximum read IOPS": 8000,
+        "Maximum write throughput (MiBps)": 480,
+        "Maximum read throughput (MiBps)": 600
+      },
+      {
+        "VM vCPU count": "30",
+        "Maximum write IOPS": 8000,
+        "Maximum read IOPS": 15000,
+        "Maximum write throughput (MiBps)": 480,
+        "Maximum read throughput (MiBps)": 600
+      },
+      {
+        "VM vCPU count": "60",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 30000,
+        "Maximum write throughput (MiBps)": 800,
+        "Maximum read throughput (MiBps)": 1200
+      }
+    ],
+    "pd-standard": [
+      {
+        "VM vCPU count": "4",
+        "Maximum write IOPS": 4000,
+        "Maximum read IOPS": 3000,
+        "Maximum write throughput (MiBps)": 240,
+        "Maximum read throughput (MiBps)": 240
+      },
+      {
+        "VM vCPU count": "8",
+        "Maximum write IOPS": 4000,
+        "Maximum read IOPS": 3000,
+        "Maximum write throughput (MiBps)": 240,
+        "Maximum read throughput (MiBps)": 240
+      },
+      {
+        "VM vCPU count": "16",
+        "Maximum write IOPS": 4000,
+        "Maximum read IOPS": 3000,
+        "Maximum write throughput (MiBps)": 240,
+        "Maximum read throughput (MiBps)": 240
+      },
+      {
+        "VM vCPU count": "30",
+        "Maximum write IOPS": 8000,
+        "Maximum read IOPS": 3000,
+        "Maximum write throughput (MiBps)": 240,
+        "Maximum read throughput (MiBps)": 240
+      },
+      {
+        "VM vCPU count": "60",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 3000,
+        "Maximum write throughput (MiBps)": 240,
+        "Maximum read throughput (MiBps)": 240
+      }
+    ]
+  },
+  "C2D VMs": {
+    "pd-balanced": [
+      {
+        "VM vCPU count": "2",
+        "Maximum write IOPS": 4590,
+        "Maximum read IOPS": 4080,
+        "Maximum write throughput (MiBps)": 245,
+        "Maximum read throughput (MiBps)": 245
+      },
+      {
+        "VM vCPU count": "4",
+        "Maximum write IOPS": 4590,
+        "Maximum read IOPS": 4080,
+        "Maximum write throughput (MiBps)": 245,
+        "Maximum read throughput (MiBps)": 245
+      },
+      {
+        "VM vCPU count": "8",
+        "Maximum write IOPS": 4590,
+        "Maximum read IOPS": 4080,
+        "Maximum write throughput (MiBps)": 245,
+        "Maximum read throughput (MiBps)": 245
+      },
+      {
+        "VM vCPU count": "16",
+        "Maximum write IOPS": 4590,
+        "Maximum read IOPS": 8160,
+        "Maximum write throughput (MiBps)": 245,
+        "Maximum read throughput (MiBps)": 326
+      },
+      {
+        "VM vCPU count": "32",
+        "Maximum write IOPS": 8160,
+        "Maximum read IOPS": 15300,
+        "Maximum write throughput (MiBps)": 245,
+        "Maximum read throughput (MiBps)": 612
+      },
+      {
+        "VM vCPU count": "56",
+        "Maximum write IOPS": 8160,
+        "Maximum read IOPS": 15300,
+        "Maximum write throughput (MiBps)": 245,
+        "Maximum read throughput (MiBps)": 612
+      },
+      {
+        "VM vCPU count": "112",
+        "Maximum write IOPS": 15300,
+        "Maximum read IOPS": 30600,
+        "Maximum write throughput (MiBps)": 408,
+        "Maximum read throughput (MiBps)": 1224
+      }
+    ],
+    "pd-ssd": [
+      {
+        "VM vCPU count": "2",
+        "Maximum write IOPS": 4590,
+        "Maximum read IOPS": 4080,
+        "Maximum write throughput (MiBps)": 245,
+        "Maximum read throughput (MiBps)": 245
+      },
+      {
+        "VM vCPU count": "4",
+        "Maximum write IOPS": 4590,
+        "Maximum read IOPS": 4080,
+        "Maximum write throughput (MiBps)": 245,
+        "Maximum read throughput (MiBps)": 245
+      },
+      {
+        "VM vCPU count": "8",
+        "Maximum write IOPS": 4590,
+        "Maximum read IOPS": 4080,
+        "Maximum write throughput (MiBps)": 245,
+        "Maximum read throughput (MiBps)": 245
+      },
+      {
+        "VM vCPU count": "16",
+        "Maximum write IOPS": 4590,
+        "Maximum read IOPS": 8160,
+        "Maximum write throughput (MiBps)": 245,
+        "Maximum read throughput (MiBps)": 326
+      },
+      {
+        "VM vCPU count": "32",
+        "Maximum write IOPS": 8160,
+        "Maximum read IOPS": 15300,
+        "Maximum write throughput (MiBps)": 245,
+        "Maximum read throughput (MiBps)": 612
+      },
+      {
+        "VM vCPU count": "56",
+        "Maximum write IOPS": 8160,
+        "Maximum read IOPS": 15300,
+        "Maximum write throughput (MiBps)": 245,
+        "Maximum read throughput (MiBps)": 612
+      },
+      {
+        "VM vCPU count": "112",
+        "Maximum write IOPS": 15300,
+        "Maximum read IOPS": 30600,
+        "Maximum write throughput (MiBps)": 408,
+        "Maximum read throughput (MiBps)": 1224
+      }
+    ],
+    "pd-standard": [
+      {
+        "VM vCPU count": "2",
+        "Maximum write IOPS": 4590,
+        "Maximum read IOPS": 3060,
+        "Maximum write throughput (MiBps)": 245,
+        "Maximum read throughput (MiBps)": 245
+      },
+      {
+        "VM vCPU count": "4",
+        "Maximum write IOPS": 4590,
+        "Maximum read IOPS": 3060,
+        "Maximum write throughput (MiBps)": 245,
+        "Maximum read throughput (MiBps)": 245
+      },
+      {
+        "VM vCPU count": "8",
+        "Maximum write IOPS": 4590,
+        "Maximum read IOPS": 3060,
+        "Maximum write throughput (MiBps)": 245,
+        "Maximum read throughput (MiBps)": 245
+      },
+      {
+        "VM vCPU count": "16",
+        "Maximum write IOPS": 4590,
+        "Maximum read IOPS": 3060,
+        "Maximum write throughput (MiBps)": 245,
+        "Maximum read throughput (MiBps)": 245
+      },
+      {
+        "VM vCPU count": "32",
+        "Maximum write IOPS": 8160,
+        "Maximum read IOPS": 3060,
+        "Maximum write throughput (MiBps)": 245,
+        "Maximum read throughput (MiBps)": 245
+      },
+      {
+        "VM vCPU count": "56",
+        "Maximum write IOPS": 8160,
+        "Maximum read IOPS": 3060,
+        "Maximum write throughput (MiBps)": 245,
+        "Maximum read throughput (MiBps)": 245
+      },
+      {
+        "VM vCPU count": "112",
+        "Maximum write IOPS": 15300,
+        "Maximum read IOPS": 3060,
+        "Maximum write throughput (MiBps)": 245,
+        "Maximum read throughput (MiBps)": 245
+      }
+    ]
+  },
+  "C3D VMs": {
+    "pd-balanced": [
+      {
+        "VM vCPU count": "4",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 15000,
+        "Maximum write throughput (MiBps)": 240,
+        "Maximum read throughput (MiBps)": 240
+      },
+      {
+        "VM vCPU count": "8",
+        "Maximum write IOPS": 25000,
+        "Maximum read IOPS": 25000,
+        "Maximum write throughput (MiBps)": 800,
+        "Maximum read throughput (MiBps)": 800
+      },
+      {
+        "VM vCPU count": "16",
+        "Maximum write IOPS": 25000,
+        "Maximum read IOPS": 25000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "VM vCPU count": "30",
+        "Maximum write IOPS": 50000,
+        "Maximum read IOPS": 50000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "VM vCPU count": "60",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "VM vCPU count": "90",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "VM vCPU count": "180",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MiBps)": 2200,
+        "Maximum read throughput (MiBps)": 2200
+      },
+      {
+        "VM vCPU count": "360",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MiBps)": 2200,
+        "Maximum read throughput (MiBps)": 2200
+      }
+    ],
+    "pd-ssd": [
+      {
+        "VM vCPU count": "4",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 15000,
+        "Maximum write throughput (MiBps)": 240,
+        "Maximum read throughput (MiBps)": 240
+      },
+      {
+        "VM vCPU count": "8",
+        "Maximum write IOPS": 25000,
+        "Maximum read IOPS": 25000,
+        "Maximum write throughput (MiBps)": 800,
+        "Maximum read throughput (MiBps)": 800
+      },
+      {
+        "VM vCPU count": "16",
+        "Maximum write IOPS": 25000,
+        "Maximum read IOPS": 25000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "VM vCPU count": "30",
+        "Maximum write IOPS": 50000,
+        "Maximum read IOPS": 50000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "VM vCPU count": "60",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "VM vCPU count": "90",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "VM vCPU count": "180",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MiBps)": 2200,
+        "Maximum read throughput (MiBps)": 2200
+      },
+      {
+        "VM vCPU count": "360",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MiBps)": 2200,
+        "Maximum read throughput (MiBps)": 2200
+      }
+    ]
+  },
+  "C3 VMs": {
+    "pd-balanced": [
+      {
+        "VM vCPU count": "4",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 15000,
+        "Maximum write throughput (MiBps)": 240,
+        "Maximum read throughput (MiBps)": 240
+      },
+      {
+        "VM vCPU count": "8",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 15000,
+        "Maximum write throughput (MiBps)": 240,
+        "Maximum read throughput (MiBps)": 240
+      },
+      {
+        "VM vCPU count": "22",
+        "Maximum write IOPS": 20000,
+        "Maximum read IOPS": 20000,
+        "Maximum write throughput (MiBps)": 800,
+        "Maximum read throughput (MiBps)": 800
+      },
+      {
+        "VM vCPU count": "44",
+        "Maximum write IOPS": 50000,
+        "Maximum read IOPS": 50000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "VM vCPU count": "88",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "VM vCPU count": "176",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      }
+    ],
+    "pd-ssd": [
+      {
+        "VM vCPU count": "4",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 15000,
+        "Maximum write throughput (MiBps)": 240,
+        "Maximum read throughput (MiBps)": 240
+      },
+      {
+        "VM vCPU count": "8",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 15000,
+        "Maximum write throughput (MiBps)": 240,
+        "Maximum read throughput (MiBps)": 240
+      },
+      {
+        "VM vCPU count": "22",
+        "Maximum write IOPS": 25000,
+        "Maximum read IOPS": 25000,
+        "Maximum write throughput (MiBps)": 800,
+        "Maximum read throughput (MiBps)": 800
+      },
+      {
+        "VM vCPU count": "44",
+        "Maximum write IOPS": 60000,
+        "Maximum read IOPS": 60000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "VM vCPU count": "88",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "VM vCPU count": "176",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      }
+    ]
+  }
+}

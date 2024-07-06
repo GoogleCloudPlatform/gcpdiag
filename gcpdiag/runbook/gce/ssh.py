@@ -17,7 +17,7 @@ import ipaddress
 import googleapiclient.errors
 
 from gcpdiag import config, runbook
-from gcpdiag.queries import crm, gce, iam, monitoring
+from gcpdiag.queries import crm, gce, iam
 from gcpdiag.runbook import op
 from gcpdiag.runbook.crm import generalized_steps as crm_gs
 from gcpdiag.runbook.gce import constants as gce_const
@@ -250,20 +250,6 @@ class SshStart(runbook.StartStep):
           op.info(
               'Runbook will not investigate components required for SSH in browser'
           )
-
-    ops_agent_q = monitoring.query(
-        op.get(flags.PROJECT_ID), """
-              fetch gce_instance
-              | metric 'agent.googleapis.com/agent/uptime'
-              | filter (metadata.system_labels.name == '{}')
-              | align rate(5m)
-              | every 5m
-              | {}
-            """.format(op.get(flags.NAME), gce_gs.within_str))
-    if ops_agent_q:
-      op.info(
-          'Runbook Will use ops agent metrics for VM Performance investigation')
-      op.put(flags.OPS_AGENT_EXPORTING_METRICS, True)
 
 
 class VmGuestOsType(runbook.Gateway):

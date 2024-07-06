@@ -1,0 +1,7 @@
+{
+  "kind": "compute#serialPortOutput",
+  "contents": "\u001b[2J\u001b[01;01H\u001b[=3h\u001b[2J\u001b[01;01H\u001b[2J\u001b[01;01H\u001b[=3h\u001b[2J\u001b[01;01HCSM BBS Table full.\r\nBdsDxe: loading Boot0001 \"UEFI Google PersistentDisk \" from PciRoot(0x0)/Pci(0x3,0x0)/Scsi(0x1,0x0)\r\nBdsDxe: starting Boot0001 \"UEFI Google PersistentDisk \" from PciRoot(0x0)/Pci(0x3,0x0)/Scsi(0x1,0x0)\r\n\r\nUEFI: Attempting to start image.\r\nDescription: UEFI Google PersistentDisk \r\nFilePath: PciRoot(0x0)/Pci(0x3,0x0)/Scsi(0x1,0x0)\r\nOptionNumber: 1.\r\n[   20.5] cloud-init[56]: Cloud-init v. 21.4 finished at Thu, 13 Apr 2023 13:53:15 +0000. Datasource DataSourceGCE.  Up 20.49 seconds",
+  "start": "0",
+  "next": "63414",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instances/1010101010/serialPortOutput"
+}

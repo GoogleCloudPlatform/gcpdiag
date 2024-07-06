@@ -39,6 +39,10 @@ https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-seri
 
 Memory utilization on this VM is within optimal range.
 
+### Skipped Reason
+
+There are no logs to examine !
+
 
 
 <!--

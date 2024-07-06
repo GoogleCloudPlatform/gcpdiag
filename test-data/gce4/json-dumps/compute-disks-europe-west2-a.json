@@ -1,0 +1,177 @@
+{
+  "kind": "compute#diskList",
+  "id": "projects/gcpdiag-gce-vm-performance/zones/europe-west2-a/disks",
+  "items": [
+    {
+      "kind": "compute#disk",
+      "id": "1020012628094441724",
+      "creationTimestamp": "2023-11-16T20:03:33.349-08:00",
+      "name": "faulty-linux-ssh",
+      "sizeGb": "10",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west2-a",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west2-a/disks/faulty-linux-ssh",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-11-bullseye-v20231115",
+      "sourceImageId": "3081125733607199085",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west2-a/diskTypes/pd-standard",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-11-bullseye"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "GVNIC"
+        },
+        {
+          "type": "SEV_CAPABLE"
+        }
+      ],
+      "lastAttachTimestamp": "2023-11-16T20:03:33.350-08:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west2-a/instances/faulty-linux-ssh"
+      ],
+      "labelFingerprint": "42WmSpB8rSM=",
+      "licenseCodes": [
+        "3853522013536123851"
+      ],
+      "physicalBlockSizeBytes": "4096",
+      "architecture": "X86_64"
+    },
+    {
+      "kind": "compute#disk",
+      "id": "5193645208196831705",
+      "creationTimestamp": "2023-11-16T20:08:24.574-08:00",
+      "name": "faulty-windows-ssh",
+      "sizeGb": "32",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west2-a",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west2-a/disks/faulty-windows-ssh",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/windows-cloud/global/images/windows-server-2019-dc-core-v20231115",
+      "sourceImageId": "4704563576960484445",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west2-a/diskTypes/pd-standard",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/windows-cloud/global/licenses/windows-server-2019-dc",
+        "https://www.googleapis.com/compute/v1/projects/windows-cloud/global/licenses/windows-server-core"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "MULTI_IP_SUBNET"
+        },
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "GVNIC"
+        },
+        {
+          "type": "WINDOWS"
+        }
+      ],
+      "lastAttachTimestamp": "2023-11-16T20:08:24.575-08:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west2-a/instances/faulty-windows-ssh"
+      ],
+      "labelFingerprint": "42WmSpB8rSM=",
+      "licenseCodes": [
+        "3389558045860892917",
+        "1000226"
+      ],
+      "physicalBlockSizeBytes": "4096",
+      "architecture": "X86_64"
+    },
+    {
+      "kind": "compute#disk",
+      "id": "7702462607973374205",
+      "creationTimestamp": "2023-11-16T20:03:32.812-08:00",
+      "name": "valid-linux-ssh",
+      "sizeGb": "10",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west2-a",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west2-a/disks/valid-linux-ssh",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-11-bullseye-v20231115",
+      "sourceImageId": "3081125733607199085",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west2-a/diskTypes/pd-standard",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-11-bullseye"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "GVNIC"
+        },
+        {
+          "type": "SEV_CAPABLE"
+        }
+      ],
+      "lastAttachTimestamp": "2023-11-16T20:03:32.812-08:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west2-a/instances/valid-linux-ssh"
+      ],
+      "labelFingerprint": "42WmSpB8rSM=",
+      "licenseCodes": [
+        "3853522013536123851"
+      ],
+      "physicalBlockSizeBytes": "4096",
+      "architecture": "X86_64"
+    },
+    {
+      "kind": "compute#disk",
+      "id": "5223308949582469373",
+      "creationTimestamp": "2023-11-16T20:03:32.839-08:00",
+      "name": "valid-windows-ssh",
+      "sizeGb": "32",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west2-a",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west2-a/disks/valid-windows-ssh",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/windows-cloud/global/images/windows-server-2019-dc-core-v20231115",
+      "sourceImageId": "4704563576960484445",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west2-a/diskTypes/pd-standard",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/windows-cloud/global/licenses/windows-server-2019-dc",
+        "https://www.googleapis.com/compute/v1/projects/windows-cloud/global/licenses/windows-server-core"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "MULTI_IP_SUBNET"
+        },
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "GVNIC"
+        },
+        {
+          "type": "WINDOWS"
+        }
+      ],
+      "lastAttachTimestamp": "2023-11-16T20:03:32.839-08:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west2-a/instances/valid-windows-ssh"
+      ],
+      "labelFingerprint": "42WmSpB8rSM=",
+      "licenseCodes": [
+        "3389558045860892917",
+        "1000226"
+      ],
+      "physicalBlockSizeBytes": "4096",
+      "architecture": "X86_64"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west2-a/disks"
+}

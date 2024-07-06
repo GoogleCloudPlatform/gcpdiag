@@ -1,0 +1,62 @@
+{
+  "bindings": [
+    {
+      "members": [
+        "serviceAccount:canssh@gcpdiag-gce-vm-performance.iam.gserviceaccount.com"
+      ],
+      "role": "roles/compute.instanceAdmin.v1"
+    },
+    {
+      "members": [
+        "serviceAccount:canssh@gcpdiag-gce-vm-performance.iam.gserviceaccount.com"
+      ],
+      "role": "roles/compute.osAdminLogin"
+    },
+    {
+      "members": [
+        "serviceAccount:canssh@gcpdiag-gce-vm-performance.iam.gserviceaccount.com"
+      ],
+      "role": "roles/compute.osLogin"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345601@compute-system.iam.gserviceaccount.com"
+      ],
+      "role": "roles/compute.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:12345601-compute@developer.gserviceaccount.com",
+        "serviceAccount:12345601@cloudservices.gserviceaccount.com"
+      ],
+      "role": "roles/editor"
+    },
+    {
+      "members": [
+        "serviceAccount:canssh@gcpdiag-gce-vm-performance.iam.gserviceaccount.com"
+      ],
+      "role": "roles/iam.serviceAccountUser"
+    },
+    {
+      "members": [
+        "serviceAccount:canssh@gcpdiag-gce-vm-performance.iam.gserviceaccount.com"
+      ],
+      "role": "roles/iap.tunnelResourceAccessor"
+    },
+    {
+      "members": [
+        "serviceAccount:canssh@gcpdiag-gce-vm-performance.iam.gserviceaccount.com",
+        "user:testuser@example.com"
+      ],
+      "role": "roles/owner"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12345601@gcp-sa-websecurityscanner.iam.gserviceaccount.com"
+      ],
+      "role": "roles/websecurityscanner.serviceAgent"
+    }
+  ],
+  "etag": "BwYKUSKQwSE=",
+  "version": 1
+}

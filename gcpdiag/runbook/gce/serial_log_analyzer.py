@@ -119,6 +119,12 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
     fs_util.negative_pattern = gce_const.DISK_EXHAUSTION_ERRORS
     self.add_step(parent=log_start_point, child=fs_util)
 
+    # The PD may be experiencing slow read times
+    slow_disk_io = gce_gs.VmSerialLogsCheck()
+    slow_disk_io.template = 'vm_performance::slow_disk_io'
+    slow_disk_io.negative_pattern = gce_const.SLOW_DISK_READS
+    self.add_step(parent=log_start_point, child=slow_disk_io)
+
     # Checking for OOM related errors
     oom_errors = gce_gs.VmSerialLogsCheck()
     oom_errors.template = 'vm_performance::memory_error'

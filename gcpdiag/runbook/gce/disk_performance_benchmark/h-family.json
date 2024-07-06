@@ -1,0 +1,13 @@
+{
+  "H3 VMs": {
+    "pd-balanced": [
+      {
+        "VM vCPU count": "88",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 15000,
+        "Maximum write throughput (MiBps)": 240,
+        "Maximum read throughput (MiBps)": 240
+      }
+    ]
+  }
+}

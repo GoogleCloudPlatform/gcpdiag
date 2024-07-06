@@ -1,0 +1,203 @@
+{
+  "kind": "compute#diskList",
+  "id": "projects/gcpdiag-gce-vm-performance/zones/europe-west1-b/disks",
+  "items": [
+    {
+      "kind": "compute#disk",
+      "id": "7550338177783293118",
+      "creationTimestamp": "2022-05-10T05:28:01.712-07:00",
+      "name": "gke-gke1-default-pool-5665d797-62lh",
+      "sizeGb": "100",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west1-b",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west1-b/disks/gke-gke1-default-pool-5665d797-62lh",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/images/gke-12110-gke2000-cos-89-16108-604-19-v220317-c-pre",
+      "sourceImageId": "8040052912969817984",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west1-b/diskTypes/pd-standard",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/licenses/gke-node",
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos",
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud-shielded/global/licenses/shielded-cos",
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos-pcid"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "SEV_CAPABLE"
+        },
+        {
+          "type": "SECURE_BOOT"
+        }
+      ],
+      "lastAttachTimestamp": "2022-05-10T05:28:01.713-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west1-b/instances/gke-gke1-default-pool-5665d797-62lh"
+      ],
+      "labels": {
+        "gcp_doctor_test": "gke",
+        "goog-gke-node": ""
+      },
+      "labelFingerprint": "mUgogP08_Iw=",
+      "licenseCodes": [
+        "1001003",
+        "1001010",
+        "166739712233658766",
+        "6880041984096540132"
+      ],
+      "physicalBlockSizeBytes": "4096"
+    },
+    {
+      "kind": "compute#disk",
+      "id": "7424433754121692350",
+      "creationTimestamp": "2022-05-10T05:28:02.097-07:00",
+      "name": "gke-gke1-default-pool-5665d797-hz12",
+      "sizeGb": "100",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west1-b",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west1-b/disks/gke-gke1-default-pool-5665d797-hz12",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/images/gke-12110-gke2000-cos-89-16108-604-19-v220317-c-pre",
+      "sourceImageId": "8040052912969817984",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west1-b/diskTypes/pd-standard",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/licenses/gke-node",
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos",
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud-shielded/global/licenses/shielded-cos",
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos-pcid"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "SEV_CAPABLE"
+        },
+        {
+          "type": "SECURE_BOOT"
+        }
+      ],
+      "lastAttachTimestamp": "2022-05-10T05:28:02.097-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west1-b/instances/gke-gke1-default-pool-5665d797-hz12"
+      ],
+      "labels": {
+        "gcp_doctor_test": "gke",
+        "goog-gke-node": ""
+      },
+      "labelFingerprint": "mUgogP08_Iw=",
+      "licenseCodes": [
+        "1001003",
+        "1001010",
+        "166739712233658766",
+        "6880041984096540132"
+      ],
+      "physicalBlockSizeBytes": "4096"
+    },
+    {
+      "kind": "compute#disk",
+      "id": "8594043929682764990",
+      "creationTimestamp": "2022-05-10T05:28:02.179-07:00",
+      "name": "gke-gke1-default-pool-5665d797-jd80",
+      "sizeGb": "100",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west1-b",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west1-b/disks/gke-gke1-default-pool-5665d797-jd80",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/images/gke-12110-gke2000-cos-89-16108-604-19-v220317-c-pre",
+      "sourceImageId": "8040052912969817984",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west1-b/diskTypes/pd-standard",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/licenses/gke-node",
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos",
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud-shielded/global/licenses/shielded-cos",
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos-pcid"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "SEV_CAPABLE"
+        },
+        {
+          "type": "SECURE_BOOT"
+        }
+      ],
+      "lastAttachTimestamp": "2022-05-10T05:28:02.179-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west1-b/instances/gke-gke1-default-pool-5665d797-jd80"
+      ],
+      "labels": {
+        "gcp_doctor_test": "gke",
+        "goog-gke-node": ""
+      },
+      "labelFingerprint": "mUgogP08_Iw=",
+      "licenseCodes": [
+        "1001003",
+        "1001010",
+        "166739712233658766",
+        "6880041984096540132"
+      ],
+      "physicalBlockSizeBytes": "4096"
+    },
+    {
+      "kind": "compute#disk",
+      "id": "7088717128623711421",
+      "creationTimestamp": "2022-05-10T05:28:03.186-07:00",
+      "name": "gke-gke1-default-pool-5665d797-z9kh",
+      "sizeGb": "100",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west1-b",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west1-b/disks/gke-gke1-default-pool-5665d797-z9kh",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/images/gke-12110-gke2000-cos-89-16108-604-19-v220317-c-pre",
+      "sourceImageId": "8040052912969817984",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west1-b/diskTypes/pd-standard",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/licenses/gke-node",
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos",
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud-shielded/global/licenses/shielded-cos",
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos-pcid"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "SEV_CAPABLE"
+        },
+        {
+          "type": "SECURE_BOOT"
+        }
+      ],
+      "lastAttachTimestamp": "2022-05-10T05:28:03.187-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west1-b/instances/gke-gke1-default-pool-5665d797-z9kh"
+      ],
+      "labels": {
+        "gcp_doctor_test": "gke",
+        "goog-gke-node": ""
+      },
+      "labelFingerprint": "mUgogP08_Iw=",
+      "licenseCodes": [
+        "1001003",
+        "1001010",
+        "166739712233658766",
+        "6880041984096540132"
+      ],
+      "physicalBlockSizeBytes": "4096"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west1-b/disks"
+}

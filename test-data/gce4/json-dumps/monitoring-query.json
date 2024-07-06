@@ -1,0 +1,144 @@
+{
+  "timeSeriesDescriptor": {
+    "labelDescriptors": [
+      {
+        "key": "resource.project_id"
+      },
+      {
+        "key": "resource.zone"
+      },
+      {
+        "key": "resource.instance_id"
+      },
+      {
+        "key": "metric.instance_name"
+      }
+    ],
+    "pointDescriptors": [
+      {
+        "key": "value_utilization_max",
+        "valueType": "DOUBLE",
+        "metricKind": "GAUGE",
+        "unit": "10^2.%"
+      }
+    ]
+  },
+  "timeSeriesData": [
+    {
+      "labelValues": [
+        {
+          "stringValue": "gcpdiag-gce-faultyssh-runbook"
+        },
+        {
+          "stringValue": "europe-west2-a"
+        },
+        {
+          "stringValue": "5942951451833189109"
+        },
+        {
+          "stringValue": "valid-linux-ssh"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 0.0045755313326865847
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2023-11-06T00:51:33.181476Z",
+            "endTime": "2023-11-06T00:51:33.181476Z"
+          }
+        }
+      ]
+    },
+    {
+      "labelValues": [
+        {
+          "stringValue": "gcpdiag-gce-faultyssh-runbook"
+        },
+        {
+          "stringValue": "europe-west2-a"
+        },
+        {
+          "stringValue": "3885320804588110182"
+        },
+        {
+          "stringValue": "faulty-windows-ssh"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 0.28800768913451219
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2023-11-06T00:51:33.181476Z",
+            "endTime": "2023-11-06T00:51:33.181476Z"
+          }
+        }
+      ]
+    },
+    {
+      "labelValues": [
+        {
+          "stringValue": "gcpdiag-gce-faultyssh-runbook"
+        },
+        {
+          "stringValue": "europe-west2-a"
+        },
+        {
+          "stringValue": "3200700792812650937"
+        },
+        {
+          "stringValue": "valid-windows-ssh"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 0.30707438214176364
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2023-11-06T00:51:33.181476Z",
+            "endTime": "2023-11-06T00:51:33.181476Z"
+          }
+        }
+      ]
+    },
+    {
+      "labelValues": [
+        {
+          "stringValue": "gcpdiag-gce-faultyssh-runbook"
+        },
+        {
+          "stringValue": "europe-west2-a"
+        },
+        {
+          "stringValue": "1843453795420711417"
+        },
+        {
+          "stringValue": "faulty-linux-ssh"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 0.99957377216799159
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2023-11-06T00:51:33.181476Z",
+            "endTime": "2023-11-06T00:51:33.181476Z"
+          }
+        }
+      ]
+    }
+  ]
+}

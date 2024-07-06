@@ -136,6 +136,16 @@ vertex/workbench-instance-stuck-in-provisioning: Runbook to Troubleshoot Issue: 
      Or connect via the Serial Console if SSH is not available to mitigate the issue.
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
+[AUTOMATED STEP]: Checking if there are any memory related errors in Serial logs
+
+   - gcpdiag-notebooks2-aaaa/notebooks2instance-provisioning-stuck        [UNCERTAIN]
+     [REASON]
+     We did not find any Memory related errors in Serial console logs
+
+     [REMEDIATION]
+     You may check if VM is facing high memory utilisation from GuestOS side using `free -m`
+     or `cat /proc/meminfo` commands.
+
 [AUTOMATED STEP]: Checking if VM's Boot disk space utilization is within optimal levels.
 
    - gcpdiag-notebooks2-aaaa/notebooks2instance-provisioning-stuck        [FAIL]

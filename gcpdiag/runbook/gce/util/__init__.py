@@ -17,6 +17,10 @@
 import re
 from typing import List
 
+from gcpdiag.queries import monitoring
+from gcpdiag.runbook import op
+from gcpdiag.runbook.gce import flags
+
 
 def search_pattern_in_serial_logs(patterns: List,
                                   contents: List[str],
@@ -62,4 +66,24 @@ def user_has_valid_ssh_key(local_user, keys: List[str], key_type=None) -> bool:
         valid = key_type == m.group('type')
       if valid:
         return valid
+  return False
+
+
+def ops_agent_installed(project_id, vm_id) -> bool:
+  within_hours = 8
+  within_str = 'within %dh, d\'%s\'' % (within_hours,
+                                        monitoring.period_aligned_now(5))
+  ops_agent_q = monitoring.query(
+      project_id, """
+            fetch gce_instance
+            | metric 'agent.googleapis.com/agent/uptime'
+            | filter (resource.instance_id == '{}')
+            | align rate(1m)
+            | every 1m
+            | group_by [], [value_uptime_max: max(value.uptime)]
+            | {}
+          """.format(vm_id, within_str))
+  if ops_agent_q:
+    op.put(flags.OPS_AGENT_EXPORTING_METRICS, True)
+    return True
   return False

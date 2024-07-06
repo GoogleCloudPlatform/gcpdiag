@@ -1,0 +1,68 @@
+{
+  "id": "projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroupManagers",
+  "items": [
+    {
+      "kind": "compute#instanceGroupManager",
+      "id": "7183453391228875571",
+      "creationTimestamp": "2022-04-26T08:21:00.715-07:00",
+      "name": "mig",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a",
+      "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/global/instanceTemplates/mig-template",
+      "versions": [
+        {
+          "instanceTemplate": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/global/instanceTemplates/mig-template",
+          "targetSize": {
+            "calculated": 2
+          }
+        }
+      ],
+      "instanceGroup": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroups/mig",
+      "baseInstanceName": "mig",
+      "fingerprint": "lss-DXagYSg=",
+      "currentActions": {
+        "none": 2,
+        "creating": 0,
+        "creatingWithoutRetries": 0,
+        "verifying": 0,
+        "recreating": 0,
+        "deleting": 0,
+        "abandoning": 0,
+        "restarting": 0,
+        "refreshing": 0,
+        "suspending": 0,
+        "resuming": 0,
+        "stopping": 0,
+        "starting": 0
+      },
+      "status": {
+        "isStable": true,
+        "versionTarget": {
+          "isReached": true
+        },
+        "stateful": {
+          "hasStatefulConfig": false,
+          "perInstanceConfigs": {
+            "allEffective": true
+          }
+        }
+      },
+      "targetSize": 2,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroupManagers/mig",
+      "updatePolicy": {
+        "type": "OPPORTUNISTIC",
+        "minimalAction": "REPLACE",
+        "maxSurge": {
+          "fixed": 1,
+          "calculated": 1
+        },
+        "maxUnavailable": {
+          "fixed": 1,
+          "calculated": 1
+        },
+        "replacementMethod": "SUBSTITUTE"
+      }
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroupManagers",
+  "kind": "compute#instanceGroupManagerList"
+}

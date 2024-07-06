@@ -1,0 +1,120 @@
+{
+  "G2 VMs": {
+    "pd-balanced": [
+      {
+        "Machine type": "g2-standard-4",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 15000,
+        "Maximum write throughput (MiBps)": 240,
+        "Maximum read throughput (MiBps)": 240
+      },
+      {
+        "Machine type": "g2-standard-8",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 15000,
+        "Maximum write throughput (MiBps)": 800,
+        "Maximum read throughput (MiBps)": 800
+      },
+      {
+        "Machine type": "g2-standard-12",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 15000,
+        "Maximum write throughput (MiBps)": 800,
+        "Maximum read throughput (MiBps)": 800
+      },
+      {
+        "Machine type": "g2-standard-16",
+        "Maximum write IOPS": 20000,
+        "Maximum read IOPS": 20000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "g2-standard-24",
+        "Maximum write IOPS": 20000,
+        "Maximum read IOPS": 20000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "g2-standard-32",
+        "Maximum write IOPS": 50000,
+        "Maximum read IOPS": 50000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "g2-standard-48",
+        "Maximum write IOPS": 50000,
+        "Maximum read IOPS": 50000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "g2-standard-96",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      }
+    ],
+    "pd-ssd": [
+      {
+        "Machine type": "g2-standard-4",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 15000,
+        "Maximum write throughput (MiBps)": 240,
+        "Maximum read throughput (MiBps)": 240
+      },
+      {
+        "Machine type": "g2-standard-8",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 15000,
+        "Maximum write throughput (MiBps)": 800,
+        "Maximum read throughput (MiBps)": 800
+      },
+      {
+        "Machine type": "g2-standard-12",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 15000,
+        "Maximum write throughput (MiBps)": 800,
+        "Maximum read throughput (MiBps)": 800
+      },
+      {
+        "Machine type": "g2-standard-16",
+        "Maximum write IOPS": 25000,
+        "Maximum read IOPS": 25000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "g2-standard-24",
+        "Maximum write IOPS": 25000,
+        "Maximum read IOPS": 25000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "g2-standard-32",
+        "Maximum write IOPS": 60000,
+        "Maximum read IOPS": 60000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "g2-standard-48",
+        "Maximum write IOPS": 60000,
+        "Maximum read IOPS": 60000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "g2-standard-96",
+        "Maximum write IOPS": 100000,
+        "Maximum read IOPS": 100000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      }
+    ]
+  }
+}

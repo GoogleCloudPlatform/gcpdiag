@@ -1,0 +1,339 @@
+{
+  "id": "projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances",
+  "items": [
+    {
+      "canIpForward": false,
+      "cpuPlatform": "Intel Broadwell",
+      "creationTimestamp": "2023-11-16T20:03:33.344-08:00",
+      "deletionProtection": false,
+      "disks": [
+        {
+          "architecture": "X86_64",
+          "autoDelete": true,
+          "boot": true,
+          "deviceName": "persistent-disk-0",
+          "diskSizeGb": "10",
+          "guestOsFeatures": [
+            {
+              "type": "UEFI_COMPATIBLE"
+            },
+            {
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "GVNIC"
+            },
+            {
+              "type": "SEV_CAPABLE"
+            }
+          ],
+          "index": 0,
+          "interface": "SCSI",
+          "kind": "compute#attachedDisk",
+          "licenses": [
+            "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-11-bullseye"
+          ],
+          "mode": "READ_WRITE",
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/disks/faulty-linux-ssh",
+          "type": "PERSISTENT"
+        }
+      ],
+      "fingerprint": "REDACTED",
+      "id": "3256822971556911357",
+      "kind": "compute#instance",
+      "labelFingerprint": "1TQLkowq0ZY=",
+      "labels": {
+        "foo": "bar"
+      },
+      "lastStartTimestamp": "2023-11-16T20:03:39.756-08:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/machineTypes/e2-standard-2",
+      "metadata": {
+        "fingerprint": "REDACTED",
+        "items": [
+          {
+            "key": "enable-oslogin",
+            "value": "false"
+          },
+          {
+            "key": "startup-script",
+            "value": "#!/bin/bash\n# stop sshd\nsystemctl stop ssh\n\nwhile true; do\n  : # Do nothing, which consumes CPU cycles\ndone\n"
+          }
+        ],
+        "kind": "compute#metadata"
+      },
+      "name": "faulty-linux-ssh",
+      "networkInterfaces": [
+        {
+          "fingerprint": "REDACTED",
+          "kind": "compute#networkInterface",
+          "name": "nic0",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-faultyssh-runbook/global/networks/default",
+          "networkIP": "10.154.0.14",
+          "stackType": "IPV4_ONLY",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-faultyssh-runbook/regions/europe-west2/subnetworks/default"
+        }
+      ],
+      "scheduling": {
+        "automaticRestart": false,
+        "onHostMaintenance": "TERMINATE",
+        "preemptible": true
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances/faulty-linux-ssh",
+      "serviceAccounts": [
+        {
+          "email": "12345601-compute@developer.gserviceaccount.com",
+          "scopes": [
+            "https://www.googleapis.com/auth/devstorage.read_only",
+            "https://www.googleapis.com/auth/logging.write",
+            "https://www.googleapis.com/auth/monitoring.write",
+            "https://www.googleapis.com/auth/service.management.readonly",
+            "https://www.googleapis.com/auth/servicecontrol"
+          ]
+        }
+      ],
+      "shieldedInstanceConfig": {
+        "enableIntegrityMonitoring": true,
+        "enableSecureBoot": false,
+        "enableVtpm": true
+      },
+      "shieldedInstanceIntegrityPolicy": {
+        "updateAutoLearnPolicy": true
+      },
+      "startRestricted": false,
+      "status": "RUNNING",
+      "tags": {
+        "fingerprint": "REDACTED",
+        "items": [
+          "faulty-ssh-instance",
+          "gce-secured-instance-test-deny"
+        ]
+      },
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a"
+    },
+    {
+      "canIpForward": false,
+      "cpuPlatform": "Unknown CPU Platform",
+      "creationTimestamp": "2023-11-16T20:08:24.568-08:00",
+      "deletionProtection": false,
+      "disks": [
+        {
+          "architecture": "X86_64",
+          "autoDelete": true,
+          "boot": true,
+          "deviceName": "persistent-disk-0",
+          "diskSizeGb": "32",
+          "guestOsFeatures": [
+            {
+              "type": "MULTI_IP_SUBNET"
+            },
+            {
+              "type": "UEFI_COMPATIBLE"
+            },
+            {
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "GVNIC"
+            },
+            {
+              "type": "WINDOWS"
+            }
+          ],
+          "index": 0,
+          "interface": "SCSI",
+          "kind": "compute#attachedDisk",
+          "licenses": [
+            "https://www.googleapis.com/compute/v1/projects/windows-cloud/global/licenses/windows-server-2019-dc",
+            "https://www.googleapis.com/compute/v1/projects/windows-cloud/global/licenses/windows-server-core"
+          ],
+          "mode": "READ_WRITE",
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/disks/faulty-windows-ssh",
+          "type": "PERSISTENT"
+        }
+      ],
+      "fingerprint": "REDACTED",
+      "id": "8620994183730780633",
+      "kind": "compute#instance",
+      "labelFingerprint": "1TQLkowq0ZY=",
+      "labels": {
+        "foo": "bar"
+      },
+      "lastStartTimestamp": "2023-11-16T20:08:30.833-08:00",
+      "lastStopTimestamp": "2023-11-16T20:15:59.465-08:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/machineTypes/e2-standard-2",
+      "metadata": {
+        "fingerprint": "REDACTED",
+        "items": [
+          {
+            "key": "enable-oslogin",
+            "value": "true"
+          },
+          {
+            "key": "startup-script",
+            "value": "#!/bin/bash\n\nshutdown -h now\n"
+          }
+        ],
+        "kind": "compute#metadata"
+      },
+      "name": "faulty-windows-ssh",
+      "networkInterfaces": [
+        {
+          "fingerprint": "REDACTED",
+          "kind": "compute#networkInterface",
+          "name": "nic0",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-faultyssh-runbook/global/networks/default",
+          "networkIP": "10.154.0.16",
+          "stackType": "IPV4_ONLY",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-faultyssh-runbook/regions/europe-west2/subnetworks/default"
+        }
+      ],
+      "scheduling": {
+        "automaticRestart": false,
+        "onHostMaintenance": "TERMINATE",
+        "preemptible": true
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances/faulty-windows-ssh",
+      "serviceAccounts": [
+        {
+          "email": "12345601-compute@developer.gserviceaccount.com",
+          "scopes": [
+            "https://www.googleapis.com/auth/devstorage.read_only",
+            "https://www.googleapis.com/auth/logging.write",
+            "https://www.googleapis.com/auth/monitoring.write",
+            "https://www.googleapis.com/auth/service.management.readonly",
+            "https://www.googleapis.com/auth/servicecontrol"
+          ]
+        }
+      ],
+      "shieldedInstanceConfig": {
+        "enableIntegrityMonitoring": true,
+        "enableSecureBoot": false,
+        "enableVtpm": true
+      },
+      "shieldedInstanceIntegrityPolicy": {
+        "updateAutoLearnPolicy": true
+      },
+      "startRestricted": false,
+      "status": "TERMINATED",
+      "tags": {
+        "fingerprint": "REDACTED",
+        "items": [
+          "faulty-ssh-instance",
+          "gce-secured-instance-test-deny"
+        ]
+      },
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a"
+    },
+    {
+      "canIpForward": false,
+      "cpuPlatform": "Intel Broadwell",
+      "creationTimestamp": "2023-11-16T20:03:32.807-08:00",
+      "deletionProtection": false,
+      "disks": [
+        {
+          "architecture": "X86_64",
+          "autoDelete": true,
+          "boot": true,
+          "deviceName": "persistent-disk-0",
+          "diskSizeGb": "10",
+          "guestOsFeatures": [
+            {
+              "type": "UEFI_COMPATIBLE"
+            },
+            {
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "GVNIC"
+            },
+            {
+              "type": "SEV_CAPABLE"
+            }
+          ],
+          "index": 0,
+          "interface": "SCSI",
+          "kind": "compute#attachedDisk",
+          "licenses": [
+            "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-11-bullseye"
+          ],
+          "mode": "READ_WRITE",
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/disks/valid-linux-ssh",
+          "type": "PERSISTENT"
+        }
+      ],
+      "fingerprint": "REDACTED",
+      "id": "4683873813257738493",
+      "kind": "compute#instance",
+      "labelFingerprint": "1TQLkowq0ZY=",
+      "labels": {
+        "foo": "bar"
+      },
+      "lastStartTimestamp": "2023-11-16T20:03:38.817-08:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/machineTypes/e2-standard-2",
+      "metadata": {
+        "fingerprint": "REDACTED",
+        "items": [
+          {
+            "key": "enable-oslogin",
+            "value": "true"
+          },
+          {
+            "key": "startup-script",
+            "value": "#!/bin/bash\n\ncurl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh\nsudo bash add-google-cloud-ops-agent-repo.sh --also-install\n"
+          }
+        ],
+        "kind": "compute#metadata"
+      },
+      "name": "valid-linux-ssh",
+      "networkInterfaces": [
+        {
+          "fingerprint": "REDACTED",
+          "kind": "compute#networkInterface",
+          "name": "nic0",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-faultyssh-runbook/global/networks/default",
+          "networkIP": "10.154.0.12",
+          "stackType": "IPV4_ONLY",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-faultyssh-runbook/regions/europe-west2/subnetworks/default"
+        }
+      ],
+      "scheduling": {
+        "automaticRestart": false,
+        "onHostMaintenance": "TERMINATE",
+        "preemptible": true
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances/valid-linux-ssh",
+      "serviceAccounts": [
+        {
+          "email": "12345601-compute@developer.gserviceaccount.com",
+          "scopes": [
+            "https://www.googleapis.com/auth/devstorage.read_only",
+            "https://www.googleapis.com/auth/logging.write",
+            "https://www.googleapis.com/auth/monitoring.write",
+            "https://www.googleapis.com/auth/service.management.readonly",
+            "https://www.googleapis.com/auth/servicecontrol"
+          ]
+        }
+      ],
+      "shieldedInstanceConfig": {
+        "enableIntegrityMonitoring": true,
+        "enableSecureBoot": false,
+        "enableVtpm": true
+      },
+      "shieldedInstanceIntegrityPolicy": {
+        "updateAutoLearnPolicy": true
+      },
+      "startRestricted": false,
+      "status": "RUNNING",
+      "tags": {
+        "fingerprint": "REDACTED",
+        "items": [
+          "valid-ssh-instance"
+        ]
+      },
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a"
+    }
+  ],
+  "kind": "compute#instanceList",
+  "nextPageToken": "CkQIiOr-rJjKggM6OQoCGAMKAyDyEQoCGAIKByD_srD9xQkKAhgHChEqD3ZhbGlkLWxpbnV4LXNzaAoKIP2x7d-rzZ2AQQ==",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances"
+}

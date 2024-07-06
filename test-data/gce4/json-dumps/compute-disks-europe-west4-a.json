@@ -1,0 +1,177 @@
+{
+  "kind": "compute#diskList",
+  "id": "projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/disks",
+  "items": [
+    {
+      "kind": "compute#disk",
+      "id": "4897755586815845618",
+      "creationTimestamp": "2022-05-10T05:27:10.646-07:00",
+      "name": "gce1",
+      "sizeGb": "32",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/disks/gce1",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/windows-cloud/global/images/windows-server-2019-dc-core-v20220414",
+      "sourceImageId": "3529112155699095586",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/diskTypes/pd-standard",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/windows-cloud/global/licenses/windows-server-2019-dc",
+        "https://www.googleapis.com/compute/v1/projects/windows-cloud/global/licenses/windows-server-core"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "MULTI_IP_SUBNET"
+        },
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "WINDOWS"
+        }
+      ],
+      "lastAttachTimestamp": "2022-05-10T05:27:10.647-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instances/gce1"
+      ],
+      "labelFingerprint": "42WmSpB8rSM=",
+      "licenseCodes": [
+        "3389558045860892917",
+        "1000226"
+      ],
+      "physicalBlockSizeBytes": "4096"
+    },
+    {
+      "kind": "compute#disk",
+      "id": "7436782321968604403",
+      "creationTimestamp": "2022-05-10T05:27:09.694-07:00",
+      "name": "gce2",
+      "sizeGb": "10",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/disks/gce2",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/images/cos-85-13310-1453-5",
+      "sourceImageId": "1276396551904338204",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/diskTypes/pd-standard",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos-pcid",
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos",
+        "https://www.googleapis.com/compute/v1/projects/cos-cloud-shielded/global/licenses/shielded-cos"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "SEV_CAPABLE"
+        },
+        {
+          "type": "UEFI_COMPATIBLE"
+        }
+      ],
+      "lastAttachTimestamp": "2022-05-10T05:27:09.695-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instances/gce2"
+      ],
+      "labelFingerprint": "42WmSpB8rSM=",
+      "licenseCodes": [
+        "6880041984096540132",
+        "1001010",
+        "166739712233658766"
+      ],
+      "physicalBlockSizeBytes": "4096"
+    },
+    {
+      "kind": "compute#disk",
+      "id": "2534143966095860953",
+      "creationTimestamp": "2022-05-10T05:27:34.871-07:00",
+      "name": "mig-926f",
+      "sizeGb": "10",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/disks/mig-926f",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-9-stretch-v20220406",
+      "sourceImageId": "1994093915008945255",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/diskTypes/pd-standard",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-9-stretch"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        }
+      ],
+      "lastAttachTimestamp": "2022-05-10T05:27:34.872-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instances/mig-926f"
+      ],
+      "labelFingerprint": "42WmSpB8rSM=",
+      "licenseCodes": [
+        "1000205"
+      ],
+      "physicalBlockSizeBytes": "4096"
+    },
+    {
+      "kind": "compute#disk",
+      "id": "3703127063546815705",
+      "creationTimestamp": "2022-05-10T05:27:35.177-07:00",
+      "name": "mig-hmnt",
+      "sizeGb": "10",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/disks/mig-hmnt",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-9-stretch-v20220406",
+      "sourceImageId": "1994093915008945255",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/diskTypes/pd-standard",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-9-stretch"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        }
+      ],
+      "lastAttachTimestamp": "2022-05-10T05:27:35.178-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instances/mig-hmnt"
+      ],
+      "labelFingerprint": "42WmSpB8rSM=",
+      "licenseCodes": [
+        "1000205"
+      ],
+      "physicalBlockSizeBytes": "4096"
+    },
+    {
+      "kind": "compute#disk",
+      "id": "4944833045469848960",
+      "creationTimestamp": "2022-05-10T05:32:47.994-07:00",
+      "name": "unattached-disk",
+      "sizeGb": "10",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/disks/unattached-disk",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-9-stretch-v20200805",
+      "sourceImageId": "6709658075886210235",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/diskTypes/pd-ssd",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-9-stretch"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        }
+      ],
+      "labels": {
+        "environment": "dev"
+      },
+      "labelFingerprint": "a6HI36FuYIQ=",
+      "licenseCodes": [
+        "1000205"
+      ],
+      "physicalBlockSizeBytes": "4096"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/disks"
+}

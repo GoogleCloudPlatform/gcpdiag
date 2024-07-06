@@ -1,0 +1,338 @@
+{
+  "M1 VMs": {
+    "pd-balanced": [
+      {
+        "Machine type": "m1-megamem-96",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m1-ultramem-40",
+        "Maximum write IOPS": 60000,
+        "Maximum read IOPS": 60000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m1-ultramem-80",
+        "Maximum write IOPS": 70000,
+        "Maximum read IOPS": 70000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m1-ultramem-160",
+        "Maximum write IOPS": 70000,
+        "Maximum read IOPS": 70000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      }
+    ],
+    "pd-ssd": [
+      {
+        "Machine type": "m1-megamem-96",
+        "Maximum write IOPS": 90000,
+        "Maximum read IOPS": 90000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m1-ultramem-40",
+        "Maximum write IOPS": 60000,
+        "Maximum read IOPS": 60000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m1-ultramem-80",
+        "Maximum write IOPS": 70000,
+        "Maximum read IOPS": 70000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m1-ultramem-160",
+        "Maximum write IOPS": 70000,
+        "Maximum read IOPS": 70000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      }
+    ],
+    "pd-standard": [
+      {
+        "Machine type": "m1-megamem-96",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 7500,
+        "Maximum write throughput (MiBps)": 400,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m1-ultramem-40",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 7500,
+        "Maximum write throughput (MiBps)": 400,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m1-ultramem-80",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 7500,
+        "Maximum write throughput (MiBps)": 400,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m1-ultramem-160",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 7500,
+        "Maximum write throughput (MiBps)": 400,
+        "Maximum read throughput (MiBps)": 1200
+      }
+    ],
+    "pd-extreme": [
+      {
+        "Machine type": "m1-megamem-96",
+        "Maximum write IOPS": 90000,
+        "Maximum read IOPS": 90000,
+        "Maximum write throughput (MiBps)": 2200,
+        "Maximum read throughput (MiBps)": 2200
+      }
+    ]
+  },
+  "M2 VMs": {
+    "pd-balanced": [
+      {
+        "Machine type": "m2-megamem-416",
+        "Maximum write IOPS": 40000,
+        "Maximum read IOPS": 40000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m2-ultramem-208",
+        "Maximum write IOPS": 40000,
+        "Maximum read IOPS": 40000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m2-ultramem-416",
+        "Maximum write IOPS": 40000,
+        "Maximum read IOPS": 40000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m2-hypermem-416",
+        "Maximum write IOPS": 40000,
+        "Maximum read IOPS": 40000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      }
+    ],
+    "pd-ssd": [
+      {
+        "Machine type": "m2-megamem-416",
+        "Maximum write IOPS": 40000,
+        "Maximum read IOPS": 40000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m2-ultramem-208",
+        "Maximum write IOPS": 40000,
+        "Maximum read IOPS": 40000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m2-ultramem-416",
+        "Maximum write IOPS": 40000,
+        "Maximum read IOPS": 40000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m2-hypermem-416",
+        "Maximum write IOPS": 40000,
+        "Maximum read IOPS": 40000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      }
+    ],
+    "pd-standard": [
+      {
+        "Machine type": "m2-megamem-416",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 7500,
+        "Maximum write throughput (MiBps)": 400,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m2-ultramem-208",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 7500,
+        "Maximum write throughput (MiBps)": 400,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m2-ultramem-416",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 7500,
+        "Maximum write throughput (MiBps)": 400,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m2-hypermem-416",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 7500,
+        "Maximum write throughput (MiBps)": 400,
+        "Maximum read throughput (MiBps)": 1200
+      }
+    ],
+    "pd-extreme": [
+      {
+        "Machine type": "m2-megamem-416",
+        "Maximum write IOPS": 40000,
+        "Maximum read IOPS": 40000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 2200
+      },
+      {
+        "Machine type": "m2-ultramem-208",
+        "Maximum write IOPS": 40000,
+        "Maximum read IOPS": 40000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 2200
+      },
+      {
+        "Machine type": "m2-ultramem-416",
+        "Maximum write IOPS": 40000,
+        "Maximum read IOPS": 40000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 2200
+      },
+      {
+        "Machine type": "m2-hypermem-416",
+        "Maximum write IOPS": 40000,
+        "Maximum read IOPS": 40000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 2200
+      }
+    ]
+  },
+  "M3 VMs": {
+    "pd-balanced": [
+      {
+        "Machine type": "m3-megamem-64",
+        "Maximum write IOPS": 40000,
+        "Maximum read IOPS": 40000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m3-megamem-128",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m3-ultramem-32",
+        "Maximum write IOPS": 40000,
+        "Maximum read IOPS": 40000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m3-ultramem-64",
+        "Maximum write IOPS": 40000,
+        "Maximum read IOPS": 40000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m3-ultramem-128",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      }
+    ],
+    "pd-ssd": [
+      {
+        "Machine type": "m3-megamem-64",
+        "Maximum write IOPS": 40000,
+        "Maximum read IOPS": 40000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m3-megamem-128",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m3-ultramem-32",
+        "Maximum write IOPS": 40000,
+        "Maximum read IOPS": 40000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m3-ultramem-64",
+        "Maximum write IOPS": 40000,
+        "Maximum read IOPS": 40000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      },
+      {
+        "Machine type": "m3-ultramem-128",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 1200
+      }
+    ],
+    "pd-extreme": [
+      {
+        "Machine type": "m3-megamem-64",
+        "Maximum write IOPS": 40000,
+        "Maximum read IOPS": 40000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 2200
+      },
+      {
+        "Machine type": "m3-megamem-128",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MiBps)": 1700,
+        "Maximum read throughput (MiBps)": 2200
+      },
+      {
+        "Machine type": "m3-ultramem-32",
+        "Maximum write IOPS": 40000,
+        "Maximum read IOPS": 40000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 2200
+      },
+      {
+        "Machine type": "m3-ultramem-64",
+        "Maximum write IOPS": 40000,
+        "Maximum read IOPS": 40000,
+        "Maximum write throughput (MiBps)": 1200,
+        "Maximum read throughput (MiBps)": 2200
+      },
+      {
+        "Machine type": "m3-ultramem-128",
+        "Maximum write IOPS": 80000,
+        "Maximum read IOPS": 80000,
+        "Maximum write throughput (MiBps)": 1700,
+        "Maximum read throughput (MiBps)": 2200
+      }
+    ]
+  }
+}

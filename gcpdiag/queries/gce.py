@@ -384,7 +384,14 @@ class Instance(models.Resource):
 
   def machine_type(self):
     if 'machineType' in self._resource_data:
-      return self._resource_data['machineType']
+      #return self._resource_data['machineType']
+      machine_type_uri = self._resource_data['machineType']
+      mt = re.search(r'/machineTypes/([^/]+)$', machine_type_uri)
+      if mt:
+        return mt.group(1)
+      else:
+        raise RuntimeError(
+            f"can't determine machineType of instance {self.name}")
     return None
 
   def check_license(self, licenses: List[str]) -> bool:
@@ -629,6 +636,14 @@ class Disk(models.Resource):
   @property
   def in_use(self) -> bool:
     return 'users' in self._resource_data
+
+  @property
+  def size(self) -> int:
+    return self._resource_data['sizeGb']
+
+  @property
+  def provisionediops(self) -> Optional[int]:
+    return self._resource_data.get('provisionedIops')
 
   @property
   def has_snapshot_schedule(self) -> bool:
@@ -1068,6 +1083,7 @@ def get_regions_with_instances(context: models.Context) -> Iterable[Region]:
 
 @caching.cached_api_call
 def get_all_disks(project_id: str) -> Iterable[Disk]:
+  # Fetching only Zonal Disks(Regional disks exempted)
   try:
     gce_api = apis.get_api('compute', 'v1', project_id)
     requests = [
@@ -1082,6 +1098,31 @@ def get_all_disks(project_id: str) -> Iterable[Disk]:
     )
 
     return {Disk(project_id, item) for item in items}
+
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
+
+
+@caching.cached_api_call
+def get_all_disks_of_instance(project_id: str, zone: str,
+                              instance_name: str) -> dict:
+  # Fetching only Zonal Disks(Regional disks exempted) attached to an instance
+  try:
+    gce_api = apis.get_api('compute', 'v1', project_id)
+    requests = [gce_api.disks().list(project=project_id, zone=zone)]
+    items = apis_utils.batch_list_all(
+        api=gce_api,
+        requests=requests,
+        next_function=gce_api.disks().list_next,
+        log_text=
+        f'listing gce disks of attached to an instance {instance_name} in project {project_id}',
+    )
+    all_disk_list = {Disk(project_id, item) for item in items}
+    disk_list = {}
+    for disk in all_disk_list:
+      if disk.users == [instance_name]:
+        disk_list[disk.name] = disk
+    return disk_list
 
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err

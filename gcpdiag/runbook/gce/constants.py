@@ -52,6 +52,7 @@ KERNEL_PANIC_LOGS = [
     'Give root password for maintenance',
     r'\(or press Control-D to continue\):',
     'Boot failed: not a bootable disk',
+    'Dependency failed for /'
 ]
 
 SERIAL_LOG_START_POINT = [
@@ -62,7 +63,9 @@ SERIAL_LOG_START_POINT = [
 FS_CORRUPTION_MSG = [
     'Corruption of in-memory data detected. Shutting down filesystem',
     'Corruption of in-memory data detected', 'warning: mounting fs with errors',
-    'Failed to mount', r'A stop job is running for Security \.\.\..* Service '
+    'Failed to mount /',
+    r'A stop job is running for Security \.\.\..* Service ',
+    'I/O Error Detected. Shutting down filesystem', 'metadata I/O error in'
 ]
 
 OOM_PATTERNS = [
@@ -115,9 +118,25 @@ DISK_EXHAUSTION_ERRORS = [
     'disk is at or near capacity'
 ]
 
+SLOW_DISK_READS = [
+    # Linux slow read:
+    r'\d+:\d+:\d+:\d+: timing out command, waited \d+s',
+    r'end_request: I/O error, dev [a-z0-9-]+, sector \d+',
+    r'Buffer I/O error on device [a-z0-9-]+, logical block \d+',
+    r'blocked for more than \d+ seconds',
+    # Linux SCSI commands abort/reset (when operation to PD times out)
+    r'\d+:\d+:\d+:\d+:\s+\[([a-z0-9-]+)\]\s+(abort|device reset)$',
+    r'\d+:\d+:\d+:\d+:\s+(device reset)$',
+    # Linux Local SSD physical failure on console:
+    r'kernel: blk_update_request: I/O error, dev [a-z0-9-]+, sector \d+',
+    # Windows
+    r'The IO operation at logical block address 0x[0-9a-fA-F.]+ for Disk \d+ '
+]
+
 GOOD_SSHD_PATTERNS = [
     'Started OpenBSD Secure Shell server', 'Started OpenSSH server daemon',
-    'Started OpenSSH Daemon'
+    'Started OpenSSH Daemon',
+    'Started ssh.service - OpenBSD Secure Shell server'
 ]
 
 BAD_SSHD_PATTERNS = [
@@ -127,6 +146,7 @@ BAD_SSHD_PATTERNS = [
 
 # SSHD Guard blocking logs
 SSHGUARD_PATTERNS = [r'sshguard\[\d+\]: Blocking (\d+\.\d+\.\d+\.\d+)']
+
 GCE_CLUSTER_MANAGER_EMAIL = 'cloud-cluster-manager@prod.google.com'
 
 GUEST_AGENT_STATUS_MSG = [

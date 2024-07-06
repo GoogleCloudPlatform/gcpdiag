@@ -33,7 +33,6 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 [INFO]: Runbook will use Protocol tcp,Port 22 and ip 35.235.240.0/20 as the source IP
 [INFO]: Runbook will check if OS login is correctly configured to permit SSH
 [INFO]: Runbook will not investigate components required for SSH in browser
-[INFO]: Runbook Will use ops agent metrics for VM Performance investigation
 [AUTOMATED STEP]: Verifying VM is in the RUNNING state...
 
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [OK]
@@ -59,6 +58,16 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 
      Or connect via the Serial Console if SSH is not available to mitigate the issue.
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+
+[AUTOMATED STEP]: Checking if there are any memory related errors in Serial logs
+
+   - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [UNCERTAIN]
+     [REASON]
+     We did not find any Memory related errors in Serial console logs
+
+     [REMEDIATION]
+     You may check if VM is facing high memory utilisation from GuestOS side using `free -m`
+     or `cat /proc/meminfo` commands.
 
 [AUTOMATED STEP]: Checking if VM's Boot disk space utilization is within optimal levels.
 
@@ -264,7 +273,6 @@ principal in Cloud Console / gcloud (incl. impersonated service account)
 [INFO]: Runbook will use Protocol tcp,Port 22 and ip 35.235.240.0/20 as the source IP
 [INFO]: Runbook will check if OS login is correctly configured to permit SSH
 [INFO]: Runbook will not investigate components required for SSH in browser
-[INFO]: Runbook Will use ops agent metrics for VM Performance investigation
 [AUTOMATED STEP]: Verifying VM is in the RUNNING state...
 
    - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
@@ -290,6 +298,16 @@ principal in Cloud Console / gcloud (incl. impersonated service account)
 
      Or connect via the Serial Console if SSH is not available to mitigate the issue.
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+
+[AUTOMATED STEP]: Checking if there are any memory related errors in Serial logs
+
+   - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [UNCERTAIN]
+     [REASON]
+     We did not find any Memory related errors in Serial console logs
+
+     [REMEDIATION]
+     You may check if VM is facing high memory utilisation from GuestOS side using `free -m`
+     or `cat /proc/meminfo` commands.
 
 [AUTOMATED STEP]: Checking if VM's Boot disk space utilization is within optimal levels.
 
@@ -491,7 +509,6 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 [INFO]: Runbook will check if Key-based SSH approached is are correctly configured
 [INFO]: Local User: no_user will be used examine metadata-based SSH Key configuration
 [INFO]: Runbook will not investigate components required for SSH in browser
-[INFO]: Runbook Will use ops agent metrics for VM Performance investigation
 [AUTOMATED STEP]: Verifying VM is in the RUNNING state...
 
    - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [FAIL]
@@ -528,6 +545,16 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 
      Or connect via the Serial Console if SSH is not available to mitigate the issue.
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+
+[AUTOMATED STEP]: Checking if there are any memory related errors in Serial logs
+
+   - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [UNCERTAIN]
+     [REASON]
+     We did not find any Memory related errors in Serial console logs
+
+     [REMEDIATION]
+     You may check if VM is facing high memory utilisation from GuestOS side using `free -m`
+     or `cat /proc/meminfo` commands.
 
 [AUTOMATED STEP]: Checking if VM's Boot disk space utilization is within optimal levels.
 

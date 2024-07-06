@@ -1,0 +1,343 @@
+project: gcpdiag-gce-vm-performance, parameters: {name=faulty-linux-ssh,project_id=gcpdiag-gce-vm-
+performance,zone=europe-west2-a}
+
+gce/vm-performance:  GCE VM performance checks
+
+  This runbook is designed to assist you in investigating and understanding the underlying reasons
+  behind the performance issues of your GCE Virtual Machines (VMs) within Google Cloud Platform.
+
+  Key Investigation Areas:
+
+    - High CPU utilisation
+    - CPU Over-commitment for E2 or Sole-Tenant VMs
+    - High Memory utilisation
+    - Disk space high utilisation
+    - High Disk IOPS utilisation
+    - High Disk Throughput utilisation
+    - Check for Live Migrations
+    - Usualy Error checks in Serial console logs
+  
+[START]: Fetching VM details
+[AUTOMATED STEP]: Verifying VM is in the RUNNING state...
+
+   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [OK]
+     [REASON]
+     The GCE VM faulty-linux-ssh is in the expected state: RUNNING.
+
+[AUTOMATED STEP]: Verifying VM CPU utilization is within optimal levels
+
+   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
+     [REASON]
+     CPU utilization on this VM has surpassed recommended operational levels,
+     which may affect its performance and SSH connectivity.
+
+     [REMEDIATION]
+     Excessive CPU usage can lead to performance bottlenecks. Consider resizing the VM to a more
+     powerful machine type with higher CPU capabilities.
+     Detailed instructions for resizing and restarting VMs are available here:
+     - Stopping a VM: https://cloud.google.com/compute/docs/instances/stop-start-instance
+     - Resizing a VM: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+     Additionally, use the GCE observability metrics for an in-depth analysis to pinpoint high-usage processes:
+     https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics
+     https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization
+
+     Alternatively, you can connect via serial console if SSH is unvailable to stop offending processes
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console.
+
+[AUTOMATED STEP]: Checking if CPU is overcommited
+
+   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
+     [REASON]
+     CPU for the VM faulty-linux-ssh is over committed beyond acceptable limits: 0 ms/s
+[AUTOMATED STEP]: Verifying VM memory utilization is within optimal levels...
+
+   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
+     [REASON]
+     Memory utilization on this VM has reached levels that may compromise its VM application performance.
+
+     [REMEDIATION]
+     Elevated memory usage can result in slow or unresponsive or termimated applications.
+     Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
+     Guidance on stopping and changing the machine type can be found here:
+     - Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+     For deeper analysis of memory issues:
+
+     Additionally, use the GCE observability metrics for an in-depth analysis to pinpoint high-usage processes:
+     https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization
+
+     Or connect via the Serial Console if SSH is not available to mitigate the issue.
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+
+[AUTOMATED STEP]: Checking if there are any memory related errors in Serial logs
+
+   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [UNCERTAIN]
+     [REASON]
+     We did not find any Memory related errors in Serial console logs
+
+     [REMEDIATION]
+     You may check if VM is facing high memory utilisation from GuestOS side using `free -m`
+     or `cat /proc/meminfo` commands.
+
+[AUTOMATED STEP]: Checking if VM's Boot disk space utilization is within optimal levels.
+
+   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
+     [REASON]
+     Disk utilization on this VM's boot disk is critically high,
+     potentially affecting application performance.
+
+     [REMEDIATION]
+     To mitigate high disk usage, consider expanding the VM's boot disk capacity.
+     This action can help avoid performance issues and ensure smoother SSH connections.
+     Follow the guide to increase disk size:
+     https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
+
+[AUTOMATED STEP]: Checking if any slow Disk operations related errors in Serial console logs
+
+   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [UNCERTAIN]
+     [REASON]
+     We did not find any slow Disk operations related errors in Serial console logs
+
+     [REMEDIATION]
+
+
+[AUTOMATED STEP]: Checking if any Filesystem corruption related errors in Serial console logs
+
+   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [UNCERTAIN]
+     [REASON]
+     We did not find any Filesystem corruption related errors in Serial console logs
+
+     [REMEDIATION]
+
+
+[AUTOMATED STEP]: Checking if live migrations happened for the instance
+[INFO]: 
+
+Live Migration Detected at 2021/11/24 16:29:21, Checking further
+
+
+[INFO]: 
+
+Live Migration Detected at 2021/11/24 16:34:35, Checking further
+
+
+[INFO]: 
+
+Live Migration Detected at 2021/11/24 16:34:37, Checking further
+
+
+[INFO]: 
+
+Live Migration Detected at 2021/11/24 16:34:38, Checking further
+
+
+[INFO]: 
+
+Live Migration Detected at 2021/11/24 16:35:08, Checking further
+
+
+[INFO]: 
+
+Live Migration Detected at 2021/11/24 16:35:10, Checking further
+
+
+[INFO]: 
+
+Live Migration Detected at 2021/11/24 16:35:22, Checking further
+
+
+[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
+[END]: Finalizing VM performance diagnostics...
+
+
+project: gcpdiag-gce-vm-performance, parameters: {name=faulty-windows-ssh,project_id=gcpdiag-gce-vm-
+performance,zone=europe-west2-a}
+
+gce/vm-performance:  GCE VM performance checks
+
+  This runbook is designed to assist you in investigating and understanding the underlying reasons
+  behind the performance issues of your GCE Virtual Machines (VMs) within Google Cloud Platform.
+
+  Key Investigation Areas:
+
+    - High CPU utilisation
+    - CPU Over-commitment for E2 or Sole-Tenant VMs
+    - High Memory utilisation
+    - Disk space high utilisation
+    - High Disk IOPS utilisation
+    - High Disk Throughput utilisation
+    - Check for Live Migrations
+    - Usualy Error checks in Serial console logs
+  
+[START]: Fetching VM details
+
+   - gcpdiag-gce-vm-performance/faulty-windows-ssh                        [FAIL]
+     [REASON]
+     The GCE VM faulty-windows-ssh is in an undesired state: TERMINATED.
+
+     [REMEDIATION]
+     This step failed because GCE Virtual Machine faulty-windows-ssh is expected to be in a RUNNING state:
+
+     To initiate the lifecycle transition from TERMINATED to RUNNING state follow guide [1]
+
+     If you encounter any difficulties during the startup process, consult the troubleshooting
+     documentation to identify and resolve potential startup issues [2]
+     Resources:
+     [1] https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm
+     [2] https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting
+
+[AUTOMATED STEP]: Verifying VM is in the RUNNING state...
+
+   - gcpdiag-gce-vm-performance/faulty-windows-ssh                        [FAIL]
+     [REASON]
+     The GCE VM faulty-windows-ssh is in an undesired state: TERMINATED.
+
+     [REMEDIATION]
+     This step failed because GCE Virtual Machine faulty-windows-ssh is expected to be in a RUNNING state:
+
+     To initiate the lifecycle transition from TERMINATED to RUNNING state follow guide [1]
+
+     If you encounter any difficulties during the startup process, consult the troubleshooting
+     documentation to identify and resolve potential startup issues [2]
+     Resources:
+     [1] https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm
+     [2] https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting
+
+[AUTOMATED STEP]: Verifying VM CPU utilization is within optimal levels
+
+   - gcpdiag-gce-vm-performance/faulty-windows-ssh                        [FAIL]
+     [REASON]
+     CPU utilization on this VM has surpassed recommended operational levels,
+     which may affect its performance and SSH connectivity.
+
+     [REMEDIATION]
+     Excessive CPU usage can lead to performance bottlenecks. Consider resizing the VM to a more
+     powerful machine type with higher CPU capabilities.
+     Detailed instructions for resizing and restarting VMs are available here:
+     - Stopping a VM: https://cloud.google.com/compute/docs/instances/stop-start-instance
+     - Resizing a VM: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+     Additionally, use the GCE observability metrics for an in-depth analysis to pinpoint high-usage processes:
+     https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics
+     https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization
+
+     Alternatively, you can connect via serial console if SSH is unvailable to stop offending processes
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console.
+
+[AUTOMATED STEP]: Checking if CPU is overcommited
+
+   - gcpdiag-gce-vm-performance/faulty-windows-ssh                        [FAIL]
+     [REASON]
+     CPU for the VM faulty-windows-ssh is over committed beyond acceptable limits: 0 ms/s
+[AUTOMATED STEP]: Verifying VM memory utilization is within optimal levels...
+
+   - gcpdiag-gce-vm-performance/faulty-windows-ssh                        [FAIL]
+     [REASON]
+     Memory utilization on this VM has reached levels that may compromise its VM application performance.
+
+     [REMEDIATION]
+     Elevated memory usage can result in slow or unresponsive or termimated applications.
+     Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
+     Guidance on stopping and changing the machine type can be found here:
+     - Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+     For deeper analysis of memory issues:
+
+     Additionally, use the GCE observability metrics for an in-depth analysis to pinpoint high-usage processes:
+     https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization
+
+     Or connect via the Serial Console if SSH is not available to mitigate the issue.
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+
+[AUTOMATED STEP]: Checking if there are any memory related errors in Serial logs
+
+   - gcpdiag-gce-vm-performance/faulty-windows-ssh                        [UNCERTAIN]
+     [REASON]
+     We did not find any Memory related errors in Serial console logs
+
+     [REMEDIATION]
+     You may check if VM is facing high memory utilisation from GuestOS side using `free -m`
+     or `cat /proc/meminfo` commands.
+
+[AUTOMATED STEP]: Checking if VM's Boot disk space utilization is within optimal levels.
+
+   - gcpdiag-gce-vm-performance/faulty-windows-ssh                        [FAIL]
+     [REASON]
+     Disk utilization on this VM's boot disk is critically high,
+     potentially affecting application performance.
+
+     [REMEDIATION]
+     To mitigate high disk usage, consider expanding the VM's boot disk capacity.
+     This action can help avoid performance issues and ensure smoother SSH connections.
+     Follow the guide to increase disk size:
+     https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
+
+[AUTOMATED STEP]: Checking if any slow Disk operations related errors in Serial console logs
+
+   - gcpdiag-gce-vm-performance/faulty-windows-ssh                        [UNCERTAIN]
+     [REASON]
+     We did not find any slow Disk operations related errors in Serial console logs
+
+     [REMEDIATION]
+
+
+[AUTOMATED STEP]: Checking if any Filesystem corruption related errors in Serial console logs
+
+   - gcpdiag-gce-vm-performance/faulty-windows-ssh                        [UNCERTAIN]
+     [REASON]
+     We did not find any Filesystem corruption related errors in Serial console logs
+
+     [REMEDIATION]
+
+
+[AUTOMATED STEP]: Checking if live migrations happened for the instance
+[INFO]: 
+
+Live Migration Detected at 2021/11/24 16:29:21, Checking further
+
+
+[INFO]: 
+
+Live Migration Detected at 2021/11/24 16:34:35, Checking further
+
+
+[INFO]: 
+
+Live Migration Detected at 2021/11/24 16:34:37, Checking further
+
+
+[INFO]: 
+
+Live Migration Detected at 2021/11/24 16:34:38, Checking further
+
+
+[INFO]: 
+
+Live Migration Detected at 2021/11/24 16:35:08, Checking further
+
+
+[INFO]: 
+
+Live Migration Detected at 2021/11/24 16:35:10, Checking further
+
+
+[INFO]: 
+
+Live Migration Detected at 2021/11/24 16:35:22, Checking further
+
+
+[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
+[END]: Finalizing VM performance diagnostics...
+
+

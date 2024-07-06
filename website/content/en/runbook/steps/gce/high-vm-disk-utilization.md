@@ -33,6 +33,10 @@ https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_
 
 The VM's disk space usage is within optimal levels.
 
+### Skipped Reason
+
+There are no logs to examine !
+
 
 
 <!--

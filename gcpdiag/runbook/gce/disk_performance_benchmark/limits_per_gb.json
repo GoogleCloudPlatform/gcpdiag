@@ -1,0 +1,52 @@
+{
+  "iops": {
+    "pd-standard": {
+      "Read IOPS per GiB": 0.75,
+      "Write IOPS per GiB": 1.5
+    },
+    "pd-balanced": {
+      "Read IOPS per GiB": 6,
+      "Write IOPS per GiB": 6
+    },
+    "pd-ssd": {
+      "Read IOPS per GiB": 30,
+      "Write IOPS per GiB": 30
+    },
+    "pd-extreme": {
+      "Read IOPS per GiB": 3.6,
+      "Write IOPS per GiB": 3.6
+    }
+  },
+  "throughput": {
+    "pd-standard": {
+      "Throughput per GiB (MiBps)": 0.12
+    },
+    "pd-balanced": {
+      "Throughput per GiB (MiBps)": 0.28
+    },
+    "pd-ssd": {
+      "Throughput per GiB (MiBps)": 0.48
+    },
+    "pd-extreme": {
+      "Throughput per GiB (MiBps)": 0.168
+    }
+  },
+  "baseline": {
+    "pd-balanced": {
+      "Baseline IOPS per VM": 3000,
+      "Baseline Throughput (MiBps) per VM": 140
+    },
+    "pd-ssd": {
+      "Baseline IOPS per VM": 6000,
+      "Baseline Throughput (MiBps) per VM": 240
+    },
+    "pd-standard": {
+      "Baseline IOPS per VM": 0,
+      "Baseline Throughput (MiBps) per VM": 0
+    },
+    "pd-extreme": {
+      "Baseline IOPS per VM": 0,
+      "Baseline Throughput (MiBps) per VM": 0
+    }
+  }
+}
