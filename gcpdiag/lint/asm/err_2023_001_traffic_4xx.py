@@ -30,7 +30,7 @@ def prepare_rule(context: models.Context):
         project_id=project_id,
         resource_type='k8s_container',
         log_name='log_id("server-accesslog-stackdriver")',
-        filter_str='httpRequest.status>=400',
+        filter_str='httpRequest.status>=400 AND httpRequest.status<500',
     )
 
 
@@ -48,7 +48,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   # Search the logs.
   def filter_f(log_entry):
     try:
-      if log_entry['httpRequest']['status'] >= 400:
+      if (log_entry['httpRequest']['status'] >= 400 or
+          log_entry['httpRequest']['status'] < 500):
         return True
     except KeyError:
       return False
