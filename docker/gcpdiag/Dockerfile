@@ -27,9 +27,8 @@ RUN chmod 755 /usr/bin/entrypoint.sh; \
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]
 
 # Install gcpdiag + dependencies.
-COPY dist/Pipfile.lock /opt/gcpdiag/Pipfile.lock
-RUN cd /opt/gcpdiag && env PIPENV_VENV_IN_PROJECT=1 pipenv install --ignore-pipfile
 COPY dist /opt/gcpdiag
+RUN cd /opt/gcpdiag && env PIPENV_VENV_IN_PROJECT=1 pipenv install --ignore-pipfile
 
 # Grant write permission to write kubeconfig file in the directory.
 RUN chmod a+w /opt/gcpdiag
