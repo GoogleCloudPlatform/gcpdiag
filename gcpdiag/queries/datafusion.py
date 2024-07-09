@@ -104,6 +104,12 @@ class Instance(models.Resource):
     return self._resource_data['state']
 
   @property
+  def status_details(self) -> Optional[str]:
+    if 'stateMessage' in self._resource_data:
+      return self._resource_data['stateMessage']
+    return None
+
+  @property
   def is_running(self) -> bool:
     return self.status == 'ACTIVE'
 
