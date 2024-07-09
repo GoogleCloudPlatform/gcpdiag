@@ -16,7 +16,7 @@ Supports only boolean constraints and not list constraints.
 
 ### Failure Reason
 
-The {constraint} is {enforced_or_not} however the opposite is expected.
+The {constraint} policy is {actual_state} however should be {expected_state}.
 
 ### Failure Remediation
 
@@ -30,7 +30,7 @@ Note: You may want to doublecheck with your organization admins of the best appr
 
 ### Success Reason
 
-The {constraint} is {enforced_or_not}.
+The {constraint} is {actual_state}.
 
 
 

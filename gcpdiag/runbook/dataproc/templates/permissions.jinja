@@ -1,0 +1,8 @@
+{% block projectcheck_failure_reason %}
+Service Account {service_account} associated with Dataproc cluster was not found in project {project_id} or cross project (if specified).
+{% endblock projectcheck_failure_reason %}
+
+{% block projectcheck_failure_remediation %}
+Provide
+project in which the service account resides by using the cross_project parameter.
+{% endblock projectcheck_failure_remediation %}

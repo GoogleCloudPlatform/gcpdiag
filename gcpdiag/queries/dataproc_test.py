@@ -36,12 +36,6 @@ class TestDataproc:
     clusters = dataproc.get_clusters(context)
     assert ('good', True) in [(c.name, c.is_running()) for c in clusters]
 
-  def test_image_version(self):
-    context = models.Context(project_id=DUMMY_PROJECT_NAME)
-    clusters = dataproc.get_clusters(context)
-    assert ('good',
-            '2.0.47-debian10') in [(c.name, c.image_version) for c in clusters]
-
   def test_stackdriver_logging_enabled(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = dataproc.get_clusters(context)

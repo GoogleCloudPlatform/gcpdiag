@@ -1,0 +1,47 @@
+{% block cluster_quota_success_reason %}
+No issues with unsufficient quota in project {project_id} has been identified for the ivestigated cluster {cluster_name}, please double-check if you have provided
+the right cluster_name parameter if the cluster you are trying to create doesn't appear in Dataproc UI.
+{% endblock cluster_quota_success_reason %}
+
+{% block cluster_quota_failure_reason %}
+The cluster {cluster_name} in project {project_id} could not be created due to insufficient quota in the project.
+{% endblock cluster_quota_failure_reason %}
+
+{% block cluster_quota_failure_remediation %}
+This issue occurs when the requested Dataproc cluster exceeds the project's available quota for resources such as CPU, disk space, or IP addresses.
+Solution: Request additional quota [1] from the Google Cloud console or use another project.
+[1] https://cloud.google.com/docs/quotas/view-manage#managing_your_quota_console
+{% endblock cluster_quota_failure_remediation %}
+
+{% block cluster_stockout_success_reason %}
+No issues with stockouts and insufficient resources in project {project_id} has been identified for {cluster_name}, please double-check if you have provided
+the right cluster_name parameter if the cluster you are trying to create doesn't appear in Dataproc UI.
+{% endblock cluster_stockout_success_reason %}
+
+{% block cluster_stockout_failure_reason %}
+The cluster {cluster_name} creation in project {project_id} failed due to insufficient resources in the selected zone/region.
+{% endblock cluster_stockout_failure_reason %}
+
+{% block cluster_stockout_failure_remediation %}
+Dataproc cluster stockout occurs when there are insufficient resources available in a specific zone or region to create your requested cluster.
+Solutions to resolve the issue include:
+- Create the cluster in a different zone or region.
+- Use the Dataproc Auto Zone placement feature by not specifying the zone [1].
+[1] https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/auto-zone
+{% endblock cluster_stockout_failure_remediation %}
+
+{% block cluster_init_success_reason %}
+The initialization actions for cluster {cluster_name} in project {project_id} completed successfully without errors.
+{% endblock cluster_init_success_reason %}
+
+{% block cluster_init_failure_reason %}
+The cluster {cluster_name} creation failed because the initialization script encountered an error.
+{% endblock cluster_init_failure_reason %}
+
+{% block cluster_init_failure_remediation %}
+A Dataproc cluster init script failure means that a script intended to run during the cluster's initial setup did not complete successfully.
+Solution:
+See initialization actions considerations and guidelines [1].
+Examine the output logs. The error message should provide a link to the logs in Cloud Storage.
+[1]https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/init-actions#important_considerations_and_guidelines
+{% endblock cluster_init_failure_remediation %}

@@ -40,7 +40,8 @@ class Cluster(models.Resource):
         property_name)
 
   def is_stackdriver_logging_enabled(self) -> bool:
-    # Unless overridden during create, properties with default values are not returned,
+    # Unless overridden during create,
+    # properties with default values are not returned,
     # therefore get_software_property should only return when its false
     return (not self.get_software_property(
         'dataproc:dataproc.logging.stackdriver.enable') == 'false')
@@ -86,6 +87,10 @@ class Cluster(models.Resource):
     return self.short_path
 
   @property
+  def cluster_uuid(self) -> str:
+    return self._resource_data['clusterUuid']
+
+  @property
   def image_version(self):
     return self._resource_data['config']['softwareConfig']['imageVersion']
 
@@ -116,6 +121,21 @@ class Cluster(models.Resource):
     return network_uri
 
   @property
+  def gce_subnetwork_uri(self) -> Optional[str]:
+    """Get subnetwork uri from cluster subnetwork."""
+    if not self.is_gce_cluster:
+      raise RuntimeError(
+          'Can not return subnetwork URI for a Dataproc on GKE cluster')
+    subnetwork_uri = (self._resource_data.get('config',
+                                              {}).get('gceClusterConfig',
+                                                      {}).get('subnetworkUri'))
+    if not subnetwork_uri:
+      subnetwork_uri = ('https://www.googleapis.com/compute/v1/projects/' +
+                        self.project_id + '/regions/' + self.region +
+                        '/subnetworks/default')
+    return subnetwork_uri
+
+  @property
   def is_single_node_cluster(self) -> bool:
     workers = (self._resource_data.get('config',
                                        {}).get('workerConfig',
@@ -128,6 +148,15 @@ class Cluster(models.Resource):
                                        {}).get('masterConfig',
                                                {}).get('numInstances', 1))
     return masters != 1
+
+  @property
+  def is_internal_ip_only(self) -> bool:
+    # internalIpOnly is set to true by default when creating a
+    # Dataproc 2.2 image version cluster.
+    # The default should be false in older versions instead.
+    internal_ip_only = self._resource_data['config']['gceClusterConfig'][
+        'internalIpOnly']
+    return internal_ip_only
 
 
 class Region:

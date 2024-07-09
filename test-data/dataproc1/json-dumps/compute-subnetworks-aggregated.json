@@ -1,13 +1,33 @@
 {
   "id": "projects/gcpdiag-dataproc1-aaaa/aggregated/subnetworks",
   "items": {
+    "regions/africa-south1": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2024-06-25T04:59:06.455-07:00",
+          "fingerprint": "hmBUd0mbnzA=",
+          "gatewayAddress": "10.218.0.1",
+          "id": "100918737986064357",
+          "ipCidrRange": "10.218.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/regions/africa-south1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/regions/africa-south1/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
     "regions/asia-east1": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.383-07:00",
-          "fingerprint": "hd62BZWaGGI=",
+          "creationTimestamp": "2024-06-25T04:59:06.119-07:00",
+          "fingerprint": "lfd2XdWpN-M=",
           "gatewayAddress": "10.140.0.1",
-          "id": "4795610857829426714",
+          "id": "7450471739883458533",
           "ipCidrRange": "10.140.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -24,10 +44,10 @@
     "regions/asia-east2": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.432-07:00",
-          "fingerprint": "sVHfwTnGAdw=",
+          "creationTimestamp": "2024-06-25T04:59:06.138-07:00",
+          "fingerprint": "1FBIaZb3Sbg=",
           "gatewayAddress": "10.170.0.1",
-          "id": "7920864890463315482",
+          "id": "3438038495104798693",
           "ipCidrRange": "10.170.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -44,10 +64,10 @@
     "regions/asia-northeast1": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.361-07:00",
-          "fingerprint": "uelvqrEmL-I=",
+          "creationTimestamp": "2024-06-25T04:59:06.166-07:00",
+          "fingerprint": "9TceXjNValw=",
           "gatewayAddress": "10.146.0.1",
-          "id": "5142487908601423386",
+          "id": "272193409456213989",
           "ipCidrRange": "10.146.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -64,10 +84,10 @@
     "regions/asia-northeast2": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.306-07:00",
-          "fingerprint": "wsyYVlhl7e8=",
+          "creationTimestamp": "2024-06-25T04:59:06.187-07:00",
+          "fingerprint": "1P0tVqNX1gk=",
           "gatewayAddress": "10.174.0.1",
-          "id": "4158769273435448858",
+          "id": "5067779868684914661",
           "ipCidrRange": "10.174.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -84,10 +104,10 @@
     "regions/asia-northeast3": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.413-07:00",
-          "fingerprint": "x2CkOfpBOsI=",
+          "creationTimestamp": "2024-06-25T04:59:06.136-07:00",
+          "fingerprint": "P4ELQMfQwH4=",
           "gatewayAddress": "10.178.0.1",
-          "id": "847751076251559450",
+          "id": "4493044181405994981",
           "ipCidrRange": "10.178.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -104,10 +124,10 @@
     "regions/asia-south1": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.437-07:00",
-          "fingerprint": "2A2yiZtGChc=",
+          "creationTimestamp": "2024-06-25T04:59:06.248-07:00",
+          "fingerprint": "decoBNyIV8I=",
           "gatewayAddress": "10.160.0.1",
-          "id": "7792807674574136858",
+          "id": "8749343852480368613",
           "ipCidrRange": "10.160.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -124,10 +144,10 @@
     "regions/asia-south2": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.441-07:00",
-          "fingerprint": "m25Lq6-Po3k=",
+          "creationTimestamp": "2024-06-25T04:59:06.298-07:00",
+          "fingerprint": "uIsyDGjHlK4=",
           "gatewayAddress": "10.190.0.1",
-          "id": "6441066567557834266",
+          "id": "4419771386501205989",
           "ipCidrRange": "10.190.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -144,10 +164,10 @@
     "regions/asia-southeast1": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.370-07:00",
-          "fingerprint": "ApNbq9OwHS8=",
+          "creationTimestamp": "2024-06-25T04:59:06.242-07:00",
+          "fingerprint": "ymGHIzEAlzo=",
           "gatewayAddress": "10.148.0.1",
-          "id": "6209823002900424218",
+          "id": "783597407363862501",
           "ipCidrRange": "10.148.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -164,10 +184,10 @@
     "regions/asia-southeast2": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.379-07:00",
-          "fingerprint": "IbShhmktz6g=",
+          "creationTimestamp": "2024-06-25T04:59:06.217-07:00",
+          "fingerprint": "zXAQ0aawwx8=",
           "gatewayAddress": "10.184.0.1",
-          "id": "7602566354510407194",
+          "id": "437667530024620005",
           "ipCidrRange": "10.184.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -184,10 +204,10 @@
     "regions/australia-southeast1": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.350-07:00",
-          "fingerprint": "7jyb9ThvCNE=",
+          "creationTimestamp": "2024-06-25T04:59:06.741-07:00",
+          "fingerprint": "rHPgrAuKMYo=",
           "gatewayAddress": "10.152.0.1",
-          "id": "7544253510518171162",
+          "id": "5098244973658574821",
           "ipCidrRange": "10.152.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -204,10 +224,10 @@
     "regions/australia-southeast2": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.433-07:00",
-          "fingerprint": "vmHAHBuwchk=",
+          "creationTimestamp": "2024-06-25T04:59:06.623-07:00",
+          "fingerprint": "F7Bgk1E9Rvc=",
           "gatewayAddress": "10.192.0.1",
-          "id": "898100239128192538",
+          "id": "7740054008531193829",
           "ipCidrRange": "10.192.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -224,10 +244,10 @@
     "regions/europe-central2": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.305-07:00",
-          "fingerprint": "eYhS8hbWIzg=",
+          "creationTimestamp": "2024-06-25T04:59:06.012-07:00",
+          "fingerprint": "0wmPxjgXKUU=",
           "gatewayAddress": "10.186.0.1",
-          "id": "1315872841881478682",
+          "id": "1784132926847782885",
           "ipCidrRange": "10.186.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -244,10 +264,10 @@
     "regions/europe-north1": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.535-07:00",
-          "fingerprint": "GghXhflOxG4=",
+          "creationTimestamp": "2024-06-25T04:59:06.026-07:00",
+          "fingerprint": "y2jeG6o_ntQ=",
           "gatewayAddress": "10.166.0.1",
-          "id": "851814403076384282",
+          "id": "1559079496690634725",
           "ipCidrRange": "10.166.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -264,10 +284,10 @@
     "regions/europe-southwest1": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.450-07:00",
-          "fingerprint": "LnEYPnAqQ-c=",
+          "creationTimestamp": "2024-06-25T04:59:06.002-07:00",
+          "fingerprint": "3n4bTS3jrkw=",
           "gatewayAddress": "10.204.0.1",
-          "id": "7266571045764458010",
+          "id": "4763998262062944229",
           "ipCidrRange": "10.204.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -284,10 +304,10 @@
     "regions/europe-west1": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.341-07:00",
-          "fingerprint": "ooZUOAyiS8k=",
+          "creationTimestamp": "2024-06-25T04:59:05.997-07:00",
+          "fingerprint": "DK98eickMz4=",
           "gatewayAddress": "10.132.0.1",
-          "id": "1577758288071484954",
+          "id": "5352155795156307942",
           "ipCidrRange": "10.132.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -301,13 +321,53 @@
         }
       ]
     },
+    "regions/europe-west10": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2024-06-25T04:59:05.981-07:00",
+          "fingerprint": "i8LIko4rBZc=",
+          "gatewayAddress": "10.214.0.1",
+          "id": "6798231198789734374",
+          "ipCidrRange": "10.214.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/regions/europe-west10",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/regions/europe-west10/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/europe-west12": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2024-06-25T04:59:06.003-07:00",
+          "fingerprint": "rcHU81dR--Q=",
+          "gatewayAddress": "10.210.0.1",
+          "id": "870348020096896997",
+          "ipCidrRange": "10.210.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/regions/europe-west12",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/regions/europe-west12/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
     "regions/europe-west2": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:02.023-07:00",
-          "fingerprint": "QvyQI8-kIc0=",
+          "creationTimestamp": "2024-06-25T04:59:06.008-07:00",
+          "fingerprint": "lY48CQKMrOk=",
           "gatewayAddress": "10.154.0.1",
-          "id": "5968637396406625817",
+          "id": "5759265785114988517",
           "ipCidrRange": "10.154.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -324,10 +384,10 @@
     "regions/europe-west3": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.336-07:00",
-          "fingerprint": "oqa9p_KP8mQ=",
+          "creationTimestamp": "2024-06-25T04:59:05.990-07:00",
+          "fingerprint": "I5DsqCpZaqU=",
           "gatewayAddress": "10.156.0.1",
-          "id": "5652906469212677658",
+          "id": "2314712416133779430",
           "ipCidrRange": "10.156.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -344,10 +404,10 @@
     "regions/europe-west4": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:02.178-07:00",
-          "fingerprint": "vpHlKE2l4bU=",
+          "creationTimestamp": "2024-06-25T04:59:06.033-07:00",
+          "fingerprint": "xJFkvksH35U=",
           "gatewayAddress": "10.164.0.1",
-          "id": "3517207627357349401",
+          "id": "5005342988505124837",
           "ipCidrRange": "10.164.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -364,10 +424,10 @@
     "regions/europe-west6": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.287-07:00",
-          "fingerprint": "fu2PQ8o23Iw=",
+          "creationTimestamp": "2024-06-25T04:59:05.997-07:00",
+          "fingerprint": "191N5zLIvko=",
           "gatewayAddress": "10.172.0.1",
-          "id": "4591557915079206426",
+          "id": "3450317110819360742",
           "ipCidrRange": "10.172.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -384,10 +444,10 @@
     "regions/europe-west8": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.341-07:00",
-          "fingerprint": "o07riTKOJGo=",
+          "creationTimestamp": "2024-06-25T04:59:06.007-07:00",
+          "fingerprint": "1ugD3NVne5g=",
           "gatewayAddress": "10.198.0.1",
-          "id": "5081610582586418714",
+          "id": "7792428025149591525",
           "ipCidrRange": "10.198.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -404,10 +464,10 @@
     "regions/europe-west9": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.292-07:00",
-          "fingerprint": "FBf0vac4jUk=",
+          "creationTimestamp": "2024-06-25T04:59:05.986-07:00",
+          "fingerprint": "9bDTK2MTgg8=",
           "gatewayAddress": "10.200.0.1",
-          "id": "4810405997961930266",
+          "id": "7027420450524696550",
           "ipCidrRange": "10.200.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -421,13 +481,45 @@
         }
       ]
     },
+    "regions/me-central1": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2024-06-25T04:59:06.192-07:00",
+          "fingerprint": "4dtGSrxvICk=",
+          "gatewayAddress": "10.212.0.1",
+          "id": "240636214558265317",
+          "ipCidrRange": "10.212.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "privateIpv6GoogleAccess": "DISABLE_GOOGLE_ACCESS",
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/regions/me-central1",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/regions/me-central1/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/me-central2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/me-central2"
+          }
+        ],
+        "message": "There are no results for scope 'regions/me-central2' on this page."
+      }
+    },
     "regions/me-west1": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.388-07:00",
-          "fingerprint": "fctDAttubdE=",
+          "creationTimestamp": "2024-06-25T04:59:06.124-07:00",
+          "fingerprint": "eAQrd-FOXUs=",
           "gatewayAddress": "10.208.0.1",
-          "id": "8745622701490431514",
+          "id": "5446617403194019813",
           "ipCidrRange": "10.208.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -444,10 +536,10 @@
     "regions/northamerica-northeast1": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.196-07:00",
-          "fingerprint": "jgeh2JZmIKg=",
+          "creationTimestamp": "2024-06-25T04:59:05.970-07:00",
+          "fingerprint": "4eeSFaWZzs8=",
           "gatewayAddress": "10.162.0.1",
-          "id": "1500754231738361370",
+          "id": "4154882405256597478",
           "ipCidrRange": "10.162.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -464,10 +556,10 @@
     "regions/northamerica-northeast2": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.235-07:00",
-          "fingerprint": "doF8voURRog=",
+          "creationTimestamp": "2024-06-25T04:59:05.971-07:00",
+          "fingerprint": "W8u44BnP8rQ=",
           "gatewayAddress": "10.188.0.1",
-          "id": "6148373660256036378",
+          "id": "6108053031181815782",
           "ipCidrRange": "10.188.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -484,10 +576,10 @@
     "regions/southamerica-east1": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.409-07:00",
-          "fingerprint": "-eSD2HdFi-w=",
+          "creationTimestamp": "2024-06-25T04:59:06.332-07:00",
+          "fingerprint": "9iP6ws_QNSk=",
           "gatewayAddress": "10.158.0.1",
-          "id": "7117337519392155162",
+          "id": "6797036287348379621",
           "ipCidrRange": "10.158.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -504,10 +596,10 @@
     "regions/southamerica-west1": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.359-07:00",
-          "fingerprint": "edm7W68OQ-w=",
+          "creationTimestamp": "2024-06-25T04:59:06.460-07:00",
+          "fingerprint": "0SLYNsfZCXc=",
           "gatewayAddress": "10.194.0.1",
-          "id": "8555758952001693210",
+          "id": "6962739772055293925",
           "ipCidrRange": "10.194.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -524,10 +616,10 @@
     "regions/us-central1": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.133-07:00",
-          "fingerprint": "-plH9TMppL8=",
+          "creationTimestamp": "2024-06-25T04:59:05.826-07:00",
+          "fingerprint": "JeKWm_kooyg=",
           "gatewayAddress": "10.128.0.1",
-          "id": "8174316068855997978",
+          "id": "8137157983115612134",
           "ipCidrRange": "10.128.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -540,11 +632,11 @@
           "stackType": "IPV4_ONLY"
         },
         {
-          "creationTimestamp": "2022-10-07T09:56:20.756-07:00",
+          "creationTimestamp": "2024-06-25T05:49:26.322-07:00",
           "enableFlowLogs": false,
-          "fingerprint": "M3dpYDpIRss=",
+          "fingerprint": "Qg_-Ankn0e0=",
           "gatewayAddress": "10.128.0.1",
-          "id": "1988698379540882651",
+          "id": "21108203992842809",
           "ipCidrRange": "10.128.0.0/20",
           "kind": "compute#subnetwork",
           "logConfig": {
@@ -567,10 +659,10 @@
     "regions/us-east1": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.205-07:00",
-          "fingerprint": "QdGumbEVYsA=",
+          "creationTimestamp": "2024-06-25T04:59:05.782-07:00",
+          "fingerprint": "vNfmSyS02pc=",
           "gatewayAddress": "10.142.0.1",
-          "id": "8581227790239393306",
+          "id": "6367557854309060582",
           "ipCidrRange": "10.142.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -587,10 +679,10 @@
     "regions/us-east4": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.197-07:00",
-          "fingerprint": "LAuaaDFU-OM=",
+          "creationTimestamp": "2024-06-25T04:59:05.865-07:00",
+          "fingerprint": "GsPo7F5WslU=",
           "gatewayAddress": "10.150.0.1",
-          "id": "7352738655341766170",
+          "id": "7594357237403291622",
           "ipCidrRange": "10.150.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -607,10 +699,10 @@
     "regions/us-east5": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.284-07:00",
-          "fingerprint": "pvMhy0E5QgY=",
+          "creationTimestamp": "2024-06-25T04:59:05.881-07:00",
+          "fingerprint": "yL0YyDnPz8o=",
           "gatewayAddress": "10.202.0.1",
-          "id": "7796090425452652058",
+          "id": "3987291845063806950",
           "ipCidrRange": "10.202.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -627,10 +719,10 @@
     "regions/us-east7": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-08T03:08:42.735-07:00",
-          "fingerprint": "Gnvatg22Fbo=",
+          "creationTimestamp": "2024-06-26T15:47:44.039-07:00",
+          "fingerprint": "X6nvnJBt--s=",
           "gatewayAddress": "10.196.0.1",
-          "id": "3326412539980214981",
+          "id": "7918237903695717503",
           "ipCidrRange": "10.196.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -646,10 +738,10 @@
     "regions/us-south1": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.137-07:00",
-          "fingerprint": "0v7sq2QwOEU=",
+          "creationTimestamp": "2024-06-25T04:59:05.859-07:00",
+          "fingerprint": "f3VzF4aIqgU=",
           "gatewayAddress": "10.206.0.1",
-          "id": "385380426449806874",
+          "id": "7323051386039898086",
           "ipCidrRange": "10.206.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -666,10 +758,10 @@
     "regions/us-west1": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.692-07:00",
-          "fingerprint": "GEAcrkkD8uY=",
+          "creationTimestamp": "2024-06-25T04:59:05.906-07:00",
+          "fingerprint": "k50GD4x5LSw=",
           "gatewayAddress": "10.138.0.1",
-          "id": "2012543939184027162",
+          "id": "8992813733035577318",
           "ipCidrRange": "10.138.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -686,10 +778,10 @@
     "regions/us-west2": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.280-07:00",
-          "fingerprint": "WLAyKEEUnb8=",
+          "creationTimestamp": "2024-06-25T04:59:05.961-07:00",
+          "fingerprint": "uMNDAseya9k=",
           "gatewayAddress": "10.168.0.1",
-          "id": "5097031091432056346",
+          "id": "5406268362996518886",
           "ipCidrRange": "10.168.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -706,10 +798,10 @@
     "regions/us-west3": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.532-07:00",
-          "fingerprint": "1_KdQDSpTHA=",
+          "creationTimestamp": "2024-06-25T04:59:05.923-07:00",
+          "fingerprint": "EhGV9ET6_l8=",
           "gatewayAddress": "10.180.0.1",
-          "id": "349591623613408794",
+          "id": "5333988736329256934",
           "ipCidrRange": "10.180.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -726,10 +818,10 @@
     "regions/us-west4": {
       "subnetworks": [
         {
-          "creationTimestamp": "2022-10-07T09:51:01.225-07:00",
-          "fingerprint": "IGRXmHTBPxs=",
+          "creationTimestamp": "2024-06-25T04:59:06.047-07:00",
+          "fingerprint": "yyAaBq1EUMQ=",
           "gatewayAddress": "10.182.0.1",
-          "id": "2016549799346431514",
+          "id": "8159681418681061349",
           "ipCidrRange": "10.182.0.0/20",
           "kind": "compute#subnetwork",
           "name": "default",
@@ -739,6 +831,25 @@
           "purpose": "PRIVATE",
           "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/regions/us-west4",
           "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/regions/us-west4/subnetworks/default",
+          "stackType": "IPV4_ONLY"
+        }
+      ]
+    },
+    "regions/us-west8": {
+      "subnetworks": [
+        {
+          "creationTimestamp": "2024-06-25T13:42:08.771-07:00",
+          "fingerprint": "Tb0F1gpGUbY=",
+          "gatewayAddress": "10.220.0.1",
+          "id": "114583601640019279",
+          "ipCidrRange": "10.220.0.0/20",
+          "kind": "compute#subnetwork",
+          "name": "default",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/global/networks/default",
+          "privateIpGoogleAccess": false,
+          "purpose": "PRIVATE",
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/regions/us-west8",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/regions/us-west8/subnetworks/default",
           "stackType": "IPV4_ONLY"
         }
       ]

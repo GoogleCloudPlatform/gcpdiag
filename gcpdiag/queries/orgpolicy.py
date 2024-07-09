@@ -25,7 +25,9 @@ PREFETCH_ORG_CONSTRAINTS = (
     'constraints/compute.requireShieldedVm',
     'constraints/iam.automaticIamGrantsForDefaultServiceAccounts',
     'constraints/compute.disableSerialPortLogging',
-    'constraints/compute.disableSshInBrowser')
+    'constraints/compute.disableSshInBrowser',
+    'constraints/iam.disableCrossProjectServiceAccountUsage',
+)
 
 # TODO: list policy constraints of interest (not yet supported)
 # 'constraints/compute.vmCanIpForward'

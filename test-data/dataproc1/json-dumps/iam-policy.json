@@ -20,8 +20,8 @@
     },
     {
       "members": [
-        "serviceAccount:12340005@cloudservices.gserviceaccount.com",
-        "serviceAccount:12340005-compute@developer.gserviceaccount.com"
+        "serviceAccount:12340005-compute@developer.gserviceaccount.com",
+        "serviceAccount:12340005@cloudservices.gserviceaccount.com"
       ],
       "role": "roles/editor"
     },
@@ -30,8 +30,14 @@
         "user:testuser@example.com"
       ],
       "role": "roles/owner"
+    },
+    {
+      "members": [
+        "serviceAccount:service-12340005@gcp-sa-websecurityscanner.iam.gserviceaccount.com"
+      ],
+      "role": "roles/websecurityscanner.serviceAgent"
     }
   ],
-  "etag": "BwXpl3K8tAs=",
+  "etag": "BwYbuVu9jMI=",
   "version": 1
 }

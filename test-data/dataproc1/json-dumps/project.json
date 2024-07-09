@@ -1,12 +1,12 @@
 {
   "name": "projects/12340005",
-  "parent": "folders/373737373737",
+  "parent": "folders/348077457356",
   "projectId": "gcpdiag-dataproc1-aaaa",
   "state": "ACTIVE",
   "displayName": "gcpdiag test - dataproc1",
-  "createTime": "2022-09-26T16:58:36.242Z",
-  "updateTime": "2022-09-26T16:58:38.082Z",
-  "etag": "+VlqI+yEXJcy99GB3Ee0vg==",
+  "createTime": "2024-06-25T11:49:18.219552Z",
+  "updateTime": "2024-06-25T11:49:18.219552Z",
+  "etag": "W/\"3b2e21b109750122\"",
   "labels": {
     "gcpdiag": "test"
   }

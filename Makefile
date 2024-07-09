@@ -19,7 +19,7 @@ spelling:
 	 pip install -U PyEnchant; pylint --disable all --enable spelling --spelling-dict en_US gcpdiag
 
 snapshots:
-	pytest --snapshot-update --forked
+	pytest --snapshot-update --forked -v -v
 
 gke-eol-file:
 	./gcpdiag/lint/gke/eol_parser.sh > gcpdiag/lint/gke/eol.yaml

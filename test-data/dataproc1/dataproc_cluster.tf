@@ -116,6 +116,7 @@ resource "google_dataproc_cluster" "test-deny-icmp" {
     gce_cluster_config {
       zone       = "us-central1-a"
       subnetwork = google_compute_subnetwork.test-bad-subnet.name
+      tags       = ["icmp-deny"]
     }
   }
 }

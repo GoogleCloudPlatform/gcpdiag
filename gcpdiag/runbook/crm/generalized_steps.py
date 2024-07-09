@@ -27,31 +27,34 @@ class OrgPolicyCheck(runbook.Step):
   template = 'orgpolicy::default'
   constraint: str
   is_enforced: bool = True
+  project = None
 
   def execute(self):
     """Checking Organization policy"""
-    project = crm.get_project(op.get(flags.PROJECT_ID))
-    constraint = orgpolicy.get_effective_org_policy(op.get(flags.PROJECT_ID),
-                                                    self.constraint)
+    project_id = self.project or op.get(flags.PROJECT_ID)
+    project = crm.get_project(project_id)
+    constraint = orgpolicy.get_effective_org_policy(project_id, self.constraint)
 
-    enforced_or_not = 'enforced' if self.is_enforced else 'not enforced'
+    expected_state = 'enforced' if self.is_enforced else 'not enforced'
+    actual_state = 'enforced' if constraint.is_enforced() else 'not enforced'
 
     # Is effected to be enforced and is enforce or vice versa
     if (self.is_enforced and
         constraint.is_enforced()) or (not self.is_enforced and
                                       not constraint.is_enforced()):
       op.add_ok(resource=project,
-                reason=op.prep_msg(
-                    op.SUCCESS_REASON,
-                    constraint=self.constraint,
-                    enforced_or_not=enforced_or_not,
-                ))
+                reason=op.prep_msg(op.SUCCESS_REASON,
+                                   constraint=self.constraint,
+                                   expected_state=expected_state,
+                                   actual_state=actual_state))
 
     # Is effected to be enforced and is enforce or vice versa
-    elif (self.is_enforced and not constraint) or (not self.is_enforced and
-                                                   not constraint):
+    elif (self.is_enforced and
+          not constraint.is_enforced()) or (not self.is_enforced and
+                                            constraint.is_enforced()):
       op.add_failed(resource=project,
                     reason=op.prep_msg(constants.FAILURE_REASON,
                                        constraint=self.constraint,
-                                       enforced_or_not=enforced_or_not),
+                                       expected_state=expected_state,
+                                       actual_state=actual_state),
                     remediation=op.prep_msg(constants.FAILURE_REMEDIATION))

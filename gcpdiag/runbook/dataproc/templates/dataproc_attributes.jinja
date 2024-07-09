@@ -1,0 +1,28 @@
+{% block cluster_name_exists_success_reason %}
+Cluster {cluster_name} exists in project {project_id}
+{% endblock cluster_name_exists_success_reason %}
+
+{% block cluster_name_exists_failure_reason %}
+Cluster {cluster_name} doesn't exists in project {project_id}
+{% endblock cluster_name_exists_failure_reason %}
+
+{% block cluster_name_exists_failure_remediation %}
+Either create again the cluster and keep it in ERROR state in Dataproc UI or manually provide additional parameters using command:
+gcpdiag runbook dataproc/cluster-creation -p cluster_name=CLUSTER_NAME -p cluster_uuid=CLUSTER_UUID -p network=NETWORK_URI -p subnetwork=SUBNETWORK_URI -p service_account=SERVICE_ACCOUNT -p internal_ip_only=True/False --project=PROJECT_ID.
+Please visit https://gcpdiag.dev/runbook/diagnostic-trees/dataproc/ for any additional parameters you would like to specify.
+{% endblock cluster_name_exists_failure_remediation %}
+
+{% block stackdriver_success_reason %}
+Stackdriver: Enabled
+{% endblock stackdriver_success_reason %}
+
+{% block stackdriver_uncertain_reason %}
+Unable to find sufficient information if stackdriver.logging property is enabled. This may be due to the fact that the
+cluster is deleted. The runbook will assume that it is enabled, however if not, it might affect some of the runbooks steps.
+{% endblock stackdriver_uncertain_reason %}
+
+{% block stackdriver_uncertain_remediation %}
+Consider enabling it by creating a cluster with property dataproc:dataproc.logging.stackdriver.enable = true
+Review our guide for more details:
+https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/cluster-properties
+{% endblock stackdriver_uncertain_remediation %}

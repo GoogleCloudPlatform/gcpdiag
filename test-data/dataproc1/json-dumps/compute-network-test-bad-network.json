@@ -1,0 +1,17 @@
+{
+  "autoCreateSubnetworks": false,
+  "creationTimestamp": "2024-06-25T05:49:04.428-07:00",
+  "description": "VPC network without Dataproc specific firewall rules",
+  "id": "2582141050195214895",
+  "kind": "compute#network",
+  "name": "test-bad-network",
+  "networkFirewallPolicyEnforcementOrder": "AFTER_CLASSIC_FIREWALL",
+  "routingConfig": {
+    "routingMode": "REGIONAL"
+  },
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/global/networks/test-bad-network",
+  "selfLinkWithId": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/global/networks/2582141050195214895",
+  "subnetworks": [
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/regions/us-central1/subnetworks/test-bad-subnet"
+  ]
+}

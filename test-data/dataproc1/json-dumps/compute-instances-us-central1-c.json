@@ -1,0 +1,5 @@
+{
+  "id": "projects/gcpdiag-dataproc1-aaaa/zones/us-central1-c/instances",
+  "kind": "compute#instanceList",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-c/instances"
+}

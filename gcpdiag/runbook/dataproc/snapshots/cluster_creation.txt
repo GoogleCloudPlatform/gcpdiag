@@ -1,0 +1,262 @@
+project: gcpdiag-dataproc1-aaaa, parameters:
+{cluster_name=good,end_time_utc=2024-06-22t01:00:00z,project_id=gcpdiag-
+dataproc1-aaaa,start_time_utc=2024-06-18t01:00:00z}
+
+dataproc/cluster-creation: Provides a comprehensive analysis of common issues which affects Dataproc cluster creation.
+
+  This runbook focuses on a range of potential problems for Dataproc clusters on
+  Google Cloud Platform. By conducting a series of checks, the runbook aims to
+  pinpoint the root cause of cluster creation difficulties.
+
+  The following areas are examined:
+
+  - Stockout errors: Evaluates Logs Explorer logs regarding stockout in the
+  region/zone.
+
+  - Quota availibility: Checks for the quota availibility in Dataproc cluster project.
+
+  - Network configuration: Performs GCE Network Connectivity Tests, checks necessary firewall rules, external/internal IP configuration.
+
+  - Cross-project configuration: Checks if the service account is not in the same
+  project and reviews additional
+    roles and organization policies enforcement.
+
+  - Shared VPC configuration: Checks if the Dataproc cluster uses a Shared VPC network and
+  evaluates if right service account roles are added.
+
+  - Init actions script failures: Evaluates Logs Explorer
+  logs regarding init actions script failures or timeouts.
+  
+[START]: Verify cluster quota...
+
+   - gcpdiag-dataproc1-aaaa                                               [FAIL]
+     [REASON]
+     The cluster good in project gcpdiag-dataproc1-aaaa could not be created due to insufficient quota in the project.
+
+     [REMEDIATION]
+     This issue occurs when the requested Dataproc cluster exceeds the project's available quota for resources such as CPU, disk space, or IP addresses.
+     Solution: Request additional quota [1] from the Google Cloud console or use another project.
+     [1] https://cloud.google.com/docs/quotas/view-manage#managing_your_quota_console
+
+[AUTOMATED STEP]: Verify cluster stockout issue...
+
+   - gcpdiag-dataproc1-aaaa                                               [FAIL]
+     [REASON]
+     The cluster good creation in project gcpdiag-dataproc1-aaaa failed due to insufficient resources in the selected zone/region.
+
+     [REMEDIATION]
+     Dataproc cluster stockout occurs when there are insufficient resources available in a specific zone or region to create your requested cluster.
+     Solutions to resolve the issue include:
+     - Create the cluster in a different zone or region.
+     - Use the Dataproc Auto Zone placement feature by not specifying the zone [1].
+     [1] https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/auto-zone
+
+[AUTOMATED STEP]: Verify cluster exists in Dataproc UI...
+
+   - gcpdiag-dataproc1-aaaa/us-central1/good                              [OK]
+     [REASON]
+     Cluster good exists in project projects/gcpdiag-dataproc1-aaaa
+
+[GATEWAY]: Verify cluster is in ERROR state...
+[INFO]: Cluster is in RUNNING state. Please choose another issue category to investigate, the issue is not related to cluster creation, as the cluster provisioned successfully.
+[END]: This is the end step of the runbook.
+[INFO]: Please visit all the FAIL steps and address the suggested remediations.
+        If the cluster is still not able to be provisioned successfully,
+        run the runbook again and open a Support case. If you are missing
+        Service Account permissions, but are not able to see the Service Agent
+        Service Account go to the IAM page and check 'Include Google-provided
+        role grants'
+
+
+project: gcpdiag-dataproc1-aaaa, parameters:
+{cluster_name=good,end_time_utc=2024-06-24t01:00:00z,project_id=gcpdiag-
+dataproc1-aaaa,start_time_utc=2024-06-23t01:00:00z}
+
+dataproc/cluster-creation: Provides a comprehensive analysis of common issues which affects Dataproc cluster creation.
+
+  This runbook focuses on a range of potential problems for Dataproc clusters on
+  Google Cloud Platform. By conducting a series of checks, the runbook aims to
+  pinpoint the root cause of cluster creation difficulties.
+
+  The following areas are examined:
+
+  - Stockout errors: Evaluates Logs Explorer logs regarding stockout in the
+  region/zone.
+
+  - Quota availibility: Checks for the quota availibility in Dataproc cluster project.
+
+  - Network configuration: Performs GCE Network Connectivity Tests, checks necessary firewall rules, external/internal IP configuration.
+
+  - Cross-project configuration: Checks if the service account is not in the same
+  project and reviews additional
+    roles and organization policies enforcement.
+
+  - Shared VPC configuration: Checks if the Dataproc cluster uses a Shared VPC network and
+  evaluates if right service account roles are added.
+
+  - Init actions script failures: Evaluates Logs Explorer
+  logs regarding init actions script failures or timeouts.
+  
+[START]: Verify cluster quota...
+
+   - gcpdiag-dataproc1-aaaa                                               [FAIL]
+     [REASON]
+     The cluster good in project gcpdiag-dataproc1-aaaa could not be created due to insufficient quota in the project.
+
+     [REMEDIATION]
+     This issue occurs when the requested Dataproc cluster exceeds the project's available quota for resources such as CPU, disk space, or IP addresses.
+     Solution: Request additional quota [1] from the Google Cloud console or use another project.
+     [1] https://cloud.google.com/docs/quotas/view-manage#managing_your_quota_console
+
+[AUTOMATED STEP]: Verify cluster stockout issue...
+
+   - gcpdiag-dataproc1-aaaa                                               [FAIL]
+     [REASON]
+     The cluster good creation in project gcpdiag-dataproc1-aaaa failed due to insufficient resources in the selected zone/region.
+
+     [REMEDIATION]
+     Dataproc cluster stockout occurs when there are insufficient resources available in a specific zone or region to create your requested cluster.
+     Solutions to resolve the issue include:
+     - Create the cluster in a different zone or region.
+     - Use the Dataproc Auto Zone placement feature by not specifying the zone [1].
+     [1] https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/auto-zone
+
+[AUTOMATED STEP]: Verify cluster exists in Dataproc UI...
+
+   - gcpdiag-dataproc1-aaaa/us-central1/good                              [OK]
+     [REASON]
+     Cluster good exists in project projects/gcpdiag-dataproc1-aaaa
+
+[GATEWAY]: Verify cluster is in ERROR state...
+[INFO]: Cluster is in RUNNING state. Please choose another issue category to investigate, the issue is not related to cluster creation, as the cluster provisioned successfully.
+[END]: This is the end step of the runbook.
+[INFO]: Please visit all the FAIL steps and address the suggested remediations.
+        If the cluster is still not able to be provisioned successfully,
+        run the runbook again and open a Support case. If you are missing
+        Service Account permissions, but are not able to see the Service Agent
+        Service Account go to the IAM page and check 'Include Google-provided
+        role grants'
+
+
+project: gcpdiag-dataproc1-aaaa, parameters: {cluster_name=test-deny-
+icmp,end_time_utc=2024-06-22t01:00:00z,project_id=gcpdiag-
+dataproc1-aaaa,start_time_utc=2024-06-18t01:00:00z}
+
+dataproc/cluster-creation: Provides a comprehensive analysis of common issues which affects Dataproc cluster creation.
+
+  This runbook focuses on a range of potential problems for Dataproc clusters on
+  Google Cloud Platform. By conducting a series of checks, the runbook aims to
+  pinpoint the root cause of cluster creation difficulties.
+
+  The following areas are examined:
+
+  - Stockout errors: Evaluates Logs Explorer logs regarding stockout in the
+  region/zone.
+
+  - Quota availibility: Checks for the quota availibility in Dataproc cluster project.
+
+  - Network configuration: Performs GCE Network Connectivity Tests, checks necessary firewall rules, external/internal IP configuration.
+
+  - Cross-project configuration: Checks if the service account is not in the same
+  project and reviews additional
+    roles and organization policies enforcement.
+
+  - Shared VPC configuration: Checks if the Dataproc cluster uses a Shared VPC network and
+  evaluates if right service account roles are added.
+
+  - Init actions script failures: Evaluates Logs Explorer
+  logs regarding init actions script failures or timeouts.
+  
+[START]: Verify cluster quota...
+
+   - gcpdiag-dataproc1-aaaa                                               [FAIL]
+     [REASON]
+     The cluster test-deny-icmp in project gcpdiag-dataproc1-aaaa could not be created due to insufficient quota in the project.
+
+     [REMEDIATION]
+     This issue occurs when the requested Dataproc cluster exceeds the project's available quota for resources such as CPU, disk space, or IP addresses.
+     Solution: Request additional quota [1] from the Google Cloud console or use another project.
+     [1] https://cloud.google.com/docs/quotas/view-manage#managing_your_quota_console
+
+[AUTOMATED STEP]: Verify cluster stockout issue...
+
+   - gcpdiag-dataproc1-aaaa                                               [FAIL]
+     [REASON]
+     The cluster test-deny-icmp creation in project gcpdiag-dataproc1-aaaa failed due to insufficient resources in the selected zone/region.
+
+     [REMEDIATION]
+     Dataproc cluster stockout occurs when there are insufficient resources available in a specific zone or region to create your requested cluster.
+     Solutions to resolve the issue include:
+     - Create the cluster in a different zone or region.
+     - Use the Dataproc Auto Zone placement feature by not specifying the zone [1].
+     [1] https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/auto-zone
+
+[AUTOMATED STEP]: Verify cluster exists in Dataproc UI...
+
+   - gcpdiag-dataproc1-aaaa/us-central1/test-deny-icmp                    [OK]
+     [REASON]
+     Cluster test-deny-icmp exists in project projects/gcpdiag-dataproc1-aaaa
+
+[GATEWAY]: Verify cluster is in ERROR state...
+[INFO]: Cluster is in ERROR state or not existing and additional parameters has been provided
+[AUTOMATED STEP]: Gathering cluster details...
+
+   - gcpdiag-dataproc1-aaaa/us-central1/test-deny-icmp                    [OK]
+     [REASON]
+     Stackdriver: Enabled
+
+[INFO]: Service Account:12340005-compute@developer.gserviceaccount.com
+[INFO]: Network: https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/global/networks/test-bad-network
+[AUTOMATED STEP]: Verify network connectivity among nodes in the cluster...
+[INFO]: Zone: us-central1-a
+[INFO]: Running connectivity tests...
+[INFO]: ICMP test...
+[GATEWAY]: Checking if the cluster is using internal IP only...
+[GATEWAY]: Checking service account project...
+[INFO]: 12340005-compute@developer.gserviceaccount.com
+[INFO]: VM Service Account associated with Dataproc cluster was found in the same project
+[INFO]: Checking permissions...
+[AUTOMATED STEP]: Verifying IAM policy
+
+   - projects/gcpdiag-dataproc1-aaaa                                      [FAIL]
+     [REASON]
+     serviceAccount:12340005-compute@developer.gserviceaccount.com doesn't have at least one of the expected roles:
+     roles/dataproc.worker.
+
+     [REMEDIATION]
+     Follow Guide [1] to grant a role which has the correct permissions.
+     [2] has a list of all Google predefined roles available to you.
+
+     Note: You may want to doublecheck with your project admins of the best way to grant the role
+     or custom roles which can be used.
+
+     [1] https://cloud.google.com/iam/docs/grant-role-console
+     [2] https://cloud.google.com/iam/docs/understanding-roles
+
+[AUTOMATED STEP]: Verify service account roles based on Shared VPC...
+
+   - gcpdiag-dataproc1-aaaa                                               [SKIP]
+     [REASON]
+     Cluster is not using a Shared VPC network
+[AUTOMATED STEP]: Verify Cluster init script failure.
+
+   - gcpdiag-dataproc1-aaaa                                               [FAIL]
+     [REASON]
+     The cluster test-deny-icmp creation failed because the initialization script encountered an error.
+
+     [REMEDIATION]
+     A Dataproc cluster init script failure means that a script intended to run during the cluster's initial setup did not complete successfully.
+     Solution:
+     See initialization actions considerations and guidelines [1].
+     Examine the output logs. The error message should provide a link to the logs in Cloud Storage.
+     [1]https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/init-actions#important_considerations_and_guidelines
+
+[END]: This is the end step of the runbook.
+[INFO]: Please visit all the FAIL steps and address the suggested remediations.
+        If the cluster is still not able to be provisioned successfully,
+        run the runbook again and open a Support case. If you are missing
+        Service Account permissions, but are not able to see the Service Agent
+        Service Account go to the IAM page and check 'Include Google-provided
+        role grants'
+
+
