@@ -1,0 +1,36 @@
+project: , parameters: {location=europe-west10-b,node=gke-diag-cluster-
+nodepool-a545b703-8kjq,nodepool=nodepool,project_id=}
+
+gke/node-bootstrapping: Analyses issues experienced when adding nodes to your GKE Standard cluster.
+
+  This runbook requires at least
+  - location and node parameters. Location here is the zone where the node is running,
+  for example us-central1-c.
+  - location, nodepool and cluster name parameters to be provided. Location is zone or region for
+  a nodepool, if the cluster is a regional cluster, then location for a nodepool will be the
+  cluster region. For example a region could be us-central1.
+
+  If a location/node pair is provided, the runbook will check the Node Registration Checker output
+  for the given location/node pair.
+
+  If a location, nodepool and GKE cluster name parameters are provided, the runbook will check for
+  any errors that might have occurred when the instances.insert method was invoked for the given
+  parameters.
+  
+[START]: 
+    Check the provided parameters.
+    
+[AUTOMATED STEP]: 
+    Check for any errors during instances.insert method for the given location (region or zone)
+    and nodepool pair.
+    
+[AUTOMATED STEP]: 
+    Verify if Node Registration Checker completed running.
+
+    If the node was successfully registered, provide log entry proving successful registration
+    If the node wasn't registered successfully, provide Node Registration Checker summary to
+    understand why.
+    
+[END]: Finalizing `GKE Node Bootstrapping` diagnostics...
+
+

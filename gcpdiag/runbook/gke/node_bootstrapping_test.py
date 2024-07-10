@@ -11,15 +11,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Contains GKE specific flags"""
+"""Test class for gke/NodeBootstrapping"""
 
-# pylint: disable=wildcard-import, unused-wildcard-import
-from gcpdiag.runbook.gcp.flags import *
+from gcpdiag import config
+from gcpdiag.runbook import gke, snapshot_test_base
 
-LOCATION = 'location'
-NODE = 'node'
-NODEPOOL = 'nodepool'
 
-OPS_AGENT_EXPORTING_METRICS = False
-PROTOCOL_TYPE = 'protocol_type'
-INTERACTIVE_MODE = 'auto'
+class Test(snapshot_test_base.RulesSnapshotTestBase):
+  rule_pkg = gke
+  runbook_name = 'gke/node-bootstrapping'
+  project_id = ''
+  config.init({'auto': True, 'interface': 'cli'}, project_id)
+
+  rule_parameters = [{
+      'project_id': 'gcpdiag-gke-cluster-autoscaler-rrrr',
+      'node': 'gke-diag-cluster-nodepool-a545b703-8kjq',
+      'nodepool': 'nodepool',
+      'location': 'europe-west10-b'
+  }]

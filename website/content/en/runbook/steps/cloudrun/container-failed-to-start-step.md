@@ -16,7 +16,7 @@ This step will check if the error is present and link to additional troubleshoot
 
 ### Failure Reason
 
-Container failed to start in service { name }
+Container failed to start in service { name }.
 
 ### Failure Remediation
 
