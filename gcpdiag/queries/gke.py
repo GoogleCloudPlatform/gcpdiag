@@ -19,7 +19,7 @@ import functools
 import ipaddress
 import logging
 import re
-from typing import Dict, Iterable, List, Mapping, Optional
+from typing import Dict, Iterable, List, Mapping, Optional, Union
 
 import googleapiclient.errors
 from boltons.iterutils import get_path
@@ -479,16 +479,15 @@ def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
 
 
 @caching.cached_api_call
-def get_cluster(context: models.Context, cluster_id, zone) -> Cluster:
+def get_cluster(project_id, cluster_id, location) -> Union[Cluster, None]:
   """Get a Cluster from project_id of a context."""
-  if not apis.is_enabled(context.project_id, 'container'):
-    raise RuntimeError('container api is not enabled. Enable the container api')
-  container_api = apis.get_api('container', 'v1', context.project_id)
+  if not apis.is_enabled(project_id, 'container'):
+    return None
+  container_api = apis.get_api('container', 'v1', project_id)
   logging.info('fetching the GKE cluster %s in project %s', cluster_id,
-               context.project_id)
+               project_id)
   query = container_api.projects().locations().clusters().get(
-      name=
-      f'projects/{context.project_id}/locations/{zone}/clusters/{cluster_id}')
+      name=f'projects/{project_id}/locations/{location}/clusters/{cluster_id}')
   try:
     resp = query.execute(num_retries=config.API_RETRIES)
     if cluster_id not in str(resp):
@@ -496,7 +495,7 @@ def get_cluster(context: models.Context, cluster_id, zone) -> Cluster:
           'missing data in projects.locations.clusters.list response')
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
-  return Cluster(project_id=context.project_id, resource_data=resp)
+  return Cluster(project_id=project_id, resource_data=resp)
 
 
 @caching.cached_api_call

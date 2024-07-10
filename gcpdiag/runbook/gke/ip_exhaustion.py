@@ -15,12 +15,11 @@
 
 from datetime import datetime
 
-import googleapiclient.errors
-
 from gcpdiag import config, runbook
 from gcpdiag.queries import crm, gke, logs
 from gcpdiag.runbook import op
 from gcpdiag.runbook.gke import flags, util
+from gcpdiag.utils import GcpApiError
 
 
 class IpExhaustion(runbook.DiagnosticTree):
@@ -94,19 +93,20 @@ class IpExhaustionStart(runbook.StartStep):
 
     project = crm.get_project(op.get(flags.PROJECT_ID))
     try:
-      cluster = gke.get_cluster(op.context,
+      cluster = gke.get_cluster(op.get(flags.PROJECT_ID),
                                 cluster_id=op.get(flags.NAME),
-                                zone=op.get(flags.LOCATION))
-    except googleapiclient.errors.HttpError:
+                                location=op.get(flags.LOCATION))
+    except GcpApiError:
       op.add_skipped(
           project,
           reason=('Cluster {} does not exist in {} for project {}').format(
               op.get(flags.NAME), op.get(flags.LOCATION),
               op.get(flags.PROJECT_ID)))
-    op.add_ok(project,
-              reason=('Cluster {} found in {} for project {}').format(
-                  cluster.name, op.get(flags.LOCATION),
-                  op.get(flags.PROJECT_ID)))
+    else:
+      op.add_ok(project,
+                reason=('Cluster {} found in {} for project {}').format(
+                    cluster.name, op.get(flags.LOCATION),
+                    op.get(flags.PROJECT_ID)))
 
 
 class IpExhaustionGateway(runbook.Gateway):
@@ -119,9 +119,9 @@ class IpExhaustionGateway(runbook.Gateway):
   def execute(self):
     """Checking IP Exhaustion and cluster configuration"""
 
-    cluster = gke.get_cluster(op.context,
+    cluster = gke.get_cluster(op.get(flags.PROJECT_ID),
                               cluster_id=op.get(flags.NAME),
-                              zone=op.get(flags.LOCATION))
+                              location=op.get(flags.LOCATION))
 
     # Define the query strings to be used to search cloud logging.
     ip_space_exhausted_query = f'"IP_SPACE_EXHAUSTED" AND "{op.get(flags.NAME)}"'
@@ -176,9 +176,9 @@ class PodIpRangeExhaustion(runbook.Step):
   def execute(self):
     """Checking Pod IP Exhaustion and offering remediation steps"""
 
-    cluster = gke.get_cluster(op.context,
+    cluster = gke.get_cluster(op.get(flags.PROJECT_ID),
                               cluster_id=op.get(flags.NAME),
-                              zone=op.get(flags.LOCATION))
+                              location=op.get(flags.LOCATION))
 
     op.info(
         'Verifying if the cluster is an Autopilot cluster or a standard cluster...'
@@ -211,9 +211,9 @@ class NodeIpRangeExhaustion(runbook.Step):
   def execute(self):
     """Checking node IP Exhaustion and offering remediation steps"""
 
-    cluster = gke.get_cluster(op.context,
+    cluster = gke.get_cluster(op.get(flags.PROJECT_ID),
                               cluster_id=op.get(flags.NAME),
-                              zone=op.get(flags.LOCATION))
+                              location=op.get(flags.LOCATION))
     op.info(
         'Checking the cluster status message if IP Exhaustion issue is ongoing...'
     )
