@@ -57,8 +57,16 @@ release:
 	# Note: this will fail if we have already a release tag, in which case
 	# you should first increase the minor version with a code review.
 	bumpversion --commit --tag --tag-message "Release v{new_version}" release
-	# push to the release branch and tag the release
-	git merge -s ours origin/release
+	# Push to the release branch and tag the release.
+	# Note: We want ff-only because otherwise the commit ids will be different
+	# between master and release, and that causes problems with tags
+	# (and in particular the version tag pointing to a commit in the release
+	# branch, so that git describe doesn't work correctly in master, which
+	# itself disrupts the creation of tags in GitHub by Copybara),
+	# If this fails, you probably should force-push from master to the
+	# release branch. The release branch is only used to kick off releases
+	# in Kokoro.
+	git merge --ff-only origin/release
 	git push origin HEAD:release
 	git push --tags
 	# increment the version (and add back '-test')
