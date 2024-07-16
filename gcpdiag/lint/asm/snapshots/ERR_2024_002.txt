@@ -1,0 +1,3 @@
+*  asm/ERR/2024_002: Sufficient resources (CPU and memory) then Istiod pods are scheduled.
+   (logging api is disabled)                                              [SKIP]
+
