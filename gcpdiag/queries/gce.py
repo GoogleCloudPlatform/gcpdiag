@@ -24,6 +24,7 @@ from datetime import datetime, timezone
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Set
 
 import googleapiclient.errors
+from boltons.iterutils import get_path
 
 from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis, apis_utils, crm
@@ -245,6 +246,11 @@ class ManagedInstanceGroup(models.Resource):
       )
     return templates[template_self_link]
 
+  @property
+  def version_target_reached(self) -> bool:
+    return get_path(self._resource_data,
+                    ('status', 'versionTarget', 'isReached'))
+
 
 class SerialPortOutput:
   """Represents the full Serial Port Output (/dev/ttyS0 or COM1) of an instance.
@@ -383,6 +389,24 @@ class Instance(models.Resource):
     return ('scheduling' in self._resource_data and
             'preemptible' in self._resource_data['scheduling'] and
             self._resource_data['scheduling']['preemptible'])
+
+  @property
+  def created_by_mig(self) -> bool:
+    """Return bool indicating if the instance part of a mig.
+
+    MIG which were part of MIG however have been removed or terminated will return True.
+    """
+    created_by = self.get_metadata('created-by')
+    if created_by is None:
+      return False
+
+    created_by_match = re.match(
+        r'projects/([^/]+)/((?:regions|zones)/[^/]+/instanceGroupManagers/[^/]+)$',
+        created_by,
+    )
+    if not created_by_match:
+      return False
+    return True
 
   def is_windows_machine(self) -> bool:
     if 'disks' in self._resource_data:

@@ -179,6 +179,10 @@ JSON_PROJECT_DIR = {
     'windows-sql-cloud':
         pathlib.Path(__file__).parents[2] /
         'test-data/gce-image-license/json-dumps',
+    'gcpdiag-gce5-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/gce5/json-dumps',
+    '123456012345':
+        pathlib.Path(__file__).parents[2] / 'test-data/gce5/json-dumps',
 }
 
 # set to a value higher than 0 to emulate API temp. failure

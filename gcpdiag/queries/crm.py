@@ -148,9 +148,7 @@ def get_all_projects_in_parent(project_id: str) -> List[ProjectBillingInfo]:
           'projectId'] else p['projectId']
       request = crm_api.projects().get(name=p_name)
       response = request.execute(num_retries=config.API_RETRIES)
-      projects.append(
-          ProjectBillingInfo(response['projectId'],
-                             get_billing_info(p['projectId'])))
+      projects.append(get_billing_info(response['projectId']))
     except (utils.GcpApiError, googleapiclient.errors.HttpError) as error:
       if isinstance(error, googleapiclient.errors.HttpError):
         error = utils.GcpApiError(error)

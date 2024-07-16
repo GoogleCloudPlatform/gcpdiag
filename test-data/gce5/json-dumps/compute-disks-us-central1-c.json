@@ -1,0 +1,219 @@
+{
+  "kind": "compute#diskList",
+  "id": "projects/gcpdiag-gce5-aaaa/zones/us-central1-c/disks",
+  "items": [
+    {
+      "kind": "compute#disk",
+      "id": "324125873382120840",
+      "creationTimestamp": "2025-03-18T14:19:36.663-07:00",
+      "name": "apache-instance-3q8d",
+      "sizeGb": "10",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce5-aaaa/zones/us-central1-c",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce5-aaaa/zones/us-central1-c/disks/apache-instance-3q8d",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-11-bullseye-v20250311",
+      "sourceImageId": "6139874332219611556",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce5-aaaa/zones/us-central1-c/diskTypes/pd-standard",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-11-bullseye"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "GVNIC"
+        }
+      ],
+      "lastAttachTimestamp": "2025-03-18T14:19:37.762-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce5-aaaa/zones/us-central1-c/instances/apache-instance-3q8d"
+      ],
+      "labelFingerprint": "42WmSpB8rSM=",
+      "licenseCodes": [
+        "3853522013536123851"
+      ],
+      "physicalBlockSizeBytes": "4096",
+      "enableConfidentialCompute": false,
+      "satisfiesPzi": true,
+      "architecture": "X86_64"
+    },
+    {
+      "kind": "compute#disk",
+      "id": "5581225578091489892",
+      "creationTimestamp": "2025-03-18T17:49:16.023-07:00",
+      "name": "apache-instance-7ssf",
+      "sizeGb": "10",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce5-aaaa/zones/us-central1-c",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce5-aaaa/zones/us-central1-c/disks/apache-instance-7ssf",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-11-bullseye-v20250311",
+      "sourceImageId": "6139874332219611556",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce5-aaaa/zones/us-central1-c/diskTypes/pd-standard",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-11-bullseye"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "GVNIC"
+        }
+      ],
+      "lastAttachTimestamp": "2025-03-18T17:50:11.251-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce5-aaaa/zones/us-central1-c/instances/apache-instance-7ssf"
+      ],
+      "labelFingerprint": "42WmSpB8rSM=",
+      "licenseCodes": [
+        "3853522013536123851"
+      ],
+      "physicalBlockSizeBytes": "4096",
+      "enableConfidentialCompute": false,
+      "architecture": "X86_64"
+    },
+    {
+      "kind": "compute#disk",
+      "id": "5220330411195129197",
+      "creationTimestamp": "2025-03-18T14:20:02.736-07:00",
+      "name": "shielded-vm-integrity-failure",
+      "sizeGb": "10",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce5-aaaa/zones/us-central1-c",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce5-aaaa/zones/us-central1-c/disks/shielded-vm-integrity-failure",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/ubuntu-2204-jammy-v20250312",
+      "sourceImageId": "6817663366014267458",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce5-aaaa/zones/us-central1-c/diskTypes/pd-standard",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/licenses/ubuntu-2204-lts"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "SEV_CAPABLE"
+        },
+        {
+          "type": "SEV_SNP_CAPABLE"
+        },
+        {
+          "type": "SEV_LIVE_MIGRATABLE"
+        },
+        {
+          "type": "SEV_LIVE_MIGRATABLE_V2"
+        },
+        {
+          "type": "IDPF"
+        },
+        {
+          "type": "TDX_CAPABLE"
+        },
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "GVNIC"
+        }
+      ],
+      "lastAttachTimestamp": "2025-03-18T14:20:03.421-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce5-aaaa/zones/us-central1-c/instances/shielded-vm-integrity-failure"
+      ],
+      "labelFingerprint": "42WmSpB8rSM=",
+      "licenseCodes": [
+        "5511465778777431107"
+      ],
+      "physicalBlockSizeBytes": "4096",
+      "enableConfidentialCompute": false,
+      "satisfiesPzi": true,
+      "architecture": "X86_64"
+    },
+    {
+      "kind": "compute#disk",
+      "id": "1275105682248316840",
+      "creationTimestamp": "2025-03-13T18:41:28.587-07:00",
+      "name": "spot-vm-termination",
+      "sizeGb": "10",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce5-aaaa/zones/us-central1-c",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce5-aaaa/zones/us-central1-c/disks/spot-vm-termination",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-11-bullseye-v20250311",
+      "sourceImageId": "6139874332219611556",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce5-aaaa/zones/us-central1-c/diskTypes/pd-standard",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-11-bullseye"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "GVNIC"
+        }
+      ],
+      "lastAttachTimestamp": "2025-03-13T18:41:29.556-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce5-aaaa/zones/us-central1-c/instances/spot-vm-termination"
+      ],
+      "labelFingerprint": "42WmSpB8rSM=",
+      "licenseCodes": [
+        "3853522013536123851"
+      ],
+      "physicalBlockSizeBytes": "4096",
+      "enableConfidentialCompute": false,
+      "satisfiesPzi": true,
+      "architecture": "X86_64"
+    },
+    {
+      "kind": "compute#disk",
+      "id": "358652166287535319",
+      "creationTimestamp": "2025-03-13T19:19:36.239-07:00",
+      "name": "start-and-stop-vm",
+      "sizeGb": "10",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce5-aaaa/zones/us-central1-c",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce5-aaaa/zones/us-central1-c/disks/start-and-stop-vm",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-11-bullseye-v20250311",
+      "sourceImageId": "6139874332219611556",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce5-aaaa/zones/us-central1-c/diskTypes/pd-standard",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-11-bullseye"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "GVNIC"
+        }
+      ],
+      "lastAttachTimestamp": "2025-03-13T19:19:36.916-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce5-aaaa/zones/us-central1-c/instances/start-and-stop-vm"
+      ],
+      "labelFingerprint": "42WmSpB8rSM=",
+      "licenseCodes": [
+        "3853522013536123851"
+      ],
+      "physicalBlockSizeBytes": "4096",
+      "enableConfidentialCompute": false,
+      "satisfiesPzi": true,
+      "architecture": "X86_64"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce5-aaaa/zones/us-central1-c/disks"
+}
