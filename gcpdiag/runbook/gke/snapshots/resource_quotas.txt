@@ -1,0 +1,19 @@
+project: temp-resourcequota, parameters: {location=us-central1-c,project_id=temp-resourcequota}
+
+gke/resource-quotas: Analyses logs in the project where the cluster is running.
+
+  If there are log entries that contain messages listed in the public documentation
+  https://cloud.google.com/knowledge/kb/google-kubernetes-engine-pods-fail-to-start-due-to-exceeded-quota-000004701
+  then provide details on how this issue can be solved.
+  
+[START]: 
+    Check the provided parameters.
+    
+[AUTOMATED STEP]: Verifying Cloud API state...
+[AUTOMATED STEP]: 
+    Verify clusters running version. GKE doesn't enforce the Kubernetes
+    resource quotas for clusters running version 1.28 or later.
+    
+[END]: Finalizing `Resource Quotas` diagnostics...
+
+
