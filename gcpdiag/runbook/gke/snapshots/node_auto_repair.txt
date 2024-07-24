@@ -1,0 +1,57 @@
+project: gcpdiag-gke-cluster-autoscaler-rrrr, parameters: {location=europe-west10-a,name=gcp-
+cluster,node=gke-gcp-cluster-default-pool-82e0c046-8m8b,project_id=gcpdiag-gke-cluster-autoscaler-
+rrrr}
+
+gke/node-auto-repair: Provides the reason why a Node was auto-repaired
+
+  This runbook checks if:
+  - Node auto-repair is enabled on the cluster
+  - Nodes was repaired because it was in NotReady status for more than 10 minutes
+  - Nodes was repaired because it had disk pressure
+  - Nodes was repaired because of unallocatable GPUs
+  - Nodes was repaired because of unallocatable TPUs
+  
+[START]: Check inputs and verify if there was a repair event
+[AUTOMATED STEP]: Checking if there is the node is in NotReady status.
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     The node gke-gcp-cluster-default-pool-82e0c046-8m8b was auto-repaired because it was in a NotReady state for more than approximately 10 minutes.
+
+     [REMEDIATION]
+     The auto-repair should have fixed the detected NotReady state.
+     For more details check: https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair
+
+[AUTOMATED STEP]: Checking if there is the node is in NodeHasDiskPressure status.
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     The node gke-gcp-cluster-default-pool-82e0c046-8m8b was auto-repaired because it had disk pressure for more than 30 minutes.
+
+     [REMEDIATION]
+     The auto-repair should have fixed the detected disk pressure.
+     For more details check: https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair
+
+[AUTOMATED STEP]: Verify whether the node was auto-repaired because of Unallocatable GPUs.
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     The node gke-gcp-cluster-default-pool-82e0c046-8m8b was auto-repaired because it had unallocatable GPU(s) for more than 15 minutes.
+
+     [REMEDIATION]
+     The auto-repair should have fixed the detected unallocatable GPU(s).
+     For more details check: https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair
+
+[AUTOMATED STEP]: Verify whether the node was auto-repaired because of Unallocatable TPUs.
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     The node gke-gcp-cluster-default-pool-82e0c046-8m8b was auto-repaired because it had unallocatable TPU(s) for more than 10 minutes.
+
+     [REMEDIATION]
+     The auto-repair should have fixed the detected unallocatable TPU(s).
+     For more details check: https://cloud.google.com/kubernetes-engine/docs/how-to/tpus#node-auto-repair
+
+[END]: Finalizing `Node AutoRepair` diagnostics...
+
+

@@ -1,0 +1,51 @@
+{% block node_notready_failure_reason %}
+The node {NODE} was auto-repaired because it was in a NotReady state for more than approximately 10 minutes.
+{% endblock node_notready_failure_reason %}
+
+{% block node_notready_failure_remediation %}
+The auto-repair should have fixed the detected NotReady state.
+For more details check: https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair
+{% endblock node_notready_failure_remediation %}
+
+{% block node_notready_success_reason %}
+The node {NODE} was auto-repaired for reasons other than being in a NotReady state.
+{% endblock node_notready_success_reason %}
+
+{% block node_disk_full_failure_reason %}
+The node {NODE} was auto-repaired because it had disk pressure for more than 30 minutes.
+{% endblock node_disk_full_failure_reason %}
+
+{% block node_disk_full_failure_remediation %}
+The auto-repair should have fixed the detected disk pressure.
+For more details check: https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair
+{% endblock node_disk_full_failure_remediation %}
+
+{% block node_disk_full_success_reason %}
+The node {NODE} was auto-repaired for reasons other than disk pressure.
+{% endblock node_disk_full_success_reason %}
+
+{% block unallocatable_gpu_failure_reason %}
+The node {NODE} was auto-repaired because it had unallocatable GPU(s) for more than 15 minutes.
+{% endblock unallocatable_gpu_failure_reason %}
+
+{% block unallocatable_gpu_failure_remediation %}
+The auto-repair should have fixed the detected unallocatable GPU(s).
+For more details check: https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair
+{% endblock unallocatable_gpu_failure_remediation %}
+
+{% block unallocatable_gpu_success_reason %}
+The node {NODE} was auto-repaired for reasons other than unallocatable GPU(s).
+{% endblock unallocatable_gpu_success_reason %}
+
+{% block unallocatable_tpu_failure_reason %}
+The node {NODE} was auto-repaired because it had unallocatable TPU(s) for more than 10 minutes.
+{% endblock unallocatable_tpu_failure_reason %}
+
+{% block unallocatable_tpu_failure_remediation %}
+The auto-repair should have fixed the detected unallocatable TPU(s).
+For more details check: https://cloud.google.com/kubernetes-engine/docs/how-to/tpus#node-auto-repair
+{% endblock unallocatable_tpu_failure_remediation %}
+
+{% block unallocatable_tpu_success_reason %}
+The node {NODE} was auto-repaired for reasons other than unallocatable TPU(s).
+{% endblock unallocatable_tpu_success_reason %}
