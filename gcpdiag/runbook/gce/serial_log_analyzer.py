@@ -50,6 +50,9 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
 
     Google Guest Agent checks:
         - Check if we have logs related to successful startup of Google Guest Agent.
+
+    SSH guard check:
+        - Check if SSHGuard is active and may be blocking IP addresses
     """
 
   # Specify parameters common to all steps in the diagnostic tree class.
@@ -138,13 +141,21 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
     sshd_check = gce_gs.VmSerialLogsCheck()
     sshd_check.template = 'vm_serial_log::sshd'
     sshd_check.positive_pattern = gce_const.GOOD_SSHD_PATTERNS
+    sshd_check.negative_pattern = gce_const.BAD_SSHD_PATTERNS
     self.add_step(parent=log_start_point, child=sshd_check)
 
     # Check for Guest Agent status
     guest_agent_check = gce_gs.VmSerialLogsCheck()
     guest_agent_check.template = 'vm_serial_log::guest_agent'
     guest_agent_check.positive_pattern = gce_const.GUEST_AGENT_STATUS_MSG
+    guest_agent_check.negative_pattern = gce_const.GUEST_AGENT_FAILED_MSG
     self.add_step(parent=log_start_point, child=guest_agent_check)
+
+    # Check for SSH Guard blocks that might be preventing SSH access.
+    sshd_guard = gce_gs.VmSerialLogsCheck()
+    sshd_guard.template = 'vm_serial_log::sshguard'
+    sshd_guard.negative_pattern = gce_const.SSHGUARD_PATTERNS
+    self.add_step(parent=log_start_point, child=sshd_guard)
 
     self.add_end(AnalysingSerialLogsEnd())
 

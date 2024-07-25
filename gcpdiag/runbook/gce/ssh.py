@@ -152,6 +152,14 @@ class Ssh(runbook.DiagnosticTree):
     # assign add as a child of start
     self.add_step(parent=start, child=gce_permission_check)
     self.add_step(parent=start, child=gce_firewall_check)
+
+    # Check for Guest Agent status
+    guest_agent_check = gce_gs.VmSerialLogsCheck()
+    guest_agent_check.template = 'vm_serial_log::guest_agent'
+    guest_agent_check.positive_pattern = gce_const.GUEST_AGENT_STATUS_MSG
+    guest_agent_check.negative_pattern = gce_const.GUEST_AGENT_FAILED_MSG
+    self.add_step(parent=start, child=guest_agent_check)
+
     # users wants to use SSH in Browser
     if op.get(CHECK_SSH_IN_BROWSER):
       self.add_step(parent=start, child=SshInBrowserCheck())

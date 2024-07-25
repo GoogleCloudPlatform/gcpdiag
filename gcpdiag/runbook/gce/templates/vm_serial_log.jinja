@@ -354,7 +354,22 @@ Detected that Google Guest Agent is running within the VM
 There are no logs to examine !
 {% endblock guest_agent_skipped_reason %}
 
+{% block guest_agent_uncertain_reason %}
+We are not able to find the success or failed logs for Google Guest Agent startup.
+{% endblock guest_agent_uncertain_reason %}
 
+{% block guest_agent_uncertain_remediation %}
+Each supported operating system that is available on Compute Engine
+requires specific guest environment packages.
+
+The presence of a guest environment can be determined by either
+inspecting system logs emitted to the console while an instance starts up,
+or by listing the installed packages while connected to the instance.
+
+To manually validate the Guest Agent,
+please check https://cloud.google.com/compute/docs/images/install-guest-environment#wgei
+
+{% endblock guest_agent_uncertain_remediation %}
 
 {% block  network_errors_step_message %}
 Checking for network related errors

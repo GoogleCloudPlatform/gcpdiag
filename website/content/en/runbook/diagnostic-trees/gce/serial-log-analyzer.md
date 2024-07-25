@@ -36,6 +36,9 @@ This runbook is designed to assist you in investigating the serial console logs 
     Google Guest Agent checks:
         - Check if we have logs related to successful startup of Google Guest Agent.
 
+    SSH guard check:
+        - Check if SSHGuard is active and may be blocking IP addresses
+
 ### Executing this runbook
 
 ```shell
@@ -66,6 +69,8 @@ gcpdiag runbook --help
 ### Potential Steps
 
   - [Fetch Vm Details](/runbook/steps/gce/fetch-vm-details)
+
+  - [Vm Serial Logs Check](/runbook/steps/gce/vm-serial-logs-check)
 
   - [Vm Serial Logs Check](/runbook/steps/gce/vm-serial-logs-check)
 

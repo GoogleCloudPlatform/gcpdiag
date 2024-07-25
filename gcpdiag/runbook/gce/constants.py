@@ -77,6 +77,7 @@ NETWORK_ERRORS = [
     'dial tcp 169.254.169.254:80: i/o timeout',
     'dial tcp metadata.goog:80: connect: network is unreachable',
     'dial tcp metadata.google.internal:80: connect: network is unreachable',
+    'error connecting to metadata server'
 ]
 
 TIME_SYNC_ERROR = [
@@ -131,4 +132,9 @@ GCE_CLUSTER_MANAGER_EMAIL = 'cloud-cluster-manager@prod.google.com'
 GUEST_AGENT_STATUS_MSG = [
     'Started Google Compute Engine Guest Agent',
     r'google_guest_agent\[\d+\]: GCE Agent Started'
+]
+
+GUEST_AGENT_FAILED_MSG = [
+    'Failed to start Google Compute Engine Guest Agent',
+    r'google_guest_agent\[(\d+)\]: CRITICAL (.*\.go):(\d+) error registering service'
 ]

@@ -199,6 +199,12 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      Ingress Traffic from source IP/CIDR 35.235.240.0/20, tcp:22 to the GCE
      instance faulty-linux-ssh is allowed by: vpc firewall rule: gce-secured-instance-test-allow
 
+[AUTOMATED STEP]: Checking for Guest Agent startup logs
+
+   - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [OK]
+     [REASON]
+     Detected that Google Guest Agent is running within the VM
+
 [END]: Finalizing SSH diagnostics...
 
 
@@ -401,6 +407,12 @@ principal in Cloud Console / gcloud (incl. impersonated service account)
      Ingress Traffic from source IP/CIDR 35.235.240.0/20, tcp:22 to the GCE
      instance valid-linux-ssh is allowed by: vpc firewall rule: default-allow-ssh
 
+[AUTOMATED STEP]: Checking for Guest Agent startup logs
+
+   - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
+     [REASON]
+     Detected that Google Guest Agent is running within the VM
+
 [END]: Finalizing SSH diagnostics...
 
 
@@ -572,6 +584,24 @@ are operational on the VM.
    - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [OK]
      [REASON]
      Ingress Traffic from source IP/CIDR 0.0.0.0, tcp:22 to the GCE instance faulty-windows-ssh is allowed by: vpc firewall rule: gce-secured-instance-test-allow
+
+[AUTOMATED STEP]: Checking for Guest Agent startup logs
+
+   - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [UNCERTAIN]
+     [REASON]
+     We are not able to find the success or failed logs for Google Guest Agent startup.
+
+     [REMEDIATION]
+     Each supported operating system that is available on Compute Engine
+     requires specific guest environment packages.
+
+     The presence of a guest environment can be determined by either
+     inspecting system logs emitted to the console while an instance starts up,
+     or by listing the installed packages while connected to the instance.
+
+     To manually validate the Guest Agent,
+     please check https://cloud.google.com/compute/docs/images/install-guest-environment#wgei
+
 
 [END]: Finalizing SSH diagnostics...
 

@@ -26,6 +26,9 @@ gce/serial-log-analyzer:  GCE VM Serial log analyzer
 
     Google Guest Agent checks:
         - Check if we have logs related to successful startup of Google Guest Agent.
+
+    SSH guard check:
+        - Check if SSHGuard is active and may be blocking IP addresses
     
 [START]: Fetching VM details
 [AUTOMATED STEP]: Checking if all logs available since last boot of the instance
@@ -37,6 +40,7 @@ gce/serial-log-analyzer:  GCE VM Serial log analyzer
 [AUTOMATED STEP]: Checking for Time Sync related errors
 [AUTOMATED STEP]: Examining SSHD functionality via serial logs.
 [AUTOMATED STEP]: Checking for Guest Agent startup logs
+[AUTOMATED STEP]: Analyzing SSHGuard intrusion detection functionality on the VM (if any)
 [END]: Finalizing Serial console Log Analysis...
 
 
@@ -68,6 +72,9 @@ gce/serial-log-analyzer:  GCE VM Serial log analyzer
 
     Google Guest Agent checks:
         - Check if we have logs related to successful startup of Google Guest Agent.
+
+    SSH guard check:
+        - Check if SSHGuard is active and may be blocking IP addresses
     
 [START]: Fetching VM details
 [AUTOMATED STEP]: Checking if all logs available since last boot of the instance
@@ -79,6 +86,7 @@ gce/serial-log-analyzer:  GCE VM Serial log analyzer
 [AUTOMATED STEP]: Checking for Time Sync related errors
 [AUTOMATED STEP]: Examining SSHD functionality via serial logs.
 [AUTOMATED STEP]: Checking for Guest Agent startup logs
+[AUTOMATED STEP]: Analyzing SSHGuard intrusion detection functionality on the VM (if any)
 [END]: Finalizing Serial console Log Analysis...
 
 
