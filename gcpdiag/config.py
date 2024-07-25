@@ -164,6 +164,11 @@ def set_project_id(project_id):
   _project_id = project_id
 
 
+def get_project_id():
+  """Session project-id."""
+  return _project_id
+
+
 def get(key):
   """Find property value for provided key inside CLI args or yaml configuration
   (including global and per project configuration).
