@@ -70,7 +70,9 @@ class VmTermination(runbook.DiagnosticTree):
           'type':
               str,
           'help':
-              'The name of the terminated VM. Or provide the id i.e -p id=<int>'
+              'The name of the terminated VM. Or provide the id i.e -p id=<int>',
+          'required':
+              True
       },
       flags.ID: {
           'type':
@@ -80,7 +82,8 @@ class VmTermination(runbook.DiagnosticTree):
       },
       flags.ZONE: {
           'type': str,
-          'help': 'The Google Cloud zone where the terminated VM is located.'
+          'help': 'The Google Cloud zone where the terminated VM is located.',
+          'required': True
       },
       flags.START_TIME_UTC: {
           'type':

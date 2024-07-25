@@ -47,9 +47,9 @@ gcpdiag runbook gce/vm-termination \
 | Name | Required | Default | Type | Help |
 |------|----------|---------|------|------|
 | `project_id` | True | None | str | The Project ID associated with the terminated VM.For investigations covering multiple VMs, provide only the Project ID. |
-| `name` | False | None | str | The name of the terminated VM. Or provide the id i.e -p id=<int> |
+| `name` | True | None | str | The name of the terminated VM. Or provide the id i.e -p id=<int> |
 | `id` | False | None | int | The instance ID of the terminated VM. Or provide name instead i.e -p name=<str> |
-| `zone` | False | None | str | The Google Cloud zone where the terminated VM is located. |
+| `zone` | True | None | str | The Google Cloud zone where the terminated VM is located. |
 | `start_time_utc` | False | None | datetime | The start window to investigate vm termination. Format: YYYY-MM-DDTHH:MM:SSZ |
 | `end_time_utc` | False | None | datetime | The end window for the investigation. Format: YYYY-MM-DDTHH:MM:SSZ |
 
