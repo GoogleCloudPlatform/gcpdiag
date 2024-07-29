@@ -1,0 +1,30 @@
+project: , parameters: {custom_flag=composer,project_id=}
+
+composer/env-creation: Composer Runbook: Check for environment creation permissions.
+[START]: Starting composer runbook for environment creation.
+[AUTOMATED STEP]: Checking Number of Composer environments in the project.
+[INFO]: Please select the environment you want to troubleshoot.
+[AUTOMATED STEP]: Validating IAM permissions for all service accounts involved
+    in the Composer environment creation.
+[AUTOMATED STEP]: Checking if the Composer environment is,
+    configured to use a Shared VPC and verifying necessary permissions...
+[AUTOMATED STEP]: Checking if a Customer-Managed Encryption Key (CMEK) is enabled,
+    for this Composer environment and verifying necessary permissions...
+[AUTOMATED STEP]: Checking for org policy violations and Managed Instance Group quota,
+    related issues in logs checks.
+
+   -                                                                      [OK]
+     [REASON]
+     No Org Policy Violation detected for  😎. Nice!
+
+   -                                                                      [OK]
+     [REASON]
+     Managed Instance Group Quota within limits for  😎. Nice!
+
+   -                                                                      [OK]
+     [REASON]
+     No caller permission issues detected  😎. Nice!
+[END]: ✅ RUNBOOK COMPLETED ✅
+[INFO]: Environment creation process finished. Review any warnings or errors for further action.
+
+

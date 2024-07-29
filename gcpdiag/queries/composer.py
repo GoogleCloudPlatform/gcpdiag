@@ -108,9 +108,27 @@ class Environment(models.Resource):
     return f'{self.project_id}/{self.region}/{self.name}'
 
   @property
-  def airflow_config_overrides(self) -> dict:
+  def airflow_config_overrides(self) -> dict[str, str]:
     return self._resource_data['config']['softwareConfig'].get(
         'airflowConfigOverrides', {})
+
+  @property
+  def network_details(self) -> str:
+    nd = self._resource_data['config']['nodeConfig'].get('network')
+    if nd is None:
+      return (  # Or return a default value, or raise an exception
+          'Network not found')
+    else:
+      return nd
+
+  @property
+  def kms_key_name(self) -> str:
+    kms = self._resource_data['config']['encryptionConfig'].get('kmsKeyName')
+    if kms is None:
+      return (  # Or return a default value, or raise an exception
+          'No KMS key found')
+    else:
+      return kms
 
   @property
   def service_account(self) -> str:
