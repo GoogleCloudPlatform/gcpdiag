@@ -1,0 +1,3 @@
+*  gke/WARN/2024_003: Ingress creation is successful if service is correctly mapped
+   (logging api is disabled)                                              [SKIP]
+
