@@ -1,0 +1,3 @@
+*  gke/WARN/2024_004: Ingress creation is successful if backendconfig crd is correctly mapped
+   (logging api is disabled)                                              [SKIP]
+
