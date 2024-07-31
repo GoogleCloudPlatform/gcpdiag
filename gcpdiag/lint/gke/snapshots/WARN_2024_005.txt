@@ -1,0 +1,3 @@
+*  gke/WARN/2024_005: GKE Ingress successfully routes external traffic to NodePort service
+   (logging api is disabled)                                              [SKIP]
+
