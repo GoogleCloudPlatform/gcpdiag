@@ -76,6 +76,8 @@ gcpdiag runbook --help
 
   - [Validate Backend Service Port Configuration](/runbook/steps/lb/validate-backend-service-port-configuration)
 
+  - [Verify Firewall Rules](/runbook/steps/lb/verify-firewall-rules)
+
   - [Unhealthy Backends End](/runbook/steps/lb/unhealthy-backends-end)
 
 

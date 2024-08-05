@@ -108,8 +108,16 @@ class BackendServices(models.Resource):
       return None
 
   @property
-  def used_by(self) -> List[str]:
-    return self._resource_data.get('usedBy', [])
+  def used_by_refs(self) -> List[str]:
+    used_by = []
+    for x in self._resource_data.get('usedBy', []):
+      reference = x.get('reference')
+      if reference:
+        match = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
+                         reference)
+        if match:
+          used_by.append(match.group(1))
+    return used_by
 
 
 @caching.cached_api_call(in_memory=True)
@@ -167,8 +175,11 @@ def _generate_health_response_callback(
 
   def health_response_callback(request_id, response, exception):
     del request_id, exception
-    for health_status in response.get('healthStatus', []):
-      backend_heath_statuses.append(BackendHealth(health_status, group))
+
+    # None is returned when backend type doesn't support health check
+    if response is not None:
+      for health_status in response.get('healthStatus', []):
+        backend_heath_statuses.append(BackendHealth(health_status, group))
 
   return health_response_callback
 

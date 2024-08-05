@@ -40,6 +40,18 @@ This configuration can be problematic unless you have configured the load balanc
 The load balancer is performing health checks on the same port that it is using for serving traffic. This is the standard configuration.
 {% endblock port_mismatch_success_reason %}
 
+{% block firewall_rules_failure_reason %}
+The health checks are currently failing due to a misconfigured firewall. This is preventing Google Cloud probers from connecting to your backends, causing the load balancer to consider them unhealthy.
+{% endblock firewall_rules_failure_reason %}
+
+{% block firewall_rules_failure_remediation %}
+Update your firewall rules to allow inbound traffic from the Google Cloud health check IP ranges (found at https://cloud.google.com/load-balancing/docs/health-check-concepts#ip-ranges) to your backends.
+{% endblock firewall_rules_failure_remediation %}
+
+{% block firewall_rules_success_reason %}
+Firewalls are correctly configured and are not blocking the health check probes.
+{% endblock firewall_rules_success_reason %}
+
 {% block past_hc_success_uncertain_remediation %}
 Check the logs and monitoring metrics for those instances, focusing on the given timeframes to see if there were any errors, crashes, or resource exhaustion issues that coincide with the unhealthy transition. You can also inspect any application-specific logs for errors or warnings around the timestamp.
 {% endblock past_hc_success_uncertain_remediation %}

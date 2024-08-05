@@ -14,6 +14,18 @@ description: >
 
 None
 
+### Failure Reason
+
+The health checks are currently failing due to a misconfigured firewall. This is preventing Google Cloud probers from connecting to your backends, causing the load balancer to consider them unhealthy.
+
+### Failure Remediation
+
+Update your firewall rules to allow inbound traffic from the Google Cloud health check IP ranges (found at https://cloud.google.com/load-balancing/docs/health-check-concepts#ip-ranges) to your backends.
+
+### Success Reason
+
+Firewalls are correctly configured and are not blocking the health check probes.
+
 
 
 <!--

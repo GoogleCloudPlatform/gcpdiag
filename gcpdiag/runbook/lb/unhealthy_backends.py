@@ -94,11 +94,8 @@ class UnhealthyBackends(runbook.DiagnosticTree):
     port_check = ValidateBackendServicePortConfiguration()
     self.add_step(parent=start, child=port_check)
 
-    # TODO: restore this step once Recommender API returns
-    # correct load balancer url
-
-    # firewall_check = VerifyFirewallRules()
-    # self.add_step(parent=start, child=firewall_check)
+    firewall_check = VerifyFirewallRules()
+    self.add_step(parent=start, child=firewall_check)
 
     # Ending your runbook
     self.add_end(UnhealthyBackendsEnd())
@@ -119,9 +116,8 @@ class UnhealthyBackendsStart(runbook.StartStep):
       return  # Early exit if Compute API is disabled
 
     try:
-      op.info(
-          f'name: {op.get(flags.BACKEND_SERVICE_NAME)}, region: {op.get(flags.REGION)}'
-      )
+      op.info(f'name: {op.get(flags.BACKEND_SERVICE_NAME)}, region:'
+              f' {op.get(flags.REGION)}')
       backend_service = lb.get_backend_service(
           op.context.project_id,
           op.get(flags.BACKEND_SERVICE_NAME),
@@ -130,10 +126,10 @@ class UnhealthyBackendsStart(runbook.StartStep):
     except googleapiclient.errors.HttpError:
       op.add_skipped(
           proj,
-          reason=
-          (f'Backend service {op.get(flags.BACKEND_SERVICE_NAME)} does not exist in scope'
-           f' {op.get(flags.REGION, "global")} or project'
-           f' {op.get(flags.PROJECT_ID)}'),
+          reason=(
+              f'Backend service {op.get(flags.BACKEND_SERVICE_NAME)} does not'
+              f' exist in scope {op.get(flags.REGION, "global")} or project'
+              f' {op.get(flags.PROJECT_ID)}'),
       )
       return  # Early exit if load balancer doesn't exist
 
@@ -183,21 +179,49 @@ class UnhealthyBackendsStart(runbook.StartStep):
       )
 
 
-# TODO: restore this steps once Recommender API returns correct load balancer url
-# class VerifyFirewallRules(runbook.Step):
-#   """Checks if firewall rules are configured correctly."""
+class VerifyFirewallRules(runbook.Step):
+  """Checks if firewall rules are configured correctly."""
 
-#   def execute(self):
-#     """Checks if firewall rules are configured correctly."""
-#     backend_service = lb.get_backend_service(
-#         op.context.project_id,
-#         op.get(flags.BACKEND_SERVICE_NAME),
-#         op.get(flags.REGION),
-#     )
-#     insights = lb.get_lb_insights_for_a_project(op.context.project_id)
-#     for insight in insights:
-#       if insight.is_firewall_rule_insight:
-#         op.info(insight.details)
+  template = 'unhealthy_backends::firewall_rules'
+
+  def execute(self):
+    """Checks if firewall rules are configured correctly."""
+    backend_service = lb.get_backend_service(
+        op.context.project_id,
+        op.get(flags.BACKEND_SERVICE_NAME),
+        op.get(flags.REGION),
+    )
+
+    used_by_refs = backend_service.used_by_refs
+    insights = lb.get_lb_insights_for_a_project(op.context.project_id)
+    for insight in insights:
+      if insight.is_firewall_rule_insight and insight.details.get(
+          'loadBalancerUri'):
+        # network load balancers (backend service is central resource):
+        if insight.details.get('loadBalancerUri').endswith(
+            backend_service.full_path):
+          op.add_failed(
+              resource=backend_service,
+              reason=op.prep_msg(
+                  op.FAILURE_REASON,
+                  insight=insight.description,
+              ),
+              remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+          )
+          return  # Exit the loop after finding a match
+        for ref in used_by_refs:
+          # application load balancers (url map is central resource):
+          if insight.details.get('loadBalancerUri').endswith(ref):
+            op.add_failed(
+                resource=backend_service,
+                reason=op.prep_msg(
+                    op.FAILURE_REASON,
+                    insight=insight.details,
+                ),
+                remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+            )
+            return  # Exit the loop after finding a match
+    op.add_ok(backend_service, reason=op.prep_msg(op.SUCCESS_REASON))
 
 
 class ValidateBackendServicePortConfiguration(runbook.Step):
@@ -367,10 +391,10 @@ class AnalyzeLatestHealthCheckLog(runbook.Gateway):
       else:
         op.add_skipped(
             resource=backend_service,
-            reason=
-            (f'Unsupported resource type {resource_type} for group {group} '
-             f'in backend service {op.get(flags.BACKEND_SERVICE_NAME)} in scope'
-             f' {op.get(flags.REGION, "global")}'),
+            reason=(f'Unsupported resource type {resource_type} for group'
+                    f' {group} in backend service'
+                    f' {op.get(flags.BACKEND_SERVICE_NAME)} in scope'
+                    f' {op.get(flags.REGION, "global")}'),
         )
         continue
       serial_log_entries = logs.realtime_query(
@@ -599,10 +623,10 @@ class CheckPastHealthCheckSuccess(runbook.Step):
       else:
         op.add_skipped(
             resource=group,
-            reason=
-            (f'Unsupported resource type {resource_type} for group {group} '
-             f'in backend service {op.get(flags.BACKEND_SERVICE_NAME)} in scope'
-             f' {op.get(flags.REGION, "global")}'),
+            reason=(f'Unsupported resource type {resource_type} for group'
+                    f' {group} in backend service'
+                    f' {op.get(flags.BACKEND_SERVICE_NAME)} in scope'
+                    f' {op.get(flags.REGION, "global")}'),
         )
         continue
 
