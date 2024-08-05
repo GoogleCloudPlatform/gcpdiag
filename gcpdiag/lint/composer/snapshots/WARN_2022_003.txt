@@ -1,6 +1,6 @@
 *  composer/WARN/2022_003: Composer scheduler parses all DAG files without overloading
-   - gcpdiag-composer1-aaaa/us-central1/env2                              [SKIP]
+   - projects/gcpdiag-composer1-aaaa/locations/us-central1/environments/env2 [SKIP]
      no metrics
-   - gcpdiag-composer1-aaaa/us-central1/env1                              [SKIP]
+   - projects/gcpdiag-composer1-aaaa/locations/us-central1/environments/env1 [SKIP]
      no metrics
 

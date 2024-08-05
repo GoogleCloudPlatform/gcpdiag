@@ -1,4 +1,4 @@
 *  bigquery/WARN/2024_005: BigQuery table does not exceed number of partition modifications to a column partitioned table
-   - gcpdiag-cloudsql1-aaaa                                               [SKIP]
+   - projects/gcpdiag-cloudsql1-aaaa                                      [SKIP]
      logging api is disabled
 

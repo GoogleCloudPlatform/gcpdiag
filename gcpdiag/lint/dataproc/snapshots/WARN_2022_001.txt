@@ -1,4 +1,4 @@
 *  dataproc/WARN/2022_001: Dataproc clusters are not failed to stop due to the local SSDs
-   - gcpdiag-dataproc1-aaaa                                               [SKIP]
+   - projects/gcpdiag-dataproc1-aaaa                                      [SKIP]
      logging api is disabled
 

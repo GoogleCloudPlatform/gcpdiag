@@ -1,5 +1,5 @@
 *  notebooks/BP/2023_001: Vertex AI Workbench instance enables system health report
-   - gcpdiag-notebooks1-aaaa/us-west1-a/gcpdiag-notebooks1instance-aaaa   [FAIL]
+   - projects/gcpdiag-notebooks1-aaaa/locations/us-west1-a/instances/gcpdiag-notebooks1instance-aaaa [FAIL]
 
    User-managed notebooks instances can report the system health of the core
    services like Docker service, Docker reverse proxy agent, Jupyter service and

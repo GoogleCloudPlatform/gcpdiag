@@ -1,5 +1,6 @@
 # [START cloudloadbalancing_ext_http_gce_instance_health_check]
 resource "google_compute_health_check" "default" {
+  provider           = google-beta
   depends_on         = [google_project_service.compute]
   name               = "http-basic-check"
   project            = google_project.project.project_id
@@ -44,6 +45,7 @@ resource "google_compute_health_check" "http-basic-check-2" {
 
 # [START cloudloadbalancing_ext_tcp_gce_instance_health_check]
 resource "google_compute_health_check" "tcp-basic-check-1" {
+  provider   = google-beta
   depends_on = [google_project_service.compute]
   name       = "tcp-basic-check-1"
   project    = google_project.project.project_id

@@ -1,5 +1,5 @@
 *  gce/BP_EXT/2022_001: GCP project has VM Manager enabled
-   - gcpdiag-gce1-aaaa                                                    [FAIL]
+   - projects/gcpdiag-gce1-aaaa                                           [FAIL]
      it is recommended to enable VM Manager on your project
 
    Google recommends enabling VM Manager. It provides visibility on software

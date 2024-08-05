@@ -219,7 +219,7 @@ class TerminalOutput(base_output.BaseOutput):
     reason = reason or ''
     if resource:
       self.terminal_print_line('   - ' +
-                               resource.short_path.ljust(OUTPUT_WIDTH) +
+                               resource.full_path.ljust(OUTPUT_WIDTH) +
                                ' [SKIP]' + short_info)
       self.terminal_print_line(textwrap.indent(reason, '     '))
     else:
@@ -235,9 +235,9 @@ class TerminalOutput(base_output.BaseOutput):
       short_info = ' ' + str(short_info)
     else:
       short_info = ''
-    short_path = resource.short_path if resource is not None \
-                 and resource.short_path is not None else ''
-    self.terminal_print_line('   - ' + short_path.ljust(OUTPUT_WIDTH) + ' [' +
+    full_path = resource.full_path if resource is not None \
+                 and resource.full_path is not None else ''
+    self.terminal_print_line('   - ' + full_path.ljust(OUTPUT_WIDTH) + ' [' +
                              self.term.green(' OK ') + ']' + short_info)
 
   def _print_failed(self, resource: Optional[models.Resource],
@@ -246,9 +246,9 @@ class TerminalOutput(base_output.BaseOutput):
       short_info = ' ' + short_info
     else:
       short_info = ''
-    short_path = resource.short_path if resource is not None \
-                 and resource.short_path is not None else ''
-    self.terminal_print_line('   - ' + short_path.ljust(OUTPUT_WIDTH) + ' [' +
+    full_path = resource.full_path if resource is not None \
+                 and resource.full_path is not None else ''
+    self.terminal_print_line('   - ' + full_path.ljust(OUTPUT_WIDTH) + ' [' +
                              self.term.red('FAIL') + ']' + short_info)
     if reason:
       self.terminal_print_line(textwrap.indent(reason, '     '))

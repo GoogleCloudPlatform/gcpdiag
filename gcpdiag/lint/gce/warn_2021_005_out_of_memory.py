@@ -54,7 +54,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if len(instances) == 0:
     report.add_skipped(None, 'No instances found')
   else:
-    for instance in sorted(instances, key=lambda i: i.name):
+    for instance in sorted(instances, key=lambda i: i.full_path):
       match: Optional[LogEntryShort] = search.get_last_match(
           instance_id=instance.id)
       if match:

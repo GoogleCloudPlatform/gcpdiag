@@ -20,6 +20,28 @@ resource "google_compute_instance_group" "instance_group_1" {
   depends_on = [google_project_service.compute]
 }
 
+resource "google_compute_instance_group" "instance_group_1_europe-west4-b" {
+  project = google_project.project.project_id
+  name    = "instance-group-1"
+
+  instances = [
+    google_compute_instance.gce1_europe-west4-b.id,
+  ]
+
+  named_port {
+    name = "http"
+    port = "8080"
+  }
+
+  named_port {
+    name = "http"
+    port = "8443"
+  }
+
+  zone       = "europe-west4-b"
+  depends_on = [google_project_service.compute]
+}
+
 resource "google_compute_instance_group" "instance_group_2" {
   project = google_project.project.project_id
   name    = "instance-group-2"

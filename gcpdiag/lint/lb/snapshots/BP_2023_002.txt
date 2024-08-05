@@ -1,3 +1,3 @@
 *  lb/BP/2023_002: Health check logging is enabled on health checks for load balancer backend services
-   - gcpdiag-lb1-aaaa/http-basic-check                                    [ OK ]
+   - projects/gcpdiag-lb1-aaaa/global/healthChecks/http-basic-check       [ OK ]
 

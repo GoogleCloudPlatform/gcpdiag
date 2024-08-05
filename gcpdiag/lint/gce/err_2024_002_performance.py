@@ -86,7 +86,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'no instances found')
     return
 
-  for i in sorted(instances, key=op.attrgetter('project_id', 'name')):
+  for i in sorted(instances, key=op.attrgetter('project_id', 'full_path')):
     if not i.is_running:
       report.add_skipped(i, reason=f'VM {i.name} is in {i.status} state')
     else:

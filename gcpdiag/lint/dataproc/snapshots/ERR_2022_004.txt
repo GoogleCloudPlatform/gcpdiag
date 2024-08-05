@@ -1,11 +1,11 @@
 *  dataproc/ERR/2022_004: Dataproc on GCE master VM is able to communicate with atleast one worker VM
-   - gcpdiag-dataproc1-aaaa/us-central1/good                              [SKIP]
+   - projects/gcpdiag-dataproc1-aaaa/regions/us-central1/clusters/good    [SKIP]
      Cluster not in error state
-   - gcpdiag-dataproc1-aaaa/us-central1/test-best-practices-disabled      [SKIP]
+   - projects/gcpdiag-dataproc1-aaaa/regions/us-central1/clusters/test-best-practices-disabled [SKIP]
      Cluster not in error state
-   - gcpdiag-dataproc1-aaaa/us-central1/test-best-practices-enabled       [SKIP]
+   - projects/gcpdiag-dataproc1-aaaa/regions/us-central1/clusters/test-best-practices-enabled [SKIP]
      Cluster not in error state
-   - gcpdiag-dataproc1-aaaa/us-central1/test-deny-icmp                    [FAIL]
+   - projects/gcpdiag-dataproc1-aaaa/regions/us-central1/clusters/test-deny-icmp [FAIL]
      ICMP connections must be allowed, blocked by: None
 
    The Compute Engine Virtual Machine instances (VMs) in a Dataproc cluster must

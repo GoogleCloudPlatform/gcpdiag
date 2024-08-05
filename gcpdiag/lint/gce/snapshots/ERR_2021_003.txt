@@ -1,3 +1,3 @@
 *  gce/ERR/2021_003: Google APIs service agent has the Editor role.
-   - gcpdiag-gce1-aaaa                                                    [ OK ]
+   - projects/gcpdiag-gce1-aaaa                                           [ OK ]
 

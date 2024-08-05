@@ -1,21 +1,21 @@
 *  gke/BP/2022_003: GKE cluster is not near to end of life
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [SKIP]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke1 [SKIP]
      release channel: REGULAR
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [SKIP]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke2 [SKIP]
      release channel: REGULAR
-   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [FAIL]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2      [FAIL]
      GKE version 1.24
 
          scheduled end of life: already reached EOL
-   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [SKIP]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke3      [SKIP]
      release channel: REGULAR
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [FAIL]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke1        [FAIL]
      GKE version 1.25
 
          scheduled end of life: 2024-02-06 (estimation)
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [SKIP]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke4        [SKIP]
      release channel: REGULAR
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [SKIP]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke6        [SKIP]
      release channel: REGULAR
 
    The GKE clusters should be updated regularly. It is recommended to keep your

@@ -1,4 +1,4 @@
 *  notebooks/ERR/2023_002: Vertex AI Workbench account has compute.subnetworks permissions to create notebook in VPC
-   - gcpdiag-notebooks1-aaaa                                              [SKIP]
+   - projects/gcpdiag-notebooks1-aaaa                                     [SKIP]
      Logging API is disabled
 

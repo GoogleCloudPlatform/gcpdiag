@@ -1,4 +1,4 @@
 *  gce/WARN/2022_010: GCE has enough resources available to fulfill requests
-   - gcpdiag-gce1-aaaa                                                    [SKIP]
+   - projects/gcpdiag-gce1-aaaa                                           [SKIP]
      logging api is disabled
 

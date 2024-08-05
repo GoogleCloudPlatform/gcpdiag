@@ -1,5 +1,5 @@
 *  gce/WARN/2021_001: GCE VM Instance Access Scope, GCE VM Attached Service Account Permissions and APIs Required for Logging.
-   - gcpdiag-gce1-aaaa                                                    [FAIL] Cloud Logging API Not Enabled on project gcpdiag-gce1-aaaa
+   - projects/gcpdiag-gce1-aaaa                                           [FAIL] Cloud Logging API Not Enabled on project gcpdiag-gce1-aaaa
      Please enable Cloud Logging API on the project with the command: 
      gcloud services enable logging.googleapis.com --project=gcpdiag-gce1-aaaa
      Ops Agent requires the API to collect logs from GCE VMs and display on Logs Explorer

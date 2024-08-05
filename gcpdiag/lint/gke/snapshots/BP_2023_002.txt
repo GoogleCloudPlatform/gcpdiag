@@ -1,9 +1,9 @@
 *  gke/BP/2023_002: Stateful workloads not run on preemptible node
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [ OK ]
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [ OK ]
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [ OK ]
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [ OK ]
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [ OK ]
-   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [ OK ]
-   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [ OK ]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke1        [ OK ]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke4        [ OK ]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke6        [ OK ]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke1 [ OK ]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke2 [ OK ]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2      [ OK ]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke3      [ OK ]
 

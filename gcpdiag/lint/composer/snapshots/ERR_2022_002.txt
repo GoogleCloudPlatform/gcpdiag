@@ -1,8 +1,8 @@
 *  composer/ERR/2022_002: Composer Environment Service Account permissions
-   - gcpdiag-composer1-aaaa/us-central1/env2                              [FAIL]
+   - projects/gcpdiag-composer1-aaaa/locations/us-central1/environments/env2 [FAIL]
      service account: env2sa@gcpdiag-composer1-aaaa.iam.gserviceaccount.com
      missing role: roles/iam.serviceAccountUser
-   - gcpdiag-composer1-aaaa/us-central1/env1                              [ OK ]
+   - projects/gcpdiag-composer1-aaaa/locations/us-central1/environments/env1 [ OK ]
 
    Verify that the Composer Environment Service Account exists and has the
    Composer Worker role on the project.

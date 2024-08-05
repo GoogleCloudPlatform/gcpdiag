@@ -225,19 +225,22 @@ class ManagedInstanceGroup(models.Resource):
   def template(self) -> InstanceTemplate:
     if 'instanceTemplate' not in self._resource_data:
       raise RuntimeError('instanceTemplate not set for MIG {self.name}')
+
     m = re.match(
-        r'https://www.googleapis.com/compute/v1/projects/([^/]+)/global/instanceTemplates/([^/]+)',
+        r'https://www.googleapis.com/compute/v1/(.*)',
         self._resource_data['instanceTemplate'],
     )
+
     if not m:
       raise RuntimeError("can't parse instanceTemplate: %s" %
                          self._resource_data['instanceTemplate'])
-    (project_id, template_name) = (m.group(1), m.group(2))
-    templates = get_instance_templates(project_id)
-    if template_name not in templates:
+    template_self_link = m.group(1)
+    templates = get_instance_templates(self.project_id)
+    if template_self_link not in templates:
       raise RuntimeError(
-          f'instanceTemplate {template_name} for MIG {self.name} not found')
-    return templates[template_name]
+          f'instanceTemplate {template_self_link} for MIG {self.name} not found'
+      )
+    return templates[template_self_link]
 
 
 class SerialPortOutput:
@@ -770,7 +773,8 @@ def get_instance_groups(context: models.Context) -> Mapping[str, InstanceGroup]:
     if not context.match_project_resource(
         location=zone, labels=labels, resource=resource):
       continue
-    groups[i['name']] = InstanceGroup(context.project_id, i)
+    instance_group = InstanceGroup(context.project_id, i)
+    groups[instance_group.full_path] = instance_group
   return groups
 
 
@@ -871,7 +875,8 @@ def get_instance_templates(project_id: str) -> Mapping[str, InstanceTemplate]:
   )
   for t in apis_utils.list_all(
       request, next_function=gce_api.instanceTemplates().list_next):
-    templates[t['name']] = InstanceTemplate(project_id, t)
+    instance_template = InstanceTemplate(project_id, t)
+    templates[instance_template.full_path] = instance_template
   return templates
 
 

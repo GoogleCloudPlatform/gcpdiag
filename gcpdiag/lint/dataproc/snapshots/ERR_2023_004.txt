@@ -1,4 +1,4 @@
 *  dataproc/ERR/2023_004: Dataproc cluster firewall rules for connectivity between master and worker nodes established!
-   - gcpdiag-dataproc1-aaaa                                               [SKIP]
+   - projects/gcpdiag-dataproc1-aaaa                                      [SKIP]
      logging api is disabled
 

@@ -1,4 +1,4 @@
 *  composer/BP_EXT/2023_001: Cloud Composer has no more than 2 Airflow schedulers
-   - gcpdiag-composer1-aaaa/us-central1/env2                              [ OK ]
-   - gcpdiag-composer1-aaaa/us-central1/env1                              [ OK ]
+   - projects/gcpdiag-composer1-aaaa/locations/us-central1/environments/env2 [ OK ]
+   - projects/gcpdiag-composer1-aaaa/locations/us-central1/environments/env1 [ OK ]
 

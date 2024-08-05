@@ -1,4 +1,4 @@
 *  gce/ERR/2022_001: Project limits were not exceeded.
-   - gcpdiag-gce1-aaaa                                                    [SKIP]
+   - projects/gcpdiag-gce1-aaaa                                           [SKIP]
      no data
 

@@ -1,14 +1,14 @@
 *  gke/WARN/2021_001: GKE master version available for new clusters.
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [SKIP]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke1 [SKIP]
      release channel: REGULAR
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [SKIP]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke2 [SKIP]
      release channel: REGULAR
-   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [ OK ] 1.24.10-gke.2300
-   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [SKIP]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2      [ OK ] 1.24.10-gke.2300
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke3      [SKIP]
      release channel: REGULAR
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [ OK ] 1.25.7-gke.1000
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [SKIP]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke1        [ OK ] 1.25.7-gke.1000
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke4        [SKIP]
      release channel: REGULAR
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [SKIP]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke6        [SKIP]
      release channel: REGULAR
 

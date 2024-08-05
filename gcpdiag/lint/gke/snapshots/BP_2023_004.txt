@@ -1,13 +1,13 @@
 *  gke/BP/2023_004: GKE clusters are VPC-native.
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [ OK ]
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [ OK ]
-   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [FAIL]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke1 [ OK ]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke2 [ OK ]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2      [FAIL]
       is not VPC-native
-   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [FAIL]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke3      [FAIL]
       is not VPC-native
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [ OK ]
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [ OK ]
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [FAIL]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke1        [ OK ]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke4        [ OK ]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke6        [FAIL]
       is not VPC-native
 
    It's recommended to use VPC-native clusters. VPC-native clusters use alias IP

@@ -70,7 +70,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'no instances found')
     return
 
-  for i in sorted(instances.values(), key=op.attrgetter('project_id', 'name')):
+  for i in sorted(instances.values(),
+                  key=op.attrgetter('project_id', 'full_path')):
     ts_key = frozenset({f'resource.instance_id:{i.id}'})
     try:
       ts = _query_results_per_project_id[context.project_id][ts_key]

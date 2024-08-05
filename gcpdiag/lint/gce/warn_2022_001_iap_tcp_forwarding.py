@@ -35,7 +35,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if len(instances) == 0:
     report.add_skipped(None, 'No instances found')
   else:
-    for instance in sorted(instances, key=lambda i: i.name):
+    for instance in sorted(instances, key=lambda i: i.full_path):
       if instance.is_dataproc_instance():
         report.add_skipped(instance, 'skipped dataproc vm instance')
         continue

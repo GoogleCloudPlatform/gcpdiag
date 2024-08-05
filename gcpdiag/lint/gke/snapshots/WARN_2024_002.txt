@@ -1,10 +1,10 @@
 *  gke/WARN/2024_002: Number of Kubernetes service accounts not above 3000.
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [SKIP]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke1 [SKIP]
      API Server metrics are disabled
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [SKIP]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke2 [SKIP]
      API Server metrics are disabled
-   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [SKIP]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2      [SKIP]
      API Server metrics are disabled
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [SKIP]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke4        [SKIP]
      API Server metrics are disabled
 

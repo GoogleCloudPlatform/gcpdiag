@@ -1,10 +1,10 @@
 *  interconnect/WARN/2023_003: The interconnect link is undergoing a maintenance window.
-   - gcpdiag-gke1-aaaa/dummy-interconnect1                                [ OK ]
-   - gcpdiag-gke1-aaaa/dummy-interconnect2                                [ OK ]
-   - gcpdiag-gke1-aaaa/dummy-interconnect3                                [ OK ]
-   - gcpdiag-gke1-aaaa/dummy-interconnect4                                [ OK ]
-   - gcpdiag-gke1-aaaa/dummy-interconnect4                                [ OK ]
-   - gcpdiag-gke1-aaaa/dummy-interconnect5                                [FAIL]  this Interconnect link is currently under maintenance
+   - projects/gcpdiag-gke1-aaaa/global/interconnects/dummy-interconnect1  [ OK ]
+   - projects/gcpdiag-gke1-aaaa/global/interconnects/dummy-interconnect2  [ OK ]
+   - projects/gcpdiag-gke1-aaaa/global/interconnects/dummy-interconnect3  [ OK ]
+   - projects/gcpdiag-gke1-aaaa/global/interconnects/dummy-interconnect4  [ OK ]
+   - projects/gcpdiag-gke1-aaaa/global/interconnects/dummy-interconnect4  [ OK ]
+   - projects/gcpdiag-gke1-aaaa/global/interconnects/dummy-interconnect4  [FAIL]  this Interconnect link is currently under maintenance
 
    Please check the email sent to the technical contacts for further details
    about the maintenance.

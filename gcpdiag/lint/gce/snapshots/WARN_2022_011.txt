@@ -1,9 +1,10 @@
 *  gce/WARN/2022_011: GCE VM service account is valid
-   - gcpdiag-gce1-aaaa/gce1                                               [ OK ]
-   - gcpdiag-gce1-aaaa/gce2                                               [ OK ]
-   - gcpdiag-gce1-aaaa/mig-4h21                                           [SKIP]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce1       [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce2       [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-4h21   [SKIP]
      instance does not have a service account
-   - gcpdiag-gce1-aaaa/mig-7pvl                                           [SKIP]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-7pvl   [SKIP]
      instance does not have a service account
-   - gcpdiag-gce1-aaaa/windows-test                                       [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/windows-test [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-b/instances/gce1       [ OK ]
 

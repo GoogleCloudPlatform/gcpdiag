@@ -1,12 +1,12 @@
 *  gke/WARN/2022_004: Cloud Logging API enabled when GKE logging is enabled
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [FAIL]
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [FAIL]
-   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [FAIL]
-   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [FAIL]
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [SKIP]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke1 [FAIL]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke2 [FAIL]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2      [FAIL]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke3      [FAIL]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke1        [SKIP]
      GKE logging is disabled
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [FAIL]
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [FAIL]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke4        [FAIL]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke6        [FAIL]
 
    If Cloud Logging API is disabled, while GKE logging is enabled the Workload
    and Node logs won't be ingested, and thus, won't be visible in Logs Explorer.

@@ -29,7 +29,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'no disks found')
     return
   rule_ok = True
-  for d in sorted(disks, key=lambda d: d.name):
+  for d in sorted(disks, key=lambda d: d.full_path):
     if d.has_snapshot_schedule and not d.in_use:
       report.add_failed(d)
       rule_ok = False

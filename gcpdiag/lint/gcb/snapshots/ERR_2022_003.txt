@@ -1,5 +1,5 @@
 *  gcb/ERR/2022_003: Builds don't fail because of retention policy set on logs bucket.
-   - gcpdiag-gcb1-aaaa/58c22070-5629-480e-b822-cd8eff7befb8               [FAIL]
+   - projects/gcpdiag-gcb1-aaaa/locations/-/builds/58c22070-5629-480e-b822-cd8eff7befb8 [FAIL]
      Build can not stream logs to bucket gcpdiag-gcb1-bucket1-aaaa because it has retention policy set.
 
    Builds that upload logs to bucket with retention policy must do that once

@@ -1,17 +1,17 @@
 *  gke/BP_EXT/2023_001: GKE maintenance windows are defined
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [FAIL]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke1 [FAIL]
       does not configure a maintenance window
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [FAIL]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke2 [FAIL]
       does not configure a maintenance window
-   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [FAIL]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2      [FAIL]
       does not configure a maintenance window
-   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [FAIL]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke3      [FAIL]
       does not configure a maintenance window
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [FAIL]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke1        [FAIL]
       does not configure a maintenance window
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [FAIL]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke4        [FAIL]
       does not configure a maintenance window
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [ OK ]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke6        [ OK ]
 
    Maintenance windows give you fine-grained control over when automatic
    maintenance can occur on GKE clusters. They allow administrators to control

@@ -1,9 +1,9 @@
 *  pubsub/WARN/2023_002: BigQuery subscription should have a dead-letter topic attached.
-   - gcpdiag-pubsub1-aaaa/gcpdiag-bqdlqsubscription-9pm6hng1              [SKIP]
+   - projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-bqdlqsubscription-9pm6hng1 [SKIP]
      is not a BigQuery Subscription
-   - gcpdiag-pubsub1-aaaa/gcpdiag-pubsub1subscription-9pm6hng1            [SKIP]
+   - projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-pubsub1subscription-9pm6hng1 [SKIP]
      is not a BigQuery Subscription
-   - gcpdiag-pubsub1-aaaa/gcpdiag-pubsub1subscription2-9pm6hng1           [ OK ]
-   - gcpdiag-pubsub1-aaaa/gcpdiag-pubsub1subscription3gcs-9pm6hng1        [SKIP]
+   - projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-pubsub1subscription2-9pm6hng1 [ OK ]
+   - projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-pubsub1subscription3gcs-9pm6hng1 [SKIP]
      is not a BigQuery Subscription
 

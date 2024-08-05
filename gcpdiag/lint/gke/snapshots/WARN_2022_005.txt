@@ -1,17 +1,17 @@
 *  gke/WARN/2022_005: NVIDIA GPU device drivers are installed on GKE nodes with GPU
    (no nodepools found)                                                   [SKIP]
    (no nodepools found)                                                   [SKIP]
-   - gcpdiag-gke1-aaaa/europe-west4/gke2/default-pool                     [SKIP]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2/nodePools/default-pool [SKIP]
      no nodes with GPU found
-   - gcpdiag-gke1-aaaa/europe-west4/gke2/low-pod-per-node-pool            [SKIP]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2/nodePools/low-pod-per-node-pool [SKIP]
      no nodes with GPU found
-   - gcpdiag-gke1-aaaa/europe-west4/gke3/default-pool                     [SKIP]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke3/nodePools/default-pool [SKIP]
      no nodes with GPU found
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [SKIP]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke1        [SKIP]
      monitoring disabled
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke4/default-pool                   [SKIP]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke4/nodePools/default-pool [SKIP]
      no nodes with GPU found
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [FAIL]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke6        [FAIL]
      The DaemonSet of nvidia-driver-installer is not found in the GKE cluster.
 
    After adding GPU nodes to the GKE cluster, the NVIDIA's device drivers should

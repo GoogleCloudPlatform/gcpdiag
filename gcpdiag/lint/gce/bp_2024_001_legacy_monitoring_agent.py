@@ -65,7 +65,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     return
 
   instances_without_osinventory = []
-  for i in sorted(instances, key=op.attrgetter('project_id', 'name')):
+  for i in sorted(instances, key=op.attrgetter('project_id', 'full_path')):
     if i.is_gke_node():
       continue
     inventory = osconfig.get_inventory(context, i.zone, i.name)

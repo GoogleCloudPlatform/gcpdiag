@@ -1,4 +1,4 @@
 *  bigquery/ERR/2023_009: BigQuery job not failed due to Scheduled query with multiple DML
-   - gcpdiag-cloudsql1-aaaa                                               [SKIP]
+   - projects/gcpdiag-cloudsql1-aaaa                                      [SKIP]
      logging api is disabled
 

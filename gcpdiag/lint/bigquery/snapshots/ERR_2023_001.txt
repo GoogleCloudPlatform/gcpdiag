@@ -1,4 +1,4 @@
 *  bigquery/ERR/2023_001: Jobs called via the API are all found
-   - gcpdiag-cloudsql1-aaaa                                               [SKIP]
+   - projects/gcpdiag-cloudsql1-aaaa                                      [SKIP]
      Logging api is disabled
 

@@ -31,7 +31,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, 'No instances found')
     return
 
-  for instance in sorted(instances, key=lambda i: i.name):
+  for instance in sorted(instances, key=lambda i: i.full_path):
     if instance.is_gke_node():
       gke_node_counter += 1
       continue

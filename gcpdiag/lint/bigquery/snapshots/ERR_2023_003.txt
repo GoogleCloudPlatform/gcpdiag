@@ -1,4 +1,4 @@
 *  bigquery/ERR/2023_003: BigQuery query job do not encounter resource exceeded error
-   - gcpdiag-cloudsql1-aaaa                                               [SKIP]
+   - projects/gcpdiag-cloudsql1-aaaa                                      [SKIP]
      logging api is disabled
 

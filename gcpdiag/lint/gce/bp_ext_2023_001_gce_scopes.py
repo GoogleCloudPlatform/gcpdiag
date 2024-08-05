@@ -44,7 +44,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(None, "no instances found")
     return
 
-  for i in sorted(instances.values(), key=op.attrgetter("project_id", "name")):
+  for i in sorted(instances.values(),
+                  key=op.attrgetter("project_id", "full_path")):
     service_account = f"serviceAccount:{i.service_account}"
     basic_roles_granted = [
         iam_policy.has_role_permissions(service_account, role) for role in roles

@@ -1,11 +1,11 @@
 *  gke/BP/2021_001: GKE logging and monitoring enabled.
-   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [FAIL]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2      [FAIL]
      workload logs are disabled
-   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [ OK ]
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [FAIL]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke3      [ OK ]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke1        [FAIL]
      logging and monitoring are disabled
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [ OK ]
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [ OK ]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke4        [ OK ]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke6        [ OK ]
 
    Disabling either one of logging (SYSTEM, WORKLOADS) and monitoring (aka "GKE
    Cloud Operations") impacts the ability to effectively and efficiently

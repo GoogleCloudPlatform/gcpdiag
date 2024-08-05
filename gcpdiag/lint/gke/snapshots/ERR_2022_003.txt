@@ -1,12 +1,12 @@
 *  gke/ERR/2022_003: GKE connectivity: load balancer to node communication (ingress).
-   - gcpdiag-gke1-aaaa/europe-west4/gke2/default-pool                     [SKIP]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2/nodePools/default-pool [SKIP]
      no ingress detected
-   - gcpdiag-gke1-aaaa/europe-west4/gke3/default-pool                     [ OK ]
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke1/default-pool                   [SKIP]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke3/nodePools/default-pool [ OK ]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke1/nodePools/default-pool [SKIP]
      no ingress detected
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke4/default-pool                   [FAIL]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke4/nodePools/default-pool [FAIL]
      connections from 35.191.0.0/16 to port 8080 blocked by vpc firewall rule: gke-gke4-ingress-test-deny
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke6/default-pool                   [SKIP]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke6/nodePools/default-pool [SKIP]
      no ingress detected
 
    In order for the Ingress service to work correctly, the network connection

@@ -1,20 +1,22 @@
 *  gce/WARN/2021_002: GCE nodes have good disk performance.
-   - gcpdiag-gce1-aaaa/gce1                                               [SKIP]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west1-b/instances/gke-gke1-default-pool-35923fbc-2xxp [SKIP]
      no data
-   - gcpdiag-gce1-aaaa/gce2                                               [SKIP]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west1-b/instances/gke-gke1-default-pool-35923fbc-c12f [SKIP]
      no data
-   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-2xxp                [SKIP]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west1-b/instances/gke-gke1-default-pool-35923fbc-fv50 [SKIP]
      no data
-   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-c12f                [SKIP]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west1-b/instances/gke-gke1-default-pool-35923fbc-k05c [SKIP]
      no data
-   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-fv50                [SKIP]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce1       [SKIP]
      no data
-   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-k05c                [SKIP]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce2       [SKIP]
      no data
-   - gcpdiag-gce1-aaaa/mig-4h21                                           [SKIP]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-4h21   [SKIP]
      no data
-   - gcpdiag-gce1-aaaa/mig-7pvl                                           [SKIP]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-7pvl   [SKIP]
      no data
-   - gcpdiag-gce1-aaaa/windows-test                                       [SKIP]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/windows-test [SKIP]
+     no data
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-b/instances/gce1       [SKIP]
      no data
 

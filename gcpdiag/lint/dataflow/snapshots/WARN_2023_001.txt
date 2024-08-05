@@ -1,3 +1,3 @@
 *  dataflow/WARN/2023_001: Dataflow job does not have a hot key
-   - gcpdiag-datafusion1-aaaa                                             [ OK ]
+   - projects/gcpdiag-datafusion1-aaaa                                    [ OK ]
 

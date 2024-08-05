@@ -1,14 +1,14 @@
 *  gke/SEC/2021_001: GKE nodes don't use the GCE default service account.
-   - gcpdiag-gke1-aaaa/europe-west4/gke2/default-pool                     [SKIP]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2/nodePools/default-pool [SKIP]
      workload identity enabled
-   - gcpdiag-gke1-aaaa/europe-west4/gke2/low-pod-per-node-pool            [SKIP]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2/nodePools/low-pod-per-node-pool [SKIP]
      workload identity enabled
-   - gcpdiag-gke1-aaaa/europe-west4/gke3/default-pool                     [ OK ]
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke1/default-pool                   [FAIL]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke3/nodePools/default-pool [ OK ]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke1/nodePools/default-pool [FAIL]
      node pool uses the GCE default service account
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke4/default-pool                   [SKIP]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke4/nodePools/default-pool [SKIP]
      workload identity enabled
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke6/default-pool                   [FAIL]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke6/nodePools/default-pool [FAIL]
      node pool uses the GCE default service account
 
    The GCE default service account has more permissions than are required to run

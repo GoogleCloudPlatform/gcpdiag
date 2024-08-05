@@ -1,5 +1,5 @@
 *  gce/BP/2022_003: GCE unattached bootable disk.
-   - gcpdiag-gce1-aaaa/unattached-disk                                    [FAIL]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/disks/unattached-disk [FAIL]
      Unattached bootable disk: unattached-disk in zone: europe-west4-a
 
    Unattached bootable disks are abandoned or orphaned resources that are

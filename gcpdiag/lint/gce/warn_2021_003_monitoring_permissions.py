@@ -73,7 +73,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
         None, '', f'No VM instances found in project: {context.project_id}.')
     return
 
-  for i in sorted(instances.values(), key=op.attrgetter('project_id', 'name')):
+  for i in sorted(instances.values(),
+                  key=op.attrgetter('project_id', 'full_path')):
     # GKE nodes are checked by another test.
     if i.is_gke_node():
       continue

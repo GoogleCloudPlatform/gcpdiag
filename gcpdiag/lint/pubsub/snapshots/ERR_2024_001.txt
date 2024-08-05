@@ -1,4 +1,4 @@
 *  pubsub/ERR/2024_001: Pub/Sub Bigquery Subscription Created using Exist BigQuery table.
-   - gcpdiag-pubsub1-aaaa                                                 [SKIP]
+   - projects/gcpdiag-pubsub1-aaaa                                        [SKIP]
      logging api is disabled
 

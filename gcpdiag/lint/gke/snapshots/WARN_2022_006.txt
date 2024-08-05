@@ -1,14 +1,14 @@
 *  gke/WARN/2022_006: GKE NAP nodes use a containerd image.
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [ OK ] Node Type: COS_CONTAINERD
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [ OK ] Node Type: COS_CONTAINERD
-   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [SKIP]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke1 [ OK ] Node Type: COS_CONTAINERD
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke2 [ OK ] Node Type: COS_CONTAINERD
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2      [SKIP]
      Node Auto Provisioning Disabled
-   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [SKIP]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke3      [SKIP]
      Node Auto Provisioning Disabled
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [SKIP]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke1        [SKIP]
      Node Auto Provisioning Disabled
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [SKIP]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke4        [SKIP]
      Node Auto Provisioning Disabled
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [SKIP]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke6        [SKIP]
      Node Auto Provisioning Disabled
 

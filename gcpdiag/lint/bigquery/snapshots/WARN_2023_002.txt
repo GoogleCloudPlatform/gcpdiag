@@ -1,4 +1,4 @@
 *  bigquery/WARN/2023_002: No errors querying wildcard tables
-   - gcpdiag-cloudsql1-aaaa                                               [SKIP]
+   - projects/gcpdiag-cloudsql1-aaaa                                      [SKIP]
      Logging api is disabled
 

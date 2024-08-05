@@ -1,4 +1,4 @@
 *  gae/ERR/2023_001: App Engine: VPC Connector creation failure due to Org Policy
-   - gcpdiag-gaes1-aaaa                                                   [SKIP]
+   - projects/gcpdiag-gaes1-aaaa                                          [SKIP]
      vpc access api is disabled
 

@@ -1,16 +1,16 @@
 *  gke/BP/2023_001: GKE network policy minimum requirements
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [SKIP]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke1 [SKIP]
      Dataplane V2 is enabled in the cluster
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [SKIP]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke2 [SKIP]
      Dataplane V2 is enabled in the cluster
-   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [SKIP]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2      [SKIP]
      network policy enforcement is disabled in the cluster
-   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [SKIP]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke3      [SKIP]
      network policy enforcement is disabled in the cluster
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [SKIP]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke1        [SKIP]
      network policy enforcement is disabled in the cluster
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [SKIP]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke4        [SKIP]
      network policy enforcement is disabled in the cluster
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [SKIP]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke6        [SKIP]
      network policy enforcement is disabled in the cluster
 

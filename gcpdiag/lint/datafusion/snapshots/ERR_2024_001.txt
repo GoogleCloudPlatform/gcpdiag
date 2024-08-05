@@ -1,3 +1,3 @@
 *  datafusion/ERR/2024_001: Datafusion delete operation not failing.
-   - gcpdiag-datafusion1-aaaa                                             [ OK ]
+   - projects/gcpdiag-datafusion1-aaaa                                    [ OK ]
 

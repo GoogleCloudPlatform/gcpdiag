@@ -1,14 +1,14 @@
 *  interconnect/WARN/2023_002: VLAN attachment is in a non-functional state.
-   - gcpdiag-gke1-aaaa/dummy-attachment1                                  [ OK ]
-   - gcpdiag-gke1-aaaa/dummy-attachment2                                  [ OK ]
-   - gcpdiag-gke1-aaaa/dummy-attachment3                                  [ OK ]
-   - gcpdiag-gke1-aaaa/dummy-attachment4                                  [ OK ]
-   - gcpdiag-gke1-aaaa/dummy-attachment5                                  [ OK ]
-   - gcpdiag-gke1-aaaa/dummy-attachment6                                  [ OK ]
-   - gcpdiag-gke1-aaaa/dummy-attachment7                                  [ OK ]
-   - gcpdiag-gke1-aaaa/dummy-attachment8                                  [ OK ]
-   - gcpdiag-gke1-aaaa/dummy-attachment9                                  [ OK ]
-   - gcpdiag-gke1-aaaa/dummy-attachment10                                 [FAIL]  this VLAN attachment is in a non-functional state
+   - projects/gcpdiag-gke1-aaaa/regions/us-east4/interconnectAttachments/dummy-attachment1 [ OK ]
+   - projects/gcpdiag-gke1-aaaa/regions/us-east4/interconnectAttachments/dummy-attachment2 [ OK ]
+   - projects/gcpdiag-gke1-aaaa/regions/us-east4/interconnectAttachments/dummy-attachment3 [ OK ]
+   - projects/gcpdiag-gke1-aaaa/regions/us-east4/interconnectAttachments/dummy-attachment4 [ OK ]
+   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment5 [ OK ]
+   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6 [ OK ]
+   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6 [ OK ]
+   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6 [ OK ]
+   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6 [ OK ]
+   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6 [FAIL]  this VLAN attachment is in a non-functional state
 
    This could be because the associated Interconnect was removed, or because the
    other side of a Partner attachment was deleted.

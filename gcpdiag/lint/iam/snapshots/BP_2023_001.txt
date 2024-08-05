@@ -1,5 +1,5 @@
 *  iam/BP/2023_001: Policy constraint AutomaticIamGrantsForDefaultServiceAccounts is enforced
-   - gcpdiag-iam1-aaaa                                                    [FAIL]
+   - projects/gcpdiag-iam1-aaaa                                           [FAIL]
 
    Policy constraint AutomaticIamGrantsForDefaultServiceAccounts is strongly
    recommended to be enforced in production projects according to security best

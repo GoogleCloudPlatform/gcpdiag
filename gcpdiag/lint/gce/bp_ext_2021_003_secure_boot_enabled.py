@@ -29,7 +29,8 @@ from gcpdiag.queries import gce
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   instances = gce.get_instances(context)
   instances_count = 0
-  for i in sorted(instances.values(), key=op.attrgetter('project_id', 'name')):
+  for i in sorted(instances.values(),
+                  key=op.attrgetter('project_id', 'full_path')):
     # GKE nodes are not checked by this rule
     if i.is_gke_node():
       continue

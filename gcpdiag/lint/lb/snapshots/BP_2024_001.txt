@@ -1,4 +1,4 @@
 *  lb/BP/2024_001: Session affinity is configured on backends for global external application load balancers
-   - gcpdiag-lb1-aaaa/web-backend-service                                 [SKIP]
+   - projects/gcpdiag-lb1-aaaa/global/backendServices/web-backend-service [SKIP]
      Non Global application Load balancer backend service
 

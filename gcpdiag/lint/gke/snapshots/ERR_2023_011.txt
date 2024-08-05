@@ -1,12 +1,12 @@
 *  gke/ERR/2023_011: GKE Metadata Server isn't reporting errors for pod IP not found.
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [ OK ]
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [ OK ]
-   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [ OK ]
-   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [SKIP]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke1 [ OK ]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke2 [ OK ]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2      [ OK ]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke3      [SKIP]
      GKE Workload Identity is disabled
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [SKIP]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke1        [SKIP]
      GKE Workload Identity is disabled
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [ OK ]
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [SKIP]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke4        [ OK ]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke6        [SKIP]
      GKE Workload Identity is disabled
 

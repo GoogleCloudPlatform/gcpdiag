@@ -53,7 +53,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   payg_licenses = [x for x in licenses if not x.endswith('-byol')]
 
   # Add windows to new list and skip entire rule if no Windows instances
-  for instance in sorted(instances, key=op.attrgetter('project_id', 'name')):
+  for instance in sorted(instances,
+                         key=op.attrgetter('project_id', 'full_path')):
     fault_list = []
     is_faulty = False
     # Skip non-Windows machines

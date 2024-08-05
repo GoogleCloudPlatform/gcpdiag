@@ -1,15 +1,15 @@
 *  gke/BP/2022_002: GKE clusters are using unique subnets.
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke1                                [ OK ]
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke4                                [ OK ]
-   - gcpdiag-gke1-aaaa/europe-west4-a/gke6                                [FAIL]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke1        [ OK ]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke4        [ OK ]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke6        [FAIL]
      Subnet "gcpdiag-gke1-aaaa/default" is used by "gcpdiag-gke1-aaaa/europe-west4-a/gke4" cluster
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke1                        [FAIL]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke1 [FAIL]
      Subnet "gcpdiag-gke1-aaaa/default" is used by "gcpdiag-gke1-aaaa/europe-west4-a/gke4" cluster
-   - gcpdiag-gke1-aaaa/europe-west4/autopilot-gke2                        [FAIL]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke2 [FAIL]
      Subnet "gcpdiag-gke1-aaaa/default" is used by "gcpdiag-gke1-aaaa/europe-west4-a/gke4" cluster
-   - gcpdiag-gke1-aaaa/europe-west4/gke2                                  [FAIL]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2      [FAIL]
      Subnet "gcpdiag-gke1-aaaa/default" is used by "gcpdiag-gke1-aaaa/europe-west4-a/gke4" cluster
-   - gcpdiag-gke1-aaaa/europe-west4/gke3                                  [FAIL]
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke3      [FAIL]
      Subnet "gcpdiag-gke1-aaaa/default" is used by "gcpdiag-gke1-aaaa/europe-west4-a/gke4" cluster
 
    Verify that the Google Kubernetes Engine clusters are not sharing subnets. It

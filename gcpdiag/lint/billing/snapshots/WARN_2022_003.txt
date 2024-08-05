@@ -1,5 +1,5 @@
 *  billing/WARN/2022_003: Check for any billing anomalies using cost insights
-   - gcpdiag-billing1-aaaa                                                [FAIL] This is a cost anomaly. The aggregated gross cost for the specified target resource list and cost slice is significantly different from the aggregated forecasted cost.
+   - projects/gcpdiag-billing1-aaaa                                       [FAIL] This is a cost anomaly. The aggregated gross cost for the specified target resource list and cost slice is significantly different from the aggregated forecasted cost.
 Cost Below forcast, Forecasted: 80 USD, Actual: 16 USD
 Anomaly Period From: 2021-04-20T07:00:00Z, To: 2021-04-21T07:00:00Z
      Cost Anomaly Found

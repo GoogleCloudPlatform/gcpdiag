@@ -1,4 +1,4 @@
 *  gce/ERR/2024_001: Snapshot creation not failed due to rate limit.
-   - gcpdiag-gce1-aaaa                                                    [SKIP]
+   - projects/gcpdiag-gce1-aaaa                                           [SKIP]
      logging api is disabled
 

@@ -1,17 +1,19 @@
 *  gce/BP_EXT/2024_001: Instance has a public ip address
-   - gcpdiag-gce1-aaaa/gce1                                               [FAIL]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west1-b/instances/gke-gke1-default-pool-35923fbc-2xxp [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west1-b/instances/gke-gke1-default-pool-35923fbc-c12f [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west1-b/instances/gke-gke1-default-pool-35923fbc-fv50 [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west1-b/instances/gke-gke1-default-pool-35923fbc-k05c [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce1       [FAIL]
      Instance does not have a public address.
-   - gcpdiag-gce1-aaaa/gce2                                               [FAIL]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce2       [FAIL]
      Instance does not have a public address.
-   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-2xxp                [ OK ]
-   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-c12f                [ OK ]
-   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-fv50                [ OK ]
-   - gcpdiag-gce1-aaaa/gke-gke1-default-pool-35923fbc-k05c                [ OK ]
-   - gcpdiag-gce1-aaaa/mig-4h21                                           [FAIL]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-4h21   [FAIL]
      Instance does not have a public address.
-   - gcpdiag-gce1-aaaa/mig-7pvl                                           [FAIL]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-7pvl   [FAIL]
      Instance does not have a public address.
-   - gcpdiag-gce1-aaaa/windows-test                                       [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/windows-test [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-b/instances/gce1       [FAIL]
+     Instance does not have a public address.
 
    If the Compute Engine instance does not have a public ip address, then the
    SSH button will be disabled in the SSH in browser UI.

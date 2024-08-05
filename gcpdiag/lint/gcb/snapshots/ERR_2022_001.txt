@@ -1,5 +1,5 @@
 *  gcb/ERR/2022_001: Cloud Build service account has the cloudbuild.builds.builder role.
-   - gcpdiag-gcb1-aaaa                                                    [FAIL]
+   - projects/gcpdiag-gcb1-aaaa                                           [FAIL]
      service account: 12340005@cloudbuild.gserviceaccount.com
      missing role: roles/cloudbuild.builds.builder
 

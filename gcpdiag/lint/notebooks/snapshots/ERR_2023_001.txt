@@ -1,5 +1,5 @@
 *  notebooks/ERR/2023_001: Vertex AI Workbench user-managed notebook instances are healthy
-   - gcpdiag-notebooks1-aaaa/us-west1-a/gcpdiag-notebooks1instance-aaaa   [FAIL]
+   - projects/gcpdiag-notebooks1-aaaa/locations/us-west1-a/instances/gcpdiag-notebooks1instance-aaaa [FAIL]
      Health state = UNHEALTHY
 
    Rule which verifies the Vertex AI Workbench user-managed notebook instances

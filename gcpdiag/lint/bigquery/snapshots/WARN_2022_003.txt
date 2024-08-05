@@ -1,4 +1,4 @@
 *  bigquery/WARN/2022_003: BigQuery copy job does not exceed the daily copy quota
-   - gcpdiag-cloudsql1-aaaa                                               [SKIP]
+   - projects/gcpdiag-cloudsql1-aaaa                                      [SKIP]
      Logging api is disabled
 

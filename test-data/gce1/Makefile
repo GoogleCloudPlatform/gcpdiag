@@ -6,6 +6,7 @@ CURL         = ../../bin/curl-wrap.sh
 JSON_CLEANER = ../../bin/json-cleaner
 ZONE_1       = europe-west1-b
 ZONE_2       = europe-west4-a
+ZONE_3       = europe-west4-b
 
 FAKE_PROJECT_ID_SUFFIX = aaaa
 FAKE_PROJECT_NR = 12340001
@@ -20,11 +21,13 @@ all:	\
 	json-dumps/compute-effective-firewalls-default.json \
 	json-dumps/compute-igs-$(ZONE_1).json \
 	json-dumps/compute-igs-$(ZONE_2).json \
+	json-dumps/compute-igs-$(ZONE_3).json \
 	json-dumps/compute-igs-empty.json \
 	json-dumps/compute-instances-$(ZONE_1).json \
 	json-dumps/compute-instances-$(ZONE_1)-2.json \
 	json-dumps/compute-instances-$(ZONE_2).json \
 	json-dumps/compute-instances-$(ZONE_2)-2.json \
+	json-dumps/compute-instances-$(ZONE_3).json \
 	json-dumps/compute-instances-empty.json \
 	json-dumps/compute-migs-$(ZONE_1).json \
 	json-dumps/compute-migs-$(ZONE_2).json \

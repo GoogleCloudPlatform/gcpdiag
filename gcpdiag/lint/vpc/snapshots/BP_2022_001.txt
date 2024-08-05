@@ -1,6 +1,6 @@
 *  vpc/BP/2022_001: Explicit routes for Google APIs if the default route is modified.
    (rule networks found)                                                  [SKIP]
-   - gcpdiag-vpc1-aaaa                                                    [ OK ]
-   - gcpdiag-vpc1-aaaa                                                    [SKIP]
+   - projects/gcpdiag-vpc1-aaaa                                           [ OK ]
+   - projects/gcpdiag-vpc1-aaaa                                           [SKIP]
      no data
 

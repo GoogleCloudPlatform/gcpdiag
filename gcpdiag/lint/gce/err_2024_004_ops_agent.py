@@ -231,7 +231,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   instances = [
       Instance(context.project_id, i)
-      for i in sorted(instances, key=op.attrgetter('project_id', 'name'))
+      for i in sorted(instances, key=op.attrgetter('project_id', 'full_path'))
   ]
 
   confirm_agent_installation_via_os_config(context, report, instances)

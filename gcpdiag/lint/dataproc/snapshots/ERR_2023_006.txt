@@ -1,10 +1,10 @@
 *  dataproc/ERR/2023_006: DataProc Cluster user has networking permissions on host project.
-   - gcpdiag-dataproc1-aaaa/us-central1/good                              [SKIP]
+   - projects/gcpdiag-dataproc1-aaaa/regions/us-central1/clusters/good    [SKIP]
      Not on Shared VPC : gcpdiag-dataproc1-aaaa/us-central1/good
-   - gcpdiag-dataproc1-aaaa/us-central1/test-best-practices-disabled      [SKIP]
+   - projects/gcpdiag-dataproc1-aaaa/regions/us-central1/clusters/test-best-practices-disabled [SKIP]
      Not on Shared VPC : gcpdiag-dataproc1-aaaa/us-central1/test-best-practices-disabled
-   - gcpdiag-dataproc1-aaaa/us-central1/test-best-practices-enabled       [SKIP]
+   - projects/gcpdiag-dataproc1-aaaa/regions/us-central1/clusters/test-best-practices-enabled [SKIP]
      Not on Shared VPC : gcpdiag-dataproc1-aaaa/us-central1/test-best-practices-enabled
-   - gcpdiag-dataproc1-aaaa/us-central1/test-deny-icmp                    [SKIP]
+   - projects/gcpdiag-dataproc1-aaaa/regions/us-central1/clusters/test-deny-icmp [SKIP]
      Not on Shared VPC : gcpdiag-dataproc1-aaaa/us-central1/test-deny-icmp
 

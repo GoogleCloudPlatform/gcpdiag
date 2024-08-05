@@ -1,8 +1,8 @@
 *  dataproc/WARN/2021_001: Dataproc cluster is in RUNNING state
-   - gcpdiag-dataproc1-aaaa/us-central1/good                              [ OK ]
-   - gcpdiag-dataproc1-aaaa/us-central1/test-best-practices-disabled      [ OK ]
-   - gcpdiag-dataproc1-aaaa/us-central1/test-best-practices-enabled       [ OK ]
-   - gcpdiag-dataproc1-aaaa/us-central1/test-deny-icmp                    [FAIL]
+   - projects/gcpdiag-dataproc1-aaaa/regions/us-central1/clusters/good    [ OK ]
+   - projects/gcpdiag-dataproc1-aaaa/regions/us-central1/clusters/test-best-practices-disabled [ OK ]
+   - projects/gcpdiag-dataproc1-aaaa/regions/us-central1/clusters/test-best-practices-enabled [ OK ]
+   - projects/gcpdiag-dataproc1-aaaa/regions/us-central1/clusters/test-deny-icmp [FAIL]
 
    Cluster should normally spend most of the time in RUNNING state.
 

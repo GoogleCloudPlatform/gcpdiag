@@ -1,4 +1,4 @@
 *  composer/WARN/2023_007: Cloud Composer Scheduler CPU limit exceeded.
-   - gcpdiag-composer1-aaaa/us-central1/env2                              [ OK ]
-   - gcpdiag-composer1-aaaa/us-central1/env1                              [ OK ]
+   - projects/gcpdiag-composer1-aaaa/locations/us-central1/environments/env2 [ OK ]
+   - projects/gcpdiag-composer1-aaaa/locations/us-central1/environments/env1 [ OK ]
 

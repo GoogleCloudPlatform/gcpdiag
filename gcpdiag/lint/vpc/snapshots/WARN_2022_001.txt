@@ -1,4 +1,4 @@
 *  vpc/WARN/2022_001: Per-project quotas are not near the limit.
-   - gcpdiag-vpc1-aaaa                                                    [SKIP]
+   - projects/gcpdiag-vpc1-aaaa                                           [SKIP]
      no data
 

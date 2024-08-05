@@ -27,7 +27,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   instances = gce.get_instances(context).values()
 
   if instances:
-    for instance in sorted(instances, key=lambda i: i.name):
+    for instance in sorted(instances, key=lambda i: i.full_path):
       if not instance.is_public_machine():
         report.add_failed(instance, "Instance does not have a public address.")
       else:

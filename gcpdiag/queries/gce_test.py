@@ -30,9 +30,15 @@ DUMMY_PROJECT_NAME = 'gcpdiag-gce1-aaaa'
 DUMMY_PROJECT_NR = '12340001'
 DUMMY_DEFAULT_NAME = 'default'
 DUMMY_INSTANCE1_NAME = 'gce1'
+DUMMY_INSTANCE1_PATH = (f'projects/{DUMMY_PROJECT_NAME}/zones/{DUMMY_ZONE}/'
+                        f'instances/{DUMMY_INSTANCE1_NAME}')
 DUMMY_INSTANCE1_LABELS = {'foo': 'bar'}
 DUMMY_INSTANCE2_NAME = 'gce2'
+DUMMY_INSTANCE2_PATH = (f'projects/{DUMMY_PROJECT_NAME}/zones/{DUMMY_ZONE}/'
+                        f'instances/{DUMMY_INSTANCE2_NAME}')
 DUMMY_INSTANCE3_NAME = 'gke-gke1-default-pool-35923fbc-k05c'
+DUMMY_INSTANCE3_PATH = (f'projects/{DUMMY_PROJECT_NAME}/zones/{DUMMY_ZONE2}/'
+                        f'instances/{DUMMY_INSTANCE3_NAME}')
 DUMMY_INSTANCE3_LABELS = {'gcp_doctor_test': 'gke'}
 DUMMY_INSTANCE4_NAME = 'windows-test'
 
@@ -47,29 +53,30 @@ class TestGce:
   def test_get_instances(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     instances = gce.get_instances(context)
-    assert len(instances) == 9
-    instances_by_name = {i.name: i for i in instances.values()}
-    assert DUMMY_INSTANCE1_NAME in instances_by_name
-    assert instances_by_name[DUMMY_INSTANCE1_NAME].full_path == \
-        f'projects/{DUMMY_PROJECT_NAME}/zones/{DUMMY_ZONE}/instances/{DUMMY_INSTANCE1_NAME}'
-    assert instances_by_name[DUMMY_INSTANCE1_NAME].short_path == \
+    assert len(instances) == 10
+    instances_by_path = {i.full_path: i for i in instances.values()}
+    assert DUMMY_INSTANCE1_PATH in instances_by_path
+    assert instances_by_path[
+        DUMMY_INSTANCE1_PATH].full_path == DUMMY_INSTANCE1_PATH
+    assert instances_by_path[DUMMY_INSTANCE1_PATH].short_path == \
         f'{DUMMY_PROJECT_NAME}/{DUMMY_INSTANCE1_NAME}'
     # also verify that the instances dict uses the instance id as key
-    assert instances_by_name[DUMMY_INSTANCE1_NAME].id in instances
+    assert instances_by_path[DUMMY_INSTANCE1_PATH].id in instances
 
   def test_get_instances_by_region_returns_instance(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              locations=['fake-region', DUMMY_REGION])
     instances = gce.get_instances(context)
-    instances_by_name = {i.name: i for i in instances.values()}
-    assert DUMMY_INSTANCE1_NAME in instances_by_name and len(instances) == 5
+    instances_by_path = {i.full_path: i for i in instances.values()}
+    assert DUMMY_INSTANCE1_PATH in instances_by_path and len(instances) == 6
 
   def test_get_instances_by_label(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              labels=DUMMY_INSTANCE1_LABELS)
     instances = gce.get_instances(context)
-    instances_by_name = {i.name: i for i in instances.values()}
-    assert DUMMY_INSTANCE1_NAME in instances_by_name and len(instances) == 2
+    instances_by_path = {i.full_path: i for i in instances.values()}
+
+    assert DUMMY_INSTANCE1_PATH in instances_by_path and len(instances) == 2
 
   def test_get_instances_by_other_region_returns_empty_result(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
@@ -81,24 +88,24 @@ class TestGce:
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              labels=DUMMY_INSTANCE1_LABELS)
     instances = gce.get_instances(context)
-    instances_by_name = {i.name: i for i in instances.values()}
-    i = instances_by_name[DUMMY_INSTANCE1_NAME]
+    instances_by_path = {i.full_path: i for i in instances.values()}
+    i = instances_by_path[DUMMY_INSTANCE1_PATH]
     assert i.is_serial_port_logging_enabled()
     assert i.get_metadata('serial-port-logging-enable')
 
   def test_is_serial_port_logging_enabled_instance_level(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     instances = gce.get_instances(context)
-    instances_by_name = {i.name: i for i in instances.values()}
-    i = instances_by_name[DUMMY_INSTANCE2_NAME]
+    instances_by_path = {i.full_path: i for i in instances.values()}
+    i = instances_by_path[DUMMY_INSTANCE2_PATH]
     assert not i.is_serial_port_logging_enabled()
 
   def test_is_gke_node_false(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              labels=DUMMY_INSTANCE1_LABELS)
     instances = gce.get_instances(context)
-    instances_by_name = {i.name: i for i in instances.values()}
-    assert not instances_by_name[DUMMY_INSTANCE1_NAME].is_gke_node()
+    instances_by_path = {i.full_path: i for i in instances.values()}
+    assert not instances_by_path[DUMMY_INSTANCE1_PATH].is_gke_node()
 
   def test_is_gke_node_true(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
@@ -111,72 +118,81 @@ class TestGce:
   def test_is_windows_machine(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     instances = gce.get_instances(context)
-    instances_by_name = {i.name: i for i in instances.values()}
-    assert instances_by_name[DUMMY_INSTANCE1_NAME].is_windows_machine() is True
-    assert instances_by_name[DUMMY_INSTANCE2_NAME].is_windows_machine() is False
+    instances_by_path = {i.full_path: i for i in instances.values()}
+    assert instances_by_path[DUMMY_INSTANCE1_PATH].is_windows_machine() is True
+    assert instances_by_path[DUMMY_INSTANCE2_PATH].is_windows_machine() is False
 
   def test_is_preemptible_vm(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     instances = gce.get_instances(context)
-    instances_by_name = {i.name: i for i in instances.values()}
-    assert instances_by_name[DUMMY_INSTANCE1_NAME].is_preemptible_vm() is True
-    assert instances_by_name[DUMMY_INSTANCE2_NAME].is_preemptible_vm() is True
-    assert instances_by_name[DUMMY_INSTANCE3_NAME].is_preemptible_vm() is False
+    instances_by_path = {i.full_path: i for i in instances.values()}
+    assert instances_by_path[DUMMY_INSTANCE1_PATH].is_preemptible_vm() is True
+    assert instances_by_path[DUMMY_INSTANCE2_PATH].is_preemptible_vm() is True
+    assert instances_by_path[DUMMY_INSTANCE3_PATH].is_preemptible_vm() is False
 
   def test_network(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     instances = gce.get_instances(context)
-    instances_by_name = {i.name: i for i in instances.values()}
-    assert instances_by_name[
-        DUMMY_INSTANCE1_NAME].network.name == DUMMY_DEFAULT_NAME
-    assert instances_by_name[
-        DUMMY_INSTANCE2_NAME].network.name == DUMMY_DEFAULT_NAME
+    instances_by_path = {i.full_path: i for i in instances.values()}
+    assert instances_by_path[
+        DUMMY_INSTANCE1_PATH].network.name == DUMMY_DEFAULT_NAME
+    assert instances_by_path[
+        DUMMY_INSTANCE2_PATH].network.name == DUMMY_DEFAULT_NAME
 
   def test_tags(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     instances = gce.get_instances(context)
-    instances_by_name = {i.name: i for i in instances.values()}
-    assert 'secured-instance' in instances_by_name[DUMMY_INSTANCE1_NAME].tags
-    assert 'secured-instance' in instances_by_name[DUMMY_INSTANCE2_NAME].tags
+    instances_by_path = {i.full_path: i for i in instances.values()}
+    assert 'secured-instance' in instances_by_path[DUMMY_INSTANCE1_PATH].tags
+    assert 'secured-instance' in instances_by_path[DUMMY_INSTANCE2_PATH].tags
 
   def test_disks(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     instances = gce.get_instances(context)
-    instances_by_name = {i.name: i for i in instances.values()}
-    assert len(instances_by_name[DUMMY_INSTANCE1_NAME].disks) == 1
-    assert len(instances_by_name[DUMMY_INSTANCE2_NAME].disks) == 1
+    instances_by_path = {i.full_path: i for i in instances.values()}
+    assert len(instances_by_path[DUMMY_INSTANCE1_PATH].disks) == 1
+    assert len(instances_by_path[DUMMY_INSTANCE2_PATH].disks) == 1
 
   def test_access_scopes(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              labels=DUMMY_INSTANCE1_LABELS)
     instances = gce.get_instances(context)
-    instances_by_name = {i.name: i for i in instances.values()}
-    assert set(instances_by_name[DUMMY_INSTANCE1_NAME].access_scopes) == {
+    instances_by_path = {i.full_path: i for i in instances.values()}
+    assert set(instances_by_path[DUMMY_INSTANCE1_PATH].access_scopes) == {
         'https://www.googleapis.com/auth/devstorage.read_only',
         'https://www.googleapis.com/auth/logging.write',
         'https://www.googleapis.com/auth/monitoring.write',
         'https://www.googleapis.com/auth/service.management.readonly',
-        'https://www.googleapis.com/auth/servicecontrol'
+        'https://www.googleapis.com/auth/servicecontrol',
     }
 
   def test_service_account(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              labels=DUMMY_INSTANCE1_LABELS)
     instances = gce.get_instances(context)
-    instances_by_name = {i.name: i for i in instances.values()}
-    assert instances_by_name[
-        DUMMY_INSTANCE1_NAME].service_account == \
-          f'{DUMMY_PROJECT_NR}-compute@developer.gserviceaccount.com'
+    instances_by_path = {i.full_path: i for i in instances.values()}
+    assert (instances_by_path[DUMMY_INSTANCE1_PATH].service_account ==
+            f'{DUMMY_PROJECT_NR}-compute@developer.gserviceaccount.com')
 
   def test_get_instance_groups(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              locations=['europe-west4'])
     groups = gce.get_instance_groups(context)
-    assert groups['instance-group-1'].has_named_ports() is True
-    assert groups['mig'].has_named_ports() is False
-    assert 'http' in [p['name'] for p in groups['instance-group-1'].named_ports]
+    assert (groups[
+        'projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroups/instance-group-1']
+            .has_named_ports() is True)
+    assert (groups[
+        'projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroups/mig'].
+            has_named_ports() is False)
+    assert 'http' in [
+        p['name'] for p in groups[
+            'projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroups/instance-group-1']
+        .named_ports
+    ]
     assert 'https' not in [
-        p['name'] for p in groups['instance-group-1'].named_ports
+        p['name'] for p in groups[
+            'projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroups/instance-group-1']
+        .named_ports
     ]
 
   def test_get_managed_instance_groups(self):
@@ -251,7 +267,9 @@ class TestGce:
     templates = gce.get_instance_templates(DUMMY_PROJECT_NAME)
     # find the GKE node pool template
     matched_names = [
-        t for t in templates if t.startswith('gke-gke1-default-pool')
+        t for t in templates if t.startswith(
+            'projects/gcpdiag-gce1-aaaa/global/instanceTemplates/gke-gke1-default-pool'
+        )
     ]
     assert len(matched_names) == 1
     t = templates[matched_names[0]]
