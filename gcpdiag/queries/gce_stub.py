@@ -57,7 +57,7 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
 
   def list(self, project, zone=None, returnPartialSuccess=None, fields=None):
     # TODO: implement fields filtering
-    if self.mock_state in ['igs', 'instances', 'disks']:
+    if self.mock_state in ['igs', 'instances', 'disks', 'negs']:
       return apis_stub.RestCallStub(
           project,
           f'compute-{self.mock_state}-{zone}',
@@ -102,6 +102,9 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
         project_id=project,
         json_basename=f'compute-serial-port-output-{instance}',
     )
+
+  def networkEndpointGroups(self):
+    return ComputeEngineApiStub('negs')
 
   def new_batch_http_request(self):
     batch_api = apis_stub.BatchRequestStub()
@@ -155,11 +158,17 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
   def backendServices(self):
     return lb_stub.LbApiStub(mock_state='backendServices')
 
+  def regionBackendServices(self):
+    return lb_stub.LbApiStub(mock_state='regionBackendServices')
+
   def forwardingRules(self):
     return lb_stub.LbApiStub(mock_state='forwardingRules')
 
   def healthChecks(self):
     return HealthCheckApiStub(mock_state='healthChecks')
+
+  def regionHealthChecks(self):
+    return HealthCheckApiStub(mock_state='regionHealthChecks')
 
   def interconnects(self):
     return interconnect_stub.InterconnectApiStub(mock_state='interconnects')
@@ -236,24 +245,29 @@ class HealthCheckApiStub:
   def list(self, project, region=None):
     if self.mock_state == 'healthChecks':
       return apis_stub.RestCallStub(project, 'lb-health-checks')
+    if self.mock_state == 'regionHealthChecks':
+      return apis_stub.RestCallStub(project, f'regionHealthChecks-{region}')
     else:
       raise ValueError(f'cannot call method {self.mock_state} here')
 
-  def get(self, project, healthCheck=None):
-    if self.mock_state == 'healthChecks' and healthCheck:
+  def get(self, project, healthCheck=None, region=None):
+    if healthCheck:
       self.health_check = healthCheck
       self.project = project
+      self.region = region
       return self
     else:
       raise ValueError(f'cannot call method {self.mock_state} here')
 
   def execute(self, num_retries=0):
     json_dir = apis_stub.get_json_dir(self.project)
-    with open(json_dir / f'{self.mock_state}.json',
-              encoding='utf-8') as json_file:
+    json_file_name = f'{self.mock_state}.json'
+    if self.mock_state == 'regionHealthChecks':
+      json_file_name = f'{self.mock_state}-{self.region}.json'
+    with open(json_dir / json_file_name, encoding='utf-8') as json_file:
       health_checks = json.load(json_file)['items']
       # search for and get the health check
-      if self.mock_state == 'healthChecks' and health_checks:
+      if health_checks:
         for health_check in health_checks:
           if health_check['name'] == self.health_check:
             return health_check

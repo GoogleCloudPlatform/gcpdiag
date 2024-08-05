@@ -1,0 +1,17 @@
+{
+  "kind": "compute#backendServiceGroupHealth",
+  "healthStatus": [
+    {
+      "ipAddress": "10.142.0.2",
+      "port": 80,
+      "instance": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/zones/us-east1-b/instances/vm-pn3l",
+      "healthState": "UNHEALTHY"
+    },
+    {
+      "ipAddress": "10.142.0.3",
+      "port": 80,
+      "instance": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/zones/us-east1-b/instances/vm-m5q1",
+      "healthState": "UNHEALTHY"
+    }
+  ]
+}

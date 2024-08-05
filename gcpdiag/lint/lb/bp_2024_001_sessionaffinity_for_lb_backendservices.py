@@ -34,12 +34,12 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   for bs in bs_list:
     # fail for backend services for GXLB which don't have session affinity configured
     if (bs.load_balancing_scheme == EXTERNAL_MANAGED and
-        bs.session_affinity == 'NONE' and bs.region == 'None'):
+        bs.session_affinity == 'NONE' and not bs.region):
       report.add_failed(bs)
 
     # pass for backend services for GXLB which have session affinity configured
     elif (bs.load_balancing_scheme == EXTERNAL_MANAGED and
-          bs.session_affinity != 'NONE' and bs.region == 'None'):
+          bs.session_affinity != 'NONE' and not bs.region):
       report.add_ok(bs)
     else:
       # skip for non-global application LB backend services

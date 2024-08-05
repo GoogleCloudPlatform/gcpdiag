@@ -38,6 +38,11 @@ resource "google_project_service" "compute" {
   service = "compute.googleapis.com"
 }
 
+resource "google_project_service" "recommender" {
+  project = google_project.project.project_id
+  service = "recommender.googleapis.com"
+}
+
 output "project_id" {
   value = google_project.project.project_id
 }

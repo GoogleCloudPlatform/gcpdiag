@@ -26,6 +26,7 @@ DATAPROC_LABELS = {'goog-dataproc-cluster-name': 'cluster'}
 DUMMY_REGION = 'europe-west4'
 DUMMY_ZONE = 'europe-west4-a'
 DUMMY_ZONE2 = 'europe-west1-b'
+DUMMY_ZONE3 = 'europe-west4-b'
 DUMMY_PROJECT_NAME = 'gcpdiag-gce1-aaaa'
 DUMMY_PROJECT_NR = '12340001'
 DUMMY_DEFAULT_NAME = 'default'
@@ -41,6 +42,10 @@ DUMMY_INSTANCE3_PATH = (f'projects/{DUMMY_PROJECT_NAME}/zones/{DUMMY_ZONE2}/'
                         f'instances/{DUMMY_INSTANCE3_NAME}')
 DUMMY_INSTANCE3_LABELS = {'gcp_doctor_test': 'gke'}
 DUMMY_INSTANCE4_NAME = 'windows-test'
+
+DUMMY_NEG1_NAME = 'neg1'
+DUMMY_NEG1_PATH = (f'projects/{DUMMY_PROJECT_NAME}/zones/{DUMMY_ZONE3}/'
+                   f'networkEndpointGroups/{DUMMY_NEG1_NAME}')
 
 DUMMY_REGION_MIG_PROJECT_NAME = 'gcpdiag-apigee1-aaaa'
 DUMMY_REGION_MIG_NAME = 'mig-bridge-manager-us-central1'
@@ -419,3 +424,10 @@ class TestGce:
     instances = gce.get_instances(context)
     for i in instances.values():
       assert i.labels == DUMMY_INSTANCE1_LABELS
+
+  def test_get_zonal_network_endpoint_groups(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    negs = gce.get_zonal_network_endpoint_groups(context)
+    assert len(negs) == 1
+    negs_by_path = {i.full_path: i for i in negs.values()}
+    assert DUMMY_NEG1_PATH in negs_by_path

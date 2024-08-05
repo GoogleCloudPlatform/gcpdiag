@@ -1,0 +1,13 @@
+{
+  "name": "projects/12340009",
+  "parent": "folders/211134714592",
+  "projectId": "gcpdiag-lb2-aaaa",
+  "state": "ACTIVE",
+  "displayName": "gcpdiag test - lb2",
+  "createTime": "2024-08-09T11:54:30.204573Z",
+  "updateTime": "2024-08-09T11:54:30.204573Z",
+  "etag": "W/\"d955640477ae431d\"",
+  "labels": {
+    "gcpdiag": "test"
+  }
+}

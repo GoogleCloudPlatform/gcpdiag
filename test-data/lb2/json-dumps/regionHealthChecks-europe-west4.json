@@ -1,0 +1,27 @@
+{
+  "kind": "compute#healthCheckList",
+  "id": "projects/gcpdiag-lb2-aaaa/regions/europe-west4/healthChecks/",
+  "items": [
+    {
+      "kind": "compute#healthCheck",
+      "id": "2180228872595236041",
+      "creationTimestamp": "2024-08-13T06:05:42.459-07:00",
+      "name": "tcp-basic-check-2",
+      "checkIntervalSec": 5,
+      "timeoutSec": 5,
+      "unhealthyThreshold": 2,
+      "healthyThreshold": 2,
+      "type": "TCP",
+      "tcpHealthCheck": {
+        "port": 80,
+        "proxyHeader": "NONE"
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/regions/europe-west4/healthChecks/tcp-basic-check-2",
+      "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/regions/europe-west4",
+      "logConfig": {
+        "enable": true
+      }
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/regions/europe-west4/healthChecks/"
+}

@@ -34,6 +34,14 @@ json-dumps/compute-igs-%.json:
 json-dumps/compute-igs-empty.json: json-dumps/compute-igs-$(ZONE_EMPTY).json
 	ln -sf $(notdir $<) $@
 
+json-dumps/compute-negs-%.json:
+	$(CURL) -fsS \
+		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones/$*/networkEndpointGroups' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-nes-empty.json: json-dumps/compute-negs-$(ZONE_EMPTY).json
+	ln -sf $(notdir $<) $@
+
 COMPUTE_INSTANCES_MAXRESULTS ?= 10
 
 json-dumps/compute-instances-%.json:

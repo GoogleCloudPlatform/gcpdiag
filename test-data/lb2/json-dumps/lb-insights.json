@@ -1,0 +1,68 @@
+{
+  "insights": [
+    {
+      "name": "projects/12340009/locations/global/insightTypes/google.networkanalyzer.networkservices.loadBalancerInsight/insights/1a5cab32-909c-4c1b-ac5c-848c6fe54c23",
+      "description": "Backend services use different ports for health check and traffic",
+      "content": {
+        "backendServiceInfos": [
+          {
+            "backendServiceUri": "//compute.googleapis.com/projects/gcpdiag-lb2-aaaa/global/backendServices/web-backend-service",
+            "associatedForwardingRuleUris": [
+              "//compute.googleapis.com/projects/gcpdiag-lb2-aaaa/global/forwardingRules/http-content-rule"
+            ],
+            "impactedInstanceGroupUris": [
+              "//compute.googleapis.com/projects/gcpdiag-lb2-aaaa/zones/us-east1-b/instanceGroups/lb-backend-example"
+            ],
+            "servingPortName": "http",
+            "healthCheckUri": "//compute.googleapis.com/projects/gcpdiag-lb2-aaaa/global/healthChecks/http-basic-check",
+            "healthCheckPortNumber": 88
+          }
+        ]
+      },
+      "lastRefreshTime": "2024-08-12T11:55:04.317647338Z",
+      "observationPeriod": "0s",
+      "stateInfo": {
+        "state": "ACTIVE"
+      },
+      "category": "PERFORMANCE",
+      "targetResources": [
+        "//cloudresourcemanager.googleapis.com/projects/gcpdiag-lb2-aaaa"
+      ],
+      "insightSubtype": "HEALTH_CHECK_PORT_MISMATCH",
+      "etag": "\"8d1b2881668276eb\"",
+      "severity": "LOW"
+    },
+    {
+      "name": "projects/12340009/locations/global/insightTypes/google.networkanalyzer.networkservices.loadBalancerInsight/insights/c50f45a6-968b-4f52-a784-3e86f60d1163",
+      "description": "Health check firewall is not configured",
+      "content": {
+        "forwardingRuleUri": "//compute.googleapis.com/projects/gcpdiag-lb2-aaaa/global/forwardingRules/http-content-rule",
+        "loadBalancerType": "EXTERNAL_HTTP_PROXY",
+        "healthCheckFirewallInfo": {
+          "misconfiguredInstanceUris": [
+            "//compute.googleapis.com/projects/gcpdiag-lb2-aaaa/zones/us-east1-b/instances/vm-m5q1",
+            "//compute.googleapis.com/projects/gcpdiag-lb2-aaaa/zones/us-east1-b/instances/vm-pn3l"
+          ],
+          "matchedFirewalls": [
+            {
+              "firewallUri": "gcpdiag-lb2-aaaa::default::default-deny-ingress",
+              "firewallAction": "DENY"
+            }
+          ]
+        }
+      },
+      "lastRefreshTime": "2024-08-12T11:55:04.459978451Z",
+      "observationPeriod": "777.078654069s",
+      "stateInfo": {
+        "state": "ACTIVE"
+      },
+      "category": "PERFORMANCE",
+      "targetResources": [
+        "//compute.googleapis.com/projects/gcpdiag-lb2-aaaa/global/forwardingRules/http-content-rule"
+      ],
+      "insightSubtype": "HEALTH_CHECK_FIREWALL_NOT_CONFIGURED",
+      "etag": "\"1da24f29cfd9fa23\"",
+      "severity": "MEDIUM"
+    }
+  ]
+}

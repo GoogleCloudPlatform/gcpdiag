@@ -1,0 +1,203 @@
+{
+  "entries": [
+    {
+      "insertId": "13pdgcnc969",
+      "jsonPayload": {
+        "healthCheckProbeResult": {
+          "healthState": "UNHEALTHY",
+          "previousHealthState": "HEALTHY",
+          "targetIp": "10.142.0.2",
+          "ipAddress": "10.142.0.2",
+          "probeCompletionTimestamp": "2024-08-13T09:20:21.631554663Z",
+          "targetPort": 80,
+          "probeRequest": "/",
+          "probeSourceIp": "35.191.193.100",
+          "probeResultText": "HTTP response: , Error: Timeout waiting for connect",
+          "healthCheckProtocol": "HTTP",
+          "responseLatency": "5.001402s",
+          "detailedHealthState": "TIMEOUT",
+          "previousDetailedHealthState": "HEALTHY"
+        }
+      },
+      "resource": {
+        "type": "gce_instance_group",
+        "labels": {
+          "instance_group_id": "3727997629940134718",
+          "project_id": "gcpdiag-lb2-aaaa",
+          "location": "us-east1-b",
+          "instance_group_name": "lb-backend-example"
+        }
+      },
+      "timestamp": "2024-08-13T09:20:22.199333012Z",
+      "severity": "INFO",
+      "logName": "projects/gcpdiag-lb2-aaaa/logs/compute.googleapis.com%2Fhealthchecks",
+      "receiveTimestamp": "2024-08-13T09:20:22.666336211Z"
+    },
+    {
+      "insertId": "13pdgcnc968",
+      "jsonPayload": {
+        "healthCheckProbeResult": {
+          "previousDetailedHealthState": "HEALTHY",
+          "probeCompletionTimestamp": "2024-08-13T09:20:21.475813306Z",
+          "healthCheckProtocol": "HTTP",
+          "ipAddress": "10.142.0.3",
+          "detailedHealthState": "TIMEOUT",
+          "healthState": "UNHEALTHY",
+          "probeSourceIp": "35.191.193.100",
+          "probeResultText": "HTTP response: , Error: Timeout waiting for connect",
+          "targetIp": "10.142.0.3",
+          "probeRequest": "/",
+          "targetPort": 80,
+          "responseLatency": "5.000828s",
+          "previousHealthState": "HEALTHY"
+        }
+      },
+      "resource": {
+        "type": "gce_instance_group",
+        "labels": {
+          "instance_group_name": "lb-backend-example",
+          "location": "us-east1-b",
+          "project_id": "gcpdiag-lb2-aaaa",
+          "instance_group_id": "3727997629940134718"
+        }
+      },
+      "timestamp": "2024-08-13T09:20:22.199260545Z",
+      "severity": "INFO",
+      "logName": "projects/gcpdiag-lb2-aaaa/logs/compute.googleapis.com%2Fhealthchecks",
+      "receiveTimestamp": "2024-08-13T09:20:22.666336211Z"
+    },
+    {
+      "insertId": "13pdgcnc7o7",
+      "jsonPayload": {
+        "healthCheckProbeResult": {
+          "previousDetailedHealthState": "UNKNOWN",
+          "healthState": "UNHEALTHY",
+          "probeRequest": "/",
+          "probeCompletionTimestamp": "2024-08-12T11:38:21.925734077Z",
+          "targetPort": 88,
+          "ipAddress": "10.142.0.3",
+          "probeResultText": "HTTP response: , Error: Timeout waiting for connect",
+          "targetIp": "10.142.0.3",
+          "previousHealthState": "UNHEALTHY",
+          "probeSourceIp": "35.191.193.100",
+          "responseLatency": "5.000532s",
+          "healthCheckProtocol": "HTTP",
+          "detailedHealthState": "TIMEOUT"
+        }
+      },
+      "resource": {
+        "type": "gce_instance_group",
+        "labels": {
+          "location": "us-east1-b",
+          "instance_group_name": "lb-backend-example",
+          "instance_group_id": "3727997629940134718",
+          "project_id": "gcpdiag-lb2-aaaa"
+        }
+      },
+      "timestamp": "2024-08-12T11:38:23.660085464Z",
+      "severity": "INFO",
+      "logName": "projects/gcpdiag-lb2-aaaa/logs/compute.googleapis.com%2Fhealthchecks",
+      "receiveTimestamp": "2024-08-12T11:38:24.424194648Z"
+    },
+    {
+      "insertId": "13pdgcnc7o6",
+      "jsonPayload": {
+        "healthCheckProbeResult": {
+          "ipAddress": "10.142.0.2",
+          "probeSourceIp": "35.191.193.101",
+          "probeRequest": "/",
+          "previousHealthState": "UNHEALTHY",
+          "responseLatency": "5.000717s",
+          "targetIp": "10.142.0.2",
+          "targetPort": 88,
+          "probeResultText": "HTTP response: , Error: Timeout waiting for connect",
+          "healthCheckProtocol": "HTTP",
+          "healthState": "UNHEALTHY",
+          "probeCompletionTimestamp": "2024-08-12T11:38:22.220641335Z",
+          "previousDetailedHealthState": "UNKNOWN",
+          "detailedHealthState": "TIMEOUT"
+        }
+      },
+      "resource": {
+        "type": "gce_instance_group",
+        "labels": {
+          "instance_group_id": "3727997629940134718",
+          "project_id": "gcpdiag-lb2-aaaa",
+          "location": "us-east1-b",
+          "instance_group_name": "lb-backend-example"
+        }
+      },
+      "timestamp": "2024-08-12T11:38:23.489417160Z",
+      "severity": "INFO",
+      "logName": "projects/gcpdiag-lb2-aaaa/logs/compute.googleapis.com%2Fhealthchecks",
+      "receiveTimestamp": "2024-08-12T11:38:24.424194648Z"
+    },
+    {
+      "insertId": "13pdgcnc7o5",
+      "jsonPayload": {
+        "healthCheckProbeResult": {
+          "targetPort": 80,
+          "detailedHealthState": "TIMEOUT",
+          "targetIp": "10.142.0.3",
+          "probeCompletionTimestamp": "2024-08-12T11:38:02.158189861Z",
+          "responseLatency": "5.001404s",
+          "probeSourceIp": "35.191.193.100",
+          "ipAddress": "10.142.0.3",
+          "healthCheckProtocol": "HTTP",
+          "previousDetailedHealthState": "HEALTHY",
+          "probeResultText": "HTTP response: , Error: Timeout waiting for connect",
+          "probeRequest": "/",
+          "previousHealthState": "HEALTHY",
+          "healthState": "UNHEALTHY"
+        }
+      },
+      "resource": {
+        "type": "gce_instance_group",
+        "labels": {
+          "location": "us-east1-b",
+          "instance_group_id": "3727997629940134718",
+          "project_id": "gcpdiag-lb2-aaaa",
+          "instance_group_name": "lb-backend-example"
+        }
+      },
+      "timestamp": "2024-08-12T11:38:03.660044569Z",
+      "severity": "INFO",
+      "logName": "projects/gcpdiag-lb2-aaaa/logs/compute.googleapis.com%2Fhealthchecks",
+      "receiveTimestamp": "2024-08-12T11:38:05.414612124Z"
+    },
+    {
+      "insertId": "13pdgcnc7o4",
+      "jsonPayload": {
+        "healthCheckProbeResult": {
+          "targetPort": 80,
+          "responseLatency": "5.001105s",
+          "probeRequest": "/",
+          "previousHealthState": "HEALTHY",
+          "previousDetailedHealthState": "HEALTHY",
+          "healthState": "UNHEALTHY",
+          "healthCheckProtocol": "HTTP",
+          "probeCompletionTimestamp": "2024-08-12T11:38:02.26396931Z",
+          "ipAddress": "10.142.0.2",
+          "targetIp": "10.142.0.2",
+          "detailedHealthState": "TIMEOUT",
+          "probeSourceIp": "35.191.193.98",
+          "probeResultText": "HTTP response: , Error: Timeout waiting for connect"
+        }
+      },
+      "resource": {
+        "type": "gce_instance_group",
+        "labels": {
+          "project_id": "gcpdiag-lb2-aaaa",
+          "instance_group_id": "3727997629940134718",
+          "location": "us-east1-b",
+          "instance_group_name": "lb-backend-example"
+        }
+      },
+      "timestamp": "2024-08-12T11:38:02.660665555Z",
+      "severity": "INFO",
+      "logName": "projects/gcpdiag-lb2-aaaa/logs/compute.googleapis.com%2Fhealthchecks",
+      "receiveTimestamp": "2024-08-12T11:38:04.419383730Z"
+    }
+  ],
+  "nextPageToken": "EAE455yslIC87crEAUoUIhIiAgoAKgwI_5GitAYQ_5Pr3ANSBwikyrGfiR5gkv2gpYXD9KyKAWocCgwI-MrstQYQnuiagQMSCAgFEMavvr8BGAYgAA"
+}

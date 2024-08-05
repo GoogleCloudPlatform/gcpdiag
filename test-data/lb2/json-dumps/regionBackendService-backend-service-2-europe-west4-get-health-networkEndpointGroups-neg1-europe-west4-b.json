@@ -1,0 +1,13 @@
+{
+  "kind": "compute#backendServiceGroupHealth",
+  "healthStatus": [
+    {
+      "ipAddress": "10.164.0.2",
+      "port": 80,
+      "instance": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/zones/europe-west4-b/instances/neg-vm",
+      "healthState": "UNHEALTHY",
+      "forwardingRuleIp": "34.91.64.191",
+      "forwardingRule": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/regions/europe-west4/forwardingRules/tcp-content-rule"
+    }
+  ]
+}

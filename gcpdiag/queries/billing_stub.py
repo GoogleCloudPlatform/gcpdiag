@@ -73,14 +73,11 @@ class BillingAccountProjectsStub(BillingApiStub):
     return None
 
 
-class RecommenderApiStub:
+class RecommenderBillingApiStub:
   """Mock object to simulate recommender cost insights"""
 
   def __init__(self, project_id=DUMMY_PROJECT_ID):
     self.project_id = project_id
-
-  def billingAccounts(self):
-    return self
 
   def locations(self):
     return self

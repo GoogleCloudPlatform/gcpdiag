@@ -1,0 +1,26 @@
+{
+  "kind": "compute#instanceGroupList",
+  "id": "projects/gcpdiag-lb2-aaaa/zones/us-east1-b/instanceGroups",
+  "items": [
+    {
+      "kind": "compute#instanceGroup",
+      "id": "3727997629940134718",
+      "creationTimestamp": "2024-08-12T01:54:41.142-07:00",
+      "name": "lb-backend-example",
+      "description": "This instance group is controlled by Instance Group Manager 'lb-backend-example'. To modify instances in this group, use the Instance Group Manager API: https://cloud.google.com/compute/docs/reference/latest/instanceGroupManagers",
+      "namedPorts": [
+        {
+          "name": "http",
+          "port": 80
+        }
+      ],
+      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/global/networks/default",
+      "fingerprint": "l9ccw0jwP90=",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/zones/us-east1-b",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/zones/us-east1-b/instanceGroups/lb-backend-example",
+      "size": 2,
+      "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/regions/us-east1/subnetworks/default"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/zones/us-east1-b/instanceGroups"
+}

@@ -32,6 +32,9 @@ all:	\
 	json-dumps/compute-migs-$(ZONE_1).json \
 	json-dumps/compute-migs-$(ZONE_2).json \
 	json-dumps/compute-migs-empty.json \
+	json-dumps/compute-negs-$(ZONE_1).json \
+	json-dumps/compute-negs-$(ZONE_3).json \
+	json-dumps/compute-negs-empty.json \
 	json-dumps/compute-disks-$(ZONE_1).json \
 	json-dumps/compute-disks-$(ZONE_2).json \
 	json-dumps/compute-disks-empty.json \

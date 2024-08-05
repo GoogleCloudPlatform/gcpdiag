@@ -21,7 +21,7 @@ from gcpdiag import models
 from gcpdiag.queries import apis_stub, lb
 
 DUMMY_PROJECT_ID = 'gcpdiag-lb1-aaaa'
-DUMMY_PROJECT_NAME = 'gcpdiag-lb1-aaaa'
+DUMMY_PROJECT2_ID = 'gcpdiag-lb2-aaaa'
 DUMMY_PORT = 80
 DUMMY_PROTOCOL = 'HTTP'
 DUMMY_URLMAP_NAME = 'web-map-http'
@@ -34,17 +34,59 @@ class TestURLMap:
 
   def test_get_backend_services(self):
     """get_backend_services returns the right backend services matched by name."""
-    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    context = models.Context(project_id=DUMMY_PROJECT_ID)
     obj_list = lb.get_backend_services(context.project_id)
     assert len(obj_list) == 1
     n = obj_list[0]
     assert n.session_affinity == 'NONE'
     assert n.locality_lb_policy == 'ROUND_ROBIN'
 
+  def test_get_backend_service_global(self):
+    context = models.Context(project_id=DUMMY_PROJECT2_ID)
+    obj = lb.get_backend_service(context.project_id, 'web-backend-service')
+
+    assert obj.name == 'web-backend-service'
+    assert obj.session_affinity == 'NONE'
+    assert obj.locality_lb_policy == 'ROUND_ROBIN'
+
+  def test_get_backend_service_regional(self):
+    context = models.Context(project_id=DUMMY_PROJECT2_ID)
+    obj = lb.get_backend_service(context.project_id, 'backend-service-2',
+                                 'europe-west4')
+
+    assert obj.name == 'backend-service-2'
+    assert obj.region == 'europe-west4'
+    assert obj.session_affinity == 'NONE'
+    assert obj.locality_lb_policy == 'ROUND_ROBIN'
+
+  def test_get_backend_service_health_global(self):
+    context = models.Context(project_id=DUMMY_PROJECT2_ID)
+    states_list = lb.get_backend_service_health(context.project_id,
+                                                'web-backend-service')
+
+    assert len(states_list) == 2
+    assert states_list[0].health_state == 'UNHEALTHY'
+
+  def test_get_backend_service_health_regional(self):
+    context = models.Context(project_id=DUMMY_PROJECT2_ID)
+    states_list = lb.get_backend_service_health(context.project_id,
+                                                'backend-service-2',
+                                                'europe-west4')
+
+    assert len(states_list) == 1
+    assert states_list[0].health_state == 'UNHEALTHY'
+
   def test_get_forwarding_rules(self):
     """get_forwarding_rules returns the right forwarding rules matched by name."""
-    forwarding_rules = lb.get_forwarding_rules(project_id=DUMMY_PROJECT_NAME)
+    forwarding_rules = lb.get_forwarding_rules(project_id=DUMMY_PROJECT_ID)
     assert len(forwarding_rules) == 1
     forwarding_rule = forwarding_rules[0]
     assert forwarding_rule.name == 'forwardingRule1'
     assert forwarding_rule.short_path == 'gcpdiag-lb1-aaaa/forwardingRule1'
+
+  def test_get_lb_insights_for_a_project(self):
+    context = models.Context(project_id=DUMMY_PROJECT2_ID)
+    lb_insights = lb.get_lb_insights_for_a_project(context.project_id)
+
+    assert lb_insights[0].is_health_check_port_mismatch_insight
+    assert lb_insights[1].is_firewall_rule_insight

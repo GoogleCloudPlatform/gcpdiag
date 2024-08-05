@@ -78,6 +78,8 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/vpc1/json-dumps',
     'gcpdiag-lb1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/lb1/json-dumps',
+    'gcpdiag-lb2-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/lb2/json-dumps',
     'gcpdiag-tpu1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/tpu1/json-dumps',
     'gcpdiag-iam1-aaaa':
@@ -352,8 +354,8 @@ def get_api_stub(service_name: str,
     from gcpdiag.queries import vertex_stub
     return vertex_stub.VertexApiStub()
   elif service_name == 'recommender':
-    from gcpdiag.queries import billing_stub
-    return billing_stub.RecommenderApiStub()
+    from gcpdiag.queries import recommender_stub
+    return recommender_stub.RecommenderApiStub()
   elif service_name == 'cloudbilling':
     from gcpdiag.queries import billing_stub
     return billing_stub.BillingApiStub()

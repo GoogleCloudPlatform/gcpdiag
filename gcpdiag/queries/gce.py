@@ -1274,12 +1274,139 @@ class HealthCheck(models.Resource):
       return False
     return False
 
+  @property
+  def type(self) -> str:
+    return self._resource_data['type']
+
+  @property
+  def request_path(self) -> str:
+    return self.get_health_check_property('requestPath', '/')
+
+  @property
+  def request(self) -> str:
+    return self.get_health_check_property('request')
+
+  @property
+  def response(self) -> str:
+    return self.get_health_check_property('response')
+
+  @property
+  def port(self) -> int:
+    return self.get_health_check_property('port')
+
+  @property
+  def port_specification(self) -> str:
+    return self.get_health_check_property('portSpecification')
+
+  @property
+  def timeout_sec(self) -> int:
+    return self._resource_data.get('timeoutSec', 5)
+
+  def get_health_check_property(self, property_name: str, default_value=None):
+    health_check_types = {
+        'HTTP': 'httpHealthCheck',
+        'HTTPS': 'httpsHealthCheck',
+        'HTTP2': 'http2HealthCheck',
+        'TCP': 'tcpHealthCheck',
+        'SSL': 'sslHealthCheck',
+        'GRPC': 'grpcHealthCheck',
+    }
+    if self.type in health_check_types:
+      health_check_data = self._resource_data.get(health_check_types[self.type])
+      if health_check_data:
+        return health_check_data.get(property_name) or default_value
+    return default_value
+
 
 @caching.cached_api_call(in_memory=True)
-def get_health_check(project_id: str, health_check: str) -> object:
+def get_health_check(project_id: str,
+                     health_check: str,
+                     region: str = None) -> object:
   logging.info('fetching health check: %s', health_check)
   compute = apis.get_api('compute', 'v1', project_id)
-  request = compute.healthChecks().get(project=project_id,
-                                       healthCheck=health_check)
+  if not region:
+    request = compute.healthChecks().get(project=project_id,
+                                         healthCheck=health_check)
+  else:
+    request = compute.regionHealthChecks().get(project=project_id,
+                                               healthCheck=health_check,
+                                               region=region)
   response = request.execute(num_retries=config.API_RETRIES)
   return HealthCheck(project_id, response)
+
+
+class NetworkEndpointGroup(models.Resource):
+  """A Network Endpoint Group resource."""
+
+  _resource_data: dict
+  _type: str
+
+  def __init__(self, project_id, resource_data):
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+
+  @property
+  def name(self) -> str:
+    return self._resource_data['name']
+
+  @property
+  def id(self) -> str:
+    return self._resource_data['id']
+
+  @property
+  def full_path(self) -> str:
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
+                      self.self_link)
+    if result:
+      return result.group(1)
+    else:
+      return f'>> {self.self_link}'
+
+  @property
+  def short_path(self) -> str:
+    path = self.project_id + '/' + self.name
+    return path
+
+  @property
+  def self_link(self) -> str:
+    return self._resource_data['selfLink']
+
+
+@caching.cached_api_call(in_memory=True)
+def get_zonal_network_endpoint_groups(
+    context: models.Context,) -> Mapping[str, NetworkEndpointGroup]:
+  """Returns a list of Network Endpoint Groups in the project."""
+  groups: Dict[str, NetworkEndpointGroup] = {}
+  if not apis.is_enabled(context.project_id, 'compute'):
+    return groups
+  gce_api = apis.get_api('compute', 'v1', context.project_id)
+  requests = [
+      gce_api.networkEndpointGroups().list(project=context.project_id,
+                                           zone=zone)
+      for zone in get_gce_zones(context.project_id)
+  ]
+  items = apis_utils.batch_list_all(
+      api=gce_api,
+      requests=requests,
+      next_function=gce_api.networkEndpointGroups().list_next,
+      log_text=f'listing gce instances of project {context.project_id}',
+  )
+
+  for i in items:
+    result = re.match(
+        r'https://www.googleapis.com/compute/v1/projects/[^/]+/zones/([^/]+)',
+        i['selfLink'],
+    )
+    if not result:
+      logging.error("instance %s selfLink didn't match regexp: %s", i['id'],
+                    i['selfLink'])
+      continue
+    zone = result.group(1)
+    labels = i.get('labels', {})
+    resource = i.get('name', '')
+    if not context.match_project_resource(
+        location=zone, labels=labels, resource=resource):
+      continue
+    data = NetworkEndpointGroup(context.project_id, i)
+    groups[data.full_path] = data
+  return groups
