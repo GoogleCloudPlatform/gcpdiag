@@ -117,6 +117,8 @@ gcpdiag runbook --help
 
   - [Vm Serial Logs Check](/runbook/steps/gce/vm-serial-logs-check)
 
+  - [Vm Serial Logs Check](/runbook/steps/gce/vm-serial-logs-check)
+
   - [Ssh In Browser Check](/runbook/steps/gce/ssh-in-browser-check)
 
   - [Org Policy Check](/runbook/steps/crm/org-policy-check)

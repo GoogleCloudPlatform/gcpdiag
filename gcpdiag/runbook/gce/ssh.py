@@ -160,6 +160,12 @@ class Ssh(runbook.DiagnosticTree):
     guest_agent_check.negative_pattern = gce_const.GUEST_AGENT_FAILED_MSG
     self.add_step(parent=start, child=guest_agent_check)
 
+    # Check for SSH issues due to bad permissions
+    sshd_auth_failure = gce_gs.VmSerialLogsCheck()
+    sshd_auth_failure.template = 'vm_serial_log::sshd_auth_failure'
+    sshd_auth_failure.negative_pattern = gce_const.SSHD_AUTH_FAILURE
+    self.add_step(parent=start, child=sshd_auth_failure)
+
     # users wants to use SSH in Browser
     if op.get(CHECK_SSH_IN_BROWSER):
       self.add_step(parent=start, child=SshInBrowserCheck())

@@ -205,6 +205,25 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      [REASON]
      Detected that Google Guest Agent is running within the VM
 
+[AUTOMATED STEP]: Examining SSHD authentication failures via serial logs.
+
+   - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [UNCERTAIN]
+     [REASON]
+     We are not able to find the success or failed logs for SSHD authentication issues.
+
+     [REMEDIATION]
+     To check if sshd_auth_failures are happening due to wrong directory permissions:
+     1. Follow either of the below steps to check the permissions:
+       a. these steps to rescue the vm:
+          https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
+
+       b. these steps login through serial console:
+          https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+
+     2. Check the system logs for following error messages:
+        'Authentication refused: bad ownership or modes for directory'
+        'Error updating SSH keys for user1: mkdir /home/USER/.ssh: no such file or directory'
+
 [END]: Finalizing SSH diagnostics...
 
 
@@ -413,6 +432,25 @@ principal in Cloud Console / gcloud (incl. impersonated service account)
      [REASON]
      Detected that Google Guest Agent is running within the VM
 
+[AUTOMATED STEP]: Examining SSHD authentication failures via serial logs.
+
+   - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [UNCERTAIN]
+     [REASON]
+     We are not able to find the success or failed logs for SSHD authentication issues.
+
+     [REMEDIATION]
+     To check if sshd_auth_failures are happening due to wrong directory permissions:
+     1. Follow either of the below steps to check the permissions:
+       a. these steps to rescue the vm:
+          https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
+
+       b. these steps login through serial console:
+          https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+
+     2. Check the system logs for following error messages:
+        'Authentication refused: bad ownership or modes for directory'
+        'Error updating SSH keys for user1: mkdir /home/USER/.ssh: no such file or directory'
+
 [END]: Finalizing SSH diagnostics...
 
 
@@ -602,6 +640,25 @@ are operational on the VM.
      To manually validate the Guest Agent,
      please check https://cloud.google.com/compute/docs/images/install-guest-environment#wgei
 
+
+[AUTOMATED STEP]: Examining SSHD authentication failures via serial logs.
+
+   - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [UNCERTAIN]
+     [REASON]
+     We are not able to find the success or failed logs for SSHD authentication issues.
+
+     [REMEDIATION]
+     To check if sshd_auth_failures are happening due to wrong directory permissions:
+     1. Follow either of the below steps to check the permissions:
+       a. these steps to rescue the vm:
+          https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
+
+       b. these steps login through serial console:
+          https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+
+     2. Check the system logs for following error messages:
+        'Authentication refused: bad ownership or modes for directory'
+        'Error updating SSH keys for user1: mkdir /home/USER/.ssh: no such file or directory'
 
 [END]: Finalizing SSH diagnostics...
 

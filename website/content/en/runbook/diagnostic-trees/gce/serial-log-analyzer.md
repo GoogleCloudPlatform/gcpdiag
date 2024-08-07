@@ -90,6 +90,8 @@ gcpdiag runbook --help
 
   - [Vm Serial Logs Check](/runbook/steps/gce/vm-serial-logs-check)
 
+  - [Vm Serial Logs Check](/runbook/steps/gce/vm-serial-logs-check)
+
   - [Analysing Serial Logs End](/runbook/steps/gce/analysing-serial-logs-end)
 
 

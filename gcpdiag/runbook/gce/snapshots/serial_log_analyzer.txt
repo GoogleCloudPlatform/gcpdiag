@@ -39,6 +39,7 @@ gce/serial-log-analyzer:  GCE VM Serial log analyzer
 [AUTOMATED STEP]: Checking for network related errors
 [AUTOMATED STEP]: Checking for Time Sync related errors
 [AUTOMATED STEP]: Examining SSHD functionality via serial logs.
+[AUTOMATED STEP]: Examining SSHD authentication failures via serial logs.
 [AUTOMATED STEP]: Checking for Guest Agent startup logs
 [AUTOMATED STEP]: Analyzing SSHGuard intrusion detection functionality on the VM (if any)
 [END]: Finalizing Serial console Log Analysis...
@@ -85,6 +86,7 @@ gce/serial-log-analyzer:  GCE VM Serial log analyzer
 [AUTOMATED STEP]: Checking for network related errors
 [AUTOMATED STEP]: Checking for Time Sync related errors
 [AUTOMATED STEP]: Examining SSHD functionality via serial logs.
+[AUTOMATED STEP]: Examining SSHD authentication failures via serial logs.
 [AUTOMATED STEP]: Checking for Guest Agent startup logs
 [AUTOMATED STEP]: Analyzing SSHGuard intrusion detection functionality on the VM (if any)
 [END]: Finalizing Serial console Log Analysis...

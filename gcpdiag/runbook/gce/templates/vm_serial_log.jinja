@@ -423,3 +423,51 @@ https://www.youtube.com/watch?v=oD6IFpjEtEw
 {% block linux_fs_corruption_skipped_reason %}
 There are no logs to examine !
 {% endblock linux_fs_corruption_skipped_reason %}
+
+{% block sshd_auth_failure_step_message %}
+Examining SSHD authentication failures via serial logs.
+{% endblock sshd_auth_failure_step_message %}
+
+{% block sshd_auth_failure_failure_reason %}
+SSHD authentication issues detected in the VM, potentially affecting SSH access.
+We found the error "Authentication refused: bad ownership or modes for directory"
+{% endblock sshd_auth_failure_failure_reason %}
+
+{% block sshd_auth_failure_failure_remediation %}
+To mitigate "bad ownership or modes for directory" errors:
+1. Follow either of the below steps to check the permissions:
+  a. these steps to rescue the vm:
+     https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
+
+  b. these steps login through serial console:
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+
+2. Refer to the standard permissions required for ssh connection:
+   https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-ssh-errors#permissions
+{% endblock sshd_auth_failure_failure_remediation %}
+
+{% block sshd_auth_failure_success_reason %}
+No errors detected for sshd auth failure due to bad permissions
+{% endblock sshd_auth_failure_success_reason %}
+
+{% block sshd_auth_failure_skipped_reason %}
+There are no logs to examine
+{% endblock sshd_auth_failure_skipped_reason %}
+
+{% block sshd_auth_failure_uncertain_reason %}
+We are not able to find the success or failed logs for SSHD authentication issues.
+{% endblock sshd_auth_failure_uncertain_reason %}
+
+{% block sshd_auth_failure_uncertain_remediation %}
+To check if sshd_auth_failures are happening due to wrong directory permissions:
+1. Follow either of the below steps to check the permissions:
+  a. these steps to rescue the vm:
+     https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
+
+  b. these steps login through serial console:
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+
+2. Check the system logs for following error messages:
+   'Authentication refused: bad ownership or modes for directory'
+   'Error updating SSH keys for user1: mkdir /home/USER/.ssh: no such file or directory'
+{% endblock sshd_auth_failure_uncertain_remediation %}

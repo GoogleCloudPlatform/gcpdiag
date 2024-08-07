@@ -144,6 +144,12 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
     sshd_check.negative_pattern = gce_const.BAD_SSHD_PATTERNS
     self.add_step(parent=log_start_point, child=sshd_check)
 
+    # Check for SSH issues due to bad permissions
+    sshd_auth_failure = gce_gs.VmSerialLogsCheck()
+    sshd_auth_failure.template = 'vm_serial_log::sshd_auth_failure'
+    sshd_auth_failure.negative_pattern = gce_const.SSHD_AUTH_FAILURE
+    self.add_step(parent=log_start_point, child=sshd_auth_failure)
+
     # Check for Guest Agent status
     guest_agent_check = gce_gs.VmSerialLogsCheck()
     guest_agent_check.template = 'vm_serial_log::guest_agent'

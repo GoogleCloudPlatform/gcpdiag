@@ -138,3 +138,8 @@ GUEST_AGENT_FAILED_MSG = [
     'Failed to start Google Compute Engine Guest Agent',
     r'google_guest_agent\[(\d+)\]: CRITICAL (.*\.go):(\d+) error registering service'
 ]
+
+SSHD_AUTH_FAILURE = [
+    'Authentication refused: bad ownership or modes for directory',
+    r'Error updating SSH keys for (\w+): mkdir (.*): no such file or directory'
+]
