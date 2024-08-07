@@ -1,3 +1,14 @@
+## 0.74 (2024-7-10)
+
+#### Fixes
+- Re-roll of v0.72 after correcting pip module issue with the docker image build
+
+#### New Lint Rule
+datafusion/warn\_2024\_002 Data Fusion instance is in a running state
+
+#### New Runbook
+dataproc/cluster\_creation Dataproc cluster creation diagnostic tree
+
 ## 0.73 (2024-7-8)
 
 #### New Feature
