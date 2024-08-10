@@ -54,7 +54,7 @@ class Parameter(dict[T, V], Generic[T, V]):
   def _parse_value(self, value: str) -> Any:
     """Make all values lower string and strip whitespaces."""
     if isinstance(value, str):
-      return value.strip().lower()
+      return value.strip()
     return value
 
   def __setitem__(self, key: T, value: V) -> None:

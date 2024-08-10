@@ -1,5 +1,5 @@
-project: gcpdiag-gke3-runbook, parameters: {end_time_utc=2024-06-30t23:00:00z,location=us-
-central1-c,name=cluster-1,project_id=gcpdiag-gke3-runbook,start_time_utc=2024-06-30t01:00:00z}
+project: gcpdiag-gke3-runbook, parameters: {end_time_utc=2024-06-30T23:00:00Z,location=us-
+central1-c,name=cluster-1,project_id=gcpdiag-gke3-runbook,start_time_utc=2024-06-30T01:00:00Z}
 
 gke/ip-exhaustion: Troubleshooting ip exhaustion issues on GKE clusters.
 

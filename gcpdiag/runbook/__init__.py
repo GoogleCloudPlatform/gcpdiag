@@ -469,6 +469,12 @@ class DiagnosticEngine:
         dt.context.parameters[k] = dt_param['default']
         continue
 
+      if isinstance(user_provided_param, str):
+        if dt_param and dt_param.get('ignorecase') is True:
+          dt.context.parameters[k] = user_provided_param
+        else:
+          dt.context.parameters[k] = user_provided_param.lower()
+
       if dt_param and dt_param.get('type') == datetime:
         if k == flags.END_TIME_UTC:
           end_time = dt.context.parameters.get(flags.END_TIME_UTC,

@@ -128,10 +128,10 @@ def test_generic_declaration():
   assert param.get('key')
 
 
-def test_string_strip_and_lowercase():
+def test_string_strip():
   param = models.Parameter()
   param['bool_value_true'] = ' TRUE '
-  assert param['bool_value_true'] == 'true'
+  assert param['bool_value_true'] == 'TRUE'
 
 
 def test_update_method():

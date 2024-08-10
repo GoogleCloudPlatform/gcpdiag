@@ -1,6 +1,6 @@
-project: gcpdiag-gce-faultyssh-runbook, parameters: {check_os_login=true,name=faulty-linux-
+project: gcpdiag-gce-faultyssh-runbook, parameters: {check_os_login=True,name=faulty-linux-
 ssh,principal=cannotssh@example.com,project_id=gcpdiag-gce-faultyssh-
-runbook,tunnel_through_iap=true,zone=europe-west2-a}
+runbook,tunnel_through_iap=True,zone=europe-west2-a}
 
 gce/ssh: A comprehensive troubleshooting guide for common issues which affects SSH connectivity to VMs.
 
@@ -141,11 +141,11 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
-     The authenticated user none:cannotssh@example.com does not have the permissions needed to manage instances.
+     The authenticated user None:cannotssh@example.com does not have the permissions needed to manage instances.
      The following permissions are required: permissions.
 
      [REMEDIATION]
-     To remedy this, ensure the user none:cannotssh@example.com is granted a role encompassing the necessary permissions:
+     To remedy this, ensure the user None:cannotssh@example.com is granted a role encompassing the necessary permissions:
      - Permissions needed: compute.instances.get, compute.instances.use
      For guidance on assigning instance admin roles, consult:
      https://cloud.google.com/compute/docs/access/iam#connectinginstanceadmin
@@ -166,7 +166,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
-     "none:cannotssh@example.com" is missing at least one of the required OS Login roles:
+     "None:cannotssh@example.com" is missing at least one of the required OS Login roles:
      roles/compute.osAdminLogin, roles/compute.osLogin, roles/owner.
 
      [REMEDIATION]
@@ -179,11 +179,11 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
-     "none:cannotssh@example.com" does not have the "roles/iam.serviceAccountUser" role or custom roles which has the
+     "None:cannotssh@example.com" does not have the "roles/iam.serviceAccountUser" role or custom roles which has the
      constituent permissions required to be able to impersonate the attached service account.
 
      [REMEDIATION]
-     Assign the "roles/iam.serviceAccountUser" role to "none:cannotssh@example.com".
+     Assign the "roles/iam.serviceAccountUser" role to "None:cannotssh@example.com".
      Guidelines:
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
@@ -192,10 +192,10 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
-     "none:cannotssh@example.com" lacks the "roles/iap.tunnelResourceAccessor" role necessary to Tunnel through IAP for access.
+     "None:cannotssh@example.com" lacks the "roles/iap.tunnelResourceAccessor" role necessary to Tunnel through IAP for access.
 
      [REMEDIATION]
-     Ensure "none:cannotssh@example.com" is granted the "roles/iap.tunnelResourceAccessor" role.
+     Ensure "None:cannotssh@example.com" is granted the "roles/iap.tunnelResourceAccessor" role.
      Resource guide:
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
@@ -236,9 +236,9 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 [END]: Finalizing SSH diagnostics...
 
 
-project: gcpdiag-gce-faultyssh-runbook, parameters: {check_os_login=true,name=valid-linux-
+project: gcpdiag-gce-faultyssh-runbook, parameters: {check_os_login=True,name=valid-linux-
 ssh,principal=canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com,project_id=gcpdiag-gce-
-faultyssh-runbook,tunnel_through_iap=true,zone=europe-west2-a}
+faultyssh-runbook,tunnel_through_iap=True,zone=europe-west2-a}
 
 gce/ssh: A comprehensive troubleshooting guide for common issues which affects SSH connectivity to VMs.
 
@@ -267,7 +267,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
     the organization policies permits SSH in Browser.
     
 [START]: Starting SSH diagnostics
-[INFO]: Checks will use serviceaccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com as the authenticated
+[INFO]: Checks will use serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com as the authenticated
 principal in Cloud Console / gcloud (incl. impersonated service account)
 [INFO]: Will check for IAP configuration
 [INFO]: Runbook will use Protocol tcp,Port 22 and ip 35.235.240.0/20 as the source IP
@@ -379,16 +379,9 @@ principal in Cloud Console / gcloud (incl. impersonated service account)
     ancestor resources such as folder(s) or organization and groups are not checked.
 [AUTOMATED STEP]: Verifying IAM policy
 
-   - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
+   - projects/gcpdiag-gce-faultyssh-runbook                               [OK]
      [REASON]
-     The authenticated user serviceaccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com does not have the permissions needed to manage instances.
-     The following permissions are required: permissions.
-
-     [REMEDIATION]
-     To remedy this, ensure the user serviceaccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com is granted a role encompassing the necessary permissions:
-     - Permissions needed: compute.instances.get, compute.instances.use
-     For guidance on assigning instance admin roles, consult:
-     https://cloud.google.com/compute/docs/access/iam#connectinginstanceadmin
+     The user serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com possesses the appropriate permissions to fetch instance details.
 
 [GATEWAY]: Identifying OS Login Setup.
 [AUTOMATED STEP]: Verifying that OS Login is set to `True` for the VM.
@@ -400,41 +393,23 @@ principal in Cloud Console / gcloud (incl. impersonated service account)
 
 [AUTOMATED STEP]: Verifying IAM policy
 
-   - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
+   - projects/gcpdiag-gce-faultyssh-runbook                               [OK]
      [REASON]
-     "serviceaccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com" is missing at least one of the required OS Login roles:
+     "serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com" possesses at least one of the required OS Login roles:
      roles/compute.osAdminLogin, roles/compute.osLogin, roles/owner.
 
-     [REMEDIATION]
-     Assign the principal one of the role required to have OS Login privileges.
-     For more information:
-     https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
-     https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
+[AUTOMATED STEP]: Verifying IAM policy
+
+   - projects/gcpdiag-gce-faultyssh-runbook                               [OK]
+     [REASON]
+     "serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com" has the "roles/iam.serviceAccountUser"
+     required to impersonate the attached service account.
 
 [AUTOMATED STEP]: Verifying IAM policy
 
-   - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
+   - projects/gcpdiag-gce-faultyssh-runbook                               [OK]
      [REASON]
-     "serviceaccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com" does not have the "roles/iam.serviceAccountUser" role or custom roles which has the
-     constituent permissions required to be able to impersonate the attached service account.
-
-     [REMEDIATION]
-     Assign the "roles/iam.serviceAccountUser" role to "serviceaccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com".
-     Guidelines:
-     https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
-     https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
-
-[AUTOMATED STEP]: Verifying IAM policy
-
-   - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
-     [REASON]
-     "serviceaccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com" lacks the "roles/iap.tunnelResourceAccessor" role necessary to Tunnel through IAP for access.
-
-     [REMEDIATION]
-     Ensure "serviceaccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com" is granted the "roles/iap.tunnelResourceAccessor" role.
-     Resource guide:
-     https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
-     https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
+     "serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com" has the requisite "roles/iap.tunnelResourceAccessor" role to tunnel through IAP.
 
 [GATEWAY]: Evaluating VPC network firewall rules for SSH access...
 [AUTOMATED STEP]: Evaluating VPC network traffic rules...
@@ -473,9 +448,9 @@ principal in Cloud Console / gcloud (incl. impersonated service account)
 
 
 project: gcpdiag-gce-faultyssh-runbook, parameters:
-{check_os_login=false,local_user=no_user,name=faulty-windows-
+{check_os_login=False,local_user=no_user,name=faulty-windows-
 ssh,principal=cannot@example.com,project_id=gcpdiag-gce-faultyssh-
-runbook,src_ip=0.0.0.0,tunnel_through_iap=false,zone=europe-west2-a}
+runbook,src_ip=0.0.0.0,tunnel_through_iap=False,zone=europe-west2-a}
 
 gce/ssh: A comprehensive troubleshooting guide for common issues which affects SSH connectivity to VMs.
 
@@ -633,11 +608,11 @@ are operational on the VM.
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
-     The authenticated user none:cannot@example.com does not have the permissions needed to manage instances.
+     The authenticated user None:cannot@example.com does not have the permissions needed to manage instances.
      The following permissions are required: permissions.
 
      [REMEDIATION]
-     To remedy this, ensure the user none:cannot@example.com is granted a role encompassing the necessary permissions:
+     To remedy this, ensure the user None:cannot@example.com is granted a role encompassing the necessary permissions:
      - Permissions needed: compute.instances.get, compute.instances.use
      For guidance on assigning instance admin roles, consult:
      https://cloud.google.com/compute/docs/access/iam#connectinginstanceadmin

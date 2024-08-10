@@ -84,6 +84,7 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
       },
       flags.SERIAL_CONSOLE_FILE: {
           'type': str,
+          'ignorecase': True,
           'help': 'Absolute path of files contailing the Serial console logs,'
                   ' in case if gcpdiag is not able to reach the VM Serial logs.'
                   ' i.e -p serial_console_file="filepath1,filepath2" ',

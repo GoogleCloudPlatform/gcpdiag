@@ -982,7 +982,7 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
     else:
       if comp:
         for compval in comp.items():
-          if len(compval[1]['values']) > 1:
+          if len(compval[1]['values']) > 2:
             op.add_failed(
                 vm,
                 reason=
