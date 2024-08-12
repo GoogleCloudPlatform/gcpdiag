@@ -1,0 +1,189 @@
+project: gcpdiag-gke-cluster-autoscaler-rrrr, parameters:
+{end_time_utc=2024-08-12t23:00:00z,location=europe-west10,name=gcp-cluster,project_id=gcpdiag-gke-
+cluster-autoscaler-rrrr,start_time_utc=2024-08-12t01:00:00z}
+
+gke/image-pull: Analysis and Resolution of Image Pull Failures on GKE clusters.
+
+  This runbook investigates the gke cluster for Image pull failures and recommends remediation
+  steps.
+
+  Areas Examined:
+
+  - GKE cluster
+
+  - Stackdriver logs
+    
+[START]: Starting the image pull error diagnostics
+[AUTOMATED STEP]: 
+    Check for "Failed to pull image.*not found" log entries
+    
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     Image cannot be pulled by a container on Pod, because the image is not found on the repository. Check if the image is correctly written or if it exists in the repository.
+     Example log entry that would help identify involved objects:
+     {'protoPayload': {'@type': 'type.googleapis.com/google.cloud.audit.AuditLog'
+     'authenticationInfo': {'principalEmail': 'service-12340002@container-engine-robot.iam.gserviceaccount.com'}
+     'requestMetadata': {'callerIp': '2002:a17:907:3ea4::'
+     'callerSuppliedUserAgent': 'google-api-go-client/0.5 GoogleContainerEngine/v1'}
+     'serviceName': 'compute.googleapis.com'
+     'methodName': 'beta.compute.instanceGroupManagers.insert'
+     'resourceName': 'projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-dc4a8b29-grp'
+     'request': {'@type': 'type.googleapis.com/compute.instanceGroupManagers.insert'}}
+     'insertId': '-tt9mudi768'
+     'resource': {'type': 'gce_instance_group_manager'
+     'labels': {'location': 'europe-west4-a'
+     'instance_group_manager_id': '318228385164940970'
+     'project_id': 'gcpdiag-gke1-aaaa'
+     'instance_group_manager_name': 'gke-gke1-default-pool-dc4a8b29-grp'}}
+     'timestamp': '2021-11-24T16:29:21.943390Z'
+     'severity': 'NOTICE'
+     'logName': 'projects/gcpdiag-gke1-aaaa/logs/cloudaudit.googleapis.com%2Factivity'
+     'operation': {'id': 'operation-1637771331527-5d18b5a706163-f238dbec-106555c8'
+     'producer': 'compute.googleapis.com'
+     'last': True}
+     'receiveTimestamp': '2021-11-24T16:29:22.710110506Z'}
+
+     [REMEDIATION]
+     Follow the documentation:
+     https://cloud.google.com/kubernetes-engine/docs/troubleshooting#ImagePullBackOff
+
+[AUTOMATED STEP]: 
+    Check for "Failed to pull image.*403 Forbidden" log entries
+    
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     Image cannot be pulled by a container on Pod, because there are not enough permissions to pull it from the repository. Verify the node SA has the correct permissions.
+     Example log entry that would help identify involved objects:
+     {'protoPayload': {'@type': 'type.googleapis.com/google.cloud.audit.AuditLog'
+     'authenticationInfo': {'principalEmail': 'service-12340002@container-engine-robot.iam.gserviceaccount.com'}
+     'requestMetadata': {'callerIp': '2002:a17:907:3ea4::'
+     'callerSuppliedUserAgent': 'google-api-go-client/0.5 GoogleContainerEngine/v1'}
+     'serviceName': 'compute.googleapis.com'
+     'methodName': 'beta.compute.instanceGroupManagers.insert'
+     'resourceName': 'projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-dc4a8b29-grp'
+     'request': {'@type': 'type.googleapis.com/compute.instanceGroupManagers.insert'}}
+     'insertId': '-tt9mudi768'
+     'resource': {'type': 'gce_instance_group_manager'
+     'labels': {'location': 'europe-west4-a'
+     'instance_group_manager_id': '318228385164940970'
+     'project_id': 'gcpdiag-gke1-aaaa'
+     'instance_group_manager_name': 'gke-gke1-default-pool-dc4a8b29-grp'}}
+     'timestamp': '2021-11-24T16:29:21.943390Z'
+     'severity': 'NOTICE'
+     'logName': 'projects/gcpdiag-gke1-aaaa/logs/cloudaudit.googleapis.com%2Factivity'
+     'operation': {'id': 'operation-1637771331527-5d18b5a706163-f238dbec-106555c8'
+     'producer': 'compute.googleapis.com'
+     'last': True}
+     'receiveTimestamp': '2021-11-24T16:29:22.710110506Z'}
+
+     [REMEDIATION]
+     Follow the documentation:
+     https://cloud.google.com/artifact-registry/docs/integrate-gke#permissions
+
+[AUTOMATED STEP]: 
+    Check for "Failed to pull image.*lookup.*server misbehaving" log entries
+    
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     The DNS resolver (metadata server - 169.254.169.254:53) on the Node is unable to resolve the IP of the repository, preventing image pull. Check that the networking and DNS requirements mentioned in public documentation.
+     Example log entry that would help identify involved objects:
+     {'protoPayload': {'@type': 'type.googleapis.com/google.cloud.audit.AuditLog'
+     'authenticationInfo': {'principalEmail': 'service-12340002@container-engine-robot.iam.gserviceaccount.com'}
+     'requestMetadata': {'callerIp': '2002:a17:907:3ea4::'
+     'callerSuppliedUserAgent': 'google-api-go-client/0.5 GoogleContainerEngine/v1'}
+     'serviceName': 'compute.googleapis.com'
+     'methodName': 'beta.compute.instanceGroupManagers.insert'
+     'resourceName': 'projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-dc4a8b29-grp'
+     'request': {'@type': 'type.googleapis.com/compute.instanceGroupManagers.insert'}}
+     'insertId': '-tt9mudi768'
+     'resource': {'type': 'gce_instance_group_manager'
+     'labels': {'location': 'europe-west4-a'
+     'instance_group_manager_id': '318228385164940970'
+     'project_id': 'gcpdiag-gke1-aaaa'
+     'instance_group_manager_name': 'gke-gke1-default-pool-dc4a8b29-grp'}}
+     'timestamp': '2021-11-24T16:29:21.943390Z'
+     'severity': 'NOTICE'
+     'logName': 'projects/gcpdiag-gke1-aaaa/logs/cloudaudit.googleapis.com%2Factivity'
+     'operation': {'id': 'operation-1637771331527-5d18b5a706163-f238dbec-106555c8'
+     'producer': 'compute.googleapis.com'
+     'last': True}
+     'receiveTimestamp': '2021-11-24T16:29:22.710110506Z'}
+
+     [REMEDIATION]
+     Follow the documentation:
+     https://cloud.google.com/vpc/docs/configure-private-google-access#requirements
+
+[AUTOMATED STEP]: 
+    Check for "Failed to pull image.*dial tcp.*199.36.153.\d:443: i/o timeout" log entries
+    
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     The connection from Node to restricted.googleapis.com (199.36.153.4/30) or private.googleapis.com (199.36.153.8/30) is timing out, preventing image pull. It is probable that a firewall rule is blocking this IP range. A firewall to permit this egress should be created.
+     Example log entry that would help identify involved objects:
+     {'protoPayload': {'@type': 'type.googleapis.com/google.cloud.audit.AuditLog'
+     'authenticationInfo': {'principalEmail': 'service-12340002@container-engine-robot.iam.gserviceaccount.com'}
+     'requestMetadata': {'callerIp': '2002:a17:907:3ea4::'
+     'callerSuppliedUserAgent': 'google-api-go-client/0.5 GoogleContainerEngine/v1'}
+     'serviceName': 'compute.googleapis.com'
+     'methodName': 'beta.compute.instanceGroupManagers.insert'
+     'resourceName': 'projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-dc4a8b29-grp'
+     'request': {'@type': 'type.googleapis.com/compute.instanceGroupManagers.insert'}}
+     'insertId': '-tt9mudi768'
+     'resource': {'type': 'gce_instance_group_manager'
+     'labels': {'location': 'europe-west4-a'
+     'instance_group_manager_id': '318228385164940970'
+     'project_id': 'gcpdiag-gke1-aaaa'
+     'instance_group_manager_name': 'gke-gke1-default-pool-dc4a8b29-grp'}}
+     'timestamp': '2021-11-24T16:29:21.943390Z'
+     'severity': 'NOTICE'
+     'logName': 'projects/gcpdiag-gke1-aaaa/logs/cloudaudit.googleapis.com%2Factivity'
+     'operation': {'id': 'operation-1637771331527-5d18b5a706163-f238dbec-106555c8'
+     'producer': 'compute.googleapis.com'
+     'last': True}
+     'receiveTimestamp': '2021-11-24T16:29:22.710110506Z'}
+
+     [REMEDIATION]
+     Follow the documentation:
+     https://cloud.google.com/vpc-service-controls/docs/set-up-private-connectivity
+
+[AUTOMATED STEP]: 
+    Check for "Failed to pull image.*dial tcp.*i/o timeout" log entries
+    
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     The connection from Node to Google APIs is timing out. It is probable that a firewall rule is blocking this IP range. Expand results to see the blocked IP range.
+     Example log entry that would help identify involved objects:
+     {'protoPayload': {'@type': 'type.googleapis.com/google.cloud.audit.AuditLog'
+     'authenticationInfo': {'principalEmail': 'service-12340002@container-engine-robot.iam.gserviceaccount.com'}
+     'requestMetadata': {'callerIp': '2002:a17:907:3ea4::'
+     'callerSuppliedUserAgent': 'google-api-go-client/0.5 GoogleContainerEngine/v1'}
+     'serviceName': 'compute.googleapis.com'
+     'methodName': 'beta.compute.instanceGroupManagers.insert'
+     'resourceName': 'projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-dc4a8b29-grp'
+     'request': {'@type': 'type.googleapis.com/compute.instanceGroupManagers.insert'}}
+     'insertId': '-tt9mudi768'
+     'resource': {'type': 'gce_instance_group_manager'
+     'labels': {'location': 'europe-west4-a'
+     'instance_group_manager_id': '318228385164940970'
+     'project_id': 'gcpdiag-gke1-aaaa'
+     'instance_group_manager_name': 'gke-gke1-default-pool-dc4a8b29-grp'}}
+     'timestamp': '2021-11-24T16:29:21.943390Z'
+     'severity': 'NOTICE'
+     'logName': 'projects/gcpdiag-gke1-aaaa/logs/cloudaudit.googleapis.com%2Factivity'
+     'operation': {'id': 'operation-1637771331527-5d18b5a706163-f238dbec-106555c8'
+     'producer': 'compute.googleapis.com'
+     'last': True}
+     'receiveTimestamp': '2021-11-24T16:29:22.710110506Z'}
+
+     [REMEDIATION]
+     Follow the documentation:
+     https://cloud.google.com/kubernetes-engine/docs/concepts/firewall-rules
+
+[END]: Finalizing `GKE Image Pull runbbok` diagnostics...
+
+
