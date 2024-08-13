@@ -23,10 +23,9 @@ from typing import Dict, Iterable, List, Mapping, Optional
 
 import googleapiclient.errors
 import requests
-from bs4 import BeautifulSoup
 
 from gcpdiag import caching, config, models, utils
-from gcpdiag.queries import apis, crm, network
+from gcpdiag.queries import apis, crm, html, network
 from gcpdiag.queries.generic_api.api_build import get_generic
 from gcpdiag.utils import Version
 
@@ -229,10 +228,9 @@ def extract_support_datafusion_version() -> Dict[str, str]:
   page_url = 'https://cloud.google.com/data-fusion/docs/support/version-support-policy'
 
   try:
-    response = requests.get(page_url)
-    response.raise_for_status()
-    soup = BeautifulSoup(response.content, 'html.parser')
-    data_fusion_table = soup.find('table')
+    data_fusion_table = html.fetch_and_extract_table(page_url,
+                                                     tag='h2',
+                                                     tag_id='support_timelines')
     if data_fusion_table:
       versions = []
       support_end_dates = []
@@ -392,3 +390,53 @@ def get_instance_user_compute_profile(context: models.Context,
                                          res))
       user_profiles = list(filter(bool, user_profiles))
   return user_profiles
+
+
+@caching.cached_api_call
+def extract_datafusion_dataproc_version() -> Dict[str, list[str]]:
+  """Extract the supported Data Fusion versions and their corresponding
+  Dataproc versions from the GCP documentation."""
+
+  page_url = 'https://cloud.google.com/data-fusion/docs/concepts/configure-clusters'
+
+  try:
+    table = html.fetch_and_extract_table(page_url,
+                                         tag='h2',
+                                         tag_id='version-compatibility')
+    if table:
+      rows = table.find_all('tr')[1:]  #Skip the header row
+      version_dict = {}
+
+      for row in rows:
+        cdf_versions = row.find_all('td')[0].get_text().strip()
+        dp_versions = row.find_all('td')[1].get_text().strip()
+
+        cdf_versions = cdf_versions.replace(' and later', '')
+        cdf_versions_list = []
+
+        if '-' in cdf_versions:
+          start, end = map(float, cdf_versions.split('-'))
+          while start <= end:
+            cdf_versions_list.append(f'{start:.1f}')
+            start += 0.1
+        else:
+          cdf_versions_list.append(cdf_versions)
+        dp_versions = [v.split('*')[0].strip() for v in dp_versions.split(',')]
+        for version in cdf_versions_list:
+          version_dict[version] = dp_versions
+      return version_dict
+
+    else:
+      return {}
+  except (
+      requests.exceptions.RequestException,
+      AttributeError,
+      TypeError,
+      ValueError,
+      IndexError,
+  ) as e:
+    logging.error(
+        'Error in extracting datafusion and dataproc versions: %s',
+        e,
+    )
+    return {}

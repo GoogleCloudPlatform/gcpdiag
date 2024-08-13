@@ -38,7 +38,16 @@ SUPPORTED_VERSIONS_DICT = {
     '6.4': '2022-11-30',
     '6.3': '2022-07-31',
     '6.2': '2022-03-31',
-    '6.1': '2021-06-30'
+    '6.1': '2021-06-30',
+}
+DATAFUSION_DATAPROC_VERSIONS_DICT = {
+    '6.7': ['1.3'],
+    '6.6': ['2.0', '1.3'],
+    '6.5': ['2.0', '1.3'],
+    '6.4': ['2.0', '1.3'],
+    '6.3': ['1.3'],
+    '6.2': ['1.3'],
+    '6.1': ['1.3'],
 }
 
 
@@ -64,10 +73,10 @@ class TestDataFusion:
             True) in [(i.name, i.is_private) for k, i in instances.items()]
 
 
+@mock.patch('gcpdiag.queries.html.requests.get', autospec=True)
 class TestExtractVersionPolicyDict:
-  """Test Http Request and Response."""
+  """Test html content."""
 
-  @mock.patch('gcpdiag.queries.datafusion.requests.get', autospec=True)
   def test_extract_support_datafusion_version(self, mock_get):
 
     with open(
@@ -79,6 +88,18 @@ class TestExtractVersionPolicyDict:
 
     response_dict = datafusion.extract_support_datafusion_version()
     assert response_dict == SUPPORTED_VERSIONS_DICT
+
+  def test_extract_datafusion_dataproc_version(self, mock_get):
+
+    with open(
+        'test-data/datafusion1/html-content/'
+        'version_compatability.html',
+        encoding='utf-8') as fh:
+      mock_get.return_value.content = fh.read().encode('utf-8')
+      mock_get.return_value.status_code = 200
+
+    response_dict = datafusion.extract_datafusion_dataproc_version()
+    assert response_dict == DATAFUSION_DATAPROC_VERSIONS_DICT
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)

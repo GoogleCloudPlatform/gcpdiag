@@ -1,0 +1,15 @@
+*  datafusion/WARN/2024_004: Data Fusion version is compatible with Dataproc version from the corresponding compute profiles.
+   - projects/gcpdiag-datafusion1-aaaa/locations/us-central1/instances/my-instance [ OK ] 
+	projects/gcpdiag-datafusion1-aaaa/instances/my-instance/computeProfiles/autoscaling-dataproc
+	(No imageVersion defined)
+
+   - projects/gcpdiag-datafusion1-aaaa/locations/us-central1/instances/my-instance [ OK ] 
+	projects/gcpdiag-datafusion1-aaaa/instances/my-instance/computeProfiles/dataproc
+	(No imageVersion defined)
+
+   - projects/gcpdiag-datafusion1-aaaa/locations/us-central1/instances/my-instance [ OK ] 
+	projects/gcpdiag-datafusion1-aaaa/instances/my-instance/computeProfiles/namespace_profile
+	Datafusion version : 6.7.1
+	Dataproc version : 2.0
+
+

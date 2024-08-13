@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <link rel="stylesheet" href="/extras.css" />
+  </head>
+  <body
+    class=""
+    template="page"
+    theme="cloud-theme"
+    type="article"
+    layout="docs"
+    free-trial
+    display-toc
+    pending
+  >
+    <h1 class="devsite-page-title" tabindex="-1">Dataproc cluster configuration</h1>
+    <devsite-feature-tooltip
+      ack-key="AckCollectionsBookmarkTooltipDismiss"
+      analytics-category="Site-Wide Custom Events"
+      analytics-action-show="Callout Profile displayed"
+      analytics-action-close="Callout Profile dismissed"
+      analytics-label="Create Collection Callout"
+      class="devsite-page-bookmark-tooltip nocontent"
+      dismiss-button="true"
+      id="devsite-collections-dropdown"
+      dismiss-button-text="Dismiss"
+      close-button-text="Got it"
+    >
+      <devsite-bookmark></devsite-bookmark>
+
+      <span slot="popout-heading"> Stay organized with collections </span>
+      <span slot="popout-contents"> Save and categorize content based on your preferences. </span>
+    </devsite-feature-tooltip>
+    <div class="devsite-page-title-meta">
+      <devsite-view-release-notes></devsite-view-release-notes>
+    </div>
+
+    <devsite-toc class="devsite-nav" depth="2" devsite-toc-embedded> </devsite-toc>
+
+    <div class="devsite-article-body clearfix">
+      <p>
+        In Cloud Data Fusion, cluster configuration refers to defining how your data processing
+        pipelines utilize computational resources when running Spark jobs on Dataproc. This page
+        describes the main approaches to cluster configuration.
+      </p>
+
+      <h2
+        id="default-ephemeral-clusters"
+        data-text="Default ephemeral clusters (recommended)"
+        tabindex="-1"
+      >
+        Default ephemeral clusters (recommended)
+      </h2>
+
+      <p>Using the default clusters is the recommended approach for Cloud Data Fusion pipelines.</p>
+
+      <ul>
+        <li>
+          Cloud Data Fusion automatically provisions and manages ephemeral Dataproc clusters for
+          each pipeline execution. It creates a cluster at the beginning of the pipeline run, and
+          then deletes it after the pipeline run completes.
+        </li>
+        <li>
+          Benefits of ephemeral clusters:
+          <ul>
+            <li>
+              <strong>Simplicity</strong>: you don&#39;t need to manually configure or manage the
+              cluster.
+            </li>
+            <li>
+              <strong>Cost-effectiveness</strong>: you only pay for the resources used during
+              pipeline execution.
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <aside class="note">
+        <strong>Note:</strong
+        ><span>
+          Cloud Data Fusion, by default, uses Dataproc Autoscaling compute profile which creates
+          ephemeral clusters as per the default configurations.</span
+        >
+      </aside>
+      <p>
+        To adjust clusters and tune performance, see
+        <a href="/data-fusion/docs/concepts/cluster-sizing">Cluster sizing</a>.
+      </p>
+
+      <h2 id="static-clusters" data-text="Static clusters (for specific scenarios)" tabindex="-1">
+        Static clusters (for specific scenarios)
+      </h2>
+
+      <p>In the following scenarios, you can use static clusters:</p>
+
+      <ul>
+        <li>
+          <strong>Long-running pipelines</strong>: for pipelines that run continuously or for
+          extended periods, a static cluster can be more cost-effective than repeatedly creating and
+          tearing down ephemeral clusters.
+        </li>
+        <li>
+          <strong>Centralized cluster management</strong>: if your organization requires centralized
+          control over cluster creation and management policies, static clusters can be used
+          alongside tools like Terraform.
+        </li>
+        <li>
+          <strong>Cluster creation time</strong>: when the time it takes to create a new cluster for
+          every pipeline is prohibitive for your use case.
+        </li>
+      </ul>
+
+      <p>
+        However, static clusters require more manual configuration and involve managing the cluster
+        lifecycle yourself.
+      </p>
+
+      <p>
+        To use a static cluster, you must set the following
+        <a
+          href="/dataproc/docs/concepts/configuring-clusters/cluster-properties"
+          track-type="article"
+          track-name="internalLink"
+          track-metadata-position="body"
+          >property</a
+        >
+        on the Dataproc cluster:
+      </p>
+      <pre
+        class="prettyprint lang-gcloud"
+        translate="no"
+        dir="ltr"
+      ><code translate="no" dir="ltr">dataproc:dataproc.conscrypt.provider.enable=false
+</code></pre>
+      <h3
+        id="cluster_configuration_options_for_static_clusters"
+        data-text="Cluster configuration options for static clusters"
+        tabindex="-1"
+      >
+        Cluster configuration options for static clusters
+      </h3>
+
+      <p>
+        If you choose to use static clusters, Cloud Data Fusion offers configuration options for the
+        following aspects:
+      </p>
+
+      <ul>
+        <li>
+          <strong>Worker machine type</strong>: specify the virtual machine type for the worker
+          nodes in your cluster. This determines the vCPUs and memory available for each worker.
+        </li>
+        <li>
+          <strong>Number of workers</strong>: define the initial number of worker nodes in your
+          cluster. Dataproc might still autoscale this number, based on workload.
+        </li>
+        <li>
+          <strong>Zone</strong>: select your cluster&#39;s Google Cloud zone. Location can affect
+          data locality and network performance.
+        </li>
+        <li>
+          <strong>Additional configurations</strong>: you can configure advanced options for your
+          static cluster, such as preemption settings, network settings, and initialization actions.
+        </li>
+      </ul>
+
+      <h2 id="best_practices" data-text="Best practices" tabindex="-1">Best practices</h2>
+
+      <p>When creating a static cluster for your pipelines, use the following configurations.</p>
+
+      <table>
+        <tr>
+          <th>Parameters</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td><code translate="no" dir="ltr">yarn.nodemanager.delete.debug-delay-sec</code></td>
+          <td>
+            Retains YARN logs.<br />
+            Recommended value: <code translate="no" dir="ltr">86400</code> (equivalent to one day)
+          </td>
+        </tr>
+        <tr>
+          <td><code translate="no" dir="ltr">yarn.nodemanager.pmem-check-enabled</code></td>
+          <td>
+            Enables YARN to check for physical memory limits and kill containers if they go beyond
+            physical memory.<br />
+            Recommended value: <code translate="no" dir="ltr">false</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code translate="no" dir="ltr">yarn.nodemanager.vmem-check-enabled</code></td>
+          <td>
+            Enables YARN to check for virtual memory limits and kill containers if they go beyond
+            physical memory.<br />
+            Recommended value: <code translate="no" dir="ltr">false</code>.
+          </td>
+        </tr>
+      </table>
+
+      <p>
+        For more information, see
+        <a
+          href="/data-fusion/docs/how-to/running-against-existing-dataproc"
+          track-type="article"
+          track-name="internalLink"
+          track-metadata-position="body"
+          >Run a pipeline against an existing Dataproc cluster</a
+        >.
+      </p>
+
+      <h2 id="reuse-clusters" data-text="Reusing clusters" tabindex="-1">Reusing clusters</h2>
+
+      <p>
+        You can reuse Dataproc clusters between runs to improve processing time. Cluster reuse is
+        implemented in a model similar to connection pooling or thread pooling. Any cluster is kept
+        up and running for a specified time after the run is finished. When a new run is started, it
+        will try to find an idle cluster available that matches the configuration of the compute
+        profile. If one is present, it will be used, otherwise a new cluster will be started.
+      </p>
+
+      <h3
+        id="considerations_for_reusing_clusters"
+        data-text="Considerations for reusing clusters"
+        tabindex="-1"
+      >
+        Considerations for reusing clusters
+      </h3>
+
+      <ul>
+        <li>
+          Clusters are not shared. Similar to the regular ephemeral cluster provisioning model, a
+          cluster runs a single pipeline run at a time. A cluster is reused only if it is
+          idle<strong>.</strong>
+        </li>
+        <li>
+          If you enable cluster reuse for all your runs, the necessary number of clusters to process
+          all your runs will be created as needed. Similar to the ephemeral Dataproc provisioner,
+          there is no direct control on the number of clusters created. You can still use Google
+          Cloud quotes to manage resources. For example, if you run 100 runs with 7 maximum parallel
+          runs, you will have up to 7 clusters at a given point of time.
+        </li>
+        <li>
+          <p>
+            Clusters are reused between different pipelines as soon as those pipelines are using the
+            same profile and share the same profile settings. If profile customization is used,
+            clusters will still be reused, but only if customizations are exactly the same,
+            including all cluster settings like cluster labeling.
+          </p>
+        </li>
+        <li>
+          <p>When cluster reuse is enabled, there are two main cost considerations:</p>
+
+          <ul>
+            <li>Less resources are used for cluster startup and initialization.</li>
+            <li>
+              More resources are used for clusters to sit idle between the pipeline runs and after
+              the last pipeline run.
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+      <p>
+        While it&#39;s hard to predict the cost effect of cluster reuse, you can employ a strategy
+        to get maximum savings. The strategy is to identify a critical path for chained pipelines
+        and enable cluster reuse for this critical path. This would ensure the cluster is
+        immediately reused, no idle time is wasted and maximum performance benefits are achieved.
+      </p>
+
+      <h3 id="enable_cluster_reuse" data-text="Enable Cluster Reuse" tabindex="-1">
+        Enable Cluster Reuse
+      </h3>
+
+      <p>
+        In the Compute Config section of deployed pipeline configuration or when creating new
+        compute profile:
+      </p>
+
+      <ul>
+        <li>Enable <strong>Skip Cluster Delete</strong>.</li>
+        <li>
+          Max Idle Time is the time up to which a cluster waits for the next pipeline to reuse it.
+          The default Max Idle Time is 30 minutes. For Max Idle Time, consider the cost versus
+          cluster availability for reuse. The higher the value of Max Idle Time, the more clusters
+          sit idle, ready for a run.
+        </li>
+      </ul>
+
+      <h2 id="version-compatibility" data-text="Troubleshoot: Version compatibility" tabindex="-1">
+        Troubleshoot: Version compatibility
+      </h2>
+
+      <p>
+        <strong>Problem</strong>: The version of your Cloud Data Fusion environment might not be
+        compatible with the version of your Dataproc cluster.
+      </p>
+
+      <p>
+        <strong>Recommended</strong>: Upgrade to the latest Cloud Data Fusion version and use one of
+        the
+        <a href="/dataproc/docs/concepts/versioning/dataproc-versions#supported_dataproc_versions"
+          >supported Dataproc versions</a
+        >.
+      </p>
+
+      <p>
+        Earlier versions of Cloud Data Fusion are only compatible with
+        <a href="/dataproc/docs/concepts/versioning/dataproc-versions#unsupported_dataproc_versions"
+          >unsupported versions of Dataproc</a
+        >. Dataproc does not provide updates and support for clusters created with these versions.
+        Although you can continue running a cluster that was created with an unsupported version, we
+        recommend replacing it with one created with a
+        <a href="/dataproc/docs/concepts/versioning/dataproc-versions#supported_dataproc_versions"
+          >supported version</a
+        >.
+      </p>
+
+      <table>
+        <tr>
+          <th>Cloud Data Fusion version</th>
+          <th>Dataproc version</th>
+        </tr>
+        <tr>
+          <td>6.7</td>
+          <td>
+            1.3<sup><a href="#unsupported-dataproc-version">**</a></sup>
+          </td>
+        </tr>
+        <tr>
+          <td>6.4-6.6</td>
+          <td>
+            2.0 <sup><a href="#supported-dataproc-version">*</a></sup
+            >, 1.3 <sup><a href="#unsupported-dataproc-version">**</a></sup>
+          </td>
+        </tr>
+        <tr>
+          <td>6.1-6.3</td>
+          <td>
+            1.3<sup><a href="#unsupported-dataproc-version">**</a></sup>
+          </td>
+        </tr>
+      </table>
+
+      <p>
+        <small>
+          <div class="footnote" id="supported-dataproc-version">
+            <sup class="footnote">*</sup> Cloud Data Fusion versions 6.4 and later are compatible
+            with
+            <a
+              href="/dataproc/docs/concepts/versioning/dataproc-versions#supported_dataproc_versions"
+            >
+              supported versions of Dataproc</a
+            >. Unless specific OS features are needed, the recommended practice is to specify the
+            <a href="/dataproc/docs/concepts/versioning/overview#how_versioning_works">
+              <code translate="no" dir="ltr">major.minor</code> image version</a
+            >.<br />
+            To specify the OS version used in your Dataproc cluster, the OS version must be
+            compatible with one of the supported Dataproc versions for your Cloud Data Fusion in the
+            preceding table.
+          </div>
+        </small>
+      </p>
+
+      <p>
+        <small>
+          <div class="footnote" id="unsupported-dataproc-version">
+            <sup class="footnote">**</sup> Cloud Data Fusion versions 6.1 to 6.6 are compatible with
+            <a
+              href="/dataproc/docs/concepts/versioning/dataproc-versions#unsupported_dataproc_versions"
+            >
+              unsupported Dataproc version 1.3</a
+            >.
+          </div>
+        </small>
+      </p>
+
+      <h2 id="whats_next" data-text="What's next" tabindex="-1">What's next</h2>
+
+      <ul>
+        <li>
+          Refer to the
+          <a
+            href="/data-fusion/docs/how-to/change-dataproc-image"
+            track-type="article"
+            track-name="internalLink"
+            track-metadata-position="body"
+            >How to change Dataproc image version</a
+          >.
+        </li>
+      </ul>
+
+      <devsite-hats-survey
+        class="nocontent"
+        hats-id="Nd7nTix2o0eU5NUYprb0ThtUc5jf"
+        listnr-id="83405"
+      ></devsite-hats-survey>
+    </div>
+
+    <devsite-thumb-rating position="footer"> </devsite-thumb-rating>
+  </body>
+</html>
