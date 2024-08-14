@@ -1,0 +1,4 @@
+*  bigquery/WARN/2024_006: BigQuery job does not exceed tabledata.list bytes per second per project
+   - projects/gcpdiag-cloudsql1-aaaa                                      [SKIP]
+     Logging api is disabled
+
