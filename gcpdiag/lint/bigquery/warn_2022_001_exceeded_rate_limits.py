@@ -24,7 +24,7 @@ from boltons.iterutils import get_path
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
 
-MATCH_STR = 'Exceeded rate limits'
+MATCH_STR = 'xceeded rate limits'
 
 RATE_LIMITS_FILTER = [
     'severity=ERROR',
@@ -56,15 +56,15 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     report.add_skipped(project, 'bigquery api is disabled')
     return
 
-  if logs_by_project.get(context.project_id) and \
-     logs_by_project[context.project_id].entries:
+  if (logs_by_project.get(context.project_id) and
+      logs_by_project[context.project_id].entries):
     for log_entry in logs_by_project[context.project_id].entries:
       # Filter out non-relevant log entries.
-      if log_entry['severity'] != 'ERROR' or \
-         MATCH_STR not in get_path(log_entry,
-                     ('protoPayload', 'status', 'message'), default=''):
+      if log_entry['severity'] != 'ERROR' or MATCH_STR not in get_path(
+          log_entry, ('protoPayload', 'status', 'message'), default=''):
         continue
-      report.add_failed(project, 'exceeded BigQuery rate limits')
+      report.add_failed(
+          project, 'exceeded rate limits. Kindly slow down the request rate.')
       return
 
   # in case of there is no log or all logs are non-relevant
