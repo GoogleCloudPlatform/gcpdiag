@@ -1,0 +1,62 @@
+project: gcpdiag-dataflow1-aaaa, parameters:
+{custom_flag=dataflow,principal=user@xyz.com,project_id=gcpdiag-
+dataflow1-aaaa,worker_service_account=dataflow-worker@gcpdiag-
+dataflow1-aaaa.iam.gserviceaccount.com}
+
+dataflow/dataflow-permissions: Analysis and Resolution of Dataflow Permissions issues.
+
+  This  runbook investigates Dataflow permissions and recommends remediation steps.
+
+  Areas Examined:
+  1. Dataflow user account permissions
+  2. Dataflow Service Account
+  3. Dataflow Worker Service Account
+  4. Dataflow Resource Permissions
+  
+[START]: Executing default start step for runbooks...
+[AUTOMATED STEP]: Check the Authenticated User account permissions.
+[AUTOMATED STEP]: Verifying IAM policy
+
+   - projects/gcpdiag-dataflow1-aaaa                                      [FAIL]
+     [REASON]
+     user:user@xyz.com doesn't have at least one of the expected roles:
+     roles/dataflow.developer, roles/iam.serviceAccountUser.
+
+     [REMEDIATION]
+     Follow Guide [1] to grant a role which has the correct permissions.
+     [2] has a list of all Google predefined roles available to you.
+
+     Note: You may want to doublecheck with your project admins of the best way to grant the role
+     or custom roles which can be used.
+
+     [1] https://cloud.google.com/iam/docs/grant-role-console
+     [2] https://cloud.google.com/iam/docs/understanding-roles
+
+[AUTOMATED STEP]: Verifying IAM policy
+
+   - projects/gcpdiag-dataflow1-aaaa                                      [FAIL]
+     [REASON]
+     serviceAccount:service-12340010@dataflow-service-producer-prod.iam.gserviceaccount.com doesn't have at least one of the expected roles:
+     roles/dataflow.serviceAgent.
+
+     [REMEDIATION]
+     Follow Guide [1] to grant a role which has the correct permissions.
+
+     [1] https://cloud.google.com/dataflow/docs/concepts/security-and-permissions#df-service-account
+
+[GATEWAY]: Checking dataflow worker service account permissions.
+[INFO]: dataflow-worker@gcpdiag-dataflow1-aaaa.iam.gserviceaccount.com
+
+   - gcpdiag-datafusion1-aaaa                                             [FAIL]
+     [REASON]
+     Service Account dataflow-worker@gcpdiag-dataflow1-aaaa.iam.gserviceaccount.com associated with Dataflow Job was not found in project gcpdiag-dataflow1-aaaa or cross project (if specified).
+
+     [REMEDIATION]
+     Provide the project in which the service account resides by using the cross_project/project parameter.
+
+[AUTOMATED STEP]: Check the Dataflow Resource permissions.
+[INFO]: No Cloud Storage buckets related errors found in the logs
+[END]: Permissions checks completed.
+[INFO]: Dataflow Permissions Checks Completed
+
+

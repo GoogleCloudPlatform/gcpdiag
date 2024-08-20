@@ -15,3 +15,8 @@
 # pylint: disable=unused-wildcard-import, wildcard-import
 from gcpdiag.runbook.gcp.constants import *
 from gcpdiag.runbook.iam.constants import *
+
+DATAFLOW_SERVICE_AGENT_ROLE = 'roles/dataflow.serviceAgent'
+DATAFLOW_WORKER_ROLE = 'roles/dataflow.worker'
+DATAFLOW_DEVELOPER_ROLE = 'roles/dataflow.developer'
+DATAFLOW_IAM_SERVICE_ACCOUNT_USER = 'roles/iam.serviceAccountUser'

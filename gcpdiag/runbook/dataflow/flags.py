@@ -18,3 +18,6 @@ from gcpdiag.runbook.iam.flags import *
 
 JOB_ID = 'job_id'
 JOB_REGION = 'job_region'
+WORKER_SERVICE_ACCOUNT = 'worker_service_account'
+PRINCIPAL = 'principal'
+CROSS_PROJECT_ID = 'cross_project_id'
