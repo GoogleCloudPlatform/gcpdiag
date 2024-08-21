@@ -1,0 +1,40 @@
+{
+  "F1 VMs": {
+    "pd-balanced": [
+      {
+        "Machine type": "f1-micro",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 15000,
+        "Maximum write throughput (MiBps)": 204,
+        "Maximum read throughput (MiBps)": 240
+      }
+    ],
+    "pd-ssd": [
+      {
+        "Machine type": "f1-micro",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 15000,
+        "Maximum write throughput (MiBps)": 204,
+        "Maximum read throughput (MiBps)": 240
+      }
+    ],
+    "pd-standard": [
+      {
+        "Machine type": "f1-micro",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 3000,
+        "Maximum write throughput (MiBps)": 204,
+        "Maximum read throughput (MiBps)": 240
+      }
+    ],
+    "pd-extreme": [
+      {
+        "Machine type": "f1-micro",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 3000,
+        "Maximum write throughput (MiBps)": 204,
+        "Maximum read throughput (MiBps)": 240
+      }
+    ]
+  }
+}

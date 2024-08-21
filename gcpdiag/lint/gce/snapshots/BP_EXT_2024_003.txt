@@ -1,0 +1,22 @@
+*  gce/BP_EXT/2024_003: Calculate GCE VM's IOPS and Throughput Limits
+   - gcpdiag-gce1-aaaa/gce1                                               [ OK ] 
+	IOPS and Throughput limits available for VM DiskType - pd-standard,
+	Total DiskSize: 32:
+
+	 Read-IOPS Count: 24.0,
+	 Read-Throughput: 3.84 MB/s, 
+	 Write-IOPS Count: 48.0, 
+	 Write-Throughput: 3.84 MB/s 
+
+
+   - gcpdiag-gce1-aaaa/gce2                                               [ OK ] 
+	IOPS and Throughput limits available for VM DiskType - pd-standard,
+	Total DiskSize: 10:
+
+	 Read-IOPS Count: 7.5,
+	 Read-Throughput: 1.2 MB/s, 
+	 Write-IOPS Count: 15.0, 
+	 Write-Throughput: 1.2 MB/s 
+
+
+

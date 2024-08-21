@@ -34,7 +34,7 @@ resource "google_compute_instance" "valid_linux_ssh" {
   project        = google_project.project.project_id
   depends_on     = [google_project_service.compute]
   name           = "valid-linux-ssh"
-  machine_type   = "f1-micro"
+  machine_type   = "e2-micro"
   zone           = "europe-west2-a"
   desired_status = "RUNNING"
   network_interface {
@@ -80,7 +80,7 @@ resource "google_compute_instance" "valid_windows_ssh" {
   project        = google_project.project.project_id
   depends_on     = [google_project_service.compute]
   name           = "valid-windows-ssh"
-  machine_type   = "f1-micro"
+  machine_type   = "e2-micro"
   zone           = "europe-west2-a"
   desired_status = "RUNNING"
   network_interface {

@@ -46,7 +46,7 @@
         "foo": "bar"
       },
       "lastStartTimestamp": "2023-11-16T20:03:39.756-08:00",
-      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/machineTypes/f1-micro",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/machineTypes/e2-micro",
       "metadata": {
         "fingerprint": "REDACTED",
         "items": [
@@ -269,7 +269,7 @@
         "foo": "bar"
       },
       "lastStartTimestamp": "2023-11-16T20:03:38.817-08:00",
-      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/machineTypes/f1-micro",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/machineTypes/e2-micro",
       "metadata": {
         "fingerprint": "REDACTED",
         "items": [

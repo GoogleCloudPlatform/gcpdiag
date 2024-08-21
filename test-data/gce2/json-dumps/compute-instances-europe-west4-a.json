@@ -46,7 +46,7 @@
         "foo": "bar"
       },
       "lastStartTimestamp": "2022-04-26T08:20:58.538-07:00",
-      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/machineTypes/f1-micro",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/machineTypes/e2-micro",
       "metadata": {
         "fingerprint": "REDACTED",
         "kind": "compute#metadata"
@@ -143,7 +143,7 @@
         "foo": "bar"
       },
       "lastStartTimestamp": "2022-04-26T08:20:58.538-07:00",
-      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/machineTypes/f1-micro",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/machineTypes/e2-micro",
       "metadata": {
         "fingerprint": "REDACTED",
         "kind": "compute#metadata"
@@ -281,7 +281,7 @@
       "kind": "compute#instance",
       "labelFingerprint": "42WmSpB8rSM=",
       "lastStartTimestamp": "2022-04-26T08:21:01.453-07:00",
-      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/machineTypes/f1-micro",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/machineTypes/e2-micro",
       "metadata": {
         "fingerprint": "REDACTED",
         "items": [

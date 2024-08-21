@@ -1,4 +1,42 @@
 {
+  "G1 VMs": {
+    "pd-balanced": [
+      {
+        "Machine type": "g1-small",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 15000,
+        "Maximum write throughput (MiBps)": 204,
+        "Maximum read throughput (MiBps)": 240
+      }
+    ],
+    "pd-ssd": [
+      {
+        "Machine type": "g1-small",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 15000,
+        "Maximum write throughput (MiBps)": 204,
+        "Maximum read throughput (MiBps)": 240
+      }
+    ],
+    "pd-standard": [
+      {
+        "Machine type": "g1-small",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 3000,
+        "Maximum write throughput (MiBps)": 204,
+        "Maximum read throughput (MiBps)": 240
+      }
+    ],
+    "pd-extreme": [
+      {
+        "Machine type": "g1-small",
+        "Maximum write IOPS": 15000,
+        "Maximum read IOPS": 3000,
+        "Maximum write throughput (MiBps)": 204,
+        "Maximum read throughput (MiBps)": 240
+      }
+    ]
+  },
   "G2 VMs": {
     "pd-balanced": [
       {

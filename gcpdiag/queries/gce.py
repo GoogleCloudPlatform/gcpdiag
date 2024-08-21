@@ -345,6 +345,12 @@ class Instance(models.Resource):
   def startrestricted(self) -> bool:
     return self._resource_data['startRestricted']
 
+  def laststarttimestamp(self) -> str:
+    return self._resource_data['lastStartTimestamp']
+
+  def laststoptimestamp(self) -> str:
+    return self._resource_data['lastStopTimestamp']
+
   def is_serial_port_logging_enabled(self) -> bool:
     value = self.get_metadata('serial-port-logging-enable')
     return bool(value and value.upper() in POSITIVE_BOOL_VALUES)

@@ -18,7 +18,7 @@ resource "google_compute_instance" "faulty_linux_ssh" {
   project        = google_project.project.project_id
   depends_on     = [google_project_service.compute]
   name           = "faulty-linux-ssh"
-  machine_type   = "f1-micro"
+  machine_type   = "e2-micro"
   zone           = "europe-west2-a"
   desired_status = "RUNNING"
   network_interface {

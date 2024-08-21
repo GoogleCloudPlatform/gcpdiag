@@ -46,7 +46,7 @@
         "foo": "bar"
       },
       "lastStartTimestamp": "2024-06-02T19:10:10.535-07:00",
-      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/zones/us-central1-a/machineTypes/f1-micro",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/zones/us-central1-a/machineTypes/e2-micro",
       "metadata": {
         "fingerprint": "REDACTED",
         "kind": "compute#metadata"
@@ -133,7 +133,7 @@
         "foo": "bar"
       },
       "lastStartTimestamp": "2024-06-02T19:10:10.031-07:00",
-      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/zones/us-central1-a/machineTypes/f1-micro",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/zones/us-central1-a/machineTypes/e2-micro",
       "metadata": {
         "fingerprint": "REDACTED",
         "kind": "compute#metadata"
@@ -220,7 +220,7 @@
         "foo": "bar"
       },
       "lastStartTimestamp": "2024-06-02T19:10:09.875-07:00",
-      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/zones/us-central1-a/machineTypes/f1-micro",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/zones/us-central1-a/machineTypes/e2-micro",
       "metadata": {
         "fingerprint": "REDACTED",
         "kind": "compute#metadata"
@@ -316,7 +316,7 @@
         "foo": "bar"
       },
       "lastStartTimestamp": "2024-06-02T19:10:10.182-07:00",
-      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/zones/us-central1-a/machineTypes/f1-micro",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpc2-runbook/zones/us-central1-a/machineTypes/e2-micro",
       "metadata": {
         "fingerprint": "REDACTED",
         "kind": "compute#metadata"

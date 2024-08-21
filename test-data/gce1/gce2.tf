@@ -18,7 +18,7 @@ resource "google_compute_instance" "gce2" {
   project        = google_project.project.project_id
   depends_on     = [google_project_service.compute]
   name           = "gce2"
-  machine_type   = "f1-micro"
+  machine_type   = "e2-micro"
   zone           = "europe-west4-a"
   desired_status = "RUNNING"
   network_interface {

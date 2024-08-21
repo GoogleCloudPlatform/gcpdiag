@@ -18,7 +18,7 @@ resource "google_compute_instance" "private-linux-valid" {
   project        = google_project.project.project_id
   depends_on     = [google_project_service.compute]
   name           = "private-linux-valid"
-  machine_type   = "f1-micro"
+  machine_type   = "e2-micro"
   zone           = var.zone
   desired_status = "RUNNING"
   network_interface {

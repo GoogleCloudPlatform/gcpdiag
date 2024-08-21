@@ -43,7 +43,7 @@
       "kind": "compute#instance",
       "labelFingerprint": "42WmSpB8rSM=",
       "lastStartTimestamp": "2024-05-28T11:05:20.961-07:00",
-      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/machineTypes/f1-micro",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/machineTypes/e2-micro",
       "metadata": {
         "fingerprint": "REDACTED",
         "items": [
@@ -138,7 +138,7 @@
       "kind": "compute#instance",
       "labelFingerprint": "42WmSpB8rSM=",
       "lastStartTimestamp": "2024-05-28T10:46:24.523-07:00",
-      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/machineTypes/f1-micro",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/machineTypes/e2-micro",
       "metadata": {
         "fingerprint": "REDACTED",
         "items": [
@@ -236,7 +236,7 @@
         "env": "valid"
       },
       "lastStartTimestamp": "2024-05-28T10:45:23.910-07:00",
-      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/machineTypes/f1-micro",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/machineTypes/e2-micro",
       "metadata": {
         "fingerprint": "REDACTED",
         "kind": "compute#metadata"

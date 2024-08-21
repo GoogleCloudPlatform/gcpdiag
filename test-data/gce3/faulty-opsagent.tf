@@ -18,7 +18,7 @@ resource "google_compute_instance" "faulty_opsagent" {
   project        = data.google_project.project.project_id
   depends_on     = [google_project_service.compute]
   name           = "faulty-opsagent"
-  machine_type   = "f1-micro"
+  machine_type   = "e2-micro"
   zone           = "europe-west2-a"
   desired_status = "RUNNING"
   network_interface {
@@ -48,7 +48,7 @@ resource "google_compute_instance" "faulty_opsagent_no_sa" {
   project        = data.google_project.project.project_id
   depends_on     = [google_project_service.compute]
   name           = "faulty-opsagent-no-sa"
-  machine_type   = "f1-micro"
+  machine_type   = "e2-micro"
   zone           = "europe-west2-a"
   desired_status = "RUNNING"
   network_interface {
