@@ -6,7 +6,7 @@
 	 Max Read-IOPS Count: 75, 
 	 Max Read-Throughput: 12 MB/s,
 	 Max Write-IOPS Count: 150, 
-	 Max Write-Throughput: 12 MB/s 
+	 Max Write-Throughput: 12 MB/s
 
    - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce2       [ OK ] 
 	IOPS and Throughput limits available for VM DiskType - pd-standard,
@@ -15,6 +15,6 @@
 	 Max Read-IOPS Count: 75, 
 	 Max Read-Throughput: 12 MB/s,
 	 Max Write-IOPS Count: 150, 
-	 Max Write-Throughput: 12 MB/s 
+	 Max Write-Throughput: 12 MB/s
 
 

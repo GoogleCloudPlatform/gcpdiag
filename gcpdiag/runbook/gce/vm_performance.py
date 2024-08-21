@@ -14,7 +14,7 @@
 
 import json
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 
 import googleapiclient.errors
 
@@ -218,6 +218,25 @@ class CpuOvercommitmentCheck(runbook.Step):
 
     if vm.is_sole_tenant_vm or 'e2' in vm.machine_type():
 
+      start_dt_pst = datetime.strptime(vm.laststarttimestamp(),
+                                       '%Y-%m-%dT%H:%M:%S.%f%z')
+      start_dt_utc = start_dt_pst.astimezone(timezone.utc)
+      start_dt_utc_plus_5_mins = start_dt_utc + timedelta(minutes=5)
+      current_time_utc = datetime.now(timezone.utc)
+      within_hours = 9
+      if start_dt_utc_plus_5_mins > current_time_utc and (isinstance(
+          vm.laststoptimestamp(), str)):
+        # Instance just starting up, CpuCount might not be available currently via metrics.
+        # Use instance's last stop time as EndTime for monitoring query
+        stop_dt_pst = datetime.strptime(vm.laststoptimestamp(),
+                                        '%Y-%m-%dT%H:%M:%S.%f%z')
+        stop_dt_utc = stop_dt_pst.astimezone(timezone.utc)
+        end_formatted_string = stop_dt_utc.strftime('%Y/%m/%d %H:%M:%S')
+        within_str = 'within %dh, d\'%s\'' % (within_hours,
+                                              end_formatted_string)
+      else:
+        within_str = f'within d\'{start_formatted_string}\', d\'{end_formatted_string}\''
+
       try:
         cpu_count_query = monitoring.query(
             op.get(flags.PROJECT_ID), """
@@ -303,13 +322,30 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
 
     #op.info(('\n\nStart TIme: {}, End time: {}\n\n').format(
     #    self.start_formatted_string, self.end_formatted_string))
-    within_str = f'within d\'{self.start_formatted_string}\', d\'{self.end_formatted_string}\''
 
     disk_io_util_threshold = 0.9
 
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
                           instance_name=op.get(flags.NAME))
+
+    start_dt_pst = datetime.strptime(vm.laststarttimestamp(),
+                                     '%Y-%m-%dT%H:%M:%S.%f%z')
+    start_dt_utc = start_dt_pst.astimezone(timezone.utc)
+    start_dt_utc_plus_5_mins = start_dt_utc + timedelta(minutes=5)
+    current_time_utc = datetime.now(timezone.utc)
+    within_hours = 9
+    if start_dt_utc_plus_5_mins > current_time_utc and (isinstance(
+        vm.laststoptimestamp(), str)):
+      # Instance just starting up, CpuCount might not be available currently via metrics.
+      # Use instance's last stop time as EndTime for monitoring query
+      stop_dt_pst = datetime.strptime(vm.laststoptimestamp(),
+                                      '%Y-%m-%dT%H:%M:%S.%f%z')
+      stop_dt_utc = stop_dt_pst.astimezone(timezone.utc)
+      end_formatted_string = stop_dt_utc.strftime('%Y/%m/%d %H:%M:%S')
+      within_str = 'within %dh, d\'%s\'' % (within_hours, end_formatted_string)
+    else:
+      within_str = f'within d\'{self.start_formatted_string}\', d\'{self.end_formatted_string}\''
 
     try:
       cpu_count_query = monitoring.query(
@@ -336,12 +372,12 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
     else:
       op.add_failed(
           vm,
-          reason='CPU count info is not available for the instance via'
+          reason='\tCPU count info is not available for the instance via'
           ' Monitoring metric "guest_visible_vcpus"',
           remediation=(
-              'Please first start the VM {}, if it is not in running state'
+              '\n\tPlease first start the VM {}, if it is not in running state'
           ).format(vm.short_path))
-      sys.exit(21)
+      return
 
     # Fetch list of disks for the instance
     disk_list = gce.get_all_disks_of_instance(op.get(flags.PROJECT_ID), vm.zone,
@@ -391,17 +427,17 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
       else:
         op.add_skipped(
             vm,
-            reason=('Unsupported Disk-Type {}, disk name - {}').format(
-                disk.type, disk.name))
+            reason=('Disk-Type {} is not supported with this gcpdiag runbook,'
+                    ' disk name - {}').format(disk.type, disk.name))
 
     # Getting dirty with logic based on different disk types, Machine types, CPU counts etc.
     for disktypes in total_disk_size.items():
       disktype = disktypes[0]
       if total_disk_size[disktype] > 0 and cpu_count > 0:
 
-        if vm_family in ['a', 'g', 'm']:
+        if vm_family in ['a', 'f', 'g', 'm']:
           if vm.machine_type().split('-')[0].upper() in [
-              'A2', 'A3', 'G2', 'M1', 'M2', 'M3'
+              'A2', 'A3', 'F1', 'G2', 'M1', 'M2', 'M3'
           ]:
             next_hop = 'Machine type'
             next_hop_val = vm.machine_type()
@@ -410,36 +446,76 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
               search_str = search_str + ' Ultra VMs'
             elif search_str == 'A2' and 'highgpu' in next_hop_val:
               search_str = search_str + ' Ultra VMs'
+            else:
+              search_str = search_str + ' VMs'
 
             data = self.limit_calculator(limits_data,
                                          mach_fam_json_data, disktype,
                                          int(total_disk_size[disktype]),
                                          search_str, next_hop, next_hop_val)
 
-            op.info((
-                'IOPS and Throughput limits available for VM DiskType - {}, Total DiskSize: {}:'
-                '\n\n\t r-IOPS : {}, \n\t r-Throughput: {} MB/s, \n\t w-IOPS : {},'
-                ' \n\t w-throughput: {} MB/s').format(
-                    disktype, int(total_disk_size[disktype]),
-                    min(data[0], data[1]), min(data[2], data[3]),
-                    min(data[4], data[5]), min(data[6], data[7])))
+            # upto first 100GB, pd-standard disks have fixed IO limits
+            if disktype == 'pd-standard' and int(
+                total_disk_size[disktype]) < 100:
+              op.info((
+                  '\n\tIOPS and Throughput limits available for VM DiskType - {},'
+                  '\n\tTotal DiskSize: {}:'
+                  '\n\n\t Read-IOPS Count: {},'
+                  '\n\t Read-Throughput: {} MB/s,'
+                  '\n\t Write-IOPS Count: {},'
+                  '\n\t Write-Throughput: {} MB/s\n').format(
+                      disktype, int(total_disk_size[disktype]), 75, 12, 150,
+                      12))
 
-            self.actual_usage_comparision(
-                vm, disktype,
-                min(data[0], data[1]) * disk_io_util_threshold,
-                'max_read_ops_count')
-            self.actual_usage_comparision(
-                vm, disktype,
-                min(data[2], data[3]) * disk_io_util_threshold * 1000 * 1000,
-                'max_read_bytes_count')
-            self.actual_usage_comparision(
-                vm, disktype,
-                min(data[4], data[5]) * disk_io_util_threshold,
-                'max_write_ops_count')
-            self.actual_usage_comparision(
-                vm, disktype,
-                min(data[6], data[7]) * disk_io_util_threshold * 1000 * 1000,
-                'max_write_bytes_count')
+              self.actual_usage_comparision(vm, disktype,
+                                            75 * disk_io_util_threshold,
+                                            'max_read_ops_count')
+              self.actual_usage_comparision(
+                  vm, disktype, 12 * disk_io_util_threshold * 1000 * 1000,
+                  'max_read_bytes_count')
+              self.actual_usage_comparision(vm, disktype,
+                                            150 * disk_io_util_threshold,
+                                            'max_write_ops_count')
+              self.actual_usage_comparision(
+                  vm, disktype, 12 * disk_io_util_threshold * 1000 * 1000,
+                  'max_write_bytes_count')
+
+            elif disktype == 'pd-extreme' and vm.machine_type() in [
+                'g1-small', 'f1-micro'
+            ]:
+              op.add_skipped(
+                  vm,
+                  reason=('The script do not support '
+                          'pd-extreme disk type with machine type {} \n'
+                         ).format(next_hop_val))
+            else:
+              op.info(
+                  ('IOPS and Throughput limits available for VM DiskType - {},'
+                   '\n\tTotal DiskSize: {}:'
+                   '\n\n\t Max Read-IOPS Count: {},'
+                   '\n\t Max Read-Throughput: {} MB/s,'
+                   '\n\t Max Write-IOPS Count: {},'
+                   '\n\t Max Write-Throughput: {} MB/s\n').format(
+                       disktype, int(total_disk_size[disktype]),
+                       min(data[0], data[1]), min(data[2], data[3]),
+                       min(data[4], data[5]), min(data[6], data[7])))
+
+              self.actual_usage_comparision(
+                  vm, disktype,
+                  min(data[0], data[1]) * disk_io_util_threshold,
+                  'max_read_ops_count')
+              self.actual_usage_comparision(
+                  vm, disktype,
+                  min(data[2], data[3]) * disk_io_util_threshold * 1000 * 1000,
+                  'max_read_bytes_count')
+              self.actual_usage_comparision(
+                  vm, disktype,
+                  min(data[4], data[5]) * disk_io_util_threshold,
+                  'max_write_ops_count')
+              self.actual_usage_comparision(
+                  vm, disktype,
+                  min(data[6], data[7]) * disk_io_util_threshold * 1000 * 1000,
+                  'max_write_bytes_count')
           else:
             op.add_failed(
                 vm,
@@ -448,8 +524,8 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
                 ).format(vm.machine_type()),
                 remediation=
                 'You may only run this runbook for any of the below machine family:'
-                'A2, A3, C2, C2D, C3, C3D, E2, G2, H3, N1, N2, N2D, M1, M2, M3, T2D, T2A, Z3'
-            )
+                'A2, A3, C2, C2D, C3, C3D, E2, F1, G1, G2,'
+                ' H3, N1, N2, N2D, M1, M2, M3, T2D, T2A, Z3')
 
         elif vm_family in ['c', 'h', 'z']:
           if vm.machine_type().split('-')[0].upper() in [
@@ -459,35 +535,102 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
             next_hop_val = str(cpu_count)
             search_str = vm.machine_type().split('-')[0].upper() + ' VMs'
 
-            data = self.limit_calculator(limits_data,
-                                         mach_fam_json_data, disktype,
-                                         int(total_disk_size[disktype]),
-                                         search_str, next_hop, next_hop_val)
+            # upto first 100GB, pd-standard disks have fixed IO limits
+            if disktype == 'pd-standard' and int(
+                total_disk_size[disktype]) < 100:
+              op.info((
+                  '\n\tIOPS and Throughput limits available for VM DiskType - {},'
+                  '\n\tTotal DiskSize: {}:'
+                  '\n\n\t Read-IOPS Count: {},'
+                  '\n\t Read-Throughput: {} MB/s,'
+                  '\n\t Write-IOPS Count: {},'
+                  '\n\t Write-Throughput: {} MB/s\n').format(
+                      disktype, int(total_disk_size[disktype]), 75, 12, 150,
+                      12))
 
-            op.info((
-                'IOPS and Throughput limits available for VM DiskType - {}, Total DiskSize: {}:'
-                '\n\n\t r-IOPS : {},\n\t r-Throughput: {} MB/s, \n\t w-IOPS : {},'
-                ' \n\t w-throughput: {} MB/s').format(
-                    disktype, int(total_disk_size[disktype]),
-                    min(data[0], data[1]), min(data[2], data[3]),
-                    min(data[4], data[5]), min(data[6], data[7])))
+              self.actual_usage_comparision(vm, disktype,
+                                            75 * disk_io_util_threshold,
+                                            'max_read_ops_count')
+              self.actual_usage_comparision(
+                  vm, disktype, 12 * disk_io_util_threshold * 1000 * 1000,
+                  'max_read_bytes_count')
+              self.actual_usage_comparision(vm, disktype,
+                                            150 * disk_io_util_threshold,
+                                            'max_write_ops_count')
+              self.actual_usage_comparision(
+                  vm, disktype, 12 * disk_io_util_threshold * 1000 * 1000,
+                  'max_write_bytes_count')
 
-            self.actual_usage_comparision(
-                vm, disktype,
-                min(data[0], data[1]) * disk_io_util_threshold,
-                'max_read_ops_count')
-            self.actual_usage_comparision(
-                vm, disktype,
-                min(data[2], data[3]) * disk_io_util_threshold * 1000 * 1000,
-                'max_read_bytes_count')
-            self.actual_usage_comparision(
-                vm, disktype,
-                min(data[4], data[5]) * disk_io_util_threshold,
-                'max_write_ops_count')
-            self.actual_usage_comparision(
-                vm, disktype,
-                min(data[6], data[7]) * disk_io_util_threshold * 1000 * 1000,
-                'max_write_bytes_count')
+            elif disktype == 'pd-extreme':
+              # https://cloud.google.com/compute/docs/disks/extreme-persistent-disk#machine_shape_support
+
+              data = self.limit_calculator(limits_data, mach_fam_json_data,
+                                           'pd-ssd',
+                                           int(total_disk_size['pd-extreme']),
+                                           search_str, next_hop, next_hop_val)
+
+              op.info(
+                  ('IOPS and Throughput limits available for VM DiskType - {},'
+                   '\n\tTotal DiskSize: {}:'
+                   '\n\n\t Max Read-IOPS Count: {},'
+                   '\n\t Max Read-Throughput: {} MB/s,'
+                   '\n\t Max Write-IOPS Count: {},'
+                   '\n\t Max Write-Throughput: {} MB/s\n').format(
+                       disktype, int(total_disk_size[disktype]),
+                       min(data[1], provisions_iops['pd-extreme']),
+                       min(data[2], data[3]),
+                       min(data[5], provisions_iops['pd-extreme']),
+                       min(data[6], data[7])))
+
+              self.actual_usage_comparision(
+                  vm, disktype,
+                  min(data[1], provisions_iops['pd-extreme']) *
+                  disk_io_util_threshold, 'max_read_ops_count')
+              self.actual_usage_comparision(
+                  vm, disktype,
+                  min(data[2], data[3]) * disk_io_util_threshold * 1000 * 1000,
+                  'max_read_bytes_count')
+              self.actual_usage_comparision(
+                  vm, disktype,
+                  min(data[5], provisions_iops['pd-extreme']) * 0.9,
+                  'max_write_ops_count')
+              self.actual_usage_comparision(
+                  vm, disktype,
+                  min(data[6], data[7]) * disk_io_util_threshold * 1000 * 1000,
+                  'max_write_bytes_count')
+
+            else:
+              data = self.limit_calculator(limits_data, mach_fam_json_data,
+                                           disktype,
+                                           int(total_disk_size[disktype]),
+                                           search_str, next_hop, next_hop_val)
+              op.info(
+                  ('IOPS and Throughput limits available for VM DiskType - {},'
+                   '\n\t Total DiskSize: {}:'
+                   '\n\n\t Max Read-IOPS Count: {},'
+                   '\n\t Max Read-Throughput: {} MB/s,'
+                   '\n\t Max Write-IOPS Count: {},'
+                   '\n\t Max Write-Throughput: {} MB/s\n').format(
+                       disktype, int(total_disk_size[disktype]),
+                       min(data[0], data[1]), min(data[2], data[3]),
+                       min(data[4], data[5]), min(data[6], data[7])))
+
+              self.actual_usage_comparision(
+                  vm, disktype,
+                  min(data[0], data[1]) * disk_io_util_threshold,
+                  'max_read_ops_count')
+              self.actual_usage_comparision(
+                  vm, disktype,
+                  min(data[2], data[3]) * disk_io_util_threshold * 1000 * 1000,
+                  'max_read_bytes_count')
+              self.actual_usage_comparision(
+                  vm, disktype,
+                  min(data[4], data[5]) * disk_io_util_threshold,
+                  'max_write_ops_count')
+              self.actual_usage_comparision(
+                  vm, disktype,
+                  min(data[6], data[7]) * disk_io_util_threshold * 1000 * 1000,
+                  'max_write_bytes_count')
           else:
             op.add_failed(
                 vm,
@@ -496,8 +639,8 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
                 ).format(vm.machine_type()),
                 remediation=
                 'You may only run this runbook for any of the below machine family:'
-                'A2, A3, C2, C2D, C3, C3D, E2, G2, H3, N1, N2, N2D, M1, M2, M3, T2D, T2A, Z3'
-            )
+                'A2, A3, C2, C2D, C3, C3D, E2, F1, G1, G2,'
+                ' H3, N1, N2, N2D, M1, M2, M3, T2D, T2A, Z3')
 
         elif vm_family == 't':
           # Logic to fetch details for T2 family type
@@ -562,19 +705,22 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
                                            int(total_disk_size['pd-extreme']),
                                            search_str, next_hop, next_hop_val)
 
-              op.info((
-                  'IOPS and Throughput limits available for VM DiskType - {}, Total DiskSize: {}:'
-                  '\n\n\t r-IOPS : {},\n\t r-Throughput: {} MB/s \n\t w-IOPS: {},'
-                  ' \n\t w-Throughput: {} MB/s ').format(
-                      disktype, int(total_disk_size[disktype]),
-                      min(data[0], provisions_iops['pd-extreme']),
-                      min(data[2], data[3]),
-                      min(data[4], provisions_iops['pd-extreme']),
-                      min(data[6], data[7])))
+              op.info(
+                  ('IOPS and Throughput limits available for VM DiskType - {},'
+                   '\n\tTotal DiskSize: {}:'
+                   '\n\n\t Max Read-IOPS Count: {},'
+                   '\n\t Max Read-Throughput: {} MB/s,'
+                   '\n\t Max Write-IOPS Count: {},'
+                   '\n\t Max Write-Throughput: {} MB/s\n').format(
+                       disktype, int(total_disk_size[disktype]),
+                       min(data[1], provisions_iops['pd-extreme']),
+                       min(data[2], data[3]),
+                       min(data[5], provisions_iops['pd-extreme']),
+                       min(data[6], data[7])))
 
               self.actual_usage_comparision(
                   vm, disktype,
-                  min(data[0], provisions_iops['pd-extreme']) *
+                  min(data[1], provisions_iops['pd-extreme']) *
                   disk_io_util_threshold, 'max_read_ops_count')
               self.actual_usage_comparision(
                   vm, disktype,
@@ -582,25 +728,55 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
                   'max_read_bytes_count')
               self.actual_usage_comparision(
                   vm, disktype,
-                  min(data[4], provisions_iops['pd-extreme']) * 0.9,
+                  min(data[5], provisions_iops['pd-extreme']) * 0.9,
                   'max_write_ops_count')
               self.actual_usage_comparision(
                   vm, disktype,
                   min(data[6], data[7]) * disk_io_util_threshold * 1000 * 1000,
                   'max_write_bytes_count')
+
+            elif disktype == 'pd-standard' and int(
+                total_disk_size[disktype]) < 100:
+              # upto first 100GB, pd-standard disks have fixed IO limits
+              op.info((
+                  '\n\tIOPS and Throughput limits available for VM DiskType - {},'
+                  '\n\tTotal DiskSize: {}:'
+                  '\n\n\t Read-IOPS Count: {},'
+                  '\n\t Read-Throughput: {} MB/s,'
+                  '\n\t Write-IOPS Count: {},'
+                  '\n\t Write-Throughput: {} MB/s\n').format(
+                      disktype, int(total_disk_size[disktype]), 75, 12, 150,
+                      12))
+
+              self.actual_usage_comparision(vm, disktype,
+                                            75 * disk_io_util_threshold,
+                                            'max_read_ops_count')
+              self.actual_usage_comparision(
+                  vm, disktype, 12 * disk_io_util_threshold * 1000 * 1000,
+                  'max_read_bytes_count')
+              self.actual_usage_comparision(vm, disktype,
+                                            150 * disk_io_util_threshold,
+                                            'max_write_ops_count')
+              self.actual_usage_comparision(
+                  vm, disktype, 12 * disk_io_util_threshold * 1000 * 1000,
+                  'max_write_bytes_count')
+
             else:
               data = self.limit_calculator(limits_data, mach_fam_json_data,
                                            disktype,
                                            int(total_disk_size[disktype]),
                                            search_str, next_hop, next_hop_val)
 
-              op.info((
-                  'IOPS and Throughput limits available for VM DiskType - {}, Total DiskSize: {}:'
-                  ' \n\n\t r-IOPS : {},\n\t r-Throughput: {} MB/s, \n\t w-IOPS : {},'
-                  ' \n\t w-throughput: {} MB/s').format(
-                      disktype, int(total_disk_size[disktype]),
-                      min(data[0], data[1]), min(data[2], data[3]),
-                      min(data[4], data[5]), min(data[6], data[7])))
+              op.info(
+                  ('IOPS and Throughput limits available for VM DiskType - {},'
+                   '\n\tTotal DiskSize: {}:'
+                   '\n\n\t Max Read-IOPS Count: {},'
+                   '\n\t Max Read-Throughput: {} MB/s,'
+                   '\n\t Max Write-IOPS Count: {},'
+                   '\n\t Max Write-Throughput: {} MB/s\n').format(
+                       disktype, int(total_disk_size[disktype]),
+                       min(data[0], data[1]), min(data[2], data[3]),
+                       min(data[4], data[5]), min(data[6], data[7])))
 
               self.actual_usage_comparision(
                   vm, disktype,
@@ -626,8 +802,8 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
                 ).format(vm.machine_type()),
                 remediation=
                 'You may only run this runbook for any of the below machine family:'
-                'A2, A3, C2, C2D, C3, C3D, E2, G2, H3, N1, N2, N2D, M1, M2, M3, T2D, T2A, Z3'
-            )
+                'A2, A3, C2, C2D, C3, C3D, E2, F1, G1, G2,'
+                ' H3, N1, N2, N2D, M1, M2, M3, T2D, T2A, Z3')
 
         elif vm_family == 'e':
           # Logic to fetch details for E2 family type
@@ -656,19 +832,22 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
                                            int(total_disk_size['pd-extreme']),
                                            search_str, next_hop, next_hop_val)
 
-              op.info((
-                  'IOPS and Throughput limits available for VM DiskType - {}, Total DiskSize: {}:'
-                  '\n\n\t r-IOPS : {},\n\t r-Throughput: {} MB/s \n\t w-IOPS: {},'
-                  ' \n\t w-Throughput: {} MB/s ').format(
-                      disktype, int(total_disk_size[disktype]),
-                      min(data[0], provisions_iops['pd-extreme']),
-                      min(data[2], data[3]),
-                      min(data[4], provisions_iops['pd-extreme']),
-                      min(data[6], data[7])))
+              op.info(
+                  ('IOPS and Throughput limits available for VM DiskType - {},'
+                   '\n\tTotal DiskSize: {}:'
+                   '\n\n\t Max Read-IOPS Count: {},'
+                   '\n\t Max Read-Throughput: {} MB/s,'
+                   '\n\t Max Write-IOPS Count: {},'
+                   '\n\t Max Write-Throughput: {} MB/s\n').format(
+                       disktype, int(total_disk_size[disktype]),
+                       min(data[1], provisions_iops['pd-extreme']),
+                       min(data[2], data[3]),
+                       min(data[5], provisions_iops['pd-extreme']),
+                       min(data[6], data[7])))
 
               self.actual_usage_comparision(
                   vm, disktype,
-                  min(data[0], provisions_iops['pd-extreme']) *
+                  min(data[1], provisions_iops['pd-extreme']) *
                   disk_io_util_threshold, 'max_read_ops_count')
               self.actual_usage_comparision(
                   vm, disktype,
@@ -676,11 +855,37 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
                   'max_read_bytes_count')
               self.actual_usage_comparision(
                   vm, disktype,
-                  min(data[4], provisions_iops['pd-extreme']) *
+                  min(data[5], provisions_iops['pd-extreme']) *
                   disk_io_util_threshold, 'max_write_ops_count')
               self.actual_usage_comparision(
                   vm, disktype,
                   min(data[6], data[7]) * disk_io_util_threshold * 1000 * 1000,
+                  'max_write_bytes_count')
+
+            elif disktype == 'pd-standard' and int(
+                total_disk_size[disktype]) < 100:
+              # upto first 100GB, pd-standard disks have fixed IO limits
+              op.info((
+                  '\n\tIOPS and Throughput limits available for VM DiskType - {},'
+                  '\n\tTotal DiskSize: {}:'
+                  '\n\n\t Read-IOPS Count: {},'
+                  '\n\t Read-Throughput: {} MB/s,'
+                  '\n\t Write-IOPS Count: {},'
+                  '\n\t Write-Throughput: {} MB/s\n').format(
+                      disktype, int(total_disk_size[disktype]), 75, 12, 150,
+                      12))
+
+              self.actual_usage_comparision(vm, disktype,
+                                            75 * disk_io_util_threshold,
+                                            'max_read_ops_count')
+              self.actual_usage_comparision(
+                  vm, disktype, 12 * disk_io_util_threshold * 1000 * 1000,
+                  'max_read_bytes_count')
+              self.actual_usage_comparision(vm, disktype,
+                                            150 * disk_io_util_threshold,
+                                            'max_write_ops_count')
+              self.actual_usage_comparision(
+                  vm, disktype, 12 * disk_io_util_threshold * 1000 * 1000,
                   'max_write_bytes_count')
             else:
               data = self.limit_calculator(limits_data, mach_fam_json_data,
@@ -688,13 +893,16 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
                                            int(total_disk_size[disktype]),
                                            search_str, next_hop, next_hop_val)
 
-              op.info((
-                  'IOPS and Throughput limits available for VM DiskType - {}, Total DiskSize: {}:'
-                  '\n\n\t r-IOPS : {},\n\t r-Throughput: {} MB/s, \n\t w-IOPS : {},'
-                  ' \n\t w-throughput: {} MB/s').format(
-                      disktype, int(total_disk_size[disktype]),
-                      min(data[0], data[1]), min(data[2], data[3]),
-                      min(data[4], data[5]), min(data[6], data[7])))
+              op.info(
+                  ('IOPS and Throughput limits available for VM DiskType - {},'
+                   '\n\tTotal DiskSize: {}:'
+                   '\n\n\t Max Read-IOPS Count: {},'
+                   '\n\t Max Read-Throughput: {} MB/s,'
+                   '\n\t Max Write-IOPS Count: {},'
+                   '\n\t Max Write-Throughput: {} MB/s\n').format(
+                       disktype, int(total_disk_size[disktype]),
+                       min(data[0], data[1]), min(data[2], data[3]),
+                       min(data[4], data[5]), min(data[6], data[7])))
 
               self.actual_usage_comparision(
                   vm, disktype,
@@ -720,8 +928,8 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
                 ).format(vm.machine_type()),
                 remediation=
                 'You may only run this runbook for any of the below machine family:'
-                'A2, A3, C2, C2D, C3, C3D, E2, G2, H3, N1, N2, N2D, M1, M2, M3, T2D, T2A, Z3'
-            )
+                'A2, A3, C2, C2D, C3, C3D, E2, F1, G1, G2,'
+                ' H3, N1, N2, N2D, M1, M2, M3, T2D, T2A, Z3')
 
         elif vm_family == 'n':
           if vm.machine_type().split('-')[0].upper() in ['N1', 'N2', 'N2D']:
@@ -747,11 +955,11 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
                                            search_str, next_hop, next_hop_val)
               op.info((
                   'IOPS and Throughput limits available for VM DiskType - {}, Total DiskSize: {}:'
-                  '\n\n\t r-IOPS : {}, \n\t r-Throughput: {} MB/s,'
-                  '\n\t w-IOPS : {}, \n\t w-throughput: {} MB/s').format(
-                      disktype, int(total_disk_size[disktype]),
-                      min(data[0], data[1]), min(data[2], data[3]),
-                      min(data[4], data[5]), min(data[6], data[7])))
+                  '\n\n\t Max Read-IOPS Count: {}, \n\t Max Read-Throughput: {} MB/s,'
+                  '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s'
+              ).format(disktype, int(total_disk_size[disktype]),
+                       min(data[0], data[1]), min(data[2], data[3]),
+                       min(data[4], data[5]), min(data[6], data[7])))
 
               self.actual_usage_comparision(
                   vm, disktype,
@@ -780,35 +988,63 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
               elif cpu_count > 15:
                 next_hop_val = '16 or more'
 
-              data = self.limit_calculator(limits_data, mach_fam_json_data,
-                                           disktype,
-                                           int(total_disk_size[disktype]),
-                                           search_str, next_hop, next_hop_val)
+              if int(total_disk_size[disktype]) < 100:
+                # upto first 100GB, pd-standard disks have fixed IO limits
+                op.info((
+                    '\n\tIOPS and Throughput limits available for VM DiskType - {},'
+                    '\n\tTotal DiskSize: {}:'
+                    '\n\n\t Read-IOPS Count: {},'
+                    '\n\t Read-Throughput: {} MB/s,'
+                    '\n\t Write-IOPS Count: {},'
+                    '\n\t Write-Throughput: {} MB/s\n').format(
+                        disktype, int(total_disk_size[disktype]), 75, 12, 150,
+                        12))
 
-              op.info((
-                  'IOPS and Throughput limits available for VM DiskType - {}, Total DiskSize: {}:,'
-                  '\n\n\t r-IOPS : {}\n\t r-Throughput: {} MB/s,'
-                  '\n\t w-IOPS : {}, \n\t w-throughput: {} MB/s').format(
-                      disktype, int(total_disk_size[disktype]),
-                      min(data[0], data[1]), min(data[2], data[3]),
-                      min(data[4], data[5]), min(data[6], data[7])))
+                self.actual_usage_comparision(vm, disktype,
+                                              75 * disk_io_util_threshold,
+                                              'max_read_ops_count')
+                self.actual_usage_comparision(
+                    vm, disktype, 12 * disk_io_util_threshold * 1000 * 1000,
+                    'max_read_bytes_count')
+                self.actual_usage_comparision(vm, disktype,
+                                              150 * disk_io_util_threshold,
+                                              'max_write_ops_count')
+                self.actual_usage_comparision(
+                    vm, disktype, 12 * disk_io_util_threshold * 1000 * 1000,
+                    'max_write_bytes_count')
+              else:
+                data = self.limit_calculator(limits_data, mach_fam_json_data,
+                                             disktype,
+                                             int(total_disk_size[disktype]),
+                                             search_str, next_hop, next_hop_val)
 
-              self.actual_usage_comparision(
-                  vm, disktype,
-                  min(data[0], data[1]) * disk_io_util_threshold,
-                  'max_read_ops_count')
-              self.actual_usage_comparision(
-                  vm, disktype,
-                  min(data[2], data[3]) * disk_io_util_threshold * 1000 * 1000,
-                  'max_read_bytes_count')
-              self.actual_usage_comparision(
-                  vm, disktype,
-                  min(data[4], data[5]) * disk_io_util_threshold,
-                  'max_write_ops_count')
-              self.actual_usage_comparision(
-                  vm, disktype,
-                  min(data[6], data[7]) * disk_io_util_threshold * 1000 * 1000,
-                  'max_write_bytes_count')
+                op.info((
+                    'IOPS and Throughput limits available for VM DiskType - {},'
+                    '\n\tTotal DiskSize: {}:,'
+                    '\n\n\t Max Read-IOPS Count: {},'
+                    '\n\t Max Read-Throughput: {} MB/s,'
+                    '\n\t Max Write-IOPS Count: {},'
+                    '\n\t Max Write-Throughput: {} MB/s\n').format(
+                        disktype, int(total_disk_size[disktype]),
+                        min(data[0], data[1]), min(data[2], data[3]),
+                        min(data[4], data[5]), min(data[6], data[7])))
+
+                self.actual_usage_comparision(
+                    vm, disktype,
+                    min(data[0], data[1]) * disk_io_util_threshold,
+                    'max_read_ops_count')
+                self.actual_usage_comparision(
+                    vm, disktype,
+                    min(data[2], data[3]) * disk_io_util_threshold * 1000 *
+                    1000, 'max_read_bytes_count')
+                self.actual_usage_comparision(
+                    vm, disktype,
+                    min(data[4], data[5]) * disk_io_util_threshold,
+                    'max_write_ops_count')
+                self.actual_usage_comparision(
+                    vm, disktype,
+                    min(data[6], data[7]) * disk_io_util_threshold * 1000 *
+                    1000, 'max_write_bytes_count')
 
             elif disktype == 'pd-extreme':
               if search_str == 'N2 VMs' and cpu_count > 63:
@@ -820,9 +1056,12 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
                                              search_str, next_hop, next_hop_val)
 
                 op.info((
-                    'IOPS and Throughput limits available for VM DiskType - {}, Total DiskSize: {}:'
-                    '\n\n\t r-IOPS : {},\n\t r-Throughput: {} MB/s'
-                    '\n\t w-IOPS: {}, \n\t w-Throughput: {} MB/s').format(
+                    'IOPS and Throughput limits available for VM DiskType - {},'
+                    '\n\tTotal DiskSize: {}:'
+                    '\n\n\t Max Read-IOPS Count: {},'
+                    '\n\t Max Read-Throughput: {} MB/s,'
+                    '\n\t Max Write-IOPS Count: {},'
+                    '\n\t Max Write-Throughput: {} MB/s\n').format(
                         disktype, int(total_disk_size[disktype]),
                         min(data[1], provisions_iops['pd-extreme']),
                         min(data[2], data[3]),
@@ -853,9 +1092,12 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
                                              search_str, next_hop, next_hop_val)
                 # https://cloud.google.com/compute/docs/disks/extreme-persistent-disk#machine_shape_support
                 op.info((
-                    'IOPS and Throughput limits available for VM DiskType - {}, Total DiskSize: {}:'
-                    '\n\n\t r-IOPS : {},\n\t r-Throughput: {} MB/s'
-                    '\n\t w-IOPS: {}, \n\t w-Throughput: {} MB/s').format(
+                    'IOPS and Throughput limits available for VM DiskType - {},'
+                    '\n\tTotal DiskSize: {}:'
+                    '\n\n\t Max Read-IOPS Count: {},'
+                    '\n\t Max Read-Throughput: {} MB/s,'
+                    '\n\t Max Write-IOPS Count: {},'
+                    '\n\t Max Write-Throughput: {} MB/s\n').format(
                         disktype, int(total_disk_size[disktype]),
                         min(data[1], provisions_iops['pd-extreme']),
                         max(data[2], data[3]),
@@ -886,7 +1128,8 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
                 ).format(vm.machine_type()),
                 remediation=
                 'You may only run this runbook for any of the below machine family:'
-                'A, C, E, G, H, N, M, T, Z')
+                'A2, A3, C2, C2D, C3, C3D, E2, F1, G1, G2,'
+                ' H3, N1, N2, N2D, M1, M2, M3, T2D, T2A, Z3')
         else:
           op.add_failed(
               vm,
@@ -895,7 +1138,7 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
               ).format(vm.machine_type()),
               remediation=
               'You may only run this runbook for any of the below machine family:'
-              'A, C, E, G, H, N, M, T, Z')
+              'A, C, E, G, F, H, N, M, T, Z')
 
   def limit_calculator(self, limits_data, mach_fam_json_data, disktype: str,
                        total_disk_size: int, search_str: str, next_hop: str,

@@ -13,8 +13,8 @@
 # limitations under the License.
 """ Calculate GCE VM's IOPS and Throughput Limits
 
-This lint rules provide a easy method to calculate the Instance's
-disk IOPS and Throughput applicable limits.
+This lint rules provide an easy method to calculate the Instance's
+disk IOPS and Throughput applicable max limits.
 """
 
 import json
@@ -58,7 +58,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       start_dt_utc_plus_10_mins = start_dt_utc + timedelta(minutes=5)
       current_time_utc = datetime.now(timezone.utc)
       within_hours = 9
-      if start_dt_utc_plus_10_mins > current_time_utc:
+      if start_dt_utc_plus_10_mins > current_time_utc and (isinstance(
+          vm.laststoptimestamp(), str)):
         # Instance just starting up, CpuCount might not be available currently via metrics.
         # Use instance's last stop time as EndTime for monitoring query
         stop_dt_pst = datetime.strptime(vm.laststoptimestamp(),
@@ -149,8 +150,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
         else:
           report.add_skipped(
               vm,
-              reason=('Unsupported Disk-Type {}, disk name - {}').format(
-                  disk.type, disk.name))
+              reason=('Disk-Type {} is not supported with this gcpdiag runbook,'
+                      ' disk name - {}').format(disk.type, disk.name))
 
       # Getting dirty with logic based on different disk types, Machine types, CPU counts etc.
       for disktypes in total_disk_size.items():
@@ -184,7 +185,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
                     ('\n\tIOPS and Throughput limits available for VM DiskType - {},'
                      '\n\tTotal DiskSize: {}:'
                      '\n\n\t Max Read-IOPS Count: {}, \n\t Max Read-Throughput: {} MB/s,'
-                     '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s \n'
+                     '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s\n'
                     ).format(disktype, int(total_disk_size[disktype]), 75, 12,
                              150, 12))
 
@@ -203,7 +204,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
                     ('\n\tIOPS and Throughput limits available for VM DiskType - {},'
                      '\n\tTotal DiskSize: {}:'
                      '\n\n\t Max Read-IOPS Count: {}, \n\t Max Read-Throughput: {} MB/s,'
-                     '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s \n'
+                     '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s\n'
                     ).format(disktype, int(total_disk_size[disktype]),
                              min(data[0], data[1]), min(data[2], data[3]),
                              min(data[4], data[5]), min(data[6], data[7])))
@@ -237,9 +238,30 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
                     ('\n\tIOPS and Throughput limits available for VM DiskType - {},'
                      '\n\tTotal DiskSize: {}:'
                      '\n\n\t Max Read-IOPS Count: {}, \n\t Max Read-Throughput: {} MB/s,'
-                     '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s \n'
+                     '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s\n'
                     ).format(disktype, int(total_disk_size[disktype]), 75, 12,
                              150, 12))
+              elif disktype == 'pd-extreme':
+                # https://cloud.google.com/compute/docs/disks/extreme-persistent-disk#machine_shape_support
+                data = limit_calculator(limits_data, mach_fam_json_data,
+                                        'pd-ssd',
+                                        int(total_disk_size['pd-extreme']),
+                                        search_str, next_hop, next_hop_val)
+
+                report.add_ok(
+                    vm,
+                    short_info=
+                    ('IOPS and Throughput limits available for VM DiskType - {},'
+                     '\n\tTotal DiskSize: {}:'
+                     '\n\n\t Max Read-IOPS Count: {},'
+                     '\n\t Max Read-Throughput: {} MB/s,'
+                     '\n\t Max Write-IOPS Count: {},'
+                     '\n\t Max Write-Throughput: {} MB/s\n').format(
+                         disktype, int(total_disk_size[disktype]),
+                         min(data[1], provisions_iops['pd-extreme']),
+                         min(data[2], data[3]),
+                         min(data[5], provisions_iops['pd-extreme']),
+                         min(data[6], data[7])))
               else:
                 report.add_ok(
                     vm,
@@ -247,7 +269,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
                     ('\n\tIOPS and Throughput limits available for VM DiskType - {},'
                      '\n\tTotal DiskSize: {}:'
                      '\n\n\t Max Read-IOPS Count: {}, \n\t Max Read-Throughput: {} MB/s,'
-                     '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s \n'
+                     '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s\n'
                     ).format(disktype, int(total_disk_size[disktype]),
                              min(data[0], data[1]), min(data[2], data[3]),
                              min(data[4], data[5]), min(data[6], data[7])))
@@ -330,11 +352,11 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
                     ('\n\tIOPS and Throughput limits available for VM DiskType - {},'
                      '\n\tTotal DiskSize: {}:'
                      '\n\n\t Max Read-IOPS Count: {}, \n\t Max Read-Throughput: {} MB/s,'
-                     '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s \n'
+                     '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s\n'
                     ).format(disktype, int(total_disk_size[disktype]),
-                             min(data[0], provisions_iops['pd-extreme']),
+                             min(data[1], provisions_iops['pd-extreme']),
                              min(data[2], data[3]),
-                             min(data[4], provisions_iops['pd-extreme']),
+                             min(data[5], provisions_iops['pd-extreme']),
                              min(data[6], data[7])))
 
               else:
@@ -361,7 +383,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
                       ('\n\tIOPS and Throughput limits available for VM DiskType - {},'
                        '\n\tTotal DiskSize: {}:'
                        '\n\n\t Max Read-IOPS Count: {},\n\t Max Read-Throughput: {} MB/s,'
-                       '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s \n'
+                       '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s\n'
                       ).format(disktype, int(total_disk_size[disktype]),
                                min(data[0], data[1]), min(data[2], data[3]),
                                min(data[4], data[5]), min(data[6], data[7])))
@@ -407,7 +429,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
                     ('\n\tIOPS and Throughput limits available for VM DiskType - {},'
                      '\n\tTotal DiskSize: {}:'
                      '\n\n\t Max Read-IOPS Count: {}, \n\t Max Read-Throughput: {} MB/s,'
-                     '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s \n'
+                     '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s\n'
                     ).format(disktype, int(total_disk_size[disktype]),
                              min(data[0], provisions_iops['pd-extreme']),
                              min(data[2], data[3]),
@@ -428,7 +450,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
                       ('\n\tIOPS and Throughput limits available for VM DiskType - {},'
                        '\n\tTotal DiskSize: {}:'
                        '\n\n\t Max Read-IOPS Count: {}, \n\t Max Read-Throughput: {} MB/s,'
-                       '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s \n'
+                       '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s\n'
                       ).format(disktype, int(total_disk_size[disktype]), 75, 12,
                                150, 12))
                 else:
@@ -438,7 +460,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
                       ('\n\tIOPS and Throughput limits available for VM DiskType - {},'
                        '\n\tTotal DiskSize: {}:'
                        '\n\n\t Max Read-IOPS Count: {},\n\t Max Read-Throughput: {} MB/s,'
-                       '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s \n'
+                       '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s\n'
                       ).format(disktype, int(total_disk_size[disktype]),
                                min(data[0], data[1]), min(data[2], data[3]),
                                min(data[4], data[5]), min(data[6], data[7])))
@@ -479,7 +501,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
                     ('\n\tIOPS and Throughput limits available for VM DiskType - {},'
                      '\n\tTotal DiskSize: {}:'
                      '\n\n\t Max Read-IOPS Count: {}, \n\t Max Read-Throughput: {} MB/s,'
-                     '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s \n'
+                     '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s\n'
                     ).format(disktype, int(total_disk_size[disktype]),
                              min(data[0], data[1]), min(data[2], data[3]),
                              min(data[4], data[5]), min(data[6], data[7])))
@@ -516,7 +538,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
                       ('\n\tIOPS and Throughput limits available for VM DiskType - {},'
                        '\n\tTotal DiskSize: {}:'
                        '\n\n\t Max Read-IOPS Count: {}, \n\t Max Read-Throughput: {} MB/s,'
-                       '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s \n'
+                       '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s\n'
                       ).format(disktype, int(total_disk_size[disktype]),
                                min(data[0], data[1]), min(data[2], data[3]),
                                min(data[4], data[5]), min(data[6], data[7])))
@@ -536,7 +558,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
                       ('\n\tIOPS and Throughput limits available for VM DiskType - {},'
                        '\n\tTotal DiskSize: {}:'
                        '\n\n\t Max Read-IOPS Count: {}, \n\t Max Read-Throughput: {} MB/s'
-                       '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s \n'
+                       '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s\n'
                       ).format(disktype, int(total_disk_size[disktype]),
                                min(data[1], provisions_iops['pd-extreme']),
                                min(data[2], data[3]),
@@ -556,7 +578,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
                       ('\n\tIOPS and Throughput limits available for VM DiskType - {},'
                        '\n\tTotal DiskSize: {}:'
                        '\n\n\t Max Read-IOPS Count: {}, \n\t Max Read-Throughput: {} MB/s'
-                       '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s \n'
+                       '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s\n'
                       ).format(disktype, int(total_disk_size[disktype]),
                                min(data[1], provisions_iops['pd-extreme']),
                                max(data[2], data[3]),
