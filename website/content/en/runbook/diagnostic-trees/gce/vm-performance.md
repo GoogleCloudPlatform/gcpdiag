@@ -4,7 +4,7 @@ linkTitle: "gce/vm-performance"
 weight: 3
 type: docs
 description: >
-  GCE VM performance checks
+  Google Compute Engine VM performance checks
 ---
 
 **Product**: [Compute Engine](https://cloud.google.com/compute)
@@ -13,7 +13,7 @@ description: >
 ### Description
 
 This runbook is designed to assist you in investigating and understanding the underlying reasons
-  behind the performance issues of your GCE Virtual Machines (VMs) within Google Cloud Platform.
+  behind the performance issues of your Google Compute Engine VMs within Google Cloud Platform.
 
   Key Investigation Areas:
 

@@ -14,8 +14,8 @@ Explore rescue options for inaccessible VMs or review possible guest OS issues,
 - Rescuing VMs: https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
 
 If escalating Guest OS related issues to Google Cloud Support
-do check to ensure is in line with GCP's Guest OS support policy
-- GCP Support Scope: https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
+do check to ensure is in line with Google Cloud Platform's Guest OS support policy
+- Google Cloud Platform Support Scope: https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
 {% endblock default_failure_remediation %}
 
 {% block default_success_reason %}
@@ -31,11 +31,11 @@ inconclusive
 {% block default_uncertain_remediation %}
 Confirm the VM's operational status by reviewing available serial logs.
 Address any detected guest OS issues using the provided documentation,
-keeping in mind certain guest OS faults may be beyond GCP's support scope.
+keeping in mind certain guest OS faults may be beyond Google Cloud Platform's support scope.
 - Viewing Serial Port Output: https://cloud.google.com/compute/docs/troubleshooting/viewing-serial-port-output
 - Resolving Kernel Panic:
 https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error
-- GCP Support Scope: https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
+- Google Cloud Platform Support Scope: https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
 {% endblock default_uncertain_remediation %}
 
 {% block kernel_panic_step_message %}
@@ -55,18 +55,17 @@ which is likely preventing the VM from booting up correctly.
 {% endblock kernel_panic_failure_reason %}
 
 {% block kernel_panic_failure_remediation %}
-Address underlying issues leading to bootup issues:
+Address underlying issues leading to boot issues:
 Consult the troubleshooting guide for kernel panic errors [1]
 
-Common causes of kernel panic within linux guest os
-File system errors
+Common causes of kernel panic within linux guestos is File system errors.
 Examining `/etc/fstab` for file system errors that could halt the boot process. [2]
 
 Use gce-rescue available in cloud shell [2] rescue faulty VMs:
 https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
 https://www.youtube.com/watch?v=oD6IFpjEtEw
 
-GCP Support Scope:
+Google Cloud Platform Support Scope:
 https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
 
 [1] https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error
@@ -102,7 +101,7 @@ Use gce-rescue available in cloud shell [2] rescue faulty VMs:
 https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
 https://www.youtube.com/watch?v=oD6IFpjEtEw
 
-GCP Support Scope:
+Google Cloud Platform Support Scope:
 https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
 
 [0] https://cloud.google.com/compute/docs/troubleshooting/viewing-serial-port-output
@@ -125,7 +124,7 @@ Verify if your IP is blocked by SSHGuard on the VM.
 {% endblock sshguard_failure_reason %}
 
 {% block sshguard_failure_remediation %}
-Note: Issues related to SSHGuard fall outside the standard support scope for GCP.
+Note: Issues related to SSHGuard fall outside the standard support scope for Google Cloud Platform.
 Consult the most appropriate team within your organisation to assist with resolution.
 For guest OS issues and SSHGuard configurations, refer to:
 - Support Scope: https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
@@ -220,7 +219,7 @@ https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-ssh-errors
 https://cloud.google.com/knowledge/kb/ssh-in-cloud-serial-console-fails-with-warning-message-000004554
 Use gce-rescue to get your VM into emergency mode: https://github.com/GoogleCloudPlatform/gce-rescue
 NOTE: Guest related issues are Out of Support Scope
-See GCP support policy on Guest OS
+See Google Cloud Platform support policy on Guest OS
 https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
 https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support
 {% endblock sshd_uncertain_remediation %}
@@ -257,7 +256,7 @@ Connecting to the Windows Special Administrative Console (SAC) to troubleshoot b
 [5] https://cloud.google.com/compute/docs/connect/windows-ssh
 [6] https://cloud.google.com/compute/docs/instances/windows/connecting-powershell
 
-GCP Support Scope
+Google Cloud Platform Support Scope
 https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
 {% endblock windows_bootup_failure_remediation %}
 
@@ -275,7 +274,7 @@ Resources:
 Connecting to the Windows Special Administrative Console (SAC) to troubleshoot bootup issues.
 [2] https://cloud.google.com/compute/docs/instances/connecting-to-sac
 
-GCP Support Scope
+Google Cloud Platform Support Scope
 https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
 {% endblock windows_bootup_uncertain_remediation %}
 
@@ -311,7 +310,7 @@ Found time sync error messages in Serial console logs. It looks like VM's time i
 {% endblock time_sync_issue_failure_reason %}
 
 {% block time_sync_issue_failure_remediation %}
-Please check if your NTP server config on your instance is as per GCP standards
+Please check if your NTP server config on your instance is as per Google Cloud Platform standards
 https://cloud.google.com/compute/docs/instances/configure-ntp.
 {% endblock time_sync_issue_failure_remediation %}
 

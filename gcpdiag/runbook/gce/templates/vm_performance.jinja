@@ -9,7 +9,7 @@ powerful machine type with higher CPU capabilities.
 Detailed instructions for resizing and restarting VMs are available here:
 - Stopping a VM: https://cloud.google.com/compute/docs/instances/stop-start-instance
 - Resizing a VM: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
-Additionally, use the GCE observability metrics for an in-depth analysis to pinpoint high-usage processes:
+Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
 https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics
 https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization
 
@@ -61,7 +61,7 @@ Guidance on stopping and changing the machine type can be found here:
 - Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
 For deeper analysis of memory issues:
 
-Additionally, use the GCE observability metrics for an in-depth analysis to pinpoint high-usage processes:
+Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
 https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization
 
 Or connect via the Serial Console if SSH is not available to mitigate the issue.
@@ -94,7 +94,7 @@ The patterns we looked for :
 {% block memory_error_failure_remediation %}
 We have found memory related errors in Serial console logs.
 
-Please use the GCE observability metrics for an in-depth analysis to pinpoint high-usage processes:
+Please use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
 https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization
 
 Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
@@ -154,7 +154,7 @@ Live migrations detected for the VM during mentioned period.
 {% block live_migrations_failure_remediation %}
 As remediation, you may try to simulate the migration (move the VM to another host) using
 https://cloud.google.com/compute/docs/instances/simulating-host-maintenance?hl=en#testingpolicies ,
-and see if issue still persists. If yes, please reach out to GCP Support teams via case.
+and see if issue still persists. If yes, please reach out to Google Cloud Platform Support teams via case.
 
 Note: During live migration, VMs might experience a decrease in performance in disk,
 CPU, memory, and network utilization for a short period of time.

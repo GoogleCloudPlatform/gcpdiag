@@ -4,7 +4,7 @@ linkTitle: "gce/serial-log-analyzer"
 weight: 3
 type: docs
 description: >
-  GCE VM Serial log analyzer
+  Google Compute Engine VM Serial log analyzer
 ---
 
 **Product**: [Compute Engine](https://cloud.google.com/compute)
@@ -32,6 +32,9 @@ This runbook is designed to assist you in investigating the serial console logs 
 
     SSHD checks:
         - Check if we have logs related to successful startup of SSHD service.
+
+    SSHD Auth Failures checks:
+        - Check for SSH issues due to bad permissions of files or directories
 
     Google Guest Agent checks:
         - Check if we have logs related to successful startup of Google Guest Agent.

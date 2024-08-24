@@ -1,10 +1,10 @@
 project: gcpdiag-gce-vm-performance, parameters: {name=faulty-linux-ssh,project_id=gcpdiag-gce-vm-
 performance,zone=europe-west2-a}
 
-gce/vm-performance:  GCE VM performance checks
+gce/vm-performance:  Google Compute Engine VM performance checks
 
   This runbook is designed to assist you in investigating and understanding the underlying reasons
-  behind the performance issues of your GCE Virtual Machines (VMs) within Google Cloud Platform.
+  behind the performance issues of your Google Compute Engine VMs within Google Cloud Platform.
 
   Key Investigation Areas:
 
@@ -37,7 +37,7 @@ gce/vm-performance:  GCE VM performance checks
      Detailed instructions for resizing and restarting VMs are available here:
      - Stopping a VM: https://cloud.google.com/compute/docs/instances/stop-start-instance
      - Resizing a VM: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
-     Additionally, use the GCE observability metrics for an in-depth analysis to pinpoint high-usage processes:
+     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
      https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics
      https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization
 
@@ -62,7 +62,7 @@ gce/vm-performance:  GCE VM performance checks
      - Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
      For deeper analysis of memory issues:
 
-     Additionally, use the GCE observability metrics for an in-depth analysis to pinpoint high-usage processes:
+     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
      https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization
 
      Or connect via the Serial Console if SSH is not available to mitigate the issue.
@@ -159,10 +159,10 @@ Live Migration Detected at 2021/11/24 16:35:22, Checking further
 project: gcpdiag-gce-vm-performance, parameters: {name=faulty-windows-ssh,project_id=gcpdiag-gce-vm-
 performance,zone=europe-west2-a}
 
-gce/vm-performance:  GCE VM performance checks
+gce/vm-performance:  Google Compute Engine VM performance checks
 
   This runbook is designed to assist you in investigating and understanding the underlying reasons
-  behind the performance issues of your GCE Virtual Machines (VMs) within Google Cloud Platform.
+  behind the performance issues of your Google Compute Engine VMs within Google Cloud Platform.
 
   Key Investigation Areas:
 
@@ -222,7 +222,7 @@ gce/vm-performance:  GCE VM performance checks
      Detailed instructions for resizing and restarting VMs are available here:
      - Stopping a VM: https://cloud.google.com/compute/docs/instances/stop-start-instance
      - Resizing a VM: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
-     Additionally, use the GCE observability metrics for an in-depth analysis to pinpoint high-usage processes:
+     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
      https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics
      https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization
 
@@ -247,7 +247,7 @@ gce/vm-performance:  GCE VM performance checks
      - Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
      For deeper analysis of memory issues:
 
-     Additionally, use the GCE observability metrics for an in-depth analysis to pinpoint high-usage processes:
+     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
      https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization
 
      Or connect via the Serial Console if SSH is not available to mitigate the issue.

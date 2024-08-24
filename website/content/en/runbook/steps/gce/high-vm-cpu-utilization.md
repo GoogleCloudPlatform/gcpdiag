@@ -29,7 +29,7 @@ powerful machine type with higher CPU capabilities.
 Detailed instructions for resizing and restarting VMs are available here:
 - Stopping a VM: https://cloud.google.com/compute/docs/instances/stop-start-instance
 - Resizing a VM: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
-Additionally, use the GCE observability metrics for an in-depth analysis to pinpoint high-usage processes:
+Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
 https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics
 https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization
 

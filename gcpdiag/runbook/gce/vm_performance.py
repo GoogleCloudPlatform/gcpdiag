@@ -27,10 +27,10 @@ from gcpdiag.runbook.gce import generalized_steps as gce_gs
 
 
 class VmPerformance(runbook.DiagnosticTree):
-  """ GCE VM performance checks
+  """ Google Compute Engine VM performance checks
 
   This runbook is designed to assist you in investigating and understanding the underlying reasons
-  behind the performance issues of your GCE Virtual Machines (VMs) within Google Cloud Platform.
+  behind the performance issues of your Google Compute Engine VMs within Google Cloud Platform.
 
   Key Investigation Areas:
 

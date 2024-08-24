@@ -29,8 +29,8 @@ Explore rescue options for inaccessible VMs or review possible guest OS issues,
 - Rescuing VMs: https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
 
 If escalating Guest OS related issues to Google Cloud Support
-do check to ensure is in line with GCP's Guest OS support policy
-- GCP Support Scope: https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
+do check to ensure is in line with Google Cloud Platform's Guest OS support policy
+- Google Cloud Platform Support Scope: https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
 
 ### Success Reason
 
@@ -46,11 +46,11 @@ inconclusive
 
 Confirm the VM's operational status by reviewing available serial logs.
 Address any detected guest OS issues using the provided documentation,
-keeping in mind certain guest OS faults may be beyond GCP's support scope.
+keeping in mind certain guest OS faults may be beyond Google Cloud Platform's support scope.
 - Viewing Serial Port Output: https://cloud.google.com/compute/docs/troubleshooting/viewing-serial-port-output
 - Resolving Kernel Panic:
 https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error
-- GCP Support Scope: https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
+- Google Cloud Platform Support Scope: https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
 
 ### Skipped Reason
 

@@ -1,4 +1,4 @@
-*  gce/BP_EXT/2024_002: Calculate GCE VM's IOPS and Throughput Limits
+*  gce/BP_EXT/2024_002: Calculate Google Compute Engine VM's IOPS and Throughput Limits
    - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce1       [ OK ] 
 	IOPS and Throughput limits available for VM DiskType - pd-standard,
 	Total DiskSize: 32:

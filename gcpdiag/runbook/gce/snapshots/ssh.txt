@@ -53,7 +53,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      - Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
      For deeper analysis of memory issues:
 
-     Additionally, use the GCE observability metrics for an in-depth analysis to pinpoint high-usage processes:
+     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
      https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization
 
      Or connect via the Serial Console if SSH is not available to mitigate the issue.
@@ -95,7 +95,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      Detailed instructions for resizing and restarting VMs are available here:
      - Stopping a VM: https://cloud.google.com/compute/docs/instances/stop-start-instance
      - Resizing a VM: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
-     Additionally, use the GCE observability metrics for an in-depth analysis to pinpoint high-usage processes:
+     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
      https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics
      https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization
 
@@ -293,7 +293,7 @@ principal in Cloud Console / gcloud (incl. impersonated service account)
      - Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
      For deeper analysis of memory issues:
 
-     Additionally, use the GCE observability metrics for an in-depth analysis to pinpoint high-usage processes:
+     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
      https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization
 
      Or connect via the Serial Console if SSH is not available to mitigate the issue.
@@ -335,7 +335,7 @@ principal in Cloud Console / gcloud (incl. impersonated service account)
      Detailed instructions for resizing and restarting VMs are available here:
      - Stopping a VM: https://cloud.google.com/compute/docs/instances/stop-start-instance
      - Resizing a VM: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
-     Additionally, use the GCE observability metrics for an in-depth analysis to pinpoint high-usage processes:
+     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
      https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics
      https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization
 
@@ -515,7 +515,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      - Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
      For deeper analysis of memory issues:
 
-     Additionally, use the GCE observability metrics for an in-depth analysis to pinpoint high-usage processes:
+     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
      https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization
 
      Or connect via the Serial Console if SSH is not available to mitigate the issue.
@@ -557,7 +557,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      Detailed instructions for resizing and restarting VMs are available here:
      - Stopping a VM: https://cloud.google.com/compute/docs/instances/stop-start-instance
      - Resizing a VM: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
-     Additionally, use the GCE observability metrics for an in-depth analysis to pinpoint high-usage processes:
+     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
      https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics
      https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization
 
@@ -595,7 +595,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      Connecting to the Windows Special Administrative Console (SAC) to troubleshoot bootup issues.
      [2] https://cloud.google.com/compute/docs/instances/connecting-to-sac
 
-     GCP Support Scope
+     Google Cloud Platform Support Scope
      https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
 
 [MANUAL STEP]: Manually verify if the necessary Google guest agents, especially `google-compute-engine-ssh`,

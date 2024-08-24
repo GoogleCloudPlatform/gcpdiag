@@ -29,7 +29,7 @@ Guidance on stopping and changing the machine type can be found here:
 - Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
 For deeper analysis of memory issues:
 
-Additionally, use the GCE observability metrics for an in-depth analysis to pinpoint high-usage processes:
+Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
 https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization
 
 Or connect via the Serial Console if SSH is not available to mitigate the issue.

@@ -25,7 +25,7 @@ from gcpdiag.runbook.gce import generalized_steps as gce_gs
 
 
 class SerialLogAnalyzer(runbook.DiagnosticTree):
-  """ GCE VM Serial log analyzer
+  """ Google Compute Engine VM Serial log analyzer
 
     This runbook is designed to assist you in investigating the serial console logs of a vm.
 
@@ -47,6 +47,9 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
 
     SSHD checks:
         - Check if we have logs related to successful startup of SSHD service.
+
+    SSHD Auth Failures checks:
+        - Check for SSH issues due to bad permissions of files or directories
 
     Google Guest Agent checks:
         - Check if we have logs related to successful startup of Google Guest Agent.

@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-""" Calculate GCE VM's IOPS and Throughput Limits
+""" Calculate Google Compute Engine VM's IOPS and Throughput Limits
 
 This lint rules provide an easy method to calculate the Instance's
 disk IOPS and Throughput applicable max limits.

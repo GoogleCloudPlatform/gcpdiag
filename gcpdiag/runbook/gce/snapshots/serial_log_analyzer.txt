@@ -1,7 +1,7 @@
 project: gcpdiag-gce-faulty-serial-log-runbook, parameters: {name=faulty-linux-
 ssh,project_id=gcpdiag-gce-faulty-serial-log-runbook,zone=europe-west2-a}
 
-gce/serial-log-analyzer:  GCE VM Serial log analyzer
+gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
 
     This runbook is designed to assist you in investigating the serial console logs of a vm.
 
@@ -23,6 +23,9 @@ gce/serial-log-analyzer:  GCE VM Serial log analyzer
 
     SSHD checks:
         - Check if we have logs related to successful startup of SSHD service.
+
+    SSHD Auth Failures checks:
+        - Check for SSH issues due to bad permissions of files or directories
 
     Google Guest Agent checks:
         - Check if we have logs related to successful startup of Google Guest Agent.
@@ -49,7 +52,7 @@ gce/serial-log-analyzer:  GCE VM Serial log analyzer
 project: gcpdiag-gce-faulty-serial-log-runbook, parameters: {name=valid-linux-
 ssh,project_id=gcpdiag-gce-faulty-serial-log-runbook,zone=europe-west2-a}
 
-gce/serial-log-analyzer:  GCE VM Serial log analyzer
+gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
 
     This runbook is designed to assist you in investigating the serial console logs of a vm.
 
@@ -71,6 +74,9 @@ gce/serial-log-analyzer:  GCE VM Serial log analyzer
 
     SSHD checks:
         - Check if we have logs related to successful startup of SSHD service.
+
+    SSHD Auth Failures checks:
+        - Check for SSH issues due to bad permissions of files or directories
 
     Google Guest Agent checks:
         - Check if we have logs related to successful startup of Google Guest Agent.
