@@ -100,6 +100,73 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      [REMEDIATION]
      Update your firewall rules to allow inbound traffic from the Google Cloud health check IP ranges (found at https://cloud.google.com/load-balancing/docs/health-check-concepts#ip-ranges) to your backends.
 
+[COMPOSITE STEP]: Checks if the VM performance is degraded.
+
+    In this step one unhealthy instance from each group is analyzed - disks,
+    memory and cpu utilization are being checked.
+    
+[AUTOMATED STEP]: Verifying VM memory utilization is within optimal levels...
+
+   - gcpdiag-lb2-aaaa/vm-pn3l                                             [FAIL]
+     [REASON]
+     Memory utilization on this VM has reached levels that may compromise its VM application performance.
+
+     [REMEDIATION]
+     Elevated memory usage can result in slow or unresponsive or termimated applications.
+     Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
+     Guidance on stopping and changing the machine type can be found here:
+     - Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+     For deeper analysis of memory issues:
+
+     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
+     https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization
+
+     Or connect via the Serial Console if SSH is not available to mitigate the issue.
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+
+[AUTOMATED STEP]: Checking if there are any memory related errors in Serial logs
+
+   - gcpdiag-lb2-aaaa/vm-pn3l                                             [UNCERTAIN]
+     [REASON]
+     We did not find any Memory related errors in Serial console logs
+
+     [REMEDIATION]
+     You may check if VM is facing high memory utilisation from GuestOS side using `free -m`
+     or `cat /proc/meminfo` commands.
+
+[AUTOMATED STEP]: Checking if VM's Boot disk space utilization is within optimal levels.
+
+   - gcpdiag-lb2-aaaa/vm-pn3l                                             [FAIL]
+     [REASON]
+     Disk utilization on this VM's boot disk is critically high,
+     potentially affecting application performance.
+
+     [REMEDIATION]
+     To mitigate high disk usage, consider expanding the VM's boot disk capacity.
+     This action can help avoid performance issues and ensure smoother SSH connections.
+     Follow the guide to increase disk size:
+     https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
+
+[AUTOMATED STEP]: Verifying VM CPU utilization is within optimal levels
+
+   - gcpdiag-lb2-aaaa/vm-pn3l                                             [FAIL]
+     [REASON]
+     CPU utilization on this VM has surpassed recommended operational levels,
+     which may affect its performance and SSH connectivity.
+
+     [REMEDIATION]
+     Excessive CPU usage can lead to performance bottlenecks. Consider resizing the VM to a more
+     powerful machine type with higher CPU capabilities.
+     Detailed instructions for resizing and restarting VMs are available here:
+     - Stopping a VM: https://cloud.google.com/compute/docs/instances/stop-start-instance
+     - Resizing a VM: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
+     https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics
+     https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization
+
+     Alternatively, you can connect via serial console if SSH is unvailable to stop offending processes
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console.
+
 [END]: Finalizing unhealthy backends diagnostics...
 
 
@@ -196,6 +263,73 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
    - gcpdiag-lb2-aaaa/backend-service-2                                   [OK]
      [REASON]
      Firewalls are correctly configured and are not blocking the health check probes.
+
+[COMPOSITE STEP]: Checks if the VM performance is degraded.
+
+    In this step one unhealthy instance from each group is analyzed - disks,
+    memory and cpu utilization are being checked.
+    
+[AUTOMATED STEP]: Verifying VM memory utilization is within optimal levels...
+
+   - gcpdiag-lb2-aaaa/neg-vm                                              [FAIL]
+     [REASON]
+     Memory utilization on this VM has reached levels that may compromise its VM application performance.
+
+     [REMEDIATION]
+     Elevated memory usage can result in slow or unresponsive or termimated applications.
+     Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
+     Guidance on stopping and changing the machine type can be found here:
+     - Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+     For deeper analysis of memory issues:
+
+     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
+     https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization
+
+     Or connect via the Serial Console if SSH is not available to mitigate the issue.
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+
+[AUTOMATED STEP]: Checking if there are any memory related errors in Serial logs
+
+   - gcpdiag-lb2-aaaa/neg-vm                                              [UNCERTAIN]
+     [REASON]
+     We did not find any Memory related errors in Serial console logs
+
+     [REMEDIATION]
+     You may check if VM is facing high memory utilisation from GuestOS side using `free -m`
+     or `cat /proc/meminfo` commands.
+
+[AUTOMATED STEP]: Checking if VM's Boot disk space utilization is within optimal levels.
+
+   - gcpdiag-lb2-aaaa/neg-vm                                              [FAIL]
+     [REASON]
+     Disk utilization on this VM's boot disk is critically high,
+     potentially affecting application performance.
+
+     [REMEDIATION]
+     To mitigate high disk usage, consider expanding the VM's boot disk capacity.
+     This action can help avoid performance issues and ensure smoother SSH connections.
+     Follow the guide to increase disk size:
+     https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
+
+[AUTOMATED STEP]: Verifying VM CPU utilization is within optimal levels
+
+   - gcpdiag-lb2-aaaa/neg-vm                                              [FAIL]
+     [REASON]
+     CPU utilization on this VM has surpassed recommended operational levels,
+     which may affect its performance and SSH connectivity.
+
+     [REMEDIATION]
+     Excessive CPU usage can lead to performance bottlenecks. Consider resizing the VM to a more
+     powerful machine type with higher CPU capabilities.
+     Detailed instructions for resizing and restarting VMs are available here:
+     - Stopping a VM: https://cloud.google.com/compute/docs/instances/stop-start-instance
+     - Resizing a VM: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
+     https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics
+     https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization
+
+     Alternatively, you can connect via serial console if SSH is unvailable to stop offending processes
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console.
 
 [END]: Finalizing unhealthy backends diagnostics...
 

@@ -19,6 +19,8 @@ all:	\
 	json-dumps/project.json \
 	json-dumps/services.json \
 	json-dumps/compute-igs-$(ZONE1).json \
+	json-dumps/compute-instances-$(ZONE1).json \
+	json-dumps/compute-instances-$(ZONE2).json \
 	json-dumps/compute-negs-$(ZONE2).json \
 	json-dumps/compute-network-default.json \
 	json-dumps/compute-project.json \
@@ -32,9 +34,26 @@ all:	\
 	json-dumps/lb-insights.json \
 	json-dumps/backendService-web-backend-service-get-health-instanceGroups-lb-backend-example-us-east1-b.json \
 	json-dumps/regionBackendService-backend-service-2-europe-west4-get-health-networkEndpointGroups-neg1-europe-west4-b.json \
-	json-dumps/logging-entries-1.json
+	json-dumps/logging-entries-1.json \
+	json-dumps/monitoring-query.json
 
 include ../Makefile.inc
+
+define MONITORING_QUERY
+{ \
+  "query": "fetch gce_instance::compute.googleapis.com/instance/uptime_total \
+  | within 10m \
+  | group_by [resource.zone, metric.instance_name] \
+  | group_by 5m, [.mean, .count] \
+  " \
+}
+endef
+json-dumps/monitoring-query.json:
+	$(CURL) -fsS \
+		'https://monitoring.googleapis.com/v3/projects/$(PROJECT_ID)/timeSeries:query' \
+		--header "Content-Type: application/json" -X POST \
+		--data '$(MONITORING_QUERY)' \
+		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/regionBackendServices-%.json:
 	$(CURL) -fsS \

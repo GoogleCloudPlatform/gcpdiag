@@ -24,6 +24,7 @@ from boltons.iterutils import get_path
 from gcpdiag import config, models, runbook
 from gcpdiag.queries import apis, crm, gce, lb, logs
 from gcpdiag.runbook import op
+from gcpdiag.runbook.gce import generalized_steps as gce_gs
 from gcpdiag.runbook.lb import flags
 
 
@@ -97,6 +98,9 @@ class UnhealthyBackends(runbook.DiagnosticTree):
     firewall_check = VerifyFirewallRules()
     self.add_step(parent=start, child=firewall_check)
 
+    vm_performance_check = CheckVmPerformance()
+    self.add_step(parent=start, child=vm_performance_check)
+
     # Ending your runbook
     self.add_end(UnhealthyBackendsEnd())
 
@@ -157,7 +161,6 @@ class UnhealthyBackendsStart(runbook.StartStep):
         detailed_reason += (
             f'Group {group} has {unhealthy_count}/{len(backends_in_group)} '
             'unhealthy backends\n')
-
       op.add_failed(
           resource=backend_service,
           reason=op.prep_msg(
@@ -177,6 +180,63 @@ class UnhealthyBackendsStart(runbook.StartStep):
               region=op.get(flags.REGION, 'global'),
           ),
       )
+
+
+class CheckVmPerformance(runbook.CompositeStep):
+  """Checks if the instances performance is degraded."""
+
+  template = 'unhealthy_backends::vm_performance'
+
+  def execute(self):
+    """Checks if the VM performance is degraded.
+
+    In this step one unhealthy instance from each group is analyzed - disks,
+    memory and cpu utilization are being checked.
+    """
+    backend_health_statuses = lb.get_backend_service_health(
+        op.get(flags.PROJECT_ID),
+        op.get(flags.BACKEND_SERVICE_NAME),
+        op.get(flags.REGION),
+    )
+
+    instances_to_analyze_by_group = {}
+
+    for status in sorted(
+        backend_health_statuses,
+        key=lambda obj: obj.instance):  # sorting to make testing predictable
+      if status.health_state == 'UNHEALTHY':
+        instances_to_analyze_by_group[status.group] = status.instance
+
+    for group, instance in instances_to_analyze_by_group.items():
+      m = re.search(r'projects/([^/?]+)/zones/([^/?]+)/instances/([^/?]+)',
+                    instance)
+      if not m:
+        raise RuntimeError(
+            "Can't determine project, zone or instance name from self links"
+            f' {group}')
+
+      project_id = m.group(1)
+      zone = m.group(2)
+      instance_name = m.group(3)
+
+      mem_check = gce_gs.HighVmMemoryUtilization()
+      mem_check.project_id = project_id
+      mem_check.zone = zone
+      mem_check.instance_name = instance_name
+
+      disk_check = gce_gs.HighVmDiskUtilization()
+      disk_check.project_id = project_id
+      disk_check.zone = zone
+      disk_check.instance_name = instance_name
+
+      cpu_check = gce_gs.HighVmCpuUtilization()
+      cpu_check.project_id = project_id
+      cpu_check.zone = zone
+      cpu_check.instance_name = instance_name
+
+      self.add_child(mem_check)
+      self.add_child(disk_check)
+      self.add_child(cpu_check)
 
 
 class VerifyFirewallRules(runbook.Step):

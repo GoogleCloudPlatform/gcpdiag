@@ -78,6 +78,14 @@ gcpdiag runbook --help
 
   - [Verify Firewall Rules](/runbook/steps/lb/verify-firewall-rules)
 
+  - [Check Vm Performance](/runbook/steps/lb/check-vm-performance)
+
+  - [High Vm Memory Utilization](/runbook/steps/gce/high-vm-memory-utilization)
+
+  - [High Vm Disk Utilization](/runbook/steps/gce/high-vm-disk-utilization)
+
+  - [High Vm Cpu Utilization](/runbook/steps/gce/high-vm-cpu-utilization)
+
   - [Unhealthy Backends End](/runbook/steps/lb/unhealthy-backends-end)
 
 

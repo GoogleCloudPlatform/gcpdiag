@@ -41,6 +41,10 @@ class HighVmMemoryUtilization(runbook.Step):
   """
   template = 'vm_performance::high_memory_utilization'
 
+  project_id = None
+  zone = None
+  instance_name = None
+
   # Typcial Memory exhaustion logs in serial console.
 
   def execute(self):
@@ -48,9 +52,11 @@ class HighVmMemoryUtilization(runbook.Step):
 
     mark_no_ops_agent = False
 
-    vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
-                          zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+    vm = gce.get_instance(
+        project_id=self.project_id or op.get(flags.PROJECT_ID),
+        zone=self.zone or op.get(flags.ZONE),
+        instance_name=self.instance_name or op.get(flags.NAME),
+    )
 
     mem_usage_metrics = None
 
@@ -95,6 +101,9 @@ class HighVmMemoryUtilization(runbook.Step):
 
     # Checking for OOM related errors
     oom_errors = VmSerialLogsCheck()
+    oom_errors.project_id = self.project_id
+    oom_errors.zone = self.zone
+    oom_errors.instance_name = self.instance_name
     oom_errors.template = 'vm_performance::memory_error'
     oom_errors.negative_pattern = constants.OOM_PATTERNS
     self.add_child(oom_errors)
@@ -110,14 +119,20 @@ class HighVmDiskUtilization(runbook.Step):
   """
   template = 'vm_performance::high_disk_utilization'
 
+  project_id = None
+  zone = None
+  instance_name = None
+
   def execute(self):
     """Verifying VM's Boot disk space utilization is within optimal levels."""
 
     mark_no_ops_agent = False
 
-    vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
-                          zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+    vm = gce.get_instance(
+        project_id=self.project_id or op.get(flags.PROJECT_ID),
+        zone=self.zone or op.get(flags.ZONE),
+        instance_name=self.instance_name or op.get(flags.NAME),
+    )
 
     disk_usage_metrics = None
 
@@ -164,12 +179,18 @@ class HighVmCpuUtilization(runbook.Step):
 
   template = 'vm_performance::high_cpu_utilization'
 
+  project_id = None
+  zone = None
+  instance_name = None
+
   def execute(self):
     """Verifying VM CPU utilization is within optimal levels"""
 
-    vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
-                          zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+    vm = gce.get_instance(
+        project_id=self.project_id or op.get(flags.PROJECT_ID),
+        zone=self.zone or op.get(flags.ZONE),
+        instance_name=self.instance_name or op.get(flags.NAME),
+    )
     cpu_usage_metrics = None
 
     if util.ops_agent_installed(op.get(flags.PROJECT_ID), vm.id):
@@ -241,6 +262,10 @@ class VmSerialLogsCheck(runbook.Step):
   patterns, the step categorizes the VM's status as 'OK', 'Failed', or 'Uncertain'.
   """
 
+  project_id = None
+  zone = None
+  instance_name = None
+
   template = 'vm_serial_log::default'
 
   # Typical logs of a fully booted windows VM
@@ -256,9 +281,11 @@ class VmSerialLogsCheck(runbook.Step):
     bad_pattern_detected = False
     serial_log_file_content = []
     instance_serial_logs = None
-    vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
-                          zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+    vm = gce.get_instance(
+        project_id=self.project_id or op.get(flags.PROJECT_ID),
+        zone=self.zone or op.get(flags.ZONE),
+        instance_name=self.instance_name or op.get(flags.NAME),
+    )
 
     if op.get(flags.SERIAL_CONSOLE_FILE):
       for files in op.get(flags.SERIAL_CONSOLE_FILE).split(','):
@@ -267,9 +294,9 @@ class VmSerialLogsCheck(runbook.Step):
         serial_log_file_content = serial_log_file_content + serial_log_file_content
     else:
       instance_serial_logs = gce.get_instance_serial_port_output(
-          project_id=op.get(flags.PROJECT_ID),
-          zone=op.get(flags.ZONE),
-          instance_name=op.get(flags.NAME))
+          project_id=self.project_id or op.get(flags.PROJECT_ID),
+          zone=self.zone or op.get(flags.ZONE),
+          instance_name=self.instance_name or op.get(flags.NAME))
 
     if instance_serial_logs or serial_log_file_content:
       instance_serial_log = instance_serial_logs.contents if \

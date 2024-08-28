@@ -1,0 +1,95 @@
+{
+  "id": "projects/gcpdiag-lb2-aaaa/zones/europe-west4-b/instances",
+  "items": [
+    {
+      "canIpForward": false,
+      "cpuPlatform": "Intel Broadwell",
+      "creationTimestamp": "2024-08-13T05:59:45.573-07:00",
+      "deletionProtection": false,
+      "disks": [
+        {
+          "architecture": "X86_64",
+          "autoDelete": true,
+          "boot": true,
+          "deviceName": "persistent-disk-0",
+          "diskSizeGb": "10",
+          "guestOsFeatures": [
+            {
+              "type": "UEFI_COMPATIBLE"
+            },
+            {
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "GVNIC"
+            },
+            {
+              "type": "SEV_CAPABLE"
+            }
+          ],
+          "index": 0,
+          "interface": "SCSI",
+          "kind": "compute#attachedDisk",
+          "licenses": [
+            "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-11-bullseye"
+          ],
+          "mode": "READ_WRITE",
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/zones/europe-west4-b/disks/neg-vm",
+          "type": "PERSISTENT"
+        }
+      ],
+      "fingerprint": "REDACTED",
+      "id": "3190067059314058837",
+      "kind": "compute#instance",
+      "labelFingerprint": "42WmSpB8rSM=",
+      "lastStartTimestamp": "2024-08-13T05:59:53.039-07:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/zones/europe-west4-b/machineTypes/e2-medium",
+      "metadata": {
+        "fingerprint": "REDACTED",
+        "items": [
+          {
+            "key": "startup-script",
+            "value": "#! /bin/bash\n     sudo apt-get update\n     sudo apt-get install apache2 -y\n     sudo a2ensite default-ssl\n     sudo a2enmod ssl\n     sudo vm_hostname=\"$(curl -H \"Metadata-Flavor:Google\" \\\n   http://169.254.169.254/computeMetadata/v1/instance/name)\"\n   sudo echo \"Page served from: $vm_hostname\" | \\\n   tee /var/www/html/index.html\n   sudo systemctl restart apache2"
+          }
+        ],
+        "kind": "compute#metadata"
+      },
+      "name": "neg-vm",
+      "networkInterfaces": [
+        {
+          "fingerprint": "REDACTED",
+          "kind": "compute#networkInterface",
+          "name": "nic0",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/global/networks/default",
+          "networkIP": "10.164.0.2",
+          "stackType": "IPV4_ONLY",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/regions/europe-west4/subnetworks/default"
+        }
+      ],
+      "satisfiesPzi": true,
+      "scheduling": {
+        "automaticRestart": true,
+        "onHostMaintenance": "MIGRATE",
+        "preemptible": false,
+        "provisioningModel": "STANDARD"
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/zones/europe-west4-b/instances/neg-vm",
+      "shieldedInstanceConfig": {
+        "enableIntegrityMonitoring": true,
+        "enableSecureBoot": false,
+        "enableVtpm": true
+      },
+      "shieldedInstanceIntegrityPolicy": {
+        "updateAutoLearnPolicy": true
+      },
+      "startRestricted": false,
+      "status": "RUNNING",
+      "tags": {
+        "fingerprint": "REDACTED"
+      },
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/zones/europe-west4-b"
+    }
+  ],
+  "kind": "compute#instanceList",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/zones/europe-west4-b/instances"
+}
