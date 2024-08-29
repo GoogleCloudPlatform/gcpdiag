@@ -15,6 +15,16 @@ cloudrun/service-deployment: Investigates the necessary GCP components searching
 [START]: Verifying context and parameters required for deployment runbook checks.
 [COMPOSITE STEP]: Checking for common container and code issues.
 [AUTOMATED STEP]: Verifying if there is an error that container failed to start.
+
+   - gcpdiag-cloudrun2-aaaa/4ca2c930-7962-4fce-9470-987642372120          [FAIL]
+     [REASON]
+     Container failed to start in service invalid-container.
+
+     [REMEDIATION]
+     The container failed to start. Please check
+     https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start
+     for the next steps.
+
 [AUTOMATED STEP]: Verifying if specified image exists.
 [AUTOMATED STEP]: Verifying if Cloud Run service agent can fetch the image.
 [END]: Finalizing runbook investigations...

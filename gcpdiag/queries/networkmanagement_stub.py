@@ -54,11 +54,7 @@ class NetworkManagementApiStub:
     match = re.search(pattern, name)
     if match:
       project = match.group(1)
-      test_id = match.group(2)
-      if test_id == 'vmexternalipconnectivitytest':
-        return apis_stub.RestCallStub(project, 'connectivity-test')
-      else:
-        return self
+      return apis_stub.RestCallStub(project, 'connectivity-test')
     else:
       raise ValueError('cannot call get method here')
 

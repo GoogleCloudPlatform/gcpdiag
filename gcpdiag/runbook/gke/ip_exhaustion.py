@@ -132,8 +132,8 @@ jsonPayload.resourceName="//container.googleapis.com/projects\
 
     # Check activity logs if 'IP_SPACE_EXHAUSTED' log is present in cloud logging.
     op.info(
-        'Searching cloud logging for the string %s \
-      which indicates IP Exhaustion issue', ip_space_exhausted_query)
+        f'Searching cloud logging for the string {ip_space_exhausted_query} '
+        'which indicates IP Exhaustion issue')
     ip_space_exhausted_log_entries = logs.realtime_query(
         project_id=op.get(flags.PROJECT_ID),
         filter_str=ip_space_exhausted_query,
@@ -143,9 +143,8 @@ jsonPayload.resourceName="//container.googleapis.com/projects\
     # Check cloud log entries and cluster status for IP exhaustion.
     if len(ip_space_exhausted_log_entries) > 0 or 'IP_SPACE_EXHAUSTED' in str(
         cluster.status_message):
-      op.info(
-          'log entries with IP_SPACE_EXHAUSTED found in cloud logging for \
-the cluster %s', {op.get(flags.NAME)})
+      op.info('log entries with IP_SPACE_EXHAUSTED found in cloud logging for '
+              f'the cluster {op.get(flags.NAME)}')
       self.add_child(NodeIpRangeExhaustion())
 
     # Check for exhaustion of pod range

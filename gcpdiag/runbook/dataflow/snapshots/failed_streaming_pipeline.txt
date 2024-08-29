@@ -30,6 +30,10 @@ dataflow/failed-streaming-pipeline: Diagnostic checks for failed Dataflow Stream
      Dataflow job Beam SDK is supported.
 [GATEWAY]: Checks if a Dataflow job graph is successfully constructed.
 [AUTOMATED STEP]: Checks if a Dataflow job has visible logs.
+
+   - gcpdiag-datafusion1-aaaa                                             [OK]
+     [REASON]
+     Dataflow Logs are not excluded
 [END]: End step.
 [INFO]: No more checks to perform.
 

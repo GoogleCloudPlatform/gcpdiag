@@ -1,5 +1,5 @@
-project: , parameters: {location=europe-west10-b,node=gke-diag-cluster-
-nodepool-a545b703-8kjq,nodepool=nodepool,project_id=}
+project: gcpdiag-gke1-aaaa, parameters: {location=europe-west4-a,nodepool=gke-gke1-default-
+pool-671518f6,project_id=gcpdiag-gke1-aaaa}
 
 gke/node-bootstrapping: Analyses issues experienced when adding nodes to your GKE Standard cluster.
 
@@ -24,6 +24,11 @@ gke/node-bootstrapping: Analyses issues experienced when adding nodes to your GK
     Check for any errors during instances.insert method for the given location (region or zone)
     and nodepool pair.
     
+
+   - gcpdiag-gke1-aaaa                                                    [SKIP]
+     [REASON]
+     No nodepool or GKE cluster name provided, skipping this step ... 
+     Please provide nodepool name (-p nodepool=<nodepoolname>) and GKE cluster name (-p name=<gke-cluster-name>) if you see issues with nodes not appearing in the nodepool.
 [AUTOMATED STEP]: 
     Verify if Node Registration Checker completed running.
 
@@ -31,6 +36,12 @@ gke/node-bootstrapping: Analyses issues experienced when adding nodes to your GK
     If the node wasn't registered successfully, provide Node Registration Checker summary to
     understand why.
     
+
+   - gcpdiag-gke1-aaaa                                                    [SKIP]
+     [REASON]
+     No node name provided, skipping this step ...
+     Please provide node name (-p node=<nodename>) if the node appears in the nodepool, but fails registration.
+
 [END]: Finalizing `GKE Node Bootstrapping` diagnostics...
 
 

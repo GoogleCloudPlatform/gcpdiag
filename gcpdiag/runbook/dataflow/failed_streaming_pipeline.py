@@ -157,9 +157,8 @@ class JobState(runbook.Step):
       for log_entry in project_logs[project_id].entries:
         if log_entry['severity'] >= 'ERROR':
           op.info(
-              resource=job,
-              message='Error logs found in job logs for the project',
-          )
+              message=
+              f'Error logs found in job logs for the project {job.full_path}')
 
       failure_reason = op.prep_msg(op.FAILURE_REASON,
                                    job_id=op.get(flags.JOB_ID))

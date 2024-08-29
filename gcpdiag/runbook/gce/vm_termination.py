@@ -255,8 +255,7 @@ class MultipleTerminationCheck(runbook.Step):
 
     termination_details: Dict[str, set] = {}
 
-    op.info(f'{len(log_entries)} instance (s) terminated within the timeframe',
-            store_in_report=True)
+    op.info(f'{len(log_entries)} instance (s) terminated within the timeframe')
 
     for log_entry in log_entries:
       method = get_path(log_entry, ('protoPayload', 'methodName'), default='')

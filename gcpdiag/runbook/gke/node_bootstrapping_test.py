@@ -20,12 +20,11 @@ from gcpdiag.runbook import gke, snapshot_test_base
 class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = gke
   runbook_name = 'gke/node-bootstrapping'
-  project_id = ''
+  project_id = 'gcpdiag-gke1-aaaa'
   config.init({'auto': True, 'interface': 'cli'}, project_id)
 
   rule_parameters = [{
-      'project_id': 'gcpdiag-gke-cluster-autoscaler-rrrr',
-      'node': 'gke-diag-cluster-nodepool-a545b703-8kjq',
-      'nodepool': 'nodepool',
-      'location': 'europe-west10-b'
+      'project_id': 'gcpdiag-gke1-aaaa',
+      'nodepool': 'gke-gke1-default-pool-671518f6',
+      'location': 'europe-west4-a'
   }]

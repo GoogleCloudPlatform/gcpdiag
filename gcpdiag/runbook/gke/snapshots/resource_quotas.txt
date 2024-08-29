@@ -1,4 +1,5 @@
-project: temp-resourcequota, parameters: {location=us-central1-c,project_id=temp-resourcequota}
+project: gcpdiag-gke-cluster-autoscaler-rrrr, parameters: {location=us-
+central1-c,project_id=gcpdiag-gke-cluster-autoscaler-rrrr}
 
 gke/resource-quotas: Analyses logs in the project where the cluster is running.
 
@@ -9,7 +10,18 @@ gke/resource-quotas: Analyses logs in the project where the cluster is running.
 [START]: 
     Check the provided parameters.
     
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     No clusters found at location us-central1-c in project gcpdiag-gke-cluster-autoscaler-rrrr
+     [REMEDIATION]
+     Please verify the provided GKE cluster location
 [AUTOMATED STEP]: Verifying Cloud API state...
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [OK]
+     [REASON]
+     The `logging.googleapis.com` service is currently in the expected state: `ENABLED`.
+
 [AUTOMATED STEP]: 
     Verify clusters running version. GKE doesn't enforce the Kubernetes
     resource quotas for clusters running version 1.28 or later.

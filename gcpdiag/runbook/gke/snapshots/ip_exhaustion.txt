@@ -1,5 +1,5 @@
-project: gcpdiag-gke3-runbook, parameters: {end_time_utc=2024-06-30T23:00:00Z,location=us-
-central1-c,name=cluster-1,project_id=gcpdiag-gke3-runbook,start_time_utc=2024-06-30T01:00:00Z}
+project: gcpdiag-gke3-gggg, parameters: {end_time_utc=2024-06-30T23:00:00Z,location=us-
+central1-c,name=cluster-1,project_id=gcpdiag-gke3-gggg,start_time_utc=2024-06-30T01:00:00Z}
 
 gke/ip-exhaustion: Troubleshooting ip exhaustion issues on GKE clusters.
 
@@ -18,18 +18,18 @@ gke/ip-exhaustion: Troubleshooting ip exhaustion issues on GKE clusters.
 
    - gcpdiag-gke3-gggg                                                    [OK]
      [REASON]
-     Cluster cluster-1 found in us-central1-c for project gcpdiag-gke3-runbook
+     Cluster cluster-1 found in us-central1-c for project gcpdiag-gke3-gggg
 [GATEWAY]: Checking IP Exhaustion and cluster configuration
-[INFO]: Searching cloud logging for the string %s       which indicates IP Exhaustion issue
-[INFO]: log entries with IP_SPACE_EXHAUSTED found in cloud logging for the cluster %s
+[INFO]: Searching cloud logging for the string "IP_SPACE_EXHAUSTED" AND "cluster-1" which indicates IP Exhaustion issue
+[INFO]: log entries with IP_SPACE_EXHAUSTED found in cloud logging for the cluster cluster-1
 
-   - gcpdiag-gke3-runbook/us-central1-c/cluster-1                         [OK]
+   - gcpdiag-gke3-gggg/us-central1-c/cluster-1                            [OK]
      [REASON]
-     No IP exhaustion issues found for cluster-1 found in project gcpdiag-gke3-runbook
+     No IP exhaustion issues found for cluster-1 found in project gcpdiag-gke3-gggg
 [AUTOMATED STEP]: Checking node IP Exhaustion and offering remediation steps
 [INFO]: Checking the cluster status message if IP Exhaustion issue is ongoing...
 
-   - gcpdiag-gke3-runbook/us-central1-c/cluster-1                         [FAIL]
+   - gcpdiag-gke3-gggg/us-central1-c/cluster-1                            [FAIL]
      [REASON]
        Node IP exhaustion is detected in the cluster cluster-1:
 

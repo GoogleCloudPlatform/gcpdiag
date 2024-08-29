@@ -33,17 +33,29 @@ class LoggingApiStub:
   """Mock object to simulate container api calls."""
   body: str
 
-  def entries(self):
-    return self
+  def __init__(self, mock_state='init', project_id=None, zone=None, page=1):
+    self.mock_state = mock_state
+    self.project_id = project_id
+    self.zone = zone
+    self.page = page
 
-  def list(self, body):
-    global logging_body
-    logging_body = body
-    project = utils.get_project_by_res_name(body['resourceNames'][0])
-    return apis_stub.RestCallStub(project, 'logging-entries-1')
+  def exclusions(self):
+    return LoggingApiStub('exclusions')
+
+  def entries(self):
+    return LoggingApiStub('entries')
+
+  def list(self, parent=None, body=None):
+    if self.mock_state == 'entries':
+      if body:
+        global logging_body
+        logging_body = body
+        project = utils.get_project_by_res_name(body['resourceNames'][0])
+        return apis_stub.RestCallStub(project, 'logging-entries-1')
+    elif self.mock_state == 'exclusions':
+      if parent:
+        return apis_stub.RestCallStub(project_id=parent.split('/')[1],
+                                      json_basename='log-exclusions')
 
   def list_next(self, req, res):
     del req, res
-
-  def exclusions(self):
-    return apis_stub.RestCallStub(self, 'logging-exclusions-1')

@@ -20,7 +20,7 @@ from gcpdiag.runbook import gce, snapshot_test_base
 class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = gce
   runbook_name = 'gce/serial-log-analyzer'
-  project_id = 'gcpdiag-gce-faulty-serial-log-runbook'
+  project_id = 'gcpdiag-gce-vm-performance'
   config.init({'auto': True, 'interface': 'cli'}, project_id)
 
   rule_parameters = [{
