@@ -139,7 +139,7 @@ def login():
 
 
 def get_user_email() -> str:
-  if config.get('universe_domain'):
+  if config.get('universe_domain') != 'googleapis.com':
     return 'TPC user'
   credentials = get_credentials().with_quota_project(None)
 
