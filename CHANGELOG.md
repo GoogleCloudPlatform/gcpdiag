@@ -1,3 +1,64 @@
+## 0.75 (2024-9-2)
+
+#### New Lint Rules
+
+- bigquery/WARN/2024\_005: Checks BigQuery table does not exceed number of partition modifications
+  to a column partitioned table
+- bigquery/WARN/2024\_006: Checks BigQuery job does not exceed tabledata.list bytes
+  per second per project
+- dataflow/ERR/2024\_006: Checks Dataflow job does not fail during execution due
+  to resource exhaustion in zone
+- datafusion/WARN\_2024\_004: Checks Data Fusion version is compatible with Dataproc
+  version from the corresponding compute profiles
+- gke/WARN/2024\_003: Checks Ingress traffic is successful if service is correctly mapped
+- gke/WARN/2024\_004: Checks Ingress is successful if backendconfig crd is correctly mapped
+- gke/WARN/2024\_005: Checks GKE Ingress successfully routes external traffic to NodePort service
+- gce/BP_EXT/2024\_002: Calculate a GCE VM's IOPS and Throughput Limits
+
+#### New Runbooks
+
+- lb/unhealthy-backends: Diagnose Unhealthy Backends of a Load Balancer
+- gke/resource-quota: Diagnose quota related issues related to gke clusters.
+- gce/vm-performance: Diagnose GCE VM performance
+- gke/image-pull: Diagnose Image Pull Failures related GKE clusters.
+- gke/node-auto-repair: RCA Node auto-repaired incidents
+- gke/gke-ip-masq-standard: Diagnose IP Masquerading issues on GKE clusters
+- dataflow/dataflow-permission: Diagnose Permission required for cluster creation and operation
+
+#### New Query
+
+- lb.get\_backend\_service: Fetch instances matching compute backend service name and/or region
+- lb.get\_backend\_service_health: Fetch compute backend service health data
+- generic\_api/datafusion: Re-implementation of how to call and test generic apis
+
+#### Enhancements
+
+- cloudrun/service-deployment: 2 additional checks for image not found and image permissions failure
+- bigquery/WARN/2022\_001: Updated lint rule  diagnostic steps documentation
+- Implement ignorecase for input parameters
+- gce/ssh and gce/serial-log-analyzer: Include Auth failure checks in  runbooks
+- Updated GKE version End of Life tracker
+- New API Stub for Recommender API
+
+#### Fixes
+
+- gce/vm-termination: Made vm name and zone mandatory fields
+- Updated dependencies:
+  - aiohttp: 3.9.5 -> 3.10.3
+  - attrs: 23.2.0 -> 24.2.0
+  - cachetools: 5.3.3 -> 5.4.0
+  - certifi: 2024.6.2 -> 2024.7.4
+  - exceptiongroup: 1.2.1 -> 1.2.2
+  - google-api-python-client: 2.134.0 -> 2.141.0
+  - google-auth: 2.30.0 -> 2.33.0
+  - google-auth-oauthlib: 1.2.0 -> 1.2.1
+  - importlib-resources: 6.4.0 -> 6.4.2
+  - protobuf: 5.27.2 -> 5.27.3
+  - pyyaml: 6.0.1 -> 6.0.2
+  - soupsieve: 2.5 -> 2.6
+- Fix lint output and GCE query functions for multi-region resources
+- Removed deprecated option skip\_delete from TF code
+
 ## 0.74 (2024-7-10)
 
 #### Fixes
