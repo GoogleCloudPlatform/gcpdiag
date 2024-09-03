@@ -44,6 +44,7 @@ tarfile:
 	cp --parents gcpdiag/queries/client_secrets.json dist-tmp/$(DIST_NAME)
 	find gcpdiag -name '*.py' -exec cp --parents '{}' dist-tmp/$(DIST_NAME) ';'
 	find gcpdiag -name '*.jinja' -exec cp --parents '{}' dist-tmp/$(DIST_NAME) ';'
+	find gcpdiag -name 'gcpdiag/runbook/gce/disk_performance_benchmark/*.json' -exec cp --parents '{}' dist-tmp/$(DIST_NAME) ';'
 	chmod -R a+rX dist-tmp
 	mkdir -p dist
 	tar -C dist-tmp -czf dist/gcpdiag-$(VERSION).tar.gz --owner=0 --group=0 gcpdiag-$(VERSION)
