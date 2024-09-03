@@ -19,9 +19,19 @@ from PyInstaller.utils.hooks import collect_submodules
 # note: keep in sync with modules in bin/runbook-starter-code-generator
 hiddenimports = \
   collect_submodules('gcpdiag.runbook.crm') + \
+  collect_submodules('gcpdiag.runbook.composer') + \
   collect_submodules('gcpdiag.runbook.monitoring') + \
   collect_submodules('gcpdiag.runbook.gcp') + \
   collect_submodules('gcpdiag.runbook.iam') + \
   collect_submodules('gcpdiag.runbook.gke') + \
   collect_submodules('gcpdiag.runbook.gce') + \
-  collect_submodules('gcpdiag.runbook.gce.util')
+  collect_submodules('gcpdiag.runbook.gce.util') + \
+  collect_submodules('gcpdiag.runbook.cloudrun') + \
+  collect_submodules('gcpdiag.runbook.composer') + \
+  collect_submodules('gcpdiag.runbook.dataflow') + \
+  collect_submodules('gcpdiag.runbook.dataproc') + \
+  collect_submodules('gcpdiag.runbook.lb') + \
+  collect_submodules('gcpdiag.runbook.logs') + \
+  collect_submodules('gcpdiag.runbook.nat') + \
+  collect_submodules('gcpdiag.runbook.vertex') + \
+  collect_submodules('gcpdiag.runbook.vpc')
