@@ -293,9 +293,25 @@ class CheckWorkbenchInstancePerformance(runbook.CompositeStep):
     if ops_agent_query:
       op.info(
           'Runbook will use ops agent metrics for VM performance investigation')
-    self.add_child(child=gce_gs.HighVmMemoryUtilization())
-    self.add_child(child=gce_gs.HighVmDiskUtilization())
-    self.add_child(child=gce_gs.HighVmCpuUtilization())
+
+    vm_memory_utilization = gce_gs.HighVmMemoryUtilization()
+    vm_memory_utilization.project_id = project_id
+    vm_memory_utilization.zone = zone
+    vm_memory_utilization.instance_name = instance_name
+
+    vm_disk_utilization = gce_gs.HighVmDiskUtilization()
+    vm_disk_utilization.project_id = project_id
+    vm_disk_utilization.zone = zone
+    vm_disk_utilization.instance_name = instance_name
+
+    vm_cpu_utilization = gce_gs.HighVmCpuUtilization()
+    vm_cpu_utilization.project_id = project_id
+    vm_cpu_utilization.zone = zone
+    vm_cpu_utilization.instance_name = instance_name
+
+    self.add_child(child=vm_memory_utilization)
+    self.add_child(child=vm_disk_utilization)
+    self.add_child(child=vm_cpu_utilization)
 
 
 class CheckWorkbenchInstanceExternalIpDisabled(runbook.Step):

@@ -23,7 +23,7 @@ from boltons.iterutils import get_path
 from gcpdiag import runbook
 from gcpdiag.queries import gce, logs, monitoring
 from gcpdiag.runbook import op
-from gcpdiag.runbook.gce import constants, flags, util
+from gcpdiag.runbook.gce import constants, util
 
 UTILIZATION_THRESHOLD = 0.95
 within_hours = 8
@@ -41,9 +41,10 @@ class HighVmMemoryUtilization(runbook.Step):
   """
   template = 'vm_performance::high_memory_utilization'
 
-  project_id = None
-  zone = None
-  instance_name = None
+  project_id: str
+  zone: str
+  instance_name: str
+  serial_console_file = None
 
   # Typcial Memory exhaustion logs in serial console.
 
@@ -53,16 +54,16 @@ class HighVmMemoryUtilization(runbook.Step):
     mark_no_ops_agent = False
 
     vm = gce.get_instance(
-        project_id=self.project_id or op.get(flags.PROJECT_ID),
-        zone=self.zone or op.get(flags.ZONE),
-        instance_name=self.instance_name or op.get(flags.NAME),
+        project_id=self.project_id,
+        zone=self.zone,
+        instance_name=self.instance_name,
     )
 
     mem_usage_metrics = None
 
-    if util.ops_agent_installed(op.get(flags.PROJECT_ID), vm.id):
+    if util.ops_agent_installed(self.project_id, vm.id):
       mem_usage_metrics = monitoring.query(
-          op.get(flags.PROJECT_ID), """
+          self.project_id, """
           fetch gce_instance
             | metric 'agent.googleapis.com/memory/percent_used'
             | filter (resource.instance_id == '{}')
@@ -72,7 +73,7 @@ class HighVmMemoryUtilization(runbook.Step):
           """.format(vm.id, UTILIZATION_THRESHOLD, within_str))
     elif 'e2' in vm.machine_type():
       mem_usage_metrics = monitoring.query(
-          op.get(flags.PROJECT_ID), """
+          self.project_id, """
               fetch gce_instance
                 | {{ metric 'compute.googleapis.com/instance/memory/balloon/ram_used'
                 ; metric 'compute.googleapis.com/instance/memory/balloon/ram_size' }}
@@ -104,6 +105,7 @@ class HighVmMemoryUtilization(runbook.Step):
     oom_errors.project_id = self.project_id
     oom_errors.zone = self.zone
     oom_errors.instance_name = self.instance_name
+    oom_errors.serial_console_file = self.serial_console_file
     oom_errors.template = 'vm_performance::memory_error'
     oom_errors.negative_pattern = constants.OOM_PATTERNS
     self.add_child(oom_errors)
@@ -119,9 +121,10 @@ class HighVmDiskUtilization(runbook.Step):
   """
   template = 'vm_performance::high_disk_utilization'
 
-  project_id = None
-  zone = None
-  instance_name = None
+  project_id: str
+  zone: str
+  instance_name: str
+  serial_console_file: str
 
   def execute(self):
     """Verifying VM's Boot disk space utilization is within optimal levels."""
@@ -129,16 +132,16 @@ class HighVmDiskUtilization(runbook.Step):
     mark_no_ops_agent = False
 
     vm = gce.get_instance(
-        project_id=self.project_id or op.get(flags.PROJECT_ID),
-        zone=self.zone or op.get(flags.ZONE),
-        instance_name=self.instance_name or op.get(flags.NAME),
+        project_id=self.project_id,
+        zone=self.zone,
+        instance_name=self.instance_name,
     )
 
     disk_usage_metrics = None
 
-    if util.ops_agent_installed(op.get(flags.PROJECT_ID), vm.id):
+    if util.ops_agent_installed(self.project_id, vm.id):
       disk_usage_metrics = monitoring.query(
-          op.get(flags.PROJECT_ID), """
+          self.project_id, """
           fetch gce_instance
             | metric 'agent.googleapis.com/disk/percent_used'
             | filter (resource.instance_id == '{}' && metric.device !~ '/dev/loop.*' && metric.state == 'used')
@@ -161,6 +164,10 @@ class HighVmDiskUtilization(runbook.Step):
                      ' messages in Serial logs')
       # Fallback to check for filesystem utilization related messages in Serial logs
       fs_util = VmSerialLogsCheck()
+      fs_util.project_id = self.project_id
+      fs_util.zone = self.zone
+      fs_util.instance_name = self.instance_name
+      fs_util.serial_console_file = self.serial_console_file
       fs_util.template = 'vm_performance::high_disk_utilization_error'
       fs_util.negative_pattern = constants.DISK_EXHAUSTION_ERRORS
       self.add_child(fs_util)
@@ -179,23 +186,23 @@ class HighVmCpuUtilization(runbook.Step):
 
   template = 'vm_performance::high_cpu_utilization'
 
-  project_id = None
-  zone = None
-  instance_name = None
+  project_id: str
+  zone: str
+  instance_name: str
 
   def execute(self):
     """Verifying VM CPU utilization is within optimal levels"""
 
     vm = gce.get_instance(
-        project_id=self.project_id or op.get(flags.PROJECT_ID),
-        zone=self.zone or op.get(flags.ZONE),
-        instance_name=self.instance_name or op.get(flags.NAME),
+        project_id=self.project_id,
+        zone=self.zone,
+        instance_name=self.instance_name,
     )
     cpu_usage_metrics = None
 
-    if util.ops_agent_installed(op.get(flags.PROJECT_ID), vm.id):
+    if util.ops_agent_installed(self.project_id, vm.id):
       cpu_usage_metrics = monitoring.query(
-          op.get(flags.PROJECT_ID), """
+          self.project_id, """
           fetch gce_instance
             | metric 'agent.googleapis.com/cpu/utilization'
             | filter (resource.instance_id == '{}')
@@ -206,7 +213,7 @@ class HighVmCpuUtilization(runbook.Step):
     else:
       # use CPU utilization visible to the hypervisor
       cpu_usage_metrics = monitoring.query(
-          op.get(flags.PROJECT_ID), """
+          self.project_id, """
             fetch gce_instance
               | metric 'compute.googleapis.com/instance/cpu/utilization'
               | filter (resource.instance_id == '{}')
@@ -234,11 +241,15 @@ class VmLifecycleState(runbook.Step):
 
   template = 'vm_attributes::running'
 
+  project_id: str
+  zone: str
+  instance_name: str
+
   def execute(self):
     """Verifying VM is in the RUNNING state..."""
-    vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
-                          zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+    vm = gce.get_instance(project_id=self.project_id,
+                          zone=self.zone,
+                          instance_name=self.instance_name)
     if vm and vm.is_running:
       op.add_ok(vm,
                 reason=op.prep_msg(op.SUCCESS_REASON,
@@ -262,9 +273,10 @@ class VmSerialLogsCheck(runbook.Step):
   patterns, the step categorizes the VM's status as 'OK', 'Failed', or 'Uncertain'.
   """
 
-  project_id = None
-  zone = None
-  instance_name = None
+  project_id: str
+  zone: str
+  instance_name: str
+  serial_console_file = None
 
   template = 'vm_serial_log::default'
 
@@ -282,21 +294,21 @@ class VmSerialLogsCheck(runbook.Step):
     serial_log_file_content = []
     instance_serial_logs = None
     vm = gce.get_instance(
-        project_id=self.project_id or op.get(flags.PROJECT_ID),
-        zone=self.zone or op.get(flags.ZONE),
-        instance_name=self.instance_name or op.get(flags.NAME),
+        project_id=self.project_id,
+        zone=self.zone,
+        instance_name=self.instance_name,
     )
 
-    if op.get(flags.SERIAL_CONSOLE_FILE):
-      for files in op.get(flags.SERIAL_CONSOLE_FILE).split(','):
+    if self.serial_console_file:
+      for files in self.serial_console_file.split(','):
         with open(files, encoding='utf-8') as file:
           serial_log_file_content = file.readlines()
         serial_log_file_content = serial_log_file_content + serial_log_file_content
     else:
       instance_serial_logs = gce.get_instance_serial_port_output(
-          project_id=self.project_id or op.get(flags.PROJECT_ID),
-          zone=self.zone or op.get(flags.ZONE),
-          instance_name=self.instance_name or op.get(flags.NAME))
+          project_id=self.project_id,
+          zone=self.zone,
+          instance_name=self.instance_name)
 
     if instance_serial_logs or serial_log_file_content:
       instance_serial_log = instance_serial_logs.contents if \
@@ -352,6 +364,10 @@ class VmMetadataCheck(runbook.Step):
   facilitating configuration verification and compliance checks."""
 
   template: str = 'vm_metadata::default'
+
+  project_id: str
+  zone: str
+  instance_name: str
   # key to inspect
   metadata_key: str
   # desired value.
@@ -395,9 +411,9 @@ class VmMetadataCheck(runbook.Step):
 
   def execute(self):
     """Verifying VM metadata value..."""
-    vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
-                          zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+    vm = gce.get_instance(project_id=self.project_id,
+                          zone=self.zone,
+                          instance_name=self.instance_name)
 
     if self.is_expected_md_value(vm.get_metadata(self.metadata_key)):
       op.add_ok(
@@ -425,34 +441,41 @@ class GceVpcConnectivityCheck(runbook.Step):
   Evaluates VPC firewall rules to verify if a GCE VM permits ingress or egress traffic from a
   designated source IP through a specified port and protocol.
   """
+  project_id: str
+  zone: str
+  instance_name: str
+  src_ip: str
+  protocol_type: str
+  port: int
+
   traffic = None
 
   def execute(self):
     """Evaluating VPC network traffic rules..."""
-    vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
-                          zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+    vm = gce.get_instance(project_id=self.project_id,
+                          zone=self.zone,
+                          instance_name=self.instance_name)
     result = None
     if self.traffic == 'ingress':
       result = vm.network.firewall.check_connectivity_ingress(
-          src_ip=op.get(flags.SRC_IP),
-          ip_protocol=op.get(flags.PROTOCOL_TYPE),
-          port=op.get(flags.PORT),
+          src_ip=self.src_ip,
+          ip_protocol=self.protocol_type,
+          port=self.port,
           target_service_account=vm.service_account,
           target_tags=vm.tags)
     if self.traffic == 'egress':
       result = vm.network.firewall.check_connectivity_egress(
           src_ip=vm.network_ips,
-          ip_protocol=op.get(flags.PROTOCOL_TYPE),
-          port=op.get(flags.PORT),
+          ip_protocol=self.protocol_type,
+          port=self.port,
           target_service_account=vm.service_account,
           target_tags=vm.tags)
     if result.action == 'deny':
       op.add_failed(vm,
                     reason=op.prep_msg(op.FAILURE_REASON,
-                                       address=op.get(flags.SRC_IP),
-                                       protocol=op.get(flags.PROTOCOL_TYPE),
-                                       port=op.get(flags.PORT),
+                                       address=self.src_ip,
+                                       protocol=self.protocol_type,
+                                       port=self.port,
                                        name=vm.name,
                                        result=result.matched_by_str),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
@@ -460,9 +483,9 @@ class GceVpcConnectivityCheck(runbook.Step):
       op.add_ok(
           vm,
           op.prep_msg(op.SUCCESS_REASON,
-                      address=op.get(flags.SRC_IP),
-                      protocol=op.get(flags.PROTOCOL_TYPE),
-                      port=op.get(flags.PORT),
+                      address=self.src_ip,
+                      protocol=self.protocol_type,
+                      port=self.port,
                       name=vm.name,
                       result=result.matched_by_str))
 
@@ -482,12 +505,15 @@ class VmScope(runbook.Step):
   template = 'vm_attributes::access_scope'
   access_scopes: Set = set()
   require_all = False
+  project_id: str
+  zone: str
+  instance_name: str
 
   def execute(self):
     """Verifying GCE VM access scope"""
-    instance = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
-                                zone=op.get(flags.ZONE),
-                                instance_name=op.get(flags.NAME))
+    instance = gce.get_instance(project_id=self.project_id,
+                                zone=self.zone,
+                                instance_name=self.instance_name)
     present_access_scopes = set()
     missing_access_scopes = set()
     has_item = False
@@ -541,6 +567,11 @@ class VmHasOpsAgent(runbook.Step):
   template = 'vm_ops::opsagent_installed'
   check_logging: bool = True
   check_metrics: bool = True
+
+  project_id: str
+  zone: str
+  instance_name: str
+  instance_id: str
   start_time_utc: datetime
   end_time_utc: datetime
 
@@ -568,21 +599,21 @@ class VmHasOpsAgent(runbook.Step):
   def execute(self):
     """Verifying GCE VM's has ops agent installed and currently active"""
     self.end_time_utc = getattr(self, 'end_time_utc', None) or op.get(
-        flags.END_TIME_UTC)
+        self.end_time_utc)
     self.start_time_utc = getattr(self, 'start_time_utc', None) or op.get(
-        flags.START_TIME_UTC)
-    instance = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
-                                zone=op.get(flags.ZONE),
-                                instance_name=op.get(flags.NAME) or
-                                op.get(flags.ID))
+        self.start_time_utc)
+    instance = gce.get_instance(project_id=self.project_id,
+                                zone=self.zone,
+                                instance_name=self.instance_name or
+                                self.instance_id)
     if self.check_logging:
       serial_log_entries = logs.realtime_query(
-          project_id=op.get(flags.PROJECT_ID),
+          project_id=self.project_id,
           filter_str='''resource.type="gce_instance"
                           log_name="projects/{}/logs/ops-agent-health"
                           resource.labels.instance_id="{}"
-                          "LogPingOpsAgent"'''.format(op.get(flags.PROJECT_ID),
-                                                      op.get(flags.ID)),
+                          "LogPingOpsAgent"'''.format(self.project_id,
+                                                      self.instance_id),
           start_time_utc=self.start_time_utc,
           end_time_utc=self.end_time_utc)
       if serial_log_entries:
@@ -601,7 +632,7 @@ class VmHasOpsAgent(runbook.Step):
 
     if self.check_metrics:
       ops_agent_uptime = monitoring.query(
-          op.get(flags.PROJECT_ID), """
+          self.project_id, """
                 fetch gce_instance
                 | metric 'agent.googleapis.com/agent/uptime'
                 | filter (resource.instance_id == '{}')
@@ -609,7 +640,7 @@ class VmHasOpsAgent(runbook.Step):
                 | every 1m
                 | group_by [resource.instance_id, metric.version],
                     [value_uptime_aggregate: aggregate(value.uptime)]
-              """.format(op.get(flags.ID)))
+              """.format(self.instance_id))
       subagents = self._has_ops_agent_subagent(ops_agent_uptime)
       if subagents['metrics_subagent_installed']:
         op.add_ok(resource=instance,

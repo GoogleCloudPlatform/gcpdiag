@@ -229,21 +229,33 @@ class InvestigateLoggingMonitoring(runbook.Gateway):
       self.add_child(logging_api)
 
       log_permission_check = iam_gs.IamPolicyCheck()
-      log_permission_check.principal = f'serviceAccount:{op.get(flags.SERVICE_ACCOUNT)}'
+      log_permission_check.principal = (
+          f'serviceAccount:{op.get(flags.SERVICE_ACCOUNT)}')
       log_permission_check.roles = [
-          'roles/owner', 'roles/editor', 'roles/logging.logWriter',
-          'roles/logging.admin'
+          'roles/owner',
+          'roles/editor',
+          'roles/logging.logWriter',
+          'roles/logging.admin',
       ]
       logging_api.add_child(log_permission_check)
       logging_access_scope = gce_gs.VmScope()
+      logging_access_scope.project_id = op.get(flags.PROJECT_ID)
+      logging_access_scope.zone = op.get(flags.ZONE)
+      logging_access_scope.instance_name = op.get(flags.NAME)
       logging_access_scope.access_scopes = {
           'https://www.googleapis.com/auth/logging.write',
           'https://www.googleapis.com/auth/cloud-platform',
-          'https://www.googleapis.com/auth/logging.admin'
+          'https://www.googleapis.com/auth/logging.admin',
       }
       logging_api.add_child(logging_access_scope)
 
       logging_subagent_check = gce_gs.VmHasOpsAgent()
+      logging_subagent_check.project_id = op.get(flags.PROJECT_ID)
+      logging_subagent_check.zone = op.get(flags.ZONE)
+      logging_subagent_check.instance_name = op.get(flags.NAME)
+      logging_subagent_check.instance_id = op.get(flags.ID)
+      logging_subagent_check.start_time_utc = op.get(flags.START_TIME_UTC)
+      logging_subagent_check.end_time_utc = op.get(flags.END_TIME_UTC)
       logging_subagent_check.check_logging = True
       logging_subagent_check.check_metrics = False
       logging_access_scope.add_child(logging_subagent_check)
@@ -265,6 +277,9 @@ class InvestigateLoggingMonitoring(runbook.Gateway):
       ]
       monitoring_api.add_child(child=monitoring_permission_check)
       monitoring_access_scope = gce_gs.VmScope()
+      monitoring_access_scope.project_id = op.get(flags.PROJECT_ID)
+      monitoring_access_scope.zone = op.get(flags.ZONE)
+      monitoring_access_scope.instance_name = op.get(flags.NAME)
       monitoring_access_scope.access_scopes = {
           'https://www.googleapis.com/auth/monitoring.write',
           'https://www.googleapis.com/auth/cloud-platform',
@@ -273,6 +288,12 @@ class InvestigateLoggingMonitoring(runbook.Gateway):
       monitoring_api.add_child(monitoring_access_scope)
       # Check if ops agent metric subagent is installed.
       metric_subagent_check = gce_gs.VmHasOpsAgent()
+      metric_subagent_check.project_id = op.get(flags.PROJECT_ID)
+      metric_subagent_check.zone = op.get(flags.ZONE)
+      metric_subagent_check.instance_name = op.get(flags.NAME)
+      metric_subagent_check.instance_id = op.get(flags.ID)
+      metric_subagent_check.start_time_utc = op.get(flags.START_TIME_UTC)
+      metric_subagent_check.end_time_utc = op.get(flags.END_TIME_UTC)
       metric_subagent_check.check_logging = False
       metric_subagent_check.check_metrics = True
       monitoring_access_scope.add_child(metric_subagent_check)
@@ -293,6 +314,9 @@ class CheckSerialPortLogging(runbook.CompositeStep):
     self.add_child(serial_logging_orgpolicy_check)
 
     serial_logging_md_check = gce_gs.VmMetadataCheck()
+    serial_logging_md_check.project_id = op.get(flags.PROJECT_ID)
+    serial_logging_md_check.zone = op.get(flags.ZONE)
+    serial_logging_md_check.instance_name = op.get(flags.NAME)
     serial_logging_md_check.metadata_key = 'serial-port-logging-enable'
     serial_logging_md_check.expected_value = True
     self.add_child(serial_logging_md_check)

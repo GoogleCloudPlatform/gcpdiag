@@ -223,12 +223,10 @@ class CheckVmPerformance(runbook.CompositeStep):
       mem_check.project_id = project_id
       mem_check.zone = zone
       mem_check.instance_name = instance_name
-
       disk_check = gce_gs.HighVmDiskUtilization()
       disk_check.project_id = project_id
       disk_check.zone = zone
       disk_check.instance_name = instance_name
-
       cpu_check = gce_gs.HighVmCpuUtilization()
       cpu_check.project_id = project_id
       cpu_check.zone = zone

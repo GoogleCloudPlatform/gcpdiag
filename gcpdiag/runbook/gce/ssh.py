@@ -136,6 +136,9 @@ class Ssh(runbook.DiagnosticTree):
   def build_tree(self):
     start = SshStart()
     lifecycle_check = gce_gs.VmLifecycleState()
+    lifecycle_check.project_id = op.get(flags.PROJECT_ID)
+    lifecycle_check.zone = op.get(flags.ZONE)
+    lifecycle_check.instance_name = op.get(flags.NAME)
     performance_check = VmPerformanceChecks()
     gce_permission_check = GcpSshPermissions()
     gce_firewall_check = GceFirewallAllowsSsh()
@@ -155,6 +158,9 @@ class Ssh(runbook.DiagnosticTree):
 
     # Check for Guest Agent status
     guest_agent_check = gce_gs.VmSerialLogsCheck()
+    guest_agent_check.project_id = op.get(flags.PROJECT_ID)
+    guest_agent_check.zone = op.get(flags.ZONE)
+    guest_agent_check.instance_name = op.get(flags.NAME)
     guest_agent_check.template = 'vm_serial_log::guest_agent'
     guest_agent_check.positive_pattern = gce_const.GUEST_AGENT_STATUS_MSG
     guest_agent_check.negative_pattern = gce_const.GUEST_AGENT_FAILED_MSG
@@ -162,6 +168,9 @@ class Ssh(runbook.DiagnosticTree):
 
     # Check for SSH issues due to bad permissions
     sshd_auth_failure = gce_gs.VmSerialLogsCheck()
+    sshd_auth_failure.project_id = op.get(flags.PROJECT_ID)
+    sshd_auth_failure.zone = op.get(flags.ZONE)
+    sshd_auth_failure.instance_name = op.get(flags.NAME)
     sshd_auth_failure.template = 'vm_serial_log::sshd_auth_failure'
     sshd_auth_failure.negative_pattern = gce_const.SSHD_AUTH_FAILURE
     self.add_step(parent=start, child=sshd_auth_failure)
@@ -359,6 +368,9 @@ class OsLoginStatusCheck(runbook.Gateway):
     # User intends to use OS login
     if op.get(flags.CHECK_OS_LOGIN):
       os_login_check = gce_gs.VmMetadataCheck()
+      os_login_check.project_id = op.get(flags.PROJECT_ID)
+      os_login_check.zone = op.get(flags.ZONE)
+      os_login_check.instance_name = op.get(flags.NAME)
       os_login_check.template = 'vm_metadata::os_login_enabled'
       os_login_check.metadata_key = 'enable-oslogin'
       os_login_check.expected_value = True
@@ -388,6 +400,9 @@ class OsLoginStatusCheck(runbook.Gateway):
         metadata_perm_check.require_all = False
         self.add_child(metadata_perm_check)
         os_login_check = gce_gs.VmMetadataCheck()
+        os_login_check.project_id = op.get(flags.PROJECT_ID)
+        os_login_check.zone = op.get(flags.ZONE)
+        os_login_check.instance_name = op.get(flags.NAME)
         os_login_check.template = 'vm_metadata::no_os_login'
         os_login_check.metadata_key = 'enable_oslogin'
         os_login_check.expected_value = False
@@ -448,6 +463,12 @@ class GceFirewallAllowsSsh(runbook.Gateway):
 
     if op.get(flags.TUNNEL_THROUGH_IAP):
       tti_ingress_check = gce_gs.GceVpcConnectivityCheck()
+      tti_ingress_check.project_id = op.get(flags.PROJECT_ID)
+      tti_ingress_check.zone = op.get(flags.ZONE)
+      tti_ingress_check.instance_name = op.get(flags.NAME)
+      tti_ingress_check.src_ip = op.get(flags.SRC_IP)
+      tti_ingress_check.protocol_type = op.get(flags.PROTOCOL_TYPE)
+      tti_ingress_check.port = op.get(flags.PORT)
       tti_ingress_check.traffic = 'ingress'
       # Check IAP Firewall rule if specified
       tti_ingress_check.template = 'vpc_connectivity::tti_ingress'
@@ -455,6 +476,12 @@ class GceFirewallAllowsSsh(runbook.Gateway):
     if (not op.get(flags.SRC_IP) and not op.get(flags.TUNNEL_THROUGH_IAP) and
         vm.is_public_machine()):
       default_ingress_check = gce_gs.GceVpcConnectivityCheck()
+      default_ingress_check.project_id = op.get(flags.PROJECT_ID)
+      default_ingress_check.zone = op.get(flags.ZONE)
+      default_ingress_check.instance_name = op.get(flags.NAME)
+      default_ingress_check.src_ip = op.get(flags.SRC_IP)
+      default_ingress_check.protocol_type = op.get(flags.PROTOCOL_TYPE)
+      default_ingress_check.port = op.get(flags.PORT)
       default_ingress_check.traffic = 'ingress'
       default_ingress_check.template = 'vpc_connectivity::default_ingress'
 
@@ -463,6 +490,12 @@ class GceFirewallAllowsSsh(runbook.Gateway):
     # Check provided source IP has access
     if op.get(flags.SRC_IP) and not op.get(flags.TUNNEL_THROUGH_IAP):
       custom_ip_ingress_check = gce_gs.GceVpcConnectivityCheck()
+      custom_ip_ingress_check.project_id = op.get(flags.PROJECT_ID)
+      custom_ip_ingress_check.zone = op.get(flags.ZONE)
+      custom_ip_ingress_check.instance_name = op.get(flags.NAME)
+      custom_ip_ingress_check.src_ip = op.get(flags.SRC_IP)
+      custom_ip_ingress_check.protocol_type = op.get(flags.PROTOCOL_TYPE)
+      custom_ip_ingress_check.port = op.get(flags.PORT)
       custom_ip_ingress_check.traffic = 'ingress'
       custom_ip_ingress_check.template = 'vpc_connectivity::default_ingress'
       self.add_child(custom_ip_ingress_check)
@@ -478,9 +511,21 @@ class VmPerformanceChecks(runbook.CompositeStep):
 
   def execute(self):
     """Evaluating VM memory, CPU, and disk performance..."""
-    self.add_child(child=gce_gs.HighVmMemoryUtilization())
-    self.add_child(child=gce_gs.HighVmDiskUtilization())
-    self.add_child(child=gce_gs.HighVmCpuUtilization())
+    vm_memory_check = gce_gs.HighVmMemoryUtilization()
+    vm_memory_check.project_id = op.get(flags.PROJECT_ID)
+    vm_memory_check.zone = op.get(flags.ZONE)
+    vm_memory_check.instance_name = op.get(flags.NAME)
+    vm_disk_check = gce_gs.HighVmDiskUtilization()
+    vm_disk_check.project_id = op.get(flags.PROJECT_ID)
+    vm_disk_check.zone = op.get(flags.ZONE)
+    vm_disk_check.instance_name = op.get(flags.NAME)
+    vm_cpu_check = gce_gs.HighVmCpuUtilization()
+    vm_cpu_check.project_id = op.get(flags.PROJECT_ID)
+    vm_cpu_check.zone = op.get(flags.ZONE)
+    vm_cpu_check.instance_name = op.get(flags.NAME)
+    self.add_child(child=vm_memory_check)
+    self.add_child(child=vm_disk_check)
+    self.add_child(child=vm_cpu_check)
 
 
 class LinuxGuestOsChecks(runbook.CompositeStep):
@@ -497,6 +542,9 @@ class LinuxGuestOsChecks(runbook.CompositeStep):
     """Analyzing serial logs for common linux guest os and application issues..."""
     # Check for kernel panic patterns in serial logs.
     kernel_panic = gce_gs.VmSerialLogsCheck()
+    kernel_panic.project_id = op.get(flags.PROJECT_ID)
+    kernel_panic.zone = op.get(flags.ZONE)
+    kernel_panic.instance_name = op.get(flags.NAME)
     kernel_panic.template = 'vm_serial_log::kernel_panic'
     kernel_panic.negative_pattern = gce_const.KERNEL_PANIC_LOGS
     kernel_panic.positive_pattern = ['systemd', 'OSConfigAgent']
@@ -504,12 +552,18 @@ class LinuxGuestOsChecks(runbook.CompositeStep):
     self.add_child(kernel_panic)
     # Check for issues in SSHD configuration or behavior.
     sshd_check = gce_gs.VmSerialLogsCheck()
+    sshd_check.project_id = op.get(flags.PROJECT_ID)
+    sshd_check.zone = op.get(flags.ZONE)
+    sshd_check.instance_name = op.get(flags.NAME)
     sshd_check.template = 'vm_serial_log::sshd'
     sshd_check.negative_pattern = gce_const.BAD_SSHD_PATTERNS
     sshd_check.positive_pattern = gce_const.GOOD_SSHD_PATTERNS
     self.add_child(sshd_check)
     # Check for SSH Guard blocks that might be preventing SSH access.
     sshd_guard = gce_gs.VmSerialLogsCheck()
+    sshd_guard.project_id = op.get(flags.PROJECT_ID)
+    sshd_guard.zone = op.get(flags.ZONE)
+    sshd_guard.instance_name = op.get(flags.NAME)
     sshd_guard.template = 'vm_serial_log::sshguard'
     sshd_guard.negative_pattern = gce_const.SSHGUARD_PATTERNS
     self.add_child(sshd_guard)
@@ -528,17 +582,29 @@ class WindowsGuestOsChecks(runbook.CompositeStep):
     """Analyzing Windows Guest OS boot-up and SSH agent status..."""
     # Check Windows Metadata enabling ssh is set as this is required for windows
     windows_ssh_md = gce_gs.VmMetadataCheck()
+    windows_ssh_md.project_id = op.get(flags.PROJECT_ID)
+    windows_ssh_md.zone = op.get(flags.ZONE)
+    windows_ssh_md.instance_name = op.get(flags.NAME)
     windows_ssh_md.template = 'vm_metadata::windows_ssh_md'
     windows_ssh_md.metadata_key = 'enable-windows-ssh'
     windows_ssh_md.expected_value = True
     self.add_child(windows_ssh_md)
 
     windows_good_bootup = gce_gs.VmSerialLogsCheck()
+    windows_good_bootup.project_id = op.get(flags.PROJECT_ID)
+    windows_good_bootup.zone = op.get(flags.ZONE)
+    windows_good_bootup.instance_name = op.get(flags.NAME)
     windows_good_bootup.template = 'vm_serial_log::windows_bootup'
     windows_good_bootup.positive_pattern = gce_const.GOOD_WINDOWS_BOOT_LOGS_READY
     self.add_child(windows_good_bootup)
 
     check_windows_ssh_agent = gcp_gs.HumanTask()
+    check_windows_ssh_agent.project_id = op.get(flags.PROJECT_ID)
+    check_windows_ssh_agent.zone = op.get(flags.ZONE)
+    check_windows_ssh_agent.instance_name = op.get(flags.NAME)
+    check_windows_ssh_agent.template = (
+        'gcpdiag.runbook.gce::vm_serial_log::windows_gce_ssh_agent')
+
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
                           instance_name=op.get(flags.NAME))

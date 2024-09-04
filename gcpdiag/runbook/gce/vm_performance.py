@@ -88,11 +88,25 @@ class VmPerformance(runbook.DiagnosticTree):
 
     start = FetchVmDetails()
     cpu_check = gce_gs.HighVmCpuUtilization()
+    cpu_check.project_id = op.get(flags.PROJECT_ID)
+    cpu_check.zone = op.get(flags.ZONE)
+    cpu_check.instance_name = op.get(flags.NAME)
     mem_check = gce_gs.HighVmMemoryUtilization()
+    mem_check.project_id = op.get(flags.PROJECT_ID)
+    mem_check.zone = op.get(flags.ZONE)
+    mem_check.instance_name = op.get(flags.NAME)
     disk_util_check = gce_gs.HighVmDiskUtilization()
+    disk_util_check.project_id = op.get(flags.PROJECT_ID)
+    disk_util_check.zone = op.get(flags.ZONE)
+    disk_util_check.instance_name = op.get(flags.NAME)
+
+    vm_lifecycle_check = gce_gs.VmLifecycleState()
+    vm_lifecycle_check.project_id = op.get(flags.PROJECT_ID)
+    vm_lifecycle_check.zone = op.get(flags.ZONE)
+    vm_lifecycle_check.instance_name = op.get(flags.NAME)
 
     self.add_start(step=start)
-    self.add_step(parent=start, child=gce_gs.VmLifecycleState())
+    self.add_step(parent=start, child=vm_lifecycle_check)
     self.add_step(parent=start, child=cpu_check)
     self.add_step(parent=start, child=mem_check)
     self.add_step(parent=cpu_check, child=CpuOvercommitmentCheck())
@@ -100,12 +114,18 @@ class VmPerformance(runbook.DiagnosticTree):
 
     # Check for PD slow Reads/Writes
     slow_disk_io = gce_gs.VmSerialLogsCheck()
+    slow_disk_io.project_id = op.get(flags.PROJECT_ID)
+    slow_disk_io.zone = op.get(flags.ZONE)
+    slow_disk_io.instance_name = op.get(flags.NAME)
     slow_disk_io.template = 'vm_performance::slow_disk_io'
     slow_disk_io.negative_pattern = gce_const.SLOW_DISK_READS
     self.add_step(parent=disk_util_check, child=slow_disk_io)
 
     # Checking for Filesystem corruption related errors
     fs_corruption = gce_gs.VmSerialLogsCheck()
+    fs_corruption.project_id = op.get(flags.PROJECT_ID)
+    fs_corruption.zone = op.get(flags.ZONE)
+    fs_corruption.instance_name = op.get(flags.NAME)
     fs_corruption.template = 'vm_serial_log::linux_fs_corruption'
     fs_corruption.negative_pattern = gce_const.FS_CORRUPTION_MSG
     self.add_step(parent=disk_util_check, child=fs_corruption)

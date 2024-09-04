@@ -101,54 +101,90 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
 
     # Checking if all logs available since last boot of the instance
     log_start_point = gce_gs.VmSerialLogsCheck()
+    log_start_point.project_id = op.get(flags.PROJECT_ID)
+    log_start_point.zone = op.get(flags.ZONE)
+    log_start_point.instance_name = op.get(flags.NAME)
+    log_start_point.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
     log_start_point.template = 'vm_serial_log::serial_log_start_point'
     log_start_point.positive_pattern = gce_const.SERIAL_LOG_START_POINT
     self.add_step(parent=start, child=log_start_point)
 
     # Check for Boot related issues
     kernel_panic = gce_gs.VmSerialLogsCheck()
+    kernel_panic.project_id = op.get(flags.PROJECT_ID)
+    kernel_panic.zone = op.get(flags.ZONE)
+    kernel_panic.instance_name = op.get(flags.NAME)
+    kernel_panic.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
     kernel_panic.template = 'vm_serial_log::kernel_panic'
     kernel_panic.negative_pattern = gce_const.KERNEL_PANIC_LOGS
     self.add_step(parent=log_start_point, child=kernel_panic)
 
     # Checking for Filesystem corruption related errors
     fs_corruption = gce_gs.VmSerialLogsCheck()
+    fs_corruption.project_id = op.get(flags.PROJECT_ID)
+    fs_corruption.zone = op.get(flags.ZONE)
+    fs_corruption.instance_name = op.get(flags.NAME)
+    fs_corruption.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
     fs_corruption.template = 'vm_serial_log::linux_fs_corruption'
     fs_corruption.negative_pattern = gce_const.FS_CORRUPTION_MSG
     self.add_step(parent=log_start_point, child=fs_corruption)
 
     # Checking for Filesystem utilization related messages
     fs_util = gce_gs.VmSerialLogsCheck()
+    fs_util.project_id = op.get(flags.PROJECT_ID)
+    fs_util.zone = op.get(flags.ZONE)
+    fs_util.instance_name = op.get(flags.NAME)
+    fs_util.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
     fs_util.template = 'vm_performance::high_disk_utilization_error'
     fs_util.negative_pattern = gce_const.DISK_EXHAUSTION_ERRORS
     self.add_step(parent=log_start_point, child=fs_util)
 
     # The PD may be experiencing slow read times
     slow_disk_io = gce_gs.VmSerialLogsCheck()
+    slow_disk_io.project_id = op.get(flags.PROJECT_ID)
+    slow_disk_io.zone = op.get(flags.ZONE)
+    slow_disk_io.instance_name = op.get(flags.NAME)
+    slow_disk_io.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
     slow_disk_io.template = 'vm_performance::slow_disk_io'
     slow_disk_io.negative_pattern = gce_const.SLOW_DISK_READS
     self.add_step(parent=log_start_point, child=slow_disk_io)
 
     # Checking for OOM related errors
     oom_errors = gce_gs.VmSerialLogsCheck()
+    oom_errors.project_id = op.get(flags.PROJECT_ID)
+    oom_errors.zone = op.get(flags.ZONE)
+    oom_errors.instance_name = op.get(flags.NAME)
+    oom_errors.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
     oom_errors.template = 'vm_performance::memory_error'
     oom_errors.negative_pattern = gce_const.OOM_PATTERNS
     self.add_step(parent=log_start_point, child=oom_errors)
 
     # Checking for network related errors
     network_issue = gce_gs.VmSerialLogsCheck()
+    network_issue.project_id = op.get(flags.PROJECT_ID)
+    network_issue.zone = op.get(flags.ZONE)
+    network_issue.instance_name = op.get(flags.NAME)
+    network_issue.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
     network_issue.template = 'vm_serial_log::network_errors'
     network_issue.negative_pattern = gce_const.NETWORK_ERRORS
     self.add_step(parent=log_start_point, child=network_issue)
 
     # Checking for Time Sync related errors
     timesync_issue = gce_gs.VmSerialLogsCheck()
+    timesync_issue.project_id = op.get(flags.PROJECT_ID)
+    timesync_issue.zone = op.get(flags.ZONE)
+    timesync_issue.instance_name = op.get(flags.NAME)
+    timesync_issue.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
     timesync_issue.template = 'vm_serial_log::time_sync_issue'
     timesync_issue.negative_pattern = gce_const.TIME_SYNC_ERROR
     self.add_step(parent=log_start_point, child=timesync_issue)
 
     # Check for issues in SSHD configuration or behavior.
     sshd_check = gce_gs.VmSerialLogsCheck()
+    sshd_check.project_id = op.get(flags.PROJECT_ID)
+    sshd_check.zone = op.get(flags.ZONE)
+    sshd_check.instance_name = op.get(flags.NAME)
+    sshd_check.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
     sshd_check.template = 'vm_serial_log::sshd'
     sshd_check.positive_pattern = gce_const.GOOD_SSHD_PATTERNS
     sshd_check.negative_pattern = gce_const.BAD_SSHD_PATTERNS
@@ -156,12 +192,20 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
 
     # Check for SSH issues due to bad permissions
     sshd_auth_failure = gce_gs.VmSerialLogsCheck()
+    sshd_auth_failure.project_id = op.get(flags.PROJECT_ID)
+    sshd_auth_failure.zone = op.get(flags.ZONE)
+    sshd_auth_failure.instance_name = op.get(flags.NAME)
+    sshd_auth_failure.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
     sshd_auth_failure.template = 'vm_serial_log::sshd_auth_failure'
     sshd_auth_failure.negative_pattern = gce_const.SSHD_AUTH_FAILURE
     self.add_step(parent=log_start_point, child=sshd_auth_failure)
 
     # Check for Guest Agent status
     guest_agent_check = gce_gs.VmSerialLogsCheck()
+    guest_agent_check.project_id = op.get(flags.PROJECT_ID)
+    guest_agent_check.zone = op.get(flags.ZONE)
+    guest_agent_check.instance_name = op.get(flags.NAME)
+    guest_agent_check.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
     guest_agent_check.template = 'vm_serial_log::guest_agent'
     guest_agent_check.positive_pattern = gce_const.GUEST_AGENT_STATUS_MSG
     guest_agent_check.negative_pattern = gce_const.GUEST_AGENT_FAILED_MSG
@@ -169,6 +213,10 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
 
     # Check for SSH Guard blocks that might be preventing SSH access.
     sshd_guard = gce_gs.VmSerialLogsCheck()
+    sshd_guard.project_id = op.get(flags.PROJECT_ID)
+    sshd_guard.zone = op.get(flags.ZONE)
+    sshd_guard.instance_name = op.get(flags.NAME)
+    sshd_guard.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
     sshd_guard.template = 'vm_serial_log::sshguard'
     sshd_guard.negative_pattern = gce_const.SSHGUARD_PATTERNS
     self.add_step(parent=log_start_point, child=sshd_guard)
