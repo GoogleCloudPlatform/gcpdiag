@@ -4,7 +4,7 @@ linkTitle: "dataproc/cluster-creation"
 weight: 3
 type: docs
 description: >
-  Provides a comprehensive analysis of common issues which affects Dataproc cluster creation.
+  Provides a comprehensive analysis of common issues which affect Dataproc cluster creation.
 ---
 
 **Product**: [Cloud Dataproc](https://cloud.google.com/dataproc)
@@ -21,7 +21,7 @@ This runbook focuses on a range of potential problems for Dataproc clusters on
   - Stockout errors: Evaluates Logs Explorer logs regarding stockout in the
   region/zone.
 
-  - Quota availibility: Checks for the quota availibility in Dataproc cluster project.
+  - Quota availability: Checks for the quota availability in Dataproc cluster project.
 
   - Network configuration: Performs GCE Network Connectivity Tests, checks necessary firewall rules, external/internal IP configuration.
 
