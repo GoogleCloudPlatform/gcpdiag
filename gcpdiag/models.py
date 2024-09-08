@@ -71,6 +71,9 @@ class Parameter(dict[T, V], Generic[T, V]):
       self[key] = converted_default
     return super().setdefault(key, self[key])
 
+  def __str__(self):
+    return _mapping_str(self)
+
 
 @dataclasses.dataclass
 class Context:

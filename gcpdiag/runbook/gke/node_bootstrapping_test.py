@@ -20,8 +20,7 @@ from gcpdiag.runbook import gke, snapshot_test_base
 class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = gke
   runbook_name = 'gke/node-bootstrapping'
-  project_id = 'gcpdiag-gke1-aaaa'
-  config.init({'auto': True, 'interface': 'cli'}, project_id)
+  config.init({'auto': True, 'interface': 'cli'})
 
   rule_parameters = [{
       'project_id': 'gcpdiag-gke1-aaaa',

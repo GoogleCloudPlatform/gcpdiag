@@ -64,3 +64,48 @@ class TestStringConversions(unittest.TestCase):
     test_str = 'not-a-valid-time'
     with self.assertRaises(ValueError):
       util.parse_time_input(test_str)
+
+
+class TestGenerateUUID(unittest.TestCase):
+  """Test UUID genertor for Runbook executions"""
+
+  def test_uniqueness(self):
+    """Test that generated UUIDs are unique."""
+    uuids = set()
+    for _ in range(10000):  # Generate a reasonable number of UUIDs
+      uuids.add(util.generate_uuid())
+    self.assertEqual(len(uuids), 10000)  # All should be unique
+
+  def test_default_parameters(self):
+    """Test with default length and separator."""
+    result = util.generate_uuid()
+
+    self.assertEqual(len(result), 8 + result.count('.'))  # Check length
+    self.assertTrue('.' in result)  # Check for separator
+
+  def test_custom_length(self):
+    """Test with a custom length."""
+    result = util.generate_uuid(length=12)
+    self.assertEqual(len(result), 12 + result.count('.'))
+
+  def test_custom_separator(self):
+    """Test with a custom separator."""
+    result = util.generate_uuid(seperator='-')
+    self.assertTrue('-' in result)
+
+  def test_custom_interval(self):
+    """Test with a custom separator interval."""
+    result = util.generate_uuid(separator_interval=3)
+    separator_count = result.count('.')
+    self.assertEqual(separator_count, 2)
+
+  def test_truncate(self):
+    """Test truncation when length is shorter than UUID."""
+    result = util.generate_uuid(length=4)
+    self.assertEqual(len(result), 4 + result.count('.'))
+
+  def test_pad(self):
+    """Test padding when length is longer than UUID."""
+    result = util.generate_uuid(length=40)
+    self.assertEqual(len(result), 40 + result.count('.'))
+    self.assertTrue(result.endswith('0'))

@@ -29,14 +29,12 @@ class Test(unittest.TestCase):
   def test_init_args_parser(self):
     with mock.patch('os.path.exists', return_value=True):
       parser = command._init_runbook_args_parser()
-      args = parser.parse_args(['product/runbook', '--project', 'myproject'])
-      assert args.project == 'myproject'
+      args = parser.parse_args(['product/runbook'])
       assert args.runbook == 'product/runbook'
       assert args.billing_project is None
       assert args.auth_adc is False
       assert args.auth_key is None
       assert args.verbose == 0
-      assert args.within_days == 1
       assert args.logging_ratelimit_requests is None
       assert args.logging_ratelimit_period_seconds is None
       assert args.logging_page_size is None
@@ -50,45 +48,35 @@ class Test(unittest.TestCase):
   def test_provided_init_args_parser(self):
     with mock.patch('os.path.exists', return_value=True):
       parser = command._init_runbook_args_parser()
-      args = parser.parse_args(
-          ['product/runbook', '--project', 'myproject', '--auto'])
+      args = parser.parse_args(['product/runbook', '--auto'])
       assert args.auto is True
-      args = parser.parse_args([
-          'product/runbook', '--project', 'myproject', '--parameter',
-          'test=test'
-      ])
+      args = parser.parse_args(['product/runbook', '--parameter', 'test=test'])
       assert args.parameter == {'test': 'test'}
 
-      args = parser.parse_args(
-          ['product/runbook', '--project', 'myproject', '--report-dir', '~'])
+      args = parser.parse_args(['product/runbook', '--report-dir', '~'])
       assert args.report_dir == os.path.expanduser('~')
 
     # Test user provided path in cloud shell in present in home.
     with mock.patch('os.getenv', return_value='true'):
-      args = parser.parse_args(
-          ['product/runbook', '--project', 'myproject', '--report-dir', '/tmp'])
+      args = parser.parse_args(['product/runbook', '--report-dir', '/tmp'])
       assert args.report_dir == os.path.join(os.path.expanduser('~'),
                                              config.get('report_dir'))
 
     with mock.patch('os.getenv', return_value='false'):
-      args = parser.parse_args(['product/runbook', '--project', 'myproject'])
+      args = parser.parse_args(['product/runbook'])
       assert args.report_dir == os.path.join(os.path.expanduser('~'),
                                              config.get('report_dir'))
 
-    args = parser.parse_args(
-        ['product/runbook', '--project', 'myproject', '--report-dir', '/tmp'])
+    args = parser.parse_args(['product/runbook', '--report-dir', '/tmp'])
     assert args.report_dir == '/tmp'
 
-    args = parser.parse_args(
-        ['product/runbook', '--project', 'myproject', '--report-dir', '~'])
+    args = parser.parse_args(['product/runbook', '--report-dir', '~'])
     assert args.report_dir == os.path.expanduser('~')
 
-    args = parser.parse_args(
-        ['product/runbook', '--project', 'myproject', '--report-dir', '/tmp'])
+    args = parser.parse_args(['product/runbook', '--report-dir', '/tmp'])
     assert args.report_dir == '/tmp'
 
-    args = parser.parse_args(
-        ['product/runbook', '--project', 'myproject', '--report-dir', '.'])
+    args = parser.parse_args(['product/runbook', '--report-dir', '.'])
     assert args.report_dir == os.getcwd()
 
   # pylint: disable=protected-access

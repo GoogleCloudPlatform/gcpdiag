@@ -15,8 +15,7 @@ from gcpdiag.runbook import gke, snapshot_test_base
 class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = gke
   runbook_name = 'gke/node-auto-repair'
-  project_id = 'gcpdiag-gke-cluster-autoscaler-rrrr'
-  config.init({'auto': True, 'interface': 'cli'}, project_id)
+  config.init({'auto': True, 'interface': 'cli'})
 
   rule_parameters = [{
       'project_id': 'gcpdiag-gke-cluster-autoscaler-rrrr',

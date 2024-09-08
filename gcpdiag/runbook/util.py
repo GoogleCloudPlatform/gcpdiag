@@ -15,10 +15,8 @@
 
 import importlib
 import os
-import random
 import re
-import string
-import sys
+import uuid
 from datetime import datetime, timezone
 
 from dateutil import parser
@@ -33,10 +31,32 @@ env = Environment(trim_blocks=True,
 step_outcomes = constants.StepConstants.keys()
 
 
-def generate_random_string(length: int = 4) -> str:
-  """Generates a random string of given length."""
-  return ''.join(random.choices(string.ascii_letters + string.digits,
-                                k=length)).lower()
+def generate_uuid(length: int = 8,
+                  separator_interval: int = 4,
+                  seperator: str = '.'):
+  """
+  Generates a UUID string with the specified length and separators.
+
+  Args:
+      length: The desired length of the final UUID string excluding seperators. Default 8
+      separator_interval: The number of characters between separators. Default: 4
+      seperator: uuid separator. Default `.`
+
+  Returns:
+      A UUID string formatted with the specified length and separators.
+  """
+  uuid_str = uuid.uuid4().hex
+
+  if len(uuid_str) > length:
+    uuid_str = uuid_str[:length]
+  else:
+    uuid_str = uuid_str.ljust(length, '0')
+
+  unique_id = seperator.join(
+      uuid_str[i:i + separator_interval]
+      for i in range(0, len(uuid_str), separator_interval))
+
+  return unique_id
 
 
 def pascal_case_to_kebab_case(s):
@@ -156,10 +176,3 @@ def parse_time_input(time_str):
   # Not an ISO 8601 / RFC 3339 formatted date
   # If none of the formats matched, raise an exception
   raise ValueError(f'Date format not recognized: {time_str}')
-
-
-# pylint: disable=protected-access
-def get_caller_object(index: int):
-  # Attempt to get the 'self' variable from the caller's frame.
-  # plus one for this current method
-  return sys._getframe(index + 1).f_locals.get('self')

@@ -1,5 +1,4 @@
-project: gcpdiag-gke-cluster-autoscaler-rrrr, parameters: {location=europe-west10,name=gcp-
-cluster,project_id=gcpdiag-gke-cluster-autoscaler-rrrr}
+location=europe-west10,name=gcp-cluster,project_id=gcpdiag-gke-cluster-autoscaler-rrrr
 
 gke/cluster-autoscaler: Analyses logs in the project where the cluster is running.
 

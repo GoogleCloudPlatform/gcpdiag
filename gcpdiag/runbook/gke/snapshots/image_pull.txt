@@ -1,6 +1,5 @@
-project: gcpdiag-gke-cluster-autoscaler-rrrr, parameters:
-{end_time_utc=2024-08-12T23:00:00Z,location=europe-west10,name=gcp-cluster,project_id=gcpdiag-gke-
-cluster-autoscaler-rrrr,start_time_utc=2024-08-12T01:00:00Z}
+end_time_utc=2024-08-12T23:00:00Z,location=europe-west10,name=gcp-cluster,project_id=gcpdiag-gke-
+cluster-autoscaler-rrrr,start_time_utc=2024-08-12T01:00:00Z
 
 gke/image-pull: Analysis and Resolution of Image Pull Failures on GKE clusters.
 

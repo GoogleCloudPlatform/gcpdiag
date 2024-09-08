@@ -38,8 +38,8 @@ class HumanTask(runbook.Step):
   instructions: str = ''
   options: dict = {}
 
-  def __init__(self, name=None, parent=None, step_type=op.StepType.MANUAL):
-    super().__init__(step_type=step_type, name=name, parent=parent)
+  def __init__(self, uuid=None, parent=None, step_type=op.StepType.MANUAL):
+    super().__init__(step_type=step_type, uuid=uuid, parent=parent)
 
   def execute(self):
     """Human task: Follow the guide below and confirm if issue is occuring or not."""

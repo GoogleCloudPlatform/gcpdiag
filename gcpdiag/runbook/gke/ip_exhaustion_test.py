@@ -20,10 +20,10 @@ from gcpdiag.runbook import gke, snapshot_test_base
 class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = gke
   runbook_name = 'gke/ip-exhaustion'
-  project_id = 'gcpdiag-gke3-gggg'
-  config.init({'auto': True, 'interface': 'cli'}, project_id)
+  config.init({'auto': True, 'interface': 'cli'})
 
   rule_parameters = [{
+      'project_id': 'gcpdiag-gke3-gggg',
       'name': 'cluster-1',
       'location': 'us-central1-c',
       'start_time_utc': '2024-06-30T01:00:00Z',

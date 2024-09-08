@@ -20,8 +20,7 @@ from gcpdiag.runbook import lb, snapshot_test_base
 class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = lb
   runbook_name = 'lb/unhealthy-backends'
-  project_id = 'gcpdiag-lb2-aaaa'
-  config.init({'auto': True, 'interface': 'cli'}, project_id)
+  config.init({'auto': True, 'interface': 'cli'})
 
   rule_parameters = [{
       'project_id': 'gcpdiag-lb2-aaaa',

@@ -16,5 +16,4 @@
 from gcpdiag.runbook.gcp.flags import *
 from gcpdiag.runbook.iam.flags import *
 
-OPS_AGENT_EXPORTING_METRICS = False
 PROTOCOL_TYPE = 'protocol_type'

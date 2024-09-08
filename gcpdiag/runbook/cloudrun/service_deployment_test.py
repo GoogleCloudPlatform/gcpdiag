@@ -20,19 +20,21 @@ from gcpdiag.runbook import cloudrun, snapshot_test_base
 class TestInvalidContainer(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = cloudrun
   runbook_name = 'cloudrun/service-deployment'
-  project_id = 'gcpdiag-cloudrun2-aaaa'
-  config.init({'auto': True, 'interface': 'cli'}, project_id)
+  config.init({'auto': True, 'interface': 'cli'})
 
   rule_parameters = [
       {
+          'project_id': 'gcpdiag-cloudrun2-aaaa',
           'service_name': 'invalid-container',
           'region': 'us-central1',
       },
       {
+          'project_id': 'gcpdiag-cloudrun2-aaaa',
           'service_name': 'image-does-not-exist',
           'region': 'us-central1',
       },
       {
+          'project_id': 'gcpdiag-cloudrun2-aaaa',
           'service_name': 'no-image-permission',
           'region': 'us-central1',
       },

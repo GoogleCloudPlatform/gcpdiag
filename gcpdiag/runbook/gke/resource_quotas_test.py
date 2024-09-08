@@ -20,7 +20,9 @@ from gcpdiag.runbook import gke, snapshot_test_base
 class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = gke
   runbook_name = 'gke/resource-quotas'
-  project_id = 'gcpdiag-gke-cluster-autoscaler-rrrr'
-  config.init({'auto': True, 'interface': 'cli'}, project_id)
+  config.init({'auto': True, 'interface': 'cli'})
 
-  rule_parameters = [{'project_id': project_id, 'location': 'us-central1-c'}]
+  rule_parameters = [{
+      'project_id': 'gcpdiag-gke-cluster-autoscaler-rrrr',
+      'location': 'us-central1-c'
+  }]

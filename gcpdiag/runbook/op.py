@@ -13,10 +13,14 @@
 # limitations under the License.
 """Operator Module"""
 
+import logging
 from contextlib import contextmanager
-from typing import Any, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
-from gcpdiag import models
+from google.auth import exceptions
+
+from gcpdiag import models, utils
+from gcpdiag.queries.apis import is_enabled
 from gcpdiag.runbook.constants import *  # pylint: disable=unused-wildcard-import, wildcard-import
 from gcpdiag.runbook.report import InteractionInterface
 
@@ -28,20 +32,36 @@ class Operator(dict):
   """ Operation Object used to manipulate context, message and parameter data"""
   messages: models.Messages
   context: models.Context
+  parameter: models.Parameter
   interface: InteractionInterface
+  _step = None
+  _tree = None
 
-  def __init__(self, c: models.Context, i: InteractionInterface):
-    self.context = c
-    self.interface = i
-
-  def set_context(self, c):
-    self.context = c
+  def __init__(self, interface: InteractionInterface):
+    self.interface = interface
 
   def set_parameters(self, p):
-    self.context.parameters = p
+    self.parameters = p
+
+  def set_context(self, p, project_id=None):
+    self.context = models.Context(project_id=project_id, parameters=p)
 
   def set_messages(self, m):
     self.messages = m
+
+  def set_step(self, s):
+    self._step = s
+
+  def set_tree(self, t):
+    self._tree = t
+
+  @property
+  def step(self):
+    return self._step
+
+  @property
+  def tree(self):
+    return self._tree
 
 
 @contextmanager
@@ -101,7 +121,7 @@ def get(key, default=None):
     Usage:
       value = op.get('parameter_name')
     """
-  return operator.context.parameters.get(key, default)
+  return operator.parameters.get(key, default)
 
 
 def put(key, value):
@@ -118,7 +138,7 @@ def put(key, value):
     Usage:
         operator.put('parameter_name', 'value')
   """
-  operator.context.parameters[key] = value
+  operator.parameters[key] = value
 
 
 def prompt(message: str,
@@ -155,33 +175,41 @@ def prompt(message: str,
                                    choice_msg=choice_msg)
 
 
-def info(message: str,
-         resource=None,
-         store_in_report=False,
-         step_type='INFO') -> None:
+def info(message: str, step_type='INFO') -> None:
   """Send an informational message to the user"""
-  operator.interface.info(message, resource, store_in_report, step_type)
+  operator.interface.info(message, step_type)
+  operator.interface.rm.add_step_info_metadata(
+      step_execution_id=operator.step.execution_id, value=message)
 
 
 def prep_rca(resource: Optional[models.Resource], template, suffix,
              kwarg) -> None:
   """Parses a log form and complex Jinja templates for root cause analysis (RCA)."""
-  return operator.interface.prepare_rca(resource, template, suffix, kwarg)
+  return operator.interface.prepare_rca(resource, template, suffix,
+                                        operator.step, kwarg)
 
 
 def add_skipped(resource: Optional[models.Resource], reason: str) -> None:
   """Sends a skip message for a step to the user and store it in the report"""
-  operator.interface.add_skipped(resource=resource, reason=reason)
+  operator.interface.add_skipped(resource=resource,
+                                 reason=reason,
+                                 step_execution_id=operator.step.execution_id)
 
 
 def add_ok(resource: models.Resource, reason: str = '') -> None:
   """Sends a success message for a step to the user and store it in the report"""
-  operator.interface.add_ok(resource=resource, reason=reason)
+  operator.interface.add_ok(resource=resource,
+                            reason=reason,
+                            step_execution_id=operator.step.execution_id)
 
 
 def add_failed(resource: models.Resource, reason: str, remediation: str) -> Any:
   """Sends a failure message for a step to the user and store it in the report"""
-  return operator.interface.add_failed(resource, reason, remediation)
+  return operator.interface.add_failed(
+      resource=resource,
+      reason=reason,
+      remediation=remediation,
+      step_execution_id=operator.step.execution_id)
 
 
 def add_uncertain(resource: models.Resource,
@@ -189,11 +217,15 @@ def add_uncertain(resource: models.Resource,
                   remediation: str = None,
                   human_task_msg: str = '') -> Any:
   """Sends an inconclusive message for a step to the user and store it in the report"""
-  return operator.interface.add_uncertain(resource, reason, remediation,
-                                          human_task_msg)
+  return operator.interface.add_uncertain(
+      resource=resource,
+      reason=reason,
+      remediation=remediation,
+      step_execution_id=operator.step.execution_id,
+      human_task_msg=human_task_msg)
 
 
-def get_step_outcome(run_id):
+def get_step_outcome(execution_id) -> Tuple[Any, dict]:
   """Returns the overall evaluation result of a step
 
   You can only check for steps that have already been executed.
@@ -201,48 +233,83 @@ def get_step_outcome(run_id):
   in branches not yet executed.
 
   Returns:
-    a string representing outcome of a step or None if the step hasn't been executed.
-
-  Usage:
-    if op.get_step_outcome(run_id) == 'ok':
-      # child step to execute if some step was successful
-      self.add_child(ChildClass())
-    elif op.get_step_outcome(run_id) == 'skipped':
-      # child step to execute if some step was skipped
-      self.add_child(ChildClass())
-    elif op.get_step_outcome(run_id) == 'failed':
-      # child step to execute if some step failed it analysis
-      self.add_child(FailureChildClass())
-    elif not op.get_step_outcome(run_id):
-      # child step to execute if step with run_id didn't get executed.
-      self.add_child(SomeChildClass())
+    a dict of totals by status representing outcome of resource evaluations
+    or empty dict if the step hasn't been executed.
   """
-  step_result = operator.interface.rm.results.get(run_id)
+  step_result = operator.interface.rm.results.get(execution_id)
   if not step_result:
-    return None
-  return step_result.status
+    return (None, {})
+  return (step_result.overall_status, step_result.totals_by_status)
 
 
-def step_ok(run_id) -> bool:
+def step_ok(execution_id) -> bool:
   """Checks if the step with the provided run id passed evaluation"""
-  return get_step_outcome(run_id) == 'ok'
+  overall_status, _ = get_step_outcome(execution_id)
+  return overall_status == 'ok'
 
 
-def step_failed(run_id) -> bool:
+def step_failed(execution_id) -> bool:
   """Checks if the step with the provided run id failed evaluation"""
-  return get_step_outcome(run_id) == 'failed'
+  overall_status, _ = get_step_outcome(execution_id)
+  return overall_status == 'failed'
 
 
-def step_uncertain(run_id) -> bool:
+def step_uncertain(execution_id) -> bool:
   """Checks if the step with the provided run id has an indeterminate evaluation"""
-  return get_step_outcome(run_id) == 'uncertain'
+  overall_status, _ = get_step_outcome(execution_id)
+  return overall_status == 'uncertain'
 
 
-def step_skipped(run_id) -> bool:
+def step_skipped(execution_id) -> bool:
   """Checks if the step with the provided run id was skipped"""
-  return get_step_outcome(run_id) == 'skipped'
+  overall_status, _ = get_step_outcome(execution_id)
+  return overall_status == 'skipped'
 
 
-def step_unexecuted(run_id) -> bool:
+def step_unexecuted(execution_id) -> bool:
   """Checks if the step with the provided run id was never executed"""
-  return get_step_outcome(run_id) is None
+  overall_status, _ = get_step_outcome(execution_id)
+  return overall_status is None
+
+
+def add_metadata(key, value):
+  operator.interface.rm.add_step_metadata(
+      step_execution_id=operator.step.execution_id, key=key, value=value)
+
+
+def get_metadata(key, step_execution_id=None):
+  step_execution_id = step_execution_id or operator.step.execution_id
+  return operator.interface.rm.get_step_metadata(
+      step_execution_id=step_execution_id, key=key)
+
+
+def get_all_metadata(step_execution_id=None):
+  step_execution_id = step_execution_id or operator.step.execution_id
+  return operator.interface.rm.get_all_step_metadata(
+      step_execution_id=step_execution_id)
+
+
+def verify_access(services: List, project_id: str) -> Dict[str, str]:
+  """Verify that the user has access to the project, exit with an error otherwise."""
+  service_state = {}
+  for service in services:
+    try:
+      if not is_enabled(project_id, service):
+        service_state[service] = 'ENABLED'
+        logging.error(
+            ('%s.googleapis.com service must be enabled. To enable, execute:\n'
+             'gcloud services enable %s.googleapis.com --project=%s'), service,
+            service, project_id)
+      else:
+        service_state[service] = 'DISABLED'
+    except utils.GcpApiError as err:
+      if 'SERVICE_DISABLED' == err.reason and 'serviceusage.googleapis.com' == err.service:
+        logging.error(((
+            'Service Usage API must be enabled. To enable, execute:\n'
+            'gcloud services enable serviceusage.googleapis.com --project=%s'),
+                       project_id))
+      else:
+        logging.error('can\'t access project %s: %s.', project_id, err.message)
+    except exceptions.GoogleAuthError as err:
+      logging.error('%s', err)
+  return service_state

@@ -1,5 +1,4 @@
-project: gcpdiag-gke1-aaaa, parameters: {location=europe-west4-a,nodepool=gke-gke1-default-
-pool-671518f6,project_id=gcpdiag-gke1-aaaa}
+location=europe-west4-a,nodepool=gke-gke1-default-pool-671518f6,project_id=gcpdiag-gke1-aaaa
 
 gke/node-bootstrapping: Analyses issues experienced when adding nodes to your GKE Standard cluster.
 

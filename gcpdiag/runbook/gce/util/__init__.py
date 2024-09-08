@@ -84,6 +84,5 @@ def ops_agent_installed(project_id, vm_id) -> bool:
             | {}
           """.format(vm_id, within_str))
   if ops_agent_q:
-    op.put(flags.OPS_AGENT_EXPORTING_METRICS, True)
     return True
   return False

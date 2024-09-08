@@ -293,7 +293,6 @@ class CheckWorkbenchInstancePerformance(runbook.CompositeStep):
     if ops_agent_query:
       op.info(
           'Runbook will use ops agent metrics for VM performance investigation')
-      op.put(gce_flags.OPS_AGENT_EXPORTING_METRICS, True)
     self.add_child(child=gce_gs.HighVmMemoryUtilization())
     self.add_child(child=gce_gs.HighVmDiskUtilization())
     self.add_child(child=gce_gs.HighVmCpuUtilization())

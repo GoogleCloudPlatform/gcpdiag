@@ -20,11 +20,11 @@ from gcpdiag.runbook import gke, snapshot_test_base
 class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = gke
   runbook_name = 'gke/gke-ip-masq-standard'
-  project_id = 'gcpdiag-gke4-runbook'
-  config.init({'auto': True, 'interface': 'cli'}, project_id)
+  config.init({'auto': True, 'interface': 'cli'})
 
   rule_parameters = [{
       'project_id': 'gcpdiag-gke4-runbook',
       'name': 'gke1',
-      'dest_ip': '8.8.8.8'
+      'dest_ip': '8.8.8.8',
+      'src_ip': '0.0.0.0'
   }]

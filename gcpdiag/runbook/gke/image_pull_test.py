@@ -20,10 +20,10 @@ from gcpdiag.runbook import gke, snapshot_test_base
 class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = gke
   runbook_name = 'gke/image-pull'
-  project_id = 'gcpdiag-gke-cluster-autoscaler-rrrr'
-  config.init({'auto': True, 'interface': 'cli'}, project_id)
+  config.init({'auto': True, 'interface': 'cli'})
 
   rule_parameters = [{
+      'project_id': 'gcpdiag-gke-cluster-autoscaler-rrrr',
       'name': 'gcp-cluster',
       'location': 'europe-west10',
       'start_time_utc': '2024-08-12T01:00:00Z',

@@ -20,10 +20,10 @@ from gcpdiag.runbook import snapshot_test_base, vertex
 class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = vertex
   runbook_name = 'vertex/workbench-instance-stuck-in-provisioning'
-  project_id = 'gcpdiag-notebooks2-aaaa'
-  config.init({'auto': True, 'interface': 'cli'}, project_id)
+  config.init({'auto': True, 'interface': 'cli'})
 
   rule_parameters = [{
+      'project_id': 'gcpdiag-notebooks2-aaaa',
       'instance_name': 'notebooks2instance-provisioning-stuck',
       'zone': 'us-west1-a'
   }]

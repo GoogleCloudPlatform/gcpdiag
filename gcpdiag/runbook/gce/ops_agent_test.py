@@ -20,16 +20,18 @@ from gcpdiag.runbook import gce, snapshot_test_base
 class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = gce
   runbook_name = 'gce/ops-agent'
-  project_id = 'gcpdiag-gce3-aaaa'
-  config.init({'auto': True, 'interface': 'cli'}, project_id)
+  config.init({'auto': True, 'interface': 'cli'})
 
   rule_parameters = [{
+      'project_id': 'gcpdiag-gce3-aaaa',
       'name': 'faulty-opsagent',
       'zone': 'europe-west2-a'
   }, {
+      'project_id': 'gcpdiag-gce3-aaaa',
       'name': 'faulty-opsagent-no-sa',
       'zone': 'europe-west2-a'
   }, {
+      'project_id': 'gcpdiag-gce3-aaaa',
       'name': 'working-opsagent',
       'zone': 'europe-west2-a'
   }]

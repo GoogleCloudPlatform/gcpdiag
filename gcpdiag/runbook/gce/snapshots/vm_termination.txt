@@ -1,5 +1,4 @@
-project: gcpdiag-gce-faultyssh-runbook, parameters: {name=faulty-linux-ssh,project_id=gcpdiag-gce-
-faultyssh-runbook,zone=europe-west2-a}
+name=faulty-linux-ssh,project_id=gcpdiag-gce-faultyssh-runbook,zone=europe-west2-a
 
 gce/vm-termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
 
@@ -38,8 +37,7 @@ No GCE VM was terminated between {start_time_utc} and {end_time_utc}
 [END]: Finalizing VM terminations diagnostics...
 
 
-project: gcpdiag-gce-faultyssh-runbook, parameters: {name=valid-linux-ssh,project_id=gcpdiag-gce-
-faultyssh-runbook,zone=europe-west2-a}
+name=valid-linux-ssh,project_id=gcpdiag-gce-faultyssh-runbook,zone=europe-west2-a
 
 gce/vm-termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
 
@@ -78,8 +76,7 @@ No GCE VM was terminated between {start_time_utc} and {end_time_utc}
 [END]: Finalizing VM terminations diagnostics...
 
 
-project: gcpdiag-gce-faultyssh-runbook, parameters: {name=faulty-windows-ssh,project_id=gcpdiag-gce-
-faultyssh-runbook,zone=europe-west2-a}
+name=faulty-windows-ssh,project_id=gcpdiag-gce-faultyssh-runbook,zone=europe-west2-a
 
 gce/vm-termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
 

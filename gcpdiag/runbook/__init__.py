@@ -27,6 +27,7 @@ import googleapiclient.errors
 from jinja2 import TemplateNotFound
 
 from gcpdiag import caching, config, models, utils
+from gcpdiag.queries import crm
 from gcpdiag.runbook import constants, exceptions, flags, op, report, util
 
 DiagnosticTreeRegister: Dict[str, 'DiagnosticTree'] = {}
@@ -53,11 +54,11 @@ class Step(metaclass=MetaStep):
   def __init__(self,
                parent: 'Step' = None,
                step_type=constants.StepType.AUTOMATED,
-               name=None):
+               uuid=None):
     """
     Initializes a new instance of the Step class.
     """
-    self.name = name or util.generate_random_string()
+    self.uuid = uuid or util.generate_uuid()
     self.steps = []
     self.type = step_type
     self.prompts: models.Messages = models.Messages()
@@ -75,11 +76,11 @@ class Step(metaclass=MetaStep):
     return self.__class__.id
 
   @property
-  def run_id(self):
-    return '.'.join([self.id, self.name])
+  def execution_id(self):
+    return '.'.join([self.id, self.uuid])
 
   def __str__(self):
-    return self.run_id
+    return self.execution_id
 
   @final
   def hook_execute(self, operator: op.Operator):
@@ -140,7 +141,7 @@ class Step(metaclass=MetaStep):
     return None
 
   def __hash__(self) -> int:
-    return hash((self.run_id, self.type))
+    return hash((self.execution_id, self.type))
 
   @property
   def label(self):
@@ -254,18 +255,18 @@ class DiagnosticTree(metaclass=RunbookRule):
   steps: List[Step]
   keywords: List[str]
 
-  def __init__(self, context: models.Context):
+  def __init__(self, uuid=None):
     self.id = f'{self.__module__}.{self.__class__.__name__}'
-    self.context = context
+    self.uuid = uuid or util.generate_uuid()
     self.product = self.__module__.rsplit('.')[-2].lower()
     self.doc_file = util.pascal_case_to_kebab_case(self.__class__.__name__)
-    self.name = f'{self.product}/{util.runbook_name_parser(self.__class__.__name__)}'
+    self.dt_name = util.runbook_name_parser(self.__class__.__name__)
+    self.name = f'{self.product}/{self.dt_name}'
     self.steps: List = []
-    self.parameters = self.parameters if hasattr(self, 'parameters') else {}
 
-  def set_context(self, context: models.Context):
-    """Sets the execution context for the diagnostic tree."""
-    self.context = context
+  @property
+  def run_id(self):
+    return '.'.join([self.product, self.dt_name, self.uuid])
 
   def add_step(self, parent: Step, child: Step):
     """Adds an intermediate diagnostic step to the tree."""
@@ -280,7 +281,7 @@ class DiagnosticTree(metaclass=RunbookRule):
       parent_step.add_child(child)
     else:
       raise ValueError(
-          f'Parent step with {parent.run_id} not found. Add parent first')
+          f'Parent step with {parent.execution_id} not found. Add parent first')
 
   def add_start(self, step: StartStep):
     """Adds a diagnostic step to the tree."""
@@ -385,18 +386,32 @@ class DiagnosticEngine:
     try:
       # ex: product/gce-runbook
       name = util.runbook_name_parser(name)
-      self.dt = DiagnosticTreeRegister.get(name)
-      if not self.dt:
+      self.tree = DiagnosticTreeRegister.get(name)
+      if not self.tree:
         raise exceptions.DiagnosticTreeNotFound
     except exceptions.DiagnosticTreeNotFound as e:
       logging.error('%s: %s', name, e)
       sys.exit(2)
 
-  def _check_required_paramaters(self, tree: DiagnosticTree):
+  def _get_billing_project(self, parameter: models.Parameter):
+    project_id = parameter.get('project_id')
+    if project_id:
+      return project_id
+    # get project number if no project id
+    project_number = parameter.get('project_number')
+    if project_number:
+      project = crm.get_project(project_id=project_number)
+      return project.id
+    if config.get('billing_project'):
+      return config.get('billing_project')
+    return None
+
+  def _check_required_paramaters(self, tree: DiagnosticTree,
+                                 parameters: models.Parameter):
     missing_parameters = {
         key: value.get('help', '')
         for key, value in tree.parameters.items()
-        if value.get('required', False) and key not in tree.context.parameters  # pylint: disable=protected-access
+        if value.get('required', False) and key not in parameters
     }
     if missing_parameters:
       missing_param_str = '\n'.join(
@@ -409,18 +424,19 @@ class DiagnosticEngine:
           missing_param_str)
       sys.exit(2)
 
-  def _set_default_parameters(self, dt: DiagnosticTree):
+  def _set_default_parameters(self, tree: DiagnosticTree):
     # set default parameters
-    dt.parameters.setdefault(flags.START_TIME_UTC, {
+    tree.parameters.setdefault(flags.START_TIME_UTC, {
         'type': datetime,
         'help': 'Beginning Timeframe to scope investigation.'
     })
-    dt.parameters.setdefault(flags.END_TIME_UTC, {
+    tree.parameters.setdefault(flags.END_TIME_UTC, {
         'type': datetime,
         'help': 'End timeframe'
     })
 
-  def parse_parameters(self, dt: DiagnosticTree):
+  def parse_parameters(self, tree: DiagnosticTree,
+                       parameters: models.Parameter):
     """Set to defaults parameters and convert datatypes"""
 
     def is_builtin_type(target_type):
@@ -458,53 +474,50 @@ class DiagnosticEngine:
         except ValueError:
           print(f'Cannot cast {param_val} to type {target_type}.')
 
-    self._set_default_parameters(dt)
+    self._set_default_parameters(tree)
     # convert data types and set defaults for non exist parameters
-    for k, _ in dt.parameters.items():
+    for k, _ in tree.parameters.items():
       # Set default if not provided by user
-      dt_param = dt.parameters.get(k)
-      user_provided_param = dt.context.parameters.get(k)
-      if k not in dt.context.parameters and dt_param and dt_param.get(
-          'default'):
-        dt.context.parameters[k] = dt_param['default']
+      dt_param = tree.parameters.get(k)
+      user_provided_param = parameters.get(k)
+      if k not in parameters and dt_param and dt_param.get('default'):
+        parameters[k] = dt_param['default']
         continue
 
       if isinstance(user_provided_param, str):
         if dt_param and dt_param.get('ignorecase') is True:
-          dt.context.parameters[k] = user_provided_param
+          parameters[k] = user_provided_param
         else:
-          dt.context.parameters[k] = user_provided_param.lower()
+          parameters[k] = user_provided_param.lower()
 
       if dt_param and dt_param.get('type') == datetime:
         if k == flags.END_TIME_UTC:
-          end_time = dt.context.parameters.get(flags.END_TIME_UTC,
-                                               datetime.now(timezone.utc))
-          dt.context.parameters[flags.END_TIME_UTC] = cast_to_type(
-              end_time, dt_param['type'])
+          end_time = parameters.get(flags.END_TIME_UTC,
+                                    datetime.now(timezone.utc))
+          parameters[flags.END_TIME_UTC] = cast_to_type(end_time,
+                                                        dt_param['type'])
         if k == flags.START_TIME_UTC:
-          end_time = dt.context.parameters.get(flags.END_TIME_UTC,
-                                               datetime.now(timezone.utc))
-          dt.context.parameters[flags.END_TIME_UTC] = cast_to_type(
-              end_time, dt_param['type'])
-          parsed_end_time = dt.context.parameters[flags.END_TIME_UTC]
-          start_time = dt.context.parameters.get(
-              flags.START_TIME_UTC, parsed_end_time - timedelta(hours=8))
-          dt.context.parameters[flags.START_TIME_UTC] = cast_to_type(
+          end_time = parameters.get(flags.END_TIME_UTC,
+                                    datetime.now(timezone.utc))
+          parameters[flags.END_TIME_UTC] = cast_to_type(end_time,
+                                                        dt_param['type'])
+          parsed_end_time = parameters[flags.END_TIME_UTC]
+          start_time = parameters.get(flags.START_TIME_UTC,
+                                      parsed_end_time - timedelta(hours=8))
+          parameters[flags.START_TIME_UTC] = cast_to_type(
               start_time, dt_param['type'])
         if k != flags.START_TIME_UTC or k == flags.END_TIME_UTC:
-          date_string = dt.context.parameters.get(k)
+          date_string = parameters.get(k)
           if date_string:
-            dt.context.parameters[k] = cast_to_type(date_string,
-                                                    dt_param['type'])
+            parameters[k] = cast_to_type(date_string, dt_param['type'])
 
       # DT specified a type for the param and it's not a string.
       # cast the parameter to the type specified by the runbook.
       if (dt_param and dt_param.get('type') and dt_param['type'] != str and
           user_provided_param):
-        dt.context.parameters[k] = cast_to_type(user_provided_param,
-                                                dt_param['type'])
+        parameters[k] = cast_to_type(user_provided_param, dt_param['type'])
 
-  def run_diagnostic_tree(self, context: models.Context) -> None:
+  def run_diagnostic_tree(self, parameter: models.Parameter) -> None:
     """Executes the loaded diagnostic tree within a given context.
 
     Validates required parameters, builds the tree, and executes its steps.
@@ -513,29 +526,35 @@ class DiagnosticEngine:
     Args:
       context: The execution context for the diagnostic tree.
     """
-    if not self.dt or not callable(self.dt):
+    if not self.tree or not callable(self.tree):
       logging.error('Could not instantiate Diagnostic Tree')
       sys.exit(2)
 
-    dt = self.dt(context)
+    tree = self.tree()
 
-    self._check_required_paramaters(dt)
-    self.parse_parameters(dt)
-    self.rm.tree = dt
-    self.interface.set_dt(dt)
+    self._check_required_paramaters(tree=tree, parameters=parameter)
+    self.parse_parameters(tree=tree, parameters=parameter)
+    self.rm.tree = tree
+    self.interface.set_dt(tree)
     self.interface.rm = self.rm
-    self.interface.output.display_runbook_description(dt)
+    self.interface.output.display_runbook_description(tree)
 
     try:
-      operator = op.Operator(c=context, i=self.interface)
+      operator = op.Operator(interface=self.interface)
+      operator.set_tree(tree)
+      operator.set_parameters(parameter)
+      project_id = self._get_billing_project(parameter)
+      operator.set_context(p=parameter, project_id=project_id)
       with op.operator_context(operator):
-        dt.hook_build_tree()
+        tree.hook_build_tree()
       self.finalize = False
-      self.find_path_dfs(step=dt.start, operator=operator, executed_steps=set())
+      self.find_path_dfs(step=tree.start,
+                         operator=operator,
+                         executed_steps=set())
 
     except (RuntimeError, exceptions.InvalidDiagnosticTree) as err:
       logging.warning('%s: %s while processing runbook rule: %s',
-                      type(err).__name__, err, dt)
+                      type(err).__name__, err, tree)
 
   def find_path_dfs(self, step: Step, operator: op.Operator,
                     executed_steps: Set):
@@ -547,25 +566,27 @@ class DiagnosticEngine:
       executed_steps: A set of executed step IDs to avoid cycles.
     """
     if not self.finalize:
+      operator.set_step(step)
       with op.operator_context(operator):
         try:
           self.run_step(step=step, operator=operator)
           executed_steps.add(step)
         except TemplateNotFound:
-          logging.error('could not load messages linked to step: %s', step.name)
+          logging.error('could not load messages linked to step: %s',
+                        step.execution_id)
         except exceptions.InvalidStepOperation as err:
           logging.error('Invalid step operation: %s', err)
         except (ValueError, KeyError) as err:
-          logging.error('`%s`: %s', step.name, err)
+          logging.error('`%s`: %s', step.execution_id, err)
         except (utils.GcpApiError, googleapiclient.errors.HttpError) as error:
           error = utils.GcpApiError(error)
           if error.status == 403:
             logging.error(('%s: %s user does not sufficient permissions '
                            'to perform operations in step: %s'),
-                          type(error).__name__, error, step.id)
+                          type(error).__name__, error, step.execution_id)
             return
           logging.error('%s: %s while processing step: %s',
-                        type(error).__name__, error, step.id)
+                        type(error).__name__, error, step.execution_id)
 
       for child in step.steps:  # Iterate over the children of the current step
         if child not in executed_steps:
@@ -590,15 +611,15 @@ class DiagnosticEngine:
         with caching.bypass_cache():
           user_input = self._run(step, operator=operator)
       elif step.type == constants.StepType.END:
-        self.rm.generate_report()
+        self.rm.generate_report(operator)
         self.finalize = True
         break
       elif user_input is constants.STOP:
         logging.info('Exiting Runbook Execution \n')
         sys.exit(2)
       elif step.type == constants.StepType.START and (
-        self.rm.results.get(step.run_id) is not None and \
-          self.rm.results[step.run_id].status == 'skipped'):
+        self.rm.results.get(step.execution_id) is not None and \
+          self.rm.results[step.execution_id].overall_status == 'skipped'):
         logging.info('Start Step was skipped. Can\'t proceed ...\n')
         sys.exit(2)
       elif user_input is constants.CONTINUE:
@@ -610,12 +631,13 @@ class DiagnosticEngine:
 
   def _run(self, step: Step, operator: op.Operator):
     start = datetime.now(timezone.utc).timestamp()
+    self.rm.results[step.execution_id] = report.StepResult(step=step)
     step.hook_execute(operator)
     end = datetime.now(timezone.utc).timestamp()
-    if self.rm.results.get(step.run_id):
-      self.rm.results[step.run_id].start_time_utc = start
-      self.rm.results[step.run_id].end_time_utc = end
-      return self.rm.results[step.run_id].prompt_response
+    if self.rm.results.get(step.execution_id):
+      self.rm.results[step.execution_id].start_time_utc = start
+      self.rm.results[step.execution_id].end_time_utc = end
+      return self.rm.results[step.execution_id].prompt_response
     return None
 
 
@@ -627,7 +649,7 @@ class ExpandTreeFromAst(ast.NodeVisitor):
   """
 
   def __init__(self, tree=None):
-    self.tree: DiagnosticTree = tree(None) or DiagnosticTree(None)
+    self.tree: DiagnosticTree = tree() or DiagnosticTree()
     self.parent: OrderedDict = OrderedDict()
     self.current_class = None
     # Track instances to map variable names to their classes

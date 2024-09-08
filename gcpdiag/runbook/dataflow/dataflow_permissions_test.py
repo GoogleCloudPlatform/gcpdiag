@@ -20,10 +20,11 @@ from gcpdiag.runbook import dataflow, snapshot_test_base
 class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = dataflow
   runbook_name = 'dataflow/dataflow-permissions'
-  project_id = 'gcpdiag-dataflow1-aaaa'
-  config.init({'auto': True, 'interface': 'cli'}, project_id)
+  config.init({'auto': True, 'interface': 'cli'})
 
   rule_parameters = [{
+      'project_id':
+          'gcpdiag-dataflow1-aaaa',
       'custom_flag':
           'dataflow',
       'worker_service_account':

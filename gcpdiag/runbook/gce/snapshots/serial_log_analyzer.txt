@@ -1,5 +1,4 @@
-project: gcpdiag-gce-vm-performance, parameters: {name=faulty-linux-ssh,project_id=gcpdiag-gce-vm-
-performance,zone=europe-west2-a}
+name=faulty-linux-ssh,project_id=gcpdiag-gce-vm-performance,zone=europe-west2-a
 
 gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
 
@@ -183,8 +182,7 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
 [END]: Finalizing Serial console Log Analysis...
 
 
-project: gcpdiag-gce-vm-performance, parameters: {name=valid-linux-ssh,project_id=gcpdiag-gce-vm-
-performance,zone=europe-west2-a}
+name=valid-linux-ssh,project_id=gcpdiag-gce-vm-performance,zone=europe-west2-a
 
 gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
 

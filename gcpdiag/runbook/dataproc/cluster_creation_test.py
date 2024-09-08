@@ -20,8 +20,7 @@ from gcpdiag.runbook import dataproc, snapshot_test_base
 class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = dataproc
   runbook_name = 'dataproc/cluster-creation'
-  project_id = 'gcpdiag-dataproc1-aaaa'
-  config.init({'auto': True, 'interface': 'cli'}, project_id)
+  config.init({'auto': True, 'interface': 'cli'})
 
   rule_parameters = [
       {

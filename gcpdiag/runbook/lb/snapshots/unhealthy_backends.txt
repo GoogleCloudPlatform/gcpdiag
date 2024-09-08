@@ -1,5 +1,4 @@
-project: gcpdiag-lb2-aaaa, parameters: {backend_service_name=web-backend-service,project_id=gcpdiag-
-lb2-aaaa}
+backend_service_name=web-backend-service,project_id=gcpdiag-lb2-aaaa
 
 lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 
@@ -170,8 +169,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 [END]: Finalizing unhealthy backends diagnostics...
 
 
-project: gcpdiag-lb2-aaaa, parameters: {backend_service_name=backend-service-2,project_id=gcpdiag-
-lb2-aaaa,region=europe-west4}
+backend_service_name=backend-service-2,project_id=gcpdiag-lb2-aaaa,region=europe-west4
 
 lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 

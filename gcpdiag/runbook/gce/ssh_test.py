@@ -19,16 +19,18 @@ from gcpdiag.runbook import gce, snapshot_test_base
 class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = gce
   runbook_name = 'gce/ssh'
-  project_id = 'gcpdiag-gce-faultyssh-runbook'
-  config.init({'auto': True, 'interface': 'cli'}, project_id)
+  config.init({'auto': True, 'interface': 'cli'})
 
   rule_parameters = [{
+      'project_id': 'gcpdiag-gce-faultyssh-runbook',
       'name': 'faulty-linux-ssh',
       'zone': 'europe-west2-a',
       'principal': 'cannotssh@example.com',
       'tunnel_through_iap': 'True',
       'check_os_login': 'True'
   }, {
+      'project_id':
+          'gcpdiag-gce-faultyssh-runbook',
       'name':
           'valid-linux-ssh',
       'zone':
@@ -40,6 +42,7 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
       'check_os_login':
           'True'
   }, {
+      'project_id': 'gcpdiag-gce-faultyssh-runbook',
       'name': 'faulty-windows-ssh',
       'zone': 'europe-west2-a',
       'principal': 'cannot@example.com',

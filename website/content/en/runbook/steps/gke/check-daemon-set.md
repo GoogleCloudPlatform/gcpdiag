@@ -20,7 +20,8 @@ Check for ip-masq-agent daemonSet is deployed in the Cluster. If yes follow chec
 
 ### Uncertain Remediation
 
-If No, please follow [1] to deploy ip-masq-agent DaemonSet in the kube-system namespace and wait for around 5 minutes for the DaemonSet to be ready.
+If No, please follow [1] to deploy ip-masq-agent DaemonSet in the kube-system namespace and wait for around 5 minutes
+for the DaemonSet to be ready.
 
 [1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#checking_the_ip-masq-agent_daemonset
 

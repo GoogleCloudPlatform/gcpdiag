@@ -16,8 +16,8 @@ This will either rule out ip-masq issue or points to ip-mas-agent issue.
 
 ### Failure Reason
 
-There are no egress traffic to Destination IP which indicates that GKE NODE is also having issue to connect to destination IP.
-{LOG_ENTRY}
+There are no egress traffic to Destination IP which indicates that GKE NODE is also having issue to connect to
+destination IP.
 
 ### Failure Remediation
 
@@ -26,7 +26,9 @@ https://cloud.google.com/vpc/docs/using-flow-logs#enable-logging-existing
 
 ### Success Reason
 
-When VPC flow logs shows traffic is going out, then GKE IP masquerading may be working as intended. If the end-to-end case is still failing, the problem is likely to be somewhere in the networking path between Dest-IP and node on which impacted Pod is scheduled.
+When VPC flow logs shows traffic is going out, then GKE IP masquerading may be working as intended. If the end-to-end
+case is still failing, the problem is likely to be somewhere in the networking path between Dest-IP and node on which
+impacted Pod is scheduled.
 
 
 

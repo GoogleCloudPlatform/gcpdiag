@@ -21,10 +21,11 @@ import os
 import pkgutil
 import re
 import sys
+import warnings
 from typing import Tuple
 
 from gcpdiag import config, hooks, models, runbook
-from gcpdiag.queries import apis, crm, kubectl
+from gcpdiag.queries import apis, kubectl
 from gcpdiag.runbook.output import terminal_output
 
 
@@ -71,6 +72,14 @@ def expand_and_validate_path(arg) -> str:
   return expanded_path
 
 
+class DeprecatedAction(argparse.Action):
+
+  def __call__(self, parser, namespace, values, option_string=None):
+    warnings.warn(f'Argument {option_string} is deprecated.',
+                  DeprecationWarning)
+    setattr(namespace, self.dest, values)
+
+
 def _init_runbook_args_parser():
   parser = argparse.ArgumentParser(
       description='Run diagnostics in GCP projects.', prog='gcpdiag runbook')
@@ -85,14 +94,10 @@ def _init_runbook_args_parser():
       help='Authenticate using a service account private key file',
       metavar='FILE')
 
-  parser.add_argument('--auth-oauth',
-                      help=argparse.SUPPRESS,
-                      action='store_true')
-
   parser.add_argument('--project',
+                      action=DeprecatedAction,
                       metavar='P',
-                      required=True,
-                      help='Project ID of project to inspect')
+                      help=argparse.SUPPRESS)
 
   parser.add_argument(
       '--billing-project',
@@ -106,13 +111,6 @@ def _init_runbook_args_parser():
                       action='count',
                       default=config.get('verbose'),
                       help='Increase log verbosity')
-
-  parser.add_argument('--within-days',
-                      metavar='D',
-                      type=int,
-                      help=(f'How far back to search logs and metrics (default:'
-                            f" {config.get('within_days')} days)"),
-                      default=1)
 
   parser.add_argument('--logging-ratelimit-requests',
                       metavar='R',
@@ -260,11 +258,6 @@ def run_and_get_report(argv=None, credentials: str = None) -> Tuple[int, dict]:
 
   # Initialize configuration
   config.init(vars(args), terminal_output.is_cloud_shell())
-  project = crm.get_project(args.project)
-  config.set_project_id(project.id)
-
-  # Initialize Context.
-  context = models.Context(project_id=project.id, parameters=args.parameter)
 
   # Rules name patterns that shall be included or excluded
   runbook_pattern = _validate_rule_pattern(args.runbook)
@@ -294,16 +287,18 @@ def run_and_get_report(argv=None, credentials: str = None) -> Tuple[int, dict]:
     gac_http_logger = logging.getLogger('googleapiclient.http')
     gac_http_logger.setLevel(logging.ERROR)
 
+  # for capatibility till --project is fully deprecated under runbooks
+  if args.project and args.project.isdigit():
+    args.parameter['project_number'] = args.project
+  elif args.project and not args.project.isdigit():
+    args.parameter['project_id'] = args.project
   # Start the reporting
   output.display_banner()
-  output.display_header(context)
-
-  # Verify that we have access and that the CRM API is enabled
-  apis.verify_access(context.project_id)
+  output.display_header(parameter=args.parameter)
 
   # Run the tests.
   dt_engine.load_rule(runbook_pattern)
-  dt_engine.run_diagnostic_tree(context)
+  dt_engine.run_diagnostic_tree(args.parameter)
   output.display_footer(dt_engine.rm)
   hooks.post_lint_hook(dt_engine.rm.get_totals_by_status())
 

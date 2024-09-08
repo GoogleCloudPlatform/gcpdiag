@@ -1,7 +1,5 @@
-project: gcpdiag-dataflow1-aaaa, parameters:
-{custom_flag=dataflow,principal=user@xyz.com,project_id=gcpdiag-
-dataflow1-aaaa,worker_service_account=dataflow-worker@gcpdiag-
-dataflow1-aaaa.iam.gserviceaccount.com}
+custom_flag=dataflow,principal=user@xyz.com,project_id=gcpdiag-
+dataflow1-aaaa,worker_service_account=dataflow-worker@gcpdiag-dataflow1-aaaa.iam.gserviceaccount.com
 
 dataflow/dataflow-permissions: Analysis and Resolution of Dataflow Permissions issues.
 

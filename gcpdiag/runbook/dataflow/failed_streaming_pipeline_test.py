@@ -20,10 +20,10 @@ from gcpdiag.runbook import dataflow, snapshot_test_base
 class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = dataflow
   runbook_name = 'dataflow/failed-streaming-pipeline'
-  project_id = 'gcpdiag-dataflow1-aaaa'
-  config.init({'auto': True, 'interface': 'cli'}, project_id)
+  config.init({'auto': True, 'interface': 'cli'})
 
   rule_parameters = [{
+      'project_id': 'gcpdiag-dataflow1-aaaa',
       'job_id': '2024-06-19_09_43_07-14927685200167458422',
       'job_region': 'us-central1'
   }]

@@ -211,7 +211,6 @@ class SingleTerminationCheck(runbook.Step):
                                    end_time_utc=op.get(flags.END_TIME_UTC)))
 
     status_check = gcp_gs.ResourceAttributeCheck()
-    status_check.name = 'terminated_vm_status'
     status_check.resource_query = gce.get_instance
     status_check.query_kwargs = {
         'project_id': op.get(flags.PROJECT_ID),

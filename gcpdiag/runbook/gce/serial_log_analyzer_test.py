@@ -20,13 +20,14 @@ from gcpdiag.runbook import gce, snapshot_test_base
 class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = gce
   runbook_name = 'gce/serial-log-analyzer'
-  project_id = 'gcpdiag-gce-vm-performance'
-  config.init({'auto': True, 'interface': 'cli'}, project_id)
+  config.init({'auto': True, 'interface': 'cli'})
 
   rule_parameters = [{
+      'project_id': 'gcpdiag-gce-vm-performance',
       'name': 'faulty-linux-ssh',
       'zone': 'europe-west2-a'
   }, {
+      'project_id': 'gcpdiag-gce-vm-performance',
       'name': 'valid-linux-ssh',
       'zone': 'europe-west2-a'
   }]

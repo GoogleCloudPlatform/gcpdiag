@@ -1,5 +1,5 @@
-project: gcpdiag-notebooks2-aaaa, parameters: {instance_name=notebooks2instance-provisioning-
-stuck,project_id=gcpdiag-notebooks2-aaaa,zone=us-west1-a}
+instance_name=notebooks2instance-provisioning-stuck,project_id=gcpdiag-notebooks2-aaaa,zone=us-
+west1-a
 
 vertex/workbench-instance-stuck-in-provisioning: Runbook to Troubleshoot Issue: Vertex AI Workbench Instance Stuck in Provisioning State
 

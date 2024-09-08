@@ -1,6 +1,6 @@
 {% block Nodeproblem_failure_reason %}
-There are no egress traffic to Destination IP which indicates that GKE NODE is also having issue to connect to destination IP.
-{LOG_ENTRY}
+There are no egress traffic to Destination IP which indicates that GKE NODE is also having issue to connect to
+destination IP.
 {% endblock Nodeproblem_failure_reason %}
 
 {% block Nodeproblem_failure_remediation %}
@@ -9,7 +9,9 @@ https://cloud.google.com/vpc/docs/using-flow-logs#enable-logging-existing
 {% endblock Nodeproblem_failure_remediation %}
 
 {% block Nodeproblem_success_reason %}
-When VPC flow logs shows traffic is going out, then GKE IP masquerading may be working as intended. If the end-to-end case is still failing, the problem is likely to be somewhere in the networking path between Dest-IP and node on which impacted Pod is scheduled.
+When VPC flow logs shows traffic is going out, then GKE IP masquerading may be working as intended. If the end-to-end
+case is still failing, the problem is likely to be somewhere in the networking path between Dest-IP and node on which
+impacted Pod is scheduled.
 {% endblock Nodeproblem_success_reason %}
 
 {% block daemon_uncertain_reason %}
@@ -17,7 +19,8 @@ Check for ip-masq-agent daemonSet is deployed in the Cluster. If yes follow chec
 {% endblock daemon_uncertain_reason %}
 
 {% block daemon_uncertain_remediation %}
-If No, please follow [1] to deploy ip-masq-agent DaemonSet in the kube-system namespace and wait for around 5 minutes for the DaemonSet to be ready.
+If No, please follow [1] to deploy ip-masq-agent DaemonSet in the kube-system namespace and wait for around 5 minutes
+for the DaemonSet to be ready.
 
 [1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#checking_the_ip-masq-agent_daemonset
 {% endblock daemon_uncertain_remediation %}
@@ -30,7 +33,8 @@ When ip-masq-agent daemonset is deployed without a configmap, it uses the defaul
 {% endblock configmap_uncertain_reason %}
 
 {% block configmap_uncertain_remediation %}
-If you needs to customize the configmap, then follow the steps [1] to deploy ip-masq-agent ConfigMap in the kube-system namespace.
+If you needs to customize the configmap, then follow the steps [1] to deploy ip-masq-agent ConfigMap in the kube-system
+namespace.
 [1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap
 {% endblock configmap_uncertain_remediation %}
 

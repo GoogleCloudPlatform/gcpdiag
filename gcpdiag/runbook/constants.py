@@ -182,3 +182,5 @@ HUMAN_TASK_OPTIONS = {
     's': 'Stop Runbook'
 }
 CONFIRMATION_OPTIONS = {'Yes/Y/y': 'Yes', 'No/N/n': 'No'}
+
+STATUS_ORDER = ['failed', 'uncertain', 'ok', 'skipped']

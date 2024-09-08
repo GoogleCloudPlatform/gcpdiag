@@ -203,8 +203,7 @@ class Nodeproblem(runbook.Step):
       op.add_ok(project_path, reason=op.prep_msg(op.SUCCESS_REASON))
     else:
       op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON,
-                                       LOG_ENTRY=log_entries),
+                    reason=op.prep_msg(op.FAILURE_REASON),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
 
 

@@ -19,7 +19,7 @@ from unittest.mock import MagicMock, mock_open, patch
 
 from gcpdiag import config
 from gcpdiag.queries import gce
-from gcpdiag.runbook import report
+from gcpdiag.runbook import Step, report
 from gcpdiag.runbook.report import StepResult
 
 config.init({'auto': True, 'interface': 'cli'})
@@ -40,15 +40,16 @@ class TestTerminalReportManager(unittest.TestCase):
             'name': 'test',
             'selfLink': 'https://www.googleapis.com/compute/v1/test/test-id'
         })
-    test_step = StepResult(status='ok',
-                           resource=self.resource,
-                           step='TestStep',
-                           reason='TestReason',
-                           remediation='TestRemediation',
-                           remediation_skipped=True,
-                           prompt_response=None)
+
+    ok_step_eval = report.ResourceEvaluation(resource=self.resource,
+                                             status='ok',
+                                             reason='TestReason',
+                                             remediation='TestRemediation')
+    test_step = report.StepResult(step=Step(uuid='ok.step'))
+
+    test_step.results.append(ok_step_eval)
     self.trm.results = {
-        test_step.step: test_step,
+        test_step.execution_id: test_step,
     }
 
   def test_initialization(self):
@@ -56,23 +57,26 @@ class TestTerminalReportManager(unittest.TestCase):
     self.assertEqual(self.trm.report_path, '')
 
   def test_add_step_result(self):
-    step_result = StepResult('ok', self.resource, 'Step1', None, None)
+    step_result = StepResult(Step(uuid='friendly.name'))
     self.trm.add_step_result(step_result)
-    self.assertIn('Step1', self.trm.results)
-    self.assertEqual(self.trm.results['Step1'], step_result)
+    self.assertIn('gcpdiag.runbook.Step.friendly.name', self.trm.results)
+    self.assertEqual(self.trm.results['gcpdiag.runbook.Step.friendly.name'],
+                     step_result)
 
   def test_any_failed(self):
-    step_result_failed = StepResult('failed', None, 'Step1', None, None)
+    step_result_failed = StepResult(Step(uuid='failed'))
+    failed_eval = report.ResourceEvaluation(resource=self.resource,
+                                            status='failed',
+                                            reason='TestReason',
+                                            remediation='TestRemediation')
     self.trm.add_step_result(step_result_failed)
-    self.assertTrue(self.trm.any_failed)
-
-    step_result_ok = StepResult('ok', None, 'Step2', None, None)
-    self.trm.add_step_result(step_result_ok)
+    self.trm.add_step_eval(execution_id=step_result_failed.execution_id,
+                           evaluation=failed_eval)
     self.assertTrue(self.trm.any_failed)
 
   def test_get_rule_statuses(self):
     rule_statuses = self.trm.get_rule_statuses()
-    self.assertEqual(rule_statuses, {'TestStep': 'ok'})
+    self.assertEqual(rule_statuses, {'gcpdiag.runbook.Step.ok.step': 'ok'})
 
   def test_generate_report_path(self):
     with patch('gcpdiag.config.get', return_value='fake_dir') as fd:
@@ -127,7 +131,7 @@ class TestTerminalReportManager(unittest.TestCase):
 
 
 class TestReportResults(unittest.TestCase):
-  """Test Repor"""
+  """Test Report"""
 
   def test_initialization(self):
     resource = gce.Instance(
@@ -137,25 +141,21 @@ class TestReportResults(unittest.TestCase):
             'selfLink': 'https://www.googleapis.com/compute/v1/test/test-id'
         })
     # Test normal initialization
-    step_result = StepResult(status='ok',
-                             resource=resource,
-                             step='TestStep',
-                             reason='TestReason',
-                             remediation='TestRemediation',
-                             remediation_skipped=False,
-                             prompt_response=None)
+    ok_step_eval = report.ResourceEvaluation(resource=resource,
+                                             status='ok',
+                                             reason='TestReason',
+                                             remediation='TestRemediation')
+    step_result = report.StepResult(step=Step(uuid='ok.step.friendly.name'))
+    step_result.results.append(ok_step_eval)
 
-    self.assertEqual(step_result.status, 'ok')
-    self.assertEqual(str(step_result.resource), 'test/test-id')
-    self.assertEqual(step_result.step, 'TestStep')
-    # Add more assertions as needed
+    self.assertEqual(step_result.overall_status, 'ok')
 
   def test_equality(self):
     # Test objects with the same properties are considered equal
-    result1 = StepResult('ok', None, 'Step1', 'Reason', True)
-    result2 = StepResult('ok', None, 'Step1', 'Reason', True)
+    result1 = StepResult(Step(uuid='uuid'))
+    result2 = StepResult(Step(uuid='uuid'))
     self.assertEqual(result1, result2)
 
     # Test objects with different properties are not considered equal
-    result3 = StepResult('failed', None, 'Step1', None, None)
+    result3 = StepResult(Step())
     self.assertNotEqual(result1, result3)

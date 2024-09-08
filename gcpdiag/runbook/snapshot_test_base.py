@@ -38,20 +38,19 @@ class RulesSnapshotTestBase:
     output_stream = io.StringIO()
     sys.stdout = _Tee(output_stream, sys.stdout)
     for parameter in self.rule_parameters:
-      context = self._mk_context(parameter=parameter)
-      self.de.dt = rule
-      print(textwrap.fill(str(context), 100), file=sys.stdout, end='\n\n')
-      self.de.run_diagnostic_tree(context)
+      parameters = self._mk_parameters(parameter=parameter)
+      self.de.tree = rule
+      print(textwrap.fill(str(parameters), 100), file=sys.stdout, end='\n\n')
+      self.de.run_diagnostic_tree(parameter=parameters)
       print('\n')
     snapshot.assert_match(
         output_stream.getvalue(),
         path.join(
             snapshot.snapshot_dir,
-            f'{util.pascal_case_to_snake_case(rule(None).__class__.__name__)}.txt'
-        ))
+            f'{util.pascal_case_to_snake_case(rule().__class__.__name__)}.txt'))
 
-  def _mk_context(self, parameter):
-    return models.Context(project_id=self.project_id, parameters=parameter)
+  def _mk_parameters(self, parameter):
+    return models.Parameter(parameter)
 
 
 class _Tee:

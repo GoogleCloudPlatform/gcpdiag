@@ -1,6 +1,5 @@
-project: gcpdiag-gce-faultyssh-runbook, parameters: {check_os_login=True,name=faulty-linux-
-ssh,principal=cannotssh@example.com,project_id=gcpdiag-gce-faultyssh-
-runbook,tunnel_through_iap=True,zone=europe-west2-a}
+check_os_login=True,name=faulty-linux-ssh,principal=cannotssh@example.com,project_id=gcpdiag-gce-
+faultyssh-runbook,tunnel_through_iap=True,zone=europe-west2-a
 
 gce/ssh: A comprehensive troubleshooting guide for common issues which affects SSH connectivity to VMs.
 
@@ -236,9 +235,9 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 [END]: Finalizing SSH diagnostics...
 
 
-project: gcpdiag-gce-faultyssh-runbook, parameters: {check_os_login=True,name=valid-linux-
-ssh,principal=canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com,project_id=gcpdiag-gce-
-faultyssh-runbook,tunnel_through_iap=True,zone=europe-west2-a}
+check_os_login=True,name=valid-linux-ssh,principal=canssh@gcpdiag-gce-faultyssh-
+runbook.iam.gserviceaccount.com,project_id=gcpdiag-gce-faultyssh-
+runbook,tunnel_through_iap=True,zone=europe-west2-a
 
 gce/ssh: A comprehensive troubleshooting guide for common issues which affects SSH connectivity to VMs.
 
@@ -447,10 +446,9 @@ principal in Cloud Console / gcloud (incl. impersonated service account)
 [END]: Finalizing SSH diagnostics...
 
 
-project: gcpdiag-gce-faultyssh-runbook, parameters:
-{check_os_login=False,local_user=no_user,name=faulty-windows-
+check_os_login=False,local_user=no_user,name=faulty-windows-
 ssh,principal=cannot@example.com,project_id=gcpdiag-gce-faultyssh-
-runbook,src_ip=0.0.0.0,tunnel_through_iap=False,zone=europe-west2-a}
+runbook,src_ip=0.0.0.0,tunnel_through_iap=False,zone=europe-west2-a
 
 gce/ssh: A comprehensive troubleshooting guide for common issues which affects SSH connectivity to VMs.
 
