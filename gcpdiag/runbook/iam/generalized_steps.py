@@ -97,10 +97,12 @@ class IamPolicyCheck(runbook.Step):
   permissions: Optional[Set[str]] = None
   roles: Optional[Set[str]] = None
   require_all: bool = False
+  project = None
 
   def execute(self):
     """Verifying IAM policy"""
-    iam_policy = iam.get_project_policy(op.get(flags.PROJECT_ID))
+    project_id = self.project or op.get(flags.PROJECT_ID)
+    iam_policy = iam.get_project_policy(project_id)
     principal = self.principal or op.get(flags.PRINCIPAL)
     present_permissions_or_roles = set()
     missing_permissions_or_roles = set()
