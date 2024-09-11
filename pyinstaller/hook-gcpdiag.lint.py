@@ -18,20 +18,26 @@ from PyInstaller.utils.hooks import collect_submodules
 # update also bin/precommit-required-files
 hiddenimports = \
   collect_submodules('gcpdiag.lint.apigee') + \
-  collect_submodules('gcpdiag.lint.billing') + \
+  collect_submodules('gcpdiag.lint.asm') + \
   collect_submodules('gcpdiag.lint.bigquery') + \
-  collect_submodules('gcpdiag.lint.composer') + \
+  collect_submodules('gcpdiag.lint.billing') + \
+  collect_submodules('gcpdiag.lint.cloudrun') + \
   collect_submodules('gcpdiag.lint.cloudsql') + \
+  collect_submodules('gcpdiag.lint.composer') + \
   collect_submodules('gcpdiag.lint.dataflow') + \
   collect_submodules('gcpdiag.lint.datafusion') + \
   collect_submodules('gcpdiag.lint.dataproc') + \
-  collect_submodules('gcpdiag.lint.gaes') + \
+  collect_submodules('gcpdiag.lint.gae') + \
   collect_submodules('gcpdiag.lint.gcb') + \
   collect_submodules('gcpdiag.lint.gce') + \
   collect_submodules('gcpdiag.lint.gcf') + \
+  collect_submodules('gcpdiag.lint.gcs') + \
   collect_submodules('gcpdiag.lint.gke') + \
-  collect_submodules('gcpdiag.lint.monitoring') + \
-  collect_submodules('gcpdiag.lint.vpc') + \
-  collect_submodules('gcpdiag.lint.lb') + \
   collect_submodules('gcpdiag.lint.iam') + \
-  collect_submodules('gcpdiag.lint.tpu')
+  collect_submodules('gcpdiag.lint.interconnect') + \
+  collect_submodules('gcpdiag.lint.lb') + \
+  collect_submodules('gcpdiag.lint.notebooks') + \
+  collect_submodules('gcpdiag.lint.pubsub') + \
+  collect_submodules('gcpdiag.lint.tpu') + \
+  collect_submodules('gcpdiag.lint.vertex') + \
+  collect_submodules('gcpdiag.lint.vpc')
