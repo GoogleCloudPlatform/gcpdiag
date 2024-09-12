@@ -24,6 +24,8 @@ from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Set, final
 
 import googleapiclient.errors
+from dateutil import parser
+from dateutil.tz import UTC
 from jinja2 import TemplateNotFound
 
 from gcpdiag import caching, config, models, utils
@@ -455,10 +457,26 @@ class DiagnosticEngine:
           built-in types and the cast is possible. Otherwise, returns the original object.
       """
       if is_builtin_type(target_type) and target_type != bool:
+        if isinstance(param_val, datetime):
+          if target_type == int:
+            # Convert datetime to an integer timestamp
+            return int(param_val.timestamp())
+          elif target_type == float:
+            # Convert datetime to a floating-point timestamp
+            return param_val.timestamp()
+          elif target_type == str:
+            # Convert datetime to a string
+            return param_val.isoformat()
+          # Add more conversions as needed
+          else:
+            return param_val
         try:
           return target_type(param_val)
-        except ValueError:
-          print(f'Cannot cast {param_val} to type {target_type}.')
+        except (TypeError, ValueError):
+          print(
+              f'Type/Value Error: Cannot cast {param_val} to type {target_type}.'
+          )
+          return param_val
       elif target_type == bool:
         try:
           return constants.BOOL_VALUES[str(param_val).lower()]
@@ -515,6 +533,25 @@ class DiagnosticEngine:
       # cast the parameter to the type specified by the runbook.
       if (dt_param and dt_param.get('type') and dt_param['type'] != str and
           user_provided_param):
+        if isinstance(user_provided_param, str):
+          # Try parsing the string with dateutil.parser to handle different formats
+          try:
+            user_provided_param = parser.parse(user_provided_param)
+            if user_provided_param.tzinfo is None:
+              # Define the timezone (for example, UTC) if not present
+              tz = UTC
+              # Attach the timezone information
+              user_provided_param = user_provided_param.replace(tzinfo=tz)
+          except ValueError as e:
+            logging.error('Error parsing date string: %s', e)
+        elif isinstance(user_provided_param, datetime):
+          if user_provided_param.tzinfo is None:
+            # Create a timezone object with the desired offset, for example UTC+0:00
+            tz = UTC
+            # Make the datetime object offset-aware by attaching the timezone
+            user_provided_param = user_provided_param.replace(tzinfo=tz)
+        else:
+          logging.error('Invalid input: Expected a String or Datetime object.')
         parameters[k] = cast_to_type(user_provided_param, dt_param['type'])
 
   def run_diagnostic_tree(self, parameter: models.Parameter) -> None:
