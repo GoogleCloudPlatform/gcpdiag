@@ -13,14 +13,10 @@
 # limitations under the License.
 """Operator Module"""
 
-import logging
 from contextlib import contextmanager
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional, Tuple
 
-from google.auth import exceptions
-
-from gcpdiag import models, utils
-from gcpdiag.queries.apis import is_enabled
+from gcpdiag import models
 from gcpdiag.runbook.constants import *  # pylint: disable=unused-wildcard-import, wildcard-import
 from gcpdiag.runbook.report import InteractionInterface
 
@@ -287,29 +283,3 @@ def get_all_metadata(step_execution_id=None):
   step_execution_id = step_execution_id or operator.step.execution_id
   return operator.interface.rm.get_all_step_metadata(
       step_execution_id=step_execution_id)
-
-
-def verify_access(services: List, project_id: str) -> Dict[str, str]:
-  """Verify that the user has access to the project, exit with an error otherwise."""
-  service_state = {}
-  for service in services:
-    try:
-      if not is_enabled(project_id, service):
-        service_state[service] = 'ENABLED'
-        logging.error(
-            ('%s.googleapis.com service must be enabled. To enable, execute:\n'
-             'gcloud services enable %s.googleapis.com --project=%s'), service,
-            service, project_id)
-      else:
-        service_state[service] = 'DISABLED'
-    except utils.GcpApiError as err:
-      if 'SERVICE_DISABLED' == err.reason and 'serviceusage.googleapis.com' == err.service:
-        logging.error(((
-            'Service Usage API must be enabled. To enable, execute:\n'
-            'gcloud services enable serviceusage.googleapis.com --project=%s'),
-                       project_id))
-      else:
-        logging.error('can\'t access project %s: %s.', project_id, err.message)
-    except exceptions.GoogleAuthError as err:
-      logging.error('%s', err)
-  return service_state

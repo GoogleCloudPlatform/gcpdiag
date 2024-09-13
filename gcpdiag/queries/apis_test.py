@@ -48,6 +48,14 @@ class Test:
     assert apis.is_enabled(DUMMY_PROJECT_NAME, 'container')
     assert not apis.is_enabled(DUMMY_PROJECT_NAME, 'containerxyz')
 
+  def test_is_all_enabled(self):
+    for value in apis.is_all_enabled(DUMMY_PROJECT_NAME,
+                                     ['container', 'compute']).values():
+      assert value == 'ENABLED'
+    for val in apis.is_all_enabled(DUMMY_PROJECT_NAME,
+                                   ['containerxyz', 'computelol']).values():
+      assert val == 'DISABLED'
+
 
 class TestTPC(TestCase):
   """testing for TPC universe domain settings."""

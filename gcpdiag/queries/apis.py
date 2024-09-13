@@ -225,7 +225,18 @@ def _list_apis(project_id: str) -> Set[str]:
 
 
 def is_enabled(project_id: str, service_name: str) -> bool:
-  return f'{service_name}.googleapis.com' in _list_apis(project_id)
+  universe_domain = config.get('universe_domain')
+  return f'{service_name}.{universe_domain}' in _list_apis(project_id)
+
+
+def is_all_enabled(project_id: str, services: list) -> Dict[str, str]:
+  service_state = {}
+  for service in services:
+    if not is_enabled(project_id, service):
+      service_state[service] = 'DISABLED'
+    else:
+      service_state[service] = 'ENABLED'
+  return service_state
 
 
 @caching.cached_api_call(in_memory=True)
