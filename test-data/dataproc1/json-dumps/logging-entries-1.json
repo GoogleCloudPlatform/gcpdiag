@@ -8,8 +8,8 @@
           "message": "Cannot start master: Timed out waiting for 2 nodes. This usually happens when VM to VM communications are blocked by firewall rules. For additional details, see https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/network#firewall_rule_requirement\nOperation timed out: Only 0 out of 2 minimum required datanodes running.\nOperation timed out: Only 0 out of 2 minimum required node managers running."
         },
         "authenticationInfo": {
-          "principalEmail": "edoardobasili@google.com",
-          "principalSubject": "user:edoardobasili@google.com"
+          "principalEmail": "abcdef@abcdef.com",
+          "principalSubject": "user:abcdef@abcdef.com"
         },
         "requestMetadata": {
           "requestAttributes": {},
@@ -44,8 +44,8 @@
         "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
         "status": {},
         "authenticationInfo": {
-          "principalEmail": "edoardobasili@google.com",
-          "principalSubject": "user:edoardobasili@google.com"
+          "principalEmail": "abcdef@abcdef.com",
+          "principalSubject": "user:abcdef@abcdef.com"
         },
         "requestMetadata": {
           "callerIp": "gce-internal-ip",
@@ -116,8 +116,8 @@
         "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
         "status": {},
         "authenticationInfo": {
-          "principalEmail": "edoardobasili@google.com",
-          "principalSubject": "user:edoardobasili@google.com"
+          "principalEmail": "abcdef@abcdef.com",
+          "principalSubject": "user:abcdef@abcdef.com"
         },
         "requestMetadata": {
           "requestAttributes": {},
@@ -152,8 +152,8 @@
         "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
         "status": {},
         "authenticationInfo": {
-          "principalEmail": "edoardobasili@google.com",
-          "principalSubject": "user:edoardobasili@google.com"
+          "principalEmail": "abcdef@abcdef.com",
+          "principalSubject": "user:abcdef@abcdef.com"
         },
         "requestMetadata": {
           "requestAttributes": {},
@@ -188,8 +188,8 @@
         "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
         "status": {},
         "authenticationInfo": {
-          "principalEmail": "edoardobasili@google.com",
-          "principalSubject": "user:edoardobasili@google.com"
+          "principalEmail": "abcdef@abcdef.com",
+          "principalSubject": "user:abcdef@abcdef.com"
         },
         "requestMetadata": {
           "requestAttributes": {},
@@ -224,8 +224,8 @@
         "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
         "status": {},
         "authenticationInfo": {
-          "principalEmail": "edoardobasili@google.com",
-          "principalSubject": "user:edoardobasili@google.com"
+          "principalEmail": "abcdef@abcdef.com",
+          "principalSubject": "user:abcdef@abcdef.com"
         },
         "requestMetadata": {
           "callerIp": "gce-internal-ip",
@@ -314,8 +314,8 @@
         "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
         "status": {},
         "authenticationInfo": {
-          "principalEmail": "edoardobasili@google.com",
-          "principalSubject": "user:edoardobasili@google.com"
+          "principalEmail": "abcdef@abcdef.com",
+          "principalSubject": "user:abcdef@abcdef.com"
         },
         "requestMetadata": {
           "callerIp": "gce-internal-ip",
@@ -396,8 +396,8 @@
         "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
         "status": {},
         "authenticationInfo": {
-          "principalEmail": "edoardobasili@google.com",
-          "principalSubject": "user:edoardobasili@google.com"
+          "principalEmail": "abcdef@abcdef.com",
+          "principalSubject": "user:abcdef@abcdef.com"
         },
         "requestMetadata": {
           "callerIp": "gce-internal-ip",
