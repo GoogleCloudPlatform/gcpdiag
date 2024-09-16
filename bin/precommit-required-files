@@ -17,6 +17,8 @@ from typing import List
 from jinja2 import TemplateNotFound, UndefinedError
 
 from gcpdiag import lint, runbook
+from gcpdiag.product_list import get_product_list
+from gcpdiag.rule_classes import get_rule_classes
 from gcpdiag.runbook import DiagnosticTree, util
 
 #Lint Rules Doc
@@ -26,60 +28,9 @@ LINT_RULES_DIR = 'gcpdiag/lint'
 WEBSITE_RUNBOOK_DIR = 'website/content/en/runbook'
 
 # update also pyinstaller/hook-gcpdiag.lint.py
-PRODUCTS = {
-    'apigee':
-        '[Apigee API Management](https://cloud.google.com/apigee)',
-    'billing':
-        '[Cloud Billing](https://cloud.google.com/billing)',
-    'bigquery':
-        '[BigQuery](https://cloud.google.com/bigquery)',
-    'composer':
-        '[Cloud Composer](https://cloud.google.com/composer)',
-    'cloudrun':
-        '[Cloud Run](https://cloud.google.com/run)',
-    'cloudsql':
-        '[CloudSQL](https://cloud.google.com/sql)',
-    'dataflow':
-        '[Dataflow](https://cloud.google.com/dataflow)',
-    'datafusion':
-        '[Cloud Data Fusion](https://cloud.google.com/data-fusion)',
-    'dataproc':
-        '[Cloud Dataproc](https://cloud.google.com/dataproc)',
-    'gae':
-        '[App Engine](https://cloud.google.com/appengine)',
-    'gcb':
-        '[Cloud Build](https://cloud.google.com/build)',
-    'gce':
-        '[Compute Engine](https://cloud.google.com/compute)',
-    'gcf':
-        '[Cloud Functions](https://cloud.google.com/functions)',
-    'gke':
-        '[Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine)',
-    'iam':
-        '[Identity and Access Management (IAM)](https://cloud.google.com/iam)',
-    'lb':
-        '[Load balancing](https://cloud.google.com/load-balancing)',
-    'monitoring':
-        'https://cloud.google.com/monitoring',
-    'tpu':
-        '[Cloud TPU](https://cloud.google.com/tpu)',
-    'vpc':
-        '[Virtual Private Cloud](https://cloud.google.com/vpc)',
-    'vertex':
-        '[Vertex AI](https://cloud.google.com/vertex-ai)',
-}
+PRODUCTS = get_product_list()
 
-RULE_CLASSES = {
-    'BP': 'Best practice, opinionated recommendation',
-    'ERR': 'Something that is very likely to be wrong',
-    'WARN': 'Something that is possibly wrong',
-    'SEC': 'Potential security issue',
-    # classes for extended rules
-    'BP_EXT': '(Extended) Best practice, opinionated recommendation',
-    'ERR_EXT': '(Extended) Something that is very likely to be wrong',
-    'WARN_EXT': '(Extended) Something that is possibly wrong',
-    'SEC_EXT': '(Extended) Potential security issue',
-}
+RULE_CLASSES = get_rule_classes()
 
 
 def usage():

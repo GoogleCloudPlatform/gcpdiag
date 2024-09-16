@@ -94,3 +94,9 @@ repos:
     name: Check that gke eol.yaml file is up to date and contains fresh EOL data
     entry: ./bin/precommit-gke-eol-file.sh
     language: script
+- repo: local
+  hooks:
+  - id: todo-annotations
+    name: Check presence of "TODO:" comments
+    entry: ./bin/precommit-todo-annotations
+    language: script

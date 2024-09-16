@@ -1,0 +1,18 @@
+{
+  "rule_name": "",
+  "__name": "{{ cookiecutter.rule_name.lower().replace(' ', '_').replace('-', '_') }}",
+  "year": "{% now 'utc', '%Y' %}",
+  "severity": "",
+  "__products": "",
+  "product": "",
+  "__rule_numbers": "",
+  "number": "{{ '001' if cookiecutter.__rule_numbers[cookiecutter.product][cookiecutter.year] is undefined else cookiecutter.__rule_numbers[cookiecutter.product][cookiecutter.year][cookiecutter.severity] | default('001') }}",
+  "title": "",
+  "description": "",
+  "__rule_classes": "",
+  "__prompts__": {
+    "rule_name": "short description of the lint rule",
+    "title": "a one-line description of the rule, that states the GOOD/EXPECTED state of the product/feature",
+    "description": "3-4 sentenses that explain the issue in greater details"
+  }
+}

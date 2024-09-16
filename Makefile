@@ -34,6 +34,9 @@ build:
 bump-version:
 	bumpversion --commit minor
 
+new-rule:
+	python cookiecutter-gcpdiag-rule/cookiecutter_runner.py
+
 tarfile:
 	# TODO: replace with something based on setuptools?
 	rm -rf dist-tmp
