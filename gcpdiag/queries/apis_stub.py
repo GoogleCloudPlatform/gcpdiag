@@ -125,7 +125,52 @@ JSON_PROJECT_DIR = {
     'gcpdiag-gke4-runbook':
         pathlib.Path(__file__).parents[2] / 'test-data/gke4/json-dumps',
     '12340033':
-        pathlib.Path(__file__).parents[2] / 'test-data/gke4/json-dumps'
+        pathlib.Path(__file__).parents[2] / 'test-data/gke4/json-dumps',
+    'centos-cloud':
+        pathlib.Path(__file__).parents[2] /
+        'test-data/gce-image-license/json-dumps',
+    'cos-cloud':
+        pathlib.Path(__file__).parents[2] /
+        'test-data/gce-image-license/json-dumps',
+    'debian-cloud':
+        pathlib.Path(__file__).parents[2] /
+        'test-data/gce-image-license/json-dumps',
+    'fedora-cloud':
+        pathlib.Path(__file__).parents[2] /
+        'test-data/gce-image-license/json-dumps',
+    'fedora-coreos-cloud':
+        pathlib.Path(__file__).parents[2] /
+        'test-data/gce-image-license/json-dumps',
+    'opensuse-cloud':
+        pathlib.Path(__file__).parents[2] /
+        'test-data/gce-image-license/json-dumps',
+    'rhel-cloud':
+        pathlib.Path(__file__).parents[2] /
+        'test-data/gce-image-license/json-dumps',
+    'rhel-sap-cloud':
+        pathlib.Path(__file__).parents[2] /
+        'test-data/gce-image-license/json-dumps',
+    'rocky-linux-cloud':
+        pathlib.Path(__file__).parents[2] /
+        'test-data/gce-image-license/json-dumps',
+    'suse-cloud':
+        pathlib.Path(__file__).parents[2] /
+        'test-data/gce-image-license/json-dumps',
+    'suse-sap-cloud':
+        pathlib.Path(__file__).parents[2] /
+        'test-data/gce-image-license/json-dumps',
+    'ubuntu-os-cloud':
+        pathlib.Path(__file__).parents[2] /
+        'test-data/gce-image-license/json-dumps',
+    'ubuntu-os-pro-cloud':
+        pathlib.Path(__file__).parents[2] /
+        'test-data/gce-image-license/json-dumps',
+    'windows-cloud':
+        pathlib.Path(__file__).parents[2] /
+        'test-data/gce-image-license/json-dumps',
+    'windows-sql-cloud':
+        pathlib.Path(__file__).parents[2] /
+        'test-data/gce-image-license/json-dumps',
 }
 
 # set to a value higher than 0 to emulate API temp. failure

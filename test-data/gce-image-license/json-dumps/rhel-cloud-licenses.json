@@ -1,0 +1,138 @@
+{
+  "id": "projects/rhel-cloud/global/licenses",
+  "items": [
+    {
+      "kind": "compute#license",
+      "name": "rhel-6-byol",
+      "chargesUseFee": false,
+      "id": "2285321382868516082",
+      "licenseCode": "2862452038400965874",
+      "creationTimestamp": "2017-10-05T16:37:01.816-07:00",
+      "description": "Red Hat Enterprise Linux 6 BYOL",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/rhel-cloud/global/licenses/rhel-6-byol"
+    },
+    {
+      "kind": "compute#license",
+      "name": "rhel-6-byos",
+      "chargesUseFee": false,
+      "id": "8599870313857478211",
+      "licenseCode": "4720191914037931587",
+      "creationTimestamp": "2019-08-07T15:29:00.736-07:00",
+      "description": "Red Hat Enterprise Linux 6 BYOS",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/rhel-cloud/global/licenses/rhel-6-byos"
+    },
+    {
+      "kind": "compute#license",
+      "name": "rhel-6-els",
+      "chargesUseFee": false,
+      "id": "349077510725721113",
+      "licenseCode": "1176308840663243801",
+      "creationTimestamp": "2020-09-02T11:22:46.089-07:00",
+      "description": "Red Hat Enterprise Linux 6 Extended Life Cycle Support",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/rhel-cloud/global/licenses/rhel-6-els"
+    },
+    {
+      "kind": "compute#license",
+      "name": "rhel-6-server",
+      "chargesUseFee": true,
+      "id": "6080198141787314983",
+      "licenseCode": "1000002",
+      "creationTimestamp": "2013-08-19T17:17:57.000-07:00",
+      "description": "RedHat Enterprise Linux 6",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/rhel-cloud/global/licenses/rhel-6-server"
+    },
+    {
+      "kind": "compute#license",
+      "name": "rhel-7-byol",
+      "chargesUseFee": false,
+      "id": "5226391214801780519",
+      "licenseCode": "4621277670514851623",
+      "creationTimestamp": "2017-10-05T16:35:36.053-07:00",
+      "description": "Red Hat Enterprise Linux 7 BYOL",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/rhel-cloud/global/licenses/rhel-7-byol"
+    },
+    {
+      "kind": "compute#license",
+      "name": "rhel-7-byos",
+      "chargesUseFee": false,
+      "id": "242324105752669770",
+      "licenseCode": "1492188837615955530",
+      "creationTimestamp": "2019-08-07T15:28:53.703-07:00",
+      "description": "Red Hat Enterprise Linux 7 BYOS",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/rhel-cloud/global/licenses/rhel-7-byos"
+    },
+    {
+      "kind": "compute#license",
+      "name": "rhel-7-els",
+      "chargesUseFee": false,
+      "id": "1277727991743525253",
+      "licenseCode": "4646774207868449156",
+      "creationTimestamp": "2024-02-28T11:54:18.289-08:00",
+      "description": "Red Hat Enterprise Linux 7 Extended Life Cycle Support",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/rhel-cloud/global/licenses/rhel-7-els"
+    },
+    {
+      "kind": "compute#license",
+      "name": "rhel-7-server",
+      "chargesUseFee": true,
+      "id": "6080198135500386054",
+      "licenseCode": "1000006",
+      "creationTimestamp": "2013-08-19T17:17:57.000-07:00",
+      "description": "RedHat Enterprise Linux 7",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/rhel-cloud/global/licenses/rhel-7-server"
+    },
+    {
+      "kind": "compute#license",
+      "name": "rhel-8-byos",
+      "chargesUseFee": false,
+      "id": "7836451121217859165",
+      "licenseCode": "8475125252192923229",
+      "creationTimestamp": "2019-08-07T15:29:06.897-07:00",
+      "description": "Red Hat Enterprise Linux 8 BYOS",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/rhel-cloud/global/licenses/rhel-8-byos"
+    },
+    {
+      "kind": "compute#license",
+      "name": "rhel-8-server",
+      "chargesUseFee": false,
+      "id": "3637965609761428989",
+      "licenseCode": "601259152637613565",
+      "creationTimestamp": "2019-01-22T11:12:19.065-08:00",
+      "description": "RedHat Enterprise Linux 8",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/rhel-cloud/global/licenses/rhel-8-server"
+    },
+    {
+      "kind": "compute#license",
+      "name": "rhel-9-byos",
+      "chargesUseFee": false,
+      "id": "1643200137801707630",
+      "licenseCode": "3837518230911135854",
+      "creationTimestamp": "2022-03-07T15:00:17.359-08:00",
+      "description": "Red Hat Enterprise Linux 9 BYOS",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/rhel-cloud/global/licenses/rhel-9-byos"
+    },
+    {
+      "kind": "compute#license",
+      "name": "rhel-9-server",
+      "chargesUseFee": false,
+      "id": "7600336033804923015",
+      "licenseCode": "7883559014960410759",
+      "creationTimestamp": "2022-03-07T14:59:52.389-08:00",
+      "description": "Red Hat Enterprise Linux 9",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/rhel-cloud/global/licenses/rhel-9-server"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/rhel-cloud/global/licenses"
+}

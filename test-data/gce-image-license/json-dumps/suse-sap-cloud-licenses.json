@@ -1,0 +1,28 @@
+{
+  "id": "projects/suse-sap-cloud/global/licenses",
+  "items": [
+    {
+      "kind": "compute#license",
+      "name": "sles-sap-12",
+      "chargesUseFee": false,
+      "id": "7819209786793516810",
+      "licenseCode": "4079932016749305610",
+      "creationTimestamp": "2017-03-02T10:18:13.971-08:00",
+      "description": "SLES 12 for SAP",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/suse-sap-cloud/global/licenses/sles-sap-12"
+    },
+    {
+      "kind": "compute#license",
+      "name": "sles-sap-15",
+      "chargesUseFee": false,
+      "id": "6924394672531508922",
+      "licenseCode": "4764125400812555962",
+      "creationTimestamp": "2018-02-02T10:39:17.468-08:00",
+      "description": "SLES 15 For SAP",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/suse-sap-cloud/global/licenses/sles-sap-15"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/suse-sap-cloud/global/licenses"
+}

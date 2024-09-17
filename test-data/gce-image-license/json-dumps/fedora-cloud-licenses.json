@@ -1,0 +1,94 @@
+{
+  "id": "projects/fedora-cloud/global/licenses",
+  "items": [
+    {
+      "kind": "compute#license",
+      "name": "fedora-33-cloud-base",
+      "chargesUseFee": false,
+      "id": "646646099248634613",
+      "licenseCode": "8809591208937216757",
+      "creationTimestamp": "2020-11-19T13:31:06.831-08:00",
+      "description": "Fedora 33 Cloud Base",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/fedora-cloud/global/licenses/fedora-33-cloud-base"
+    },
+    {
+      "kind": "compute#license",
+      "name": "fedora-34-cloud-base",
+      "chargesUseFee": false,
+      "id": "4865478576897108243",
+      "licenseCode": "2706998670158047507",
+      "creationTimestamp": "2021-05-06T09:23:24.362-07:00",
+      "description": "Fedora 34 Cloud Base",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/fedora-cloud/global/licenses/fedora-34-cloud-base"
+    },
+    {
+      "kind": "compute#license",
+      "name": "fedora-35-cloud-base",
+      "chargesUseFee": false,
+      "id": "3861096437478587519",
+      "licenseCode": "1001413950881922175",
+      "creationTimestamp": "2021-12-21T13:09:36.291-08:00",
+      "description": "Fedora 35 Cloud Base",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/fedora-cloud/global/licenses/fedora-35-cloud-base"
+    },
+    {
+      "kind": "compute#license",
+      "name": "fedora-36-cloud-base",
+      "chargesUseFee": false,
+      "id": "2979243289693777887",
+      "licenseCode": "4937629199917248478",
+      "creationTimestamp": "2022-08-22T21:01:53.021-07:00",
+      "description": "Fedora 36 Cloud Base",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/fedora-cloud/global/licenses/fedora-36-cloud-base"
+    },
+    {
+      "kind": "compute#license",
+      "name": "fedora-37-beta-cloud-base",
+      "chargesUseFee": false,
+      "id": "7460591022215304124",
+      "licenseCode": "7842126891402957754",
+      "creationTimestamp": "2022-09-25T21:40:53.208-07:00",
+      "description": "Fedora 37 Beta Cloud Base",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/fedora-cloud/global/licenses/fedora-37-beta-cloud-base"
+    },
+    {
+      "kind": "compute#license",
+      "name": "fedora-37-cloud-base",
+      "chargesUseFee": false,
+      "id": "8530529652626673835",
+      "licenseCode": "6298964164312289450",
+      "creationTimestamp": "2023-03-15T18:17:57.197-07:00",
+      "description": "Fedora 37 Cloud Base",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/fedora-cloud/global/licenses/fedora-37-cloud-base"
+    },
+    {
+      "kind": "compute#license",
+      "name": "fedora-38-cloud-base",
+      "chargesUseFee": false,
+      "id": "8626823085690963723",
+      "licenseCode": "5898834260713785099",
+      "creationTimestamp": "2023-03-15T19:07:32.800-07:00",
+      "description": "Fedora 38 Cloud Base",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/fedora-cloud/global/licenses/fedora-38-cloud-base"
+    },
+    {
+      "kind": "compute#license",
+      "name": "fedora-39-cloud-base",
+      "chargesUseFee": false,
+      "id": "4256409977573932653",
+      "licenseCode": "725690115706912365",
+      "creationTimestamp": "2023-09-28T01:59:46.561-07:00",
+      "description": "Fedora 39 Cloud Base",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/fedora-cloud/global/licenses/fedora-39-cloud-base"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/fedora-cloud/global/licenses"
+}

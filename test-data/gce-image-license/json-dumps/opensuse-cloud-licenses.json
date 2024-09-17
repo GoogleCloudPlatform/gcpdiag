@@ -1,0 +1,28 @@
+{
+  "id": "projects/opensuse-cloud/global/licenses",
+  "items": [
+    {
+      "kind": "compute#license",
+      "name": "opensuse-13",
+      "chargesUseFee": true,
+      "id": "6264275645351518247",
+      "licenseCode": "1000211",
+      "creationTimestamp": "2016-02-09T14:08:14.000-08:00",
+      "description": "OpenSUSE 13",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/opensuse-cloud/global/licenses/opensuse-13"
+    },
+    {
+      "kind": "compute#license",
+      "name": "opensuse-leap-42",
+      "chargesUseFee": true,
+      "id": "8399628480346513446",
+      "licenseCode": "1000212",
+      "creationTimestamp": "2016-02-09T14:08:14.000-08:00",
+      "description": "OpenSUSE Leap 42",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/opensuse-cloud/global/licenses/opensuse-leap-42"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/opensuse-cloud/global/licenses"
+}

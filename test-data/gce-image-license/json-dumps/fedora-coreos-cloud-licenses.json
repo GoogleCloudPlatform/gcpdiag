@@ -1,0 +1,83 @@
+{
+  "id": "projects/fedora-coreos-cloud/global/licenses",
+  "items": [
+    {
+      "kind": "compute#license",
+      "name": "fedora-coreos-branched",
+      "chargesUseFee": false,
+      "id": "7090747570141108142",
+      "licenseCode": "1137282471016634286",
+      "creationTimestamp": "2021-05-06T10:37:05.779-07:00",
+      "description": "Fedora CoreOS Branched",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/fedora-coreos-cloud/global/licenses/fedora-coreos-branched"
+    },
+    {
+      "kind": "compute#license",
+      "name": "fedora-coreos-next",
+      "chargesUseFee": false,
+      "id": "556917158607495357",
+      "licenseCode": "8565510459461902525",
+      "creationTimestamp": "2020-05-06T13:30:10.447-07:00",
+      "description": "Fedora CoreOS Next",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/fedora-coreos-cloud/global/licenses/fedora-coreos-next"
+    },
+    {
+      "kind": "compute#license",
+      "name": "fedora-coreos-next-devel",
+      "chargesUseFee": false,
+      "id": "1767594780660769675",
+      "licenseCode": "3659048100932002699",
+      "creationTimestamp": "2020-05-06T13:26:12.829-07:00",
+      "description": "Fedora CoreOS Next-Devel",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/fedora-coreos-cloud/global/licenses/fedora-coreos-next-devel"
+    },
+    {
+      "kind": "compute#license",
+      "name": "fedora-coreos-rawhide",
+      "chargesUseFee": false,
+      "id": "5967584498063875084",
+      "licenseCode": "6563587759585991692",
+      "creationTimestamp": "2021-05-06T10:09:55.444-07:00",
+      "description": "Fedora CoreOS Rawhide",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/fedora-coreos-cloud/global/licenses/fedora-coreos-rawhide"
+    },
+    {
+      "kind": "compute#license",
+      "name": "fedora-coreos-stable",
+      "chargesUseFee": false,
+      "id": "1225811452571328641",
+      "licenseCode": "3474194821636071553",
+      "creationTimestamp": "2020-05-06T13:30:38.353-07:00",
+      "description": "Fedora CoreOS Stable",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/fedora-coreos-cloud/global/licenses/fedora-coreos-stable"
+    },
+    {
+      "kind": "compute#license",
+      "name": "fedora-coreos-testing",
+      "chargesUseFee": false,
+      "id": "6129359340783444110",
+      "licenseCode": "3779260279882162318",
+      "creationTimestamp": "2020-05-06T13:30:25.861-07:00",
+      "description": "Fedora CoreOS Testing",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/fedora-coreos-cloud/global/licenses/fedora-coreos-testing"
+    },
+    {
+      "kind": "compute#license",
+      "name": "fedora-coreos-testing-devel",
+      "chargesUseFee": false,
+      "id": "4589800477849198811",
+      "licenseCode": "844225830482518235",
+      "creationTimestamp": "2020-05-06T13:29:40.400-07:00",
+      "description": "Fedora CoreOS Testing-Devel",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/fedora-coreos-cloud/global/licenses/fedora-coreos-testing-devel"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/fedora-coreos-cloud/global/licenses"
+}

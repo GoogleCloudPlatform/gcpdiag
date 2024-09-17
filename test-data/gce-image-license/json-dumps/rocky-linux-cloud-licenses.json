@@ -1,0 +1,50 @@
+{
+  "id": "projects/rocky-linux-cloud/global/licenses",
+  "items": [
+    {
+      "kind": "compute#license",
+      "name": "rocky-linux-8",
+      "chargesUseFee": false,
+      "id": "292266368701429789",
+      "licenseCode": "4496053841174591517",
+      "creationTimestamp": "2021-05-03T11:54:42.661-07:00",
+      "description": "Rocky Linux 8",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/rocky-linux-cloud/global/licenses/rocky-linux-8"
+    },
+    {
+      "kind": "compute#license",
+      "name": "rocky-linux-8-optimized-gcp",
+      "chargesUseFee": false,
+      "id": "8825802357826528356",
+      "licenseCode": "6558362506632242275",
+      "creationTimestamp": "2022-06-10T12:24:59.793-07:00",
+      "description": "Rocky Linux 8 Optimized for GCP",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/rocky-linux-cloud/global/licenses/rocky-linux-8-optimized-gcp"
+    },
+    {
+      "kind": "compute#license",
+      "name": "rocky-linux-9",
+      "chargesUseFee": false,
+      "id": "8997780373141070933",
+      "licenseCode": "1393672665428796501",
+      "creationTimestamp": "2022-06-10T12:25:46.595-07:00",
+      "description": "Rocky Linux 9",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/rocky-linux-cloud/global/licenses/rocky-linux-9"
+    },
+    {
+      "kind": "compute#license",
+      "name": "rocky-linux-9-optimized-gcp",
+      "chargesUseFee": false,
+      "id": "3606573183652471876",
+      "licenseCode": "3313713657389392963",
+      "creationTimestamp": "2022-06-10T12:25:32.158-07:00",
+      "description": "Rocky Linux 9 Optimized for GCP",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/rocky-linux-cloud/global/licenses/rocky-linux-9-optimized-gcp"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/rocky-linux-cloud/global/licenses"
+}

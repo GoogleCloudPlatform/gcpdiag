@@ -1,0 +1,61 @@
+{
+  "id": "projects/centos-cloud/global/licenses",
+  "items": [
+    {
+      "kind": "compute#license",
+      "name": "centos-6",
+      "chargesUseFee": true,
+      "id": "6261635378630811686",
+      "licenseCode": "1000206",
+      "creationTimestamp": "2016-02-09T14:08:14.000-08:00",
+      "description": "CentOS 6",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/licenses/centos-6"
+    },
+    {
+      "kind": "compute#license",
+      "name": "centos-7",
+      "chargesUseFee": true,
+      "id": "1590725888655155238",
+      "licenseCode": "1000207",
+      "creationTimestamp": "2016-02-09T14:08:14.000-08:00",
+      "description": "CentOS 7",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/licenses/centos-7"
+    },
+    {
+      "kind": "compute#license",
+      "name": "centos-8",
+      "chargesUseFee": false,
+      "id": "3549388059678600306",
+      "licenseCode": "5731035067256925298",
+      "creationTimestamp": "2019-09-24T10:30:05.016-07:00",
+      "description": "CentOS 8",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/licenses/centos-8"
+    },
+    {
+      "kind": "compute#license",
+      "name": "centos-stream",
+      "chargesUseFee": false,
+      "id": "2847851129470332745",
+      "licenseCode": "3197331720697687881",
+      "creationTimestamp": "2020-12-29T12:29:26.821-08:00",
+      "description": "CentOS Stream",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/licenses/centos-stream"
+    },
+    {
+      "kind": "compute#license",
+      "name": "centos-stream-9",
+      "chargesUseFee": false,
+      "id": "8153611294265844894",
+      "licenseCode": "2587764519704208542",
+      "creationTimestamp": "2022-02-01T12:39:13.879-08:00",
+      "description": "CentOS Stream 9",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/licenses/centos-stream-9"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/centos-cloud/global/licenses"
+}

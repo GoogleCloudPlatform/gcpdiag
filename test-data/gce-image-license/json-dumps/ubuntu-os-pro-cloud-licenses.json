@@ -1,0 +1,138 @@
+{
+  "id": "projects/ubuntu-os-pro-cloud/global/licenses",
+  "items": [
+    {
+      "kind": "compute#license",
+      "name": "ubuntu-pro-1604-lts",
+      "chargesUseFee": false,
+      "id": "3941006390333842763",
+      "licenseCode": "8045211386737108299",
+      "creationTimestamp": "2020-12-03T09:08:52.513-08:00",
+      "description": "Ubuntu Pro 16.04 LTS (Xenial Xerus)",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/ubuntu-os-pro-cloud/global/licenses/ubuntu-pro-1604-lts"
+    },
+    {
+      "kind": "compute#license",
+      "name": "ubuntu-pro-1804-bionic-arm64",
+      "chargesUseFee": false,
+      "id": "7326263841230969689",
+      "licenseCode": "3631530139086248793",
+      "creationTimestamp": "2024-03-13T10:43:18.670-07:00",
+      "description": "ubuntu-pro-1804-bionic-arm64",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/ubuntu-os-pro-cloud/global/licenses/ubuntu-pro-1804-bionic-arm64"
+    },
+    {
+      "kind": "compute#license",
+      "name": "ubuntu-pro-1804-lts",
+      "chargesUseFee": false,
+      "id": "5618755422289962359",
+      "licenseCode": "6022427724719891830",
+      "creationTimestamp": "2020-12-03T09:08:41.124-08:00",
+      "description": "Ubuntu Pro 18.04 LTS (Bionic Beaver)",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/ubuntu-os-pro-cloud/global/licenses/ubuntu-pro-1804-lts"
+    },
+    {
+      "kind": "compute#license",
+      "name": "ubuntu-pro-2004-focal-arm64",
+      "chargesUseFee": false,
+      "id": "8677376590236900130",
+      "licenseCode": "8885648217368976162",
+      "creationTimestamp": "2024-03-13T10:43:41.581-07:00",
+      "description": "ubuntu-pro-2004-focal-arm64",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/ubuntu-os-pro-cloud/global/licenses/ubuntu-pro-2004-focal-arm64"
+    },
+    {
+      "kind": "compute#license",
+      "name": "ubuntu-pro-2004-lts",
+      "chargesUseFee": false,
+      "id": "8936529431231768014",
+      "licenseCode": "599959289349842382",
+      "creationTimestamp": "2020-12-03T09:06:41.907-08:00",
+      "description": "Ubuntu Pro 20.04 LTS (Focal Fossa)",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/ubuntu-os-pro-cloud/global/licenses/ubuntu-pro-2004-lts"
+    },
+    {
+      "kind": "compute#license",
+      "name": "ubuntu-pro-2204-jammy-arm64",
+      "chargesUseFee": false,
+      "id": "2278827998777727759",
+      "licenseCode": "3644693775761824526",
+      "creationTimestamp": "2024-03-13T10:44:00.907-07:00",
+      "description": "ubuntu-pro-2204-jammy-arm64",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/ubuntu-os-pro-cloud/global/licenses/ubuntu-pro-2204-jammy-arm64"
+    },
+    {
+      "kind": "compute#license",
+      "name": "ubuntu-pro-2204-lts",
+      "chargesUseFee": false,
+      "id": "1661165809961015888",
+      "licenseCode": "2592866803419978320",
+      "creationTimestamp": "2021-10-18T09:45:51.910-07:00",
+      "description": "Ubuntu Pro 22.04 LTS (Jammy Jellyfish)",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/ubuntu-os-pro-cloud/global/licenses/ubuntu-pro-2204-lts"
+    },
+    {
+      "kind": "compute#license",
+      "name": "ubuntu-pro-2404-lts",
+      "chargesUseFee": false,
+      "id": "7234930073195138986",
+      "licenseCode": "2176054482269786025",
+      "creationTimestamp": "2023-10-27T10:20:05.914-07:00",
+      "description": "Ubuntu Pro 24.04 LTS (Noble Numbat)",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/ubuntu-os-pro-cloud/global/licenses/ubuntu-pro-2404-lts"
+    },
+    {
+      "kind": "compute#license",
+      "name": "ubuntu-pro-fips-1804-lts",
+      "chargesUseFee": false,
+      "id": "3014414184157572334",
+      "licenseCode": "2609515522535746798",
+      "creationTimestamp": "2022-03-16T05:03:13.515-07:00",
+      "description": "Ubuntu Pro FIPS 18.04 LTS (Bionic Beaver)",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/ubuntu-os-pro-cloud/global/licenses/ubuntu-pro-fips-1804-lts"
+    },
+    {
+      "kind": "compute#license",
+      "name": "ubuntu-pro-fips-2004-lts",
+      "chargesUseFee": false,
+      "id": "4638035787686636796",
+      "licenseCode": "892251481491401980",
+      "creationTimestamp": "2022-03-16T05:03:31.188-07:00",
+      "description": "Ubuntu Pro FIPS 20.04 LTS (Focal Fossa)",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/ubuntu-os-pro-cloud/global/licenses/ubuntu-pro-fips-2004-lts"
+    },
+    {
+      "kind": "compute#license",
+      "name": "ubuntu-pro-fips-2204-lts",
+      "chargesUseFee": false,
+      "id": "3480614574692789277",
+      "licenseCode": "4663571520039971869",
+      "creationTimestamp": "2022-03-16T05:07:14.303-07:00",
+      "description": "Ubuntu Pro FIPS 22.04 LTS (Jammy Jellyfish)",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/ubuntu-os-pro-cloud/global/licenses/ubuntu-pro-fips-2204-lts"
+    },
+    {
+      "kind": "compute#license",
+      "name": "ubuntu-pro-fips-2404-lts",
+      "chargesUseFee": false,
+      "id": "4890027961376722813",
+      "licenseCode": "8575064881497526141",
+      "creationTimestamp": "2023-10-27T10:21:22.731-07:00",
+      "description": "Ubuntu Pro FIPS 24.04 LTS (Noble Numbat)",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/ubuntu-os-pro-cloud/global/licenses/ubuntu-pro-fips-2404-lts"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/ubuntu-os-pro-cloud/global/licenses"
+}

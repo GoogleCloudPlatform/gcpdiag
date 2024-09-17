@@ -1,0 +1,72 @@
+{
+  "id": "projects/debian-cloud/global/licenses",
+  "items": [
+    {
+      "kind": "compute#license",
+      "name": "debian-10-buster",
+      "chargesUseFee": false,
+      "id": "7165099968554055853",
+      "licenseCode": "5543610867827062957",
+      "creationTimestamp": "2018-08-22T17:56:34.778-07:00",
+      "description": "Debian 10 Buster",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-10-buster"
+    },
+    {
+      "kind": "compute#license",
+      "name": "debian-11-bullseye",
+      "chargesUseFee": false,
+      "id": "8474191643257863115",
+      "licenseCode": "3853522013536123851",
+      "creationTimestamp": "2021-03-23T12:44:36.568-07:00",
+      "description": "Debian 11 Bullseye",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-11-bullseye"
+    },
+    {
+      "kind": "compute#license",
+      "name": "debian-12-bookworm",
+      "chargesUseFee": false,
+      "id": "50032240371219040",
+      "licenseCode": "2147286739765738111",
+      "creationTimestamp": "2023-03-08T13:56:32.072-08:00",
+      "description": "Debian 12 Bookworm",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-12-bookworm"
+    },
+    {
+      "kind": "compute#license",
+      "name": "debian-7-wheezy",
+      "chargesUseFee": true,
+      "id": "5548643783560585255",
+      "licenseCode": "1000203",
+      "creationTimestamp": "2016-02-09T14:08:14.000-08:00",
+      "description": "Debian 7 Wheezy",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-7-wheezy"
+    },
+    {
+      "kind": "compute#license",
+      "name": "debian-8-jessie",
+      "chargesUseFee": true,
+      "id": "4583190536202936358",
+      "licenseCode": "1000204",
+      "creationTimestamp": "2016-02-09T14:08:14.000-08:00",
+      "description": "Debian 8 Jessie",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-8-jessie"
+    },
+    {
+      "kind": "compute#license",
+      "name": "debian-9-stretch",
+      "chargesUseFee": true,
+      "id": "422202477258924070",
+      "licenseCode": "1000205",
+      "creationTimestamp": "2016-02-09T14:08:14.000-08:00",
+      "description": "Debian 9 Stretch",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-9-stretch"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses"
+}

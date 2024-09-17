@@ -28,6 +28,7 @@ DUMMY_ZONE = 'europe-west4-a'
 DUMMY_ZONE2 = 'europe-west1-b'
 DUMMY_ZONE3 = 'europe-west4-b'
 DUMMY_PROJECT_NAME = 'gcpdiag-gce1-aaaa'
+DUMMY_LICENSE_PROJECT_NAME = 'windows-cloud'
 DUMMY_PROJECT_NR = '12340001'
 DUMMY_DEFAULT_NAME = 'default'
 DUMMY_INSTANCE1_NAME = 'gce1'
@@ -328,7 +329,7 @@ class TestGce:
     assert instance.is_public_machine() is True
 
   def test_check_license(self):
-    licenses = gce.get_gce_public_licences(DUMMY_PROJECT_NAME)
+    licenses = gce.get_gce_public_licences(DUMMY_LICENSE_PROJECT_NAME)
     payg_licenses = [x for x in licenses if not x.endswith('-byol')]
     instance = gce.get_instance(project_id=DUMMY_PROJECT_NAME,
                                 zone=DUMMY_ZONE,

@@ -1,0 +1,248 @@
+{
+  "id": "projects/windows-sql-cloud/global/licenses",
+  "items": [
+    {
+      "kind": "compute#license",
+      "name": "sql-server-2012-enterprise",
+      "chargesUseFee": true,
+      "id": "1019197322190909629",
+      "licenseCode": "1000222",
+      "creationTimestamp": "2016-05-02T14:35:54.000-07:00",
+      "description": "SQL Server 2012 Enterprise",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/windows-sql-cloud/global/licenses/sql-server-2012-enterprise"
+    },
+    {
+      "kind": "compute#license",
+      "name": "sql-server-2012-standard",
+      "chargesUseFee": true,
+      "id": "6498737321656908670",
+      "licenseCode": "1000220",
+      "creationTimestamp": "2016-05-02T14:35:54.000-07:00",
+      "description": "SQL Server 2012 Standard",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/windows-sql-cloud/global/licenses/sql-server-2012-standard"
+    },
+    {
+      "kind": "compute#license",
+      "name": "sql-server-2012-web",
+      "chargesUseFee": true,
+      "id": "4544654693774126004",
+      "licenseCode": "1000223",
+      "creationTimestamp": "2016-05-02T14:35:54.000-07:00",
+      "description": "SQL Server 2012 Web",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/windows-sql-cloud/global/licenses/sql-server-2012-web"
+    },
+    {
+      "kind": "compute#license",
+      "name": "sql-server-2014-enterprise",
+      "chargesUseFee": true,
+      "id": "1844915350471588436",
+      "licenseCode": "1000216",
+      "creationTimestamp": "2016-05-02T14:35:54.000-07:00",
+      "description": "SQL Server 2014 Enterprise",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/windows-sql-cloud/global/licenses/sql-server-2014-enterprise"
+    },
+    {
+      "kind": "compute#license",
+      "name": "sql-server-2014-standard",
+      "chargesUseFee": true,
+      "id": "3705777654507911764",
+      "licenseCode": "1000215",
+      "creationTimestamp": "2016-05-02T14:35:54.000-07:00",
+      "description": "SQL Server 2014 Standard",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/windows-sql-cloud/global/licenses/sql-server-2014-standard"
+    },
+    {
+      "kind": "compute#license",
+      "name": "sql-server-2014-web",
+      "chargesUseFee": true,
+      "id": "192393444583684692",
+      "licenseCode": "1000217",
+      "creationTimestamp": "2016-05-02T14:35:54.000-07:00",
+      "description": "SQL Server 2014 Web",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/windows-sql-cloud/global/licenses/sql-server-2014-web"
+    },
+    {
+      "kind": "compute#license",
+      "name": "sql-server-2016-enterprise",
+      "chargesUseFee": true,
+      "id": "4374019495694842452",
+      "licenseCode": "1000219",
+      "creationTimestamp": "2016-05-02T14:35:54.000-07:00",
+      "description": "SQL Server 2016 Enterprise",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/windows-sql-cloud/global/licenses/sql-server-2016-enterprise"
+    },
+    {
+      "kind": "compute#license",
+      "name": "sql-server-2016-express",
+      "chargesUseFee": true,
+      "id": "1256146342879158924",
+      "licenseCode": "1000225",
+      "creationTimestamp": "2016-05-02T14:35:54.000-07:00",
+      "description": "SQL Server 2016 Express",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/windows-sql-cloud/global/licenses/sql-server-2016-express"
+    },
+    {
+      "kind": "compute#license",
+      "name": "sql-server-2016-standard",
+      "chargesUseFee": true,
+      "id": "3762728117693987412",
+      "licenseCode": "1000218",
+      "creationTimestamp": "2016-05-02T14:35:54.000-07:00",
+      "description": "SQL Server 2016 Standard",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/windows-sql-cloud/global/licenses/sql-server-2016-standard"
+    },
+    {
+      "kind": "compute#license",
+      "name": "sql-server-2016-web",
+      "chargesUseFee": true,
+      "id": "2341292125388798373",
+      "licenseCode": "1000224",
+      "creationTimestamp": "2016-05-02T14:35:54.000-07:00",
+      "description": "SQL Server 2016 Web",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/windows-sql-cloud/global/licenses/sql-server-2016-web"
+    },
+    {
+      "kind": "compute#license",
+      "name": "sql-server-2017-enterprise",
+      "chargesUseFee": false,
+      "id": "5251530023456011222",
+      "licenseCode": "1741222371620352982",
+      "creationTimestamp": "2017-09-25T11:38:49.539-07:00",
+      "description": "SQL Server 2017 Enterprise",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/windows-sql-cloud/global/licenses/sql-server-2017-enterprise"
+    },
+    {
+      "kind": "compute#license",
+      "name": "sql-server-2017-express",
+      "chargesUseFee": false,
+      "id": "755737010247103372",
+      "licenseCode": "4315490921280396",
+      "creationTimestamp": "2017-09-25T11:39:31.203-07:00",
+      "description": "SQL Server 2017 Express",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/windows-sql-cloud/global/licenses/sql-server-2017-express"
+    },
+    {
+      "kind": "compute#license",
+      "name": "sql-server-2017-standard",
+      "chargesUseFee": false,
+      "id": "923950005690364768",
+      "licenseCode": "6795597790302237536",
+      "creationTimestamp": "2017-09-25T11:40:15.938-07:00",
+      "description": "SQL Server 2017 Standard",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/windows-sql-cloud/global/licenses/sql-server-2017-standard"
+    },
+    {
+      "kind": "compute#license",
+      "name": "sql-server-2017-web",
+      "chargesUseFee": false,
+      "id": "7215797861326582678",
+      "licenseCode": "3398668354433905558",
+      "creationTimestamp": "2017-09-25T11:39:53.032-07:00",
+      "description": "SQL Server 2017 Web",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/windows-sql-cloud/global/licenses/sql-server-2017-web"
+    },
+    {
+      "kind": "compute#license",
+      "name": "sql-server-2019-enterprise",
+      "chargesUseFee": false,
+      "id": "1115216916632473700",
+      "licenseCode": "3039072951948447844",
+      "creationTimestamp": "2019-11-15T15:02:35.345-08:00",
+      "description": "SQL Server 2019 Enterprise",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/windows-sql-cloud/global/licenses/sql-server-2019-enterprise"
+    },
+    {
+      "kind": "compute#license",
+      "name": "sql-server-2019-express",
+      "chargesUseFee": false,
+      "id": "6719031184910880891",
+      "licenseCode": "6367554477567938683",
+      "creationTimestamp": "2019-11-15T15:02:44.631-08:00",
+      "description": "SQL Server 2019 Express",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/windows-sql-cloud/global/licenses/sql-server-2019-express"
+    },
+    {
+      "kind": "compute#license",
+      "name": "sql-server-2019-standard",
+      "chargesUseFee": false,
+      "id": "7011009714597302387",
+      "licenseCode": "3042936622923550835",
+      "creationTimestamp": "2019-11-15T15:02:53.011-08:00",
+      "description": "SQL Server 2019 Standard",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/windows-sql-cloud/global/licenses/sql-server-2019-standard"
+    },
+    {
+      "kind": "compute#license",
+      "name": "sql-server-2019-web",
+      "chargesUseFee": false,
+      "id": "7336830812754710569",
+      "licenseCode": "6213885950785916969",
+      "creationTimestamp": "2019-11-15T15:03:34.508-08:00",
+      "description": "SQL Server 2019 Web",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/windows-sql-cloud/global/licenses/sql-server-2019-web"
+    },
+    {
+      "kind": "compute#license",
+      "name": "sql-server-2022-enterprise",
+      "chargesUseFee": false,
+      "id": "115249055344003240",
+      "licenseCode": "1239729342351313064",
+      "creationTimestamp": "2022-07-19T15:55:03.422-07:00",
+      "description": "SQL Server 2022 Enterprise",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/windows-sql-cloud/global/licenses/sql-server-2022-enterprise"
+    },
+    {
+      "kind": "compute#license",
+      "name": "sql-server-2022-express",
+      "chargesUseFee": false,
+      "id": "5357714831518107650",
+      "licenseCode": "2745185555069962241",
+      "creationTimestamp": "2022-07-19T15:57:49.861-07:00",
+      "description": "SQL Server 2022 Express",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/windows-sql-cloud/global/licenses/sql-server-2022-express"
+    },
+    {
+      "kind": "compute#license",
+      "name": "sql-server-2022-standard",
+      "chargesUseFee": false,
+      "id": "19382503374227483",
+      "licenseCode": "7764068523658872858",
+      "creationTimestamp": "2022-07-19T15:57:57.033-07:00",
+      "description": "SQL Server 2022 Standard",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/windows-sql-cloud/global/licenses/sql-server-2022-standard"
+    },
+    {
+      "kind": "compute#license",
+      "name": "sql-server-2022-web",
+      "chargesUseFee": false,
+      "id": "2954436675263694869",
+      "licenseCode": "1086120352405948436",
+      "creationTimestamp": "2022-07-19T15:58:02.857-07:00",
+      "description": "SQL Server 2022 Web",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/windows-sql-cloud/global/licenses/sql-server-2022-web"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/windows-sql-cloud/global/licenses"
+}

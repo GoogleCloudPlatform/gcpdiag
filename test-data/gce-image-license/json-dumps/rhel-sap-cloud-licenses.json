@@ -1,0 +1,105 @@
+{
+  "id": "projects/rhel-sap-cloud/global/licenses",
+  "items": [
+    {
+      "kind": "compute#license",
+      "name": "rhel-7-sap",
+      "chargesUseFee": false,
+      "id": "5604538286035877319",
+      "licenseCode": "8555687517154622919",
+      "creationTimestamp": "2018-09-07T16:00:56.178-07:00",
+      "description": "Red Hat Enterprise Linux for SAP with High Availability and Update Services",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/rhel-sap-cloud/global/licenses/rhel-7-sap"
+    },
+    {
+      "kind": "compute#license",
+      "name": "rhel-7-sap-apps",
+      "chargesUseFee": false,
+      "id": "240630458432039891",
+      "licenseCode": "5955710252559838163",
+      "creationTimestamp": "2018-01-10T14:35:40.112-08:00",
+      "description": "RHEL 7 for SAP Applications",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/rhel-sap-cloud/global/licenses/rhel-7-sap-apps"
+    },
+    {
+      "kind": "compute#license",
+      "name": "rhel-7-sap-hana",
+      "chargesUseFee": false,
+      "id": "1819405748623059915",
+      "licenseCode": "996690525257673675",
+      "creationTimestamp": "2018-01-10T14:35:16.300-08:00",
+      "description": "RHEL 7 for SAP HANA",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/rhel-sap-cloud/global/licenses/rhel-7-sap-hana"
+    },
+    {
+      "kind": "compute#license",
+      "name": "rhel-7-sap-solutions",
+      "chargesUseFee": false,
+      "id": "7327934045737262966",
+      "licenseCode": "1785892118823772022",
+      "creationTimestamp": "2018-05-22T16:02:49.771-07:00",
+      "description": "Red Hat Enterprise Linux for SAP with High Availability and Update Services",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/rhel-sap-cloud/global/licenses/rhel-7-sap-solutions"
+    },
+    {
+      "kind": "compute#license",
+      "name": "rhel-7-sap-us",
+      "chargesUseFee": false,
+      "id": "7350733497329754778",
+      "licenseCode": "5882583258875011738",
+      "creationTimestamp": "2019-01-24T12:13:41.931-08:00",
+      "description": "Red Hat Enterprise Linux for SAP with Update Services",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/rhel-sap-cloud/global/licenses/rhel-7-sap-us"
+    },
+    {
+      "kind": "compute#license",
+      "name": "rhel-8-sap",
+      "chargesUseFee": false,
+      "id": "4048768305189858476",
+      "licenseCode": "1270685562947480748",
+      "creationTimestamp": "2020-01-14T11:10:59.082-08:00",
+      "description": "Red Hat Enterprise Linux for SAP with High Availability and Update Services",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/rhel-sap-cloud/global/licenses/rhel-8-sap"
+    },
+    {
+      "kind": "compute#license",
+      "name": "rhel-8-sap-byos",
+      "chargesUseFee": false,
+      "id": "4694240906525046332",
+      "licenseCode": "489291035512960571",
+      "creationTimestamp": "2023-10-10T14:57:40.183-07:00",
+      "description": "Red Hat Enterprise Linux 8 for SAP BYOS",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/rhel-sap-cloud/global/licenses/rhel-8-sap-byos"
+    },
+    {
+      "kind": "compute#license",
+      "name": "rhel-9-sap",
+      "chargesUseFee": false,
+      "id": "5536778078288293918",
+      "licenseCode": "8291906032809750558",
+      "creationTimestamp": "2022-03-07T15:02:09.839-08:00",
+      "description": "Red Hat Enterprise Linux 9 for SAP with High Availability and Update Services",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/rhel-sap-cloud/global/licenses/rhel-9-sap"
+    },
+    {
+      "kind": "compute#license",
+      "name": "rhel-9-sap-byos",
+      "chargesUseFee": false,
+      "id": "6784251256380093966",
+      "licenseCode": "6753525580035552782",
+      "creationTimestamp": "2023-10-10T14:57:53.794-07:00",
+      "description": "Red Hat Enterprise Linux 9 for SAP BYOS",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/rhel-sap-cloud/global/licenses/rhel-9-sap-byos"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/rhel-sap-cloud/global/licenses"
+}

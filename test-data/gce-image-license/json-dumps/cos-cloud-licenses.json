@@ -1,0 +1,50 @@
+{
+  "id": "projects/cos-cloud/global/licenses",
+  "items": [
+    {
+      "kind": "compute#license",
+      "name": "cos",
+      "chargesUseFee": false,
+      "id": "1860921057156066203",
+      "licenseCode": "1001010",
+      "creationTimestamp": "2017-01-13T12:51:38.000-08:00",
+      "description": "Container-Optimized OS from Google",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos"
+    },
+    {
+      "kind": "compute#license",
+      "name": "cos-gpu",
+      "chargesUseFee": false,
+      "id": "7123420343221295763",
+      "licenseCode": "146969651383835282",
+      "creationTimestamp": "2017-10-02T13:41:33.043-07:00",
+      "description": "Container-Optimized OS from Google, with GPU drivers",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos-gpu"
+    },
+    {
+      "kind": "compute#license",
+      "name": "cos-pcid",
+      "chargesUseFee": false,
+      "id": "9020039035948176868",
+      "licenseCode": "6880041984096540132",
+      "creationTimestamp": "2018-08-15T15:36:59.739-07:00",
+      "description": "Container-Optimized OS - PCID Whitelisted",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos-pcid"
+    },
+    {
+      "kind": "compute#license",
+      "name": "cos-st",
+      "chargesUseFee": false,
+      "id": "7258840043588497590",
+      "licenseCode": "9084803053990260918",
+      "creationTimestamp": "2017-10-04T00:31:37.769-07:00",
+      "description": "Container-Optimized OS from Google, with Snaggletooth drivers",
+      "transferable": true,
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos-st"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses"
+}

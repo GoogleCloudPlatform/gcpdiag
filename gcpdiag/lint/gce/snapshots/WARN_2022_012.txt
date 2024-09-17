@@ -1,3 +1,6 @@
 *  gce/WARN/2022_012: PAYG licensed Windows instance can reach KMS to activate
-   (Error: 'windows-cloud')                                               [SKIP]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce1       [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/windows-test [SKIP]
+     No PAYG licence attached to this instance
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-b/instances/gce1       [ OK ]
 

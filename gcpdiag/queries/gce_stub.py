@@ -63,8 +63,10 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
           f'compute-{self.mock_state}-{zone}',
           default=f'compute-{self.mock_state}-empty',
       )
-    elif self.mock_state in ['regions', 'templates', 'zones', 'licenses']:
+    elif self.mock_state in ['regions', 'templates', 'zones']:
       return apis_stub.RestCallStub(project, f'compute-{self.mock_state}')
+    elif self.mock_state in ['licenses']:
+      return apis_stub.RestCallStub(project, f'{project}-licenses')
     else:
       raise RuntimeError(f"can't list for mock state {self.mock_state}")
 
