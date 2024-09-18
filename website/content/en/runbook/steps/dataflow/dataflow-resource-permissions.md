@@ -12,7 +12,10 @@ description: >
 
 ### Description
 
-None
+Verify that Dataflow resources have the necessary permissions to be accessed
+  and used by Dataflow jobs.
+  Ensure that the your Dataflow project Worker Service Account have the
+  required permissions to access and modify these resources.
 
 
 

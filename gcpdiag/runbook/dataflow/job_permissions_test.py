@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Test class for dataflow/DataflowPermissions"""
+"""Test class for dataflow/JobPermissions"""
 
 from gcpdiag import config
 from gcpdiag.runbook import dataflow, snapshot_test_base
@@ -19,7 +19,7 @@ from gcpdiag.runbook import dataflow, snapshot_test_base
 
 class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = dataflow
-  runbook_name = 'dataflow/dataflow-permissions'
+  runbook_name = 'dataflow/job-permissions'
   config.init({'auto': True, 'interface': 'cli'})
 
   rule_parameters = [{

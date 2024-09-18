@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Contains diagnostic tree for Dataflow Permissions Checks."""
+"""Module containing Dataflow Jobs permissions check diagnostic tree and custom steps."""
 
 from gcpdiag import runbook
 from gcpdiag.queries import crm, iam, logs
@@ -25,26 +25,38 @@ PRODUCT_FLAG = 'dataflow'
 
 
 def local_realtime_query(filter_str):
-  result = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
-                               start_time_utc=op.get(flags.START_TIME_UTC),
-                               end_time_utc=op.get(flags.END_TIME_UTC),
-                               filter_str=filter_str)
+  result = logs.realtime_query(
+      project_id=op.get(flags.PROJECT_ID),
+      start_time_utc=op.get(flags.START_TIME_UTC),
+      end_time_utc=op.get(flags.END_TIME_UTC),
+      filter_str=filter_str,
+  )
   return result
 
 
-class DataflowPermissions(runbook.DiagnosticTree):
-  """Analysis and Resolution of Dataflow Permissions issues.
+class JobPermissions(runbook.DiagnosticTree):
+  """Analysis and Resolution of Dataflow Jobs Permissions issues.
 
-  This  runbook investigates Dataflow permissions and recommends remediation steps.
+  This runbook investigates Dataflow permissions and recommends remediation steps.
 
   Areas Examined:
-  1. Dataflow user account permissions
-  2. Dataflow Service Account
-  3. Dataflow Worker Service Account
-  4. Dataflow Resource Permissions
+  - Dataflow User Account Permissions: Verify that individual Dataflow users have the necessary
+    permissions to access and manage Dataflow jobs (e.g., create,update,cancel).
+
+  - Dataflow Service Account Permissions: Verify that the Dataflow Service Account has the required
+    permissions to execute and manage the Dataflow jobs
+
+  - Dataflow Worker Service Account: Verify that the Dataflow Worker Service Account has the
+    necessary permissions for worker instances within a Dataflow job to access input and
+    output resources during job execution.
+
+  - Dataflow Resource Permissions: Verify that Dataflow resources (e.g., Cloud Storage buckets,
+    BigQuery datasets) have the necessary permissions to be accessed and used by Dataflow jobs.
+
+  By ensuring that Dataflow resources have the necessary permissions, you
+  can prevent errors and ensure that your jobs run smoothly.
   """
 
-  #Specify the parameters required for the runbook execution
   parameters = {
       flags.PROJECT_ID: {
           'type': str,
@@ -60,9 +72,9 @@ class DataflowPermissions(runbook.DiagnosticTree):
       },
       flags.WORKER_SERVICE_ACCOUNT: {
           'type': str,
-          'help': (
-              'Dataflow Service Account used for Dataflow Job Creation and execution'
-          ),
+          'help':
+              ('Dataflow Worker Service Account used for Dataflow Job Creation'
+               'and execution'),
           'required': True,
       },
       flags.CROSS_PROJECT_ID: {
@@ -71,7 +83,7 @@ class DataflowPermissions(runbook.DiagnosticTree):
           'help':
               ('Cross Project ID, where service account is located if it is not'
                ' in the same project as the Dataflow Job'),
-      }
+      },
   }
 
   def build_tree(self):
@@ -222,7 +234,13 @@ class DataflowWorkerServiceAccountPermissions(runbook.Gateway):
 
 
 class DataflowResourcePermissions(runbook.Step):
-  """Check the Dataflow Resource permissions."""
+  """Check the Dataflow Resource permissions.
+
+  Verify that Dataflow resources have the necessary permissions to be accessed
+  and used by Dataflow jobs.
+  Ensure that the your Dataflow project Worker Service Account have the
+  required permissions to access and modify these resources.
+  """
 
   def execute(self):
     """Check the Dataflow Resource permissions."""
@@ -254,4 +272,4 @@ class DataflowPermissionsEnd(runbook.EndStep):
 
   def execute(self):
     """Permissions checks completed."""
-    op.info('Dataflow Permissions Checks Completed')
+    op.info('Dataflow Resources Permissions Checks Completed')

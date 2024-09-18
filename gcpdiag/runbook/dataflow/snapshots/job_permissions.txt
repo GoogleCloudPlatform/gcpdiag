@@ -1,15 +1,26 @@
 custom_flag=dataflow,principal=user@xyz.com,project_id=gcpdiag-
 dataflow1-aaaa,worker_service_account=dataflow-worker@gcpdiag-dataflow1-aaaa.iam.gserviceaccount.com
 
-dataflow/dataflow-permissions: Analysis and Resolution of Dataflow Permissions issues.
+dataflow/job-permissions: Analysis and Resolution of Dataflow Jobs Permissions issues.
 
-  This  runbook investigates Dataflow permissions and recommends remediation steps.
+  This runbook investigates Dataflow permissions and recommends remediation steps.
 
   Areas Examined:
-  1. Dataflow user account permissions
-  2. Dataflow Service Account
-  3. Dataflow Worker Service Account
-  4. Dataflow Resource Permissions
+  - Dataflow User Account Permissions: Verify that individual Dataflow users have the necessary
+    permissions to access and manage Dataflow jobs (e.g., create,update,cancel).
+
+  - Dataflow Service Account Permissions: Verify that the Dataflow Service Account has the required
+    permissions to execute and manage the Dataflow jobs
+
+  - Dataflow Worker Service Account: Verify that the Dataflow Worker Service Account has the
+    necessary permissions for worker instances within a Dataflow job to access input and
+    output resources during job execution.
+
+  - Dataflow Resource Permissions: Verify that Dataflow resources (e.g., Cloud Storage buckets,
+    BigQuery datasets) have the necessary permissions to be accessed and used by Dataflow jobs.
+
+  By ensuring that Dataflow resources have the necessary permissions, you
+  can prevent errors and ensure that your jobs run smoothly.
   
 [START]: Executing default start step for runbooks...
 [AUTOMATED STEP]: Check the Authenticated User account permissions.
@@ -55,6 +66,6 @@ dataflow/dataflow-permissions: Analysis and Resolution of Dataflow Permissions i
 [AUTOMATED STEP]: Check the Dataflow Resource permissions.
 [INFO]: No Cloud Storage buckets related errors found in the logs
 [END]: Permissions checks completed.
-[INFO]: Dataflow Permissions Checks Completed
+[INFO]: Dataflow Resources Permissions Checks Completed
 
 
