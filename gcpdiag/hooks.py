@@ -31,6 +31,18 @@ def set_lint_args_hook(args):
     pass
 
 
+def set_runbook_args_hook(args):
+  """Called after lint command arguments were parsed."""
+  try:
+    # This is for Google-internal use only and allows us to modify
+    # default options for internal use.
+    # pylint: disable=import-outside-toplevel
+    from gcpdiag_google_internal import hooks as google_internal
+    google_internal.set_lint_args_hook(args)
+  except ImportError:
+    pass
+
+
 def verify_access_hook(project_id: str):
   """Called to do additional authorization verifications."""
   try:
@@ -64,5 +76,17 @@ def post_lint_hook(report):
     # pylint: disable=import-outside-toplevel
     from gcpdiag_google_internal import hooks as google_internal
     google_internal.post_lint_hook(report)
+  except ImportError:
+    pass
+
+
+def post_runbook_hook(report):
+  """Called after runbook command has run."""
+  try:
+    # gcpdiag_google_internal contains code that we run only internally
+    # at Google, so this import will fail in the public version.
+    # pylint: disable=import-outside-toplevel
+    from gcpdiag_google_internal import hooks as google_internal
+    google_internal.post_runbook_hook(report)
   except ImportError:
     pass

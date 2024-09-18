@@ -63,8 +63,8 @@ class StepResult:
   """Runbook Step Results"""
   # if any evals failed this will be failed
   execution_id: str
-  start_time_utc: str
-  end_time_utc: str
+  start_time: str
+  end_time: str
   results: List[ResourceEvaluation]
   prompt_response: Any
   metadata: dict
@@ -126,6 +126,10 @@ class Report:
   """Report for a runbook or bundle"""
   # Same as the runbook or bundle run_id
   run_id: str
+  runbook_name: str
+  run_start_time: str
+  run_end_time: str
+  execution_mode: str
   parameters: models.Parameter
   results: Dict[str, StepResult]
 
@@ -133,6 +137,8 @@ class Report:
     self.run_id = run_id
     self.parameters = parameters
     self.results = {}
+    self.execution_mode = 'NON_INTERACTIVE' if config.get(
+        'auto') else 'INTERACTIVE'
 
   @property
   def any_failed(self) -> bool:
@@ -154,7 +160,7 @@ class Report:
 
 class ReportManager:
   """Base Report Manager subclassed to hand different interfaces (cli, api)"""
-  reports: Dict[str, Report]
+  reports: Dict[str, Report] = {}
 
   def __init__(self) -> None:
     self.reports = {}
@@ -188,8 +194,8 @@ class ReportManager:
           'description': entry.step.__doc__,
           'execution_message': entry.step.execution_message,
           'overall_status': entry.overall_status,
-          'start_time_utc': entry.start_time_utc,
-          'end_time_utc': entry.end_time_utc,
+          'start_time': entry.start_time,
+          'end_time': entry.end_time,
           'metadata': entry.metadata,
           'info': entry.info,
           'execution_error': entry.step_error,
@@ -203,16 +209,13 @@ class ReportManager:
         return str(data)
 
     report_dict = {
-        'run_id':
-            report.run_id,
-        'parameters':
-            report.parameters,
-        'totals_by_status':
-            report.get_totals_by_status(),
-        'execution_mode':
-            'NON_INTERACTIVE' if config.get('auto') else 'INTERACTIVE',
-        'results':
-            report.results
+        'run_id': report.run_id,
+        'execution_mode': report.execution_mode,
+        'start_time': report.run_start_time,
+        'end_time': report.run_end_time,
+        'parameters': report.parameters,
+        'totals_by_status': report.get_totals_by_status(),
+        'results': report.results
     }
 
     return json.dumps(report_dict,
@@ -229,6 +232,30 @@ class ReportManager:
     for report in self.reports.values():
       totals.update(report.get_totals_by_status())
     return totals
+
+  def generate_report_metrics(self, report: Report) -> Dict[str, dict]:
+    reports_metrics: Dict[str, Any] = {}
+    all_step_metrics = []
+    for result in report.results.values():
+      step_metrics: Dict[str, dict] = collections.defaultdict(dict)
+      start = util.parse_time_input(result.start_time)
+      end = util.parse_time_input(result.end_time)
+      duration = (end - start).total_seconds() * 1000
+      step_metrics[result.step.id]['execution_duration'] = duration
+      step_metrics[result.step.id]['totals_by_status'] = result.totals_by_status
+      all_step_metrics.append(step_metrics)
+    if report.runbook_name:
+      start = util.parse_time_input(report.run_start_time)
+      end = util.parse_time_input(report.run_end_time)
+      duration = (end - start).total_seconds() * 1000
+      reports_metrics['runbook_name'] = report.runbook_name
+      reports_metrics['execution_mode'] = report.execution_mode
+      reports_metrics['run_duration'] = duration
+      reports_metrics['totals_by_status'] = report.get_totals_by_status()
+      reports_metrics['steps'] = all_step_metrics
+    else:
+      reports_metrics['steps'] = all_step_metrics
+    return reports_metrics
 
   def add_step_metadata(self, run_id, key, value, step_execution_id):
     if step_execution_id:

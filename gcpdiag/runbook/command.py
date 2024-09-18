@@ -316,7 +316,7 @@ def run_and_get_report(argv=None, credentials: str = None) -> dict:
     apis.set_credentials(credentials)
 
   # Allow to change defaults using a hook function.
-  hooks.set_lint_args_hook(args)
+  hooks.set_runbook_args_hook(args)
 
   # Initialize configuration
   config.init(vars(args), terminal_output.is_cloud_shell())
@@ -371,14 +371,19 @@ def run_and_get_report(argv=None, credentials: str = None) -> dict:
       dt_engine.add_task((bundle, bundle.parameter))
 
   dt_engine.run()
-  output.display_footer(dt_engine.interface.rm)
 
-  # Clean up the kubeconfig file generated for gcpdiag
-  kubectl.clean_up()
-
+  # Only collected for internal googler users
   report = {}
   report['version'] = config.VERSION
   report['reports'] = dt_engine.interface.rm.generate_reports()
+
+  for r in dt_engine.interface.rm.reports.values():
+    metrics = dt_engine.interface.rm.generate_report_metrics(report=r)
+    hooks.post_runbook_hook(metrics)
+
+  output.display_footer(dt_engine.interface.rm)
+  # Clean up the kubeconfig file generated for gcpdiag
+  kubectl.clean_up()
   return report
 
 

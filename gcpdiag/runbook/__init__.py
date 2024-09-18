@@ -593,6 +593,10 @@ class DiagnosticEngine:
       operator.create_context(p=parameter, project_id=project_id)
       self.interface.rm.reports[tree.run_id] = report.Report(
           run_id=tree.run_id, parameters=parameter)
+      self.interface.rm.reports[tree.run_id].run_start_time = datetime.now(
+          timezone.utc).isoformat()
+      if operator.tree:
+        self.interface.rm.reports[tree.run_id].runbook_name = operator.tree.name
       with op.operator_context(operator):
         tree.hook_build_tree()
       self.finalize = False
@@ -603,6 +607,8 @@ class DiagnosticEngine:
     except (RuntimeError, exceptions.InvalidDiagnosticTree) as err:
       logging.warning('%s: %s while processing runbook rule: %s',
                       type(err).__name__, err, tree)
+    self.interface.rm.reports[tree.run_id].run_end_time = datetime.now(
+        timezone.utc).isoformat()
 
   def find_path_dfs(self, step: Step, operator: op.Operator,
                     executed_steps: Set):
@@ -667,7 +673,7 @@ class DiagnosticEngine:
       error_msg = 'Unknown'
       end = datetime.now(timezone.utc).isoformat()
       self.interface.rm.reports[operator.run_id].results[
-          step.execution_id].end_time_utc = end
+          step.execution_id].end_time = end
       if isinstance(err, TemplateNotFound):
         error_msg = (
             f'could not load messages linked to step: {step.id}.'
@@ -696,11 +702,11 @@ class DiagnosticEngine:
     self.interface.rm.reports[operator.run_id].results[
         step.execution_id] = report.StepResult(step=step)
     self.interface.rm.reports[operator.run_id].results[
-        step.execution_id].start_time_utc = start
+        step.execution_id].start_time = start
     step.execute_hook(operator)
     end = datetime.now(timezone.utc).isoformat()
     self.interface.rm.reports[operator.run_id].results[
-        step.execution_id].end_time_utc = end
+        step.execution_id].end_time = end
     return self.interface.rm.reports[operator.run_id].results[
         step.execution_id].prompt_response
 
