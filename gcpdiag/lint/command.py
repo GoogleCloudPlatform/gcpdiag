@@ -222,6 +222,10 @@ def _init_args_parser():
       help=(
           'Format output as one of [terminal, json, csv] (default: terminal)'))
 
+  parser.add_argument('--reason',
+                      type=str,
+                      default=config.get('reason'),
+                      help='The reason for running gcpdiag')
   return parser
 
 

@@ -222,6 +222,11 @@ def _init_runbook_args_parser():
                       default=config.get('universe_domain'),
                       help='Domain name of APIs')
 
+  parser.add_argument('--reason',
+                      type=str,
+                      default=config.get('reason'),
+                      help='The reason for running gcpdiag')
+
   return parser
 
 

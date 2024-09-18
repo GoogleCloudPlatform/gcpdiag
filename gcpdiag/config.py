@@ -116,7 +116,8 @@ _defaults: Dict[str, Any] = {
     'auto': False,
     'report_dir': '/tmp',
     'interface': 'cli',
-    'universe_domain': 'googleapis.com'
+    'universe_domain': 'googleapis.com',
+    'reason': None
 }
 
 #

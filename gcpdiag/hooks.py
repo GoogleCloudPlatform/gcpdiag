@@ -32,13 +32,13 @@ def set_lint_args_hook(args):
 
 
 def set_runbook_args_hook(args):
-  """Called after lint command arguments were parsed."""
+  """Called after runbook command arguments were parsed."""
   try:
     # This is for Google-internal use only and allows us to modify
     # default options for internal use.
     # pylint: disable=import-outside-toplevel
     from gcpdiag_google_internal import hooks as google_internal
-    google_internal.set_lint_args_hook(args)
+    google_internal.set_runbook_args_hook(args)
   except ImportError:
     pass
 
