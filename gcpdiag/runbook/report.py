@@ -63,20 +63,22 @@ class StepResult:
   """Runbook Step Results"""
   # if any evals failed this will be failed
   execution_id: str
-  start_time_utc: float
-  end_time_utc: float
+  start_time_utc: str
+  end_time_utc: str
   results: List[ResourceEvaluation]
   prompt_response: Any
   metadata: dict
   info: List
+  step_error: str
 
   def __init__(self, step):
     self.execution_id = step.execution_id
     self.step = step
-    self.prompt_response = None
     self.results = []
     self.metadata = OrderedDict()
     self.info = []
+    self.prompt_response = None
+    self.step_error = None
 
   def __hash__(self) -> int:
     return self.execution_id.__hash__()
@@ -96,6 +98,8 @@ class StepResult:
 
     Order of worst evals: failed > uncertain > ok > skipped
     """
+    if self.step_error:
+      return 'skipped'
     for status in constants.STATUS_ORDER:
       if self.totals_by_status.get(status):
         return status
@@ -118,19 +122,22 @@ class StepResult:
     return totals
 
 
-class ReportManager:
-  """Base Report Manager subclassed to hand different interfaces (cli, api)"""
+class Report:
+  """Report for a runbook or bundle"""
+  # Same as the runbook or bundle run_id
+  run_id: str
+  parameters: models.Parameter
   results: Dict[str, StepResult]
 
-  def __init__(self) -> None:
+  def __init__(self, run_id, parameters) -> None:
+    self.run_id = run_id
+    self.parameters = parameters
     self.results = {}
-    self.tree = None
 
-  def add_step_result(self, result: StepResult):
-    self.results[result.execution_id] = result
-
-  def add_step_eval(self, execution_id, evaluation: ResourceEvaluation):
-    self.results[execution_id].results.append(evaluation)
+  @property
+  def any_failed(self) -> bool:
+    return any(r.overall_status in ('failed', 'uncertain')
+               for r in self.results.values())
 
   def get_totals_by_status(self) -> Dict[str, int]:
     totals: Dict[str, int]
@@ -139,70 +146,26 @@ class ReportManager:
       totals[step_result.overall_status] += 1
     return totals
 
-  def generate_report(self, operator) -> None:
-    pass
-
-  @property
-  def any_failed(self) -> bool:
-    return any(r.overall_status in ('failed', 'uncertain')
-               for r in self.results.values())
-
-  def add_step_metadata(self, key, value, step_execution_id):
-    if step_execution_id:
-      step_result = self.results[step_execution_id]
-    if step_result:
-      step_result.metadata[key] = value
-
-  def add_step_info_metadata(self, value, step_execution_id):
-    if step_execution_id:
-      step_result = self.results[step_execution_id]
-    if step_result:
-      step_result.info.append(value)
-
-  def get_step_metadata(self, key, step_execution_id):
-    if step_execution_id:
-      step_result = self.results[step_execution_id]
-    if step_result:
-      return step_result.metadata.get(key)
-    return None
-
-  def get_all_step_metadata(self, step_execution_id) -> dict:
-    if step_execution_id:
-      step_result = self.results[step_execution_id]
-    if step_result:
-      return step_result.metadata
-    return {}
-
-
-class TerminalReportManager(ReportManager):
-  """ Class representing results of runbook """
-  report_path: str
-
-  def __init__(self) -> None:
-    super().__init__()
-    self.report_path = ''
-
   def get_rule_statuses(self) -> Dict[str, str]:
     return {
         str(r.execution_id): r.overall_status for r in self.results.values()
     }
 
-  def get_report_path(self):
-    date = datetime.now(timezone.utc).strftime('%Y_%m_%d_%H_%M_%S_%Z')
-    tree_name = self.tree.name
-    report_name = f"gcpdiag_runbook_report_{re.sub(r'[/-]', '_', tree_name)}_{date}.json"
-    self.report_path = os.path.join(config.get('report_dir'), report_name)
 
-  def generate_report(self, operator):
-    """Generate Runbook Report"""
-    # Always generate a report to avoid FileNotFound, even if there are no failed rules
-    if not self.report_path:
-      self.get_report_path()
-    result = self._generate_json_report(operator)
-    if config.get('interface') == 'cli':
-      self._write_report_to_terminal(result)
+class ReportManager:
+  """Base Report Manager subclassed to hand different interfaces (cli, api)"""
+  reports: Dict[str, Report]
 
-  def _generate_json_report(self, operator):
+  def __init__(self) -> None:
+    self.reports = {}
+
+  def add_step_result(self, run_id, result: StepResult):
+    self.reports[run_id].results[result.execution_id] = result
+
+  def add_step_eval(self, run_id, execution_id, evaluation: ResourceEvaluation):
+    self.reports[run_id].results[execution_id].results.append(evaluation)
+
+  def serialize_report(self, report: Report):
 
     def resource_evaluation(eval_list: List[ResourceEvaluation]):
       return [{
@@ -229,6 +192,7 @@ class TerminalReportManager(ReportManager):
           'end_time_utc': entry.end_time_utc,
           'metadata': entry.metadata,
           'info': entry.info,
+          'execution_error': entry.step_error,
           'resource_evaluation': resource_evaluation(entry.results)
       }
 
@@ -238,22 +202,92 @@ class TerminalReportManager(ReportManager):
       else:
         return str(data)
 
-    report = {
-        'runbook': self.tree.name,
-        'parameters': operator.parameters,
-        'totals_by_status': self.get_totals_by_status(),
-        'execution_mode': 'auto' if config.get('auto') else 'interactive',
-        'results': self.results
+    report_dict = {
+        'run_id':
+            report.run_id,
+        'parameters':
+            report.parameters,
+        'totals_by_status':
+            report.get_totals_by_status(),
+        'execution_mode':
+            'NON_INTERACTIVE' if config.get('auto') else 'INTERACTIVE',
+        'results':
+            report.results
     }
 
-    return json.dumps(report,
+    return json.dumps(report_dict,
                       ensure_ascii=False,
                       default=parse_report_data,
                       indent=2)
 
-  def _write_report_to_terminal(self, json_report):
+  def generate_reports(self):
+    pass
+
+  def get_totals_by_status(self) -> Dict[str, int]:
+    totals: Dict[str, int]
+    totals = collections.defaultdict(int)
+    for report in self.reports.values():
+      totals.update(report.get_totals_by_status())
+    return totals
+
+  def add_step_metadata(self, run_id, key, value, step_execution_id):
+    if step_execution_id:
+      step_result = self.reports[run_id].results[step_execution_id]
+    if step_result:
+      step_result.metadata[key] = value
+
+  def add_step_info_metadata(self, run_id, value, step_execution_id):
+    if step_execution_id:
+      step_result = self.reports[run_id].results[step_execution_id]
+    if step_result:
+      step_result.info.append(value)
+
+  def get_step_metadata(self, run_id, key, step_execution_id):
+    if step_execution_id:
+      step_result = self.reports[run_id].results[step_execution_id]
+    if step_result:
+      return step_result.metadata.get(key)
+    return None
+
+  def get_all_step_metadata(self, run_id, step_execution_id) -> dict:
+    if step_execution_id:
+      step_result = self.reports[run_id].results[step_execution_id]
+    if step_result:
+      return step_result.metadata
+    return {}
+
+
+class ApiReportManager(ReportManager):
+  """Report Manager for API interactions with runbooks"""
+
+  def generate_reports(self):
+    """Generate Runbook Report"""
+    reports = []
+    for _, report in self.reports:
+      # TODO: Refactor serialization logic to allow
+      # converting a report into a dict without serialization
+      reports.append(json.load(self.serialize_report(report)))
+    return reports
+
+
+class TerminalReportManager(ReportManager):
+  """ Class representing results of runbook """
+
+  def get_report_path(self, run_id):
+    date = datetime.now(timezone.utc).strftime('%Y_%m_%d_%H_%M_%S_%Z')
+    report_name = f"gcpdiag_runbook_report_{re.sub(r'[.]', '_', run_id)}_{date}.json"
+    return os.path.join(config.get('report_dir'), report_name)
+
+  def generate_reports(self):
+    """Generate Runbook Report"""
+    for run_id, report in self.reports.items():
+      result = self.serialize_report(report)
+      path = self.get_report_path(run_id)
+      self._write_report_to_terminal(path, result)
+
+  def _write_report_to_terminal(self, out_path, json_report):
     try:
-      with open(self.report_path, 'w', encoding='utf-8') as file:
+      with open(out_path, 'w', encoding='utf-8') as file:
         file.write(json_report)
     except PermissionError as e:
       logging.error(
@@ -295,8 +329,8 @@ class InteractionInterface:
   def info(self, message: str, step_type='INFO') -> None:
     self.output.info(message=message, step_type=step_type)
 
-  def prepare_rca(self, resource: Optional[models.Resource], template, suffix,
-                  step, context) -> None:
+  def prepare_rca(self, run_id, resource: Optional[models.Resource], template,
+                  suffix, step, context) -> None:
     try:
       module = importlib.import_module(step.__module__)
       file_name = module.__file__
@@ -311,33 +345,38 @@ class InteractionInterface:
         rca = util.render_template(filepath, f'{file}.jinja', context, prefix,
                                    suffix)
         self.output.info(message=rca)
-        self.rm.add_step_eval(execution_id=step.execution_id,
+        self.rm.add_step_eval(run_id=run_id,
+                              execution_id=step.execution_id,
                               evaluation=ResourceEvaluation(status='rca',
                                                             resource=resource,
                                                             reason=rca,
                                                             remediation=''))
 
-  def add_skipped(self, resource: Optional[models.Resource], reason: str,
-                  step_execution_id: str) -> None:
+  def add_skipped(self, run_id, resource: Optional[models.Resource],
+                  reason: str, step_execution_id: str) -> None:
     self.output.print_skipped(resource=resource, reason=reason)
-    self.rm.add_step_eval(execution_id=step_execution_id,
+    self.rm.add_step_eval(run_id,
+                          execution_id=step_execution_id,
                           evaluation=ResourceEvaluation(status='skipped',
                                                         resource=resource,
                                                         reason=reason,
                                                         remediation=''))
 
   def add_ok(self,
+             run_id: str,
              resource: models.Resource,
              step_execution_id: str,
              reason: str = '') -> None:
     self.output.print_ok(resource=resource, reason=reason)
-    self.rm.add_step_eval(execution_id=step_execution_id,
+    self.rm.add_step_eval(run_id=run_id,
+                          execution_id=step_execution_id,
                           evaluation=ResourceEvaluation(status='ok',
                                                         resource=resource,
                                                         reason=reason,
                                                         remediation=''))
 
   def add_failed(self,
+                 run_id: str,
                  resource: models.Resource,
                  reason: str,
                  remediation: str,
@@ -357,7 +396,9 @@ class InteractionInterface:
                                 reason=reason,
                                 remediation=remediation)
     # Add results to report manager so other dependent features can act on it.
-    self.rm.add_step_eval(execution_id=step_execution_id, evaluation=result)
+    self.rm.add_step_eval(run_id=run_id,
+                          execution_id=step_execution_id,
+                          evaluation=result)
     # assign a human task to be completed
     choice = self.output.prompt(kind=constants.HUMAN_TASK,
                                 message=human_task_msg)
@@ -369,6 +410,7 @@ class InteractionInterface:
       return choice
 
   def add_uncertain(self,
+                    run_id: str,
                     step_execution_id: str,
                     resource: models.Resource,
                     reason: str,
@@ -381,7 +423,9 @@ class InteractionInterface:
                                 resource=resource,
                                 reason=reason,
                                 remediation=remediation)
-    self.rm.add_step_eval(execution_id=step_execution_id, evaluation=result)
+    self.rm.add_step_eval(run_id=run_id,
+                          execution_id=step_execution_id,
+                          evaluation=result)
     choice = self.output.prompt(kind=constants.HUMAN_TASK,
                                 message=human_task_msg)
 

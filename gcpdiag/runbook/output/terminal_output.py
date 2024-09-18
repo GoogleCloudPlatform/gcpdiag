@@ -72,10 +72,8 @@ class TerminalOutput(BaseOutput):
     else:
       print(f'gcpdiag {config.VERSION}\n', file=sys.stderr)
 
-  def display_header(self, parameter: models.Parameter) -> None:
-    print(
-        f'Starting runbook inspection [Alpha Release]\nParameters: {parameter}\n',
-        file=sys.stderr)
+  def display_header(self) -> None:
+    print('Starting runbook inspection [Alpha Release]\n', file=sys.stderr)
 
   def display_runbook_description(self, tree):
     self.terminal_print_line(f'{self.term.yellow(tree.name)}: {tree.__doc__}')

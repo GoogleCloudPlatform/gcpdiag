@@ -318,4 +318,3 @@ class NodeAutoRepairEnd(runbook.EndStep):
     )
     if response == op.NO:
       op.info(message=op.END_MESSAGE)
-      op.operator.interface.rm.generate_report()

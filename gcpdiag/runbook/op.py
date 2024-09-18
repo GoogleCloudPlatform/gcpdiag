@@ -30,16 +30,20 @@ class Operator(dict):
   context: models.Context
   parameter: models.Parameter
   interface: InteractionInterface
+  run_id: str
   _step = None
   _tree = None
 
   def __init__(self, interface: InteractionInterface):
     self.interface = interface
 
+  def set_run_id(self, run_id):
+    self.run_id = run_id
+
   def set_parameters(self, p):
     self.parameters = p
 
-  def set_context(self, p, project_id=None):
+  def create_context(self, p, project_id=None):
     self.context = models.Context(project_id=project_id, parameters=p)
 
   def set_messages(self, m):
@@ -69,8 +73,8 @@ def operator_context(new_operator):
   try:
     yield
   finally:
-    context = None
     operator = None
+    context = None
 
 
 # pylint: disable=protected-access
@@ -175,26 +179,34 @@ def info(message: str, step_type='INFO') -> None:
   """Send an informational message to the user"""
   operator.interface.info(message, step_type)
   operator.interface.rm.add_step_info_metadata(
-      step_execution_id=operator.step.execution_id, value=message)
+      run_id=operator.run_id,
+      step_execution_id=operator.step.execution_id,
+      value=message)
 
 
 def prep_rca(resource: Optional[models.Resource], template, suffix,
              kwarg) -> None:
   """Parses a log form and complex Jinja templates for root cause analysis (RCA)."""
-  return operator.interface.prepare_rca(resource, template, suffix,
-                                        operator.step, kwarg)
+  return operator.interface.prepare_rca(run_id=operator.run_id,
+                                        resource=resource,
+                                        template=template,
+                                        suffix=suffix,
+                                        step=operator.step,
+                                        context=kwarg)
 
 
 def add_skipped(resource: Optional[models.Resource], reason: str) -> None:
   """Sends a skip message for a step to the user and store it in the report"""
-  operator.interface.add_skipped(resource=resource,
+  operator.interface.add_skipped(run_id=operator.run_id,
+                                 resource=resource,
                                  reason=reason,
                                  step_execution_id=operator.step.execution_id)
 
 
 def add_ok(resource: models.Resource, reason: str = '') -> None:
   """Sends a success message for a step to the user and store it in the report"""
-  operator.interface.add_ok(resource=resource,
+  operator.interface.add_ok(run_id=operator.run_id,
+                            resource=resource,
                             reason=reason,
                             step_execution_id=operator.step.execution_id)
 
@@ -202,6 +214,7 @@ def add_ok(resource: models.Resource, reason: str = '') -> None:
 def add_failed(resource: models.Resource, reason: str, remediation: str) -> Any:
   """Sends a failure message for a step to the user and store it in the report"""
   return operator.interface.add_failed(
+      run_id=operator.run_id,
       resource=resource,
       reason=reason,
       remediation=remediation,
@@ -214,6 +227,7 @@ def add_uncertain(resource: models.Resource,
                   human_task_msg: str = '') -> Any:
   """Sends an inconclusive message for a step to the user and store it in the report"""
   return operator.interface.add_uncertain(
+      run_id=operator.run_id,
       resource=resource,
       reason=reason,
       remediation=remediation,
@@ -232,7 +246,8 @@ def get_step_outcome(execution_id) -> Tuple[Any, dict]:
     a dict of totals by status representing outcome of resource evaluations
     or empty dict if the step hasn't been executed.
   """
-  step_result = operator.interface.rm.results.get(execution_id)
+  step_result = operator.interface.rm.reports[operator.run_id].results.get(
+      execution_id)
   if not step_result:
     return (None, {})
   return (step_result.overall_status, step_result.totals_by_status)
@@ -270,16 +285,19 @@ def step_unexecuted(execution_id) -> bool:
 
 def add_metadata(key, value):
   operator.interface.rm.add_step_metadata(
-      step_execution_id=operator.step.execution_id, key=key, value=value)
+      run_id=operator.run_id,
+      step_execution_id=operator.step.execution_id,
+      key=key,
+      value=value)
 
 
 def get_metadata(key, step_execution_id=None):
   step_execution_id = step_execution_id or operator.step.execution_id
   return operator.interface.rm.get_step_metadata(
-      step_execution_id=step_execution_id, key=key)
+      run_id=operator.run_id, step_execution_id=step_execution_id, key=key)
 
 
 def get_all_metadata(step_execution_id=None):
   step_execution_id = step_execution_id or operator.step.execution_id
   return operator.interface.rm.get_all_step_metadata(
-      step_execution_id=step_execution_id)
+      run_id=operator.run_id, step_execution_id=step_execution_id)

@@ -21,7 +21,7 @@ import sys
 import textwrap
 from collections import OrderedDict
 from datetime import datetime, timedelta, timezone
-from typing import Dict, List, Set, final
+from typing import Deque, Dict, List, Mapping, Set, Tuple, final
 
 import googleapiclient.errors
 from jinja2 import TemplateNotFound
@@ -30,7 +30,8 @@ from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import crm
 from gcpdiag.runbook import constants, exceptions, flags, op, report, util
 
-DiagnosticTreeRegister: Dict[str, 'DiagnosticTree'] = {}
+RunbookRegistry: Dict[str, 'DiagnosticTree'] = {}
+StepRegistry: Dict[str, 'Step'] = {}
 
 
 class MetaStep(type):
@@ -41,15 +42,22 @@ class MetaStep(type):
     """Class Id of a step"""
     return '.'.join([cls.__module__, cls.__name__])
 
+  def __new__(mcs, name, bases, namespace):
+    """Register all steps into StepRegistry exluding base classes"""
+    new_class = super().__new__(mcs, name, bases, namespace)
+    if name not in ('Step', 'Gateway', 'LintWrapper', 'StartStep', 'EndStep',
+                    'CompositeStep') and bases[0] == Step:
+      StepRegistry[new_class.id] = new_class
+    return new_class
+
 
 class Step(metaclass=MetaStep):
   """
   Represents a step in a diagnostic or runbook process.
   """
   steps: List['Step']
-  _operator: op.Operator
   template: str
-  parameters: dict
+  parameters: dict = {}
 
   def __init__(self,
                parent: 'Step' = None,
@@ -83,7 +91,7 @@ class Step(metaclass=MetaStep):
     return self.execution_id
 
   @final
-  def hook_execute(self, operator: op.Operator):
+  def execute_hook(self, operator: op.Operator):
     """
     Executes the step using the given context and interface.
 
@@ -92,14 +100,13 @@ class Step(metaclass=MetaStep):
         interface: The interface used for interactions during execution.
     """
     self.load_prompts()
-    self._operator = operator
     operator.set_messages(m=self.prompts)
     operator.interface.info(step_type=self.type.value,
                             message=self.execution_message)
     self.execute()
 
   def execute(self):
-    """Executes the step using the given context and interface."""
+    """Executes the main diagnostic log for this step."""
     pass
 
   def set_prompts(self, prompt: models.Messages = None):
@@ -242,7 +249,7 @@ class RunbookRule(type):
     if name != 'DiagnosticTree' and bases[0] == DiagnosticTree:
       rule_id = util.runbook_name_parser(name)
       product = namespace.get('__module__', '').split('.')[-2].lower()
-      DiagnosticTreeRegister[f'{product}/{rule_id}'] = new_class
+      RunbookRegistry[f'{product}/{rule_id}'] = new_class
     return new_class
 
 
@@ -262,7 +269,7 @@ class DiagnosticTree(metaclass=RunbookRule):
     self.doc_file = util.pascal_case_to_kebab_case(self.__class__.__name__)
     self.dt_name = util.runbook_name_parser(self.__class__.__name__)
     self.name = f'{self.product}/{self.dt_name}'
-    self.steps: List = []
+    self.steps = []
 
   @property
   def run_id(self):
@@ -354,6 +361,15 @@ class DiagnosticTree(metaclass=RunbookRule):
     return f'https://gcpdiag.dev/runbook/diagnostic-trees/{self.name}'
 
 
+class Bundle:
+  run_id: str
+  steps: List[Step]
+  parameter: models.Parameter
+
+  def __init__(self) -> None:
+    self.run_id = util.generate_uuid()
+
+
 class DiagnosticEngine:
   """Loads and Executes diagnostic trees.
 
@@ -368,11 +384,16 @@ class DiagnosticEngine:
 
   def __init__(self, rm: report.ReportManager = None, interface=None) -> None:
     """Initializes the DiagnosticEngine with required managers."""
-    self.rm = rm or report.TerminalReportManager()
     self.interface = interface or report.InteractionInterface()
     self.finalize = False
+    self.interface.rm = rm or report.TerminalReportManager()
+    # tuple in the format (DiagnosticTree/Bundle, user_provided_parameter)
+    self.task_queue: Deque = Deque()
 
-  def load_rule(self, name: str) -> None:
+  def add_task(self, new_task: Tuple):
+    self.task_queue.appendleft(new_task)
+
+  def load_tree(self, name: str) -> DiagnosticTree:
     """Loads a diagnostic tree by name ex gce/ssh.
 
     Attempts to retrieve a diagnostic tree registered under the given name.
@@ -386,12 +407,32 @@ class DiagnosticEngine:
     try:
       # ex: product/gce-runbook
       name = util.runbook_name_parser(name)
-      self.tree = DiagnosticTreeRegister.get(name)
-      if not self.tree:
+      tree = RunbookRegistry.get(name)
+      if not tree:
         raise exceptions.DiagnosticTreeNotFound
+      return tree
     except exceptions.DiagnosticTreeNotFound as e:
       logging.error('%s: %s', name, e)
       sys.exit(2)
+
+  def load_steps(self, parameter: Mapping[str, Mapping],
+                 steps_to_run: List) -> Bundle:
+    """Loads individual steps and prepare a bundle.
+
+    Args:
+      parameter: User provided parameter
+      steps_to_run: List of steps to from a bundle specification.
+    """
+    bundle: Bundle = Bundle()
+    bundle.parameter = models.Parameter(parameter)
+    bundle.steps = []
+    for id_ in steps_to_run:
+      step_def = StepRegistry.get(id_)
+      if not step_def:
+        logging.error('skipping step "%s": no step definition found', id_)
+        continue
+      bundle.steps.append(step_def)
+    return bundle
 
   def _get_billing_project(self, parameter: models.Parameter):
     project_id = parameter.get('project_id')
@@ -406,12 +447,12 @@ class DiagnosticEngine:
       return config.get('billing_project')
     return None
 
-  def _check_required_paramaters(self, tree: DiagnosticTree,
-                                 parameters: models.Parameter):
+  def _check_required_paramaters(self, parameter_def: Dict,
+                                 caller_args: models.Parameter):
     missing_parameters = {
         key: value.get('help', '')
-        for key, value in tree.parameters.items()
-        if value.get('required', False) and key not in parameters
+        for key, value in parameter_def.items()
+        if value.get('required', False) and key not in caller_args
     }
     if missing_parameters:
       missing_param_str = '\n'.join(
@@ -424,19 +465,19 @@ class DiagnosticEngine:
           missing_param_str)
       sys.exit(2)
 
-  def _set_default_parameters(self, tree: DiagnosticTree):
+  def _set_default_parameters(self, parameter_def: Dict):
     # set default parameters
-    tree.parameters.setdefault(flags.START_TIME_UTC, {
+    parameter_def.setdefault(flags.START_TIME_UTC, {
         'type': datetime,
         'help': 'Beginning Timeframe to scope investigation.'
     })
-    tree.parameters.setdefault(flags.END_TIME_UTC, {
+    parameter_def.setdefault(flags.END_TIME_UTC, {
         'type': datetime,
         'help': 'End timeframe'
     })
 
-  def parse_parameters(self, tree: DiagnosticTree,
-                       parameters: models.Parameter):
+  def parse_parameters(self, parameter_def: Dict,
+                       caller_args: models.Parameter):
     """Set to defaults parameters and convert datatypes"""
 
     def is_builtin_type(target_type):
@@ -474,77 +515,84 @@ class DiagnosticEngine:
         except ValueError:
           print(f'Cannot cast {param_val} to type {target_type}.')
 
-    self._set_default_parameters(tree)
+    self._set_default_parameters(parameter_def)
     # convert data types and set defaults for non exist parameters
-    for k, _ in tree.parameters.items():
+    for k, _ in parameter_def.items():
       # Set default if not provided by user
-      dt_param = tree.parameters.get(k)
-      user_provided_param = parameters.get(k)
-      if k not in parameters and dt_param and dt_param.get('default'):
-        parameters[k] = dt_param['default']
+      dt_param = parameter_def.get(k)
+      user_provided_param = caller_args.get(k)
+      if k not in caller_args and dt_param and dt_param.get('default'):
+        caller_args[k] = dt_param['default']
         continue
 
       if isinstance(user_provided_param, str):
         if dt_param and dt_param.get('ignorecase') is True:
-          parameters[k] = user_provided_param
+          caller_args[k] = user_provided_param
         else:
-          parameters[k] = user_provided_param.lower()
+          caller_args[k] = user_provided_param.lower()
 
       if dt_param and dt_param.get('type') == datetime:
         if k == flags.END_TIME_UTC:
-          end_time = parameters.get(flags.END_TIME_UTC,
-                                    datetime.now(timezone.utc))
-          parameters[flags.END_TIME_UTC] = cast_to_type(end_time,
-                                                        dt_param['type'])
+          end_time = caller_args.get(flags.END_TIME_UTC,
+                                     datetime.now(timezone.utc))
+          caller_args[flags.END_TIME_UTC] = cast_to_type(
+              end_time, dt_param['type'])
         if k == flags.START_TIME_UTC:
-          end_time = parameters.get(flags.END_TIME_UTC,
-                                    datetime.now(timezone.utc))
-          parameters[flags.END_TIME_UTC] = cast_to_type(end_time,
-                                                        dt_param['type'])
-          parsed_end_time = parameters[flags.END_TIME_UTC]
-          start_time = parameters.get(flags.START_TIME_UTC,
-                                      parsed_end_time - timedelta(hours=8))
-          parameters[flags.START_TIME_UTC] = cast_to_type(
+          end_time = caller_args.get(flags.END_TIME_UTC,
+                                     datetime.now(timezone.utc))
+          caller_args[flags.END_TIME_UTC] = cast_to_type(
+              end_time, dt_param['type'])
+          parsed_end_time = caller_args[flags.END_TIME_UTC]
+          start_time = caller_args.get(flags.START_TIME_UTC,
+                                       parsed_end_time - timedelta(hours=8))
+          caller_args[flags.START_TIME_UTC] = cast_to_type(
               start_time, dt_param['type'])
         if k != flags.START_TIME_UTC or k == flags.END_TIME_UTC:
-          date_string = parameters.get(k)
+          date_string = caller_args.get(k)
           if date_string:
-            parameters[k] = cast_to_type(date_string, dt_param['type'])
+            caller_args[k] = cast_to_type(date_string, dt_param['type'])
 
       # DT specified a type for the param and it's not a string.
       # cast the parameter to the type specified by the runbook.
       if (dt_param and dt_param.get('type') and dt_param['type'] != str and
           user_provided_param):
-        parameters[k] = cast_to_type(user_provided_param, dt_param['type'])
+        caller_args[k] = cast_to_type(user_provided_param, dt_param['type'])
 
-  def run_diagnostic_tree(self, parameter: models.Parameter) -> None:
-    """Executes the loaded diagnostic tree within a given context.
+  def run(self):
+    """Execute tasks (runbooks or bundles) present in the engines task queue"""
+    if not self.task_queue:
+      logging.error('No tasks to execute. Did you call add_task()?')
+      return
 
-    Validates required parameters, builds the tree, and executes its steps.
-    Handles exceptions during execution and generates a report upon completion.
+    for task in self.task_queue:
+      if isinstance(task[0], Bundle):
+        self.run_bundle(task[0])
+        continue
+
+      if isinstance(task[0], DiagnosticTree):
+        self.run_diagnostic_tree(tree=task[0], parameter=task[1])
+
+  def run_diagnostic_tree(self, tree: DiagnosticTree,
+                          parameter: models.Parameter) -> None:
+    """Executes a diagnostic tree with a given parameter.
 
     Args:
       context: The execution context for the diagnostic tree.
     """
-    if not self.tree or not callable(self.tree):
-      logging.error('Could not instantiate Diagnostic Tree')
-      sys.exit(2)
-
-    tree = self.tree()
-
-    self._check_required_paramaters(tree=tree, parameters=parameter)
-    self.parse_parameters(tree=tree, parameters=parameter)
-    self.rm.tree = tree
-    self.interface.set_dt(tree)
-    self.interface.rm = self.rm
+    self._check_required_paramaters(parameter_def=tree.parameters,
+                                    caller_args=parameter)
+    self.parse_parameters(parameter_def=tree.parameters, caller_args=parameter)
     self.interface.output.display_runbook_description(tree)
 
     try:
       operator = op.Operator(interface=self.interface)
       operator.set_tree(tree)
       operator.set_parameters(parameter)
+      operator.set_run_id(tree.run_id)
       project_id = self._get_billing_project(parameter)
-      operator.set_context(p=parameter, project_id=project_id)
+      operator.create_context(p=parameter, project_id=project_id)
+      self.interface.rm.reports[tree.run_id] = report.Report(
+          run_id=tree.run_id, parameters=parameter)
       with op.operator_context(operator):
         tree.hook_build_tree()
       self.finalize = False
@@ -562,32 +610,17 @@ class DiagnosticEngine:
 
     Args:
       step: The current step to execute.
-      context: The execution context.
+      operator: The operator used duing execution.
       executed_steps: A set of executed step IDs to avoid cycles.
     """
     if not self.finalize:
       operator.set_step(step)
       with op.operator_context(operator):
-        try:
-          self.run_step(step=step, operator=operator)
-          executed_steps.add(step)
-        except TemplateNotFound:
-          logging.error('could not load messages linked to step: %s',
-                        step.execution_id)
-        except exceptions.InvalidStepOperation as err:
-          logging.error('Invalid step operation: %s', err)
-        except (ValueError, KeyError) as err:
-          logging.error('`%s`: %s', step.execution_id, err)
-        except (utils.GcpApiError, googleapiclient.errors.HttpError) as error:
-          error = utils.GcpApiError(error)
-          if error.status == 403:
-            logging.error(('%s: %s user does not sufficient permissions '
-                           'to perform operations in step: %s'),
-                          type(error).__name__, error, step.execution_id)
-            return
-          logging.error('%s: %s while processing step: %s',
-                        type(error).__name__, error, step.execution_id)
-
+        outcome = self.run_step(step=step, operator=operator)
+        executed_steps.add(step)
+        if outcome == constants.FINALIZE_INVESTIGATION:
+          self.finalize = True
+          return
       for child in step.steps:  # Iterate over the children of the current step
         if child not in executed_steps:
           self.find_path_dfs(step=child,
@@ -602,43 +635,98 @@ class DiagnosticEngine:
       step: The diagnostic step to execute.
       operator: The execution operations object containing the context.
     """
-
-    user_input = self._run(step, operator)
-    while True:
-      if user_input is constants.RETEST:
-        operator.interface.info(step_type=constants.RETEST,
-                                message='Re-evaluating recent failed step')
-        with caching.bypass_cache():
-          user_input = self._run(step, operator=operator)
-      elif step.type == constants.StepType.END:
-        self.rm.generate_report(operator)
-        self.finalize = True
-        break
-      elif user_input is constants.STOP:
-        logging.info('Exiting Runbook Execution \n')
-        sys.exit(2)
-      elif step.type == constants.StepType.START and (
-        self.rm.results.get(step.execution_id) is not None and \
-          self.rm.results[step.execution_id].overall_status == 'skipped'):
-        logging.info('Start Step was skipped. Can\'t proceed ...\n')
-        sys.exit(2)
-      elif user_input is constants.CONTINUE:
-        break
-      elif (user_input is not constants.RETEST and
-            user_input is not constants.CONTINUE and
-            user_input is not constants.STOP):
-        return user_input
+    try:
+      user_input = self._run(step, operator)
+      while True:
+        if user_input is constants.RETEST:
+          operator.interface.info(step_type=constants.RETEST,
+                                  message='Re-evaluating recent failed step')
+          with caching.bypass_cache():
+            user_input = self._run(operator.step, operator=operator)
+        elif step.type == constants.StepType.END:
+          return constants.FINALIZE_INVESTIGATION
+        elif user_input is constants.STOP:
+          logging.info('Finalizing Investigation\n')
+          return constants.FINALIZE_INVESTIGATION
+        elif step.type == constants.StepType.START and (
+          self.interface.rm.reports[operator.run_id]
+          .results.get(step.execution_id) is not None and \
+          self.interface.rm.reports[operator.run_id]
+          .results[step.execution_id].overall_status == 'skipped'):
+          logging.info('Start Step was skipped. Can\'t proceed ...\n')
+          return constants.FINALIZE_INVESTIGATION
+        elif user_input is constants.CONTINUE:
+          break
+        elif (user_input is not constants.RETEST and
+              user_input is not constants.CONTINUE and
+              user_input is not constants.STOP):
+          return user_input
+    except (TemplateNotFound, exceptions.InvalidStepOperation,
+            utils.GcpApiError, googleapiclient.errors.HttpError, ValueError,
+            KeyError) as err:
+      error_msg = 'Unknown'
+      end = datetime.now(timezone.utc).isoformat()
+      self.interface.rm.reports[operator.run_id].results[
+          step.execution_id].end_time_utc = end
+      if isinstance(err, TemplateNotFound):
+        error_msg = (
+            f'could not load messages linked to step: {step.id}.'
+            'ensure step has a valid template eg: filename::block_prefix')
+        logging.error(error_msg)
+      if isinstance(err, exceptions.InvalidStepOperation):
+        error_msg = f'invalid step operation: %s: {err}'
+        logging.error(error_msg)
+      if isinstance(err, (ValueError, KeyError)):
+        error_msg = f'`{step.execution_id}`: {err}'
+        logging.error(error_msg)
+      if isinstance(err, (utils.GcpApiError, googleapiclient.errors.HttpError)):
+        err = utils.GcpApiError(err)
+        if err.status == 403:
+          logging.error(('%s: %s user does not sufficient permissions '
+                         'to perform operations in step: %s'),
+                        type(err).__name__, err, step.execution_id)
+          return
+        logging.error('%s: %s while processing step: %s',
+                      type(err).__name__, err, step.execution_id)
+      self.interface.rm.reports[operator.run_id].results[
+          step.execution_id].step_error = error_msg
 
   def _run(self, step: Step, operator: op.Operator):
-    start = datetime.now(timezone.utc).timestamp()
-    self.rm.results[step.execution_id] = report.StepResult(step=step)
-    step.hook_execute(operator)
-    end = datetime.now(timezone.utc).timestamp()
-    if self.rm.results.get(step.execution_id):
-      self.rm.results[step.execution_id].start_time_utc = start
-      self.rm.results[step.execution_id].end_time_utc = end
-      return self.rm.results[step.execution_id].prompt_response
-    return None
+    start = datetime.now(timezone.utc).isoformat()
+    self.interface.rm.reports[operator.run_id].results[
+        step.execution_id] = report.StepResult(step=step)
+    self.interface.rm.reports[operator.run_id].results[
+        step.execution_id].start_time_utc = start
+    step.execute_hook(operator)
+    end = datetime.now(timezone.utc).isoformat()
+    self.interface.rm.reports[operator.run_id].results[
+        step.execution_id].end_time_utc = end
+    return self.interface.rm.reports[operator.run_id].results[
+        step.execution_id].prompt_response
+
+  def run_bundle(self, bundle: Bundle) -> None:
+    """Executes a list of steps present in a bundle
+
+    Args:
+      bundle: bundle to be excuted
+    """
+    operator = op.Operator(interface=self.interface)
+    operator.set_parameters(bundle.parameter)
+    operator.set_run_id(bundle.run_id)
+    project_id = self._get_billing_project(bundle.parameter)
+    operator.create_context(p=bundle.parameter, project_id=project_id)
+    self.interface.rm.reports[bundle.run_id] = report.Report(
+        run_id=bundle.run_id, parameters=bundle.parameter)
+    with op.operator_context(operator):
+      for step in bundle.steps:
+        self._check_required_paramaters(parameter_def=step.parameters,
+                                        caller_args=bundle.parameter)
+        self.parse_parameters(parameter_def=step.parameters,
+                              caller_args=bundle.parameter)
+        if callable(step):
+          step_obj = step()
+          operator.set_step(step_obj)
+          self.run_step(step=step_obj, operator=operator)
 
 
 class ExpandTreeFromAst(ast.NodeVisitor):
@@ -649,8 +737,8 @@ class ExpandTreeFromAst(ast.NodeVisitor):
   """
 
   def __init__(self, tree=None):
-    self.tree: DiagnosticTree = tree() or DiagnosticTree()
-    self.parent: OrderedDict = OrderedDict()
+    self.tree = tree() or DiagnosticTree()
+    self.parent = OrderedDict()
     self.current_class = None
     # Track instances to map variable names to their classes
     self.instances = {}

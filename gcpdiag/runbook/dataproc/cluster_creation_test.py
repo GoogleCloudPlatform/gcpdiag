@@ -24,16 +24,28 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
 
   rule_parameters = [
       {
-          'project_id': 'gcpdiag-dataproc1-aaaa',
-          'cluster_name': 'good',
-          'start_time_utc': '2024-06-18T01:00:00Z',
-          'end_time_utc': '2024-06-22T01:00:00Z',
+          'project_id':
+              'gcpdiag-dataproc1-aaaa',
+          'service_account':
+              'saworker@gcpdiag-dataproc1-aaaa.iam.gserviceaccount.com',
+          'cluster_name':
+              'good',
+          'start_time_utc':
+              '2024-06-18T01:00:00Z',
+          'end_time_utc':
+              '2024-06-22T01:00:00Z',
       },
       {
-          'project_id': 'gcpdiag-dataproc1-aaaa',
-          'cluster_name': 'good',
-          'start_time_utc': '2024-06-23T01:00:00Z',
-          'end_time_utc': '2024-06-24T01:00:00Z',
+          'project_id':
+              'gcpdiag-dataproc1-aaaa',
+          'service_account':
+              'saworker@gcpdiag-dataproc1-aaaa.iam.gserviceaccount.com',
+          'cluster_name':
+              'good',
+          'start_time_utc':
+              '2024-06-23T01:00:00Z',
+          'end_time_utc':
+              '2024-06-24T01:00:00Z',
       },
       {
           'project_id': 'gcpdiag-dataproc1-aaaa',

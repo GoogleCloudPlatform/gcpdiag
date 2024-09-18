@@ -605,4 +605,3 @@ class NodeBootstrappingEnd(runbook.EndStep):
         message='Are you satisfied with the `GKE Node Bootstrapping` analysis?')
     if response == op.NO:
       op.info(message=op.END_MESSAGE)
-      op.operator.interface.rm.generate_report()

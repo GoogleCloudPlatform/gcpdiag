@@ -43,11 +43,17 @@ skipped_step = report.StepResult(step=Step(uuid='skipped.step'))
 skipped_step.results.append(skipped_step_eval)
 
 op.operator = op.Operator(interface=report.InteractionInterface())
+op.operator.set_run_id('test')
 op.operator.interface.rm = report.TerminalReportManager()
-op.operator.interface.rm.results[ok_step.execution_id] = ok_step
-op.operator.interface.rm.results[failed_step.execution_id] = failed_step
-op.operator.interface.rm.results[uncertain_step.execution_id] = uncertain_step
-op.operator.interface.rm.results[skipped_step.execution_id] = skipped_step
+op.operator.interface.rm.reports['test'] = report.Report(run_id='test',
+                                                         parameters={})
+op.operator.interface.rm.reports['test'].results[ok_step.execution_id] = ok_step
+op.operator.interface.rm.reports['test'].results[
+    failed_step.execution_id] = failed_step
+op.operator.interface.rm.reports['test'].results[
+    uncertain_step.execution_id] = uncertain_step
+op.operator.interface.rm.reports['test'].results[
+    skipped_step.execution_id] = skipped_step
 
 op.operator.set_step(ok_step)
 
@@ -100,5 +106,6 @@ class OperatorTest(unittest.TestCase):
     info = ['info1', 'info2', 'info3']
     for i in info:
       op.info(i)
-    step_report = op.operator.interface.rm.results.get(ok_step.execution_id)
+    step_report = op.operator.interface.rm.reports['test'].results.get(
+        ok_step.execution_id)
     self.assertEqual(info, step_report.info)

@@ -15,14 +15,15 @@
 
 import argparse
 import importlib
-import json
 import logging
 import os
 import pkgutil
 import re
 import sys
 import warnings
-from typing import Tuple
+from typing import List
+
+import yaml
 
 from gcpdiag import config, hooks, models, runbook
 from gcpdiag.queries import apis, kubectl
@@ -51,6 +52,22 @@ class ParseMappingArg(argparse.Action):
     setattr(namespace, self.dest, parsed_dict)
 
 
+class ParseBundleSpec(argparse.Action):
+  """Takes a string argument and parse argument"""
+
+  def __call__(self, parser, namespace, values, option_string):
+    if values:
+      bundle_list = getattr(namespace, self.dest, List)
+      for file_path in values:
+        try:
+          bundle_list += _load_bundles_spec(file_path.name)
+        except ValueError:
+          parser.error(
+              f'argument {option_string} expected key:value, received {file_path}'
+          )
+    setattr(namespace, self.dest, bundle_list)
+
+
 def expand_and_validate_path(arg) -> str:
   # Expand the path and check if it exists
   expanded_path = os.path.abspath(os.path.expanduser(arg))
@@ -70,6 +87,14 @@ def expand_and_validate_path(arg) -> str:
         f"Dirctory '{arg}' does not exist. Create one mkdir -p {arg} and try again"
     )
   return expanded_path
+
+
+def validate_args(args):
+  if args.runbook is None and not args.bundle_spec:
+    print(
+        'Error: Provide a runbook id  or "--bundle-spec=YAML_FILE_PATH" must be provided.'
+    )
+    sys.exit(1)
 
 
 class DeprecatedAction(argparse.Action):
@@ -148,7 +173,15 @@ def _init_runbook_args_parser():
   parser.add_argument(
       'runbook',
       help=
-      'Runbook to execute in the format product/runbook-name or product/name')
+      'Runbook to execute in the format product/runbook-name or product/name',
+      nargs='?')
+
+  parser.add_argument('--bundle-spec',
+                      nargs='*',
+                      default=[],
+                      action=ParseBundleSpec,
+                      type=argparse.FileType('r'),
+                      help='Path to YAML file containing bundle specifications')
   parser.add_argument(
       '-p',
       '--parameter',
@@ -183,14 +216,6 @@ def _init_runbook_args_parser():
       default=config.get('interface'),
       type=str,
       help=('What interface as one of [cli, api] (default: cli)'))
-
-  parser.add_argument(
-      '--label',
-      action=ParseMappingArg,
-      metavar='key:value',
-      help=(
-          'One or more resource labels as key-value pair(s) to scope inspection '
-          '(e.g.: env:prod, type:frontend or env=prod type=frontend)'))
 
   parser.add_argument('--universe-domain',
                       type=str,
@@ -229,6 +254,43 @@ def _load_runbook_rules(package: str):
       _load_runbook_rules(name)
 
 
+def _load_bundles_spec(file_path):
+  """Load step config from file
+
+  Example:
+    - bundle:
+      parameter:
+        project_id: "project_detail"
+        zone: "location"
+        ...
+      steps:
+        - gcpdiag.runbook.gce.generalized_steps.VmLifecycleState
+        - gcpdiag.runbook.gce.ops_agent.VmHasAServiceAccount
+        - gcpdiag.runbook.gce.ssh.PoxisUserHasValidSshKeyCheck
+    - bundle:
+      ...
+  """
+  if file_path:
+    # Read the file contents
+    if os.path.exists(file_path):
+      with open(file_path, encoding='utf-8') as f:
+        content = f.read()
+    else:
+      print(f'ERROR: Bundle Specification file: {file_path} does not exist!',
+            file=sys.stderr)
+      sys.exit(1)
+
+    # Parse the content of the file as YAML
+    if content:
+      try:
+        parsed_content = yaml.safe_load(content)
+        return parsed_content
+      except yaml.YAMLError as err:
+        print(f"ERROR: can't parse content of the file as YAML: {err}",
+              file=sys.stderr)
+        sys.exit(1)
+
+
 def _initialize_output():
   constructor = terminal_output.TerminalOutput
   kwargs = {
@@ -245,7 +307,7 @@ def _initialize_output():
   return output
 
 
-def run_and_get_report(argv=None, credentials: str = None) -> Tuple[int, dict]:
+def run_and_get_report(argv=None, credentials: str = None) -> dict:
   # Initialize argument parser
   parser = _init_runbook_args_parser()
   args = parser.parse_args(argv[1:])
@@ -259,15 +321,12 @@ def run_and_get_report(argv=None, credentials: str = None) -> Tuple[int, dict]:
   # Initialize configuration
   config.init(vars(args), terminal_output.is_cloud_shell())
 
-  # Rules name patterns that shall be included or excluded
-  runbook_pattern = _validate_rule_pattern(args.runbook)
-
   # Initialize Repository, and Tests.
   dt_engine = runbook.DiagnosticEngine()
   _load_runbook_rules(runbook.__name__)
 
-  # ^^^ If you add rules directory, update also
-  # pyinstaller/hook-gcpdiag.lint.py and bin/precommit-required-files
+  # ^^^ If you add gcpdiag/runbook/[NEW-PRODUCT] directory, update also
+  # pyinstaller/hook-gcpdiag.runbook.py and bin/precommit-required-files
 
   # Initialize proper output formater
   output = _initialize_output()
@@ -294,30 +353,34 @@ def run_and_get_report(argv=None, credentials: str = None) -> Tuple[int, dict]:
     args.parameter['project_id'] = args.project
   # Start the reporting
   output.display_banner()
-  output.display_header(parameter=args.parameter)
 
-  # Run the tests.
-  dt_engine.load_rule(runbook_pattern)
-  dt_engine.run_diagnostic_tree(args.parameter)
-  output.display_footer(dt_engine.rm)
-  hooks.post_lint_hook(dt_engine.rm.get_totals_by_status())
+  # Run the runbook or step connections.
+  if args.runbook:
+    # Rules name patterns that shall be included or excluded
+    runbook_pattern = _validate_rule_pattern(args.runbook)
+    output.display_header()
+    tree = dt_engine.load_tree(runbook_pattern)
+    if not callable(tree):
+      logging.error('Can\'t instantiate Runbook')
+      sys.exit(2)
+    dt_engine.add_task((tree(), args.parameter))
+  elif args.bundle_spec:
+    for bundle in args.bundle_spec:
+      bundle = dt_engine.load_steps(parameter=bundle['parameter'],
+                                    steps_to_run=bundle['steps'])
+      dt_engine.add_task((bundle, bundle.parameter))
+
+  dt_engine.run()
+  output.display_footer(dt_engine.interface.rm)
 
   # Clean up the kubeconfig file generated for gcpdiag
   kubectl.clean_up()
 
-  # Read report and return the content
-  if hasattr(dt_engine.rm, 'report_path'):
-    with open(dt_engine.rm.report_path, encoding='utf-8') as f:
-      report = json.load(f)
-  else:
-    report = {}
+  report = {}
   report['version'] = config.VERSION
-  code = 2 if dt_engine.rm.any_failed else 0
-  return code, report
+  report['reports'] = dt_engine.interface.rm.generate_reports()
+  return report
 
 
 def run(argv) -> None:
-  code, report = run_and_get_report(argv)
-  del report
-  # Exit 0 if there are no failed rules.
-  sys.exit(code)
+  run_and_get_report(argv)

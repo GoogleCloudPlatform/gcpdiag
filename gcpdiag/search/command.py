@@ -86,7 +86,7 @@ def _load_runbook_rules() -> Dict[str, DiagnosticTree]:
   """Load and return all runbook rules. """
   #pylint:disable=protected-access
   runbook_command._load_runbook_rules(runbook.__name__)
-  return runbook.DiagnosticTreeRegister
+  return runbook.RunbookRegistry
 
 
 def run(argv=None):

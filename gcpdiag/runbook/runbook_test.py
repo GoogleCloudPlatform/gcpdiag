@@ -28,17 +28,22 @@ class TestDiagnosticEngine(unittest.TestCase):
 
   def setUp(self):
     self.mock_report_manager = Mock(spec=runbook.report.ReportManager)
-    self.de: runbook.DiagnosticEngine = runbook.DiagnosticEngine(
-        rm=self.mock_report_manager)
+    self.mock_report_manager.reports = {}
+    self.de = runbook.DiagnosticEngine(rm=self.mock_report_manager)
+    step = runbook.Step
+    step.parameters = {}
+    self.de.add_task((runbook.Bundle(), {}))
+    self.de.add_task((runbook.DiagnosticTree(), {}))
 
   def test_initialization_with_default_report_manager(self):
     engine = runbook.DiagnosticEngine()
-    self.assertIsInstance(engine.rm, runbook.report.TerminalReportManager)
+    self.assertIsInstance(engine.interface.rm,
+                          runbook.report.TerminalReportManager)
 
   def test_load_rule_invalid(self):
     with self.assertRaises(SystemExit) as cm:
       with self.assertRaises(runbook.exceptions.DiagnosticTreeNotFound):
-        self.de.load_rule('invalid_rule_name')
+        self.de.load_tree('invalid_rule_name')
     # Test program is exited with code 2 when invalid rule name is provided
     self.assertEqual(cm.exception.code, 2)
 
@@ -47,13 +52,14 @@ class TestDiagnosticEngine(unittest.TestCase):
     with self.assertRaises(SystemExit) as cm:
       dt = runbook.DiagnosticTree()
       dt.parameters = {'missing_param': {'required': True,}}
-      self.de._check_required_paramaters(tree=dt, parameters=models.Parameter())
+      self.de._check_required_paramaters(parameter_def=dt.parameters,
+                                         caller_args=models.Parameter())
     self.assertEqual(cm.exception.code, 2)
 
   @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
   def test_find_path_dfs_normal_operation(self, mock_run_step):
     op = Operator(interface=None)
-    op.context = models.Context('')
+    op.create_context(p={}, project_id='')
     current_step = Mock(execution_id='1')
     current_step.steps = []
     visited = set()
@@ -69,7 +75,7 @@ class TestDiagnosticEngine(unittest.TestCase):
   @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
   def test_find_path_dfs_finite_loop(self, mock_run_step):
     op = Operator(interface=None)
-    op.context = models.Context('')
+    op.create_context(p={}, project_id='')
     current_step = Mock(execution_id='1', type=StepType.AUTOMATED)
     current_step.steps = [current_step]
     visited = set()
@@ -84,7 +90,7 @@ class TestDiagnosticEngine(unittest.TestCase):
   @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
   def test_find_path_all_child_step_executions(self, mock_run_step):
     op = Operator(interface=None)
-    op.context = models.Context('')
+    op.create_context(p={}, project_id='')
     first_step = Mock(execution_id='1')
     intermidiate_step = Mock(execution_id='2')
     first_step.steps = [intermidiate_step]
@@ -100,21 +106,36 @@ class TestDiagnosticEngine(unittest.TestCase):
     self.assertIn(last_step, visited)
     self.assertEqual(mock_run_step.call_count, 3)
 
+  @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
+  def test_run_bundle_operation(self, mock_run_step):
+    bundle = Mock(run_id='1', runbook_name='test')
+    bundle.parameter = {}
+    step = Mock()
+    step.parameters = {}
+    bundle.steps = [step]
+    self.de.run_bundle(bundle=bundle)
+    assert mock_run_step.called
+
+  @patch('gcpdiag.runbook.DiagnosticEngine.run_bundle')
+  @patch('gcpdiag.runbook.DiagnosticEngine.run_diagnostic_tree')
+  def test_run_operation(self, mock_run_bundle, mock_run_diagnostic_tree):
+
+    self.de.run()
+    assert mock_run_bundle.called
+    assert mock_run_diagnostic_tree.called
+
 
 class TestSetDefaultParameters(unittest.TestCase):
   """Test for Setting default date parameters"""
 
   def setUp(self):
     self.mock_report_manager = Mock(spec=runbook.report.ReportManager)
-    self.de: runbook.DiagnosticEngine = runbook.DiagnosticEngine(
-        rm=self.mock_report_manager)
-    self.de.tree = Mock(parent=runbook.DiagnosticTree)
-    self.de.tree.context = models.Context('project')
+    self.de = runbook.DiagnosticEngine(rm=self.mock_report_manager)
+    self.de.add_task((Mock(parent=runbook.DiagnosticTree), {}))
 
   def test_no_parameters_set(self):
     parameters = models.Parameter()
-    self.de.tree.parameters = {}
-    self.de.parse_parameters(tree=self.de.tree, parameters=parameters)
+    self.de.parse_parameters(parameter_def={}, caller_args=parameters)
     self.assertIn(flags.END_TIME_UTC, parameters)
     self.assertIn(flags.START_TIME_UTC, parameters)
     end_time = parameters[flags.END_TIME_UTC]
@@ -131,8 +152,7 @@ class TestSetDefaultParameters(unittest.TestCase):
     end_t_str = '2024-03-20T15:00:00Z'
     parameters = models.Parameter()
     parameters[flags.END_TIME_UTC] = end_t_str
-    self.de.tree.parameters = {}
-    self.de.parse_parameters(tree=self.de.tree, parameters=parameters)
+    self.de.parse_parameters(parameter_def={}, caller_args=parameters)
     end_time = parameters[flags.END_TIME_UTC]
     start_time = parameters[flags.START_TIME_UTC]
 
@@ -145,8 +165,7 @@ class TestSetDefaultParameters(unittest.TestCase):
     start_t_str = '2024-03-20T07:00:00Z'
     parameters = models.Parameter()
     parameters[flags.START_TIME_UTC] = start_t_str
-    self.de.tree.parameters = {}
-    self.de.parse_parameters(tree=self.de.tree, parameters=parameters)
+    self.de.parse_parameters(parameter_def={}, caller_args=parameters)
     start_time = parameters[flags.START_TIME_UTC]
     end_time = parameters[flags.END_TIME_UTC]
 
@@ -158,12 +177,11 @@ class TestSetDefaultParameters(unittest.TestCase):
   def test_both_times_provided_in_rfc3339(self):
     start_time_str = '2024-03-20T07:00:00Z'
     end_time_str = '2024-03-20T15:00:00Z'
-    self.de.tree.parameters = {}
     parameters = models.Parameter()
     parameters[flags.START_TIME_UTC] = start_time_str
     parameters[flags.END_TIME_UTC] = end_time_str
 
-    self.de.parse_parameters(self.de.tree, parameters)
+    self.de.parse_parameters(parameter_def={}, caller_args=parameters)
     start_time = parameters[flags.START_TIME_UTC]
     end_time = parameters[flags.END_TIME_UTC]
 
@@ -180,8 +198,7 @@ class TestSetDefaultParameters(unittest.TestCase):
     parameters = models.Parameter()
     parameters[flags.START_TIME_UTC] = start_time_epoch
     parameters[flags.END_TIME_UTC] = end_time_epoch
-    self.de.tree.parameters = {}
-    self.de.parse_parameters(tree=self.de.tree, parameters=parameters)
+    self.de.parse_parameters(parameter_def={}, caller_args=parameters)
     start_time = parameters[flags.START_TIME_UTC]
     end_time = parameters[flags.END_TIME_UTC]
 
@@ -198,6 +215,5 @@ class TestSetDefaultParameters(unittest.TestCase):
     parameters = models.Parameter()
     parameters[flags.START_TIME_UTC] = start_time_invalid
     parameters[flags.END_TIME_UTC] = end_time_invalid
-    self.de.tree.parameters = {}
     with self.assertRaises(ValueError):
-      self.de.parse_parameters(tree=self.de.tree, parameters=parameters)
+      self.de.parse_parameters(parameter_def={}, caller_args=parameters)

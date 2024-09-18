@@ -15,7 +15,7 @@
 
 import io
 import unittest
-from unittest.mock import MagicMock, mock_open, patch
+from unittest.mock import mock_open, patch
 
 from gcpdiag import config
 from gcpdiag.queries import gce
@@ -32,8 +32,9 @@ class TestTerminalReportManager(unittest.TestCase):
 
   def setUp(self):
     self.trm = report.TerminalReportManager()
-    self.trm.tree = MagicMock(name='MockTree')
-    self.trm.tree.name = 'TestTree'
+    r = report.Report(run_id='test', parameters={})
+    r.run_id = 'test'
+    self.trm.reports[r.run_id] = r
     self.resource = gce.Instance(
         'project_id', {
             'id': '123',
@@ -48,20 +49,21 @@ class TestTerminalReportManager(unittest.TestCase):
     test_step = report.StepResult(step=Step(uuid='ok.step'))
 
     test_step.results.append(ok_step_eval)
-    self.trm.results = {
+    self.trm.reports['test'].results = {
         test_step.execution_id: test_step,
     }
 
   def test_initialization(self):
-    self.assertIsInstance(self.trm.results, dict)
-    self.assertEqual(self.trm.report_path, '')
+    self.assertIsInstance(self.trm.reports['test'].results, dict)
 
   def test_add_step_result(self):
     step_result = StepResult(Step(uuid='friendly.name'))
-    self.trm.add_step_result(step_result)
-    self.assertIn('gcpdiag.runbook.Step.friendly.name', self.trm.results)
-    self.assertEqual(self.trm.results['gcpdiag.runbook.Step.friendly.name'],
-                     step_result)
+    self.trm.add_step_result(run_id='test', result=step_result)
+    self.assertIn('gcpdiag.runbook.Step.friendly.name',
+                  self.trm.reports['test'].results)
+    self.assertEqual(
+        self.trm.reports['test'].results['gcpdiag.runbook.Step.friendly.name'],
+        step_result)
 
   def test_any_failed(self):
     step_result_failed = StepResult(Step(uuid='failed'))
@@ -69,20 +71,21 @@ class TestTerminalReportManager(unittest.TestCase):
                                             status='failed',
                                             reason='TestReason',
                                             remediation='TestRemediation')
-    self.trm.add_step_result(step_result_failed)
-    self.trm.add_step_eval(execution_id=step_result_failed.execution_id,
+    self.trm.add_step_result(run_id='test', result=step_result_failed)
+    self.trm.add_step_eval(run_id='test',
+                           execution_id=step_result_failed.execution_id,
                            evaluation=failed_eval)
-    self.assertTrue(self.trm.any_failed)
+    self.assertTrue(self.trm.reports['test'].any_failed)
 
   def test_get_rule_statuses(self):
-    rule_statuses = self.trm.get_rule_statuses()
+    rule_statuses = self.trm.reports['test'].get_rule_statuses()
     self.assertEqual(rule_statuses, {'gcpdiag.runbook.Step.ok.step': 'ok'})
 
   def test_generate_report_path(self):
     with patch('gcpdiag.config.get', return_value='fake_dir') as fd:
-      self.trm.get_report_path()
-      self.assertTrue(self.trm.report_path.endswith('.json'))
-      self.assertTrue(self.trm.report_path.startswith(fd.return_value))
+      report_path = self.trm.get_report_path('test')
+      self.assertTrue(report_path.endswith('.json'))
+      self.assertTrue(report_path.startswith(fd.return_value))
 
   #pylint:disable=protected-access
   @patch('builtins.open', new_callable=mock_open)
@@ -90,8 +93,10 @@ class TestTerminalReportManager(unittest.TestCase):
   @patch('sys.stderr', new_callable=io.StringIO)
   def test_report_to_terminal_success(self, mock_stderr, mock_logging_error,
                                       m_open):
-    self.trm._write_report_to_terminal(json_report)
-    m_open.assert_called_once_with(self.trm.report_path, 'w', encoding='utf-8')
+    report_path = self.trm.get_report_path('test')
+    self.trm._write_report_to_terminal(out_path=report_path,
+                                       json_report=json_report)
+    m_open.assert_called_once_with(report_path, 'w', encoding='utf-8')
     handle = m_open.return_value.__enter__.return_value
     handle.write.assert_called_once_with(json_report)
     self.assertEqual(mock_logging_error.call_count, 0)
@@ -102,8 +107,10 @@ class TestTerminalReportManager(unittest.TestCase):
   @patch('sys.stderr', new_callable=io.StringIO)
   def test_save_report_permission_error(self, mock_stderr, mock_logging_error,
                                         m_open):
-    self.trm._write_report_to_terminal(json_report)
-    m_open.assert_called_once_with(self.trm.report_path, 'w', encoding='utf-8')
+    report_path = self.trm.get_report_path('test')
+    self.trm._write_report_to_terminal(out_path=report_path,
+                                       json_report=json_report)
+    m_open.assert_called_once_with(report_path, 'w', encoding='utf-8')
     handle = m_open.return_value.__enter__.return_value
     handle.write.assert_not_called()
     mock_logging_error.assert_called_once()
@@ -118,8 +125,10 @@ class TestTerminalReportManager(unittest.TestCase):
   def test_write_report_to_terminal_os_error(self, mock_stderr,
                                              mock_logging_error, m_open):
 
-    self.trm._write_report_to_terminal(json_report)
-    m_open.assert_called_once_with(self.trm.report_path, 'w', encoding='utf-8')
+    report_path = self.trm.get_report_path('test')
+    self.trm._write_report_to_terminal(out_path=report_path,
+                                       json_report=json_report)
+    m_open.assert_called_once_with(report_path, 'w', encoding='utf-8')
     handle = m_open.return_value.__enter__.return_value
     handle.write.assert_not_called()
     mock_logging_error.assert_called_once()

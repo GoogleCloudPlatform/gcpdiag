@@ -83,8 +83,8 @@ class Test(unittest.TestCase):
   def test_load_repository_rules(self):
     repo = runbook.DiagnosticEngine()
     command._load_runbook_rules(repo.__module__)
-    assert len(runbook.DiagnosticTreeRegister) > 0
-    modules = {r(None).product for r in runbook.DiagnosticTreeRegister.values()}
+    assert len(runbook.RunbookRegistry) > 0
+    modules = {r(None).product for r in runbook.RunbookRegistry.values()}
     assert MUST_HAVE_MODULES.issubset(modules)
 
   def test_validate_rule_pattern(self):

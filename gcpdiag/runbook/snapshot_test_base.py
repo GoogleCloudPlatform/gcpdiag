@@ -32,22 +32,24 @@ class RulesSnapshotTestBase:
 
   def test_all_rules(self, snapshot):
     self.de = runbook.DiagnosticEngine()
-    rule = runbook.DiagnosticTreeRegister.get(self.runbook_name)
+    tree = runbook.RunbookRegistry.get(self.runbook_name)
+    if not tree:
+      print(f'Runbook: {self.runbook_name} does not exist!', file=sys.stderr)
+      return
     snapshot.snapshot_dir = path.join(path.dirname(self.rule_pkg.__file__),
                                       'snapshots')
     output_stream = io.StringIO()
     sys.stdout = _Tee(output_stream, sys.stdout)
     for parameter in self.rule_parameters:
       parameters = self._mk_parameters(parameter=parameter)
-      self.de.tree = rule
       print(textwrap.fill(str(parameters), 100), file=sys.stdout, end='\n\n')
-      self.de.run_diagnostic_tree(parameter=parameters)
+      self.de.run_diagnostic_tree(tree(), parameter=parameters)
       print('\n')
     snapshot.assert_match(
         output_stream.getvalue(),
         path.join(
             snapshot.snapshot_dir,
-            f'{util.pascal_case_to_snake_case(rule().__class__.__name__)}.txt'))
+            f'{util.pascal_case_to_snake_case(tree().__class__.__name__)}.txt'))
 
   def _mk_parameters(self, parameter):
     return models.Parameter(parameter)
