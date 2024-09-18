@@ -11,7 +11,7 @@
     {
       "role": "roles/owner",
       "members": [
-        "user:mburuian@google.com"
+        "user:dummymail@dummymail.com"
       ]
     },
     {

@@ -1,0 +1,30 @@
+{% block low_pull_rate_success_reason %}
+  Good pull rate observed.
+{% endblock low_pull_rate_success_reason %}
+
+{% block low_pull_rate_failure_remediation%}
+  Consider increasing pull rate to at least 20 RPCs per minute or increasing the value of max messages configured [1].
+  Note that Pub/Sub may return fewer messages than the max amount configured, in order to respond to pull RPCs in reasonable time.
+
+  [1] https://cloud.google.com/pubsub/docs/reference/rest/v1/projects.subscriptions/pull#request-body
+{% endblock low_pull_rate_failure_remediation %}
+
+{% block quota_exceeded_failure_reason %}
+  Quota exceeded errors found for the Pub/Sub service.
+{% endblock quota_exceeded_failure_reason%}
+
+{% block quota_exceeded_failure_remediation %}
+  Please review [1] for guidelines on quota limits and how to resolve quota errors.
+
+  [1] https://cloud.google.com/pubsub/quotas.
+{% endblock quota_exceeded_failure_remediation %}
+
+{% block throughput_qualification_failure_reason %}
+  Low Health Score for the subscription for metrics {low_health_metrics}.
+{% endblock throughput_qualification_failure_reason %}
+
+{% block throughput_qualification_failure_remediation %}
+  Please review [1] to monitor and resolve the health issues of the subscription.
+
+  [1] https://cloud.google.com/pubsub/docs/monitoring#delivery_latency_health.
+{% endblock throughput_qualification_failure_remediation %}

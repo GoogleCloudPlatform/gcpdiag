@@ -23,6 +23,7 @@ from gcpdiag.queries import apis_stub, pubsub
 DUMMY_PROJECT_NAME = 'gcpdiag-pubsub1-aaaa'
 DUMMY_TOPIC_NAME = 'projects/gcpdiag-pubsub1-aaaa/topics/gcpdiag-pubsub1topic-9pm6hng1'
 DUMMY_SUB_NAME = 'projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-pubsub1subscription-9pm6hng1'
+DUMMY_SUB_SHORT_NAME = 'gcpdiag-pubsub1subscription-9pm6hng1'
 DUMMY_PERM = 'domain:google.com'
 
 
@@ -37,8 +38,14 @@ class TestPubsub:
 
   def test_get_subscriptions(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
-    subscription = pubsub.get_subscriptions(context=context)
-    assert DUMMY_SUB_NAME in subscription
+    subscriptions = pubsub.get_subscriptions(context=context)
+    assert DUMMY_SUB_NAME in subscriptions
+
+  def test_get_subscription(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    subscription = pubsub.get_subscription(
+        project_id=context.project_id, subscription_name=DUMMY_SUB_SHORT_NAME)
+    assert subscription.full_path == DUMMY_SUB_NAME
 
   def test_get_topic_iam_policy(self):
     policy = pubsub.get_topic_iam_policy(DUMMY_TOPIC_NAME)

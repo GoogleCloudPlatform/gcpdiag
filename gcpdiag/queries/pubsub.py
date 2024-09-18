@@ -232,6 +232,22 @@ def get_subscriptions(context: models.Context) -> Mapping[str, Subscription]:
   return subscriptions
 
 
+@caching.cached_api_call
+def get_subscription(project_id: str,
+                     subscription_name: str) -> Union[None, Subscription]:
+  if not apis.is_enabled(project_id, 'pubsub'):
+    return None
+  pubsub_api = apis.get_api('pubsub', 'v1', project_id)
+  logging.info('fetching PubSub subscription in project %s', project_id)
+  query = pubsub_api.projects().subscriptions().get(
+      subscription=f'projects/{project_id}/subscriptions/{subscription_name}')
+  try:
+    resp = query.execute(num_retries=config.API_RETRIES)
+    return Subscription(project_id=project_id, resource_data=resp)
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
+
+
 class SubscriptionIAMPolicy(iam.BaseIAMPolicy):
 
   def _is_resource_permission(self, permission):

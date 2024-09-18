@@ -18,6 +18,7 @@
 Instead of doing real API calls, we return test JSON data.
 """
 
+import json
 import re
 
 from gcpdiag.queries import apis_stub
@@ -28,11 +29,12 @@ from gcpdiag.queries import apis_stub
 DUMMY_PROJECT_NAME = 'gcpdiag-pubsub1-aaaa'
 
 
-class PubsubApiStub:
+class PubsubApiStub(apis_stub.ApiStub):
   """Mock object to simulate pubsub api calls."""
 
-  def __init__(self, mock_state='init'):
+  def __init__(self, mock_state='init', project_id=None):
     self.mock_state = mock_state
+    self.project_id = project_id
 
   def projects(self):
     return self
@@ -42,7 +44,12 @@ class PubsubApiStub:
     return self
 
   def subscriptions(self):
+    self.mock_state = 'subscriptions'
+    return self
+
+  def get(self, subscription):
     self.mock_state = 'subscription'
+    self.subscription = subscription
     return self
 
   def list(self, project):
@@ -50,7 +57,7 @@ class PubsubApiStub:
     project_id = m.group(1)
     if self.mock_state == 'topics':
       return apis_stub.RestCallStub(project_id, 'topics')
-    if self.mock_state == 'subscription':
+    if self.mock_state == 'subscriptions':
       return apis_stub.RestCallStub(project_id, 'subscriptions')
     else:
       raise ValueError('incorrect value received')
@@ -58,7 +65,20 @@ class PubsubApiStub:
   def getIamPolicy(self, resource):
     if self.mock_state == 'topics':
       return apis_stub.RestCallStub(DUMMY_PROJECT_NAME, 'topic-iam')
-    if self.mock_state == 'subscription':
+    if self.mock_state == 'subscriptions':
       return apis_stub.RestCallStub(DUMMY_PROJECT_NAME, 'subscriptions-iam')
     else:
       raise ValueError('incorrect value received')
+
+  def execute(self, num_retries: int = 0):
+    if self.mock_state == 'subscription':
+      m = re.match(r'projects/([^/]+)/subscriptions/([^/]+)', self.subscription)
+      if m:
+        project_id = m.group(1)
+      json_dir = apis_stub.get_json_dir(project_id)
+      with open(json_dir / 'subscriptions.json', encoding='utf-8') as json_file:
+        data = json.load(json_file)
+      for s in data.get('subscriptions', []):
+        if s['name'] == self.subscription:
+          return s
+    return None

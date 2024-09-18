@@ -1,0 +1,39 @@
+project_id=gcpdiag-pubsub1-aaaa,subscription_name=gcpdiag-pubsub1subscription-9pm6hng1
+
+pubsub/pull-subscription-delivery: Diagnostic checks for Cloud Pub/Sub pull delivery issues.
+
+  Provides a DiagnosticTree to check for issues related to delivery issues
+  for resources in Cloud Pub/Sub. Particularly this runbook focuses on common issues
+  experienced while using Pub/Sub pull subscriptions.
+
+  - Areas:
+    - delivery latency
+    - quotas
+    - pull rate
+    - throughput rate
+  
+[START]: Start step.
+[INFO]: name: gcpdiag test - pubsub1, id: gcpdiag-pubsub1-aaaa
+[AUTOMATED STEP]: Checks if any Pub/Sub quotas are being exceeded.
+
+   - gcpdiag-pubsub1-aaaa                                                 [OK]
+     [REASON]
+     Quota usage is within project limits.
+[GATEWAY]: Checks if delivery rate is low i.e. receiving fewer messages than expected.
+[INFO]: The current rate of delivery rate is 0.00/s against 0.0 unacked messages. (Note that Pub/Sub may return fewer messages than the max amount configured, in order to respond to pull RPCs in reasonable time.)
+[AUTOMATED STEP]: Checks if the subscription is not suffering from cold caches due to low pull rate.
+
+   - gcpdiag-pubsub1-aaaa/gcpdiag-pubsub1subscription-9pm6hng1            [FAIL]
+     [REASON]
+     Pub/Sub is optimized for high throughput. Sparse traffic can lead to warm-up periods with higher latency.
+     [REMEDIATION]
+     Maintain continuous pulling to keep the topic/subscription warm; even without backlog
+[AUTOMATED STEP]: Checks if subscription has good health (high qualification).
+
+   - gcpdiag-pubsub1-aaaa/gcpdiag-pubsub1subscription-9pm6hng1            [OK]
+     [REASON]
+     Subcription has good health
+[END]: End step.
+[INFO]: No more checks to perform.
+
+

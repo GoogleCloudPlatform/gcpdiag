@@ -23,6 +23,7 @@ all:	\
 	json-dumps/topics.json \
 	json-dumps/topic-iam.json \
 	json-dumps/subscriptions.json \
+	json-dumps/pull-subscription.json \
 	json-dumps/subscriptions-iam.json \
 	json-dumps/iam-policy.json \
 	json-dumps/iam-service-accounts.json \
@@ -52,6 +53,11 @@ json-dumps/topic-iam.json:
 json-dumps/subscriptions.json:
 	$(CURL) -fv \
 		'https://pubsub.googleapis.com/v1/projects/${PROJECT_ID}/subscriptions' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/pull-subscription.json:
+	$(CURL) -fv \
+		'https://pubsub.googleapis.com/v1/projects/$(PROJECT_ID)/subscriptions/$(SUBSCRIPTION)' \
 		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/subscriptions-iam.json:

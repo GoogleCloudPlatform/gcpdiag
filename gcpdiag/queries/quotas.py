@@ -39,6 +39,14 @@ fetch consumer_quota
 | within {within_days}d
 """
 
+QUOTA_EXCEEDED_HOURLY_PER_SERVICE_QUERY_TEMPLATE = """
+fetch consumer_quota
+| metric 'serviceruntime.googleapis.com/quota/exceeded'
+| filter (resource.service =~ {service_name})
+| group_by 1h, [value_exceeded_count_true: count_true(value.exceeded)]
+| within {within_days}d
+"""
+
 QUOTA_EXCEEDED_QUERY_WINDOW_TEMPLATE = """
 fetch consumer_quota
 | metric 'serviceruntime.googleapis.com/quota/exceeded'

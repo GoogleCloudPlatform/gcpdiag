@@ -32,5 +32,6 @@ hiddenimports = \
  collect_submodules('gcpdiag.runbook.logs') + \
  collect_submodules('gcpdiag.runbook.monitoring') + \
  collect_submodules('gcpdiag.runbook.nat') + \
+ collect_submodules('gcpdiag.runbook.pubsub') + \
  collect_submodules('gcpdiag.runbook.vertex') + \
  collect_submodules('gcpdiag.runbook.vpc')
