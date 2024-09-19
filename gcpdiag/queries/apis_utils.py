@@ -47,6 +47,14 @@ def list_all(request,
       break
 
 
+def multi_list_all(
+    requests: list,
+    next_function: Callable,
+) -> Iterator[Any]:
+  for req in requests:
+    yield from list_all(req, next_function)
+
+
 def batch_list_all(api,
                    requests: list,
                    next_function: Callable,

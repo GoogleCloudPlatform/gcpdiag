@@ -721,11 +721,10 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
       gce_api.instances().list(project=context.project_id, zone=zone)
       for zone in get_gce_zones(context.project_id)
   ]
-  items = apis_utils.batch_list_all(
-      api=gce_api,
+  logging.info('listing gce instances of project %s', context.project_id)
+  items = apis_utils.multi_list_all(
       requests=requests,
       next_function=gce_api.instances().list_next,
-      log_text=f'listing gce instances of project {context.project_id}',
   )
   for i in items:
     result = re.match(
@@ -758,11 +757,10 @@ def get_instance_groups(context: models.Context) -> Mapping[str, InstanceGroup]:
       gce_api.instanceGroups().list(project=context.project_id, zone=zone)
       for zone in get_gce_zones(context.project_id)
   ]
-  items = apis_utils.batch_list_all(
-      api=gce_api,
+  logging.info('listing gce instance groups of project %s', context.project_id)
+  items = apis_utils.multi_list_all(
       requests=requests,
       next_function=gce_api.instanceGroups().list_next,
-      log_text=f'listing gce instances of project {context.project_id}',
   )
   for i in items:
     result = re.match(
@@ -798,12 +796,11 @@ def get_managed_instance_groups(
                                            zone=zone)
       for zone in get_gce_zones(context.project_id)
   ]
-  items = apis_utils.batch_list_all(
-      api=gce_api,
+  logging.info('listing zonal managed instance groups of project %s',
+               context.project_id)
+  items = apis_utils.multi_list_all(
       requests=requests,
       next_function=gce_api.instanceGroupManagers().list_next,
-      log_text=('listing zonal managed instance groups of project'
-                f' {context.project_id}'),
   )
   for i in items:
     result = re.match(
@@ -839,12 +836,11 @@ def get_region_managed_instance_groups(
                                                  region=r.name)
       for r in get_all_regions(context.project_id)
   ]
-  items = apis_utils.batch_list_all(
-      api=gce_api,
+  logging.info('listing regional managed instance groups of project %s',
+               context.project_id)
+  items = apis_utils.multi_list_all(
       requests=requests,
       next_function=gce_api.regionInstanceGroupManagers().list_next,
-      log_text=('listing regional managed instance groups of project'
-                f' {context.project_id}'),
   )
   for i in items:
     result = re.match(
@@ -1101,11 +1097,10 @@ def get_all_disks(project_id: str) -> Iterable[Disk]:
         gce_api.disks().list(project=project_id, zone=zone)
         for zone in get_gce_zones(project_id)
     ]
-    items = apis_utils.batch_list_all(
-        api=gce_api,
+    logging.info('listing gce disks of project %s', project_id)
+    items = apis_utils.multi_list_all(
         requests=requests,
         next_function=gce_api.disks().list_next,
-        log_text=f'listing gce disks of project {project_id}',
     )
 
     return {Disk(project_id, item) for item in items}
@@ -1121,12 +1116,11 @@ def get_all_disks_of_instance(project_id: str, zone: str,
   try:
     gce_api = apis.get_api('compute', 'v1', project_id)
     requests = [gce_api.disks().list(project=project_id, zone=zone)]
-    items = apis_utils.batch_list_all(
-        api=gce_api,
+    logging.info('listing gce disks attached to instance %s in project %s',
+                 instance_name, project_id)
+    items = apis_utils.multi_list_all(
         requests=requests,
         next_function=gce_api.disks().list_next,
-        log_text=
-        f'listing gce disks of attached to an instance {instance_name} in project {project_id}',
     )
     all_disk_list = {Disk(project_id, item) for item in items}
     disk_list = {}
@@ -1391,11 +1385,11 @@ def get_zonal_network_endpoint_groups(
                                            zone=zone)
       for zone in get_gce_zones(context.project_id)
   ]
-  items = apis_utils.batch_list_all(
-      api=gce_api,
+  logging.info('listing gce networkEndpointGroups of project %s',
+               context.project_id)
+  items = apis_utils.multi_list_all(
       requests=requests,
       next_function=gce_api.networkEndpointGroups().list_next,
-      log_text=f'listing gce instances of project {context.project_id}',
   )
 
   for i in items:

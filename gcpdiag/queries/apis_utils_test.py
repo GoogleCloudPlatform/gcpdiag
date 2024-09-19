@@ -66,6 +66,13 @@ class Test:
     results = list(apis_utils.list_all(RequestMock(1), next_function_mock))
     assert (results == ['a', 'b', 'c', 'd'])
 
+  def test_multi_list_all(self):
+    results = list(
+        apis_utils.multi_list_all(requests=[RequestMock(1),
+                                            RequestMock(3)],
+                                  next_function=next_function_mock))
+    assert (results == ['a', 'b', 'c', 'd', 'e'])
+
   def test_batch_list_all(self):
     api = apis_stub.get_api_stub('compute', 'v1')
     results = list(
