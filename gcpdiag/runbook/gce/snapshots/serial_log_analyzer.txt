@@ -16,6 +16,10 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
     Memory crunch issues:
         - Check if OOM kills happened on the VM or any other memory related issues.
 
+    Cloud-init checks:
+        - Check if cloud-init has initialised or started.
+        - Check if NIC has received the IP.
+
     Network related issues:
         - Check if metadata server became unreachable since last boot.
         - Check if there are any time sync related errors.
@@ -135,6 +139,11 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      You may check if VM is facing high memory utilisation from GuestOS side using `free -m`
      or `cat /proc/meminfo` commands.
 
+[COMPOSITE STEP]: Cloud init related checks
+
+   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [SKIP]
+     [REASON]
+     This VM is not Ubuntu or it does not uses cloud-init
 [AUTOMATED STEP]: Checking for network related errors
 
    - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
@@ -230,6 +239,10 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
     Memory crunch issues:
         - Check if OOM kills happened on the VM or any other memory related issues.
 
+    Cloud-init checks:
+        - Check if cloud-init has initialised or started.
+        - Check if NIC has received the IP.
+
     Network related issues:
         - Check if metadata server became unreachable since last boot.
         - Check if there are any time sync related errors.
@@ -319,6 +332,11 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      You may check if VM is facing high memory utilisation from GuestOS side using `free -m`
      or `cat /proc/meminfo` commands.
 
+[COMPOSITE STEP]: Cloud init related checks
+
+   - gcpdiag-gce-vm-performance/valid-linux-ssh                           [SKIP]
+     [REASON]
+     This VM is not Ubuntu or it does not uses cloud-init
 [AUTOMATED STEP]: Checking for network related errors
 
    - gcpdiag-gce-vm-performance/valid-linux-ssh                           [UNCERTAIN]

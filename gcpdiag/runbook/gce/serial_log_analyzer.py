@@ -41,6 +41,10 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
     Memory crunch issues:
         - Check if OOM kills happened on the VM or any other memory related issues.
 
+    Cloud-init checks:
+        - Check if cloud-init has initialised or started.
+        - Check if NIC has received the IP.
+
     Network related issues:
         - Check if metadata server became unreachable since last boot.
         - Check if there are any time sync related errors.
@@ -158,6 +162,10 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
     oom_errors.template = 'vm_performance::memory_error'
     oom_errors.negative_pattern = gce_const.OOM_PATTERNS
     self.add_step(parent=log_start_point, child=oom_errors)
+
+    #Checking for Cloud-init related issues
+    cloudinit_issues = CloudInitChecks()
+    self.add_step(parent=log_start_point, child=cloudinit_issues)
 
     # Checking for network related errors
     network_issue = gce_gs.VmSerialLogsCheck()
@@ -290,6 +298,44 @@ class FetchVmDetails(runbook.StartStep):
               reason=('The file {} does not exists. Please verify if '
                       'you have provided the correct absolute file path'
                      ).format(file))
+
+
+class CloudInitChecks(runbook.CompositeStep):
+  """Cloud init related checks"""
+
+  def execute(self):
+    """Cloud init related checks"""
+    ubuntu_licenses = gce.get_gce_public_licences('ubuntu-os-cloud')
+    ubuntu_pro_licenses = gce.get_gce_public_licences('ubuntu-os-pro-cloud')
+    licenses = ubuntu_licenses + ubuntu_pro_licenses
+    vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
+                          zone=op.get(flags.ZONE),
+                          instance_name=op.get(flags.NAME))
+    if vm.check_license(licenses):
+      # Checking for Cloud init startup log
+      cloud_init_startup_check = gce_gs.VmSerialLogsCheck()
+      cloud_init_startup_check.project_id = op.get(flags.PROJECT_ID)
+      cloud_init_startup_check.zone = op.get(flags.ZONE)
+      cloud_init_startup_check.instance_name = op.get(flags.NAME)
+      cloud_init_startup_check.serial_console_file = op.get(
+          flags.SERIAL_CONSOLE_FILE)
+      cloud_init_startup_check.template = 'vm_serial_log::cloud_init_startup_check'
+      cloud_init_startup_check.positive_pattern = gce_const.CLOUD_INIT_STARTUP_PATTERN
+      self.add_child(cloud_init_startup_check)
+
+      # Checking if NIC has received IP
+      cloud_init_check = gce_gs.VmSerialLogsCheck()
+      cloud_init_check.template = 'vm_serial_log::cloud_init'
+      cloud_init_check.project_id = op.get(flags.PROJECT_ID)
+      cloud_init_check.zone = op.get(flags.ZONE)
+      cloud_init_check.instance_name = op.get(flags.NAME)
+      cloud_init_check.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
+      cloud_init_check.negative_pattern = gce_const.CLOUD_INIT_NEGATIVE_PATTERN
+      cloud_init_check.positive_pattern = gce_const.CLOUD_INIT_POSITIVE_PATTERN
+      self.add_child(cloud_init_check)
+    else:
+      op.add_skipped(
+          vm, reason='This VM is not Ubuntu or it does not uses cloud-init')
 
 
 class AnalysingSerialLogsEnd(runbook.EndStep):

@@ -26,6 +26,10 @@ This runbook is designed to assist you in investigating the serial console logs 
     Memory crunch issues:
         - Check if OOM kills happened on the VM or any other memory related issues.
 
+    Cloud-init checks:
+        - Check if cloud-init has initialised or started.
+        - Check if NIC has received the IP.
+
     Network related issues:
         - Check if metadata server became unreachable since last boot.
         - Check if there are any time sync related errors.
@@ -80,6 +84,12 @@ gcpdiag runbook --help
   - [Vm Serial Logs Check](/runbook/steps/gce/vm-serial-logs-check)
 
   - [Vm Serial Logs Check](/runbook/steps/gce/vm-serial-logs-check)
+
+  - [Vm Serial Logs Check](/runbook/steps/gce/vm-serial-logs-check)
+
+  - [Vm Serial Logs Check](/runbook/steps/gce/vm-serial-logs-check)
+
+  - [Cloud Init Checks](/runbook/steps/gce/cloud-init-checks)
 
   - [Vm Serial Logs Check](/runbook/steps/gce/vm-serial-logs-check)
 

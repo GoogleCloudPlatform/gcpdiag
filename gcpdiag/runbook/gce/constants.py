@@ -162,3 +162,10 @@ SSHD_AUTH_FAILURE = [
     'Authentication refused: bad ownership or modes for directory',
     r'Error updating SSH keys for (\w+): mkdir (.*): no such file or directory'
 ]
+
+# Cloud init checks
+CLOUD_INIT_POSITIVE_PATTERN = [r'ci-info: [|].*[|]\sTrue\s[|]']
+CLOUD_INIT_NEGATIVE_PATTERN = [r'ci-info: [|].*[|]\sFalse\s[|]']
+CLOUD_INIT_STARTUP_PATTERN = [
+    r"cloud-init\[(\d+)\]: Cloud-init v\. (.*?) running '(.*)'"
+]

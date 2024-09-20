@@ -500,3 +500,98 @@ We did not find any Filesystem corruption related errors in Serial console logs
 {% block linux_fs_corruption_uncertain_remediation %}
 
 {% endblock linux_fs_corruption_uncertain_remediation %}
+
+{% block  cloud_init_startup_check_step_message %}
+Checking for Cloud-init startup logs
+{% endblock  cloud_init_startup_check_step_message %}
+
+{% block cloud_init_startup_check_failure_reason %}
+Could not find the Cloud-init startup log in Serial console logs.
+{% endblock cloud_init_startup_check_failure_reason %}
+
+{% block cloud_init_startup_check_failure_remediation %}
+Cloud-init is the standard method for initializing cloud instance when it boots up.
+It is installed in official Ubuntu and Container-Optimized OS images.
+Cloud-init failures can be caused by internal issues, problems with other system components, or user configuration errors.
+
+
+Check if Cloud-init process is in running state.
+
+systemctl status cloud-init
+
+Verify if the cloud init package is installed. Otherwise reinstall cloud-init and enable it
+
+dpkg -l | grep -i cloud-init
+
+apt-get install -f cloud-init -y
+systemctl enable cloud-init
+
+{% endblock cloud_init_startup_check_failure_remediation %}
+
+{% block cloud_init_startup_check_success_reason %}
+Detected that Cloud-init is running within the VM
+
+{% endblock cloud_init_startup_check_success_reason %}
+
+{% block cloud_init_startup_check_skipped_reason %}
+There are no logs to examine!
+{% endblock cloud_init_startup_check_skipped_reason %}
+
+{% block cloud_init_startup_check_uncertain_reason %}
+We are not able to find the success or failed logs for cloud-init startup.
+{% endblock cloud_init_startup_check_uncertain_reason %}
+
+{% block cloud_init_startup_check_uncertain_remediation %}
+Check if cloud-init package is installed in VM
+dpkg -l | grep -i cloud-init
+systemctl enable cloud-init
+
+{% endblock cloud_init_startup_check_uncertain_remediation %}
+
+
+{% block  cloud_init_step_message %}
+Checking if Network interface received IP through cloud-init
+{% endblock  cloud_init_step_message %}
+
+{% block cloud_init_failure_reason %}
+NIC did not received any IP through cloud-init
+{% endblock cloud_init_failure_reason %}
+
+{% block cloud_init_failure_remediation %}
+Cloud-init is the standard method for initializing cloud instance when it boots up.
+It is installed in official Ubuntu and Container-Optimized OS images.
+Cloud-init failures can be caused by internal issues, problems with other system components, or user configuration errors.
+
+
+Check if Cloud-init process is in running state.
+
+systemctl status cloud-init
+
+Verify if the cloud init package is installed. Otherwise reinstall cloud-init and enable it
+
+dpkg -l | grep -i cloud-init
+
+apt-get install -f cloud-init -y
+systemctl enable cloud-init
+
+{% endblock cloud_init_failure_remediation %}
+
+{% block cloud_init_success_reason %}
+Detected that NIC has received IP through cloud-init
+
+{% endblock cloud_init_success_reason %}
+
+{% block cloud_init_skipped_reason %}
+There are no logs to examine !
+{% endblock cloud_init_skipped_reason %}
+
+{% block cloud_init_uncertain_reason %}
+We are not able to find the success or failed logs for cloud-init startup.
+{% endblock cloud_init_uncertain_reason %}
+
+{% block cloud_init_uncertain_remediation %}
+Check if cloud-init package is installed in VM
+dpkg -l | grep -i cloud-init
+systemctl enable cloud-init
+
+{% endblock cloud_init_uncertain_remediation %}
