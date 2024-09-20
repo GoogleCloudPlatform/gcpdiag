@@ -1,3 +1,3 @@
-*  lb/BP/2024_002: Global Access enabled on Regional Internal Load Balancer.
+*  lb/BP/2024_002: Global Access enabled on forwarding rule for Regional Internal Load Balancer.
    - projects/gcpdiag-lb1-aaaa/regions/us-west1/forwardingRules/forwardingRule1 [ OK ]
 

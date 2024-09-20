@@ -11,15 +11,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Global Access enabled on Regional Internal Load Balancer.
+"""Global Access enabled on forwarding rule for Regional Internal Load Balancer.
 
-When global access is not on, resources in other location might not be able to
-visit the Internal Load Balancer(iLB). It's recommended to enable the global
-access in regional iLB.
+When global access is not on, resources/clients in other location might not be
+able to visit the Internal Load Balancer(iLB). It's recommended to enable the
+global access in regional iLB.
 """
+
+import re
 
 from gcpdiag import lint, models
 from gcpdiag.queries import lb
+
+INTERNAL = 'INTERNAL'
+INTERNAL_MANAGED = 'INTERNAL_MANAGED'
 
 forwarding_rules_list = {}
 
@@ -30,6 +35,7 @@ def prefetch_rule(context: models.Context):
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
+  """Checks if global access is enabled on regional forwarding rule."""
 
   forwarding_rules = forwarding_rules_list[context.project_id]
   # return if there is no forwarding_rule found in the project
@@ -38,7 +44,15 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     return
 
   for forwarding_rule in forwarding_rules:
-    if not forwarding_rule.is_global_access_allowed:
-      report.add_failed(forwarding_rule)
-    else:
-      report.add_ok(forwarding_rule)
+    forwarding_rule_regional = re.match(
+        r'projects/([^/]+)/regions/([^/]+)/forwardingRules/([^/]+)',
+        forwarding_rule.full_path,
+    )
+    if forwarding_rule_regional and forwarding_rule.load_balancing_scheme in [
+        INTERNAL,
+        INTERNAL_MANAGED,
+    ]:
+      if not forwarding_rule.global_access_allowed:
+        report.add_failed(forwarding_rule)
+      else:
+        report.add_ok(forwarding_rule)

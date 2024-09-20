@@ -269,8 +269,12 @@ class ForwardingRules(models.Resource):
     return self._resource_data['selfLink']
 
   @property
-  def is_global_access_allowed(self) -> bool:
+  def global_access_allowed(self) -> bool:
     return self._resource_data.get('allowGlobalAccess', False)
+
+  @property
+  def load_balancing_scheme(self) -> str:
+    return self._resource_data.get('loadBalancingScheme', None)
 
 
 @caching.cached_api_call(in_memory=True)
