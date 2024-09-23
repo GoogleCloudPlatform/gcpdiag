@@ -21,7 +21,7 @@ import pkgutil
 import re
 import sys
 import warnings
-from typing import List
+from typing import List, Tuple
 
 import yaml
 
@@ -312,7 +312,7 @@ def _initialize_output():
   return output
 
 
-def run_and_get_report(argv=None, credentials: str = None) -> dict:
+def run_and_get_report(argv=None, credentials: str = None) -> Tuple[int, dict]:
   # Initialize argument parser
   parser = _init_runbook_args_parser()
   args = parser.parse_args(argv[1:])
@@ -389,8 +389,10 @@ def run_and_get_report(argv=None, credentials: str = None) -> dict:
   output.display_footer(dt_engine.interface.rm)
   # Clean up the kubeconfig file generated for gcpdiag
   kubectl.clean_up()
-  return report
+  # return success if we get to this point and the report..
+  return (0, report)
 
 
 def run(argv) -> None:
-  run_and_get_report(argv)
+  code, _ = run_and_get_report(argv)
+  sys.exit(code)

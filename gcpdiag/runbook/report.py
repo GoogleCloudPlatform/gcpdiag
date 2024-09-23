@@ -236,6 +236,7 @@ class ReportManager:
   def generate_report_metrics(self, report: Report) -> Dict[str, dict]:
     reports_metrics: Dict[str, Any] = {}
     all_step_metrics = []
+    reports_metrics['execution_mode'] = report.execution_mode
     for result in report.results.values():
       step_metrics: Dict[str, dict] = collections.defaultdict(dict)
       start = util.parse_time_input(result.start_time)
@@ -243,13 +244,13 @@ class ReportManager:
       duration = (end - start).total_seconds() * 1000
       step_metrics[result.step.id]['execution_duration'] = duration
       step_metrics[result.step.id]['totals_by_status'] = result.totals_by_status
+      step_metrics[result.step.id]['error'] = bool(result.step_error)
       all_step_metrics.append(step_metrics)
     if report.runbook_name:
       start = util.parse_time_input(report.run_start_time)
       end = util.parse_time_input(report.run_end_time)
       duration = (end - start).total_seconds() * 1000
       reports_metrics['runbook_name'] = report.runbook_name
-      reports_metrics['execution_mode'] = report.execution_mode
       reports_metrics['run_duration'] = duration
       reports_metrics['totals_by_status'] = report.get_totals_by_status()
       reports_metrics['steps'] = all_step_metrics

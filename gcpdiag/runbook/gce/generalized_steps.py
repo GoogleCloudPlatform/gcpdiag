@@ -124,7 +124,7 @@ class HighVmDiskUtilization(runbook.Step):
   project_id: str
   zone: str
   instance_name: str
-  serial_console_file: str
+  serial_console_file: str = ''
 
   def execute(self):
     """Verifying VM's Boot disk space utilization is within optimal levels."""
