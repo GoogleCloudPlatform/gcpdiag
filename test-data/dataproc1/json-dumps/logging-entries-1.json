@@ -8,8 +8,8 @@
           "message": "Cannot start master: Timed out waiting for 2 nodes. This usually happens when VM to VM communications are blocked by firewall rules. For additional details, see https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/network#firewall_rule_requirement\nOperation timed out: Only 0 out of 2 minimum required datanodes running.\nOperation timed out: Only 0 out of 2 minimum required node managers running."
         },
         "authenticationInfo": {
-          "principalEmail": "abcdef@abcdef.com",
-          "principalSubject": "user:abcdef@abcdef.com"
+          "principalEmail": "abcde@abcde.com",
+          "principalSubject": "user:abcde@abcde.com"
         },
         "requestMetadata": {
           "requestAttributes": {},
@@ -24,9 +24,9 @@
         "type": "cloud_dataproc_cluster",
         "labels": {
           "project_id": "gcpdiag-dataproc1-aaaa",
-          "region": "us-central1",
+          "cluster_uuid": "c02d5602-14ac-4e8e-af4f-f83df01b3b16",
           "cluster_name": "test-deny-icmp",
-          "cluster_uuid": "c02d5602-14ac-4e8e-af4f-f83df01b3b16"
+          "region": "us-central1"
         }
       },
       "timestamp": "2024-06-25T13:01:48.296661Z",
@@ -44,8 +44,8 @@
         "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
         "status": {},
         "authenticationInfo": {
-          "principalEmail": "abcdef@abcdef.com",
-          "principalSubject": "user:abcdef@abcdef.com"
+          "principalEmail": "abcde@abcde.com",
+          "principalSubject": "user:abcde@abcde.com"
         },
         "requestMetadata": {
           "callerIp": "gce-internal-ip",
@@ -95,10 +95,10 @@
       "resource": {
         "type": "cloud_dataproc_cluster",
         "labels": {
-          "region": "us-central1",
-          "project_id": "gcpdiag-dataproc1-aaaa",
           "cluster_name": "test-deny-icmp",
-          "cluster_uuid": "c02d5602-14ac-4e8e-af4f-f83df01b3b16"
+          "project_id": "gcpdiag-dataproc1-aaaa",
+          "cluster_uuid": "c02d5602-14ac-4e8e-af4f-f83df01b3b16",
+          "region": "us-central1"
         }
       },
       "timestamp": "2024-06-25T12:49:49.631732Z",
@@ -116,8 +116,8 @@
         "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
         "status": {},
         "authenticationInfo": {
-          "principalEmail": "abcdef@abcdef.com",
-          "principalSubject": "user:abcdef@abcdef.com"
+          "principalEmail": "abcde@abcde.com",
+          "principalSubject": "user:abcde@abcde.com"
         },
         "requestMetadata": {
           "requestAttributes": {},
@@ -132,9 +132,9 @@
         "type": "cloud_dataproc_cluster",
         "labels": {
           "cluster_uuid": "e7e3a260-78c1-4364-8ec8-32df4ea2be57",
-          "project_id": "gcpdiag-dataproc1-aaaa",
           "region": "us-central1",
-          "cluster_name": "good"
+          "cluster_name": "good",
+          "project_id": "gcpdiag-dataproc1-aaaa"
         }
       },
       "timestamp": "2024-06-25T12:04:13.209895Z",
@@ -152,8 +152,8 @@
         "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
         "status": {},
         "authenticationInfo": {
-          "principalEmail": "abcdef@abcdef.com",
-          "principalSubject": "user:abcdef@abcdef.com"
+          "principalEmail": "abcde@abcde.com",
+          "principalSubject": "user:abcde@abcde.com"
         },
         "requestMetadata": {
           "requestAttributes": {},
@@ -167,10 +167,10 @@
       "resource": {
         "type": "cloud_dataproc_cluster",
         "labels": {
-          "cluster_name": "test-best-practices-enabled",
           "region": "us-central1",
-          "project_id": "gcpdiag-dataproc1-aaaa",
-          "cluster_uuid": "62a9bfce-295a-4637-b732-8fa8a1cc4196"
+          "cluster_uuid": "62a9bfce-295a-4637-b732-8fa8a1cc4196",
+          "cluster_name": "test-best-practices-enabled",
+          "project_id": "gcpdiag-dataproc1-aaaa"
         }
       },
       "timestamp": "2024-06-25T12:04:02.579303Z",
@@ -188,8 +188,8 @@
         "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
         "status": {},
         "authenticationInfo": {
-          "principalEmail": "abcdef@abcdef.com",
-          "principalSubject": "user:abcdef@abcdef.com"
+          "principalEmail": "abcde@abcde.com",
+          "principalSubject": "user:abcde@abcde.com"
         },
         "requestMetadata": {
           "requestAttributes": {},
@@ -203,9 +203,9 @@
       "resource": {
         "type": "cloud_dataproc_cluster",
         "labels": {
-          "region": "us-central1",
           "cluster_name": "test-best-practices-disabled",
           "project_id": "gcpdiag-dataproc1-aaaa",
+          "region": "us-central1",
           "cluster_uuid": "7426fd71-2543-44c8-aae3-c42b00069d1c"
         }
       },
@@ -224,8 +224,8 @@
         "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
         "status": {},
         "authenticationInfo": {
-          "principalEmail": "abcdef@abcdef.com",
-          "principalSubject": "user:abcdef@abcdef.com"
+          "principalEmail": "abcde@abcde.com",
+          "principalSubject": "user:abcde@abcde.com"
         },
         "requestMetadata": {
           "callerIp": "gce-internal-ip",
@@ -293,10 +293,10 @@
       "resource": {
         "type": "cloud_dataproc_cluster",
         "labels": {
+          "cluster_uuid": "62a9bfce-295a-4637-b732-8fa8a1cc4196",
           "cluster_name": "test-best-practices-enabled",
-          "region": "us-central1",
           "project_id": "gcpdiag-dataproc1-aaaa",
-          "cluster_uuid": "62a9bfce-295a-4637-b732-8fa8a1cc4196"
+          "region": "us-central1"
         }
       },
       "timestamp": "2024-06-25T12:00:10.039120Z",
@@ -314,8 +314,8 @@
         "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
         "status": {},
         "authenticationInfo": {
-          "principalEmail": "abcdef@abcdef.com",
-          "principalSubject": "user:abcdef@abcdef.com"
+          "principalEmail": "abcde@abcde.com",
+          "principalSubject": "user:abcde@abcde.com"
         },
         "requestMetadata": {
           "callerIp": "gce-internal-ip",
@@ -375,10 +375,10 @@
       "resource": {
         "type": "cloud_dataproc_cluster",
         "labels": {
-          "cluster_name": "good",
-          "region": "us-central1",
+          "project_id": "gcpdiag-dataproc1-aaaa",
           "cluster_uuid": "e7e3a260-78c1-4364-8ec8-32df4ea2be57",
-          "project_id": "gcpdiag-dataproc1-aaaa"
+          "region": "us-central1",
+          "cluster_name": "good"
         }
       },
       "timestamp": "2024-06-25T12:00:10.037846Z",
@@ -396,8 +396,8 @@
         "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
         "status": {},
         "authenticationInfo": {
-          "principalEmail": "abcdef@abcdef.com",
-          "principalSubject": "user:abcdef@abcdef.com"
+          "principalEmail": "abcde@abcde.com",
+          "principalSubject": "user:abcde@abcde.com"
         },
         "requestMetadata": {
           "callerIp": "gce-internal-ip",
@@ -463,9 +463,9 @@
         "type": "cloud_dataproc_cluster",
         "labels": {
           "region": "us-central1",
-          "cluster_name": "test-best-practices-disabled",
           "cluster_uuid": "7426fd71-2543-44c8-aae3-c42b00069d1c",
-          "project_id": "gcpdiag-dataproc1-aaaa"
+          "project_id": "gcpdiag-dataproc1-aaaa",
+          "cluster_name": "test-best-practices-disabled"
         }
       },
       "timestamp": "2024-06-25T12:00:09.939283Z",

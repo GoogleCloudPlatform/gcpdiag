@@ -583,6 +583,7 @@ class InternalIpGateway(runbook.Gateway):
             'The cluster and the internalIpOnly config cannot be found, skipping this step. '
             + 'Please provide internal_ip_only as input parameter ' +
             'if the cluster is deleted or keep the cluster in error state.')
+        return
       subnetwork_uri = op.get(flags.SUBNETWORK)
       if subnetwork_uri is None:
         op.add_skipped(
@@ -590,20 +591,27 @@ class InternalIpGateway(runbook.Gateway):
             'The cluster and the subnetworkUri config cannot be found, skipping this step. '
             + 'Please provide subnetwork_uri as input parameter ' +
             'if the cluster is deleted or keep the cluster in error state.')
-      if is_internal_ip_only is not None and subnetwork_uri is not None:
-        # Add the internal IP config of the cluster
-        if not op.get(flags.INTERNAL_IP_ONLY):
-          if cluster.is_internal_ip_only is not None:
-            op.put(flags.INTERNAL_IP_ONLY, cluster.is_internal_ip_only)
-            op.info(
-                ('Internal IP only: {}').format(cluster.is_internal_ip_only),)
-        # Add the subnetwork of the cluster
-        if not op.get(flags.SUBNETWORK):
-          op.put(flags.SUBNETWORK, subnetwork_uri)
-          op.add_ok(cluster, reason=('Subnetwork: {}').format(subnetwork_uri))
-
-        if is_internal_ip_only:
-          self.add_child(child=CheckPrivateGoogleAccess())
+        return
+    else:
+      is_internal_ip_only = cluster.is_internal_ip_only
+      subnetwork_uri = cluster.gce_subnetwork_uri
+    # Add the related configs of the cluster
+    if is_internal_ip_only is not None and subnetwork_uri is not None:
+      # Add the internal IP config of the cluster
+      if not op.get(flags.INTERNAL_IP_ONLY):
+        if cluster.is_internal_ip_only is not None:
+          op.put(flags.INTERNAL_IP_ONLY, cluster.is_internal_ip_only)
+          op.info(('Internal IP only: {}').format(cluster.is_internal_ip_only),)
+      # Add the subnetwork of the cluster
+      if not op.get(flags.SUBNETWORK):
+        op.put(flags.SUBNETWORK, subnetwork_uri)
+        op.add_ok(cluster, reason=('Subnetwork: {}').format(subnetwork_uri))
+    # If the cluster is in private subnet, check that PGA is enabled
+    # otherwise end this step
+    if is_internal_ip_only:
+      self.add_child(child=CheckPrivateGoogleAccess())
+    else:
+      op.add_ok(cluster, reason='The cluster is in a public subnet.')
 
 
 class CheckPrivateGoogleAccess(runbook.Step):

@@ -221,6 +221,15 @@ dataproc/cluster-creation: Provides a comprehensive analysis of common issues wh
      The network communication among nodes in cluster test-deny-icmp is working.
 
 [GATEWAY]: Checking if the cluster is using internal IP only...
+[INFO]: Internal IP only: False
+
+   - gcpdiag-dataproc1-aaaa/us-central1/test-deny-icmp                    [OK]
+     [REASON]
+     Subnetwork: https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/regions/us-central1/subnetworks/test-bad-subnet
+
+   - gcpdiag-dataproc1-aaaa/us-central1/test-deny-icmp                    [OK]
+     [REASON]
+     The cluster is in a public subnet.
 [GATEWAY]: Checking service account project...
 [INFO]: 12340005-compute@developer.gserviceaccount.com
 [INFO]: VM Service Account associated with Dataproc cluster was found in the same project
