@@ -50,7 +50,6 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      Health check logging is enabled
 
 [GATEWAY]: Look for the latest health check logs and based on that decide what to do next.
-[INFO]: {'insertId': '13pdgcnc969', 'jsonPayload': {'healthCheckProbeResult': {'healthState': 'UNHEALTHY', 'previousHealthState': 'HEALTHY', 'targetIp': '10.142.0.2', 'ipAddress': '10.142.0.2', 'probeCompletionTimestamp': '2024-08-13T09:20:21.631554663Z', 'targetPort': 80, 'probeRequest': '/', 'probeSourceIp': '35.191.193.100', 'probeResultText': 'HTTP response: , Error: Timeout waiting for connect', 'healthCheckProtocol': 'HTTP', 'responseLatency': '5.001402s', 'detailedHealthState': 'TIMEOUT', 'previousDetailedHealthState': 'HEALTHY'}}, 'resource': {'type': 'gce_instance_group', 'labels': {'instance_group_id': '3727997629940134718', 'project_id': 'gcpdiag-lb2-aaaa', 'location': 'us-east1-b', 'instance_group_name': 'lb-backend-example'}}, 'timestamp': '2024-08-13T09:20:22.199333012Z', 'severity': 'INFO', 'logName': 'projects/gcpdiag-lb2-aaaa/logs/compute.googleapis.com%2Fhealthchecks', 'receiveTimestamp': '2024-08-13T09:20:22.666336211Z'}
 [AUTOMATED STEP]: Analyzes logs with the detailed health check state TIMEOUT
 
    - gcpdiag-lb2-aaaa/web-backend-service                                 [UNCERTAIN]
@@ -94,6 +93,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 
    - gcpdiag-lb2-aaaa/web-backend-service                                 [FAIL]
      [REASON]
+     Health check firewall is not configured
      The health checks are currently failing due to a misconfigured firewall. This is preventing Google Cloud probers from connecting to your backends, causing the load balancer to consider them unhealthy.
 
      [REMEDIATION]
@@ -221,7 +221,6 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      Health check logging is enabled
 
 [GATEWAY]: Look for the latest health check logs and based on that decide what to do next.
-[INFO]: {'insertId': '13pdgcnc969', 'jsonPayload': {'healthCheckProbeResult': {'healthState': 'UNHEALTHY', 'previousHealthState': 'HEALTHY', 'targetIp': '10.142.0.2', 'ipAddress': '10.142.0.2', 'probeCompletionTimestamp': '2024-08-13T09:20:21.631554663Z', 'targetPort': 80, 'probeRequest': '/', 'probeSourceIp': '35.191.193.100', 'probeResultText': 'HTTP response: , Error: Timeout waiting for connect', 'healthCheckProtocol': 'HTTP', 'responseLatency': '5.001402s', 'detailedHealthState': 'TIMEOUT', 'previousDetailedHealthState': 'HEALTHY'}}, 'resource': {'type': 'gce_instance_group', 'labels': {'instance_group_id': '3727997629940134718', 'project_id': 'gcpdiag-lb2-aaaa', 'location': 'us-east1-b', 'instance_group_name': 'lb-backend-example'}}, 'timestamp': '2024-08-13T09:20:22.199333012Z', 'severity': 'INFO', 'logName': 'projects/gcpdiag-lb2-aaaa/logs/compute.googleapis.com%2Fhealthchecks', 'receiveTimestamp': '2024-08-13T09:20:22.666336211Z'}
 [AUTOMATED STEP]: Analyzes logs with the detailed health check state TIMEOUT
 
    - gcpdiag-lb2-aaaa/backend-service-2                                   [UNCERTAIN]

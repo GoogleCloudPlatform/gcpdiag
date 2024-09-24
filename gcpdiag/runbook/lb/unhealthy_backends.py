@@ -143,6 +143,16 @@ class UnhealthyBackendsStart(runbook.StartStep):
         op.get(flags.REGION),
     )
 
+    if not backend_health_statuses:
+      op.add_skipped(
+          proj,
+          reason=(
+              f'Backend service {op.get(flags.BACKEND_SERVICE_NAME)} does not'
+              f' have any backends in scope {op.get(flags.REGION, "global")} or'
+              f' project {op.get(flags.PROJECT_ID)}'),
+      )
+      return  # Early exit if load balancer doesn't have any backends
+
     unhealthy_backends = [
         backend for backend in backend_health_statuses
         if backend.health_state == 'UNHEALTHY'
@@ -244,6 +254,14 @@ class VerifyFirewallRules(runbook.Step):
 
   def execute(self):
     """Checks if firewall rules are configured correctly."""
+    if not apis.is_enabled(op.context.project_id, 'recommender'):
+      op.add_skipped(
+          crm.get_project(op.context.project_id),
+          reason=(
+              'Checking firewall rules requires Recommender API to be enabled'),
+      )
+      return  # Early exit if Recommender API is disabled
+
     backend_service = lb.get_backend_service(
         op.context.project_id,
         op.get(flags.BACKEND_SERVICE_NAME),
@@ -251,13 +269,15 @@ class VerifyFirewallRules(runbook.Step):
     )
 
     used_by_refs = backend_service.used_by_refs
-    insights = lb.get_lb_insights_for_a_project(op.context.project_id)
+    insights = lb.get_lb_insights_for_a_project(op.context.project_id,
+                                                op.get(flags.REGION, 'global'))
     for insight in insights:
       if insight.is_firewall_rule_insight and insight.details.get(
           'loadBalancerUri'):
         # network load balancers (backend service is central resource):
         if insight.details.get('loadBalancerUri').endswith(
             backend_service.full_path):
+          op.add_metadata('insightDetail', insight.details)
           op.add_failed(
               resource=backend_service,
               reason=op.prep_msg(
@@ -270,11 +290,12 @@ class VerifyFirewallRules(runbook.Step):
         for ref in used_by_refs:
           # application load balancers (url map is central resource):
           if insight.details.get('loadBalancerUri').endswith(ref):
+            op.add_metadata('insightDetail', insight.details)
             op.add_failed(
                 resource=backend_service,
                 reason=op.prep_msg(
                     op.FAILURE_REASON,
-                    insight=insight.details,
+                    insight=insight.description,
                 ),
                 remediation=op.prep_msg(op.FAILURE_REMEDIATION),
             )
@@ -289,13 +310,22 @@ class ValidateBackendServicePortConfiguration(runbook.Step):
 
   def execute(self):
     """Checks if health check sends probe requests to the different port than serving port."""
+    if not apis.is_enabled(op.context.project_id, 'recommender'):
+      op.add_skipped(
+          crm.get_project(op.context.project_id),
+          reason=('Checking port configuration requires Recommender API to be'
+                  ' enabled'),
+      )
+      return  # Early exit if Recommender API is disabled
+
     backend_service = lb.get_backend_service(
         op.context.project_id,
         op.get(flags.BACKEND_SERVICE_NAME),
         op.get(flags.REGION),
     )
     igs = gce.get_instance_groups(op.context)
-    insights = lb.get_lb_insights_for_a_project(op.context.project_id)
+    insights = lb.get_lb_insights_for_a_project(op.context.project_id,
+                                                op.get(flags.REGION, 'global'))
     for insight in insights:
       if insight.is_health_check_port_mismatch_insight:
         for info in insight.details.get('backendServiceInfos'):
@@ -464,7 +494,7 @@ class AnalyzeLatestHealthCheckLog(runbook.Gateway):
 
       if serial_log_entries:
         last_log = serial_log_entries.pop()
-        op.info(last_log)
+        op.add_metadata('log', last_log)
         if (get_path(
             last_log,
             'jsonPayload.healthCheckProbeResult.healthState') == 'UNHEALTHY'):
@@ -697,16 +727,17 @@ class CheckPastHealthCheckSuccess(runbook.Step):
 
       if serial_log_entries:
         last_log = serial_log_entries.pop()
+        timestamp = get_path(last_log, 'receiveTimestamp')
         any_date_found = True
+        op.add_metadata(group, timestamp)
         message += (f'{group}: Backends transitioned to an unhealthy state at'
-                    f' {get_path(last_log, "receiveTimestamp")}\n\n')
+                    f' {timestamp}\n\n')
       else:
         message += (
             f'{group}: No logs were found indicating HEALTHY -> UNHEALTHY'
             ' transition \n\n')
 
     if message and any_date_found:
-      # TODO: add timestamps into the step metadata
       op.add_uncertain(
           backend_service,
           reason=message,

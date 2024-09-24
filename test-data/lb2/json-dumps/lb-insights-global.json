@@ -19,8 +19,8 @@
           }
         ]
       },
-      "lastRefreshTime": "2024-08-22T07:02:04.248202514Z",
-      "observationPeriod": "846419.930555176s",
+      "lastRefreshTime": "2024-09-23T07:02:04.526707434Z",
+      "observationPeriod": "3611220.209060096s",
       "stateInfo": {
         "state": "ACTIVE"
       },
@@ -29,7 +29,7 @@
         "//cloudresourcemanager.googleapis.com/projects/gcpdiag-lb2-aaaa"
       ],
       "insightSubtype": "HEALTH_CHECK_PORT_MISMATCH",
-      "etag": "\"ae64eeb84d1c424c\"",
+      "etag": "\"381e11271a290275\"",
       "severity": "LOW"
     },
     {
@@ -53,8 +53,8 @@
           ]
         }
       },
-      "lastRefreshTime": "2024-08-22T07:02:04.282633461Z",
-      "observationPeriod": "847196.901309079s",
+      "lastRefreshTime": "2024-09-23T07:02:04.602359880Z",
+      "observationPeriod": "3611997.221035498s",
       "stateInfo": {
         "state": "ACTIVE"
       },
@@ -63,7 +63,7 @@
         "//compute.googleapis.com/projects/gcpdiag-lb2-aaaa/global/forwardingRules/http-content-rule"
       ],
       "insightSubtype": "HEALTH_CHECK_FIREWALL_NOT_CONFIGURED",
-      "etag": "\"41757c97aab16f73\"",
+      "etag": "\"5abfcf123b1d11e6\"",
       "severity": "MEDIUM"
     }
   ]

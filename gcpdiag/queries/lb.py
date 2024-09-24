@@ -316,8 +316,13 @@ class LoadBalancerInsight(models.Resource):
 
   @property
   def is_firewall_rule_insight(self) -> bool:
-    return self.insight_subtype.startswith(
-        'HEALTH_CHECK_FIREWALL_NOT_CONFIGURED')
+    firewall_rule_subtypes = (
+        'HEALTH_CHECK_FIREWALL_NOT_CONFIGURED',
+        'HEALTH_CHECK_FIREWALL_FULLY_BLOCKING',
+        'HEALTH_CHECK_FIREWALL_PARTIALLY_BLOCKING',
+        'HEALTH_CHECK_FIREWALL_INCONSISTENT',
+    )
+    return self.insight_subtype.startswith(firewall_rule_subtypes)
 
   @property
   def is_health_check_port_mismatch_insight(self) -> bool:
@@ -329,10 +334,10 @@ class LoadBalancerInsight(models.Resource):
 
 
 @caching.cached_api_call
-def get_lb_insights_for_a_project(project_id: str):
+def get_lb_insights_for_a_project(project_id: str, region: str = 'global'):
   api = apis.get_api('recommender', 'v1', project_id)
 
-  insight_name = (f'projects/{project_id}/locations/global/insightTypes/'
+  insight_name = (f'projects/{project_id}/locations/{region}/insightTypes/'
                   'google.networkanalyzer.networkservices.loadBalancerInsight')
   insights = []
   for insight in apis_utils.list_all(

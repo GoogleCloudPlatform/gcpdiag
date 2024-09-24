@@ -42,9 +42,14 @@ class RecommenderApiStub:
 
   def list(self, parent):
     parent_split = parent.split('/')
-    project, insight_type = parent_split[1], parent_split[-1]
-    if insight_type == 'google.networkanalyzer.networkservices.loadBalancerInsight':
-      return apis_stub.RestCallStub(project, 'lb-insights')
+    project, scope, insight_type = (
+        parent_split[1],
+        parent_split[3],
+        parent_split[-1],
+    )
+    if (insight_type ==
+        'google.networkanalyzer.networkservices.loadBalancerInsight'):
+      return apis_stub.RestCallStub(project, f'lb-insights-{scope}')
 
   def list_next(self, previous_request, previous_response):
     return None

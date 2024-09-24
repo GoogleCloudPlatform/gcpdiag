@@ -12,6 +12,8 @@ SED_SUBST_FAKE = sed -e "s/$(PROJECT_ID_SUFFIX)/$(FAKE_PROJECT_ID_SUFFIX)/" \
 				-e "s/$(PROJECT_NR)/$(FAKE_PROJECT_NR)/" \
 				-e "s/$(ORG_ID)/$(FAKE_ORG_ID)/" \
 
+REGION1 = europe-west4
+
 ZONE1 = us-east1-b
 ZONE2 = europe-west4-b
 
@@ -27,13 +29,13 @@ all:	\
 	json-dumps/compute-regions.json \
 	json-dumps/compute-zones.json \
 	json-dumps/backendServices.json \
-	json-dumps/regionBackendServices-europe-west4.json \
+	json-dumps/regionBackendServices-$(REGION1).json \
 	json-dumps/healthChecks.json \
-	json-dumps/regionHealthChecks-europe-west4.json \
-	json-dumps/lb-insights.json \
-	json-dumps/lb-insights.json \
-	json-dumps/backendService-web-backend-service-get-health-instanceGroups-lb-backend-example-us-east1-b.json \
-	json-dumps/regionBackendService-backend-service-2-europe-west4-get-health-networkEndpointGroups-neg1-europe-west4-b.json \
+	json-dumps/regionHealthChecks-$(REGION1).json \
+	json-dumps/lb-insights-$(REGION1).json \
+	json-dumps/lb-insights-global.json \
+	json-dumps/backendService-web-backend-service-get-health-instanceGroups-lb-backend-example-$(ZONE1).json \
+	json-dumps/regionBackendService-backend-service-2-$(REGION1)-get-health-networkEndpointGroups-neg1-$(ZONE2).json \
 	json-dumps/logging-entries-1.json \
 	json-dumps/monitoring-query.json
 
@@ -75,11 +77,11 @@ json-dumps/healthChecks.json:
 	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/healthChecks/' \
 		| $(SED_SUBST_FAKE) >$@
 
-json-dumps/lb-insights.json:
+json-dumps/lb-insights-%.json:
 	$(CURL) -fv \
 	-H "Authorization: Bearer $(gcloud auth print-access-token)" \
 	-H "x-goog-user-project: $(PROJECT_ID)" \
-	  'https://recommender.googleapis.com/v1/projects/$(PROJECT_ID)/locations/global/insightTypes/google.networkanalyzer.networkservices.loadBalancerInsight/insights' \
+	  'https://recommender.googleapis.com/v1/projects/$(PROJECT_ID)/locations/$*/insightTypes/google.networkanalyzer.networkservices.loadBalancerInsight/insights' \
 	  | $(SED_SUBST_FAKE) >$@
 
 json-dumps/backendService-web-backend-service-get-health-instanceGroups-lb-backend-example-us-east1-b.json:
