@@ -121,3 +121,31 @@ class TestComputeProfile:
     instance = list(instances.values())[0]
     profiles = datafusion.get_instance_user_compute_profile(context, instance)
     assert len(profiles) == 1
+
+
+@mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
+@mock.patch('gcpdiag.queries.generic_api.api_build.get_generic.get_generic_api',
+            new=generic_api_stub.get_generic_api_stub)
+class TestPreferences:
+  """Test datafusion cdap preferences"""
+
+  def test_get_system_preferences(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    instances = datafusion.get_instances(context)
+    instance = list(instances.values())[0]
+    preference = datafusion.get_system_preferences(context, instance)
+    assert preference.image_version == '2.1'
+
+  def test_get_application_preferences(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    instances = datafusion.get_instances(context)
+    instance = list(instances.values())[0]
+    preferences = datafusion.get_application_preferences(context, instance)
+    assert '2.2' in [(i.image_version) for k, i in preferences.items()]
+
+  def test_get_namespace_preferences(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    instances = datafusion.get_instances(context)
+    instance = list(instances.values())[0]
+    preferences = datafusion.get_namespace_preferences(context, instance)
+    assert '2.1' in [(i.image_version) for k, i in preferences.items()]

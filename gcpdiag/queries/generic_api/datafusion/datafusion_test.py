@@ -1,6 +1,6 @@
 """
   Tests for datafusion API
-  python -m unittest gcpdiag.generic_api.datafusion.datafusion_test
+  python -m unittest gcpdiag.queries.generic_api.datafusion.datafusion_test
 """
 
 import unittest
@@ -155,3 +155,58 @@ class TestDatafusion(unittest.TestCase):
         'http status 404 calling GET https://datafusion.googleusercontent.com/v3/namespaces/test-namespace/profiles',  # pylint: disable=line-too-long
         str(context.exception))
     self.assertEqual(mock_request.call_count, 1)
+
+  @patch('requests.request')
+  def test_get_all_applications(self, mock_request):
+    mock_response = Mock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = {'apps': []}
+    mock_request.return_value = mock_response
+
+    response = self._api.get_all_applications(namespace='test-namespace')
+    self.assertEqual(response, {'apps': []})
+
+  @patch('requests.request')
+  def test_get_application_preferences(self, mock_request):
+    mock_response = Mock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = {'preferences': {}}
+    mock_request.return_value = mock_response
+    response = self._api.get_application_preferences(
+        namespace='test-namespace', application_name='test-application')
+    self.assertEqual(response, {'preferences': {}})
+
+  @patch('requests.request')
+  def test_get_application_preferences_failure(self, mock_request):
+    mock_response = Mock()
+    mock_response.status_code = 404
+    mock_response.raise_for_status.side_effect = requests.exceptions.HTTPError(
+        'Not Found')
+    mock_request.return_value = mock_response
+
+    with self.assertRaises(RuntimeError) as context:
+      self._api.get_application_preferences(namespace='test-namespace',
+                                            application_name='test-application')
+
+    self.assertIn(
+        'http status 404 calling GET https://datafusion.googleusercontent.com/v3/namespaces/test-namespace/apps/test-application/preferences',  # pylint: disable=line-too-long
+        str(context.exception))
+    self.assertEqual(mock_request.call_count, 1)
+
+  @patch('requests.request')
+  def test_get_system_preferences(self, mock_request):
+    mock_response = Mock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = {'preferences': {}}
+    mock_request.return_value = mock_response
+    response = self._api.get_system_preferences()
+    self.assertEqual(response, {'preferences': {}})
+
+  @patch('requests.request')
+  def test_get_namespace_preferences(self, mock_request):
+    mock_response = Mock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = {'preferences': {}}
+    mock_request.return_value = mock_response
+    response = self._api.get_namespace_preferences(namespace='test-namespace')
+    self.assertEqual(response, {'preferences': {}})

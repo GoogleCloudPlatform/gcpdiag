@@ -1,0 +1,4 @@
+{
+ "system.profile.name": "SYSTEM:dataproc",
+ "system.profile.properties.imageVersion": "2.1"
+}

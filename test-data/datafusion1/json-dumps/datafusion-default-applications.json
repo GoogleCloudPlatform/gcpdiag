@@ -1,0 +1,18 @@
+[
+  {
+    "type": "App",
+    "name": "pipeline1",
+    "version": "0ced9d03-6aad-11ef-bb93-4ee099d66111",
+    "description": "Data Pipeline Application",
+    "artifact": {
+      "name": "cdap-data-pipeline",
+      "version": "6.10.1",
+      "scope": "SYSTEM"
+    },
+    "change": {
+      "author": "cdap",
+      "creationTimeMillis": 1725447695199,
+      "latest": true
+    }
+  }
+]

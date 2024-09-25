@@ -21,3 +21,19 @@ class Datafusion(api.API):
   def get_user_profiles(self, namespace: str):
     endpoint = f'v3/namespaces/{namespace}/profiles'
     return self.get(endpoint)
+
+  def get_system_preferences(self):
+    endpoint = 'v3/preferences/'
+    return self.get(endpoint)
+
+  def get_namespace_preferences(self, namespace: str):
+    endpoint = f'v3/namespaces/{namespace}/preferences'
+    return self.get(endpoint)
+
+  def get_all_applications(self, namespace: str):
+    endpoint = f'v3/namespaces/{namespace}/apps'
+    return self.get(endpoint)
+
+  def get_application_preferences(self, namespace: str, application_name: str):
+    endpoint = f'v3/namespaces/{namespace}/apps/{application_name}/preferences'
+    return self.get(endpoint)

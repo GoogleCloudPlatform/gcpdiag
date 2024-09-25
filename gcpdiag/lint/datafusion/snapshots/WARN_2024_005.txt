@@ -1,0 +1,29 @@
+*  datafusion/WARN/2024_005: Data Fusion version is compatible with Dataproc version from the CDAP Preferences settings.
+   - projects/gcpdiag-datafusion1-aaaa/locations/us-central1/instances/my-instance [FAIL]
+     Application preferences found
+     pipeline name : pipeline1
+     	Datafusion version : 6.7.1
+     	Dataproc version : 2.2
+     	Check Datafusion version is compatible with Dataproc version (VERSION INCOMPATIBILITY FOUND)
+
+   - projects/gcpdiag-datafusion1-aaaa/locations/us-central1/instances/my-instance [FAIL]
+     	Namespace preferences found
+     	namespace name : default
+     	Datafusion version : 6.7.1
+     	Dataproc version : 2.1
+     	Check Datafusion version is compatible with Dataproc version (VERSION INCOMPATIBILITY FOUND)
+
+   - projects/gcpdiag-datafusion1-aaaa/locations/us-central1/instances/my-instance [FAIL]
+     	System preferences found
+     	Datafusion version : 6.7.1
+     	Dataproc version : 2.1
+     	Check Datafusion version compatible with Dataproc version (VERSION INCOMPATIBILITY FOUND)
+
+
+   The version of your Cloud Data Fusion environment might not be compatible
+   with the version of your Dataproc cluster from the CDAP Preferences
+   settings.Check image version set in the Compute Configurations, Namespace
+   Preferences, or Pipeline Runtime Arguments.
+
+   https://gcpdiag.dev/rules/datafusion/WARN/2024_005
+

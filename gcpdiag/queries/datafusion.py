@@ -440,3 +440,80 @@ def extract_datafusion_dataproc_version() -> Dict[str, list[str]]:
         e,
     )
     return {}
+
+
+class Preference(models.Resource):
+  """Represents a Preference."""
+
+  _resource_data: dict
+
+  def __init__(self, project_id, instance, resource_data):
+    super().__init__(project_id=project_id)
+    self.instance = instance
+    self._resource_data = resource_data
+
+  @property
+  def full_path(self) -> str:
+    """The full path form :
+
+    projects/{project}/locations/{location}/instances/{instance}.
+    """
+    return self.instance.full_path
+
+  @property
+  def image_version(self):
+    return self._resource_data.get('system.profile.properties.imageVersion',
+                                   None)
+
+
+def get_system_preferences(context: models.Context,
+                           instance: Instance) -> Preference:
+  """Get datafusion Instance system preferences."""
+  logging.info('fetching dataproc System preferences: %s', context.project_id)
+  cdap_endpoint = instance.api_endpoint
+  datafusion = get_generic.get_generic_api('datafusion', cdap_endpoint)
+  response = datafusion.get_system_preferences()
+  return Preference(context.project_id, instance, response)
+
+
+def get_namespace_preferences(context: models.Context,
+                              instance: Instance) -> Mapping[str, Preference]:
+  """Get datafusion cdap namespace preferences.
+  """
+  logging.info('fetching dataproc namespace preferences: %s',
+               context.project_id)
+  cdap_endpoint = instance.api_endpoint
+  datafusion = get_generic.get_generic_api('datafusion', cdap_endpoint)
+  namespaces = datafusion.get_all_namespaces()
+  namespaces_preferences = {}
+  if namespaces is not None:
+    for namespace in namespaces:
+      response = datafusion.get_namespace_preferences(
+          namespace=namespace['name'])
+      if bool(response):
+        namespaces_preferences[namespace['name']] = Preference(
+            context.project_id, instance, response)
+  return namespaces_preferences
+
+
+def get_application_preferences(context: models.Context,
+                                instance: Instance) -> Mapping[str, Preference]:
+  """Get datafusion cdap application preferences."""
+  logging.info('fetching dataproc application preferences: %s',
+               context.project_id)
+  cdap_endpoint = instance.api_endpoint
+  datafusion = get_generic.get_generic_api('datafusion', cdap_endpoint)
+  applications_preferences = {}
+  namespaces = datafusion.get_all_namespaces()
+  if namespaces is not None:
+    for namespace in namespaces:
+      applications = datafusion.get_all_applications(
+          namespace=namespace['name'])
+      if applications is not None:
+        for application in applications:
+          response = datafusion.get_application_preferences(
+              namespace=namespace['name'], application_name=application['name'])
+          if bool(response):
+            applications_preferences[application['name']] = Preference(
+                context.project_id, instance, response)
+  return applications_preferences
