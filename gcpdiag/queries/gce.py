@@ -349,7 +349,9 @@ class Instance(models.Resource):
     return self._resource_data['lastStartTimestamp']
 
   def laststoptimestamp(self) -> str:
-    return self._resource_data['lastStopTimestamp']
+    if 'lastStopTimestamp' in self._resource_data:
+      return self._resource_data['lastStopTimestamp']
+    return ''
 
   def is_serial_port_logging_enabled(self) -> bool:
     value = self.get_metadata('serial-port-logging-enable')

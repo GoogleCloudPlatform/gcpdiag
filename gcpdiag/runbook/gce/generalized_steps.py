@@ -159,7 +159,7 @@ class HighVmDiskUtilization(runbook.Step):
     elif mark_no_ops_agent:
       op.add_skipped(vm,
                      reason='Ops Agent not installed on the VM, '
-                     'Unable to fetch disk utilisation data via metrics. '
+                     'Unable to fetch disk utilisation data via metrics.\n'
                      'Falling back to check for filesystem utilization related'
                      ' messages in Serial logs')
       # Fallback to check for filesystem utilization related messages in Serial logs

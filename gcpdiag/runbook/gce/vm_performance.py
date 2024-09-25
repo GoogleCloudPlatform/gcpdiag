@@ -13,7 +13,6 @@
 """Module containing VM performance diagnostic tree and custom steps"""
 
 import json
-import sys
 from datetime import datetime, timedelta, timezone
 
 import googleapiclient.errors
@@ -244,8 +243,7 @@ class CpuOvercommitmentCheck(runbook.Step):
       start_dt_utc_plus_5_mins = start_dt_utc + timedelta(minutes=5)
       current_time_utc = datetime.now(timezone.utc)
       within_hours = 9
-      if start_dt_utc_plus_5_mins > current_time_utc and (isinstance(
-          vm.laststoptimestamp(), str)):
+      if start_dt_utc_plus_5_mins > current_time_utc and vm.laststoptimestamp():
         # Instance just starting up, CpuCount might not be available currently via metrics.
         # Use instance's last stop time as EndTime for monitoring query
         stop_dt_pst = datetime.strptime(vm.laststoptimestamp(),
@@ -282,9 +280,10 @@ class CpuOvercommitmentCheck(runbook.Step):
           cpu_count = int(list(cpu_count_query.values())[0]['values'][0][0])
         else:
           op.info(
-              'CPU count info not available for the instance.'
-              ' Please start the VM if it is not in running state.', vm)
-          sys.exit(21)
+              ('CPU count info not available for the instance.\n'
+               'Please start the VM {} if it is not in running state.').format(
+                   vm.short_path))
+          return
 
       # an acceptable average Scheduler Wait Time is 20 ms/s per vCPU.
       utilization_threshold = cpu_count * 20
@@ -307,6 +306,8 @@ class CpuOvercommitmentCheck(runbook.Step):
             ('CPU for the VM {} is over committed beyond acceptable limits: {} ms/s'
             ).format(vm.name, utilization_threshold),
             remediation='')
+      else:
+        op.add_ok(vm, reason='VM CPU is not overcommited.\n')
     else:
       op.add_skipped(vm,
                      reason='VM is neither a Sole Tenent VM nor an E2 instance,'
@@ -355,8 +356,7 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
     start_dt_utc_plus_5_mins = start_dt_utc + timedelta(minutes=5)
     current_time_utc = datetime.now(timezone.utc)
     within_hours = 9
-    if start_dt_utc_plus_5_mins > current_time_utc and (isinstance(
-        vm.laststoptimestamp(), str)):
+    if start_dt_utc_plus_5_mins > current_time_utc and vm.laststoptimestamp():
       # Instance just starting up, CpuCount might not be available currently via metrics.
       # Use instance's last stop time as EndTime for monitoring query
       stop_dt_pst = datetime.strptime(vm.laststoptimestamp(),
@@ -395,7 +395,7 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
           reason='\tCPU count info is not available for the instance via'
           ' Monitoring metric "guest_visible_vcpus"',
           remediation=(
-              '\n\tPlease first start the VM {}, if it is not in running state'
+              '\tPlease first start the VM {}, if it is not in running state'
           ).format(vm.short_path))
       return
 
