@@ -667,10 +667,8 @@ class DiagnosticEngine:
               user_input is not constants.CONTINUE and
               user_input is not constants.STOP):
           return user_input
-    except (TemplateNotFound, exceptions.InvalidStepOperation,
-            utils.GcpApiError, googleapiclient.errors.HttpError, ValueError,
-            KeyError) as err:
-      error_msg = 'Unknown'
+    except Exception as err:  # pylint: disable=broad-exception-caught
+      error_msg = str(err)
       end = datetime.now(timezone.utc).isoformat()
       self.interface.rm.reports[operator.run_id].results[
           step.execution_id].end_time = end
@@ -679,21 +677,37 @@ class DiagnosticEngine:
             f'could not load messages linked to step: {step.id}.'
             'ensure step has a valid template eg: filename::block_prefix')
         logging.error(error_msg)
-      if isinstance(err, exceptions.InvalidStepOperation):
+      elif isinstance(err, exceptions.InvalidStepOperation):
         error_msg = f'invalid step operation: %s: {err}'
         logging.error(error_msg)
-      if isinstance(err, (ValueError, KeyError)):
+      elif isinstance(err, (ValueError, KeyError)):
         error_msg = f'`{step.execution_id}`: {err}'
         logging.error(error_msg)
-      if isinstance(err, (utils.GcpApiError, googleapiclient.errors.HttpError)):
+      elif isinstance(err,
+                      (utils.GcpApiError, googleapiclient.errors.HttpError)):
         err = utils.GcpApiError(err)
         if err.status == 403:
-          logging.error(('%s: %s user does not sufficient permissions '
-                         'to perform operations in step: %s'),
-                        type(err).__name__, err, step.execution_id)
+          logging.error(
+              ('%s: %s user does not sufficient permissions '
+               'to perform operations in step: %s'),
+              type(err).__name__,
+              err,
+              step.execution_id,
+          )
           return
-        logging.error('%s: %s while processing step: %s',
-                      type(err).__name__, err, step.execution_id)
+        logging.error(
+            '%s: %s while processing step: %s',
+            type(err).__name__,
+            err,
+            step.execution_id,
+        )
+      else:
+        logging.error(
+            '%s: %s while processing step: %s',
+            type(err).__name__,
+            err,
+            step.execution_id,
+        )
       self.interface.rm.reports[operator.run_id].results[
           step.execution_id].step_error = error_msg
 
