@@ -21,13 +21,13 @@ import pkgutil
 import re
 import sys
 import warnings
-from typing import List, Tuple
+from typing import List
 
 import yaml
 
 from gcpdiag import config, hooks, models, runbook
 from gcpdiag.queries import apis, kubectl
-from gcpdiag.runbook.output import terminal_output
+from gcpdiag.runbook.output import api_output, base_output, terminal_output
 
 
 class ParseMappingArg(argparse.Action):
@@ -298,48 +298,26 @@ def _load_bundles_spec(file_path):
       sys.exit(1)
 
 
-def _initialize_output():
-  constructor = terminal_output.TerminalOutput
-  kwargs = {
-      'log_info_for_progress_only': (config.get('verbose') == 0),
-  }
-  if config.get('interface') == 'cli':
-    output = constructor(**kwargs)
-    return output
-  elif config.get('interface') == 'api':
-    raise NotImplementedError
+def _initialize_output(interface):
+  if interface == runbook.constants.CLI:
+    kwargs = {
+        'log_info_for_progress_only': (config.get('verbose') == 0),
+    }
+    return terminal_output.TerminalOutput(**kwargs)
+  elif interface == runbook.constants.API:
+    return api_output.ApiOutput()
   else:
-    output = constructor(**kwargs)
-  # default to terminal
-  return output
+    return base_output.BaseOutput()
 
 
-def run_and_get_report(argv=None, credentials: str = None) -> Tuple[int, dict]:
-  # Initialize argument parser
-  parser = _init_runbook_args_parser()
-  args = parser.parse_args(argv[1:])
+def _init_config(args):
+  if args.interface == runbook.constants.CLI:
+    config.init(vars(args), terminal_output.is_cloud_shell())
+  elif args.interface == runbook.constants.API:
+    config.init(vars(args))
 
-  if credentials:
-    apis.set_credentials(credentials)
 
-  # Allow to change defaults using a hook function.
-  hooks.set_runbook_args_hook(args)
-
-  # Initialize configuration
-  config.init(vars(args), terminal_output.is_cloud_shell())
-
-  # Initialize Repository, and Tests.
-  dt_engine = runbook.DiagnosticEngine()
-  _load_runbook_rules(runbook.__name__)
-
-  # ^^^ If you add gcpdiag/runbook/[NEW-PRODUCT] directory, update also
-  # pyinstaller/hook-gcpdiag.runbook.py and bin/precommit-required-files
-
-  # Initialize proper output formater
-  output = _initialize_output()
-  dt_engine.interface.output = output
-  # Logging setup.
-  logging_handler = output.get_logging_handler()
+def setup_logging(logging_handler):
   logger = logging.getLogger()
   # Make sure we are only using our own handler
   logger.handlers = []
@@ -353,19 +331,49 @@ def run_and_get_report(argv=None, credentials: str = None) -> Tuple[int, dict]:
     gac_http_logger = logging.getLogger('googleapiclient.http')
     gac_http_logger.setLevel(logging.ERROR)
 
+
+def run_and_get_report(argv=None, credentials: str = None) -> dict:
+  # Initialize argument parser
+  parser = _init_runbook_args_parser()
+  args = parser.parse_args(argv[1:])
+
+  if credentials:
+    apis.set_credentials(credentials)
+
+  # Allow to change defaults using a hook function.
+  hooks.set_runbook_args_hook(args)
+
+  # Initialize configuration
+  _init_config(args)
+
+  # Initialize Repository, and Tests.
+
+  dt_engine = runbook.DiagnosticEngine()
+  _load_runbook_rules(runbook.__name__)
+
+  # ^^^ If you add gcpdiag/runbook/[NEW-PRODUCT] directory, update also
+  # pyinstaller/hook-gcpdiag.runbook.py and bin/precommit-required-files
+
+  # Initialize proper output formater
+  output_ = _initialize_output(args.interface)
+  dt_engine.interface.output = output_
+  # Logging setup.
+  logging_handler = output_.get_logging_handler()
+  setup_logging(logging_handler)
+
   # for capatibility till --project is fully deprecated under runbooks
   if args.project and args.project.isdigit():
     args.parameter['project_number'] = args.project
   elif args.project and not args.project.isdigit():
     args.parameter['project_id'] = args.project
-  # Start the reporting
-  output.display_banner()
 
   # Run the runbook or step connections.
   if args.runbook:
     # Rules name patterns that shall be included or excluded
     runbook_pattern = _validate_rule_pattern(args.runbook)
-    output.display_header()
+    if args.interface == runbook.constants.CLI:
+      output_.display_header()
+      output_.display_banner()
     tree = dt_engine.load_tree(runbook_pattern)
     if not callable(tree):
       logging.error('Can\'t instantiate Runbook')
@@ -388,13 +396,15 @@ def run_and_get_report(argv=None, credentials: str = None) -> Tuple[int, dict]:
     metrics = dt_engine.interface.rm.generate_report_metrics(report=r)
     hooks.post_runbook_hook(metrics)
 
-  output.display_footer(dt_engine.interface.rm)
+  if args.interface == runbook.constants.CLI:
+    output_.display_footer(dt_engine.interface.rm)
   # Clean up the kubeconfig file generated for gcpdiag
   kubectl.clean_up()
   # return success if we get to this point and the report..
-  return (0, report)
+  return report
 
 
 def run(argv) -> None:
-  code, _ = run_and_get_report(argv)
-  sys.exit(code)
+  report = run_and_get_report(argv)
+  if report:
+    sys.exit(0)

@@ -28,6 +28,7 @@ from typing import Any, Dict, List, Optional
 from gcpdiag import config, models
 from gcpdiag.runbook import constants, util
 from gcpdiag.runbook.flags import INTERACTIVE_MODE
+from gcpdiag.runbook.output.api_output import ApiOutput
 from gcpdiag.runbook.output.base_output import BaseOutput
 from gcpdiag.runbook.output.terminal_output import TerminalOutput
 
@@ -224,7 +225,7 @@ class ReportManager:
                       indent=2)
 
   def generate_reports(self):
-    pass
+    raise NotImplementedError
 
   def get_totals_by_status(self) -> Dict[str, int]:
     totals: Dict[str, int]
@@ -291,10 +292,10 @@ class ApiReportManager(ReportManager):
   def generate_reports(self):
     """Generate Runbook Report"""
     reports = []
-    for _, report in self.reports:
+    for _, report in self.reports.items():
       # TODO: Refactor serialization logic to allow
       # converting a report into a dict without serialization
-      reports.append(json.load(self.serialize_report(report)))
+      reports.append(json.loads(self.serialize_report(report)))
     return reports
 
 
@@ -312,6 +313,7 @@ class TerminalReportManager(ReportManager):
       result = self.serialize_report(report)
       path = self.get_report_path(run_id)
       self._write_report_to_terminal(path, result)
+    return json.loads(result)
 
   def _write_report_to_terminal(self, out_path, json_report):
     try:
@@ -338,11 +340,16 @@ class InteractionInterface:
   rm: ReportManager
   output: BaseOutput
 
-  def __init__(self, output=None) -> None:
-    self.output: BaseOutput = output or TerminalOutput()
-
-  def set_dt(self, rule):
-    self.rule = rule
+  def __init__(self, kind) -> None:
+    if kind == constants.CLI:
+      self.rm = TerminalReportManager()
+      self.output = TerminalOutput()
+    elif kind == constants.API:
+      self.rm = ApiReportManager()
+      self.output = ApiOutput()
+    else:
+      raise AttributeError(
+          f'No valid interface specified {kind}. specify `cli` or `api`')
 
   def prompt(self,
              message: str,

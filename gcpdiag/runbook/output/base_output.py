@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """ Base class for different output implementations """
+import logging
+import sys
 from typing import Any, Optional
 
 from gcpdiag import models
@@ -52,3 +54,25 @@ class BaseOutput:
 
   def display_runbook_description(self, tree) -> None:
     pass
+
+  def get_logging_handler(self) -> logging.Handler:
+    return _LoggingHandler()
+
+
+class _LoggingHandler(logging.Handler):
+  """Basic Logging Hangler"""
+
+  def __init__(self, stream_config=None):
+    super().__init__()
+    self.stream_config = stream_config or {
+        logging.DEBUG: sys.stdout,
+        logging.INFO: sys.stdout,
+        logging.WARNING: sys.stderr,
+        logging.ERROR: sys.stderr,
+        logging.CRITICAL: sys.stderr
+    }
+
+  def emit(self, record):
+    record.msg = f'[{record.levelname}] {record.msg}'
+    stream = self.stream_config.get(record.levelno, sys.stderr)
+    stream.flush()

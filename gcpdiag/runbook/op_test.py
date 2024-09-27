@@ -42,7 +42,7 @@ uncertain_step.results.append(uncertain_step_eval)
 skipped_step = report.StepResult(step=Step(uuid='skipped.step'))
 skipped_step.results.append(skipped_step_eval)
 
-op.operator = op.Operator(interface=report.InteractionInterface())
+op.operator = op.Operator(interface=report.InteractionInterface(kind='cli'))
 op.operator.set_run_id('test')
 op.operator.interface.rm = report.TerminalReportManager()
 op.operator.interface.rm.reports['test'] = report.Report(run_id='test',

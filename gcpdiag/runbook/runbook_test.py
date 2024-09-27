@@ -29,16 +29,11 @@ class TestDiagnosticEngine(unittest.TestCase):
   def setUp(self):
     self.mock_report_manager = Mock(spec=runbook.report.ReportManager)
     self.mock_report_manager.reports = {}
-    self.de = runbook.DiagnosticEngine(rm=self.mock_report_manager)
+    self.de = runbook.DiagnosticEngine()
     step = runbook.Step
     step.parameters = {}
     self.de.add_task((runbook.Bundle(), {}))
     self.de.add_task((runbook.DiagnosticTree(), {}))
-
-  def test_initialization_with_default_report_manager(self):
-    engine = runbook.DiagnosticEngine()
-    self.assertIsInstance(engine.interface.rm,
-                          runbook.report.TerminalReportManager)
 
   def test_load_rule_invalid(self):
     with self.assertRaises(SystemExit) as cm:
@@ -147,8 +142,7 @@ class TestSetDefaultParameters(unittest.TestCase):
   """Test for Setting default date parameters"""
 
   def setUp(self):
-    self.mock_report_manager = Mock(spec=runbook.report.ReportManager)
-    self.de = runbook.DiagnosticEngine(rm=self.mock_report_manager)
+    self.de = runbook.DiagnosticEngine()
     self.de.add_task((Mock(parent=runbook.DiagnosticTree), {}))
 
   def test_no_parameters_set(self):

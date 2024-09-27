@@ -61,7 +61,7 @@ class Test(unittest.TestCase):
       assert args.logging_fetch_max_time_seconds is None
       assert args.auto is False
       assert args.report_dir == '/tmp'
-      assert args.interface == 'cli'
+      assert args.interface == runbook.constants.CLI
 
   # pylint: disable=protected-access
   def test_provided_init_args_parser(self):

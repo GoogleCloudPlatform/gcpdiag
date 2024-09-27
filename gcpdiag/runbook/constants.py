@@ -185,3 +185,6 @@ CONFIRMATION_OPTIONS = {'Yes/Y/y': 'Yes', 'No/N/n': 'No'}
 GENERATE_REPORT = 'GENERATE_REPORT'
 STATUS_ORDER = ['failed', 'uncertain', 'ok', 'skipped']
 FINALIZE_INVESTIGATION = 'FINALIZE_INVESTIGATION'
+
+CLI = 'cli'
+API = 'api'

@@ -391,11 +391,10 @@ class DiagnosticEngine:
     _dt: Optional[DiagnosticTree] The current diagnostic tree being executed.
   """
 
-  def __init__(self, rm: report.ReportManager = None, interface=None) -> None:
+  def __init__(self) -> None:
     """Initializes the DiagnosticEngine with required managers."""
-    self.interface = interface or report.InteractionInterface()
+    self.interface = report.InteractionInterface(kind=config.get('interface'))
     self.finalize = False
-    self.interface.rm = rm or report.TerminalReportManager()
     # tuple in the format (DiagnosticTree/Bundle, user_provided_parameter)
     self.task_queue: Deque = Deque()
 
