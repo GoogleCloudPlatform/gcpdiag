@@ -61,8 +61,8 @@ provided as a command arguments.
 # Static properties
 #
 
-# Default number of retries for API Calls.
-API_RETRIES = 10
+# Default Number of Retries for API Calls.
+API_RETRIES = 3
 API_RETRY_SLEEP_MULTIPLIER = 1.4
 API_RETRY_SLEEP_RANDOMNESS_PCT = 0.2
 
