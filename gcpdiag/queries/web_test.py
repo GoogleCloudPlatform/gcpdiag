@@ -18,22 +18,22 @@
 import unittest
 from unittest import mock
 
-from gcpdiag.queries import html
+from gcpdiag.queries import web
 
 
-@mock.patch('gcpdiag.queries.html.requests.get', autospec=True)
+@mock.patch('gcpdiag.queries.web.get', autospec=True)
 class TestFetchAndExtractHtmlContent(unittest.TestCase):
   """Test Fetch and Extract html content"""
 
   def test_fetch_and_extract_table(self, mock_get):
     with open(
-        'test-data/datafusion1/html-content/'
-        'version_support_policy.html',
+        'test-data/web/static/'
+        'cloud-google-com-data-fusion-docs-support-version-support-policy',
         encoding='utf-8') as fh:
       mock_get.return_value.content = fh.read().encode('utf-8')
       mock_get.return_value.status_code = 200
 
-      test_table = html.fetch_and_extract_table(
+      test_table = web.fetch_and_extract_table(
           page_url=
           'https://cloud.google.com/data-fusion/docs/support/version-support-policy',
           tag='h2',
@@ -57,7 +57,7 @@ class TestFetchAndExtractHtmlContent(unittest.TestCase):
     """
     mock_get.return_value.status_code = 200
 
-    test_table = html.fetch_and_extract_table(
+    test_table = web.fetch_and_extract_table(
         page_url=
         'https://cloud.google.com/data-fusion/docs/support/version-support-policy'
     )
@@ -78,7 +78,7 @@ class TestFetchAndExtractHtmlContent(unittest.TestCase):
     """
     mock_get.return_value.status_code = 200
 
-    test_table = html.fetch_and_extract_table(
+    test_table = web.fetch_and_extract_table(
         page_url=
         'https://cloud.google.com/data-fusion/docs/support/version-support-policy',
         tag='h1')
@@ -100,7 +100,7 @@ class TestFetchAndExtractHtmlContent(unittest.TestCase):
     """
     mock_get.return_value.status_code = 200
 
-    test_table = html.fetch_and_extract_table(
+    test_table = web.fetch_and_extract_table(
         page_url=
         'https://cloud.google.com/data-fusion/docs/support/version-support-policy',
         tag='h1',
@@ -125,7 +125,7 @@ class TestFetchAndExtractHtmlContent(unittest.TestCase):
     """
     mock_get.return_value.status_code = 200
 
-    test_table = html.fetch_and_extract_table(
+    test_table = web.fetch_and_extract_table(
         page_url=
         'https://cloud.google.com/data-fusion/docs/support/version-support-policy',
         tag='h1',

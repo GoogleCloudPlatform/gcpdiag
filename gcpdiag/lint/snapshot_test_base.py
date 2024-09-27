@@ -19,10 +19,11 @@ from unittest import mock
 
 from gcpdiag import lint, models
 from gcpdiag.lint.output import terminal_output
-from gcpdiag.queries import apis_stub, kubectl_stub
+from gcpdiag.queries import apis_stub, kubectl_stub, web_stub
 from gcpdiag.queries.generic_api.api_build import generic_api_stub
 
 
+@mock.patch('gcpdiag.queries.web.get', new=web_stub.get)
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
 @mock.patch('gcpdiag.queries.kubectl.verify_auth', new=kubectl_stub.verify_auth)
 @mock.patch(

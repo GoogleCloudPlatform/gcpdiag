@@ -7,9 +7,15 @@
 	projects/gcpdiag-datafusion1-aaaa/instances/my-instance/computeProfiles/dataproc
 	(No imageVersion defined)
 
-   - projects/gcpdiag-datafusion1-aaaa/locations/us-central1/instances/my-instance [ OK ] 
-	projects/gcpdiag-datafusion1-aaaa/instances/my-instance/computeProfiles/namespace_profile
-	Datafusion version : 6.7.1
-	Dataproc version : 2.0
+   - projects/gcpdiag-datafusion1-aaaa/locations/us-central1/instances/my-instance [FAIL]
+     	projects/gcpdiag-datafusion1-aaaa/instances/my-instance/computeProfiles/namespace_profile
+     	Datafusion version : 6.7.1
+     	Dataproc version : 2.0
 
+
+   The version of your Cloud Data Fusion environment might not be compatible
+   with the version of your Dataproc cluster from the corresponding compute
+   profiles.
+
+   https://gcpdiag.dev/rules/datafusion/WARN/2024_004
 

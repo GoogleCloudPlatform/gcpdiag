@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# WARNING: This script is deprecated and may be removed in a future release.
+# Please use 'gcpdiag/queries/gke.get_release_schedule' instead.
+
 # Parses the public GKE Schedule page and extratct EOL (end-of-life) dates
 # for currently available GKE versions
 

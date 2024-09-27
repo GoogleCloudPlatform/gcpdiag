@@ -16,7 +16,7 @@
 from unittest import mock
 
 from gcpdiag import models
-from gcpdiag.queries import apis_stub, datafusion
+from gcpdiag.queries import apis_stub, datafusion, web_stub
 from gcpdiag.queries.generic_api.api_build import generic_api_stub
 
 DUMMY_REGION = 'us-central1'
@@ -73,31 +73,15 @@ class TestDataFusion:
             True) in [(i.name, i.is_private) for k, i in instances.items()]
 
 
-@mock.patch('gcpdiag.queries.html.requests.get', autospec=True)
+@mock.patch('gcpdiag.queries.web.get', new=web_stub.get)
 class TestExtractVersionPolicyDict:
   """Test html content."""
 
-  def test_extract_support_datafusion_version(self, mock_get):
-
-    with open(
-        'test-data/datafusion1/html-content/'
-        'version_support_policy.html',
-        encoding='utf-8') as fh:
-      mock_get.return_value.content = fh.read().encode('utf-8')
-      mock_get.return_value.status_code = 200
-
+  def test_extract_support_datafusion_version(self):
     response_dict = datafusion.extract_support_datafusion_version()
     assert response_dict == SUPPORTED_VERSIONS_DICT
 
-  def test_extract_datafusion_dataproc_version(self, mock_get):
-
-    with open(
-        'test-data/datafusion1/html-content/'
-        'version_compatability.html',
-        encoding='utf-8') as fh:
-      mock_get.return_value.content = fh.read().encode('utf-8')
-      mock_get.return_value.status_code = 200
-
+  def test_extract_datafusion_dataproc_version(self):
     response_dict = datafusion.extract_datafusion_dataproc_version()
     assert response_dict == DATAFUSION_DATAPROC_VERSIONS_DICT
 

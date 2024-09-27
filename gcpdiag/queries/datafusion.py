@@ -25,7 +25,7 @@ import googleapiclient.errors
 import requests
 
 from gcpdiag import caching, config, models, utils
-from gcpdiag.queries import apis, crm, html, network
+from gcpdiag.queries import apis, crm, network, web
 from gcpdiag.queries.generic_api.api_build import get_generic
 from gcpdiag.utils import Version
 
@@ -228,9 +228,9 @@ def extract_support_datafusion_version() -> Dict[str, str]:
   page_url = 'https://cloud.google.com/data-fusion/docs/support/version-support-policy'
 
   try:
-    data_fusion_table = html.fetch_and_extract_table(page_url,
-                                                     tag='h2',
-                                                     tag_id='support_timelines')
+    data_fusion_table = web.fetch_and_extract_table(page_url,
+                                                    tag='h2',
+                                                    tag_id='support_timelines')
     if data_fusion_table:
       versions = []
       support_end_dates = []
@@ -400,9 +400,9 @@ def extract_datafusion_dataproc_version() -> Dict[str, list[str]]:
   page_url = 'https://cloud.google.com/data-fusion/docs/concepts/configure-clusters'
 
   try:
-    table = html.fetch_and_extract_table(page_url,
-                                         tag='h2',
-                                         tag_id='version-compatibility')
+    table = web.fetch_and_extract_table(page_url,
+                                        tag='h2',
+                                        tag_id='version-compatibility')
     if table:
       rows = table.find_all('tr')[1:]  #Skip the header row
       version_dict = {}

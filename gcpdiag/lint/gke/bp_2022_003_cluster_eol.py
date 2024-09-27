@@ -20,11 +20,9 @@ Rule will start failing if scheduled end of life is in less than 30 days.
 """
 
 from datetime import date, timedelta
-from os.path import dirname
 from typing import Dict
 
 from boltons.iterutils import get_path
-from yaml import safe_load
 
 from gcpdiag import lint, models
 from gcpdiag.queries import gke
@@ -64,14 +62,6 @@ def _estimate_oss_release_date(version: Version) -> date:
       MINOR_RELEASE_PACE_IN_DAYS)
 
 
-def _get_date(str_or_date) -> date:
-  # Handle incomplete dates in 'YYYY-MM' form
-  if str_or_date and isinstance(str_or_date,
-                                str) and len(str_or_date) == len('YYYY-MM'):
-    return date.fromisoformat(f'{str_or_date}-15')
-  return str_or_date
-
-
 def _estimate_gke_eol_date(version: Version, eol_schedule: Dict):
   """
   Estimate End Of Life date for a given GKE version
@@ -83,12 +73,10 @@ def _estimate_gke_eol_date(version: Version, eol_schedule: Dict):
 
   short_version = f'{version.major}.{version.minor}'
 
-  regular_release = _get_date(
-      get_path(eol_schedule, (short_version, 'regular_avail'), None))
-  rapid_release = _get_date(
-      get_path(eol_schedule, (short_version, 'rapid_avail'), None))
-  oss_release = _get_date(
-      get_path(eol_schedule, (short_version, 'oss_release'), None))
+  regular_release = get_path(eol_schedule, (short_version, 'regular_avail'),
+                             None)
+  rapid_release = get_path(eol_schedule, (short_version, 'rapid_avail'), None)
+  oss_release = get_path(eol_schedule, (short_version, 'oss_release'), None)
 
   if regular_release and regular_release != TBD:
     return regular_release + timedelta(days=GKE_REGULAR_SUPPORT_PERIOD_IN_DAYS)
@@ -125,7 +113,7 @@ def _notification_required(version: Version, eol_schedule: Dict) -> bool:
     # Update the EOL date in the `eol_schedule` dict
     eol_schedule[short_version] = {'eol': eol_date, 'estimated': True}
   else:
-    eol_date = _get_date(eol_schedule[short_version]['eol'])
+    eol_date = eol_schedule[short_version]['eol']
 
   return date.today() > eol_date - timedelta(days=NOTIFY_PERIOD_IN_DAYS)
 
@@ -133,7 +121,7 @@ def _notification_required(version: Version, eol_schedule: Dict) -> bool:
 def _get_notification_msg(version: Version, eol_schedule: Dict) -> str:
   short_version = f'{version.major}.{version.minor}'
   msg = f'''GKE version {short_version}\n
-    scheduled end of life: {_get_date(eol_schedule[short_version]["eol"])}'''
+    scheduled end of life: {eol_schedule[short_version]["eol"]}'''
   if 'estimated' in eol_schedule[short_version]:
     msg += ' (estimation)'
   return msg
@@ -144,14 +132,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not clusters:
     report.add_skipped(None, 'no clusters found')
 
-  # This file should be updated regularly by `eol_parser.sh` or by `make`:
-  #  <root_prj_folder>$ make gke-eol-file
-  try:
-    with open(f'{dirname(__file__)}/eol.yaml', encoding='utf-8') as eol_file:
-      eol_schedule = safe_load(eol_file)
-  except OSError:
-    # Ignore absence of the file, estimations will be used
-    eol_schedule = {}
+  eol_schedule = gke.get_release_schedule()
 
   for _, c in sorted(clusters.items()):
     if c.release_channel:

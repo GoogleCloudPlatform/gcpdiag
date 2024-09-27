@@ -24,7 +24,8 @@ def fetch_and_extract_table(page_url: str,
                             tag_id: str = None,
                             class_name: str = None):
   """Fetch the table from the given page url and return it."""
-  response = requests.get(page_url)
+  table = None
+  response = get(url=page_url, timeout=10)
   response.raise_for_status(
   )  # Raise an exception if the response is not successful
   soup = BeautifulSoup(response.content, 'html.parser')
@@ -39,11 +40,28 @@ def fetch_and_extract_table(page_url: str,
 
   if not content_fetched:
     logging.error('tag/id/class not found for %s with tag %s', page_url, tag)
-    return None
-
+    return table
+  if tag == 'table':
+    return content_fetched
   table = content_fetched.find_next('table')
   if not table:
     logging.error('Table not found for %s with tag %s', page_url, tag)
-    return None
+    return table
 
   return table
+
+
+def get(
+    url,
+    params=None,
+    timeout=10,
+    *,
+    data=None,
+    headers=None,
+) -> requests.Response:
+  """A wrapper around requests.get for http calls which can't use the google discovery api"""
+  return requests.get(url=url,
+                      params=params,
+                      timeout=timeout,
+                      data=data,
+                      headers=headers)

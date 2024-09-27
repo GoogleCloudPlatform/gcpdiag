@@ -15,17 +15,20 @@
 # Lint as: python3
 """Queries related to GCP Kubernetes Engine clusters."""
 
+import datetime
 import functools
 import ipaddress
 import logging
 import re
 from typing import Dict, Iterable, List, Mapping, Optional, Union
 
+import bs4
 import googleapiclient.errors
+import requests
 from boltons.iterutils import get_path
 
 from gcpdiag import caching, config, models, utils
-from gcpdiag.queries import apis, crm, gce, network
+from gcpdiag.queries import apis, crm, gce, network, web
 from gcpdiag.utils import Version
 
 # To avoid name conflict with L342
@@ -599,3 +602,82 @@ def get_node_by_instance_id(context: models.Context, instance_id: str) -> Node:
   except AttributeError as err:
     raise KeyError from err
   return None
+
+
+@caching.cached_api_call
+def get_release_schedule() -> Dict:
+  """Extract the release schdule for gke clusters
+
+  Returns:
+    A dictionary of release schdule.
+  """
+  page_url = 'https://cloud.google.com/kubernetes-engine/docs/release-schedule'
+  release_data = {}
+  # estimate first month of the quarter
+  quarter_dates = {'Q1': '1', 'Q2': '4', 'Q3': '7', 'Q4': '10'}
+  try:
+    table = web.fetch_and_extract_table(page_url,
+                                        tag='table',
+                                        class_name='gke-release-schedule')
+
+    # Function to parse a date string or return None for 'N/A'
+    def parse_date(date_str) -> Optional[datetime.date]:
+      p = r'(?P<year>\d{4})-(?:(?P<quarter>Q[1-4])|(?P<month>[0-9]{1,2}))(?:-(?P<day>[0-9]{1,2}))?'
+      match = re.search(p, date_str)
+      # Handle incomplete dates in 'YYYY-MM' form
+      if match and match.group('month') and not match.group('day'):
+        return datetime.date.fromisoformat(f'{date_str}-15')
+      # Handle quarter year (for example, 2025-Q3) approximations that are updated when known.
+      # https://cloud.google.com/kubernetes-engine/docs/release-schedule.md#fn6
+      if match and match.group('quarter') and not match.group('day'):
+        date_str = f"{match.group('year')}-{quarter_dates[match.group('quarter')]}-01"
+        return datetime.date.fromisoformat(date_str)
+      if match and match.group('year') and match.group('month') and match.group(
+          'day'):
+        return datetime.date.fromisoformat(date_str)
+      # anything less like N/A return None
+      return None
+
+    def find_date_str_in_td(e):
+      """recursively find a date string in a td"""
+      if isinstance(e, str):
+        return e
+      if isinstance(e, bs4.element.Tag):
+        return find_date_str_in_td(e.next)
+      return None
+
+    # Find all table rows within tbody
+    rows = table.find('tbody').find_all('tr')
+
+    # Iterate over each row and extract the data
+    for row in rows:
+      # Extract all the columns (td elements)
+      cols = row.find_all('td')
+
+      # Extract relevant data
+
+      minor_version = cols[0].next.strip()
+      rapid_avail = parse_date(find_date_str_in_td(cols[1].next))
+      regular_avail = parse_date(find_date_str_in_td(cols[3].next))
+      stable_avail = parse_date(find_date_str_in_td(cols[5].next))
+      extended_avail = parse_date(find_date_str_in_td(cols[7].next))
+      end_of_standard_support = parse_date(find_date_str_in_td(cols[9].next))
+
+      # Add the extracted data into the dictionary in the desired format
+      release_data[minor_version] = {
+          'rapid_avail': rapid_avail,
+          'regular_avail': regular_avail,
+          'stable_avail': stable_avail,
+          'extended_avail': extended_avail,
+          'eol': end_of_standard_support,
+      }
+    return release_data
+  except (
+      requests.exceptions.RequestException,
+      AttributeError,
+      TypeError,
+      ValueError,
+      IndexError,
+  ) as e:
+    logging.error('Error in extracting gke release schedule: %s', e)
+    return release_data

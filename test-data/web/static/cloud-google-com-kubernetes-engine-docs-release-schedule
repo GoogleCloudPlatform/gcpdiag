@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en"dir="ltr">
+  <body>
+<h2 id="schedule-for-release-channels" data-text="Estimated schedule for release channels" tabindex="-1">Estimated schedule for release channels</h2>
+
+<p>GKE automatically upgrades clusters in a release channel on or
+after the dates specified in the <em>Auto Upgrade</em> column of the following
+schedule. The patches of a minor version remain available in all release
+channels until the <em>end of standard support</em> (formerly known as <em>end of life</em>),
+except for clusters enrolled in the Extended channel, where the minor version
+and its patches remain available until the <em>end of extended support</em>. When
+choosing a version older than the default version for the channel, you can use
+<a href="/kubernetes-engine/docs/concepts/maintenance-windows-and-exclusions#exclusions">maintenance exclusions</a>
+to prevent a cluster from being automatically upgraded until its end of support
+date.</p>
+
+<p>Dates are best-effort predictions and are updated periodically when new
+information becomes available. Consider the <a href="/kubernetes-engine/docs/release-schedule?hl=en">English language
+documentation</a> as the source of
+truth if the dates in other languages differ due to delays in translation.</p>
+
+<p>See the following schedule for clusters enrolled in a <a href="/kubernetes-engine/docs/concepts/release-channels#what_versions_are_available_in_a_channel">release
+channel</a>
+follow this schedule:</p>
+
+<table class="vertical-rules gke-release-schedule">
+  <thead>
+    <tr>
+      <th width="10%" rowspan="2">
+        Minor version (<a href="https://kubernetes.io/releases/">release date</a>)</th>
+      <th style="text-align:center" colspan="2">Rapid</th>
+      <th style="text-align:center" colspan="2">Regular</th>
+      <th style="text-align:center" colspan="2">Stable</th>
+      <th style="text-align:center" colspan="2">Extended</th>
+      <th width="10%" rowspan="2">End of standard support (formerly <em>end of life</em>)<sup id="fnref3"><a href="#fn3" rel="footnote">3</a></sup></th>
+      <th width="10%" rowspan="2">End of extended support<sup id="fnref3"><a href="#fn3" rel="footnote">3</a></sup></th>
+    </tr>
+    <tr>
+      <th width="10%">Available<sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup></th> <! -- Rapid available -->
+      <th width="10%">Auto Upgrade<sup id="fnref2"><a href="#fn2" rel="footnote">2</a></sup></th>   <! -- Rapid auto upgrade -->
+      <th width="10%">Available<sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup></th> <! -- Regular available -->
+      <th width="10%">Auto Upgrade<sup id="fnref2"><a href="#fn2" rel="footnote">2</a></sup></th>   <! -- Regular auto upgrade -->
+      <th width="10%">Available<sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup></th> <! -- Stable available -->
+      <th width="10%">Auto Upgrade<sup id="fnref2"><a href="#fn2" rel="footnote">2</a></sup></th>   <! -- Stable auto upgrade -->
+      <th width="10%">Available<sup id="fnref1"><a href="#fn1" rel="footnote">1</a></sup></th> <! -- Extended available -->
+      <th width="10%">Auto Upgrade<sup id="fnref2"><a href="#fn2" rel="footnote">2</a></sup></th>   <! -- Extended auto upgrade -->
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1.26</td>
+      <td>2023-02-21</td> <! -- Rapid available -->
+      <td>2023-06-16</td> <! -- Rapid auto upgrade -->
+      <td>2023-04-07</td> <! -- Regular available -->
+      <td>2023-06-23</td> <! -- Regular auto upgrade -->
+      <td>2023-06-16</td> <! -- Stable available -->
+      <td>2024-01-25</td> <! -- Stable auto upgrade -->
+      <td>N/A<sup id="fnref5"><a href="#fn5" rel="footnote">5</a></sup></td> <! -- Extended not available before 1.27 -->
+      <td>N/A<sup id="fnref5"><a href="#fn5" rel="footnote">5</a></sup></td> <! -- Extended not available before 1.27 -->
+      <td>2024-06-30<sup id="fnref4"><a href="#fn4" rel="footnote">4</a></sup></td> <! -- End of standard support -->
+      <td>N/A<sup id="fnref5"><a href="#fn5" rel="footnote">5</a></sup></td> <! -- Extended not available before 1.27 -->
+    </tr>
+    <tr>
+      <td>1.27</td>
+      <td>2023-06-09</td> <! -- Rapid available -->
+      <td>2023-08-09</td> <! -- Rapid auto upgrade -->
+      <td>2023-06-16</td> <! -- Regular available -->
+      <td>2024-02-03</td> <! -- Regular auto upgrade -->
+      <td>2023-07-06</td> <! -- Stable available -->
+      <td>2024-04-29</td> <! -- Stable auto upgrade -->
+      <td>2023-06-16</td> <! -- Extended available -->
+      <td>2025-04-14</td> <! -- Extended auto upgrade -->
+      <td>2024-10-01</td> <! -- End of standard support -->
+      <td>2025-06-14</td> <! -- End of extended support -->
+    </tr>
+    <tr>
+      <td>1.28</td>
+      <td>2023-09-04</td> <! -- Rapid available -->
+      <td>2024-01-05</td> <! -- Rapid auto upgrade -->
+      <td>2023-11-30</td> <! -- Regular available -->
+      <td>2024-06-11</td> <! -- Regular auto upgrade -->
+      <td>2024-01-05</td> <! -- Stable available -->
+      <td>2024-07-23</td> <! -- Stable auto upgrade -->
+      <td>2023-11-30</td>  <! -- Extended available -->
+      <td>2025-10-04</td> <! -- Extended auto upgrade -->
+      <td>2025-02-04</td> <! -- End of standard support -->
+      <td>2025-12-04</td> <! -- End of extended support -->
+    </tr>
+    <tr>
+      <td>1.29</td>
+      <td>2024-01-05</td> <! -- Rapid available -->
+      <td>2024-04-15</td> <! -- Rapid auto upgrade -->
+      <td>2024-01-25</td> <! -- Regular available -->
+      <td>2024-07-09</td> <! -- Regular auto upgrade -->
+      <td>2024-06-11</td> <! -- Stable available -->
+      <td>2024-08-09</td> <! -- Stable auto upgrade -->
+      <td>2024-01-25</td> <! -- Extended available -->
+      <td>2025-11-25</td> <! -- Extended auto upgrade -->
+      <td>2025-03-21</td> <! -- End of standard support -->
+      <td>2026-01-25</td> <! -- End of extended support -->
+    </tr>
+    <tr>
+      <td>1.30</td>
+      <td>2024-04-29</td> <! -- Rapid available -->
+      <td>2024-07-30</td> <! -- Rapid auto upgrade -->
+      <td>2024-07-30</td> <! -- Regular available -->
+      <td>2024-09-17</td> <! -- Regular auto upgrade -->
+      <td>2024-08-13</td> <! -- Stable available -->
+      <td>2024-09-24</td> <! -- Stable auto upgrade -->
+      <td>2024-07-30</td> <! -- Extended available -->
+      <td>2026-04</td> <! -- Extended auto upgrade -->
+      <td>2025-09-30</td> <! -- End of standard support -->
+      <td>2026-07-30</td> <! -- End of extended support -->
+    </tr>
+    <tr>
+      <td>1.31</td>
+      <td>2024-08-20</td> <! -- Rapid available -->
+      <td>2024-09-17</td> <! -- Rapid auto upgrade -->
+      <td><i>2024-10</i><sup id="fnref6"><a href="#fn6" rel="footnote">6</a></sup></td> <! -- Regular available -->
+      <td><i>2024-11</i><sup id="fnref6"><a href="#fn6" rel="footnote">6</a></sup></td> <! -- Regular auto upgrade -->
+      <td><i>2024-10</i><sup id="fnref6"><a href="#fn6" rel="footnote">6</a></sup></td> <! -- Stable available -->
+      <td><i>2024-12</i><sup id="fnref6"><a href="#fn6" rel="footnote">6</a></sup></td> <! -- Stable auto upgrade -->
+      <td><i>2024-10</i><sup id="fnref6"><a href="#fn6" rel="footnote">6</a></sup></td> <! -- Extended available -->
+      <td>2026-04</td> <! -- Extended auto upgrade -->
+      <td><i>2025-Q4</i><sup id="fnref6"><a href="#fn6" rel="footnote">6</a></sup></td> <! -- End of standard support -->
+      <td><i>2026-Q4</i><sup id="fnref6"><a href="#fn6" rel="footnote">6</a></sup></td> <! -- End of extended support -->
+    </tr>
+  </tbody>
+</table>
+  </nav>
+  </body>
+</html>

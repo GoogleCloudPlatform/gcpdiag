@@ -90,12 +90,6 @@ repos:
       ^gcpdiag/runbook/(constants|command|flags|exceptions|report|util).py
 - repo: local
   hooks:
-  - id: gke-eol-file
-    name: Check that gke eol.yaml file is up to date and contains fresh EOL data
-    entry: ./bin/precommit-gke-eol-file.sh
-    language: script
-- repo: local
-  hooks:
   - id: todo-annotations
     name: Check presence of "TODO:" comments
     entry: ./bin/precommit-todo-annotations
