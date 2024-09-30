@@ -1,0 +1,63 @@
+{% block node_live_migration_failure_reason %}
+Live migration check failed for node {NODE}.
+{% endblock node_live_migration_failure_reason %}
+
+{% block node_live_migration_failure_remediation %}
+There was a live migration event for the node {NODE}.
+
+For more details about Live migration process during maintenance events, please consult the documentation:
+https://cloud.google.com/compute/docs/instances/live-migration-process
+{% endblock node_live_migration_failure_remediation %}
+
+{% block node_live_migration_success_reason %}
+The node {NODE} was unavailable for reasons other than live migration.
+{% endblock node_live_migration_success_reason %}
+
+{% block node_preempted_failure_reason %}
+The node {NODE} was preempted.
+{% endblock node_preempted_failure_reason %}
+
+{% block node_preempted_failure_remediation %}
+Compute Engine might stop (preempt) preemptible instances if it needs to reclaim the compute capacity for allocation to other VMs.
+
+For more details about preemptible VMs in GKE please consult the documentation:
+https://cloud.google.com/kubernetes-engine/docs/how-to/preemptible-vms
+{% endblock node_preempted_failure_remediation %}
+
+{% block node_preempted_success_reason %}
+The node {NODE} was unavailable for reasons other than preemption.
+{% endblock node_preempted_success_reason %}
+
+{% block node_removed_by_autoscaler_failure_reason %}
+The node {NODE} was removed by the cluster autoscaler.
+{% endblock node_removed_by_autoscaler_failure_reason %}
+
+{% block node_removed_by_autoscaler_failure_remediation %}
+This is expected behavior. GKE's cluster autoscaler automatically resizes the number of nodes in a given node pool, based on the demands of your workloads. When demand is low, the cluster autoscaler scales back down to a minimum size that you designate.
+
+For more details about Cluster Autoscaler ScaleDown events please consult the documentation:
+https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-autoscaler-visibility#scaledown-event
+{% endblock node_removed_by_autoscaler_failure_remediation %}
+
+{% block node_removed_by_autoscaler_success_reason %}
+The node {NODE} was unavailable for reasons other than scale down by the cluster autoscaler.
+{% endblock node_removed_by_autoscaler_success_reason %}
+
+{% block node_pool_upgrade_failure_reason %}
+The node {NODE} was unavailable due to a node pool upgrade.
+{% endblock node_pool_upgrade_failure_reason %}
+
+{% block node_pool_upgrade_failure_remediation %}
+This is expected behavior, when the upgrade is performed, nodes are drained and re-created to match the desired version.
+
+To list the node upgrade operations, please issue the following gcloud command:
+
+gcloud container operations list --filter=operationType:UPGRADE_NODES
+
+For more details about node upgrades please consult the documentation:
+https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-upgrades
+{% endblock node_pool_upgrade_failure_remediation %}
+
+{% block node_pool_upgrade_success_reason %}
+The node {NODE} was unavailable for reasons other than a node pool upgrade.
+{% endblock node_pool_upgrade_success_reason %}

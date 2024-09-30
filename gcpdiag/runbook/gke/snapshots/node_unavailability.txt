@@ -1,0 +1,69 @@
+location=europe-west10-a,name=gcp-cluster,node=gke-gcp-cluster-default-
+pool-82e0c046-8m8b,project_id=gcpdiag-gke-cluster-autoscaler-rrrr
+
+gke/node-unavailability: Identifies the reasons for a GKE node being unavailable.
+
+  This runbook investigates various factors that may have caused a node to become unavailable,
+  including:
+
+  - Live Migration
+  - Preemption
+  - Removal by the Cluster Autoscaler
+  - Node Pool Upgrade
+  
+[START]: Check inputs and verify if the node was unavailable
+[AUTOMATED STEP]: Check for live migration logs.
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     Live migration check failed for node gke-gcp-cluster-default-pool-82e0c046-8m8b.
+
+     [REMEDIATION]
+     There was a live migration event for the node gke-gcp-cluster-default-pool-82e0c046-8m8b.
+
+     For more details about Live migration process during maintenance events, please consult the documentation:
+     https://cloud.google.com/compute/docs/instances/live-migration-process
+
+[AUTOMATED STEP]: Checks for preemption logs.
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     The node gke-gcp-cluster-default-pool-82e0c046-8m8b was preempted.
+
+     [REMEDIATION]
+     Compute Engine might stop (preempt) preemptible instances if it needs to reclaim the compute capacity for allocation to other VMs.
+
+     For more details about preemptible VMs in GKE please consult the documentation:
+     https://cloud.google.com/kubernetes-engine/docs/how-to/preemptible-vms
+
+[AUTOMATED STEP]: Checks for Cluster Autoscaler ScaleDown logs.
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     The node gke-gcp-cluster-default-pool-82e0c046-8m8b was removed by the cluster autoscaler.
+
+     [REMEDIATION]
+     This is expected behavior. GKE's cluster autoscaler automatically resizes the number of nodes in a given node pool, based on the demands of your workloads. When demand is low, the cluster autoscaler scales back down to a minimum size that you designate.
+
+     For more details about Cluster Autoscaler ScaleDown events please consult the documentation:
+     https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-autoscaler-visibility#scaledown-event
+
+[AUTOMATED STEP]: Checks for Node Upgrade operation logs.
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     The node gke-gcp-cluster-default-pool-82e0c046-8m8b was unavailable due to a node pool upgrade.
+
+     [REMEDIATION]
+     This is expected behavior, when the upgrade is performed, nodes are drained and re-created to match the desired version.
+
+     To list the node upgrade operations, please issue the following gcloud command:
+
+     gcloud container operations list --filter=operationType:UPGRADE_NODES
+
+     For more details about node upgrades please consult the documentation:
+     https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-upgrades
+
+[END]: Finalizing `Node Unavailability` diagnostics...
+
+
