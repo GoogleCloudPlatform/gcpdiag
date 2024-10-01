@@ -1,3 +1,40 @@
+## 0.76 (2024-10-1)
+
+#### New Lint Rules
+
+- dataproc/warn/2024\_005: Investigates if Data Fusion version is compatible with Dataproc version from the CDAP Preferences settings
+
+#### New Runbooks
+
+- pubsub/pull-subscription-delivery: Investigates common Cloud Pub/Sub pull delivery issues related to delivery latency, quotas, pull rate and throughput rate
+
+#### New Queries
+
+- pubsub.get\_subscription: Retrieves a single pubsub subscription resource
+- apis.is\_all\_enabled: Check if a list of services are enabled on a given project
+- gke.get\_release\_schedule: Fetch GKE cluster release schedule
+
+#### Enhancements
+
+- `make new-rule`: A make rule with a [cookiecutter](https://www.cookiecutter.io/) recipe to generate new lint rule templates
+- gce.get\_gce\_public\_images: Improved gce\_stub query to correctly fetch all image licenses during test.
+- Runbooks metrics generation for Google Internal Users
+- New flag `--reason`: argument primarily used by Google internal users to specify rational for executing the tool
+- Bundles: A runbook feature to allow execution of a collection of steps
+- Runbook operation (op.add_metadata) to create or retrieve metadata related to steps
+
+#### Fixes
+- Enforce explicit parameter configuration in gce generalized steps.
+- dataflow/dataflow-permission: Refactored runbook to `dataflow/job-permission`
+- dataflow/bp/2024\_002: Fixed resource filtering bug for forwarding rule (internal LB)
+- gce/vm-performance: Fixed disk performance benchmark lookup
+
+#### Deprecation
+
+- apis\_utils.batch\_list\_all: Replaced by apis\utils.multi\_list\_all
+- Flag `--project`: Soft deprecation in **runbook command** to allow multiple project ids/numbers to be spcified via `--parameter`
+- Deprecated pre-commit hook gke-eol-file
+
 ## 0.75 (2024-9-2)
 
 #### New Lint Rules
