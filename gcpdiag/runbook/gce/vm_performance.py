@@ -14,6 +14,7 @@
 
 import json
 from datetime import datetime, timedelta, timezone
+from os.path import dirname
 
 import googleapiclient.errors
 
@@ -404,7 +405,7 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
                                               vm.name)
 
     # Load limits per GB data from json file
-    limits_per_gb_file = 'gcpdiag/runbook/gce/disk_performance_benchmark/limits_per_gb.json'
+    limits_per_gb_file = f'{dirname(__file__)}/disk_performance_benchmark/limits_per_gb.json'
     with open(limits_per_gb_file, encoding='utf-8') as file:
       limits_data = json.load(file)
     file.close()
@@ -412,10 +413,9 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
     vm_family = vm.machine_type()[0]
 
     # Load instance level iops/throughput limits from json file
-    machine_family_json_file = (
-        'gcpdiag/runbook/gce/disk_performance_benchmark/{}-family.json'
-    ).format(vm_family)
-    with open(machine_family_json_file, encoding='utf-8') as f:
+    vm_family_file = f'{dirname(__file__)}/disk_performance_benchmark/{vm_family}-family.json'
+
+    with open(vm_family_file, encoding='utf-8') as f:
       mach_fam_json_data = json.load(f)
     f.close()
 
