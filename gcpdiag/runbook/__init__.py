@@ -62,7 +62,8 @@ class Step(metaclass=MetaStep):
   def __init__(self,
                parent: 'Step' = None,
                step_type=constants.StepType.AUTOMATED,
-               uuid=None):
+               uuid=None,
+               **parameters):
     """
     Initializes a new instance of the Step class.
     """
@@ -76,6 +77,13 @@ class Step(metaclass=MetaStep):
 
     if parent:
       parent.add_child(child=self)
+
+    # set object attributes with parameters
+    # This is used by Bundles and Generalized steps
+    if parameters:
+      for attribute, value in parameters.items():
+        setattr(self, attribute, value)
+
     self.set_prompts()
 
   @property
@@ -368,6 +376,7 @@ class Bundle:
 
   def __init__(self) -> None:
     self.run_id = util.generate_uuid()
+    self.steps = []
 
 
 class DiagnosticEngine:
@@ -425,7 +434,6 @@ class DiagnosticEngine:
     """
     bundle: Bundle = Bundle()
     bundle.parameter = models.Parameter(parameter)
-    bundle.steps = []
     for id_ in steps_to_run:
       step_def = StepRegistry.get(id_)
       if not step_def:
@@ -744,7 +752,7 @@ class DiagnosticEngine:
         self.parse_parameters(parameter_def=step.parameters,
                               caller_args=bundle.parameter)
         if callable(step):
-          step_obj = step()
+          step_obj = step(**bundle.parameter)
           operator.set_step(step_obj)
           self.run_step(step=step_obj, operator=operator)
 

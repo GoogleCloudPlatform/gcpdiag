@@ -275,25 +275,27 @@ def _load_bundles_spec(file_path):
     - bundle:
       ...
   """
-  if file_path:
-    # Read the file contents
-    if os.path.exists(file_path):
-      with open(file_path, encoding='utf-8') as f:
-        content = f.read()
-    else:
-      print(f'ERROR: Bundle Specification file: {file_path} does not exist!',
+  if not file_path:
+    print('ERROR: no bundle spec file path provided', file=sys.stderr)
+    sys.exit(1)
+  # Read the file contents
+  if os.path.exists(file_path):
+    with open(file_path, encoding='utf-8') as f:
+      content = f.read()
+  else:
+    print(f'ERROR: Bundle Specification file: {file_path} does not exist!',
+          file=sys.stderr)
+    sys.exit(1)
+
+  # Parse the content of the file as YAML
+  if content:
+    try:
+      parsed_content = yaml.safe_load(content)
+      return parsed_content
+    except yaml.YAMLError as err:
+      print(f"ERROR: can't parse content of the file as YAML: {err}",
             file=sys.stderr)
       sys.exit(1)
-
-    # Parse the content of the file as YAML
-    if content:
-      try:
-        parsed_content = yaml.safe_load(content)
-        return parsed_content
-      except yaml.YAMLError as err:
-        print(f"ERROR: can't parse content of the file as YAML: {err}",
-              file=sys.stderr)
-        sys.exit(1)
 
 
 def _initialize_output():

@@ -124,6 +124,24 @@ class TestDiagnosticEngine(unittest.TestCase):
     assert mock_run_bundle.called
     assert mock_run_diagnostic_tree.called
 
+  @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
+  def test_run_bundles(self, mock_run_step):
+    bundle = runbook.Bundle()
+    param = {
+        'param_one': 'test',
+        'param_two': True,
+        'param_three': datetime.now()
+    }
+    bundle.parameter = models.Parameter(param)
+    bundle.steps.append(runbook.Step)
+    self.de.run_bundle(bundle=bundle)
+    _, kwargs = mock_run_step.call_args
+    assert mock_run_step.called
+    assert isinstance(kwargs['step'], runbook.Step)
+    assert kwargs['step'].param_one == param['param_one']
+    assert kwargs['step'].param_two == param['param_two']
+    assert kwargs['step'].param_three == param['param_three']
+
 
 class TestSetDefaultParameters(unittest.TestCase):
   """Test for Setting default date parameters"""

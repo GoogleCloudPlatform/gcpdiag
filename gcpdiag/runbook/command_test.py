@@ -13,6 +13,7 @@
 # limitations under the License.
 """Test code in command.py."""
 import os
+import sys
 import unittest
 from unittest import mock
 
@@ -20,6 +21,24 @@ from gcpdiag import config, runbook
 from gcpdiag.runbook import command
 
 MUST_HAVE_MODULES = {'gce'}
+
+sample_bundle = """
+- bundle:
+  parameter:
+    project_id: "test-project"
+    zone: "us-central1-a"
+    name: "test-vm"
+  steps:
+    - gcpdiag.runbook.gce.generalized_steps.VmLifecycleState
+    - gcpdiag.runbook.gce.ssh.PoxisUserHasValidSshKeyCheck
+- bundle:
+  parameter:
+    project_id: "test-project"
+    zone: "us-central1-a"
+    name: "test-vm"
+  steps:
+    - gcpdiag.runbook.gce.ops_agent.VmHasAServiceAccount
+"""
 
 
 class Test(unittest.TestCase):
@@ -112,3 +131,35 @@ class Test(unittest.TestCase):
     with self.assertRaises(SystemExit) as e:
       command._validate_rule_pattern(r'gcp/runbook\id')
     self.assertEqual(2, e.exception.code)
+
+  @mock.patch('builtins.print')
+  def test_no_file_path_provided(self, mock_print):
+    with self.assertRaises(SystemExit) as e:
+      command._load_bundles_spec('')
+
+    self.assertEqual(1, e.exception.code)  # sys.exit(1)
+    mock_print.assert_called_once_with(
+        'ERROR: no bundle spec file path provided', file=sys.stderr)
+
+  @mock.patch('os.path.exists', return_value=False)
+  @mock.patch('builtins.print')
+  def test_file_does_not_exist(self, mock_print, mock_exists):
+    with self.assertRaises(SystemExit) as e:
+      command._load_bundles_spec('non_existent_file.yaml')
+
+    self.assertEqual(1, e.exception.code)
+    mock_print.assert_called_once_with(
+        'ERROR: Bundle Specification file: non_existent_file.yaml does not exist!',
+        file=sys.stderr)
+    assert mock_exists.called
+
+  @mock.patch('os.path.exists', return_value=True)
+  @mock.patch('builtins.open',
+              new_callable=mock.mock_open,
+              read_data=sample_bundle)
+  def test_valid_yaml_parsing(self, mock_file, mock_exists):
+    result = command._load_bundles_spec('valid_file.yaml')
+    self.assertIsNotNone(result)
+    self.assertEqual(result[0]['parameter']['project_id'], 'test-project')
+    mock_exists.assert_called_with('valid_file.yaml')
+    assert mock_file.called
