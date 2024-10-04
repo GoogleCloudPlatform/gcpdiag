@@ -13,6 +13,7 @@ gce/vm-performance:  Google Compute Engine VM performance checks
     - Disk space high utilisation
     - High Disk IOPS utilisation
     - High Disk Throughput utilisation
+    - Disk Health check
     - Check for Live Migrations
     - Usualy Error checks in Serial console logs
   
@@ -76,6 +77,31 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      [REMEDIATION]
      You may check if VM is facing high memory utilisation from GuestOS side using `free -m`
      or `cat /proc/meminfo` commands.
+
+[AUTOMATED STEP]: Checking if instance disks are healthy
+
+   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
+     [REASON]
+     You might experience slower/poor performance with your disk 'persistent-disk-0' due to an
+     ongoing issue with our Compute Engine or Persistent Disk infrastructure. We're working
+     to resolve this as quickly as possible.
+
+     [REMEDIATION]
+     To better understand the situation with your Compute Engine or Persistent Disks,
+     could you please take a look at the Google Cloud Status page:
+
+     https://status.cloud.google.com
+
+     This page provides real-time updates on the health of Google Cloud services.
+
+     Additionally, it may be helpful to check the Service Health dashboard in your
+     Google Cloud Console for any reported incidents:
+
+     https://console.cloud.google.com/servicehealth/incidents
+
+     If you don't find any information about an ongoing issue related to your concern,
+     please don't hesitate to reach out to Google Cloud Support by creating a support case.
+     They'll be happy to investigate further and assist you.
 
 [AUTOMATED STEP]: Checking if VM's Boot disk space utilization is within optimal levels.
 
@@ -170,6 +196,7 @@ gce/vm-performance:  Google Compute Engine VM performance checks
     - Disk space high utilisation
     - High Disk IOPS utilisation
     - High Disk Throughput utilisation
+    - Disk Health check
     - Check for Live Migrations
     - Usualy Error checks in Serial console logs
   
@@ -260,6 +287,31 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      [REMEDIATION]
      You may check if VM is facing high memory utilisation from GuestOS side using `free -m`
      or `cat /proc/meminfo` commands.
+
+[AUTOMATED STEP]: Checking if instance disks are healthy
+
+   - gcpdiag-gce-vm-performance/faulty-windows-ssh                        [FAIL]
+     [REASON]
+     You might experience slower/poor performance with your disk 'persistent-disk-0' due to an
+     ongoing issue with our Compute Engine or Persistent Disk infrastructure. We're working
+     to resolve this as quickly as possible.
+
+     [REMEDIATION]
+     To better understand the situation with your Compute Engine or Persistent Disks,
+     could you please take a look at the Google Cloud Status page:
+
+     https://status.cloud.google.com
+
+     This page provides real-time updates on the health of Google Cloud services.
+
+     Additionally, it may be helpful to check the Service Health dashboard in your
+     Google Cloud Console for any reported incidents:
+
+     https://console.cloud.google.com/servicehealth/incidents
+
+     If you don't find any information about an ongoing issue related to your concern,
+     please don't hesitate to reach out to Google Cloud Support by creating a support case.
+     They'll be happy to investigate further and assist you.
 
 [AUTOMATED STEP]: Checking if VM's Boot disk space utilization is within optimal levels.
 

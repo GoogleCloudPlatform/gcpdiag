@@ -40,6 +40,7 @@ class VmPerformance(runbook.DiagnosticTree):
     - Disk space high utilisation
     - High Disk IOPS utilisation
     - High Disk Throughput utilisation
+    - Disk Health check
     - Check for Live Migrations
     - Usualy Error checks in Serial console logs
   """
@@ -110,6 +111,7 @@ class VmPerformance(runbook.DiagnosticTree):
     self.add_step(parent=start, child=cpu_check)
     self.add_step(parent=start, child=mem_check)
     self.add_step(parent=cpu_check, child=CpuOvercommitmentCheck())
+    self.add_step(parent=start, child=DiskHealthCheck())
     self.add_step(parent=start, child=disk_util_check)
 
     # Check for PD slow Reads/Writes
@@ -220,6 +222,53 @@ class CheckLiveMigrations(runbook.Step):
       self.add_child(DiskIopsThroughputUtilisationChecks())
 
 
+class DiskHealthCheck(runbook.Step):
+  """Disk Health check"""
+
+  template = 'vm_performance::disk_health_check'
+
+  def execute(self):
+    """Instance Disk health check"""
+
+    vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
+                          zone=op.get(flags.ZONE),
+                          instance_name=op.get(flags.NAME))
+
+    start_formatted_string = op.get(
+        flags.START_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+    end_formatted_string = op.get(
+        flags.END_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+    within_str = f'within d\'{start_formatted_string}\', d\'{end_formatted_string}\''
+
+    for disk in vm.disks:
+      pd_health_metrics = monitoring.query(
+          op.get(flags.PROJECT_ID), """
+            fetch gce_instance
+              | metric 'compute.googleapis.com/instance/disk/performance_status'
+              | filter (metric.performance_status != 'Healthy')
+              | filter (resource.instance_id == '{}') &&
+                (metric.device_name == '{}')
+              | group_by 3m,
+                  [value_performance_status_fraction_true:
+                    fraction_true(value.performance_status)]
+              | every 3m
+              | filter value_performance_status_fraction_true > 0
+              | {}
+            """.format(vm.id, disk['deviceName'], within_str))
+
+      if pd_health_metrics:
+        op.add_failed(vm,
+                      reason=op.prep_msg(op.FAILURE_REASON,
+                                         disk_name=disk['deviceName'],
+                                         start_time=start_formatted_string,
+                                         end_time=end_formatted_string),
+                      remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      else:
+        op.add_ok(vm,
+                  reason=op.prep_msg(op.SUCCESS_REASON,
+                                     disk_name=disk['deviceName']))
+
+
 class CpuOvercommitmentCheck(runbook.Step):
   """Checking if CPU overcommited beyond threshold"""
 
@@ -244,7 +293,8 @@ class CpuOvercommitmentCheck(runbook.Step):
       start_dt_utc_plus_5_mins = start_dt_utc + timedelta(minutes=5)
       current_time_utc = datetime.now(timezone.utc)
       within_hours = 9
-      if start_dt_utc_plus_5_mins > current_time_utc and vm.laststoptimestamp():
+      if (start_dt_utc_plus_5_mins > current_time_utc or
+          not vm.is_running) and vm.laststoptimestamp():
         # Instance just starting up, CpuCount might not be available currently via metrics.
         # Use instance's last stop time as EndTime for monitoring query
         stop_dt_pst = datetime.strptime(vm.laststoptimestamp(),
@@ -280,10 +330,10 @@ class CpuOvercommitmentCheck(runbook.Step):
         if cpu_count_query:
           cpu_count = int(list(cpu_count_query.values())[0]['values'][0][0])
         else:
-          op.info(
-              ('CPU count info not available for the instance.\n'
-               'Please start the VM {} if it is not in running state.').format(
-                   vm.short_path))
+          op.info((
+              'CPU count info not available for the instance.\n'
+              'Please start the VM {} if it is not in running state.\n').format(
+                  vm.short_path))
           return
 
       # an acceptable average Scheduler Wait Time is 20 ms/s per vCPU.
@@ -357,7 +407,8 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
     start_dt_utc_plus_5_mins = start_dt_utc + timedelta(minutes=5)
     current_time_utc = datetime.now(timezone.utc)
     within_hours = 9
-    if start_dt_utc_plus_5_mins > current_time_utc and vm.laststoptimestamp():
+    if (start_dt_utc_plus_5_mins > current_time_utc or
+        not vm.is_running) and vm.laststoptimestamp():
       # Instance just starting up, CpuCount might not be available currently via metrics.
       # Use instance's last stop time as EndTime for monitoring query
       stop_dt_pst = datetime.strptime(vm.laststoptimestamp(),

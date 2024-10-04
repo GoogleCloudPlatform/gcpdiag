@@ -94,9 +94,9 @@ class HighVmMemoryUtilization(runbook.Step):
     elif mark_no_ops_agent:
       op.add_skipped(vm,
                      reason='Ops Agent not installed on the VM, '
-                     'Unable to fetch memory utilisation data via metrics'
+                     'Unable to fetch memory utilisation data via metrics\n'
                      'Falling back to check for Memory related error messages '
-                     'in Serial logs')
+                     'in Serial logs\n')
     else:
       op.add_ok(vm, reason=op.prep_msg(op.SUCCESS_REASON))
 
@@ -161,7 +161,7 @@ class HighVmDiskUtilization(runbook.Step):
                      reason='Ops Agent not installed on the VM, '
                      'Unable to fetch disk utilisation data via metrics.\n'
                      'Falling back to check for filesystem utilization related'
-                     ' messages in Serial logs')
+                     ' messages in Serial logs\n')
       # Fallback to check for filesystem utilization related messages in Serial logs
       fs_util = VmSerialLogsCheck()
       fs_util.project_id = self.project_id

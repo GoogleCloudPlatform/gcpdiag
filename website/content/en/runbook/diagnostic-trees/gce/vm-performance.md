@@ -23,6 +23,7 @@ This runbook is designed to assist you in investigating and understanding the un
     - Disk space high utilisation
     - High Disk IOPS utilisation
     - High Disk Throughput utilisation
+    - Disk Health check
     - Check for Live Migrations
     - Usualy Error checks in Serial console logs
 
@@ -66,6 +67,8 @@ gcpdiag runbook --help
   - [High Vm Memory Utilization](/runbook/steps/gce/high-vm-memory-utilization)
 
   - [Vm Serial Logs Check](/runbook/steps/gce/vm-serial-logs-check)
+
+  - [Disk Health Check](/runbook/steps/gce/disk-health-check)
 
   - [High Vm Disk Utilization](/runbook/steps/gce/high-vm-disk-utilization)
 
