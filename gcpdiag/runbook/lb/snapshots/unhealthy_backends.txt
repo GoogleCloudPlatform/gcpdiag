@@ -32,7 +32,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
       determine if the issue is recent or ongoing.
   
 [START]: Checks the health of a specified load balancer's backends.
-[INFO]: name: web-backend-service, region: None
+[INFO]: name: web-backend-service, region: global
 
    - gcpdiag-lb2-aaaa/web-backend-service                                 [FAIL]
      [REASON]

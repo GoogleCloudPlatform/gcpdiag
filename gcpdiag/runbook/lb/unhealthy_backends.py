@@ -121,11 +121,11 @@ class UnhealthyBackendsStart(runbook.StartStep):
 
     try:
       op.info(f'name: {op.get(flags.BACKEND_SERVICE_NAME)}, region:'
-              f' {op.get(flags.REGION)}')
+              f' {op.get(flags.REGION, "global")}')
       backend_service = lb.get_backend_service(
           op.context.project_id,
           op.get(flags.BACKEND_SERVICE_NAME),
-          op.get(flags.REGION),
+          op.get(flags.REGION, 'global'),
       )
     except googleapiclient.errors.HttpError:
       op.add_skipped(

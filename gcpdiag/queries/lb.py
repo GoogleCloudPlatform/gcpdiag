@@ -137,7 +137,7 @@ def get_backend_service(project_id: str,
                         region: str = None) -> BackendServices:
   """Returns instance object matching backend service name and region"""
   compute = apis.get_api('compute', 'v1', project_id)
-  if not region:
+  if not region or region == 'global':
     request = compute.backendServices().get(project=project_id,
                                             backendService=backend_service_name)
   else:

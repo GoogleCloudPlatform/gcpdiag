@@ -59,10 +59,18 @@ class TestURLMap:
     assert obj.session_affinity == 'NONE'
     assert obj.locality_lb_policy == 'ROUND_ROBIN'
 
-  def test_get_backend_service_health_global(self):
+  def test_get_backend_service_health_implicit_global(self):
     context = models.Context(project_id=DUMMY_PROJECT2_ID)
     states_list = lb.get_backend_service_health(context.project_id,
                                                 'web-backend-service')
+
+    assert len(states_list) == 2
+    assert states_list[0].health_state == 'UNHEALTHY'
+
+  def test_get_backend_service_health_explicit_global(self):
+    context = models.Context(project_id=DUMMY_PROJECT2_ID)
+    states_list = lb.get_backend_service_health(context.project_id,
+                                                'web-backend-service', 'global')
 
     assert len(states_list) == 2
     assert states_list[0].health_state == 'UNHEALTHY'
