@@ -104,7 +104,7 @@ class StepResult:
     for status in constants.STATUS_ORDER:
       if self.totals_by_status.get(status):
         return status
-    return 'NO_STATUS'
+    return 'no_status'
 
   @property
   def any_failed(self):
