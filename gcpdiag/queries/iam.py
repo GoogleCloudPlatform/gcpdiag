@@ -450,8 +450,8 @@ def get_project_policy(project_id: str) -> ProjectPolicy:
 
   resource_name = f'projects/{project_id}'
 
-  crm_api = apis.get_api('cloudresourcemanager', 'v1', project_id)
-  request = crm_api.projects().getIamPolicy(resource=project_id)
+  crm_api = apis.get_api('cloudresourcemanager', 'v3', project_id)
+  request = crm_api.projects().getIamPolicy(resource='projects/' + project_id)
 
   return fetch_iam_policy(request, ProjectPolicy, project_id, resource_name)
 

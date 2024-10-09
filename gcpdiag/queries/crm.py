@@ -138,7 +138,7 @@ def get_all_projects_in_parent(project_id: str) -> List[ProjectBillingInfo]:
   p_filter = 'parent.type:'+project.parent.split('/')[0][:-1]\
     +' parent.id:'+project.parent.split('/')[1] if project.parent else ''
 
-  api = apis.get_api('cloudresourcemanager', 'v1')
+  api = apis.get_api('cloudresourcemanager', 'v3')
   for p in apis_utils.list_all(request=api.projects().list(filter=p_filter),
                                next_function=api.projects().list_next,
                                response_keyword='projects'):

@@ -56,7 +56,9 @@ class CrmApiStub:
 
   # pylint: disable=invalid-name
   def getIamPolicy(self, resource):
-    return apis_stub.RestCallStub(resource, 'iam-policy')
+    m = re.match(r'projects/(.*)', resource)
+    project_id = m.group(1)
+    return apis_stub.RestCallStub(project_id, 'iam-policy')
 
   # pylint: disable=invalid-name
   def getEffectiveOrgPolicy(self, resource, body):
