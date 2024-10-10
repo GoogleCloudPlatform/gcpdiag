@@ -51,8 +51,6 @@ gcpdiag runbook --help
 
   - [Pull Rate](/runbook/steps/pubsub/pull-rate)
 
-  - [Subscription Pull Start Up](/runbook/steps/pubsub/subscription-pull-start-up)
-
   - [Throughput Qualification](/runbook/steps/pubsub/throughput-qualification)
 
   - [Pull Subscription Delivery End](/runbook/steps/pubsub/pull-subscription-delivery-end)

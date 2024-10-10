@@ -24,7 +24,7 @@ DELIVERY_RATE = (
     'fetch pubsub_subscription | metric'
     ' "pubsub.googleapis.com/subscription/sent_message_count"| filter'
     ' resource.project_id == "{project_id}" && (resource.subscription_id =='
-    ' "projects/{project_id}/subscriptions/{subscription_name}") | '
+    ' "{subscription_name}") | '
     ' align rate(1m) | every 1m | group_by [],'
     ' [value_sent_message_count_aggregate: aggregate(value.sent_message_count)]'
     ' | within 10m')
@@ -33,20 +33,11 @@ UNACKED_MESSAGES = (
     'fetch pubsub_subscription | metric'
     ' "pubsub.googleapis.com/subscription/num_undelivered_messages" | filter'
     ' resource.project_id == "{project_id}" && (resource.subscription_id =='
-    ' "projects/{project_id}/subscriptions/{subscription_name}") | group_by 1m,'
+    ' "{subscription_name}") | group_by 1m,'
     ' [value_num_undelivered_messages_mean:'
     ' mean(value.num_undelivered_messages)] | every 1m | group_by [],'
     ' [value_num_undelivered_messages_mean_aggregate:'
     ' aggregate(value_num_undelivered_messages_mean)] | within 10m')
-
-PULL_REQUEST_RATE = (
-    'fetch pubsub_subscription| metric'
-    ' "pubsub.googleapis.com/subscription/pull_request_count" | filter'
-    ' resource.project_id == "{project_id}" && (resource.subscription_id =='
-    ' "projects/{project_id}/subscriptions/{subscription_name}") | '
-    ' align rate(1m) | every 1m | group_by [],'
-    ' [value_pull_request_count_aggregate: aggregate(value.pull_request_count)]'
-    ' | within 10m')
 
 
 class PullSubscriptionDelivery(runbook.DiagnosticTree):
@@ -169,9 +160,6 @@ class PullRate(runbook.Gateway):
         ' amount configured, in order to respond to pull RPCs in reasonable time.)'
     ).format(delivery_rate=delivery_rate, unacked_messages=unacked_messages))
 
-    # analyze throughput for cold caches
-    self.add_child(child=SubscriptionPullStartUp())
-
     # analyze qualification
     self.add_child(child=ThroughputQualification())
 
@@ -237,39 +225,6 @@ class ThroughputQualification(runbook.Step):
       op.add_ok(resource=subscription, reason='Subcription has good health')
 
 
-class SubscriptionPullStartUp(runbook.Step):
-  """Has common step to check if a subscription has cold start up due to low throughput."""
-
-  def execute(self):
-    """Checks if the subscription is not suffering from cold caches due to low pull rate."""
-
-    subscription = pubsub.get_subscription(project_id=op.context.project_id,
-                                           subscription_name=op.get(
-                                               flags.SUBSCRIPTION_NAME))
-
-    if self.pull_requests(subscription.name) == 0:
-      op.add_failed(
-          resource=subscription,
-          reason=('Pub/Sub is optimized for high throughput. Sparse traffic can'
-                  ' lead to warm-up periods with higher latency.'),
-          remediation=(
-              'Maintain continuous pulling to keep the topic/subscription warm;'
-              ' even without backlog'),
-      )
-    else:
-      op.add_ok(resource=subscription)
-
-  # subscription/pull_request_count
-  def pull_requests(self, subscription_name: str) -> float:
-    pull_requests_rate = PULL_REQUEST_RATE.format(
-        project_id=op.context.project_id, subscription_name=subscription_name)
-
-    time_series = monitoring.query(op.context.project_id, pull_requests_rate)
-    if time_series:
-      return float(get_path(list(time_series.values())[0], 'values')[0][0])
-    return 0.0
-
-
 class PullSubscriptionDeliveryEnd(runbook.EndStep):
   """End of this runbook.
 
@@ -277,5 +232,5 @@ class PullSubscriptionDeliveryEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """End step."""
+    """End step. """
     op.info('No more checks to perform.')
