@@ -13,6 +13,7 @@
 # limitations under the License.
 """Queries related to Dataproc."""
 
+import logging
 import re
 from typing import Iterable, List, Mapping, Optional
 
@@ -186,13 +187,19 @@ class Region:
     return clusters
 
   def query_api(self) -> Iterable[dict]:
-    api = apis.get_api('dataproc', 'v1', self.project_id)
-    query = (api.projects().regions().clusters().list(projectId=self.project_id,
-                                                      region=self.region))
-    # be careful not to retry too many times because querying all regions
-    # sometimes causes requests to fail permanently
-    resp = query.execute(num_retries=1)
-    return resp.get('clusters', [])
+    try:
+      api = apis.get_api('dataproc', 'v1', self.project_id)
+      query = (api.projects().regions().clusters().list(
+          projectId=self.project_id, region=self.region))
+      # be careful not to retry too many times because querying all regions
+      # sometimes causes requests to fail permanently
+      resp = query.execute(num_retries=1)
+      return resp.get('clusters', [])
+    except googleapiclient.errors.HttpError as err:
+      # b/371526148 investigate permission denied error
+      logging.error(err)
+      return []
+      # raise utils.GcpApiError(err) from err
 
 
 class Dataproc:
@@ -224,6 +231,20 @@ def get_clusters(context: models.Context) -> Iterable[Cluster]:
                                dataproc.get_regions()):
     r += clusters
   return r
+
+
+@caching.cached_api_call
+def get_cluster(cluster_name, region, project) -> Optional[Cluster]:
+  api = apis.get_api('dataproc', 'v1', project)
+  request = api.projects().regions().clusters().get(projectId=project,
+                                                    clusterName=cluster_name,
+                                                    region=region)
+  try:
+    r = request.execute(num_retries=config.API_RETRIES)
+  except googleapiclient.errors.HttpError as err:
+    logging.error(err)
+    return None
+  return Cluster(r['clusterName'], project_id=r['projectId'], resource_data=r)
 
 
 class AutoScalingPolicy(models.Resource):

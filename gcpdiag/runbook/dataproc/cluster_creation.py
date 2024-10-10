@@ -64,6 +64,11 @@ necessary firewall rules, external/internal IP configuration.
           'help': ('Dataproc cluster Name of an existing/active resource'),
           'required': True,
       },
+      flags.REGION: {
+          'type': str,
+          'help': 'Dataproc cluster Region',
+          'required': True,
+      },
       flags.CLUSTER_UUID: {
           'type': str,
           'help': 'Dataproc cluster UUID',
@@ -91,10 +96,6 @@ necessary firewall rules, external/internal IP configuration.
           'help': ('Checks if stackdriver logging is enabled for further'
                    ' troubleshooting'),
           'default': True,
-      },
-      flags.REGION: {
-          'type': str,
-          'help': 'Dataproc cluster Region',
       },
       flags.ZONE: {
           'type': str,
@@ -277,18 +278,17 @@ class ClusterExists(runbook.Step):
                      reason='Provide a cluster UUID or name to investigate')
       return
       # uses the API to check for existing cluster based on cluster name
-    clusters = dataproc.get_clusters(op.context)
-    cluster = None
-    for c in clusters:
-      if c.name == (op.get(flags.CLUSTER_NAME)):
-        cluster = c
-        op.add_ok(
-            cluster,
-            reason=op.prep_msg(op.SUCCESS_REASON,
-                               cluster_name=cluster.name,
-                               project_id=project),
-        )
-        break
+    cluster = dataproc.get_cluster(project=op.get(flags.PROJECT_ID),
+                                   region=op.get(flags.REGION),
+                                   cluster_name=op.get(flags.CLUSTER_NAME))
+    if cluster:
+      op.add_ok(
+          cluster,
+          reason=op.prep_msg(op.SUCCESS_REASON,
+                             cluster_name=cluster.name,
+                             project_id=project),
+      )
+      return
     if cluster is None and (not op.get(flags.CLUSTER_UUID) or
                             not op.get(flags.SERVICE_ACCOUNT) or
                             not op.get(flags.NETWORK) or
@@ -321,8 +321,9 @@ class ClusterInError(runbook.Gateway):
   def execute(self):
     """Verify cluster is in ERROR state..."""
     # Taking cluster details
-    cluster = get_cluster_by_name(dataproc, op.context,
-                                  op.get(flags.CLUSTER_NAME))
+    cluster = dataproc.get_cluster(project=op.get(flags.PROJECT_ID),
+                                   region=op.get(flags.REGION),
+                                   cluster_name=op.get(flags.CLUSTER_NAME))
     # Checking for ERROR state
     if op.get(flags.CLUSTER_UUID):
       op.info(
@@ -355,8 +356,9 @@ class ClusterDetails(runbook.Step):
   def execute(self):
     """Gathering cluster details..."""
     # taking cluster details
-    cluster = get_cluster_by_name(dataproc, op.context,
-                                  op.get(flags.CLUSTER_NAME))
+    cluster = dataproc.get_cluster(project=op.get(flags.PROJECT_ID),
+                                   region=op.get(flags.REGION),
+                                   cluster_name=op.get(flags.CLUSTER_NAME))
 
     if cluster is not None or not op.get(flags.CLUSTER_UUID):
       op.put(flags.STACKDRIVER, cluster.is_stackdriver_logging_enabled)
@@ -410,8 +412,9 @@ class CheckClusterNetwork(runbook.Step):
   def execute(self):
     """Verify network connectivity among nodes in the cluster..."""
     # Gathering cluster details...
-    cluster = get_cluster_by_name(dataproc, op.context,
-                                  op.get(flags.CLUSTER_NAME))
+    cluster = dataproc.get_cluster(project=op.get(flags.PROJECT_ID),
+                                   region=op.get(flags.REGION),
+                                   cluster_name=op.get(flags.CLUSTER_NAME))
     # Skip this step if the cluster does not exist
     if cluster is None:
       op.add_uncertain(cluster,
@@ -571,8 +574,9 @@ class InternalIpGateway(runbook.Gateway):
   def execute(self):
     """Checking if the cluster is using internal IP only..."""
     # Gathering cluster details...
-    cluster = get_cluster_by_name(dataproc, op.context,
-                                  op.get(flags.CLUSTER_NAME))
+    cluster = dataproc.get_cluster(project=op.get(flags.PROJECT_ID),
+                                   region=op.get(flags.REGION),
+                                   cluster_name=op.get(flags.CLUSTER_NAME))
     is_internal_ip_only = None
     # If cluster cannot be found, gather details from flags
     if cluster is None:
@@ -625,8 +629,9 @@ class CheckPrivateGoogleAccess(runbook.Step):
   def execute(self):
     """Checking if the subnetwork of the cluster has private google access enabled...."""
     # taking cluster details
-    cluster = get_cluster_by_name(dataproc, op.context,
-                                  op.get(flags.CLUSTER_NAME))
+    cluster = dataproc.get_cluster(project=op.get(flags.PROJECT_ID),
+                                   region=op.get(flags.REGION),
+                                   cluster_name=op.get(flags.CLUSTER_NAME))
     subnetwork_uri = op.get(flags.SUBNETWORK)
     subnetwork_obj = network.get_subnetwork_from_url(subnetwork_uri)
 
@@ -875,25 +880,3 @@ def get_log_entries(
       start_time_utc=start_time_utc,
       end_time_utc=end_time_utc,
   )
-
-
-def get_cluster_by_name(dataproc_obj, context, cluster_name):
-  """Fetches a cluster object by name from a list of clusters.
-
-  Args:
-      dataproc_obj: The object or module used to retrieve clusters.
-      context: The context information needed for cluster retrieval.
-      cluster_name: The name of the cluster to find.
-
-  Returns:
-      The cluster object if found, or None if not found.
-  """
-
-  clusters = dataproc_obj.get_clusters(context)
-
-  for cluster in clusters:
-    if cluster.name == cluster_name:
-      return cluster
-
-  # If the loop completes without finding the cluster
-  return None

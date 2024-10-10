@@ -41,12 +41,12 @@ This runbook focuses on a range of potential problems for Dataproc clusters on
 gcpdiag runbook dataproc/cluster-creation \
   -p project_id=value \
   -p cluster_name=value \
+  -p region=value \
   -p cluster_uuid=value \
   -p project_number=value \
   -p service_account=value \
   -p constraint=value \
   -p stackdriver=value \
-  -p region=value \
   -p zone=value \
   -p network=value \
   -p subnetwork=value \
@@ -63,12 +63,12 @@ gcpdiag runbook dataproc/cluster-creation \
 |------|----------|---------|------|------|
 | `project_id` | True | None | str | The Project ID where the Dataproc cluster is located |
 | `cluster_name` | True | None | str | Dataproc cluster Name of an existing/active resource |
+| `region` | True | None | str | Dataproc cluster Region |
 | `cluster_uuid` | False | None | str | Dataproc cluster UUID |
 | `project_number` | False | None | str | The Project Number where the Dataproc cluster is located |
 | `service_account` | False | None | str | Dataproc cluster Service Account used to create the resource |
 | `constraint` | False | None | bool | Checks if the Dataproc cluster has an enforced organization policy constraint |
 | `stackdriver` | False | True | str | Checks if stackdriver logging is enabled for further troubleshooting |
-| `region` | False | None | str | Dataproc cluster Region |
 | `zone` | False | None | str | Dataproc cluster Zone |
 | `network` | False | None | str | Dataproc cluster Network |
 | `subnetwork` | False | None | str | Dataproc cluster Subnetwork |

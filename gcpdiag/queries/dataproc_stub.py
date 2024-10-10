@@ -16,6 +16,7 @@
 Instead of doing real API calls, we return test JSON data.
 """
 
+import json
 import re
 
 from gcpdiag.queries import apis_stub
@@ -24,8 +25,13 @@ from gcpdiag.queries import apis_stub
 #pylint: disable=invalid-name
 
 
-class DataprocApiStub:
+class DataprocApiStub(apis_stub.ApiStub):
   """Mock object to simulate dataproc api calls."""
+
+  def __init__(self, json_basename=None, project_id=None, mock_state='init'):
+    self.mock_state = mock_state
+    self.json_basename = json_basename
+    self.project_id = project_id
 
   def projects(self):
     return self
@@ -34,19 +40,40 @@ class DataprocApiStub:
     return self
 
   def clusters(self):
-    return self
+    return DataprocApiStub(mock_state='clusters')
 
   def autoscalingPolicies(self):
-    return self
+    return DataprocApiStub(mock_state='autoscalingPolicies')
 
-  def get(self, name):
-    m = re.match(
-        r'projects/([^/]+)/regions/([^/]+)/autoscalingPolicies/([^/]+)', name)
-    project_id = m.group(1)
-    return apis_stub.RestCallStub(project_id, 'autoscaling-policy')
+  def get(self, name='', clusterName='', region='', projectId=''):
+    if self.mock_state == 'autoscalingPolicies':
+      m = re.match(
+          r'projects/([^/]+)/regions/([^/]+)/autoscalingPolicies/([^/]+)', name)
+      project_id = m.group(1)
+      return apis_stub.RestCallStub(project_id, 'autoscaling-policy')
+    if self.mock_state == 'clusters':
+      stub = DataprocApiStub(project_id=projectId,
+                             json_basename=f'dataproc-clusters-{region}',
+                             mock_state='clusters')
+      stub.cluster_name = clusterName
+      stub.region = region
+      return stub
 
-  # pylint: disable=invalid-name
   def list(self, projectId, region):
-    return apis_stub.RestCallStub(projectId,
-                                  f'dataproc-clusters-{region}',
-                                  default={})
+    if self.mock_state == 'clusters':
+      return apis_stub.RestCallStub(projectId,
+                                    f'dataproc-clusters-{region}',
+                                    default={})
+    # Implement other list mocked states here
+
+  def execute(self, num_retries=0):
+    self._maybe_raise_api_exception()
+    json_dir = apis_stub.get_json_dir(self.project_id)
+    with open(json_dir / f'{self.json_basename}.json',
+              encoding='utf-8') as json_file:
+      data = json.load(json_file)
+      if self.mock_state == 'clusters':
+        for cluster in data.get('clusters', []):
+          if cluster['clusterName'] == self.cluster_name:
+            return cluster
+      return data
