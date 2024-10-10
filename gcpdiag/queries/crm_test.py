@@ -31,7 +31,7 @@ def get_cache_stub():
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
-@mock.patch('gcpdiag.caching.get_cache', new=get_cache_stub)
+@mock.patch('gcpdiag.caching.get_disk_cache', new=get_cache_stub)
 class Test:
   """Test project.py"""
 

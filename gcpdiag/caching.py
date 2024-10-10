@@ -34,6 +34,7 @@ from gcpdiag import config
 
 _cache = None
 _bypass_cache = False
+_use_cache = True
 
 
 def _set_bypass_cache(value: bool):
@@ -47,7 +48,16 @@ def _set_bypass_cache(value: bool):
 
 def _get_bypass_cache():
   """Gets the cache bypass flag for the current thread. By default should always use cache"""
+  # if cache is permanently disabled always bypass cache
+  if not _use_cache:
+    return False
   return getattr(threading.current_thread(), '_bypass_cache', False)
+
+
+def configure_global_cache(enabled: bool):
+  """ Used to enable or disable the use of caching in the application."""
+  global _use_cache
+  _use_cache = enabled
 
 
 @contextlib.contextmanager
@@ -83,10 +93,10 @@ def _close_cache():
     _cache.close()
 
 
-def get_cache() -> diskcache.Cache:
+def get_disk_cache() -> diskcache.Cache:
   """Get a Diskcache.Cache object that can be used to cache data."""
   global _cache
-  if not _cache:
+  if _use_cache and not _cache:
     _cache = diskcache.Cache(config.get_cache_dir(), tag_index=True)
     # Make sure that we remove any data that wasn't cleaned up correctly for
     # some reason.
@@ -173,46 +183,52 @@ def cached_api_call(expire=None, in_memory=False):
 
     @functools.wraps(func)
     def _cached_api_call_wrapper(*args, **kwargs):
-      key = _make_key(func, args, kwargs)
-      lock = lockdict[key]
-      with _acquire_timeout(lock, config.CACHE_LOCK_TIMEOUT, func.__name__):
-        if in_memory:
-          if _get_bypass_cache():
-            logging.debug('Cache bypassed for %s, fetching fresh data.',
-                          func.__name__)
-            lru_cached_func.cache_clear()
-          return lru_cached_func(*args, **kwargs)
+      key = None
+      if _use_cache:
+        logging.debug('looking up cache for %s', func.__name__)
+        key = _make_key(func, args, kwargs)
+        lock = lockdict[key]
+        with _acquire_timeout(lock, config.CACHE_LOCK_TIMEOUT, func.__name__):
+          if in_memory:
+            if _get_bypass_cache():
+              logging.debug('bypassing cache for %s, fetching fresh data.',
+                            func.__name__)
+              lru_cached_func.cache_clear()
+            return lru_cached_func(*args, **kwargs)
+          else:
+            api_cache = get_disk_cache()
+            if _get_bypass_cache():
+              logging.debug('bypassing cache for %s, fetching fresh data.',
+                            func.__name__)
+            else:
+              # We use 'no data' to be able to cache calls that returned None.
+              cached_result = api_cache.get(key, default='no data')
+              if cached_result != 'no data':
+                logging.debug('returning cached result for %s', func.__name__)
+                if isinstance(cached_result, Exception):
+                  raise cached_result
+                return cached_result
+      else:
+        logging.debug('caching is disabled for %s', func.__name__)
+      # Call the function
+      logging.debug('calling function %s (expire=%s, key=%s)', func.__name__,
+                    str(expire), str(key))
+      result = None
+      try:
+        result = func(*args, **kwargs)
+        logging.debug('DONE calling function %s (expire=%s, key=%s)',
+                      func.__name__, str(expire), str(key))
+      except googleapiclient.errors.HttpError as err:
+        # cache API errors as well
+        result = err
+      if _use_cache:
+        if expire:
+          api_cache.set(key, result, expire=expire)
         else:
-          api_cache = get_cache()
-          if _get_bypass_cache():
-            logging.debug('Cache bypassed for %s, fetching fresh data.',
-                          func.__name__)
-          else:
-            # We use 'no data' to be able to cache calls that returned None.
-            cached_result = api_cache.get(key, default='no data')
-            if cached_result != 'no data':
-              logging.debug('returning cached result for %s', func.__name__)
-              if isinstance(cached_result, Exception):
-                raise cached_result
-              return cached_result
-
-          # Call the function
-          logging.debug('calling function %s (expire=%s, key=%s)',
-                        func.__name__, expire, key)
-          try:
-            result = func(*args, **kwargs)
-            logging.debug('DONE calling function %s (expire=%s, key=%s)',
-                          func.__name__, expire, key)
-          except googleapiclient.errors.HttpError as err:
-            # cache API errors as well
-            result = err
-          if expire:
-            api_cache.set(key, result, expire=expire)
-          else:
-            api_cache.set(key, result, tag='tmp')
-          if isinstance(result, Exception):
-            raise result
-          return result
+          api_cache.set(key, result, tag='tmp')
+        if isinstance(result, Exception):
+          raise result
+      return result
 
     return _cached_api_call_wrapper
 

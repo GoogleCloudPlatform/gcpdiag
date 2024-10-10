@@ -334,6 +334,7 @@ def setup_logging(logging_handler):
 
 def run_and_get_report(argv=None, credentials: str = None) -> dict:
   # Initialize argument parser
+
   parser = _init_runbook_args_parser()
   args = parser.parse_args(argv[1:])
 
@@ -405,6 +406,7 @@ def run_and_get_report(argv=None, credentials: str = None) -> dict:
 
 
 def run(argv) -> None:
+  # Enable Caching
   report = run_and_get_report(argv)
   if report:
     sys.exit(0)

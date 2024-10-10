@@ -87,3 +87,29 @@ class CacheBypassTests(unittest.TestCase):
       t.start()
       t.join()
     self.assertEqual(len(results), 4, 'All threads should get different result')
+
+
+class UseCacheTests(unittest.TestCase):
+  """Testing configuring cache use"""
+
+  def test_enable_use_cache(self):
+    caching.configure_global_cache(enabled=True)
+    result_cached = cached_in_memory('same-arg')
+    result_cached_two = cached_in_memory('same-arg')
+    # memory id should be the same
+    self.assertEqual(id(result_cached), id(result_cached_two))
+
+    # Disk cache
+    disk_result_cached = cached_on_disk('same-arg')
+    next_disk_result_cached = cached_on_disk('same-arg')
+    self.assertEqual(disk_result_cached, next_disk_result_cached)
+
+  def test_disable_use_cache(self):
+    caching.configure_global_cache(enabled=False)
+    result_cached = cached_in_memory('same-arg')
+    next_call_result = cached_in_memory('same-arg')
+    self.assertNotEqual(id(result_cached), id(next_call_result))
+
+    disk_result = cached_on_disk('same-arg-but-different-result')
+    next_disk_result = cached_on_disk('same-arg-but-different-result')
+    self.assertNotEqual(disk_result, next_disk_result)

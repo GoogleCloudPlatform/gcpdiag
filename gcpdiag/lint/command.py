@@ -403,8 +403,10 @@ def run(argv) -> int:
   sys.exit(2 if repo.result.any_failed else 0)
 
 
-def run_and_get_results(argv: List[str],
-                        credentials: str = None) -> Dict[str, Any]:
+def run_and_get_results(
+    argv: List[str],
+    credentials: str = None,
+) -> Dict[str, Any]:
   """Run gcpdiag lint as the command line and return a dict with API results.
 
   Args:
@@ -417,7 +419,6 @@ def run_and_get_results(argv: List[str],
                  'short_info': str, 'doc_url': str}, ...]
      }
   """
-
   repo = _parse_args_run_repo(argv, credentials=credentials)
   results = []
   for r in repo.result.get_rule_reports():
