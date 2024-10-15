@@ -204,6 +204,72 @@ class TestSetDefaultParameters(unittest.TestCase):
     self.assertEqual(start_time, expected_start_time)
     self.assertEqual(end_time, expected_end_time)
 
+  def test_start_time_provided_in_utc_format(self):
+    start_time_str = '2024-07-20'
+    self.de.parameters = {}
+    parameters = models.Parameter()
+    parameters[flags.START_TIME_UTC] = start_time_str
+
+    self.de.parse_parameters(self.de.parameters, parameters)
+    start_time = parameters[flags.START_TIME_UTC]
+    end_time = parameters[flags.END_TIME_UTC]
+
+    self.assertEqual(str(start_time), '2024-07-20 00:00:00+00:00')
+    self.assertTrue(str(end_time), isinstance(end_time, datetime))
+
+  def test_end_time_provided_in_utc_format(self):
+    end_time_str = '2024-07-20'
+    self.de.parameters = {}
+    parameters = models.Parameter()
+    parameters[flags.END_TIME_UTC] = end_time_str
+
+    self.de.parse_parameters(self.de.parameters, parameters)
+    start_time = parameters[flags.START_TIME_UTC]
+    end_time = parameters[flags.END_TIME_UTC]
+
+    self.assertEqual(str(start_time), '2024-07-19 16:00:00+00:00')
+    self.assertEqual(str(end_time), '2024-07-20 00:00:00+00:00')
+
+  def test_both_times_provided_in_utc_format(self):
+    start_time_str = '2024-07-20'
+    end_time_str = '2024-08-25'
+    self.de.parameters = {}
+    parameters = models.Parameter()
+    parameters[flags.START_TIME_UTC] = start_time_str
+    parameters[flags.END_TIME_UTC] = end_time_str
+
+    self.de.parse_parameters(self.de.parameters, parameters)
+    start_time = parameters[flags.START_TIME_UTC]
+    end_time = parameters[flags.END_TIME_UTC]
+
+    self.assertEqual(str(start_time), '2024-07-20 00:00:00+00:00')
+    self.assertEqual(str(end_time), '2024-08-25 00:00:00+00:00')
+
+  def test_both_times_provided_in_non_utc_format(self):
+    start_time_str = '2024-07-20 00:00:00'
+    # '2024-07-20T12:00:00-05:00'   12 PM EST (UTC-5)
+    end_time_str = '2024-08-25 00:00:00'
+    # '2024-08-25T15:00:00-07:00'     3 PM PDT (UTC-7)
+
+    self.de.parameters = {}
+    parameters = models.Parameter()
+
+    parameters[flags.START_TIME_UTC] = start_time_str
+    parameters[flags.END_TIME_UTC] = end_time_str
+
+    self.de.parse_parameters(self.de.parameters, parameters)
+    start_time = parameters[flags.START_TIME_UTC]
+    end_time = parameters[flags.END_TIME_UTC]
+
+    # Convert expected UTC times for the test case
+    expected_start_time = '2024-07-20 00:00:00+00:00'
+    # '2024-07-20 17:00:00+00:00'   12 PM EST is 5 PM UTC
+    expected_end_time = '2024-08-25 00:00:00+00:00'
+    # '2024-08-25 22:00:00+00:00'     3 PM PDT is 10 PM UTC
+
+    self.assertEqual(str(start_time), expected_start_time)
+    self.assertEqual(str(end_time), expected_end_time)
+
   def test_times_provided_in_epoch_format(self):
     start_time_epoch = '1601481600'  # 2020-09-30 16:00:00 UTC
     end_time_epoch = '1601485200'  # 2020-09-30 17:00:00 UTC

@@ -516,7 +516,13 @@ class DiagnosticEngine:
         if target_type == datetime:
           if isinstance(param_val, target_type):
             return param_val
-          return util.parse_time_input(param_val.upper())
+          parsed_time = util.parse_time_input(param_val.upper())
+          if parsed_time.tzinfo is None:
+            # Define the timezone (for example, UTC) if not present
+            tz = timezone.utc
+            # Attach the timezone information
+            parsed_time = parsed_time.replace(tzinfo=tz)
+          return parsed_time
         try:
           return target_type(param_val)
         except ValueError:
