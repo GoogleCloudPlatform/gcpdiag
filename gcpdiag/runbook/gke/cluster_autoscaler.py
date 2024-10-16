@@ -14,34 +14,45 @@
 """GKE Cluster Autoscaler runbook"""
 
 from gcpdiag import runbook
-from gcpdiag.executor import get_executor
 from gcpdiag.queries import apis, crm, gke, logs
 from gcpdiag.runbook import op
 from gcpdiag.runbook.gke import flags
 
 
-def local_log_search(project, cluster_name, cluster_location, error_message):
-  filter_str = ''
+def local_log_search(cluster_name, cluster_location, error_message):
+  """Constructs a filter string for a logs query function based on provided arguments.
+
+  Args:
+    cluster_name: Optional name of the cluster to filter logs for.
+    cluster_location: Optional location of the cluster to filter logs for.
+    error_message: Required error message to include in the filter.
+
+  Returns:
+    A string representing the filter for the logs query.
+  """
+  filter_str = (
+      'log_id("container.googleapis.com/cluster-autoscaler-visibility") AND'
+      ' resource.type="k8s_cluster" AND ')
+
   if cluster_name and cluster_location:
-    filter_str += f'resource.labels.location="{cluster_location}" AND \
-      resource.labels.cluster_name="{cluster_name}" AND {error_message}'
+    filter_str += (
+        f'resource.labels.location="{cluster_location}" AND      '
+        f' resource.labels.cluster_name="{cluster_name}" AND {error_message}')
 
   elif cluster_name:
-    filter_str += f'resource.labels.cluster_name="{cluster_name}" AND {error_message}'
+    filter_str += (
+        f'resource.labels.cluster_name="{cluster_name}" AND {error_message}')
   elif cluster_location:
-    filter_str += f'resource.labels.location="{cluster_location}" AND {error_message}'
+    filter_str += (
+        f'resource.labels.location="{cluster_location}" AND {error_message}')
   else:
     filter_str += f'{error_message}'
 
-  log_entries = logs.query(
-      project_id=project,
-      resource_type='k8s_cluster',
-      log_name=
-      'log_id("container.googleapis.com/cluster-autoscaler-visibility")',
-      filter_str=filter_str)
+  log_entries = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
+                                    start_time_utc=op.get(flags.START_TIME_UTC),
+                                    end_time_utc=op.get(flags.END_TIME_UTC),
+                                    filter_str=filter_str)
 
-  executor = get_executor()
-  logs.execute_queries(executor)
   return log_entries
 
 
@@ -200,11 +211,11 @@ class CaOutOfResources(runbook.Step):
     error_message = 'jsonPayload.resultInfo.results.errorMsg.messageId=\
       "scale.up.error.out.of.resources"'
 
-    log_entries = local_log_search(project, cluster_name, cluster_location,
+    log_entries = local_log_search(cluster_name, cluster_location,
                                    error_message)
 
-    if log_entries.entries:
-      for log_entry in log_entries.entries:
+    if log_entries:
+      for log_entry in log_entries:
         sample_log = log_entry
         break
       op.add_failed(project_path,
@@ -233,11 +244,11 @@ class CaQuotaExceeded(runbook.Step):
     error_message = 'jsonPayload.resultInfo.results.errorMsg.messageId=\
       "scale.up.error.quota.exceeded"'
 
-    log_entries = local_log_search(project, cluster_name, cluster_location,
+    log_entries = local_log_search(cluster_name, cluster_location,
                                    error_message)
 
-    if log_entries.entries:
-      for log_entry in log_entries.entries:
+    if log_entries:
+      for log_entry in log_entries:
         sample_log = log_entry
         break
       op.add_failed(project_path,
@@ -266,11 +277,11 @@ class CaInstanceTimeout(runbook.Step):
     error_message = 'jsonPayload.resultInfo.results.errorMsg.messageId=\
       "scale.up.error.waiting.for.instances.timeout"'
 
-    log_entries = local_log_search(project, cluster_name, cluster_location,
+    log_entries = local_log_search(cluster_name, cluster_location,
                                    error_message)
 
-    if log_entries.entries:
-      for log_entry in log_entries.entries:
+    if log_entries:
+      for log_entry in log_entries:
         sample_log = log_entry
         break
       op.add_failed(project_path,
@@ -299,11 +310,11 @@ class CaIpSpaceExhausted(runbook.Step):
     error_message = 'jsonPayload.resultInfo.results.errorMsg.messageId=\
       "scale.up.error.ip.space.exhausted"'
 
-    log_entries = local_log_search(project, cluster_name, cluster_location,
+    log_entries = local_log_search(cluster_name, cluster_location,
                                    error_message)
 
-    if log_entries.entries:
-      for log_entry in log_entries.entries:
+    if log_entries:
+      for log_entry in log_entries:
         sample_log = log_entry
         break
       op.add_failed(project_path,
@@ -332,11 +343,11 @@ class CaServiceAccountDeleted(runbook.Step):
     error_message = 'jsonPayload.resultInfo.results.errorMsg.messageId=\
       "scale.up.error.service.account.deleted"'
 
-    log_entries = local_log_search(project, cluster_name, cluster_location,
+    log_entries = local_log_search(cluster_name, cluster_location,
                                    error_message)
 
-    if log_entries.entries:
-      for log_entry in log_entries.entries:
+    if log_entries:
+      for log_entry in log_entries:
         sample_log = log_entry
         break
       op.add_failed(project_path,
@@ -365,11 +376,11 @@ class CaMinSizeReached(runbook.Step):
     error_message = 'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId=\
       "no.scale.down.node.node.group.min.size.reached"'
 
-    log_entries = local_log_search(project, cluster_name, cluster_location,
+    log_entries = local_log_search(cluster_name, cluster_location,
                                    error_message)
 
-    if log_entries.entries:
-      for log_entry in log_entries.entries:
+    if log_entries:
+      for log_entry in log_entries:
         sample_log = log_entry
         break
       op.add_failed(project_path,
@@ -398,11 +409,11 @@ class CaFailedToEvictPods(runbook.Step):
     error_message = 'jsonPayload.resultInfo.results.errorMsg.messageId=\
       "scale.down.error.failed.to.evict.pods"'
 
-    log_entries = local_log_search(project, cluster_name, cluster_location,
+    log_entries = local_log_search(cluster_name, cluster_location,
                                    error_message)
 
-    if log_entries.entries:
-      for log_entry in log_entries.entries:
+    if log_entries:
+      for log_entry in log_entries:
         sample_log = log_entry
         break
       op.add_failed(project_path,
