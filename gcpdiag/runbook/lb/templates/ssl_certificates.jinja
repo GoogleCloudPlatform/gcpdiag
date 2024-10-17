@@ -2,6 +2,14 @@
 The certificate "{name}" is in ACTIVE state.
 {% endblock confirmation_success_reason %}
 
+{% block confirmation_skipped_reason %}
+SSL certificate {name} does not exist or project {project_id} does not exist.
+{% endblock confirmation_skipped_reason %}
+
+{% block confirmation_skipped_reason_a1 %}
+The certificate "{name}" is self-managed. Customers are responsible for obtaining, provisioning, and renewing self-managed certificates.  This runbook supports only certificates managed by google
+{% endblock confirmation_skipped_reason_a1 %}
+
 {% block confirmation_failure_reason %}
 We detected that the certificate "{name}" is not in ACTIVE state.
 {% endblock confirmation_failure_reason %}
@@ -85,6 +93,10 @@ DNS records for domain {domain} resolve to IP addresses: {unresolved_ip_addresse
 {% block verify_dns_records_failure_remediation %}
 Configure DNS records for {domain} to point to the correct load balancer IP address(es) for certificate {name}. See the load balancer configuration for details. Check: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns
 {% endblock verify_dns_records_failure_remediation %}
+
+{% block verify_dns_records_failure_reason_a1 %}
+Domain {domain} does not resolve to any IP addresses. This prevents certificate provisioning.
+{% endblock verify_dns_records_failure_reason_a1 %}
 
 {% block verify_dns_records_uncertain_reason %}
 Some DNS records for domain {domain} resolve to the following unexpected IP address(es): {unresolved_ip_addresses}.  While other records point to the expected IP addresses: {resolved_ip_addresses}. The unexpected IP addresses do not point to any load balancer associated with certificate {name}. This can cause certificate provisioning issues.

@@ -26,6 +26,10 @@ Further investigation is required to identify the root cause and apply appropria
 
 The certificate "{name}" is in ACTIVE state.
 
+### Skipped Reason
+
+SSL certificate {name} does not exist or project {project_id} does not exist.
+
 
 
 <!--

@@ -103,18 +103,18 @@ class SslCertificatesStart(runbook.StartStep):
     except googleapiclient.errors.HttpError:
       op.add_skipped(
           proj,
-          reason=(f'SSL certificate {op.get(flags.CERTIFICATE_NAME)} does not'
-                  f' exist or project'
-                  f' {op.get(flags.PROJECT_ID)}'),
+          reason=op.prep_msg(
+              op.SKIPPED_REASON,
+              name=op.get(flags.CERTIFICATE_NAME),
+              project_id=op.get(flags.PROJECT_ID),
+          ),
       )
       return  # Early exit if certificate doesn't exist
     if certificate.type == 'SELF_MANAGED':
       op.add_skipped(
           proj,
-          reason=(f'The certificate "{op.get(flags.CERTIFICATE_NAME)}" is'
-                  ' self-managed. Customers are responsible for obtaining,'
-                  ' provisioning, and renewing self-managed certificates.  This'
-                  ' runbook supports only certificates managed by google'),
+          reason=op.prep_msg(op.SKIPPED_REASON_ALT1,
+                             name=op.get(flags.CERTIFICATE_NAME)),
       )
       return  # Early exit if certificate is not Google-managed
 
@@ -516,13 +516,12 @@ class VerifyDnsRecords(runbook.Gateway):
     else:
       op.add_failed(
           certificate,
-          reason=(
-              f'Domain {self.domain} does not resolve to any IP addresses. This'
-              ' prevents certificate provisioning.'),
-          remediation=(
-              f'Configure DNS records for {self.domain} to point to the correct'
-              ' load balancer IP address(es) for certificate'
-              f' {certificate_name}.'),
+          reason=op.prep_msg(op.FAILURE_REASON_ALT1, domain=self.domain),
+          remediation=op.prep_msg(
+              op.FAILURE_REMEDIATION,
+              domain=self.domain,
+              name=op.get(flags.CERTIFICATE_NAME),
+          ),
       )
 
 
@@ -722,8 +721,7 @@ class SslCertificatesEnd(runbook.EndStep):
     if not config.get(flags.INTERACTIVE_MODE):
       response = op.prompt(
           kind=op.CONFIRMATION,
-          message=('Are you still satisfied with the SSL Certificate'
-                   ' troubleshooting?'),
+          message='Are you satisfied with the SSL Certificate troubleshooting?',
       )
       if response == op.NO:
         op.info(message=op.END_MESSAGE)
