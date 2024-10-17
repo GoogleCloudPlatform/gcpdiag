@@ -41,8 +41,8 @@ import dataclasses
 import datetime
 import logging
 import threading
-from typing import (Any, Dict, List, Mapping, Optional, Sequence, Set, Tuple,
-                    Union)
+from typing import (Any, Deque, Dict, List, Mapping, Optional, Sequence, Set,
+                    Tuple, Union)
 
 import dateutil.parser
 import ratelimit
@@ -239,13 +239,11 @@ def _execute_query_job(job: _LogsQueryJob):
   return deque
 
 
+@caching.cached_api_call
 def realtime_query(project_id, filter_str, start_time_utc, end_time_utc):
   """Intended for use in only runbooks. use logs.query() for lint rules."""
-  thread = threading.current_thread()
-  thread.name = f'log_query:{project_id}'
   logging_api = apis.get_api('logging', 'v2', project_id)
 
-  # Convert "within" relative time to an absolute timestamp.
   filter_lines = [filter_str]
   filter_lines.append('timestamp>"%s"' %
                       start_time_utc.isoformat(timespec='seconds'))
@@ -254,8 +252,7 @@ def realtime_query(project_id, filter_str, start_time_utc, end_time_utc):
   filter_str = '\n'.join(filter_lines)
   logging.info('searching logs in project %s for logs between %s and %s',
                project_id, str(start_time_utc), str(end_time_utc))
-  # Fetch all logs and put the results in temporary storage (diskcache.Deque)
-  deque = caching.get_tmp_deque('tmp-logs-')
+  deque = Deque()
   req = logging_api.entries().list(
       body={
           'resourceNames': [f'projects/{project_id}'],
