@@ -86,6 +86,21 @@ json-dumps/compute-network-%.json:
 		| $(JSON_CLEANER) compute-network \
 		| $(SED_SUBST_FAKE) >$@
 
+json-dumps/compute-sslCertificates.json:
+	$(CURL) -fsS \
+	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/sslCertificates/' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-aggregated-targetHttpsProxies.json:
+	$(CURL) -fsS \
+	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/aggregated/targetHttpsProxies/' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-targetSslProxies.json:
+	$(CURL) -fsS \
+	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/targetSslProxies/' \
+		| $(SED_SUBST_FAKE) >$@
+
 json-dumps/compute-project.json:
 	$(CURL) -fsS \
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)' \

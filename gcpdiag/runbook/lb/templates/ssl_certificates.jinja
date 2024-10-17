@@ -1,0 +1,137 @@
+{% block confirmation_success_reason %}
+The certificate "{name}" is in ACTIVE state.
+{% endblock confirmation_success_reason %}
+
+{% block confirmation_failure_reason %}
+We detected that the certificate "{name}" is not in ACTIVE state.
+{% endblock confirmation_failure_reason %}
+
+{% block confirmation_failure_remediation %}
+Further investigation is required to identify the root cause and apply appropriate fixes
+{% endblock confirmation_failure_remediation %}
+
+{% block cert_status_success_reason %}
+The certificate "{name}" is in {status} state.
+{% endblock cert_status_success_reason %}
+
+{% block cert_status_failure_reason %}
+The certificate {name} is in the "PROVISIONING_FAILED_PERMANENTLY" state. This is a non-recoverable state.
+{% endblock cert_status_failure_reason %}
+
+{% block cert_status_failure_remediation %}
+Please recreate the certificate. See the documentation for instructions on creating SSL certificates.
+{% endblock cert_status_failure_remediation %}
+
+{% block cert_status_uncertain_reason %}
+The certificate {name} is in the "{status}" state. {context}.
+{% endblock cert_status_uncertain_reason %}
+
+{% block domain_status_success_reason %}
+All domains associated with the certificate "{name}" are in the "ACTIVE" state. No issues detected with domain provisioning
+{% endblock domain_status_success_reason %}
+
+{% block failed_not_visible_domains_failure_reason %}
+The following domains are in "FAILED_NOT_VISIBLE" state: {domains}. This usually means the domain's DNS records aren't correctly pointing to your load balancer.
+{% endblock failed_not_visible_domains_failure_reason %}
+
+{% block failed_not_visible_domains_failure_remediation %}
+Further investigation is required. This runbook will proceed with additional checks.
+{% endblock failed_not_visible_domains_failure_remediation %}
+
+{% block provisioning_domains_uncertain_reason %}
+The following domains are in "PROVISIONING" state: {domains}.
+{% endblock provisioning_domains_uncertain_reason %}
+
+{% block provisioning_domains_uncertain_remediation %}
+The provisioning process can take some time.  The runbook will proactively check other potential issues while the domains are provisioning.
+{% endblock provisioning_domains_uncertain_remediation %}
+
+{% block failed_rate_limited_domains_failure_reason %}
+The following domains are in "FAILED_RATE_LIMITED" state: {domains}. This indicates rate limiting by the Certificate Authority.  You've likely exceeded the allowed number of certificate requests in a short period.
+{% endblock failed_rate_limited_domains_failure_reason %}
+
+{% block failed_rate_limited_domains_failure_remediation %}
+Wait for a while and then check the certificate status again. If the issue persists, contact Google Cloud Support.
+{% endblock failed_rate_limited_domains_failure_remediation %}
+
+{% block failed_caa_check_domains_failure_reason %}
+The following domains are in "FAILED_CAA_CHECKING" or "FAILED_CAA_FORBIDDEN" state: {domains}. This indicates misconfigured CAA records.  CAA records authorize specific Certificate Authorities to issue certificates for your domain.
+{% endblock failed_caa_check_domains_failure_reason %}
+
+{% block failed_caa_check_domains_failure_remediation %}
+Please ensure the CAA records are configured correctly and try again. See the documentation for instructions on configuring CAA records: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#caa
+{% endblock failed_caa_check_domains_failure_remediation %}
+
+{% block check_certificate_attachment_failure_reason %}
+The SSL certificate {name} is not attached to any target proxies. Please attach the certificate to a target proxy and try again.
+{% endblock check_certificate_attachment_failure_reason %}
+
+{% block check_certificate_attachment_failure_remediation %}
+Please follow the documentation to attach the certificate to a target proxy: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#load-balancer
+{% endblock check_certificate_attachment_failure_remediation %}
+
+{% block check_certificate_attachment_success_reason %}
+The SSL certificate {name} is attached to target proxies ({target_proxies}) that are in use by forwarding rules.
+{% endblock check_certificate_attachment_success_reason %}
+
+{% block verify_dns_records_success_reason %}
+DNS records for domain {domain} are correctly configured. All resolved IP addresses ({ip_addresses}) point to the load balancer(s) associated with certificate {name}.
+{% endblock verify_dns_records_success_reason %}
+
+{% block verify_dns_records_failure_reason %}
+DNS records for domain {domain} resolve to IP addresses: {unresolved_ip_addresses}, which do not point to any load balancer associated with certificate {name}. This prevents certificate provisioning.
+{% endblock verify_dns_records_failure_reason %}
+
+{% block verify_dns_records_failure_remediation %}
+Configure DNS records for {domain} to point to the correct load balancer IP address(es) for certificate {name}. See the load balancer configuration for details. Check: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns
+{% endblock verify_dns_records_failure_remediation %}
+
+{% block verify_dns_records_uncertain_reason %}
+Some DNS records for domain {domain} resolve to the following unexpected IP address(es): {unresolved_ip_addresses}.  While other records point to the expected IP addresses: {resolved_ip_addresses}. The unexpected IP addresses do not point to any load balancer associated with certificate {name}. This can cause certificate provisioning issues.
+{% endblock verify_dns_records_uncertain_reason %}
+
+{% block verify_dns_records_uncertain_remediation %}
+Configure DNS records for {domain} to point to the correct load balancer IP address(es) for certificate {name}. See the load balancer configuration for details. Check: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns
+{% endblock verify_dns_records_uncertain_remediation %}
+
+{% block verify_forwarding_rules_port_success_reason %}
+Certificate {name} has forwarding rules configured for HTTPS (port 443) on all associated IP addresses.
+{% endblock verify_forwarding_rules_port_success_reason %}
+
+{% block verify_forwarding_rules_port_failure_reason %}
+{misconfigured_entities}
+There must be at least one load balancer's forwarding rule that use TCP port 443 for the Google-managed certificate to be initially provisioned and automatically renewed.
+{% endblock verify_forwarding_rules_port_failure_reason %}
+
+{% block verify_forwarding_rules_port_failure_remediation %}
+Configure the load balancer to listen on port 443 for certificate {name}.
+{% endblock verify_forwarding_rules_port_failure_remediation %}
+
+{% block verify_no_certificate_map_conflict_success_reason %}
+All target proxies associated with the certificate {name} do not have a certificate map.
+{% endblock verify_no_certificate_map_conflict_success_reason %}
+
+{% block verify_no_certificate_map_conflict_failure_reason %}
+The following target proxies have a conflicting certificate map:
+
+{conflicting_target_proxies}.
+
+If certificate map is set on a target proxy, the classic SSL certificates are ignored.
+{% endblock verify_no_certificate_map_conflict_failure_reason %}
+
+{% block verify_no_certificate_map_conflict_failure_remediation %}
+If this is not intended, please detach the certificate map from the target proxies.
+{% endblock verify_no_certificate_map_conflict_failure_remediation %}
+
+{% block check_provisioning_time_success_reason %}
+We haven't found any recent changes to the forwarding rules and target proxies associated with the certificate {name}.
+{% endblock check_provisioning_time_success_reason %}
+
+{% block check_provisioning_time_uncertain_reason %}
+The certificate {name} has recently had associated resources modified. This might affect DNS validation. Details are below:
+{recently_changed}
+{% endblock check_provisioning_time_uncertain_reason %}
+
+{% block check_provisioning_time_uncertain_remediation %}
+DNS validation automatically checks your domain's A and AAAA records against your Google Cloud load balancer's IP address. This process includes an automatic retry mechanism with increasing wait times. If you recently attached {name} to a target proxy or the target proxy to forwarding rule, validation could take up to 24 hours to complete.
+{% endblock check_provisioning_time_uncertain_remediation %}

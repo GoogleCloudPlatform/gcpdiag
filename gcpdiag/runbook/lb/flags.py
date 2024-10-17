@@ -16,4 +16,5 @@
 from gcpdiag.runbook.iam.flags import *
 
 BACKEND_SERVICE_NAME = 'backend_service_name'
+CERTIFICATE_NAME = 'certificate_name'
 REGION = 'region'

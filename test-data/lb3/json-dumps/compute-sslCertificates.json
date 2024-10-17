@@ -1,0 +1,98 @@
+{
+  "kind": "compute#sslCertificateList",
+  "id": "projects/gcpdiag-lb3-aaaa/global/sslCertificates/",
+  "items": [
+    {
+      "kind": "compute#sslCertificate",
+      "id": "5007046999615196979",
+      "creationTimestamp": "2024-10-18T07:34:04.255-07:00",
+      "name": "cert1",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert1",
+      "managed": {
+        "domains": [
+          "natka123.com",
+          "second.natka123.com"
+        ],
+        "status": "PROVISIONING",
+        "domainStatus": {
+          "natka123.com": "FAILED_NOT_VISIBLE",
+          "second.natka123.com": "FAILED_NOT_VISIBLE"
+        }
+      },
+      "type": "MANAGED"
+    },
+    {
+      "kind": "compute#sslCertificate",
+      "id": "152674253559287603",
+      "creationTimestamp": "2024-10-18T07:34:04.222-07:00",
+      "name": "cert2",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert2",
+      "managed": {
+        "domains": [
+          "test.natka123.com"
+        ],
+        "status": "PROVISIONING",
+        "domainStatus": {
+          "test.natka123.com": "FAILED_NOT_VISIBLE"
+        }
+      },
+      "type": "MANAGED"
+    },
+    {
+      "kind": "compute#sslCertificate",
+      "id": "6567642127033619454",
+      "creationTimestamp": "2024-10-22T02:14:57.607-07:00",
+      "name": "cert3",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert3",
+      "managed": {
+        "domains": [
+          "test.org",
+          "second.test.org"
+        ],
+        "status": "PROVISIONING",
+        "domainStatus": {
+          "second.test.org": "FAILED_NOT_VISIBLE",
+          "test.org": "FAILED_NOT_VISIBLE"
+        }
+      },
+      "type": "MANAGED"
+    },
+    {
+      "kind": "compute#sslCertificate",
+      "id": "391516744939351060",
+      "creationTimestamp": "2024-10-22T04:56:43.877-07:00",
+      "name": "cert5",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert5",
+      "managed": {
+        "domains": [
+          "test.org"
+        ],
+        "status": "PROVISIONING",
+        "domainStatus": {
+          "test.org": "PROVISIONING"
+        }
+      },
+      "type": "MANAGED"
+    },
+    {
+      "kind": "compute#sslCertificate",
+      "id": "8942192522650371715",
+      "creationTimestamp": "2024-10-22T03:03:24.633-07:00",
+      "name": "unused-cert4",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb3-aaaa/global/sslCertificates/unused-cert4",
+      "managed": {
+        "domains": [
+          "test.org",
+          "second.test.org"
+        ],
+        "status": "PROVISIONING",
+        "domainStatus": {
+          "second.test.org": "FAILED_NOT_VISIBLE",
+          "test.org": "FAILED_NOT_VISIBLE"
+        }
+      },
+      "type": "MANAGED"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb3-aaaa/global/sslCertificates/"
+}

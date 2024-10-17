@@ -1,0 +1,137 @@
+{
+  "entries": [
+    {
+      "protoPayload": {
+        "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+        "authenticationInfo": {
+          "principalEmail": "nataliakaczor@google.com",
+          "principalSubject": "user:nataliakaczor@google.com"
+        },
+        "requestMetadata": {
+          "callerIp": "gce-internal-ip",
+          "callerSuppliedUserAgent": "Terraform/1.9.3 (+https://www.terraform.io) Terraform-Plugin-SDK/2.33.0 terraform-provider-google/6.7.0,gzip(gfe)",
+          "requestAttributes": {},
+          "destinationAttributes": {}
+        },
+        "serviceName": "compute.googleapis.com",
+        "methodName": "v1.compute.targetHttpsProxies.insert",
+        "resourceName": "projects/gcpdiag-lb3-aaaa/global/targetHttpsProxies/https-lb-proxy",
+        "request": {
+          "@type": "type.googleapis.com/compute.targetHttpsProxies.insert"
+        }
+      },
+      "insertId": "-2rli97e1cxkk",
+      "resource": {
+        "type": "gce_target_https_proxy",
+        "labels": {
+          "target_https_proxy_id": "2209022440749649672",
+          "project_id": "gcpdiag-lb3-aaaa"
+        }
+      },
+      "timestamp": "2024-10-18T14:34:17.798905Z",
+      "severity": "NOTICE",
+      "labels": {
+        "compute.googleapis.com/root_trigger_id": "40523d2d-d62b-476e-9585-17c2341a0dff"
+      },
+      "logName": "projects/gcpdiag-lb3-aaaa/logs/cloudaudit.googleapis.com%2Factivity",
+      "operation": {
+        "id": "operation-1729262055617-624c1328c759c-adc97462-31656ee9",
+        "producer": "compute.googleapis.com",
+        "last": true
+      },
+      "receiveTimestamp": "2024-10-18T14:34:18.886589315Z"
+    },
+    {
+      "protoPayload": {
+        "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+        "authenticationInfo": {
+          "principalEmail": "nataliakaczor@google.com",
+          "principalSubject": "user:nataliakaczor@google.com"
+        },
+        "requestMetadata": {
+          "callerIp": "gce-internal-ip",
+          "callerSuppliedUserAgent": "Terraform/1.9.3 (+https://www.terraform.io) Terraform-Plugin-SDK/2.33.0 terraform-provider-google/6.7.0,gzip(gfe)",
+          "requestAttributes": {
+            "time": "2024-10-18T14:34:16.248041Z",
+            "auth": {}
+          },
+          "destinationAttributes": {}
+        },
+        "serviceName": "compute.googleapis.com",
+        "methodName": "v1.compute.targetHttpsProxies.insert",
+        "authorizationInfo": [
+          {
+            "resource": "projects/gcpdiag-lb3-aaaa/global/targetHttpsProxies/https-lb-proxy",
+            "permission": "compute.targetHttpsProxies.create",
+            "granted": true,
+            "resourceAttributes": {
+              "service": "compute",
+              "name": "projects/gcpdiag-lb3-aaaa/global/targetHttpsProxies/https-lb-proxy",
+              "type": "compute.targetHttpsProxies"
+            },
+            "permissionType": "ADMIN_WRITE"
+          },
+          {
+            "resource": "projects/gcpdiag-lb3-aaaa/global/urlMaps/web-map-https",
+            "permission": "compute.urlMaps.use",
+            "granted": true,
+            "resourceAttributes": {
+              "service": "compute",
+              "name": "projects/gcpdiag-lb3-aaaa/global/urlMaps/web-map-https",
+              "type": "compute.urlMaps"
+            },
+            "permissionType": "ADMIN_WRITE"
+          }
+        ],
+        "resourceName": "projects/gcpdiag-lb3-aaaa/global/targetHttpsProxies/https-lb-proxy",
+        "request": {
+          "name": "https-lb-proxy",
+          "@type": "type.googleapis.com/compute.targetHttpsProxies.insert",
+          "quicOverride": "NONE",
+          "urlMap": "projects/gcpdiag-lb3-aaaa/global/urlMaps/web-map-https"
+        },
+        "response": {
+          "targetId": "2209022440749649672",
+          "insertTime": "2024-10-18T07:34:16.035-07:00",
+          "startTime": "2024-10-18T07:34:16.038-07:00",
+          "progress": "0",
+          "selfLinkWithId": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb3-aaaa/global/operations/6855579118264635144",
+          "operationType": "insert",
+          "user": "nataliakaczor@google.com",
+          "name": "operation-1729262055617-624c1328c759c-adc97462-31656ee9",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb3-aaaa/global/targetHttpsProxies/https-lb-proxy",
+          "status": "RUNNING",
+          "id": "6855579118264635144",
+          "@type": "type.googleapis.com/operation",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb3-aaaa/global/operations/operation-1729262055617-624c1328c759c-adc97462-31656ee9"
+        },
+        "resourceLocation": {
+          "currentLocations": [
+            "global"
+          ]
+        }
+      },
+      "insertId": "nvbpyme10tq0",
+      "resource": {
+        "type": "gce_target_https_proxy",
+        "labels": {
+          "project_id": "gcpdiag-lb3-aaaa",
+          "target_https_proxy_id": "2209022440749649672"
+        }
+      },
+      "timestamp": "2024-10-18T14:34:15.686588Z",
+      "severity": "NOTICE",
+      "labels": {
+        "compute.googleapis.com/root_trigger_id": "40523d2d-d62b-476e-9585-17c2341a0dff"
+      },
+      "logName": "projects/gcpdiag-lb3-aaaa/logs/cloudaudit.googleapis.com%2Factivity",
+      "operation": {
+        "id": "operation-1729262055617-624c1328c759c-adc97462-31656ee9",
+        "producer": "compute.googleapis.com",
+        "first": true
+      },
+      "receiveTimestamp": "2024-10-18T14:34:16.974719684Z"
+    }
+  ],
+  "nextPageToken": "EAE4l4_KqNyjzP0iSh8iEiICCgAqDAj_v8S3BhD_k-vcA1j13sf0s86omegBUgcIxYm53sUeYP3U87aj8M6paWocCgwI8tnZuAYQiuGThAMSCAgFEN_8v5wBGAIgAA"
+}

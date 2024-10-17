@@ -15,7 +15,7 @@
 
 import logging
 import re
-from typing import List
+from typing import Dict, List
 
 import googleapiclient
 
@@ -232,6 +232,69 @@ def get_backend_service_health(
   return backend_heath_statuses
 
 
+class SslCertificate(models.Resource):
+  """A SSL Certificate resource."""
+
+  _resource_data: dict
+  _type: str
+
+  def __init__(self, project_id, resource_data):
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+
+  @property
+  def name(self) -> str:
+    return self._resource_data['name']
+
+  @property
+  def id(self) -> str:
+    return self._resource_data['id']
+
+  @property
+  def full_path(self) -> str:
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
+                      self.self_link)
+    if result:
+      return result.group(1)
+    else:
+      return f'>> {self.self_link}'
+
+  @property
+  def self_link(self) -> str:
+    return self._resource_data['selfLink']
+
+  @property
+  def type(self) -> str:
+    return self._resource_data.get('type', 'SELF_MANAGED')
+
+  @property
+  def status(self) -> str:
+    return self._resource_data.get('managed', {}).get('status')
+
+  @property
+  def domains(self) -> List[str]:
+    return self._resource_data.get('managed', {}).get('domains', [])
+
+  @property
+  def domain_status(self) -> Dict[str, str]:
+    return self._resource_data.get('managed', {}).get('domainStatus', {})
+
+
+@caching.cached_api_call(in_memory=True)
+def get_ssl_certificate(
+    project_id: str,
+    certificate_name: str,
+) -> SslCertificate:
+  """Returns object matching certificate name and region"""
+  compute = apis.get_api('compute', 'v1', project_id)
+
+  request = compute.sslCertificates().get(project=project_id,
+                                          sslCertificate=certificate_name)
+
+  response = request.execute(num_retries=config.API_RETRIES)
+  return SslCertificate(project_id, resource_data=response)
+
+
 class ForwardingRules(models.Resource):
   """A Forwarding Rule resource."""
 
@@ -265,6 +328,16 @@ class ForwardingRules(models.Resource):
     return path
 
   @property
+  def region(self):
+    url = self._resource_data.get('region', '')
+    if url is not None:
+      match = re.search(r'/([^/]+)/?$', url)
+      if match is not None:
+        region = match.group(1)
+        return region
+    return 'global'
+
+  @property
   def self_link(self) -> str:
     return self._resource_data['selfLink']
 
@@ -275,6 +348,23 @@ class ForwardingRules(models.Resource):
   @property
   def load_balancing_scheme(self) -> str:
     return self._resource_data.get('loadBalancingScheme', None)
+
+  @property
+  def target(self) -> str:
+    full_path = self._resource_data.get('target', '')
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)', full_path)
+    if result:
+      return result.group(1)
+    else:
+      return full_path
+
+  @property
+  def ip_address(self) -> str:
+    return self._resource_data.get('IPAddress', '')
+
+  @property
+  def port_range(self) -> str:
+    return self._resource_data.get('portRange', '')
 
 
 @caching.cached_api_call(in_memory=True)
@@ -293,6 +383,147 @@ def get_forwarding_rules(project_id: str) -> List[ForwardingRules]:
         for forwarding_rule in data_['forwardingRules']
     ])
   return forwarding_rules
+
+
+class TargetHttpsProxy(models.Resource):
+  """A Target HTTPS Proxy resource."""
+
+  _resource_data: dict
+  _type: str
+
+  def __init__(self, project_id, resource_data):
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+
+  @property
+  def name(self) -> str:
+    return self._resource_data['name']
+
+  @property
+  def id(self) -> str:
+    return self._resource_data['id']
+
+  @property
+  def full_path(self) -> str:
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
+                      self.self_link)
+    if result:
+      return result.group(1)
+    else:
+      return f'>> {self.self_link}'
+
+  @property
+  def self_link(self) -> str:
+    return self._resource_data['selfLink']
+
+  @property
+  def region(self):
+    url = self._resource_data.get('region', '')
+    if url is not None:
+      match = re.search(r'/([^/]+)/?$', url)
+      if match is not None:
+        region = match.group(1)
+        return region
+    return 'global'
+
+  @property
+  def ssl_certificates(self) -> List[str]:
+    return self._resource_data.get('sslCertificates', [])
+
+  @property
+  def certificate_map(self) -> str:
+    certificate_map = self._resource_data.get('certificateMap', '')
+    result = re.match(r'https://certificatemanager.googleapis.com/v1/(.*)',
+                      certificate_map)
+    if result:
+      return result.group(1)
+    return certificate_map
+
+
+@caching.cached_api_call(in_memory=True)
+def get_target_https_proxies(project_id: str) -> List[TargetHttpsProxy]:
+  logging.info('fetching Target HTTPS Proxies: %s', project_id)
+  compute = apis.get_api('compute', 'v1', project_id)
+  target_https_proxies = []
+  request = compute.targetHttpsProxies().aggregatedList(project=project_id)
+  response = request.execute(num_retries=config.API_RETRIES)
+  target_https_proxies_by_region = response['items']
+  for _, data_ in target_https_proxies_by_region.items():
+    if 'targetHttpsProxies' not in data_:
+      continue
+    target_https_proxies.extend([
+        TargetHttpsProxy(project_id, target_https_proxy)
+        for target_https_proxy in data_['targetHttpsProxies']
+    ])
+
+  return target_https_proxies
+
+
+class TargetSslProxy(models.Resource):
+  """A Target SSL Proxy resource."""
+
+  _resource_data: dict
+  _type: str
+
+  def __init__(self, project_id, resource_data):
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+
+  @property
+  def name(self) -> str:
+    return self._resource_data['name']
+
+  @property
+  def id(self) -> str:
+    return self._resource_data['id']
+
+  @property
+  def full_path(self) -> str:
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
+                      self.self_link)
+    if result:
+      return result.group(1)
+    else:
+      return f'>> {self.self_link}'
+
+  @property
+  def self_link(self) -> str:
+    return self._resource_data['selfLink']
+
+  @property
+  def region(self):
+    url = self._resource_data.get('region', '')
+    if url is not None:
+      match = re.search(r'/([^/]+)/?$', url)
+      if match is not None:
+        region = match.group(1)
+        return region
+    return 'global'
+
+  @property
+  def ssl_certificates(self) -> List[str]:
+    return self._resource_data.get('sslCertificates', [])
+
+  @property
+  def certificate_map(self) -> str:
+    certificate_map = self._resource_data.get('certificateMap', '')
+    result = re.match(r'https://certificatemanager.googleapis.com/v1/(.*)',
+                      certificate_map)
+    if result:
+      return result.group(1)
+    return certificate_map
+
+
+@caching.cached_api_call(in_memory=True)
+def get_target_ssl_proxies(project_id: str) -> List[TargetSslProxy]:
+  logging.info('fetching Target SSL Proxies: %s', project_id)
+  compute = apis.get_api('compute', 'v1', project_id)
+  request = compute.targetSslProxies().list(project=project_id)
+  response = request.execute(num_retries=config.API_RETRIES)
+
+  return [
+      TargetSslProxy(project_id, item) for item in response.get('items', [])
+  ]
 
 
 class LoadBalancerInsight(models.Resource):

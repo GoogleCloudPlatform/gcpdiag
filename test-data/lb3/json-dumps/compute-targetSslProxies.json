@@ -1,0 +1,20 @@
+{
+  "kind": "compute#targetSslProxyList",
+  "id": "projects/gcpdiag-lb3-aaaa/global/targetSslProxies/",
+  "items": [
+    {
+      "kind": "compute#targetSslProxy",
+      "id": "2435662921451885502",
+      "creationTimestamp": "2024-10-22T02:16:01.466-07:00",
+      "name": "ssl-proxy",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb3-aaaa/global/targetSslProxies/ssl-proxy",
+      "service": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb3-aaaa/global/backendServices/tcp-backend-service",
+      "sslCertificates": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert3",
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert5"
+      ],
+      "proxyHeader": "NONE"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb3-aaaa/global/targetSslProxies/"
+}

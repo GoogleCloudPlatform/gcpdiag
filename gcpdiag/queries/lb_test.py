@@ -22,6 +22,7 @@ from gcpdiag.queries import apis_stub, lb
 
 DUMMY_PROJECT_ID = 'gcpdiag-lb1-aaaa'
 DUMMY_PROJECT2_ID = 'gcpdiag-lb2-aaaa'
+DUMMY_PROJECT3_ID = 'gcpdiag-lb3-aaaa'
 DUMMY_PORT = 80
 DUMMY_PROTOCOL = 'HTTP'
 DUMMY_URLMAP_NAME = 'web-map-http'
@@ -91,6 +92,34 @@ class TestURLMap:
     forwarding_rule = forwarding_rules[0]
     assert forwarding_rule.name == 'forwardingRule1'
     assert forwarding_rule.short_path == 'gcpdiag-lb1-aaaa/forwardingRule1'
+
+  def test_get_ssl_certificate_global(self):
+    """get_ssl_certificate returns the right SSL certificate matched by name."""
+    obj = lb.get_ssl_certificate(project_id=DUMMY_PROJECT3_ID,
+                                 certificate_name='cert1')
+    assert obj.name == 'cert1'
+    assert obj.type == 'MANAGED'
+    assert 'natka123.com' in obj.domains
+    assert 'second.natka123.com' in obj.domains
+
+  def test_get_target_https_proxies(self):
+    """get_target_https_proxy returns the list of target https proxies."""
+    items = lb.get_target_https_proxies(project_id=DUMMY_PROJECT3_ID)
+
+    assert len(items) == 2
+    assert items[0].name == 'https-lb-proxy'
+    assert items[
+        0].full_path == 'projects/gcpdiag-lb3-aaaa/global/targetHttpsProxies/https-lb-proxy'
+    assert items[1].name == 'https-lb-proxy-working'
+
+  def test_get_target_ssl_proxies(self):
+    """get_target_https_proxy returns the list of target ssl proxies."""
+    items = lb.get_target_ssl_proxies(project_id=DUMMY_PROJECT3_ID)
+
+    assert len(items) == 1
+    assert items[0].name == 'ssl-proxy'
+    assert items[
+        0].full_path == 'projects/gcpdiag-lb3-aaaa/global/targetSslProxies/ssl-proxy'
 
   def test_get_lb_insights_for_a_project(self):
     context = models.Context(project_id=DUMMY_PROJECT2_ID)

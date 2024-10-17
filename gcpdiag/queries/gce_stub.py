@@ -163,6 +163,18 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
   def regionBackendServices(self):
     return lb_stub.LbApiStub(mock_state='regionBackendServices')
 
+  def targetHttpsProxies(self):
+    return lb_stub.TargetProxyStub(mock_state='targetHttpsProxies')
+
+  def targetSslProxies(self):
+    return lb_stub.TargetProxyStub(mock_state='targetSslProxies')
+
+  def sslCertificates(self):
+    return lb_stub.SslCertificateApiStub(mock_state='sslCertificates')
+
+  def regionSslCertificates(self):
+    return lb_stub.SslCertificateApiStub(mock_state='regionSslCertificates')
+
   def forwardingRules(self):
     return lb_stub.LbApiStub(mock_state='forwardingRules')
 

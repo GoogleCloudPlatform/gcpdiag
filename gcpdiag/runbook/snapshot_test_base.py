@@ -19,7 +19,7 @@ from os import path
 from unittest import mock
 
 from gcpdiag import models, runbook
-from gcpdiag.queries import apis_stub, kubectl_stub
+from gcpdiag.queries import apis_stub, dns_stub, kubectl_stub
 from gcpdiag.runbook import command, util
 
 
@@ -27,6 +27,8 @@ from gcpdiag.runbook import command, util
 @mock.patch('gcpdiag.queries.kubectl.verify_auth', new=kubectl_stub.verify_auth)
 @mock.patch('gcpdiag.queries.kubectl.check_gke_ingress',
             new=kubectl_stub.check_gke_ingress)
+@mock.patch('gcpdiag.queries.dns.find_dns_records',
+            new=dns_stub.find_dns_records)
 class RulesSnapshotTestBase:
   """ Run snapshot test """
 

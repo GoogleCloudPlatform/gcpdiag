@@ -1,0 +1,14 @@
+{
+  "name": "projects/12340009",
+  "parent": "folders/211134714592",
+  "projectId": "gcpdiag-lb3-aaaa",
+  "state": "ACTIVE",
+  "displayName": "gcpdiag test - lb3",
+  "createTime": "2024-10-17T18:39:31.667941Z",
+  "updateTime": "2024-10-17T18:39:31.667941Z",
+  "etag": "W/\"af713938739b3e80\"",
+  "labels": {
+    "gcpdiag": "test",
+    "goog-terraform-provisioned": "true"
+  }
+}

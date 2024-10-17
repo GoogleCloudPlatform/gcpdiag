@@ -55,7 +55,7 @@ class LbApiStub:
     else:
       raise ValueError(f'cannot call method {self.mock_state} here')
 
-  def get(self, project, backendService=None, region=None):
+  def get(self, project, backendService=None, region=None, sslCertificate=None):
     if self.mock_state in backend_service_states and backendService:
       self.backend_service = backendService
       self.region = region
@@ -109,3 +109,55 @@ class LbApiStub:
 
   def list_next(self, prev_request, prev_response):
     return None
+
+
+class SslCertificateApiStub:
+  """Mock object to simulate SSL certificate api calls"""
+
+  def __init__(self, mock_state):
+    self.mock_state = mock_state
+
+  def get(self, project, sslCertificate=None, region=None):
+    if sslCertificate:
+      self.ssl_certificate = sslCertificate
+      self.project = project
+      self.region = region
+      return self
+    else:
+      raise ValueError(f'cannot call method {self.mock_state} here')
+
+  def execute(self, num_retries=0):
+    json_dir = apis_stub.get_json_dir(self.project)
+    json_file_name = f'compute-{self.mock_state}.json'
+    if self.mock_state == 'regionSslCertificates':
+      json_file_name = f'compute-{self.mock_state}-{self.region}.json'
+    with open(json_dir / json_file_name, encoding='utf-8') as json_file:
+      ssl_certificates = json.load(json_file)['items']
+      # search for and get the ssl certificate
+      if ssl_certificates:
+        for ssl_certificate in ssl_certificates:
+          if ssl_certificate['name'] == self.ssl_certificate:
+            return ssl_certificate
+        raise apiclient.errors.HttpError(
+            httplib2.Response({
+                'status': 404,
+                'reason': 'Not Found'
+            }),
+            f'The SSL certificate {self.ssl_certificate} is not found'.encode(),
+        )
+      else:
+        raise ValueError(f'cannot call method {self.mock_state} here')
+
+
+class TargetProxyStub:
+  """Mock object to simulate target proxy api calls"""
+
+  def __init__(self, mock_state):
+    self.mock_state = mock_state
+
+  def aggregatedList(self, project):
+    return apis_stub.RestCallStub(project,
+                                  f'compute-aggregated-{self.mock_state}')
+
+  def list(self, project):
+    return apis_stub.RestCallStub(project, f'compute-{self.mock_state}')
