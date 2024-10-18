@@ -94,7 +94,6 @@ def validate_args(args):
     print(
         'Error: Provide a runbook id  or "--bundle-spec=YAML_FILE_PATH" must be provided.'
     )
-    sys.exit(1)
 
 
 class DeprecatedAction(argparse.Action):
@@ -237,7 +236,7 @@ def _validate_rule_pattern(runbook_name: str):
     logging.error(
         'Invalid runbook name: %s should be `gcpdiag runbook product/runbook-id`',
         runbook_name)
-    sys.exit(2)
+    raise ValueError(f'invalid runbook name {runbook_name}')
   return runbook_name
 
 
@@ -377,8 +376,8 @@ def run_and_get_report(argv=None, credentials: str = None) -> dict:
       output_.display_banner()
     tree = dt_engine.load_tree(runbook_pattern)
     if not callable(tree):
-      logging.error('Can\'t instantiate Runbook')
-      sys.exit(2)
+      logging.error("can't instantiate Runbook")
+      raise ValueError('debugging tree is not callable')
     dt_engine.add_task((tree(), args.parameter))
   elif args.bundle_spec:
     for bundle in args.bundle_spec:

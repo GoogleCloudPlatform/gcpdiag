@@ -147,7 +147,7 @@ def init(args, is_cloud_shell=False):
     else:
       print(f'ERROR: Configuration file: {file} does not exist!',
             file=sys.stderr)
-      sys.exit(1)
+      raise FileNotFoundError
 
     # Parse the content of the file as YAML
     if content:
@@ -156,7 +156,7 @@ def init(args, is_cloud_shell=False):
       except yaml.YAMLError as err:
         print(f"ERROR: can't parse content of the file as YAML: {err}",
               file=sys.stderr)
-        sys.exit(1)
+        raise err
 
 
 def set_project_id(project_id):

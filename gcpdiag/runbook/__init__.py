@@ -421,7 +421,7 @@ class DiagnosticEngine:
       return tree
     except exceptions.DiagnosticTreeNotFound as e:
       logging.error('%s: %s', name, e)
-      sys.exit(2)
+      raise e
 
   def load_steps(self, parameter: Mapping[str, Mapping],
                  steps_to_run: List) -> Bundle:
@@ -470,7 +470,7 @@ class DiagnosticEngine:
           len(missing_parameters),
           'parameter' if len(missing_parameters) == 1 else 'parameters',
           missing_param_str)
-      sys.exit(2)
+      raise AttributeError('missing required parameters to run runbook')
 
   def _set_default_parameters(self, parameter_def: Dict):
     # set default parameters
@@ -698,7 +698,8 @@ class DiagnosticEngine:
         logging.error(error_msg)
       elif isinstance(err,
                       (utils.GcpApiError, googleapiclient.errors.HttpError)):
-        err = utils.GcpApiError(err)
+        if isinstance(err, googleapiclient.errors.HttpError):
+          err = utils.GcpApiError(err)
         if err.status == 403:
           logging.error(
               ('%s: %s user does not sufficient permissions '

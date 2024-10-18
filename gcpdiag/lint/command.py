@@ -23,6 +23,8 @@ import re
 import sys
 from typing import Any, Dict, List, Optional
 
+from google.auth import exceptions
+
 from gcpdiag import config, hooks, lint, models, utils
 from gcpdiag.lint.output import csv_output, json_output, terminal_output
 from gcpdiag.queries import apis, crm, gce, kubectl
@@ -304,10 +306,7 @@ def _parse_args_run_repo(
     # fetch project details
     project = crm.get_project(args.project)
   except utils.GcpApiError as e:
-    # fail hard as the user typically doesn't have permission
-    # to retrieve details of the project under inspection.
-    print('[ERROR]:exiting program...', file=sys.stderr)
-    raise ValueError('error getting project details') from e
+    raise e
   else:
     # set the project id in config and context as
     # remaining code will mainly use project ID
@@ -365,7 +364,10 @@ def _parse_args_run_repo(
   output.display_header(context)
 
   # Verify that we have access and that the CRM API is enabled
-  apis.verify_access(context.project_id)
+  try:
+    apis.verify_access(context.project_id)
+  except (utils.GcpApiError, exceptions.GoogleAuthError) as err:
+    raise err
 
   # Warn end user to fallback on serial logs buffer if project isn't storing in
   # cloud logging
@@ -397,10 +399,13 @@ def run(argv) -> int:
 
   try:
     repo = _parse_args_run_repo()
-  except ValueError as e:
-    print(e, file=sys.stderr)
-    sys.exit(1)
-  sys.exit(2 if repo.result.any_failed else 0)
+  except (utils.GcpApiError, exceptions.GoogleAuthError) as e:
+    # fail hard as the user typically doesn't have permission
+    # to retrieve details of the project under inspection.
+    print(f'[ERROR]:{e}. exiting program', file=sys.stderr)
+    sys.exit(2)
+  else:
+    sys.exit(2 if repo.result.any_failed else 0)
 
 
 def run_and_get_results(

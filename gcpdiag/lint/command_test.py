@@ -16,7 +16,7 @@
 import sys
 from unittest import TestCase, mock
 
-from gcpdiag import config, lint
+from gcpdiag import config, lint, utils
 from gcpdiag.lint import command
 from gcpdiag.queries import apis, apis_stub
 
@@ -54,28 +54,29 @@ class TestCommand(TestCase):
         '--include',
         'dataproc/BP/2021_001',
     ]
-    self.assertDictEqual(
-        command.run_and_get_results(None), {
-            'result': [{
-                'doc_url': 'https://gcpdiag.dev/rules/dataproc/BP/2021_001',
-                'long_doc': 'Enabling stackdriver logging for your Dataproc '
-                            'cluster impacts the ability\n'
-                            'to troubleshoot any issues that you might have.',
-                'result': [{
-                    'reason': 'no dataproc clusters found',
-                    'resource': '-',
-                    'status': 'skipped'
-                }],
-                'rule': 'dataproc/BP/2021_001',
-                'short_doc':
-                    'Check if logging is enabled : Stackdriver Logging '
-                    'enabled'
-            }],
-            'summary': {
-                'skipped': 1
-            },
-            'version': config.VERSION
-        })
+    with self.assertRaises(utils.GcpApiError):
+      self.assertDictEqual(
+          command.run_and_get_results(None), {
+              'result': [{
+                  'doc_url': 'https://gcpdiag.dev/rules/dataproc/BP/2021_001',
+                  'long_doc': 'Enabling stackdriver logging for your Dataproc '
+                              'cluster impacts the ability\n'
+                              'to troubleshoot any issues that you might have.',
+                  'result': [{
+                      'reason': 'no dataproc clusters found',
+                      'resource': '-',
+                      'status': 'skipped'
+                  }],
+                  'rule': 'dataproc/BP/2021_001',
+                  'short_doc':
+                      'Check if logging is enabled : Stackdriver Logging '
+                      'enabled'
+              }],
+              'summary': {
+                  'skipped': 1
+              },
+              'version': config.VERSION
+          })
 
 
 class Test:

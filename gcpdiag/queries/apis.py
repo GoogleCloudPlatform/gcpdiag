@@ -207,7 +207,8 @@ def get_api(service_name: str,
 
 
 @caching.cached_api_call(in_memory=True)
-def _list_apis(project_id: str) -> Set[str]:
+def _list_enabled_apis(project_id: str) -> Set[str]:
+  """List all enabled services available to the specified project"""
   logging.debug('listing enabled APIs')
   serviceusage = get_api('serviceusage', 'v1', project_id)
   request = serviceusage.services().list(parent=f'projects/{project_id}',
@@ -226,7 +227,7 @@ def _list_apis(project_id: str) -> Set[str]:
 
 def is_enabled(project_id: str, service_name: str) -> bool:
   universe_domain = config.get('universe_domain')
-  return f'{service_name}.{universe_domain}' in _list_apis(project_id)
+  return f'{service_name}.{universe_domain}' in _list_enabled_apis(project_id)
 
 
 def is_all_enabled(project_id: str, services: list) -> Dict[str, str]:
@@ -261,45 +262,47 @@ def verify_access(project_id: str):
 
   try:
     if not is_enabled(project_id, 'cloudresourcemanager'):
-      print((
-          'ERROR: Cloud Resource Manager API must be enabled. To enable, execute:\n'
-          f'gcloud services enable cloudresourcemanager.googleapis.com --project={project_id}'
-      ),
-            file=sys.stdout)
-      sys.exit(1)
-
+      service = f'cloudresourcemanager.{config.get("universe_domain")}'
+      error_msg = (
+          'Cloud Resource Manager API must be enabled. To enable, execute:\n'
+          f'gcloud services enable {service} --project={project_id}')
+      raise utils.GcpApiError(response=error_msg,
+                              service=service,
+                              reason='SERVICE_DISABLED')
     if not is_enabled(project_id, 'iam'):
-      print((
-          'ERROR: Identity and Access Management (IAM) API must be enabled. To enable, execute:\n'
-          f'gcloud services enable iam.googleapis.com --project={project_id}'),
-            file=sys.stdout)
-      sys.exit(1)
-
+      service = f'iam.{config.get("universe_domain")}'
+      error_msg = (
+          'Identity and Access Management (IAM) API must be enabled. To enable, execute:\n'
+          f'gcloud services enable iam.{config.get("universe_domain")} --project={project_id}'
+      )
+      raise utils.GcpApiError(response=error_msg,
+                              service=service,
+                              reason='SERVICE_DISABLED')
     if not is_enabled(project_id, 'logging'):
-      print((
-          'WARNING: Cloud Logging API is not enabled (related rules will be skipped).'
+      service = f'logging.{config.get("universe_domain")}'
+      warning_msg = (
+          'Cloud Logging API is not enabled (related rules will be skipped).'
           ' To enable, execute:\n'
-          f'gcloud services enable logging.googleapis.com --project={project_id}\n'
-      ),
-            file=sys.stdout)
+          f'gcloud services enable logging.{config.get("universe_domain")} --project={project_id}\n'
+      )
+      raise utils.GcpApiError(response=warning_msg,
+                              service=service,
+                              reason='SERVICE_DISABLED')
   except utils.GcpApiError as err:
-    if 'SERVICE_DISABLED' == err.reason and 'serviceusage.googleapis.com' == err.service:
-      print((
-          'ERROR: Service Usage API must be enabled. To enable, execute:\n'
-          f'gcloud services enable serviceusage.googleapis.com --project={project_id}'
-      ),
-            file=sys.stdout)
+    if 'SERVICE_DISABLED' == err.reason:
+      if f'serviceusage.{config.get("universe_domain")}' == err.service:
+        err.response += (
+            '\nService Usage API must be enabled. To enable, execute:\n'
+            f'gcloud services enable serviceusage.{config.get("universe_domain")} '
+            f'--project={project_id}')
     else:
-      print(f'ERROR: can\'t access project {project_id}: {err.message}.',
-            file=sys.stdout)
-    sys.exit(1)
+      logging.error('can\'t access project %s: %s', project_id, err.message)
+    raise err
   except exceptions.GoogleAuthError as err:
-    print(f'ERROR: {err}', file=sys.stdout)
+    logging.error(err)
     if _auth_method() == 'adc':
-      print(('Error using application default credentials. '
-             'Try running: gcloud auth login --update-adc'),
-            file=sys.stderr)
-    sys.exit(1)
-
+      logging.error('Error using application default credentials. '
+                    'Try running: gcloud auth login --update-adc')
+    raise err
   # Plug-in additional authorization verifications
   hooks.verify_access_hook(project_id)

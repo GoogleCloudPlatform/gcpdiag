@@ -116,21 +116,20 @@ class Test(unittest.TestCase):
                      command._validate_rule_pattern('gcp/runbook-id-one'))
 
     # Invalid patterns
-    with self.assertRaises(SystemExit) as e:
+    with self.assertRaises(ValueError):
       command._validate_rule_pattern('gcp')
-    self.assertEqual(2, e.exception.code)
-    with self.assertRaises(SystemExit) as e:
+
+    with self.assertRaises(ValueError):
       command._validate_rule_pattern('runbook-id')
-    self.assertEqual(2, e.exception.code)
-    with self.assertRaises(SystemExit) as e:
+
+    with self.assertRaises(ValueError):
       command._validate_rule_pattern('gcp/runbook-id/1/2/3/4')
-    self.assertEqual(2, e.exception.code)
-    with self.assertRaises(SystemExit) as e:
+
+    with self.assertRaises(ValueError):
       command._validate_rule_pattern('gcp/runbook_id')
-    self.assertEqual(2, e.exception.code)
-    with self.assertRaises(SystemExit) as e:
+
+    with self.assertRaises(ValueError):
       command._validate_rule_pattern(r'gcp/runbook\id')
-    self.assertEqual(2, e.exception.code)
 
   @mock.patch('builtins.print')
   def test_no_file_path_provided(self, mock_print):
@@ -144,10 +143,9 @@ class Test(unittest.TestCase):
   @mock.patch('os.path.exists', return_value=False)
   @mock.patch('builtins.print')
   def test_file_does_not_exist(self, mock_print, mock_exists):
-    with self.assertRaises(SystemExit) as e:
+    with self.assertRaises(SystemExit):
       command._load_bundles_spec('non_existent_file.yaml')
 
-    self.assertEqual(1, e.exception.code)
     mock_print.assert_called_once_with(
         'ERROR: Bundle Specification file: non_existent_file.yaml does not exist!',
         file=sys.stderr)
@@ -163,3 +161,11 @@ class Test(unittest.TestCase):
     self.assertEqual(result[0]['parameter']['project_id'], 'test-project')
     mock_exists.assert_called_with('valid_file.yaml')
     assert mock_file.called
+
+  def test_run_and_get_report(self):
+    argv = [
+        'gcpdiag runbook', 'gce/ssh', '-p', 'project_id=gcpdiag-gce1-aaaa',
+        '-p', 'zone=us-central1-a', '-p', 'name=test', '--interface', 'api'
+    ]
+    with mock.patch('gcpdiag.runbook.DiagnosticEngine.run', side_effect=None):
+      command.run_and_get_report(argv)

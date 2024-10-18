@@ -109,13 +109,17 @@ class GcpApiError(Exception):
     except KeyError:
       return None
 
-  def __init__(self, response='An error occurred during the GCP API call'):
+  def __init__(self,
+               response='An error occurred during the GCP API call',
+               reason=None,
+               service=None):
     self.response = response
-    self.reason = None
-    self.service = None
+    self.reason = reason
+    self.service = service
     # see also: https://github.com/googleapis/google-api-python-client/issues/662
     try:
-      content = json.loads(response.content)
+      content = json.loads(response.content) if hasattr(response,
+                                                        'content') else response
       if isinstance(
           content,
           dict) and 'error' in content and 'message' in content['error']:

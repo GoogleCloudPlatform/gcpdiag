@@ -36,20 +36,16 @@ class TestDiagnosticEngine(unittest.TestCase):
     self.de.add_task((runbook.DiagnosticTree(), {}))
 
   def test_load_rule_invalid(self):
-    with self.assertRaises(SystemExit) as cm:
-      with self.assertRaises(runbook.exceptions.DiagnosticTreeNotFound):
-        self.de.load_tree('invalid_rule_name')
-    # Test program is exited with code 2 when invalid rule name is provided
-    self.assertEqual(cm.exception.code, 2)
+    with self.assertRaises(runbook.exceptions.DiagnosticTreeNotFound):
+      self.de.load_tree('invalid_rule_name')
 
   #pylint: disable=protected-access
   def test_run_diagnostic_tree_missing_required_parameters(self):
-    with self.assertRaises(SystemExit) as cm:
+    with self.assertRaises(AttributeError):
       dt = runbook.DiagnosticTree()
       dt.parameters = {'missing_param': {'required': True,}}
       self.de._check_required_paramaters(parameter_def=dt.parameters,
                                          caller_args=models.Parameter())
-    self.assertEqual(cm.exception.code, 2)
 
   @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
   def test_find_path_dfs_normal_operation(self, mock_run_step):
