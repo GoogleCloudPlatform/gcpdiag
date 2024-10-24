@@ -173,6 +173,7 @@ class ReportManager:
     self.reports[run_id].results[execution_id].results.append(evaluation)
 
   def serialize_report(self, report: Report):
+    line_breaks = '\t|\n|\r|\r\n|\x0b|\x0c'
 
     def resource_evaluation(eval_list: List[ResourceEvaluation]):
       return [{
@@ -181,26 +182,37 @@ class ReportManager:
           'status':
               r.status,
           'reason':
-              r.reason,
+              re.sub(line_breaks, '', str(r.reason)),
           'remediation':
-              r.remediation if r.remediation else '-',
+              re.sub(line_breaks, '', r.remediation) if r.remediation else '-',
           'remediation_skipped':
               False if config.get('auto') else r.remediation_skipped
       } for r in eval_list]
 
     def result_to_dict(entry: StepResult):
       return {
-          'execution_id': entry.step.execution_id,
-          'totals_by_status': entry.totals_by_status,
-          'description': entry.step.__doc__,
-          'execution_message': entry.step.execution_message,
-          'overall_status': entry.overall_status,
-          'start_time': entry.start_time,
-          'end_time': entry.end_time,
-          'metadata': entry.metadata,
-          'info': entry.info,
-          'execution_error': entry.step_error,
-          'resource_evaluation': resource_evaluation(entry.results)
+          'execution_id':
+              entry.step.execution_id,
+          'totals_by_status':
+              entry.totals_by_status,
+          'description':
+              re.sub(line_breaks, '', entry.step.__doc__),
+          'execution_message':
+              re.sub(line_breaks, '', entry.step.execution_message),
+          'overall_status':
+              entry.overall_status,
+          'start_time':
+              entry.start_time,
+          'end_time':
+              entry.end_time,
+          'metadata':
+              entry.metadata,
+          'info':
+              entry.info,
+          'execution_error':
+              entry.step_error,
+          'resource_evaluation':
+              resource_evaluation(entry.results)
       }
 
     def parse_report_data(data):
