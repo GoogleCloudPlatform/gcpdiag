@@ -133,8 +133,8 @@ class VmExternalIpConnectivityTest(runbook.Step):
     result = networkmanagement.run_connectivity_test(
         op.get(flags.PROJECT_ID), op.get(flags.SRC_IP), dest_ip,
         op.get(flags.DEST_PORT), op.get(flags.PROTOCOL_TYPE))
-    # if the VM has only a private IP address, check that there is a NATGW in the traffic path and
-    # put the NATGW details
+    # if the VM has only a private IP address, check that there is a NATGW in
+    # the traffic path and put the NATGW details
     if result and not util.is_external_ip_on_nic(vm.get_network_interfaces,
                                                  op.get(flags.SRC_NIC)):
       steps = result['reachabilityDetails']['traces'][0]['steps']
@@ -145,6 +145,24 @@ class VmExternalIpConnectivityTest(runbook.Step):
         ]
         op.put('nat_gateway_name', natgw_step[0]['nat']['natGatewayName'])
         op.put('nat_gateway_uri', natgw_step[0]['nat']['routerUri'])
+      else:
+        # the VM has only a private IP address but there is no NATGW in the traffic path
+        # Notify the cx if a custom NAT GW is being used.
+        op.add_uncertain(vm,
+                         reason="""
+          A NAT gateway is not found in the external traffic path for the VM: {},
+          connecting to the external IP address {}.
+          """.format(op.get(flags.NAME), dest_ip),
+                         remediation="""
+          If a VM instance or custom NAT is being used as a NAT Gateway, check that
+          it is configured and functioning correctly. Otherwise, enusre that a public
+          Cloud NAT is configured for the VPC Network [1]:
+
+          Check that the destination IP is a Google Service IP address and
+          Private Google Access is enabled
+
+          1. https://cloud.google.com/nat/docs/set-up-manage-network-address-translation#creating_nat
+          """)
 
     # If there is no result from the connectivity test, prompt to rerun/retest
     if not result:
@@ -154,7 +172,7 @@ class VmExternalIpConnectivityTest(runbook.Step):
           'returned. Do you want to rerun the connectivity test?',
           choice_msg='Enter an option: ')
       if response == op.STOP:
-        op.add_skipped(vm, reason='Skipping the connectivity test.')
+        op.add_skipped(vm, reason='Skipping the connectivity test...')
 
     # Report the connectivity test result
     result_status = result.get('reachabilityDetails', {}).get('result')

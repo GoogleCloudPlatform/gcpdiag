@@ -16,6 +16,7 @@
 from gcpdiag import runbook
 from gcpdiag.queries import gce, monitoring
 from gcpdiag.runbook import op
+from gcpdiag.runbook.nat import utils
 from gcpdiag.runbook.vpc import flags
 
 
@@ -34,12 +35,15 @@ class NatIpExhaustionCheck(runbook.Step):
                           zone=op.get(flags.ZONE),
                           instance_name=op.get(flags.NAME))
 
+    region = utils.region_from_zone(op.get(flags.ZONE))
+
     if op.get('nat_gateway_name'):
       gw_name = op.get('nat_gateway_name')
       nat_allocation_failed = monitoring.query(
           op.get(flags.PROJECT_ID),
           'fetch nat_gateway::router.googleapis.com/nat/nat_allocation_failed '
-          f'| filter (resource.gateway_name == \'{gw_name}\') | within 5m')
+          f'| filter (resource.gateway_name == \'{gw_name}\' && resource.region == \'{region}\')'
+          ' | within 5m')
 
       if nat_allocation_failed:
         values = nat_allocation_failed.values()
@@ -80,12 +84,15 @@ class NatResourceExhaustionCheck(runbook.Step):
                           zone=op.get(flags.ZONE),
                           instance_name=op.get(flags.NAME))
 
+    region = utils.region_from_zone(op.get(flags.ZONE))
+
     if op.get('nat_gateway_name'):
       gw_name = op.get('nat_gateway_name')
       dropped_sent_packets_count = monitoring.query(
           op.get(flags.PROJECT_ID),
           'fetch nat_gateway::router.googleapis.com/nat/dropped_sent_packets_count '
-          f'| filter (resource.gateway_name == \'{gw_name}\')'
+          f'| filter (resource.gateway_name == \'{gw_name}\' '
+          f'&& resource.region == \'{region}\')'
           '| align rate(10m)'
           '| within 10m | group_by [metric.reason],'
           ' [value_dropped_sent_packets_count_aggregate: '
@@ -133,12 +140,14 @@ class NatDroppedReceivedPacketCheck(runbook.Step):
                           zone=op.get(flags.ZONE),
                           instance_name=op.get(flags.NAME))
 
+    region = utils.region_from_zone(op.get(flags.ZONE))
+
     if op.get('nat_gateway_name'):
       gw_name = op.get('nat_gateway_name')
       received_packets_dropped = monitoring.query(
           op.get(flags.PROJECT_ID),
           'fetch nat_gateway::router.googleapis.com/nat/dropped_received_packets_count '
-          f'| filter (resource.gateway_name == \'{gw_name}\')'
+          f'| filter (resource.gateway_name == \'{gw_name}\' && resource.region == \'{region}\')'
           '| align rate(5m) | within 5m | group_by [],'
           '[value_dropped_received_packets_count_aggregate:'
           'aggregate(value.dropped_received_packets_count)]')
@@ -161,7 +170,8 @@ class NatDroppedReceivedPacketCheck(runbook.Step):
             vm_received_packets_dropped_count = monitoring.query(
                 op.get(flags.PROJECT_ID),
                 'fetch gce_instance::compute.googleapis.com/nat/dropped_received_packets_count '
-                f'| filter (metric.nat_gateway_name == \'{gw_name}\')'
+                f'| filter (resource.gateway_name == \'{gw_name}\' '
+                f'&& resource.region == \'{region}\')'
                 '| align rate(5m)'
                 '| every 5m'
                 '| group_by [resource.instance_id], '

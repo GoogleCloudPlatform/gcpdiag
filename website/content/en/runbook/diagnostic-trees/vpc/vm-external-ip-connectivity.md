@@ -17,19 +17,25 @@ This runbook investigates components required for VMs to establish connectivity
 
   Areas Examined:
 
-  - VM Instance Status: Evaluates the VM's current state, performance - ensuring that it is running
-    and not impaired by high CPU usage, insufficient memory, or disk space issues that might disrupt
-    normal operations.
+  - VM Instance:
+      - Verify that the VM exists and is running
 
-  - VM Configuration: Checks the source nic configuration on the VM if it
-    has an External IP address or not.
+  - VM Configuration:
+      - Checks the source nic configuration on the VM if it has an
+        External IP address or not.
 
-  - GCE Network Connectivity Tests: Reviews applicable routing and firewall rules to
-    verify that there are no network barriers preventing the VM from connection to
-    an external IP address.
+  - VPC routes checks:
+      - Checks the VPC routing rules are configured to allow external connectivity
 
-  - NATGW Checks: For source nic without an External IP address,
-    verify the VM is served by a Public NAT Gateway and check there are no issues on the NATGW.
+  - VPC firewall and firewall policy checks:
+      - Checks the VPC firewall and firewall policies allow external connectivity.
+
+  - GCE Network Connectivity Tests:
+      - Runs a VPC network connectivity test and reports the result.
+
+  - NATGW Checks:
+      - For source nics without an External IP address, verify the VM is served
+        by a Public NAT Gateway and check there are no issues on the NATGW.
 
 ### Executing this runbook
 
@@ -37,7 +43,6 @@ This runbook investigates components required for VMs to establish connectivity
 gcpdiag runbook vpc/vm-external-ip-connectivity \
   -p project_id=value \
   -p name=value \
-  -p id=value \
   -p dest_ip=value \
   -p dest_port=value \
   -p protocol_type=value \
@@ -51,7 +56,6 @@ gcpdiag runbook vpc/vm-external-ip-connectivity \
 |------|----------|---------|------|------|
 | `project_id` | True | None | str | The Project ID of the resource under investigation |
 | `name` | True | None | str | The name of the GCE VM |
-| `id` | False | None | int | The instance ID of the GCE VM |
 | `dest_ip` | True | None | IPv4Address | External IP the VM is connecting to |
 | `dest_port` | False | 443 | int | External IP the VM is connecting to |
 | `protocol_type` | False | tcp | str | Protocol used to connect to SSH |

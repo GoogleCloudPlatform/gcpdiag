@@ -37,19 +37,25 @@ class VmExternalIpConnectivity(runbook.DiagnosticTree):
 
   Areas Examined:
 
-  - VM Instance Status: Evaluates the VM's current state, performance - ensuring that it is running
-    and not impaired by high CPU usage, insufficient memory, or disk space issues that might disrupt
-    normal operations.
+  - VM Instance:
+      - Verify that the VM exists and is running
 
-  - VM Configuration: Checks the source nic configuration on the VM if it
-    has an External IP address or not.
+  - VM Configuration:
+      - Checks the source nic configuration on the VM if it has an
+        External IP address or not.
 
-  - GCE Network Connectivity Tests: Reviews applicable routing and firewall rules to
-    verify that there are no network barriers preventing the VM from connection to
-    an external IP address.
+  - VPC routes checks:
+      - Checks the VPC routing rules are configured to allow external connectivity
 
-  - NATGW Checks: For source nic without an External IP address,
-    verify the VM is served by a Public NAT Gateway and check there are no issues on the NATGW.
+  - VPC firewall and firewall policy checks:
+      - Checks the VPC firewall and firewall policies allow external connectivity.
+
+  - GCE Network Connectivity Tests:
+      - Runs a VPC network connectivity test and reports the result.
+
+  - NATGW Checks:
+      - For source nics without an External IP address, verify the VM is served
+        by a Public NAT Gateway and check there are no issues on the NATGW.
     """
 
   parameters = {
@@ -63,11 +69,6 @@ class VmExternalIpConnectivity(runbook.DiagnosticTree):
           'help': 'The name of the GCE VM',
           'group': 'instance',
           'required': True
-      },
-      flags.ID: {
-          'type': int,
-          'help': 'The instance ID of the GCE VM',
-          'group': 'instance'
       },
       flags.DEST_IP: {
           'type': ipaddress.IPv4Address,
@@ -135,8 +136,6 @@ class VmExternalIpConnectivityStart(runbook.StartStep):
         # Check for instance id and instance name
         if not op.get(flags.ID):
           op.put(flags.ID, vm.id)
-        elif not op.get(flags.NAME):
-          op.put(flags.NAME, vm.name)
 
     # Check that the user passed in a valid source NIC on the VM
     if not util.is_valid_nic(op.get(flags.SRC_NIC)):
@@ -210,11 +209,12 @@ class VmExternalIpConnectivityEnd(runbook.EndStep):
   def execute(self):
     """Finalizing VM external connectivity diagnostics..."""
     if not config.get(flags.INTERACTIVE_MODE):
-      response = op.prompt(
-          kind=op.CONFIRMATION,
-          message=
-          f'Are you able to connect to external IP from the VM {op.get(flags.NAME)}?',
-          choice_msg='Enter an option: ')
+      response = op.prompt(kind=op.CONFIRMATION,
+                           message="""
+          Are you able to connect to external IP from the VM {}:
+          after taking the remediation steps outlined.
+          """.format(op.get(flags.NAME)),
+                           choice_msg='Enter an option: ')
       if response == op.NO:
         op.info(message=op.END_MESSAGE)
 
