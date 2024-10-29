@@ -20,7 +20,6 @@ import os
 import pkgutil
 import re
 import sys
-import warnings
 from typing import List
 
 import yaml
@@ -96,14 +95,6 @@ def validate_args(args):
     )
 
 
-class DeprecatedAction(argparse.Action):
-
-  def __call__(self, parser, namespace, values, option_string=None):
-    warnings.warn(f'Argument {option_string} is deprecated.',
-                  DeprecationWarning)
-    setattr(namespace, self.dest, values)
-
-
 def _init_runbook_args_parser():
   parser = argparse.ArgumentParser(
       description='Run diagnostics in GCP projects.', prog='gcpdiag runbook')
@@ -117,11 +108,6 @@ def _init_runbook_args_parser():
       '--auth-key',
       help='Authenticate using a service account private key file',
       metavar='FILE')
-
-  parser.add_argument('--project',
-                      action=DeprecatedAction,
-                      metavar='P',
-                      help=argparse.SUPPRESS)
 
   parser.add_argument(
       '--billing-project',
@@ -361,12 +347,6 @@ def run_and_get_report(argv=None, credentials: str = None) -> dict:
   logging_handler = output_.get_logging_handler()
   setup_logging(logging_handler)
 
-  # for capatibility till --project is fully deprecated under runbooks
-  if args.project and args.project.isdigit():
-    args.parameter['project_number'] = args.project
-  elif args.project and not args.project.isdigit():
-    args.parameter['project_id'] = args.project
-
   # Run the runbook or step connections.
   if args.runbook:
     # Rules name patterns that shall be included or excluded
@@ -398,8 +378,8 @@ def run_and_get_report(argv=None, credentials: str = None) -> dict:
 
   if args.interface == runbook.constants.CLI:
     output_.display_footer(dt_engine.interface.rm)
-  # Clean up the kubeconfig file generated for gcpdiag
-  kubectl.clean_up()
+    # Clean up the kubeconfig file generated for gcpdiag
+    kubectl.clean_up()
   # return success if we get to this point and the report..
   return report
 
