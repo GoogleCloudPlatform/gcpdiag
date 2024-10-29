@@ -16,8 +16,8 @@
 import logging
 from typing import Dict
 
-from gcpdiag import caching
-from gcpdiag.queries import apis, apis_utils
+from gcpdiag import caching, config
+from gcpdiag.queries import apis
 
 PREFETCH_ORG_CONSTRAINTS = (
     'constraints/compute.disableSerialPortAccess',
@@ -70,10 +70,8 @@ def _get_effective_org_policy_all_constraints(
 
   all_constraints: Dict[str, PolicyConstraint] = {}
   logging.info('getting org constraints of %s', project_id)
-  for _, result, exception in apis_utils.batch_execute_all(crm_api, requests):
-    if exception:
-      logging.warning("can't retrieve org constraint (error: %s)", exception)
-      continue
+  for req in requests:
+    result = req.execute(num_retries=config.API_RETRIES)
     if 'booleanPolicy' in result:
       all_constraints[result['constraint']] = BooleanPolicyConstraint(
           result['constraint'], result['booleanPolicy'])
