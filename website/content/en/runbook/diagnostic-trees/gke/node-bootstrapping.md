@@ -30,6 +30,7 @@ This runbook requires at least
 
 ```shell
 gcpdiag runbook gke/node-bootstrapping \
+  -p project_id=value \
   -p location=value \
   -p node=value \
   -p nodepool=value \
@@ -42,6 +43,7 @@ gcpdiag runbook gke/node-bootstrapping \
 
 | Name | Required | Default | Type | Help |
 |------|----------|---------|------|------|
+| `project_id` | True | None | str | The ID of the project hosting the GKE Cluster |
 | `location` | True | None | str | The location where the node or nodepool is. For a node, location will be the zone where the node is running (i.e. us-central1-c). For a nodepool, this can be the zone or the region (i.e. us-central1) where the nodepool is configured |
 | `node` | False | None | str | The node name that is failing to register (if available). If node name is not available, please provide the nodepool name where nodes aren't registering |
 | `nodepool` | False | None | str | The nodepool name where nodes aren't registering, if a node name is not availalbe |

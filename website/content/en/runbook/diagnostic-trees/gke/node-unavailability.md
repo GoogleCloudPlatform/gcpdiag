@@ -24,6 +24,7 @@ This runbook investigates various factors that may have caused a node to become 
 
 ```shell
 gcpdiag runbook gke/node-unavailability \
+  -p project_id=value \
   -p name=value \
   -p node=value \
   -p location=value
@@ -33,6 +34,7 @@ gcpdiag runbook gke/node-unavailability \
 
 | Name | Required | Default | Type | Help |
 |------|----------|---------|------|------|
+| `project_id` | True | None | str | The ID of the project hosting the GKE Cluster |
 | `name` | False | None | str | The name of the GKE cluster, to limit search only for this cluster |
 | `node` | True | None | str | The node name that was started. |
 | `location` | False | None | str | The zone of the GKE node |

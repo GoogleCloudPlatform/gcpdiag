@@ -118,6 +118,11 @@ class NodeAutoRepair(runbook.DiagnosticTree):
   - Nodes was repaired because of unallocatable TPUs
   """
   parameters = {
+      flags.PROJECT_ID: {
+          'type': str,
+          'help': 'The ID of the project hosting the GKE Cluster',
+          'required': True
+      },
       flags.NAME: {
           'type':
               str,

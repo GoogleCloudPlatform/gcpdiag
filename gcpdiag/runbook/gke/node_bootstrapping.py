@@ -117,6 +117,11 @@ class NodeBootstrapping(runbook.DiagnosticTree):
   """
   # Specify parameters common to all steps in the diagnostic tree class.
   parameters = {
+      flags.PROJECT_ID: {
+          'type': str,
+          'help': 'The ID of the project hosting the GKE Cluster',
+          'required': True
+      },
       flags.LOCATION: {
           'type':
               str,

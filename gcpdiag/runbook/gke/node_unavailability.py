@@ -42,6 +42,11 @@ class NodeUnavailability(runbook.DiagnosticTree):
   - Node Pool Upgrade
   """
   parameters = {
+      flags.PROJECT_ID: {
+          'type': str,
+          'help': 'The ID of the project hosting the GKE Cluster',
+          'required': True
+      },
       flags.NAME: {
           'type':
               str,
