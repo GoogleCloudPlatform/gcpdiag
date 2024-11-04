@@ -25,6 +25,8 @@ from gcpdiag.runbook.gce import constants as gce_const
 from gcpdiag.runbook.gce import flags
 from gcpdiag.runbook.gce import generalized_steps as gce_gs
 
+IO_LATENCY_THRESHOLD = 1500
+
 
 class VmPerformance(runbook.DiagnosticTree):
   """ Google Compute Engine VM performance checks
@@ -41,8 +43,10 @@ class VmPerformance(runbook.DiagnosticTree):
     - High Disk IOPS utilisation
     - High Disk Throughput utilisation
     - Disk Health check
+    - Disk IO latency check
+    - Disk Slowness check
     - Check for Live Migrations
-    - Usualy Error checks in Serial console logs
+    - Usual Error checks in Serial console logs
   """
 
   # Specify parameters common to all steps in the diagnostic tree class.
@@ -113,6 +117,7 @@ class VmPerformance(runbook.DiagnosticTree):
     self.add_step(parent=cpu_check, child=CpuOvercommitmentCheck())
     self.add_step(parent=start, child=DiskHealthCheck())
     self.add_step(parent=start, child=disk_util_check)
+    self.add_step(parent=start, child=DiskAvgIOLatencyCheck())
 
     # Check for PD slow Reads/Writes
     slow_disk_io = gce_gs.VmSerialLogsCheck()
@@ -228,7 +233,7 @@ class DiskHealthCheck(runbook.Step):
   template = 'vm_performance::disk_health_check'
 
   def execute(self):
-    """Instance Disk health check"""
+    """Checking if instance disks are healthy"""
 
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
@@ -259,9 +264,7 @@ class DiskHealthCheck(runbook.Step):
       if pd_health_metrics:
         op.add_failed(vm,
                       reason=op.prep_msg(op.FAILURE_REASON,
-                                         disk_name=disk['deviceName'],
-                                         start_time=start_formatted_string,
-                                         end_time=end_formatted_string),
+                                         disk_name=disk['deviceName']),
                       remediation=op.prep_msg(op.FAILURE_REMEDIATION))
       else:
         op.add_ok(vm,
@@ -363,6 +366,65 @@ class CpuOvercommitmentCheck(runbook.Step):
       op.add_skipped(vm,
                      reason='VM is neither a Sole Tenent VM nor an E2 instance,'
                      'Skipping CPU Overcommitment checks')
+
+
+class DiskAvgIOLatencyCheck(runbook.Step):
+  """Check Disk Avg IO Latency"""
+
+  template = 'vm_performance::disk_io_latency_check'
+
+  def execute(self):
+    """Checking if Instance's Disk Avg IO Latency is within optimal limits"""
+
+    vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
+                          zone=op.get(flags.ZONE),
+                          instance_name=op.get(flags.NAME))
+
+    start_formatted_string = op.get(
+        flags.START_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+    end_formatted_string = op.get(
+        flags.END_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+    within_str = f'within d\'{start_formatted_string}\', d\'{end_formatted_string}\''
+
+    # Fetch list of disks for the instance
+    disk_list = gce.get_all_disks_of_instance(op.get(flags.PROJECT_ID), vm.zone,
+                                              vm.name)
+    disk: gce.Disk
+    for disks in disk_list.items():
+      disk = disks[1]
+      if disk.type in ['pd-balanced', 'pd-ssd', 'pd-standard', 'pd-extreme']:
+        # Checking Disk IO latency for the instance -
+        disk_io_latency = monitoring.query(
+            op.get(flags.PROJECT_ID), """
+          fetch gce_instance
+          | metric 'compute.googleapis.com/instance/disk/average_io_latency'
+          | filter (resource.instance_id == '{}')
+            &&
+              (metric.device_name == '{}'
+              && metric.storage_type == '{}')
+          | group_by 1m, [value_average_io_latency_mean: mean(value.average_io_latency)]
+          | every 1m
+          | group_by [metric.storage_type],
+            [value_average_io_latency_mean_percentile:
+            percentile(value_average_io_latency_mean, 99)]
+          | filter(cast_units(value_average_io_latency_mean_percentile,"")/1000) >= {}
+          | {}
+          """.format(vm.id, disk.name, disk.type, IO_LATENCY_THRESHOLD,
+                     within_str))
+
+        if disk_io_latency:
+          op.add_failed(vm,
+                        reason=op.prep_msg(op.FAILURE_REASON,
+                                           disk_name=disk.name),
+                        remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+        else:
+          op.add_ok(vm,
+                    reason=op.prep_msg(op.SUCCESS_REASON, disk_name=disk.name))
+      else:
+        op.add_skipped(
+            vm,
+            reason=('Disk-Type {} is not supported with this gcpdiag runbook,'
+                    ' disk name - {}').format(disk.type, disk.name))
 
 
 class DiskIopsThroughputUtilisationChecks(runbook.Step):

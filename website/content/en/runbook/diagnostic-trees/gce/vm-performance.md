@@ -24,8 +24,10 @@ This runbook is designed to assist you in investigating and understanding the un
     - High Disk IOPS utilisation
     - High Disk Throughput utilisation
     - Disk Health check
+    - Disk IO latency check
+    - Disk Slowness check
     - Check for Live Migrations
-    - Usualy Error checks in Serial console logs
+    - Usual Error checks in Serial console logs
 
 ### Executing this runbook
 
@@ -77,6 +79,8 @@ gcpdiag runbook --help
   - [Vm Serial Logs Check](/runbook/steps/gce/vm-serial-logs-check)
 
   - [Vm Serial Logs Check](/runbook/steps/gce/vm-serial-logs-check)
+
+  - [Disk Avg I O Latency Check](/runbook/steps/gce/disk-avg-i-o-latency-check)
 
   - [Check Live Migrations](/runbook/steps/gce/check-live-migrations)
 
