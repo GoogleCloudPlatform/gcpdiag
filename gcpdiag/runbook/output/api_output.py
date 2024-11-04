@@ -14,6 +14,7 @@
 """API class for api output implementations"""
 
 import logging
+import sys
 
 from gcpdiag.runbook.output.base_output import BaseOutput
 
@@ -22,7 +23,7 @@ class ApiOutput(BaseOutput):
   """API output implementation."""
 
   def get_logging_handler(self) -> logging.Handler:
-    stream_handler = logging.StreamHandler()
+    stream_handler = logging.StreamHandler(stream=sys.stdout)
     formatter = logging.Formatter('%(levelname)-6s: %(message)s')
     stream_handler.setFormatter(formatter)
     return stream_handler
