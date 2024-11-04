@@ -174,17 +174,45 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
         disk_errors = disk_search.get_last_match(i.id)
 
       # Checking Disk IO latency for the instance -
-      disk_io_latency = monitoring.query(
-          context.project_id, """
-        fetch gce_instance
-        | metric 'compute.googleapis.com/instance/disk/average_io_latency'
-        | filter (resource.instance_id == '{}')
-        | group_by 1m, [value_average_io_latency_mean: mean(value.average_io_latency)]
-        | every 1m
-        | group_by [metric.device_name], [value_average_io_latency_mean_percentile: percentile(value_average_io_latency_mean, 99)]
-        | filter(cast_units(value_average_io_latency_mean_percentile,"")/1000) >= {}
-        | {}
-        """.format(i.name, IO_LATENCY_THRESHOLD, within_str))
+      disk_list = gce.get_all_disks_of_instance(context.project_id, i.zone,
+                                                i.name)
+      disk: gce.Disk
+      for disks in disk_list.items():
+        disk = disks[1]
+        if disk.type in ['pd-balanced', 'pd-ssd', 'pd-standard', 'pd-extreme']:
+          disk_io_latency = monitoring.query(
+              context.project_id, """
+              fetch gce_instance
+              | metric 'compute.googleapis.com/instance/disk/average_io_latency'
+              | filter (resource.instance_id == '{}')
+                &&
+                  (metric.device_name == '{}'
+                  && metric.storage_type == '{}')
+              | group_by 1m, [value_average_io_latency_mean: mean(value.average_io_latency)]
+              | every 1m
+              | group_by [metric.storage_type],
+                [value_average_io_latency_mean_percentile:
+                percentile(value_average_io_latency_mean, 99)]
+              | filter(cast_units(value_average_io_latency_mean_percentile,"")/1000) >= {}
+              | {}
+            """.format(i.id, disk.name, disk.type, IO_LATENCY_THRESHOLD,
+                       within_str))
+
+          if disk_io_latency:
+            report.add_failed(
+                i,
+                reason=
+                ('Disk IO Latency for disk {} is exceeding optimal levels, potentially '
+                 'impacting performance of the instance.').format(disk.name))
+          else:
+            report.add_ok(i,
+                          ('Disk {} IO Latency is under optimal levels').format(
+                              disk.name))
+        else:
+          report.add_skipped(
+              i,
+              reason=('Disk-Type {} is not supported with this gcpdiag runbook,'
+                      ' disk name - {}').format(disk.type, disk.name))
 
       if cpu_usage:
         report.add_failed(
@@ -217,10 +245,3 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
                 'could be causing issue with instance'))
       else:
         report.add_ok(i, 'Disk utilization is under optimal levels')
-
-      if disk_io_latency:
-        report.add_failed(
-            i, ('Disk IO Latency is exceeding optimal levels, potentially '
-                'impacting performance of the instance.'))
-      else:
-        report.add_ok(i, 'Disk IO Latency is under optimal levels')
