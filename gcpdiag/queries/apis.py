@@ -18,7 +18,6 @@
 import json
 import logging
 import os
-import sys
 from typing import Dict, Optional, Set
 
 import google.auth
@@ -28,7 +27,6 @@ import httplib2
 from google.api_core.client_options import ClientOptions
 from google.auth import exceptions
 from google.oauth2 import credentials as oauth2_credentials
-from google_auth_oauthlib import flow
 from googleapiclient import discovery
 
 from gcpdiag import caching, config, hooks, utils
@@ -79,30 +77,6 @@ def _get_credentials_key():
     _credentials, _ = google.auth.load_credentials_from_file(filename=filename,
                                                              scopes=AUTH_SCOPES)
   return _credentials
-
-
-def _oauth_flow_prompt(client_config):
-  oauth_flow = flow.Flow.from_client_config(
-      client_config,
-      scopes=AUTH_SCOPES + ['https://www.googleapis.com/auth/accounts.reauth'],
-      redirect_uri='urn:ietf:wg:oauth:2.0:oob')
-  while True:
-    auth_url, _ = oauth_flow.authorization_url(prompt='consent')
-    print('Go to the following URL in your browser to authenticate:\n',
-          file=sys.stderr)
-    print('  ' + auth_url, file=sys.stderr)
-    print('\nEnter verification code: ', file=sys.stderr, end='')
-    code = input()
-    print(file=sys.stderr)
-
-    os.environ.setdefault('OAUTHLIB_RELAX_TOKEN_SCOPE', 'True')
-    token = oauth_flow.fetch_token(code=code)
-    if 'https://www.googleapis.com/auth/cloud-platform' in token['scope']:
-      return oauth_flow.credentials
-    print((
-        'ERROR: Cloud Platform scope must be granted. Make sure that you tick all boxes\n'
-        '       in the consent screen.\n'),
-          file=sys.stderr)
 
 
 def set_credentials(cred_json):
