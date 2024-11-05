@@ -1,0 +1,86 @@
+{
+  "kind": "compute#backendServiceAggregatedList",
+  "id": "projects/gcpdiag-lb2-aaaa/aggregated/backendServices",
+  "items": {
+    "global": {
+      "backendServices": [
+        {
+          "kind": "compute#backendService",
+          "id": "4222530648416744207",
+          "creationTimestamp": "2024-08-12T01:54:56.339-07:00",
+          "name": "web-backend-service",
+          "description": "",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/global/backendServices/web-backend-service",
+          "backends": [
+            {
+              "group": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/zones/us-east1-b/instanceGroups/lb-backend-example",
+              "balancingMode": "UTILIZATION",
+              "capacityScaler": 1
+            }
+          ],
+          "healthChecks": [
+            "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/global/healthChecks/http-basic-check"
+          ],
+          "timeoutSec": 30,
+          "port": 80,
+          "protocol": "HTTP",
+          "fingerprint": "JJHYy-dQ_ks=",
+          "portName": "http",
+          "enableCDN": false,
+          "sessionAffinity": "NONE",
+          "affinityCookieTtlSec": 0,
+          "loadBalancingScheme": "EXTERNAL",
+          "connectionDraining": {
+            "drainingTimeoutSec": 0
+          },
+          "iap": {
+            "enabled": false
+          },
+          "usedBy": [
+            {
+              "reference": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/global/urlMaps/web-map-http"
+            }
+          ]
+        }
+      ]
+    },
+    "regions/europe-west4": {
+      "backendServices": [
+        {
+          "kind": "compute#backendService",
+          "id": "4868168055250150809",
+          "creationTimestamp": "2024-08-13T06:11:18.777-07:00",
+          "name": "backend-service-2",
+          "description": "",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/regions/europe-west4/backendServices/backend-service-2",
+          "backends": [
+            {
+              "group": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/zones/europe-west4-b/networkEndpointGroups/neg1",
+              "balancingMode": "CONNECTION"
+            }
+          ],
+          "healthChecks": [
+            "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/regions/europe-west4/healthChecks/tcp-basic-check-2"
+          ],
+          "timeoutSec": 30,
+          "port": 80,
+          "protocol": "TCP",
+          "fingerprint": "Q-UN6RnknOk=",
+          "portName": "http",
+          "enableCDN": false,
+          "sessionAffinity": "NONE",
+          "affinityCookieTtlSec": 0,
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/regions/europe-west4",
+          "loadBalancingScheme": "EXTERNAL",
+          "connectionDraining": {
+            "drainingTimeoutSec": 0
+          },
+          "iap": {
+            "enabled": false
+          }
+        }
+      ]
+    }
+  },
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/aggregated/backendServices"
+}

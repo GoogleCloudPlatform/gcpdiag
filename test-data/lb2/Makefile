@@ -28,8 +28,9 @@ all:	\
 	json-dumps/compute-project.json \
 	json-dumps/compute-regions.json \
 	json-dumps/compute-zones.json \
-	json-dumps/backendServices.json \
-	json-dumps/regionBackendServices-$(REGION1).json \
+	json-dumps/compute-aggregated-backendServices.json \
+	json-dumps/compute-backendServices-$(REGION1).json \
+	json-dumps/compute-aggregated-forwardingRules.json \
 	json-dumps/healthChecks.json \
 	json-dumps/regionHealthChecks-$(REGION1).json \
 	json-dumps/lb-insights-$(REGION1).json \
@@ -57,19 +58,9 @@ json-dumps/monitoring-query.json:
 		--data '$(MONITORING_QUERY)' \
 		| $(SED_SUBST_FAKE) >$@
 
-json-dumps/regionBackendServices-%.json:
-	$(CURL) -fsS \
-	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/regions/$*/backendServices/' \
-		| $(SED_SUBST_FAKE) >$@
-
 json-dumps/regionHealthChecks-%.json:
 	$(CURL) -fsS \
 	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/regions/$*/healthChecks/' \
-		| $(SED_SUBST_FAKE) >$@
-
-json-dumps/backendServices.json:
-	$(CURL) -fsS \
-	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/backendServices/' \
 		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/healthChecks.json:

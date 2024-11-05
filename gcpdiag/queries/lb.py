@@ -15,12 +15,21 @@
 
 import logging
 import re
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 import googleapiclient
 
 from gcpdiag import caching, config, models
 from gcpdiag.queries import apis, apis_utils
+
+
+def normalize_url(url: str) -> str:
+  """Returns normalized url."""
+  result = re.match(r'https://www.googleapis.com/compute/v1/(.*)', url)
+  if result:
+    return result.group(1)
+  else:
+    return ''
 
 
 class BackendServices(models.Resource):
@@ -124,11 +133,18 @@ class BackendServices(models.Resource):
 def get_backend_services(project_id: str) -> List[BackendServices]:
   logging.info('fetching Backend Services: %s', project_id)
   compute = apis.get_api('compute', 'v1', project_id)
-  request = compute.backendServices().list(project=project_id)
+  backend_services = []
+  request = compute.backendServices().aggregatedList(project=project_id)
   response = request.execute(num_retries=config.API_RETRIES)
-  return [
-      BackendServices(project_id, item) for item in response.get('items', [])
-  ]
+  backend_services_by_region = response['items']
+  for _, data_ in backend_services_by_region.items():
+    if 'backendServices' not in data_:
+      continue
+    backend_services.extend([
+        BackendServices(project_id, backend_service)
+        for backend_service in data_['backendServices']
+    ])
+  return backend_services
 
 
 @caching.cached_api_call(in_memory=True)
@@ -146,6 +162,18 @@ def get_backend_service(project_id: str,
 
   response = request.execute(num_retries=config.API_RETRIES)
   return BackendServices(project_id, resource_data=response)
+
+
+def get_backend_service_by_self_link(
+    backend_service_self_link: str,) -> Optional[BackendServices]:
+  backend_service_name = backend_service_self_link.split('/')[-1]
+  backend_service_scope = backend_service_self_link.split('/')[-3]
+  match = re.match(r'projects/([^/]+)/', backend_service_self_link)
+  if not match:
+    return None
+  project_id = match.group(1)
+  return get_backend_service(project_id, backend_service_name,
+                             backend_service_scope)
 
 
 class BackendHealth:
@@ -356,7 +384,16 @@ class ForwardingRules(models.Resource):
     if result:
       return result.group(1)
     else:
-      return full_path
+      return ''
+
+  @property
+  def backend_service(self) -> str:
+    full_path = self._resource_data.get('backendService', '')
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)', full_path)
+    if result:
+      return result.group(1)
+    else:
+      return ''
 
   @property
   def ip_address(self) -> str:
@@ -365,6 +402,96 @@ class ForwardingRules(models.Resource):
   @property
   def port_range(self) -> str:
     return self._resource_data.get('portRange', '')
+
+  @caching.cached_api_call(in_memory=True)
+  def get_related_backend_services(self) -> List[BackendServices]:
+    """Returns the backend services related to the forwarding rule."""
+    if self.backend_service:
+      resource = get_backend_service_by_self_link(self.backend_service)
+      return [resource] if resource else []
+    if self.target:
+      target_proxy_target = get_target_proxy_reference(self.target)
+      if not target_proxy_target:
+        return []
+      target_proxy_target_type = target_proxy_target.split('/')[-2]
+      if target_proxy_target_type == 'backendServices':
+        resource = get_backend_service_by_self_link(target_proxy_target)
+        return [resource] if resource else []
+      elif target_proxy_target_type == 'urlMaps':
+        # Currently it doesn't work for shared-vpc backend services
+        backend_services = get_backend_services(self.project_id)
+        return [
+            backend_service for backend_service in backend_services
+            if target_proxy_target in backend_service.used_by_refs
+        ]
+    return []
+
+
+@caching.cached_api_call(in_memory=True)
+def get_target_proxy_reference(target_proxy_self_link: str) -> str:
+  """Retrieves the URL map or backend service associated with a given target proxy.
+
+  Args:
+    target_proxy_self_link: self link of the target proxy
+
+  Returns:
+    The url map or the backend service self link
+  """
+  target_proxy_type = target_proxy_self_link.split('/')[-2]
+  target_proxy_name = target_proxy_self_link.split('/')[-1]
+  target_proxy_scope = target_proxy_self_link.split('/')[-3]
+  match_result = re.match(r'projects/([^/]+)/', target_proxy_self_link)
+  if not match_result:
+    return ''
+  project_id = match_result.group(1)
+  compute = apis.get_api('compute', 'v1', project_id)
+
+  request = None
+  if target_proxy_type == 'targetHttpsProxies':
+    if target_proxy_scope == 'global':
+      request = compute.targetHttpsProxies().get(
+          project=project_id, targetHttpsProxy=target_proxy_name)
+    else:
+      request = compute.regionTargetHttpsProxies().get(
+          project=project_id,
+          region=target_proxy_scope,
+          targetHttpsProxy=target_proxy_name,
+      )
+  elif target_proxy_type == 'targetHttpProxies':
+    if target_proxy_scope == 'global':
+      request = compute.targetHttpProxies().get(
+          project=project_id, targetHttpProxy=target_proxy_name)
+    else:
+      request = compute.regionTargetHttpProxies().get(
+          project=project_id,
+          region=target_proxy_scope,
+          targetHttpProxy=target_proxy_name,
+      )
+  elif target_proxy_type == 'targetTcpProxies':
+    if target_proxy_scope == 'global':
+      request = compute.targetTcpProxies().get(project=project_id,
+                                               targetTcpProxy=target_proxy_name)
+    else:
+      request = compute.regionTargetTcpProxies().get(
+          project=project_id,
+          region=target_proxy_scope,
+          targetTcpProxy=target_proxy_name,
+      )
+  elif target_proxy_type == 'targetSslProxies':
+    request = compute.targetSslProxies().get(project=project_id,
+                                             targetSslProxy=target_proxy_name)
+  elif target_proxy_type == 'targetGrcpProxies':
+    request = compute.targetGrpcProxies().get(project=project_id,
+                                              targetGrpcProxy=target_proxy_name)
+  if not request:
+    # target is not target proxy
+    return ''
+  response = request.execute(num_retries=config.API_RETRIES)
+  if 'urlMap' in response:
+    return normalize_url(response['urlMap'])
+  if 'service' in response:
+    return normalize_url(response['service'])
+  return ''
 
 
 @caching.cached_api_call(in_memory=True)
@@ -383,6 +510,22 @@ def get_forwarding_rules(project_id: str) -> List[ForwardingRules]:
         for forwarding_rule in data_['forwardingRules']
     ])
   return forwarding_rules
+
+
+@caching.cached_api_call(in_memory=True)
+def get_forwarding_rule(project_id: str,
+                        forwarding_rule_name: str,
+                        region: str = None) -> ForwardingRules:
+  compute = apis.get_api('compute', 'v1', project_id)
+  if not region or region == 'global':
+    request = compute.globalForwardingRules().get(
+        project=project_id, forwardingRule=forwarding_rule_name)
+  else:
+    request = compute.forwardingRules().get(project=project_id,
+                                            region=region,
+                                            forwardingRule=forwarding_rule_name)
+  response = request.execute(num_retries=config.API_RETRIES)
+  return ForwardingRules(project_id, resource_data=response)
 
 
 class TargetHttpsProxy(models.Resource):

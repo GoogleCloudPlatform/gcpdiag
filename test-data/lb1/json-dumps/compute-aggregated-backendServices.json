@@ -1,0 +1,46 @@
+{
+  "kind": "compute#backendServiceAggregatedList",
+  "id": "projects/gcpdiag-lb1-aaaa/aggregated/backendServices",
+  "items": {
+    "global": {
+      "backendServices": [
+        {
+          "kind": "compute#backendService",
+          "id": "3538406228716304628",
+          "creationTimestamp": "2022-08-25T07:24:27.356-07:00",
+          "name": "web-backend-service",
+          "description": "",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb1-aaaa/global/backendServices/web-backend-service",
+          "backends": [
+            {
+              "group": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb1-aaaa/zones/us-east1-b/instanceGroups/lb-backend-example",
+              "balancingMode": "UTILIZATION",
+              "capacityScaler": 1
+            }
+          ],
+          "healthChecks": [
+            "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb1-aaaa/global/healthChecks/http-basic-check"
+          ],
+          "timeoutSec": 30,
+          "port": 80,
+          "protocol": "HTTP",
+          "fingerprint": "uf9A59CplJc=",
+          "portName": "http",
+          "enableCDN": false,
+          "sessionAffinity": "NONE",
+          "affinityCookieTtlSec": 0,
+          "loadBalancingScheme": "EXTERNAL",
+          "connectionDraining": {
+            "drainingTimeoutSec": 0
+          },
+          "iap": {
+            "enabled": false,
+            "oauth2ClientId": "",
+            "oauth2ClientSecretSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+          }
+        }
+      ]
+    }
+  },
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb1-aaaa/aggregated/backendServices"
+}

@@ -178,6 +178,9 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
   def forwardingRules(self):
     return lb_stub.LbApiStub(mock_state='forwardingRules')
 
+  def globalForwardingRules(self):
+    return lb_stub.LbApiStub(mock_state='globalForwardingRules')
+
   def healthChecks(self):
     return HealthCheckApiStub(mock_state='healthChecks')
 

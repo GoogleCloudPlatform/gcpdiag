@@ -93,6 +93,25 @@ class TestURLMap:
     assert forwarding_rule.name == 'forwardingRule1'
     assert forwarding_rule.short_path == 'gcpdiag-lb1-aaaa/forwardingRule1'
 
+  def test_get_forwarding_rule(self):
+    """get_forwarding_rule returns the right forwarding rule matched by name."""
+    forwarding_rule = lb.get_forwarding_rule(
+        project_id=DUMMY_PROJECT2_ID,
+        forwarding_rule_name='forwardingRule1',
+        region='us-west1',
+    )
+    assert forwarding_rule.name == 'forwardingRule1'
+    assert forwarding_rule.short_path == 'gcpdiag-lb2-aaaa/forwardingRule1'
+
+  def test_forwarding_rule_related_backend_service_http(self):
+    forwarding_rule = lb.get_forwarding_rule(
+        project_id=DUMMY_PROJECT3_ID, forwarding_rule_name='https-content-rule')
+
+    related_backend_service = forwarding_rule.get_related_backend_services()
+
+    assert len(related_backend_service) == 1
+    assert related_backend_service[0].name == 'web-backend-service'
+
   def test_get_ssl_certificate_global(self):
     """get_ssl_certificate returns the right SSL certificate matched by name."""
     obj = lb.get_ssl_certificate(project_id=DUMMY_PROJECT3_ID,
@@ -108,8 +127,9 @@ class TestURLMap:
 
     assert len(items) == 2
     assert items[0].name == 'https-lb-proxy'
-    assert items[
-        0].full_path == 'projects/gcpdiag-lb3-aaaa/global/targetHttpsProxies/https-lb-proxy'
+    assert (
+        items[0].full_path ==
+        'projects/gcpdiag-lb3-aaaa/global/targetHttpsProxies/https-lb-proxy')
     assert items[1].name == 'https-lb-proxy-working'
 
   def test_get_target_ssl_proxies(self):
@@ -118,8 +138,8 @@ class TestURLMap:
 
     assert len(items) == 1
     assert items[0].name == 'ssl-proxy'
-    assert items[
-        0].full_path == 'projects/gcpdiag-lb3-aaaa/global/targetSslProxies/ssl-proxy'
+    assert (items[0].full_path ==
+            'projects/gcpdiag-lb3-aaaa/global/targetSslProxies/ssl-proxy')
 
   def test_get_lb_insights_for_a_project(self):
     context = models.Context(project_id=DUMMY_PROJECT2_ID)

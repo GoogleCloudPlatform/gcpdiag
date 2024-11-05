@@ -91,9 +91,44 @@ json-dumps/compute-sslCertificates.json:
 	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/sslCertificates/' \
 		| $(SED_SUBST_FAKE) >$@
 
+json-dumps/compute-forwardingRules.json:
+	$(CURL) -fsS \
+	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/forwardingRules/' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-forwardingRules-%.json:
+	$(CURL) -fsS \
+	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/regions/$*/forwardingRules/' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-aggregated-forwardingRules.json:
+	$(CURL) -fsS \
+	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/aggregated/forwardingRules/' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-backendServices.json:
+	$(CURL) -fsS \
+	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/backendServices/' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-backendServices-%.json:
+	$(CURL) -fsS \
+	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/regions/$*/backendServices/' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-aggregated-backendServices.json:
+	$(CURL) -fsS \
+	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/aggregated/backendServices/' \
+		| $(SED_SUBST_FAKE) >$@
+
 json-dumps/compute-aggregated-targetHttpsProxies.json:
 	$(CURL) -fsS \
 	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/aggregated/targetHttpsProxies/' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-targetHttpsProxies.json:
+	$(CURL) -fsS \
+	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/global/targetHttpsProxies/' \
 		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/compute-targetSslProxies.json:

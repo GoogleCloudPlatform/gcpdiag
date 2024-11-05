@@ -35,13 +35,13 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   for bs in bs_list:
     # fail for backend services for Global HTTP(S) LB which have CloudCDN enabled
-    if (bs.load_balancing_scheme == EXTERNAL_MANAGED and
+    if (bs.load_balancing_scheme == EXTERNAL_MANAGED and not bs.region and
         not bs.is_enable_cdn and not bs.region):
       report.add_failed(bs)
 
     # pass for backend services for Global HTTP(S) LB which have CloudCDN enabled
-    elif (bs.load_balancing_scheme == EXTERNAL_MANAGED and bs.is_enable_cdn and
-          not bs.region):
+    elif (bs.load_balancing_scheme == EXTERNAL_MANAGED and not bs.region and
+          bs.is_enable_cdn and not bs.region):
       report.add_ok(bs)
     else:
       # skip for non-global HTTP(S) LB backend services

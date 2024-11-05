@@ -21,9 +21,11 @@ ZONE2 = europe-west4-b
 all:	\
 	json-dumps/project.json \
 	json-dumps/services.json \
-	json-dumps/forwardingRules.json \
+	json-dumps/compute-aggregated-forwardingRules.json \
+	json-dumps/compute-aggregated-backendServices.json \
 	json-dumps/compute-sslCertificates.json \
 	json-dumps/compute-aggregated-targetHttpsProxies.json \
+	json-dumps/compute-targetHttpsProxies.json \
 	json-dumps/compute-targetSslProxies.json \
 	json-dumps/logging-entries-1.json
 
@@ -50,7 +52,7 @@ json-dumps/logging-entries-1.json:
 		-d "$$LOGGING_ENTRIES_BODY" \
 		| $(SED_SUBST_FAKE) >$@
 
-json-dumps/forwardingRules.json:
+json-dumps/compute-aggregated-forwardingRules.json:
 	@$(CURL) -fsS \
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/aggregated/forwardingRules/' \
 		| $(SED_SUBST_FAKE) > $@

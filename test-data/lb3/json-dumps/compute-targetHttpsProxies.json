@@ -1,0 +1,36 @@
+{
+  "kind": "compute#targetHttpsProxyList",
+  "id": "projects/gcpdiag-lb3-aaaa/global/targetHttpsProxies/",
+  "items": [
+    {
+      "kind": "compute#targetHttpsProxy",
+      "id": "2209022440749649672",
+      "creationTimestamp": "2024-10-18T07:34:15.981-07:00",
+      "name": "https-lb-proxy",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb3-aaaa/global/targetHttpsProxies/https-lb-proxy",
+      "urlMap": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb3-aaaa/global/urlMaps/web-map-https",
+      "sslCertificates": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert1"
+      ],
+      "certificateMap": "//certificatemanager.googleapis.com/projects/gcpdiag-lb3-aaaa/locations/global/certificateMaps/cert-map",
+      "quicOverride": "NONE",
+      "fingerprint": "GsS18JR8BT8=",
+      "tlsEarlyData": "DISABLED"
+    },
+    {
+      "kind": "compute#targetHttpsProxy",
+      "id": "6476775702975728672",
+      "creationTimestamp": "2024-10-18T07:38:07.808-07:00",
+      "name": "https-lb-proxy-working",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb3-aaaa/global/targetHttpsProxies/https-lb-proxy-working",
+      "urlMap": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb3-aaaa/global/urlMaps/web-map-https",
+      "sslCertificates": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert2"
+      ],
+      "quicOverride": "NONE",
+      "fingerprint": "Ika63TUJl5I=",
+      "tlsEarlyData": "DISABLED"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-lb3-aaaa/global/targetHttpsProxies/"
+}
