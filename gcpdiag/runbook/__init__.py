@@ -15,13 +15,17 @@
 
 import ast
 import builtins
+import difflib
 import inspect
 import logging
+import os
+import re
 import sys
 import textwrap
 from collections import OrderedDict
 from datetime import datetime, timedelta, timezone
-from typing import Deque, Dict, List, Mapping, Set, Tuple, final
+from typing import (Callable, Deque, Dict, List, Mapping, Optional, Set, Tuple,
+                    final)
 
 import googleapiclient.errors
 from jinja2 import TemplateNotFound
@@ -401,6 +405,10 @@ class DiagnosticEngine:
   def add_task(self, new_task: Tuple):
     self.task_queue.appendleft(new_task)
 
+  def get_similar_trees(self, name: str) -> List[str]:
+    """Returns a list of similar trees to the given name."""
+    return difflib.get_close_matches(name, RunbookRegistry.keys())
+
   def load_tree(self, name: str) -> DiagnosticTree:
     """Loads a diagnostic tree by name ex gce/ssh.
 
@@ -412,16 +420,34 @@ class DiagnosticEngine:
     Args:
       name: The name of the diagnostic tree to load.
     """
-    try:
-      # ex: product/gce-runbook
-      name = util.runbook_name_parser(name)
-      tree = RunbookRegistry.get(name)
-      if not tree:
-        raise exceptions.DiagnosticTreeNotFound
-      return tree
-    except exceptions.DiagnosticTreeNotFound as e:
-      logging.error('%s: %s', name, e)
-      raise e
+    # ex: product/gce-runbook
+    name = util.runbook_name_parser(name)
+    runbook = RunbookRegistry.get(name)
+    if not runbook:
+      message = f"The runbook `{name}` doesn't exist or hasn't been registered."
+      similar_runbooks = self.get_similar_trees(name)
+      if similar_runbooks:
+        message += f' Did you mean: "{similar_runbooks[0]}"?'
+
+      # If this error occurs during development, it may be because the class hasn't been registered.
+      # Note: Runbooks use Python metaclasses and might not register automatically when there are
+      # syntax errors.
+      # For more information on metaclasses and registration issues, see:
+      # https://docs.python.org/3/reference/datamodel.html#metaclasses
+      if 'test' in config.VERSION:
+        m = re.search(r'([^/]+)/([^/]+)', name)
+        if m:
+          product = m.group(1)
+          clazz = util.kebab_case_to_pascal_case(m.group(2))
+          mod_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                  product)
+          message += (
+              '\n\nPlease verify the following:'
+              f"\n1. Ensure that the class `{clazz}` exists in the product's module `{mod_path}`."
+              '\n2. If the class exists, ensure there are no syntax errors '
+              f'in the file containing the class `{clazz}`.\n')
+      raise exceptions.DiagnosticTreeNotFound(message)
+    return runbook
 
   def load_steps(self, parameter: Mapping[str, Mapping],
                  steps_to_run: List) -> Bundle:

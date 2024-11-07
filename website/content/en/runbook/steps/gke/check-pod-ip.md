@@ -1,6 +1,6 @@
 ---
-title: "gke/Check Pod I P"
-linkTitle: "Check Pod I P"
+title: "gke/Check Pod Ip"
+linkTitle: "Check Pod Ip"
 weight: 3
 type: docs
 description: >

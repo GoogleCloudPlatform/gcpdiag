@@ -80,7 +80,7 @@ gcpdiag runbook --help
 
   - [Vm Serial Logs Check](/runbook/steps/gce/vm-serial-logs-check)
 
-  - [Disk Avg I O Latency Check](/runbook/steps/gce/disk-avg-i-o-latency-check)
+  - [Disk Avg Io Latency Check](/runbook/steps/gce/disk-avg-io-latency-check)
 
   - [Check Live Migrations](/runbook/steps/gce/check-live-migrations)
 

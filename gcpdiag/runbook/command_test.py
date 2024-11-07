@@ -19,6 +19,7 @@ from unittest import mock
 
 from gcpdiag import config, runbook
 from gcpdiag.runbook import command
+from gcpdiag.runbook.exceptions import DiagnosticTreeNotFound
 
 MUST_HAVE_MODULES = {'gce'}
 
@@ -106,31 +107,6 @@ class Test(unittest.TestCase):
     modules = {r(None).product for r in runbook.RunbookRegistry.values()}
     assert MUST_HAVE_MODULES.issubset(modules)
 
-  def test_validate_rule_pattern(self):
-    # Valid patterns
-    self.assertEqual('gcp/runbook-id',
-                     command._validate_rule_pattern('gcp/runbook-id'))
-    self.assertEqual('gcp/runbook-id',
-                     command._validate_rule_pattern('GCP/runbook-id'))
-    self.assertEqual('gcp/runbook-id-one',
-                     command._validate_rule_pattern('gcp/runbook-id-one'))
-
-    # Invalid patterns
-    with self.assertRaises(ValueError):
-      command._validate_rule_pattern('gcp')
-
-    with self.assertRaises(ValueError):
-      command._validate_rule_pattern('runbook-id')
-
-    with self.assertRaises(ValueError):
-      command._validate_rule_pattern('gcp/runbook-id/1/2/3/4')
-
-    with self.assertRaises(ValueError):
-      command._validate_rule_pattern('gcp/runbook_id')
-
-    with self.assertRaises(ValueError):
-      command._validate_rule_pattern(r'gcp/runbook\id')
-
   @mock.patch('builtins.print')
   def test_no_file_path_provided(self, mock_print):
     with self.assertRaises(SystemExit) as e:
@@ -168,4 +144,14 @@ class Test(unittest.TestCase):
         '-p', 'zone=us-central1-a', '-p', 'name=test', '--interface', 'api'
     ]
     with mock.patch('gcpdiag.runbook.DiagnosticEngine.run', side_effect=None):
+      command.run_and_get_report(argv)
+
+  def test_run_and_get_report_invalid_runbook(self):
+    argv = [
+        'gcpdiag runbook',
+        'gce/unheaklhy',
+        '-p',
+        'project_id=gcpdiag-gce1-aaaa',
+    ]
+    with self.assertRaises(DiagnosticTreeNotFound):
       command.run_and_get_report(argv)

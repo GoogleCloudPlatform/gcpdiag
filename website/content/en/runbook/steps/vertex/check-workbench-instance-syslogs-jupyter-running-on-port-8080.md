@@ -1,6 +1,6 @@
 ---
-title: "vertex/Check Workbench Instance Syslogs Jupyter Running On Port8080"
-linkTitle: "Check Workbench Instance Syslogs Jupyter Running On Port8080"
+title: "vertex/Check Workbench Instance Syslogs Jupyter Running On Port 8080"
+linkTitle: "Check Workbench Instance Syslogs Jupyter Running On Port 8080"
 weight: 3
 type: docs
 description: >

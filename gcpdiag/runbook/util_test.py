@@ -24,29 +24,48 @@ class TestStringConversions(unittest.TestCase):
   def test_pascal_case_to_kebab_case(self):
     self.assertEqual(util.pascal_case_to_kebab_case('PascalCase'),
                      'pascal-case')
-    #should be able to handle camelcase too
+    # should be able to handle camelcase too
     self.assertEqual(util.pascal_case_to_kebab_case('camelCase'), 'camel-case')
     self.assertEqual(util.pascal_case_to_kebab_case('Pascal'), 'pascal')
     self.assertNotEqual(util.pascal_case_to_kebab_case('Not Pascal'),
                         'not-pascal')
 
+  def test_pascal_case_to_title(self):
+    self.assertEqual(util.pascal_case_to_title('PascalCase'), 'Pascal Case')
+    self.assertEqual(util.pascal_case_to_title('Errors5xx'), 'Errors 5xx')
+    self.assertEqual(util.pascal_case_to_title('Errors5xxStart'),
+                     'Errors 5xx Start')
+    self.assertEqual(util.pascal_case_to_title('Errors503'), 'Errors 503')
+
   def test_runbook_name_parser(self):
     self.assertEqual(util.runbook_name_parser('product/word'), 'product/word')
     self.assertEqual(util.runbook_name_parser('product/kebab-case'),
                      'product/kebab-case')
-    self.assertEqual(util.runbook_name_parser('product/kebab_case_name'),
-                     'product/kebab-case-name')
+    self.assertEqual(
+        util.runbook_name_parser('product/kebab_case_name'),
+        'product/kebab-case-name',
+    )
     self.assertEqual(util.runbook_name_parser('Product/PascalCase'),
                      'product/pascal-case')
     self.assertEqual(util.runbook_name_parser('Product/PascalCase'),
                      'product/pascal-case')
+    self.assertEqual(
+        util.runbook_name_parser('Product/PascalCase5xx'),
+        'product/pascal-case-5xx',
+    )
+    self.assertEqual(
+        util.runbook_name_parser('Product/PascalCase5Test'),
+        'product/pascal-case-5-test',
+    )
 
     self.assertEqual(util.runbook_name_parser('PascalCase'), 'pascal-case')
     self.assertEqual(util.runbook_name_parser('snake_case'), 'snake-case')
     self.assertEqual(util.runbook_name_parser('pascal-snake_case'),
                      'pascal-snake-case')
-    self.assertEqual(util.runbook_name_parser('MixAnd-Match_Examplev3'),
-                     'mix-and-match-examplev3')
+    self.assertEqual(
+        util.runbook_name_parser('MixAnd-Match_Examplev3'),
+        'mix-and-match-examplev-3',
+    )
 
   def test_parse_rfc3339_format(self):
     test_str = '2024-03-20T07:00:00Z'

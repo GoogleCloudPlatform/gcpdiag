@@ -96,9 +96,9 @@ gcpdiag runbook --help
 
   - [Decision Check Workbench Instance System Logging](/runbook/steps/vertex/decision-check-workbench-instance-system-logging)
 
-  - [Check Workbench Instance Syslogs Jupyter Running On Port8080](/runbook/steps/vertex/check-workbench-instance-syslogs-jupyter-running-on-port8080)
+  - [Check Workbench Instance Syslogs Jupyter Running On Port 8080](/runbook/steps/vertex/check-workbench-instance-syslogs-jupyter-running-on-port-8080)
 
-  - [Check Workbench Instance Compute Engine S S H](/runbook/steps/vertex/check-workbench-instance-compute-engine-s-s-h)
+  - [Check Workbench Instance Compute Engine Ssh](/runbook/steps/vertex/check-workbench-instance-compute-engine-ssh)
 
   - [Check Workbench Instance Jupyter Space](/runbook/steps/vertex/check-workbench-instance-jupyter-space)
 

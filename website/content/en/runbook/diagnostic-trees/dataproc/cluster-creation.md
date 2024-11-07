@@ -122,7 +122,7 @@ gcpdiag runbook --help
 
   - [Iam Policy Check](/runbook/steps/iam/iam-policy-check)
 
-  - [Check Shared V P C Roles](/runbook/steps/dataproc/check-shared-v-p-c-roles)
+  - [Check Shared Vpc Roles](/runbook/steps/dataproc/check-shared-vpc-roles)
 
   - [Iam Policy Check](/runbook/steps/iam/iam-policy-check)
 

@@ -20,12 +20,14 @@ import os
 import pkgutil
 import re
 import sys
+import traceback
 from typing import List
 
 import yaml
 
 from gcpdiag import config, hooks, models, runbook
 from gcpdiag.queries import apis, kubectl
+from gcpdiag.runbook.exceptions import DiagnosticTreeNotFound
 from gcpdiag.runbook.output import api_output, base_output, terminal_output
 
 
@@ -215,17 +217,6 @@ def _init_runbook_args_parser():
   return parser
 
 
-def _validate_rule_pattern(runbook_name: str):
-  runbook_name = runbook_name.lower()
-  m = re.match(r'^([a-z]+)/([a-z\-]+)$', runbook_name)
-  if not m:
-    logging.error(
-        'Invalid runbook name: %s should be `gcpdiag runbook product/runbook-id`',
-        runbook_name)
-    raise ValueError(f'invalid runbook name {runbook_name}')
-  return runbook_name
-
-
 def _load_runbook_rules(package: str):
   """Recursively import all submodules under a package, including subpackages."""
   if isinstance(package, str):
@@ -349,16 +340,13 @@ def run_and_get_report(argv=None, credentials: str = None) -> dict:
 
   # Run the runbook or step connections.
   if args.runbook:
-    # Rules name patterns that shall be included or excluded
-    runbook_pattern = _validate_rule_pattern(args.runbook)
+    runbook_name = args.runbook.lower()
     if args.interface == runbook.constants.CLI:
       output_.display_header()
       output_.display_banner()
-    tree = dt_engine.load_tree(runbook_pattern)
-    if not callable(tree):
-      logging.error("can't instantiate Runbook")
-      raise ValueError('debugging tree is not callable')
-    dt_engine.add_task((tree(), args.parameter))
+    tree = dt_engine.load_tree(runbook_name)
+    if callable(tree):
+      dt_engine.add_task((tree(), args.parameter))
   elif args.bundle_spec:
     for bundle in args.bundle_spec:
       bundle = dt_engine.load_steps(parameter=bundle['parameter'],
@@ -386,6 +374,11 @@ def run_and_get_report(argv=None, credentials: str = None) -> dict:
 
 def run(argv) -> None:
   # Enable Caching
-  report = run_and_get_report(argv)
-  if report:
-    sys.exit(0)
+  try:
+    report = run_and_get_report(argv)
+  except DiagnosticTreeNotFound as e:
+    logging.error(e)
+    logging.debug('%s', ''.join(traceback.format_tb(e.__traceback__)))
+  else:
+    if report:
+      sys.exit(0)

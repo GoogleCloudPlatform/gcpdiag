@@ -1,6 +1,6 @@
 ---
-title: "vertex/Check Workbench Instance Compute Engine S S H"
-linkTitle: "Check Workbench Instance Compute Engine S S H"
+title: "vertex/Check Workbench Instance Compute Engine Ssh"
+linkTitle: "Check Workbench Instance Compute Engine Ssh"
 weight: 3
 type: docs
 description: >

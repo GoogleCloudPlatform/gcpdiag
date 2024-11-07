@@ -1,6 +1,6 @@
 ---
-title: "gke/Check Node I P"
-linkTitle: "Check Node I P"
+title: "gke/Check Node Ip"
+linkTitle: "Check Node Ip"
 weight: 3
 type: docs
 description: >

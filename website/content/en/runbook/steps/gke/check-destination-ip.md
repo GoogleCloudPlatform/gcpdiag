@@ -1,6 +1,6 @@
 ---
-title: "gke/Check Destination I P"
-linkTitle: "Check Destination I P"
+title: "gke/Check Destination Ip"
+linkTitle: "Check Destination Ip"
 weight: 3
 type: docs
 description: >

@@ -16,6 +16,7 @@
 import importlib
 import os
 import re
+import string
 import uuid
 from datetime import datetime, timezone
 
@@ -69,7 +70,25 @@ def pascal_case_to_kebab_case(s):
   Returns:
       str: The converted string in kebab-case.
   """
-  return re.sub(r'(?<!^)(?=[A-Z])', '-', s).lower()
+  s = re.sub('(.)([A-Z0-9][a-z]+)', r'\1-\2', s)
+  s = re.sub('--([A-Z0-9])', r'-\1', s)
+  s = re.sub('([a-z])([A-Z0-9])', r'\1-\2', s)
+  return s.lower()
+
+
+def kebab_case_to_pascal_case(s):
+  """
+  Converts a kebab-case string to PascalCase.
+
+  Args:
+      s (str): The string to convert
+
+  Returns:
+      str: The converted string in Pascal Case.
+  """
+  words = s.split('-')
+  pascal_str = ''.join(word.capitalize() for word in words)
+  return pascal_str
 
 
 def pascal_case_to_snake_case(s):
@@ -82,7 +101,10 @@ def pascal_case_to_snake_case(s):
   Returns:
       str: The converted string in snake_case.
   """
-  return re.sub(r'(?<!^)(?=[A-Z])', '_', s).lower()
+  s = re.sub('(.)([A-Z0-9][a-z]+)', r'\1_\2', s)
+  s = re.sub('__([A-Z0-9])', r'_\1', s)
+  s = re.sub('([a-z])([A-Z0-9])', r'\1_\2', s)
+  return s.lower()
 
 
 def runbook_name_parser(s):
@@ -96,9 +118,9 @@ def runbook_name_parser(s):
       str: The converted string in kebab-case
   """
   s = s.replace('_', '-')
-  # Convert PascalCase to snake_case
-  s = re.sub('([a-z0-9])([A-Z])', r'\1-\2', s).lower()
-  return s
+  parts = s.split('/')
+
+  return '/'.join([pascal_case_to_kebab_case(part) for part in parts])
 
 
 def pascal_case_to_title(s):
@@ -111,15 +133,17 @@ def pascal_case_to_title(s):
   Returns:
       str: The converted string in Title Case.
   """
-  words = re.sub(r'(?<!^)(?=[A-Z])', ' ', s).lower()
-  return words.title()
+  s = re.sub('(.)([A-Z0-9][a-z]+)', r'\1 \2', s)
+  s = re.sub('__([A-Z0-9])', r' \1', s)
+  s = re.sub('([a-z])([A-Z0-9])', r'\1 \2', s)
+  return string.capwords(s)
 
 
 def load_template_block(module_name, file_name, block_name):
   """
   Load specified blocks from a Jinja2 template.
 
-  block_name: Load blocks with this prefix
+  block_name: Load blocks with this prefixf/
   module_name: Ref to module
   """
   module = importlib.import_module(module_name)

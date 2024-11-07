@@ -1,6 +1,6 @@
 ---
-title: "gce/Disk Avg I O Latency Check"
-linkTitle: "Disk Avg I O Latency Check"
+title: "gce/Disk Avg Io Latency Check"
+linkTitle: "Disk Avg Io Latency Check"
 weight: 3
 type: docs
 description: >

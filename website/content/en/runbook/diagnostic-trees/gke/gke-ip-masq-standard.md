@@ -65,11 +65,11 @@ gcpdiag runbook --help
 
   - [Check Config Map](/runbook/steps/gke/check-config-map)
 
-  - [Check Pod I P](/runbook/steps/gke/check-pod-i-p)
+  - [Check Pod Ip](/runbook/steps/gke/check-pod-ip)
 
-  - [Check Node I P](/runbook/steps/gke/check-node-i-p)
+  - [Check Node Ip](/runbook/steps/gke/check-node-ip)
 
-  - [Check Destination I P](/runbook/steps/gke/check-destination-i-p)
+  - [Check Destination Ip](/runbook/steps/gke/check-destination-ip)
 
   - [Gke Ip Masq Standard End](/runbook/steps/gke/gke-ip-masq-standard-end)
 

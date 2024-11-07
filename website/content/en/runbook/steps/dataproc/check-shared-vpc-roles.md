@@ -1,6 +1,6 @@
 ---
-title: "dataproc/Check Shared V P C Roles"
-linkTitle: "Check Shared V P C Roles"
+title: "dataproc/Check Shared Vpc Roles"
+linkTitle: "Check Shared Vpc Roles"
 weight: 3
 type: docs
 description: >
