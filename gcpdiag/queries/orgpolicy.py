@@ -16,7 +16,9 @@
 import logging
 from typing import Dict
 
-from gcpdiag import caching, config
+import googleapiclient.errors
+
+from gcpdiag import caching, config, utils
 from gcpdiag.queries import apis
 
 PREFETCH_ORG_CONSTRAINTS = (
@@ -71,7 +73,11 @@ def _get_effective_org_policy_all_constraints(
   all_constraints: Dict[str, PolicyConstraint] = {}
   logging.info('getting org constraints of %s', project_id)
   for req in requests:
-    result = req.execute(num_retries=config.API_RETRIES)
+    try:
+      result = req.execute(num_retries=config.API_RETRIES)
+    except googleapiclient.errors.HttpError as err:
+      raise utils.GcpApiError(err) from err
+
     if 'booleanPolicy' in result:
       all_constraints[result['constraint']] = BooleanPolicyConstraint(
           result['constraint'], result['booleanPolicy'])
