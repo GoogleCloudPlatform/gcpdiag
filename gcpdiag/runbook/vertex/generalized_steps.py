@@ -275,6 +275,9 @@ class CheckWorkbenchInstancePerformance(runbook.CompositeStep):
 
   def execute(self):
     """Evaluating Workbench Instance Compute Engine VM memory, CPU, and disk performance..."""
+    within_hours = 8
+    within_str = 'within %dh, d\'%s\'' % (within_hours,
+                                          monitoring.period_aligned_now(5))
     project_id: str = self.project_id or op.get(flags.PROJECT_ID)
     instance_name: str = self.instance_name or op.get(flags.INSTANCE_NAME)
     zone: str = self.zone or op.get(flags.ZONE)
@@ -289,7 +292,7 @@ class CheckWorkbenchInstancePerformance(runbook.CompositeStep):
               | align rate(5m)
               | every 5m
               | {}
-            """.format(op.get(gce_flags.NAME), gce_gs.within_str))
+            """.format(op.get(gce_flags.NAME), within_str))
     if ops_agent_query:
       op.info(
           'Runbook will use ops agent metrics for VM performance investigation')

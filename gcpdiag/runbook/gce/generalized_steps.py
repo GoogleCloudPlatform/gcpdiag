@@ -23,12 +23,9 @@ from boltons.iterutils import get_path
 from gcpdiag import runbook
 from gcpdiag.queries import gce, logs, monitoring
 from gcpdiag.runbook import op
-from gcpdiag.runbook.gce import constants, util
+from gcpdiag.runbook.gce import constants, flags, util
 
 UTILIZATION_THRESHOLD = 0.95
-within_hours = 8
-within_str = 'within %dh, d\'%s\'' % (within_hours,
-                                      monitoring.period_aligned_now(5))
 
 
 class HighVmMemoryUtilization(runbook.Step):
@@ -50,6 +47,12 @@ class HighVmMemoryUtilization(runbook.Step):
 
   def execute(self):
     """Verifying VM memory utilization is within optimal levels..."""
+
+    start_formatted_string = op.get(
+        flags.START_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+    end_formatted_string = op.get(
+        flags.END_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+    within_str = f'within d\'{start_formatted_string}\', d\'{end_formatted_string}\''
 
     mark_no_ops_agent = False
 
@@ -129,6 +132,12 @@ class HighVmDiskUtilization(runbook.Step):
   def execute(self):
     """Verifying VM's Boot disk space utilization is within optimal levels."""
 
+    start_formatted_string = op.get(
+        flags.START_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+    end_formatted_string = op.get(
+        flags.END_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+    within_str = f'within d\'{start_formatted_string}\', d\'{end_formatted_string}\''
+
     mark_no_ops_agent = False
 
     vm = gce.get_instance(
@@ -192,6 +201,12 @@ class HighVmCpuUtilization(runbook.Step):
 
   def execute(self):
     """Verifying VM CPU utilization is within optimal levels"""
+
+    start_formatted_string = op.get(
+        flags.START_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+    end_formatted_string = op.get(
+        flags.END_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+    within_str = f'within d\'{start_formatted_string}\', d\'{end_formatted_string}\''
 
     vm = gce.get_instance(
         project_id=self.project_id,

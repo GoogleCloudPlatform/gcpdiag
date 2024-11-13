@@ -1367,6 +1367,12 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
                 remediation=op.prep_msg(op.FAILURE_REMEDIATION,
                                         vm_name=vm.name,
                                         status=vm.status))
+          else:
+            op.add_ok(
+                vm,
+                reason=(
+                    '{} usage is within optimal limits for disktype {}').format(
+                        metric_name, storage_type))
       else:
         op.add_ok(
             vm,
