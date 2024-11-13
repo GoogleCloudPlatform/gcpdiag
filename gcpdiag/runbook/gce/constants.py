@@ -79,8 +79,7 @@ NETWORK_ERRORS = [
     'dial tcp 169.254.169.254:80: connect: network is unreachable',
     'dial tcp 169.254.169.254:80: i/o timeout',
     'dial tcp metadata.goog:80: connect: network is unreachable',
-    'dial tcp metadata.google.internal:80: connect: network is unreachable',
-    'error connecting to metadata server'
+    'dial tcp metadata.google.internal:80: connect: network is unreachable'
 ]
 
 TIME_SYNC_ERROR = [

@@ -129,12 +129,32 @@ gce/vm-performance:  Google Compute Engine VM performance checks
 
 [AUTOMATED STEP]: Checking if any Filesystem corruption related errors in Serial console logs
 
-   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [UNCERTAIN]
+   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
      [REASON]
-     We did not find any Filesystem corruption related errors in Serial console logs
+     Possibe filesystem corruption detected.
+
+     The patterns we looked for :
+         'Corruption of in-memory data detected. Shutting down filesystem',
+         'Corruption of in-memory data detected', 'warning: mounting fs with errors',
+         'Failed to mount /',
+         'A stop job is running for Security \.\.\..* Service ',
+         'I/O Error Detected. Shutting down filesystem',
+         'metadata I/O error in'
 
      [REMEDIATION]
+     To fix the filesystem correuption, you may use gce-rescue[1] available in cloud shell to
+     rescue faulty VMs or go via manual mathod[2] to repair the filesystem.
 
+     More articles you may refer:
+     https://access.redhat.com/solutions/1750923
+
+
+     [1]
+     https://github.com/GoogleCloudPlatform/gce-rescue
+
+     [2]
+     https://cloud.google.com/compute/docs/troubleshooting/rescue-vm ,
+     https://www.youtube.com/watch?v=oD6IFpjEtEw
 
 [AUTOMATED STEP]: Checking if Instance's Disk Avg IO Latency is within optimal limits
 

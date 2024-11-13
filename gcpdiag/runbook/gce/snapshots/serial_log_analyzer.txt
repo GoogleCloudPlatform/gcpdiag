@@ -41,21 +41,16 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
 
 [AUTOMATED STEP]: Initiating kernel panic check on the Guest OS.
 
-   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [UNCERTAIN]
+   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
      [REASON]
-     The logs retrieved does not contain positive or negative entries which
-     would help make conclusive assessment. You will need to double check
-     This if it's a likely cause.
+     Detected kernel panic logs in faulty-linux-ssh serial logs,
+     which is likely preventing the VM from booting up correctly.
 
      [REMEDIATION]
-     Manually view the serial logs [0] to assess if there is kernel Panic
-     issues
-
-     Address underlying issues leading to bootup issues:
+     Address underlying issues leading to boot issues:
      Consult the troubleshooting guide for kernel panic errors [1]
 
-     Common causes of kernel panic within linux guest os
-     File system errors
+     Common causes of kernel panic within linux guestos is File system errors.
      Examining `/etc/fstab` for file system errors that could halt the boot process. [2]
 
      Use gce-rescue available in cloud shell [2] rescue faulty VMs:
@@ -65,27 +60,62 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      Google Cloud Platform Support Scope:
      https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
 
-     [0] https://cloud.google.com/compute/docs/troubleshooting/viewing-serial-port-output
      [1] https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error
      [2] https://cloud.google.com/compute/docs/troubleshooting/fstab-errors
 
+     More articles to refer to:
+       Redhat:
+       - https://access.redhat.com/solutions/2515741
+       - https://access.redhat.com/solutions/6932631
+
+       SUSE:
+       - https://www.suse.com/support/kb/doc/?id=000018523
+
 [AUTOMATED STEP]: Checking if any Filesystem corruption related errors in Serial console logs
 
-   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [UNCERTAIN]
+   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
      [REASON]
-     We did not find any Filesystem corruption related errors in Serial console logs
+     Possibe filesystem corruption detected.
+
+     The patterns we looked for :
+         'Corruption of in-memory data detected. Shutting down filesystem',
+         'Corruption of in-memory data detected', 'warning: mounting fs with errors',
+         'Failed to mount /',
+         'A stop job is running for Security \.\.\..* Service ',
+         'I/O Error Detected. Shutting down filesystem',
+         'metadata I/O error in'
 
      [REMEDIATION]
+     To fix the filesystem correuption, you may use gce-rescue[1] available in cloud shell to
+     rescue faulty VMs or go via manual mathod[2] to repair the filesystem.
 
+     More articles you may refer:
+     https://access.redhat.com/solutions/1750923
+
+
+     [1]
+     https://github.com/GoogleCloudPlatform/gce-rescue
+
+     [2]
+     https://cloud.google.com/compute/docs/troubleshooting/rescue-vm ,
+     https://www.youtube.com/watch?v=oD6IFpjEtEw
 
 [AUTOMATED STEP]: Checking for high disk utilization related logs in serial console logs
 
-   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [UNCERTAIN]
+   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
      [REASON]
-     We did not find any high disk utilisation related errors in Serial console logs
+     We have found high disk utilisation related errors in Serial console logs.
+     The patterns we looked for :
+         'No space left on device', 'No usable temporary directory found',
+         'A stop job is running for Security \.\.\..* Service ',
+         'disk is at or near capacity'
 
      [REMEDIATION]
-     NOTICE: No message available to parse for this step
+     To mitigate high disk usage, consider expanding the VM's boot disk capacity.
+     This action can help avoid performance issues and ensure accessibility of the VM.
+     Follow the guide to increase disk size:
+     https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
+
 [AUTOMATED STEP]: Checking if any slow Disk operations related errors in Serial console logs
 
    - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [UNCERTAIN]
@@ -143,12 +173,13 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
 
 [AUTOMATED STEP]: Examining SSHD authentication failures via serial logs.
 
-   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [UNCERTAIN]
+   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
      [REASON]
-     We are not able to find the success or failed logs for SSHD authentication issues.
+     SSHD authentication issues detected in the VM, potentially affecting SSH access.
+     We found the error "Authentication refused: bad ownership or modes for directory"
 
      [REMEDIATION]
-     To check if sshd_auth_failures are happening due to wrong directory permissions:
+     To mitigate "bad ownership or modes for directory" errors:
      1. Follow either of the below steps to check the permissions:
        a. these steps to rescue the vm:
           https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
@@ -156,9 +187,8 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
        b. these steps login through serial console:
           https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
-     2. Check the system logs for following error messages:
-        'Authentication refused: bad ownership or modes for directory'
-        'Error updating SSH keys for user1: mkdir /home/USER/.ssh: no such file or directory'
+     2. Refer to the standard permissions required for ssh connection:
+        https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-ssh-errors#permissions
 
 [AUTOMATED STEP]: Checking for Guest Agent startup logs
 
@@ -291,21 +321,12 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
 
 [AUTOMATED STEP]: Checking for network related errors
 
-   - gcpdiag-gce-vm-performance/valid-linux-ssh                           [FAIL]
+   - gcpdiag-gce-vm-performance/valid-linux-ssh                           [UNCERTAIN]
      [REASON]
-     The metadata server(169.254.169.254) is unreachable from the insatnce.
-     The instance might not have IP assigned to its primary NIC.
+     We are not able to deduce a conlusion on certainity of Network issues on the instance.
 
      [REMEDIATION]
-     Please try to login via Serial console using password and check Network stack status.
-     If login via Serial console is not possible, You might want to restart the instance.
-     If issue persists post reboot as well, you may follow the steps
-     https://cloud.google.com/compute/docs/troubleshooting/rescue-vm to rescue the vm and
-     troubleshoot further.
-
-     Additionally, this document shows you how to resolve issues with the Compute Engine metadata server.
-     https://cloud.google.com/compute/docs/troubleshooting/troubleshoot-metadata-server
-
+     NOTICE: No message available to parse for this step
 [AUTOMATED STEP]: Checking for Time Sync related errors
 
    - gcpdiag-gce-vm-performance/valid-linux-ssh                           [UNCERTAIN]

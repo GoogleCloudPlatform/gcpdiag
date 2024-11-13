@@ -405,6 +405,9 @@ https://cloud.google.com/compute/docs/troubleshooting/troubleshoot-metadata-serv
 There are no logs to examine !
 {% endblock network_errors_skipped_reason %}
 
+{% block network_errors_uncertain_reason %}
+We are not able to deduce a conlusion on certainity of Network issues on the instance.
+{% endblock network_errors_uncertain_reason %}
 
 {% block  linux_fs_corruption_step_message %}
 Checking if any Filesystem corruption related errors in Serial console logs
