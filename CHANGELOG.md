@@ -1,3 +1,47 @@
+## 0.77 (2024-11-13)
+
+#### New Lint Rules
+
+- gke/err/2024\_002: gke webhook failure endpoints not available
+- gke/warn/2024\_007: GKE cluster in a dual-stack with external IPv6 access
+
+#### New Runbooks
+
+- lb/ssl-certificate: Runbook for troubleshooting LB SSL certificates issues
+- gke/node-unavailablity: Identifies the reasons for a GKE node being unavailable
+
+#### New Queries
+
+- gke.get\_cluster: Retrieve a single GKE cluster using its project, region, and cluster name.
+- dns.find\_dns\_records: Resolves DNS records for a given domain and returns a set of IP addresses.
+- lb.get\_ssl\_certifcate: Returns object matching certificate name and region
+- lb.get\_target\_https\_proxies: Retrieves the list of all TargetHttpProxy resources, regional and global, available to the specified project.
+- lb.get\_forwarding\_rule: Returns the specified ForwardingRule resource.
+
+#### Enhancements
+- Functionality to auto suggest correct runbook names for misspelled runbooks
+- Updated docker images to ubuntu:24.04 (python 3.12)
+- Updated devcontainer to python 3.12
+- Migrated crm queries from v1 to v3
+- gce/vm-performance: Added PD performance health check
+- gce/vm-performance: Implemented disk average\_io\_latency check
+- Removed apis\_utils.batch\_execute\_all call from orgpolicy query
+- Enabled gcpdiag.dev page indexing
+- Reduced API retries to 3 attempts
+- Improved START\_TIME\_UTC inconsistency & Error parsing date string fix
+- pubsub/pull-subscription-delivery: removed cold cache checks
+- Add functionality to disable query caching for edge cases
+- Improve error handling within gcpdiag library to raise errors for handling rather than exiting.
+
+
+#### Fixes
+- lb.get\_backend\_service: Improved calls to fetch global backend
+- Added project_id parameters for the runbook tests without  valid project ids
+
+#### Deprecation
+
+- Flag `--project`: Full deprecation in **runbook command** to allow multiple project ids/numbers to be spcified via `--parameter`
+
 ## 0.76 (2024-10-1)
 
 #### New Lint Rules
