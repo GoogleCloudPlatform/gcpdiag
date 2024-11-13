@@ -74,12 +74,14 @@ def _fetch_iam_roles(parent: str, api_project_id: str) -> Dict[str, Role]:
     roles_api = iam_api.organizations().roles()
   else:
     roles_api = iam_api.roles()
+  try:
+    res = apis_utils.list_all(roles_api.list(view='FULL', parent=parent),
+                              roles_api.list_next, 'roles')
+  except googleapiclient.errors.HttpError as err:
+    logging.error('failed to list roles: %s', err)
+    raise utils.GcpApiError(err) from err
 
-  return dict(
-      map(
-          _make_role,
-          apis_utils.list_all(roles_api.list(view='FULL', parent=parent),
-                              roles_api.list_next, 'roles')))
+  return dict(map(_make_role, res))
 
 
 # Cache both in memory and on disk, so that multiple calls during the same
