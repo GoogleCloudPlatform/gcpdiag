@@ -18,3 +18,7 @@ from gcpdiag.runbook.iam.flags import *
 BACKEND_SERVICE_NAME = 'backend_service_name'
 CERTIFICATE_NAME = 'certificate_name'
 REGION = 'region'
+FORWARDING_RULE_NAME = 'forwarding_rule_name'
+BACKEND_LATENCY_THRESHOLD = 'backend_latency_threshold'
+REQUEST_COUNT_THRESHOLD = 'request_count_threshold'
+ERROR_RATE_THRESHOLD = 'error_rate_threshold'

@@ -1,0 +1,27 @@
+{% block backend_latency_success_reason%}
+The forwarding rule has a backend latency of {average_latency} ms. This is less than the threshold value of {threshold} ms.
+{% endblock backend_latency_success_reason %}
+{% block backend_latency_failure_reason%}
+The forwarding rule has a backend latency of {average_latency} ms. This is higher than the threshold value of {threshold} ms.
+{% endblock backend_latency_failure_reason %}
+{% block backend_latency_failure_remediation%}
+Investigate the increased backend latency. Check the health and performance of your backend instances, including CPU usage, memory usage, and disk I/O.
+{% endblock backend_latency_failure_remediation %}
+{% block request_count_success_reason%}
+The forwarding rule has an average request count of {average_request_count} requests/s in the last 15 minutes. This is less than the threshold value of {threshold}.
+{% endblock request_count_success_reason %}
+{% block request_count_failure_reason%}
+The forwarding rule has an average request count of {average_request_count} requests/s in the last 15 minutes. This is higher than the threshold value of {threshold}.
+{% endblock request_count_failure_reason %}
+{% block request_count_failure_remediation%}
+The high request count suggests your backend may be overloaded. Consider scaling up your backend by adding more instances or increasing the resources of existing instances.
+{% endblock request_count_failure_remediation %}
+{% block error_rate_success_reason%}
+The forwarding rule has an average error rate of {average_error_rate}% in the last 15 minutes. This is less than the threshold value of {threshold}%.
+{% endblock error_rate_success_reason %}
+{% block error_rate_failure_reason%}
+The forwarding rule has an average error rate of {average_error_rate}% in the last 15 minutes. This is higher than the threshold value of {threshold}%.
+{% endblock error_rate_failure_reason %}
+{% block error_rate_failure_remediation%}
+A high error rate indicates problems with your backend. Check the logs for 5xx errors and investigate the root cause. Common issues include application errors and resource exhaustion. If the errors are related to specific requests, examine those requests for patterns or anomalies.
+{% endblock error_rate_failure_remediation %}

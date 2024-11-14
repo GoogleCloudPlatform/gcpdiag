@@ -1,0 +1,148 @@
+{
+  "timeSeriesDescriptor": {
+    "labelDescriptors": [
+      {
+        "key": "resource.zone"
+      },
+      {
+        "key": "metric.instance_name"
+      }
+    ],
+    "pointDescriptors": [
+      {
+        "key": "value_uptime_total_aggregate_mean",
+        "valueType": "DOUBLE",
+        "metricKind": "GAUGE",
+        "unit": "s"
+      },
+      {
+        "key": "value_uptime_total_aggregate_count",
+        "valueType": "INT64",
+        "metricKind": "GAUGE",
+        "unit": "1"
+      }
+    ]
+  },
+  "timeSeriesData": [
+    {
+      "labelValues": [
+        {
+          "stringValue": "europe-west4-b"
+        },
+        {
+          "stringValue": "neg-vm"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 1219297
+            },
+            {
+              "int64Value": "4"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-08-27T15:45:06.919908Z",
+            "endTime": "2024-08-27T15:45:06.919908Z"
+          }
+        },
+        {
+          "values": [
+            {
+              "doubleValue": 1219027
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-08-27T15:40:06.919908Z",
+            "endTime": "2024-08-27T15:40:06.919908Z"
+          }
+        }
+      ]
+    },
+    {
+      "labelValues": [
+        {
+          "stringValue": "us-east1-b"
+        },
+        {
+          "stringValue": "vm-pn3l"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 1320395
+            },
+            {
+              "int64Value": "4"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-08-27T15:45:06.919908Z",
+            "endTime": "2024-08-27T15:45:06.919908Z"
+          }
+        },
+        {
+          "values": [
+            {
+              "doubleValue": 1320125
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-08-27T15:40:06.919908Z",
+            "endTime": "2024-08-27T15:40:06.919908Z"
+          }
+        }
+      ]
+    },
+    {
+      "labelValues": [
+        {
+          "stringValue": "us-east1-b"
+        },
+        {
+          "stringValue": "vm-m5q1"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "doubleValue": 1320407
+            },
+            {
+              "int64Value": "4"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-08-27T15:45:06.919908Z",
+            "endTime": "2024-08-27T15:45:06.919908Z"
+          }
+        },
+        {
+          "values": [
+            {
+              "doubleValue": 1320137
+            },
+            {
+              "int64Value": "5"
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-08-27T15:40:06.919908Z",
+            "endTime": "2024-08-27T15:40:06.919908Z"
+          }
+        }
+      ]
+    }
+  ]
+}

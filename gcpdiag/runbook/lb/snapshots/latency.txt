@@ -1,0 +1,129 @@
+forwarding_rule_name=https-content-rule,project_id=gcpdiag-lb3-aaaa,region=global
+
+lb/latency: This runbook diagnoses and troubleshoots latency issues with Application Load Balancers.
+
+  It analyzes key metrics to identify potential bottlenecks and performance
+  problems.
+
+  Key Investigation Areas:
+
+  - Backend Latency:
+    - Measures the time taken for backends to respond to requests, checking if
+    it exceeds a configurable threshold.
+  - Request Count Per Second (QPS):
+    - Monitors the rate of incoming requests to the load balancer, checking if
+    it exceeds a configurable threshold.  A high request count coupled with high
+    latency might suggest overload.
+  - 5xx Error Rate:
+    - Calculates the percentage of 5xx server errors, indicating problems on the
+    backend servers.  This check uses a configurable threshold and considers the
+    request count to provide a meaningful error rate.
+  
+[START]: Fetch the specified forwarding rule.
+[INFO]: Forwarding rule found: https-content-rule
+[AUTOMATED STEP]: Check backend latency for the specified forwarding rule
+[INFO]: Forwarding rule name: projects/gcpdiag-lb3-aaaa/global/forwardingRules/https-content-rule
+
+   - gcpdiag-lb3-aaaa/https-content-rule                                  [FAIL]
+     [REASON]
+     The forwarding rule has a backend latency of 660138.25 ms. This is higher than the threshold value of 200 ms.
+
+     [REMEDIATION]
+     Investigate the increased backend latency. Check the health and performance of your backend instances, including CPU usage, memory usage, and disk I/O.
+
+[AUTOMATED STEP]: Check request count per second for the specified forwarding rule
+[INFO]: Forwarding rule name: projects/gcpdiag-lb3-aaaa/global/forwardingRules/https-content-rule
+
+   - gcpdiag-lb3-aaaa/https-content-rule                                  [FAIL]
+     [REASON]
+     The forwarding rule has an average request count of 11002.3 requests/s in the last 15 minutes. This is higher than the threshold value of 150.
+
+     [REMEDIATION]
+     The high request count suggests your backend may be overloaded. Consider scaling up your backend by adding more instances or increasing the resources of existing instances.
+
+[AUTOMATED STEP]: Check the 5xx error rate for the specified forwarding rule
+[INFO]: Forwarding rule name: projects/gcpdiag-lb3-aaaa/global/forwardingRules/https-content-rule
+
+   - gcpdiag-lb3-aaaa/https-content-rule                                  [OK]
+     [REASON]
+     The forwarding rule has an average error rate of 0% in the last 15 minutes. This is less than the threshold value of 1%.
+
+[END]: Finalizing unhealthy backends diagnostics...
+
+
+forwarding_rule_name=https-content-rule-working,project_id=gcpdiag-lb3-aaaa,region=global
+
+lb/latency: This runbook diagnoses and troubleshoots latency issues with Application Load Balancers.
+
+  It analyzes key metrics to identify potential bottlenecks and performance
+  problems.
+
+  Key Investigation Areas:
+
+  - Backend Latency:
+    - Measures the time taken for backends to respond to requests, checking if
+    it exceeds a configurable threshold.
+  - Request Count Per Second (QPS):
+    - Monitors the rate of incoming requests to the load balancer, checking if
+    it exceeds a configurable threshold.  A high request count coupled with high
+    latency might suggest overload.
+  - 5xx Error Rate:
+    - Calculates the percentage of 5xx server errors, indicating problems on the
+    backend servers.  This check uses a configurable threshold and considers the
+    request count to provide a meaningful error rate.
+  
+[START]: Fetch the specified forwarding rule.
+
+   - gcpdiag-lb3-aaaa                                                     [SKIP]
+     [REASON]
+     Forwarding rule not found in the specified project and region.
+
+
+backend_latency_threshold=700000,error_rate_threshold=50,forwarding_rule_name=https-content-
+rule,project_id=gcpdiag-lb3-aaaa,region=global,request_count_threshold=700000
+
+lb/latency: This runbook diagnoses and troubleshoots latency issues with Application Load Balancers.
+
+  It analyzes key metrics to identify potential bottlenecks and performance
+  problems.
+
+  Key Investigation Areas:
+
+  - Backend Latency:
+    - Measures the time taken for backends to respond to requests, checking if
+    it exceeds a configurable threshold.
+  - Request Count Per Second (QPS):
+    - Monitors the rate of incoming requests to the load balancer, checking if
+    it exceeds a configurable threshold.  A high request count coupled with high
+    latency might suggest overload.
+  - 5xx Error Rate:
+    - Calculates the percentage of 5xx server errors, indicating problems on the
+    backend servers.  This check uses a configurable threshold and considers the
+    request count to provide a meaningful error rate.
+  
+[START]: Fetch the specified forwarding rule.
+[INFO]: Forwarding rule found: https-content-rule
+[AUTOMATED STEP]: Check backend latency for the specified forwarding rule
+[INFO]: Forwarding rule name: projects/gcpdiag-lb3-aaaa/global/forwardingRules/https-content-rule
+
+   - gcpdiag-lb3-aaaa/https-content-rule                                  [OK]
+     [REASON]
+     The forwarding rule has a backend latency of 660138.25 ms. This is less than the threshold value of 700000.0 ms.
+
+[AUTOMATED STEP]: Check request count per second for the specified forwarding rule
+[INFO]: Forwarding rule name: projects/gcpdiag-lb3-aaaa/global/forwardingRules/https-content-rule
+
+   - gcpdiag-lb3-aaaa/https-content-rule                                  [OK]
+     [REASON]
+     The forwarding rule has an average request count of 11002.3 requests/s in the last 15 minutes. This is less than the threshold value of 700000.0.
+
+[AUTOMATED STEP]: Check the 5xx error rate for the specified forwarding rule
+[INFO]: Forwarding rule name: projects/gcpdiag-lb3-aaaa/global/forwardingRules/https-content-rule
+
+   - gcpdiag-lb3-aaaa/https-content-rule                                  [OK]
+     [REASON]
+     The forwarding rule has an average error rate of 0% in the last 15 minutes. This is less than the threshold value of 50.0%.
+
+[END]: Finalizing unhealthy backends diagnostics...
+
+
