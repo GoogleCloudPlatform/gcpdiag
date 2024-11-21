@@ -160,7 +160,7 @@
             "labels": [
               {
                 "key": "resource_container",
-                "description": "The GCP container (e.g. project number) associated with the reservation."
+                "description": "The GCP container (e.g. project number) associated with the storage pool."
               },
               {
                 "key": "location",
@@ -199,6 +199,8 @@
             {
               "monitoredResource": "compute.googleapis.com/VpcNetwork",
               "metrics": [
+                "compute.googleapis.com/cloud_router_prefixes_from_other_regions_per_region_per_vpc_network",
+                "compute.googleapis.com/cloud_router_prefixes_from_own_region_per_region_per_vpc_network",
                 "compute.googleapis.com/dynamic_routes_per_region_per_peering_group",
                 "compute.googleapis.com/global_internal_managed_forwarding_rules_per_region_per_vpc_network",
                 "compute.googleapis.com/instances_per_peering_group",
@@ -218,6 +220,10 @@
                 "compute.googleapis.com/quota/cloud_router_prefixes_from_other_regions_per_region_per_vpc_network/exceeded",
                 "compute.googleapis.com/quota/cloud_router_prefixes_from_own_region_per_region_per_vpc_network/exceeded",
                 "compute.googleapis.com/quota/dynamic_routes_per_region_per_peering_group/exceeded",
+                "compute.googleapis.com/quota/firewall_rule_attributes_per_region_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/firewall_rule_attributes_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/firewall_rule_fqdns_per_region_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/firewall_rule_fqdns_per_vpc_network/exceeded",
                 "compute.googleapis.com/quota/global_internal_managed_forwarding_rules_per_region_per_vpc_network/exceeded",
                 "compute.googleapis.com/quota/global_network_firewall_policy_associations_per_vpc_network/exceeded",
                 "compute.googleapis.com/quota/global_network_firewall_policy_associations_per_vpc_network_system/exceeded",
@@ -236,9 +242,8 @@
                 "compute.googleapis.com/quota/ip_aliases_per_peering_group/exceeded",
                 "compute.googleapis.com/quota/ip_aliases_per_regional_vpc_network/exceeded",
                 "compute.googleapis.com/quota/ip_aliases_per_vpc_network/exceeded",
+                "compute.googleapis.com/quota/multicast_consumers_per_zone_per_vpc_network/exceeded",
                 "compute.googleapis.com/quota/peerings_per_vpc_network/exceeded",
-                "compute.googleapis.com/quota/psc_accepted_connections_per_producer_vpc_network/exceeded",
-                "compute.googleapis.com/quota/psc_connections_per_vpc_network/exceeded",
                 "compute.googleapis.com/quota/psc_google_apis_forwarding_rules_per_vpc_network/exceeded",
                 "compute.googleapis.com/quota/psc_ilb_consumer_forwarding_rules_per_producer_regional_vpc_network/exceeded",
                 "compute.googleapis.com/quota/psc_ilb_consumer_forwarding_rules_per_producer_vpc_network/exceeded",
@@ -281,7 +286,8 @@
                 "compute.googleapis.com/quota/preemptible_gpus_per_gpu_family/exceeded",
                 "compute.googleapis.com/quota/rdma_networking_cards_per_vm_family/exceeded",
                 "compute.googleapis.com/quota/reserved_resource_per_aggregate_reservation_per_cluster/exceeded",
-                "compute.googleapis.com/quota/tpus_per_tpu_family/exceeded"
+                "compute.googleapis.com/quota/tpus_per_tpu_family/exceeded",
+                "compute.googleapis.com/tpus_per_tpu_family"
               ]
             },
             {
@@ -295,6 +301,7 @@
               "monitoredResource": "compute.googleapis.com/FirewallPolicy",
               "metrics": [
                 "compute.googleapis.com/fqdns_per_global_network_firewall_policy",
+                "compute.googleapis.com/fqdns_per_hierarchical_firewall_policy",
                 "compute.googleapis.com/fqdns_per_regional_network_firewall_policy",
                 "compute.googleapis.com/quota/fqdns_per_global_network_firewall_policy/exceeded",
                 "compute.googleapis.com/quota/fqdns_per_hierarchical_firewall_policy/exceeded",
@@ -303,12 +310,16 @@
                 "compute.googleapis.com/quota/rule_attributes_per_hierarchical_firewall_policy/exceeded",
                 "compute.googleapis.com/quota/rule_attributes_per_regional_network_firewall_policy/exceeded",
                 "compute.googleapis.com/rule_attributes_per_global_network_firewall_policy",
+                "compute.googleapis.com/rule_attributes_per_hierarchical_firewall_policy",
                 "compute.googleapis.com/rule_attributes_per_regional_network_firewall_policy"
               ]
             },
             {
               "monitoredResource": "compute.googleapis.com/SecurityPolicy",
               "metrics": [
+                "compute.googleapis.com/advanced_rules_per_edge_security_policy",
+                "compute.googleapis.com/advanced_rules_per_regional_security_policy",
+                "compute.googleapis.com/advanced_rules_per_security_policy",
                 "compute.googleapis.com/quota/advanced_rules_per_edge_security_policy/exceeded",
                 "compute.googleapis.com/quota/advanced_rules_per_regional_security_policy/exceeded",
                 "compute.googleapis.com/quota/advanced_rules_per_security_policy/exceeded"
@@ -356,7 +367,10 @@
                 "compute.googleapis.com/storage_pool/total_disk_provisioned_throughput",
                 "compute.googleapis.com/storage_pool/capacity_utilization",
                 "compute.googleapis.com/storage_pool/iops_utilization",
-                "compute.googleapis.com/storage_pool/throughput_utilization"
+                "compute.googleapis.com/storage_pool/throughput_utilization",
+                "compute.googleapis.com/storage_pool/capacity_overprovisioning",
+                "compute.googleapis.com/storage_pool/iops_overprovisioning",
+                "compute.googleapis.com/storage_pool/throughput_overprovisioning"
               ]
             },
             {
@@ -390,6 +404,14 @@
                 "compute.googleapis.com/quota/cloud_router_prefixes_from_own_region_per_region_per_vpc_network/usage",
                 "compute.googleapis.com/quota/dynamic_routes_per_region_per_peering_group/limit",
                 "compute.googleapis.com/quota/dynamic_routes_per_region_per_peering_group/usage",
+                "compute.googleapis.com/quota/firewall_rule_attributes_per_region_per_vpc_network/limit",
+                "compute.googleapis.com/quota/firewall_rule_attributes_per_region_per_vpc_network/usage",
+                "compute.googleapis.com/quota/firewall_rule_attributes_per_vpc_network/limit",
+                "compute.googleapis.com/quota/firewall_rule_attributes_per_vpc_network/usage",
+                "compute.googleapis.com/quota/firewall_rule_fqdns_per_region_per_vpc_network/limit",
+                "compute.googleapis.com/quota/firewall_rule_fqdns_per_region_per_vpc_network/usage",
+                "compute.googleapis.com/quota/firewall_rule_fqdns_per_vpc_network/limit",
+                "compute.googleapis.com/quota/firewall_rule_fqdns_per_vpc_network/usage",
                 "compute.googleapis.com/quota/global_internal_managed_forwarding_rules_per_region_per_vpc_network/limit",
                 "compute.googleapis.com/quota/global_internal_managed_forwarding_rules_per_region_per_vpc_network/usage",
                 "compute.googleapis.com/quota/global_network_firewall_policy_associations_per_vpc_network/limit",
@@ -426,12 +448,10 @@
                 "compute.googleapis.com/quota/ip_aliases_per_regional_vpc_network/usage",
                 "compute.googleapis.com/quota/ip_aliases_per_vpc_network/limit",
                 "compute.googleapis.com/quota/ip_aliases_per_vpc_network/usage",
+                "compute.googleapis.com/quota/multicast_consumers_per_zone_per_vpc_network/limit",
+                "compute.googleapis.com/quota/multicast_consumers_per_zone_per_vpc_network/usage",
                 "compute.googleapis.com/quota/peerings_per_vpc_network/limit",
                 "compute.googleapis.com/quota/peerings_per_vpc_network/usage",
-                "compute.googleapis.com/quota/psc_accepted_connections_per_producer_vpc_network/limit",
-                "compute.googleapis.com/quota/psc_accepted_connections_per_producer_vpc_network/usage",
-                "compute.googleapis.com/quota/psc_connections_per_vpc_network/limit",
-                "compute.googleapis.com/quota/psc_connections_per_vpc_network/usage",
                 "compute.googleapis.com/quota/psc_google_apis_forwarding_rules_per_vpc_network/limit",
                 "compute.googleapis.com/quota/psc_google_apis_forwarding_rules_per_vpc_network/usage",
                 "compute.googleapis.com/quota/psc_ilb_consumer_forwarding_rules_per_producer_regional_vpc_network/limit",

@@ -26,6 +26,11 @@
           "usage": 0
         },
         {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
+          "usage": 0
+        },
+        {
           "metric": "STATIC_ADDRESSES",
           "limit": 175,
           "usage": 0
@@ -584,12 +589,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 600,
+          "limit": 3000,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -839,12 +849,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -869,7 +879,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 3000,
           "usage": 0
         },
         {
@@ -974,7 +984,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -1151,12 +1161,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 600,
+          "limit": 1500,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -1406,12 +1421,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -1436,7 +1451,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -1541,7 +1556,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -1718,12 +1733,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 600,
+          "limit": 1500,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -1973,12 +1993,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 100,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 100,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -2003,7 +2023,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -2108,7 +2128,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -2285,12 +2305,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 600,
+          "limit": 750,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -2540,12 +2565,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 100,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 100,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -2570,7 +2595,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -2675,7 +2700,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -2852,12 +2877,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 600,
+          "limit": 1500,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -3107,12 +3137,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 100,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 100,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -3137,7 +3167,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -3242,7 +3272,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -3419,12 +3449,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 600,
+          "limit": 3000,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -3674,12 +3709,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 3000,
           "usage": 0
         },
         {
@@ -3704,7 +3739,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 500,
+          "limit": 3000,
           "usage": 0
         },
         {
@@ -3809,7 +3844,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 24,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -3986,12 +4021,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 300,
+          "limit": 750,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -4241,12 +4281,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -4271,7 +4311,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 24,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -4376,7 +4416,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 24,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -4553,12 +4593,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 600,
+          "limit": 3000,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -4808,12 +4853,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -4838,7 +4883,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 3000,
           "usage": 0
         },
         {
@@ -4943,7 +4988,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -5120,12 +5165,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 600,
+          "limit": 1500,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -5375,12 +5425,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -5405,7 +5455,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -5510,7 +5560,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -5687,12 +5737,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 600,
+          "limit": 1500,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -5942,12 +5997,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -5972,7 +6027,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -6077,7 +6132,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -6254,12 +6309,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 300,
+          "limit": 750,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -6509,12 +6569,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -6539,7 +6599,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 24,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -6644,7 +6704,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 24,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -6821,12 +6881,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 300,
+          "limit": 750,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -7076,12 +7141,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -7106,7 +7171,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 24,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -7211,7 +7276,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 24,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -7388,12 +7453,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 600,
+          "limit": 1500,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -7643,12 +7713,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -7673,7 +7743,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -7778,7 +7848,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -7955,12 +8025,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 300,
+          "limit": 750,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -8210,12 +8285,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -8240,7 +8315,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -8345,7 +8420,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 24,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -8522,12 +8597,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 600,
+          "limit": 3000,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -8777,12 +8857,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 3000,
           "usage": 0
         },
         {
@@ -8807,7 +8887,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 3000,
           "usage": 0
         },
         {
@@ -8912,7 +8992,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 300,
+          "limit": 1000,
           "usage": 0
         },
         {
@@ -9089,12 +9169,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 300,
+          "limit": 750,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -9344,12 +9429,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 24,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -9374,7 +9459,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -9479,7 +9564,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 24,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -9656,12 +9741,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 300,
+          "limit": 750,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -9911,12 +10001,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -9941,7 +10031,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -10046,7 +10136,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 24,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -10223,12 +10313,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 600,
+          "limit": 3000,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -10478,12 +10573,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -10508,7 +10603,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -10613,7 +10708,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -10790,12 +10885,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 600,
+          "limit": 3000,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -11045,12 +11145,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 3000,
           "usage": 0
         },
         {
@@ -11075,7 +11175,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -11180,7 +11280,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -11357,12 +11457,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 600,
+          "limit": 3000,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -11612,12 +11717,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -11642,7 +11747,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 3000,
           "usage": 0
         },
         {
@@ -11747,7 +11852,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -11924,12 +12029,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 600,
+          "limit": 750,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -12179,12 +12289,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -12209,7 +12319,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -12314,7 +12424,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -12491,12 +12601,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 300,
+          "limit": 750,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -12746,12 +12861,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -12776,7 +12891,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -12881,7 +12996,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 24,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -13058,12 +13173,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 300,
+          "limit": 750,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -13313,12 +13433,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -13343,7 +13463,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -13448,7 +13568,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 24,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -13625,12 +13745,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 300,
+          "limit": 750,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -13880,12 +14005,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -13910,7 +14035,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -14015,7 +14140,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 24,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -14198,6 +14323,11 @@
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -14759,12 +14889,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 300,
+          "limit": 750,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -15014,12 +15149,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -15044,7 +15179,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -15149,7 +15284,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 24,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -15326,12 +15461,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 600,
+          "limit": 1500,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -15581,12 +15721,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -15611,7 +15751,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -15716,7 +15856,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -15893,12 +16033,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 300,
+          "limit": 750,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -16148,12 +16293,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -16283,7 +16428,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 24,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -16443,7 +16588,7 @@
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/regions/northamerica-northeast2",
-      "supportsPzs": false
+      "supportsPzs": true
     },
     {
       "kind": "compute#region",
@@ -16460,12 +16605,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 600,
+          "limit": 1500,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -16715,12 +16865,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -16745,7 +16895,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -16850,7 +17000,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -17027,12 +17177,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -17282,12 +17437,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -17312,7 +17467,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 24,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -17417,7 +17572,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 24,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -17595,13 +17750,18 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 600,
-          "usage": 21
+          "limit": 3000,
+          "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
           "usage": 3270
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
+          "usage": 0
         },
         {
           "metric": "STATIC_ADDRESSES",
@@ -17611,7 +17771,7 @@
         {
           "metric": "IN_USE_ADDRESSES",
           "limit": 575,
-          "usage": 12
+          "usage": 0
         },
         {
           "metric": "SSD_TOTAL_GB",
@@ -17850,12 +18010,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 3000,
           "usage": 0
         },
         {
@@ -17880,7 +18040,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 3000,
           "usage": 0
         },
         {
@@ -17985,7 +18145,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 300,
+          "limit": 1000,
           "usage": 0
         },
         {
@@ -18162,12 +18322,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 600,
+          "limit": 3000,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -18417,12 +18582,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 3000,
           "usage": 0
         },
         {
@@ -18447,7 +18612,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 3000,
           "usage": 0
         },
         {
@@ -18552,7 +18717,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 300,
+          "limit": 1000,
           "usage": 0
         },
         {
@@ -18729,12 +18894,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 600,
+          "limit": 3000,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -18984,12 +19154,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 3000,
           "usage": 0
         },
         {
@@ -19014,7 +19184,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 3000,
           "usage": 0
         },
         {
@@ -19119,7 +19289,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 300,
+          "limit": 1000,
           "usage": 0
         },
         {
@@ -19296,12 +19466,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 300,
+          "limit": 750,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -19551,12 +19726,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -19581,7 +19756,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -19686,7 +19861,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 24,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -19846,7 +20021,7 @@
         }
       ],
       "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/regions/us-east5",
-      "supportsPzs": false
+      "supportsPzs": true
     },
     {
       "kind": "compute#region",
@@ -19863,12 +20038,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 300,
+          "limit": 750,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -20118,12 +20298,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -20148,7 +20328,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -20253,7 +20433,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 24,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -20436,6 +20616,11 @@
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -20997,12 +21182,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 600,
+          "limit": 1500,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -21252,12 +21442,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -21282,7 +21472,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -21387,7 +21577,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -21564,12 +21754,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 600,
+          "limit": 1500,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -21819,12 +22014,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -21849,7 +22044,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -21954,7 +22149,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
@@ -22131,12 +22326,17 @@
       "quotas": [
         {
           "metric": "CPUS",
-          "limit": 600,
+          "limit": 1500,
           "usage": 0
         },
         {
           "metric": "DISKS_TOTAL_GB",
           "limit": 102400,
+          "usage": 0
+        },
+        {
+          "metric": "SNAPSHOTS",
+          "limit": 10000,
           "usage": 0
         },
         {
@@ -22386,12 +22586,12 @@
         },
         {
           "metric": "C2_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {
           "metric": "N2_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -22416,7 +22616,7 @@
         },
         {
           "metric": "N2D_CPUS",
-          "limit": 300,
+          "limit": 1500,
           "usage": 0
         },
         {
@@ -22521,7 +22721,7 @@
         },
         {
           "metric": "C2D_CPUS",
-          "limit": 300,
+          "limit": 500,
           "usage": 0
         },
         {

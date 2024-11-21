@@ -1,0 +1,53 @@
+{
+  "reference": {
+    "projectId": "gcpdiag-dataproc1-aaaa",
+    "jobId": "1234567891"
+  },
+  "placement": {
+    "clusterName": "job-failed",
+    "clusterUuid": "94b9d209-dbd2-49bf-a1fb-cb15348cc0fb"
+  },
+  "sparkJob": {
+    "mainClass": "org.apache.spark.examples.SparkPi",
+    "args": [
+      "10000"
+    ],
+    "jarFileUris": [
+      "file:///usr/lib/spark/examples/jars/spark-examples.jar"
+    ],
+    "properties": {
+      "spark.logConf": "true"
+    },
+    "loggingConfig": {
+      "driverLogLevels": {
+        "root": "INFO"
+      }
+    }
+  },
+  "status": {
+    "state": "ERROR",
+    "details": "Driver received SIGTERM/SIGKILL signal and exited with 143 code, which potentially signifies a memory pressure.\nGoogle Cloud Dataproc Agent reports job failure. If logs are available, they can be found at:\nhttps://console.cloud.google.com/dataproc/jobs/1234567891?project=gcpdiag-dataproc1-aaaa&region=us-central1\ngcloud dataproc jobs wait 'afea8b77-c4b5-413d-b853-6c30b1c601de' --region 'us-central1' --project 'gcpdiag-dataproc1-f914htnn'\nhttps://console.cloud.google.com/storage/browser/dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/94b9d209-dbd2-49bf-a1fb-cb15348cc0fb/jobs/afea8b77-c4b5-413d-b853-6c30b1c601de/\ngs://dataproc-staging-us-central1-867564666308-9v6173vh/google-cloud-dataproc-metainfo/94b9d209-dbd2-49bf-a1fb-cb15348cc0fb/jobs/afea8b77-c4b5-413d-b853-6c30b1c601de/driveroutput.*",
+    "stateStartTime": "2024-11-01T03:13:26.981926Z"
+  },
+  "statusHistory": [
+    {
+      "state": "PENDING",
+      "stateStartTime": "2024-11-01T03:12:34.648195Z"
+    },
+    {
+      "state": "SETUP_DONE",
+      "stateStartTime": "2024-11-01T03:12:34.680296Z"
+    },
+    {
+      "state": "RUNNING",
+      "stateStartTime": "2024-11-01T03:12:35.635169Z"
+    }
+  ],
+  "driverControlFilesUri": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/94b9d209-dbd2-49bf-a1fb-cb15348cc0fb/jobs/1234567891/",
+  "driverOutputResourceUri": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/94b9d209-dbd2-49bf-a1fb-cb15348cc0fb/jobs/1234567891/driveroutput",
+  "labels": {
+    "goog-terraform-provisioned": "true"
+  },
+  "jobUuid": "1234567891",
+  "done": true
+}

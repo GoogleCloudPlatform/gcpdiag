@@ -19,6 +19,8 @@ from gcpdiag import models
 from gcpdiag.queries import apis_stub, dataproc
 
 DUMMY_PROJECT_NAME = 'gcpdiag-dataproc1-aaaa'
+DUMMY_SUCCESS_JOB_ID = '1234567890'
+DUMMY_FAILED_JOB_ID = '1234567891'
 NUMBER_OF_CLUSTERS_IN_DATAPROC_JSON_DUMP_FILE = 4
 REGION = 'us-central1'
 POLICY_ID = 'CDF_AUTOSCALING_POLICY_V1'
@@ -32,6 +34,10 @@ class TestDataproc:
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     clusters = dataproc.get_clusters(context)
     assert len(clusters) == NUMBER_OF_CLUSTERS_IN_DATAPROC_JSON_DUMP_FILE
+
+  def test_get_cluster(self):
+    cluster = dataproc.get_cluster('good', 'us-central1', DUMMY_PROJECT_NAME)
+    assert cluster.name == 'good'
 
   def test_is_running(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
@@ -91,3 +97,20 @@ class TestDataproc:
     policy_name = ('projects/gcpdiag-dataproc1-aaaa/regions/us-central1/'
                    'autoscalingPolicies/CDF_AUTOSCALING_POLICY_V1')
     assert policy.name == policy_name
+
+  def test_get_job_by_jobid_(self):
+    failed_job = dataproc.get_job_by_jobid(
+        project_id=DUMMY_PROJECT_NAME,
+        region='us-central1',
+        job_id=DUMMY_FAILED_JOB_ID,
+    )
+
+    assert failed_job.state == 'ERROR'
+
+    success_job = dataproc.get_job_by_jobid(
+        project_id=DUMMY_PROJECT_NAME,
+        region='us-central1',
+        job_id=DUMMY_SUCCESS_JOB_ID,
+    )
+
+    assert success_job.state == 'DONE'

@@ -1,0 +1,61 @@
+{
+  "reference": {
+    "projectId": "gcpdiag-dataproc1-aaaa",
+    "jobId": "1234567890"
+  },
+  "placement": {
+    "clusterName": "job-success",
+    "clusterUuid": "02eb914f-566d-4e20-a23b-895ebcadfa54"
+  },
+  "sparkJob": {
+    "mainClass": "org.apache.spark.examples.SparkPi",
+    "args": [
+      "10"
+    ],
+    "jarFileUris": [
+      "file:///usr/lib/spark/examples/jars/spark-examples.jar"
+    ],
+    "properties": {
+      "spark.logConf": "true"
+    },
+    "loggingConfig": {
+      "driverLogLevels": {
+        "root": "INFO"
+      }
+    }
+  },
+  "status": {
+    "state": "DONE",
+    "stateStartTime": "2024-11-01T02:58:57.465011Z"
+  },
+  "yarnApplications": [
+    {
+      "name": "Spark Pi",
+      "state": "FINISHED",
+      "progress": 1,
+      "trackingUrl": "http://job-success-m.c.gcpdiag-dataproc1-aaaa.internal.:8088/proxy/application_1730429847891_0001/"
+    }
+  ],
+  "statusHistory": [
+    {
+      "state": "PENDING",
+      "stateStartTime": "2024-11-01T02:58:22.207045Z"
+    },
+    {
+      "state": "SETUP_DONE",
+      "stateStartTime": "2024-11-01T02:58:22.240406Z"
+    },
+    {
+      "state": "RUNNING",
+      "details": "Agent reported job success",
+      "stateStartTime": "2024-11-01T02:58:22.604010Z"
+    }
+  ],
+  "driverControlFilesUri": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/02eb914f-566d-4e20-a23b-895ebcadfa54/jobs/1234567890/",
+  "driverOutputResourceUri": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/02eb914f-566d-4e20-a23b-895ebcadfa54/jobs/1234567890/driveroutput",
+  "labels": {
+    "goog-terraform-provisioned": "true"
+  },
+  "jobUuid": "1234567890",
+  "done": true
+}

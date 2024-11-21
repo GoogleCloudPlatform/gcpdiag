@@ -1,10 +1,10 @@
 ---
-title: "dataproc/Cluster Exists"
-linkTitle: "Cluster Exists"
+title: "dataproc/Check Shuffle Failures"
+linkTitle: "Check Shuffle Failures"
 weight: 3
 type: docs
 description: >
-  Verify if cluster exists in Dataproc UI.
+  Check for logs indicating shuffle failures.
 ---
 
 **Product**: [Cloud Dataproc](https://cloud.google.com/dataproc)\
@@ -16,15 +16,11 @@ None
 
 ### Failure Reason
 
-The cluster: {cluster_name} doesn't exists in project {project_id}
-
-### Failure Remediation
-
-Please check if you deleted the cluster.
+Cluster {cluster_name} experienced shuffle failures. Potential root causes: {root_causes}
 
 ### Success Reason
 
-The cluster: {cluster_name} exists in project {project_id}
+No shuffle failure logs found for cluster {cluster_name}
 
 
 

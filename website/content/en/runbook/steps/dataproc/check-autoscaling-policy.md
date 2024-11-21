@@ -1,10 +1,10 @@
 ---
-title: "dataproc/Cluster Exists"
-linkTitle: "Cluster Exists"
+title: "dataproc/Check Autoscaling Policy"
+linkTitle: "Check Autoscaling Policy"
 weight: 3
 type: docs
 description: >
-  Verify if cluster exists in Dataproc UI.
+  Verify autoscaling policies.
 ---
 
 **Product**: [Cloud Dataproc](https://cloud.google.com/dataproc)\
@@ -16,15 +16,11 @@ None
 
 ### Failure Reason
 
-The cluster: {cluster_name} doesn't exists in project {project_id}
+Autoscaling is enabled without graceful decommission timeout on cluster {cluster_name}
 
 ### Failure Remediation
 
-Please check if you deleted the cluster.
-
-### Success Reason
-
-The cluster: {cluster_name} exists in project {project_id}
+Enable graceful decommission timeout in the autoscaling policy to allow executors to fetch shuffle data before nodes are removed.
 
 
 

@@ -4,10 +4,11 @@
   "projectId": "gcpdiag-dataproc1-aaaa",
   "state": "ACTIVE",
   "displayName": "gcpdiag test - dataproc1",
-  "createTime": "2024-06-25T11:49:18.219552Z",
-  "updateTime": "2024-06-25T11:49:18.219552Z",
-  "etag": "W/\"3b2e21b109750122\"",
+  "createTime": "2024-10-31T03:04:58.584562Z",
+  "updateTime": "2024-10-31T06:18:28.441603Z",
+  "etag": "W/\"520c285328f06d6d\"",
   "labels": {
-    "gcpdiag": "test"
+    "gcpdiag": "test",
+    "goog-terraform-provisioned": "true"
   }
 }

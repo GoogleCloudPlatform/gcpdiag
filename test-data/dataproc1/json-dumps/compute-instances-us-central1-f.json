@@ -1,5 +1,1237 @@
 {
   "id": "projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f/instances",
+  "items": [
+    {
+      "cpuPlatform": "Unknown CPU Platform",
+      "creationTimestamp": "2024-10-30T20:32:54.062-07:00",
+      "deletionProtection": false,
+      "disks": [
+        {
+          "autoDelete": true,
+          "boot": true,
+          "deviceName": "persistent-disk-0",
+          "diskSizeGb": "30",
+          "guestOsFeatures": [
+            {
+              "type": "UEFI_COMPATIBLE"
+            },
+            {
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "GVNIC"
+            },
+            {
+              "type": "SEV_CAPABLE"
+            },
+            {
+              "type": "SEV_LIVE_MIGRATABLE_V2"
+            }
+          ],
+          "index": 0,
+          "interface": "SCSI",
+          "kind": "compute#attachedDisk",
+          "licenses": [
+            "https://www.googleapis.com/compute/v1/projects/cloud-dataproc/global/licenses/dataproc"
+          ],
+          "mode": "READ_WRITE",
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f/disks/good-m",
+          "type": "PERSISTENT"
+        }
+      ],
+      "fingerprint": "REDACTED",
+      "id": "7985437924094067850",
+      "kind": "compute#instance",
+      "labelFingerprint": "i07p_VesMMc=",
+      "labels": {
+        "goog-dataproc-autozone": "enabled",
+        "goog-dataproc-cluster-name": "good",
+        "goog-dataproc-cluster-uuid": "ae0a9260-f4a1-49ad-9593-8451a2536e59",
+        "goog-dataproc-location": "us-central1"
+      },
+      "lastStartTimestamp": "2024-10-30T20:33:06.277-07:00",
+      "lastStopTimestamp": "2024-10-30T23:19:32.290-07:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f/machineTypes/e2-medium",
+      "metadata": {
+        "fingerprint": "REDACTED",
+        "items": [
+          {
+            "key": "dataproc-bucket",
+            "value": "dataproc-staging-us-central1-12340005-9v6173vh"
+          },
+          {
+            "key": "dataproc-cloud-logging-enabled",
+            "value": "false"
+          },
+          {
+            "key": "dataproc-cluster-configuration-directory",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/ae0a9260-f4a1-49ad-9593-8451a2536e59/"
+          },
+          {
+            "key": "dataproc-cluster-name",
+            "value": "good"
+          },
+          {
+            "key": "dataproc-cluster-uuid",
+            "value": "ae0a9260-f4a1-49ad-9593-8451a2536e59"
+          },
+          {
+            "key": "dataproc-exclude-file-location",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/ae0a9260-f4a1-49ad-9593-8451a2536e59/nodes_exclude.xml"
+          },
+          {
+            "key": "dataproc-include-file-location",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/ae0a9260-f4a1-49ad-9593-8451a2536e59/nodes_include"
+          },
+          {
+            "key": "dataproc-initialization-script-count",
+            "value": "0"
+          },
+          {
+            "key": "dataproc-master",
+            "value": "good-m"
+          },
+          {
+            "key": "dataproc-master-additional",
+            "value": ""
+          },
+          {
+            "key": "dataproc-region",
+            "value": "us-central1"
+          },
+          {
+            "key": "dataproc-temp-bucket",
+            "value": "dataproc-temp-us-central1-12340005-xslkmij6"
+          },
+          {
+            "key": "dataproc-worker-agent-runner-daemon-timeout",
+            "value": "60"
+          },
+          {
+            "key": "dataproc-worker-count",
+            "value": "2"
+          },
+          {
+            "key": "has-driver-pool",
+            "value": "false"
+          },
+          {
+            "key": "master-run-driver-location",
+            "value": "LOCAL"
+          },
+          {
+            "key": "dataproc-agent-output-directory",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/ae0a9260-f4a1-49ad-9593-8451a2536e59/good-m"
+          },
+          {
+            "key": "dataproc-cluster-properties",
+            "value": "ZIPPY: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"
+          },
+          {
+            "key": "dataproc-cluster-properties-file",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/ae0a9260-f4a1-49ad-9593-8451a2536e59/cluster.properties"
+          },
+          {
+            "key": "dataproc-datanode-enabled",
+            "value": "false"
+          },
+          {
+            "key": "dataproc-option-run-init-actions-early",
+            "value": "true"
+          },
+          {
+            "key": "dataproc-protocol-spec",
+            "value": "EoQBCipkYXRhcHJvY2NvbnRyb2wtdXMtY2VudHJhbDEuZ29vZ2xlYXBpcy5jb20SKmRhdGFwcm9jY29udHJvbC11cy1jZW50cmFsMS5nb29nbGVhcGlzLmNvbSIqZGF0YXByb2Njb250cm9sLXVzLWNlbnRyYWwxLmdvb2dsZWFwaXMuY29t"
+          },
+          {
+            "key": "dataproc-role",
+            "value": "Master"
+          },
+          {
+            "key": "node-group-roles",
+            "value": "MASTER"
+          }
+        ],
+        "kind": "compute#metadata"
+      },
+      "name": "good-m",
+      "networkInterfaces": [
+        {
+          "accessConfigs": [
+            {
+              "kind": "compute#accessConfig",
+              "name": "External NAT",
+              "networkTier": "PREMIUM",
+              "type": "ONE_TO_ONE_NAT"
+            }
+          ],
+          "fingerprint": "REDACTED",
+          "kind": "compute#networkInterface",
+          "name": "nic0",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/global/networks/default",
+          "networkIP": "10.128.0.7",
+          "nicType": "GVNIC",
+          "stackType": "IPV4_ONLY",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/regions/us-central1/subnetworks/default"
+        }
+      ],
+      "satisfiesPzi": false,
+      "scheduling": {
+        "automaticRestart": true,
+        "onHostMaintenance": "MIGRATE",
+        "preemptible": false,
+        "provisioningModel": "STANDARD"
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f/instances/good-m",
+      "serviceAccounts": [
+        {
+          "email": "12340005-compute@developer.gserviceaccount.com",
+          "scopes": [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ]
+        }
+      ],
+      "shieldedInstanceConfig": {
+        "enableIntegrityMonitoring": true,
+        "enableSecureBoot": true,
+        "enableVtpm": true
+      },
+      "shieldedInstanceIntegrityPolicy": {
+        "updateAutoLearnPolicy": true
+      },
+      "startRestricted": false,
+      "status": "TERMINATED",
+      "tags": {
+        "fingerprint": "REDACTED"
+      },
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f"
+    },
+    {
+      "cpuPlatform": "Unknown CPU Platform",
+      "creationTimestamp": "2024-10-30T20:32:54.823-07:00",
+      "deletionProtection": false,
+      "disks": [
+        {
+          "autoDelete": true,
+          "boot": true,
+          "deviceName": "persistent-disk-0",
+          "diskSizeGb": "30",
+          "guestOsFeatures": [
+            {
+              "type": "UEFI_COMPATIBLE"
+            },
+            {
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "GVNIC"
+            },
+            {
+              "type": "SEV_CAPABLE"
+            },
+            {
+              "type": "SEV_LIVE_MIGRATABLE_V2"
+            }
+          ],
+          "index": 0,
+          "interface": "SCSI",
+          "kind": "compute#attachedDisk",
+          "licenses": [
+            "https://www.googleapis.com/compute/v1/projects/cloud-dataproc/global/licenses/dataproc"
+          ],
+          "mode": "READ_WRITE",
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f/disks/good-w-0",
+          "type": "PERSISTENT"
+        }
+      ],
+      "fingerprint": "REDACTED",
+      "id": "4718619462986581130",
+      "kind": "compute#instance",
+      "labelFingerprint": "i07p_VesMMc=",
+      "labels": {
+        "goog-dataproc-autozone": "enabled",
+        "goog-dataproc-cluster-name": "good",
+        "goog-dataproc-cluster-uuid": "ae0a9260-f4a1-49ad-9593-8451a2536e59",
+        "goog-dataproc-location": "us-central1"
+      },
+      "lastStartTimestamp": "2024-10-30T20:33:06.358-07:00",
+      "lastStopTimestamp": "2024-10-30T23:19:27.106-07:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f/machineTypes/e2-medium",
+      "metadata": {
+        "fingerprint": "REDACTED",
+        "items": [
+          {
+            "key": "dataproc-bucket",
+            "value": "dataproc-staging-us-central1-12340005-9v6173vh"
+          },
+          {
+            "key": "dataproc-cloud-logging-enabled",
+            "value": "false"
+          },
+          {
+            "key": "dataproc-cluster-configuration-directory",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/ae0a9260-f4a1-49ad-9593-8451a2536e59/"
+          },
+          {
+            "key": "dataproc-cluster-name",
+            "value": "good"
+          },
+          {
+            "key": "dataproc-cluster-uuid",
+            "value": "ae0a9260-f4a1-49ad-9593-8451a2536e59"
+          },
+          {
+            "key": "dataproc-exclude-file-location",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/ae0a9260-f4a1-49ad-9593-8451a2536e59/nodes_exclude.xml"
+          },
+          {
+            "key": "dataproc-include-file-location",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/ae0a9260-f4a1-49ad-9593-8451a2536e59/nodes_include"
+          },
+          {
+            "key": "dataproc-initialization-script-count",
+            "value": "0"
+          },
+          {
+            "key": "dataproc-master",
+            "value": "good-m"
+          },
+          {
+            "key": "dataproc-master-additional",
+            "value": ""
+          },
+          {
+            "key": "dataproc-region",
+            "value": "us-central1"
+          },
+          {
+            "key": "dataproc-temp-bucket",
+            "value": "dataproc-temp-us-central1-12340005-xslkmij6"
+          },
+          {
+            "key": "dataproc-worker-agent-runner-daemon-timeout",
+            "value": "60"
+          },
+          {
+            "key": "dataproc-worker-count",
+            "value": "2"
+          },
+          {
+            "key": "has-driver-pool",
+            "value": "false"
+          },
+          {
+            "key": "master-run-driver-location",
+            "value": "LOCAL"
+          },
+          {
+            "key": "dataproc-agent-output-directory",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/ae0a9260-f4a1-49ad-9593-8451a2536e59/good-w-0"
+          },
+          {
+            "key": "dataproc-cluster-properties",
+            "value": "ZIPPY:eJylWG1v4jgQ/t5fUWm/ni0IhbZI+cC29Nq7FirSvbs9VUImMeCtHedshy7762/sJDSAU/qiSqU0zzMzHj+eGefLBc+1oeo4UzKjyjCqj778TZPjcWyOO63joNXvBP1ucHx/+QBfgpOjmGQkZmaNdLykSc6peuyviUrx5juuIFhRLXMVUxQTHuecGKlCqRbYPl9SvCSJlBl27NwwvsHjSylYSlIzKf9xseG/z7+UBid0TnJusFQJVSxdoExyFq/DOWFgTSr62J9rvNB4xmX8hDX7RcN25yRon54GZ1sAQQ1JiCHgwIZPUzLjFOxwTUtcuSKtefk0wZBYI2PJdfhwG63av7nfuPoMjqxBwMSPfbKgqcE6I+oJJ4qtYCVUZLCMH0SFRuW0jhVgmAmi1lOZ8nUZxMvz6i9MngkzKKXP6FmqJ6o00lStGOyJogumjSKGybSZHxf6QEtKuFliWAinsUGxFJlMIV6UyoSilAiqd2PcswH5UyzWGyN22wp+9aRM2kFLxlixZFKVRkhs2Ap2vJlYxauRkUjIlIGW/KlYJnN9bK367aQ6VuvM2H1dscTuUSGDZs+pUZKjjJOUooRCJIJpDZ5Ai4cXXLBxGbGllEHDIWJvphuinzBLV4SzxK0SvkAe4TsWjHOmw26r1TpoQdH/cqrNx8iQYAqyTfIiz7COOOz5eSA2ZWaUGCyI3W88d57TeO1YnQOkQuk7JNT2kX7IGa7EV+b4ZXVFhD5aGVYMapQCCMxgK0EQB1hJaDj5Npp+HV6NJ8NpNJz8dXMxjLxmSs/2DBRl0P4lSAqlQOHyyB3QV00ZVaXbPk0fYeo1rE+8w4DNo1vA+31rQ+Knqt7VS6qHZtOzUDLP7N7INIH61+hig30pK412ofXNpYLEw7mqVgDCNjTdBNV8yF4ajyA/oTKmca6ULY2QFDgbhymCCqnWKNfgpIXPfYRS0h8UnFN0Coou6ycmuZFWXq+UoA3HiVMQZvfWxWk7GnXO0da2fcqEWULzX0qe4Cc2C3vdbqf3Xktljj4TTGni88F8JooD7u1RW4I2gYShly2a26ZmIuNszmAK0XF9s3eB7uRyuUBksYBeSDwrAIdx9tgXwADl2mNCMhhMVgTLzOgQ/SN+dk97ogFYrBGLWXjaO/Ngyo832avMbpksBi9E09Vj/3pwOR7fTy8HD4PR+HI4Hd8/RIXBdiCObHuHgwUTnV2/2waSJJBwDWfP/Tz2z896PR9waUzmRZ80obUX3vXBWRZ7wac1sJ2zCtskTdyoK/PUhEHLiwH/yGPxtBGtvfC2Dw66oqAo2I4s3rAWUiZIPPbPWl2vj03RbozNbuUhnjfK3rmfWMxK2+lqNwTnsA3raR8VCtyS2B/jr9Prm+hhPPluq+5wMr0eDu6jm3+H4APuSgWlLl43b5BMh+cND8s/NZfP0BiVcZMrp4YmjgbtofsqU4dt//OqZCjIJRRcGIrgK4WOQGCh+5eyF+4qwEuNrwt6BEmi6pauKE9mkSGGRtZMVOTO49me/jjL8cpekPzB7VeSdqfdFg3Il3Pf7nV8WSw/ak6DZtS236AXBD6/eyWnE5yeeXDFmC2xhouJhQXd3gblaizJ6pmFadjeBkCbqGHpftLmmgxrRHuJPcCpEufumYWao/vB5E+ol8O78Wh6B78n351+RQGCRlLcSTd3ymRlJ6UE5pC5nbMZN7t910+sRiodwroxnK4FtwqUeVJee+tz2GXJuivmsduS22Ba/8dB5Sy9gELBbP+aUHfhf0tYlgt3f+jKiqQQRK6XiXxO30qFvWOC/QJfNgA8z/Ve+3wLmdO50VQwZwTqHZyzjxmyvZ7ARz6D6w/o9X0BwX+AZkr4lYSpRF3YyuAjFrMbzLATquH+ENl3J67LemHu+PiURX/SOLdXr0rL/qcshZKYxu5E+xGVi6DbbXAxTFd4fD8cfb0dRNPRt7vpw/VkOLiMdp1mPF+Av+pmZNW3L9pN4iqtRpZ776jb5moDvx3XrwY3kx0ApD6eyVd2aXuTFTQyJqh9aSXFVXECnXIyYuyI+YqhnGH75iRsbf+7qBuiymHvpCWO3MsVVyO+DyajqR2n7gajwe/1TnfSOt/FTYbR+NvkYh/ruuIO+OHmbnh7Mxp6O6jFliWtfjXeGwDOWkGvCewrl8FBcDmWV8W+Bq8gFWXnnY57o6XRMzGw59tPEZvDU6SX+XzOKbLyKfbnFeu14NBCkZjOc771GglZHcjcIJiSdAizaKtVt7d11WQiF4hwW+zcfcezuhoerpn7+PbR/3KYLus="
+          },
+          {
+            "key": "dataproc-cluster-properties-file",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/ae0a9260-f4a1-49ad-9593-8451a2536e59/cluster.properties"
+          },
+          {
+            "key": "dataproc-datanode-enabled",
+            "value": "true"
+          },
+          {
+            "key": "dataproc-option-run-init-actions-early",
+            "value": "true"
+          },
+          {
+            "key": "dataproc-protocol-spec",
+            "value": "EoQBCipkYXRhcHJvY2NvbnRyb2wtdXMtY2VudHJhbDEuZ29vZ2xlYXBpcy5jb20SKmRhdGFwcm9jY29udHJvbC11cy1jZW50cmFsMS5nb29nbGVhcGlzLmNvbSIqZGF0YXByb2Njb250cm9sLXVzLWNlbnRyYWwxLmdvb2dsZWFwaXMuY29t"
+          },
+          {
+            "key": "dataproc-role",
+            "value": "Worker"
+          },
+          {
+            "key": "node-group-roles",
+            "value": "PRIMARY_WORKER"
+          }
+        ],
+        "kind": "compute#metadata"
+      },
+      "name": "good-w-0",
+      "networkInterfaces": [
+        {
+          "accessConfigs": [
+            {
+              "kind": "compute#accessConfig",
+              "name": "External NAT",
+              "networkTier": "PREMIUM",
+              "type": "ONE_TO_ONE_NAT"
+            }
+          ],
+          "fingerprint": "REDACTED",
+          "kind": "compute#networkInterface",
+          "name": "nic0",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/global/networks/default",
+          "networkIP": "10.128.0.10",
+          "nicType": "GVNIC",
+          "stackType": "IPV4_ONLY",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/regions/us-central1/subnetworks/default"
+        }
+      ],
+      "satisfiesPzi": false,
+      "scheduling": {
+        "automaticRestart": true,
+        "onHostMaintenance": "MIGRATE",
+        "preemptible": false,
+        "provisioningModel": "STANDARD"
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f/instances/good-w-0",
+      "serviceAccounts": [
+        {
+          "email": "12340005-compute@developer.gserviceaccount.com",
+          "scopes": [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ]
+        }
+      ],
+      "shieldedInstanceConfig": {
+        "enableIntegrityMonitoring": true,
+        "enableSecureBoot": true,
+        "enableVtpm": true
+      },
+      "shieldedInstanceIntegrityPolicy": {
+        "updateAutoLearnPolicy": true
+      },
+      "startRestricted": false,
+      "status": "TERMINATED",
+      "tags": {
+        "fingerprint": "REDACTED"
+      },
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f"
+    },
+    {
+      "cpuPlatform": "Unknown CPU Platform",
+      "creationTimestamp": "2024-10-30T20:32:54.051-07:00",
+      "deletionProtection": false,
+      "disks": [
+        {
+          "autoDelete": true,
+          "boot": true,
+          "deviceName": "persistent-disk-0",
+          "diskSizeGb": "30",
+          "guestOsFeatures": [
+            {
+              "type": "UEFI_COMPATIBLE"
+            },
+            {
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "GVNIC"
+            },
+            {
+              "type": "SEV_CAPABLE"
+            },
+            {
+              "type": "SEV_LIVE_MIGRATABLE_V2"
+            }
+          ],
+          "index": 0,
+          "interface": "SCSI",
+          "kind": "compute#attachedDisk",
+          "licenses": [
+            "https://www.googleapis.com/compute/v1/projects/cloud-dataproc/global/licenses/dataproc"
+          ],
+          "mode": "READ_WRITE",
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f/disks/good-w-1",
+          "type": "PERSISTENT"
+        }
+      ],
+      "fingerprint": "REDACTED",
+      "id": "7950912623326741642",
+      "kind": "compute#instance",
+      "labelFingerprint": "i07p_VesMMc=",
+      "labels": {
+        "goog-dataproc-autozone": "enabled",
+        "goog-dataproc-cluster-name": "good",
+        "goog-dataproc-cluster-uuid": "ae0a9260-f4a1-49ad-9593-8451a2536e59",
+        "goog-dataproc-location": "us-central1"
+      },
+      "lastStartTimestamp": "2024-10-30T20:33:05.323-07:00",
+      "lastStopTimestamp": "2024-10-30T23:19:27.078-07:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f/machineTypes/e2-medium",
+      "metadata": {
+        "fingerprint": "REDACTED",
+        "items": [
+          {
+            "key": "dataproc-bucket",
+            "value": "dataproc-staging-us-central1-12340005-9v6173vh"
+          },
+          {
+            "key": "dataproc-cloud-logging-enabled",
+            "value": "false"
+          },
+          {
+            "key": "dataproc-cluster-configuration-directory",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/ae0a9260-f4a1-49ad-9593-8451a2536e59/"
+          },
+          {
+            "key": "dataproc-cluster-name",
+            "value": "good"
+          },
+          {
+            "key": "dataproc-cluster-uuid",
+            "value": "ae0a9260-f4a1-49ad-9593-8451a2536e59"
+          },
+          {
+            "key": "dataproc-exclude-file-location",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/ae0a9260-f4a1-49ad-9593-8451a2536e59/nodes_exclude.xml"
+          },
+          {
+            "key": "dataproc-include-file-location",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/ae0a9260-f4a1-49ad-9593-8451a2536e59/nodes_include"
+          },
+          {
+            "key": "dataproc-initialization-script-count",
+            "value": "0"
+          },
+          {
+            "key": "dataproc-master",
+            "value": "good-m"
+          },
+          {
+            "key": "dataproc-master-additional",
+            "value": ""
+          },
+          {
+            "key": "dataproc-region",
+            "value": "us-central1"
+          },
+          {
+            "key": "dataproc-temp-bucket",
+            "value": "dataproc-temp-us-central1-12340005-xslkmij6"
+          },
+          {
+            "key": "dataproc-worker-agent-runner-daemon-timeout",
+            "value": "60"
+          },
+          {
+            "key": "dataproc-worker-count",
+            "value": "2"
+          },
+          {
+            "key": "has-driver-pool",
+            "value": "false"
+          },
+          {
+            "key": "master-run-driver-location",
+            "value": "LOCAL"
+          },
+          {
+            "key": "dataproc-agent-output-directory",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/ae0a9260-f4a1-49ad-9593-8451a2536e59/good-w-1"
+          },
+          {
+            "key": "dataproc-cluster-properties",
+            "value": "ZIPPY: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"
+          },
+          {
+            "key": "dataproc-cluster-properties-file",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/ae0a9260-f4a1-49ad-9593-8451a2536e59/cluster.properties"
+          },
+          {
+            "key": "dataproc-datanode-enabled",
+            "value": "true"
+          },
+          {
+            "key": "dataproc-option-run-init-actions-early",
+            "value": "true"
+          },
+          {
+            "key": "dataproc-protocol-spec",
+            "value": "EoQBCipkYXRhcHJvY2NvbnRyb2wtdXMtY2VudHJhbDEuZ29vZ2xlYXBpcy5jb20SKmRhdGFwcm9jY29udHJvbC11cy1jZW50cmFsMS5nb29nbGVhcGlzLmNvbSIqZGF0YXByb2Njb250cm9sLXVzLWNlbnRyYWwxLmdvb2dsZWFwaXMuY29t"
+          },
+          {
+            "key": "dataproc-role",
+            "value": "Worker"
+          },
+          {
+            "key": "node-group-roles",
+            "value": "PRIMARY_WORKER"
+          }
+        ],
+        "kind": "compute#metadata"
+      },
+      "name": "good-w-1",
+      "networkInterfaces": [
+        {
+          "accessConfigs": [
+            {
+              "kind": "compute#accessConfig",
+              "name": "External NAT",
+              "networkTier": "PREMIUM",
+              "type": "ONE_TO_ONE_NAT"
+            }
+          ],
+          "fingerprint": "REDACTED",
+          "kind": "compute#networkInterface",
+          "name": "nic0",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/global/networks/default",
+          "networkIP": "10.128.0.6",
+          "nicType": "GVNIC",
+          "stackType": "IPV4_ONLY",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/regions/us-central1/subnetworks/default"
+        }
+      ],
+      "satisfiesPzi": false,
+      "scheduling": {
+        "automaticRestart": true,
+        "onHostMaintenance": "MIGRATE",
+        "preemptible": false,
+        "provisioningModel": "STANDARD"
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f/instances/good-w-1",
+      "serviceAccounts": [
+        {
+          "email": "12340005-compute@developer.gserviceaccount.com",
+          "scopes": [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ]
+        }
+      ],
+      "shieldedInstanceConfig": {
+        "enableIntegrityMonitoring": true,
+        "enableSecureBoot": true,
+        "enableVtpm": true
+      },
+      "shieldedInstanceIntegrityPolicy": {
+        "updateAutoLearnPolicy": true
+      },
+      "startRestricted": false,
+      "status": "TERMINATED",
+      "tags": {
+        "fingerprint": "REDACTED"
+      },
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f"
+    },
+    {
+      "cpuPlatform": "Unknown CPU Platform",
+      "creationTimestamp": "2024-10-30T20:32:53.664-07:00",
+      "deletionProtection": false,
+      "disks": [
+        {
+          "autoDelete": true,
+          "boot": true,
+          "deviceName": "persistent-disk-0",
+          "diskSizeGb": "30",
+          "guestOsFeatures": [
+            {
+              "type": "UEFI_COMPATIBLE"
+            },
+            {
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "GVNIC"
+            },
+            {
+              "type": "SEV_CAPABLE"
+            },
+            {
+              "type": "SEV_LIVE_MIGRATABLE_V2"
+            }
+          ],
+          "index": 0,
+          "interface": "SCSI",
+          "kind": "compute#attachedDisk",
+          "licenses": [
+            "https://www.googleapis.com/compute/v1/projects/cloud-dataproc/global/licenses/dataproc"
+          ],
+          "mode": "READ_WRITE",
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f/disks/test-best-practices-disabled-m",
+          "type": "PERSISTENT"
+        }
+      ],
+      "fingerprint": "REDACTED",
+      "id": "5758764777191982218",
+      "kind": "compute#instance",
+      "labelFingerprint": "PykIPoZ7O6s=",
+      "labels": {
+        "goog-dataproc-autozone": "enabled",
+        "goog-dataproc-cluster-name": "test-best-practices-disabled",
+        "goog-dataproc-cluster-uuid": "fa7689da-2c32-4258-af4b-571af491f0bd",
+        "goog-dataproc-location": "us-central1"
+      },
+      "lastStartTimestamp": "2024-10-30T20:33:05.720-07:00",
+      "lastStopTimestamp": "2024-10-30T23:19:32.422-07:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f/machineTypes/e2-medium",
+      "metadata": {
+        "fingerprint": "REDACTED",
+        "items": [
+          {
+            "key": "dataproc-bucket",
+            "value": "dataproc-staging-us-central1-12340005-9v6173vh"
+          },
+          {
+            "key": "dataproc-cloud-logging-enabled",
+            "value": "false"
+          },
+          {
+            "key": "dataproc-cluster-configuration-directory",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/fa7689da-2c32-4258-af4b-571af491f0bd/"
+          },
+          {
+            "key": "dataproc-cluster-name",
+            "value": "test-best-practices-disabled"
+          },
+          {
+            "key": "dataproc-cluster-uuid",
+            "value": "fa7689da-2c32-4258-af4b-571af491f0bd"
+          },
+          {
+            "key": "dataproc-exclude-file-location",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/fa7689da-2c32-4258-af4b-571af491f0bd/nodes_exclude.xml"
+          },
+          {
+            "key": "dataproc-include-file-location",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/fa7689da-2c32-4258-af4b-571af491f0bd/nodes_include"
+          },
+          {
+            "key": "dataproc-initialization-script-count",
+            "value": "0"
+          },
+          {
+            "key": "dataproc-master",
+            "value": "test-best-practices-disabled-m"
+          },
+          {
+            "key": "dataproc-master-additional",
+            "value": ""
+          },
+          {
+            "key": "dataproc-region",
+            "value": "us-central1"
+          },
+          {
+            "key": "dataproc-temp-bucket",
+            "value": "dataproc-temp-us-central1-12340005-xslkmij6"
+          },
+          {
+            "key": "dataproc-worker-agent-runner-daemon-timeout",
+            "value": "60"
+          },
+          {
+            "key": "dataproc-worker-count",
+            "value": "2"
+          },
+          {
+            "key": "has-driver-pool",
+            "value": "false"
+          },
+          {
+            "key": "master-run-driver-location",
+            "value": "LOCAL"
+          },
+          {
+            "key": "dataproc-agent-output-directory",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/fa7689da-2c32-4258-af4b-571af491f0bd/test-best-practices-disabled-m"
+          },
+          {
+            "key": "dataproc-cluster-properties",
+            "value": "ZIPPY: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"
+          },
+          {
+            "key": "dataproc-cluster-properties-file",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/fa7689da-2c32-4258-af4b-571af491f0bd/cluster.properties"
+          },
+          {
+            "key": "dataproc-datanode-enabled",
+            "value": "false"
+          },
+          {
+            "key": "dataproc-option-run-init-actions-early",
+            "value": "true"
+          },
+          {
+            "key": "dataproc-protocol-spec",
+            "value": "EoQBCipkYXRhcHJvY2NvbnRyb2wtdXMtY2VudHJhbDEuZ29vZ2xlYXBpcy5jb20SKmRhdGFwcm9jY29udHJvbC11cy1jZW50cmFsMS5nb29nbGVhcGlzLmNvbSIqZGF0YXByb2Njb250cm9sLXVzLWNlbnRyYWwxLmdvb2dsZWFwaXMuY29t"
+          },
+          {
+            "key": "dataproc-role",
+            "value": "Master"
+          },
+          {
+            "key": "node-group-roles",
+            "value": "MASTER"
+          }
+        ],
+        "kind": "compute#metadata"
+      },
+      "name": "test-best-practices-disabled-m",
+      "networkInterfaces": [
+        {
+          "accessConfigs": [
+            {
+              "kind": "compute#accessConfig",
+              "name": "External NAT",
+              "networkTier": "PREMIUM",
+              "type": "ONE_TO_ONE_NAT"
+            }
+          ],
+          "fingerprint": "REDACTED",
+          "kind": "compute#networkInterface",
+          "name": "nic0",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/global/networks/default",
+          "networkIP": "10.128.0.5",
+          "nicType": "GVNIC",
+          "stackType": "IPV4_ONLY",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/regions/us-central1/subnetworks/default"
+        }
+      ],
+      "satisfiesPzi": false,
+      "scheduling": {
+        "automaticRestart": true,
+        "onHostMaintenance": "MIGRATE",
+        "preemptible": false,
+        "provisioningModel": "STANDARD"
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f/instances/test-best-practices-disabled-m",
+      "serviceAccounts": [
+        {
+          "email": "12340005-compute@developer.gserviceaccount.com",
+          "scopes": [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ]
+        }
+      ],
+      "shieldedInstanceConfig": {
+        "enableIntegrityMonitoring": true,
+        "enableSecureBoot": true,
+        "enableVtpm": true
+      },
+      "shieldedInstanceIntegrityPolicy": {
+        "updateAutoLearnPolicy": true
+      },
+      "startRestricted": false,
+      "status": "TERMINATED",
+      "tags": {
+        "fingerprint": "REDACTED"
+      },
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f"
+    },
+    {
+      "cpuPlatform": "Unknown CPU Platform",
+      "creationTimestamp": "2024-10-30T20:32:54.642-07:00",
+      "deletionProtection": false,
+      "disks": [
+        {
+          "autoDelete": true,
+          "boot": true,
+          "deviceName": "persistent-disk-0",
+          "diskSizeGb": "30",
+          "guestOsFeatures": [
+            {
+              "type": "UEFI_COMPATIBLE"
+            },
+            {
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "GVNIC"
+            },
+            {
+              "type": "SEV_CAPABLE"
+            },
+            {
+              "type": "SEV_LIVE_MIGRATABLE_V2"
+            }
+          ],
+          "index": 0,
+          "interface": "SCSI",
+          "kind": "compute#attachedDisk",
+          "licenses": [
+            "https://www.googleapis.com/compute/v1/projects/cloud-dataproc/global/licenses/dataproc"
+          ],
+          "mode": "READ_WRITE",
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f/disks/test-best-practices-disabled-w-0",
+          "type": "PERSISTENT"
+        }
+      ],
+      "fingerprint": "REDACTED",
+      "id": "7719999315884590218",
+      "kind": "compute#instance",
+      "labelFingerprint": "PykIPoZ7O6s=",
+      "labels": {
+        "goog-dataproc-autozone": "enabled",
+        "goog-dataproc-cluster-name": "test-best-practices-disabled",
+        "goog-dataproc-cluster-uuid": "fa7689da-2c32-4258-af4b-571af491f0bd",
+        "goog-dataproc-location": "us-central1"
+      },
+      "lastStartTimestamp": "2024-10-30T20:33:05.562-07:00",
+      "lastStopTimestamp": "2024-10-30T23:19:27.444-07:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f/machineTypes/e2-medium",
+      "metadata": {
+        "fingerprint": "REDACTED",
+        "items": [
+          {
+            "key": "dataproc-bucket",
+            "value": "dataproc-staging-us-central1-12340005-9v6173vh"
+          },
+          {
+            "key": "dataproc-cloud-logging-enabled",
+            "value": "false"
+          },
+          {
+            "key": "dataproc-cluster-configuration-directory",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/fa7689da-2c32-4258-af4b-571af491f0bd/"
+          },
+          {
+            "key": "dataproc-cluster-name",
+            "value": "test-best-practices-disabled"
+          },
+          {
+            "key": "dataproc-cluster-uuid",
+            "value": "fa7689da-2c32-4258-af4b-571af491f0bd"
+          },
+          {
+            "key": "dataproc-exclude-file-location",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/fa7689da-2c32-4258-af4b-571af491f0bd/nodes_exclude.xml"
+          },
+          {
+            "key": "dataproc-include-file-location",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/fa7689da-2c32-4258-af4b-571af491f0bd/nodes_include"
+          },
+          {
+            "key": "dataproc-initialization-script-count",
+            "value": "0"
+          },
+          {
+            "key": "dataproc-master",
+            "value": "test-best-practices-disabled-m"
+          },
+          {
+            "key": "dataproc-master-additional",
+            "value": ""
+          },
+          {
+            "key": "dataproc-region",
+            "value": "us-central1"
+          },
+          {
+            "key": "dataproc-temp-bucket",
+            "value": "dataproc-temp-us-central1-12340005-xslkmij6"
+          },
+          {
+            "key": "dataproc-worker-agent-runner-daemon-timeout",
+            "value": "60"
+          },
+          {
+            "key": "dataproc-worker-count",
+            "value": "2"
+          },
+          {
+            "key": "has-driver-pool",
+            "value": "false"
+          },
+          {
+            "key": "master-run-driver-location",
+            "value": "LOCAL"
+          },
+          {
+            "key": "dataproc-agent-output-directory",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/fa7689da-2c32-4258-af4b-571af491f0bd/test-best-practices-disabled-w-0"
+          },
+          {
+            "key": "dataproc-cluster-properties",
+            "value": "ZIPPY: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"
+          },
+          {
+            "key": "dataproc-cluster-properties-file",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/fa7689da-2c32-4258-af4b-571af491f0bd/cluster.properties"
+          },
+          {
+            "key": "dataproc-datanode-enabled",
+            "value": "true"
+          },
+          {
+            "key": "dataproc-option-run-init-actions-early",
+            "value": "true"
+          },
+          {
+            "key": "dataproc-protocol-spec",
+            "value": "EoQBCipkYXRhcHJvY2NvbnRyb2wtdXMtY2VudHJhbDEuZ29vZ2xlYXBpcy5jb20SKmRhdGFwcm9jY29udHJvbC11cy1jZW50cmFsMS5nb29nbGVhcGlzLmNvbSIqZGF0YXByb2Njb250cm9sLXVzLWNlbnRyYWwxLmdvb2dsZWFwaXMuY29t"
+          },
+          {
+            "key": "dataproc-role",
+            "value": "Worker"
+          },
+          {
+            "key": "node-group-roles",
+            "value": "PRIMARY_WORKER"
+          }
+        ],
+        "kind": "compute#metadata"
+      },
+      "name": "test-best-practices-disabled-w-0",
+      "networkInterfaces": [
+        {
+          "accessConfigs": [
+            {
+              "kind": "compute#accessConfig",
+              "name": "External NAT",
+              "networkTier": "PREMIUM",
+              "type": "ONE_TO_ONE_NAT"
+            }
+          ],
+          "fingerprint": "REDACTED",
+          "kind": "compute#networkInterface",
+          "name": "nic0",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/global/networks/default",
+          "networkIP": "10.128.0.8",
+          "nicType": "GVNIC",
+          "stackType": "IPV4_ONLY",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/regions/us-central1/subnetworks/default"
+        }
+      ],
+      "satisfiesPzi": false,
+      "scheduling": {
+        "automaticRestart": true,
+        "onHostMaintenance": "MIGRATE",
+        "preemptible": false,
+        "provisioningModel": "STANDARD"
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f/instances/test-best-practices-disabled-w-0",
+      "serviceAccounts": [
+        {
+          "email": "12340005-compute@developer.gserviceaccount.com",
+          "scopes": [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ]
+        }
+      ],
+      "shieldedInstanceConfig": {
+        "enableIntegrityMonitoring": true,
+        "enableSecureBoot": true,
+        "enableVtpm": true
+      },
+      "shieldedInstanceIntegrityPolicy": {
+        "updateAutoLearnPolicy": true
+      },
+      "startRestricted": false,
+      "status": "TERMINATED",
+      "tags": {
+        "fingerprint": "REDACTED"
+      },
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f"
+    },
+    {
+      "cpuPlatform": "Unknown CPU Platform",
+      "creationTimestamp": "2024-10-30T20:32:54.720-07:00",
+      "deletionProtection": false,
+      "disks": [
+        {
+          "autoDelete": true,
+          "boot": true,
+          "deviceName": "persistent-disk-0",
+          "diskSizeGb": "30",
+          "guestOsFeatures": [
+            {
+              "type": "UEFI_COMPATIBLE"
+            },
+            {
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "GVNIC"
+            },
+            {
+              "type": "SEV_CAPABLE"
+            },
+            {
+              "type": "SEV_LIVE_MIGRATABLE_V2"
+            }
+          ],
+          "index": 0,
+          "interface": "SCSI",
+          "kind": "compute#attachedDisk",
+          "licenses": [
+            "https://www.googleapis.com/compute/v1/projects/cloud-dataproc/global/licenses/dataproc"
+          ],
+          "mode": "READ_WRITE",
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f/disks/test-best-practices-disabled-w-1",
+          "type": "PERSISTENT"
+        }
+      ],
+      "fingerprint": "REDACTED",
+      "id": "7331144418697626762",
+      "kind": "compute#instance",
+      "labelFingerprint": "PykIPoZ7O6s=",
+      "labels": {
+        "goog-dataproc-autozone": "enabled",
+        "goog-dataproc-cluster-name": "test-best-practices-disabled",
+        "goog-dataproc-cluster-uuid": "fa7689da-2c32-4258-af4b-571af491f0bd",
+        "goog-dataproc-location": "us-central1"
+      },
+      "lastStartTimestamp": "2024-10-30T20:33:07.665-07:00",
+      "lastStopTimestamp": "2024-10-30T23:19:22.404-07:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f/machineTypes/e2-medium",
+      "metadata": {
+        "fingerprint": "REDACTED",
+        "items": [
+          {
+            "key": "dataproc-bucket",
+            "value": "dataproc-staging-us-central1-12340005-9v6173vh"
+          },
+          {
+            "key": "dataproc-cloud-logging-enabled",
+            "value": "false"
+          },
+          {
+            "key": "dataproc-cluster-configuration-directory",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/fa7689da-2c32-4258-af4b-571af491f0bd/"
+          },
+          {
+            "key": "dataproc-cluster-name",
+            "value": "test-best-practices-disabled"
+          },
+          {
+            "key": "dataproc-cluster-uuid",
+            "value": "fa7689da-2c32-4258-af4b-571af491f0bd"
+          },
+          {
+            "key": "dataproc-exclude-file-location",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/fa7689da-2c32-4258-af4b-571af491f0bd/nodes_exclude.xml"
+          },
+          {
+            "key": "dataproc-include-file-location",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/fa7689da-2c32-4258-af4b-571af491f0bd/nodes_include"
+          },
+          {
+            "key": "dataproc-initialization-script-count",
+            "value": "0"
+          },
+          {
+            "key": "dataproc-master",
+            "value": "test-best-practices-disabled-m"
+          },
+          {
+            "key": "dataproc-master-additional",
+            "value": ""
+          },
+          {
+            "key": "dataproc-region",
+            "value": "us-central1"
+          },
+          {
+            "key": "dataproc-temp-bucket",
+            "value": "dataproc-temp-us-central1-12340005-xslkmij6"
+          },
+          {
+            "key": "dataproc-worker-agent-runner-daemon-timeout",
+            "value": "60"
+          },
+          {
+            "key": "dataproc-worker-count",
+            "value": "2"
+          },
+          {
+            "key": "has-driver-pool",
+            "value": "false"
+          },
+          {
+            "key": "master-run-driver-location",
+            "value": "LOCAL"
+          },
+          {
+            "key": "dataproc-agent-output-directory",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/fa7689da-2c32-4258-af4b-571af491f0bd/test-best-practices-disabled-w-1"
+          },
+          {
+            "key": "dataproc-cluster-properties",
+            "value": "ZIPPY:eJylWG1v4jgQ/t5fUWm/ni0IhbZI+cC29Nq7FirSvbs9VUImMeCtHedshy7762/sJDSAU/qiSkDq55kZj2fGM/lywXNtqDrOlMyoMozqoy9/0+R4HJvjTus4aPU7Qb8bHN9fPsBDcHIUk4zEzKyRjpc0yTlVj/01USnePOMKghXVMlcxRTHhcc6JkSqUaoHt+pLiJUmkzLBj54bxDR5fSsFSkppJ+Y+LDf99+qU0OKFzknODpUqoYukCZZKzeB3OCQNpUtHH/lzjhcYzLuMnrNkvGrY7J0H79DQ42wIIakhCDAEF1nyakhmnIIdrWuLKHWnNy9UEg2ONjCXX4cNttGr/5j5x9R0cWYGAiR/7ZEFTg3VG1BNOFFvBTqjIYBs/iAqNymkdK0AwE0StpzLl69KIl/XqFybPhBmU0mf0LNUTVRppqlYMzkTRBdNGEcNk2syPi/hAS0q4WWLYCKexQbEUmUzBXpTKhKKUCKp3bdyTAf5TLNYbIfbYCn61UjrtoCRjbLBkUpVCSGzYCk68mVjZq5GRSMiUQSz5XbFM5vrYSvXLSXWs1pmx57piiT2jIgyaNadGSY4yTlKKEgqWCKY1aIJYPLzhgo1Liy2lNBqSiL2Zboh+wixdEc4St0t4AD/CMxaMc6bDbqvVOihB0f9yqs3HyOBgCmGb5IWfYR9x2PPzINiUmVFisCD2vPHcaU7jtWN1DpCKSN8hobaP9EPOcBV8pY9fdldY6KNxuVi4szAkfqpytV4OPJxyKzFEsBSghBlswxYCCjQnNJx8G02/Dq/Gk+E0Gk7+urkYRl4xpbU2b4rSaX8JkkL5ULhM0wMxWYumqjpuZ+BHmHoN+xPvEGB97zbwft3v8bt1z0LJPLPnKdMEamajig32pRQ1yoXrci4VOB5ysdoBJIOh6cao5sR8uawE+QnVNI1zpWw5BadAPh2mCCqkWqNcg5IWPvcRyjT4YMC5LEghC8qai0lupA2vV8rWhuOCUxBmz9bZaW9B6pSjrWP7lAizhIZhKXmCn9gs7HW7nd57JZU++owxpYjPG/MZKw6ot6m2hNgEEob7b9F81WomMs7mDDoXHdcPexfoMhfqICKLBdyfxLMDUBhnj30BDIhcmyYkg2ZmRbDMjA7RP+Jn97QnGoDFHrGYhae9Mw+m/HqTvErslsiiWUM0XT32rweX4/H99HLwMBiNL4fT8f1DVAhsB+LItgSQWNAF2v27YyBJAg7XkHvu77F/ftbr+YBLYzIv+qQJrb3wrg/OstgLPq2BbW9WyCZp4tpjmacmDFpeDOhHHomnjWjthbd9cIgrChEFx5HFG5aBhgLN7EembHmKqUZwgC6OkHjsn7W6Xt2bYt5osz3iQzyv9b1zP7Hou7bd2G4wzmHfuc/2URGxWyH5x/jr9PomehhPvtsqPZxMr4eD++jm3yHohnmsoNSD3fU0JNPhecNi+VNz+QwXqTKuO+bU0MTR4DrpvsrUYdu/XpUYBT6GAg2NFzxSuEEIOGB/8HvhrgK81Pi6oEfgPKpu6YryZBYZYmhkxUSFTz2abbWIsxyv7BDmN26/8rQ77bZoQL7UiXav4/Ni+VVTGjSjtvUGvSDw6d0rUZ3g9MyDK1p5iTUMPxYWdHsblKvJJKt7FjpuO3FAzKKGrftJm1Ec9oj2HHuAUznOzbJFNEf3g8mfUF+Hd+PR9A4+J99d/IoCBBdPMfdu5tZkZTurBPqWue3lGTe797SfWLVgOoR944WUC24jUOZJOVrX+7bLknVX9G+3JbdBtP6PQ5Sz9AIKCLP33YS6lwpvMctyuYQbFSuSghG5XibyOX0rFc6OCfYLdFkD8DzXe9ftW8iczo2mgjkhUAchzz4myPYGBL7yGYxYEK/vMwj+AzRTwq8kdDHqwlYGH7Ho9aDnnVAN80Zk38+4W9kLc+njiyz6k8a5He+qWPavshRKYhq7jPYjKhVBt9ugYpiu8Ph+OPp6O4imo29304fryXBwGe0qzXgOU6SuJikbfftBu3FcFauR5d476ra42oBg2/urwc1kBwCuj2fylVPaPmQFFxwT1L4Yk+KqyEAXORkxtiV9RVDOsH07E7a2/13UDVH5sHfSEkfuBY6rEd8Hk9HUtl93g9Hg9/pNd9I638VNhtH42+RiH+tuxR3ww83d8PZmNPTeoBZblrT6KL3XGJy1gl4T2Fcug4Pgso2vin0NXkEqys57I/fWTKNnYuDMt1cRm8Mq0st8PucU2fApzucV6TXj0AK6EzrP+darKmTjQOYGQfekQ+hdW626vK3RlIlcIMJtsXPzkWd3NTyMpfv49tH/nIpVbQ=="
+          },
+          {
+            "key": "dataproc-cluster-properties-file",
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/fa7689da-2c32-4258-af4b-571af491f0bd/cluster.properties"
+          },
+          {
+            "key": "dataproc-datanode-enabled",
+            "value": "true"
+          },
+          {
+            "key": "dataproc-option-run-init-actions-early",
+            "value": "true"
+          },
+          {
+            "key": "dataproc-protocol-spec",
+            "value": "EoQBCipkYXRhcHJvY2NvbnRyb2wtdXMtY2VudHJhbDEuZ29vZ2xlYXBpcy5jb20SKmRhdGFwcm9jY29udHJvbC11cy1jZW50cmFsMS5nb29nbGVhcGlzLmNvbSIqZGF0YXByb2Njb250cm9sLXVzLWNlbnRyYWwxLmdvb2dsZWFwaXMuY29t"
+          },
+          {
+            "key": "dataproc-role",
+            "value": "Worker"
+          },
+          {
+            "key": "node-group-roles",
+            "value": "PRIMARY_WORKER"
+          }
+        ],
+        "kind": "compute#metadata"
+      },
+      "name": "test-best-practices-disabled-w-1",
+      "networkInterfaces": [
+        {
+          "accessConfigs": [
+            {
+              "kind": "compute#accessConfig",
+              "name": "External NAT",
+              "networkTier": "PREMIUM",
+              "type": "ONE_TO_ONE_NAT"
+            }
+          ],
+          "fingerprint": "REDACTED",
+          "kind": "compute#networkInterface",
+          "name": "nic0",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/global/networks/default",
+          "networkIP": "10.128.0.9",
+          "nicType": "GVNIC",
+          "stackType": "IPV4_ONLY",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/regions/us-central1/subnetworks/default"
+        }
+      ],
+      "satisfiesPzi": false,
+      "scheduling": {
+        "automaticRestart": true,
+        "onHostMaintenance": "MIGRATE",
+        "preemptible": false,
+        "provisioningModel": "STANDARD"
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f/instances/test-best-practices-disabled-w-1",
+      "serviceAccounts": [
+        {
+          "email": "12340005-compute@developer.gserviceaccount.com",
+          "scopes": [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ]
+        }
+      ],
+      "shieldedInstanceConfig": {
+        "enableIntegrityMonitoring": true,
+        "enableSecureBoot": true,
+        "enableVtpm": true
+      },
+      "shieldedInstanceIntegrityPolicy": {
+        "updateAutoLearnPolicy": true
+      },
+      "startRestricted": false,
+      "status": "TERMINATED",
+      "tags": {
+        "fingerprint": "REDACTED"
+      },
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f"
+    }
+  ],
   "kind": "compute#instanceList",
   "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-f/instances"
 }

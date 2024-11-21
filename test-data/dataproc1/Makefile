@@ -2,6 +2,9 @@ PROJECT_ID  := $(shell terraform output project_id)
 PROJECT_ID_SUFFIX := $(shell terraform output project_id_suffix)
 PROJECT_NR  := $(shell terraform output project_nr)
 ORG_ID      := $(shell terraform output org_id)
+SUCCESS_JOB_ID      := $(shell terraform output job-success-id)
+FAILED_JOB_ID      := $(shell terraform output job-failed-id)
+
 CURL         = ../../bin/curl-wrap.sh
 JSON_CLEANER = ../../bin/json-cleaner
 REGION_1     = us-central1
@@ -14,14 +17,18 @@ ZONE_3         = us-central1-f
 FAKE_PROJECT_ID_SUFFIX = aaaa
 FAKE_PROJECT_NR = 12340005
 FAKE_ORG_ID = 11112222
-SED_SUBST_FAKE = sed -e "s/$(PROJECT_ID_SUFFIX)/$(FAKE_PROJECT_ID_SUFFIX)/" \
-		     -e "s/$(PROJECT_NR)/$(FAKE_PROJECT_NR)/" \
-		     -e "s/$(ORG_ID)/$(FAKE_ORG_ID)/" \
+FAKE_SUCCESS_JOB_ID = 1234567890
+FAKE_FAILED_JOB_ID = 1234567891
+
+SED_JOB_FAKE = sed -e "s/$(SUCCESS_JOB_ID)/$(FAKE_SUCCESS_JOB_ID)/" \
+                   -e "s/$(FAILED_JOB_ID)/$(FAKE_FAILED_JOB_ID)/"
 
 all:	\
   json-dumps/project.json \
 	json-dumps/compute-regions.json \
 	json-dumps/dataproc-clusters-$(REGION_1).json \
+	json-dumps/dataproc-job-failed.json \
+	json-dumps/dataproc-job-success.json \
 	json-dumps/services.json \
 	json-dumps/iam-service-accounts.json \
 	json-dumps/iam-policy.json \
@@ -50,6 +57,18 @@ json-dumps/dataproc-clusters-$(REGION_1).json:
 	  'https://dataproc.googleapis.com/v1/projects/$(PROJECT_ID)/regions/$(REGION_1)/clusters' \
 	| $(SED_SUBST_FAKE) >$@
 
+json-dumps/dataproc-job-failed.json:
+	$(CURL) -fsS \
+	  'https://dataproc.googleapis.com/v1/projects/$(PROJECT_ID)/regions/$(REGION_1)/jobs/$(FAILED_JOB_ID)' \
+	| $(SED_SUBST_FAKE) \
+	| $(SED_JOB_FAKE) >$@
+
+json-dumps/dataproc-job-success.json:
+	$(CURL) -fsS \
+	  'https://dataproc.googleapis.com/v1/projects/$(PROJECT_ID)/regions/$(REGION_1)/jobs/$(SUCCESS_JOB_ID)' \
+	| $(SED_SUBST_FAKE) \
+	| $(SED_JOB_FAKE) >$@
+
 json-dumps/services.json:
 	$(CURL) -fsS \
 	  'https://serviceusage.googleapis.com/v1/projects/$(PROJECT_ID)/services?filter=state:ENABLED' \
@@ -68,6 +87,7 @@ json-dumps/iam-policy.json:
 		-d "" \
 		| $(JSON_CLEANER) other \
 		| $(SED_SUBST_FAKE) >$@
+
 
 # If you need to recreate the JSON: adapt the timestamp and make sure that there are some entries found.
 define LOGGING_ENTRIES_BODY

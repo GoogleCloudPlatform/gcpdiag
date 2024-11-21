@@ -1,0 +1,50 @@
+{% block job_id_exists_success_reason %}
+The job: {job_id} exists in project {project_id}
+{% endblock job_id_exists_success_reason %}
+
+{% block job_id_exists_failure_reason %}
+The job: {job_id} doesn't exists in project {project_id}
+{% endblock job_id_exists_failure_reason %}
+
+{% block job_id_exists_failure_remediation %}
+Please check if the job id/region you provided is correct.
+{% endblock job_id_exists_failure_remediation %}
+
+{% block cluster_exists_success_reason %}
+The cluster: {cluster_name} exists in project {project_id}
+{% endblock cluster_exists_success_reason %}
+
+{% block cluster_exists_failure_reason %}
+The cluster: {cluster_name} doesn't exists in project {project_id}
+{% endblock cluster_exists_failure_reason %}
+
+{% block cluster_exists_failure_remediation %}
+Please check if you deleted the cluster.
+{% endblock cluster_exists_failure_remediation %}
+
+{% block job_failed_success_reason %}
+Job {job_id} was failed. Run the rest steps to investigate further.
+{% endblock job_failed_success_reason %}
+
+{% block job_failed_failure_reason %}
+Job {job_id} has completed successfully.
+{% endblock job_failed_failure_reason %}
+
+{% block job_failed_failure_remediation %}
+The job you shared hasn't failed.
+If your job experienced slow performance, potential causes could include data skew, changes in data volume, or network latency.
+Please initiate a support case and share the Spark event log for both the fast and slow job runs.
+{% endblock job_failed_failure_remediation %}
+
+{% block task_not_found_success_reason %}
+Job {job_id} didn't failed due to 'task not found' error. {additional_message}
+{% endblock task_not_found_success_reason %}
+
+{% block task_not_found_failure_reason %}
+Job {job_id} was failed due to 'task not found' error. {additional_message}
+{% endblock task_not_found_failure_reason %}
+
+{% block task_not_found_failure_remediation %}
+This typically indicates the associated cluster was terminated prior to job completion.
+Please review your automation workflows to ensure clusters remain active until all jobs are finalized.
+{% endblock task_not_found_failure_remediation %}

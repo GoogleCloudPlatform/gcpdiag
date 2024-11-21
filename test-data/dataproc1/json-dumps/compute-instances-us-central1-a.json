@@ -2,8 +2,8 @@
   "id": "projects/gcpdiag-dataproc1-aaaa/zones/us-central1-a/instances",
   "items": [
     {
-      "cpuPlatform": "Intel Haswell",
-      "creationTimestamp": "2024-06-25T05:49:54.136-07:00",
+      "cpuPlatform": "Unknown CPU Platform",
+      "creationTimestamp": "2024-10-30T20:33:19.158-07:00",
       "deletionProtection": false,
       "disks": [
         {
@@ -17,6 +17,15 @@
             },
             {
               "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "GVNIC"
+            },
+            {
+              "type": "SEV_CAPABLE"
+            },
+            {
+              "type": "SEV_LIVE_MIGRATABLE_V2"
             }
           ],
           "index": 0,
@@ -31,22 +40,23 @@
         }
       ],
       "fingerprint": "REDACTED",
-      "id": "2289688068356506112",
+      "id": "3441797725372236946",
       "kind": "compute#instance",
-      "labelFingerprint": "4Fd_WxquI9o=",
+      "labelFingerprint": "tjiU9HDVBJ4=",
       "labels": {
         "goog-dataproc-cluster-name": "test-deny-icmp",
-        "goog-dataproc-cluster-uuid": "c02d5602-14ac-4e8e-af4f-f83df01b3b16",
+        "goog-dataproc-cluster-uuid": "f0ce26dc-87e9-40d0-a75c-ca6c0ae78cf4",
         "goog-dataproc-location": "us-central1"
       },
-      "lastStartTimestamp": "2024-06-25T05:50:03.435-07:00",
-      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-a/machineTypes/n1-standard-4",
+      "lastStartTimestamp": "2024-10-30T20:33:24.200-07:00",
+      "lastStopTimestamp": "2024-10-30T23:19:32.090-07:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-a/machineTypes/n2-standard-4",
       "metadata": {
         "fingerprint": "REDACTED",
         "items": [
           {
             "key": "dataproc-bucket",
-            "value": "dataproc-staging-us-central1-12340005-v147je1y"
+            "value": "dataproc-staging-us-central1-12340005-9v6173vh"
           },
           {
             "key": "dataproc-cloud-logging-enabled",
@@ -54,7 +64,7 @@
           },
           {
             "key": "dataproc-cluster-configuration-directory",
-            "value": "gs://dataproc-staging-us-central1-12340005-v147je1y/google-cloud-dataproc-metainfo/c02d5602-14ac-4e8e-af4f-f83df01b3b16/"
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/f0ce26dc-87e9-40d0-a75c-ca6c0ae78cf4/"
           },
           {
             "key": "dataproc-cluster-name",
@@ -62,15 +72,15 @@
           },
           {
             "key": "dataproc-cluster-uuid",
-            "value": "c02d5602-14ac-4e8e-af4f-f83df01b3b16"
+            "value": "f0ce26dc-87e9-40d0-a75c-ca6c0ae78cf4"
           },
           {
             "key": "dataproc-exclude-file-location",
-            "value": "gs://dataproc-staging-us-central1-12340005-v147je1y/google-cloud-dataproc-metainfo/c02d5602-14ac-4e8e-af4f-f83df01b3b16/nodes_exclude.xml"
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/f0ce26dc-87e9-40d0-a75c-ca6c0ae78cf4/nodes_exclude.xml"
           },
           {
             "key": "dataproc-include-file-location",
-            "value": "gs://dataproc-staging-us-central1-12340005-v147je1y/google-cloud-dataproc-metainfo/c02d5602-14ac-4e8e-af4f-f83df01b3b16/nodes_include"
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/f0ce26dc-87e9-40d0-a75c-ca6c0ae78cf4/nodes_include"
           },
           {
             "key": "dataproc-initialization-script-count",
@@ -90,7 +100,7 @@
           },
           {
             "key": "dataproc-temp-bucket",
-            "value": "dataproc-temp-us-central1-12340005-m3flc35v"
+            "value": "dataproc-temp-us-central1-12340005-xslkmij6"
           },
           {
             "key": "dataproc-worker-agent-runner-daemon-timeout",
@@ -110,15 +120,15 @@
           },
           {
             "key": "dataproc-agent-output-directory",
-            "value": "gs://dataproc-staging-us-central1-12340005-v147je1y/google-cloud-dataproc-metainfo/c02d5602-14ac-4e8e-af4f-f83df01b3b16/test-deny-icmp-m"
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/f0ce26dc-87e9-40d0-a75c-ca6c0ae78cf4/test-deny-icmp-m"
           },
           {
             "key": "dataproc-cluster-properties",
-            "value": "ZIPPY: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"
+            "value": "ZIPPY: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"
           },
           {
             "key": "dataproc-cluster-properties-file",
-            "value": "gs://dataproc-staging-us-central1-12340005-v147je1y/google-cloud-dataproc-metainfo/c02d5602-14ac-4e8e-af4f-f83df01b3b16/cluster.properties"
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/f0ce26dc-87e9-40d0-a75c-ca6c0ae78cf4/cluster.properties"
           },
           {
             "key": "dataproc-datanode-enabled",
@@ -150,7 +160,6 @@
             {
               "kind": "compute#accessConfig",
               "name": "External NAT",
-              "natIP": "34.172.233.175",
               "networkTier": "PREMIUM",
               "type": "ONE_TO_ONE_NAT"
             }
@@ -160,11 +169,12 @@
           "name": "nic0",
           "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/global/networks/test-bad-network",
           "networkIP": "10.128.0.4",
+          "nicType": "GVNIC",
           "stackType": "IPV4_ONLY",
           "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/regions/us-central1/subnetworks/test-bad-subnet"
         }
       ],
-      "satisfiesPzi": false,
+      "satisfiesPzi": true,
       "scheduling": {
         "automaticRestart": true,
         "onHostMaintenance": "MIGRATE",
@@ -176,27 +186,20 @@
         {
           "email": "12340005-compute@developer.gserviceaccount.com",
           "scopes": [
-            "https://www.googleapis.com/auth/bigquery",
-            "https://www.googleapis.com/auth/bigtable.admin.table",
-            "https://www.googleapis.com/auth/bigtable.data",
-            "https://www.googleapis.com/auth/cloud.useraccounts.readonly",
-            "https://www.googleapis.com/auth/devstorage.full_control",
-            "https://www.googleapis.com/auth/devstorage.read_write",
-            "https://www.googleapis.com/auth/logging.write",
-            "https://www.googleapis.com/auth/monitoring.write"
+            "https://www.googleapis.com/auth/cloud-platform"
           ]
         }
       ],
       "shieldedInstanceConfig": {
         "enableIntegrityMonitoring": true,
-        "enableSecureBoot": false,
+        "enableSecureBoot": true,
         "enableVtpm": true
       },
       "shieldedInstanceIntegrityPolicy": {
         "updateAutoLearnPolicy": true
       },
       "startRestricted": false,
-      "status": "RUNNING",
+      "status": "TERMINATED",
       "tags": {
         "fingerprint": "REDACTED",
         "items": [
@@ -206,8 +209,8 @@
       "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-a"
     },
     {
-      "cpuPlatform": "Intel Haswell",
-      "creationTimestamp": "2024-06-25T05:49:52.683-07:00",
+      "cpuPlatform": "Unknown CPU Platform",
+      "creationTimestamp": "2024-10-30T20:33:18.034-07:00",
       "deletionProtection": false,
       "disks": [
         {
@@ -221,6 +224,15 @@
             },
             {
               "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "GVNIC"
+            },
+            {
+              "type": "SEV_CAPABLE"
+            },
+            {
+              "type": "SEV_LIVE_MIGRATABLE_V2"
             }
           ],
           "index": 0,
@@ -235,22 +247,23 @@
         }
       ],
       "fingerprint": "REDACTED",
-      "id": "286386678641656320",
+      "id": "5459908484446241938",
       "kind": "compute#instance",
-      "labelFingerprint": "4Fd_WxquI9o=",
+      "labelFingerprint": "tjiU9HDVBJ4=",
       "labels": {
         "goog-dataproc-cluster-name": "test-deny-icmp",
-        "goog-dataproc-cluster-uuid": "c02d5602-14ac-4e8e-af4f-f83df01b3b16",
+        "goog-dataproc-cluster-uuid": "f0ce26dc-87e9-40d0-a75c-ca6c0ae78cf4",
         "goog-dataproc-location": "us-central1"
       },
-      "lastStartTimestamp": "2024-06-25T05:50:01.030-07:00",
-      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-a/machineTypes/n1-standard-4",
+      "lastStartTimestamp": "2024-10-30T20:33:26.580-07:00",
+      "lastStopTimestamp": "2024-10-30T23:20:52.153-07:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-a/machineTypes/n2-standard-4",
       "metadata": {
         "fingerprint": "REDACTED",
         "items": [
           {
             "key": "dataproc-bucket",
-            "value": "dataproc-staging-us-central1-12340005-v147je1y"
+            "value": "dataproc-staging-us-central1-12340005-9v6173vh"
           },
           {
             "key": "dataproc-cloud-logging-enabled",
@@ -258,7 +271,7 @@
           },
           {
             "key": "dataproc-cluster-configuration-directory",
-            "value": "gs://dataproc-staging-us-central1-12340005-v147je1y/google-cloud-dataproc-metainfo/c02d5602-14ac-4e8e-af4f-f83df01b3b16/"
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/f0ce26dc-87e9-40d0-a75c-ca6c0ae78cf4/"
           },
           {
             "key": "dataproc-cluster-name",
@@ -266,15 +279,15 @@
           },
           {
             "key": "dataproc-cluster-uuid",
-            "value": "c02d5602-14ac-4e8e-af4f-f83df01b3b16"
+            "value": "f0ce26dc-87e9-40d0-a75c-ca6c0ae78cf4"
           },
           {
             "key": "dataproc-exclude-file-location",
-            "value": "gs://dataproc-staging-us-central1-12340005-v147je1y/google-cloud-dataproc-metainfo/c02d5602-14ac-4e8e-af4f-f83df01b3b16/nodes_exclude.xml"
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/f0ce26dc-87e9-40d0-a75c-ca6c0ae78cf4/nodes_exclude.xml"
           },
           {
             "key": "dataproc-include-file-location",
-            "value": "gs://dataproc-staging-us-central1-12340005-v147je1y/google-cloud-dataproc-metainfo/c02d5602-14ac-4e8e-af4f-f83df01b3b16/nodes_include"
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/f0ce26dc-87e9-40d0-a75c-ca6c0ae78cf4/nodes_include"
           },
           {
             "key": "dataproc-initialization-script-count",
@@ -294,7 +307,7 @@
           },
           {
             "key": "dataproc-temp-bucket",
-            "value": "dataproc-temp-us-central1-12340005-m3flc35v"
+            "value": "dataproc-temp-us-central1-12340005-xslkmij6"
           },
           {
             "key": "dataproc-worker-agent-runner-daemon-timeout",
@@ -314,15 +327,15 @@
           },
           {
             "key": "dataproc-agent-output-directory",
-            "value": "gs://dataproc-staging-us-central1-12340005-v147je1y/google-cloud-dataproc-metainfo/c02d5602-14ac-4e8e-af4f-f83df01b3b16/test-deny-icmp-w-0"
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/f0ce26dc-87e9-40d0-a75c-ca6c0ae78cf4/test-deny-icmp-w-0"
           },
           {
             "key": "dataproc-cluster-properties",
-            "value": "ZIPPY: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"
+            "value": "ZIPPY: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"
           },
           {
             "key": "dataproc-cluster-properties-file",
-            "value": "gs://dataproc-staging-us-central1-12340005-v147je1y/google-cloud-dataproc-metainfo/c02d5602-14ac-4e8e-af4f-f83df01b3b16/cluster.properties"
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/f0ce26dc-87e9-40d0-a75c-ca6c0ae78cf4/cluster.properties"
           },
           {
             "key": "dataproc-datanode-enabled",
@@ -354,7 +367,6 @@
             {
               "kind": "compute#accessConfig",
               "name": "External NAT",
-              "natIP": "34.172.179.25",
               "networkTier": "PREMIUM",
               "type": "ONE_TO_ONE_NAT"
             }
@@ -364,11 +376,12 @@
           "name": "nic0",
           "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/global/networks/test-bad-network",
           "networkIP": "10.128.0.2",
+          "nicType": "GVNIC",
           "stackType": "IPV4_ONLY",
           "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/regions/us-central1/subnetworks/test-bad-subnet"
         }
       ],
-      "satisfiesPzi": false,
+      "satisfiesPzi": true,
       "scheduling": {
         "automaticRestart": true,
         "onHostMaintenance": "MIGRATE",
@@ -380,27 +393,20 @@
         {
           "email": "12340005-compute@developer.gserviceaccount.com",
           "scopes": [
-            "https://www.googleapis.com/auth/bigquery",
-            "https://www.googleapis.com/auth/bigtable.admin.table",
-            "https://www.googleapis.com/auth/bigtable.data",
-            "https://www.googleapis.com/auth/cloud.useraccounts.readonly",
-            "https://www.googleapis.com/auth/devstorage.full_control",
-            "https://www.googleapis.com/auth/devstorage.read_write",
-            "https://www.googleapis.com/auth/logging.write",
-            "https://www.googleapis.com/auth/monitoring.write"
+            "https://www.googleapis.com/auth/cloud-platform"
           ]
         }
       ],
       "shieldedInstanceConfig": {
         "enableIntegrityMonitoring": true,
-        "enableSecureBoot": false,
+        "enableSecureBoot": true,
         "enableVtpm": true
       },
       "shieldedInstanceIntegrityPolicy": {
         "updateAutoLearnPolicy": true
       },
       "startRestricted": false,
-      "status": "RUNNING",
+      "status": "TERMINATED",
       "tags": {
         "fingerprint": "REDACTED",
         "items": [
@@ -410,8 +416,8 @@
       "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-a"
     },
     {
-      "cpuPlatform": "Intel Haswell",
-      "creationTimestamp": "2024-06-25T05:49:53.459-07:00",
+      "cpuPlatform": "Unknown CPU Platform",
+      "creationTimestamp": "2024-10-30T20:33:18.781-07:00",
       "deletionProtection": false,
       "disks": [
         {
@@ -425,6 +431,15 @@
             },
             {
               "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "GVNIC"
+            },
+            {
+              "type": "SEV_CAPABLE"
+            },
+            {
+              "type": "SEV_LIVE_MIGRATABLE_V2"
             }
           ],
           "index": 0,
@@ -439,22 +454,23 @@
         }
       ],
       "fingerprint": "REDACTED",
-      "id": "4113426732375540224",
+      "id": "9021823956504495250",
       "kind": "compute#instance",
-      "labelFingerprint": "4Fd_WxquI9o=",
+      "labelFingerprint": "tjiU9HDVBJ4=",
       "labels": {
         "goog-dataproc-cluster-name": "test-deny-icmp",
-        "goog-dataproc-cluster-uuid": "c02d5602-14ac-4e8e-af4f-f83df01b3b16",
+        "goog-dataproc-cluster-uuid": "f0ce26dc-87e9-40d0-a75c-ca6c0ae78cf4",
         "goog-dataproc-location": "us-central1"
       },
-      "lastStartTimestamp": "2024-06-25T05:50:00.453-07:00",
-      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-a/machineTypes/n1-standard-4",
+      "lastStartTimestamp": "2024-10-30T20:33:25.604-07:00",
+      "lastStopTimestamp": "2024-10-30T23:20:50.922-07:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/zones/us-central1-a/machineTypes/n2-standard-4",
       "metadata": {
         "fingerprint": "REDACTED",
         "items": [
           {
             "key": "dataproc-bucket",
-            "value": "dataproc-staging-us-central1-12340005-v147je1y"
+            "value": "dataproc-staging-us-central1-12340005-9v6173vh"
           },
           {
             "key": "dataproc-cloud-logging-enabled",
@@ -462,7 +478,7 @@
           },
           {
             "key": "dataproc-cluster-configuration-directory",
-            "value": "gs://dataproc-staging-us-central1-12340005-v147je1y/google-cloud-dataproc-metainfo/c02d5602-14ac-4e8e-af4f-f83df01b3b16/"
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/f0ce26dc-87e9-40d0-a75c-ca6c0ae78cf4/"
           },
           {
             "key": "dataproc-cluster-name",
@@ -470,15 +486,15 @@
           },
           {
             "key": "dataproc-cluster-uuid",
-            "value": "c02d5602-14ac-4e8e-af4f-f83df01b3b16"
+            "value": "f0ce26dc-87e9-40d0-a75c-ca6c0ae78cf4"
           },
           {
             "key": "dataproc-exclude-file-location",
-            "value": "gs://dataproc-staging-us-central1-12340005-v147je1y/google-cloud-dataproc-metainfo/c02d5602-14ac-4e8e-af4f-f83df01b3b16/nodes_exclude.xml"
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/f0ce26dc-87e9-40d0-a75c-ca6c0ae78cf4/nodes_exclude.xml"
           },
           {
             "key": "dataproc-include-file-location",
-            "value": "gs://dataproc-staging-us-central1-12340005-v147je1y/google-cloud-dataproc-metainfo/c02d5602-14ac-4e8e-af4f-f83df01b3b16/nodes_include"
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/f0ce26dc-87e9-40d0-a75c-ca6c0ae78cf4/nodes_include"
           },
           {
             "key": "dataproc-initialization-script-count",
@@ -498,7 +514,7 @@
           },
           {
             "key": "dataproc-temp-bucket",
-            "value": "dataproc-temp-us-central1-12340005-m3flc35v"
+            "value": "dataproc-temp-us-central1-12340005-xslkmij6"
           },
           {
             "key": "dataproc-worker-agent-runner-daemon-timeout",
@@ -518,15 +534,15 @@
           },
           {
             "key": "dataproc-agent-output-directory",
-            "value": "gs://dataproc-staging-us-central1-12340005-v147je1y/google-cloud-dataproc-metainfo/c02d5602-14ac-4e8e-af4f-f83df01b3b16/test-deny-icmp-w-1"
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/f0ce26dc-87e9-40d0-a75c-ca6c0ae78cf4/test-deny-icmp-w-1"
           },
           {
             "key": "dataproc-cluster-properties",
-            "value": "ZIPPY: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"
+            "value": "ZIPPY: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"
           },
           {
             "key": "dataproc-cluster-properties-file",
-            "value": "gs://dataproc-staging-us-central1-12340005-v147je1y/google-cloud-dataproc-metainfo/c02d5602-14ac-4e8e-af4f-f83df01b3b16/cluster.properties"
+            "value": "gs://dataproc-staging-us-central1-12340005-9v6173vh/google-cloud-dataproc-metainfo/f0ce26dc-87e9-40d0-a75c-ca6c0ae78cf4/cluster.properties"
           },
           {
             "key": "dataproc-datanode-enabled",
@@ -558,7 +574,6 @@
             {
               "kind": "compute#accessConfig",
               "name": "External NAT",
-              "natIP": "35.223.171.117",
               "networkTier": "PREMIUM",
               "type": "ONE_TO_ONE_NAT"
             }
@@ -568,11 +583,12 @@
           "name": "nic0",
           "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/global/networks/test-bad-network",
           "networkIP": "10.128.0.3",
+          "nicType": "GVNIC",
           "stackType": "IPV4_ONLY",
           "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/regions/us-central1/subnetworks/test-bad-subnet"
         }
       ],
-      "satisfiesPzi": false,
+      "satisfiesPzi": true,
       "scheduling": {
         "automaticRestart": true,
         "onHostMaintenance": "MIGRATE",
@@ -584,27 +600,20 @@
         {
           "email": "12340005-compute@developer.gserviceaccount.com",
           "scopes": [
-            "https://www.googleapis.com/auth/bigquery",
-            "https://www.googleapis.com/auth/bigtable.admin.table",
-            "https://www.googleapis.com/auth/bigtable.data",
-            "https://www.googleapis.com/auth/cloud.useraccounts.readonly",
-            "https://www.googleapis.com/auth/devstorage.full_control",
-            "https://www.googleapis.com/auth/devstorage.read_write",
-            "https://www.googleapis.com/auth/logging.write",
-            "https://www.googleapis.com/auth/monitoring.write"
+            "https://www.googleapis.com/auth/cloud-platform"
           ]
         }
       ],
       "shieldedInstanceConfig": {
         "enableIntegrityMonitoring": true,
-        "enableSecureBoot": false,
+        "enableSecureBoot": true,
         "enableVtpm": true
       },
       "shieldedInstanceIntegrityPolicy": {
         "updateAutoLearnPolicy": true
       },
       "startRestricted": false,
-      "status": "RUNNING",
+      "status": "TERMINATED",
       "tags": {
         "fingerprint": "REDACTED",
         "items": [

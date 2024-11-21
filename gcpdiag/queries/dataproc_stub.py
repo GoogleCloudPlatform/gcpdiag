@@ -42,10 +42,13 @@ class DataprocApiStub(apis_stub.ApiStub):
   def clusters(self):
     return DataprocApiStub(mock_state='clusters')
 
+  def jobs(self):
+    return DataprocApiStub(mock_state='jobs')
+
   def autoscalingPolicies(self):
     return DataprocApiStub(mock_state='autoscalingPolicies')
 
-  def get(self, name='', clusterName='', region='', projectId=''):
+  def get(self, name='', clusterName='', region='', projectId='', jobId=''):
     if self.mock_state == 'autoscalingPolicies':
       m = re.match(
           r'projects/([^/]+)/regions/([^/]+)/autoscalingPolicies/([^/]+)', name)
@@ -56,6 +59,17 @@ class DataprocApiStub(apis_stub.ApiStub):
                              json_basename=f'dataproc-clusters-{region}',
                              mock_state='clusters')
       stub.cluster_name = clusterName
+      stub.region = region
+      return stub
+    if self.mock_state == 'jobs':
+      stub = DataprocApiStub(project_id=projectId, mock_state='jobs')
+
+      if jobId == '1234567891':
+        stub.json_basename = 'dataproc-job-failed'
+      else:
+        stub.json_basename = 'dataproc-job-success'
+
+      stub.job_id = jobId
       stub.region = region
       return stub
 
