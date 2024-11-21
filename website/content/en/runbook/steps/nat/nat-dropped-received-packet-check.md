@@ -7,7 +7,7 @@ description: >
   Evaluates NATGW received_packets_dropped metric for issues.
 ---
 
-**Product**: \
+**Product**: [Cloud NAT](https://cloud.google.com/nat)\
 **Step Type**: AUTOMATED STEP
 
 ### Description

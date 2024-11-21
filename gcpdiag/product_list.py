@@ -49,6 +49,8 @@ def get_product_list() -> Dict:
           'https://cloud.google.com/monitoring',
       'notebooks':
           '[Vertex AI Workbench](https://cloud.google.com/vertex-ai-workbench)',
+      'nat':
+          '[Cloud NAT](https://cloud.google.com/nat)',
       'pubsub':
           '[Cloud Pub/Sub](https://cloud.google.com/pubsub/)',
       'tpu':

@@ -7,7 +7,7 @@ description: >
   Evaluates NATGW for OUT_OF_RESOURCES and ENDPOINT_INDEPENDENCE_CONFLICT issues.
 ---
 
-**Product**: \
+**Product**: [Cloud NAT](https://cloud.google.com/nat)\
 **Step Type**: AUTOMATED STEP
 
 ### Description

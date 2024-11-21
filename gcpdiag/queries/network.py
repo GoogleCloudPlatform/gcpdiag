@@ -266,6 +266,20 @@ class Router(models.Resource):
   def self_link(self) -> str:
     return self._resource_data.get('selfLink', '')
 
+  @property
+  def nats(self):
+    return self._resource_data.get('nats', [])
+
+  def get_nat_ip_allocate_option(self, nat_gateway) -> str:
+    nats = self._resource_data.get('nats', [])
+    nat = [n for n in nats if n['name'] == nat_gateway]
+    return nat[0].get('natIpAllocateOption', '')
+
+  def get_enable_dynamic_port_allocation(self, nat_gateway) -> str:
+    nats = self._resource_data.get('nats', [])
+    nat = [n for n in nats if n['name'] == nat_gateway]
+    return nat[0].get('enableDynamicPortAllocation', '')
+
   def subnet_has_nat(self, subnetwork):
     if not self._resource_data.get('nats', []):
       return False
@@ -280,6 +294,84 @@ class Router(models.Resource):
         # Cloud NAT configured for all subnets
         return True
     return False
+
+
+class RouterStatus(models.Resource):
+  """NAT Router Status"""
+
+  _resource_data: dict
+
+  def __init__(self, project_id, resource_data):
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+
+  @property
+  def full_path(self) -> str:
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
+                      self.self_link)
+    if result:
+      return result.group(1)
+    else:
+      return f'>> {self.self_link}'
+
+  @property
+  def short_path(self) -> str:
+    path = self.project_id + '/' + self.name
+    return path
+
+  @property
+  def name(self) -> str:
+    return self._resource_data.get('name', '')
+
+  @property
+  def self_link(self) -> str:
+    return self._resource_data.get('selfLink', '')
+
+  @property
+  def min_extra_nat_ips_needed(self) -> str:
+    nat_status = self._resource_data.get('result', {}).get('natStatus', {})
+    return nat_status[0].get('minExtraNatIpsNeeded', None)
+
+  @property
+  def num_vms_with_nat_mappings(self) -> str:
+    nat_status = self._resource_data.get('result', {}).get('natStatus', {})
+    return nat_status[0].get('numVmEndpointsWithNatMappings', None)
+
+
+class RouterNatIpInfo(models.Resource):
+  """NAT IP Info"""
+
+  _resource_data: dict
+
+  def __init__(self, project_id, resource_data):
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+
+  @property
+  def full_path(self) -> str:
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
+                      self.self_link)
+    if result:
+      return result.group(1)
+    else:
+      return f'>> {self.self_link}'
+
+  @property
+  def short_path(self) -> str:
+    path = self.project_id + '/' + self.name
+    return path
+
+  @property
+  def self_link(self) -> str:
+    return self._resource_data.get('selfLink', '')
+
+  @property
+  def name(self) -> str:
+    return self._resource_data.get('name', '')
+
+  @property
+  def result(self) -> str:
+    return self._resource_data.get('result', [])
 
 
 @dataclasses.dataclass
@@ -1122,6 +1214,17 @@ def get_zones(project_id: str) -> List[ManagedZone]:
 
 
 @caching.cached_api_call(in_memory=True)
+def get_routers(project_id: str, region: str, network) -> List[Router]:
+  logging.info('fetching routers: %s/%s', project_id, region)
+  compute = apis.get_api('compute', 'v1', project_id)
+  request = compute.routers().list(project=project_id,
+                                   region=region,
+                                   filter=f'network="{network.self_link}"')
+  response = request.execute(num_retries=config.API_RETRIES)
+  return [Router(project_id, item) for item in response.get('items', [])]
+
+
+@caching.cached_api_call(in_memory=True)
 def get_router(project_id: str, region: str, network) -> Router:
   logging.info('fetching routers: %s/%s', project_id, region)
   compute = apis.get_api('compute', 'v1', project_id)
@@ -1130,6 +1233,42 @@ def get_router(project_id: str, region: str, network) -> Router:
                                    filter=f'network="{network.self_link}"')
   response = request.execute(num_retries=config.API_RETRIES)
   return Router(project_id, next(iter(response.get('items', [{}]))))
+
+
+@caching.cached_api_call(in_memory=True)
+def nat_router_status(project_id: str, router_name: str,
+                      region: str) -> RouterStatus:
+  logging.info('fetching router status: %s/%s in region %s', project_id,
+               router_name, region)
+  compute = apis.get_api('compute', 'v1', project_id)
+  request = compute.routers().getRouterStatus(project=project_id,
+                                              router=router_name,
+                                              region=region)
+  response = request.execute(num_retries=config.API_RETRIES)
+  if 'result' in str(response):
+    return RouterStatus(project_id, response)
+  else:
+    logging.info('unable to fetch router status: %s/%s in region %s',
+                 project_id, router_name, region)
+    return RouterStatus(project_id, {})
+
+
+@caching.cached_api_call(in_memory=True)
+def get_nat_ip_info(project_id: str, router_name: str,
+                    region: str) -> RouterNatIpInfo:
+  logging.info('fetching NAT IP info for router: %s/%s in region %s',
+               project_id, router_name, region)
+  compute = apis.get_api('compute', 'v1', project_id)
+  request = compute.routers().getNatIpInfo(project=project_id,
+                                           router=router_name,
+                                           region=region)
+  response = request.execute(num_retries=config.API_RETRIES)
+  if 'result' in str(response):
+    return RouterNatIpInfo(project_id, response)
+  else:
+    logging.info('unable to fetch Nat IP Info for router: %s/%s in region %s',
+                 project_id, router_name, region)
+    return RouterNatIpInfo(project_id, {})
 
 
 class VPCSubnetworkIAMPolicy(iam.BaseIAMPolicy):

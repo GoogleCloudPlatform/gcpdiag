@@ -11,18 +11,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Common flags applicable to any runbook"""
+"""Test class for nat/nat_ip_allocation_failed"""
 
-PROJECT_ID = 'project_id'
-PROJECT_NUMBER = 'project_number'
-NETWORK = 'network'
-REGION = 'region'
-NAT_GATEWAY_NAME = 'nat_gateway_name'
-CLOUD_ROUTER_NAME = 'cloud_router_name'
+from gcpdiag import config
+from gcpdiag.runbook import nat, snapshot_test_base
 
-FOLDER_ID = 'folder_id'
-ORG_ID = 'org_id'
-NAME = 'name'
-ID = 'id'
-ZONE = 'zone'
-INTERACTIVE_MODE = 'auto'
+
+class Test(snapshot_test_base.RulesSnapshotTestBase):
+  rule_pkg = nat
+  runbook_name = 'nat/public-nat-ip-allocation-failed'
+  config.init({'auto': True, 'interface': 'cli'})
+
+  rule_parameters = [{
+      'project_id': 'gcpdiag-nat1-aaaa',
+      'region': 'europe-west4',
+      'nat_gateway_name': 'public-nat-gateway',
+      'cloud_router_name': 'public-nat-cloud-router',
+      'network': 'nat-vpc-network'
+  }]

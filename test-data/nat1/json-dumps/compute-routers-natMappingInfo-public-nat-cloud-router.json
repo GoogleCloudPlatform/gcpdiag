@@ -1,0 +1,43 @@
+{
+  "kind": "compute#vmEndpointNatMappingsList",
+  "result": [
+    {
+      "instanceName": "private-vm-2",
+      "interfaceNatMappings": [
+        {
+          "sourceVirtualIp": "172.16.1.3",
+          "sourceAliasIpRange": "",
+          "numTotalNatPorts": 16384,
+          "natIpPortRanges": [
+            "35.204.78.175:16384-32767"
+          ],
+          "numTotalDrainNatPorts": 0
+        },
+        {
+          "sourceVirtualIp": "172.16.1.3",
+          "sourceAliasIpRange": "",
+          "numTotalNatPorts": 16384,
+          "natIpPortRanges": [
+            "35.204.78.175:32768-49151"
+          ],
+          "numTotalDrainNatPorts": 0
+        }
+      ]
+    },
+    {
+      "instanceName": "private-vm-3",
+      "interfaceNatMappings": [
+        {
+          "sourceVirtualIp": "172.16.1.2",
+          "sourceAliasIpRange": "",
+          "numTotalNatPorts": 16384,
+          "natIpPortRanges": [
+            "35.204.78.175:49152-65535"
+          ],
+          "numTotalDrainNatPorts": 0
+        }
+      ]
+    }
+  ],
+  "nextPageToken": ""
+}

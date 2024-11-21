@@ -1,0 +1,335 @@
+{
+  "id": "projects/gcpdiag-nat1-aaaa/zones/europe-west4-a/instances",
+  "items": [
+    {
+      "canIpForward": false,
+      "cpuPlatform": "Intel Broadwell",
+      "creationTimestamp": "2024-10-26T18:57:58.912-07:00",
+      "deletionProtection": false,
+      "disks": [
+        {
+          "architecture": "X86_64",
+          "autoDelete": true,
+          "boot": true,
+          "deviceName": "persistent-disk-0",
+          "diskSizeGb": "10",
+          "guestOsFeatures": [
+            {
+              "type": "UEFI_COMPATIBLE"
+            },
+            {
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "GVNIC"
+            }
+          ],
+          "index": 0,
+          "interface": "SCSI",
+          "kind": "compute#attachedDisk",
+          "licenses": [
+            "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-11-bullseye"
+          ],
+          "mode": "READ_WRITE",
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/zones/europe-west4-a/disks/private-vm-0",
+          "type": "PERSISTENT"
+        }
+      ],
+      "fingerprint": "REDACTED",
+      "id": "4734315867648565453",
+      "kind": "compute#instance",
+      "labelFingerprint": "vezUS-42LLM=",
+      "labels": {
+        "goog-terraform-provisioned": "true"
+      },
+      "lastStartTimestamp": "2024-10-26T18:58:10.012-07:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/zones/europe-west4-a/machineTypes/e2-medium",
+      "metadata": {
+        "fingerprint": "REDACTED",
+        "kind": "compute#metadata"
+      },
+      "name": "private-vm-0",
+      "networkInterfaces": [
+        {
+          "fingerprint": "REDACTED",
+          "kind": "compute#networkInterface",
+          "name": "nic0",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/global/networks/nat-vpc-network",
+          "networkIP": "172.16.1.5",
+          "stackType": "IPV4_ONLY",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/regions/europe-west4/subnetworks/private-subnet"
+        }
+      ],
+      "satisfiesPzi": true,
+      "scheduling": {
+        "automaticRestart": true,
+        "onHostMaintenance": "MIGRATE",
+        "preemptible": false,
+        "provisioningModel": "STANDARD"
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/zones/europe-west4-a/instances/private-vm-0",
+      "shieldedInstanceConfig": {
+        "enableIntegrityMonitoring": true,
+        "enableSecureBoot": false,
+        "enableVtpm": true
+      },
+      "shieldedInstanceIntegrityPolicy": {
+        "updateAutoLearnPolicy": true
+      },
+      "startRestricted": false,
+      "status": "RUNNING",
+      "tags": {
+        "fingerprint": "REDACTED"
+      },
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/zones/europe-west4-a"
+    },
+    {
+      "canIpForward": false,
+      "cpuPlatform": "Intel Broadwell",
+      "creationTimestamp": "2024-10-26T18:57:59.851-07:00",
+      "deletionProtection": false,
+      "disks": [
+        {
+          "architecture": "X86_64",
+          "autoDelete": true,
+          "boot": true,
+          "deviceName": "persistent-disk-0",
+          "diskSizeGb": "10",
+          "guestOsFeatures": [
+            {
+              "type": "UEFI_COMPATIBLE"
+            },
+            {
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "GVNIC"
+            }
+          ],
+          "index": 0,
+          "interface": "SCSI",
+          "kind": "compute#attachedDisk",
+          "licenses": [
+            "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-11-bullseye"
+          ],
+          "mode": "READ_WRITE",
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/zones/europe-west4-a/disks/private-vm-1",
+          "type": "PERSISTENT"
+        }
+      ],
+      "fingerprint": "REDACTED",
+      "id": "2461631680997236941",
+      "kind": "compute#instance",
+      "labelFingerprint": "vezUS-42LLM=",
+      "labels": {
+        "goog-terraform-provisioned": "true"
+      },
+      "lastStartTimestamp": "2024-10-26T18:58:09.100-07:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/zones/europe-west4-a/machineTypes/e2-medium",
+      "metadata": {
+        "fingerprint": "REDACTED",
+        "kind": "compute#metadata"
+      },
+      "name": "private-vm-1",
+      "networkInterfaces": [
+        {
+          "fingerprint": "REDACTED",
+          "kind": "compute#networkInterface",
+          "name": "nic0",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/global/networks/nat-vpc-network",
+          "networkIP": "172.16.1.4",
+          "stackType": "IPV4_ONLY",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/regions/europe-west4/subnetworks/private-subnet"
+        }
+      ],
+      "satisfiesPzi": true,
+      "scheduling": {
+        "automaticRestart": true,
+        "onHostMaintenance": "MIGRATE",
+        "preemptible": false,
+        "provisioningModel": "STANDARD"
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/zones/europe-west4-a/instances/private-vm-1",
+      "shieldedInstanceConfig": {
+        "enableIntegrityMonitoring": true,
+        "enableSecureBoot": false,
+        "enableVtpm": true
+      },
+      "shieldedInstanceIntegrityPolicy": {
+        "updateAutoLearnPolicy": true
+      },
+      "startRestricted": false,
+      "status": "RUNNING",
+      "tags": {
+        "fingerprint": "REDACTED"
+      },
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/zones/europe-west4-a"
+    },
+    {
+      "canIpForward": false,
+      "cpuPlatform": "Intel Broadwell",
+      "creationTimestamp": "2024-10-26T18:57:59.192-07:00",
+      "deletionProtection": false,
+      "disks": [
+        {
+          "architecture": "X86_64",
+          "autoDelete": true,
+          "boot": true,
+          "deviceName": "persistent-disk-0",
+          "diskSizeGb": "10",
+          "guestOsFeatures": [
+            {
+              "type": "UEFI_COMPATIBLE"
+            },
+            {
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "GVNIC"
+            }
+          ],
+          "index": 0,
+          "interface": "SCSI",
+          "kind": "compute#attachedDisk",
+          "licenses": [
+            "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-11-bullseye"
+          ],
+          "mode": "READ_WRITE",
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/zones/europe-west4-a/disks/private-vm-2",
+          "type": "PERSISTENT"
+        }
+      ],
+      "fingerprint": "REDACTED",
+      "id": "7851540549116895437",
+      "kind": "compute#instance",
+      "labelFingerprint": "vezUS-42LLM=",
+      "labels": {
+        "goog-terraform-provisioned": "true"
+      },
+      "lastStartTimestamp": "2024-10-26T18:58:09.871-07:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/zones/europe-west4-a/machineTypes/e2-medium",
+      "metadata": {
+        "fingerprint": "REDACTED",
+        "kind": "compute#metadata"
+      },
+      "name": "private-vm-2",
+      "networkInterfaces": [
+        {
+          "fingerprint": "REDACTED",
+          "kind": "compute#networkInterface",
+          "name": "nic0",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/global/networks/nat-vpc-network",
+          "networkIP": "172.16.1.3",
+          "stackType": "IPV4_ONLY",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/regions/europe-west4/subnetworks/private-subnet"
+        }
+      ],
+      "satisfiesPzi": true,
+      "scheduling": {
+        "automaticRestart": true,
+        "onHostMaintenance": "MIGRATE",
+        "preemptible": false,
+        "provisioningModel": "STANDARD"
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/zones/europe-west4-a/instances/private-vm-2",
+      "shieldedInstanceConfig": {
+        "enableIntegrityMonitoring": true,
+        "enableSecureBoot": false,
+        "enableVtpm": true
+      },
+      "shieldedInstanceIntegrityPolicy": {
+        "updateAutoLearnPolicy": true
+      },
+      "startRestricted": false,
+      "status": "RUNNING",
+      "tags": {
+        "fingerprint": "REDACTED"
+      },
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/zones/europe-west4-a"
+    },
+    {
+      "canIpForward": false,
+      "cpuPlatform": "Intel Broadwell",
+      "creationTimestamp": "2024-10-26T18:57:59.112-07:00",
+      "deletionProtection": false,
+      "disks": [
+        {
+          "architecture": "X86_64",
+          "autoDelete": true,
+          "boot": true,
+          "deviceName": "persistent-disk-0",
+          "diskSizeGb": "10",
+          "guestOsFeatures": [
+            {
+              "type": "UEFI_COMPATIBLE"
+            },
+            {
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "GVNIC"
+            }
+          ],
+          "index": 0,
+          "interface": "SCSI",
+          "kind": "compute#attachedDisk",
+          "licenses": [
+            "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-11-bullseye"
+          ],
+          "mode": "READ_WRITE",
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/zones/europe-west4-a/disks/private-vm-3",
+          "type": "PERSISTENT"
+        }
+      ],
+      "fingerprint": "REDACTED",
+      "id": "2326196273934246093",
+      "kind": "compute#instance",
+      "labelFingerprint": "vezUS-42LLM=",
+      "labels": {
+        "goog-terraform-provisioned": "true"
+      },
+      "lastStartTimestamp": "2024-10-26T18:58:11.337-07:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/zones/europe-west4-a/machineTypes/e2-medium",
+      "metadata": {
+        "fingerprint": "REDACTED",
+        "kind": "compute#metadata"
+      },
+      "name": "private-vm-3",
+      "networkInterfaces": [
+        {
+          "fingerprint": "REDACTED",
+          "kind": "compute#networkInterface",
+          "name": "nic0",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/global/networks/nat-vpc-network",
+          "networkIP": "172.16.1.2",
+          "stackType": "IPV4_ONLY",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/regions/europe-west4/subnetworks/private-subnet"
+        }
+      ],
+      "satisfiesPzi": true,
+      "scheduling": {
+        "automaticRestart": true,
+        "onHostMaintenance": "MIGRATE",
+        "preemptible": false,
+        "provisioningModel": "STANDARD"
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/zones/europe-west4-a/instances/private-vm-3",
+      "shieldedInstanceConfig": {
+        "enableIntegrityMonitoring": true,
+        "enableSecureBoot": false,
+        "enableVtpm": true
+      },
+      "shieldedInstanceIntegrityPolicy": {
+        "updateAutoLearnPolicy": true
+      },
+      "startRestricted": false,
+      "status": "RUNNING",
+      "tags": {
+        "fingerprint": "REDACTED"
+      },
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/zones/europe-west4-a"
+    }
+  ],
+  "kind": "compute#instanceList",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/zones/europe-west4-a/instances"
+}

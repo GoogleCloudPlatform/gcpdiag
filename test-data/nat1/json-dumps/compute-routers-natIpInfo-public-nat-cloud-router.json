@@ -1,0 +1,14 @@
+{
+  "result": [
+    {
+      "natName": "public-nat-gateway",
+      "natIpInfoMappings": [
+        {
+          "natIp": "35.204.78.175",
+          "usage": "IN_USE",
+          "mode": "MANUAL"
+        }
+      ]
+    }
+  ]
+}

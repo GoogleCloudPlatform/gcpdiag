@@ -1,0 +1,16 @@
+{
+  "kind": "compute#network",
+  "id": "4007354994527599341",
+  "creationTimestamp": "2024-10-23T20:50:26.420-07:00",
+  "name": "nat-vpc-network",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/global/networks/nat-vpc-network",
+  "selfLinkWithId": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/global/networks/4007354994527599341",
+  "autoCreateSubnetworks": false,
+  "subnetworks": [
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/regions/europe-west4/subnetworks/private-subnet"
+  ],
+  "routingConfig": {
+    "routingMode": "REGIONAL"
+  },
+  "networkFirewallPolicyEnforcementOrder": "AFTER_CLASSIC_FIREWALL"
+}

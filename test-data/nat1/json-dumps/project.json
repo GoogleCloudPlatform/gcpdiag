@@ -1,0 +1,14 @@
+{
+  "name": "projects/12340010",
+  "parent": "folders/348077457356",
+  "projectId": "gcpdiag-nat1-aaaa",
+  "state": "ACTIVE",
+  "displayName": "gcpdiag test - nat1",
+  "createTime": "2024-10-24T03:36:15.068177Z",
+  "updateTime": "2024-10-24T03:36:15.068177Z",
+  "etag": "W/\"6d4466d453793d0e\"",
+  "labels": {
+    "gcpdiag": "test",
+    "goog-terraform-provisioned": "true"
+  }
+}

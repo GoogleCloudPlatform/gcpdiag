@@ -1,0 +1,43 @@
+{
+  "kind": "compute#routerList",
+  "id": "projects/gcpdiag-nat1-aaaa/regions/europe-west4/routers/",
+  "items": [
+    {
+      "kind": "compute#router",
+      "id": "564470628362494773",
+      "creationTimestamp": "2024-10-26T18:56:42.961-07:00",
+      "name": "public-nat-cloud-router",
+      "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/regions/europe-west4",
+      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/global/networks/nat-vpc-network",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/regions/europe-west4/routers/public-nat-cloud-router",
+      "nats": [
+        {
+          "name": "public-nat-gateway",
+          "type": "PUBLIC",
+          "endpointTypes": [
+            "ENDPOINT_TYPE_VM"
+          ],
+          "sourceSubnetworkIpRangesToNat": "ALL_SUBNETWORKS_ALL_IP_RANGES",
+          "natIps": [
+            "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/regions/europe-west4/addresses/public-nat-ip-1"
+          ],
+          "natIpAllocateOption": "MANUAL_ONLY",
+          "minPortsPerVm": 32000,
+          "enableDynamicPortAllocation": false,
+          "udpIdleTimeoutSec": 30,
+          "icmpIdleTimeoutSec": 30,
+          "tcpEstablishedIdleTimeoutSec": 1200,
+          "tcpTransitoryIdleTimeoutSec": 30,
+          "tcpTimeWaitTimeoutSec": 120,
+          "logConfig": {
+            "enable": true,
+            "filter": "ERRORS_ONLY"
+          },
+          "enableEndpointIndependentMapping": false
+        }
+      ],
+      "encryptedInterconnectRouter": false
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/regions/europe-west4/routers/"
+}

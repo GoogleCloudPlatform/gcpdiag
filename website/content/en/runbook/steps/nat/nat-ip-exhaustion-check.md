@@ -7,7 +7,7 @@ description: >
   Evaluates NATGW for NAT IP exhaustion/allocation issues.
 ---
 
-**Product**: \
+**Product**: [Cloud NAT](https://cloud.google.com/nat)\
 **Step Type**: AUTOMATED STEP
 
 ### Description

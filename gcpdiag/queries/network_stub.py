@@ -50,6 +50,20 @@ class NetworkApiStub:
     self.project_id = project
     return self
 
+  def get_network(self, project, network):
+    return apis_stub.RestCallStub(project, f'compute-network-{network}')
+
+  def get_routers(self, project, region, network):
+    return apis_stub.RestCallStub(project, f'compute-network-{region}')
+
+  def nat_router_status(self, project, router_name, region):
+    return apis_stub.RestCallStub(
+        project, f'compute-routers-routerStatus-{router_name}')
+
+  def get_nat_ip_info(self, project, router_name, region):
+    return apis_stub.RestCallStub(project,
+                                  f'compute-routers-rnatIpInfo-{router_name}')
+
   def getIamPolicy(self, project, region, resource):
     return apis_stub.RestCallStub(project, 'compute-subnetwork-policy')
 
@@ -92,3 +106,13 @@ class NetworkApiStub:
           return subnet_resp
         else:
           raise ValueError(f'cannot call method {self.mock_state} here')
+
+  def getRouterStatus(self, project, router, region):
+    if self.mock_state == 'routers':
+      return apis_stub.RestCallStub(project,
+                                    f'compute-routers-routerStatus-{router}')
+
+  def getNatIpInfo(self, project, router, region):
+    if self.mock_state == 'routers':
+      return apis_stub.RestCallStub(project,
+                                    f'compute-routers-natIpInfo-{router}')

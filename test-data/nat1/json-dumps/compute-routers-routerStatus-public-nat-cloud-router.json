@@ -1,0 +1,19 @@
+{
+  "kind": "compute#routerStatusResponse",
+  "result": {
+    "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/global/networks/nat-vpc-network",
+    "natStatus": [
+      {
+        "name": "public-nat-gateway",
+        "userAllocatedNatIpResources": [
+          "https://www.googleapis.com/compute/v1/projects/gcpdiag-nat1-aaaa/regions/europe-west4/addresses/public-nat-ip-1"
+        ],
+        "userAllocatedNatIps": [
+          "35.204.78.175"
+        ],
+        "minExtraNatIpsNeeded": 2,
+        "numVmEndpointsWithNatMappings": 2
+      }
+    ]
+  }
+}

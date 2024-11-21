@@ -1,0 +1,89 @@
+{
+  "timeSeriesDescriptor": {
+    "labelDescriptors": [
+      {
+        "key": "resource.project_id"
+      },
+      {
+        "key": "resource.region"
+      },
+      {
+        "key": "resource.router_id"
+      },
+      {
+        "key": "resource.gateway_name"
+      }
+    ],
+    "pointDescriptors": [
+      {
+        "key": "value.nat_allocation_failed",
+        "valueType": "BOOL",
+        "metricKind": "GAUGE"
+      }
+    ]
+  },
+  "timeSeriesData": [
+    {
+      "labelValues": [
+        {
+          "stringValue": "gcpdiag-nat1-aaaa"
+        },
+        {
+          "stringValue": "europe-west4"
+        },
+        {
+          "stringValue": "564470628362494773"
+        },
+        {
+          "stringValue": "public-nat-gateway"
+        }
+      ],
+      "pointData": [
+        {
+          "values": [
+            {
+              "boolValue": true
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-10-27T02:47:00Z",
+            "endTime": "2024-10-27T02:47:00Z"
+          }
+        },
+        {
+          "values": [
+            {
+              "boolValue": true
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-10-27T02:46:00Z",
+            "endTime": "2024-10-27T02:46:00Z"
+          }
+        },
+        {
+          "values": [
+            {
+              "boolValue": true
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-10-27T02:45:00Z",
+            "endTime": "2024-10-27T02:45:00Z"
+          }
+        },
+        {
+          "values": [
+            {
+              "boolValue": true
+            }
+          ],
+          "timeInterval": {
+            "startTime": "2024-10-27T02:44:00Z",
+            "endTime": "2024-10-27T02:44:00Z"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -126,6 +126,8 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/gke3/json-dumps',
     'gcpdiag-gke4-runbook':
         pathlib.Path(__file__).parents[2] / 'test-data/gke4/json-dumps',
+    'gcpdiag-nat1-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/nat1/json-dumps',
     '12340033':
         pathlib.Path(__file__).parents[2] / 'test-data/gke4/json-dumps',
     'centos-cloud':
