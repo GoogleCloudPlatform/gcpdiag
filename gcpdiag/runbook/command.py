@@ -376,7 +376,7 @@ def run(argv) -> None:
   # Enable Caching
   try:
     report = run_and_get_report(argv)
-  except DiagnosticTreeNotFound as e:
+  except (DiagnosticTreeNotFound, AttributeError, ValueError, KeyError) as e:
     logging.error(e)
     logging.debug('%s', ''.join(traceback.format_tb(e.__traceback__)))
   else:

@@ -489,14 +489,15 @@ class DiagnosticEngine:
     }
     if missing_parameters:
       missing_param_str = '\n'.join(
-          f'Help: {value}\n-p {key}=value\n'
+          f'Parameter Explanation: {value}\n-p {key}=value'
           for key, value in missing_parameters.items())
-      logging.error(
-          'Missing %s required %s. Please provide the following:\n\n%s\nExiting program',
-          len(missing_parameters),
-          'parameter' if len(missing_parameters) == 1 else 'parameters',
-          missing_param_str)
-      raise AttributeError('missing required parameters to run runbook')
+
+      error_msg = (
+          f'Missing {len(missing_parameters)} required '
+          f"{'parameter' if len(missing_parameters) == 1 else 'parameters'}. "
+          'Please provide the following:\n\n'
+          f'{missing_param_str}')
+      raise AttributeError(error_msg)
 
   def _set_default_parameters(self, parameter_def: Dict):
     # set default parameters
