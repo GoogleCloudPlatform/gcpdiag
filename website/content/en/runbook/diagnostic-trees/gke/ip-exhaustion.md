@@ -16,11 +16,8 @@ This runbook investigates the gke cluster for ip exhaustion issues and recommend
   steps.
 
   Areas Examined:
-
   - GKE cluster type.
-
   - GKE cluster and nodepool configuration
-
   - Stackdriver logs
 
 ### Executing this runbook
@@ -54,13 +51,9 @@ gcpdiag runbook --help
 
   - [Ip Exhaustion Start](/runbook/steps/gke/ip-exhaustion-start)
 
-  - [Ip Exhaustion Gateway](/runbook/steps/gke/ip-exhaustion-gateway)
-
   - [Node Ip Range Exhaustion](/runbook/steps/gke/node-ip-range-exhaustion)
 
   - [Pod Ip Range Exhaustion](/runbook/steps/gke/pod-ip-range-exhaustion)
-
-  - [Ip Exhaustion End](/runbook/steps/gke/ip-exhaustion-end)
 
   - [Ip Exhaustion End](/runbook/steps/gke/ip-exhaustion-end)
 

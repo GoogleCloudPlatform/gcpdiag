@@ -271,7 +271,7 @@ class NodeInsertCheck(runbook.Step):
   """Check for any errors during instances.insert method"""
 
   template = 'nodebootstrapping::node_insert_check'
-  MAX_GKE_NAME_LENGTH = 18
+  MAX_GKE_NAME_LENGTH = 16
 
   def execute(self):
     """
@@ -289,8 +289,8 @@ class NodeInsertCheck(runbook.Step):
 
     if nodepool and name:
       if not node:
-        # the gke instance name will have a max of 18 characters from the nodepool name
-        # and max 18 characters from the GKE cluster name
+        # the gke instance name will have a max of 16 characters from the nodepool name
+        # and max 16 characters from the GKE cluster name
         filter_str = [
             'log_id("cloudaudit.googleapis.com/activity")',
             'protoPayload.methodName="v1.compute.instances.insert"',

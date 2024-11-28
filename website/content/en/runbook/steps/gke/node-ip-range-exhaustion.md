@@ -16,22 +16,18 @@ Checks Node IP range exhaustion and offers remediation step.
 
 ### Failure Reason
 
-  Node IP exhaustion is detected in the cluster {cluster_name}:
-
-  {status_message}
+Node IP exhaustion is detected in the cluster {cluster_name}
 
 
 ### Failure Remediation
 
-  Follow [1] to expand the ip range of the node subnet.
+Please follow the below documentation [1] to expand the ip range of the node subnet.
 
-  [1] https://cloud.google.com/vpc/docs/create-modify-vpc-networks#expand-subnet
+[1] https://cloud.google.com/vpc/docs/create-modify-vpc-networks#expand-subnet
 
 ### Success Reason
 
-  Node IP exhaustion is detected in the cluster {cluster_name}:
-
-  {status_message}
+No Node IP exhaustion detected in the cluster {cluster_name}
 
 
 

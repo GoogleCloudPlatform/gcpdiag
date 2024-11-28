@@ -16,13 +16,13 @@ Checks Pod IP range exhaustion and offers remediation step.
 
 ### Failure Reason
 
-  Pod IP exhaustion is detected in the cluster {cluster_name}
+Pod IP exhaustion is detected in the cluster {cluster_name}
 
 ### Failure Remediation
 
-  Follow [1] to add ipv4 range to the autopilot cluster and [2] to add ipv4 pod range to a standard cluster to mitgate the issue.
-  [1] https://cloud.google.com/kubernetes-engine/docs/how-to/multi-pod-cidr#add-pod-ipv4-range-in-autopilot-cluster
-  [2] https://cloud.google.com/kubernetes-engine/docs/how-to/multi-pod-cidr#cluster-add-pod-ipv4-range
+Please follow the below documentation [1] to add ipv4 range to the autopilot cluster to mitgate the issue.
+
+[1] https://cloud.google.com/kubernetes-engine/docs/how-to/multi-pod-cidr#add-pod-ipv4-range-in-autopilot-cluster
 
 
 
