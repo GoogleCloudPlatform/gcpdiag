@@ -62,6 +62,10 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/composer1/json-dumps',
     'gcpdiag-cloudsql1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/cloudsql1/json-dumps',
+    'gcpdiag-cloudasset1-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/cloudasset1/json-dumps',
+    '12340071':
+        pathlib.Path(__file__).parents[2] / 'test-data/cloudasset1/json-dumps',
     'gcpdiag-fw-policy-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/fw-policy/json-dumps',
     '12340004':
@@ -418,5 +422,8 @@ def get_api_stub(service_name: str,
   elif service_name == 'networkmanagement':
     from gcpdiag.queries import networkmanagement_stub
     return networkmanagement_stub.NetworkManagementApiStub()
+  elif service_name == 'cloudasset':
+    from gcpdiag.queries import cloudasset_stub
+    return cloudasset_stub.CloudAssetApiStub()
   else:
     raise ValueError('unsupported service: %s' % service_name)

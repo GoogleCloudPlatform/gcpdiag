@@ -1,0 +1,81 @@
+{
+  "results": [
+    {
+      "name": "//compute.googleapis.com/projects/cloudasset1-test-project/regions/us-central1/subnetworks/b",
+      "assetType": "compute.googleapis.com/Subnetwork",
+      "project": "projects/12340071",
+      "displayName": "b",
+      "location": "us-central1",
+      "additionalAttributes": {
+        "gatewayAddress": "10.0.0.1"
+      },
+      "createTime": "2024-08-30T05:57:37Z",
+      "state": "READY",
+      "folders": [
+        "folders/9898989",
+        "folders/37663766"
+      ],
+      "organization": "organizations/11112222",
+      "parentFullResourceName": "//cloudresourcemanager.googleapis.com/projects/cloudasset1-test-project",
+      "parentAssetType": "cloudresourcemanager.googleapis.com/Project"
+    },
+    {
+      "name": "//compute.googleapis.com/projects/cloudasset1-test-project/regions/us-central1/addresses/cross-lb-reserve-ip",
+      "assetType": "compute.googleapis.com/Address",
+      "project": "projects/12340071",
+      "displayName": "cross-lb-reserve-ip",
+      "location": "us-central1",
+      "additionalAttributes": {
+        "address": "10.1.2.99"
+      },
+      "createTime": "2024-08-27T09:40:04Z",
+      "state": "RESERVED",
+      "folders": [
+        "folders/9898989",
+        "folders/37663766"
+      ],
+      "organization": "organizations/11112222",
+      "parentFullResourceName": "//cloudresourcemanager.googleapis.com/projects/cloudasset1-test-project",
+      "parentAssetType": "cloudresourcemanager.googleapis.com/Project"
+    },
+    {
+      "name": "//compute.googleapis.com/projects/cloudasset1-test-project/zones/us-central1-a/autoscalers/gl7-ilb-mig-a",
+      "assetType": "compute.googleapis.com/Autoscaler",
+      "project": "projects/12340071",
+      "displayName": "gl7-ilb-mig-a",
+      "location": "us-central1-a",
+      "createTime": "2024-08-27T09:33:12Z",
+      "state": "ACTIVE",
+      "folders": [
+        "folders/9898989",
+        "folders/37663766"
+      ],
+      "organization": "organizations/11112222",
+      "parentFullResourceName": "//cloudresourcemanager.googleapis.com/projects/cloudasset1-test-project",
+      "parentAssetType": "cloudresourcemanager.googleapis.com/Project"
+    },
+    {
+      "name": "//compute.googleapis.com/projects/cloudasset1-test-project/zones/us-central1-a/disks/gl7-ilb-mig-a-27j7",
+      "assetType": "compute.googleapis.com/Disk",
+      "project": "projects/12340071",
+      "displayName": "gl7-ilb-mig-a-27j7",
+      "location": "us-central1-a",
+      "additionalAttributes": {
+        "sizeGb": 10,
+        "type": "pd-balanced",
+        "users": [
+          "https://www.googleapis.com/compute/v1/projects/cloudasset1-test-project/zones/us-central1-a/instances/gl7-ilb-mig-a-27j7"
+        ]
+      },
+      "createTime": "2024-08-27T09:33:10Z",
+      "state": "READY",
+      "folders": [
+        "folders/9898989",
+        "folders/37663766"
+      ],
+      "organization": "organizations/11112222",
+      "parentFullResourceName": "//cloudresourcemanager.googleapis.com/projects/cloudasset1-test-project",
+      "parentAssetType": "cloudresourcemanager.googleapis.com/Project"
+    }
+  ]
+}
