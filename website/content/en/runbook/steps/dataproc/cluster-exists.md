@@ -4,7 +4,7 @@ linkTitle: "Cluster Exists"
 weight: 3
 type: docs
 description: >
-  Verify if cluster exists in Dataproc UI.
+  Prepares the parameters required for the dataproc/cluster-creation runbook.
 ---
 
 **Product**: [Cloud Dataproc](https://cloud.google.com/dataproc)\
@@ -12,19 +12,21 @@ description: >
 
 ### Description
 
-None
+Ensures both project_id and cluster_name parameters are available.
 
 ### Failure Reason
 
-The cluster: {cluster_name} doesn't exists in project {project_id}
+Cluster {cluster_name} doesn't exists in project {project_id}
 
 ### Failure Remediation
 
-Please check if you deleted the cluster.
+Either create again the cluster and keep it in ERROR state in Dataproc UI or manually provide additional parameters using command:
+gcpdiag runbook dataproc/cluster-creation -p cluster_name=CLUSTER_NAME -p cluster_uuid=CLUSTER_UUID -p network=NETWORK_URI -p subnetwork=SUBNETWORK_URI -p service_account=SERVICE_ACCOUNT -p internal_ip_only=True/False --project=PROJECT_ID.
+Please visit https://gcpdiag.dev/runbook/diagnostic-trees/dataproc/ for any additional parameters you would like to specify.
 
 ### Success Reason
 
-The cluster: {cluster_name} exists in project {project_id}
+Cluster {cluster_name} exists in project {project_id}
 
 
 
