@@ -734,6 +734,18 @@ class DiagnosticEngine:
               err,
               step.execution_id,
           )
+          self.interface.rm.reports[operator.run_id].results[
+              step.execution_id].step_error = err
+        elif err.status == 401:
+          logging.error(
+              '%s: %s request is missing required authentication credential to'
+              ' perform operations in step: %s',
+              type(err).__name__,
+              err,
+              step.execution_id,
+          )
+          self.interface.rm.reports[operator.run_id].results[
+              step.execution_id].step_error = err
           return
         logging.error(
             '%s: %s while processing step: %s',
@@ -741,6 +753,8 @@ class DiagnosticEngine:
             err,
             step.execution_id,
         )
+        self.interface.rm.reports[operator.run_id].results[
+            step.execution_id].step_error = err
       else:
         logging.error(
             '%s: %s while processing step: %s',

@@ -106,7 +106,7 @@ class GcpApiError(Exception):
   def status(self) -> Optional[int]:
     try:
       return self.response.resp.status
-    except KeyError:
+    except (KeyError, AttributeError):
       return None
 
   def __init__(self,
