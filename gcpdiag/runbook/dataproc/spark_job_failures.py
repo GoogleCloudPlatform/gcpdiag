@@ -99,7 +99,7 @@ class SparkJobFailures(runbook.DiagnosticTree):
     job_exist = JobExists()
     self.add_start(job_exist)
     # Check cluster exists
-    cluster_exists = ClusterExists()
+    cluster_exists = DataProcClusterExists()
     self.add_step(parent=job_exist, child=cluster_exists)
     # Check stackdriver enabled
     stackdriver_setting = CheckStackdriverSetting()
@@ -257,7 +257,7 @@ class JobExists(runbook.StartStep):
     return
 
 
-class ClusterExists(runbook.Step):
+class DataProcClusterExists(runbook.Step):
   """Verify if cluster exists in Dataproc UI."""
 
   template = 'job::cluster_exists'

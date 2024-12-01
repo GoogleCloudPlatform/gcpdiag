@@ -68,7 +68,7 @@ gcpdiag runbook --help
 
   - [Job Exists](/runbook/steps/dataproc/job-exists)
 
-  - [Cluster Exists](/runbook/steps/dataproc/cluster-exists)
+  - [Data Proc Cluster Exists](/runbook/steps/dataproc/data-proc-cluster-exists)
 
   - [Check Stackdriver Setting](/runbook/steps/dataproc/check-stackdriver-setting)
 
