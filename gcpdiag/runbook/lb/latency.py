@@ -120,6 +120,30 @@ class LbLatencyStart(runbook.StartStep):
       )
       return
 
+    load_balancer_type = self.forwarding_rule.load_balancer_type
+    supported_load_balancer_types = [
+        lb.LoadBalancerType.CLASSIC_APPLICATION_LB,
+        lb.LoadBalancerType.GLOBAL_EXTERNAL_APPLICATION_LB,
+        lb.LoadBalancerType.REGIONAL_INTERNAL_APPLICATION_LB,
+        lb.LoadBalancerType.REGIONAL_EXTERNAL_APPLICATION_LB,
+    ]
+
+    if load_balancer_type == lb.LoadBalancerType.LOAD_BALANCER_TYPE_UNSPECIFIED:
+      op.add_skipped(
+          proj,
+          reason=(
+              "The given forwarding rule type is not used for load balancing."),
+      )
+      return
+    elif load_balancer_type not in supported_load_balancer_types:
+      op.add_skipped(
+          proj,
+          reason=(
+              "Latency runbook is not supported for the specified load balancer"
+              f" type: {lb.get_load_balancer_type_name(load_balancer_type)}"),
+      )
+      return
+
 
 class LbBackendLatencyCheck(runbook.Step):
   """Check if backend latency exceeds the threshold"""
@@ -137,14 +161,12 @@ class LbBackendLatencyCheck(runbook.Step):
         flags.BACKEND_LATENCY_THRESHOLD) is not None else 200
     forwarding_rule = self.forwarding_rule
     forwarding_rule_name = op.get(flags.FORWARDING_RULE_NAME)
+    load_balancer_type = self.forwarding_rule.load_balancer_type
     region = op.get(flags.REGION)
     op.info("Forwarding rule name: " + str(self.forwarding_rule))
     # Construct the MQL query string, incorporating filter and time range
 
-    if forwarding_rule.region and forwarding_rule.load_balancing_scheme in [
-        "EXTERNAL", "EXTERNAL_MANAGED"
-    ]:
-
+    if load_balancer_type == lb.LoadBalancerType.REGIONAL_EXTERNAL_APPLICATION_LB:
       #To Do: Add support for Network Load Balancers and Pass through Load Balancers
       #To Do: Allow users to chose a specific time range
 
@@ -161,8 +183,9 @@ class LbBackendLatencyCheck(runbook.Step):
           | within 15m
           """
 
-    if not forwarding_rule.region and forwarding_rule.load_balancing_scheme in [
-        "EXTERNAL", "EXTERNAL_MANAGED"
+    if load_balancer_type in [
+        lb.LoadBalancerType.CLASSIC_APPLICATION_LB,
+        lb.LoadBalancerType.GLOBAL_EXTERNAL_APPLICATION_LB,
     ]:
       query = f"""
           fetch https_lb_rule
@@ -177,9 +200,7 @@ class LbBackendLatencyCheck(runbook.Step):
           | within 15m
           """
 
-    if forwarding_rule.region and forwarding_rule.load_balancing_scheme in [
-        "INTERNAL_MANAGED"
-    ]:
+    if load_balancer_type == lb.LoadBalancerType.REGIONAL_INTERNAL_APPLICATION_LB:
       query = f"""
           fetch internal_http_lb_rule
           | metric
@@ -254,15 +275,14 @@ class LbRequestCountCheck(runbook.Step):
         flags.REQUEST_COUNT_THRESHOLD) is not None else 150
     forwarding_rule = self.forwarding_rule
     forwarding_rule_name = op.get(flags.FORWARDING_RULE_NAME)
+    load_balancer_type = self.forwarding_rule.load_balancer_type
     region = op.get(flags.REGION)
 
     op.info("Forwarding rule name: " + str(self.forwarding_rule))
 
     # Construct the MQL query string, incorporating filter and time range
 
-    if forwarding_rule.region and forwarding_rule.load_balancing_scheme in [
-        "EXTERNAL", "EXTERNAL_MANAGED"
-    ]:
+    if load_balancer_type == lb.LoadBalancerType.REGIONAL_EXTERNAL_APPLICATION_LB:
       query = f"""
           fetch http_external_regional_lb_rule
           | metric 'loadbalancing.googleapis.com/https/external/regional/request_count'
@@ -273,8 +293,9 @@ class LbRequestCountCheck(runbook.Step):
           | within 15m
           """
 
-    if not forwarding_rule.region and forwarding_rule.load_balancing_scheme in [
-        "EXTERNAL", "EXTERNAL_MANAGED"
+    if load_balancer_type in [
+        lb.LoadBalancerType.CLASSIC_APPLICATION_LB,
+        lb.LoadBalancerType.GLOBAL_EXTERNAL_APPLICATION_LB,
     ]:
       query = f"""
           fetch https_lb_rule
@@ -286,9 +307,7 @@ class LbRequestCountCheck(runbook.Step):
           | within 15m
           """
 
-    if forwarding_rule.region and forwarding_rule.load_balancing_scheme in [
-        "INTERNAL_MANAGED"
-    ]:
+    if load_balancer_type == lb.LoadBalancerType.REGIONAL_INTERNAL_APPLICATION_LB:
       query = f"""
           fetch internal_http_lb_rule
           | metric 'loadbalancing.googleapis.com/https/internal/request_count'
@@ -363,15 +382,14 @@ class LbErrorRateCheck(runbook.Step):
         flags.ERROR_RATE_THRESHOLD) is not None else 1
     forwarding_rule = self.forwarding_rule
     forwarding_rule_name = op.get(flags.FORWARDING_RULE_NAME)
+    load_balancer_type = self.forwarding_rule.load_balancer_type
     region = op.get(flags.REGION)
 
     op.info("Forwarding rule name: " + str(self.forwarding_rule))
 
     # Construct the MQL query string, incorporating filter and time range
 
-    if forwarding_rule.region and forwarding_rule.load_balancing_scheme in [
-        "EXTERNAL", "EXTERNAL_MANAGED"
-    ]:
+    if load_balancer_type == lb.LoadBalancerType.REGIONAL_EXTERNAL_APPLICATION_LB:
       query = f"""
           fetch http_external_regional_lb_rule
           | metric
@@ -387,8 +405,9 @@ class LbErrorRateCheck(runbook.Step):
           | within 15m
           """
 
-    if not forwarding_rule.region and forwarding_rule.load_balancing_scheme in [
-        "EXTERNAL", "EXTERNAL_MANAGED"
+    if load_balancer_type in [
+        lb.LoadBalancerType.CLASSIC_APPLICATION_LB,
+        lb.LoadBalancerType.GLOBAL_EXTERNAL_APPLICATION_LB,
     ]:
       query = f"""
           fetch https_lb_rule
@@ -405,9 +424,7 @@ class LbErrorRateCheck(runbook.Step):
           | within 15m
           """
 
-    if forwarding_rule.region and forwarding_rule.load_balancing_scheme in [
-        "INTERNAL_MANAGED"
-    ]:
+    if load_balancer_type == lb.LoadBalancerType.REGIONAL_INTERNAL_APPLICATION_LB:
       query = f"""
           fetch internal_http_lb_rule
           | metric

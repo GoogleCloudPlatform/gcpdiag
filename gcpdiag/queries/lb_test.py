@@ -49,6 +49,8 @@ class TestURLMap:
     assert obj.name == 'web-backend-service'
     assert obj.session_affinity == 'NONE'
     assert obj.locality_lb_policy == 'ROUND_ROBIN'
+    assert obj.protocol == 'HTTP'
+    assert obj.load_balancer_type == lb.LoadBalancerType.CLASSIC_APPLICATION_LB
 
   def test_get_backend_service_regional(self):
     context = models.Context(project_id=DUMMY_PROJECT2_ID)
@@ -59,6 +61,8 @@ class TestURLMap:
     assert obj.region == 'europe-west4'
     assert obj.session_affinity == 'NONE'
     assert obj.locality_lb_policy == 'ROUND_ROBIN'
+    assert obj.protocol == 'TCP'
+    assert obj.load_balancer_type == lb.LoadBalancerType.EXTERNAL_PASSTHROUGH_LB
 
   def test_get_backend_service_health_implicit_global(self):
     context = models.Context(project_id=DUMMY_PROJECT2_ID)
@@ -93,7 +97,7 @@ class TestURLMap:
     assert forwarding_rule.name == 'forwardingRule1'
     assert forwarding_rule.short_path == 'gcpdiag-lb1-aaaa/forwardingRule1'
 
-  def test_get_forwarding_rule(self):
+  def test_get_forwarding_rule_regional(self):
     """get_forwarding_rule returns the right forwarding rule matched by name."""
     forwarding_rule = lb.get_forwarding_rule(
         project_id=DUMMY_PROJECT2_ID,
@@ -102,6 +106,18 @@ class TestURLMap:
     )
     assert forwarding_rule.name == 'forwardingRule1'
     assert forwarding_rule.short_path == 'gcpdiag-lb2-aaaa/forwardingRule1'
+    assert (forwarding_rule.load_balancer_type ==
+            lb.LoadBalancerType.REGIONAL_INTERNAL_APPLICATION_LB)
+
+  def test_get_forwarding_rule_global(self):
+    """get_forwarding_rule returns the right forwarding rule matched by name."""
+    forwarding_rule = lb.get_forwarding_rule(
+        project_id=DUMMY_PROJECT3_ID,
+        forwarding_rule_name='https-content-rule',
+    )
+    assert forwarding_rule.name == 'https-content-rule'
+    assert (forwarding_rule.load_balancer_type ==
+            lb.LoadBalancerType.CLASSIC_APPLICATION_LB)
 
   def test_forwarding_rule_related_backend_service_http(self):
     forwarding_rule = lb.get_forwarding_rule(

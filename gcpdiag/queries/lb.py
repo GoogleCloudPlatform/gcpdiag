@@ -15,12 +15,110 @@
 
 import logging
 import re
-from typing import Dict, List, Optional
+from enum import Enum
+from typing import Dict, List, Literal, Optional
 
 import googleapiclient
 
 from gcpdiag import caching, config, models
 from gcpdiag.queries import apis, apis_utils
+
+
+class LoadBalancerType(Enum):
+  """Load balancer type."""
+
+  LOAD_BALANCER_TYPE_UNSPECIFIED = 0
+  EXTERNAL_PASSTHROUGH_LB = 1
+  INTERNAL_PASSTHROUGH_LB = 2
+  TARGET_POOL_LB = 3  # deprecated but customers still have them
+  GLOBAL_EXTERNAL_PROXY_NETWORK_LB = 4  # envoy based proxy lb
+  REGIONAL_INTERNAL_PROXY_NETWORK_LB = 5
+  REGIONAL_EXTERNAL_PROXY_NETWORK_LB = 6
+  CROSS_REGION_INTERNAL_PROXY_NETWORK_LB = 7
+  CLASSIC_PROXY_NETWORK_LB = 8
+  GLOBAL_EXTERNAL_APPLICATION_LB = 9  # envoy based application lb
+  REGIONAL_INTERNAL_APPLICATION_LB = 10
+  REGIONAL_EXTERNAL_APPLICATION_LB = 11
+  CROSS_REGION_INTERNAL_APPLICATION_LB = 12
+  CLASSIC_APPLICATION_LB = 13
+
+
+def get_load_balancer_type_name(lb_type: LoadBalancerType) -> str:
+  """Returns a human-readable name for the given load balancer type."""
+
+  type_names = {
+      LoadBalancerType.LOAD_BALANCER_TYPE_UNSPECIFIED:
+          'Unspecified',
+      LoadBalancerType.EXTERNAL_PASSTHROUGH_LB:
+          ('External Passthrough Network Load Balancer'),
+      LoadBalancerType.INTERNAL_PASSTHROUGH_LB:
+          ('Internal Passthrough Network Load Balancer'),
+      LoadBalancerType.TARGET_POOL_LB:
+          'Target Pool Network Load Balancer',
+      LoadBalancerType.GLOBAL_EXTERNAL_PROXY_NETWORK_LB:
+          ('Global External Proxy Network Load Balancer'),
+      LoadBalancerType.REGIONAL_INTERNAL_PROXY_NETWORK_LB:
+          ('Regional Internal Proxy Network Load Balancer'),
+      LoadBalancerType.REGIONAL_EXTERNAL_PROXY_NETWORK_LB:
+          ('Regional External Proxy Network Load Balancer'),
+      LoadBalancerType.CROSS_REGION_INTERNAL_PROXY_NETWORK_LB:
+          ('Cross-Region Internal Proxy Network Load Balancer'),
+      LoadBalancerType.CLASSIC_PROXY_NETWORK_LB:
+          ('Classic Proxy Network Load Balancer'),
+      LoadBalancerType.GLOBAL_EXTERNAL_APPLICATION_LB:
+          ('Global External Application Load Balancer'),
+      LoadBalancerType.REGIONAL_INTERNAL_APPLICATION_LB:
+          ('Regional Internal Application Load Balancer'),
+      LoadBalancerType.REGIONAL_EXTERNAL_APPLICATION_LB:
+          ('Regional External Application Load Balancer'),
+      LoadBalancerType.CROSS_REGION_INTERNAL_APPLICATION_LB:
+          ('Cross-Region Internal Application Load Balancer'),
+      LoadBalancerType.CLASSIC_APPLICATION_LB:
+          ('Classic Application Load Balancer'),
+  }
+  return type_names.get(lb_type, 'Unspecified')
+
+
+def get_load_balancer_type(
+    load_balancing_scheme: str,
+    scope: str,
+    layer: Literal['application', 'network'],
+    backend_service_based: bool = True,
+) -> LoadBalancerType:
+  if load_balancing_scheme == 'EXTERNAL':
+    if not scope or scope == 'global':
+      if layer == 'application':
+        return LoadBalancerType.CLASSIC_APPLICATION_LB
+      else:
+        return LoadBalancerType.CLASSIC_PROXY_NETWORK_LB
+    else:
+      return (LoadBalancerType.EXTERNAL_PASSTHROUGH_LB
+              if backend_service_based else LoadBalancerType.TARGET_POOL_LB)
+  elif load_balancing_scheme == 'INTERNAL':
+    return LoadBalancerType.INTERNAL_PASSTHROUGH_LB
+  elif load_balancing_scheme == 'INTERNAL_MANAGED':
+    if not scope or scope == 'global':
+      if layer == 'application':
+        return LoadBalancerType.CROSS_REGION_INTERNAL_APPLICATION_LB
+      else:
+        return LoadBalancerType.CROSS_REGION_INTERNAL_PROXY_NETWORK_LB
+    else:
+      if layer == 'application':
+        return LoadBalancerType.REGIONAL_INTERNAL_APPLICATION_LB
+      else:
+        return LoadBalancerType.REGIONAL_INTERNAL_PROXY_NETWORK_LB
+  elif load_balancing_scheme == 'EXTERNAL_MANAGED':
+    if not scope or scope == 'global':
+      if layer == 'application':
+        return LoadBalancerType.GLOBAL_EXTERNAL_APPLICATION_LB
+      else:
+        return LoadBalancerType.GLOBAL_EXTERNAL_PROXY_NETWORK_LB
+    else:
+      if layer == 'application':
+        return LoadBalancerType.REGIONAL_EXTERNAL_APPLICATION_LB
+      else:
+        return LoadBalancerType.REGIONAL_EXTERNAL_PROXY_NETWORK_LB
+  return LoadBalancerType.LOAD_BALANCER_TYPE_UNSPECIFIED
 
 
 def normalize_url(url: str) -> str:
@@ -117,6 +215,10 @@ class BackendServices(models.Resource):
       return None
 
   @property
+  def protocol(self) -> str:
+    return self._resource_data.get('protocol', None)
+
+  @property
   def used_by_refs(self) -> List[str]:
     used_by = []
     for x in self._resource_data.get('usedBy', []):
@@ -127,6 +229,16 @@ class BackendServices(models.Resource):
         if match:
           used_by.append(match.group(1))
     return used_by
+
+  @property
+  def load_balancer_type(self) -> LoadBalancerType:
+    application_protocols = ['HTTP', 'HTTPS', 'HTTP2']
+    return get_load_balancer_type(
+        self.load_balancing_scheme,
+        self.region,
+        'application' if self.protocol in application_protocols else 'network',
+        backend_service_based=True,
+    )
 
 
 @caching.cached_api_call(in_memory=True)
@@ -425,6 +537,27 @@ class ForwardingRules(models.Resource):
             if target_proxy_target in backend_service.used_by_refs
         ]
     return []
+
+  @property
+  def load_balancer_type(self) -> LoadBalancerType:
+    target_type = None
+    if self.target:
+      parts = self.target.split('/')
+      if len(parts) >= 2:
+        target_type = parts[-2]
+
+    application_targets = [
+        'targetHttpProxies',
+        'targetHttpsProxies',
+        'targetGrpcProxies',
+    ]
+
+    return get_load_balancer_type(
+        self.load_balancing_scheme,
+        self.region,
+        'application' if target_type in application_targets else 'network',
+        target_type != 'targetPools',
+    )
 
 
 @caching.cached_api_call(in_memory=True)
