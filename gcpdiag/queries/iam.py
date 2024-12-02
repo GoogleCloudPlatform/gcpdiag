@@ -228,8 +228,15 @@ class BaseIAMPolicy(models.Resource):
       # Ignore all errors - there could be no rules involving this role
       try:
         _get_iam_role(role, self.project_id)
-      except (RoleNotFoundError, utils.GcpApiError):
-        pass
+      except (RoleNotFoundError, utils.GcpApiError) as err:
+        # Ignore roles if cannot retrieve a role
+        # For example, due to lack of permissions
+        if isinstance(err, utils.GcpApiError):
+          logging.error('API failure getting IAM roles: %s', err)
+          raise utils.GcpApiError(err) from err
+        elif isinstance(err, RoleNotFoundError):
+          logging.warning("Unable to get IAM role '%s', ignoring: %s", role,
+                          err)
 
     # Populate cache for service accounts used in the policy
     # Note: not implemented as a generator expression because
@@ -262,10 +269,12 @@ class BaseIAMPolicy(models.Resource):
       try:
         permissions.update(_get_iam_role(role, self.project_id).permissions)
       except (RoleNotFoundError, utils.GcpApiError) as err:
-        # Ignore roles if cannot retrieve a role
-        # For example, due to lack of permissions in an organization
-        logging.warning('Unable to find IAM role \'%s\', ignoring: %s', role,
-                        err)
+        if isinstance(err, utils.GcpApiError):
+          logging.error('API failure getting IAM roles: %s', err)
+          raise utils.GcpApiError(err) from err
+        elif isinstance(err, RoleNotFoundError):
+          logging.warning("Unable to find IAM role '%s', ignoring: %s", role,
+                          err)
     member_policy['permissions'] = permissions
 
   def _is_active_member(self, member: str) -> bool:
