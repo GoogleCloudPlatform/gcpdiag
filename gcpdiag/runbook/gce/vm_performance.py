@@ -524,6 +524,8 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
     file.close()
 
     vm_family = vm.machine_type()[0]
+    if vm.machine_type().split('-')[0] == 'custom':
+      vm_family = 'n'
 
     # Load instance level iops/throughput limits from json file
     vm_family_file = f'{dirname(__file__)}/disk_performance_benchmark/{vm_family}-family.json'
@@ -1065,9 +1067,14 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
                 ' H3, N1, N2, N2D, M1, M2, M3, T2D, T2A, Z3')
 
         elif vm_family == 'n':
-          if vm.machine_type().split('-')[0].upper() in ['N1', 'N2', 'N2D']:
+          if vm.machine_type().split('-')[0].upper() in [
+              'N1', 'N2', 'N2D', 'CUSTOM'
+          ]:
             next_hop = 'VM vCPU count'
-            search_str = vm.machine_type().split('-')[0].upper() + ' VMs'
+            if vm.machine_type().split('-')[0] == 'custom':
+              search_str = 'N1 VMs'
+            else:
+              search_str = vm.machine_type().split('-')[0].upper() + ' VMs'
             if disktype in ['pd-balanced', 'pd-ssd']:
               if cpu_count == 1:
                 next_hop_val = '1'
