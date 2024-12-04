@@ -117,61 +117,6 @@ class IpExhaustionStart(runbook.StartStep):
                     op.get(flags.PROJECT_ID)))
 
 
-class PodIpRangeExhaustion(runbook.Step):
-  """Check Pod IP Range Exhaustion and offer remediation.
-
-  Checks Pod IP range exhaustion and offers remediation step.
-  """
-
-  template = 'ipexhaustion::pod_ip_exhaustion'
-
-  def execute(self):
-    """Checking Pod IP Exhaustion and offering remediation steps"""
-
-    cluster = gke.get_cluster(op.get(flags.PROJECT_ID),
-                              cluster_id=op.get(flags.NAME),
-                              location=op.get(flags.LOCATION))
-    project = op.get(flags.PROJECT_ID)
-    location = op.get(flags.LOCATION)
-    name = op.get(flags.NAME)
-
-    # Check for exhaustion of pod range
-    pod_range_exhausted_error = 'GKE_IP_UTILIZATION_POD_RANGES_ALLOCATION_HIGH'
-    # Define the query strings to be used to search cloud logging.
-    filter_str = [
-        'log_id("networkanalyzer.googleapis.com/analyzer_reports")',
-        f'jsonPayload.causeCode="{pod_range_exhausted_error}"',
-        f'jsonPayload.resourceName:"//container.googleapis.com/projects/{project}"',
-        f'jsonPayload.resourceName:"clusters/{name}"',
-        f'jsonPayload.resourceName:"{location}"'
-    ]
-    filter_str = '\n'.join(filter_str)
-
-    ip_space_exhausted_pod_range_log_entries = local_realtime_query(filter_str)
-
-    if ip_space_exhausted_pod_range_log_entries:
-      op.info(
-          'Verifying if the cluster is an Autopilot cluster or a Standard cluster...'
-      )
-
-      if cluster.is_autopilot:
-        op.info('Cluster is an Autopilot cluster')
-        op.add_failed(cluster,
-                      reason=op.prep_msg(op.FAILURE_REASON, cluster_name=name),
-                      remediation=op.prep_msg(op.FAILURE_REMEDIATION))
-      else:
-        op.info('Cluster is a standard cluster')
-        op.add_failed(cluster,
-                      reason=op.prep_msg(op.FAILURE_REASON, cluster_name=name),
-                      remediation=op.prep_msg(op.FAILURE_REMEDIATION_ALT1))
-    else:
-      op.add_ok(
-          cluster,
-          reason=
-          (f'No Pod IP exhaustion issues found for cluster {name} in the project {project}'
-          ))
-
-
 class NodeIpRangeExhaustion(runbook.Step):
   """Check Node IP Range Exhaustion and offer remediation.
 
@@ -191,14 +136,20 @@ class NodeIpRangeExhaustion(runbook.Step):
     location = op.get(flags.LOCATION)
     name = op.get(flags.NAME)
     error_msg = 'IP_SPACE_EXHAUSTED'
+    node_subnet = cluster.get_subnet_name
+    # adding fltr variable, because otherwise the filter string will be longer than 100 chars
+    fltr = 'protoPayload.status.details.ipSpaceExhausted.networkOrSubnetworkResource.resourceName'
 
+    # using here ':' instead of '=' for 'protoPayload.status.message' because there could be
+    # status messages like 'IP_SPACE_EXHAUSTED,IP_SPACE_EXHAUSTED' instead of 'IP_SPACE_EXHAUSTED'
     filter_str = [
         'log_id("cloudaudit.googleapis.com/activity")',
         'protoPayload.methodName="v1.compute.instances.insert"',
         'resource.type="gce_instance"', 'severity=ERROR',
-        f'protoPayload.status.message="{error_msg}"',
+        f'protoPayload.status.message:"{error_msg}"',
         f'protoPayload.resourceName:"{location}"',
-        f'protoPayload.resourceName:"{name[:self.MAX_GKE_NAME_LENGTH]}"'
+        f'protoPayload.resourceName:"{name[:self.MAX_GKE_NAME_LENGTH]}"',
+        f'{fltr}="{node_subnet}"'
     ]
     filter_str = '\n'.join(filter_str)
 
@@ -209,14 +160,100 @@ class NodeIpRangeExhaustion(runbook.Step):
 
     # Check cloud log entries for IP exhaustion.
     if ip_space_exhausted_log_entries:
-      op.info(f'log entries with {error_msg} found in cloud logging for '
-              f'the cluster {name}')
+      op.info(
+          f'{error_msg} error found for cluster {name} and subnet {node_subnet}'
+      )
       op.add_failed(cluster,
-                    reason=op.prep_msg(op.FAILURE_REASON, cluster_name=name),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+                    reason=op.prep_msg(op.FAILURE_REASON,
+                                       cluster_name=name,
+                                       node_subnet=node_subnet),
+                    remediation=op.prep_msg(op.FAILURE_REMEDIATION,
+                                            node_subnet=node_subnet))
     else:
       op.add_ok(cluster,
                 reason=op.prep_msg(op.SUCCESS_REASON, cluster_name=name))
+
+
+class PodIpRangeExhaustion(runbook.Step):
+  """Check Pod IP Range Exhaustion and offer remediation.
+
+  Checks Pod IP range exhaustion and offers remediation step.
+  """
+
+  template = 'ipexhaustion::pod_ip_exhaustion'
+  MAX_GKE_SUBNET_NAME_LENGTH = 15
+  MAX_GKE_NAME_LENGTH = 16
+
+  def execute(self):
+    """Checking Pod IP Exhaustion and offering remediation steps"""
+
+    cluster = gke.get_cluster(op.get(flags.PROJECT_ID),
+                              cluster_id=op.get(flags.NAME),
+                              location=op.get(flags.LOCATION))
+    project = op.get(flags.PROJECT_ID)
+    location = op.get(flags.LOCATION)
+    name = op.get(flags.NAME)
+    error_msg = 'IP_SPACE_EXHAUSTED'
+    node_subnet = cluster.get_subnet_name
+    pool_config = cluster.get_nodepool_config
+    pool_nr = len(pool_config)
+    # adding fltr variable, because otherwise the filter string will be longer than 100 chars
+    fltr = 'protoPayload.status.details.ipSpaceExhausted.networkOrSubnetworkResource.resourceName'
+
+    # using here ':' instead of '=' for 'protoPayload.status.message' because there could be
+    # status messages like 'IP_SPACE_EXHAUSTED,IP_SPACE_EXHAUSTED' instead of 'IP_SPACE_EXHAUSTED'
+    filter_str = [
+        'log_id("cloudaudit.googleapis.com/activity")',
+        'protoPayload.methodName="v1.compute.instances.insert"',
+        'resource.type="gce_instance"', 'severity=ERROR',
+        f'protoPayload.status.message:"{error_msg}"',
+        f'protoPayload.resourceName:"{location}"',
+        f'protoPayload.resourceName:"{name[:self.MAX_GKE_NAME_LENGTH]}"'
+    ]
+
+    # creating a pod_ranges list from a set to exclude duplicates
+    pod_ranges = list(
+        {pool_config[i]['networkConfig']['podRange'] for i in range(pool_nr)})
+    # add opening parenthesis to the query
+    filter_str.append('(')
+
+    # create the filter for all subnets for all nodepools
+    for pod_range in pod_ranges:
+      resource = (f'{node_subnet[:self.MAX_GKE_SUBNET_NAME_LENGTH]}-'
+                  f'{pod_range[:self.MAX_GKE_SUBNET_NAME_LENGTH]}-')
+
+      # if it's the last element, don't add OR to the filter
+      if pod_range == pod_ranges[-1]:
+        filter_str.append(f'{fltr}:"{resource}"')
+      else:
+        filter_str.append(f'{fltr}:"{resource}" OR')
+
+    # add closing parenthesis to the query
+    filter_str.append(')')
+    filter_str = '\n'.join(filter_str)
+    ip_space_exhausted_pod_range_log_entries = local_realtime_query(filter_str)
+
+    if ip_space_exhausted_pod_range_log_entries:
+      op.info(
+          'Verifying if the cluster is an Autopilot cluster or a Standard cluster...'
+      )
+
+      if cluster.is_autopilot:
+        op.info('Cluster is an Autopilot cluster')
+        op.add_failed(cluster,
+                      reason=op.prep_msg(op.FAILURE_REASON, cluster_name=name),
+                      remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      else:
+        op.info('Cluster is a Standard cluster')
+        op.add_failed(cluster,
+                      reason=op.prep_msg(op.FAILURE_REASON, cluster_name=name),
+                      remediation=op.prep_msg(op.FAILURE_REMEDIATION_ALT1))
+    else:
+      op.add_ok(
+          cluster,
+          reason=
+          (f'No Pod IP exhaustion issues found for cluster {name} in the project {project}'
+          ))
 
 
 class IpExhaustionEnd(runbook.EndStep):

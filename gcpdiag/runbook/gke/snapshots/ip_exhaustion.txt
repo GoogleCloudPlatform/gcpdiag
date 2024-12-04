@@ -18,21 +18,22 @@ gke/ip-exhaustion: Troubleshooting ip exhaustion issues on GKE clusters.
      Cluster cluster-1 found in us-central1-c for project gcpdiag-gke3-gggg
 [AUTOMATED STEP]: Checking node IP Exhaustion and offering remediation steps
 [INFO]: Searching cloud logging for the string IP_SPACE_EXHAUSTED which indicates IP Exhaustion issue
-[INFO]: log entries with IP_SPACE_EXHAUSTED found in cloud logging for the cluster cluster-1
+[INFO]: IP_SPACE_EXHAUSTED error found for cluster cluster-1 and subnet public-subnet
 
    - gcpdiag-gke3-gggg/us-central1-c/cluster-1                            [FAIL]
      [REASON]
-     Node IP exhaustion is detected in the cluster cluster-1
+     Node IP exhaustion is detected in the cluster cluster-1 for the subnet public-subnet
 
 
      [REMEDIATION]
      Please follow the below documentation [1] to expand the ip range of the node subnet.
+     The subnet that has exhausted its IP space is public-subnet.
 
      [1] https://cloud.google.com/vpc/docs/create-modify-vpc-networks#expand-subnet
 
 [AUTOMATED STEP]: Checking Pod IP Exhaustion and offering remediation steps
 [INFO]: Verifying if the cluster is an Autopilot cluster or a Standard cluster...
-[INFO]: Cluster is a standard cluster
+[INFO]: Cluster is a Standard cluster
 
    - gcpdiag-gke3-gggg/us-central1-c/cluster-1                            [FAIL]
      [REASON]

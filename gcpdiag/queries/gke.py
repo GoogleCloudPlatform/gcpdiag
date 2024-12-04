@@ -384,6 +384,18 @@ class Cluster(models.Resource):
     return network.get_subnetwork(m.group(1), m.group(2), m.group(3))
 
   @property
+  def get_subnet_name(self) -> Optional[models.Resource]:
+    if 'subnetwork' not in self._resource_data:
+      return None
+    return self._resource_data['subnetwork']
+
+  @property
+  def get_nodepool_config(self) -> Optional[models.Resource]:
+    if 'nodePools' not in self._resource_data:
+      return None
+    return self._resource_data['nodePools']
+
+  @property
   def is_private(self) -> bool:
     if not 'privateClusterConfig' in self._resource_data:
       return False
