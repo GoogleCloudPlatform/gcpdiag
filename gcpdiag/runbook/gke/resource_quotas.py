@@ -146,7 +146,9 @@ class ClusterVersion(runbook.Step):
     clusters = gke.get_clusters(op.context)
     for cluster in clusters.values():
       resource_quota_exceeded = ResourceQuotaExceeded()
-      resource_quota_exceeded.cluster = cluster
+      resource_quota_exceeded.cluster_name = cluster.name
+      resource_quota_exceeded.cluster_location = cluster.location
+
       if cluster.master_version >= self.GKE_QUOTA_ENFORCEMENT_MIN_VERSION:
         resource_quota_exceeded.template = 'resourcequotas::higher_version_quota_exceeded'
       else:
@@ -157,22 +159,24 @@ class ClusterVersion(runbook.Step):
 class ResourceQuotaExceeded(runbook.Step):
   """Verifies that Kubernetes resource quotas have been exceeded or not.
   """
+  cluster_name: str
+  cluster_location: str
+  template: str = 'resourcequotas::lower_version_quota_exceeded'
 
   def execute(self):
     """
+    Verifies that Kubernetes resource quotas have been exceeded or not.
+
     If value for "start_time_utc" and "end_time_utc" are not provided as parameter
     then this step will check the logs for last 8 hours.
-
     Check if there is any "forbidden: exceeded quota" log entries.
     """
 
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
-    cluster_location = self.cluster.location
-    cluster_name = self.cluster.name
     error_message = 'protoPayload.status.message:"forbidden: exceeded quota"'
-    filter_str = f'resource.labels.location="{cluster_location}" \
-      resource.labels.cluster_name="{cluster_name}" {error_message}'
+    filter_str = f'resource.labels.location="{self.cluster_location}" \
+      resource.labels.cluster_name="{self.cluster_name}" {error_message}'
 
     log_entries = logs.realtime_query(project_id=project,
                                       filter_str=filter_str,
@@ -181,13 +185,16 @@ class ResourceQuotaExceeded(runbook.Step):
                                       end_time_utc=op.get(flags.END_TIME_UTC))
 
     if log_entries:
-      sample_log = log_entries[0]
+      # taking the last log entry to provide as output, because the latest log entry is always
+      # more relevant than the 1st
+      sample_log = 'No message' or log_entries[-1]['protoPayload']['status'][
+          'message']
       op.add_failed(project_path,
                     reason=op.prep_msg(op.FAILURE_REASON,
                                        LOG_ENTRY=sample_log,
-                                       CLUSTER=cluster_name,
+                                       CLUSTER=self.cluster_name,
                                        PROJECT=project,
-                                       LOCATION=cluster_location,
+                                       LOCATION=self.cluster_location,
                                        START_TIME_UTC=op.get(
                                            flags.START_TIME_UTC),
                                        END_TIME_UTC=op.get(flags.END_TIME_UTC)),
@@ -195,9 +202,9 @@ class ResourceQuotaExceeded(runbook.Step):
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   CLUSTER=cluster_name,
+                                   CLUSTER=self.cluster_name,
                                    PROJECT=project,
-                                   LOCATION=cluster_location,
+                                   LOCATION=self.cluster_location,
                                    START_TIME_UTC=op.get(flags.START_TIME_UTC),
                                    END_TIME_UTC=op.get(flags.END_TIME_UTC)))
 

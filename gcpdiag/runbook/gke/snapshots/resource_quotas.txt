@@ -1,4 +1,5 @@
-location=us-central1-c,project_id=gcpdiag-gke-cluster-autoscaler-rrrr
+end_time_utc=2024-12-09T07:40:16Z,project_id=gcpdiag-gke-cluster-autoscaler-
+rrrr,start_time_utc=2024-12-08T07:40:16Z
 
 gke/resource-quotas: Analyses logs in the project where the cluster is running.
 
@@ -9,12 +10,6 @@ gke/resource-quotas: Analyses logs in the project where the cluster is running.
 [START]: 
     Check the provided parameters.
     
-
-   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
-     [REASON]
-     No clusters found at location us-central1-c in project gcpdiag-gke-cluster-autoscaler-rrrr
-     [REMEDIATION]
-     Please verify the provided GKE cluster location
 [AUTOMATED STEP]: Verifying Cloud API state...
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [OK]
@@ -25,6 +20,46 @@ gke/resource-quotas: Analyses logs in the project where the cluster is running.
     Verify clusters running version. GKE doesn't enforce the Kubernetes
     resource quotas for clusters running version 1.28 or later.
     
+[AUTOMATED STEP]: Verifies that Kubernetes resource quotas usage is within optimal limits
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     The cluster gcp-cluster in location europe-west10-a in project gcpdiag-gke-cluster-autoscaler-rrrr has exceeded its kubernetes resource quota between 2024-12-08 07:40:16+00:00 and 2024-12-09 07:40:16+00:00 UTC.
+     Example log entry that would help identify involved objects:
+
+     No message
+
+     [REMEDIATION]
+     For clusters with under 100 nodes, GKE applies Kubernetes resource quota to every namespace. These quotas protect the cluster's control plane from instability caused by potential bugs in applications deployed to the cluster. You cannot remove these quotas because they are enforced by GKE.
+     See details: https://cloud.google.com/kubernetes-engine/quotas#resource_quotas
+     You can use below command to list resourcequota in your cluster.
+
+     `kubectl get resourcequota --all-namespaces`
+
+     Refer document to know more about resource quota: https://kubernetes.io/docs/concepts/policy/resource-quotas/
+
+     There are two resolutions for this issues regarding GKE resource quotas with name "gke-resource-quotas". Kindly open the GCP support case to increase a resource quota to a specific number or request to disable GKE resource quotas for the cluster.
+
+[AUTOMATED STEP]: Verifies that Kubernetes resource quotas usage is within optimal limits
+
+   - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
+     [REASON]
+     The cluster gcp-cluster in location europe-west10 in project gcpdiag-gke-cluster-autoscaler-rrrr has exceeded its kubernetes resource quota between 2024-12-08 07:40:16+00:00 and 2024-12-09 07:40:16+00:00 UTC.
+     Example log entry that would help identify involved objects:
+
+     No message
+
+     [REMEDIATION]
+     For clusters with under 100 nodes, GKE applies Kubernetes resource quota to every namespace. These quotas protect the cluster's control plane from instability caused by potential bugs in applications deployed to the cluster. You cannot remove these quotas because they are enforced by GKE.
+     See details: https://cloud.google.com/kubernetes-engine/quotas#resource_quotas
+     You can use below command to list resourcequota in your cluster.
+
+     `kubectl get resourcequota --all-namespaces`
+
+     Refer document to know more about resource quota: https://kubernetes.io/docs/concepts/policy/resource-quotas/
+
+     There are two resolutions for this issues regarding GKE resource quotas with name "gke-resource-quotas". Kindly open the GCP support case to increase a resource quota to a specific number or request to disable GKE resource quotas for the cluster.
+
 [END]: Finalizing `Resource Quotas` diagnostics...
 
 
