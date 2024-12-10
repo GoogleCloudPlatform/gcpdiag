@@ -310,20 +310,6 @@ class BackendHealth:
     return self._resource_data.get('healthState', 'UNHEALTHY')
 
 
-def _generate_health_response_callback(
-    backend_heath_statuses: List[BackendHealth], group: str):
-
-  def health_response_callback(request_id, response, exception):
-    del request_id, exception
-
-    # None is returned when backend type doesn't support health check
-    if response is not None:
-      for health_status in response.get('healthStatus', []):
-        backend_heath_statuses.append(BackendHealth(health_status, group))
-
-  return health_response_callback
-
-
 @caching.cached_api_call(in_memory=True)
 def get_backend_service_health(
     project_id: str,
@@ -340,34 +326,33 @@ def get_backend_service_health(
   backend_heath_statuses: List[BackendHealth] = []
 
   compute = apis.get_api('compute', 'v1', project_id)
-  batch = compute.new_batch_http_request()
 
-  for i, backend in enumerate(backend_service.backends):
+  for backend in backend_service.backends:
     group = backend['group']
     if not backend_service.region:
-      batch.add(
-          compute.backendServices().getHealth(
-              project=project_id,
-              backendService=backend_service.name,
-              body={'group': group},
-          ),
-          request_id=str(i),
-          callback=_generate_health_response_callback(backend_heath_statuses,
-                                                      group),
-      )
+      response = compute.backendServices().getHealth(
+          project=project_id,
+          backendService=backend_service.name,
+          body={
+              'group': group
+          },
+      ).execute(num_retries=config.API_RETRIES)
+      # None is returned when backend type doesn't support health check
+      if response is not None:
+        for health_status in response.get('healthStatus', []):
+          backend_heath_statuses.append(BackendHealth(health_status, group))
     else:
-      batch.add(
-          compute.regionBackendServices().getHealth(
-              project=project_id,
-              region=backend_service.region,
-              backendService=backend_service.name,
-              body={'group': group},
-          ),
-          request_id=str(i),
-          callback=_generate_health_response_callback(backend_heath_statuses,
-                                                      group),
-      )
-  batch.execute()
+      response = compute.regionBackendServices().getHealth(
+          project=project_id,
+          region=backend_service.region,
+          backendService=backend_service.name,
+          body={
+              'group': group
+          },
+      ).execute(num_retries=config.API_RETRIES)
+      if response is not None:
+        for health_status in response.get('healthStatus', []):
+          backend_heath_statuses.append(BackendHealth(health_status, group))
 
   return backend_heath_statuses
 
