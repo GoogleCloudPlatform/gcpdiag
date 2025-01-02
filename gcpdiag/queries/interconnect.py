@@ -110,6 +110,7 @@ def get_links(project_id: str) -> List[Interconnect]:
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.interconnects().list(project=project_id)
   response = request.execute(num_retries=config.API_RETRIES)
+  links = []
   if isinstance(response, dict):
     # Handle the case when 'response' is a dictionary
     links = [

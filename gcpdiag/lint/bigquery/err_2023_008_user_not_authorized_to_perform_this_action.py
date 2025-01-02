@@ -23,7 +23,7 @@ from boltons.iterutils import get_path
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
 
-MATCH_STR = ('User not authorized to perform this action')
+MATCH_STR = 'User not authorized to perform this action'
 
 USER_NOT_AUTHORIZED = [
     'severity=ERROR',
@@ -53,6 +53,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     return
   project_ok_flag = True
   useremail = ''
+  pubsub = None
   if (logs_by_project.get(context.project_id) and
       logs_by_project[context.project_id].entries):
     for log_entry in logs_by_project[context.project_id].entries:

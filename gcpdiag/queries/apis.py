@@ -236,7 +236,7 @@ def verify_access(project_id: str):
 
   try:
     if not is_enabled(project_id, 'cloudresourcemanager'):
-      service = f'cloudresourcemanager.{config.get("universe_domain")}'
+      service = f"cloudresourcemanager.{config.get('universe_domain')}"
       error_msg = (
           'Cloud Resource Manager API must be enabled. To enable, execute:\n'
           f'gcloud services enable {service} --project={project_id}')
@@ -244,30 +244,30 @@ def verify_access(project_id: str):
                               service=service,
                               reason='SERVICE_DISABLED')
     if not is_enabled(project_id, 'iam'):
-      service = f'iam.{config.get("universe_domain")}'
+      service = f"iam.{config.get('universe_domain')}"
       error_msg = (
           'Identity and Access Management (IAM) API must be enabled. To enable, execute:\n'
-          f'gcloud services enable iam.{config.get("universe_domain")} --project={project_id}'
+          f"gcloud services enable iam.{config.get('universe_domain')} --project={project_id}"
       )
       raise utils.GcpApiError(response=error_msg,
                               service=service,
                               reason='SERVICE_DISABLED')
     if not is_enabled(project_id, 'logging'):
-      service = f'logging.{config.get("universe_domain")}'
+      service = f"logging.{config.get('universe_domain')}"
       warning_msg = (
           'Cloud Logging API is not enabled (related rules will be skipped).'
           ' To enable, execute:\n'
-          f'gcloud services enable logging.{config.get("universe_domain")} --project={project_id}\n'
+          f"gcloud services enable logging.{config.get('universe_domain')} --project={project_id}\n"
       )
       raise utils.GcpApiError(response=warning_msg,
                               service=service,
                               reason='SERVICE_DISABLED')
   except utils.GcpApiError as err:
     if 'SERVICE_DISABLED' == err.reason:
-      if f'serviceusage.{config.get("universe_domain")}' == err.service:
+      if f"serviceusage.{config.get('universe_domain')}" == err.service:
         err.response += (
             '\nService Usage API must be enabled. To enable, execute:\n'
-            f'gcloud services enable serviceusage.{config.get("universe_domain")} '
+            f"gcloud services enable serviceusage.{config.get('universe_domain')} "
             f'--project={project_id}')
     else:
       logging.error('can\'t access project %s: %s', project_id, err.message)

@@ -32,6 +32,7 @@ from gcpdiag.queries import apis, crm, gce, network, web
 from gcpdiag.utils import Version
 
 # To avoid name conflict with L342
+# pylint: disable=invalid-name
 IPv4NetOrIPv6Net = network.IPv4NetOrIPv6Net
 
 DEFAULT_MAX_PODS_PER_NODE = 110
@@ -313,9 +314,9 @@ class Cluster(models.Resource):
 
   def has_network_policy_enabled(self) -> bool:
     # Network policy enforcement
-    return not (get_path(self._resource_data,
-                         ('addonsConfig', 'networkPolicyConfig', 'disabled'),
-                         default=False) is True)
+    return get_path(self._resource_data,
+                    ('addonsConfig', 'networkPolicyConfig', 'disabled'),
+                    default=False) is not True
 
   def has_dpv2_enabled(self) -> bool:
     # Checks whether dataplane V2 is enabled in clusters

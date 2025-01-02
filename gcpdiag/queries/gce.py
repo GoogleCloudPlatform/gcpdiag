@@ -1003,18 +1003,19 @@ def get_instance_serial_port_output(
         r'https://www.googleapis.com/compute/v1/projects/([^/]+)/zones/[^/]+/instances/([^/]+)',
         response['selfLink'],
     )
-  if not result:
-    logging.error("instance selfLink didn't match regexp: %s",
-                  response['selfLink'])
-    return None
+    if not result:
+      logging.error("instance selfLink didn't match regexp: %s",
+                    response['selfLink'])
+      return None
 
-  project_id = result.group(1)
-  instance_id = result.group(2)
-  return SerialPortOutput(
-      project_id,
-      instance_id=instance_id,
-      contents=response['contents'].splitlines(),
-  )
+    project_id = result.group(1)
+    instance_id = result.group(2)
+    return SerialPortOutput(
+        project_id,
+        instance_id=instance_id,
+        contents=response['contents'].splitlines(),
+    )
+  return None
 
 
 class Region(models.Resource):

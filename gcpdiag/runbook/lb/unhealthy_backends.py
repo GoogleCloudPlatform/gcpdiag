@@ -121,7 +121,7 @@ class UnhealthyBackendsStart(runbook.StartStep):
 
     try:
       op.info(f'name: {op.get(flags.BACKEND_SERVICE_NAME)}, region:'
-              f' {op.get(flags.REGION, "global")}')
+              f" {op.get(flags.REGION, 'global')}")
       backend_service = lb.get_backend_service(
           op.context.project_id,
           op.get(flags.BACKEND_SERVICE_NAME),
@@ -132,7 +132,7 @@ class UnhealthyBackendsStart(runbook.StartStep):
           proj,
           reason=(
               f'Backend service {op.get(flags.BACKEND_SERVICE_NAME)} does not'
-              f' exist in scope {op.get(flags.REGION, "global")} or project'
+              f" exist in scope {op.get(flags.REGION, 'global')} or project"
               f' {op.get(flags.PROJECT_ID)}'),
       )
       return  # Early exit if load balancer doesn't exist
@@ -148,7 +148,7 @@ class UnhealthyBackendsStart(runbook.StartStep):
           proj,
           reason=(
               f'Backend service {op.get(flags.BACKEND_SERVICE_NAME)} does not'
-              f' have any backends in scope {op.get(flags.REGION, "global")} or'
+              f" have any backends in scope {op.get(flags.REGION, 'global')} or"
               f' project {op.get(flags.PROJECT_ID)}'),
       )
       return  # Early exit if load balancer doesn't have any backends
@@ -482,7 +482,7 @@ class AnalyzeLatestHealthCheckLog(runbook.Gateway):
             reason=(f'Unsupported resource type {resource_type} for group'
                     f' {group} in backend service'
                     f' {op.get(flags.BACKEND_SERVICE_NAME)} in scope'
-                    f' {op.get(flags.REGION, "global")}'),
+                    f" {op.get(flags.REGION, 'global')}"),
         )
         continue
       serial_log_entries = logs.realtime_query(
@@ -714,7 +714,7 @@ class CheckPastHealthCheckSuccess(runbook.Step):
             reason=(f'Unsupported resource type {resource_type} for group'
                     f' {group} in backend service'
                     f' {op.get(flags.BACKEND_SERVICE_NAME)} in scope'
-                    f' {op.get(flags.REGION, "global")}'),
+                    f" {op.get(flags.REGION, 'global')}"),
         )
         continue
 

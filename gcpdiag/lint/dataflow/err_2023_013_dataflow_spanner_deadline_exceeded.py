@@ -11,9 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# Lint as: python3
-# pylint: disable=line-too-long
 """Dataflow job reading from spanner did not fail due to deadline exceeded error.
 
 The Dataflow job reading from spanner, failed with deadline exceeded error
@@ -89,7 +86,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       report.add_failed(
           project,
           f'{len(failed_jobs)} job(s) failed due to deadline exceeded'
-          f' errors: {", ".join(islice(failed_jobs, 20))} {extra_jobs}',
+          f" errors: {', '.join(islice(failed_jobs, 20))} {extra_jobs}",
       )
     else:
       # only irrelevant logs were fetched

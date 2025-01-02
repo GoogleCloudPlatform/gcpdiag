@@ -126,7 +126,7 @@ def _rank_runbook_rules(rules: Dict,
         rule, 'keywords') else 0
     name_count = sum(rule_name.count(keyword) for keyword in keywords)
     description_count = sum(description.count(keyword) for keyword in keywords)
-    score = ((kw_count * 3) + (name_count * 2) + description_count)
+    score = (kw_count * 3) + (name_count * 2) + description_count
 
     if score > 0:
       # Use negative score to achieve a max-heap
@@ -155,7 +155,7 @@ def _rank_lint_rules(rules: Iterable[LintRule],
                    for keyword in keywords) if rule.keywords else 0
     short_desc_count = sum(short_desc.count(keyword) for keyword in keywords)
     long_desc_count = sum(long_desc.count(keyword) for keyword in keywords)
-    score = ((kw_count * 3) + (short_desc_count + long_desc_count) * 2)
+    score = (kw_count * 3) + (short_desc_count + long_desc_count) * 2
 
     if score > 0:
       # Use negative score to achieve a max-heap

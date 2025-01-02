@@ -29,15 +29,17 @@ network_bridge_migs = {}
 def prefetch_rule(context: models.Context):
   network_bridge_migs[context.project_id] = (
       apigee.get_network_bridge_instance_groups(context.project_id))
-  if not network_bridge_migs[context.project_id]:
-    return
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   apigee_org = apigee.get_org(context)
-  if apigee_org is None:
+  if not apigee_org:
     report.add_skipped(None, 'no Apigee organization found')
+    return
+  if not network_bridge_migs[context.project_id]:
+    report.add_skipped(
+        None, 'no Apigee network bridge Managed Instance Group (MIGs) found')
     return
 
   if apigee_org.runtime_type == 'HYBRID':

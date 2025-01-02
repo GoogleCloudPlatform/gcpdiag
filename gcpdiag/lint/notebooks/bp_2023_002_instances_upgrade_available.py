@@ -43,9 +43,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     is_upgradeable = notebooks.instance_is_upgradeable(context, instance.name)
     upgradeable_message = (
         'Instance is upgradeable - '
-        f'upgradeVersion: "{is_upgradeable.get("upgradeVersion", "unknown")}", '
-        f'upgradeInfo: "{is_upgradeable.get("upgradeInfo", "unknown")}", '
-        f'upgradeImage: {is_upgradeable.get("upgradeImage", "unknown")}')
+        f"upgradeVersion: {is_upgradeable.get('upgradeVersion', 'unknown')}, "
+        f"upgradeInfo: {is_upgradeable.get('upgradeInfo', 'unknown')}, "
+        f"upgradeImage: {is_upgradeable.get('upgradeImage', 'unknown')}")
     if is_upgradeable.get('upgradeable', False):
       report.add_failed(instance, upgradeable_message)
     else:

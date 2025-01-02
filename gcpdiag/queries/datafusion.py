@@ -30,6 +30,7 @@ from gcpdiag.queries.generic_api.api_build import get_generic
 from gcpdiag.utils import Version
 
 # To avoid name conflict with L145
+# pylint: disable=invalid-name
 IPv4NetOrIPv6Net = network.IPv4NetOrIPv6Net
 
 
@@ -290,7 +291,7 @@ class Profile(models.Resource):
     projects/{project}/instances/{instance}/computeProfiles/{profile}.
     """
     return (f'projects/{self.project_id}/instances/{self.instance_name}'
-            f'/computeProfiles/{self._resource_data["name"]}')
+            f"/computeProfiles/{self._resource_data['name']}")
 
   @property
   def short_path(self) -> str:
@@ -299,7 +300,7 @@ class Profile(models.Resource):
     {project}/{instance}/{profile}.
     """
     return (
-        f'{self.project_id}/{self.instance_name}/{self._resource_data["name"]}')
+        f"{self.project_id}/{self.instance_name}/{self._resource_data['name']}")
 
   @property
   def name(self) -> str:

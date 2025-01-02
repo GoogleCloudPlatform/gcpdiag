@@ -73,6 +73,7 @@ class PubsubApiStub(apis_stub.ApiStub):
   def execute(self, num_retries: int = 0):
     if self.mock_state == 'subscription':
       m = re.match(r'projects/([^/]+)/subscriptions/([^/]+)', self.subscription)
+      project_id = ''
       if m:
         project_id = m.group(1)
       json_dir = apis_stub.get_json_dir(project_id)

@@ -197,8 +197,8 @@ fetch gce_instance
   # We need log entries within the past 20-minute timeframe.
   start_time = now - timedelta(minutes=20)
   time_filter = (
-      f'timestamp>="{start_time.isoformat(timespec="seconds")}" AND timestamp'
-      f' <= "{now.isoformat(timespec="seconds")}"')
+      f"timestamp>=\"{start_time.isoformat(timespec='seconds')}\" AND timestamp"
+      f" <= \"{now.isoformat(timespec='seconds')}\"")
   _syslog_query[context.project_id] = logs.query(
       project_id=context.project_id,
       resource_type='gce_instance',

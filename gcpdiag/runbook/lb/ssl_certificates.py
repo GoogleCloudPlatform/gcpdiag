@@ -384,7 +384,7 @@ class CheckCertificateAttachment(runbook.Gateway):
           certificate,
           reason=
           ('The SSL certificate is attached to target proxies:'
-           f' {", ".join([tp.full_path for tp in target_proxies_with_certificate])} that'
+           f" {', '.join([tp.full_path for tp in target_proxies_with_certificate])} that"
            ' are not in use by any forwarding rules.'),
           remediation='Please attach the target proxies to forwarding rules',
       )
@@ -553,7 +553,7 @@ class VerifyForwardingRulesPort(runbook.Step):
         misconfigured_entities.append(
             'The following forwarding rules with certificate'
             f' {certificate.name}: \n'
-            f' {", ".join([fr.full_path for fr in frs])} \n use IP address'
+            f" {', '.join([fr.full_path for fr in frs])} \n use IP address"
             f' {ip_address} but none of them listen on port 443. \n')
 
     if misconfigured_entities:
@@ -605,7 +605,7 @@ class VerifyNoCertificateMapConflict(runbook.Step):
       target_proxy_conflicts = [
           f'Target Proxy: {target_proxy.full_path} has certificate map'
           f' {target_proxy.certificate_map} together with classic SSL'
-          f' certificates {", ".join(target_proxy.ssl_certificates)}'
+          f" certificates {', '.join(target_proxy.ssl_certificates)}"
           for target_proxy in conflicting_target_proxies
       ]
       op.add_failed(

@@ -725,7 +725,7 @@ class CheckPortExhaustion(runbook.CompositeStep):
       return
 
     check_port_exhaustion_log = dp_gs.CheckLogsExist()
-    check_port_exhaustion_log.template = ('logs_related::port_exhaustion')
+    check_port_exhaustion_log.template = 'logs_related::port_exhaustion'
     check_port_exhaustion_log.log_message = dp_const.PORT_EXHAUSTION_LOG
     self.add_child(child=check_port_exhaustion_log)
 
@@ -762,7 +762,7 @@ class CheckPythonImportFailure(runbook.CompositeStep):
       return
 
     check_python_import = dp_gs.CheckLogsExist()
-    check_python_import.template = ('logs_related::check_python_import_failure')
+    check_python_import.template = 'logs_related::check_python_import_failure'
     check_python_import.log_message = dp_const.PYTHON_IMPORT_LOG
     self.add_child(child=check_python_import)
 

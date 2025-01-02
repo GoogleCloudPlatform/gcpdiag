@@ -47,9 +47,10 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   query = logs_by_project[context.project_id]
   for log_entry in query.entries:
-    if MATCH_STR not in get_path(
-        log_entry, ('textPayload'),
-        default='') or get_path(log_entry, ('severity'), default='') != 'ERROR':
+    if MATCH_STR not in get_path(log_entry,
+                                 ('textPayload'), default='') or get_path(
+                                     log_entry,
+                                     ('severity'), default='') != 'ERROR':
       continue
     function_name = get_path(log_entry, ('resource', 'labels', 'function_name'),
                              default='')

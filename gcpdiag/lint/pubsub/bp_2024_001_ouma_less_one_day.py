@@ -61,28 +61,27 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not ouma_tracker:
     report.add_skipped(None, 'no subscription metrics found')
 
-  failing_subscriptions = set()
+  failing_subs = set()
   for subscription_name, ouma_metric in ouma_tracker.items():
     for metric_values in ouma_metric.values():
       # eval needs to unwrap Dict result similar to {..., 'values': [[0.0]]}
       if get_path(metric_values, ('values'))[0][0] > 24:
-        failing_subscriptions.add(subscription_name)
+        failing_subs.add(subscription_name)
 
   # reporting
-  if failing_subscriptions:
-    extra_subscriptions = ''
-    if len(failing_subscriptions) > MAX_SUBSCRIPTIONS_TO_DISPLAY:
-      extra_subscriptions = (
-          ', and'
-          f' {len(failing_subscriptions) - MAX_SUBSCRIPTIONS_TO_DISPLAY} more'
-          ' subscriptions')
+  if failing_subs:
+    extra_subs = ''
+    if len(failing_subs) > MAX_SUBSCRIPTIONS_TO_DISPLAY:
+      extra_subs = (', and'
+                    f' {len(failing_subs) - MAX_SUBSCRIPTIONS_TO_DISPLAY} more'
+                    ' subscriptions')
 
     # pylint: disable=line-too-long
     report.add_failed(
         project,
-        f'{len(failing_subscriptions)} subscriptions have an'
+        f'{len(failing_subs)} subscriptions have an'
         ' oldest_unacked_message_age of more than 24 hours'
-        f' {", ".join(islice(failing_subscriptions, MAX_SUBSCRIPTIONS_TO_DISPLAY))}{extra_subscriptions}',
+        f" {', '.join(islice(failing_subs, MAX_SUBSCRIPTIONS_TO_DISPLAY))}{extra_subs}",
     )
   # pylint: enable=line-too-long
   else:

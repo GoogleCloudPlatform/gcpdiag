@@ -114,7 +114,7 @@ class VmTerminationStart(runbook.StartStep):
   def execute(self):
     """Starting VM Termination diagnostics"""
     project = crm.get_project(op.get(flags.PROJECT_ID))
-
+    vm = None
     try:
       name = op.get(flags.NAME) or op.get(flags.ID)
       if name and op.get(flags.ZONE):
@@ -130,9 +130,9 @@ class VmTerminationStart(runbook.StartStep):
           reason=('Instance {} does not exist in zone {} or project {}').format(
               op.get(flags.NAME), op.get(flags.ZONE), op.get(flags.PROJECT_ID)))
     else:
-      if name.isdigit():
+      if vm and name.isdigit():
         op.put(flags.NAME, vm.name)
-      else:
+      elif vm and not name.isdigit():
         op.put(flags.ID, vm.id)
       op.put(SCOPE_TO_SINGLE_VM, True)
 
@@ -217,7 +217,7 @@ class SingleTerminationCheck(runbook.Step):
         'zone': op.get(flags.ZONE),
         'instance_name': op.get(flags.NAME)
     }
-    status_check.attribute = ('status')
+    status_check.attribute = ('status',)
     status_check.expected_value = 'RUNNING'
     status_check.template = 'gcpdiag.runbook.gce::vm_attributes::terminated_vm_running'
     status_check.extract_args = {

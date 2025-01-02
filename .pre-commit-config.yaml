@@ -15,7 +15,7 @@
 exclude: '/snapshots/'
 repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v4.0.1
+  rev: v5.0.0
   hooks:
   - id: check-added-large-files
   - id: check-ast
@@ -51,18 +51,18 @@ repos:
   hooks:
   - id: isort
 
-- repo: https://github.com/pre-commit/mirrors-yapf
-  rev: v0.31.0
+- repo: https://github.com/google/yapf
+  rev: v0.40.2
   hooks:
   - id: yapf
 
-- repo: https://github.com/pycqa/pylint
-  rev: v2.15.10
+- repo: https://github.com/pylint-dev/pylint
+  rev: v3.3.1
   hooks:
   - id: pylint
 
 - repo: https://github.com/antonbabenko/pre-commit-terraform
-  rev: v1.52.0
+  rev: v1.96.1
   hooks:
   - id: terraform_fmt
   - id: terraform_validate

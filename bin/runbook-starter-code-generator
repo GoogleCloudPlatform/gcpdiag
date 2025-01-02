@@ -200,7 +200,8 @@ def gen_starter_code(args_: dict):
     _git_operations(runbook_name)
   dir_path = f'gcpdiag/runbook/{product}'
   filename = id_.replace('-', '_')
-  dt_name = re.sub(r'(^|-)([a-z0-9])', lambda match: match.group(2).upper(), id_)
+  dt_name = re.sub(r'(^|-)([a-z0-9])', lambda match: match.group(2).upper(),
+                   id_)
 
   # Create necessary directories
   os.makedirs(os.path.join(dir_path, 'templates'), exist_ok=True)
