@@ -1,0 +1,2 @@
+*  gke/ERR/2025_001: When the constraints/compute.disableSerialPortLogging policy is enabled,
+GKE clusters must be created with logging disabled (serial-port-logging-enable: 'false')
