@@ -489,9 +489,7 @@ class Cluster(models.Resource):
     try:
       # Get the policy constraint status
       constraint = orgpolicy.get_effective_org_policy(
-          self.project_id,
-                'constraints/compute.disableSerialPortLogging'
-            )
+          self.project_id, 'constraints/compute.disableSerialPortLogging')
 
       # If policy is not enforced, return None (no compliance check needed)
       if not isinstance(
