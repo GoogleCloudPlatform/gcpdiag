@@ -85,7 +85,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
           project,
           f'{len(failed_jobs)} job(s) are stuck due to computation does not'
           ' have the state family warnings:'
-          f' {", ".join(islice(failed_jobs, 20))} {extra_jobs}',
+          f" {', '.join(islice(failed_jobs, 20))} {extra_jobs}",
       )
     else:
       # only irrelevant logs were fetched

@@ -30,7 +30,6 @@ terraform {
 
 resource "random_string" "project_id_suffix" {
   length  = 8
-  number  = true
   lower   = true
   upper   = false
   special = false

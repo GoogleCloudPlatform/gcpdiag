@@ -67,10 +67,9 @@ resource "google_project_iam_member" "bq_editor" {
 }
 
 resource "google_bigquery_dataset" "pubsub1_dataset" {
-  project                     = google_project.project.project_id
-  dataset_id                  = "pubsub1_dataset"
-  provider                    = google-beta
-  default_table_expiration_ms = 2592000000
+  project    = google_project.project.project_id
+  dataset_id = "pubsub1_dataset"
+  provider   = google-beta
 }
 
 resource "google_bigquery_table" "pubsub1_table" {

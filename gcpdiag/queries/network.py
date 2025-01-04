@@ -23,6 +23,7 @@ from typing import Any, Dict, FrozenSet, Iterable, List, Optional, Union
 from gcpdiag import caching, config, models
 from gcpdiag.queries import apis, apis_utils, iam
 
+#pylint: disable=invalid-name
 IPv4AddrOrIPv6Addr = Union[ipaddress.IPv4Address, ipaddress.IPv6Address]
 IPv4NetOrIPv6Net = Union[ipaddress.IPv4Network, ipaddress.IPv6Network]
 IPAddrOrNet = Union[IPv4AddrOrIPv6Addr, IPv4NetOrIPv6Net]

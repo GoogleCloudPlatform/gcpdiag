@@ -101,7 +101,7 @@ class NodeUnavailabilityStart(runbook.StartStep):
     clusters = gke.get_clusters(op.context)
     if not clusters:
       op.add_skipped(project_path,
-                     reason=(f'No GKE clusters found in project {project}'))
+                     reason=f'No GKE clusters found in project {project}')
       return
 
     # check if there were any node unavailability logs for the provided node

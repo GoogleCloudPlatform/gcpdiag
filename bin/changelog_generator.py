@@ -53,6 +53,7 @@ def find_queries(file, commit):
         function_name = ''
         if match:
           function_name = match.group(1)
+          message = ''
           for node in ast.walk(tree):
             if isinstance(node, ast.FunctionDef) and node.name == function_name:
               message = ast.get_docstring(node) or 'No Message found'

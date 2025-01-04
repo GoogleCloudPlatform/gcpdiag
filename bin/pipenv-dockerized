@@ -1,13 +1,14 @@
 #!/bin/bash
 
 if [ "$#" == "0" ]; then
-  echo "usage: $0 PYTHON_VERSION COMMAND ARG1 ARG2" >&2
+  echo "usage: $0 PYTHON_VERSION COMMAND ARG1 ARG2 ARG3" >&2
   exit 1
 fi
 PYTHON_VERSION="$1"
-shift
+IMAGE_TAG="$2"
+shift 2
 
-IMAGE="us-docker.pkg.dev/gcpdiag-dist/common/gcpdiag-pipenv-python-${PYTHON_VERSION}:0.8"
+IMAGE="us-docker.pkg.dev/gcpdiag-dist/common/gcpdiag-pipenv-python-${PYTHON_VERSION}:${IMAGE_TAG}"
 
 USE_TTY=""
 CWD=$(pwd)

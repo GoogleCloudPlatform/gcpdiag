@@ -22,12 +22,6 @@ from gcpdiag import lint, models
 from gcpdiag.queries import gce
 
 
-def prepare_rule(context: models.Context):
-  groups = gce.get_instance_groups(context)
-  if not groups:
-    return
-
-
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   groups = gce.get_instance_groups(context).values()
   if len(groups) == 0:

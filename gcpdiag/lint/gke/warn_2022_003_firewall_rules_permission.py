@@ -59,6 +59,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     if failed:
       report.add_failed(c, (f'service account: {sa}\n'
                             f'VPC network: {c.network.short_path}\n'
-                            f'missing permissions: {",".join(missing)})'))
+                            f"missing permissions: {','.join(missing)})"))
     else:
       report.add_ok(c)

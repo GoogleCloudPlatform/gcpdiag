@@ -11,9 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# Lint as: python3
-# pylint: disable=line-too-long
 """Dataflow job is not returning KeyCommitTooLargeException errors.
 
 The Dataflow job will return this error due to grouping of a very large amount
@@ -87,7 +84,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       report.add_failed(
           project,
           f'{len(failed_jobs)} job(s) contain `KeyCommitTooLargeException`'
-          f' errors: {", ".join(islice(failed_jobs, 20))} {extra_jobs}',
+          f" errors: {', '.join(islice(failed_jobs, 20))} {extra_jobs}",
       )
     else:
       # only irrelevant logs were fetched

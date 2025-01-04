@@ -179,13 +179,13 @@ class NodeAutoRepairStart(runbook.StartStep):
       if not clusters:
         op.add_skipped(
             project_path,
-            reason=(f'No {name} GKE cluster found in project {project}'))
+            reason=f'No {name} GKE cluster found in project {project}')
         return
     else:
       clusters = gke.get_clusters(op.context)
       if not clusters:
         op.add_skipped(project_path,
-                       reason=(f'No GKE clusters found in project {project}'))
+                       reason=f'No GKE clusters found in project {project}')
         return
 
     # check if there were any repair operations for provided node

@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# pylint: disable=cyclic-import
 """Stub API calls used in apis.py for testing."""
 
 import json
@@ -22,7 +23,6 @@ import googleapiclient.errors
 import httplib2
 
 # pylint: disable=unused-argument
-
 JSON_PROJECT_DIR = {
     'gcpdiag-apigee1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/apigee1/json-dumps',

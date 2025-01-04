@@ -313,6 +313,10 @@ class NatIpAllocationManualOnly(runbook.Step):
     Running diagnostic for NAT Gateway configured as MANUAL_ONLY only
     """
     project = crm.get_project(op.get(flags.PROJECT_ID))
+    enable_dynamic_port_allocation = None
+    nat_gw_ips_in_use = None
+    min_extra_ips_needed = None
+    vms_with_nat_mappings = None
 
     # try to fetch the network for the NATGW
     try:

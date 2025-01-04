@@ -120,8 +120,7 @@ def _notification_required(version: Version, eol_schedule: Dict) -> bool:
 
 def _get_notification_msg(version: Version, eol_schedule: Dict) -> str:
   short_version = f'{version.major}.{version.minor}'
-  msg = f'''GKE version {short_version}\n
-    scheduled end of life: {eol_schedule[short_version]["eol"]}'''
+  msg = f"GKE version {short_version} scheduled end of life: {eol_schedule[short_version]['eol']}"
   if 'estimated' in eol_schedule[short_version]:
     msg += ' (estimation)'
   return msg

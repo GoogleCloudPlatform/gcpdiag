@@ -28,9 +28,9 @@ from typing import Any, Dict, List, Optional
 from gcpdiag import config, models
 from gcpdiag.runbook import constants, util
 from gcpdiag.runbook.flags import INTERACTIVE_MODE
+from gcpdiag.runbook.output import terminal_output
 from gcpdiag.runbook.output.api_output import ApiOutput
 from gcpdiag.runbook.output.base_output import BaseOutput
-from gcpdiag.runbook.output.terminal_output import TerminalOutput
 
 
 @dataclasses.dataclass
@@ -271,18 +271,21 @@ class ReportManager:
     return reports_metrics
 
   def add_step_metadata(self, run_id, key, value, step_execution_id):
+    step_result = None
     if step_execution_id:
       step_result = self.reports[run_id].results[step_execution_id]
     if step_result:
       step_result.metadata[key] = value
 
   def add_step_info_metadata(self, run_id, value, step_execution_id):
+    step_result = None
     if step_execution_id:
       step_result = self.reports[run_id].results[step_execution_id]
     if step_result:
       step_result.info.append(value)
 
   def get_step_metadata(self, run_id, key, step_execution_id):
+    step_result = None
     if step_execution_id:
       step_result = self.reports[run_id].results[step_execution_id]
     if step_result:
@@ -290,6 +293,7 @@ class ReportManager:
     return None
 
   def get_all_step_metadata(self, run_id, step_execution_id) -> dict:
+    step_result = None
     if step_execution_id:
       step_result = self.reports[run_id].results[step_execution_id]
     if step_result:
@@ -354,7 +358,7 @@ class InteractionInterface:
   def __init__(self, kind) -> None:
     if kind == constants.CLI:
       self.rm = TerminalReportManager()
-      self.output = TerminalOutput()
+      self.output = terminal_output.TerminalOutput()
     elif kind == constants.API:
       self.rm = ApiReportManager()
       self.output = ApiOutput()

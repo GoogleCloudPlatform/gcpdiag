@@ -11,10 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# Lint as: python3
-# pylint: disable=line-too-long
-"""Splunk HEC endpoint uses a valid public SSL certificate, or a correct root-CA certificate is provided.
+"""Splunk HEC endpoint uses a valid public SSL certificate, or a correct root-CA certificate.
 
 The Dataflow job will fail if the root-CA certificate provided is not the
 correct one or if the endpoint is not signed by a valid issuer.
@@ -88,7 +85,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       report.add_failed(
           project,
           f'{len(failed_jobs)} job(s) contain invalid certification path'
-          f' errors: {", ".join(islice(failed_jobs, 20))} {extra_jobs}',
+          f" errors: {', '.join(islice(failed_jobs, 20))} {extra_jobs}",
       )
     else:
       # only irrelevant logs were fetched

@@ -64,7 +64,7 @@ class NatIpExhaustionCheck(runbook.Step):
     else:
       op.add_uncertain(
           vm,
-          f'Cloud not get IP allocation failed metric for NATGW {op.get("nat_gateway_name")}'
+          f"Cloud not get IP allocation failed metric for NATGW {op.get('nat_gateway_name')}"
       )
 
 
@@ -119,7 +119,7 @@ class NatResourceExhaustionCheck(runbook.Step):
     else:
       op.add_uncertain(
           vm,
-          f'Cloud not get dropped sent packets count metric for NATGW {op.get("nat_gateway_name")}'
+          f"Cloud not get dropped sent packets count metric for NATGW {op.get('nat_gateway_name')}"
       )
 
 
@@ -215,4 +215,4 @@ class NatDroppedReceivedPacketCheck(runbook.Step):
     else:
       op.add_uncertain(
           vm, 'Cloud not get dropped_received_packets_count'
-          f'metric for NATGW {op.get("nat_gateway_name")}')
+          f"metric for NATGW {op.get('nat_gateway_name')}")

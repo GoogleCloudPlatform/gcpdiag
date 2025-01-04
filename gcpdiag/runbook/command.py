@@ -197,12 +197,11 @@ def _init_runbook_args_parser():
       ('Specifies the full path to the directory where reports '
        'will be saved (default: /tmp/gcpdiag or in Cloud Shell $HOME/tmp/gcpdiag)'
       ))
-  parser.add_argument(
-      '--interface',
-      metavar='FORMATTER',
-      default=config.get('interface'),
-      type=str,
-      help=('What interface as one of [cli, api] (default: cli)'))
+  parser.add_argument('--interface',
+                      metavar='FORMATTER',
+                      default=config.get('interface'),
+                      type=str,
+                      help='What interface as one of [cli, api] (default: cli)')
 
   parser.add_argument('--universe-domain',
                       type=str,
@@ -219,8 +218,7 @@ def _init_runbook_args_parser():
 
 def _load_runbook_rules(package: str):
   """Recursively import all submodules under a package, including subpackages."""
-  if isinstance(package, str):
-    pkg = importlib.import_module(package)
+  pkg = importlib.import_module(package)
   for _, name, is_pkg in pkgutil.walk_packages(
       pkg.__path__,  # type: ignore
       pkg.__name__ + '.'):

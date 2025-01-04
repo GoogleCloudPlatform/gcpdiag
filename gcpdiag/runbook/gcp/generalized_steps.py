@@ -192,7 +192,7 @@ class ServiceApiStatusCheck(runbook.Step):
     """Verifying Cloud API state..."""
     project = crm.get_project(op.get(flags.PROJECT_ID))
     is_enabled = apis.is_enabled(op.get(flags.PROJECT_ID), self.api_name)
-    service_name = f'{self.api_name}.{config.get("universe_domain")}'
+    service_name = f"{self.api_name}.{config.get('universe_domain')}"
     actual_state = constants.APIState.ENABLED if is_enabled else constants.APIState.DISABLED
     if self.expected_state == actual_state:
       op.add_ok(

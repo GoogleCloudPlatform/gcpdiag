@@ -34,7 +34,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 
 
 # terraform
-RUN curl https://releases.hashicorp.com/terraform/1.9.6/terraform_1.9.6_openbsd_amd64.zip -O \
+RUN curl https://releases.hashicorp.com/terraform/1.9.6/terraform_1.9.6_linux_386.zip -O \
        && unzip -o *.zip -d /usr/bin/ terraform \
        && chmod +x /usr/bin/terraform \
        && rm *.zip
