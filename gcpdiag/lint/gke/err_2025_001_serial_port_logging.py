@@ -24,38 +24,38 @@ from gcpdiag import lint, models
 from gcpdiag.queries import gke
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-    clusters = gke.get_clusters(context)
-    clusters_checked = 0
+  clusters = gke.get_clusters(context)
+  clusters_checked = 0
 
-    for cluster in clusters.values():
-        clusters_checked += 1
+  for cluster in clusters.values():
+    clusters_checked += 1
 
-        try:
-            # Skip Autopilot clusters as they are managed by Google
-            if cluster.is_autopilot:
-                report.add_skipped(cluster,
-                    'Skipping Autopilot cluster - serial port logging managed by Google')
-                continue
+    try:
+      # Skip Autopilot clusters as they are managed by Google
+      if cluster.is_autopilot:
+        report.add_skipped(
+            cluster,
+            'Skipping Autopilot cluster - serial port logging managed by Google'
+        )
+        continue
 
-            # Check if cluster complies with serial port logging policy
-            if cluster.is_serial_port_logging_compliant():
-                report.add_ok(cluster)
-            else:
-                report.add_failed(
-                    cluster,
-                    msg=(
-                        'Cluster does not comply with serial port logging policy. '
-                        'When constraints/compute.disableSerialPortLogging is enabled, '
-                        'all node pools must have serial-port-logging-enable set to false'
-                    ),
-                    remediation=(
-                        'Update the node pool metadata to set '
-                        '"serial-port-logging-enable": "false" for all node pools'
-                    )
-                )
+      # Check if cluster complies with serial port logging policy
+      if cluster.is_serial_port_logging_compliant():
+        report.add_ok(cluster)
+      else:
+        report.add_failed(
+            cluster,
+            msg=
+            ('Cluster does not comply with serial port logging policy. '
+             'When constraints/compute.disableSerialPortLogging is enabled, '
+             'all node pools must have serial-port-logging-enable set to false'
+            ),
+            remediation=(
+                'Update the node pool metadata to set '
+                '"serial-port-logging-enable": "false" for all node pools'))
 
-        except Exception as e:
-            report.add_skipped(cluster, f'Error checking cluster: {str(e)}')
+    except Exception as e:
+      report.add_skipped(cluster, f'Error checking cluster: {str(e)}')
 
-    if not clusters_checked:
-        report.add_skipped(None, 'No clusters found')
+  if not clusters_checked:
+    report.add_skipped(None, 'No clusters found')

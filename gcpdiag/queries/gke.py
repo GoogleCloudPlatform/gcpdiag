@@ -28,7 +28,7 @@ import requests
 from boltons.iterutils import get_path
 
 from gcpdiag import caching, config, models, utils
-from gcpdiag.queries import apis, crm, gce, network, web, orgpolicy
+from gcpdiag.queries import apis, crm, gce, network, orgpolicy, web
 from gcpdiag.utils import Version
 
 # To avoid name conflict with L342
@@ -479,49 +479,51 @@ class Cluster(models.Resource):
     raise UndefinedClusterPropertyError('no id')
 
   def check_serial_port_logging_policy(self) -> Optional[bool]:
-        """
+    """
         Checks if serial port logging policy is enforced and if cluster complies with it.
 
         Returns:
             bool: True if cluster complies with policy, False if not compliant,
                  None if policy not enforced
         """
-        try:
-            # Get the policy constraint status
-            constraint = orgpolicy.get_effective_org_policy(
-                self.project_id,
+    try:
+      # Get the policy constraint status
+      constraint = orgpolicy.get_effective_org_policy(
+          self.project_id,
                 'constraints/compute.disableSerialPortLogging'
             )
 
-            # If policy is not enforced, return None (no compliance check needed)
-            if not isinstance(constraint, orgpolicy.BooleanPolicyConstraint) or not constraint.is_enforced():
-                return None
+      # If policy is not enforced, return None (no compliance check needed)
+      if not isinstance(
+          constraint,
+          orgpolicy.BooleanPolicyConstraint) or not constraint.is_enforced():
+        return None
 
-            # Get cluster node pools
-            for nodepool in self.nodepools:
-                # Check if serial port logging is disabled in node config metadata
-                if nodepool.config.is_serial_port_logging_enabled():
-                    return False
+      # Get cluster node pools
+      for nodepool in self.nodepools:
+        # Check if serial port logging is disabled in node config metadata
+        if nodepool.config.is_serial_port_logging_enabled():
+          return False
 
-            return True
+      return True
 
-        except ValueError:
-            # Policy not found or not supported
-            return None
-        except Exception as e:
-            logging.error(f"Error checking serial port logging policy: {e}")
-            return None
+    except ValueError:
+      # Policy not found or not supported
+      return None
+    except Exception as e:
+      logging.error(f"Error checking serial port logging policy: {e}")
+      return None
 
   def is_serial_port_logging_compliant(self) -> bool:
-        """
+    """
         Checks if the cluster is compliant with serial port logging policy.
 
         Returns:
             bool: True if compliant or policy not enforced, False if non-compliant
         """
-        compliance = self.check_serial_port_logging_policy()
-        # Return True if policy is not enforced (compliance is None) or cluster is compliant
-        return compliance is None or compliance
+    compliance = self.check_serial_port_logging_policy()
+    # Return True if policy is not enforced (compliance is None) or cluster is compliant
+    return compliance is None or compliance
 
 
 @caching.cached_api_call
