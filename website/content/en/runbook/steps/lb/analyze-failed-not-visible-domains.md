@@ -18,10 +18,6 @@ None
 
 The following domains are in "FAILED_NOT_VISIBLE" state: {domains}. This usually means the domain's DNS records aren't correctly pointing to your load balancer.
 
-### Failure Remediation
-
-Further investigation is required. This runbook will proceed with additional checks.
-
 
 
 <!--

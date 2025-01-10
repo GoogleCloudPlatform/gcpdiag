@@ -16,11 +16,7 @@ None
 
 ### Failure Reason
 
-We detected that the certificate "{name}" is not in ACTIVE state.
-
-### Failure Remediation
-
-Further investigation is required to identify the root cause and apply appropriate fixes
+The certificate "{name}" is not in ACTIVE state.
 
 ### Success Reason
 

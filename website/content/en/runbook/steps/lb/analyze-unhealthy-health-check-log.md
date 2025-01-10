@@ -16,8 +16,8 @@ None
 
 ### Uncertain Reason
 
-In the health check logs, we found logs with the detailed health state UNHEALTHY, which means the endpoint is reachable but does not conform to the requirements defined by the health check.
-The following responses were received from your backends: {probe_results_text_str}
+Health check logs show the detailed health state UNHEALTHY meaning the endpoint is reachable but doesn't meet the health check requirements.
+Responses received from backends: {probe_results_text_str}
 
 ### Uncertain Remediation
 

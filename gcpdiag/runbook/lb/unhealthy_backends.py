@@ -179,7 +179,7 @@ class UnhealthyBackendsStart(runbook.StartStep):
               region=op.get(flags.REGION, 'global'),
               detailed_reason=detailed_reason,
           ),
-          remediation=op.prep_msg(op.FAILURE_REMEDIATION,),
+          remediation='',
       )
     else:
       op.add_skipped(

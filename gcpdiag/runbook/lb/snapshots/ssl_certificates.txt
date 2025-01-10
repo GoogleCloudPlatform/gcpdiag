@@ -31,10 +31,7 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
 
    - gcpdiag-lb3-aaaa                                                     [FAIL]
      [REASON]
-     We detected that the certificate "cert1" is not in ACTIVE state.
-
-     [REMEDIATION]
-     Further investigation is required to identify the root cause and apply appropriate fixes
+     The certificate "cert1" is not in ACTIVE state.
 
 [GATEWAY]: Checks the status of the Google-managed certificate.
 
@@ -48,9 +45,6 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert1               [FAIL]
      [REASON]
      The following domains are in "FAILED_NOT_VISIBLE" state: natka123.com, second.natka123.com. This usually means the domain's DNS records aren't correctly pointing to your load balancer.
-
-     [REMEDIATION]
-     Further investigation is required. This runbook will proceed with additional checks.
 
 [GATEWAY]: Checks if the SSL certificate is attached to a target proxy.
 
@@ -142,10 +136,7 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
 
    - gcpdiag-lb3-aaaa                                                     [FAIL]
      [REASON]
-     We detected that the certificate "cert2" is not in ACTIVE state.
-
-     [REMEDIATION]
-     Further investigation is required to identify the root cause and apply appropriate fixes
+     The certificate "cert2" is not in ACTIVE state.
 
 [GATEWAY]: Checks the status of the Google-managed certificate.
 
@@ -159,9 +150,6 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert2               [FAIL]
      [REASON]
      The following domains are in "FAILED_NOT_VISIBLE" state: test.natka123.com. This usually means the domain's DNS records aren't correctly pointing to your load balancer.
-
-     [REMEDIATION]
-     Further investigation is required. This runbook will proceed with additional checks.
 
 [GATEWAY]: Checks if the SSL certificate is attached to a target proxy.
 
@@ -244,10 +232,7 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
 
    - gcpdiag-lb3-aaaa                                                     [FAIL]
      [REASON]
-     We detected that the certificate "cert3" is not in ACTIVE state.
-
-     [REMEDIATION]
-     Further investigation is required to identify the root cause and apply appropriate fixes
+     The certificate "cert3" is not in ACTIVE state.
 
 [GATEWAY]: Checks the status of the Google-managed certificate.
 
@@ -261,9 +246,6 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert3               [FAIL]
      [REASON]
      The following domains are in "FAILED_NOT_VISIBLE" state: second.test.org, test.org. This usually means the domain's DNS records aren't correctly pointing to your load balancer.
-
-     [REMEDIATION]
-     Further investigation is required. This runbook will proceed with additional checks.
 
 [GATEWAY]: Checks if the SSL certificate is attached to a target proxy.
 
@@ -345,10 +327,7 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
 
    - gcpdiag-lb3-aaaa                                                     [FAIL]
      [REASON]
-     We detected that the certificate "unused-cert4" is not in ACTIVE state.
-
-     [REMEDIATION]
-     Further investigation is required to identify the root cause and apply appropriate fixes
+     The certificate "unused-cert4" is not in ACTIVE state.
 
 [GATEWAY]: Checks the status of the Google-managed certificate.
 
@@ -362,9 +341,6 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/unused-cert4        [FAIL]
      [REASON]
      The following domains are in "FAILED_NOT_VISIBLE" state: second.test.org, test.org. This usually means the domain's DNS records aren't correctly pointing to your load balancer.
-
-     [REMEDIATION]
-     Further investigation is required. This runbook will proceed with additional checks.
 
 [GATEWAY]: Checks if the SSL certificate is attached to a target proxy.
 

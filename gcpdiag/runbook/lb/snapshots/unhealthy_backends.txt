@@ -36,12 +36,9 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 
    - gcpdiag-lb2-aaaa/web-backend-service                                 [FAIL]
      [REASON]
-      We found unhealthy backends in backend service web-backend-service in scope global
-      Group https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/zones/us-east1-b/instanceGroups/lb-backend-example has 2/2 unhealthy backends
+     Unhealthy backends were found in backend service web-backend-service in scope global.
+     Group https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/zones/us-east1-b/instanceGroups/lb-backend-example has 2/2 unhealthy backends
 
-
-     [REMEDIATION]
-     Further investigation is required to identify the root cause and apply appropriate fixes.
 
 [GATEWAY]: Check if health check logging is enabled.
 
@@ -54,7 +51,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 
    - gcpdiag-lb2-aaaa/web-backend-service                                 [UNCERTAIN]
      [REASON]
-     In the health check logs, we found logs with the detailed health state TIMEOUT.
+     Health check logs show the detailed health state "TIMEOUT".
      The backend might be timing out because:
      1. The application is overloaded and taking too long to respond.
      2. The backend service or health check timeout is too low.
@@ -207,12 +204,9 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 
    - gcpdiag-lb2-aaaa/backend-service-2                                   [FAIL]
      [REASON]
-      We found unhealthy backends in backend service backend-service-2 in scope europe-west4
-      Group https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/zones/europe-west4-b/networkEndpointGroups/neg1 has 1/1 unhealthy backends
+     Unhealthy backends were found in backend service backend-service-2 in scope europe-west4.
+     Group https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/zones/europe-west4-b/networkEndpointGroups/neg1 has 1/1 unhealthy backends
 
-
-     [REMEDIATION]
-     Further investigation is required to identify the root cause and apply appropriate fixes.
 
 [GATEWAY]: Check if health check logging is enabled.
 
@@ -225,7 +219,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 
    - gcpdiag-lb2-aaaa/backend-service-2                                   [UNCERTAIN]
      [REASON]
-     In the health check logs, we found logs with the detailed health state TIMEOUT.
+     Health check logs show the detailed health state "TIMEOUT".
      The backend might be timing out because:
      1. The application is overloaded and taking too long to respond.
      2. The backend service or health check timeout is too low.

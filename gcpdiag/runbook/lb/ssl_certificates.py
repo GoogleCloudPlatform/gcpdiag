@@ -125,12 +125,10 @@ class SslCertificatesStart(runbook.StartStep):
                              name=op.get(flags.CERTIFICATE_NAME)),
       )
     else:
-      op.add_failed(
-          proj,
-          reason=op.prep_msg(op.FAILURE_REASON,
-                             name=op.get(flags.CERTIFICATE_NAME)),
-          remediation=op.prep_msg(op.FAILURE_REMEDIATION),
-      )
+      op.add_failed(proj,
+                    reason=op.prep_msg(op.FAILURE_REASON,
+                                       name=op.get(flags.CERTIFICATE_NAME)),
+                    remediation='')
 
 
 class AnalyzeCertificateStatus(runbook.Gateway):
@@ -257,7 +255,7 @@ class AnalyzeFailedNotVisibleDomains(runbook.Step):
             op.FAILURE_REASON,
             domains=', '.join(self.domains),
         ),
-        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+        remediation='',
     )
     op.add_metadata('failedNotVisibleDomains', self.domains)
 
