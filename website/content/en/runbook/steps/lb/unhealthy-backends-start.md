@@ -19,7 +19,7 @@ None
 Unhealthy backends were found in backend service {name} in scope {region}.
 {detailed_reason}
 
-### Skipped Reason
+### Success Reason
 
 All backends are healthy in backend service {name} in scope {region}
 
