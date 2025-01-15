@@ -18,6 +18,7 @@ None
 
 The connection from Node to restricted.googleapis.com (199.36.153.4/30) or private.googleapis.com (199.36.153.8/30) is timing out, preventing image pull. It is probable that a firewall rule is blocking this IP range. A firewall to permit this egress should be created.
 Example log entry that would help identify involved objects:
+
 {LOG_ENTRY}
 
 ### Failure Remediation

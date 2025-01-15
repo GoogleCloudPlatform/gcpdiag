@@ -179,13 +179,13 @@ class UnhealthyBackendsStart(runbook.StartStep):
               region=op.get(flags.REGION, 'global'),
               detailed_reason=detailed_reason,
           ),
-          remediation=op.prep_msg(op.FAILURE_REMEDIATION,),
+          remediation='',
       )
     else:
-      op.add_skipped(
+      op.add_ok(
           resource=backend_service,
           reason=op.prep_msg(
-              op.SKIPPED_REASON,
+              op.SUCCESS_REASON,
               name=op.get(flags.BACKEND_SERVICE_NAME),
               region=op.get(flags.REGION, 'global'),
           ),

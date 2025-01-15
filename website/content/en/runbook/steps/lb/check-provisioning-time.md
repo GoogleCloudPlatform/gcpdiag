@@ -16,7 +16,7 @@ None
 
 ### Success Reason
 
-We haven't found any recent changes to the forwarding rules and target proxies associated with the certificate {name}.
+No recent changes were detected for forwarding rules and target proxies associated with the certificate {name}.
 
 ### Uncertain Reason
 

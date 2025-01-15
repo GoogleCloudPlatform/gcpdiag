@@ -18,6 +18,7 @@ None
 
 Image cannot be pulled by a container on Pod, because the image is not found on the repository. Check if the image is correctly written or if it exists in the repository.
 Example log entry that would help identify involved objects:
+
 {LOG_ENTRY}
 
 ### Failure Remediation

@@ -11,12 +11,8 @@ The certificate "{name}" is self-managed. Customers are responsible for obtainin
 {% endblock confirmation_skipped_reason_a1 %}
 
 {% block confirmation_failure_reason %}
-We detected that the certificate "{name}" is not in ACTIVE state.
+The certificate "{name}" is not in ACTIVE state.
 {% endblock confirmation_failure_reason %}
-
-{% block confirmation_failure_remediation %}
-Further investigation is required to identify the root cause and apply appropriate fixes
-{% endblock confirmation_failure_remediation %}
 
 {% block cert_status_success_reason %}
 The certificate "{name}" is in {status} state.
@@ -41,10 +37,6 @@ All domains associated with the certificate "{name}" are in the "ACTIVE" state. 
 {% block failed_not_visible_domains_failure_reason %}
 The following domains are in "FAILED_NOT_VISIBLE" state: {domains}. This usually means the domain's DNS records aren't correctly pointing to your load balancer.
 {% endblock failed_not_visible_domains_failure_reason %}
-
-{% block failed_not_visible_domains_failure_remediation %}
-Further investigation is required. This runbook will proceed with additional checks.
-{% endblock failed_not_visible_domains_failure_remediation %}
 
 {% block provisioning_domains_uncertain_reason %}
 The following domains are in "PROVISIONING" state: {domains}.
@@ -136,7 +128,7 @@ If this is not intended, please detach the certificate map from the target proxi
 {% endblock verify_no_certificate_map_conflict_failure_remediation %}
 
 {% block check_provisioning_time_success_reason %}
-We haven't found any recent changes to the forwarding rules and target proxies associated with the certificate {name}.
+No recent changes were detected for forwarding rules and target proxies associated with the certificate {name}.
 {% endblock check_provisioning_time_success_reason %}
 
 {% block check_provisioning_time_uncertain_reason %}

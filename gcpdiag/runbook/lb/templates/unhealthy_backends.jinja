@@ -1,15 +1,11 @@
-{% block confirmation_skipped_reason %}
+{% block confirmation_success_reason %}
 All backends are healthy in backend service {name} in scope {region}
-{% endblock confirmation_skipped_reason %}
+{% endblock confirmation_success_reason %}
 
 {% block confirmation_failure_reason %}
- We found unhealthy backends in backend service {name} in scope {region}
- {detailed_reason}
+Unhealthy backends were found in backend service {name} in scope {region}.
+{detailed_reason}
 {% endblock confirmation_failure_reason %}
-
-{% block confirmation_failure_remediation %}
-Further investigation is required to identify the root cause and apply appropriate fixes.
-{% endblock confirmation_failure_remediation %}
 
 {% block logging_enabled_success_reason %}
 Health check logging is enabled
@@ -58,7 +54,7 @@ Check the logs and monitoring metrics for those instances, focusing on the given
 {% endblock past_hc_success_uncertain_remediation %}
 
 {% block unknown_hc_state_log_uncertain_reason %}
-In the health check logs, we observed entries with the detailed health state "UNKNOWN." This indicates that the health checking system is aware of the instance, but its health status is currently undetermined. This situation can arise when a new endpoint is unresponsive to health checks and there's a substantial configured timeout period (approximately 25 seconds or longer). In such cases, the "UNKNOWN" state might be published while the health checker waits for the timeout to expire. Additionally, "UNKNOWN" could also be published during outage scenarios if the health checkers themselves are crashing. In this critical situation, endpoints that previously had known health states could transition to "UNKNOWN.
+Health check logs show entries with the detailed health state UNKNOWN. This indicates that the health checking system is aware of the instance, but its health status is undetermined. This situation can arise when a new endpoint is unresponsive to health checks and there's a substantial configured timeout period (approximately 25 seconds or longer). In such cases, the "UNKNOWN" state might be published while the health checker waits for the timeout to expire. Additionally, "UNKNOWN" could also be published during outage scenarios if the health checkers themselves are crashing. In this critical situation, endpoints that previously had known health states could transition to "UNKNOWN.
 {% endblock unknown_hc_state_log_uncertain_reason %}
 
 {% block unknown_hc_state_log_uncertain_remediation %}
@@ -67,8 +63,8 @@ For potential Google Cloud outages: Use Personalized Service Health to check for
 {% endblock unknown_hc_state_log_uncertain_remediation %}
 
 {% block unhealthy_hc_state_log_uncertain_reason %}
-In the health check logs, we found logs with the detailed health state UNHEALTHY, which means the endpoint is reachable but does not conform to the requirements defined by the health check.
-The following responses were received from your backends: {probe_results_text_str}
+Health check logs show the detailed health state UNHEALTHY meaning the endpoint is reachable but doesn't meet the health check requirements.
+Responses received from backends: {probe_results_text_str}
 {% endblock unhealthy_hc_state_log_uncertain_reason %}
 
 {% block unhealthy_hc_state_log_uncertain_remediation %}
@@ -80,7 +76,7 @@ If you intend to check a different endpoint or expect a different response, adju
 {% endblock unhealthy_hc_state_log_uncertain_remediation %}
 
 {% block timeout_hc_state_log_uncertain_reason %}
-In the health check logs, we found logs with the detailed health state TIMEOUT.
+Health check logs show the detailed health state "TIMEOUT".
 The backend might be timing out because:
 1. The application is overloaded and taking too long to respond.
 2. The backend service or health check timeout is too low.

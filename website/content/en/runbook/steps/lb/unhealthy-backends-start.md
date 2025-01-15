@@ -16,14 +16,10 @@ None
 
 ### Failure Reason
 
- We found unhealthy backends in backend service {name} in scope {region}
- {detailed_reason}
+Unhealthy backends were found in backend service {name} in scope {region}.
+{detailed_reason}
 
-### Failure Remediation
-
-Further investigation is required to identify the root cause and apply appropriate fixes.
-
-### Skipped Reason
+### Success Reason
 
 All backends are healthy in backend service {name} in scope {region}
 

@@ -37,7 +37,7 @@ gcpdiag runbook gke/node-unavailability \
 | `project_id` | True | None | str | The ID of the project hosting the GKE Cluster |
 | `name` | False | None | str | The name of the GKE cluster, to limit search only for this cluster |
 | `node` | True | None | str | The node name that was started. |
-| `location` | False | None | str | The zone of the GKE node |
+| `location` | False | None | str | The zone or region of the GKE cluster |
 
 Get help on available commands
 

@@ -16,7 +16,7 @@ None
 
 ### Uncertain Reason
 
-In the health check logs, we found logs with the detailed health state TIMEOUT.
+Health check logs show the detailed health state "TIMEOUT".
 The backend might be timing out because:
 1. The application is overloaded and taking too long to respond.
 2. The backend service or health check timeout is too low.
