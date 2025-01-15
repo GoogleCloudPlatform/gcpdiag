@@ -28,7 +28,7 @@ import requests
 from boltons.iterutils import get_path
 
 from gcpdiag import caching, config, models, utils
-from gcpdiag.queries import apis, crm, gce, network, orgpolicy, web
+from gcpdiag.queries import apis, crm, gce, network, web
 from gcpdiag.utils import Version
 
 # To avoid name conflict with L342
