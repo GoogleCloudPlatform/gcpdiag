@@ -138,7 +138,7 @@ class NodeAutoRepair(runbook.DiagnosticTree):
       },
       flags.LOCATION: {
           'type': str,
-          'help': 'The zone of the GKE node',
+          'help': 'The zone or region of the GKE cluster',
           'required': False
       }
   }
