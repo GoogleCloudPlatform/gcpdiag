@@ -48,7 +48,8 @@ def check_serial_port_logging_policy(cluster: gke.Cluster) -> Optional[bool]:
     for nodepool in cluster.nodepools:
       # Check if serial port logging is disabled in node config metadata
       metadata = nodepool.config.metadata or {}
-      serial_logging_enabled = metadata.get('serial-port-logging-enable', 'true').lower() == 'true'
+      serial_logging_enabled = metadata.get('serial-port-logging-enable',
+                                            'true').lower() == 'true'
 
       # if policy is enforced and serial port logging is enabled, cluster has error.
       if serial_logging_enabled:
