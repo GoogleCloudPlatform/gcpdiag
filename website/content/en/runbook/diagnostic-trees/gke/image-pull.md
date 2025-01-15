@@ -62,6 +62,8 @@ gcpdiag runbook --help
 
   - [Image Connection Timeout](/runbook/steps/gke/image-connection-timeout)
 
+  - [Image Not Found Insufficient Scope](/runbook/steps/gke/image-not-found-insufficient-scope)
+
   - [Image Pull End](/runbook/steps/gke/image-pull-end)
 
 

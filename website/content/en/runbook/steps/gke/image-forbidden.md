@@ -18,6 +18,7 @@ None
 
 Image cannot be pulled by a container on Pod, because there are not enough permissions to pull it from the repository. Verify the node SA has the correct permissions.
 Example log entry that would help identify involved objects:
+
 {LOG_ENTRY}
 
 ### Failure Remediation

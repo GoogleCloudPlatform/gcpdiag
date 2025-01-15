@@ -18,6 +18,7 @@ None
 
 The DNS resolver (metadata server - 169.254.169.254:53) on the Node is unable to resolve the IP of the repository, preventing image pull. Check that the networking and DNS requirements mentioned in public documentation.
 Example log entry that would help identify involved objects:
+
 {LOG_ENTRY}
 
 ### Failure Remediation

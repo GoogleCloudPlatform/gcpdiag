@@ -15,13 +15,16 @@
 
 from datetime import datetime
 
+from boltons.iterutils import get_path
+
 from gcpdiag import runbook
 from gcpdiag.queries import apis, crm, gke, logs
 from gcpdiag.runbook import op
 from gcpdiag.runbook.gke import flags
 
 
-def local_realtime_query(filter_str):
+def local_realtime_query(filter_list):
+  filter_str = '\n'.join(filter_list)
   result = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
                                start_time_utc=op.get(flags.START_TIME_UTC),
                                end_time_utc=op.get(flags.END_TIME_UTC),
@@ -91,6 +94,7 @@ class ImagePull(runbook.DiagnosticTree):
     image_connection_timeout_restricted_private = ImageConnectionTimeoutRestrictedPrivate(
     )
     image_connection_timeout = ImageConnectionTimeout()
+    image_not_found_insufficient_scope = ImageNotFoundInsufficientScope()
     # Describe the step relationships
     self.add_step(parent=start, child=image_not_found)
     self.add_step(parent=image_not_found, child=image_forbidden)
@@ -99,6 +103,8 @@ class ImagePull(runbook.DiagnosticTree):
                   child=image_connection_timeout_restricted_private)
     self.add_step(parent=image_connection_timeout_restricted_private,
                   child=image_connection_timeout)
+    self.add_step(parent=image_connection_timeout,
+                  child=image_not_found_insufficient_scope)
     # Ending runbook
     self.add_end(ImagePullEnd())
 
@@ -145,18 +151,18 @@ class ImagePullStart(runbook.StartStep):
     found_clusters_at_location = False
     if cluster_name and cluster_location:
       for cluster in clusters.values():
-        if cluster_name == str(cluster).rsplit('/', maxsplit=1)[-1] \
-          and cluster_location == str(cluster).split('/')[-3]:
+        if cluster_name == cluster.name \
+          and cluster_location == cluster.location:
           found_cluster_with_location = True
           break
     elif cluster_name:
       for cluster in clusters.values():
-        if cluster_name == str(cluster).rsplit('/', maxsplit=1)[-1]:
+        if cluster_name == cluster.name:
           found_cluster = True
           break
     elif cluster_location:
       for cluster in clusters.values():
-        if cluster_location == str(cluster).split('/')[-3]:
+        if cluster_location == cluster.location:
           found_clusters_at_location = True
           break
 
@@ -194,24 +200,21 @@ class ImageNotFound(runbook.Step):
     cluster_name = op.get(flags.NAME)
     start_time_utc = op.get(flags.START_TIME_UTC)
     end_time_utc = op.get(flags.END_TIME_UTC)
-    filter_str = [
+    filter_list = [
         'log_id("events")',
         'resource.type="k8s_pod"',
-        'jsonPayload.message=~"Failed to pull image.*not found"',
+        'jsonPayload.message:"Failed to pull image"',
+        'jsonPayload.message:"not found"',
     ]
-    filter_str = '\n'.join(filter_str)
 
     if cluster_location and cluster_name:
-      filter_str += '\n' + f'resource.labels.location="{cluster_location}" AND \
-      resource.labels.cluster_name="{cluster_name}"'
+      filter_list.append(f'resource.labels.location="{cluster_location}"')
+      filter_list.append(f'resource.labels.cluster_name="{cluster_name}"')
 
-    log_entries = local_realtime_query(filter_str)
+    log_entries = local_realtime_query(filter_list)
 
     if log_entries:
-      for log_entry in log_entries:
-        sample_log = log_entry
-        sample_log = str(sample_log).replace(', ', '\n')
-        break
+      sample_log = format_log_entries(log_entries)
       op.add_failed(project_path,
                     reason=op.prep_msg(
                         op.FAILURE_REASON,
@@ -241,24 +244,20 @@ class ImageForbidden(runbook.Step):
     cluster_name = op.get(flags.NAME)
     start_time_utc = op.get(flags.START_TIME_UTC)
     end_time_utc = op.get(flags.END_TIME_UTC)
-    filter_str = [
+    filter_list = [
         'log_id("events")',
         'resource.type="k8s_pod"',
-        'jsonPayload.message=~"Failed to pull image.*403 Forbidden"',
+        'jsonPayload.message:"Failed to pull image"',
+        'jsonPayload.message:"403 Forbidden"',
     ]
     if cluster_location and cluster_name:
-      filter_str += '\n' + f'resource.labels.location="{cluster_location}" AND \
-      resource.labels.cluster_name="{cluster_name}"'
+      filter_list.append(f'resource.labels.location="{cluster_location}"')
+      filter_list.append(f'resource.labels.cluster_name="{cluster_name}"')
 
-    filter_str = '\n'.join(filter_str)
-
-    log_entries = local_realtime_query(filter_str)
+    log_entries = local_realtime_query(filter_list)
 
     if log_entries:
-      for log_entry in log_entries:
-        sample_log = log_entry
-        sample_log = str(sample_log).replace(', ', '\n')
-        break
+      sample_log = format_log_entries(log_entries)
       op.add_failed(project_path,
                     reason=op.prep_msg(
                         op.FAILURE_REASON,
@@ -288,24 +287,21 @@ class ImageDnsIssue(runbook.Step):
     cluster_name = op.get(flags.NAME)
     start_time_utc = op.get(flags.START_TIME_UTC)
     end_time_utc = op.get(flags.END_TIME_UTC)
-    filter_str = [
+    filter_list = [
         'log_id("events")',
         'resource.type="k8s_pod"',
-        'jsonPayload.message=~"Failed to pull image.*lookup.*server misbehaving"',
+        'jsonPayload.message:"Failed to pull image"',
+        'jsonPayload.message:"lookup"',
+        'jsonPayload.message:"server misbehaving"',
     ]
     if cluster_location and cluster_name:
-      filter_str += '\n' + f'resource.labels.location="{cluster_location}" AND \
-      resource.labels.cluster_name="{cluster_name}"'
+      filter_list.append(f'resource.labels.location="{cluster_location}"')
+      filter_list.append(f'resource.labels.cluster_name="{cluster_name}"')
 
-    filter_str = '\n'.join(filter_str)
-
-    log_entries = local_realtime_query(filter_str)
+    log_entries = local_realtime_query(filter_list)
 
     if log_entries:
-      for log_entry in log_entries:
-        sample_log = log_entry
-        sample_log = str(sample_log).replace(', ', '\n')
-        break
+      sample_log = format_log_entries(log_entries)
       op.add_failed(project_path,
                     reason=op.prep_msg(
                         op.FAILURE_REASON,
@@ -335,24 +331,21 @@ class ImageConnectionTimeoutRestrictedPrivate(runbook.Step):
     cluster_name = op.get(flags.NAME)
     start_time_utc = op.get(flags.START_TIME_UTC)
     end_time_utc = op.get(flags.END_TIME_UTC)
-    filter_str = [
+    filter_list = [
         'log_id("events")',
         'resource.type="k8s_pod"',
-        'jsonPayload.message=~"Failed to pull image.*dial tcp.*199.36.153.\\d:443: i/o timeout"',
+        'jsonPayload.message:"Failed to pull image"',
+        'jsonPayload.message:"dial tcp"',
+        'jsonPayload.message:"199.36.153.*:443: i/o timeout"',
     ]
     if cluster_location and cluster_name:
-      filter_str += '\n' + f'resource.labels.location="{cluster_location}" AND \
-      resource.labels.cluster_name="{cluster_name}"'
+      filter_list.append(f'resource.labels.location="{cluster_location}"')
+      filter_list.append(f'resource.labels.cluster_name="{cluster_name}"')
 
-    filter_str = '\n'.join(filter_str)
-
-    log_entries = local_realtime_query(filter_str)
+    log_entries = local_realtime_query(filter_list)
 
     if log_entries:
-      for log_entry in log_entries:
-        sample_log = log_entry
-        sample_log = str(sample_log).replace(', ', '\n')
-        break
+      sample_log = format_log_entries(log_entries)
       op.add_failed(project_path,
                     reason=op.prep_msg(
                         op.FAILURE_REASON,
@@ -382,24 +375,64 @@ class ImageConnectionTimeout(runbook.Step):
     cluster_name = op.get(flags.NAME)
     start_time_utc = op.get(flags.START_TIME_UTC)
     end_time_utc = op.get(flags.END_TIME_UTC)
-    filter_str = [
+    filter_list = [
         'log_id("events")',
         'resource.type="k8s_pod"',
-        'jsonPayload.message=~"Failed to pull image.*dial tcp.*i/o timeout"',
+        'jsonPayload.message:"Failed to pull image"',
+        'jsonPayload.message:"dial tcp"',
+        'jsonPayload.message:"i/o timeout"',
     ]
     if cluster_location and cluster_name:
-      filter_str += '\n' + f'resource.labels.location="{cluster_location}" AND \
-      resource.labels.cluster_name="{cluster_name}"'
+      filter_list.append(f'resource.labels.location="{cluster_location}"')
+      filter_list.append(f'resource.labels.cluster_name="{cluster_name}"')
 
-    filter_str = '\n'.join(filter_str)
-
-    log_entries = local_realtime_query(filter_str)
+    log_entries = local_realtime_query(filter_list)
 
     if log_entries:
-      for log_entry in log_entries:
-        sample_log = log_entry
-        sample_log = str(sample_log).replace(', ', '\n')
-        break
+      sample_log = format_log_entries(log_entries)
+      op.add_failed(project_path,
+                    reason=op.prep_msg(
+                        op.FAILURE_REASON,
+                        LOG_ENTRY=sample_log,
+                        START_TIME_UTC=start_time_utc,
+                        END_TIME_UTC=end_time_utc,
+                    ),
+                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+    else:
+      op.add_ok(project_path,
+                reason=op.prep_msg(op.SUCCESS_REASON,
+                                   START_TIME_UTC=start_time_utc,
+                                   END_TIME_UTC=end_time_utc))
+
+
+class ImageNotFoundInsufficientScope(runbook.Step):
+  """Check for Image not found log entries with insufficient_scope server message"""
+  template = 'imagepull::image_not_found_insufficient_scope'
+
+  def execute(self):
+    """
+    Check for "Failed to pull image.*insufficient_scope" log entries
+    """
+    project = op.get(flags.PROJECT_ID)
+    project_path = crm.get_project(project)
+    cluster_location = op.get(flags.LOCATION)
+    cluster_name = op.get(flags.NAME)
+    start_time_utc = op.get(flags.START_TIME_UTC)
+    end_time_utc = op.get(flags.END_TIME_UTC)
+    filter_list = [
+        'log_id("events")',
+        'resource.type="k8s_pod"',
+        'jsonPayload.message:"Failed to pull image"',
+        'jsonPayload.message:"insufficient_scope"',
+    ]
+
+    if cluster_location and cluster_name:
+      filter_list.append(f'resource.labels.location="{cluster_location}"')
+      filter_list.append(f'resource.labels.cluster_name="{cluster_name}"')
+
+    log_entries = local_realtime_query(filter_list)
+    if log_entries:
+      sample_log = format_log_entries(log_entries)
       op.add_failed(project_path,
                     reason=op.prep_msg(
                         op.FAILURE_REASON,
@@ -432,3 +465,44 @@ class ImagePullEnd(runbook.EndStep):
         message='Are you satisfied with the `GKE Image Pull runbbok` analysis?')
     if response == op.NO:
       op.info(message=op.END_MESSAGE)
+
+
+def format_log_entries(log_entries):
+  """Formats a list of log entries into a readable string.
+
+  Args:
+    log_entries: A list of log entry dictionaries.
+
+  Returns:
+    A formatted string containing information from all log entries.
+  """
+
+  log_entry = log_entries[-1]
+  formatted_log = []
+
+  labels = get_path(log_entry, ('resource', 'labels'),
+                    default={})  # Provide default empty dict
+  if labels:
+    formatted_log.extend([
+        f"Cluster name: {labels.get('cluster_name', 'N/A')}",
+        f"Location: {labels.get('location', 'N/A')}",
+        f"Namespace Name: {labels.get('namespace_name', 'N/A')}",
+        f"Pod Name: {labels.get('pod_name', 'N/A')}",
+        f"Project ID: {labels.get('project_id', 'N/A')}"
+    ])
+  else:
+    formatted_log.extend([
+        'Cluster name: Not found', 'Location: Not found',
+        'Namespace Name: Not found', 'Pod Name: Not found',
+        'Project ID: Not found'
+    ])
+
+  json_payload = get_path(log_entry, ('jsonPayload',),
+                          default={})  # Provide default empty dict
+  formatted_log.extend([
+      f"Log Message: {json_payload.get('message', 'N/A')}",
+      f"Reporting Instance: {json_payload.get('reportingInstance', 'N/A')}",
+      f"Last Timestamp: {json_payload.get('lastTimestamp', 'N/A')}"
+  ])
+
+  return '\n'.join(formatted_log)
