@@ -309,8 +309,9 @@ def _parse_args_run_repo(
   if credentials:
     apis.set_credentials(credentials)
 
-  # Allow to change defaults using a hook function.
-  hooks.set_lint_args_hook(args)
+  if args.interface == 'cli':
+    # Allow to change defaults using a hook function.
+    hooks.set_lint_args_hook(args)
   # Initialize configuration
   config.init(vars(args), terminal_output.is_cloud_shell())
   try:
@@ -413,11 +414,11 @@ def _parse_args_run_repo(
   repo.run_rules(context)
   if args.interface == 'cli':
     output.display_footer(repo.result)
-  hooks.post_lint_hook(repo.result.get_rule_statuses())
-  if credentials:
-    apis.set_credentials(None)
-  # Clean up the kubeconfig file generated for gcpdiag
-  kubectl.clean_up()
+    hooks.post_lint_hook(repo.result.get_rule_statuses())
+    if credentials:
+      apis.set_credentials(None)
+    # Clean up the kubeconfig file generated for gcpdiag
+    kubectl.clean_up()
 
   return repo
 
