@@ -214,7 +214,7 @@ class StartStep(Step):
     super().__init__(step_type=constants.StepType.START)
 
   def execute(self):
-    """Executing default start step for runbooks..."""
+    """Executing default start step for runbooks."""
     pass
 
 
@@ -232,7 +232,7 @@ class EndStep(Step):
     super().__init__(step_type=constants.StepType.END)
 
   def execute(self):
-    """Finalizing runbook investigations..."""
+    """Finalize runbook investigations."""
     if not config.get(flags.INTERACTIVE_MODE):
       response = op.operator.interface.prompt(kind=op.CONFIRMATION,
                                               message='Is your issue resolved?')
@@ -692,14 +692,14 @@ class DiagnosticEngine:
         elif step.type == constants.StepType.END:
           return constants.FINALIZE_INVESTIGATION
         elif user_input is constants.STOP:
-          logging.info('Finalizing Investigation\n')
+          logging.info('Finalize Investigation\n')
           return constants.FINALIZE_INVESTIGATION
         elif step.type == constants.StepType.START and (
           self.interface.rm.reports[operator.run_id]
           .results.get(step.execution_id) is not None and \
           self.interface.rm.reports[operator.run_id]
           .results[step.execution_id].overall_status == 'skipped'):
-          logging.info('Start Step was skipped. Can\'t proceed ...\n')
+          logging.info('Start Step was skipped. Can\'t proceed.\n')
           return constants.FINALIZE_INVESTIGATION
         elif user_input is constants.CONTINUE:
           break

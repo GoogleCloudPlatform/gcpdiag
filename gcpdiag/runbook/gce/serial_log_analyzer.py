@@ -100,7 +100,7 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
 
   def build_tree(self):
     """Building Decision Tree"""
-    start = FetchVmDetails()
+    start = SerialLogAnalyzerStart()
     self.add_start(step=start)
 
     # Checking if all logs available since last boot of the instance
@@ -232,8 +232,8 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
     self.add_end(AnalysingSerialLogsEnd())
 
 
-class FetchVmDetails(runbook.StartStep):
-  """Fetching VM details ..."""
+class SerialLogAnalyzerStart(runbook.StartStep):
+  """Fetching VM details."""
 
   template = 'vm_attributes::running'
 
@@ -339,10 +339,10 @@ class CloudInitChecks(runbook.CompositeStep):
 
 
 class AnalysingSerialLogsEnd(runbook.EndStep):
-  """Finalizing Serial console Log Analysis..."""
+  """Finalize Serial console Log Analysis."""
 
   def execute(self):
-    """Finalizing Serial console Log Analysis..."""
+    """Finalize Serial console Log Analysis."""
     if not config.get(flags.INTERACTIVE_MODE):
       response = op.prompt(
           kind=op.CONFIRMATION,

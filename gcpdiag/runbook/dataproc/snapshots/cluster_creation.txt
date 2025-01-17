@@ -27,27 +27,27 @@ dataproc/cluster-creation: Provides a comprehensive analysis of common issues wh
   - Init actions script failures: Evaluates Logs Explorer
   logs regarding init actions script failures or timeouts.
   
-[START]: Verify cluster quota...
+[START]: Verify cluster quota.
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
      No issues with unsufficient quota in project gcpdiag-dataproc1-aaaa has been identified for the ivestigated cluster good, please double-check if you have provided
      the right cluster_name parameter if the cluster you are trying to create doesn't appear in Dataproc UI.
 
-[AUTOMATED STEP]: Verify cluster stockout issue...
+[AUTOMATED STEP]: Verify cluster stockout issue.
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
      No issues with stockouts and insufficient resources in project gcpdiag-dataproc1-aaaa has been identified for good, please double-check if you have provided
      the right cluster_name parameter if the cluster you are trying to create doesn't appear in Dataproc UI.
 
-[AUTOMATED STEP]: Verify cluster exists in Dataproc UI...
+[AUTOMATED STEP]: Verify cluster exists in Dataproc UI.
 
    - gcpdiag-dataproc1-aaaa/us-central1/good                              [OK]
      [REASON]
      Cluster good exists in project projects/gcpdiag-dataproc1-aaaa
 
-[GATEWAY]: Verify cluster is in ERROR state...
+[GATEWAY]: Verify cluster is in ERROR state.
 [INFO]: Cluster is in RUNNING state. Please choose another issue category to investigate, the issue is not related to cluster creation, as the cluster provisioned successfully.
 [END]: This is the end step of the runbook.
 [INFO]: Please visit all the FAIL steps and address the suggested remediations.
@@ -87,27 +87,27 @@ dataproc/cluster-creation: Provides a comprehensive analysis of common issues wh
   - Init actions script failures: Evaluates Logs Explorer
   logs regarding init actions script failures or timeouts.
   
-[START]: Verify cluster quota...
+[START]: Verify cluster quota.
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
      No issues with unsufficient quota in project gcpdiag-dataproc1-aaaa has been identified for the ivestigated cluster good, please double-check if you have provided
      the right cluster_name parameter if the cluster you are trying to create doesn't appear in Dataproc UI.
 
-[AUTOMATED STEP]: Verify cluster stockout issue...
+[AUTOMATED STEP]: Verify cluster stockout issue.
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
      No issues with stockouts and insufficient resources in project gcpdiag-dataproc1-aaaa has been identified for good, please double-check if you have provided
      the right cluster_name parameter if the cluster you are trying to create doesn't appear in Dataproc UI.
 
-[AUTOMATED STEP]: Verify cluster exists in Dataproc UI...
+[AUTOMATED STEP]: Verify cluster exists in Dataproc UI.
 
    - gcpdiag-dataproc1-aaaa/us-central1/good                              [OK]
      [REASON]
      Cluster good exists in project projects/gcpdiag-dataproc1-aaaa
 
-[GATEWAY]: Verify cluster is in ERROR state...
+[GATEWAY]: Verify cluster is in ERROR state.
 [INFO]: Cluster is in RUNNING state. Please choose another issue category to investigate, the issue is not related to cluster creation, as the cluster provisioned successfully.
 [END]: This is the end step of the runbook.
 [INFO]: Please visit all the FAIL steps and address the suggested remediations.
@@ -146,29 +146,29 @@ dataproc/cluster-creation: Provides a comprehensive analysis of common issues wh
   - Init actions script failures: Evaluates Logs Explorer
   logs regarding init actions script failures or timeouts.
   
-[START]: Verify cluster quota...
+[START]: Verify cluster quota.
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
      No issues with unsufficient quota in project gcpdiag-dataproc1-aaaa has been identified for the ivestigated cluster test-deny-icmp, please double-check if you have provided
      the right cluster_name parameter if the cluster you are trying to create doesn't appear in Dataproc UI.
 
-[AUTOMATED STEP]: Verify cluster stockout issue...
+[AUTOMATED STEP]: Verify cluster stockout issue.
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
      No issues with stockouts and insufficient resources in project gcpdiag-dataproc1-aaaa has been identified for test-deny-icmp, please double-check if you have provided
      the right cluster_name parameter if the cluster you are trying to create doesn't appear in Dataproc UI.
 
-[AUTOMATED STEP]: Verify cluster exists in Dataproc UI...
+[AUTOMATED STEP]: Verify cluster exists in Dataproc UI.
 
    - gcpdiag-dataproc1-aaaa/us-central1/test-deny-icmp                    [OK]
      [REASON]
      Cluster test-deny-icmp exists in project projects/gcpdiag-dataproc1-aaaa
 
-[GATEWAY]: Verify cluster is in ERROR state...
+[GATEWAY]: Verify cluster is in ERROR state.
 [INFO]: Cluster is in ERROR state or not existing and additional parameters has been provided
-[AUTOMATED STEP]: Gathering cluster details...
+[AUTOMATED STEP]: Gathering cluster details.
 
    - gcpdiag-dataproc1-aaaa/us-central1/test-deny-icmp                    [OK]
      [REASON]
@@ -176,21 +176,21 @@ dataproc/cluster-creation: Provides a comprehensive analysis of common issues wh
 
 [INFO]: Service Account:12340005-compute@developer.gserviceaccount.com
 [INFO]: Network: https://www.googleapis.com/compute/v1/projects/gcpdiag-dataproc1-aaaa/global/networks/test-bad-network
-[AUTOMATED STEP]: Verify network connectivity among nodes in the cluster...
+[AUTOMATED STEP]: Verify network connectivity among nodes in the cluster.
 [INFO]: Zone: us-central1-a
-[INFO]: Running connectivity tests...
-[INFO]: ICMP test...
+[INFO]: Running connectivity tests.
+[INFO]: ICMP test.
 [INFO]: Connectivity test result: REACHABLE
-[INFO]: TCP test...
+[INFO]: TCP test.
 [INFO]: Connectivity test result: REACHABLE
-[INFO]: UDP test...
+[INFO]: UDP test.
 [INFO]: Connectivity test result: REACHABLE
 
    - gcpdiag-dataproc1-aaaa/us-central1/test-deny-icmp                    [OK]
      [REASON]
      The network communication among nodes in cluster test-deny-icmp is working.
 
-[GATEWAY]: Checking if the cluster is using internal IP only...
+[GATEWAY]: Checking if the cluster is using internal IP only.
 [INFO]: Internal IP only: False
 
    - gcpdiag-dataproc1-aaaa/us-central1/test-deny-icmp                    [OK]
@@ -200,11 +200,11 @@ dataproc/cluster-creation: Provides a comprehensive analysis of common issues wh
    - gcpdiag-dataproc1-aaaa/us-central1/test-deny-icmp                    [OK]
      [REASON]
      The cluster is in a public subnet.
-[GATEWAY]: Checking service account project...
+[GATEWAY]: Checking service account project.
 [INFO]: 12340005-compute@developer.gserviceaccount.com
 [INFO]: VM Service Account associated with Dataproc cluster was found in the same project
-[INFO]: Checking permissions...
-[AUTOMATED STEP]: Verifying IAM policy
+[INFO]: Checking permissions.
+[AUTOMATED STEP]: Verify IAM policy
 
    - projects/gcpdiag-dataproc1-aaaa                                      [FAIL]
      [REASON]
@@ -221,7 +221,7 @@ dataproc/cluster-creation: Provides a comprehensive analysis of common issues wh
      [1] https://cloud.google.com/iam/docs/grant-role-console
      [2] https://cloud.google.com/iam/docs/understanding-roles
 
-[AUTOMATED STEP]: Verify service account roles based on Shared VPC...
+[AUTOMATED STEP]: Verify service account roles based on Shared VPC.
 
    - gcpdiag-dataproc1-aaaa                                               [SKIP]
      [REASON]

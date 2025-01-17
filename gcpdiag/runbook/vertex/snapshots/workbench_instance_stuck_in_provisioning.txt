@@ -75,13 +75,13 @@ vertex/workbench-instance-stuck-in-provisioning: Runbook to Troubleshoot Issue: 
      [REASON]
      OK! Workbench Instance notebooks2instance-provisioning-stuck is in PROVISIONING, STARTING or INITIALIZING state.
 
-[AUTOMATED STEP]: Checking if the Workbench Instance is using a custom container...
+[AUTOMATED STEP]: Checking if the Workbench Instance is using a custom container.
 
    - gcpdiag-notebooks2-aaaa/us-west1-a/notebooks2instance-provisioning-stuck [OK]
      [REASON]
      OK! Workbench Instance notebooks2instance-provisioning-stuck is not using a custom container.
 
-[AUTOMATED STEP]: Checking if Workbench Instance Compute Engine VM's boot disk image is part of the official family of images...
+[AUTOMATED STEP]: Verify Workbench Instance Compute Engine VM's boot disk image is part of the official family of images
 
    - gcpdiag-notebooks2-aaaa/notebooks2instance-provisioning-stuck        [UNCERTAIN]
      [REASON]
@@ -93,7 +93,7 @@ vertex/workbench-instance-stuck-in-provisioning: Runbook to Troubleshoot Issue: 
      Officially supported images are found in the Google Cloud Console:
      Vertex AI Workbench UI > Instances > Create form > Advanced > Environment > Previous versions dropdown.
 
-[AUTOMATED STEP]: Checking if Workbench Instance has custom post-startup or startup scripts...
+[AUTOMATED STEP]: Verify Workbench Instance has custom post-startup or startup scripts
 
    - gcpdiag-notebooks2-aaaa/us-west1-a/notebooks2instance-provisioning-stuck [UNCERTAIN]
      [REASON]
@@ -107,7 +107,7 @@ vertex/workbench-instance-stuck-in-provisioning: Runbook to Troubleshoot Issue: 
      - Jupyter runs on port 127.0.0.1:8080
      - If packages are installed they should not add breaking changes to the Jupyter configuration
 
-[AUTOMATED STEP]: Checking if Workbench Instance is using the latest environment version...
+[AUTOMATED STEP]: Verify Workbench Instance is using the latest environment version
 [INFO]: instance is upgradeable: False
 [INFO]: instance upgrade info: Current and latest available image are the same
 
@@ -115,9 +115,9 @@ vertex/workbench-instance-stuck-in-provisioning: Runbook to Troubleshoot Issue: 
      [REASON]
      OK! Workbench Instance notebooks2instance-provisioning-stuck is using the latest environment version M0
 
-[COMPOSITE STEP]: Evaluating Workbench Instance Compute Engine VM memory, CPU, and disk performance...
+[COMPOSITE STEP]: Evaluating Workbench Instance Compute Engine VM memory, CPU, and disk performance.
 [INFO]: Runbook will use ops agent metrics for VM performance investigation
-[AUTOMATED STEP]: Verifying VM memory utilization is within optimal levels...
+[AUTOMATED STEP]: Verify VM memory utilization is within optimal levels.
 
    - gcpdiag-notebooks2-aaaa/notebooks2instance-provisioning-stuck        [FAIL]
      [REASON]
@@ -127,7 +127,8 @@ vertex/workbench-instance-stuck-in-provisioning: Runbook to Troubleshoot Issue: 
      Elevated memory usage can result in slow or unresponsive or termimated applications.
      Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
      Guidance on stopping and changing the machine type can be found here:
-     - Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+     - Changing machine type:
+     https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
      For deeper analysis of memory issues:
 
      Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
@@ -136,7 +137,7 @@ vertex/workbench-instance-stuck-in-provisioning: Runbook to Troubleshoot Issue: 
      Or connect via the Serial Console if SSH is not available to mitigate the issue.
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
-[AUTOMATED STEP]: Checking if there are any memory related errors in Serial logs
+[AUTOMATED STEP]: Verify there are any memory related errors in Serial logs
 
    - gcpdiag-notebooks2-aaaa/notebooks2instance-provisioning-stuck        [UNCERTAIN]
      [REASON]
@@ -146,7 +147,7 @@ vertex/workbench-instance-stuck-in-provisioning: Runbook to Troubleshoot Issue: 
      You may check if VM is facing high memory utilisation from GuestOS side using `free -m`
      or `cat /proc/meminfo` commands.
 
-[AUTOMATED STEP]: Checking if VM's Boot disk space utilization is within optimal levels.
+[AUTOMATED STEP]: Verify VM's Boot disk space utilization is within optimal levels.
 
    - gcpdiag-notebooks2-aaaa/notebooks2instance-provisioning-stuck        [FAIL]
      [REASON]
@@ -159,7 +160,7 @@ vertex/workbench-instance-stuck-in-provisioning: Runbook to Troubleshoot Issue: 
      Follow the guide to increase disk size:
      https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
 
-[AUTOMATED STEP]: Verifying VM CPU utilization is within optimal levels
+[AUTOMATED STEP]: Verify VM CPU utilization is within optimal levels
 
    - gcpdiag-notebooks2-aaaa/notebooks2instance-provisioning-stuck        [FAIL]
      [REASON]
@@ -184,10 +185,10 @@ vertex/workbench-instance-stuck-in-provisioning: Runbook to Troubleshoot Issue: 
    - gcpdiag-notebooks2-aaaa/us-west1-a/notebooks2instance-provisioning-stuck [OK]
      [REASON]
      OK! Workbench Instance notebooks2instance-provisioning-stuck Serial Port Logging is enabled and instance is initializing.
-     Checking Workbench Instance syslogs for issues...
+     Checking Workbench Instance syslogs for issues
 
-[AUTOMATED STEP]: Checking if Workbench Instance Jupyter is running on port 127.0.0.1:8080...
-[INFO]: Jupyter is running! Verifying if it's running on port 127.0.0.1:8080...
+[AUTOMATED STEP]: Verify Workbench Instance Jupyter is running on port 127.0.0.1:8080
+[INFO]: Jupyter is running! Verifying if it's running on port 127.0.0.1:8080.
 
    - gcpdiag-notebooks2-aaaa/us-west1-a/notebooks2instance-provisioning-stuck [FAIL]
      [REASON]
@@ -222,7 +223,7 @@ vertex/workbench-instance-stuck-in-provisioning: Runbook to Troubleshoot Issue: 
      [REASON]
      OK! Workbench Instance notebooks2instance-provisioning-stuck's "/home/jupyter" space usage is below 85%
 
-[AUTOMATED STEP]: Checking if Workbench Instance has external IP disabled...
+[AUTOMATED STEP]: Verify Workbench Instance has external IP disabled
 
    - gcpdiag-notebooks2-aaaa/us-west1-a/notebooks2instance-provisioning-stuck [UNCERTAIN]
      [REASON]

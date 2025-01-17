@@ -36,8 +36,8 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
     SSH guard check:
         - Check if SSHGuard is active and may be blocking IP addresses
     
-[START]: Fetching VM details
-[AUTOMATED STEP]: Checking if all logs available since last boot of the instance
+[START]: Verify GCE VM is in a running state.
+[AUTOMATED STEP]: Verify all logs available since last boot of the instance
 
    - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [OK]
      [REASON]
@@ -68,26 +68,26 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      [2] https://cloud.google.com/compute/docs/troubleshooting/fstab-errors
 
      More articles to refer to:
-       Redhat:
-       - https://access.redhat.com/solutions/2515741
-       - https://access.redhat.com/solutions/6932631
+     Redhat:
+     - https://access.redhat.com/solutions/2515741
+     - https://access.redhat.com/solutions/6932631
 
-       SUSE:
-       - https://www.suse.com/support/kb/doc/?id=000018523
+     SUSE:
+     - https://www.suse.com/support/kb/doc/?id=000018523
 
-[AUTOMATED STEP]: Checking if any Filesystem corruption related errors in Serial console logs
+[AUTOMATED STEP]: Verify any Filesystem corruption related errors in Serial console logs
 
    - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
      [REASON]
      Possibe filesystem corruption detected.
 
      The patterns we looked for :
-         'Corruption of in-memory data detected. Shutting down filesystem',
-         'Corruption of in-memory data detected', 'warning: mounting fs with errors',
-         'Failed to mount /',
-         'A stop job is running for Security \.\.\..* Service ',
-         'I/O Error Detected. Shutting down filesystem',
-         'metadata I/O error in'
+     'Corruption of in-memory data detected. Shutting down filesystem',
+     'Corruption of in-memory data detected', 'warning: mounting fs with errors',
+     'Failed to mount /',
+     'A stop job is running for Security \.\.\..* Service ',
+     'I/O Error Detected. Shutting down filesystem',
+     'metadata I/O error in'
 
      [REMEDIATION]
      To fix the filesystem correuption, you may use gce-rescue[1] available in cloud shell to
@@ -110,9 +110,9 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      [REASON]
      We have found high disk utilisation related errors in Serial console logs.
      The patterns we looked for :
-         'No space left on device', 'No usable temporary directory found',
-         'A stop job is running for Security \.\.\..* Service ',
-         'disk is at or near capacity'
+     'No space left on device', 'No usable temporary directory found',
+     'A stop job is running for Security \.\.\..* Service ',
+     'disk is at or near capacity'
 
      [REMEDIATION]
      To mitigate high disk usage, consider expanding the VM's boot disk capacity.
@@ -120,7 +120,7 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      Follow the guide to increase disk size:
      https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
 
-[AUTOMATED STEP]: Checking if any slow Disk operations related errors in Serial console logs
+[AUTOMATED STEP]: Verify any slow Disk operations related errors in Serial console logs
 
    - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [UNCERTAIN]
      [REASON]
@@ -129,7 +129,7 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      [REMEDIATION]
 
 
-[AUTOMATED STEP]: Checking if there are any memory related errors in Serial logs
+[AUTOMATED STEP]: Verify there are any memory related errors in Serial logs
 
    - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [UNCERTAIN]
      [REASON]
@@ -169,10 +169,10 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
 
      [REMEDIATION]
      To verify, please check your system Logs for below patterns:
-         'time may be out of sync',
-         'System clock is unsynchronized',
-         'Time drift detected',
-         'no servers can be used, system clock unsynchronized'
+     'time may be out of sync',
+     'System clock is unsynchronized',
+     'Time drift detected',
+     'no servers can be used, system clock unsynchronized'
 
 [AUTOMATED STEP]: Examining SSHD functionality via serial logs.
 
@@ -190,14 +190,14 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      [REMEDIATION]
      To mitigate "bad ownership or modes for directory" errors:
      1. Follow either of the below steps to check the permissions:
-       a. these steps to rescue the vm:
-          https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
+     a. these steps to rescue the vm:
+     https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
 
-       b. these steps login through serial console:
-          https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+     b. these steps login through serial console:
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
      2. Refer to the standard permissions required for ssh connection:
-        https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-ssh-errors#permissions
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-ssh-errors#permissions
 
 [AUTOMATED STEP]: Checking for Guest Agent startup logs
 
@@ -218,7 +218,7 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      manually inspect its configuration via the interactive serial console:
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
-[END]: Finalizing Serial console Log Analysis...
+[END]: Finalize Serial console Log Analysis.
 
 
 name=valid-linux-ssh,project_id=gcpdiag-gce-vm-performance,zone=europe-west2-a
@@ -259,8 +259,8 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
     SSH guard check:
         - Check if SSHGuard is active and may be blocking IP addresses
     
-[START]: Fetching VM details
-[AUTOMATED STEP]: Checking if all logs available since last boot of the instance
+[START]: Verify GCE VM is in a running state.
+[AUTOMATED STEP]: Verify all logs available since last boot of the instance
 
    - gcpdiag-gce-vm-performance/valid-linux-ssh                           [OK]
      [REASON]
@@ -296,7 +296,7 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      [1] https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error
      [2] https://cloud.google.com/compute/docs/troubleshooting/fstab-errors
 
-[AUTOMATED STEP]: Checking if any Filesystem corruption related errors in Serial console logs
+[AUTOMATED STEP]: Verify any Filesystem corruption related errors in Serial console logs
 
    - gcpdiag-gce-vm-performance/valid-linux-ssh                           [UNCERTAIN]
      [REASON]
@@ -313,7 +313,7 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
 
      [REMEDIATION]
      NOTICE: No message available to parse for this step
-[AUTOMATED STEP]: Checking if any slow Disk operations related errors in Serial console logs
+[AUTOMATED STEP]: Verify any slow Disk operations related errors in Serial console logs
 
    - gcpdiag-gce-vm-performance/valid-linux-ssh                           [UNCERTAIN]
      [REASON]
@@ -322,7 +322,7 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      [REMEDIATION]
 
 
-[AUTOMATED STEP]: Checking if there are any memory related errors in Serial logs
+[AUTOMATED STEP]: Verify there are any memory related errors in Serial logs
 
    - gcpdiag-gce-vm-performance/valid-linux-ssh                           [UNCERTAIN]
      [REASON]
@@ -353,10 +353,10 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
 
      [REMEDIATION]
      To verify, please check your system Logs for below patterns:
-         'time may be out of sync',
-         'System clock is unsynchronized',
-         'Time drift detected',
-         'no servers can be used, system clock unsynchronized'
+     'time may be out of sync',
+     'System clock is unsynchronized',
+     'Time drift detected',
+     'no servers can be used, system clock unsynchronized'
 
 [AUTOMATED STEP]: Examining SSHD functionality via serial logs.
 
@@ -373,15 +373,15 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      [REMEDIATION]
      To check if sshd_auth_failures are happening due to wrong directory permissions:
      1. Follow either of the below steps to check the permissions:
-       a. these steps to rescue the vm:
-          https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
+     a. these steps to rescue the vm:
+     https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
 
-       b. these steps login through serial console:
-          https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+     b. these steps login through serial console:
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
      2. Check the system logs for following error messages:
-        'Authentication refused: bad ownership or modes for directory'
-        'Error updating SSH keys for user1: mkdir /home/USER/.ssh: no such file or directory'
+     'Authentication refused: bad ownership or modes for directory'
+     'Error updating SSH keys for user1: mkdir /home/USER/.ssh: no such file or directory'
 
 [AUTOMATED STEP]: Checking for Guest Agent startup logs
 
@@ -402,6 +402,6 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      manually inspect its configuration via the interactive serial console:
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
-[END]: Finalizing Serial console Log Analysis...
+[END]: Finalize Serial console Log Analysis.
 
 

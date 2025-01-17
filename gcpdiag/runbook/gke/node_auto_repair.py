@@ -316,7 +316,7 @@ class NodeAutoRepairEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing `Node AutoRepair` diagnostics..."""
+    """Finalize `Node AutoRepair` diagnostics."""
     response = op.prompt(
         kind=op.CONFIRMATION,
         message='Are you satisfied with the `GKE Node AutoRepair` RCA performed?'

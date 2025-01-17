@@ -157,7 +157,7 @@ class DataflowWorkerServiceAccountPermissions(runbook.Gateway):
     if sa_exists and op.get(flags.CROSS_PROJECT_ID) is None:
       op.info('Service Account associated with Dataflow Job was found in the'
               ' same project')
-      op.info('Checking permissions...')
+      op.info('Checking permissions.')
       # Check for Service Account permissions
       sa_permission_check = iam_gs.IamPolicyCheck()
       sa_permission_check.project = op.get(flags.PROJECT_ID)
@@ -171,7 +171,7 @@ class DataflowWorkerServiceAccountPermissions(runbook.Gateway):
       op.info('Service Account associated with Dataflow Job was found in cross '
               'project')
       # Check if constraint is enforced
-      op.info('Checking constraints on service account project...')
+      op.info('Checking constraints on service account project.')
       orgpolicy_constraint_check = crm_gs.OrgPolicyCheck()
       orgpolicy_constraint_check.project = op.get(flags.CROSS_PROJECT_ID)
       orgpolicy_constraint_check.constraint = (
@@ -180,7 +180,7 @@ class DataflowWorkerServiceAccountPermissions(runbook.Gateway):
       self.add_child(orgpolicy_constraint_check)
 
       # Check Service Account roles
-      op.info('Checking roles in service account project...')
+      op.info('Checking roles in service account project.')
       sa_permission_check = iam_gs.IamPolicyCheck()
       sa_permission_check.project = op.get(flags.CROSS_PROJECT_ID)
       sa_permission_check.principal = (
@@ -192,7 +192,7 @@ class DataflowWorkerServiceAccountPermissions(runbook.Gateway):
 
       # Check Service Agent Service Account roles
       op.info('Checking service agent service account roles on service account '
-              'project...')
+              'project.')
       service_agent_sa = (
           f'service-{project.number}@dataflow-service-producer-prod.iam.gserviceaccount.com'
       )
@@ -210,7 +210,7 @@ class DataflowWorkerServiceAccountPermissions(runbook.Gateway):
 
       # Check Compute Agent Service Account
       op.info('Checking compute agent service account roles on service account '
-              'project...')
+              'project.')
       compute_agent_sa = (
           f'service-{project.number}@compute-system.iam.gserviceaccount.com')
       compute_agent_permission_check = iam_gs.IamPolicyCheck()
@@ -254,7 +254,7 @@ class DataflowResourcePermissions(runbook.Step):
     log_entries = local_realtime_query(filter_str)
     if log_entries:
       op.info('Cloud Storage buckets related errors found in the logs..')
-      op.info('Checking worker service account storage object admin role...')
+      op.info('Checking worker service account storage object admin role.')
       dataflow_storage_role_check = iam_gs.IamPolicyCheck()
       if op.get(flags.CROSS_PROJECT_ID):
         dataflow_storage_role_check.project = op.get(flags.CROSS_PROJECT_ID)

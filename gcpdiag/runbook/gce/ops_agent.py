@@ -124,7 +124,7 @@ class OpsAgentStart(runbook.StartStep):
   """
 
   def execute(self):
-    """Verifying context and parameters required for Ops Agent runbook checks"""
+    """Verify context and parameters required for Ops Agent runbook checks"""
     project = crm.get_project(op.get(flags.PROJECT_ID))
 
     try:
@@ -175,7 +175,7 @@ class VmHasAServiceAccount(runbook.Step):
   template = 'vm_attributes::service_account_exists'
 
   def execute(self):
-    """Verifying Ops Agent has a service account..."""
+    """Verify Ops Agent has a service account."""
     instance = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                                 zone=op.get(flags.ZONE),
                                 instance_name=op.get(flags.NAME))
@@ -307,7 +307,7 @@ class CheckSerialPortLogging(runbook.CompositeStep):
   """
 
   def execute(self):
-    """Verifying GCP config required for serial port logging with ops agent"""
+    """Verify GCP config required for serial port logging with ops agent"""
     serial_logging_orgpolicy_check = crm_gs.OrgPolicyCheck()
     serial_logging_orgpolicy_check.constraint = 'constraints/compute.disableSerialPortLogging'
     serial_logging_orgpolicy_check.is_enforced = False
@@ -333,7 +333,7 @@ class OpsAgentEnd(runbook.EndStep):
     pass
 
   def execute(self):
-    """Finalizing Ops agent checks"""
+    """Finalize Ops agent checks"""
     serial_log_entries = None
     has_expected_opsagent_logs = False
     ops_agent_uptime = None

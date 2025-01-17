@@ -437,7 +437,7 @@ class ClusterAutoscalerEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing `Cluster Autoscaler` diagnostics..."""
+    """Finalize `Cluster Autoscaler` diagnostics."""
     response = op.prompt(
         kind=op.CONFIRMATION,
         message=

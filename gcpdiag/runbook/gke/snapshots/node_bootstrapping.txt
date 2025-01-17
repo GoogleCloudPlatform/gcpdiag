@@ -26,7 +26,7 @@ gke/node-bootstrapping: Analyses issues experienced when adding nodes to your GK
 
    - gcpdiag-gke1-aaaa                                                    [SKIP]
      [REASON]
-     No nodepool or GKE cluster name provided, skipping this step ... 
+     No nodepool or GKE cluster name provided, skipping this step . 
      Please provide nodepool name (-p nodepool=<nodepoolname>) and GKE cluster name (-p name=<gke-cluster-name>) if you see issues with nodes not appearing in the nodepool.
 [AUTOMATED STEP]: 
     Verify if Node Registration Checker completed running.
@@ -38,9 +38,9 @@ gke/node-bootstrapping: Analyses issues experienced when adding nodes to your GK
 
    - gcpdiag-gke1-aaaa                                                    [SKIP]
      [REASON]
-     No node name provided, skipping this step ...
+     No node name provided, skipping this step .
      Please provide node name (-p node=<nodename>) if the node appears in the nodepool, but fails registration.
 
-[END]: Finalizing `GKE Node Bootstrapping` diagnostics...
+[END]: Finalize `GKE Node Bootstrapping` diagnostics.
 
 

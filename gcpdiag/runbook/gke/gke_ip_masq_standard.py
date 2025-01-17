@@ -113,7 +113,7 @@ class GkeIpMasqStandardStart(runbook.StartStep):
   """
 
   def execute(self):
-    """Lets check the provided parameters..."""
+    """Lets check the provided parameters."""
     #     # skip if logging is disabled
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
@@ -235,7 +235,7 @@ class CheckConfigMap(runbook.Step):
   template = 'ipmasq_standard::configmap'
 
   def execute(self):
-    """Lets confirm if config map  is configure.."""
+    """Lets confirm if config map  is configure."""
 
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
@@ -271,7 +271,7 @@ class CheckNodeIP(runbook.Step):
   template = 'ipmasq_standard::node'
 
   def execute(self):
-    '''Lets check node IP is present under non-masq cidr...'''
+    '''Lets check node IP is present under non-masq cidr.'''
 
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
@@ -307,7 +307,7 @@ class GkeIpMasqStandardEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing connectivity diagnostics.."""
+    """Finalize connectivity diagnostics."""
 
     op.info(
         message=

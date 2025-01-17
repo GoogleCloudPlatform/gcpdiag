@@ -1,10 +1,10 @@
 ---
-title: "gce/Fetch Vm Details"
-linkTitle: "Fetch Vm Details"
+title: "gce/Vm Performance Start"
+linkTitle: "Vm Performance Start"
 weight: 3
 type: docs
 description: >
-  Fetching VM details ...
+  Fetching VM details.
 ---
 
 **Product**: [Compute Engine](https://cloud.google.com/compute)\
@@ -16,11 +16,11 @@ None
 
 ### Failure Reason
 
-The GCE VM {vm_name} is in an undesired state: {status}.
+The GCE VM {vm_full_path} is in an undesired state: {status}.
 
 ### Failure Remediation
 
-This step failed because GCE Virtual Machine {vm_name} is expected to be in a RUNNING state:
+This step failed because GCE Virtual Machine {vm_full_path} is expected to be in a RUNNING state:
 
 To initiate the lifecycle transition from {status} to RUNNING state follow guide [1]
 
@@ -32,7 +32,11 @@ Resources:
 
 ### Success Reason
 
-The GCE VM {vm_name} is in the expected state: {status}.
+The GCE VM {vm_full_path} is in {status} state.
+
+### Skipped Reason
+
+Could not validate VM lifecycle.
 
 
 

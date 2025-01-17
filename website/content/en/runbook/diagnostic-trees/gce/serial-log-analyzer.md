@@ -75,7 +75,7 @@ gcpdiag runbook --help
 
 ### Potential Steps
 
-  - [Fetch Vm Details](/runbook/steps/gce/fetch-vm-details)
+  - [Serial Log Analyzer Start](/runbook/steps/gce/serial-log-analyzer-start)
 
   - [Vm Serial Logs Check](/runbook/steps/gce/vm-serial-logs-check)
 

@@ -4,7 +4,7 @@ linkTitle: "Analysing Serial Logs End"
 weight: 3
 type: docs
 description: >
-  Finalizing Serial console Log Analysis...
+  Finalize Serial console Log Analysis.
 ---
 
 **Product**: [Compute Engine](https://cloud.google.com/compute)\

@@ -182,7 +182,7 @@ class JobExists(runbook.StartStep):
   template = 'job::job_id_exists'
 
   def execute(self):
-    """Verify job exists in Dataproc UI..."""
+    """Verify job exists in Dataproc UI."""
     project = crm.get_project(op.get(flags.PROJECT_ID))
 
     if not op.get(flags.JOB_ID) or not op.get(flags.REGION):
@@ -263,7 +263,7 @@ class DataProcClusterExists(runbook.Step):
   template = 'job::cluster_exists'
 
   def execute(self):
-    """Verify cluster exists in Dataproc UI..."""
+    """Verify cluster exists in Dataproc UI."""
 
     project = crm.get_project(op.get(flags.PROJECT_ID))
 
@@ -312,7 +312,7 @@ class CheckStackdriverSetting(runbook.Step):
   template = 'dataproc_attributes::stackdriver'
 
   def execute(self):
-    """Checking Stackdriver setting..."""
+    """Checking Stackdriver setting."""
     # taking cluster details
     cluster = dataproc.get_cluster(cluster_name=op.get(flags.CLUSTER_NAME),
                                    region=op.get(flags.REGION),
@@ -338,7 +338,7 @@ class CheckClusterVersion(runbook.Step):
   template = 'dataproc_attributes::unspported_image_version'
 
   def execute(self):
-    """Verify cluster version..."""
+    """Verify cluster version."""
 
     supported_versions = dataproc.extract_dataproc_supported_version()
     cluster = dataproc.get_cluster(cluster_name=op.get(flags.CLUSTER_NAME),
@@ -381,7 +381,7 @@ class CheckIfJobFailed(runbook.Step):
   template = 'job::job_failed'
 
   def execute(self):
-    """Verify if job failed..."""
+    """Verify if job failed."""
     project = crm.get_project(op.get(flags.PROJECT_ID))
     if op.get(flags.JOB_EXIST) == 'false':
       op.add_skipped(project, reason="Job doesn't exist, skipping this step.")
@@ -409,7 +409,7 @@ class CheckTaskNotFound(runbook.CompositeStep):
   template = 'job::task_not_found'
 
   def execute(self):
-    """Verify if job didn't failed with 'task not found' error..."""
+    """Verify if job didn't failed with 'task not found' error."""
     project = crm.get_project(op.get(flags.PROJECT_ID))
 
     if op.get(flags.JOB_EXIST) == 'false':
@@ -481,7 +481,7 @@ class CheckPermissions(runbook.CompositeStep):
   template = 'permissions::permission_check'
 
   def execute(self):
-    """Verify permissions ..."""
+    """Verify permissions ."""
 
     sa_email = op.get(flags.SERVICE_ACCOUNT)
     project = crm.get_project(op.get(flags.PROJECT_ID))
@@ -501,7 +501,7 @@ class CheckPermissions(runbook.CompositeStep):
       op.info(
           'VM Service Account associated with Dataproc cluster was found in the'
           ' same project')
-      op.info('Checking permissions...')
+      op.info('Checking permissions.')
       # Check for Service Account permissions
       sa_permission_check = iam_gs.IamPolicyCheck()
       sa_permission_check.project = op.get(flags.PROJECT_ID)
@@ -514,7 +514,7 @@ class CheckPermissions(runbook.CompositeStep):
       op.info('VM Service Account associated with Dataproc cluster was found in'
               ' cross project')
       # Check if constraint is enforced
-      op.info('Checking constraints on service account project...')
+      op.info('Checking constraints on service account project.')
       orgpolicy_constraint_check = crm_gs.OrgPolicyCheck()
       orgpolicy_constraint_check.project = op.get(flags.CROSS_PROJECT_ID)
       orgpolicy_constraint_check.constraint = (
@@ -523,7 +523,7 @@ class CheckPermissions(runbook.CompositeStep):
       self.add_child(orgpolicy_constraint_check)
 
       # Check Service Account roles
-      op.info('Checking roles in service account project...')
+      op.info('Checking roles in service account project.')
       sa_permission_check = iam_gs.IamPolicyCheck()
       sa_permission_check.project = op.get(flags.CROSS_PROJECT_ID)
       sa_permission_check.principal = (
@@ -537,7 +537,7 @@ class CheckPermissions(runbook.CompositeStep):
 
       # Check Service Agent Service Account roles
       op.info('Checking service agent service account roles on service account'
-              ' project...')
+              ' project.')
       # project = crm.get_project(op.get(flags.PROJECT_ID))
       service_agent_sa = (
           f'service-{project.number}@dataproc-accounts.iam.gserviceaccount.com')
@@ -554,7 +554,7 @@ class CheckPermissions(runbook.CompositeStep):
 
       # Check Compute Agent Service Account
       op.info('Checking compute agent service account roles on service account'
-              ' project...')
+              ' project.')
       compute_agent_sa = (
           f'service-{project.number}@compute-system.iam.gserviceaccount.com')
       compute_agent_permission_check = iam_gs.IamPolicyCheck()
@@ -583,7 +583,7 @@ class CheckMasterOOM(runbook.Step):
   template = 'logs_related::master_oom'
 
   def execute(self):
-    """Verify if OOM has happened on master ..."""
+    """Verify if OOM has happened on master ."""
 
     project = crm.get_project(op.get(flags.PROJECT_ID))
 
@@ -915,7 +915,7 @@ class CheckAutoscalingPolicy(runbook.Step):
   template = 'logs_related::shuffle_service_kill_graceful_decommision_timeout'
 
   def execute(self):
-    """Checking autoscaling policies and graceful decommission timeouts..."""
+    """Checking autoscaling policies and graceful decommission timeouts."""
 
     project = crm.get_project(op.get(flags.PROJECT_ID))
     cluster = dataproc.get_cluster(
@@ -955,7 +955,7 @@ class CheckPreemptible(runbook.Step):
   template = 'logs_related::shuffle_service_kill_preemptible_workers'
 
   def execute(self):
-    """Checking worker count..."""
+    """Checking worker count."""
 
     project = crm.get_project(op.get(flags.PROJECT_ID))
     cluster = dataproc.get_cluster(cluster_name=op.get(flags.CLUSTER_NAME),
@@ -1000,7 +1000,7 @@ class CheckGCPause(runbook.CompositeStep):
 
 
 class CheckJobThrottling(runbook.CompositeStep):
-  """Verify the presence of Job Throttling logs..."""
+  """Verify the presence of Job Throttling logs."""
 
   def execute(self):
     """Check for Job Throttling messages in the logs."""
@@ -1043,10 +1043,10 @@ class CheckJobThrottling(runbook.CompositeStep):
 
 
 class CheckYarnRuntimeException(runbook.CompositeStep):
-  """Verify presence of CheckYarnRuntimeException logs..."""
+  """Verify presence of CheckYarnRuntimeException logs."""
 
   def execute(self):
-    """Check for CheckYarnRuntimeException logs..."""
+    """Check for CheckYarnRuntimeException logs."""
     yarn_runtime = dp_gs.CheckLogsExist()
     yarn_runtime.template = 'logs_related::yarn_runtime'
     yarn_runtime.log_message = dp_const.YARN_RUNTIME_LOG
@@ -1060,7 +1060,7 @@ class CheckGCSConnector(runbook.CompositeStep):
   template = 'dataproc_attributes::gcs_connector'
 
   def execute(self):
-    """Check for non-default GCS connector..."""
+    """Check for non-default GCS connector."""
     cluster = dataproc.get_cluster(cluster_name=op.get(flags.CLUSTER_NAME),
                                    region=op.get(flags.REGION),
                                    project=op.get(flags.PROJECT_ID))
@@ -1108,7 +1108,7 @@ class CheckBQConnector(runbook.CompositeStep):
   template = 'dataproc_attributes::bq_connector'
 
   def execute(self):
-    """Check if non-default BigQuery connector version exists..."""
+    """Check if non-default BigQuery connector version exists."""
     cluster = dataproc.get_cluster(cluster_name=op.get(flags.CLUSTER_NAME),
                                    region=op.get(flags.REGION),
                                    project=op.get(flags.PROJECT_ID))

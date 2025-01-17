@@ -30,7 +30,7 @@ class VpcFirewallCheck(runbook.Step):
   traffic = None
 
   def execute(self):
-    """Evaluating VPC network firewall rules..."""
+    """Evaluating VPC network firewall rules."""
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
                           instance_name=op.get(flags.NAME))
@@ -80,7 +80,7 @@ class VpcRouteCheck(runbook.Step):
   """
 
   def execute(self):
-    """Evaluating the VPC routing rules..."""
+    """Evaluating the VPC routing rules."""
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
                           instance_name=op.get(flags.NAME))
@@ -122,7 +122,7 @@ class VmExternalIpConnectivityTest(runbook.Step):
   Evaluates the connectivity test for any issues and reports to the user."""
 
   def execute(self):
-    """Running a connectivity test to the external ip address..."""
+    """Running a connectivity test to the external ip address."""
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
                           instance_name=op.get(flags.NAME))
@@ -172,7 +172,7 @@ class VmExternalIpConnectivityTest(runbook.Step):
           'returned. Do you want to rerun the connectivity test?',
           choice_msg='Enter an option: ')
       if response == op.STOP:
-        op.add_skipped(vm, reason='Skipping the connectivity test...')
+        op.add_skipped(vm, reason='Skipping the connectivity test.')
 
     # Report the connectivity test result
     result_status = result.get('reachabilityDetails', {}).get('result')

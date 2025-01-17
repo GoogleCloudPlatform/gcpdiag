@@ -266,7 +266,7 @@ class NodeUnavailabilityEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing `Node Unavailability` diagnostics..."""
+    """Finalize `Node Unavailability` diagnostics."""
     response = op.prompt(
         kind=op.CONFIRMATION,
         message=

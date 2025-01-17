@@ -372,7 +372,7 @@ class LogsEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing `GKE logs` diagnostics..."""
+    """Finalize `GKE logs` diagnostics."""
     response = op.prompt(
         kind=op.CONFIRMATION,
         message='Are you satisfied with the `GKE logs` RCA performed?')

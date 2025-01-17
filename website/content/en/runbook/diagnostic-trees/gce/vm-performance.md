@@ -58,7 +58,7 @@ gcpdiag runbook --help
 
 ### Potential Steps
 
-  - [Fetch Vm Details](/runbook/steps/gce/fetch-vm-details)
+  - [Vm Performance Start](/runbook/steps/gce/vm-performance-start)
 
   - [Vm Lifecycle State](/runbook/steps/gce/vm-lifecycle-state)
 

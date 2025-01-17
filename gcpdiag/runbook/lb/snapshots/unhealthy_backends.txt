@@ -101,7 +101,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
     In this step one unhealthy instance from each group is analyzed - disks,
     memory and cpu utilization are being checked.
     
-[AUTOMATED STEP]: Verifying VM memory utilization is within optimal levels...
+[AUTOMATED STEP]: Verify VM memory utilization is within optimal levels.
 
    - gcpdiag-lb2-aaaa/vm-pn3l                                             [FAIL]
      [REASON]
@@ -111,7 +111,8 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      Elevated memory usage can result in slow or unresponsive or termimated applications.
      Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
      Guidance on stopping and changing the machine type can be found here:
-     - Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+     - Changing machine type:
+     https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
      For deeper analysis of memory issues:
 
      Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
@@ -120,7 +121,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      Or connect via the Serial Console if SSH is not available to mitigate the issue.
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
-[AUTOMATED STEP]: Checking if there are any memory related errors in Serial logs
+[AUTOMATED STEP]: Verify there are any memory related errors in Serial logs
 
    - gcpdiag-lb2-aaaa/vm-pn3l                                             [UNCERTAIN]
      [REASON]
@@ -130,7 +131,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      You may check if VM is facing high memory utilisation from GuestOS side using `free -m`
      or `cat /proc/meminfo` commands.
 
-[AUTOMATED STEP]: Checking if VM's Boot disk space utilization is within optimal levels.
+[AUTOMATED STEP]: Verify VM's Boot disk space utilization is within optimal levels.
 
    - gcpdiag-lb2-aaaa/vm-pn3l                                             [FAIL]
      [REASON]
@@ -143,7 +144,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      Follow the guide to increase disk size:
      https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
 
-[AUTOMATED STEP]: Verifying VM CPU utilization is within optimal levels
+[AUTOMATED STEP]: Verify VM CPU utilization is within optimal levels
 
    - gcpdiag-lb2-aaaa/vm-pn3l                                             [FAIL]
      [REASON]
@@ -163,7 +164,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      Alternatively, you can connect via serial console if SSH is unvailable to stop offending processes
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console.
 
-[END]: Finalizing unhealthy backends diagnostics...
+[END]: Finalize unhealthy backends diagnostics.
 
 
 backend_service_name=backend-service-2,project_id=gcpdiag-lb2-aaaa,region=europe-west4
@@ -260,7 +261,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
     In this step one unhealthy instance from each group is analyzed - disks,
     memory and cpu utilization are being checked.
     
-[AUTOMATED STEP]: Verifying VM memory utilization is within optimal levels...
+[AUTOMATED STEP]: Verify VM memory utilization is within optimal levels.
 
    - gcpdiag-lb2-aaaa/neg-vm                                              [FAIL]
      [REASON]
@@ -270,7 +271,8 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      Elevated memory usage can result in slow or unresponsive or termimated applications.
      Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
      Guidance on stopping and changing the machine type can be found here:
-     - Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+     - Changing machine type:
+     https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
      For deeper analysis of memory issues:
 
      Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
@@ -279,7 +281,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      Or connect via the Serial Console if SSH is not available to mitigate the issue.
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
-[AUTOMATED STEP]: Checking if there are any memory related errors in Serial logs
+[AUTOMATED STEP]: Verify there are any memory related errors in Serial logs
 
    - gcpdiag-lb2-aaaa/neg-vm                                              [UNCERTAIN]
      [REASON]
@@ -289,7 +291,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      You may check if VM is facing high memory utilisation from GuestOS side using `free -m`
      or `cat /proc/meminfo` commands.
 
-[AUTOMATED STEP]: Checking if VM's Boot disk space utilization is within optimal levels.
+[AUTOMATED STEP]: Verify VM's Boot disk space utilization is within optimal levels.
 
    - gcpdiag-lb2-aaaa/neg-vm                                              [FAIL]
      [REASON]
@@ -302,7 +304,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      Follow the guide to increase disk size:
      https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
 
-[AUTOMATED STEP]: Verifying VM CPU utilization is within optimal levels
+[AUTOMATED STEP]: Verify VM CPU utilization is within optimal levels
 
    - gcpdiag-lb2-aaaa/neg-vm                                              [FAIL]
      [REASON]
@@ -322,6 +324,6 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      Alternatively, you can connect via serial console if SSH is unvailable to stop offending processes
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console.
 
-[END]: Finalizing unhealthy backends diagnostics...
+[END]: Finalize unhealthy backends diagnostics.
 
 

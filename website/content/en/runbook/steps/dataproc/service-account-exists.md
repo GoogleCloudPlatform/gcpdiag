@@ -4,7 +4,7 @@ linkTitle: "Service Account Exists"
 weight: 3
 type: docs
 description: >
-  Validating service account and permissions in Dataproc cluster project or another project.
+  Verify service account and permissions in Dataproc cluster project or another project.
 ---
 
 **Product**: [Cloud Dataproc](https://cloud.google.com/dataproc)\

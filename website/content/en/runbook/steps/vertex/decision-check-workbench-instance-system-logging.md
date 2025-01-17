@@ -18,7 +18,7 @@ Decides whether its possible to check syslogs for the
 ### Success Reason
 
 OK! Workbench Instance {instance_name} Serial Port Logging is enabled and instance is initializing.
-Checking Workbench Instance syslogs for issues...
+Checking Workbench Instance syslogs for issues
 
 ### Uncertain Reason
 

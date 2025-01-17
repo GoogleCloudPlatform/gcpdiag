@@ -15,7 +15,8 @@ Explore rescue options for inaccessible VMs or review possible guest OS issues,
 
 If escalating Guest OS related issues to Google Cloud Support
 do check to ensure is in line with Google Cloud Platform's Guest OS support policy
-- Google Cloud Platform Support Scope: https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
+- Google Cloud Platform Support Scope:
+https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
 {% endblock default_failure_remediation %}
 
 {% block default_success_reason %}
@@ -35,7 +36,8 @@ keeping in mind certain guest OS faults may be beyond Google Cloud Platform's su
 - Viewing Serial Port Output: https://cloud.google.com/compute/docs/troubleshooting/viewing-serial-port-output
 - Resolving Kernel Panic:
 https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error
-- Google Cloud Platform Support Scope: https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
+- Google Cloud Platform Support Scope:
+https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
 {% endblock default_uncertain_remediation %}
 
 {% block kernel_panic_step_message %}
@@ -72,12 +74,12 @@ https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-
 [2] https://cloud.google.com/compute/docs/troubleshooting/fstab-errors
 
 More articles to refer to:
-  Redhat:
-  - https://access.redhat.com/solutions/2515741
-  - https://access.redhat.com/solutions/6932631
+Redhat:
+- https://access.redhat.com/solutions/2515741
+- https://access.redhat.com/solutions/6932631
 
-  SUSE:
-  - https://www.suse.com/support/kb/doc/?id=000018523
+SUSE:
+- https://www.suse.com/support/kb/doc/?id=000018523
 {% endblock kernel_panic_failure_remediation %}
 
 {% block kernel_panic_uncertain_reason %}
@@ -229,7 +231,7 @@ There are no logs to examine
 {% endblock sshd_skipped_reason %}
 
 {% block windows_bootup_step_message %}
-Verifying bootup pr
+Verify bootup pr
 {% endblock windows_bootup_step_message %}
 
 {% block windows_bootup_success_reason %}
@@ -251,7 +253,8 @@ Resources:
 
 Connecting to the Windows Special Administrative Console (SAC) to troubleshoot bootup issues.
 [2] https://cloud.google.com/compute/docs/instances/connecting-to-sac
-[3] https://cloud.google.com/compute/docs/images/install-guest-environment#windows:~:text=Engine%20Shutdown%20Scripts-,Windows,-GCEGuestAgent%3A%20GCE%20Agent
+[3]
+https://cloud.google.com/compute/docs/images/install-guest-environment#windows:~:text=Engine%20Shutdown%20Scripts-,Windows,-GCEGuestAgent%3A%20GCE%20Agent
 [4] https://cloud.google.com/compute/docs/instances/connecting-to-windows
 [5] https://cloud.google.com/compute/docs/connect/windows-ssh
 [6] https://cloud.google.com/compute/docs/instances/windows/connecting-powershell
@@ -280,7 +283,7 @@ https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-
 
 
 {% block serial_log_start_point_step_message %}
-Checking if all logs available since last boot of the instance
+Verify all logs available since last boot of the instance
 {% endblock serial_log_start_point_step_message %}
 
 {% block serial_log_start_point_success_reason %}
@@ -301,9 +304,9 @@ There are no logs to examine !
 {% endblock serial_log_start_point_skipped_reason %}
 
 
-{% block  time_sync_issue_step_message %}
+{% block time_sync_issue_step_message %}
 Checking for Time Sync related errors
-{% endblock  time_sync_issue_step_message %}
+{% endblock time_sync_issue_step_message %}
 
 {% block time_sync_issue_failure_reason %}
 Found time sync error messages in Serial console logs. It looks like VM's time is out of syc.
@@ -324,16 +327,16 @@ We did not find any Time sync related errors in Serial console logs.
 
 {% block time_sync_issue_uncertain_remediation %}
 To verify, please check your system Logs for below patterns:
-    'time may be out of sync',
-    'System clock is unsynchronized',
-    'Time drift detected',
-    'no servers can be used, system clock unsynchronized'
+'time may be out of sync',
+'System clock is unsynchronized',
+'Time drift detected',
+'no servers can be used, system clock unsynchronized'
 {% endblock time_sync_issue_uncertain_remediation %}
 
 
-{% block  guest_agent_step_message %}
+{% block guest_agent_step_message %}
 Checking for Guest Agent startup logs
-{% endblock  guest_agent_step_message %}
+{% endblock guest_agent_step_message %}
 
 {% block guest_agent_failure_reason %}
 Could not find the Google Guest Agent startup log in Serial console logs.
@@ -381,9 +384,9 @@ please check https://cloud.google.com/compute/docs/images/install-guest-environm
 
 {% endblock guest_agent_uncertain_remediation %}
 
-{% block  network_errors_step_message %}
+{% block network_errors_step_message %}
 Checking for network related errors
-{% endblock  network_errors_step_message %}
+{% endblock network_errors_step_message %}
 
 {% block network_errors_failure_reason %}
 The metadata server(169.254.169.254) is unreachable from the insatnce.
@@ -409,20 +412,20 @@ There are no logs to examine !
 We are not able to deduce a conlusion on certainity of Network issues on the instance.
 {% endblock network_errors_uncertain_reason %}
 
-{% block  linux_fs_corruption_step_message %}
-Checking if any Filesystem corruption related errors in Serial console logs
-{% endblock  linux_fs_corruption_step_message %}
+{% block linux_fs_corruption_step_message %}
+Verify any Filesystem corruption related errors in Serial console logs
+{% endblock linux_fs_corruption_step_message %}
 
 {% block linux_fs_corruption_failure_reason %}
 Possibe filesystem corruption detected.
 
 The patterns we looked for :
-    'Corruption of in-memory data detected. Shutting down filesystem',
-    'Corruption of in-memory data detected', 'warning: mounting fs with errors',
-    'Failed to mount /',
-    'A stop job is running for Security \.\.\..* Service ',
-    'I/O Error Detected. Shutting down filesystem',
-    'metadata I/O error in'
+'Corruption of in-memory data detected. Shutting down filesystem',
+'Corruption of in-memory data detected', 'warning: mounting fs with errors',
+'Failed to mount /',
+'A stop job is running for Security \.\.\..* Service ',
+'I/O Error Detected. Shutting down filesystem',
+'metadata I/O error in'
 {% endblock linux_fs_corruption_failure_reason %}
 
 {% block linux_fs_corruption_failure_remediation %}
@@ -457,14 +460,14 @@ We found the error "Authentication refused: bad ownership or modes for directory
 {% block sshd_auth_failure_failure_remediation %}
 To mitigate "bad ownership or modes for directory" errors:
 1. Follow either of the below steps to check the permissions:
-  a. these steps to rescue the vm:
-     https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
+a. these steps to rescue the vm:
+https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
 
-  b. these steps login through serial console:
-     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+b. these steps login through serial console:
+https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
 2. Refer to the standard permissions required for ssh connection:
-   https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-ssh-errors#permissions
+https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-ssh-errors#permissions
 {% endblock sshd_auth_failure_failure_remediation %}
 
 {% block sshd_auth_failure_success_reason %}
@@ -482,15 +485,15 @@ We are not able to find the success or failed logs for SSHD authentication issue
 {% block sshd_auth_failure_uncertain_remediation %}
 To check if sshd_auth_failures are happening due to wrong directory permissions:
 1. Follow either of the below steps to check the permissions:
-  a. these steps to rescue the vm:
-     https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
+a. these steps to rescue the vm:
+https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
 
-  b. these steps login through serial console:
-     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+b. these steps login through serial console:
+https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
 2. Check the system logs for following error messages:
-   'Authentication refused: bad ownership or modes for directory'
-   'Error updating SSH keys for user1: mkdir /home/USER/.ssh: no such file or directory'
+'Authentication refused: bad ownership or modes for directory'
+'Error updating SSH keys for user1: mkdir /home/USER/.ssh: no such file or directory'
 {% endblock sshd_auth_failure_uncertain_remediation %}
 
 {% block linux_fs_corruption_uncertain_reason %}
@@ -501,9 +504,9 @@ We did not find any Filesystem corruption related errors in Serial console logs
 
 {% endblock linux_fs_corruption_uncertain_remediation %}
 
-{% block  cloud_init_startup_check_step_message %}
+{% block cloud_init_startup_check_step_message %}
 Checking for Cloud-init startup logs
-{% endblock  cloud_init_startup_check_step_message %}
+{% endblock cloud_init_startup_check_step_message %}
 
 {% block cloud_init_startup_check_failure_reason %}
 Could not find the Cloud-init startup log in Serial console logs.
@@ -512,7 +515,8 @@ Could not find the Cloud-init startup log in Serial console logs.
 {% block cloud_init_startup_check_failure_remediation %}
 Cloud-init is the standard method for initializing cloud instance when it boots up.
 It is installed in official Ubuntu and Container-Optimized OS images.
-Cloud-init failures can be caused by internal issues, problems with other system components, or user configuration errors.
+Cloud-init failures can be caused by internal issues, problems with other system components, or user configuration
+errors.
 
 
 Check if Cloud-init process is in running state.
@@ -549,9 +553,9 @@ systemctl enable cloud-init
 {% endblock cloud_init_startup_check_uncertain_remediation %}
 
 
-{% block  cloud_init_step_message %}
-Checking if Network interface received IP through cloud-init
-{% endblock  cloud_init_step_message %}
+{% block cloud_init_step_message %}
+Verify Network interface received IP through cloud-init
+{% endblock cloud_init_step_message %}
 
 {% block cloud_init_failure_reason %}
 NIC did not received any IP through cloud-init
@@ -560,7 +564,8 @@ NIC did not received any IP through cloud-init
 {% block cloud_init_failure_remediation %}
 Cloud-init is the standard method for initializing cloud instance when it boots up.
 It is installed in official Ubuntu and Container-Optimized OS images.
-Cloud-init failures can be caused by internal issues, problems with other system components, or user configuration errors.
+Cloud-init failures can be caused by internal issues, problems with other system components, or user configuration
+errors.
 
 
 Check if Cloud-init process is in running state.

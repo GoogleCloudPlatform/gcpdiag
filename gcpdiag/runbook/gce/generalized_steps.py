@@ -46,7 +46,7 @@ class HighVmMemoryUtilization(runbook.Step):
   # Typcial Memory exhaustion logs in serial console.
 
   def execute(self):
-    """Verifying VM memory utilization is within optimal levels..."""
+    """Verify VM memory utilization is within optimal levels."""
 
     start_formatted_string = op.get(
         flags.START_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
@@ -92,7 +92,8 @@ class HighVmMemoryUtilization(runbook.Step):
 
     if mem_usage_metrics:
       op.add_failed(vm,
-                    reason=op.prep_msg(op.FAILURE_REASON),
+                    reason=op.prep_msg(op.FAILURE_REASON,
+                                       vm_full_path=vm.full_path),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     elif mark_no_ops_agent:
       op.add_skipped(vm,
@@ -130,7 +131,7 @@ class HighVmDiskUtilization(runbook.Step):
   serial_console_file: str = ''
 
   def execute(self):
-    """Verifying VM's Boot disk space utilization is within optimal levels."""
+    """Verify VM's Boot disk space utilization is within optimal levels."""
 
     start_formatted_string = op.get(
         flags.START_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
@@ -200,7 +201,7 @@ class HighVmCpuUtilization(runbook.Step):
   instance_name: str
 
   def execute(self):
-    """Verifying VM CPU utilization is within optimal levels"""
+    """Verify VM CPU utilization is within optimal levels"""
 
     start_formatted_string = op.get(
         flags.START_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
@@ -259,24 +260,32 @@ class VmLifecycleState(runbook.Step):
   project_id: str
   zone: str
   instance_name: str
+  expected_lifecycle_status: str
 
   def execute(self):
-    """Verifying VM is in the RUNNING state..."""
+    """Verify GCE VM is in {expected_lifecycle_status} status."""
     vm = gce.get_instance(project_id=self.project_id,
                           zone=self.zone,
                           instance_name=self.instance_name)
-    if vm and vm.is_running:
+    if not vm:
+      op.add_skipped(vm,
+                     reason=op.prep_msg(op.SKIPPED_REASON,
+                                        vm_full_path=vm.full_path,
+                                        status=vm.status))
+      return
+
+    if vm.status == self.expected_lifecycle_status:
       op.add_ok(vm,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   vm_name=vm.name,
+                                   vm_full_path=vm.full_path,
                                    status=vm.status))
     else:
       op.add_failed(vm,
                     reason=op.prep_msg(op.FAILURE_REASON,
-                                       vm_name=vm.name,
+                                       vm_full_path=vm.full_path,
                                        status=vm.status),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                            vm_name=vm.name,
+                                            vm_full_path=vm.full_path,
                                             status=vm.status))
 
 
@@ -302,7 +311,7 @@ class VmSerialLogsCheck(runbook.Step):
   negative_pattern_operator = 'OR'
 
   def execute(self):
-    """Analyzing serial logs for predefined patterns..."""
+    """Analyzing serial logs for predefined patterns."""
     # All kernel failures.
     good_pattern_detected = False
     bad_pattern_detected = False
@@ -425,7 +434,7 @@ class VmMetadataCheck(runbook.Step):
       raise ValueError('Unsupported Type')
 
   def execute(self):
-    """Verifying VM metadata value..."""
+    """Verify VM metadata value."""
     vm = gce.get_instance(project_id=self.project_id,
                           zone=self.zone,
                           instance_name=self.instance_name)
@@ -466,7 +475,7 @@ class GceVpcConnectivityCheck(runbook.Step):
   traffic = None
 
   def execute(self):
-    """Evaluating VPC network traffic rules..."""
+    """Evaluating VPC network traffic rules."""
     vm = gce.get_instance(project_id=self.project_id,
                           zone=self.zone,
                           instance_name=self.instance_name)
@@ -525,7 +534,7 @@ class VmScope(runbook.Step):
   instance_name: str
 
   def execute(self):
-    """Verifying GCE VM access scope"""
+    """Verify GCE VM access scope"""
     instance = gce.get_instance(project_id=self.project_id,
                                 zone=self.zone,
                                 instance_name=self.instance_name)
@@ -612,7 +621,7 @@ class VmHasOpsAgent(runbook.Step):
     return subagents
 
   def execute(self):
-    """Verifying GCE VM's has ops agent installed and currently active"""
+    """Verify GCE VM's has ops agent installed and currently active"""
     self.end_time_utc = getattr(self, 'end_time_utc', None) or op.get(
         self.end_time_utc)
     self.start_time_utc = getattr(self, 'start_time_utc', None) or op.get(

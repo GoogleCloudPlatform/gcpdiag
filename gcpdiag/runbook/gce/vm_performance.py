@@ -91,7 +91,7 @@ class VmPerformance(runbook.DiagnosticTree):
   def build_tree(self):
     """Construct the diagnostic tree with appropriate steps."""
 
-    start = FetchVmDetails()
+    start = VmPerformanceStart()
     cpu_check = gce_gs.HighVmCpuUtilization()
     cpu_check.project_id = op.get(flags.PROJECT_ID)
     cpu_check.zone = op.get(flags.ZONE)
@@ -142,8 +142,8 @@ class VmPerformance(runbook.DiagnosticTree):
     self.add_end(step=VmPerformanceEnd())
 
 
-class FetchVmDetails(runbook.StartStep):
-  """Fetching VM details ..."""
+class VmPerformanceStart(runbook.StartStep):
+  """Fetching VM details."""
 
   template = 'vm_attributes::running'
 
@@ -1388,10 +1388,10 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
 
 
 class VmPerformanceEnd(runbook.EndStep):
-  """Finalizing VM performance diagnostics..."""
+  """Finalize VM performance diagnostics."""
 
   def execute(self):
-    """Finalizing VM performance diagnostics..."""
+    """Finalize VM performance diagnostics."""
     response = None
     if not config.get(flags.INTERACTIVE_MODE):
       response = op.prompt(

@@ -16,3 +16,4 @@
 from gcpdiag.runbook.gcp.flags import *
 
 SERVICE_ACCOUNT = 'service_account'
+PRINCIPAL = 'principal'

@@ -510,7 +510,7 @@ class LatencyEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing unhealthy backends diagnostics..."""
+    """Finalize unhealthy backends diagnostics."""
     if not config.get(flags.INTERACTIVE_MODE):
       response = op.prompt(
           kind=op.CONFIRMATION,

@@ -116,6 +116,6 @@ gke/cluster-autoscaler: Analyses logs in the project where the cluster is runnin
      Review best practices for Pod Disruption Budgets to ensure that the rules allow for eviction of application replicas when acceptable.
      https://cloud.google.com/architecture/best-practices-for-running-cost-effective-kubernetes-applications-on-gke#add-pod_disruption_budget-to-your-application
 
-[END]: Finalizing `Cluster Autoscaler` diagnostics...
+[END]: Finalize `Cluster Autoscaler` diagnostics.
 
 

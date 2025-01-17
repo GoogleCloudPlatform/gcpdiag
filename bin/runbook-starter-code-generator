@@ -106,7 +106,7 @@ def _stash_changes(runbook_name):
 
 def _switch_to_master(current_branch):
   print(
-      f'Switching from branch "{current_branch}" to "master" to sync environment...'
+      f'Switching from branch "{current_branch}" to "master" to sync environment.'
   )
   subprocess.run(['git', 'checkout', 'master'],
                  check=True,
@@ -116,7 +116,7 @@ def _switch_to_master(current_branch):
 
 def _update_repository(current_branch):
   print(
-      f'On "{current_branch}" branch; syncing with remote branch `origin/master`...'
+      f'On "{current_branch}" branch; syncing with remote branch `origin/master`.'
   )
   subprocess.run(['git', 'pull', 'origin', 'master', '--rebase'],
                  check=True,
@@ -139,7 +139,7 @@ def _create_new_or_switch_branch(runbook_name):
         f'Branch "{runbook_name}" already exists. Switching to existing branch')
     command.remove('-b')
   else:
-    print(f'Creating new branch "{runbook_name}"...')
+    print(f'Creating new branch "{runbook_name}".')
   try:
     # Attempt to create the branch since it does not exist
     subprocess.run(command, check=True, text=True,
@@ -155,16 +155,15 @@ def check_and_activate_shell(command, py_path, name, prepenv):
   print(_color('\nPreparing your python virtual environment', 'blue'))
   print(_color('=========================================', 'blue'))
   if 'VIRTUAL_ENV' in os.environ:
-    print(
-        'Virtual environment is already activated. Generating starter code...')
+    print('Virtual environment is already activated. Generating starter code.')
     gen_starter_code({'name': name, 'prepenv': prepenv})
   else:
     # Check current directory and subfolders
     current_directory = os.getcwd()
     if 'gcpdiag' in current_directory and os.path.isdir(
         'gcpdiag') and os.path.isdir('bin'):
-      print('Attempting to activate the virtual environment for "gcpdiag"...')
-      print('Virtual environment activated...')
+      print('Attempting to activate the virtual environment for "gcpdiag".')
+      print('Virtual environment activated.')
       gen_starter_code({'name': name, 'prepenv': prepenv})
       if not _activate_virtual_environment():
         print('Failed to activate the venv. Manually run it `pipenv shell`.')

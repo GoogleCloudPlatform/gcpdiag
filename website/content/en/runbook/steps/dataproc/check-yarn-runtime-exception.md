@@ -4,7 +4,7 @@ linkTitle: "Check Yarn Runtime Exception"
 weight: 3
 type: docs
 description: >
-  Verify presence of CheckYarnRuntimeException logs...
+  Verify presence of CheckYarnRuntimeException logs.
 ---
 
 **Product**: [Cloud Dataproc](https://cloud.google.com/dataproc)\

@@ -29,7 +29,6 @@ ZONE = 'zone'
 SERIAL_CONSOLE_FILE = 'serial_console_file'
 # unique flags belong to this runbook
 PROXY = 'proxy'
-PRINCIPAL = 'principal'
 SRC_IP = 'src_ip'
 DEST_IP = 'dest_ip'
 CLIENT = 'check_os_login'

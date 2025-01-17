@@ -22,7 +22,7 @@ Confirms that the VM has the necessary OAuth scope
 
 ### Failure Reason
 
-GCE Instance {vm_name} doesn't have any of the required access scopes:
+GCE VM {vm_name} doesn't have any of the required access scopes:
 {required_access_scope}
 
 ### Failure Remediation
@@ -31,7 +31,7 @@ Access scopes are the legacy method of specifying authorization for your VM inst
 They define the default OAuth scopes used in requests from the gcloud CLI or the client libraries.
 Access scopes don't apply for calls made using gRPC.
 
-Update `{vm_name}` to enable at least one of the following access scopes:
+Update `{vm_full_path}` to enable at least one of the following access scopes:
 {required_access_scope}
 [1] https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes
 

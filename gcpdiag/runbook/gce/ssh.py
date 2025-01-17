@@ -211,6 +211,7 @@ class Ssh(runbook.DiagnosticTree):
     lifecycle_check.project_id = op.get(flags.PROJECT_ID)
     lifecycle_check.zone = op.get(flags.ZONE)
     lifecycle_check.instance_name = op.get(flags.NAME)
+    lifecycle_check.expected_lifecycle_status = 'RUNNING'
     performance_check = VmPerformanceChecks()
     gce_permission_check = GcpSshPermissions()
     gce_firewall_check = GceFirewallAllowsSsh()
@@ -359,7 +360,7 @@ class VmGuestOsType(runbook.Gateway):
   """
 
   def execute(self):
-    """Identifying Guest OS type..."""
+    """Identify Guest OS type."""
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
                           instance_name=op.get(flags.NAME))
@@ -380,7 +381,7 @@ class SshEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing SSH diagnostics..."""
+    """Finalize SSH diagnostics."""
     if not config.get(flags.INTERACTIVE_MODE):
       response = op.prompt(
           kind=op.CONFIRMATION,
@@ -415,7 +416,7 @@ class GcpSshPermissions(runbook.CompositeStep):
   """
 
   def execute(self):
-    """Verifying overall user permissions for SSH access...
+    """Verify overall user permissions for SSH access
 
     Note: Only roles granted at the project level are checked. Permissions inherited from
     ancestor resources such as folder(s) or organization and groups are not checked."""
@@ -454,7 +455,7 @@ class OsLoginStatusCheck(runbook.Gateway):
   """
 
   def execute(self):
-    """Identifying OS Login Setup."""
+    """Identify OS Login Setup."""
     # User intends to use OS login
     if op.get(flags.ACCESS_METHOD) == OSLOGIN:
       os_login_check = gce_gs.VmMetadataCheck()
@@ -512,7 +513,7 @@ class PosixUserHasValidSshKeyCheck(runbook.Step):
   template = 'vm_metadata::valid_ssh_key'
 
   def execute(self):
-    """Validating SSH key for local user..."""
+    """Verify SSH key for local user."""
 
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
@@ -546,7 +547,7 @@ class GceFirewallAllowsSsh(runbook.Gateway):
   source IP. It helps identify network configurations that might block SSH connections."""
 
   def execute(self):
-    """Evaluating VPC network firewall rules for SSH access..."""
+    """Evaluating VPC network firewall rules for SSH access."""
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
                           instance_name=op.get(flags.NAME))
@@ -600,7 +601,7 @@ class VmPerformanceChecks(runbook.CompositeStep):
   """
 
   def execute(self):
-    """Evaluating VM memory, CPU, and disk performance..."""
+    """Evaluating VM memory, CPU, and disk performance."""
     vm_memory_check = gce_gs.HighVmMemoryUtilization()
     vm_memory_check.project_id = op.get(flags.PROJECT_ID)
     vm_memory_check.zone = op.get(flags.ZONE)
@@ -629,7 +630,7 @@ class LinuxGuestOsChecks(runbook.CompositeStep):
   """
 
   def execute(self):
-    """Analyzing serial logs for common linux guest os and application issues..."""
+    """Analyzing serial logs for common linux guest os and application issues."""
     # Check for kernel panic patterns in serial logs.
     kernel_panic = gce_gs.VmSerialLogsCheck()
     kernel_panic.project_id = op.get(flags.PROJECT_ID)
@@ -669,7 +670,7 @@ class WindowsGuestOsChecks(runbook.CompositeStep):
   """
 
   def execute(self):
-    """Analyzing Windows Guest OS boot-up and SSH agent status..."""
+    """Analyzing Windows Guest OS boot-up and SSH agent status."""
     # Check Windows Metadata enabling ssh is set as this is required for windows
     windows_ssh_md = gce_gs.VmMetadataCheck()
     windows_ssh_md.project_id = op.get(flags.PROJECT_ID)

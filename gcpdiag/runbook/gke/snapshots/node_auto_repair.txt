@@ -51,6 +51,6 @@ gke/node-auto-repair: Provides the reason why a Node was auto-repaired
      The auto-repair should have fixed the detected unallocatable TPU(s).
      For more details check: https://cloud.google.com/kubernetes-engine/docs/how-to/tpus#node-auto-repair
 
-[END]: Finalizing `Node AutoRepair` diagnostics...
+[END]: Finalize `Node AutoRepair` diagnostics.
 
 

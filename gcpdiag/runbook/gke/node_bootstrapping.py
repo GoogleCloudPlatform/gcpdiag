@@ -334,12 +334,12 @@ class NodeInsertCheck(runbook.Step):
             project_path,
             reason=
             ('Node parameter provided together with nodepool parameter, proceeding with Node '
-             'Registration Checkout output verification ...'))
+             'Registration Checkout output verification .'))
     else:
       op.add_skipped(
           project_path,
           reason=
-          ('No nodepool or GKE cluster name provided, skipping this step ... \n'
+          ('No nodepool or GKE cluster name provided, skipping this step . \n'
            'Please provide nodepool name (-p nodepool=<nodepoolname>) and GKE cluster name '
            '(-p name=<gke-cluster-name>) if you see issues with nodes not appearing in the '
            'nodepool.'))
@@ -588,7 +588,7 @@ class NodeRegistrationSuccess(runbook.Step):
       op.add_skipped(
           project_path,
           reason=
-          ('No node name provided, skipping this step ...\n'
+          ('No node name provided, skipping this step .\n'
            'Please provide node name (-p node=<nodename>) if the node appears in the nodepool, '
            'but fails registration.\n'))
 
@@ -604,7 +604,7 @@ class NodeBootstrappingEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing `GKE Node Bootstrapping` diagnostics..."""
+    """Finalize `GKE Node Bootstrapping` diagnostics."""
     response = op.prompt(
         kind=op.CONFIRMATION,
         message='Are you satisfied with the `GKE Node Bootstrapping` analysis?')

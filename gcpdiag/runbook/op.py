@@ -203,7 +203,7 @@ def add_skipped(resource: Optional[models.Resource], reason: str) -> None:
                                  step_execution_id=operator.step.execution_id)
 
 
-def add_ok(resource: models.Resource, reason: str = '') -> None:
+def add_ok(resource: models.Resource, reason: str) -> None:
   """Sends a success message for a step to the user and store it in the report"""
   operator.interface.add_ok(run_id=operator.run_id,
                             resource=resource,

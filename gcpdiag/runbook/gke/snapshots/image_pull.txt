@@ -13,9 +13,7 @@ gke/image-pull: Analysis and Resolution of Image Pull Failures on GKE clusters.
   - Stackdriver logs
     
 [START]: Starting the image pull error diagnostics
-[AUTOMATED STEP]: 
-    Check for "Failed to pull image.*not found" log entries
-    
+[AUTOMATED STEP]: Check for "Failed to pull image.*not found" log entries.
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
      [REASON]
@@ -35,9 +33,7 @@ gke/image-pull: Analysis and Resolution of Image Pull Failures on GKE clusters.
      Follow the documentation:
      https://cloud.google.com/kubernetes-engine/docs/troubleshooting#ImagePullBackOff
 
-[AUTOMATED STEP]: 
-    Check for "Failed to pull image.*403 Forbidden" log entries
-    
+[AUTOMATED STEP]: Check for "Failed to pull image.*403 Forbidden" log entries.
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
      [REASON]
@@ -57,9 +53,7 @@ gke/image-pull: Analysis and Resolution of Image Pull Failures on GKE clusters.
      Follow the documentation:
      https://cloud.google.com/artifact-registry/docs/integrate-gke#permissions
 
-[AUTOMATED STEP]: 
-    Check for "Failed to pull image.*lookup.*server misbehaving" log entries
-    
+[AUTOMATED STEP]: Check for "Failed to pull image.*lookup.*server misbehaving" log entries.
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
      [REASON]
@@ -146,6 +140,6 @@ gke/image-pull: Analysis and Resolution of Image Pull Failures on GKE clusters.
      2. Follow the documentation:
      https://cloud.google.com/kubernetes-engine/docs/troubleshooting/deployed-workloads#image-not-found
 
-[END]: Finalizing `GKE Image Pull runbbok` diagnostics...
+[END]: Finalize `GKE Image Pull runbbok` diagnostics.
 
 

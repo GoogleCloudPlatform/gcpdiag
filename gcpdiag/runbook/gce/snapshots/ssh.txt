@@ -31,14 +31,14 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 [INFO]: Source IP to be used for SSH connectivity test: 35.235.240.0/20
 [INFO]: Port 22 and ip 35.235.240.0/20 as the source IP
 [INFO]: Access method to investigate: OS login https://cloud.google.com/compute/docs/oslogin
-[AUTOMATED STEP]: Verifying VM is in the RUNNING state...
+[AUTOMATED STEP]: Verify GCE VM is in a running state.
 
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [OK]
      [REASON]
-     The GCE VM faulty-linux-ssh is in the expected state: RUNNING.
+     The GCE VM projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances/faulty-linux-ssh is in RUNNING state.
 
-[COMPOSITE STEP]: Evaluating VM memory, CPU, and disk performance...
-[AUTOMATED STEP]: Verifying VM memory utilization is within optimal levels...
+[COMPOSITE STEP]: Evaluating VM memory, CPU, and disk performance.
+[AUTOMATED STEP]: Verify VM memory utilization is within optimal levels.
 
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [FAIL]
      [REASON]
@@ -48,7 +48,8 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      Elevated memory usage can result in slow or unresponsive or termimated applications.
      Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
      Guidance on stopping and changing the machine type can be found here:
-     - Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+     - Changing machine type:
+     https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
      For deeper analysis of memory issues:
 
      Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
@@ -57,7 +58,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      Or connect via the Serial Console if SSH is not available to mitigate the issue.
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
-[AUTOMATED STEP]: Checking if there are any memory related errors in Serial logs
+[AUTOMATED STEP]: Verify there are any memory related errors in Serial logs
 
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [UNCERTAIN]
      [REASON]
@@ -67,7 +68,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      You may check if VM is facing high memory utilisation from GuestOS side using `free -m`
      or `cat /proc/meminfo` commands.
 
-[AUTOMATED STEP]: Checking if VM's Boot disk space utilization is within optimal levels.
+[AUTOMATED STEP]: Verify VM's Boot disk space utilization is within optimal levels.
 
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [FAIL]
      [REASON]
@@ -80,7 +81,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      Follow the guide to increase disk size:
      https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
 
-[AUTOMATED STEP]: Verifying VM CPU utilization is within optimal levels
+[AUTOMATED STEP]: Verify VM CPU utilization is within optimal levels
 
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [FAIL]
      [REASON]
@@ -100,9 +101,9 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      Alternatively, you can connect via serial console if SSH is unvailable to stop offending processes
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console.
 
-[GATEWAY]: Identifying Guest OS type...
+[GATEWAY]: Identify Guest OS type.
 [INFO]: Detected Linux VM. Proceeding with Linux-specific diagnostics.
-[COMPOSITE STEP]: Analyzing serial logs for common linux guest os and application issues...
+[COMPOSITE STEP]: Analyzing serial logs for common linux guest os and application issues.
 [AUTOMATED STEP]: Initiating kernel panic check on the Guest OS.
 
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [OK]
@@ -131,11 +132,11 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      manually inspect its configuration via the interactive serial console:
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
-[COMPOSITE STEP]: Verifying overall user permissions for SSH access...
+[COMPOSITE STEP]: Verify overall user permissions for SSH access
 
     Note: Only roles granted at the project level are checked. Permissions inherited from
     ancestor resources such as folder(s) or organization and groups are not checked.
-[AUTOMATED STEP]: Verifying IAM policy
+[AUTOMATED STEP]: Verify IAM policy
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
@@ -148,8 +149,8 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      For guidance on assigning instance admin roles, consult:
      https://cloud.google.com/compute/docs/access/iam#connectinginstanceadmin
 
-[GATEWAY]: Identifying OS Login Setup.
-[AUTOMATED STEP]: Verifying that OS Login is set to `True` for the VM.
+[GATEWAY]: Identify OS Login Setup.
+[AUTOMATED STEP]: Verify that OS Login is set to `True` for the VM.
 
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [FAIL]
      [REASON]
@@ -160,7 +161,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      metadata to `TRUE`.For detailed instructions on enabling OS Login,
      refer to: https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#enable_os_login
 
-[AUTOMATED STEP]: Verifying IAM policy
+[AUTOMATED STEP]: Verify IAM policy
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
@@ -173,7 +174,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 
-[AUTOMATED STEP]: Verifying IAM policy
+[AUTOMATED STEP]: Verify IAM policy
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
@@ -186,7 +187,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 
-[AUTOMATED STEP]: Verifying IAM policy
+[AUTOMATED STEP]: Verify IAM policy
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
@@ -198,8 +199,8 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 
-[GATEWAY]: Evaluating VPC network firewall rules for SSH access...
-[AUTOMATED STEP]: Evaluating VPC network traffic rules...
+[GATEWAY]: Evaluating VPC network firewall rules for SSH access.
+[AUTOMATED STEP]: Evaluating VPC network traffic rules.
 
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [OK]
      [REASON]
@@ -221,17 +222,17 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      [REMEDIATION]
      To check if sshd_auth_failures are happening due to wrong directory permissions:
      1. Follow either of the below steps to check the permissions:
-       a. these steps to rescue the vm:
-          https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
+     a. these steps to rescue the vm:
+     https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
 
-       b. these steps login through serial console:
-          https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+     b. these steps login through serial console:
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
      2. Check the system logs for following error messages:
-        'Authentication refused: bad ownership or modes for directory'
-        'Error updating SSH keys for user1: mkdir /home/USER/.ssh: no such file or directory'
+     'Authentication refused: bad ownership or modes for directory'
+     'Error updating SSH keys for user1: mkdir /home/USER/.ssh: no such file or directory'
 
-[END]: Finalizing SSH diagnostics...
+[END]: Finalize SSH diagnostics.
 
 
 access_method=oslogin,name=valid-linux-ssh,principal=serviceAccount:canssh@gcpdiag-gce-faultyssh-
@@ -268,14 +269,14 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 [INFO]: Source IP to be used for SSH connectivity test: 35.235.240.0/20
 [INFO]: Port 22 and ip 35.235.240.0/20 as the source IP
 [INFO]: Access method to investigate: OS login https://cloud.google.com/compute/docs/oslogin
-[AUTOMATED STEP]: Verifying VM is in the RUNNING state...
+[AUTOMATED STEP]: Verify GCE VM is in a running state.
 
    - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
      [REASON]
-     The GCE VM valid-linux-ssh is in the expected state: RUNNING.
+     The GCE VM projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances/valid-linux-ssh is in RUNNING state.
 
-[COMPOSITE STEP]: Evaluating VM memory, CPU, and disk performance...
-[AUTOMATED STEP]: Verifying VM memory utilization is within optimal levels...
+[COMPOSITE STEP]: Evaluating VM memory, CPU, and disk performance.
+[AUTOMATED STEP]: Verify VM memory utilization is within optimal levels.
 
    - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [FAIL]
      [REASON]
@@ -285,7 +286,8 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      Elevated memory usage can result in slow or unresponsive or termimated applications.
      Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
      Guidance on stopping and changing the machine type can be found here:
-     - Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+     - Changing machine type:
+     https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
      For deeper analysis of memory issues:
 
      Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
@@ -294,7 +296,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      Or connect via the Serial Console if SSH is not available to mitigate the issue.
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
-[AUTOMATED STEP]: Checking if there are any memory related errors in Serial logs
+[AUTOMATED STEP]: Verify there are any memory related errors in Serial logs
 
    - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [UNCERTAIN]
      [REASON]
@@ -304,7 +306,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      You may check if VM is facing high memory utilisation from GuestOS side using `free -m`
      or `cat /proc/meminfo` commands.
 
-[AUTOMATED STEP]: Checking if VM's Boot disk space utilization is within optimal levels.
+[AUTOMATED STEP]: Verify VM's Boot disk space utilization is within optimal levels.
 
    - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [FAIL]
      [REASON]
@@ -317,7 +319,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      Follow the guide to increase disk size:
      https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
 
-[AUTOMATED STEP]: Verifying VM CPU utilization is within optimal levels
+[AUTOMATED STEP]: Verify VM CPU utilization is within optimal levels
 
    - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [FAIL]
      [REASON]
@@ -337,9 +339,9 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      Alternatively, you can connect via serial console if SSH is unvailable to stop offending processes
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console.
 
-[GATEWAY]: Identifying Guest OS type...
+[GATEWAY]: Identify Guest OS type.
 [INFO]: Detected Linux VM. Proceeding with Linux-specific diagnostics.
-[COMPOSITE STEP]: Analyzing serial logs for common linux guest os and application issues...
+[COMPOSITE STEP]: Analyzing serial logs for common linux guest os and application issues.
 [AUTOMATED STEP]: Initiating kernel panic check on the Guest OS.
 
    - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
@@ -368,46 +370,46 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      manually inspect its configuration via the interactive serial console:
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
-[COMPOSITE STEP]: Verifying overall user permissions for SSH access...
+[COMPOSITE STEP]: Verify overall user permissions for SSH access
 
     Note: Only roles granted at the project level are checked. Permissions inherited from
     ancestor resources such as folder(s) or organization and groups are not checked.
-[AUTOMATED STEP]: Verifying IAM policy
+[AUTOMATED STEP]: Verify IAM policy
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [OK]
      [REASON]
      The user serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com possesses the appropriate permissions to fetch instance details.
 
-[GATEWAY]: Identifying OS Login Setup.
-[AUTOMATED STEP]: Verifying that OS Login is set to `True` for the VM.
+[GATEWAY]: Identify OS Login Setup.
+[AUTOMATED STEP]: Verify that OS Login is set to `True` for the VM.
 
    - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
      [REASON]
      OS Login is active on this VM, as indicated by the `enable-oslogin`
      flag being set to `True`. Your VM can use OS Login-based access.
 
-[AUTOMATED STEP]: Verifying IAM policy
+[AUTOMATED STEP]: Verify IAM policy
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [OK]
      [REASON]
      "serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com" possesses at least one of the required OS Login roles:
      roles/compute.osAdminLogin, roles/compute.osLogin, roles/owner.
 
-[AUTOMATED STEP]: Verifying IAM policy
+[AUTOMATED STEP]: Verify IAM policy
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [OK]
      [REASON]
      "serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com" has the "roles/iam.serviceAccountUser"
      required to impersonate the attached service account.
 
-[AUTOMATED STEP]: Verifying IAM policy
+[AUTOMATED STEP]: Verify IAM policy
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [OK]
      [REASON]
      "serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com" has the requisite "roles/iap.tunnelResourceAccessor" role to tunnel through IAP.
 
-[GATEWAY]: Evaluating VPC network firewall rules for SSH access...
-[AUTOMATED STEP]: Evaluating VPC network traffic rules...
+[GATEWAY]: Evaluating VPC network firewall rules for SSH access.
+[AUTOMATED STEP]: Evaluating VPC network traffic rules.
 
    - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
      [REASON]
@@ -429,17 +431,17 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      [REMEDIATION]
      To check if sshd_auth_failures are happening due to wrong directory permissions:
      1. Follow either of the below steps to check the permissions:
-       a. these steps to rescue the vm:
-          https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
+     a. these steps to rescue the vm:
+     https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
 
-       b. these steps login through serial console:
-          https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+     b. these steps login through serial console:
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
      2. Check the system logs for following error messages:
-        'Authentication refused: bad ownership or modes for directory'
-        'Error updating SSH keys for user1: mkdir /home/USER/.ssh: no such file or directory'
+     'Authentication refused: bad ownership or modes for directory'
+     'Error updating SSH keys for user1: mkdir /home/USER/.ssh: no such file or directory'
 
-[END]: Finalizing SSH diagnostics...
+[END]: Finalize SSH diagnostics.
 
 
 access_method=oslogin,name=faulty-windows-
@@ -477,14 +479,14 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 [INFO]: Port 22 and ip 35.235.240.0/20 as the source IP
 [INFO]: Access method to investigate: OS login https://cloud.google.com/compute/docs/oslogin
 [INFO]: Guest OS Posix User to be investigated: no_user
-[AUTOMATED STEP]: Verifying VM is in the RUNNING state...
+[AUTOMATED STEP]: Verify GCE VM is in a running state.
 
    - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [FAIL]
      [REASON]
-     The GCE VM faulty-windows-ssh is in an undesired state: TERMINATED.
+     The GCE VM projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances/faulty-windows-ssh is in an undesired state: TERMINATED.
 
      [REMEDIATION]
-     This step failed because GCE Virtual Machine faulty-windows-ssh is expected to be in a RUNNING state:
+     This step failed because GCE Virtual Machine projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances/faulty-windows-ssh is expected to be in a RUNNING state:
 
      To initiate the lifecycle transition from TERMINATED to RUNNING state follow guide [1]
 
@@ -494,8 +496,8 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      [1] https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm
      [2] https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting
 
-[COMPOSITE STEP]: Evaluating VM memory, CPU, and disk performance...
-[AUTOMATED STEP]: Verifying VM memory utilization is within optimal levels...
+[COMPOSITE STEP]: Evaluating VM memory, CPU, and disk performance.
+[AUTOMATED STEP]: Verify VM memory utilization is within optimal levels.
 
    - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [FAIL]
      [REASON]
@@ -505,7 +507,8 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      Elevated memory usage can result in slow or unresponsive or termimated applications.
      Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
      Guidance on stopping and changing the machine type can be found here:
-     - Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+     - Changing machine type:
+     https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
      For deeper analysis of memory issues:
 
      Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
@@ -514,7 +517,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      Or connect via the Serial Console if SSH is not available to mitigate the issue.
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
-[AUTOMATED STEP]: Checking if there are any memory related errors in Serial logs
+[AUTOMATED STEP]: Verify there are any memory related errors in Serial logs
 
    - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [UNCERTAIN]
      [REASON]
@@ -524,7 +527,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      You may check if VM is facing high memory utilisation from GuestOS side using `free -m`
      or `cat /proc/meminfo` commands.
 
-[AUTOMATED STEP]: Checking if VM's Boot disk space utilization is within optimal levels.
+[AUTOMATED STEP]: Verify VM's Boot disk space utilization is within optimal levels.
 
    - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [FAIL]
      [REASON]
@@ -537,7 +540,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      Follow the guide to increase disk size:
      https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
 
-[AUTOMATED STEP]: Verifying VM CPU utilization is within optimal levels
+[AUTOMATED STEP]: Verify VM CPU utilization is within optimal levels
 
    - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [FAIL]
      [REASON]
@@ -557,10 +560,10 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      Alternatively, you can connect via serial console if SSH is unvailable to stop offending processes
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console.
 
-[GATEWAY]: Identifying Guest OS type...
+[GATEWAY]: Identify Guest OS type.
 [INFO]: Detected Windows VM. Proceeding with Windows-specific diagnostics.
-[COMPOSITE STEP]: Analyzing Windows Guest OS boot-up and SSH agent status...
-[AUTOMATED STEP]: Verifying VM metadata value...
+[COMPOSITE STEP]: Analyzing Windows Guest OS boot-up and SSH agent status.
+[AUTOMATED STEP]: Verify VM metadata value.
 
    - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [FAIL]
      [REASON]
@@ -572,7 +575,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      Please consult our guide on enabling SSH for Windows instances for step-by-step instructions:
      https://cloud.google.com/compute/docs/connect/windows-ssh#enable
 
-[AUTOMATED STEP]: Verifying bootup pr
+[AUTOMATED STEP]: Verify bootup pr
 
    - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [UNCERTAIN]
      [REASON]
@@ -593,11 +596,11 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 
 [MANUAL STEP]: Manually verify if the necessary Google guest agents, especially `google-compute-engine-ssh`,
 are operational on the VM.
-[COMPOSITE STEP]: Verifying overall user permissions for SSH access...
+[COMPOSITE STEP]: Verify overall user permissions for SSH access
 
     Note: Only roles granted at the project level are checked. Permissions inherited from
     ancestor resources such as folder(s) or organization and groups are not checked.
-[AUTOMATED STEP]: Verifying IAM policy
+[AUTOMATED STEP]: Verify IAM policy
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
@@ -610,15 +613,15 @@ are operational on the VM.
      For guidance on assigning instance admin roles, consult:
      https://cloud.google.com/compute/docs/access/iam#connectinginstanceadmin
 
-[GATEWAY]: Identifying OS Login Setup.
-[AUTOMATED STEP]: Verifying that OS Login is set to `True` for the VM.
+[GATEWAY]: Identify OS Login Setup.
+[AUTOMATED STEP]: Verify that OS Login is set to `True` for the VM.
 
    - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [OK]
      [REASON]
      OS Login is active on this VM, as indicated by the `enable-oslogin`
      flag being set to `True`. Your VM can use OS Login-based access.
 
-[AUTOMATED STEP]: Verifying IAM policy
+[AUTOMATED STEP]: Verify IAM policy
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
@@ -631,7 +634,7 @@ are operational on the VM.
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 
-[AUTOMATED STEP]: Verifying IAM policy
+[AUTOMATED STEP]: Verify IAM policy
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
@@ -644,7 +647,7 @@ are operational on the VM.
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 
-[AUTOMATED STEP]: Verifying IAM policy
+[AUTOMATED STEP]: Verify IAM policy
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
@@ -656,8 +659,8 @@ are operational on the VM.
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 
-[GATEWAY]: Evaluating VPC network firewall rules for SSH access...
-[AUTOMATED STEP]: Evaluating VPC network traffic rules...
+[GATEWAY]: Evaluating VPC network firewall rules for SSH access.
+[AUTOMATED STEP]: Evaluating VPC network traffic rules.
 
    - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [OK]
      [REASON]
@@ -691,16 +694,16 @@ are operational on the VM.
      [REMEDIATION]
      To check if sshd_auth_failures are happening due to wrong directory permissions:
      1. Follow either of the below steps to check the permissions:
-       a. these steps to rescue the vm:
-          https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
+     a. these steps to rescue the vm:
+     https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
 
-       b. these steps login through serial console:
-          https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+     b. these steps login through serial console:
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
      2. Check the system logs for following error messages:
-        'Authentication refused: bad ownership or modes for directory'
-        'Error updating SSH keys for user1: mkdir /home/USER/.ssh: no such file or directory'
+     'Authentication refused: bad ownership or modes for directory'
+     'Error updating SSH keys for user1: mkdir /home/USER/.ssh: no such file or directory'
 
-[END]: Finalizing SSH diagnostics...
+[END]: Finalize SSH diagnostics.
 
 

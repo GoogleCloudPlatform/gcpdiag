@@ -10,7 +10,7 @@ gke/gke-ip-masq-standard: This runbook will analyze symptoms for IP Masquerading
   - Is GKE node IP and Pod IP are under nonMasquerade CIDR?
   - Is Destination IP is under are under nonMasquerade CIDR?
   
-[START]: Lets check the provided parameters...
+[START]: Lets check the provided parameters.
 
    - gcpdiag-gke4-aaaa                                                    [OK]
      [REASON]
@@ -38,7 +38,7 @@ gke/gke-ip-masq-standard: This runbook will analyze symptoms for IP Masquerading
 
      [1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#checking_the_ip-masq-agent_daemonset
 
-[AUTOMATED STEP]: Lets confirm if config map  is configure..
+[AUTOMATED STEP]: Lets confirm if config map  is configure.
 
    - gcpdiag-gke4-aaaa                                                    [UNCERTAIN]
      [REASON]
@@ -64,7 +64,7 @@ gke/gke-ip-masq-standard: This runbook will analyze symptoms for IP Masquerading
 
      [1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#edit-ip-masq-agent-configmap
 
-[AUTOMATED STEP]: Lets check node IP is present under non-masq cidr...
+[AUTOMATED STEP]: Lets check node IP is present under non-masq cidr.
 
    - gcpdiag-gke4-aaaa                                                    [UNCERTAIN]
      [REASON]
@@ -90,7 +90,7 @@ gke/gke-ip-masq-standard: This runbook will analyze symptoms for IP Masquerading
 
      [1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#edit-ip-masq-agent-configmap
 
-[END]: Finalizing connectivity diagnostics..
+[END]: Finalize connectivity diagnostics.
 [INFO]: If all check passed consider please contact support for further troubleshooting
 
 

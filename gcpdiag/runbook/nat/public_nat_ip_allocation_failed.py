@@ -85,7 +85,7 @@ class PublicNatIpAllocationFailed(runbook.DiagnosticTree):
 
 
 class NatIpAllocationFailedStart(runbook.StartStep):
-  """Start Nat IP Allocation Failed Checks...
+  """Start Nat IP Allocation Failed Checks.
 
 
   This step steps starts the NAT IP Allocation Failed Check debugging process by
@@ -232,7 +232,7 @@ class NatIpAllocationMethodCheck(runbook.Gateway):
   template = 'nat_ip_allocation_failed::nat_allocation_method_check'
 
   def execute(self):
-    """Checking the NATGW configuration..."""
+    """Checking the NATGW configuration."""
 
     project = crm.get_project(op.get(flags.PROJECT_ID))
 
@@ -287,7 +287,7 @@ class NatIpAllocationAutoOnly(runbook.Step):
   template = 'nat_ip_allocation_failed::nat_allocation_auto_only'
 
   def execute(self):
-    """NAT IP allocation is configured as AUTO_ONLY..."""
+    """NAT IP allocation is configured as AUTO_ONLY."""
     project = crm.get_project(op.get(flags.PROJECT_ID))
 
     op.add_failed(project,
@@ -412,7 +412,7 @@ class NatIpAllocationFailedEnd(runbook.EndStep):
   template = 'nat_ip_allocation_failed::endstep'
 
   def execute(self):
-    """Finalizing NAT allocation failed diagnostics..."""
+    """Finalize NAT allocation failed diagnostics."""
     if not config.get(flags.INTERACTIVE_MODE):
       response = op.prompt(
           kind=op.CONFIRMATION,

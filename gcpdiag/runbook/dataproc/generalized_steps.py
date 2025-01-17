@@ -36,7 +36,7 @@ class CheckLogsExist(runbook.Step):
   project_id: str = ''
 
   def execute(self):
-    """Check if investigated logs messages exist in the Dataproc cluster..."""
+    """Check if investigated logs messages exist in the Dataproc cluster."""
 
     if not self.project_id:
       project = crm.get_project(op.get(flags.PROJECT_ID))
@@ -117,8 +117,8 @@ class CheckClusterNetworkConnectivity(runbook.Step):
   project_id: str = ''
 
   def execute(self):
-    """Verify network connectivity among nodes in the cluster..."""
-    # Gathering cluster details...
+    """Verify network connectivity among nodes in the cluster."""
+    # Gathering cluster details.
 
     if not self.project_id:
       project_id = op.get(flags.PROJECT_ID)
@@ -193,9 +193,9 @@ class CheckClusterNetworkConnectivity(runbook.Step):
       is_connectivity_fine = True
 
       # run connectivity tests between master and worker
-      op.info('Running connectivity tests...')
+      op.info('Running connectivity tests.')
       # ICMP
-      op.info('ICMP test...')
+      op.info('ICMP test.')
       connectivity_test_result = networkmanagement.run_connectivity_test(
           project_id=op.get(flags.PROJECT_ID),
           src_ip=str(source_ip)[:-3],
@@ -220,7 +220,7 @@ class CheckClusterNetworkConnectivity(runbook.Step):
             + 'test to verify what is blocking the traffic, ' +
             'in particular Last step and Full list of steps.')
       # TCP
-      op.info('TCP test...')
+      op.info('TCP test.')
       connectivity_test_result = networkmanagement.run_connectivity_test(
           project_id=op.get(flags.PROJECT_ID),
           src_ip=str(source_ip)[:-3],
@@ -245,7 +245,7 @@ class CheckClusterNetworkConnectivity(runbook.Step):
             + 'to verify what is blocking the traffic, ' +
             'in particular Last step and Full list of steps.')
       # UCP
-      op.info('UDP test...')
+      op.info('UDP test.')
       connectivity_test_result = networkmanagement.run_connectivity_test(
           project_id=op.get(flags.PROJECT_ID),
           src_ip=str(source_ip)[:-3],

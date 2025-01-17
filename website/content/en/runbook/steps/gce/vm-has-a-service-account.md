@@ -27,7 +27,8 @@ exporting logs/metrics.
 Follow [1] to attach an active service account to this GCE VM.
 Read more on how to properly authorize ops agent.
 [1] https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes
-[2] https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/authorization#authorize_with_an_attached_service_account
+[2]
+https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/authorization#authorize_with_an_attached_service_account
 
 ### Success Reason
 

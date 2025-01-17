@@ -235,7 +235,7 @@ class PodIpRangeExhaustion(runbook.Step):
 
     if ip_space_exhausted_pod_range_log_entries:
       op.info(
-          'Verifying if the cluster is an Autopilot cluster or a Standard cluster...'
+          'Verifying if the cluster is an Autopilot cluster or a Standard cluster.'
       )
 
       if cluster.is_autopilot:
@@ -264,7 +264,7 @@ class IpExhaustionEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing VM external connectivity diagnostics..."""
+    """Finalize VM external connectivity diagnostics."""
 
     if not config.get(flags.INTERACTIVE_MODE):
       response = op.prompt(

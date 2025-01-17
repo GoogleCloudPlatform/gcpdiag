@@ -191,9 +191,7 @@ class ImageNotFound(runbook.Step):
   template = 'imagepull::image_not_found'
 
   def execute(self):
-    """
-    Check for "Failed to pull image.*not found" log entries
-    """
+    """Check for "Failed to pull image.*not found" log entries."""
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
@@ -235,9 +233,7 @@ class ImageForbidden(runbook.Step):
   template = 'imagepull::image_forbidden'
 
   def execute(self):
-    """
-    Check for "Failed to pull image.*403 Forbidden" log entries
-    """
+    """Check for "Failed to pull image.*403 Forbidden" log entries."""
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
@@ -278,9 +274,7 @@ class ImageDnsIssue(runbook.Step):
   template = 'imagepull::image_dns_issue'
 
   def execute(self):
-    """
-    Check for "Failed to pull image.*lookup.*server misbehaving" log entries
-    """
+    """Check for "Failed to pull image.*lookup.*server misbehaving" log entries."""
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
@@ -459,7 +453,7 @@ class ImagePullEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing `GKE Image Pull runbbok` diagnostics..."""
+    """Finalize `GKE Image Pull runbbok` diagnostics."""
     response = op.prompt(
         kind=op.CONFIRMATION,
         message='Are you satisfied with the `GKE Image Pull runbbok` analysis?')

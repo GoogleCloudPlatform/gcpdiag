@@ -1,145 +1,145 @@
+#############################################################
+# Messages for NAT IP Allocation Failed Check #
+#############################################################
 
-  #############################################################
-  #        Messages for NAT IP Allocation Failed Check        #
-  #############################################################
+{% block confirmation_skipped_reason %}
+Unable to fetch the network {netwrok} confirm it exists in the project {project_id}.
+{% endblock confirmation_skipped_reason %}
 
-  {% block confirmation_skipped_reason %}
-    Unable to fetch the network {netwrok} confirm it exists in the project {project_id}.
-  {% endblock confirmation_skipped_reason %}
+{% block confirmation_skipped_reason_a1 %}
+The cloud router {cloud_router} does not exist in region {region} or project {project_id}.
+{% endblock confirmation_skipped_reason_a1 %}
 
-  {% block confirmation_skipped_reason_a1 %}
-    The cloud router {cloud_router} does not exist in region {region} or project {project_id}.
-  {% endblock confirmation_skipped_reason_a1 %}
+{% block confirmation_skipped_reason_a2 %}
+Cannot find the NAT cloud router: {cloud_router} in the region {region} for the project {project_id}
 
-  {% block confirmation_skipped_reason_a2 %}
-    Cannot find the NAT cloud router: {cloud_router} in the region {region} for the project {project_id}
+Check the cloud router name to ensure it exists in the project and rerun.
+{% endblock confirmation_skipped_reason_a2 %}
 
-    Check the cloud router name to ensure it exists in the project and rerun.
-  {% endblock confirmation_skipped_reason_a2 %}
+{% block confirmation_skipped_reason_a3 %}
+Cannot find the NAT Gateway: {nat_gateway} in the region {region} for the project {project_id}
 
-  {% block confirmation_skipped_reason_a3 %}
-    Cannot find the NAT Gateway: {nat_gateway} in the region {region} for the project {project_id}
+Check the cloud router name to ensure it exists in the project and rerun.
+{% endblock confirmation_skipped_reason_a3 %}
 
-    Check the cloud router name to ensure it exists in the project and rerun.
-  {% endblock confirmation_skipped_reason_a3 %}
+#############################################################
+# Messages for NAT IP Allocation Failed Check #
+#############################################################
 
-  #############################################################
-  #        Messages for NAT IP Allocation Failed Check        #
-  #############################################################
+{% block nat_ip_allocation_auto_only_success_reason %}
+No IP exhaustion issues found on the NAT GW {nat_gateway_name}
+{% endblock nat_ip_allocation_auto_only_success_reason %}
 
-  {% block nat_ip_allocation_auto_only_success_reason %}
-   No IP exhaustion issues found on the NAT GW {nat_gateway_name}
-  {% endblock nat_ip_allocation_auto_only_success_reason %}
+{% block nat_ip_allocation_auto_only_failure_reason %}
+Manual NAT IP allocation is enabled on the NAT GW {nat_gateway_name}
+{% endblock nat_ip_allocation_auto_only_failure_reason %}
 
-  {% block nat_ip_allocation_auto_only_failure_reason %}
-   Manual NAT IP allocation is enabled on the NAT GW {nat_gateway_name}
-  {% endblock nat_ip_allocation_auto_only_failure_reason %}
-
-  {% block nat_ip_allocation_auto_only_failure_remediation %}
-   IP exhaustion issues on {nat_gateway_name} can be remediated by taking the following steps in [1]:
-   [1] https://cloud.google.com/knowledge/kb/cloud-nat-is-dropping-or-limiting-egress-connectivity-000004263#:~:text=If%20the%20metric%20indicates%20that,on%20the%20Port%20reservation%20procedure.
-  {% endblock nat_ip_allocation_auto_only_failure_remediation %}
-
-
- #############################################################
- #          Messages for NAT ALLOCATION FAILED METRIC Check  #
-  #############################################################
-
-  {% block nat_allocation_metric_check_success_reason %}
-   No issues noticed on the NAT allocation failed metric for the NAT Gateway: {nat_gateway_name}
-  {% endblock nat_allocation_metric_check_success_reason %}
-
-  {% block nat_allocation_metric_check_failure_reason %}
-   NAT IP allocation failure found on the NAT Gateway: {nat_gateway_name}
-  {% endblock nat_allocation_metric_check_failure_reason %}
-
-  {% block nat_allocation_metric_check_failure_remediation %}
-   Continue the runbook for further diagnostic and remediation steps for the
-   IP exhaustion issue on {nat_gateway_name}
-  {% endblock nat_allocation_metric_check_failure_remediation %}
-
-  {% block nat_allocation_metric_check_skipped_reason %}
-    No issues detected on the nat_allocation_failed metric for the gateway: {nat_gateway_name}
-    Checks on the status of the cloud router for the NAT gateway: {router_name} does not indicate
-    extra IPs are needed.
-  {% endblock nat_allocation_metric_check_skipped_reason %}
-
-  {% block nat_allocation_metric_check_uncertain_reason %}
-    Unable to fetch the the nat_allocation_failed metric for the gateway: {nat_gateway_name}
-  {% endblock nat_allocation_metric_check_uncertain_reason %}
-
-  {% block nat_allocation_metric_check_uncertain_remediation %}
-    Confirm that the NAT Gateway name {nat_gateway_name} provided is correct and
-    metric for the gateway is visible on cloud console.
-  {% endblock nat_allocation_metric_check_uncertain_remediation %}
+{% block nat_ip_allocation_auto_only_failure_remediation %}
+IP exhaustion issues on {nat_gateway_name} can be remediated by taking the following steps in [1]:
+[1]
+https://cloud.google.com/knowledge/kb/cloud-nat-is-dropping-or-limiting-egress-connectivity-000004263#:~:text=If%20the%20metric%20indicates%20that,on%20the%20Port%20reservation%20procedure.
+{% endblock nat_ip_allocation_auto_only_failure_remediation %}
 
 
- #############################################################
- #                NAT ALLOCATION AUTO ONLY                    #
-  #############################################################
+#############################################################
+# Messages for NAT ALLOCATION FAILED METRIC Check #
+#############################################################
 
-  {% block nat_allocation_auto_only_failure_reason %}
-   The NAT Gateway {nat_gateway_name} is configured for automatic IP allocation...
-  {% endblock nat_allocation_auto_only_failure_reason %}
+{% block nat_allocation_metric_check_success_reason %}
+No issues noticed on the NAT allocation failed metric for the NAT Gateway: {nat_gateway_name}
+{% endblock nat_allocation_metric_check_success_reason %}
 
-  {% block nat_allocation_auto_only_failure_remediation %}
-   To resolve this issue, consider implementing the following options:
+{% block nat_allocation_metric_check_failure_reason %}
+NAT IP allocation failure found on the NAT Gateway: {nat_gateway_name}
+{% endblock nat_allocation_metric_check_failure_reason %}
 
-        1. Add one more NAT gateway in the same network and region.
-        2. Switch to Manual NAT IP assignment.
-  {% endblock nat_allocation_auto_only_failure_remediation %}
+{% block nat_allocation_metric_check_failure_remediation %}
+Continue the runbook for further diagnostic and remediation steps for the
+IP exhaustion issue on {nat_gateway_name}
+{% endblock nat_allocation_metric_check_failure_remediation %}
 
+{% block nat_allocation_metric_check_skipped_reason %}
+No issues detected on the nat_allocation_failed metric for the gateway: {nat_gateway_name}
+Checks on the status of the cloud router for the NAT gateway: {router_name} does not indicate
+extra IPs are needed.
+{% endblock nat_allocation_metric_check_skipped_reason %}
 
- #############################################################
- #                NAT ALLOCATION MANUAL ONLY                  #
-  #############################################################
+{% block nat_allocation_metric_check_uncertain_reason %}
+Unable to fetch the the nat_allocation_failed metric for the gateway: {nat_gateway_name}
+{% endblock nat_allocation_metric_check_uncertain_reason %}
 
-  {% block nat_allocation_manual_only_success_reason %}
-    Checking on the status and configuration of the Cloud NAT Router {router_name} and Gateway:
-
-       1. Minimum extra NAT IPs Needed: {extra_ips_needed}
-       2. Number of VM Endpoints With NAT mappings: {vms_with_nat_mappings}
-       3. Dynamic port allocation enabled: {enable_dynamic_port_allocation}
-       4. Number of NAT Gateway IPs in use: {nat_gw_ips_in_use}
-  {% endblock nat_allocation_manual_only_success_reason %}
-
-  {% block nat_allocation_manual_only_success_reason_a1 %}
-    The NAT Gateway {nat_gateway_name} is configured for manual IP allocation:
-
-        The number of NAT IPs required is less than quota limit of  300. Consider
-        taking the steps in [1] to allocate more IP address or further optimze
-        port utilization on the gateway [2]
-
-        1. https://cloud.google.com/nat/docs/troubleshooting#allocate-more-IPs
-        2. https://cloud.google.com/nat/docs/troubleshooting#reduce-ports
-  {% endblock nat_allocation_manual_only_success_reason_a1 %}
-
-  {% block nat_allocation_manual_only_failure_reason %}
-    The number of NAT IPs in use on the NAT Gateway is >= 300 which is above the quota limit [1].
-
-      1. https://cloud.google.com/nat/quota#quotas
-  {% endblock nat_allocation_manual_only_failure_reason %}
-
-  {% block nat_allocation_manual_only_failure_remediation %}
-    Consider creating additional NAT gateways or optimise port usage [1]:
-
-    1. https://cloud.google.com/nat/docs/troubleshooting#reduce-ports
-  {% endblock nat_allocation_manual_only_failure_remediation %}
+{% block nat_allocation_metric_check_uncertain_remediation %}
+Confirm that the NAT Gateway name {nat_gateway_name} provided is correct and
+metric for the gateway is visible on cloud console.
+{% endblock nat_allocation_metric_check_uncertain_remediation %}
 
 
- #############################################################
- #                NAT ALLOCATION METHOD CHECK                 #
-  #############################################################
+#############################################################
+# NAT ALLOCATION AUTO ONLY #
+#############################################################
 
-  {% block nat_allocation_method_check_step_message %}
-    Checks if the NATGW router is configured with manual or automatic IP allocation
-  {% endblock nat_allocation_method_check_step_message %}
+{% block nat_allocation_auto_only_failure_reason %}
+The NAT Gateway {nat_gateway_name} is configured for automatic IP allocation
+{% endblock nat_allocation_auto_only_failure_reason %}
+
+{% block nat_allocation_auto_only_failure_remediation %}
+To resolve this issue, consider implementing the following options:
+
+1. Add one more NAT gateway in the same network and region.
+2. Switch to Manual NAT IP assignment.
+{% endblock nat_allocation_auto_only_failure_remediation %}
 
 
- #############################################################
- #                NAT ALLOCATION END STEP                    #
-  #############################################################
+#############################################################
+# NAT ALLOCATION MANUAL ONLY #
+#############################################################
 
-  {% block endstep_step_message %}
-    Concludes the NAT IP allocation failed diagnostics process
-  {% endblock endstep_step_message %}
+{% block nat_allocation_manual_only_success_reason %}
+Checking on the status and configuration of the Cloud NAT Router {router_name} and Gateway:
+
+1. Minimum extra NAT IPs Needed: {extra_ips_needed}
+2. Number of VM Endpoints With NAT mappings: {vms_with_nat_mappings}
+3. Dynamic port allocation enabled: {enable_dynamic_port_allocation}
+4. Number of NAT Gateway IPs in use: {nat_gw_ips_in_use}
+{% endblock nat_allocation_manual_only_success_reason %}
+
+{% block nat_allocation_manual_only_success_reason_a1 %}
+The NAT Gateway {nat_gateway_name} is configured for manual IP allocation:
+
+The number of NAT IPs required is less than quota limit of 300. Consider
+taking the steps in [1] to allocate more IP address or further optimze
+port utilization on the gateway [2]
+
+1. https://cloud.google.com/nat/docs/troubleshooting#allocate-more-IPs
+2. https://cloud.google.com/nat/docs/troubleshooting#reduce-ports
+{% endblock nat_allocation_manual_only_success_reason_a1 %}
+
+{% block nat_allocation_manual_only_failure_reason %}
+The number of NAT IPs in use on the NAT Gateway is >= 300 which is above the quota limit [1].
+
+1. https://cloud.google.com/nat/quota#quotas
+{% endblock nat_allocation_manual_only_failure_reason %}
+
+{% block nat_allocation_manual_only_failure_remediation %}
+Consider creating additional NAT gateways or optimise port usage [1]:
+
+1. https://cloud.google.com/nat/docs/troubleshooting#reduce-ports
+{% endblock nat_allocation_manual_only_failure_remediation %}
+
+
+#############################################################
+# NAT ALLOCATION METHOD CHECK #
+#############################################################
+
+{% block nat_allocation_method_check_step_message %}
+Checks if the NATGW router is configured with manual or automatic IP allocation
+{% endblock nat_allocation_method_check_step_message %}
+
+
+#############################################################
+# NAT ALLOCATION END STEP #
+#############################################################
+
+{% block endstep_step_message %}
+Concludes the NAT IP allocation failed diagnostics process
+{% endblock endstep_step_message %}

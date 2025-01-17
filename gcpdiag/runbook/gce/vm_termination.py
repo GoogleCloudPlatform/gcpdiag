@@ -167,7 +167,7 @@ class SingleTerminationCheck(runbook.Step):
   template = 'rca::vm_termination'
 
   def execute(self):
-    """Investigating VM termination reason..."""
+    """Investigating VM termination reason."""
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
                           instance_name=op.get(flags.NAME))
@@ -245,7 +245,7 @@ class MultipleTerminationCheck(runbook.Step):
   """
 
   def execute(self):
-    """Investigating Reasons for multiple VM termination..."""
+    """Investigating Reasons for multiple VM termination."""
     log_entries = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
                                       filter_str=LOGGING_FILTER,
                                       start_time_utc=op.get(
@@ -287,7 +287,7 @@ class VmTerminationEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing VM terminations diagnostics..."""
+    """Finalize VM terminations diagnostics."""
     response = op.prompt(
         kind=op.CONFIRMATION,
         message='Are you satisfied with the VM termination RCA performed?')

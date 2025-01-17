@@ -220,7 +220,7 @@ class ResourceQuotasEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing `Resource Quotas` diagnostics..."""
+    """Finalize `Resource Quotas` diagnostics."""
     response = op.prompt(
         kind=op.CONFIRMATION,
         message='Are you satisfied with the `GKE Resource Quotas` RCA performed?'

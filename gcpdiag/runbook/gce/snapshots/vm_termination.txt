@@ -22,19 +22,19 @@ gce/vm-termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
   
 [START]: Starting VM Termination diagnostics
 [GATEWAY]: Determining whether to investigate one or more terminations
-[AUTOMATED STEP]: Investigating VM termination reason...
+[AUTOMATED STEP]: Investigating VM termination reason.
 [INFO]: 
 
 
 No GCE VM was terminated between {start_time_utc} and {end_time_utc}
 
-[AUTOMATED STEP]: Verifying that the terminated VM is currently running...
+[AUTOMATED STEP]: Verify that the terminated VM is currently running
 
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [OK]
      [REASON]
      The terminated VM is currently up and running indicating proper functionality.
 
-[END]: Finalizing VM terminations diagnostics...
+[END]: Finalize VM terminations diagnostics.
 
 
 name=valid-linux-ssh,project_id=gcpdiag-gce-faultyssh-runbook,zone=europe-west2-a
@@ -61,19 +61,19 @@ gce/vm-termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
   
 [START]: Starting VM Termination diagnostics
 [GATEWAY]: Determining whether to investigate one or more terminations
-[AUTOMATED STEP]: Investigating VM termination reason...
+[AUTOMATED STEP]: Investigating VM termination reason.
 [INFO]: 
 
 
 No GCE VM was terminated between {start_time_utc} and {end_time_utc}
 
-[AUTOMATED STEP]: Verifying that the terminated VM is currently running...
+[AUTOMATED STEP]: Verify that the terminated VM is currently running
 
    - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
      [REASON]
      The terminated VM is currently up and running indicating proper functionality.
 
-[END]: Finalizing VM terminations diagnostics...
+[END]: Finalize VM terminations diagnostics.
 
 
 name=faulty-windows-ssh,project_id=gcpdiag-gce-faultyssh-runbook,zone=europe-west2-a
@@ -100,13 +100,13 @@ gce/vm-termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
   
 [START]: Starting VM Termination diagnostics
 [GATEWAY]: Determining whether to investigate one or more terminations
-[AUTOMATED STEP]: Investigating VM termination reason...
+[AUTOMATED STEP]: Investigating VM termination reason.
 [INFO]: 
 
 
 No GCE VM was terminated between {start_time_utc} and {end_time_utc}
 
-[AUTOMATED STEP]: Verifying that the terminated VM is currently running...
+[AUTOMATED STEP]: Verify that the terminated VM is currently running
 
    - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [FAIL]
      [REASON]
@@ -123,6 +123,6 @@ No GCE VM was terminated between {start_time_utc} and {end_time_utc}
      [1] https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm
      [2] https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting
 
-[END]: Finalizing VM terminations diagnostics...
+[END]: Finalize VM terminations diagnostics.
 
 
