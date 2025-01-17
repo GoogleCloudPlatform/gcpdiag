@@ -245,7 +245,7 @@ def _load_bundles_spec(file_path):
       steps:
         - gcpdiag.runbook.gce.generalized_steps.VmLifecycleState
         - gcpdiag.runbook.gce.ops_agent.VmHasAServiceAccount
-        - gcpdiag.runbook.gce.ssh.PoxisUserHasValidSshKeyCheck
+        - gcpdiag.runbook.gce.ssh.PosixUserHasValidSshKeyCheck
     - bundle:
       ...
   """

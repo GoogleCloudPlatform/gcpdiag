@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Module containing SSH diagnostic tree and custom steps."""
-import ipaddress
+from ipaddress import IPv4Address
 
 import googleapiclient.errors
 
@@ -28,14 +28,26 @@ from gcpdiag.runbook.gcp import generalized_steps as gcp_gs
 from gcpdiag.runbook.iam import generalized_steps as iam_gs
 
 CHECK_SSH_IN_BROWSER = 'check_ssh_in_browser'
-CHECK_CLOUD_CLI = 'check_cloud_cli'
-CHECK_IAP_DESKTOP = 'check_iap_desktop'
+CLIENT = 'client'
+ACCESS_METHOD = 'access_method'
+MFA = 'mfa'
+IAP = 'iap'
+OSLOGIN = 'oslogin'
+SSH_KEY_IN_METADATA = 'ssh-key-in-metadata'
+SSH_IN_BROWSER = 'ssh-in-browser'
+OSLOGIN_2FA = 'oslogin-2fa'
+SECURITY_KEY = 'security-key'
+OPENSSH = 'openssh'
+GCLOUD = 'gcloud'
+PUTTY = 'putty'
+IAP_DESKTOP = 'iap-desktop'
+JUMPHOST = 'jumphost'
 
 
 class Ssh(runbook.DiagnosticTree):
   """A comprehensive troubleshooting guide for common issues which affects SSH connectivity to VMs.
 
-  This runbook focuses on investigating components required for ssh on either Windows and Linux VMs
+  Investigates components required for ssh on either Windows and Linux VMs
   hosted on Google Cloud Platform and pinpoint misconfigurations.
 
   Areas Examined:
@@ -69,6 +81,18 @@ class Ssh(runbook.DiagnosticTree):
       flags.NAME: {
           'type': str,
           'help': 'The name of the target GCE VM',
+          'deprecated': True,
+          'new_parameter': 'instance_name',
+          'group': 'instance'
+      },
+      flags.INSTANCE_NAME: {
+          'type': str,
+          'help': 'The name of the target GCE VM',
+          'group': 'instance'
+      },
+      flags.INSTANCE_ID: {
+          'type': int,
+          'help': 'The instance ID of the target GCE VM',
           'group': 'instance'
       },
       flags.ID: {
@@ -83,16 +107,25 @@ class Ssh(runbook.DiagnosticTree):
       },
       flags.PRINCIPAL: {
           'type': str,
-          'help': ('The user or service account principal initiating '
-                   'the SSH connection this user should be authenticated in '
-                   'gcloud/cloud console when sshing into to the GCE. '
-                   'For service account impersonation, it should be the '
-                   'service account\'s email'),
-          'required': True
+          'help': (
+              'The user or service account initiating '
+              'the SSH connection. This user should be authenticated in '
+              'gcloud/cloud console when sshing into to a GCE instance. '
+              'For service account impersonation, it should be the '
+              'service account\'s email. (format: user:user@example.com or '
+              'serviceAccount:service-account-name@project-id.iam.gserviceaccount.com)'
+          ),
+          'ignorecase': True
       },
       flags.LOCAL_USER: {
           'type': str,
-          'help': 'Poxis User on the VM',
+          'help': 'Posix User on the VM',
+          'deprecated': True,
+          'new_parameter': 'posix_user'
+      },
+      flags.POSIX_USER: {
+          'type': str,
+          'help': 'Posix User on the VM',
       },
       flags.TUNNEL_THROUGH_IAP: {
           'type': bool,
@@ -101,35 +134,74 @@ class Ssh(runbook.DiagnosticTree):
                'Identity-Aware Proxy should be used for establishing the SSH '
                'connection.'),
           'default': True,
+          'deprecated': True,
+          'new_parameter': 'proxy'
+      },
+      flags.PROXY: {
+          'type': str,
+          'help': (
+              'A string that specifies the method used to establish the SSH connection, ',
+              'and indicating whether Identity-Aware Proxy (IAP) or a jumphost is utilized.'
+          ),
+          'enum': ['iap', 'jumphost']
       },
       flags.CHECK_OS_LOGIN: {
           'type': bool,
           'help': ('A boolean value (true or false) indicating whether OS '
                    'Login should be used for SSH authentication'),
           'default': True,
+          'deprecated': True,
+          'new_parameter': 'access_method'
+      },
+      flags.CLIENT: {
+          'type':
+              str,
+          'help':
+              'The SSH client used to establish SSH connection',
+          'enum': [
+              'ssh-in-browser', 'gcloud', 'openssh', 'putty', 'iap-desktop'
+          ]
       },
       flags.SRC_IP: {
           'type':
-              ipaddress.IPv4Address,
+              IPv4Address,
           'help': (
-              'Source IP address. Workstation connecting from workstation,'
-              'Ip of the bastion/jumphost if currently on logged on a basition/jumphost '
+              'Specify the IPv4 address of the workstation connecting to the network, '
+              'or the IP of the bastion/jumphost if currently logged in through one.'
           )
       },
       flags.PROTOCOL_TYPE: {
           'type': str,
           'help': 'Protocol used to connect to SSH',
           'default': 'tcp',
+          'deprecated': True
       },
       flags.PORT: {
-          'type': int,
-          'help': 'Port used to connect to SSH',
-          'default': gce_const.DEFAULT_SSHD_PORT
+          'type':
+              int,
+          'help':
+              'Specifies the port used to connect to on the remote host (default: 22)',
+          'default':
+              gce_const.DEFAULT_SSHD_PORT
       },
       CHECK_SSH_IN_BROWSER: {
           'type': bool,
           'help': 'Check that SSH in Browser is feasible',
-          'default': False
+          'default': False,
+          'deprecated': True,
+          'new_parameter': 'client'
+      },
+      ACCESS_METHOD: {
+          'type': str,
+          'help': 'The method used to share or restrict access to the instance',
+          'enum': ['oslogin', 'ssh-key-in-metadata']
+      },
+      MFA: {
+          'type':
+              str,
+          'help':
+              'Additional authentication features required to access to the instance',
+          'enum': ['oslogin-2fa', 'security-key']
       }
   }
 
@@ -176,7 +248,7 @@ class Ssh(runbook.DiagnosticTree):
     self.add_step(parent=start, child=sshd_auth_failure)
 
     # users wants to use SSH in Browser
-    if op.get(CHECK_SSH_IN_BROWSER):
+    if op.get(CLIENT) == SSH_IN_BROWSER:
       self.add_step(parent=start, child=SshInBrowserCheck())
     self.add_end(step=SshEnd())
 
@@ -209,6 +281,7 @@ class SshStart(runbook.StartStep):
           op.put(flags.ID, vm.id)
         elif not op.get(flags.NAME):
           op.put(flags.NAME, vm.name)
+        # Align with the user on parameters to be investigated
         # prep authenticated principal
         if op.get(flags.PRINCIPAL):
           email_only = len(op.get(flags.PRINCIPAL).split(':')) == 1
@@ -219,46 +292,63 @@ class SshStart(runbook.StartStep):
             op.put(flags.PRINCIPAL, f'{p_type}:{op.get(flags.PRINCIPAL)}')
             if p_type:
               op.info(
-                  f'Checks will use {op.get(flags.PRINCIPAL)} as the authenticated\n'
-                  'principal in Cloud Console / gcloud (incl. impersonated service account)'
+                  f'GCP permissions related to SSH will be verified for: {op.get(flags.PRINCIPAL)}'
               )
-        #
         if not op.get(flags.SRC_IP) and not op.get(
-            flags.TUNNEL_THROUGH_IAP) and vm.is_public_machine():
+            flags.PROXY) and vm.is_public_machine():
           op.put(flags.SRC_IP, gce_const.UNSPECIFIED_ADDRESS)
-
-        if op.get(flags.TUNNEL_THROUGH_IAP):
+          op.info(
+              f'No proxy specified. Setting source IP range to: {gce_const.UNSPECIFIED_ADDRESS}'
+          )
+        if op.get(flags.PROXY) == IAP:
           # set IAP VIP as the source to the VM
           op.put(flags.SRC_IP, gce_const.IAP_FW_VIP)
-          op.info('Will check for IAP configuration')
-        else:
-          op.info('Will not check for IAP for TCP forwarding configuration')
+          op.info(
+              f'Source IP to be used for SSH connectivity test: {op.get(flags.SRC_IP)}'
+          )
+        elif op.get(flags.PROXY) == JUMPHOST:
+          op.info(
+              f'Source IP to be used for SSH connectivity test: {op.get(flags.SRC_IP)}'
+          )
 
         op.info(
-            f'Runbook will use Protocol {op.get(flags.PROTOCOL_TYPE)},'
             f'Port {op.get(flags.PORT)} and ip {op.get(flags.SRC_IP)} as the source IP'
         )
 
-        if op.get(flags.CHECK_OS_LOGIN):
+        if not op.get(flags.PORT):
+          op.info(f'SSH port to investigate: {op.get(flags.PORT)}')
+
+        if op.get(flags.ACCESS_METHOD) == OSLOGIN:
           op.info(
-              'Runbook will check if OS login is correctly configured to permit SSH'
+              'Access method to investigate: OS login https://cloud.google.com/compute/docs/oslogin'
           )
-        else:
+        elif op.get(flags.ACCESS_METHOD) == SSH_KEY_IN_METADATA:
           op.info(
-              'Runbook will check if Key-based SSH approached is are correctly configured'
+              'Access method to investigate: SSH keys in metadata '
+              'https://cloud.google.com/compute/docs/instances/access-overview#ssh-access'
           )
 
-        if op.get(flags.LOCAL_USER):
-          op.info(f'Local User: {op.get(flags.LOCAL_USER)} will be used '
-                  f'examine metadata-based SSH Key configuration')
-
-        if op.get(CHECK_SSH_IN_BROWSER):
+        if op.get(flags.POSIX_USER):
           op.info(
-              'Runbook will investigate components required for SSH in browser')
-        else:
-          op.info(
-              'Runbook will not investigate components required for SSH in browser'
+              f'Guest OS Posix User to be investigated: {op.get(flags.POSIX_USER)}'
           )
+        if op.get(CLIENT) == SSH_IN_BROWSER:
+          op.info('SSH Client to be investigated: SSH in Browser')
+        if op.get(CLIENT) == GCLOUD:
+          op.info('Investigating components required to use gcloud compute ssh')
+        if op.get(CLIENT) in (IAP_DESKTOP, PUTTY, OPENSSH):
+          op.info(
+              'IAP Desktop, Putty and vanilla openssh investigations are not supported yet'
+          )
+        if op.get(MFA) == OSLOGIN_2FA:
+          op.info(
+              'Multifactor authentication to investigate: OS Login 2FA '
+              'https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#byb'
+          )
+        if op.get(MFA) == SECURITY_KEY:
+          op.info(
+              'Multifactor authentication to investigate: Security keys with OS Login  '
+              'https://cloud.google.com/compute/docs/oslogin/security-keys')
 
 
 class VmGuestOsType(runbook.Gateway):
@@ -330,7 +420,7 @@ class GcpSshPermissions(runbook.CompositeStep):
     Note: Only roles granted at the project level are checked. Permissions inherited from
     ancestor resources such as folder(s) or organization and groups are not checked."""
     # Check user has permisssion to access the VM in the first place
-    if op.get(CHECK_SSH_IN_BROWSER):
+    if op.get(CLIENT) == SSH_IN_BROWSER:
       console_permission = iam_gs.IamPolicyCheck()
       console_permission.template = 'gcpdiag.runbook.gce::permissions::console_view_permission'
       console_permission.permissions = ['compute.projects.get']
@@ -348,7 +438,7 @@ class GcpSshPermissions(runbook.CompositeStep):
     # Check OS login or Key based auth preference.
     self.add_child(OsLoginStatusCheck())
 
-    if op.get(flags.TUNNEL_THROUGH_IAP):
+    if op.get(flags.PROXY) == IAP:
       iap_role_check = iam_gs.IamPolicyCheck()
       iap_role_check.template = 'gcpdiag.runbook.gce::permissions::iap_role'
       iap_role_check.roles = [gce_const.IAP_ROLE]
@@ -366,7 +456,7 @@ class OsLoginStatusCheck(runbook.Gateway):
   def execute(self):
     """Identifying OS Login Setup."""
     # User intends to use OS login
-    if op.get(flags.CHECK_OS_LOGIN):
+    if op.get(flags.ACCESS_METHOD) == OSLOGIN:
       os_login_check = gce_gs.VmMetadataCheck()
       os_login_check.project_id = op.get(flags.PROJECT_ID)
       os_login_check.zone = op.get(flags.ZONE)
@@ -390,7 +480,7 @@ class OsLoginStatusCheck(runbook.Gateway):
       sa_user_role_check.require_all = False
       self.add_child(sa_user_role_check)
 
-      if not op.get(flags.CHECK_OS_LOGIN):
+      if op.get(flags.ACCESS_METHOD) == SSH_KEY_IN_METADATA:
         metadata_perm_check = iam_gs.IamPolicyCheck()
         metadata_perm_check.template = 'gcpdiag.runbook.gce::permissions::can_set_metadata'
         metadata_perm_check.permissions = [
@@ -407,10 +497,10 @@ class OsLoginStatusCheck(runbook.Gateway):
         os_login_check.metadata_key = 'enable_oslogin'
         os_login_check.expected_value = False
         self.add_child(os_login_check)
-        self.add_child(PoxisUserHasValidSshKeyCheck())
+        self.add_child(PosixUserHasValidSshKeyCheck())
 
 
-class PoxisUserHasValidSshKeyCheck(runbook.Step):
+class PosixUserHasValidSshKeyCheck(runbook.Step):
   """Verifies the existence of a valid SSH key for the specified local Proxy user on a (VM).
 
   Ensures that the local user has at least one valid SSH key configured in the VM's metadata, which
@@ -431,21 +521,21 @@ class PoxisUserHasValidSshKeyCheck(runbook.Step):
     # Check if the local_user has a valid key in the VM's metadata.
     ssh_keys = vm.get_metadata('ssh-keys').split('\n') if vm.get_metadata(
         'ssh-keys') else []
-    has_valid_key = util.user_has_valid_ssh_key(op.get(flags.LOCAL_USER),
+    has_valid_key = util.user_has_valid_ssh_key(op.get(flags.POSIX_USER),
                                                 ssh_keys)
     if has_valid_key:
       op.add_ok(resource=vm,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   local_user=op.get(flags.LOCAL_USER),
+                                   local_user=op.get(flags.POSIX_USER),
                                    vm_name=vm.name))
     else:
       op.add_failed(vm,
                     reason=op.prep_msg(op.FAILURE_REASON,
-                                       local_user=op.get(flags.LOCAL_USER),
+                                       local_user=op.get(flags.POSIX_USER),
                                        vm_name=vm.name),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION,
                                             local_user=op.get(
-                                                flags.LOCAL_USER)))
+                                                flags.POSIX_USER)))
 
 
 class GceFirewallAllowsSsh(runbook.Gateway):
@@ -461,26 +551,26 @@ class GceFirewallAllowsSsh(runbook.Gateway):
                           zone=op.get(flags.ZONE),
                           instance_name=op.get(flags.NAME))
 
-    if op.get(flags.TUNNEL_THROUGH_IAP):
+    if op.get(flags.PROXY) == IAP:
       tti_ingress_check = gce_gs.GceVpcConnectivityCheck()
       tti_ingress_check.project_id = op.get(flags.PROJECT_ID)
       tti_ingress_check.zone = op.get(flags.ZONE)
       tti_ingress_check.instance_name = op.get(flags.NAME)
       tti_ingress_check.src_ip = op.get(flags.SRC_IP)
-      tti_ingress_check.protocol_type = op.get(flags.PROTOCOL_TYPE)
+      tti_ingress_check.protocol_type = 'tcp'
       tti_ingress_check.port = op.get(flags.PORT)
       tti_ingress_check.traffic = 'ingress'
       # Check IAP Firewall rule if specified
       tti_ingress_check.template = 'vpc_connectivity::tti_ingress'
       self.add_child(tti_ingress_check)
-    if (not op.get(flags.SRC_IP) and not op.get(flags.TUNNEL_THROUGH_IAP) and
+    if (not op.get(flags.SRC_IP) and not op.get(flags.PROXY) and
         vm.is_public_machine()):
       default_ingress_check = gce_gs.GceVpcConnectivityCheck()
       default_ingress_check.project_id = op.get(flags.PROJECT_ID)
       default_ingress_check.zone = op.get(flags.ZONE)
       default_ingress_check.instance_name = op.get(flags.NAME)
       default_ingress_check.src_ip = op.get(flags.SRC_IP)
-      default_ingress_check.protocol_type = op.get(flags.PROTOCOL_TYPE)
+      default_ingress_check.protocol_type = 'tcp'
       default_ingress_check.port = op.get(flags.PORT)
       default_ingress_check.traffic = 'ingress'
       default_ingress_check.template = 'vpc_connectivity::default_ingress'
@@ -488,13 +578,13 @@ class GceFirewallAllowsSsh(runbook.Gateway):
       self.add_child(default_ingress_check)
 
     # Check provided source IP has access
-    if op.get(flags.SRC_IP) and not op.get(flags.TUNNEL_THROUGH_IAP):
+    if op.get(flags.SRC_IP) and not op.get(flags.PROXY):
       custom_ip_ingress_check = gce_gs.GceVpcConnectivityCheck()
       custom_ip_ingress_check.project_id = op.get(flags.PROJECT_ID)
       custom_ip_ingress_check.zone = op.get(flags.ZONE)
       custom_ip_ingress_check.instance_name = op.get(flags.NAME)
       custom_ip_ingress_check.src_ip = op.get(flags.SRC_IP)
-      custom_ip_ingress_check.protocol_type = op.get(flags.PROTOCOL_TYPE)
+      custom_ip_ingress_check.protocol_type = 'tcp'
       custom_ip_ingress_check.port = op.get(flags.PORT)
       custom_ip_ingress_check.traffic = 'ingress'
       custom_ip_ingress_check.template = 'vpc_connectivity::default_ingress'

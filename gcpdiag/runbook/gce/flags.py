@@ -16,4 +16,8 @@
 from gcpdiag.runbook.gcp.flags import *
 from gcpdiag.runbook.iam.flags import *
 
-PROTOCOL_TYPE = 'protocol_type'
+LOCAL_USER = 'local_user'
+TUNNEL_THROUGH_IAP = 'tunnel_through_iap'
+CHECK_OS_LOGIN = 'check_os_login'
+POSIX_USER = 'posix_user'
+ACCESS_METHOD = 'access_method'

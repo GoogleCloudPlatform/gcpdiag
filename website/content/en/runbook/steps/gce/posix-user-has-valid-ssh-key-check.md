@@ -1,6 +1,6 @@
 ---
-title: "gce/Poxis User Has Valid Ssh Key Check"
-linkTitle: "Poxis User Has Valid Ssh Key Check"
+title: "gce/Posix User Has Valid Ssh Key Check"
+linkTitle: "Posix User Has Valid Ssh Key Check"
 weight: 3
 type: docs
 description: >
