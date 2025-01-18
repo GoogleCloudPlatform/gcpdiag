@@ -25,9 +25,9 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
       'project_id': 'gcpdiag-gce-faultyssh-runbook',
       'name': 'faulty-linux-ssh',
       'zone': 'europe-west2-a',
-      'principal': 'cannotssh@example.com',
-      'tunnel_through_iap': 'True',
-      'check_os_login': 'True'
+      'principal': 'user:cannotssh@example.com',
+      'proxy': 'iap',
+      'access_method': 'oslogin'
   }, {
       'project_id':
           'gcpdiag-gce-faultyssh-runbook',
@@ -36,18 +36,18 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
       'zone':
           'europe-west2-a',
       'principal':
-          'canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com',
-      'tunnel_through_iap':
-          'True',
-      'check_os_login':
-          'True'
+          'serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com',
+      'proxy':
+          'iap',
+      'access_method':
+          'oslogin'
   }, {
       'project_id': 'gcpdiag-gce-faultyssh-runbook',
       'name': 'faulty-windows-ssh',
       'zone': 'europe-west2-a',
-      'principal': 'cannot@example.com',
-      'tunnel_through_iap': 'False',
+      'principal': 'user:cannot@example.com',
       'src_ip': '0.0.0.0',
-      'check_os_login': 'False',
-      'local_user': 'no_user'
+      'proxy': 'iap',
+      'access_method': 'oslogin',
+      'posix_user': 'no_user'
   }]
