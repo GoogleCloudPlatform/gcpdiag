@@ -105,6 +105,5 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     else:
       report.add_failed(
           cluster,
-          msg=
           (f'The following nodepools do not comply with the serial port logging org policy: {", ".join(non_compliant_pools)}'
           ))
