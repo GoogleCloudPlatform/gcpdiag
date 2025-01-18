@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Lint as: python3
-"""GKE clusters must comply with serial port logging policy.
+""" GKE cluster complies with the serial port logging organization policy.
 
 When the constraints/compute.disableSerialPortLogging policy is enabled,
 GKE clusters must be created with logging disabled (serial-port-logging-enable: 'false'),
@@ -21,41 +21,44 @@ otherwise the creation of new nodes in Nodepool will fail.
 """
 
 import logging
-from typing import Optional
+from typing import List, Optional, Tuple
 from gcpdiag import lint, models
 from gcpdiag.queries import gke, orgpolicy
 
-def check_serial_port_logging_policy(cluster: gke.Cluster) -> Optional[bool]:
+def check_serial_port_logging_policy(cluster: gke.Cluster) -> Tuple[Optional[bool], List[str]]:
   """
         Checks if serial port logging policy is enforced and if cluster complies with it.
 
         Returns:
-            bool: True if cluster complies with policy, False if not compliant,
-                 None if policy not enforced
+            Tuple[Optional[bool], List[str]]:
+                - bool: True if cluster complies with policy, False if not compliant,
+                       None if policy not enforced
+                - List[str]: List of non-compliant nodepool names
         """
   try:
     # Get the policy constraint status
     constraint = orgpolicy.get_effective_org_policy(
         cluster.project_id, 'constraints/compute.disableSerialPortLogging')
 
-    # If policy is not enforced, return None (no compliance check needed)
+    # If policy is not enforced, return None (no compliance check needed) and empty list
     if not isinstance(
         constraint,
         orgpolicy.BooleanPolicyConstraint) or not constraint.is_enforced():
-      return None
+      return None, []
 
     # Get cluster node pools
+    non_compliant_pools = []
     for nodepool in cluster.nodepools:
       # Check if serial port logging is disabled in node config metadata
       metadata = nodepool.config.metadata or {}
       serial_logging_enabled = metadata.get('serial-port-logging-enable',
                                             'true').lower() == 'true'
 
-      # if policy is enforced and serial port logging is enabled, cluster has error.
+      # if policy is enforced and serial port logging is enabled, add to non compliant list.
       if serial_logging_enabled:
-        return False
+        non_compliant_pools.append(nodepool.name)
 
-    return True
+    return not bool(non_compliant_pools), non_compliant_pools
 
   except ValueError:
     # Policy not found or not supported
@@ -64,16 +67,19 @@ def check_serial_port_logging_policy(cluster: gke.Cluster) -> Optional[bool]:
     logging.error(f"Error checking serial port logging policy: {e}")
     return None
 
-def is_serial_port_logging_compliant(cluster: gke.Cluster) -> bool:
+def is_serial_port_logging_compliant(cluster: gke.Cluster) -> Tuple[bool, List[str]]:
   """
         Checks if the cluster is compliant with serial port logging policy.
 
         Returns:
-            bool: True if compliant or policy not enforced, False if non-compliant
+            Tuple[Optional[bool], List[str]]:
+                - bool: True if cluster complies with policy, False if not compliant,
+                       None if policy not enforced
+                - List[str]: List of non-compliant nodepool names
         """
-  compliance = check_serial_port_logging_policy(cluster)
+  compliance, non_compliant_pools = check_serial_port_logging_policy(cluster)
   # Return True if policy is not enforced (compliance is None) or cluster is compliant
-  return compliance is None or compliance
+  return (compliance is None or compliance), non_compliant_pools
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   clusters = gke.get_clusters(context)
@@ -90,7 +96,12 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       continue
 
     # Check if cluster complies with serial port logging policy
-    if is_serial_port_logging_compliant(cluster):
+    is_compliant, non_compliant_pools = is_serial_port_logging_compliant(cluster)
+    if is_compliant:
       report.add_ok(cluster)
     else:
-      report.add_failed(cluster)
+      report.add_failed(
+          cluster,
+          msg=(
+              f'The following nodepools do not comply with the serial port logging org policy: {", ".join(non_compliant_pools)}'
+          ))
