@@ -25,7 +25,8 @@ from typing import List, Optional, Tuple
 from gcpdiag import lint, models
 from gcpdiag.queries import gke, orgpolicy
 
-def check_serial_port_logging_policy(cluster: gke.Cluster) -> Tuple[Optional[bool], List[str]]:
+def check_serial_port_logging_policy(
+    cluster: gke.Cluster) -> Tuple[Optional[bool], List[str]]:
   """
         Checks if serial port logging policy is enforced and if cluster complies with it.
 
@@ -67,7 +68,8 @@ def check_serial_port_logging_policy(cluster: gke.Cluster) -> Tuple[Optional[boo
     logging.error(f"Error checking serial port logging policy: {e}")
     return None
 
-def is_serial_port_logging_compliant(cluster: gke.Cluster) -> Tuple[bool, List[str]]:
+def is_serial_port_logging_compliant(
+    cluster: gke.Cluster) -> Tuple[bool, List[str]]:
   """
         Checks if the cluster is compliant with serial port logging policy.
 
@@ -96,12 +98,13 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       continue
 
     # Check if cluster complies with serial port logging policy
-    is_compliant, non_compliant_pools = is_serial_port_logging_compliant(cluster)
+    is_compliant, non_compliant_pools = is_serial_port_logging_compliant(
+        cluster)
     if is_compliant:
       report.add_ok(cluster)
     else:
       report.add_failed(
           cluster,
-          msg=(
-              f'The following nodepools do not comply with the serial port logging org policy: {", ".join(non_compliant_pools)}'
+          msg=
+          (f'The following nodepools do not comply with the serial port logging org policy: {", ".join(non_compliant_pools)}'
           ))
