@@ -21,12 +21,11 @@ otherwise the creation of new nodes in Nodepool will fail.
 """
 
 import logging
-from typing import List, Optional, Tuple
+from typing import List
 from gcpdiag import lint, models
 from gcpdiag.queries import gke, orgpolicy
 
-def get_non_compliant_pools(
-    cluster: gke.Cluster) -> List[str]:
+def get_non_compliant_pools(cluster: gke.Cluster) -> List[str]:
   """
         Checks if org serial port logging policy is enforced and if cluster complies with it.
 
@@ -72,7 +71,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     if not non_compliant_pools:
       report.add_ok(cluster)
     else:
-      report.add_failed(
-          cluster,
-          (f'The following nodepools do not comply with the serial port logging org policy: {", ".join(non_compliant_pools)}'
-          ))
+      report.add_failed(cluster, (
+          f'The following nodepools do not comply with the serial port logging org policy: {", ".join(non_compliant_pools)}'
+      ))
