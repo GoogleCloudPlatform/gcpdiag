@@ -36,6 +36,16 @@ This configuration can be problematic unless you have configured the load balanc
 The load balancer is performing health checks on the same port that it is using for serving traffic. This is the standard configuration.
 {% endblock port_mismatch_success_reason %}
 
+{% block protocol_mismatch_uncertain_reason %}
+The load balancer uses {serving_protocol} for traffic but {hc_protocol} for health checks. If not intended, this protocol mismatch can lead to incorrect health assessments, causing traffic to be sent to failing backends or unnecessary failovers.
+
+**Important:** Health checks using {hc_protocol} might be passing while the application serving {serving_protocol} traffic is failing, because the success criteria for the two protocols can be different. More details on the health check success criteria can be found in [docs](https://cloud.google.com/load-balancing/docs/health-check-concepts#criteria-protocol-http).
+{% endblock protocol_mismatch_uncertain_reason %}
+
+{% block protocol_mismatch_success_reason %}
+The load balancer is performing health checks using the same protocol ({hc_protocol}) that it is using for serving traffic. This is the standard configuration.
+{% endblock protocol_mismatch_success_reason %}
+
 {% block firewall_rules_failure_reason %}
 {insight}
 The health checks are currently failing due to a misconfigured firewall. This is preventing Google Cloud probers from connecting to your backends, causing the load balancer to consider them unhealthy.
@@ -77,15 +87,22 @@ If you intend to check a different endpoint or expect a different response, adju
 
 {% block timeout_hc_state_log_uncertain_reason %}
 Health check logs show the detailed health state "TIMEOUT".
+
 The backend might be timing out because:
+
 1. The application is overloaded and taking too long to respond.
+
 2. The backend service or health check timeout is too low.
+
 3. Connection to the endpoint cannot be established - the backend instance has crashed or is otherwise unresponsive.
+
 The following responses were received from your backends: {probe_results_text_str}
 {% endblock timeout_hc_state_log_uncertain_reason %}
 
 {% block timeout_hc_state_log_uncertain_remediation %}
 1. Make sure that the backend service timeout (current value: {bs_timeout_sec}s) and health check timeout (current value: {hc_timeout_sec}s) are appropriately configured to accommodate your application's expected response time.
+
 2. Investigate your application's configuration to ensure it is correctly handling health check probe requests. {success_criteria}
+
 3. Check if firewall rules or iptables configurations are not blocking the health check probes from reaching the backend instances, resulting in timeouts.
 {% endblock timeout_hc_state_log_uncertain_remediation %}

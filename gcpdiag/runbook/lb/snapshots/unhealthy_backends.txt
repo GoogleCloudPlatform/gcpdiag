@@ -12,8 +12,13 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
       - Verifies if firewall rules are properly configured to allow health check
       traffic.
   - Port Configuration:
-      - Validates if the health check and serving ports are configured
-      correctly, ensuring they are not mismatched.
+      - Checks if health check sends probe requests to the different port than
+      serving port. This may be intentional or a potential configuration error,
+      and the runbook will provide guidance on the implications.
+  - Protocol Configuration:
+      - Checks if health check uses the same protocol as backend service. This
+      may be intentional or a potential configuration error, and the runbook
+      will provide guidance on the implications.
   - Logging:
       - Checks if health check logging is enabled to aid in troubleshooting.
   - Health Check Logs (if enabled):
@@ -30,6 +35,9 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
   - Past Health Check Success:
       - Checks if the health check has worked successfully in the past to
       determine if the issue is recent or ongoing.
+  - VM Performance:
+      - Checks if the instances performance is degraded - disks, memory and cpu
+      utilization are being checked.
   
 [START]: Checks the health of a specified load balancer's backends.
 [INFO]: name: web-backend-service, region: global
@@ -52,17 +60,24 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
    - gcpdiag-lb2-aaaa/web-backend-service                                 [UNCERTAIN]
      [REASON]
      Health check logs show the detailed health state "TIMEOUT".
+
      The backend might be timing out because:
+
      1. The application is overloaded and taking too long to respond.
+
      2. The backend service or health check timeout is too low.
+
      3. Connection to the endpoint cannot be established - the backend instance has crashed or is otherwise unresponsive.
+
      The following responses were received from your backends: "HTTP response: , Error: Timeout waiting for connect"
 
      [REMEDIATION]
      1. Make sure that the backend service timeout (current value: 30s) and health check timeout (current value: 5s) are appropriately configured to accommodate your application's expected response time.
+
      2. Investigate your application's configuration to ensure it is correctly handling health check probe requests. Your health check is using HTTP protocol, and it is set to: 
      - send a prober requests to the / path on port 80 
      - expect a response with an HTTP 200 (OK) status code
+
      3. Check if firewall rules or iptables configurations are not blocking the health check probes from reaching the backend instances, resulting in timeouts.
 
 [AUTOMATED STEP]: Checks if the health check has worked successfully in the past.
@@ -85,6 +100,12 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      projects/gcpdiag-lb2-aaaa/zones/us-east1-b/instanceGroups/lb-backend-example - port name "http" translates to port 80
 
      This configuration can be problematic unless you have configured the load balancer to use a different port for health checks purposefully.
+
+[AUTOMATED STEP]: Checks if health check uses the same protocol as backend service for serving traffic.
+
+   - gcpdiag-lb2-aaaa/web-backend-service                                 [OK]
+     [REASON]
+     The load balancer is performing health checks using the same protocol (HTTP) that it is using for serving traffic. This is the standard configuration.
 
 [AUTOMATED STEP]: Checks if firewall rules are configured correctly.
 
@@ -181,8 +202,13 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
       - Verifies if firewall rules are properly configured to allow health check
       traffic.
   - Port Configuration:
-      - Validates if the health check and serving ports are configured
-      correctly, ensuring they are not mismatched.
+      - Checks if health check sends probe requests to the different port than
+      serving port. This may be intentional or a potential configuration error,
+      and the runbook will provide guidance on the implications.
+  - Protocol Configuration:
+      - Checks if health check uses the same protocol as backend service. This
+      may be intentional or a potential configuration error, and the runbook
+      will provide guidance on the implications.
   - Logging:
       - Checks if health check logging is enabled to aid in troubleshooting.
   - Health Check Logs (if enabled):
@@ -199,6 +225,9 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
   - Past Health Check Success:
       - Checks if the health check has worked successfully in the past to
       determine if the issue is recent or ongoing.
+  - VM Performance:
+      - Checks if the instances performance is degraded - disks, memory and cpu
+      utilization are being checked.
   
 [START]: Checks the health of a specified load balancer's backends.
 [INFO]: name: backend-service-2, region: europe-west4
@@ -221,17 +250,24 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
    - gcpdiag-lb2-aaaa/backend-service-2                                   [UNCERTAIN]
      [REASON]
      Health check logs show the detailed health state "TIMEOUT".
+
      The backend might be timing out because:
+
      1. The application is overloaded and taking too long to respond.
+
      2. The backend service or health check timeout is too low.
+
      3. Connection to the endpoint cannot be established - the backend instance has crashed or is otherwise unresponsive.
+
      The following responses were received from your backends: "HTTP response: , Error: Timeout waiting for connect"
 
      [REMEDIATION]
      1. Make sure that the backend service timeout (current value: 30s) and health check timeout (current value: 5s) are appropriately configured to accommodate your application's expected response time.
+
      2. Investigate your application's configuration to ensure it is correctly handling health check probe requests. Your health check is using TCP protocol, and it is set to: 
      - send a prober requests on port 80
      - expect a successful TCP handshake
+
      3. Check if firewall rules or iptables configurations are not blocking the health check probes from reaching the backend instances, resulting in timeouts.
 
 [AUTOMATED STEP]: Checks if the health check has worked successfully in the past.
@@ -249,6 +285,12 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
    - gcpdiag-lb2-aaaa/backend-service-2                                   [OK]
      [REASON]
      The load balancer is performing health checks on the same port that it is using for serving traffic. This is the standard configuration.
+
+[AUTOMATED STEP]: Checks if health check uses the same protocol as backend service for serving traffic.
+
+   - gcpdiag-lb2-aaaa/backend-service-2                                   [OK]
+     [REASON]
+     The load balancer is performing health checks using the same protocol (TCP) that it is using for serving traffic. This is the standard configuration.
 
 [AUTOMATED STEP]: Checks if firewall rules are configured correctly.
 

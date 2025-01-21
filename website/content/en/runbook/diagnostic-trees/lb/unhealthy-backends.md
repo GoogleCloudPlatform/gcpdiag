@@ -22,8 +22,13 @@ This runbook helps investigate why backends in a load balancer are unhealthy.
       - Verifies if firewall rules are properly configured to allow health check
       traffic.
   - Port Configuration:
-      - Validates if the health check and serving ports are configured
-      correctly, ensuring they are not mismatched.
+      - Checks if health check sends probe requests to the different port than
+      serving port. This may be intentional or a potential configuration error,
+      and the runbook will provide guidance on the implications.
+  - Protocol Configuration:
+      - Checks if health check uses the same protocol as backend service. This
+      may be intentional or a potential configuration error, and the runbook
+      will provide guidance on the implications.
   - Logging:
       - Checks if health check logging is enabled to aid in troubleshooting.
   - Health Check Logs (if enabled):
@@ -40,6 +45,9 @@ This runbook helps investigate why backends in a load balancer are unhealthy.
   - Past Health Check Success:
       - Checks if the health check has worked successfully in the past to
       determine if the issue is recent or ongoing.
+  - VM Performance:
+      - Checks if the instances performance is degraded - disks, memory and cpu
+      utilization are being checked.
 
 ### Executing this runbook
 
@@ -75,6 +83,8 @@ gcpdiag runbook --help
   - [Check Past Health Check Success](/runbook/steps/lb/check-past-health-check-success)
 
   - [Validate Backend Service Port Configuration](/runbook/steps/lb/validate-backend-service-port-configuration)
+
+  - [Validate Backend Service Protocol Configuration](/runbook/steps/lb/validate-backend-service-protocol-configuration)
 
   - [Verify Firewall Rules](/runbook/steps/lb/verify-firewall-rules)
 
