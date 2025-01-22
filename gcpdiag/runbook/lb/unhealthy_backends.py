@@ -510,7 +510,7 @@ class AnalyzeLatestHealthCheckLog(runbook.Gateway):
         filter_str = """resource.type="gce_instance_group"
                         log_name="projects/{}/logs/compute.googleapis.com%2Fhealthchecks"
                         resource.labels.instance_group_name="{}"
-                        resource.labels.location={}
+                        resource.labels.location=~{}
                         jsonPayload.healthCheckProbeResult.healthState="UNHEALTHY"
                         """.format(op.get(flags.PROJECT_ID), resource_name,
                                    location)
