@@ -170,10 +170,10 @@ class VmPerformanceStart(runbook.StartStep):
       else:
         op.add_failed(vm,
                       reason=op.prep_msg(op.FAILURE_REASON,
-                                         vm_name=vm.name,
+                                         full_resource_path=vm.full_path,
                                          status=vm.status),
                       remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                              vm_name=vm.name,
+                                              full_resource_path=vm.full_path,
                                               status=vm.status))
 
 
@@ -1372,7 +1372,7 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
                 ('{} usage is reaching beyond optimal limits for disk type {} for this VM'
                 ).format(metric_name, storage_type),
                 remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                        vm_name=vm.name,
+                                        full_resource_path=vm.full_path,
                                         status=vm.status))
           else:
             op.add_ok(

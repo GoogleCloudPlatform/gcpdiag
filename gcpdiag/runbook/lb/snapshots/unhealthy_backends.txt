@@ -142,17 +142,52 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      Or connect via the Serial Console if SSH is not available to mitigate the issue.
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
-[AUTOMATED STEP]: Verify there are any memory related errors in Serial logs
+[AUTOMATED STEP]: Check for memory related errors in VM serial logs.
 
    - gcpdiag-lb2-aaaa/vm-pn3l                                             [UNCERTAIN]
      [REASON]
-     We did not find any Memory related errors in Serial console logs
+     Unable to investigate the high memory utilization error logs, likely due to the absence of logs.
+     However, this does not eliminate the possibility of high memory usage.
+
+     You may manually verify memory utilization on the Guest OS side a likely cause.
 
      [REMEDIATION]
-     You may check if VM is facing high memory utilisation from GuestOS side using `free -m`
-     or `cat /proc/meminfo` commands.
+     1. Manually investigate by accessing the Guest OS to Analyze Memory Usage:
+     * Identify processes with consistently high memory consumption:
+     - Run `top` and press "M" to sort processes by memory usage.
+     - Alternatively, use the command:
+     ```bash
+     ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5
+     ```
+     * Focus on processes with recent spikes or consistently high memory usage.
+     * If SSH access is unavailable, consider [troubleshooting via the serial
+     console](https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console).
 
-[AUTOMATED STEP]: Verify VM's Boot disk space utilization is within optimal levels.
+     2. Review Application or Configuration Changes:
+     * Investigate if recent deployments, updates, or configuration changes correlate with increased memory usage.
+
+     3. Resolve Identified Bottlenecks:
+     * For applications causing excessive memory usage:
+     - Optimize their configuration or update them to a stable version.
+     - Explore alternatives if optimization is insufficient.
+     * Evaluate scaling up resources if the high memory usage results from legitimate application demands.
+
+     4. Increase Instance Memory if Necessary:
+     * If additional memory is required for the application:
+     - Stop the VM and [change its machine
+     type](https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud).
+     - Consult the [machine type documentation](https://cloud.google.com/compute/docs/machine-types) to select an appropriate
+     configuration.
+
+     **Note:**
+     Non Google provided Application-specific issues may fall outside support scope. Collaborate with
+     relevant application teams for further investigation.
+     Refer to the [Google Cloud Platform support
+     policy](https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope)
+     for details, including [out-of-scope
+     items](https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support).
+
+[AUTOMATED STEP]: Check if VM's boot disk space utilization is within optimal levels.
 
    - gcpdiag-lb2-aaaa/vm-pn3l                                             [FAIL]
      [REASON]
@@ -165,7 +200,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      Follow the guide to increase disk size:
      https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
 
-[AUTOMATED STEP]: Verify VM CPU utilization is within optimal levels
+[AUTOMATED STEP]: Verify VM CPU utilization is within optimal levels.
 
    - gcpdiag-lb2-aaaa/vm-pn3l                                             [FAIL]
      [REASON]
@@ -323,17 +358,52 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      Or connect via the Serial Console if SSH is not available to mitigate the issue.
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
-[AUTOMATED STEP]: Verify there are any memory related errors in Serial logs
+[AUTOMATED STEP]: Check for memory related errors in VM serial logs.
 
    - gcpdiag-lb2-aaaa/neg-vm                                              [UNCERTAIN]
      [REASON]
-     We did not find any Memory related errors in Serial console logs
+     Unable to investigate the high memory utilization error logs, likely due to the absence of logs.
+     However, this does not eliminate the possibility of high memory usage.
+
+     You may manually verify memory utilization on the Guest OS side a likely cause.
 
      [REMEDIATION]
-     You may check if VM is facing high memory utilisation from GuestOS side using `free -m`
-     or `cat /proc/meminfo` commands.
+     1. Manually investigate by accessing the Guest OS to Analyze Memory Usage:
+     * Identify processes with consistently high memory consumption:
+     - Run `top` and press "M" to sort processes by memory usage.
+     - Alternatively, use the command:
+     ```bash
+     ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5
+     ```
+     * Focus on processes with recent spikes or consistently high memory usage.
+     * If SSH access is unavailable, consider [troubleshooting via the serial
+     console](https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console).
 
-[AUTOMATED STEP]: Verify VM's Boot disk space utilization is within optimal levels.
+     2. Review Application or Configuration Changes:
+     * Investigate if recent deployments, updates, or configuration changes correlate with increased memory usage.
+
+     3. Resolve Identified Bottlenecks:
+     * For applications causing excessive memory usage:
+     - Optimize their configuration or update them to a stable version.
+     - Explore alternatives if optimization is insufficient.
+     * Evaluate scaling up resources if the high memory usage results from legitimate application demands.
+
+     4. Increase Instance Memory if Necessary:
+     * If additional memory is required for the application:
+     - Stop the VM and [change its machine
+     type](https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud).
+     - Consult the [machine type documentation](https://cloud.google.com/compute/docs/machine-types) to select an appropriate
+     configuration.
+
+     **Note:**
+     Non Google provided Application-specific issues may fall outside support scope. Collaborate with
+     relevant application teams for further investigation.
+     Refer to the [Google Cloud Platform support
+     policy](https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope)
+     for details, including [out-of-scope
+     items](https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support).
+
+[AUTOMATED STEP]: Check if VM's boot disk space utilization is within optimal levels.
 
    - gcpdiag-lb2-aaaa/neg-vm                                              [FAIL]
      [REASON]
@@ -346,7 +416,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      Follow the guide to increase disk size:
      https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
 
-[AUTOMATED STEP]: Verify VM CPU utilization is within optimal levels
+[AUTOMATED STEP]: Verify VM CPU utilization is within optimal levels.
 
    - gcpdiag-lb2-aaaa/neg-vm                                              [FAIL]
      [REASON]

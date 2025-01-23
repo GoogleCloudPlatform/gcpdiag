@@ -44,7 +44,7 @@ dataproc/spark-job-failures: Provides a comprehensive analysis of common issues 
 
    - gcpdiag-dataproc1-aaaa/1234567891/us-central1                        [OK]
      [REASON]
-     Job 1234567891 didn't failed due to 'task not found' error. We are not able to find the cluster deletion log between 2024-11-01 03:12:35.635169+00:00 and 2024-11-08 03:12:35.635169+00:00. It could be some other issue.Please raise a support case to investigate further.
+     Job 1234567891 didn't failed due to 'task not found' error. Unable to find the cluster deletion log between 2024-11-01 03:12:35.635169+00:00 and 2024-11-08 03:12:35.635169+00:00. It could be some other issue.Please raise a support case to investigate further.
 
 [COMPOSITE STEP]: Verify permissions .
 [INFO]: Service Account:None
@@ -228,7 +228,7 @@ dataproc/spark-job-failures: Provides a comprehensive analysis of common issues 
 
    - gcpdiag-dataproc1-aaaa/1234567890/us-central1                        [OK]
      [REASON]
-     Job 1234567890 didn't failed due to 'task not found' error. We are not able to find the cluster deletion log between 2024-11-01 02:58:22.604010+00:00 and 2024-11-08 02:58:22.604010+00:00. It could be some other issue.Please raise a support case to investigate further.
+     Job 1234567890 didn't failed due to 'task not found' error. Unable to find the cluster deletion log between 2024-11-01 02:58:22.604010+00:00 and 2024-11-08 02:58:22.604010+00:00. It could be some other issue.Please raise a support case to investigate further.
 
 [COMPOSITE STEP]: Verify permissions .
 [INFO]: Service Account:None

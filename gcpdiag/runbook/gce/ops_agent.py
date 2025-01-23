@@ -185,12 +185,12 @@ class VmHasAServiceAccount(runbook.Step):
         op.put(flags.SERVICE_ACCOUNT, instance.service_account)
         op.add_ok(instance,
                   reason=op.prep_msg(op.SUCCESS_REASON,
-                                     vm_name=instance.name,
+                                     full_resource_path=instance.full_path,
                                      sa=instance.service_account))
       else:
         op.add_failed(instance,
                       reason=op.prep_msg(op.FAILURE_REASON,
-                                         vm_name=instance.name),
+                                         full_resource_path=instance.full_path),
                       remediation=op.prep_msg(op.FAILURE_REMEDIATION))
       return
 
@@ -202,13 +202,13 @@ class VmHasAServiceAccount(runbook.Step):
           op.put(flags.SERVICE_ACCOUNT, sa.email)
           op.add_ok(instance,
                     reason=op.prep_msg(op.SUCCESS_REASON,
-                                       vm_name=instance.name,
+                                       full_resource_path=instance.full_path,
                                        sa=sa.email))
           break
     elif not op.get(GAC_SERVICE_ACCOUNT) and not instance.service_account:
       op.add_failed(instance,
                     reason=op.prep_msg(op.FAILURE_REASON,
-                                       vm_name=instance.name),
+                                       full_resource_path=instance.full_path),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
 
 

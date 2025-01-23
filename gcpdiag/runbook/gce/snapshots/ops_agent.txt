@@ -23,13 +23,13 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
    - gcpdiag-gce3-aaaa/faulty-opsagent                                    [OK]
      [REASON]
-     Ops agent in faulty-opsagent has no-logging-monitoring-perm@gcpdiag-gce3-aaaa.iam.gserviceaccount.com to use when exporting logs/metrics
+     Ops agent in projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent has no-logging-monitoring-perm@gcpdiag-gce3-aaaa.iam.gserviceaccount.com to use when exporting logs/metrics
 
 [AUTOMATED STEP]: Verify if the specified service account is active.
 
    - gcpdiag-gce3-aaaa/no-logging-monitoring-perm@gcpdiag-gce3-aaaa.iam.gserviceaccount.com [OK]
      [REASON]
-     Service account: no-logging-monitoring-perm@gcpdiag-gce3-aaaa.iam.gserviceaccount.com is currently in active
+     Service account: projects/gcpdiag-gce3-aaaa/serviceAccounts/no-logging-monitoring-perm@gcpdiag-gce3-aaaa.iam.gserviceaccount.com is currently in active
 
 [GATEWAY]: Decision point to investigate Logging and/or Monitoring related issues.
 [AUTOMATED STEP]: Verify Cloud API state.
@@ -64,13 +64,23 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
      [1] https://cloud.google.com/iam/docs/grant-role-console
      [2] https://cloud.google.com/iam/docs/understanding-roles
 
-[AUTOMATED STEP]: Verify GCE Insatnce has sufficient access scope
-[AUTOMATED STEP]: Verify GCE VM's has ops agent installed and currently active
+[AUTOMATED STEP]: Verify GCE Instance has sufficient access scope
 
-   - gcpdiag-gce3-aaaa/faulty-opsagent                                    [OK]
+   - gcpdiag-gce3-aaaa/faulty-opsagent                                    [FAIL]
      [REASON]
-     GCE VM "faulty-opsagent" has logging agent installed and currently exporting data
+     GCE Instance projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent doesn't have any of the required access scopes:
+     https://www.googleapis.com/auth/cloud-platform, https://www.googleapis.com/auth/logging.admin, https://www.googleapis.com/auth/logging.write
 
+     [REMEDIATION]
+     Access scopes are the legacy method of specifying authorization for your VM instance.
+     They define the default OAuth scopes used in requests from the gcloud CLI or the client libraries.
+     Access scopes don't apply for calls made using gRPC.
+
+     Update `projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent` to enable at least one of the following access scopes:
+     https://www.googleapis.com/auth/cloud-platform, https://www.googleapis.com/auth/logging.admin, https://www.googleapis.com/auth/logging.write
+     [1] https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes
+
+[AUTOMATED STEP]: Verify GCE Instance's has ops agent installed and currently active
 [COMPOSITE STEP]: Verify GCP config required for serial port logging with ops agent
 [AUTOMATED STEP]: Checking Organization policy
 
@@ -82,7 +92,7 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
    - gcpdiag-gce3-aaaa/faulty-opsagent                                    [FAIL]
      [REASON]
-     GCE VM metadata `serial-port-logging-enable` doesn't have the expected value: True
+     GCE Instance metadata `serial-port-logging-enable` doesn't have the expected value: True
      of type <class 'bool'>
 
      [REMEDIATION]
@@ -122,17 +132,23 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
      [1] https://cloud.google.com/iam/docs/grant-role-console
      [2] https://cloud.google.com/iam/docs/understanding-roles
 
-[AUTOMATED STEP]: Verify GCE Insatnce has sufficient access scope
-[AUTOMATED STEP]: Verify GCE VM's has ops agent installed and currently active
+[AUTOMATED STEP]: Verify GCE Instance has sufficient access scope
 
    - gcpdiag-gce3-aaaa/faulty-opsagent                                    [FAIL]
      [REASON]
-     GCE VM "faulty-opsagent" does not have metrics agent installed and the subagent is not exporting data
+     GCE Instance projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent doesn't have any of the required access scopes:
+     https://www.googleapis.com/auth/cloud-platform, https://www.googleapis.com/auth/monitoring, https://www.googleapis.com/auth/monitoring.write
 
      [REMEDIATION]
-     GCE VM "faulty-opsagent" does not have metrics agent installed and the subagent is not exporting data
-     https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/troubleshoot-run-ingest
+     Access scopes are the legacy method of specifying authorization for your VM instance.
+     They define the default OAuth scopes used in requests from the gcloud CLI or the client libraries.
+     Access scopes don't apply for calls made using gRPC.
 
+     Update `projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent` to enable at least one of the following access scopes:
+     https://www.googleapis.com/auth/cloud-platform, https://www.googleapis.com/auth/monitoring, https://www.googleapis.com/auth/monitoring.write
+     [1] https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes
+
+[AUTOMATED STEP]: Verify GCE Instance's has ops agent installed and currently active
 [END]: Finalize Ops agent checks
 [INFO]: There are new logs indicating ops agent is exporting serial logs
 
@@ -162,13 +178,13 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
    - gcpdiag-gce3-aaaa/faulty-opsagent-no-sa                              [OK]
      [REASON]
-     Ops agent in faulty-opsagent-no-sa has 12345001-compute@developer.gserviceaccount.com to use when exporting logs/metrics
+     Ops agent in projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent-no-sa has 12345001-compute@developer.gserviceaccount.com to use when exporting logs/metrics
 
 [AUTOMATED STEP]: Verify if the specified service account is active.
 
    - gcpdiag-gce3-aaaa/12345001-compute@developer.gserviceaccount.com     [OK]
      [REASON]
-     Service account: 12345001-compute@developer.gserviceaccount.com is currently in active
+     Service account: projects/gcpdiag-gce3-aaaa/serviceAccounts/12345001-compute@developer.gserviceaccount.com is currently in active
 
 [GATEWAY]: Decision point to investigate Logging and/or Monitoring related issues.
 [AUTOMATED STEP]: Verify Cloud API state.
@@ -193,13 +209,23 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
      serviceAccount:12345001-compute@developer.gserviceaccount.com has expected roles.
      roles/editor, roles/logging.admin, roles/logging.logWriter, roles/owner.
 
-[AUTOMATED STEP]: Verify GCE Insatnce has sufficient access scope
-[AUTOMATED STEP]: Verify GCE VM's has ops agent installed and currently active
+[AUTOMATED STEP]: Verify GCE Instance has sufficient access scope
 
-   - gcpdiag-gce3-aaaa/faulty-opsagent-no-sa                              [OK]
+   - gcpdiag-gce3-aaaa/faulty-opsagent-no-sa                              [FAIL]
      [REASON]
-     GCE VM "faulty-opsagent-no-sa" has logging agent installed and currently exporting data
+     GCE Instance projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent-no-sa doesn't have any of the required access scopes:
+     https://www.googleapis.com/auth/cloud-platform, https://www.googleapis.com/auth/logging.admin, https://www.googleapis.com/auth/logging.write
 
+     [REMEDIATION]
+     Access scopes are the legacy method of specifying authorization for your VM instance.
+     They define the default OAuth scopes used in requests from the gcloud CLI or the client libraries.
+     Access scopes don't apply for calls made using gRPC.
+
+     Update `projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent-no-sa` to enable at least one of the following access scopes:
+     https://www.googleapis.com/auth/cloud-platform, https://www.googleapis.com/auth/logging.admin, https://www.googleapis.com/auth/logging.write
+     [1] https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes
+
+[AUTOMATED STEP]: Verify GCE Instance's has ops agent installed and currently active
 [COMPOSITE STEP]: Verify GCP config required for serial port logging with ops agent
 [AUTOMATED STEP]: Checking Organization policy
 
@@ -211,7 +237,7 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
    - gcpdiag-gce3-aaaa/faulty-opsagent-no-sa                              [FAIL]
      [REASON]
-     GCE VM metadata `serial-port-logging-enable` doesn't have the expected value: True
+     GCE Instance metadata `serial-port-logging-enable` doesn't have the expected value: True
      of type <class 'bool'>
 
      [REMEDIATION]
@@ -241,17 +267,23 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
      serviceAccount:12345001-compute@developer.gserviceaccount.com has expected roles.
      roles/editor, roles/monitoring.admin, roles/monitoring.editor, roles/monitoring.metricWriter, roles/owner.
 
-[AUTOMATED STEP]: Verify GCE Insatnce has sufficient access scope
-[AUTOMATED STEP]: Verify GCE VM's has ops agent installed and currently active
+[AUTOMATED STEP]: Verify GCE Instance has sufficient access scope
 
    - gcpdiag-gce3-aaaa/faulty-opsagent-no-sa                              [FAIL]
      [REASON]
-     GCE VM "faulty-opsagent-no-sa" does not have metrics agent installed and the subagent is not exporting data
+     GCE Instance projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent-no-sa doesn't have any of the required access scopes:
+     https://www.googleapis.com/auth/cloud-platform, https://www.googleapis.com/auth/monitoring, https://www.googleapis.com/auth/monitoring.write
 
      [REMEDIATION]
-     GCE VM "faulty-opsagent-no-sa" does not have metrics agent installed and the subagent is not exporting data
-     https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/troubleshoot-run-ingest
+     Access scopes are the legacy method of specifying authorization for your VM instance.
+     They define the default OAuth scopes used in requests from the gcloud CLI or the client libraries.
+     Access scopes don't apply for calls made using gRPC.
 
+     Update `projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent-no-sa` to enable at least one of the following access scopes:
+     https://www.googleapis.com/auth/cloud-platform, https://www.googleapis.com/auth/monitoring, https://www.googleapis.com/auth/monitoring.write
+     [1] https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes
+
+[AUTOMATED STEP]: Verify GCE Instance's has ops agent installed and currently active
 [END]: Finalize Ops agent checks
 [INFO]: There are new logs indicating ops agent is exporting serial logs
 
@@ -281,13 +313,13 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
    - gcpdiag-gce3-aaaa/working-opsagent                                   [OK]
      [REASON]
-     Ops agent in working-opsagent has 12345001-compute@developer.gserviceaccount.com to use when exporting logs/metrics
+     Ops agent in projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/working-opsagent has 12345001-compute@developer.gserviceaccount.com to use when exporting logs/metrics
 
 [AUTOMATED STEP]: Verify if the specified service account is active.
 
    - gcpdiag-gce3-aaaa/12345001-compute@developer.gserviceaccount.com     [OK]
      [REASON]
-     Service account: 12345001-compute@developer.gserviceaccount.com is currently in active
+     Service account: projects/gcpdiag-gce3-aaaa/serviceAccounts/12345001-compute@developer.gserviceaccount.com is currently in active
 
 [GATEWAY]: Decision point to investigate Logging and/or Monitoring related issues.
 [AUTOMATED STEP]: Verify Cloud API state.
@@ -312,19 +344,14 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
      serviceAccount:12345001-compute@developer.gserviceaccount.com has expected roles.
      roles/editor, roles/logging.admin, roles/logging.logWriter, roles/owner.
 
-[AUTOMATED STEP]: Verify GCE Insatnce has sufficient access scope
+[AUTOMATED STEP]: Verify GCE Instance has sufficient access scope
 
    - gcpdiag-gce3-aaaa/working-opsagent                                   [OK]
      [REASON]
-     GCE instance working-opsagent has at least one of the required scope:
+     GCE instance projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/working-opsagent has at least one of the required scope:
      https://www.googleapis.com/auth/logging.write
 
-[AUTOMATED STEP]: Verify GCE VM's has ops agent installed and currently active
-
-   - gcpdiag-gce3-aaaa/working-opsagent                                   [OK]
-     [REASON]
-     GCE VM "working-opsagent" has logging agent installed and currently exporting data
-
+[AUTOMATED STEP]: Verify GCE Instance's has ops agent installed and currently active
 [COMPOSITE STEP]: Verify GCP config required for serial port logging with ops agent
 [AUTOMATED STEP]: Checking Organization policy
 
@@ -336,7 +363,7 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
    - gcpdiag-gce3-aaaa/working-opsagent                                   [OK]
      [REASON]
-     GCE VM metadata `serial-port-logging-enable` has the expected value: True
+     GCE Instance metadata `serial-port-logging-enable` has the expected value: True
      of type <class 'bool'>
 
 [AUTOMATED STEP]: Verify Cloud API state.
@@ -361,23 +388,14 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
      serviceAccount:12345001-compute@developer.gserviceaccount.com has expected roles.
      roles/editor, roles/monitoring.admin, roles/monitoring.editor, roles/monitoring.metricWriter, roles/owner.
 
-[AUTOMATED STEP]: Verify GCE Insatnce has sufficient access scope
+[AUTOMATED STEP]: Verify GCE Instance has sufficient access scope
 
    - gcpdiag-gce3-aaaa/working-opsagent                                   [OK]
      [REASON]
-     GCE instance working-opsagent has at least one of the required scope:
+     GCE instance projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/working-opsagent has at least one of the required scope:
      https://www.googleapis.com/auth/monitoring.write
 
-[AUTOMATED STEP]: Verify GCE VM's has ops agent installed and currently active
-
-   - gcpdiag-gce3-aaaa/working-opsagent                                   [FAIL]
-     [REASON]
-     GCE VM "working-opsagent" does not have metrics agent installed and the subagent is not exporting data
-
-     [REMEDIATION]
-     GCE VM "working-opsagent" does not have metrics agent installed and the subagent is not exporting data
-     https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/troubleshoot-run-ingest
-
+[AUTOMATED STEP]: Verify GCE Instance's has ops agent installed and currently active
 [END]: Finalize Ops agent checks
 [INFO]: There are new logs indicating ops agent is exporting serial logs
 

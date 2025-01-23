@@ -19,7 +19,7 @@ Ensures that the local user has at least one valid SSH key configured in the VM'
 
 ### Failure Reason
 
-The local user "{local_user}" lacks at least one valid SSH key for VM: "{vm_name}".
+The local user "{local_user}" lacks at least one valid SSH key for VM: "{full_resource_path}".
 
 ### Failure Remediation
 
@@ -29,7 +29,7 @@ https://cloud.google.com/compute/docs/connect/add-ssh-keys#add_ssh_keys_to_insta
 ### Success Reason
 
 The local user "{local_user}" is confirmed to have at least one valid SSH key
-configured on the GCE VM: "{vm_name}".
+configured on the GCE Instance: "{full_resource_path}".
 
 
 

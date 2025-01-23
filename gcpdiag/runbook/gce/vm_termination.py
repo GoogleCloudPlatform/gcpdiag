@@ -37,7 +37,7 @@ LOGGING_FILTER = '''resource.type="gce_instance"
 
 
 class VmTermination(runbook.DiagnosticTree):
-  """GCE VM shutdowns and reboots Root Cause Analysis (RCA)
+  """GCE Instance shutdowns and reboots Root Cause Analysis (RCA)
 
   This runbook is designed to assist you in investigating and understanding the underlying reasons
   behind the unexpected termination or reboot of your GCE Virtual Machines (VMs) within Google
@@ -221,7 +221,7 @@ class SingleTerminationCheck(runbook.Step):
     status_check.expected_value = 'RUNNING'
     status_check.template = 'gcpdiag.runbook.gce::vm_attributes::terminated_vm_running'
     status_check.extract_args = {
-        'vm_name': {
+        'full_resource_path': {
             'source': Resource,
             'attribute': ('name')
         },

@@ -432,7 +432,7 @@ class CheckTaskNotFound(runbook.CompositeStep):
     end_time_utc = op.get(flags.END_TIME_UTC)
 
     additional_message = (
-        f'We are not able to find the cluster deletion log between'
+        f'Unable to find the cluster deletion log between'
         f' {start_time_utc} and {end_time_utc}. It could be some other issue.'
         f'Please raise a support case to investigate further.')
 

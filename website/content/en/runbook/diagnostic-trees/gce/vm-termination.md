@@ -4,7 +4,7 @@ linkTitle: "gce/vm-termination"
 weight: 3
 type: docs
 description: >
-  GCE VM shutdowns and reboots Root Cause Analysis (RCA)
+  GCE Instance shutdowns and reboots Root Cause Analysis (RCA)
 ---
 
 **Product**: [Compute Engine](https://cloud.google.com/compute)

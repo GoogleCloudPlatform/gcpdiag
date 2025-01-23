@@ -4,7 +4,7 @@ linkTitle: "Vm Serial Logs Check"
 weight: 3
 type: docs
 description: >
-  Searches for predefined good or bad patterns in the serial logs of a GCE VM.
+  Searches for predefined good or bad patterns in the serial logs of a GCE Instance.
 ---
 
 **Product**: [Compute Engine](https://cloud.google.com/compute)\
@@ -56,7 +56,7 @@ https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-
 
 ### Skipped Reason
 
-There are no logs to examine !
+There are no logs to examine.
 
 
 

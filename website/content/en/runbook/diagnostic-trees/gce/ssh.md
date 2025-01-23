@@ -65,12 +65,12 @@ gcpdiag runbook gce/ssh \
 
 | Name | Required | Default | Type | Help |
 |------|----------|---------|------|------|
-| `project_id` | True | None | str | The ID of the project hosting the GCE VM |
-| `name` | False | None | str | The name of the target GCE VM |
-| `instance_name` | False | None | str | The name of the target GCE VM |
-| `instance_id` | False | None | int | The instance ID of the target GCE VM |
-| `id` | False | None | int | The instance ID of the target GCE VM |
-| `zone` | True | None | str | The zone of the target GCE VM |
+| `project_id` | True | None | str | The ID of the project hosting the GCE Instance |
+| `name` | False | None | str | The name of the target GCE Instance |
+| `instance_name` | False | None | str | The name of the target GCE Instance |
+| `instance_id` | False | None | int | The instance ID of the target GCE Instance |
+| `id` | False | None | int | The instance ID of the target GCE Instance |
+| `zone` | True | None | str | The zone of the target GCE Instance |
 | `principal` | False | None | str | The user or service account initiating the SSH connection. This user should be authenticated in gcloud/cloud console when sshing into to a GCE instance. For service account impersonation, it should be the service account's email. (format: user:user@example.com or serviceAccount:service-account-name@project-id.iam.gserviceaccount.com) |
 | `local_user` | False | None | str | Posix User on the VM |
 | `posix_user` | False | None | str | Posix User on the VM |

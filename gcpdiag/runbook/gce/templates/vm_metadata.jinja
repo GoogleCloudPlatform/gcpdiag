@@ -1,5 +1,5 @@
 {% block default_failure_reason %}
-GCE VM metadata `{metadata_key}` doesn't have the expected value: {expected_value}
+GCE Instance metadata `{metadata_key}` doesn't have the expected value: {expected_value}
 of type {expected_value_type}
 {% endblock default_failure_reason %}
 
@@ -10,7 +10,7 @@ Follow guide [1] one to update the a metadata value.
 {% endblock default_failure_remediation %}
 
 {% block default_success_reason %}
-GCE VM metadata `{metadata_key}` has the expected value: {expected_value}
+GCE Instance metadata `{metadata_key}` has the expected value: {expected_value}
 of type {expected_value_type}
 {% endblock default_success_reason %}
 
@@ -64,18 +64,17 @@ Verify that OS Login is set to `True` for the VM.
 {% endblock os_login_enabled_step_message %}
 
 {% block os_login_enabled_failure_reason %}
-OS Login is intended for use, but it has been disabled on this VM.
+OS Login is disabled
 {% endblock os_login_enabled_failure_reason %}
 
 {% block os_login_enabled_failure_remediation %}
-To utilize OS Login, you need to enable it by setting the `enable-oslogin` flag in the VM's
+To utilize OS Login, enable it by setting the `enable-oslogin` flag in the VM's
 metadata to `TRUE`.For detailed instructions on enabling OS Login,
 refer to: https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#enable_os_login
 {% endblock os_login_enabled_failure_remediation %}
 
 {% block os_login_enabled_success_reason %}
-OS Login is active on this VM, as indicated by the `enable-oslogin`
-flag being set to `True`. Your VM can use OS Login-based access.
+OS Login is enabled on this VM.
 {% endblock os_login_enabled_success_reason %}
 
 {% block can_set_metadata_success_reason %}
@@ -104,11 +103,11 @@ SSH access to the VM especially if using gcloud / cloud console.
 
 {% block valid_ssh_key_success_reason %}
 The local user "{local_user}" is confirmed to have at least one valid SSH key
-configured on the GCE VM: "{vm_name}".
+configured on the GCE Instance: "{full_resource_path}".
 {% endblock valid_ssh_key_success_reason %}
 
 {% block valid_ssh_key_failure_reason %}
-The local user "{local_user}" lacks at least one valid SSH key for VM: "{vm_name}".
+The local user "{local_user}" lacks at least one valid SSH key for VM: "{full_resource_path}".
 {% endblock valid_ssh_key_failure_reason %}
 
 {% block valid_ssh_key_failure_remediation %}

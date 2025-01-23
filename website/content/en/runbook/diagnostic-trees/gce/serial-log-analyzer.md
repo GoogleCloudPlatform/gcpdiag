@@ -17,7 +17,7 @@ This runbook is designed to assist you in investigating the serial console logs 
     Key Investigation Areas:
 
     Boot Issues:
-        - Check for Boot issues happening due to Kernel Panics
+        - Check for Boot issues happening due to Kernel panics
         - Check for GRUB related issues.
         - Check if system failed to find boot disk.
         - Check if Filesystem corruption is causing issues with system boot.
@@ -35,13 +35,13 @@ This runbook is designed to assist you in investigating the serial console logs 
         - Check if there are any time sync related errors.
 
     SSHD checks:
-        - Check if we have logs related to successful startup of SSHD service.
+        - Check if there are logs related to successful startup of SSHD service.
 
     SSHD Auth Failures checks:
         - Check for SSH issues due to bad permissions of files or directories
 
     Google Guest Agent checks:
-        - Check if we have logs related to successful startup of Google Guest Agent.
+        - Check if there are logs related to successful startup of Google Guest Agent.
 
     SSH guard check:
         - Check if SSHGuard is active and may be blocking IP addresses

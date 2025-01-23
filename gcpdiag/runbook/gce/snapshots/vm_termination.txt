@@ -1,6 +1,6 @@
 name=faulty-linux-ssh,project_id=gcpdiag-gce-faultyssh-runbook,zone=europe-west2-a
 
-gce/vm-termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
+gce/vm-termination: GCE Instance shutdowns and reboots Root Cause Analysis (RCA)
 
   This runbook is designed to assist you in investigating and understanding the underlying reasons
   behind the unexpected termination or reboot of your GCE Virtual Machines (VMs) within Google
@@ -25,8 +25,7 @@ gce/vm-termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
 [AUTOMATED STEP]: Investigating VM termination reason.
 [INFO]: 
 
-
-No GCE VM was terminated between {start_time_utc} and {end_time_utc}
+No GCE Instance was terminated between {start_time_utc} and {end_time_utc}
 
 [AUTOMATED STEP]: Verify that the terminated VM is currently running
 
@@ -39,7 +38,7 @@ No GCE VM was terminated between {start_time_utc} and {end_time_utc}
 
 name=valid-linux-ssh,project_id=gcpdiag-gce-faultyssh-runbook,zone=europe-west2-a
 
-gce/vm-termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
+gce/vm-termination: GCE Instance shutdowns and reboots Root Cause Analysis (RCA)
 
   This runbook is designed to assist you in investigating and understanding the underlying reasons
   behind the unexpected termination or reboot of your GCE Virtual Machines (VMs) within Google
@@ -64,8 +63,7 @@ gce/vm-termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
 [AUTOMATED STEP]: Investigating VM termination reason.
 [INFO]: 
 
-
-No GCE VM was terminated between {start_time_utc} and {end_time_utc}
+No GCE Instance was terminated between {start_time_utc} and {end_time_utc}
 
 [AUTOMATED STEP]: Verify that the terminated VM is currently running
 
@@ -78,7 +76,7 @@ No GCE VM was terminated between {start_time_utc} and {end_time_utc}
 
 name=faulty-windows-ssh,project_id=gcpdiag-gce-faultyssh-runbook,zone=europe-west2-a
 
-gce/vm-termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
+gce/vm-termination: GCE Instance shutdowns and reboots Root Cause Analysis (RCA)
 
   This runbook is designed to assist you in investigating and understanding the underlying reasons
   behind the unexpected termination or reboot of your GCE Virtual Machines (VMs) within Google
@@ -103,8 +101,7 @@ gce/vm-termination: GCE VM shutdowns and reboots Root Cause Analysis (RCA)
 [AUTOMATED STEP]: Investigating VM termination reason.
 [INFO]: 
 
-
-No GCE VM was terminated between {start_time_utc} and {end_time_utc}
+No GCE Instance was terminated between {start_time_utc} and {end_time_utc}
 
 [AUTOMATED STEP]: Verify that the terminated VM is currently running
 

@@ -66,7 +66,7 @@ class VmExternalIpConnectivity(runbook.DiagnosticTree):
       },
       flags.NAME: {
           'type': str,
-          'help': 'The name of the GCE VM',
+          'help': 'The name of the GCE Instance',
           'group': 'instance',
           'required': True
       },
@@ -92,7 +92,7 @@ class VmExternalIpConnectivity(runbook.DiagnosticTree):
       },
       flags.ZONE: {
           'type': str,
-          'help': 'The zone of the target GCE VM',
+          'help': 'The zone of the target GCE Instance',
           'required': True
       }
   }

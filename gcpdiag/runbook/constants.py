@@ -67,9 +67,9 @@ StepConstants = {
     FAILURE_REMEDIATION:
         'How to solve the main failure scenario.',
     SUCCESS_REASON:
-        'The reason why we consider this step to be a success.',
+        'The reason why this step is consider to be a success.',
     UNCERTAIN_REASON:
-        'The reason why we are uncertain of the outcome.',
+        'The reason why this step is uncertain of the outcome.',
     UNCERTAIN_REMEDIATION:
         'How to address uncertainty in the outcome.',
     SKIPPED_REASON:
@@ -136,7 +136,7 @@ class StepType(Enum):
 
 END_MESSAGE = (
     'Before reaching out to Google Cloud Support: \n'
-    '1. We encourage you to thoroughly investigate '
+    '1. Thoroughly investigate '
     'the issue with the most appropriate team within your organization. Many issues can be '
     'resolved internally and fall within the scope of your operational responsibilities:'
     'https://cloud.google.com/architecture/framework/security'

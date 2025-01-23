@@ -22,9 +22,9 @@ from gcpdiag.runbook.vpc import flags, util
 
 
 class VpcFirewallCheck(runbook.Step):
-  """Checks whether ingress or egress traffic is allowed to a GCE VM from a specified source IP.
+  """Checks if ingress or egress traffic is allowed to a GCE Instance from a specified source IP.
 
-  Evaluates VPC firewall rules to verify if a GCE VM permits ingress or egress traffic from a
+  Evaluates VPC firewall rules to verify if a GCE Instance permits ingress or egress traffic from a
   designated source IP through a specified port and protocol.
   """
   traffic = None

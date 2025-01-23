@@ -32,7 +32,7 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
     Key Investigation Areas:
 
     Boot Issues:
-        - Check for Boot issues happening due to Kernel Panics
+        - Check for Boot issues happening due to Kernel panics
         - Check for GRUB related issues.
         - Check if system failed to find boot disk.
         - Check if Filesystem corruption is causing issues with system boot.
@@ -50,13 +50,13 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
         - Check if there are any time sync related errors.
 
     SSHD checks:
-        - Check if we have logs related to successful startup of SSHD service.
+        - Check if there are logs related to successful startup of SSHD service.
 
     SSHD Auth Failures checks:
         - Check for SSH issues due to bad permissions of files or directories
 
     Google Guest Agent checks:
-        - Check if we have logs related to successful startup of Google Guest Agent.
+        - Check if there are logs related to successful startup of Google Guest Agent.
 
     SSH guard check:
         - Check if SSHGuard is active and may be blocking IP addresses
@@ -159,7 +159,7 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
     oom_errors.zone = op.get(flags.ZONE)
     oom_errors.instance_name = op.get(flags.NAME)
     oom_errors.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
-    oom_errors.template = 'vm_performance::memory_error'
+    oom_errors.template = 'vm_performance::high_memory_usage_logs'
     oom_errors.negative_pattern = gce_const.OOM_PATTERNS
     self.add_step(parent=log_start_point, child=oom_errors)
 
@@ -260,10 +260,10 @@ class SerialLogAnalyzerStart(runbook.StartStep):
       else:
         op.add_failed(vm,
                       reason=op.prep_msg(op.FAILURE_REASON,
-                                         vm_name=vm.name,
+                                         full_resource_path=vm.full_path,
                                          status=vm.status),
                       remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                              vm_name=vm.name,
+                                              full_resource_path=vm.full_path,
                                               status=vm.status))
 
     # file sanity checks

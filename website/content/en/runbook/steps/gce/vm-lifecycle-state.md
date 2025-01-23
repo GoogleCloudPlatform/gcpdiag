@@ -19,23 +19,22 @@ This step is crucial for confirming the VM's availability and operational readin
 
 ### Failure Reason
 
-The GCE VM {vm_full_path} is in an undesired state: {status}.
+The GCE Instance {full_resource_path} is not in the {status}.
 
 ### Failure Remediation
 
-This step failed because GCE Virtual Machine {vm_full_path} is expected to be in a RUNNING state:
+Restart VM {full_resource_path} and ensure VM lifecycle transitions from {status} to RUNNING.
 
-To initiate the lifecycle transition from {status} to RUNNING state follow guide [1]
+You can [restart a compute instance](https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm)
+with this guide.
 
-If you encounter any difficulties during the startup process, consult the troubleshooting
-documentation to identify and resolve potential startup issues [2]
-Resources:
-[1] https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm
-[2] https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting
+If you encounter any difficulties starting the VM, consult the [VM Startup troubleshooting
+documentation](https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting)
+to identify and resolve potential startup issues.
 
 ### Success Reason
 
-The GCE VM {vm_full_path} is in {status} state.
+The GCE Instance {full_resource_path} is in {status} state.
 
 ### Skipped Reason
 

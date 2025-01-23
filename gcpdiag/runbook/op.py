@@ -163,7 +163,7 @@ def prompt(message: str,
       Any: User response
 
     Usage:
-      op.prompt(message='Should we check the remaining interfaces as well?',
+      op.prompt(message='Check the remaining interfaces as well?',
                 kind=op.CONFIRMATION,
                 choice_msg='Select one of the options below:',
                 options={'y': 'Yes, all remaining interfaces', 'n': 'No Proceed'}

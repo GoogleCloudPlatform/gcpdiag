@@ -75,34 +75,34 @@ class Ssh(runbook.DiagnosticTree):
   parameters = {
       flags.PROJECT_ID: {
           'type': str,
-          'help': 'The ID of the project hosting the GCE VM',
+          'help': 'The ID of the project hosting the GCE Instance',
           'required': True
       },
       flags.NAME: {
           'type': str,
-          'help': 'The name of the target GCE VM',
+          'help': 'The name of the target GCE Instance',
           'deprecated': True,
           'new_parameter': 'instance_name',
           'group': 'instance'
       },
       flags.INSTANCE_NAME: {
           'type': str,
-          'help': 'The name of the target GCE VM',
+          'help': 'The name of the target GCE Instance',
           'group': 'instance'
       },
       flags.INSTANCE_ID: {
           'type': int,
-          'help': 'The instance ID of the target GCE VM',
+          'help': 'The instance ID of the target GCE Instance',
           'group': 'instance'
       },
       flags.ID: {
           'type': int,
-          'help': 'The instance ID of the target GCE VM',
+          'help': 'The instance ID of the target GCE Instance',
           'group': 'instance'
       },
       flags.ZONE: {
           'type': str,
-          'help': 'The zone of the target GCE VM',
+          'help': 'The zone of the target GCE Instance',
           'required': True
       },
       flags.PRINCIPAL: {
@@ -365,11 +365,14 @@ class VmGuestOsType(runbook.Gateway):
                           zone=op.get(flags.ZONE),
                           instance_name=op.get(flags.NAME))
     if not vm.is_windows_machine():
-      op.info('Detected Linux VM. Proceeding with Linux-specific diagnostics.')
+      op.info(
+          'Linux Guest OS detected. Proceeding with diagnostics specific to Linux systems.'
+      )
       self.add_child(LinuxGuestOsChecks())
     else:
       op.info(
-          'Detected Windows VM. Proceeding with Windows-specific diagnostics.')
+          'Windows Guest OS detected. Proceeding with diagnostics specific to Windows systems.'
+      )
       self.add_child(WindowsGuestOsChecks())
 
 
@@ -430,9 +433,7 @@ class GcpSshPermissions(runbook.CompositeStep):
     # Both OS login and gcloud key based require this.
     instance_fetch_perm_check = iam_gs.IamPolicyCheck()
     instance_fetch_perm_check.template = 'gcpdiag.runbook.gce::permissions::instances_get'
-    instance_fetch_perm_check.permissions = [
-        'compute.instances.get', 'compute.instances.use'
-    ]
+    instance_fetch_perm_check.permissions = ['compute.instances.get']
     instance_fetch_perm_check.require_all = False
     self.add_child(instance_fetch_perm_check)
 
@@ -528,12 +529,12 @@ class PosixUserHasValidSshKeyCheck(runbook.Step):
       op.add_ok(resource=vm,
                 reason=op.prep_msg(op.SUCCESS_REASON,
                                    local_user=op.get(flags.POSIX_USER),
-                                   vm_name=vm.name))
+                                   full_resource_path=vm.full_path))
     else:
       op.add_failed(vm,
                     reason=op.prep_msg(op.FAILURE_REASON,
                                        local_user=op.get(flags.POSIX_USER),
-                                       vm_name=vm.name),
+                                       full_resource_path=vm.full_path),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION,
                                             local_user=op.get(
                                                 flags.POSIX_USER)))

@@ -42,7 +42,7 @@ Memory utilization on this VM is within optimal range.
 
 ### Skipped Reason
 
-There are no logs to examine !
+There are no logs to examine!
 
 
 

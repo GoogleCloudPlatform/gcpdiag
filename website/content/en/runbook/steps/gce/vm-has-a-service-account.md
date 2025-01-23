@@ -19,12 +19,12 @@ This investigation only happens from the perspective googleapis and
 
 ### Failure Reason
 
-Ops agent in {vm_name} doesn't have a service account to use when
+Ops agent in {full_resource_path} doesn't have a service account to use when
 exporting logs/metrics.
 
 ### Failure Remediation
 
-Follow [1] to attach an active service account to this GCE VM.
+Follow [1] to attach an active service account to this GCE Instance.
 Read more on how to properly authorize ops agent.
 [1] https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes
 [2]
@@ -32,7 +32,7 @@ https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/authorizati
 
 ### Success Reason
 
-Ops agent in {vm_name} has {sa} to use when exporting logs/metrics
+Ops agent in {full_resource_path} has {sa} to use when exporting logs/metrics
 
 
 

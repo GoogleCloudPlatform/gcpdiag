@@ -4,7 +4,7 @@ linkTitle: "Vm Metadata Check"
 weight: 3
 type: docs
 description: >
-  Validates a specific boolean metadata key-value pair on a GCE VM instance.
+  Validates a specific boolean metadata key-value pair on a GCE Instance instance.
 ---
 
 **Product**: [Compute Engine](https://cloud.google.com/compute)\
@@ -17,7 +17,7 @@ This step checks if the VM's metadata contains a specified key with the expected
 
 ### Failure Reason
 
-GCE VM metadata `{metadata_key}` doesn't have the expected value: {expected_value}
+GCE Instance metadata `{metadata_key}` doesn't have the expected value: {expected_value}
 of type {expected_value_type}
 
 ### Failure Remediation
@@ -28,7 +28,7 @@ Follow guide [1] one to update the a metadata value.
 
 ### Success Reason
 
-GCE VM metadata `{metadata_key}` has the expected value: {expected_value}
+GCE Instance metadata `{metadata_key}` has the expected value: {expected_value}
 of type {expected_value_type}
 
 
