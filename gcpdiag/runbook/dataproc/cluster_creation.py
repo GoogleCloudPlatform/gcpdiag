@@ -115,11 +115,11 @@ necessary firewall rules, external/internal IP configuration.
           'help': ('Checks if the Dataproc cluster has been created with only'
                    ' Internal IP'),
       },
-      flags.START_TIME_UTC: {
+      flags.START_TIME: {
           'type': datetime,
           'help': 'Start time of the issue',
       },
-      flags.END_TIME_UTC: {
+      flags.END_TIME: {
           'type': datetime,
           'help': 'End time of the issue',
       },
@@ -188,8 +188,8 @@ class CheckClusterQuota(runbook.StartStep):
         cluster_name=cluster_name,
         message_filter=f'protoPayload.status.message=~"{quota_log_match_str}"',
         log_id='cloudaudit.googleapis.com/activity',
-        start_time_utc=op.get(flags.START_TIME_UTC),
-        end_time_utc=op.get(flags.END_TIME_UTC),
+        start_time_utc=op.get(flags.START_TIME),
+        end_time_utc=op.get(flags.END_TIME),
     )
 
     if quota_log_entries:
@@ -238,8 +238,8 @@ class CheckClusterStockOut(runbook.Step):
         cluster_name=cluster_name,
         message_filter=f'protoPayload.status.message=~({message_filter})',
         log_id='cloudaudit.googleapis.com/activity',
-        start_time_utc=op.get(flags.START_TIME_UTC),
-        end_time_utc=op.get(flags.END_TIME_UTC),
+        start_time_utc=op.get(flags.START_TIME),
+        end_time_utc=op.get(flags.END_TIME),
     )
 
     if stockout_filter_log_entries:
@@ -806,8 +806,8 @@ class CheckInitScriptFailure(runbook.Step):
     log_entries = logs.realtime_query(
         project_id=op.get(flags.PROJECT_ID),
         filter_str=log_search_filter,
-        start_time_utc=op.get(flags.START_TIME_UTC),
-        end_time_utc=op.get(flags.END_TIME_UTC),
+        start_time_utc=op.get(flags.START_TIME),
+        end_time_utc=op.get(flags.END_TIME),
     )
     if log_entries:
       op.add_failed(

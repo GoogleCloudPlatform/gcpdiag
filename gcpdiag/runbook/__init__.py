@@ -501,11 +501,11 @@ class DiagnosticEngine:
 
   def _set_default_parameters(self, parameter_def: Dict):
     # set default parameters
-    parameter_def.setdefault(flags.START_TIME_UTC, {
+    parameter_def.setdefault(flags.START_TIME, {
         'type': datetime,
         'help': 'Beginning Timeframe to scope investigation.'
     })
-    parameter_def.setdefault(flags.END_TIME_UTC, {
+    parameter_def.setdefault(flags.END_TIME, {
         'type': datetime,
         'help': 'End timeframe'
     })
@@ -572,22 +572,18 @@ class DiagnosticEngine:
           caller_args[k] = user_provided_param.lower()
 
       if dt_param and dt_param.get('type') == datetime:
-        if k == flags.END_TIME_UTC:
-          end_time = caller_args.get(flags.END_TIME_UTC,
-                                     datetime.now(timezone.utc))
-          caller_args[flags.END_TIME_UTC] = cast_to_type(
-              end_time, dt_param['type'])
-        if k == flags.START_TIME_UTC:
-          end_time = caller_args.get(flags.END_TIME_UTC,
-                                     datetime.now(timezone.utc))
-          caller_args[flags.END_TIME_UTC] = cast_to_type(
-              end_time, dt_param['type'])
-          parsed_end_time = caller_args[flags.END_TIME_UTC]
-          start_time = caller_args.get(flags.START_TIME_UTC,
+        if k == flags.END_TIME:
+          end_time = caller_args.get(flags.END_TIME, datetime.now(timezone.utc))
+          caller_args[flags.END_TIME] = cast_to_type(end_time, dt_param['type'])
+        if k == flags.START_TIME:
+          end_time = caller_args.get(flags.END_TIME, datetime.now(timezone.utc))
+          caller_args[flags.END_TIME] = cast_to_type(end_time, dt_param['type'])
+          parsed_end_time = caller_args[flags.END_TIME]
+          start_time = caller_args.get(flags.START_TIME,
                                        parsed_end_time - timedelta(hours=8))
-          caller_args[flags.START_TIME_UTC] = cast_to_type(
-              start_time, dt_param['type'])
-        if k != flags.START_TIME_UTC or k == flags.END_TIME_UTC:
+          caller_args[flags.START_TIME] = cast_to_type(start_time,
+                                                       dt_param['type'])
+        if k != flags.START_TIME or k == flags.END_TIME:
           date_string = caller_args.get(k)
           if date_string:
             caller_args[k] = cast_to_type(date_string, dt_param['type'])

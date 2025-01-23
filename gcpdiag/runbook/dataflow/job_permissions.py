@@ -27,8 +27,8 @@ PRODUCT_FLAG = 'dataflow'
 def local_realtime_query(filter_str):
   result = logs.realtime_query(
       project_id=op.get(flags.PROJECT_ID),
-      start_time_utc=op.get(flags.START_TIME_UTC),
-      end_time_utc=op.get(flags.END_TIME_UTC),
+      start_time_utc=op.get(flags.START_TIME),
+      end_time_utc=op.get(flags.END_TIME),
       filter_str=filter_str,
   )
   return result

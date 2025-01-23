@@ -77,13 +77,13 @@ gcpdiag runbook gce/ssh \
 | `tunnel_through_iap` | False | True | bool | ('A boolean parameter (true or false) indicating whether ', 'Identity-Aware Proxy should be used for establishing the SSH connection.') |
 | `proxy` | False | None | str | ('A string that specifies the method used to establish the SSH connection, ', 'and indicating whether Identity-Aware Proxy (IAP) or a jumphost is utilized.') |
 | `check_os_login` | False | True | bool | A boolean value (true or false) indicating whether OS Login should be used for SSH authentication |
-| `client` | False | None | str | The SSH client used to establish SSH connection |
-| `src_ip` | False | None | IPv4Address | Specify the IPv4 address of the workstation connecting to the network, or the IP of the bastion/jumphost if currently logged in through one. |
+| `client` | False | None | str | The SSH client application used to establish SSH connection |
+| `src_ip` | False | None | IPv4Address | The IPv4 address of the workstation connecting to the network, or the IP of the bastion/jumphost if currently logged in through one. |
 | `protocol_type` | False | tcp | str | Protocol used to connect to SSH |
-| `port` | False | 22 | int | Specifies the port used to connect to on the remote host (default: 22) |
+| `port` | False | 22 | int | The port used to connect to on the remote host (default: 22) |
 | `check_ssh_in_browser` | False | False | bool | Check that SSH in Browser is feasible |
 | `access_method` | False | None | str | The method used to share or restrict access to the instance |
-| `mfa` | False | None | str | Additional authentication features required to access to the instance |
+| `mfa` | False | None | str | Multifactor authentication required to access to the instance |
 
 Get help on available commands
 

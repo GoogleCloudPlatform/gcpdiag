@@ -41,9 +41,8 @@ class LogsCheck(runbook.Step):
     """Inspecting cloud logging for good or bad patterns"""
     fetched_logs = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
                                        filter_str=self.filter_str,
-                                       start_time_utc=op.get(
-                                           flags.START_TIME_UTC),
-                                       end_time_utc=op.get(flags.END_TIME_UTC))
+                                       start_time_utc=op.get(flags.START_TIME),
+                                       end_time_utc=op.get(flags.END_TIME))
     for entry in fetched_logs:
       actual_value = get_path(entry, self.attribute, None)
 

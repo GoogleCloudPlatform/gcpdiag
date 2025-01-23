@@ -54,8 +54,8 @@ gcpdiag runbook vertex/workbench-instance-stuck-in-provisioning \
   -p project_id=value \
   -p instance_name=value \
   -p zone=value \
-  -p start_time_utc=value \
-  -p end_time_utc=value
+  -p start_time=value \
+  -p end_time=value
 ```
 
 #### Parameters
@@ -65,8 +65,8 @@ gcpdiag runbook vertex/workbench-instance-stuck-in-provisioning \
 | `project_id` | True | None | str | The Project ID of the resource under investigation |
 | `instance_name` | True |  | str | Name of the Workbench Instance |
 | `zone` | True | us-central1-a | str | Zone of the Workbench Instance. e.g. us-central1-a |
-| `start_time_utc` | False | None | datetime | Start time of the issue |
-| `end_time_utc` | False | None | datetime | End time of the issue |
+| `start_time` | False | None | datetime | Start time of the issue |
+| `end_time` | False | None | datetime | End time of the issue |
 
 Get help on available commands
 

@@ -24,8 +24,8 @@ from gcpdiag.utils import GcpApiError
 
 def local_realtime_query(filter_str):
   result = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
-                               start_time_utc=op.get(flags.START_TIME_UTC),
-                               end_time_utc=op.get(flags.END_TIME_UTC),
+                               start_time_utc=op.get(flags.START_TIME),
+                               end_time_utc=op.get(flags.END_TIME),
                                filter_str=filter_str)
   return result
 
@@ -61,13 +61,13 @@ class IpExhaustion(runbook.DiagnosticTree):
           'help': 'The zone or region of the GKE cluster',
           'required': True
       },
-      flags.START_TIME_UTC: {
+      flags.START_TIME: {
           'type':
               datetime,
           'help':
               'The start window to investigate the ip exhaustion. Format: YYYY-MM-DDTHH:MM:SSZ'
       },
-      flags.END_TIME_UTC: {
+      flags.END_TIME: {
           'type':
               datetime,
           'help':

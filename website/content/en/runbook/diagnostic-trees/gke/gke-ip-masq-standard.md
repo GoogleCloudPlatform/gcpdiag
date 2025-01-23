@@ -31,8 +31,8 @@ gcpdiag runbook gke/gke-ip-masq-standard \
   -p name=value \
   -p location=value \
   -p node_ip=value \
-  -p start_time_utc=value \
-  -p end_time_utc=value
+  -p start_time=value \
+  -p end_time=value
 ```
 
 #### Parameters
@@ -46,8 +46,8 @@ gcpdiag runbook gke/gke-ip-masq-standard \
 | `name` | False | None | str | The name of the GKE cluster, to limit search only for this cluster |
 | `location` | False | None | str | The zone or region of the GKE cluster |
 | `node_ip` | False | None | str | GKE Node IP address or address range/CIDR (Example 192.168.1.0/24) |
-| `start_time_utc` | False | None | datetime | Start time of the issue |
-| `end_time_utc` | False | None | datetime | End time of the issue |
+| `start_time` | False | None | datetime | Start time of the issue |
+| `end_time` | False | None | datetime | End time of the issue |
 
 Get help on available commands
 

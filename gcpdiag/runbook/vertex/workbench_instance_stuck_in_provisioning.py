@@ -83,11 +83,11 @@ class WorkbenchInstanceStuckInProvisioning(runbook.DiagnosticTree):
           'default': 'us-central1-a',
           'required': True
       },
-      flags.START_TIME_UTC: {
+      flags.START_TIME: {
           'type': datetime,
           'help': 'Start time of the issue',
       },
-      flags.END_TIME_UTC: {
+      flags.END_TIME: {
           'type': datetime,
           'help': 'End time of the issue',
       }

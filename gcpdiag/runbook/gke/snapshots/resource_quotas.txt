@@ -1,5 +1,5 @@
-end_time_utc=2024-12-09T07:40:16Z,project_id=gcpdiag-gke-cluster-autoscaler-
-rrrr,start_time_utc=2024-12-08T07:40:16Z
+end_time=2024-12-09T07:40:16Z,project_id=gcpdiag-gke-cluster-autoscaler-
+rrrr,start_time=2024-12-08T07:40:16Z
 
 gke/resource-quotas: Analyses logs in the project where the cluster is running.
 

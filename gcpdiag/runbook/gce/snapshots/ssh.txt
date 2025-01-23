@@ -1,5 +1,6 @@
-access_method=oslogin,name=faulty-linux-ssh,principal=user:cannotssh@example.com,project_id=gcpdiag-
-gce-faultyssh-runbook,proxy=iap,zone=europe-west2-a
+access_method=oslogin,end_time=2025-01-23 13:30:39.144959+00:00,instance_name=faulty-linux-
+ssh,principal=user:cannotssh@example.com,project_id=gcpdiag-gce-faultyssh-
+runbook,proxy=iap,start_time=2025-01-23 23:30:39.144959+00:00,zone=europe-west2-a
 
 gce/ssh: A comprehensive troubleshooting guide for common issues which affects SSH connectivity to VMs.
 
@@ -140,6 +141,12 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 [INFO]: Linux Guest OS detected. Proceeding with diagnostics specific to Linux systems.
 [COMPOSITE STEP]: Analyzing serial logs for common linux guest os and application issues.
 [AUTOMATED STEP]: Examine Guest OS if there are any indications of kernel panic.
+
+   - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [OK]
+     [REASON]
+     A review of the serial console logs for the GCE instance `projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances/faulty-linux-ssh` from `2025-01-23 23:30:39.144959+00:00` to `2025-01-23 13:30:39.144959+00:00`
+     shows no evidence of kernel panic or GRUB issues. The `systemd` application is confirmed to be running.
+
 [AUTOMATED STEP]: Verify OpenSSH daemon (sshd) has started from most recent serial logs.
 
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [OK]
@@ -265,9 +272,10 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 [END]: Finalize SSH diagnostics.
 
 
-access_method=oslogin,name=valid-linux-ssh,principal=serviceAccount:canssh@gcpdiag-gce-faultyssh-
-runbook.iam.gserviceaccount.com,project_id=gcpdiag-gce-faultyssh-runbook,proxy=iap,zone=europe-
-west2-a
+access_method=oslogin,end_time=2025-01-23 13:30:39.144959+00:00,instance_name=valid-linux-
+ssh,principal=serviceAccount:canssh@gcpdiag-gce-faultyssh-
+runbook.iam.gserviceaccount.com,project_id=gcpdiag-gce-faultyssh-
+runbook,proxy=iap,start_time=2025-01-23 23:30:39.144959+00:00,zone=europe-west2-a
 
 gce/ssh: A comprehensive troubleshooting guide for common issues which affects SSH connectivity to VMs.
 
@@ -408,6 +416,12 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 [INFO]: Linux Guest OS detected. Proceeding with diagnostics specific to Linux systems.
 [COMPOSITE STEP]: Analyzing serial logs for common linux guest os and application issues.
 [AUTOMATED STEP]: Examine Guest OS if there are any indications of kernel panic.
+
+   - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
+     [REASON]
+     A review of the serial console logs for the GCE instance `projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances/valid-linux-ssh` from `2025-01-23 23:30:39.144959+00:00` to `2025-01-23 13:30:39.144959+00:00`
+     shows no evidence of kernel panic or GRUB issues. The `systemd` application is confirmed to be running.
+
 [AUTOMATED STEP]: Verify OpenSSH daemon (sshd) has started from most recent serial logs.
 
    - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
@@ -501,9 +515,9 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 [END]: Finalize SSH diagnostics.
 
 
-access_method=oslogin,name=faulty-windows-
+access_method=oslogin,end_time=2025-01-23 13:30:39.144959+00:00,instance_name=faulty-windows-
 ssh,posix_user=no_user,principal=user:cannot@example.com,project_id=gcpdiag-gce-faultyssh-
-runbook,proxy=iap,src_ip=0.0.0.0,zone=europe-west2-a
+runbook,proxy=iap,src_ip=0.0.0.0,start_time=2025-01-23 23:30:39.144959+00:00,zone=europe-west2-a
 
 gce/ssh: A comprehensive troubleshooting guide for common issues which affects SSH connectivity to VMs.
 

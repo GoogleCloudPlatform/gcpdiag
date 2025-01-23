@@ -140,10 +140,10 @@ class TestSetDefaultParameters(unittest.TestCase):
   def test_no_parameters_set(self):
     parameters = models.Parameter()
     self.de.parse_parameters(parameter_def={}, caller_args=parameters)
-    self.assertIn(flags.END_TIME_UTC, parameters)
-    self.assertIn(flags.START_TIME_UTC, parameters)
-    end_time = parameters[flags.END_TIME_UTC]
-    start_time = parameters[flags.START_TIME_UTC]
+    self.assertIn(flags.END_TIME, parameters)
+    self.assertIn(flags.START_TIME, parameters)
+    end_time = parameters[flags.END_TIME]
+    start_time = parameters[flags.START_TIME]
 
     # Assert end_time is recent and start_time is 8 hours before end_time
     self.assertTrue(isinstance(end_time, datetime))
@@ -155,10 +155,10 @@ class TestSetDefaultParameters(unittest.TestCase):
   def test_end_time_provided_in_rfc3339(self):
     end_t_str = '2024-03-20T15:00:00Z'
     parameters = models.Parameter()
-    parameters[flags.END_TIME_UTC] = end_t_str
+    parameters[flags.END_TIME] = end_t_str
     self.de.parse_parameters(parameter_def={}, caller_args=parameters)
-    end_time = parameters[flags.END_TIME_UTC]
-    start_time = parameters[flags.START_TIME_UTC]
+    end_time = parameters[flags.END_TIME]
+    start_time = parameters[flags.START_TIME]
 
     exp_end_time = datetime.strptime(
         end_t_str, '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=timezone.utc)
@@ -168,10 +168,10 @@ class TestSetDefaultParameters(unittest.TestCase):
   def test_only_start_time_provided_in_rfc3339(self):
     start_t_str = '2024-03-20T07:00:00Z'
     parameters = models.Parameter()
-    parameters[flags.START_TIME_UTC] = start_t_str
+    parameters[flags.START_TIME] = start_t_str
     self.de.parse_parameters(parameter_def={}, caller_args=parameters)
-    start_time = parameters[flags.START_TIME_UTC]
-    end_time = parameters[flags.END_TIME_UTC]
+    start_time = parameters[flags.START_TIME]
+    end_time = parameters[flags.END_TIME]
 
     exp_start_time = datetime.strptime(
         start_t_str, '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=timezone.utc)
@@ -182,12 +182,12 @@ class TestSetDefaultParameters(unittest.TestCase):
     start_time_str = '2024-03-20T07:00:00Z'
     end_time_str = '2024-03-20T15:00:00Z'
     parameters = models.Parameter()
-    parameters[flags.START_TIME_UTC] = start_time_str
-    parameters[flags.END_TIME_UTC] = end_time_str
+    parameters[flags.START_TIME] = start_time_str
+    parameters[flags.END_TIME] = end_time_str
 
     self.de.parse_parameters(parameter_def={}, caller_args=parameters)
-    start_time = parameters[flags.START_TIME_UTC]
-    end_time = parameters[flags.END_TIME_UTC]
+    start_time = parameters[flags.START_TIME]
+    end_time = parameters[flags.END_TIME]
 
     expected_start_time = datetime.strptime(
         start_time_str, '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=timezone.utc)
@@ -200,11 +200,11 @@ class TestSetDefaultParameters(unittest.TestCase):
     start_time_str = '2024-07-20'
     self.de.parameters = {}
     parameters = models.Parameter()
-    parameters[flags.START_TIME_UTC] = start_time_str
+    parameters[flags.START_TIME] = start_time_str
 
     self.de.parse_parameters(self.de.parameters, parameters)
-    start_time = parameters[flags.START_TIME_UTC]
-    end_time = parameters[flags.END_TIME_UTC]
+    start_time = parameters[flags.START_TIME]
+    end_time = parameters[flags.END_TIME]
 
     self.assertEqual(str(start_time), '2024-07-20 00:00:00+00:00')
     self.assertTrue(str(end_time), isinstance(end_time, datetime))
@@ -213,11 +213,11 @@ class TestSetDefaultParameters(unittest.TestCase):
     end_time_str = '2024-07-20'
     self.de.parameters = {}
     parameters = models.Parameter()
-    parameters[flags.END_TIME_UTC] = end_time_str
+    parameters[flags.END_TIME] = end_time_str
 
     self.de.parse_parameters(self.de.parameters, parameters)
-    start_time = parameters[flags.START_TIME_UTC]
-    end_time = parameters[flags.END_TIME_UTC]
+    start_time = parameters[flags.START_TIME]
+    end_time = parameters[flags.END_TIME]
 
     self.assertEqual(str(start_time), '2024-07-19 16:00:00+00:00')
     self.assertEqual(str(end_time), '2024-07-20 00:00:00+00:00')
@@ -227,12 +227,12 @@ class TestSetDefaultParameters(unittest.TestCase):
     end_time_str = '2024-08-25'
     self.de.parameters = {}
     parameters = models.Parameter()
-    parameters[flags.START_TIME_UTC] = start_time_str
-    parameters[flags.END_TIME_UTC] = end_time_str
+    parameters[flags.START_TIME] = start_time_str
+    parameters[flags.END_TIME] = end_time_str
 
     self.de.parse_parameters(self.de.parameters, parameters)
-    start_time = parameters[flags.START_TIME_UTC]
-    end_time = parameters[flags.END_TIME_UTC]
+    start_time = parameters[flags.START_TIME]
+    end_time = parameters[flags.END_TIME]
 
     self.assertEqual(str(start_time), '2024-07-20 00:00:00+00:00')
     self.assertEqual(str(end_time), '2024-08-25 00:00:00+00:00')
@@ -246,12 +246,12 @@ class TestSetDefaultParameters(unittest.TestCase):
     self.de.parameters = {}
     parameters = models.Parameter()
 
-    parameters[flags.START_TIME_UTC] = start_time_str
-    parameters[flags.END_TIME_UTC] = end_time_str
+    parameters[flags.START_TIME] = start_time_str
+    parameters[flags.END_TIME] = end_time_str
 
     self.de.parse_parameters(self.de.parameters, parameters)
-    start_time = parameters[flags.START_TIME_UTC]
-    end_time = parameters[flags.END_TIME_UTC]
+    start_time = parameters[flags.START_TIME]
+    end_time = parameters[flags.END_TIME]
 
     # Convert expected UTC times for the test case
     expected_start_time = '2024-07-20 00:00:00+00:00'
@@ -266,11 +266,11 @@ class TestSetDefaultParameters(unittest.TestCase):
     start_time_epoch = '1601481600'  # 2020-09-30 16:00:00 UTC
     end_time_epoch = '1601485200'  # 2020-09-30 17:00:00 UTC
     parameters = models.Parameter()
-    parameters[flags.START_TIME_UTC] = start_time_epoch
-    parameters[flags.END_TIME_UTC] = end_time_epoch
+    parameters[flags.START_TIME] = start_time_epoch
+    parameters[flags.END_TIME] = end_time_epoch
     self.de.parse_parameters(parameter_def={}, caller_args=parameters)
-    start_time = parameters[flags.START_TIME_UTC]
-    end_time = parameters[flags.END_TIME_UTC]
+    start_time = parameters[flags.START_TIME]
+    end_time = parameters[flags.END_TIME]
 
     expected_start_time = datetime.fromtimestamp(float(start_time_epoch),
                                                  tz=timezone.utc)
@@ -283,7 +283,7 @@ class TestSetDefaultParameters(unittest.TestCase):
     start_time_invalid = 'invalid_start_time'
     end_time_invalid = 'invalid_end_time'
     parameters = models.Parameter()
-    parameters[flags.START_TIME_UTC] = start_time_invalid
-    parameters[flags.END_TIME_UTC] = end_time_invalid
+    parameters[flags.START_TIME] = start_time_invalid
+    parameters[flags.END_TIME] = end_time_invalid
     with self.assertRaises(ValueError):
       self.de.parse_parameters(parameter_def={}, caller_args=parameters)

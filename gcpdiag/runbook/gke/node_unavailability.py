@@ -24,8 +24,8 @@ LOG_PREEMPTED = LOG_DELETED = LOG_MIGRATED = None
 
 def local_realtime_query(filter_str):
   result = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
-                               start_time_utc=op.get(flags.START_TIME_UTC),
-                               end_time_utc=op.get(flags.END_TIME_UTC),
+                               start_time_utc=op.get(flags.START_TIME),
+                               end_time_utc=op.get(flags.END_TIME),
                                filter_str=filter_str)
   return result
 
@@ -93,8 +93,8 @@ class NodeUnavailabilityStart(runbook.StartStep):
     node = op.get(flags.NODE)
     name = op.get(flags.NAME)
     project_path = crm.get_project(project)
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
+    start_time_utc = op.get(flags.START_TIME)
+    end_time_utc = op.get(flags.END_TIME)
     global LOG_MIGRATED, LOG_DELETED, LOG_PREEMPTED
 
     # check if there are clusters in the project

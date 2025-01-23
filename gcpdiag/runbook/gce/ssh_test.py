@@ -23,15 +23,17 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
 
   rule_parameters = [{
       'project_id': 'gcpdiag-gce-faultyssh-runbook',
-      'name': 'faulty-linux-ssh',
+      'instance_name': 'faulty-linux-ssh',
       'zone': 'europe-west2-a',
       'principal': 'user:cannotssh@example.com',
       'proxy': 'iap',
-      'access_method': 'oslogin'
+      'access_method': 'oslogin',
+      'start_time': '2025-01-23 23:30:39.144959+00:00',
+      'end_time': '2025-01-23 13:30:39.144959+00:00'
   }, {
       'project_id':
           'gcpdiag-gce-faultyssh-runbook',
-      'name':
+      'instance_name':
           'valid-linux-ssh',
       'zone':
           'europe-west2-a',
@@ -40,14 +42,20 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
       'proxy':
           'iap',
       'access_method':
-          'oslogin'
+          'oslogin',
+      'start_time':
+          '2025-01-23 23:30:39.144959+00:00',
+      'end_time':
+          '2025-01-23 13:30:39.144959+00:00'
   }, {
       'project_id': 'gcpdiag-gce-faultyssh-runbook',
-      'name': 'faulty-windows-ssh',
+      'instance_name': 'faulty-windows-ssh',
       'zone': 'europe-west2-a',
       'principal': 'user:cannot@example.com',
       'src_ip': '0.0.0.0',
       'proxy': 'iap',
       'access_method': 'oslogin',
-      'posix_user': 'no_user'
+      'posix_user': 'no_user',
+      'start_time': '2025-01-23 23:30:39.144959+00:00',
+      'end_time': '2025-01-23 13:30:39.144959+00:00'
   }]

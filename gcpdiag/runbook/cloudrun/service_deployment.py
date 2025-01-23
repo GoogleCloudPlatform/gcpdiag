@@ -51,11 +51,11 @@ class ServiceDeployment(runbook.DiagnosticTree):
           'help': 'Name of the Cloud Run service',
           'required': True,
       },
-      flags.START_TIME_UTC: {
+      flags.START_TIME: {
           'type': datetime,
           'help': 'Start time of the issue',
       },
-      flags.END_TIME_UTC: {
+      flags.END_TIME: {
           'type': datetime,
           'help': 'End time of the issue',
       },

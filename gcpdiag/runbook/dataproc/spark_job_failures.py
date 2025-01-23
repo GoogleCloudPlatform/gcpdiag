@@ -232,15 +232,14 @@ class JobExists(runbook.StartStep):
     end_time_utc = start_time_utc + timedelta(days=7)
 
     # Saving cluster parameters
-    op.put(flags.START_TIME_UTC, start_time_utc)
+    op.put(flags.START_TIME, start_time_utc)
     op.info(f'Start time utc:{start_time_utc}')
-    op.put(flags.END_TIME_UTC, end_time_utc)
+    op.put(flags.END_TIME, end_time_utc)
     op.info(f'End time utc:{end_time_utc}')
     op.put(flags.CLUSTER_UUID, job.cluster_uuid)
     op.put(flags.CLUSTER_NAME, job.cluster_name)
 
-    if check_datetime_gap(op.get(flags.START_TIME_UTC),
-                          op.get(flags.END_TIME_UTC), 30):
+    if check_datetime_gap(op.get(flags.START_TIME), op.get(flags.END_TIME), 30):
       op.put(flags.JOB_OLDER_THAN_30_DAYS, True)
     else:
       op.put(flags.JOB_OLDER_THAN_30_DAYS, False)
@@ -428,8 +427,8 @@ class CheckTaskNotFound(runbook.CompositeStep):
                                     op.get(flags.REGION), op.get(flags.JOB_ID))
 
     cluster_uuid = job.cluster_uuid
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
+    start_time_utc = op.get(flags.START_TIME)
+    end_time_utc = op.get(flags.END_TIME)
 
     additional_message = (
         f'Unable to find the cluster deletion log between'
@@ -598,8 +597,8 @@ class CheckMasterOOM(runbook.Step):
     "{job_id}"
     jsonPayload.message=~"{log_message}" """
 
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
+    start_time_utc = op.get(flags.START_TIME)
+    end_time_utc = op.get(flags.END_TIME)
 
     log_entries = logs.realtime_query(
         project_id=op.get(flags.PROJECT_ID),
@@ -809,8 +808,8 @@ class CheckShuffleFailures(runbook.Step):
       )
       return
 
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
+    start_time_utc = op.get(flags.START_TIME)
+    end_time_utc = op.get(flags.END_TIME)
 
     log_entries = logs.realtime_query(
         project_id=project.id,

@@ -49,9 +49,8 @@ class HighVmMemoryUtilization(runbook.Step):
     """Verify VM memory utilization is within optimal levels."""
 
     start_formatted_string = op.get(
-        flags.START_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
-    end_formatted_string = op.get(
-        flags.END_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+        flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')
+    end_formatted_string = op.get(flags.END_TIME).strftime('%Y/%m/%d %H:%M:%S')
     within_str = f'within d\'{start_formatted_string}\', d\'{end_formatted_string}\''
 
     mark_no_ops_agent = False
@@ -103,7 +102,9 @@ class HighVmMemoryUtilization(runbook.Step):
                      reason=op.prep_msg(op.SKIPPED_REASON,
                                         full_resource_path=vm.full_path))
     else:
-      op.add_ok(vm, reason=op.prep_msg(op.SUCCESS_REASON))
+      op.add_ok(vm,
+                reason=op.prep_msg(op.SUCCESS_REASON,
+                                   full_resource_path=vm.full_path))
 
     # Checking for OOM related errors
     oom_errors = VmSerialLogsCheck()
@@ -135,9 +136,8 @@ class HighVmDiskUtilization(runbook.Step):
     """Verify VM's Boot disk space utilization is within optimal levels."""
 
     start_formatted_string = op.get(
-        flags.START_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
-    end_formatted_string = op.get(
-        flags.END_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+        flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')
+    end_formatted_string = op.get(flags.END_TIME).strftime('%Y/%m/%d %H:%M:%S')
     within_str = f'within d\'{start_formatted_string}\', d\'{end_formatted_string}\''
 
     mark_no_ops_agent = False
@@ -171,7 +171,9 @@ class HighVmDiskUtilization(runbook.Step):
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION,
                                             full_resource_path=vm.full_path))
     elif mark_no_ops_agent:
-      op.add_skipped(vm, reason=op.prep_msg(op.SKIPPED_REASON))
+      op.add_skipped(vm,
+                     reason=op.prep_msg(op.SKIPPED_REASON,
+                                        full_resource_path=vm.full_path))
       # Fallback to check for filesystem utilization related messages in Serial logs
       fs_util = VmSerialLogsCheck()
       fs_util.project_id = self.project_id
@@ -182,7 +184,9 @@ class HighVmDiskUtilization(runbook.Step):
       fs_util.negative_pattern = constants.DISK_EXHAUSTION_ERRORS
       self.add_child(fs_util)
     else:
-      op.add_ok(vm, reason=op.prep_msg(op.SUCCESS_REASON))
+      op.add_ok(vm,
+                reason=op.prep_msg(op.SUCCESS_REASON,
+                                   full_resource_path=vm.full_path))
 
 
 class HighVmCpuUtilization(runbook.Step):
@@ -204,9 +208,8 @@ class HighVmCpuUtilization(runbook.Step):
     """Verify VM CPU utilization is within optimal levels"""
 
     start_formatted_string = op.get(
-        flags.START_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
-    end_formatted_string = op.get(
-        flags.END_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+        flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')
+    end_formatted_string = op.get(flags.END_TIME).strftime('%Y/%m/%d %H:%M:%S')
     within_str = f'within d\'{start_formatted_string}\', d\'{end_formatted_string}\''
 
     vm = gce.get_instance(
@@ -240,10 +243,14 @@ class HighVmCpuUtilization(runbook.Step):
     # Get Performance issues corrected.
     if cpu_usage_metrics:
       op.add_failed(vm,
-                    reason=op.prep_msg(op.FAILURE_REASON),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+                    reason=op.prep_msg(op.FAILURE_REASON,
+                                       full_resource_path=vm.full_path),
+                    remediation=op.prep_msg(op.FAILURE_REMEDIATION,
+                                            full_resource_path=vm.full_path))
     else:
-      op.add_ok(vm, reason=op.prep_msg(op.SUCCESS_REASON))
+      op.add_ok(vm,
+                reason=op.prep_msg(op.SUCCESS_REASON,
+                                   full_resource_path=vm.full_path))
 
 
 class VmLifecycleState(runbook.Step):
@@ -347,8 +354,12 @@ class VmSerialLogsCheck(runbook.Step):
                         self.positive_pattern)
         if good_pattern_detected:
           op.add_ok(vm,
-                    reason=op.prep_msg(op.SUCCESS_REASON,
-                                       full_resource_path=vm.full_path))
+                    reason=op.prep_msg(
+                        op.SUCCESS_REASON,
+                        full_resource_path=vm.full_path,
+                        start_time=op.get(flags.START_TIME),
+                        end_time=op.get(flags.END_TIME),
+                    ))
       if hasattr(self, 'negative_pattern'):
         # Check for bad patterns
         bad_pattern_detected = util.search_pattern_in_serial_logs(
@@ -359,17 +370,17 @@ class VmSerialLogsCheck(runbook.Step):
                         self.negative_pattern)
 
         if bad_pattern_detected:
-          op.add_failed(
-              vm,
-              reason=op.prep_msg(op.FAILURE_REASON,
-                                 start_time=op.get(flags.START_TIME_UTC),
-                                 end_time=op.get(flags.END_TIME_UTC),
-                                 full_resource_path=vm.full_path,
-                                 instance_name=vm.name),
-              remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                      full_resource_path=vm.full_path,
-                                      start_time=op.get(flags.START_TIME_UTC),
-                                      end_time=op.get(flags.END_TIME_UTC)))
+          op.add_failed(vm,
+                        reason=op.prep_msg(op.FAILURE_REASON,
+                                           start_time=op.get(flags.START_TIME),
+                                           end_time=op.get(flags.END_TIME),
+                                           full_resource_path=vm.full_path,
+                                           instance_name=vm.name),
+                        remediation=op.prep_msg(
+                            op.FAILURE_REMEDIATION,
+                            full_resource_path=vm.full_path,
+                            start_time=op.get(flags.START_TIME),
+                            end_time=op.get(flags.END_TIME)))
 
       if hasattr(self, 'positive_pattern') and not hasattr(
           self, 'negative_pattern') and good_pattern_detected is False:
@@ -377,23 +388,24 @@ class VmSerialLogsCheck(runbook.Step):
             vm,
             reason=op.prep_msg(op.UNCERTAIN_REASON,
                                full_resource_path=vm.full_path,
-                               start_time=op.get(flags.START_TIME_UTC),
-                               end_time=op.get(flags.END_TIME_UTC)),
+                               start_time=op.get(flags.START_TIME),
+                               end_time=op.get(flags.END_TIME)),
             # uncetain uses the same remediation steps as failed
             remediation=op.prep_msg(op.FAILURE_REMEDIATION,
                                     full_resource_path=vm.full_path,
-                                    start_time=op.get(flags.START_TIME_UTC),
-                                    end_time=op.get(flags.END_TIME_UTC)))
+                                    start_time=op.get(flags.START_TIME),
+                                    end_time=op.get(flags.END_TIME)))
       elif hasattr(self, 'negative_pattern') and not hasattr(
           self, 'positive_pattern') and bad_pattern_detected is False:
         op.add_uncertain(
             vm,
-            reason=op.prep_msg(op.UNCERTAIN_REASON),
+            reason=op.prep_msg(op.UNCERTAIN_REASON,
+                               full_resource_path=vm.full_path),
             # uncetain uses the same remediation steps as failed
             remediation=op.prep_msg(op.FAILURE_REMEDIATION,
                                     full_resource_path=vm.full_path,
-                                    start_time=op.get(flags.START_TIME_UTC),
-                                    end_time=op.get(flags.END_TIME_UTC)))
+                                    start_time=op.get(flags.START_TIME),
+                                    end_time=op.get(flags.END_TIME)))
       elif (hasattr(self, 'positive_pattern') and
             good_pattern_detected is False) and (hasattr(
                 self, 'negative_pattern') and bad_pattern_detected is False):
@@ -401,13 +413,13 @@ class VmSerialLogsCheck(runbook.Step):
             vm,
             reason=op.prep_msg(op.UNCERTAIN_REASON,
                                full_resource_path=vm.full_path,
-                               start_time=op.get(flags.START_TIME_UTC),
-                               end_time=op.get(flags.END_TIME_UTC)),
+                               start_time=op.get(flags.START_TIME),
+                               end_time=op.get(flags.END_TIME)),
             # uncetain uses the same remediation steps as failed
             remediation=op.prep_msg(op.FAILURE_REMEDIATION,
                                     full_resource_path=vm.full_path,
-                                    start_time=op.get(flags.START_TIME_UTC),
-                                    end_time=op.get(flags.END_TIME_UTC)))
+                                    start_time=op.get(flags.START_TIME),
+                                    end_time=op.get(flags.END_TIME)))
     else:
       op.add_skipped(vm,
                      reason=op.prep_msg(op.SKIPPED_REASON,
@@ -656,9 +668,9 @@ class VmHasOpsAgent(runbook.Step):
 
   def execute(self):
     """Verify GCE Instance's has ops agent installed and currently active"""
-    self.end_time_utc = getattr(self, 'end_time_utc', None) or op.get(
+    self.end_time_utc = getattr(self, 'end_time', None) or op.get(
         self.end_time_utc)
-    self.start_time_utc = getattr(self, 'start_time_utc', None) or op.get(
+    self.start_time_utc = getattr(self, 'start_time', None) or op.get(
         self.start_time_utc)
     instance = gce.get_instance(project_id=self.project_id,
                                 zone=self.zone,

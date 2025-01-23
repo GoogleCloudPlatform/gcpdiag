@@ -325,6 +325,39 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      Found all logs since last boot of the VM.
 
 [AUTOMATED STEP]: Examine Guest OS if there are any indications of kernel panic.
+
+   - gcpdiag-gce-vm-performance/valid-linux-ssh                           [UNCERTAIN]
+     [REASON]
+     No serial logs were found for the VM projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances/valid-linux-ssh. However, this does not rule out the possibility of a kernel
+     panic.
+
+     [REMEDIATION]
+     Kernel panics can be caused by different issues within the guest.
+     Address underlying issues causing boot problems to solve the kernel panic:
+
+     General Kernel panic Troubleshooting
+     1. Consult the Troubleshooting Guide for Kernel Panic Errors:
+     - Kernel panic is commonly caused by file system errors in Linux Guest OS.
+     - Check `/etc/fstab` for incorrect entries that could halt the boot process.
+     - Refer to this guide for resolving [kernel panic issues caused by
+     /etc/fstab](https://cloud.google.com/compute/docs/troubleshooting/fstab-errors).
+
+     2. Resources for Kernel panic
+     - [Troubleshooting GCE Instance experiencing Kernel
+     Panic](https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error)
+     - [Common Red Hat Kernel Panic
+     Issues](https://access.redhat.com/search/knowledgebase?q=kernel+panic&p=1&rows=10&documentKind=Solution%26Documentation&sort=relevant)
+     - [Common SUSE Kernel Panic Issues](https://www.suse.com/support/kb/?id=&q=kernel+panic&bu_suse=true&advanced=false)
+
+     3. Rescue an instance experiencing kernel panic
+     - [How to rescue a experiencing kernel panic](https://cloud.google.com/compute/docs/troubleshooting/rescue-vm) to
+     recover faulty VMs.
+     - Watch this video for a walkthrough: [Rescue VM Guide](https://www.youtube.com/watch?v=oD6IFpjEtEw)
+
+     4 Google Cloud Platform Support Scope:
+     [Understand GCP support for kernel-related
+     issues](https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope).
+
 [AUTOMATED STEP]: Verify any Filesystem corruption related errors in Serial console logs
 
    - gcpdiag-gce-vm-performance/valid-linux-ssh                           [UNCERTAIN]

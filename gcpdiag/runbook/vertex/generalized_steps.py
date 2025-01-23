@@ -200,8 +200,8 @@ class CheckWorkbenchInstanceSyslogsJupyterRunningOnPort8080(runbook.Step):
 
   def execute(self):
     """Verify Jupyter is running on port 127.0.0.1:8080"""
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
+    start_time_utc = op.get(flags.START_TIME)
+    end_time_utc = op.get(flags.END_TIME)
     project_id: str = self.project_id or op.get(flags.PROJECT_ID)
     instance_name: str = self.instance_name or op.get(flags.INSTANCE_NAME)
     zone: str = self.zone or op.get(flags.ZONE)

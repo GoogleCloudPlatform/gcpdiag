@@ -72,11 +72,11 @@ class OpsAgent(runbook.DiagnosticTree):
           'type': str,
           'help': 'Zone of the GCE instance running the Ops Agent',
       },
-      flags.START_TIME_UTC: {
+      flags.START_TIME: {
           'type': datetime,
           'help': 'Start time of the issue',
       },
-      flags.END_TIME_UTC: {
+      flags.END_TIME: {
           'type': datetime,
           'help': 'End time of the issue',
       },
@@ -254,8 +254,8 @@ class InvestigateLoggingMonitoring(runbook.Gateway):
       logging_subagent_check.zone = op.get(flags.ZONE)
       logging_subagent_check.instance_name = op.get(flags.NAME)
       logging_subagent_check.instance_id = op.get(flags.ID)
-      logging_subagent_check.start_time_utc = op.get(flags.START_TIME_UTC)
-      logging_subagent_check.end_time_utc = op.get(flags.END_TIME_UTC)
+      logging_subagent_check.start_time_utc = op.get(flags.START_TIME)
+      logging_subagent_check.end_time_utc = op.get(flags.END_TIME)
       logging_subagent_check.check_logging = True
       logging_subagent_check.check_metrics = False
       logging_access_scope.add_child(logging_subagent_check)
@@ -292,8 +292,8 @@ class InvestigateLoggingMonitoring(runbook.Gateway):
       metric_subagent_check.zone = op.get(flags.ZONE)
       metric_subagent_check.instance_name = op.get(flags.NAME)
       metric_subagent_check.instance_id = op.get(flags.ID)
-      metric_subagent_check.start_time_utc = op.get(flags.START_TIME_UTC)
-      metric_subagent_check.end_time_utc = op.get(flags.END_TIME_UTC)
+      metric_subagent_check.start_time_utc = op.get(flags.START_TIME)
+      metric_subagent_check.end_time_utc = op.get(flags.END_TIME)
       metric_subagent_check.check_logging = False
       metric_subagent_check.check_metrics = True
       monitoring_access_scope.add_child(metric_subagent_check)
@@ -346,7 +346,7 @@ class OpsAgentEnd(runbook.EndStep):
                         resource.labels.instance_id="{}" AND
                         "LogPingOpsAgent"'''.format(op.get(flags.PROJECT_ID),
                                                     op.get(flags.ID)),
-          start_time_utc=op.get(flags.END_TIME_UTC),
+          start_time_utc=op.get(flags.END_TIME),
           end_time_utc=datetime.now())
       if serial_log_entries:
         has_expected_opsagent_logs = True

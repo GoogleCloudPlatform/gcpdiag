@@ -75,8 +75,8 @@ class CheckLogsExist(runbook.Step):
     "{job_id}"
     jsonPayload.message=~"{log_message}" """
 
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
+    start_time_utc = op.get(flags.START_TIME)
+    end_time_utc = op.get(flags.END_TIME)
 
     log_entries = logs.realtime_query(
         project_id=op.get(flags.PROJECT_ID),
