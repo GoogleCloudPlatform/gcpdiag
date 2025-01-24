@@ -38,7 +38,8 @@ https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-seri
 
 ### Success Reason
 
-This VM currently has CPU utilization within the optimal range, indicating healthy performance.
+The Compute Engine VM {full_resource_path},
+has CPU utilization within the optimal range.
 
 
 

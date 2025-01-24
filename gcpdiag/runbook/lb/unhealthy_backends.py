@@ -41,8 +41,13 @@ class UnhealthyBackends(runbook.DiagnosticTree):
       - Verifies if firewall rules are properly configured to allow health check
       traffic.
   - Port Configuration:
-      - Validates if the health check and serving ports are configured
-      correctly, ensuring they are not mismatched.
+      - Checks if health check sends probe requests to the different port than
+      serving port. This may be intentional or a potential configuration error,
+      and the runbook will provide guidance on the implications.
+  - Protocol Configuration:
+      - Checks if health check uses the same protocol as backend service. This
+      may be intentional or a potential configuration error, and the runbook
+      will provide guidance on the implications.
   - Logging:
       - Checks if health check logging is enabled to aid in troubleshooting.
   - Health Check Logs (if enabled):
@@ -59,6 +64,9 @@ class UnhealthyBackends(runbook.DiagnosticTree):
   - Past Health Check Success:
       - Checks if the health check has worked successfully in the past to
       determine if the issue is recent or ongoing.
+  - VM Performance:
+      - Checks if the instances performance is degraded - disks, memory and cpu
+      utilization are being checked.
   """
 
   parameters = {
@@ -94,6 +102,9 @@ class UnhealthyBackends(runbook.DiagnosticTree):
 
     port_check = ValidateBackendServicePortConfiguration()
     self.add_step(parent=start, child=port_check)
+
+    protocol_check = ValidateBackendServiceProtocolConfiguration()
+    self.add_step(parent=start, child=protocol_check)
 
     firewall_check = VerifyFirewallRules()
     self.add_step(parent=start, child=firewall_check)
@@ -372,6 +383,52 @@ class ValidateBackendServicePortConfiguration(runbook.Step):
     ]
 
 
+class ValidateBackendServiceProtocolConfiguration(runbook.Step):
+  """Checks if health check uses the same protocol as backend service for serving traffic."""
+
+  template = 'unhealthy_backends::protocol_mismatch'
+
+  def execute(self):
+    """Checks if health check uses the same protocol as backend service for serving traffic."""
+
+    backend_service = lb.get_backend_service(
+        op.context.project_id,
+        op.get(flags.BACKEND_SERVICE_NAME),
+        op.get(flags.REGION),
+    )
+
+    health_check = gce.get_health_check(
+        op.context.project_id,
+        backend_service.health_check,
+        backend_service.region,
+    )
+
+    if backend_service.protocol == 'UDP':
+      op.add_skipped(
+          backend_service,
+          reason=(
+              "Load balancer uses UDP protocol which doesn't make sense for"
+              " health checks as it's connectionless and doesn't have built-in"
+              ' features for acknowledging delivery'),
+      )
+      return
+    if health_check.type == backend_service.protocol:
+      op.add_ok(
+          backend_service,
+          reason=op.prep_msg(op.SUCCESS_REASON, hc_protocol=health_check.type),
+      )
+    else:
+      op.add_uncertain(
+          backend_service,
+          reason=op.prep_msg(op.UNCERTAIN_REASON),
+          remediation=op.prep_msg(
+              op.UNCERTAIN_REMEDIATION,
+              hc_protocol=health_check.type,
+              serving_protocol=backend_service.protocol,
+          ),
+      )
+
+
 class VerifyHealthCheckLoggingEnabled(runbook.Gateway):
   """Check if health check logging is enabled."""
 
@@ -453,7 +510,7 @@ class AnalyzeLatestHealthCheckLog(runbook.Gateway):
         filter_str = """resource.type="gce_instance_group"
                         log_name="projects/{}/logs/compute.googleapis.com%2Fhealthchecks"
                         resource.labels.instance_group_name="{}"
-                        resource.labels.location={}
+                        resource.labels.location=~{}
                         jsonPayload.healthCheckProbeResult.healthState="UNHEALTHY"
                         """.format(op.get(flags.PROJECT_ID), resource_name,
                                    location)
@@ -758,7 +815,7 @@ class UnhealthyBackendsEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing unhealthy backends diagnostics..."""
+    """Finalize unhealthy backends diagnostics."""
     if not config.get(flags.INTERACTIVE_MODE):
       response = op.prompt(
           kind=op.CONFIRMATION,

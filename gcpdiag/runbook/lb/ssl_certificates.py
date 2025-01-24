@@ -715,7 +715,7 @@ class SslCertificatesEnd(runbook.EndStep):
   """Concludes the SSL Certificate diagnostics process."""
 
   def execute(self):
-    """Finalizing SSL Certificate diagnostics..."""
+    """Finalize SSL Certificate diagnostics."""
     if not config.get(flags.INTERACTIVE_MODE):
       response = op.prompt(
           kind=op.CONFIRMATION,

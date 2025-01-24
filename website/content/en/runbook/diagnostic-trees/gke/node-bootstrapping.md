@@ -35,8 +35,8 @@ gcpdiag runbook gke/node-bootstrapping \
   -p node=value \
   -p nodepool=value \
   -p name=value \
-  -p start_time_utc=value \
-  -p end_time_utc=value
+  -p start_time=value \
+  -p end_time=value
 ```
 
 #### Parameters
@@ -48,8 +48,8 @@ gcpdiag runbook gke/node-bootstrapping \
 | `node` | False | None | str | The node name that is failing to register (if available). If node name is not available, please provide the nodepool name where nodes aren't registering |
 | `nodepool` | False | None | str | The nodepool name where nodes aren't registering, if a node name is not availalbe |
 | `name` | False | None | str | The GKE cluster name. When providing nodepool name, please provide the GKE cluster name as well to be able to properly filter events in the logging query. |
-| `start_time_utc` | False | None | datetime | The start window to investigate vm termination. Format: YYYY-MM-DDTHH:MM:SSZ |
-| `end_time_utc` | False | None | datetime | The end window for the investigation. Format: YYYY-MM-DDTHH:MM:SSZ |
+| `start_time` | False | None | datetime | The start window to investigate vm termination. Format: YYYY-MM-DDTHH:MM:SSZ |
+| `end_time` | False | None | datetime | The end window for the investigation. Format: YYYY-MM-DDTHH:MM:SSZ |
 
 Get help on available commands
 

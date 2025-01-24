@@ -4,7 +4,7 @@ linkTitle: "Workbench Instance Stuck In Provisioning End"
 weight: 3
 type: docs
 description: >
-  Checking if the Workbench Instance is now in ACTIVE state...
+  Checking if the Workbench Instance is now in ACTIVE state.
 ---
 
 **Product**: [Vertex AI](https://cloud.google.com/vertex-ai)\

@@ -115,11 +115,11 @@ necessary firewall rules, external/internal IP configuration.
           'help': ('Checks if the Dataproc cluster has been created with only'
                    ' Internal IP'),
       },
-      flags.START_TIME_UTC: {
+      flags.START_TIME: {
           'type': datetime,
           'help': 'Start time of the issue',
       },
-      flags.END_TIME_UTC: {
+      flags.END_TIME: {
           'type': datetime,
           'help': 'End time of the issue',
       },
@@ -177,7 +177,7 @@ class CheckClusterQuota(runbook.StartStep):
   template = 'logs_related::cluster_quota'
 
   def execute(self):
-    """Verify cluster quota..."""
+    """Verify cluster quota."""
 
     quota_log_match_str = 'Insufficient .* quota'
     cluster_name = op.get(flags.CLUSTER_NAME)
@@ -188,8 +188,8 @@ class CheckClusterQuota(runbook.StartStep):
         cluster_name=cluster_name,
         message_filter=f'protoPayload.status.message=~"{quota_log_match_str}"',
         log_id='cloudaudit.googleapis.com/activity',
-        start_time_utc=op.get(flags.START_TIME_UTC),
-        end_time_utc=op.get(flags.END_TIME_UTC),
+        start_time_utc=op.get(flags.START_TIME),
+        end_time_utc=op.get(flags.END_TIME),
     )
 
     if quota_log_entries:
@@ -220,7 +220,7 @@ class CheckClusterStockOut(runbook.Step):
   template = 'logs_related::cluster_stockout'
 
   def execute(self):
-    """Verify cluster stockout issue..."""
+    """Verify cluster stockout issue."""
 
     err_messages = [
         'ZONE_RESOURCE_POOL_EXHAUSTED',
@@ -238,8 +238,8 @@ class CheckClusterStockOut(runbook.Step):
         cluster_name=cluster_name,
         message_filter=f'protoPayload.status.message=~({message_filter})',
         log_id='cloudaudit.googleapis.com/activity',
-        start_time_utc=op.get(flags.START_TIME_UTC),
-        end_time_utc=op.get(flags.END_TIME_UTC),
+        start_time_utc=op.get(flags.START_TIME),
+        end_time_utc=op.get(flags.END_TIME),
     )
 
     if stockout_filter_log_entries:
@@ -270,7 +270,7 @@ class ClusterExists(runbook.Step):
   template = 'dataproc_attributes::cluster_name_exists'
 
   def execute(self):
-    """Verify cluster exists in Dataproc UI..."""
+    """Verify cluster exists in Dataproc UI."""
     project = crm.get_project(op.get(flags.PROJECT_ID))
 
     if not op.get(flags.CLUSTER_UUID) and not op.get(flags.CLUSTER_NAME):
@@ -312,14 +312,13 @@ class ClusterInError(runbook.Gateway):
 
   This investigation is needed to identify if the issue is related to cluster
   creation. The issue happens only when the cluster is not able
-  to provision successfully and ends up in ERROR state. In this runbook we don't
-  investigate RUNNING clusters.
+  to provision successfully and ends up in ERROR state.
   """
 
   template = 'dataproc_attributes::error_status'
 
   def execute(self):
-    """Verify cluster is in ERROR state..."""
+    """Verify cluster is in ERROR state."""
     # Taking cluster details
     cluster = dataproc.get_cluster(project=op.get(flags.PROJECT_ID),
                                    region=op.get(flags.REGION),
@@ -354,7 +353,7 @@ class ClusterDetails(runbook.Step):
   template = 'dataproc_attributes::stackdriver'
 
   def execute(self):
-    """Gathering cluster details..."""
+    """Gathering cluster details."""
     # taking cluster details
     cluster = dataproc.get_cluster(project=op.get(flags.PROJECT_ID),
                                    region=op.get(flags.REGION),
@@ -410,8 +409,8 @@ class CheckClusterNetwork(runbook.Step):
   template = 'network::cluster_network'
 
   def execute(self):
-    """Verify network connectivity among nodes in the cluster..."""
-    # Gathering cluster details...
+    """Verify network connectivity among nodes in the cluster."""
+    # Gathering cluster details.
     cluster = dataproc.get_cluster(project=op.get(flags.PROJECT_ID),
                                    region=op.get(flags.REGION),
                                    cluster_name=op.get(flags.CLUSTER_NAME))
@@ -475,9 +474,9 @@ class CheckClusterNetwork(runbook.Step):
       is_connectivity_fine = True
 
       # run connectivity tests between master and worker
-      op.info('Running connectivity tests...')
+      op.info('Running connectivity tests.')
       # ICMP
-      op.info('ICMP test...')
+      op.info('ICMP test.')
       connectivity_test_result = networkmanagement.run_connectivity_test(
           project_id=op.get(flags.PROJECT_ID),
           src_ip=str(source_ip)[:-3],
@@ -502,7 +501,7 @@ class CheckClusterNetwork(runbook.Step):
             + 'test to verify what is blocking the traffic, ' +
             'in particular Last step and Full list of steps.')
       # TCP
-      op.info('TCP test...')
+      op.info('TCP test.')
       connectivity_test_result = networkmanagement.run_connectivity_test(
           project_id=op.get(flags.PROJECT_ID),
           src_ip=str(source_ip)[:-3],
@@ -527,7 +526,7 @@ class CheckClusterNetwork(runbook.Step):
             + 'to verify what is blocking the traffic, ' +
             'in particular Last step and Full list of steps.')
       # UCP
-      op.info('UDP test...')
+      op.info('UDP test.')
       connectivity_test_result = networkmanagement.run_connectivity_test(
           project_id=op.get(flags.PROJECT_ID),
           src_ip=str(source_ip)[:-3],
@@ -572,8 +571,8 @@ class InternalIpGateway(runbook.Gateway):
   """
 
   def execute(self):
-    """Checking if the cluster is using internal IP only..."""
-    # Gathering cluster details...
+    """Checking if the cluster is using internal IP only."""
+    # Gathering cluster details.
     cluster = dataproc.get_cluster(project=op.get(flags.PROJECT_ID),
                                    region=op.get(flags.REGION),
                                    cluster_name=op.get(flags.CLUSTER_NAME))
@@ -627,7 +626,7 @@ class CheckPrivateGoogleAccess(runbook.Step):
   template = 'network::private_google_access'
 
   def execute(self):
-    """Checking if the subnetwork of the cluster has private google access enabled...."""
+    """Checking if the subnetwork of the cluster has private google access enabled."""
     # taking cluster details
     cluster = dataproc.get_cluster(project=op.get(flags.PROJECT_ID),
                                    region=op.get(flags.REGION),
@@ -650,7 +649,7 @@ class CheckPrivateGoogleAccess(runbook.Step):
 
 
 class ServiceAccountExists(runbook.Gateway):
-  """Validating service account and permissions in Dataproc cluster project or another project.
+  """Verify service account and permissions in Dataproc cluster project or another project.
 
   Decides whether to check for service account roles
   - in CROSS_PROJECT_ID, if specified by customer
@@ -660,7 +659,7 @@ class ServiceAccountExists(runbook.Gateway):
   template = 'permissions::projectcheck'
 
   def execute(self):
-    """Checking service account project..."""
+    """Checking service account project."""
     sa_email = op.get(flags.SERVICE_ACCOUNT)
     project = crm.get_project(op.get(flags.PROJECT_ID))
     op.info(op.get(flags.SERVICE_ACCOUNT))
@@ -674,7 +673,7 @@ class ServiceAccountExists(runbook.Gateway):
       op.info(
           'VM Service Account associated with Dataproc cluster was found in the'
           ' same project')
-      op.info('Checking permissions...')
+      op.info('Checking permissions.')
       # Check for Service Account permissions
       sa_permission_check = iam_gs.IamPolicyCheck()
       sa_permission_check.project = op.get(flags.PROJECT_ID)
@@ -687,7 +686,7 @@ class ServiceAccountExists(runbook.Gateway):
       op.info('VM Service Account associated with Dataproc cluster was found in'
               ' cross project')
       # Check if constraint is enforced
-      op.info('Checking constraints on service account project...')
+      op.info('Checking constraints on service account project.')
       orgpolicy_constraint_check = crm_gs.OrgPolicyCheck()
       orgpolicy_constraint_check.project = op.get(flags.CROSS_PROJECT_ID)
       orgpolicy_constraint_check.constraint = (
@@ -696,7 +695,7 @@ class ServiceAccountExists(runbook.Gateway):
       self.add_child(orgpolicy_constraint_check)
 
       # Check Service Account roles
-      op.info('Checking roles in service account project...')
+      op.info('Checking roles in service account project.')
       sa_permission_check = iam_gs.IamPolicyCheck()
       sa_permission_check.project = op.get(flags.CROSS_PROJECT_ID)
       sa_permission_check.principal = (
@@ -710,7 +709,7 @@ class ServiceAccountExists(runbook.Gateway):
 
       # Check Service Agent Service Account roles
       op.info('Checking service agent service account roles on service account'
-              ' project...')
+              ' project.')
       # project = crm.get_project(op.get(flags.PROJECT_ID))
       service_agent_sa = (
           f'service-{project.number}@dataproc-accounts.iam.gserviceaccount.com')
@@ -727,7 +726,7 @@ class ServiceAccountExists(runbook.Gateway):
 
       # Check Compute Agent Service Account
       op.info('Checking compute agent service account roles on service account'
-              ' project...')
+              ' project.')
       compute_agent_sa = (
           f'service-{project.number}@compute-system.iam.gserviceaccount.com')
       compute_agent_permission_check = iam_gs.IamPolicyCheck()
@@ -756,7 +755,7 @@ class CheckSharedVPCRoles(runbook.Step):
   """
 
   def execute(self):
-    """Verify service account roles based on Shared VPC..."""
+    """Verify service account roles based on Shared VPC."""
     project = crm.get_project(op.get(flags.PROJECT_ID))
     if not op.get(flags.HOST_VPC_PROJECT_ID) == op.get(flags.PROJECT_ID):
       #Check Service Agent Service Account role:
@@ -770,8 +769,7 @@ class CheckSharedVPCRoles(runbook.Step):
       self.add_child(child=service_agent_vpc_permission_check)
 
       #Check Google APIs Service Account
-      op.info(
-          'Checking Google APIs service account roles on host VPC project...')
+      op.info('Checking Google APIs service account roles on host VPC project.')
       api_sa = f'{project.number}@cloudservices.gserviceaccount.com'
       api_vpc_permission_check = iam_gs.IamPolicyCheck()
       api_vpc_permission_check.project = op.get(flags.HOST_VPC_PROJECT_ID)
@@ -808,8 +806,8 @@ class CheckInitScriptFailure(runbook.Step):
     log_entries = logs.realtime_query(
         project_id=op.get(flags.PROJECT_ID),
         filter_str=log_search_filter,
-        start_time_utc=op.get(flags.START_TIME_UTC),
-        end_time_utc=op.get(flags.END_TIME_UTC),
+        start_time_utc=op.get(flags.START_TIME),
+        end_time_utc=op.get(flags.END_TIME),
     )
     if log_entries:
       op.add_failed(

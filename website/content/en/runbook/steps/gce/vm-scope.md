@@ -4,7 +4,7 @@ linkTitle: "Vm Scope"
 weight: 3
 type: docs
 description: >
-  Verifies that a GCE VM has at least one of a list of required access scopes
+  Verifies that a GCE Instance has at least one of a list of required access scopes
 ---
 
 **Product**: [Compute Engine](https://cloud.google.com/compute)\
@@ -22,7 +22,7 @@ Confirms that the VM has the necessary OAuth scope
 
 ### Failure Reason
 
-GCE Instance {vm_name} doesn't have any of the required access scopes:
+GCE Instance {full_resource_path} doesn't have any of the required access scopes:
 {required_access_scope}
 
 ### Failure Remediation
@@ -31,13 +31,13 @@ Access scopes are the legacy method of specifying authorization for your VM inst
 They define the default OAuth scopes used in requests from the gcloud CLI or the client libraries.
 Access scopes don't apply for calls made using gRPC.
 
-Update `{vm_name}` to enable at least one of the following access scopes:
+Update `{full_resource_path}` to enable at least one of the following access scopes:
 {required_access_scope}
 [1] https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes
 
 ### Success Reason
 
-GCE instance {vm_name} has at least one of the required scope:
+GCE instance {full_resource_path} has at least one of the required scope:
 {present_access_scopes}
 
 

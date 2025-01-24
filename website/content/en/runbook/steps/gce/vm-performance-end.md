@@ -4,7 +4,7 @@ linkTitle: "Vm Performance End"
 weight: 3
 type: docs
 description: >
-  Finalizing VM performance diagnostics...
+  Finalize VM performance diagnostics.
 ---
 
 **Product**: [Compute Engine](https://cloud.google.com/compute)\

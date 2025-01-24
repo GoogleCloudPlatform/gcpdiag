@@ -48,7 +48,7 @@ lb/latency: This runbook diagnoses and troubleshoots latency issues with Applica
      [REASON]
      The forwarding rule has an average error rate of 0% in the last 15 minutes. This is less than the threshold value of 1%.
 
-[END]: Finalizing unhealthy backends diagnostics...
+[END]: Finalize unhealthy backends diagnostics.
 
 
 forwarding_rule_name=https-content-rule-working,project_id=gcpdiag-lb3-aaaa,region=global
@@ -124,6 +124,6 @@ lb/latency: This runbook diagnoses and troubleshoots latency issues with Applica
      [REASON]
      The forwarding rule has an average error rate of 0% in the last 15 minutes. This is less than the threshold value of 50.0%.
 
-[END]: Finalizing unhealthy backends diagnostics...
+[END]: Finalize unhealthy backends diagnostics.
 
 

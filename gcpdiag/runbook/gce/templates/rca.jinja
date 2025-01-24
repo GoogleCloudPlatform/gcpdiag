@@ -1,4 +1,3 @@
-
 {% block vm_termination_rca %}
 {% for method in termination_details %}
 {% if method == 'compute.instances.hostError' %}
@@ -66,7 +65,8 @@ operation.producer:"compute.instances.hostError")
 log_id("cloudaudit.googleapis.com/system_event")
 
 Resources:
-[1] https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-reboots#:~:text=Getting%20support.-,Method,compute.instances.hostError,-System%20event
+[1]
+https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-reboots#:~:text=Getting%20support.-,Method,compute.instances.hostError,-System%20event
 {% endif %}
 {% if method == 'compute.instances.preempted' %}
 The following instance(s) were preempted as part of a spot VM normal process.
@@ -117,5 +117,5 @@ or live migrate [1]. Read more about Host Events [2] and how to set your termina
 {% endblock vm_termination_rca %}
 
 {% block vm_termination_success_reason %}
-No GCE VM was terminated between {start_time_utc} and {end_time_utc}
+No GCE Instance was terminated between {start_time_utc} and {end_time_utc}
 {% endblock vm_termination_success_reason %}

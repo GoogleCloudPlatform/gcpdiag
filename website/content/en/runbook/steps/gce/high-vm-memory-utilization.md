@@ -26,7 +26,8 @@ Memory utilization on this VM has reached levels that may compromise its VM appl
 Elevated memory usage can result in slow or unresponsive or termimated applications.
 Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
 Guidance on stopping and changing the machine type can be found here:
-- Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+- Changing machine type:
+https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
 For deeper analysis of memory issues:
 
 Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
@@ -41,7 +42,7 @@ Memory utilization on this VM is within optimal range.
 
 ### Skipped Reason
 
-There are no logs to examine !
+There are no logs to examine!
 
 
 

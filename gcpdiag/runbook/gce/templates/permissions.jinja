@@ -1,3 +1,7 @@
+{% block instances_get_step_message %}
+Verify that the principal has "compute.instance.get" permission.
+{% endblock instances_get_step_message %}
+
 {% block instances_get_failure_reason %}
 The authenticated user {principal} does not have the permissions needed to manage instances.
 The following permissions are required: {permissions_or_roles}.
@@ -13,6 +17,10 @@ https://cloud.google.com/compute/docs/access/iam#connectinginstanceadmin
 {% block instances_get_success_reason %}
 The user {principal} possesses the appropriate {permissions_or_roles} to fetch instance details.
 {% endblock instances_get_success_reason %}
+
+{% block has_os_login_step_message %}
+Verify whether principal has at least one valid OS login role.
+{% endblock has_os_login_step_message %}
 
 {% block has_os_login_success_reason %}
 "{principal}" possesses at least one of the required OS Login roles:
@@ -31,6 +39,10 @@ https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
 https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 {% endblock has_os_login_failure_remediation %}
 
+{% block sa_user_role_step_message %}
+Verify that the principal has "roles/iam.serviceAccountUser" role.
+{% endblock sa_user_role_step_message %}
+
 {% block sa_user_role_failure_reason %}
 "{principal}" does not have the "{missing_permissions_or_roles}" role or custom roles which has the
 constituent permissions required to be able to impersonate the attached service account.
@@ -48,34 +60,49 @@ https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-ro
 required to impersonate the attached service account.
 {% endblock sa_user_role_success_reason %}
 
+{% block iap_role_step_message %}
+Verify that the principal has "roles/iap.tunnelResourceAccessor" role.
+{% endblock iap_role_step_message %}
+
 {% block iap_role_failure_reason %}
-"{principal}" lacks the "{missing_permissions_or_roles}" role necessary to Tunnel through IAP for access.
+principal does not have the "{missing_permissions_or_roles}" role necessary to Tunnel through IAP for access.
 {% endblock iap_role_failure_reason %}
 
 {% block iap_role_failure_remediation %}
-Ensure "{principal}" is granted the "roles/iap.tunnelResourceAccessor" role.
-Resource guide:
-https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
-https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
+Ensure that "{principal}" is assigned the "roles/iap.tunnelResourceAccessor" role to enable the required access.
+
+For detailed guidance, refer to the following resources:
+- [Setting up OS Login](https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users)
+- [Managing access to service
+accounts](https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role)
 {% endblock iap_role_failure_remediation %}
 
 {% block iap_role_success_reason %}
 "{principal}" has the requisite "{present_permissions_or_roles}" role to tunnel through IAP.
 {% endblock iap_role_success_reason %}
 
+{% block console_view_permission_step_message %}
+Verify whether the principal has the "compute.projects.get" permission required to view the console.
+{% endblock console_view_permission_step_message %}
+
 {% block console_view_permission_failure_reason %}
-To access Compute Engine via the Google Cloud console (i.e. SSH-in-browser),
-the user must have "compute.projects.get" permission.
+The "compute.projects.get" permission is required for users to access GCE Instances via the Google
+Cloud console, SSH-in-browser functionality.
 {% endblock console_view_permission_failure_reason %}
 
 {% block console_view_permission_failure_remediation %}
-Review the permissions guide for accessing Compute Engine resources:
-https://cloud.google.com/compute/docs/access/iam#console_permission
+Refer to the [permissions guide](https://cloud.google.com/compute/docs/access/iam#console_permission)
+for detailed steps on granting the necessary permissions to enable access to Compute Engine resources.
 {% endblock console_view_permission_failure_remediation %}
 
 {% block console_view_permission_success_reason %}
-The user is authorized to view the Google Cloud console which will allow SSH-in-browser use case
+{principal} has the necessary {present_permissions_or_roles}, including the "compute.projects.get"
+permission, required to access and use the Google Cloud.
 {% endblock console_view_permission_success_reason %}
+
+{% block can_set_metadata_step_message %}
+Verify that the principal has permission to set instance metadata or common project metadata.
+{% endblock can_set_metadata_step_message %}
 
 {% block can_set_metadata_success_reason %}
 {principal} is authorized to update instance or project metadata, including SSH keys.

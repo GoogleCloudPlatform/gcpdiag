@@ -33,7 +33,7 @@ The expected good value is present within the checked log entry.
 
 ### Uncertain Reason
 
-We are not sure of the outcome manually check this cloud logging
+The outcome could not be determined automatically. Please manually verify the relevant details in [Cloud Logging](https://cloud.google.com/logging).
 
 ### Uncertain Remediation
 

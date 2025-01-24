@@ -57,6 +57,6 @@ gke/logs: Provides a methodical approach to troubleshooting GKE logging issues.
      Project gcpdiag-gke-cluster-autoscaler-rrrr has recently exceeded the following quotas: WriteRequestsPerMinutePerProject.
      [REMEDIATION]
      Please check the project gcpdiag-gke-cluster-autoscaler-rrrr for the Cloud Logging API quotas WriteRequestsPerMinutePerProject which have been reached
-[END]: Finalizing `GKE logs` diagnostics...
+[END]: Finalize `GKE logs` diagnostics.
 
 

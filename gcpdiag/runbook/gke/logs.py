@@ -323,9 +323,9 @@ class LoggingWriteApiQuotaExceeded(runbook.Step):
 
     params = {
         'start_time':
-            op.get(flags.START_TIME_UTC).strftime("d\'%Y/%m/%d-%H:%M:%S'"),
+            op.get(flags.START_TIME).strftime("d\'%Y/%m/%d-%H:%M:%S'"),
         'end_time':
-            op.get(flags.END_TIME_UTC).strftime("d\'%Y/%m/%d-%H:%M:%S'")
+            op.get(flags.END_TIME).strftime("d\'%Y/%m/%d-%H:%M:%S'")
     }
 
     query_results_per_project_id[op.context.project_id] = \
@@ -339,8 +339,8 @@ class LoggingWriteApiQuotaExceeded(runbook.Step):
     if len(query_results_per_project_id[project]) == 0:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
-                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+                                   START_TIME_UTC=op.get(flags.START_TIME),
+                                   END_TIME_UTC=op.get(flags.END_TIME)))
     else:
       exceeded_quotas = []
       for i in query_results_per_project_id[project].values():
@@ -372,7 +372,7 @@ class LogsEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing `GKE logs` diagnostics..."""
+    """Finalize `GKE logs` diagnostics."""
     response = op.prompt(
         kind=op.CONFIRMATION,
         message='Are you satisfied with the `GKE logs` RCA performed?')

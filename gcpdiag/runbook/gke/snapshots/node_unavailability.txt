@@ -64,6 +64,6 @@ gke/node-unavailability: Identifies the reasons for a GKE node being unavailable
      For more details about node upgrades please consult the documentation:
      https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-upgrades
 
-[END]: Finalizing `Node Unavailability` diagnostics...
+[END]: Finalize `Node Unavailability` diagnostics.
 
 

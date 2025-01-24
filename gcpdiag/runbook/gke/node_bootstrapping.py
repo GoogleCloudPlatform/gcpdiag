@@ -66,8 +66,8 @@ def get_node_instance(project, location, node):
 
 def local_realtime_query(filter_str):
   result = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
-                               start_time_utc=op.get(flags.START_TIME_UTC),
-                               end_time_utc=op.get(flags.END_TIME_UTC),
+                               start_time_utc=op.get(flags.START_TIME),
+                               end_time_utc=op.get(flags.END_TIME),
                                filter_str=filter_str)
   return result
 
@@ -159,13 +159,13 @@ name as well to be able to properly filter events in the logging query.',
           'required':
               False
       },
-      flags.START_TIME_UTC: {
+      flags.START_TIME: {
           'type':
               datetime,
           'help':
               'The start window to investigate vm termination. Format: YYYY-MM-DDTHH:MM:SSZ'
       },
-      flags.END_TIME_UTC: {
+      flags.END_TIME: {
           'type':
               datetime,
           'help':
@@ -204,8 +204,8 @@ class NodeBootstrappingStart(runbook.StartStep):
     node = op.get(flags.NODE)
     name = op.get(flags.NAME)
     project_path = crm.get_project(project)
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
+    start_time_utc = op.get(flags.START_TIME)
+    end_time_utc = op.get(flags.END_TIME)
 
     # check if there are clusters in the project
     if name:
@@ -284,8 +284,8 @@ class NodeInsertCheck(runbook.Step):
     node = op.get(flags.NODE)
     name = op.get(flags.NAME)
     project_path = crm.get_project(project)
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
+    start_time_utc = op.get(flags.START_TIME)
+    end_time_utc = op.get(flags.END_TIME)
 
     if nodepool and name:
       if not node:
@@ -334,12 +334,12 @@ class NodeInsertCheck(runbook.Step):
             project_path,
             reason=
             ('Node parameter provided together with nodepool parameter, proceeding with Node '
-             'Registration Checkout output verification ...'))
+             'Registration Checkout output verification .'))
     else:
       op.add_skipped(
           project_path,
           reason=
-          ('No nodepool or GKE cluster name provided, skipping this step ... \n'
+          ('No nodepool or GKE cluster name provided, skipping this step . \n'
            'Please provide nodepool name (-p nodepool=<nodepoolname>) and GKE cluster name '
            '(-p name=<gke-cluster-name>) if you see issues with nodes not appearing in the '
            'nodepool.'))
@@ -427,12 +427,12 @@ class NodeRegistrationSuccess(runbook.Step):
         # get the offset-aware datetime instead of offset-naive
         node_start_time = datetime.fromisoformat(str(
             node_vm.creation_timestamp)).replace(tzinfo=timezone.utc)
-        if node_start_time < op.get(flags.START_TIME_UTC):
+        if node_start_time < op.get(flags.START_TIME):
           op.add_failed(
               project_path,
               reason=
               (f'The node {node} in the location {location} booted at {node_start_time} before '
-               f'the provided START_TIME_UTC {op.get(flags.START_TIME_UTC)} '
+               f'the provided START_TIME_UTC {op.get(flags.START_TIME)} '
                '(default is 8 hours from now)'),
               remediation=
               ('Please provide the START_TIME_UTC parameter (-p start_time_utc) with a date '
@@ -527,8 +527,8 @@ class NodeRegistrationSuccess(runbook.Step):
                                 op.UNCERTAIN_REASON,
                                 NODE=node,
                                 LOCATION=location,
-                                START_TIME_UTC=op.get(flags.START_TIME_UTC),
-                                END_TIME_UTC=op.get(flags.END_TIME_UTC)),
+                                START_TIME_UTC=op.get(flags.START_TIME),
+                                END_TIME_UTC=op.get(flags.END_TIME)),
                             remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION,
                                                     NODE=node))
               return
@@ -588,7 +588,7 @@ class NodeRegistrationSuccess(runbook.Step):
       op.add_skipped(
           project_path,
           reason=
-          ('No node name provided, skipping this step ...\n'
+          ('No node name provided, skipping this step .\n'
            'Please provide node name (-p node=<nodename>) if the node appears in the nodepool, '
            'but fails registration.\n'))
 
@@ -604,7 +604,7 @@ class NodeBootstrappingEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing `GKE Node Bootstrapping` diagnostics..."""
+    """Finalize `GKE Node Bootstrapping` diagnostics."""
     response = op.prompt(
         kind=op.CONFIRMATION,
         message='Are you satisfied with the `GKE Node Bootstrapping` analysis?')

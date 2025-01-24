@@ -100,7 +100,7 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
      [REMEDIATION]
      DNS validation automatically checks your domain's A and AAAA records against your Google Cloud load balancer's IP address. This process includes an automatic retry mechanism with increasing wait times. If you recently attached cert1 to a target proxy or the target proxy to forwarding rule, validation could take up to 24 hours to complete.
 
-[END]: Finalizing SSL Certificate diagnostics...
+[END]: Finalize SSL Certificate diagnostics.
 
 
 certificate_name=cert2,project_id=gcpdiag-lb3-aaaa
@@ -196,7 +196,7 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
      [REMEDIATION]
      DNS validation automatically checks your domain's A and AAAA records against your Google Cloud load balancer's IP address. This process includes an automatic retry mechanism with increasing wait times. If you recently attached cert2 to a target proxy or the target proxy to forwarding rule, validation could take up to 24 hours to complete.
 
-[END]: Finalizing SSL Certificate diagnostics...
+[END]: Finalize SSL Certificate diagnostics.
 
 
 certificate_name=cert3,project_id=gcpdiag-lb3-aaaa
@@ -291,7 +291,7 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
      [REMEDIATION]
      DNS validation automatically checks your domain's A and AAAA records against your Google Cloud load balancer's IP address. This process includes an automatic retry mechanism with increasing wait times. If you recently attached cert3 to a target proxy or the target proxy to forwarding rule, validation could take up to 24 hours to complete.
 
-[END]: Finalizing SSL Certificate diagnostics...
+[END]: Finalize SSL Certificate diagnostics.
 
 
 certificate_name=unused-cert4,project_id=gcpdiag-lb3-aaaa
@@ -351,6 +351,6 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
      [REMEDIATION]
      Please follow the documentation to attach the certificate to a target proxy: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#load-balancer
 
-[END]: Finalizing SSL Certificate diagnostics...
+[END]: Finalize SSL Certificate diagnostics.
 
 

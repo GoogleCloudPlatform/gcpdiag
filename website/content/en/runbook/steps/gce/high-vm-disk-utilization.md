@@ -31,11 +31,12 @@ https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_
 
 ### Success Reason
 
-The VM's disk space usage is within optimal levels.
+The boot disk space usage for the Compute Engine VM {full_resource_path}, is within optimal levels.
 
 ### Skipped Reason
 
-There are no logs to examine !
+No Google Cloud Ops Agent installed on the VM, making it difficult to retrieve disk utilization data via metrics.
+Falling back to checking for filesystem utilization-related messages in the serial logs.
 
 
 

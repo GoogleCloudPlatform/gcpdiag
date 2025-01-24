@@ -51,8 +51,8 @@ gcpdiag runbook dataproc/cluster-creation \
   -p network=value \
   -p subnetwork=value \
   -p internal_ip_only=value \
-  -p start_time_utc=value \
-  -p end_time_utc=value \
+  -p start_time=value \
+  -p end_time=value \
   -p cross_project=value \
   -p host_vpc_project=value
 ```
@@ -73,8 +73,8 @@ gcpdiag runbook dataproc/cluster-creation \
 | `network` | False | None | str | Dataproc cluster Network |
 | `subnetwork` | False | None | str | Dataproc cluster Subnetwork |
 | `internal_ip_only` | False | None | bool | Checks if the Dataproc cluster has been created with only Internal IP |
-| `start_time_utc` | False | None | datetime | Start time of the issue |
-| `end_time_utc` | False | None | datetime | End time of the issue |
+| `start_time` | False | None | datetime | Start time of the issue |
+| `end_time` | False | None | datetime | End time of the issue |
 | `cross_project` | False | None | str | Cross Project ID, where service account is located if it is not in the same project as the Dataproc cluster |
 | `host_vpc_project` | False | None | str | Project ID of the Shared VPC network |
 

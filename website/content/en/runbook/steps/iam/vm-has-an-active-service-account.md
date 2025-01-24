@@ -45,19 +45,15 @@ Service account: {sa} is currently in active
 
 ### Uncertain Reason
 
-Can't find service account {sa} in project {project_id}
+Can't find service account {sa}
 
 ### Uncertain Remediation
 
-We couldn't automatically detect service account {sa} and assert if it is active. i.e not
-disabled or deleted.
+The service account `{sa}` could not be automatically detected or validated for its status (e.g., active, disabled, or deleted).
 
-Follow [1] to manually list and check the service account if it has been deleted or disabled.
-
-Follow [2] for more details or deleted service accounts and [3] to undelete if feasible.
-[1] https://cloud.google.com/iam/docs/service-accounts-list-edit#listing
-[2] https://cloud.google.com/iam/docs/service-accounts-delete-undelete#deleting
-[3] https://cloud.google.com/iam/docs/service-accounts-delete-undelete#undeleting
+- To manually verify the service account, refer to the [documentation for listing and checking service accounts](https://cloud.google.com/iam/docs/service-accounts-list-edit#listing).
+- For information on deleted service accounts, see [deleted service account details](https://cloud.google.com/iam/docs/service-accounts-delete-undelete#deleting).
+- If the service account was deleted, review [how to undelete a service account](https://cloud.google.com/iam/docs/service-accounts-delete-undelete#undeleting) to recover it if feasible.
 
 
 

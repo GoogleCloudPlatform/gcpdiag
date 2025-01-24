@@ -72,11 +72,11 @@ class OpsAgent(runbook.DiagnosticTree):
           'type': str,
           'help': 'Zone of the GCE instance running the Ops Agent',
       },
-      flags.START_TIME_UTC: {
+      flags.START_TIME: {
           'type': datetime,
           'help': 'Start time of the issue',
       },
-      flags.END_TIME_UTC: {
+      flags.END_TIME: {
           'type': datetime,
           'help': 'End time of the issue',
       },
@@ -124,7 +124,7 @@ class OpsAgentStart(runbook.StartStep):
   """
 
   def execute(self):
-    """Verifying context and parameters required for Ops Agent runbook checks"""
+    """Verify context and parameters required for Ops Agent runbook checks"""
     project = crm.get_project(op.get(flags.PROJECT_ID))
 
     try:
@@ -175,7 +175,7 @@ class VmHasAServiceAccount(runbook.Step):
   template = 'vm_attributes::service_account_exists'
 
   def execute(self):
-    """Verifying Ops Agent has a service account..."""
+    """Verify Ops Agent has a service account."""
     instance = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                                 zone=op.get(flags.ZONE),
                                 instance_name=op.get(flags.NAME))
@@ -185,12 +185,12 @@ class VmHasAServiceAccount(runbook.Step):
         op.put(flags.SERVICE_ACCOUNT, instance.service_account)
         op.add_ok(instance,
                   reason=op.prep_msg(op.SUCCESS_REASON,
-                                     vm_name=instance.name,
+                                     full_resource_path=instance.full_path,
                                      sa=instance.service_account))
       else:
         op.add_failed(instance,
                       reason=op.prep_msg(op.FAILURE_REASON,
-                                         vm_name=instance.name),
+                                         full_resource_path=instance.full_path),
                       remediation=op.prep_msg(op.FAILURE_REMEDIATION))
       return
 
@@ -202,13 +202,13 @@ class VmHasAServiceAccount(runbook.Step):
           op.put(flags.SERVICE_ACCOUNT, sa.email)
           op.add_ok(instance,
                     reason=op.prep_msg(op.SUCCESS_REASON,
-                                       vm_name=instance.name,
+                                       full_resource_path=instance.full_path,
                                        sa=sa.email))
           break
     elif not op.get(GAC_SERVICE_ACCOUNT) and not instance.service_account:
       op.add_failed(instance,
                     reason=op.prep_msg(op.FAILURE_REASON,
-                                       vm_name=instance.name),
+                                       full_resource_path=instance.full_path),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
 
 
@@ -254,8 +254,8 @@ class InvestigateLoggingMonitoring(runbook.Gateway):
       logging_subagent_check.zone = op.get(flags.ZONE)
       logging_subagent_check.instance_name = op.get(flags.NAME)
       logging_subagent_check.instance_id = op.get(flags.ID)
-      logging_subagent_check.start_time_utc = op.get(flags.START_TIME_UTC)
-      logging_subagent_check.end_time_utc = op.get(flags.END_TIME_UTC)
+      logging_subagent_check.start_time_utc = op.get(flags.START_TIME)
+      logging_subagent_check.end_time_utc = op.get(flags.END_TIME)
       logging_subagent_check.check_logging = True
       logging_subagent_check.check_metrics = False
       logging_access_scope.add_child(logging_subagent_check)
@@ -292,8 +292,8 @@ class InvestigateLoggingMonitoring(runbook.Gateway):
       metric_subagent_check.zone = op.get(flags.ZONE)
       metric_subagent_check.instance_name = op.get(flags.NAME)
       metric_subagent_check.instance_id = op.get(flags.ID)
-      metric_subagent_check.start_time_utc = op.get(flags.START_TIME_UTC)
-      metric_subagent_check.end_time_utc = op.get(flags.END_TIME_UTC)
+      metric_subagent_check.start_time_utc = op.get(flags.START_TIME)
+      metric_subagent_check.end_time_utc = op.get(flags.END_TIME)
       metric_subagent_check.check_logging = False
       metric_subagent_check.check_metrics = True
       monitoring_access_scope.add_child(metric_subagent_check)
@@ -307,7 +307,7 @@ class CheckSerialPortLogging(runbook.CompositeStep):
   """
 
   def execute(self):
-    """Verifying GCP config required for serial port logging with ops agent"""
+    """Verify GCP config required for serial port logging with ops agent"""
     serial_logging_orgpolicy_check = crm_gs.OrgPolicyCheck()
     serial_logging_orgpolicy_check.constraint = 'constraints/compute.disableSerialPortLogging'
     serial_logging_orgpolicy_check.is_enforced = False
@@ -333,7 +333,7 @@ class OpsAgentEnd(runbook.EndStep):
     pass
 
   def execute(self):
-    """Finalizing Ops agent checks"""
+    """Finalize Ops agent checks"""
     serial_log_entries = None
     has_expected_opsagent_logs = False
     ops_agent_uptime = None
@@ -346,7 +346,7 @@ class OpsAgentEnd(runbook.EndStep):
                         resource.labels.instance_id="{}" AND
                         "LogPingOpsAgent"'''.format(op.get(flags.PROJECT_ID),
                                                     op.get(flags.ID)),
-          start_time_utc=op.get(flags.END_TIME_UTC),
+          start_time_utc=op.get(flags.END_TIME),
           end_time_utc=datetime.now())
       if serial_log_entries:
         has_expected_opsagent_logs = True

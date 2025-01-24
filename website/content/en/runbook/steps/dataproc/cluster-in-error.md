@@ -14,8 +14,7 @@ description: >
 
 This investigation is needed to identify if the issue is related to cluster
   creation. The issue happens only when the cluster is not able
-  to provision successfully and ends up in ERROR state. In this runbook we don't
-  investigate RUNNING clusters.
+  to provision successfully and ends up in ERROR state.
 
 
 

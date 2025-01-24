@@ -19,14 +19,9 @@ gce/vm-performance:  Google Compute Engine VM performance checks
     - Check for Live Migrations
     - Usual Error checks in Serial console logs
   
-[START]: Fetching VM details
-[AUTOMATED STEP]: Verifying VM is in the RUNNING state...
-
-   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [OK]
-     [REASON]
-     The GCE VM faulty-linux-ssh is in the expected state: RUNNING.
-
-[AUTOMATED STEP]: Verifying VM CPU utilization is within optimal levels
+[START]: Verify GCE Instance is in a "RUNNING" state.
+[AUTOMATED STEP]: Verify GCE Instance is in a "RUNNING" state.
+[AUTOMATED STEP]: Verify VM CPU utilization is within optimal levels.
 
    - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
      [REASON]
@@ -51,7 +46,7 @@ gce/vm-performance:  Google Compute Engine VM performance checks
    - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
      [REASON]
      CPU for the VM faulty-linux-ssh is over committed beyond acceptable limits: 0 ms/s
-[AUTOMATED STEP]: Verifying VM memory utilization is within optimal levels...
+[AUTOMATED STEP]: Verify VM memory utilization is within optimal levels.
 
    - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
      [REASON]
@@ -61,7 +56,8 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      Elevated memory usage can result in slow or unresponsive or termimated applications.
      Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
      Guidance on stopping and changing the machine type can be found here:
-     - Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+     - Changing machine type:
+     https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
      For deeper analysis of memory issues:
 
      Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
@@ -70,17 +66,52 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      Or connect via the Serial Console if SSH is not available to mitigate the issue.
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
-[AUTOMATED STEP]: Checking if there are any memory related errors in Serial logs
+[AUTOMATED STEP]: Check for memory related errors in VM serial logs.
 
    - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [UNCERTAIN]
      [REASON]
-     We did not find any Memory related errors in Serial console logs
+     Unable to investigate the high memory utilization error logs, likely due to the absence of logs.
+     However, this does not eliminate the possibility of high memory usage.
+
+     You may manually verify memory utilization on the Guest OS side a likely cause.
 
      [REMEDIATION]
-     You may check if VM is facing high memory utilisation from GuestOS side using `free -m`
-     or `cat /proc/meminfo` commands.
+     1. Manually investigate by accessing the Guest OS to Analyze Memory Usage:
+     * Identify processes with consistently high memory consumption:
+     - Run `top` and press "M" to sort processes by memory usage.
+     - Alternatively, use the command:
+     ```bash
+     ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5
+     ```
+     * Focus on processes with recent spikes or consistently high memory usage.
+     * If SSH access is unavailable, consider [troubleshooting via the serial
+     console](https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console).
 
-[AUTOMATED STEP]: Checking if instance disks are healthy
+     2. Review Application or Configuration Changes:
+     * Investigate if recent deployments, updates, or configuration changes correlate with increased memory usage.
+
+     3. Resolve Identified Bottlenecks:
+     * For applications causing excessive memory usage:
+     - Optimize their configuration or update them to a stable version.
+     - Explore alternatives if optimization is insufficient.
+     * Evaluate scaling up resources if the high memory usage results from legitimate application demands.
+
+     4. Increase Instance Memory if Necessary:
+     * If additional memory is required for the application:
+     - Stop the VM and [change its machine
+     type](https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud).
+     - Consult the [machine type documentation](https://cloud.google.com/compute/docs/machine-types) to select an appropriate
+     configuration.
+
+     **Note:**
+     Non Google provided Application-specific issues may fall outside support scope. Collaborate with
+     relevant application teams for further investigation.
+     Refer to the [Google Cloud Platform support
+     policy](https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope)
+     for details, including [out-of-scope
+     items](https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support).
+
+[AUTOMATED STEP]: Verify instance disks are healthy
 
    - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
      [REASON]
@@ -105,7 +136,7 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      please don't hesitate to reach out to Google Cloud Support by creating a support case.
      They'll be happy to investigate further and assist you.
 
-[AUTOMATED STEP]: Checking if VM's Boot disk space utilization is within optimal levels.
+[AUTOMATED STEP]: Check if VM's boot disk space utilization is within optimal levels.
 
    - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
      [REASON]
@@ -118,45 +149,64 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      Follow the guide to increase disk size:
      https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
 
-[AUTOMATED STEP]: Checking if any slow Disk operations related errors in Serial console logs
+[AUTOMATED STEP]: Verify any slow Disk operations related errors in Serial console logs
 
    - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [UNCERTAIN]
      [REASON]
-     We did not find any slow Disk operations related errors in Serial console logs
+     No error messages related to disk latency were found in the serial console logs.
+     This does not rule out disk performance issues.
 
      [REMEDIATION]
+     There can be multiple reasons which can cause Slow Disk IOs:
+
+     - CPU Starvation - Small instances(with lesser CPUs) may not have enough CPU to serve all I/Os inflight.
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#cpu_and_memory_performance
+
+     - Network Throttling - High sent/received network traffic can cause network throttling that impacts disk operations.
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#network_performance
+
+     - Insufficient Machine Resources - If your machine's IOPS and throughput limts are not enought to serve your workloads,
+     this can also cause CPU or Disk IOPS/throughput Starvation.
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#storage_performance
+
+     - Application and GuestOS Operations - Unmanaged and untested application workloads can cause the high influx of IOs
+     to the disk and cause IO operations to be queued, causing throttling at disk and CPU levels.
+
+     To fix this issue:
+     - Please optmize your application workloads.
+     - If needed, please add more resources(CPU, Memory) to the VM.
+     - Please optmize your Disk performance -
+     https://cloud.google.com/compute/docs/disks/optimizing-pd-performance
+     - If needed, please change your disk type to get better Disk IOPS/throughput limits -
+     https://cloud.google.com/compute/docs/disks/modify-persistent-disk#disk_type
 
 
-[AUTOMATED STEP]: Checking if any Filesystem corruption related errors in Serial console logs
+[AUTOMATED STEP]: Verify any Filesystem corruption related errors in Serial console logs
 
    - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
      [REASON]
      Possibe filesystem corruption detected.
 
-     The patterns we looked for :
-         'Corruption of in-memory data detected. Shutting down filesystem',
-         'Corruption of in-memory data detected', 'warning: mounting fs with errors',
-         'Failed to mount /',
-         'A stop job is running for Security \.\.\..* Service ',
-         'I/O Error Detected. Shutting down filesystem',
-         'metadata I/O error in'
+     The patterns used:
+     'Corruption of in-memory data detected. Shutting down filesystem',
+     'Corruption of in-memory data detected', 'warning: mounting fs with errors',
+     'Failed to mount /',
+     'A stop job is running for Security \.\.\..* Service ',
+     'I/O Error Detected. Shutting down filesystem',
+     'metadata I/O error in'
 
      [REMEDIATION]
-     To fix the filesystem correuption, you may use gce-rescue[1] available in cloud shell to
-     rescue faulty VMs or go via manual mathod[2] to repair the filesystem.
+     To resolve filesystem corruption, admins can use [gce-rescue](https://github.com/GoogleCloudPlatform/gce-rescue),
+     available in Cloud Shell, to rescue faulty VMs. Alternatively, you can follow the
+     [manual method](https://cloud.google.com/compute/docs/troubleshooting/rescue-vm) to repair the filesystem.
 
-     More articles you may refer:
-     https://access.redhat.com/solutions/1750923
+     Additional resources for reference:
+     - [Red Hat article on filesystem repair](https://access.redhat.com/solutions/1750923)
+     - [Video guide on rescuing VMs](https://www.youtube.com/watch?v=oD6IFpjEtEw)
 
+     These resources provide detailed steps for diagnosing and resolving filesystem issues.
 
-     [1]
-     https://github.com/GoogleCloudPlatform/gce-rescue
-
-     [2]
-     https://cloud.google.com/compute/docs/troubleshooting/rescue-vm ,
-     https://www.youtube.com/watch?v=oD6IFpjEtEw
-
-[AUTOMATED STEP]: Checking if Instance's Disk Avg IO Latency is within optimal limits
+[AUTOMATED STEP]: Verify Instance's Disk Avg IO Latency is within optimal limits
 
    - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
      [REASON]
@@ -173,22 +223,22 @@ gce/vm-performance:  Google Compute Engine VM performance checks
 
      Potential Bottlenecks -
      - Disk Type: To optimize disk performance, ensure your disk type is appropriate
-       for your workload and provides acceptable latency for your system architecture.
-       Choosing the right disk type can significantly impact performance.
-       https://cloud.google.com/compute/docs/disks
+     for your workload and provides acceptable latency for your system architecture.
+     Choosing the right disk type can significantly impact performance.
+     https://cloud.google.com/compute/docs/disks
 
      - Workload: The nature of your workload also influences latency. Workloads with
-       many small, random I/O operations will generally have higher latency than those
-       with sequential I/O
+     many small, random I/O operations will generally have higher latency than those
+     with sequential I/O
 
      Optimize Disk Usage:
      - Reduce I/O Operations: Optimize your applications and database queries to minimize
-       the number of disk I/O operations.
+     the number of disk I/O operations.
      - Increase I/O Request Size: Larger I/O requests can be more efficient than many small
-       ones. Consider adjusting your application or database settings to increase the I/O
-       request size.
+     ones. Consider adjusting your application or database settings to increase the I/O
+     request size.
      - Caching: Implement caching mechanisms to reduce the need to access the disk for
-       frequently used data.
+     frequently used data.
 
      Choose the Right Disk Type with lesser IO Latency - https://cloud.google.com/compute/docs/disks
 
@@ -197,7 +247,7 @@ gce/vm-performance:  Google Compute Engine VM performance checks
 
      Please don't hesitate to reach out to Google Cloud Support if issue is not resolved.
 
-[AUTOMATED STEP]: Checking if live migrations happened for the instance
+[AUTOMATED STEP]: Verify live migrations happened for the instance
 [INFO]: 
 
 Live Migration Detected at 2021/11/24 16:29:21, Checking further
@@ -233,15 +283,15 @@ Live Migration Detected at 2021/11/24 16:35:10, Checking further
 Live Migration Detected at 2021/11/24 16:35:22, Checking further
 
 
-[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
-[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
-[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
-[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
-[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
-[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
-[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
-[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
-[END]: Finalizing VM performance diagnostics...
+[AUTOMATED STEP]: Verify the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Verify the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Verify the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Verify the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Verify the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Verify the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Verify the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Verify the Disk IOPS/Throughput usage is within optimal limits
+[END]: Finalize VM performance diagnostics.
 
 
 name=faulty-windows-ssh,project_id=gcpdiag-gce-vm-performance,zone=europe-west2-a
@@ -265,41 +315,24 @@ gce/vm-performance:  Google Compute Engine VM performance checks
     - Check for Live Migrations
     - Usual Error checks in Serial console logs
   
-[START]: Fetching VM details
+[START]: Verify GCE Instance is in a "RUNNING" state.
 
    - gcpdiag-gce-vm-performance/faulty-windows-ssh                        [FAIL]
      [REASON]
-     The GCE VM faulty-windows-ssh is in an undesired state: TERMINATED.
+     The GCE Instance projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances/faulty-windows-ssh is not in the TERMINATED.
 
      [REMEDIATION]
-     This step failed because GCE Virtual Machine faulty-windows-ssh is expected to be in a RUNNING state:
+     Restart VM projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances/faulty-windows-ssh and ensure VM lifecycle transitions from TERMINATED to RUNNING.
 
-     To initiate the lifecycle transition from TERMINATED to RUNNING state follow guide [1]
+     You can [restart a compute instance](https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm)
+     with this guide.
 
-     If you encounter any difficulties during the startup process, consult the troubleshooting
-     documentation to identify and resolve potential startup issues [2]
-     Resources:
-     [1] https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm
-     [2] https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting
+     If you encounter any difficulties starting the VM, consult the [VM Startup troubleshooting
+     documentation](https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting)
+     to identify and resolve potential startup issues.
 
-[AUTOMATED STEP]: Verifying VM is in the RUNNING state...
-
-   - gcpdiag-gce-vm-performance/faulty-windows-ssh                        [FAIL]
-     [REASON]
-     The GCE VM faulty-windows-ssh is in an undesired state: TERMINATED.
-
-     [REMEDIATION]
-     This step failed because GCE Virtual Machine faulty-windows-ssh is expected to be in a RUNNING state:
-
-     To initiate the lifecycle transition from TERMINATED to RUNNING state follow guide [1]
-
-     If you encounter any difficulties during the startup process, consult the troubleshooting
-     documentation to identify and resolve potential startup issues [2]
-     Resources:
-     [1] https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm
-     [2] https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting
-
-[AUTOMATED STEP]: Verifying VM CPU utilization is within optimal levels
+[AUTOMATED STEP]: Verify GCE Instance is in a "RUNNING" state.
+[AUTOMATED STEP]: Verify VM CPU utilization is within optimal levels.
 
    - gcpdiag-gce-vm-performance/faulty-windows-ssh                        [FAIL]
      [REASON]
@@ -324,7 +357,7 @@ gce/vm-performance:  Google Compute Engine VM performance checks
    - gcpdiag-gce-vm-performance/faulty-windows-ssh                        [FAIL]
      [REASON]
      CPU for the VM faulty-windows-ssh is over committed beyond acceptable limits: 0 ms/s
-[AUTOMATED STEP]: Verifying VM memory utilization is within optimal levels...
+[AUTOMATED STEP]: Verify VM memory utilization is within optimal levels.
 
    - gcpdiag-gce-vm-performance/faulty-windows-ssh                        [FAIL]
      [REASON]
@@ -334,7 +367,8 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      Elevated memory usage can result in slow or unresponsive or termimated applications.
      Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
      Guidance on stopping and changing the machine type can be found here:
-     - Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+     - Changing machine type:
+     https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
      For deeper analysis of memory issues:
 
      Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
@@ -343,17 +377,52 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      Or connect via the Serial Console if SSH is not available to mitigate the issue.
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
-[AUTOMATED STEP]: Checking if there are any memory related errors in Serial logs
+[AUTOMATED STEP]: Check for memory related errors in VM serial logs.
 
    - gcpdiag-gce-vm-performance/faulty-windows-ssh                        [UNCERTAIN]
      [REASON]
-     We did not find any Memory related errors in Serial console logs
+     Unable to investigate the high memory utilization error logs, likely due to the absence of logs.
+     However, this does not eliminate the possibility of high memory usage.
+
+     You may manually verify memory utilization on the Guest OS side a likely cause.
 
      [REMEDIATION]
-     You may check if VM is facing high memory utilisation from GuestOS side using `free -m`
-     or `cat /proc/meminfo` commands.
+     1. Manually investigate by accessing the Guest OS to Analyze Memory Usage:
+     * Identify processes with consistently high memory consumption:
+     - Run `top` and press "M" to sort processes by memory usage.
+     - Alternatively, use the command:
+     ```bash
+     ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5
+     ```
+     * Focus on processes with recent spikes or consistently high memory usage.
+     * If SSH access is unavailable, consider [troubleshooting via the serial
+     console](https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console).
 
-[AUTOMATED STEP]: Checking if instance disks are healthy
+     2. Review Application or Configuration Changes:
+     * Investigate if recent deployments, updates, or configuration changes correlate with increased memory usage.
+
+     3. Resolve Identified Bottlenecks:
+     * For applications causing excessive memory usage:
+     - Optimize their configuration or update them to a stable version.
+     - Explore alternatives if optimization is insufficient.
+     * Evaluate scaling up resources if the high memory usage results from legitimate application demands.
+
+     4. Increase Instance Memory if Necessary:
+     * If additional memory is required for the application:
+     - Stop the VM and [change its machine
+     type](https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud).
+     - Consult the [machine type documentation](https://cloud.google.com/compute/docs/machine-types) to select an appropriate
+     configuration.
+
+     **Note:**
+     Non Google provided Application-specific issues may fall outside support scope. Collaborate with
+     relevant application teams for further investigation.
+     Refer to the [Google Cloud Platform support
+     policy](https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope)
+     for details, including [out-of-scope
+     items](https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support).
+
+[AUTOMATED STEP]: Verify instance disks are healthy
 
    - gcpdiag-gce-vm-performance/faulty-windows-ssh                        [FAIL]
      [REASON]
@@ -378,7 +447,7 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      please don't hesitate to reach out to Google Cloud Support by creating a support case.
      They'll be happy to investigate further and assist you.
 
-[AUTOMATED STEP]: Checking if VM's Boot disk space utilization is within optimal levels.
+[AUTOMATED STEP]: Check if VM's boot disk space utilization is within optimal levels.
 
    - gcpdiag-gce-vm-performance/faulty-windows-ssh                        [FAIL]
      [REASON]
@@ -391,25 +460,56 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      Follow the guide to increase disk size:
      https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
 
-[AUTOMATED STEP]: Checking if any slow Disk operations related errors in Serial console logs
+[AUTOMATED STEP]: Verify any slow Disk operations related errors in Serial console logs
 
    - gcpdiag-gce-vm-performance/faulty-windows-ssh                        [UNCERTAIN]
      [REASON]
-     We did not find any slow Disk operations related errors in Serial console logs
+     No error messages related to disk latency were found in the serial console logs.
+     This does not rule out disk performance issues.
 
      [REMEDIATION]
+     There can be multiple reasons which can cause Slow Disk IOs:
+
+     - CPU Starvation - Small instances(with lesser CPUs) may not have enough CPU to serve all I/Os inflight.
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#cpu_and_memory_performance
+
+     - Network Throttling - High sent/received network traffic can cause network throttling that impacts disk operations.
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#network_performance
+
+     - Insufficient Machine Resources - If your machine's IOPS and throughput limts are not enought to serve your workloads,
+     this can also cause CPU or Disk IOPS/throughput Starvation.
+     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#storage_performance
+
+     - Application and GuestOS Operations - Unmanaged and untested application workloads can cause the high influx of IOs
+     to the disk and cause IO operations to be queued, causing throttling at disk and CPU levels.
+
+     To fix this issue:
+     - Please optmize your application workloads.
+     - If needed, please add more resources(CPU, Memory) to the VM.
+     - Please optmize your Disk performance -
+     https://cloud.google.com/compute/docs/disks/optimizing-pd-performance
+     - If needed, please change your disk type to get better Disk IOPS/throughput limits -
+     https://cloud.google.com/compute/docs/disks/modify-persistent-disk#disk_type
 
 
-[AUTOMATED STEP]: Checking if any Filesystem corruption related errors in Serial console logs
+[AUTOMATED STEP]: Verify any Filesystem corruption related errors in Serial console logs
 
    - gcpdiag-gce-vm-performance/faulty-windows-ssh                        [UNCERTAIN]
      [REASON]
-     We did not find any Filesystem corruption related errors in Serial console logs
+     No evidence Filesystem corruption errors present in the serial logs.
 
      [REMEDIATION]
+     To resolve filesystem corruption, admins can use [gce-rescue](https://github.com/GoogleCloudPlatform/gce-rescue),
+     available in Cloud Shell, to rescue faulty VMs. Alternatively, you can follow the
+     [manual method](https://cloud.google.com/compute/docs/troubleshooting/rescue-vm) to repair the filesystem.
 
+     Additional resources for reference:
+     - [Red Hat article on filesystem repair](https://access.redhat.com/solutions/1750923)
+     - [Video guide on rescuing VMs](https://www.youtube.com/watch?v=oD6IFpjEtEw)
 
-[AUTOMATED STEP]: Checking if Instance's Disk Avg IO Latency is within optimal limits
+     These resources provide detailed steps for diagnosing and resolving filesystem issues.
+
+[AUTOMATED STEP]: Verify Instance's Disk Avg IO Latency is within optimal limits
 
    - gcpdiag-gce-vm-performance/faulty-windows-ssh                        [FAIL]
      [REASON]
@@ -426,22 +526,22 @@ gce/vm-performance:  Google Compute Engine VM performance checks
 
      Potential Bottlenecks -
      - Disk Type: To optimize disk performance, ensure your disk type is appropriate
-       for your workload and provides acceptable latency for your system architecture.
-       Choosing the right disk type can significantly impact performance.
-       https://cloud.google.com/compute/docs/disks
+     for your workload and provides acceptable latency for your system architecture.
+     Choosing the right disk type can significantly impact performance.
+     https://cloud.google.com/compute/docs/disks
 
      - Workload: The nature of your workload also influences latency. Workloads with
-       many small, random I/O operations will generally have higher latency than those
-       with sequential I/O
+     many small, random I/O operations will generally have higher latency than those
+     with sequential I/O
 
      Optimize Disk Usage:
      - Reduce I/O Operations: Optimize your applications and database queries to minimize
-       the number of disk I/O operations.
+     the number of disk I/O operations.
      - Increase I/O Request Size: Larger I/O requests can be more efficient than many small
-       ones. Consider adjusting your application or database settings to increase the I/O
-       request size.
+     ones. Consider adjusting your application or database settings to increase the I/O
+     request size.
      - Caching: Implement caching mechanisms to reduce the need to access the disk for
-       frequently used data.
+     frequently used data.
 
      Choose the Right Disk Type with lesser IO Latency - https://cloud.google.com/compute/docs/disks
 
@@ -450,7 +550,7 @@ gce/vm-performance:  Google Compute Engine VM performance checks
 
      Please don't hesitate to reach out to Google Cloud Support if issue is not resolved.
 
-[AUTOMATED STEP]: Checking if live migrations happened for the instance
+[AUTOMATED STEP]: Verify live migrations happened for the instance
 [INFO]: 
 
 Live Migration Detected at 2021/11/24 16:29:21, Checking further
@@ -486,14 +586,14 @@ Live Migration Detected at 2021/11/24 16:35:10, Checking further
 Live Migration Detected at 2021/11/24 16:35:22, Checking further
 
 
-[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
-[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
-[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
-[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
-[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
-[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
-[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
-[AUTOMATED STEP]: Checking if the Disk IOPS/Throughput usage is within optimal limits
-[END]: Finalizing VM performance diagnostics...
+[AUTOMATED STEP]: Verify the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Verify the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Verify the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Verify the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Verify the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Verify the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Verify the Disk IOPS/Throughput usage is within optimal limits
+[AUTOMATED STEP]: Verify the Disk IOPS/Throughput usage is within optimal limits
+[END]: Finalize VM performance diagnostics.
 
 

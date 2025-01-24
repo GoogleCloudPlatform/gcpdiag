@@ -51,11 +51,11 @@ class ServiceDeployment(runbook.DiagnosticTree):
           'help': 'Name of the Cloud Run service',
           'required': True,
       },
-      flags.START_TIME_UTC: {
+      flags.START_TIME: {
           'type': datetime,
           'help': 'Start time of the issue',
       },
-      flags.END_TIME_UTC: {
+      flags.END_TIME: {
           'type': datetime,
           'help': 'End time of the issue',
       },
@@ -75,7 +75,7 @@ class ServiceDeploymentStart(runbook.StartStep):
   """
 
   def execute(self):
-    """Verifying context and parameters required for deployment runbook checks."""
+    """Verify context and parameters required for deployment runbook checks."""
     project = crm.get_project(op.get(flags.PROJECT_ID))
     try:
       cloudrun.get_service(op.get(flags.PROJECT_ID), op.get(flags.REGION),
@@ -110,7 +110,7 @@ class ContainerFailedToStartStep(runbook.Step):
       r'variable.')
 
   def execute(self):
-    """Verifying if there is an error that container failed to start."""
+    """Verify if there is an error that container failed to start."""
     service = cloudrun.get_service(op.get(flags.PROJECT_ID),
                                    op.get(flags.REGION),
                                    op.get(flags.SERVICE_NAME))
@@ -133,7 +133,7 @@ class ImageWasNotFoundStep(runbook.Step):
   )
 
   def execute(self):
-    """Verifying if specified image exists."""
+    """Verify if specified image exists."""
     service = cloudrun.get_service(op.get(flags.PROJECT_ID),
                                    op.get(flags.REGION),
                                    op.get(flags.SERVICE_NAME))
@@ -160,7 +160,7 @@ class NoPermissionForImageStep(runbook.Step):
       r'([^ ]+).')
 
   def execute(self):
-    """Verifying if Cloud Run service agent can fetch the image."""
+    """Verify if Cloud Run service agent can fetch the image."""
     service = cloudrun.get_service(op.get(flags.PROJECT_ID),
                                    op.get(flags.REGION),
                                    op.get(flags.SERVICE_NAME))

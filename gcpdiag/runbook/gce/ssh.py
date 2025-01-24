@@ -75,34 +75,34 @@ class Ssh(runbook.DiagnosticTree):
   parameters = {
       flags.PROJECT_ID: {
           'type': str,
-          'help': 'The ID of the project hosting the GCE VM',
+          'help': 'The ID of the project hosting the GCE Instance',
           'required': True
       },
       flags.NAME: {
           'type': str,
-          'help': 'The name of the target GCE VM',
+          'help': 'The name of the target GCE Instance',
           'deprecated': True,
           'new_parameter': 'instance_name',
           'group': 'instance'
       },
       flags.INSTANCE_NAME: {
           'type': str,
-          'help': 'The name of the target GCE VM',
+          'help': 'The name of the target GCE Instance',
           'group': 'instance'
       },
       flags.INSTANCE_ID: {
           'type': int,
-          'help': 'The instance ID of the target GCE VM',
+          'help': 'The instance ID of the target GCE Instance',
           'group': 'instance'
       },
       flags.ID: {
           'type': int,
-          'help': 'The instance ID of the target GCE VM',
+          'help': 'The instance ID of the target GCE Instance',
           'group': 'instance'
       },
       flags.ZONE: {
           'type': str,
-          'help': 'The zone of the target GCE VM',
+          'help': 'The zone of the target GCE Instance',
           'required': True
       },
       flags.PRINCIPAL: {
@@ -157,7 +157,7 @@ class Ssh(runbook.DiagnosticTree):
           'type':
               str,
           'help':
-              'The SSH client used to establish SSH connection',
+              'The SSH client application used to establish SSH connection',
           'enum': [
               'ssh-in-browser', 'gcloud', 'openssh', 'putty', 'iap-desktop'
           ]
@@ -166,7 +166,7 @@ class Ssh(runbook.DiagnosticTree):
           'type':
               IPv4Address,
           'help': (
-              'Specify the IPv4 address of the workstation connecting to the network, '
+              'The IPv4 address of the workstation connecting to the network, '
               'or the IP of the bastion/jumphost if currently logged in through one.'
           )
       },
@@ -180,7 +180,7 @@ class Ssh(runbook.DiagnosticTree):
           'type':
               int,
           'help':
-              'Specifies the port used to connect to on the remote host (default: 22)',
+              'The port used to connect to on the remote host (default: 22)',
           'default':
               gce_const.DEFAULT_SSHD_PORT
       },
@@ -200,7 +200,7 @@ class Ssh(runbook.DiagnosticTree):
           'type':
               str,
           'help':
-              'Additional authentication features required to access to the instance',
+              'Multifactor authentication required to access to the instance',
           'enum': ['oslogin-2fa', 'security-key']
       }
   }
@@ -210,7 +210,8 @@ class Ssh(runbook.DiagnosticTree):
     lifecycle_check = gce_gs.VmLifecycleState()
     lifecycle_check.project_id = op.get(flags.PROJECT_ID)
     lifecycle_check.zone = op.get(flags.ZONE)
-    lifecycle_check.instance_name = op.get(flags.NAME)
+    lifecycle_check.instance_name = op.get(flags.INSTANCE_NAME)
+    lifecycle_check.expected_lifecycle_status = 'RUNNING'
     performance_check = VmPerformanceChecks()
     gce_permission_check = GcpSshPermissions()
     gce_firewall_check = GceFirewallAllowsSsh()
@@ -232,7 +233,7 @@ class Ssh(runbook.DiagnosticTree):
     guest_agent_check = gce_gs.VmSerialLogsCheck()
     guest_agent_check.project_id = op.get(flags.PROJECT_ID)
     guest_agent_check.zone = op.get(flags.ZONE)
-    guest_agent_check.instance_name = op.get(flags.NAME)
+    guest_agent_check.instance_name = op.get(flags.INSTANCE_NAME)
     guest_agent_check.template = 'vm_serial_log::guest_agent'
     guest_agent_check.positive_pattern = gce_const.GUEST_AGENT_STATUS_MSG
     guest_agent_check.negative_pattern = gce_const.GUEST_AGENT_FAILED_MSG
@@ -242,7 +243,7 @@ class Ssh(runbook.DiagnosticTree):
     sshd_auth_failure = gce_gs.VmSerialLogsCheck()
     sshd_auth_failure.project_id = op.get(flags.PROJECT_ID)
     sshd_auth_failure.zone = op.get(flags.ZONE)
-    sshd_auth_failure.instance_name = op.get(flags.NAME)
+    sshd_auth_failure.instance_name = op.get(flags.INSTANCE_NAME)
     sshd_auth_failure.template = 'vm_serial_log::sshd_auth_failure'
     sshd_auth_failure.negative_pattern = gce_const.SSHD_AUTH_FAILURE
     self.add_step(parent=start, child=sshd_auth_failure)
@@ -268,19 +269,20 @@ class SshStart(runbook.StartStep):
     try:
       vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                             zone=op.get(flags.ZONE),
-                            instance_name=op.get(flags.NAME))
+                            instance_name=op.get(flags.INSTANCE_NAME))
     except googleapiclient.errors.HttpError:
       op.add_skipped(
           project,
           reason=('Instance {} does not exist in zone {} or project {}').format(
-              op.get(flags.NAME), op.get(flags.ZONE), op.get(flags.PROJECT_ID)))
+              op.get(flags.INSTANCE_NAME), op.get(flags.ZONE),
+              op.get(flags.PROJECT_ID)))
     else:
       if vm:
         # Check for instance id and instance name
         if not op.get(flags.ID):
           op.put(flags.ID, vm.id)
-        elif not op.get(flags.NAME):
-          op.put(flags.NAME, vm.name)
+        elif not op.get(flags.INSTANCE_NAME):
+          op.put(flags.INSTANCE_NAME, vm.name)
         # Align with the user on parameters to be investigated
         # prep authenticated principal
         if op.get(flags.PRINCIPAL):
@@ -359,16 +361,19 @@ class VmGuestOsType(runbook.Gateway):
   """
 
   def execute(self):
-    """Identifying Guest OS type..."""
+    """Identify Guest OS type."""
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+                          instance_name=op.get(flags.INSTANCE_NAME))
     if not vm.is_windows_machine():
-      op.info('Detected Linux VM. Proceeding with Linux-specific diagnostics.')
+      op.info(
+          'Linux Guest OS detected. Proceeding with diagnostics specific to Linux systems.'
+      )
       self.add_child(LinuxGuestOsChecks())
     else:
       op.info(
-          'Detected Windows VM. Proceeding with Windows-specific diagnostics.')
+          'Windows Guest OS detected. Proceeding with diagnostics specific to Windows systems.'
+      )
       self.add_child(WindowsGuestOsChecks())
 
 
@@ -380,11 +385,11 @@ class SshEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing SSH diagnostics..."""
+    """Finalize SSH diagnostics."""
     if not config.get(flags.INTERACTIVE_MODE):
       response = op.prompt(
           kind=op.CONFIRMATION,
-          message=f'Are you able to SSH into VM {op.get(flags.NAME)}?',
+          message=f'Are you able to SSH into VM {op.get(flags.INSTANCE_NAME)}?',
           choice_msg='Enter an option: ')
       if response == op.NO:
         op.info(message=op.END_MESSAGE)
@@ -415,7 +420,7 @@ class GcpSshPermissions(runbook.CompositeStep):
   """
 
   def execute(self):
-    """Verifying overall user permissions for SSH access...
+    """Verify overall user permissions for SSH access
 
     Note: Only roles granted at the project level are checked. Permissions inherited from
     ancestor resources such as folder(s) or organization and groups are not checked."""
@@ -429,9 +434,7 @@ class GcpSshPermissions(runbook.CompositeStep):
     # Both OS login and gcloud key based require this.
     instance_fetch_perm_check = iam_gs.IamPolicyCheck()
     instance_fetch_perm_check.template = 'gcpdiag.runbook.gce::permissions::instances_get'
-    instance_fetch_perm_check.permissions = [
-        'compute.instances.get', 'compute.instances.use'
-    ]
+    instance_fetch_perm_check.permissions = ['compute.instances.get']
     instance_fetch_perm_check.require_all = False
     self.add_child(instance_fetch_perm_check)
 
@@ -454,13 +457,13 @@ class OsLoginStatusCheck(runbook.Gateway):
   """
 
   def execute(self):
-    """Identifying OS Login Setup."""
+    """Identify OS Login Setup."""
     # User intends to use OS login
     if op.get(flags.ACCESS_METHOD) == OSLOGIN:
       os_login_check = gce_gs.VmMetadataCheck()
       os_login_check.project_id = op.get(flags.PROJECT_ID)
       os_login_check.zone = op.get(flags.ZONE)
-      os_login_check.instance_name = op.get(flags.NAME)
+      os_login_check.instance_name = op.get(flags.INSTANCE_NAME)
       os_login_check.template = 'vm_metadata::os_login_enabled'
       os_login_check.metadata_key = 'enable-oslogin'
       os_login_check.expected_value = True
@@ -492,7 +495,7 @@ class OsLoginStatusCheck(runbook.Gateway):
         os_login_check = gce_gs.VmMetadataCheck()
         os_login_check.project_id = op.get(flags.PROJECT_ID)
         os_login_check.zone = op.get(flags.ZONE)
-        os_login_check.instance_name = op.get(flags.NAME)
+        os_login_check.instance_name = op.get(flags.INSTANCE_NAME)
         os_login_check.template = 'vm_metadata::no_os_login'
         os_login_check.metadata_key = 'enable_oslogin'
         os_login_check.expected_value = False
@@ -512,11 +515,11 @@ class PosixUserHasValidSshKeyCheck(runbook.Step):
   template = 'vm_metadata::valid_ssh_key'
 
   def execute(self):
-    """Validating SSH key for local user..."""
+    """Verify SSH key for local user."""
 
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+                          instance_name=op.get(flags.INSTANCE_NAME))
 
     # Check if the local_user has a valid key in the VM's metadata.
     ssh_keys = vm.get_metadata('ssh-keys').split('\n') if vm.get_metadata(
@@ -527,12 +530,12 @@ class PosixUserHasValidSshKeyCheck(runbook.Step):
       op.add_ok(resource=vm,
                 reason=op.prep_msg(op.SUCCESS_REASON,
                                    local_user=op.get(flags.POSIX_USER),
-                                   vm_name=vm.name))
+                                   full_resource_path=vm.full_path))
     else:
       op.add_failed(vm,
                     reason=op.prep_msg(op.FAILURE_REASON,
                                        local_user=op.get(flags.POSIX_USER),
-                                       vm_name=vm.name),
+                                       full_resource_path=vm.full_path),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION,
                                             local_user=op.get(
                                                 flags.POSIX_USER)))
@@ -546,16 +549,16 @@ class GceFirewallAllowsSsh(runbook.Gateway):
   source IP. It helps identify network configurations that might block SSH connections."""
 
   def execute(self):
-    """Evaluating VPC network firewall rules for SSH access..."""
+    """Evaluating VPC network firewall rules for SSH access."""
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+                          instance_name=op.get(flags.INSTANCE_NAME))
 
     if op.get(flags.PROXY) == IAP:
       tti_ingress_check = gce_gs.GceVpcConnectivityCheck()
       tti_ingress_check.project_id = op.get(flags.PROJECT_ID)
       tti_ingress_check.zone = op.get(flags.ZONE)
-      tti_ingress_check.instance_name = op.get(flags.NAME)
+      tti_ingress_check.instance_name = op.get(flags.INSTANCE_NAME)
       tti_ingress_check.src_ip = op.get(flags.SRC_IP)
       tti_ingress_check.protocol_type = 'tcp'
       tti_ingress_check.port = op.get(flags.PORT)
@@ -568,7 +571,7 @@ class GceFirewallAllowsSsh(runbook.Gateway):
       default_ingress_check = gce_gs.GceVpcConnectivityCheck()
       default_ingress_check.project_id = op.get(flags.PROJECT_ID)
       default_ingress_check.zone = op.get(flags.ZONE)
-      default_ingress_check.instance_name = op.get(flags.NAME)
+      default_ingress_check.instance_name = op.get(flags.INSTANCE_NAME)
       default_ingress_check.src_ip = op.get(flags.SRC_IP)
       default_ingress_check.protocol_type = 'tcp'
       default_ingress_check.port = op.get(flags.PORT)
@@ -582,7 +585,7 @@ class GceFirewallAllowsSsh(runbook.Gateway):
       custom_ip_ingress_check = gce_gs.GceVpcConnectivityCheck()
       custom_ip_ingress_check.project_id = op.get(flags.PROJECT_ID)
       custom_ip_ingress_check.zone = op.get(flags.ZONE)
-      custom_ip_ingress_check.instance_name = op.get(flags.NAME)
+      custom_ip_ingress_check.instance_name = op.get(flags.INSTANCE_NAME)
       custom_ip_ingress_check.src_ip = op.get(flags.SRC_IP)
       custom_ip_ingress_check.protocol_type = 'tcp'
       custom_ip_ingress_check.port = op.get(flags.PORT)
@@ -600,19 +603,19 @@ class VmPerformanceChecks(runbook.CompositeStep):
   """
 
   def execute(self):
-    """Evaluating VM memory, CPU, and disk performance..."""
+    """Evaluating VM memory, CPU, and disk performance."""
     vm_memory_check = gce_gs.HighVmMemoryUtilization()
     vm_memory_check.project_id = op.get(flags.PROJECT_ID)
     vm_memory_check.zone = op.get(flags.ZONE)
-    vm_memory_check.instance_name = op.get(flags.NAME)
+    vm_memory_check.instance_name = op.get(flags.INSTANCE_NAME)
     vm_disk_check = gce_gs.HighVmDiskUtilization()
     vm_disk_check.project_id = op.get(flags.PROJECT_ID)
     vm_disk_check.zone = op.get(flags.ZONE)
-    vm_disk_check.instance_name = op.get(flags.NAME)
+    vm_disk_check.instance_name = op.get(flags.INSTANCE_NAME)
     vm_cpu_check = gce_gs.HighVmCpuUtilization()
     vm_cpu_check.project_id = op.get(flags.PROJECT_ID)
     vm_cpu_check.zone = op.get(flags.ZONE)
-    vm_cpu_check.instance_name = op.get(flags.NAME)
+    vm_cpu_check.instance_name = op.get(flags.INSTANCE_NAME)
     self.add_child(child=vm_memory_check)
     self.add_child(child=vm_disk_check)
     self.add_child(child=vm_cpu_check)
@@ -629,12 +632,12 @@ class LinuxGuestOsChecks(runbook.CompositeStep):
   """
 
   def execute(self):
-    """Analyzing serial logs for common linux guest os and application issues..."""
+    """Analyzing serial logs for common linux guest os and application issues."""
     # Check for kernel panic patterns in serial logs.
     kernel_panic = gce_gs.VmSerialLogsCheck()
     kernel_panic.project_id = op.get(flags.PROJECT_ID)
     kernel_panic.zone = op.get(flags.ZONE)
-    kernel_panic.instance_name = op.get(flags.NAME)
+    kernel_panic.instance_name = op.get(flags.INSTANCE_NAME)
     kernel_panic.template = 'vm_serial_log::kernel_panic'
     kernel_panic.negative_pattern = gce_const.KERNEL_PANIC_LOGS
     kernel_panic.positive_pattern = ['systemd', 'OSConfigAgent']
@@ -644,7 +647,7 @@ class LinuxGuestOsChecks(runbook.CompositeStep):
     sshd_check = gce_gs.VmSerialLogsCheck()
     sshd_check.project_id = op.get(flags.PROJECT_ID)
     sshd_check.zone = op.get(flags.ZONE)
-    sshd_check.instance_name = op.get(flags.NAME)
+    sshd_check.instance_name = op.get(flags.INSTANCE_NAME)
     sshd_check.template = 'vm_serial_log::sshd'
     sshd_check.negative_pattern = gce_const.BAD_SSHD_PATTERNS
     sshd_check.positive_pattern = gce_const.GOOD_SSHD_PATTERNS
@@ -653,7 +656,7 @@ class LinuxGuestOsChecks(runbook.CompositeStep):
     sshd_guard = gce_gs.VmSerialLogsCheck()
     sshd_guard.project_id = op.get(flags.PROJECT_ID)
     sshd_guard.zone = op.get(flags.ZONE)
-    sshd_guard.instance_name = op.get(flags.NAME)
+    sshd_guard.instance_name = op.get(flags.INSTANCE_NAME)
     sshd_guard.template = 'vm_serial_log::sshguard'
     sshd_guard.negative_pattern = gce_const.SSHGUARD_PATTERNS
     self.add_child(sshd_guard)
@@ -669,12 +672,12 @@ class WindowsGuestOsChecks(runbook.CompositeStep):
   """
 
   def execute(self):
-    """Analyzing Windows Guest OS boot-up and SSH agent status..."""
+    """Analyzing Windows Guest OS boot-up and SSH agent status."""
     # Check Windows Metadata enabling ssh is set as this is required for windows
     windows_ssh_md = gce_gs.VmMetadataCheck()
     windows_ssh_md.project_id = op.get(flags.PROJECT_ID)
     windows_ssh_md.zone = op.get(flags.ZONE)
-    windows_ssh_md.instance_name = op.get(flags.NAME)
+    windows_ssh_md.instance_name = op.get(flags.INSTANCE_NAME)
     windows_ssh_md.template = 'vm_metadata::windows_ssh_md'
     windows_ssh_md.metadata_key = 'enable-windows-ssh'
     windows_ssh_md.expected_value = True
@@ -683,7 +686,7 @@ class WindowsGuestOsChecks(runbook.CompositeStep):
     windows_good_bootup = gce_gs.VmSerialLogsCheck()
     windows_good_bootup.project_id = op.get(flags.PROJECT_ID)
     windows_good_bootup.zone = op.get(flags.ZONE)
-    windows_good_bootup.instance_name = op.get(flags.NAME)
+    windows_good_bootup.instance_name = op.get(flags.INSTANCE_NAME)
     windows_good_bootup.template = 'vm_serial_log::windows_bootup'
     windows_good_bootup.positive_pattern = gce_const.GOOD_WINDOWS_BOOT_LOGS_READY
     self.add_child(windows_good_bootup)
@@ -691,13 +694,13 @@ class WindowsGuestOsChecks(runbook.CompositeStep):
     check_windows_ssh_agent = gcp_gs.HumanTask()
     check_windows_ssh_agent.project_id = op.get(flags.PROJECT_ID)
     check_windows_ssh_agent.zone = op.get(flags.ZONE)
-    check_windows_ssh_agent.instance_name = op.get(flags.NAME)
+    check_windows_ssh_agent.instance_name = op.get(flags.INSTANCE_NAME)
     check_windows_ssh_agent.template = (
         'gcpdiag.runbook.gce::vm_serial_log::windows_gce_ssh_agent')
 
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+                          instance_name=op.get(flags.INSTANCE_NAME))
     check_windows_ssh_agent.resource = vm
     check_windows_ssh_agent.template = 'gcpdiag.runbook.gce::vm_serial_log::windows_gce_ssh_agent'
     self.add_child(check_windows_ssh_agent)

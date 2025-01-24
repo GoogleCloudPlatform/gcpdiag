@@ -4,7 +4,7 @@ linkTitle: "gce/vm-termination"
 weight: 3
 type: docs
 description: >
-  GCE VM shutdowns and reboots Root Cause Analysis (RCA)
+  GCE Instance shutdowns and reboots Root Cause Analysis (RCA)
 ---
 
 **Product**: [Compute Engine](https://cloud.google.com/compute)
@@ -38,8 +38,8 @@ gcpdiag runbook gce/vm-termination \
   -p name=value \
   -p id=value \
   -p zone=value \
-  -p start_time_utc=value \
-  -p end_time_utc=value
+  -p start_time=value \
+  -p end_time=value
 ```
 
 #### Parameters
@@ -50,8 +50,8 @@ gcpdiag runbook gce/vm-termination \
 | `name` | True | None | str | The name of the terminated VM. Or provide the id i.e -p id=<int> |
 | `id` | False | None | int | The instance ID of the terminated VM. Or provide name instead i.e -p name=<str> |
 | `zone` | True | None | str | The Google Cloud zone where the terminated VM is located. |
-| `start_time_utc` | False | None | datetime | The start window to investigate vm termination. Format: YYYY-MM-DDTHH:MM:SSZ |
-| `end_time_utc` | False | None | datetime | The end window for the investigation. Format: YYYY-MM-DDTHH:MM:SSZ |
+| `start_time` | False | None | datetime | The start window to investigate vm termination. Format: YYYY-MM-DDTHH:MM:SSZ |
+| `end_time` | False | None | datetime | The end window for the investigation. Format: YYYY-MM-DDTHH:MM:SSZ |
 
 Get help on available commands
 

@@ -49,8 +49,8 @@ def local_log_search(cluster_name, cluster_location, error_message):
     filter_str += f'{error_message}'
 
   log_entries = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
-                                    start_time_utc=op.get(flags.START_TIME_UTC),
-                                    end_time_utc=op.get(flags.END_TIME_UTC),
+                                    start_time_utc=op.get(flags.START_TIME),
+                                    end_time_utc=op.get(flags.END_TIME),
                                     filter_str=filter_str)
 
   return log_entries
@@ -224,8 +224,8 @@ class CaOutOfResources(runbook.Step):
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
-                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+                                   START_TIME_UTC=op.get(flags.START_TIME),
+                                   END_TIME_UTC=op.get(flags.END_TIME)))
 
 
 class CaQuotaExceeded(runbook.Step):
@@ -257,8 +257,8 @@ class CaQuotaExceeded(runbook.Step):
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
-                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+                                   START_TIME_UTC=op.get(flags.START_TIME),
+                                   END_TIME_UTC=op.get(flags.END_TIME)))
 
 
 class CaInstanceTimeout(runbook.Step):
@@ -290,8 +290,8 @@ class CaInstanceTimeout(runbook.Step):
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
-                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+                                   START_TIME_UTC=op.get(flags.START_TIME),
+                                   END_TIME_UTC=op.get(flags.END_TIME)))
 
 
 class CaIpSpaceExhausted(runbook.Step):
@@ -323,8 +323,8 @@ class CaIpSpaceExhausted(runbook.Step):
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
-                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+                                   START_TIME_UTC=op.get(flags.START_TIME),
+                                   END_TIME_UTC=op.get(flags.END_TIME)))
 
 
 class CaServiceAccountDeleted(runbook.Step):
@@ -356,8 +356,8 @@ class CaServiceAccountDeleted(runbook.Step):
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
-                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+                                   START_TIME_UTC=op.get(flags.START_TIME),
+                                   END_TIME_UTC=op.get(flags.END_TIME)))
 
 
 class CaMinSizeReached(runbook.Step):
@@ -389,8 +389,8 @@ class CaMinSizeReached(runbook.Step):
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
-                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+                                   START_TIME_UTC=op.get(flags.START_TIME),
+                                   END_TIME_UTC=op.get(flags.END_TIME)))
 
 
 class CaFailedToEvictPods(runbook.Step):
@@ -422,8 +422,8 @@ class CaFailedToEvictPods(runbook.Step):
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
-                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+                                   START_TIME_UTC=op.get(flags.START_TIME),
+                                   END_TIME_UTC=op.get(flags.END_TIME)))
 
 
 class ClusterAutoscalerEnd(runbook.EndStep):
@@ -437,7 +437,7 @@ class ClusterAutoscalerEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing `Cluster Autoscaler` diagnostics..."""
+    """Finalize `Cluster Autoscaler` diagnostics."""
     response = op.prompt(
         kind=op.CONFIRMATION,
         message=

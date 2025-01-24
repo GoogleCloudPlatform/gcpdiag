@@ -21,8 +21,8 @@ from gcpdiag.runbook.gke import flags
 
 def local_realtime_query(filter_str):
   result = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
-                               start_time_utc=op.get(flags.START_TIME_UTC),
-                               end_time_utc=op.get(flags.END_TIME_UTC),
+                               start_time_utc=op.get(flags.START_TIME),
+                               end_time_utc=op.get(flags.END_TIME),
                                filter_str=filter_str)
   return result
 
@@ -169,8 +169,8 @@ class NodeAutoRepairStart(runbook.StartStep):
     node = op.get(flags.NODE)
     name = op.get(flags.NAME)
     project_path = crm.get_project(project)
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
+    start_time_utc = op.get(flags.START_TIME)
+    end_time_utc = op.get(flags.END_TIME)
 
     # check if there are clusters in the project
     if name:
@@ -316,7 +316,7 @@ class NodeAutoRepairEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing `Node AutoRepair` diagnostics..."""
+    """Finalize `Node AutoRepair` diagnostics."""
     response = op.prompt(
         kind=op.CONFIRMATION,
         message='Are you satisfied with the `GKE Node AutoRepair` RCA performed?'

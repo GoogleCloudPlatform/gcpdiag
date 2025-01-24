@@ -4,7 +4,7 @@ linkTitle: "Vm Serial Logs Check"
 weight: 3
 type: docs
 description: >
-  Searches for predefined good or bad patterns in the serial logs of a GCE VM.
+  Searches for predefined good or bad patterns in the serial logs of a GCE Instance.
 ---
 
 **Product**: [Compute Engine](https://cloud.google.com/compute)\
@@ -30,7 +30,8 @@ Explore rescue options for inaccessible VMs or review possible guest OS issues,
 
 If escalating Guest OS related issues to Google Cloud Support
 do check to ensure is in line with Google Cloud Platform's Guest OS support policy
-- Google Cloud Platform Support Scope: https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
+- Google Cloud Platform Support Scope:
+https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
 
 ### Success Reason
 
@@ -50,11 +51,12 @@ keeping in mind certain guest OS faults may be beyond Google Cloud Platform's su
 - Viewing Serial Port Output: https://cloud.google.com/compute/docs/troubleshooting/viewing-serial-port-output
 - Resolving Kernel Panic:
 https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error
-- Google Cloud Platform Support Scope: https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
+- Google Cloud Platform Support Scope:
+https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
 
 ### Skipped Reason
 
-There are no logs to examine !
+There are no logs to examine.
 
 
 

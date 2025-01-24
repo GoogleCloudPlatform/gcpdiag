@@ -55,12 +55,12 @@ gcpdiag runbook vpc/vm-external-ip-connectivity \
 | Name | Required | Default | Type | Help |
 |------|----------|---------|------|------|
 | `project_id` | True | None | str | The Project ID of the resource under investigation |
-| `name` | True | None | str | The name of the GCE VM |
+| `name` | True | None | str | The name of the GCE Instance |
 | `dest_ip` | True | None | IPv4Address | External IP the VM is connecting to |
 | `dest_port` | False | 443 | int | External IP the VM is connecting to |
 | `protocol_type` | False | tcp | str | Protocol used to connect to SSH |
 | `src_nic` | True | None | str | VM source NIC |
-| `zone` | True | None | str | The zone of the target GCE VM |
+| `zone` | True | None | str | The zone of the target GCE Instance |
 
 Get help on available commands
 

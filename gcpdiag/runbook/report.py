@@ -192,9 +192,10 @@ class ReportManager:
           'status':
               r.status,
           'reason':
-              remove_line_breaks(str(r.reason)) if r.reason else '-',
+              remove_line_breaks(str(r.reason)),
           'remediation':
-              remove_line_breaks(r.remediation) if r.remediation else '-',
+              remove_line_breaks(r.remediation)
+              if r.remediation else 'No remediation needed',
           'remediation_skipped':
               False if config.get('auto') else r.remediation_skipped
       } for r in eval_list]

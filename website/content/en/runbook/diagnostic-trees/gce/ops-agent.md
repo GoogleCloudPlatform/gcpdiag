@@ -36,8 +36,8 @@ gcpdiag runbook gce/ops-agent \
   -p name=value \
   -p id=value \
   -p zone=value \
-  -p start_time_utc=value \
-  -p end_time_utc=value \
+  -p start_time=value \
+  -p end_time=value \
   -p gac_service_account=value \
   -p check_logging=value \
   -p check_monitoring=value \
@@ -52,8 +52,8 @@ gcpdiag runbook gce/ops-agent \
 | `name` | False | None | str | Name of the GCE instance running the Ops Agent |
 | `id` | False | None | str | ID of the GCE instance running the Ops Agent |
 | `zone` | False | None | str | Zone of the GCE instance running the Ops Agent |
-| `start_time_utc` | False | None | datetime | Start time of the issue |
-| `end_time_utc` | False | None | datetime | End time of the issue |
+| `start_time` | False | None | datetime | Start time of the issue |
+| `end_time` | False | None | datetime | End time of the issue |
 | `gac_service_account` | False | None | str | GOOGLE_APPLICATION_CREDENTIALS used by ops agent, if applicable |
 | `check_logging` | False | True | bool | Investigate logging issues |
 | `check_monitoring` | False | True | bool | Investigate monitoring issues |

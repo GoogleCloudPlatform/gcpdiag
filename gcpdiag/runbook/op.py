@@ -163,7 +163,7 @@ def prompt(message: str,
       Any: User response
 
     Usage:
-      op.prompt(message='Should we check the remaining interfaces as well?',
+      op.prompt(message='Check the remaining interfaces as well?',
                 kind=op.CONFIRMATION,
                 choice_msg='Select one of the options below:',
                 options={'y': 'Yes, all remaining interfaces', 'n': 'No Proceed'}
@@ -203,7 +203,7 @@ def add_skipped(resource: Optional[models.Resource], reason: str) -> None:
                                  step_execution_id=operator.step.execution_id)
 
 
-def add_ok(resource: models.Resource, reason: str = '') -> None:
+def add_ok(resource: models.Resource, reason: str) -> None:
   """Sends a success message for a step to the user and store it in the report"""
   operator.interface.add_ok(run_id=operator.run_id,
                             resource=resource,

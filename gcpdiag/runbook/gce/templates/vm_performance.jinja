@@ -1,3 +1,7 @@
+{% block high_cpu_utilization_step_message %}
+Verify VM CPU utilization is within optimal levels.
+{% endblock high_cpu_utilization_step_message %}
+
 {% block high_cpu_utilization_failure_reason %}
 CPU utilization on this VM has surpassed recommended operational levels,
 which may affect its performance and SSH connectivity.
@@ -18,7 +22,8 @@ https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-seri
 {% endblock high_cpu_utilization_failure_remediation %}
 
 {% block high_cpu_utilization_success_reason %}
-This VM currently has CPU utilization within the optimal range, indicating healthy performance.
+The Compute Engine VM {full_resource_path},
+has CPU utilization within the optimal range.
 {% endblock high_cpu_utilization_success_reason %}
 
 {% block high_disk_utilization_failure_reason %}
@@ -27,7 +32,8 @@ potentially affecting application performance.
 {% endblock high_disk_utilization_failure_reason %}
 
 {% block high_disk_utilization_skipped_reason %}
-There are no logs to examine !
+No Google Cloud Ops Agent installed on the VM, making it difficult to retrieve disk utilization data via metrics.
+Falling back to checking for filesystem utilization-related messages in the serial logs.
 {% endblock high_disk_utilization_skipped_reason %}
 
 {% block high_disk_utilization_failure_remediation %}
@@ -37,17 +43,16 @@ Follow the guide to increase disk size:
 https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
 {% endblock high_disk_utilization_failure_remediation %}
 
-
 {% block high_disk_utilization_step_message %}
-Checking if VM's Boot disk space utilization is within optimal levels.
+Check if VM's boot disk space utilization is within optimal levels.
 {% endblock high_disk_utilization_step_message %}
 
 {% block high_disk_utilization_success_reason %}
-The VM's disk space usage is within optimal levels.
+The boot disk space usage for the Compute Engine VM {full_resource_path}, is within optimal levels.
 {% endblock high_disk_utilization_success_reason %}
 
 {% block high_memory_utilization_skipped_reason %}
-There are no logs to examine !
+There are no logs to examine!
 {% endblock high_memory_utilization_skipped_reason %}
 
 {% block high_memory_utilization_failure_reason %}
@@ -58,7 +63,8 @@ Memory utilization on this VM has reached levels that may compromise its VM appl
 Elevated memory usage can result in slow or unresponsive or termimated applications.
 Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
 Guidance on stopping and changing the machine type can be found here:
-- Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+- Changing machine type:
+https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
 For deeper analysis of memory issues:
 
 Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
@@ -72,56 +78,74 @@ https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-seri
 Memory utilization on this VM is within optimal range.
 {% endblock high_memory_utilization_success_reason %}
 
-{% block memory_error_skipped_reason %}
-There are no logs to examine !
-{% endblock memory_error_skipped_reason %}
+{% block high_memory_usage_logs_skipped_reason %}
+There are no serial logs to investigate possible memory issues.
+{% endblock high_memory_usage_logs_skipped_reason %}
 
-{% block memory_error_step_message %}
-Checking if there are any memory related errors in Serial logs
-{% endblock memory_error_step_message %}
+{% block high_memory_usage_logs_step_message %}
+Check for memory related errors in VM serial logs.
+{% endblock high_memory_usage_logs_step_message %}
 
-{% block memory_error_success_reason %}
-No memory related errors found in Serial console logs.
-{% endblock memory_error_success_reason %}
+{% block high_memory_usage_logs_success_reason %}
+No memory-related errors found in Serial console logs.
+{% endblock high_memory_usage_logs_success_reason %}
 
-{% block memory_error_failure_reason %}
-We have found high disk utilisation related errors in Serial console logs.
-The patterns we looked for :
-    'Out of memory: Kill(ed)? process', 'Kill(ed)? process',
-    'Memory cgroup out of memory', 'invoked oom-killer',
-{% endblock memory_error_failure_reason %}
+{% block high_memory_usage_logs_failure_reason %}
+High memory utilization error logs have been detected on your VM instance within
+{start_time} - {end_time}. This can lead to performance issues and instability.
+{% endblock high_memory_usage_logs_failure_reason %}
 
-{% block memory_error_failure_remediation %}
-We have found memory related errors in Serial console logs.
+{% block high_memory_usage_logs_failure_remediation %}
+1. Manually investigate by accessing the Guest OS to Analyze Memory Usage:
+* Identify processes with consistently high memory consumption:
+- Run `top` and press "M" to sort processes by memory usage.
+- Alternatively, use the command:
+```bash
+ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5
+```
+* Focus on processes with recent spikes or consistently high memory usage.
+* If SSH access is unavailable, consider [troubleshooting via the serial
+console](https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console).
 
-Please use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
-https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization
+2. Review Application or Configuration Changes:
+* Investigate if recent deployments, updates, or configuration changes correlate with increased memory usage.
 
-Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
-Guidance on stopping and changing the machine type can be found here:
-- Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
-For deeper analysis of memory issues:
+3. Resolve Identified Bottlenecks:
+* For applications causing excessive memory usage:
+- Optimize their configuration or update them to a stable version.
+- Explore alternatives if optimization is insufficient.
+* Evaluate scaling up resources if the high memory usage results from legitimate application demands.
 
-Or connect via the Serial Console if SSH is not available to mitigate the issue.
-https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
-{% endblock memory_error_failure_remediation %}
+4. Increase Instance Memory if Necessary:
+* If additional memory is required for the application:
+- Stop the VM and [change its machine
+type](https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud).
+- Consult the [machine type documentation](https://cloud.google.com/compute/docs/machine-types) to select an appropriate
+configuration.
 
-{% block memory_error_uncertain_reason %}
-We did not find any Memory related errors in Serial console logs
-{% endblock memory_error_uncertain_reason %}
+**Note:**
+Non Google provided Application-specific issues may fall outside support scope. Collaborate with
+relevant application teams for further investigation.
+Refer to the [Google Cloud Platform support
+policy](https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope)
+for details, including [out-of-scope
+items](https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support).
+{% endblock high_memory_usage_logs_failure_remediation %}
 
-{% block memory_error_uncertain_remediation %}
-You may check if VM is facing high memory utilisation from GuestOS side using `free -m`
-or `cat /proc/meminfo` commands.
-{% endblock memory_error_uncertain_remediation %}
+{% block high_memory_usage_logs_uncertain_reason %}
+Unable to investigate the high memory utilization error logs, likely due to the absence of logs.
+However, this does not eliminate the possibility of high memory usage.
+
+You may manually verify memory utilization on the Guest OS side a likely cause.
+{% endblock high_memory_usage_logs_uncertain_reason %}
 
 
 {% block high_disk_utilization_error_failure_reason %}
-We have found high disk utilisation related errors in Serial console logs.
-The patterns we looked for :
-    'No space left on device', 'No usable temporary directory found',
-    'A stop job is running for Security \.\.\..* Service ',
-    'disk is at or near capacity'
+Found high disk utilisation errors in Serial console logs.
+The patterns used:
+'No space left on device', 'No usable temporary directory found',
+'A stop job is running for Security \.\.\..* Service ',
+'disk is at or near capacity'
 {% endblock high_disk_utilization_error_failure_reason %}
 
 {% block high_disk_utilization_error_failure_remediation %}
@@ -140,11 +164,11 @@ No high disk utilisation related errors found in Serial console logs.
 {% endblock high_disk_utilization_error_success_reason %}
 
 {% block high_disk_utilization_error_skipped_reason %}
-There are no logs to examine !
+There are no logs to examine!
 {% endblock high_disk_utilization_error_skipped_reason %}
 
 {% block high_disk_utilization_error_uncertain_reason %}
-We did not find any high disk utilisation related errors in Serial console logs
+No Serial console logs to examine
 {% endblock high_disk_utilization_error_uncertain_reason %}
 
 {% block live_migrations_failure_reason %}
@@ -164,7 +188,7 @@ https://cloud.google.com/compute/docs/instances/live-migration-process#how_does_
 {% endblock live_migrations_failure_remediation %}
 
 {% block live_migrations_step_message %}
-Checking if live migrations happened for the instance
+Verify live migrations happened for the instance
 {% endblock live_migrations_step_message %}
 
 {% block live_migrations_success_reason %}
@@ -176,54 +200,54 @@ There are no logs to examine !
 {% endblock live_migrations_skipped_reason %}
 
 
-{% block  slow_disk_io_step_message %}
-Checking if any slow Disk operations related errors in Serial console logs
-{% endblock  slow_disk_io_step_message %}
+{% block slow_disk_io_step_message %}
+Verify any slow Disk operations related errors in Serial console logs
+{% endblock slow_disk_io_step_message %}
 
 {% block slow_disk_io_failure_reason %}
 Possibe Disk IO slowness detected.
 
-The patterns we looked for in Serial logs:
-    # Linux slow read:
-    r'\d+:\d+:\d+:\d+: timing out command, waited \d+s',
-    r'end_request: I/O error, dev [a-z0-9-]+, sector \d+',
-    r'Buffer I/O error on device [a-z0-9-]+, logical block \d+',
-    r'blocked for more than \d+ seconds',
+The patterns used:
+# Linux slow read:
+r'\d+:\d+:\d+:\d+: timing out command, waited \d+s',
+r'end_request: I/O error, dev [a-z0-9-]+, sector \d+',
+r'Buffer I/O error on device [a-z0-9-]+, logical block \d+',
+r'blocked for more than \d+ seconds',
 
-    # Linux SCSI commands abort/reset (when operation to PD times out)
-    r'\d+:\d+:\d+:\d+:\s+\[([a-z0-9-]+)\]\s+(abort|device reset)$',
-    r'\d+:\d+:\d+:\d+:\s+(device reset)$',
+# Linux SCSI commands abort/reset (when operation to PD times out)
+r'\d+:\d+:\d+:\d+:\s+\[([a-z0-9-]+)\]\s+(abort|device reset)$',
+r'\d+:\d+:\d+:\d+:\s+(device reset)$',
 
-    # Linux Local SSD physical failure on console:
-    r'kernel: blk_update_request: I/O error, dev [a-z0-9-]+, sector \d+',
+# Linux Local SSD physical failure on console:
+r'kernel: blk_update_request: I/O error, dev [a-z0-9-]+, sector \d+',
 
-    # Windows
-    r'The IO operation at logical block address 0x[0-9a-fA-F.]+ for Disk \d+ \(PDO name: \\Device\\.*\) was retried'
+# Windows
+r'The IO operation at logical block address 0x[0-9a-fA-F.]+ for Disk \d+ \(PDO name: \\Device\\.*\) was retried'
 {% endblock slow_disk_io_failure_reason %}
 
 {% block slow_disk_io_failure_remediation %}
 There can be multiple reasons which can cause Slow Disk IOs:
 
 - CPU Starvation - Small instances(with lesser CPUs) may not have enough CPU to serve all I/Os inflight.
-  https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#cpu_and_memory_performance
+https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#cpu_and_memory_performance
 
 - Network Throttling - High sent/received network traffic can cause network throttling that impacts disk operations.
-  https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#network_performance
+https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#network_performance
 
 - Insufficient Machine Resources - If your machine's IOPS and throughput limts are not enought to serve your workloads,
-  this can also cause CPU or Disk IOPS/throughput Starvation.
-  https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#storage_performance
+this can also cause CPU or Disk IOPS/throughput Starvation.
+https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#storage_performance
 
 - Application and GuestOS Operations - Unmanaged and untested application workloads can cause the high influx of IOs
-  to the disk and cause IO operations to be queued, causing throttling at disk and CPU levels.
+to the disk and cause IO operations to be queued, causing throttling at disk and CPU levels.
 
 To fix this issue:
- - Please optmize your application workloads.
- - If needed, please add more resources(CPU, Memory) to the VM.
- - Please optmize your Disk performance -
-    https://cloud.google.com/compute/docs/disks/optimizing-pd-performance
- - If needed, please change your disk type to get better Disk IOPS/throughput limits -
-    https://cloud.google.com/compute/docs/disks/modify-persistent-disk#disk_type
+- Please optmize your application workloads.
+- If needed, please add more resources(CPU, Memory) to the VM.
+- Please optmize your Disk performance -
+https://cloud.google.com/compute/docs/disks/optimizing-pd-performance
+- If needed, please change your disk type to get better Disk IOPS/throughput limits -
+https://cloud.google.com/compute/docs/disks/modify-persistent-disk#disk_type
 
 {% endblock slow_disk_io_failure_remediation %}
 
@@ -232,16 +256,17 @@ There are no logs to examine !
 {% endblock slow_disk_io_skipped_reason %}
 
 {% block slow_disk_io_uncertain_reason %}
-We did not find any slow Disk operations related errors in Serial console logs
+No error messages related to disk latency were found in the serial console logs.
+This does not rule out disk performance issues.
 {% endblock slow_disk_io_uncertain_reason %}
 
 {% block slow_disk_io_uncertain_remediation %}
-
+Check for high disk utilization using the command iostat to further troubleshoot.
 {% endblock slow_disk_io_uncertain_remediation %}
 
-{% block  disk_io_usage_check_step_message %}
-Checking if the Disk IOPS/Throughput usage is within optimal limits
-{% endblock  disk_io_usage_check_step_message %}
+{% block disk_io_usage_check_step_message %}
+Verify the Disk IOPS/Throughput usage is within optimal limits
+{% endblock disk_io_usage_check_step_message %}
 
 {% block disk_io_usage_check_failure_reason %}
 Disk IOPS/Throughput usage is NOT within optimal limits
@@ -251,44 +276,45 @@ Disk IOPS/Throughput usage is NOT within optimal limits
 There can be multiple reasons which can cause Disk IOPS/Throughput usage to increase:
 
 - Application and GuestOS Operations - Unmanaged and untested application workloads can cause the high influx of IOs
-  to the disk and cause IO operations to be queued, causing throttling at disk levels.
+to the disk and cause IO operations to be queued, causing throttling at disk levels.
 
 - CPU Starvation - Small instances(with lesser CPUs) may not have enough CPU to serve all I/Os inflight.
-  https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#cpu_and_memory_performance
+https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#cpu_and_memory_performance
 
-- Network Throttling - High sent/received network traffic can cause network throttling, that can also impacts disk operations.
-  https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#network_performance
+- Network Throttling - High sent/received network traffic can cause network throttling, that can also impacts disk
+operations.
+https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#network_performance
 
 - Insufficient Machine Resources - If your machine's IOPS and throughput limts are not enought to serve your workloads,
-  this can also cause CPU or Disk IOPS/throughput Starvation.
-  https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#storage_performance
+this can also cause CPU or Disk IOPS/throughput Starvation.
+https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#storage_performance
 
 To fix this issue:
- - Please optmize your application workloads.
- - If needed, please add more resources(CPU, Memory) to the VM.
- - Please optmize your Disk performance -
-    https://cloud.google.com/compute/docs/disks/optimizing-pd-performance
- - If needed, please change your disk type to get better Disk IOPS/throughput limits -
-    https://cloud.google.com/compute/docs/disks/modify-persistent-disk#disk_type
+- Please optmize your application workloads.
+- If needed, please add more resources(CPU, Memory) to the VM.
+- Please optmize your Disk performance -
+https://cloud.google.com/compute/docs/disks/optimizing-pd-performance
+- If needed, please change your disk type to get better Disk IOPS/throughput limits -
+https://cloud.google.com/compute/docs/disks/modify-persistent-disk#disk_type
 
 {% endblock disk_io_usage_check_failure_remediation %}
 
 
-{% block  disk_health_check_step_message %}
-Checking if instance disks are healthy
-{% endblock  disk_health_check_step_message %}
+{% block disk_health_check_step_message %}
+Verify instance disks are healthy
+{% endblock disk_health_check_step_message %}
 
-{% block  disk_health_check_success_reason %}
+{% block disk_health_check_success_reason %}
 Instance disk "{disk_name}" is healthy.
-{% endblock  disk_health_check_success_reason %}
+{% endblock disk_health_check_success_reason %}
 
-{% block  disk_health_check_failure_reason %}
+{% block disk_health_check_failure_reason %}
 You might experience slower/poor performance with your disk '{disk_name}' due to an
 ongoing issue with our Compute Engine or Persistent Disk infrastructure. We're working
 to resolve this as quickly as possible.
-{% endblock  disk_health_check_failure_reason %}
+{% endblock disk_health_check_failure_reason %}
 
-{% block  disk_health_check_failure_remediation %}
+{% block disk_health_check_failure_remediation %}
 To better understand the situation with your Compute Engine or Persistent Disks,
 could you please take a look at the Google Cloud Status page:
 
@@ -304,24 +330,24 @@ https://console.cloud.google.com/servicehealth/incidents
 If you don't find any information about an ongoing issue related to your concern,
 please don't hesitate to reach out to Google Cloud Support by creating a support case.
 They'll be happy to investigate further and assist you.
-{% endblock  disk_health_check_failure_remediation %}
+{% endblock disk_health_check_failure_remediation %}
 
 
-{% block  disk_io_latency_check_step_message %}
-Checking if Instance's Disk Avg IO Latency is within optimal limits
-{% endblock  disk_io_latency_check_step_message %}
+{% block disk_io_latency_check_step_message %}
+Verify Instance's Disk Avg IO Latency is within optimal limits
+{% endblock disk_io_latency_check_step_message %}
 
-{% block  disk_io_latency_check_success_reason %}
+{% block disk_io_latency_check_success_reason %}
 Instance disk "{disk_name}"'s IO latency is within the optimal limtis.
-{% endblock  disk_io_latency_check_success_reason %}
+{% endblock disk_io_latency_check_success_reason %}
 
-{% block  disk_io_latency_check_failure_reason %}
+{% block disk_io_latency_check_failure_reason %}
 The performance of the disk '{disk_name}' is currently degraded due to high
 IO latency exceeding optimal thresholds. This may result in slower read/write
 speeds and overall reduced performance.
-{% endblock  disk_io_latency_check_failure_reason %}
+{% endblock disk_io_latency_check_failure_reason %}
 
-{% block  disk_io_latency_check_failure_remediation %}
+{% block disk_io_latency_check_failure_remediation %}
 Disk I/O latency is the time it takes for a read or write operation to complete on a
 disk.
 High disk I/O latency can significantly impact the performance of your applications
@@ -330,22 +356,22 @@ processing time, and overall sluggishness.
 
 Potential Bottlenecks -
 - Disk Type: To optimize disk performance, ensure your disk type is appropriate
-  for your workload and provides acceptable latency for your system architecture.
-  Choosing the right disk type can significantly impact performance.
-  https://cloud.google.com/compute/docs/disks
+for your workload and provides acceptable latency for your system architecture.
+Choosing the right disk type can significantly impact performance.
+https://cloud.google.com/compute/docs/disks
 
 - Workload: The nature of your workload also influences latency. Workloads with
-  many small, random I/O operations will generally have higher latency than those
-  with sequential I/O
+many small, random I/O operations will generally have higher latency than those
+with sequential I/O
 
 Optimize Disk Usage:
 - Reduce I/O Operations: Optimize your applications and database queries to minimize
-  the number of disk I/O operations.
+the number of disk I/O operations.
 - Increase I/O Request Size: Larger I/O requests can be more efficient than many small
-  ones. Consider adjusting your application or database settings to increase the I/O
-  request size.
+ones. Consider adjusting your application or database settings to increase the I/O
+request size.
 - Caching: Implement caching mechanisms to reduce the need to access the disk for
-  frequently used data.
+frequently used data.
 
 Choose the Right Disk Type with lesser IO Latency - https://cloud.google.com/compute/docs/disks
 
@@ -353,4 +379,4 @@ You may also look into Optimizing persistent disk performance. -
 https://cloud.google.com/compute/docs/disks/optimizing-pd-performance
 
 Please don't hesitate to reach out to Google Cloud Support if issue is not resolved.
-{% endblock  disk_io_latency_check_failure_remediation %}
+{% endblock disk_io_latency_check_failure_remediation %}

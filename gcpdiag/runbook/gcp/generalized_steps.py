@@ -125,7 +125,7 @@ class ResourceAttributeCheck(runbook.Step):
   resource: Resource
 
   def execute(self):
-    """Verifying resource has expected value..."""
+    """Verify resource has expected value."""
     try:
       self.resource = self.resource_query(**self.query_kwargs)
       # TODO: change this.
@@ -189,7 +189,7 @@ class ServiceApiStatusCheck(runbook.Step):
   template: str = 'api::default'
 
   def execute(self):
-    """Verifying Cloud API state..."""
+    """Verify Cloud API state."""
     project = crm.get_project(op.get(flags.PROJECT_ID))
     is_enabled = apis.is_enabled(op.get(flags.PROJECT_ID), self.api_name)
     service_name = f"{self.api_name}.{config.get('universe_domain')}"
@@ -201,6 +201,7 @@ class ServiceApiStatusCheck(runbook.Step):
                       service_name=service_name,
                       expected_state=self.expected_state.value))
     else:
+      remediation = ''
       if self.expected_state == constants.APIState.ENABLED:
         remediation = op.prep_msg(op.FAILURE_REMEDIATION,
                                   service_name=service_name,

@@ -42,7 +42,7 @@ class VmHasAnActiveServiceAccount(runbook.Step):
   project_id: str = ''
 
   def execute(self):
-    """Verifying if the specified service account is active..."""
+    """Verify if the specified service account is active."""
     sa = self.service_account or op.get(flags.SERVICE_ACCOUNT)
     project_id = self.project_id or op.get(flags.PROJECT_ID)
 
@@ -53,17 +53,19 @@ class VmHasAnActiveServiceAccount(runbook.Step):
       # Verify service account exists
       if not iam.is_service_account_existing(sa, project_id):
         op.add_failed(sa_resource,
-                      reason=op.prep_msg(op.FAILURE_REASON, sa=sa),
+                      reason=op.prep_msg(op.FAILURE_REASON,
+                                         sa=sa_resource.full_path),
                       remediation=op.prep_msg(op.FAILURE_REMEDIATION))
       # Verify service account exists
       elif not iam.is_service_account_enabled(sa, project_id):
         op.add_failed(resource=sa_resource,
                       reason=op.prep_msg(op.FAILURE_REASON),
                       remediation=op.prep_msg(op.FAILURE_REMEDIATION_ALT1,
-                                              sa=sa))
+                                              sa=sa_resource.full_path))
       elif (iam.is_service_account_existing(sa, project_id) and
             iam.is_service_account_enabled(sa, project_id)):
-        op.add_ok(sa_resource, op.prep_msg(op.SUCCESS_REASON, sa=sa))
+        op.add_ok(sa_resource,
+                  op.prep_msg(op.SUCCESS_REASON, sa=sa_resource.full_path))
       else:
         op.add_uncertain(None,
                          reason=op.UNCERTAIN_REASON,
@@ -100,7 +102,7 @@ class IamPolicyCheck(runbook.Step):
   project = None
 
   def execute(self):
-    """Verifying IAM policy"""
+    """Verify IAM policy"""
     project_id = self.project or op.get(flags.PROJECT_ID)
     iam_policy = iam.get_project_policy(project_id)
     principal = self.principal or op.get(flags.PRINCIPAL)

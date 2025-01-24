@@ -66,7 +66,7 @@ class VmExternalIpConnectivity(runbook.DiagnosticTree):
       },
       flags.NAME: {
           'type': str,
-          'help': 'The name of the GCE VM',
+          'help': 'The name of the GCE Instance',
           'group': 'instance',
           'required': True
       },
@@ -92,7 +92,7 @@ class VmExternalIpConnectivity(runbook.DiagnosticTree):
       },
       flags.ZONE: {
           'type': str,
-          'help': 'The zone of the target GCE VM',
+          'help': 'The zone of the target GCE Instance',
           'required': True
       }
   }
@@ -177,7 +177,7 @@ class VmHasExternalIp(runbook.Gateway):
   """
 
   def execute(self):
-    """Checking if the source NIC has an associated external IP address..."""
+    """Checking if the source NIC has an associated external IP address."""
 
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
@@ -207,7 +207,7 @@ class VmExternalIpConnectivityEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing VM external connectivity diagnostics..."""
+    """Finalize VM external connectivity diagnostics."""
     if not config.get(flags.INTERACTIVE_MODE):
       response = op.prompt(kind=op.CONFIRMATION,
                            message="""

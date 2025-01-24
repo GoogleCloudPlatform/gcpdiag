@@ -74,13 +74,13 @@ class VmPerformance(runbook.DiagnosticTree):
           'required':
               True
       },
-      flags.START_TIME_UTC: {
+      flags.START_TIME: {
           'type': datetime,
           'help':
               'The start window(in UTC) to investigate vm performance issues.'
               'Format: YYYY-MM-DDTHH:MM:SSZ'
       },
-      flags.END_TIME_UTC: {
+      flags.END_TIME: {
           'type':
               datetime,
           'help':
@@ -91,7 +91,7 @@ class VmPerformance(runbook.DiagnosticTree):
   def build_tree(self):
     """Construct the diagnostic tree with appropriate steps."""
 
-    start = FetchVmDetails()
+    start = VmPerformanceStart()
     cpu_check = gce_gs.HighVmCpuUtilization()
     cpu_check.project_id = op.get(flags.PROJECT_ID)
     cpu_check.zone = op.get(flags.ZONE)
@@ -142,8 +142,8 @@ class VmPerformance(runbook.DiagnosticTree):
     self.add_end(step=VmPerformanceEnd())
 
 
-class FetchVmDetails(runbook.StartStep):
-  """Fetching VM details ..."""
+class VmPerformanceStart(runbook.StartStep):
+  """Fetching VM details."""
 
   template = 'vm_attributes::running'
 
@@ -170,10 +170,10 @@ class FetchVmDetails(runbook.StartStep):
       else:
         op.add_failed(vm,
                       reason=op.prep_msg(op.FAILURE_REASON,
-                                         vm_name=vm.name,
+                                         full_resource_path=vm.full_path,
                                          status=vm.status),
                       remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                              vm_name=vm.name,
+                                              full_resource_path=vm.full_path,
                                               status=vm.status))
 
 
@@ -193,12 +193,10 @@ class CheckLiveMigrations(runbook.Step):
     log_entries = logs.realtime_query(
         project_id=op.get(flags.PROJECT_ID),
         filter_str=f'{logging_filter}\nresource.labels.instance_id="{vm.id}"',
-        start_time_utc=op.get(flags.START_TIME_UTC),
-        end_time_utc=op.get(flags.END_TIME_UTC))
+        start_time_utc=op.get(flags.START_TIME),
+        end_time_utc=op.get(flags.END_TIME))
 
-    time_frame_list = [
-        op.get(flags.START_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
-    ]
+    time_frame_list = [op.get(flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')]
     if log_entries:
       for log in log_entries:
         start_time_val = datetime.strptime(
@@ -207,7 +205,7 @@ class CheckLiveMigrations(runbook.Step):
         time_frame_list.append(start_time_val)
         op.info(('\n\nLive Migration Detected at {}, Checking further\n\n'
                 ).format(start_time_val))
-      end_time = op.get(flags.END_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+      end_time = op.get(flags.END_TIME).strftime('%Y/%m/%d %H:%M:%S')
       time_frame_list.append(end_time)
       i = 0
       for times in time_frame_list:
@@ -240,9 +238,8 @@ class DiskHealthCheck(runbook.Step):
                           instance_name=op.get(flags.NAME))
 
     start_formatted_string = op.get(
-        flags.START_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
-    end_formatted_string = op.get(
-        flags.END_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+        flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')
+    end_formatted_string = op.get(flags.END_TIME).strftime('%Y/%m/%d %H:%M:%S')
     within_str = f'within d\'{start_formatted_string}\', d\'{end_formatted_string}\''
 
     for disk in vm.disks:
@@ -279,9 +276,8 @@ class CpuOvercommitmentCheck(runbook.Step):
     """Checking if CPU is overcommited"""
     cpu_count = 1000
     start_formatted_string = op.get(
-        flags.START_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
-    end_formatted_string = op.get(
-        flags.END_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+        flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')
+    end_formatted_string = op.get(flags.END_TIME).strftime('%Y/%m/%d %H:%M:%S')
     within_str = f'within d\'{start_formatted_string}\', d\'{end_formatted_string}\''
 
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
@@ -381,9 +377,8 @@ class DiskAvgIOLatencyCheck(runbook.Step):
                           instance_name=op.get(flags.NAME))
 
     start_formatted_string = op.get(
-        flags.START_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
-    end_formatted_string = op.get(
-        flags.END_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+        flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')
+    end_formatted_string = op.get(flags.END_TIME).strftime('%Y/%m/%d %H:%M:%S')
     within_str = f'within d\'{start_formatted_string}\', d\'{end_formatted_string}\''
 
     # Fetch list of disks for the instance
@@ -446,13 +441,13 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
       self.start_formatted_string = self.start_time
     else:
       self.start_formatted_string = op.get(
-          flags.START_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+          flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')
 
     if hasattr(self, 'end_time'):
       self.end_formatted_string = self.end_time
     else:
       self.end_formatted_string = op.get(
-          flags.END_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+          flags.END_TIME).strftime('%Y/%m/%d %H:%M:%S')
 
     #op.info(('\n\nStart TIme: {}, End time: {}\n\n').format(
     #    self.start_formatted_string, self.end_formatted_string))
@@ -1372,7 +1367,7 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
                 ('{} usage is reaching beyond optimal limits for disk type {} for this VM'
                 ).format(metric_name, storage_type),
                 remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                        vm_name=vm.name,
+                                        full_resource_path=vm.full_path,
                                         status=vm.status))
           else:
             op.add_ok(
@@ -1388,10 +1383,10 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
 
 
 class VmPerformanceEnd(runbook.EndStep):
-  """Finalizing VM performance diagnostics..."""
+  """Finalize VM performance diagnostics."""
 
   def execute(self):
-    """Finalizing VM performance diagnostics..."""
+    """Finalize VM performance diagnostics."""
     response = None
     if not config.get(flags.INTERACTIVE_MODE):
       response = op.prompt(

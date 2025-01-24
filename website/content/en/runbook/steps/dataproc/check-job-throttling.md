@@ -4,7 +4,7 @@ linkTitle: "Check Job Throttling"
 weight: 3
 type: docs
 description: >
-  Verify the presence of Job Throttling logs...
+  Verify the presence of Job Throttling logs.
 ---
 
 **Product**: [Cloud Dataproc](https://cloud.google.com/dataproc)\

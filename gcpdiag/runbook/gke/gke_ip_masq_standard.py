@@ -74,11 +74,11 @@ class GkeIpMasqStandard(runbook.DiagnosticTree):
           'help':
               'GKE Node IP address or address range/CIDR (Example 192.168.1.0/24)'
       },
-      flags.START_TIME_UTC: {
+      flags.START_TIME: {
           'type': datetime,
           'help': 'Start time of the issue',
       },
-      flags.END_TIME_UTC: {
+      flags.END_TIME: {
           'type': datetime,
           'help': 'End time of the issue',
       }
@@ -113,7 +113,7 @@ class GkeIpMasqStandardStart(runbook.StartStep):
   """
 
   def execute(self):
-    """Lets check the provided parameters..."""
+    """Lets check the provided parameters."""
     #     # skip if logging is disabled
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
@@ -196,7 +196,7 @@ class Nodeproblem(runbook.Step):
     log_entries = logs.realtime_query(
         project_id=op.get(flags.PROJECT_ID),
         filter_str=f'''"{op.get(flags.DEST_IP)}" OR "{op.get(flags.SRC_IP)}"''',
-        start_time_utc=op.get(flags.END_TIME_UTC),
+        start_time_utc=op.get(flags.END_TIME),
         end_time_utc=datetime.now())
 
     if log_entries:
@@ -235,7 +235,7 @@ class CheckConfigMap(runbook.Step):
   template = 'ipmasq_standard::configmap'
 
   def execute(self):
-    """Lets confirm if config map  is configure.."""
+    """Lets confirm if config map  is configure."""
 
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
@@ -271,7 +271,7 @@ class CheckNodeIP(runbook.Step):
   template = 'ipmasq_standard::node'
 
   def execute(self):
-    '''Lets check node IP is present under non-masq cidr...'''
+    '''Lets check node IP is present under non-masq cidr.'''
 
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
@@ -307,7 +307,7 @@ class GkeIpMasqStandardEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing connectivity diagnostics.."""
+    """Finalize connectivity diagnostics."""
 
     op.info(
         message=

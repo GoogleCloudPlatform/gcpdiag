@@ -1,21 +1,18 @@
 ---
-title: "gce/Vm Lifecycle State"
-linkTitle: "Vm Lifecycle State"
+title: "gce/Serial Log Analyzer Start"
+linkTitle: "Serial Log Analyzer Start"
 weight: 3
 type: docs
 description: >
-  Validates that a specified VM is in the 'RUNNING' state.
+  Fetching VM details.
 ---
 
 **Product**: [Compute Engine](https://cloud.google.com/compute)\
-**Step Type**: AUTOMATED STEP
+**Step Type**: START
 
 ### Description
 
-This step is crucial for confirming the VM's availability and operational readiness.
-  It checks the VM's lifecycle state and reports success if the VM is running or fails the
-  check if the VM is in any other state, providing detailed status information for
-  troubleshooting.
+None
 
 ### Failure Reason
 

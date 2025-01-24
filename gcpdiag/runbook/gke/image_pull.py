@@ -26,8 +26,8 @@ from gcpdiag.runbook.gke import flags
 def local_realtime_query(filter_list):
   filter_str = '\n'.join(filter_list)
   result = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
-                               start_time_utc=op.get(flags.START_TIME_UTC),
-                               end_time_utc=op.get(flags.END_TIME_UTC),
+                               start_time_utc=op.get(flags.START_TIME),
+                               end_time_utc=op.get(flags.END_TIME),
                                filter_str=filter_str)
   return result
 
@@ -64,7 +64,7 @@ class ImagePull(runbook.DiagnosticTree):
           'help': '(Optional) The zone or region of the GKE cluster',
           'required': False
       },
-      flags.START_TIME_UTC: {
+      flags.START_TIME: {
           'type':
               datetime,
           'help':
@@ -72,7 +72,7 @@ class ImagePull(runbook.DiagnosticTree):
           'required':
               False
       },
-      flags.END_TIME_UTC: {
+      flags.END_TIME: {
           'type':
               datetime,
           'help':
@@ -191,15 +191,13 @@ class ImageNotFound(runbook.Step):
   template = 'imagepull::image_not_found'
 
   def execute(self):
-    """
-    Check for "Failed to pull image.*not found" log entries
-    """
+    """Check for "Failed to pull image.*not found" log entries."""
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
+    start_time_utc = op.get(flags.START_TIME)
+    end_time_utc = op.get(flags.END_TIME)
     filter_list = [
         'log_id("events")',
         'resource.type="k8s_pod"',
@@ -235,15 +233,13 @@ class ImageForbidden(runbook.Step):
   template = 'imagepull::image_forbidden'
 
   def execute(self):
-    """
-    Check for "Failed to pull image.*403 Forbidden" log entries
-    """
+    """Check for "Failed to pull image.*403 Forbidden" log entries."""
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
+    start_time_utc = op.get(flags.START_TIME)
+    end_time_utc = op.get(flags.END_TIME)
     filter_list = [
         'log_id("events")',
         'resource.type="k8s_pod"',
@@ -278,15 +274,13 @@ class ImageDnsIssue(runbook.Step):
   template = 'imagepull::image_dns_issue'
 
   def execute(self):
-    """
-    Check for "Failed to pull image.*lookup.*server misbehaving" log entries
-    """
+    """Check for "Failed to pull image.*lookup.*server misbehaving" log entries."""
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
+    start_time_utc = op.get(flags.START_TIME)
+    end_time_utc = op.get(flags.END_TIME)
     filter_list = [
         'log_id("events")',
         'resource.type="k8s_pod"',
@@ -329,8 +323,8 @@ class ImageConnectionTimeoutRestrictedPrivate(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
+    start_time_utc = op.get(flags.START_TIME)
+    end_time_utc = op.get(flags.END_TIME)
     filter_list = [
         'log_id("events")',
         'resource.type="k8s_pod"',
@@ -373,8 +367,8 @@ class ImageConnectionTimeout(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
+    start_time_utc = op.get(flags.START_TIME)
+    end_time_utc = op.get(flags.END_TIME)
     filter_list = [
         'log_id("events")',
         'resource.type="k8s_pod"',
@@ -417,8 +411,8 @@ class ImageNotFoundInsufficientScope(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
+    start_time_utc = op.get(flags.START_TIME)
+    end_time_utc = op.get(flags.END_TIME)
     filter_list = [
         'log_id("events")',
         'resource.type="k8s_pod"',
@@ -459,7 +453,7 @@ class ImagePullEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing `GKE Image Pull runbbok` diagnostics..."""
+    """Finalize `GKE Image Pull runbbok` diagnostics."""
     response = op.prompt(
         kind=op.CONFIRMATION,
         message='Are you satisfied with the `GKE Image Pull runbbok` analysis?')

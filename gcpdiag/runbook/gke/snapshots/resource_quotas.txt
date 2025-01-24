@@ -1,5 +1,5 @@
-end_time_utc=2024-12-09T07:40:16Z,project_id=gcpdiag-gke-cluster-autoscaler-
-rrrr,start_time_utc=2024-12-08T07:40:16Z
+end_time=2024-12-09T07:40:16Z,project_id=gcpdiag-gke-cluster-autoscaler-
+rrrr,start_time=2024-12-08T07:40:16Z
 
 gke/resource-quotas: Analyses logs in the project where the cluster is running.
 
@@ -10,7 +10,7 @@ gke/resource-quotas: Analyses logs in the project where the cluster is running.
 [START]: 
     Check the provided parameters.
     
-[AUTOMATED STEP]: Verifying Cloud API state...
+[AUTOMATED STEP]: Verify Cloud API state.
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [OK]
      [REASON]
@@ -60,6 +60,6 @@ gke/resource-quotas: Analyses logs in the project where the cluster is running.
 
      There are two resolutions for this issues regarding GKE resource quotas with name "gke-resource-quotas". Kindly open the GCP support case to increase a resource quota to a specific number or request to disable GKE resource quotas for the cluster.
 
-[END]: Finalizing `Resource Quotas` diagnostics...
+[END]: Finalize `Resource Quotas` diagnostics.
 
 

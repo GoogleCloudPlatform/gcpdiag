@@ -22,9 +22,9 @@ dataflow/job-permissions: Analysis and Resolution of Dataflow Jobs Permissions i
   By ensuring that Dataflow resources have the necessary permissions, you
   can prevent errors and ensure that your jobs run smoothly.
   
-[START]: Executing default start step for runbooks...
+[START]: Executing default start step for runbooks.
 [AUTOMATED STEP]: Check the Authenticated User account permissions.
-[AUTOMATED STEP]: Verifying IAM policy
+[AUTOMATED STEP]: Verify IAM policy
 
    - projects/gcpdiag-dataflow1-aaaa                                      [FAIL]
      [REASON]
@@ -41,7 +41,7 @@ dataflow/job-permissions: Analysis and Resolution of Dataflow Jobs Permissions i
      [1] https://cloud.google.com/iam/docs/grant-role-console
      [2] https://cloud.google.com/iam/docs/understanding-roles
 
-[AUTOMATED STEP]: Verifying IAM policy
+[AUTOMATED STEP]: Verify IAM policy
 
    - projects/gcpdiag-dataflow1-aaaa                                      [FAIL]
      [REASON]

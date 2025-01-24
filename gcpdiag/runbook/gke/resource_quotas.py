@@ -52,7 +52,7 @@ class ResourceQuotas(runbook.DiagnosticTree):
           'help': '(Optional) The zone or region of the GKE cluster',
           'required': False
       },
-      flags.START_TIME_UTC: {
+      flags.START_TIME: {
           'type':
               datetime,
           'help':
@@ -60,7 +60,7 @@ class ResourceQuotas(runbook.DiagnosticTree):
           'required':
               False
       },
-      flags.END_TIME_UTC: {
+      flags.END_TIME: {
           'type':
               datetime,
           'help':
@@ -180,9 +180,8 @@ class ResourceQuotaExceeded(runbook.Step):
 
     log_entries = logs.realtime_query(project_id=project,
                                       filter_str=filter_str,
-                                      start_time_utc=op.get(
-                                          flags.START_TIME_UTC),
-                                      end_time_utc=op.get(flags.END_TIME_UTC))
+                                      start_time_utc=op.get(flags.START_TIME),
+                                      end_time_utc=op.get(flags.END_TIME))
 
     if log_entries:
       # taking the last log entry to provide as output, because the latest log entry is always
@@ -195,9 +194,8 @@ class ResourceQuotaExceeded(runbook.Step):
                                        CLUSTER=self.cluster_name,
                                        PROJECT=project,
                                        LOCATION=self.cluster_location,
-                                       START_TIME_UTC=op.get(
-                                           flags.START_TIME_UTC),
-                                       END_TIME_UTC=op.get(flags.END_TIME_UTC)),
+                                       START_TIME_UTC=op.get(flags.START_TIME),
+                                       END_TIME_UTC=op.get(flags.END_TIME)),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
@@ -205,8 +203,8 @@ class ResourceQuotaExceeded(runbook.Step):
                                    CLUSTER=self.cluster_name,
                                    PROJECT=project,
                                    LOCATION=self.cluster_location,
-                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
-                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+                                   START_TIME_UTC=op.get(flags.START_TIME),
+                                   END_TIME_UTC=op.get(flags.END_TIME)))
 
 
 class ResourceQuotasEnd(runbook.EndStep):
@@ -220,7 +218,7 @@ class ResourceQuotasEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing `Resource Quotas` diagnostics..."""
+    """Finalize `Resource Quotas` diagnostics."""
     response = op.prompt(
         kind=op.CONFIRMATION,
         message='Are you satisfied with the `GKE Resource Quotas` RCA performed?'

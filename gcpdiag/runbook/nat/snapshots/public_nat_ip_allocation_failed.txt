@@ -24,13 +24,13 @@ nat/public-nat-ip-allocation-failed: Troubleshooting for IP Allocation issues fo
 
    - gcpdiag-nat1-aaaa                                                    [FAIL]
      [REASON]
-        NAT IP allocation failure found on the NAT Gateway: public-nat-gateway
+     NAT IP allocation failure found on the NAT Gateway: public-nat-gateway
 
      [REMEDIATION]
-        Continue the runbook for further diagnostic and remediation steps for the
-        IP exhaustion issue on public-nat-gateway
+     Continue the runbook for further diagnostic and remediation steps for the
+     IP exhaustion issue on public-nat-gateway
 
-[GATEWAY]:     Checks if the NATGW router is configured with manual or automatic IP allocation
+[GATEWAY]: Checks if the NATGW router is configured with manual or automatic IP allocation
 [AUTOMATED STEP]: NAT IP allocation is configured with MANUAL_ONLY.
 
     Running diagnostic for NAT Gateway configured as MANUAL_ONLY only
@@ -38,25 +38,25 @@ nat/public-nat-ip-allocation-failed: Troubleshooting for IP Allocation issues fo
 
    - gcpdiag-nat1-aaaa                                                    [OK]
      [REASON]
-         Checking on the status and configuration of the Cloud NAT Router public-nat-cloud-router and Gateway:
+     Checking on the status and configuration of the Cloud NAT Router public-nat-cloud-router and Gateway:
 
-            1. Minimum extra NAT IPs Needed: 2
-            2. Number of VM Endpoints With NAT mappings: 2
-            3. Dynamic port allocation enabled: False
-            4. Number of NAT Gateway IPs in use: 1
+     1. Minimum extra NAT IPs Needed: 2
+     2. Number of VM Endpoints With NAT mappings: 2
+     3. Dynamic port allocation enabled: False
+     4. Number of NAT Gateway IPs in use: 1
 
 
    - gcpdiag-nat1-aaaa                                                    [OK]
      [REASON]
-         The NAT Gateway public-nat-gateway is configured for manual IP allocation:
+     The NAT Gateway public-nat-gateway is configured for manual IP allocation:
 
-             The number of NAT IPs required is less than quota limit of  300. Consider
-             taking the steps in [1] to allocate more IP address or further optimze
-             port utilization on the gateway [2]
+     The number of NAT IPs required is less than quota limit of 300. Consider
+     taking the steps in [1] to allocate more IP address or further optimze
+     port utilization on the gateway [2]
 
-             1. https://cloud.google.com/nat/docs/troubleshooting#allocate-more-IPs
-             2. https://cloud.google.com/nat/docs/troubleshooting#reduce-ports
+     1. https://cloud.google.com/nat/docs/troubleshooting#allocate-more-IPs
+     2. https://cloud.google.com/nat/docs/troubleshooting#reduce-ports
 
-[END]:     Concludes the NAT IP allocation failed diagnostics process
+[END]: Concludes the NAT IP allocation failed diagnostics process
 
 

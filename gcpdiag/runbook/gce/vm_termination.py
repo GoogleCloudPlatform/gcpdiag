@@ -37,7 +37,7 @@ LOGGING_FILTER = '''resource.type="gce_instance"
 
 
 class VmTermination(runbook.DiagnosticTree):
-  """GCE VM shutdowns and reboots Root Cause Analysis (RCA)
+  """GCE Instance shutdowns and reboots Root Cause Analysis (RCA)
 
   This runbook is designed to assist you in investigating and understanding the underlying reasons
   behind the unexpected termination or reboot of your GCE Virtual Machines (VMs) within Google
@@ -85,13 +85,13 @@ class VmTermination(runbook.DiagnosticTree):
           'help': 'The Google Cloud zone where the terminated VM is located.',
           'required': True
       },
-      flags.START_TIME_UTC: {
+      flags.START_TIME: {
           'type':
               datetime,
           'help':
               'The start window to investigate vm termination. Format: YYYY-MM-DDTHH:MM:SSZ'
       },
-      flags.END_TIME_UTC: {
+      flags.END_TIME: {
           'type':
               datetime,
           'help':
@@ -167,7 +167,7 @@ class SingleTerminationCheck(runbook.Step):
   template = 'rca::vm_termination'
 
   def execute(self):
-    """Investigating VM termination reason..."""
+    """Investigating VM termination reason."""
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
                           instance_name=op.get(flags.NAME))
@@ -176,8 +176,8 @@ class SingleTerminationCheck(runbook.Step):
         project_id=op.get(flags.PROJECT_ID),
         filter_str=
         f'{LOGGING_FILTER}\nresource.labels.instance_id="{op.get(flags.ID)}"',
-        start_time_utc=op.get(flags.START_TIME_UTC),
-        end_time_utc=op.get(flags.END_TIME_UTC))
+        start_time_utc=op.get(flags.START_TIME),
+        end_time_utc=op.get(flags.END_TIME))
 
     termination_details: Dict[str, set] = {}
     # TODO: implement https://cloud.google.com/compute/shielded-vm/
@@ -207,8 +207,8 @@ class SingleTerminationCheck(runbook.Step):
     else:
       op.add_ok(resource=vm,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   start_time_utc=op.get(flags.START_TIME_UTC),
-                                   end_time_utc=op.get(flags.END_TIME_UTC)))
+                                   start_time_utc=op.get(flags.START_TIME),
+                                   end_time_utc=op.get(flags.END_TIME)))
 
     status_check = gcp_gs.ResourceAttributeCheck()
     status_check.resource_query = gce.get_instance
@@ -221,7 +221,7 @@ class SingleTerminationCheck(runbook.Step):
     status_check.expected_value = 'RUNNING'
     status_check.template = 'gcpdiag.runbook.gce::vm_attributes::terminated_vm_running'
     status_check.extract_args = {
-        'vm_name': {
+        'full_resource_path': {
             'source': Resource,
             'attribute': ('name')
         },
@@ -245,12 +245,11 @@ class MultipleTerminationCheck(runbook.Step):
   """
 
   def execute(self):
-    """Investigating Reasons for multiple VM termination..."""
+    """Investigating Reasons for multiple VM termination."""
     log_entries = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
                                       filter_str=LOGGING_FILTER,
-                                      start_time_utc=op.get(
-                                          flags.START_TIME_UTC),
-                                      end_time_utc=op.get(flags.END_TIME_UTC))
+                                      start_time_utc=op.get(flags.START_TIME),
+                                      end_time_utc=op.get(flags.END_TIME))
 
     termination_details: Dict[str, set] = {}
 
@@ -287,7 +286,7 @@ class VmTerminationEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing VM terminations diagnostics..."""
+    """Finalize VM terminations diagnostics."""
     response = op.prompt(
         kind=op.CONFIRMATION,
         message='Are you satisfied with the VM termination RCA performed?')
