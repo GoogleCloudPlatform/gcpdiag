@@ -23,6 +23,25 @@ from gcpdiag.runbook.gcp import flags
 from gcpdiag.runbook.op import Operator
 
 
+class LegacyParamHandler(runbook.DiagnosticTree):
+  """test runbook"""
+  parameters = {
+      'new_param': {
+          'required': True
+      },
+      'deprecated_param': {
+          'new_parameter': 'new_param',
+          'deprecated': True
+      }
+  }
+
+  # pylint: disable=unused-argument
+  def legacy_parameter_handler(self, parameters):
+    if 'deprecated_param' in parameters:
+      parameters['new_param'] = True
+      del parameters['deprecated_param']
+
+
 class TestDiagnosticEngine(unittest.TestCase):
   """Test Diagnostic Engine"""
 
@@ -42,6 +61,37 @@ class TestDiagnosticEngine(unittest.TestCase):
       dt.parameters = {'missing_param': {'required': True,}}
       self.de._check_required_paramaters(parameter_def=dt.parameters,
                                          caller_args=models.Parameter())
+
+  @patch('logging.warning')
+  def test_run_diagnostic_tree_deprecated_parameters(self, mock_logging_error):
+    parameters = {
+        'deprecated_param': {
+            'deprecated': True,
+            'new_parameter': 'new_value'
+        }
+    }
+    result = self.de._check_deprecated_paramaters(
+        parameter_def=parameters,
+        caller_args=models.Parameter({'deprecated_param': 'val'}))
+    assert 'Deprecated parameters:\ndeprecated_param. Use: new_value=value' in result
+    mock_logging_error.assert_called_once()
+
+  # pylint: disable=protected-access
+  def test_both_new_and_deprecated_missing(self):
+    with self.assertRaises(AttributeError):
+      dt = LegacyParamHandler()
+      user_supplied = models.Parameter({'random': 'value'})
+      dt.legacy_parameter_handler(user_supplied)
+      self.de._check_required_paramaters(parameter_def=dt.parameters,
+                                         caller_args=user_supplied)
+
+  # pylint: disable=protected-access
+  def test_backward_compatibility_for_deprecated_params(self):
+    dt = LegacyParamHandler()
+    user_supplied_param = models.Parameter({'deprecated_param': 'used_by_user'})
+    dt.legacy_parameter_handler(user_supplied_param)
+    self.de._check_required_paramaters(parameter_def=dt.parameters,
+                                       caller_args=user_supplied_param)
 
   @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
   def test_find_path_dfs_normal_operation(self, mock_run_step):
@@ -128,6 +178,24 @@ class TestDiagnosticEngine(unittest.TestCase):
     assert kwargs['step'].param_one == param['param_one']
     assert kwargs['step'].param_two == param['param_two']
     assert kwargs['step'].param_three == param['param_three']
+
+  def test_run_diagnostic_tree_missing_legacy_handler(self):
+    with self.assertRaises(TypeError) as context:
+      # pylint: disable=unused-variable
+      class MissingLegacyHandler(runbook.DiagnosticTree):
+        parameters = {
+            'deprecated_param': {
+                'type': str,
+                'help': 'Deprecated parameter',
+                'deprecated': True,  # triggers Type error because of this field
+                'new_parameter': 'new_param'
+            }
+        }
+
+    self.assertIn((
+        'does not implement legacy_parameter_handler(). Implement this method to handle '
+        'backward compatibility for deprecated parameters.'),
+                  str(context.exception))
 
 
 class TestSetDefaultParameters(unittest.TestCase):

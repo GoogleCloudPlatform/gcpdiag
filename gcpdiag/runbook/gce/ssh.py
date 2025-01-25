@@ -205,6 +205,31 @@ class Ssh(runbook.DiagnosticTree):
       }
   }
 
+  def legacy_parameter_handler(self, parameters):
+    if flags.NAME in parameters:
+      parameters[flags.INSTANCE_NAME] = parameters.pop(flags.NAME)
+
+    if flags.ID in parameters:
+      parameters[flags.INSTANCE_ID] = parameters.pop(flags.ID)
+
+    if flags.LOCAL_USER in parameters:
+      parameters[flags.POSIX_USER] = parameters.pop(flags.LOCAL_USER)
+
+    if flags.TUNNEL_THROUGH_IAP in parameters:
+      parameters[flags.PROXY] = IAP
+      del parameters[flags.TUNNEL_THROUGH_IAP]
+
+    if flags.CHECK_OS_LOGIN in parameters:
+      parameters[flags.ACCESS_METHOD] = OSLOGIN
+      del parameters[flags.CHECK_OS_LOGIN]
+
+    if CHECK_SSH_IN_BROWSER in parameters:
+      if parameters.pop(CHECK_SSH_IN_BROWSER):
+        parameters[flags.CLIENT] = SSH_IN_BROWSER
+
+    if flags.PROTOCOL_TYPE in parameters:
+      del parameters[flags.PROTOCOL_TYPE]  # Deprecated with no replacement
+
   def build_tree(self):
     start = SshStart()
     lifecycle_check = gce_gs.VmLifecycleState()

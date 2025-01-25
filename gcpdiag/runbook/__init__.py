@@ -22,6 +22,7 @@ import os
 import re
 import sys
 import textwrap
+from abc import abstractmethod
 from collections import OrderedDict
 from datetime import datetime, timedelta, timezone
 from typing import (Callable, Deque, Dict, List, Mapping, Optional, Set, Tuple,
@@ -260,9 +261,36 @@ class RunbookRule(type):
     new_class = super().__new__(mcs, name, bases, namespace)
     if name != 'DiagnosticTree' and bases[0] == DiagnosticTree:
       rule_id = util.runbook_name_parser(name)
+      mcs.validate_parameter_definitions(class_=mcs, namespace=namespace)
       product = namespace.get('__module__', '').split('.')[-2].lower()
       RunbookRegistry[f'{product}/{rule_id}'] = new_class
     return new_class
+
+  def validate_parameter_definitions(class_, namespace):
+    """Validate parameters defined for a runbook.
+
+    for now only check deprecated parameters backward compatibility.
+    """
+    deprecated_params = {
+        param_name: param_config
+        for param_name, param_config in (
+            namespace.get('parameters') or {}).items()
+        if param_config.get('deprecated', False)
+    }
+
+    if deprecated_params:
+      # Ensure the child class implements legacy_parameter_handler
+      if 'legacy_parameter_handler' not in namespace:
+        raise TypeError(
+            f"{namespace.get('__module__')} has deprecated parameters "
+            f"{', '.join(deprecated_params.keys())} but does not implement "
+            'legacy_parameter_handler(). Implement this method to handle '
+            'backward compatibility for deprecated parameters.')
+
+    for param_name, param_config in deprecated_params.items():
+      if param_config.get('required', False):
+        raise TypeError(
+            f"deprecated parameter '{param_name}' cannot be marked as required")
 
 
 class DiagnosticTree(metaclass=RunbookRule):
@@ -320,6 +348,8 @@ class DiagnosticTree(metaclass=RunbookRule):
 
   @final
   def hook_build_tree(self):
+    if hasattr(self, 'legacy_parameter_handler'):
+      self.legacy_parameter_handler(op.operator.parameters)
     try:
       self.build_tree()
     except exceptions.InvalidDiagnosticTree as err:
@@ -340,6 +370,50 @@ class DiagnosticTree(metaclass=RunbookRule):
     # Add the default step
     if self.start.steps[-1].type != constants.StepType.END:
       self.start.add_child(EndStep())
+
+  @abstractmethod
+  def legacy_parameter_handler(self, parameters):
+    """Handles the translation of deprecated parameters for backward compatibility.
+
+      This method ensures that runbooks using outdated parameters can still function correctly by
+      mapping old parameters to their new counterparts. It allows systems that do not yet know
+      the updated parameters to continue leveraging the runbook while gradually migrating to the
+      new parameter format.
+
+      Key Features:
+      1. Implement this `legacy_parameter_handler` method in your runbook class.
+      2. Map old parameters to their new equivalents within this method.
+      3. This function is invoked before the runbook is executed at runtime.
+      4. The function is always called before the `build_tree()` method.
+      5. Safely migrate the rest of the runbook logic to utilize the new parameters.
+
+      Usage Example:
+          class Runbook(DiagnosticTree):
+              parameters = {
+                  'deprecated_parameter': {
+                      'type': bool,
+                      'help': 'A deprecated parameter',
+                      'deprecated': True,
+                      'new_parameter': 'currentParameter'
+                  },
+                  'currentParameter': {
+                      'type': bool,
+                      'help': 'A new parameter',
+                  }
+              }
+
+              def legacy_parameter_handler(self, parameters):
+                  # Map deprecated parameters to their new equivalents
+                  if 'deprecated_parameter' in parameters:
+                      parameters['currentParameter'] = parameters.pop('deprecated_parameter', None)
+
+      - This method must be implemented if the runbook defines any deprecated parameters
+      in its `parameters` dictionary.
+      - Proper mapping ensures smooth runtime operation while providing backward compatibility
+      for older configurations.
+      """
+
+    pass
 
   def build_tree(self):
     """Constructs the diagnostic tree."""
@@ -510,6 +584,33 @@ class DiagnosticEngine:
         'help': 'End timeframe'
     })
 
+  def _check_deprecated_paramaters(self, parameter_def: Dict,
+                                   caller_args: models.Parameter):
+    deprecated_parameters = {
+        key: value
+        for key, value in parameter_def.items()
+        if value.get('deprecated', False) and key in caller_args
+    }
+    if deprecated_parameters:
+      res = 'Deprecated parameters:\n'
+      res += '\n'.join(
+          f"{key}. Use: {value.get('new_parameter')}={value.get('type','value')}"
+          for key, value in deprecated_parameters.items()
+          if value.get('new_parameter'))
+      logging.warning(
+          '%s deprecated/unsupported parameter(s) supplied to runbook. %s',
+          len(deprecated_parameters), res)
+      return res
+    return None
+
+  def process_parameters(self, runbook: DiagnosticTree,
+                         caller_args: models.Parameter):
+    self.parse_parameters(parameter_def=runbook.parameters,
+                          caller_args=caller_args)
+    runbook.legacy_parameter_handler(caller_args)
+    self._check_required_paramaters(parameter_def=runbook.parameters,
+                                    caller_args=caller_args)
+
   def parse_parameters(self, parameter_def: Dict,
                        caller_args: models.Parameter):
     """Set to defaults parameters and convert datatypes"""
@@ -615,9 +716,6 @@ class DiagnosticEngine:
     Args:
       context: The execution context for the diagnostic tree.
     """
-    self._check_required_paramaters(parameter_def=tree.parameters,
-                                    caller_args=parameter)
-    self.parse_parameters(parameter_def=tree.parameters, caller_args=parameter)
     self.interface.output.display_runbook_description(tree)
 
     try:
@@ -634,6 +732,7 @@ class DiagnosticEngine:
       if operator.tree:
         self.interface.rm.reports[tree.run_id].runbook_name = operator.tree.name
       with op.operator_context(operator):
+        self.process_parameters(runbook=tree, caller_args=parameter)
         tree.hook_build_tree()
       self.finalize = False
       self.find_path_dfs(step=tree.start,
