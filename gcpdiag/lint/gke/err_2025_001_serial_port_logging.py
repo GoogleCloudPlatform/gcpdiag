@@ -20,10 +20,11 @@ GKE clusters must be created with logging disabled (serial-port-logging-enable: 
 otherwise the creation of new nodes in Nodepool will fail.
 """
 
-import logging
 from typing import List
+
 from gcpdiag import lint, models
 from gcpdiag.queries import gke, orgpolicy
+
 
 def get_non_compliant_pools(cluster: gke.Cluster) -> List[str]:
   """
@@ -52,6 +53,7 @@ def get_non_compliant_pools(cluster: gke.Cluster) -> List[str]:
       if nodepool.config.has_serial_port_logging_enabled
   ]
 
+
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   clusters = gke.get_clusters(context)
   if not clusters:
@@ -72,5 +74,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       report.add_ok(cluster)
     else:
       report.add_failed(cluster, (
-          f'The following nodepools do not comply with the serial port logging org policy: {", ".join(non_compliant_pools)}'
+          'The following nodepools do not comply with the serial' \
+          f'port logging org policy: {', '.join(non_compliant_pools)}'
       ))

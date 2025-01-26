@@ -705,4 +705,3 @@ def get_release_schedule() -> Dict:
   ) as e:
     logging.error('Error in extracting gke release schedule: %s', e)
     return release_data
-
