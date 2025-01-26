@@ -275,10 +275,7 @@ class VmLifecycleState(runbook.Step):
                           zone=self.zone,
                           instance_name=self.instance_name)
     if not vm:
-      op.add_skipped(vm,
-                     reason=op.prep_msg(op.SKIPPED_REASON,
-                                        full_resource_path=vm.full_path,
-                                        status=vm.status))
+      op.add_skipped(None, reason=op.prep_msg(op.SKIPPED_REASON))
       return
 
     if vm.status == self.expected_lifecycle_status:
@@ -421,10 +418,7 @@ class VmSerialLogsCheck(runbook.Step):
                                     start_time=op.get(flags.START_TIME),
                                     end_time=op.get(flags.END_TIME)))
     else:
-      op.add_skipped(vm,
-                     reason=op.prep_msg(op.SKIPPED_REASON,
-                                        full_resource_path=vm.full_path,
-                                        instance_name=vm.name))
+      op.add_skipped(None, reason=op.prep_msg(op.SKIPPED_REASON))
 
 
 class VmMetadataCheck(runbook.Step):
