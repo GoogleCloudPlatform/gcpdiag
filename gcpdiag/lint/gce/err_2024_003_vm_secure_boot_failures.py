@@ -77,11 +77,11 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
                 i.id)):
               report.add_failed(
                   i,
-                  'Instance has been restricted to boot due to Sheilded VM policy violations'
+                  'Instance has been restricted to boot due to Shielded VM policy violations'
               )
             else:
               report.add_failed(
-                  i, 'Instance is Sheilded VM, has Secure boot failures events')
+                  i, 'Instance is Shielded VM, has Secure boot failures events')
       else:
         report.add_ok(i)
     else:

@@ -85,8 +85,8 @@ Usage:
 Commands:
         help     Print this help text.
         lint     Run diagnostics on GCP projects.
-        runbook  Run dianostrics tree to deep dive into GCP issue.
-        search   Find gcpdiag rules related to search terms
+        runbook  Run diagnostics tree to deep dive into GCP issue.
+        search   Find gcpdiag rules related to search terms.
         version  Print gcpdiag version.
 
 See: gcpdiag COMMAND --help for command-specific usage.""")
