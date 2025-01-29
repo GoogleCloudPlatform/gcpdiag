@@ -73,6 +73,16 @@ class ClusterAutoscaler(runbook.DiagnosticTree):
   The following ScaleDown logs messages are covered:
   - scale.down.error.failed.to.evict.pods
   - no.scale.down.node.node.group.min.size.reached
+  - no.scale.down.node.scale.down.disabled.annotation
+  - no.scale.down.node.minimal.resource.limits.exceeded
+  - no.scale.down.node.no.place.to.move.pods
+  - no.scale.down.node.pod.not.backed.by.controller
+  - no.scale.down.node.pod.not.safe.to.evict.annotation
+  - no.scale.down.node.pod.kube.system.unmovable
+  - no.scale.down.node.pod.not.enough.pdb
+  - no.scale.down.node.pod.controller.not.found
+  - no.scale.down.node.pod.unexpected.error
+
   """
   # Specify parameters common to all steps in the diagnostic tree class.
   parameters = {
@@ -105,6 +115,15 @@ class ClusterAutoscaler(runbook.DiagnosticTree):
     service_account_deleted = CaServiceAccountDeleted()
     min_size_reached = CaMinSizeReached()
     failed_to_evict_pods = CaFailedToEvictPods()
+    disabled_annotation = CaDisabledAnnotation()
+    min_resource_limit_exceeded = CaMinResourceLimitExceeded()
+    no_place_to_move_pods = CaNoPlaceToMovePods()
+    pod_not_backed_by_controller = CaPodsNotBackedByController()
+    not_safe_to_evict_annotation = CaNotSafeToEvictAnnotation()
+    pod_kube_system_unmovable = CaPodKubeSystemUnmovable()
+    pod_not_enough_pdb = CaPodNotEnoughPdb()
+    pod_controller_not_found = CaPodControllerNotFound()
+    pod_unexpected_error = CaPodUnexpectedError()
     end = ClusterAutoscalerEnd()
 
     self.add_start(step=start)
@@ -115,6 +134,19 @@ class ClusterAutoscaler(runbook.DiagnosticTree):
     self.add_step(parent=ip_space_exhausted, child=service_account_deleted)
     self.add_step(parent=service_account_deleted, child=min_size_reached)
     self.add_step(parent=min_size_reached, child=failed_to_evict_pods)
+    self.add_step(parent=failed_to_evict_pods, child=disabled_annotation)
+    self.add_step(parent=disabled_annotation, child=min_resource_limit_exceeded)
+    self.add_step(parent=min_resource_limit_exceeded,
+                  child=no_place_to_move_pods)
+    self.add_step(parent=no_place_to_move_pods,
+                  child=pod_not_backed_by_controller)
+    self.add_step(parent=pod_not_backed_by_controller,
+                  child=not_safe_to_evict_annotation)
+    self.add_step(parent=not_safe_to_evict_annotation,
+                  child=pod_kube_system_unmovable)
+    self.add_step(parent=pod_kube_system_unmovable, child=pod_not_enough_pdb)
+    self.add_step(parent=pod_not_enough_pdb, child=pod_controller_not_found)
+    self.add_step(parent=pod_controller_not_found, child=pod_unexpected_error)
     self.add_end(step=end)
 
 
@@ -424,6 +456,303 @@ class CaFailedToEvictPods(runbook.Step):
                 reason=op.prep_msg(op.SUCCESS_REASON,
                                    START_TIME_UTC=op.get(flags.START_TIME),
                                    END_TIME_UTC=op.get(flags.END_TIME)))
+
+
+class CaDisabledAnnotation(runbook.Step):
+  """Check for "no.scale.down.node.scale.down.disabled.annotation" log entries"""
+
+  template = 'clusterautoscaler::disabled_annotation'
+
+  def execute(self):
+    """
+    Check for "no.scale.down.node.scale.down.disabled.annotation" log entries
+    """
+    project = op.get(flags.PROJECT_ID)
+    project_path = crm.get_project(project)
+    cluster_location = op.get(flags.LOCATION)
+    cluster_name = op.get(flags.NAME)
+    error_message = 'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId=\
+      "no.scale.down.node.scale.down.disabled.annotation"'
+
+    log_entries = local_log_search(cluster_name, cluster_location,
+                                   error_message)
+
+    if log_entries:
+      for log_entry in log_entries:
+        sample_log = log_entry
+        break
+      op.add_failed(project_path,
+                    reason=op.prep_msg(op.FAILURE_REASON, LOG_ENTRY=sample_log),
+                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+    else:
+      op.add_ok(project_path,
+                reason=op.prep_msg(op.SUCCESS_REASON,
+                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
+                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+
+
+class CaMinResourceLimitExceeded(runbook.Step):
+  """Check for "no.scale.down.node.minimal.resource.limits.exceeded" log entries"""
+
+  template = 'clusterautoscaler::min_resource_limit_exceeded'
+
+  def execute(self):
+    """
+    Check for "no.scale.down.node.minimal.resource.limits.exceeded" log entries
+    """
+    project = op.get(flags.PROJECT_ID)
+    project_path = crm.get_project(project)
+    cluster_location = op.get(flags.LOCATION)
+    cluster_name = op.get(flags.NAME)
+    error_message = 'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId=\
+      "no.scale.down.node.minimal.resource.limits.exceeded"'
+
+    log_entries = local_log_search(cluster_name, cluster_location,
+                                   error_message)
+
+    if log_entries:
+      for log_entry in log_entries:
+        sample_log = log_entry
+        break
+      op.add_failed(project_path,
+                    reason=op.prep_msg(op.FAILURE_REASON, LOG_ENTRY=sample_log),
+                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+    else:
+      op.add_ok(project_path,
+                reason=op.prep_msg(op.SUCCESS_REASON,
+                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
+                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+
+
+class CaNoPlaceToMovePods(runbook.Step):
+  """Check for "no.scale.down.node.no.place.to.move.pods" log entries"""
+
+  template = 'clusterautoscaler::no_place_to_move_pods'
+
+  def execute(self):
+    """
+    Check for "no.scale.down.node.no.place.to.move.pods" log entries
+    """
+    project = op.get(flags.PROJECT_ID)
+    project_path = crm.get_project(project)
+    cluster_location = op.get(flags.LOCATION)
+    cluster_name = op.get(flags.NAME)
+    error_message = 'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId=\
+      "no.scale.down.node.no.place.to.move.pods"'
+
+    log_entries = local_log_search(cluster_name, cluster_location,
+                                   error_message)
+
+    if log_entries:
+      for log_entry in log_entries:
+        sample_log = log_entry
+        break
+      op.add_failed(project_path,
+                    reason=op.prep_msg(op.FAILURE_REASON, LOG_ENTRY=sample_log),
+                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+    else:
+      op.add_ok(project_path,
+                reason=op.prep_msg(op.SUCCESS_REASON,
+                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
+                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+
+
+class CaPodsNotBackedByController(runbook.Step):
+  """Check for "no.scale.down.node.pod.not.backed.by.controller" log entries"""
+
+  template = 'clusterautoscaler::pod_not_backed_by_controller'
+
+  def execute(self):
+    """
+    Check for "no.scale.down.node.pod.not.backed.by.controller" log entries
+    """
+    project = op.get(flags.PROJECT_ID)
+    project_path = crm.get_project(project)
+    cluster_location = op.get(flags.LOCATION)
+    cluster_name = op.get(flags.NAME)
+    error_message = 'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId=\
+      "no.scale.down.node.pod.not.backed.by.controller"'
+
+    log_entries = local_log_search(cluster_name, cluster_location,
+                                   error_message)
+
+    if log_entries:
+      for log_entry in log_entries:
+        sample_log = log_entry
+        break
+      op.add_failed(project_path,
+                    reason=op.prep_msg(op.FAILURE_REASON, LOG_ENTRY=sample_log),
+                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+    else:
+      op.add_ok(project_path,
+                reason=op.prep_msg(op.SUCCESS_REASON,
+                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
+                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+
+
+class CaNotSafeToEvictAnnotation(runbook.Step):
+  """Check for "no.scale.down.node.pod.not.safe.to.evict.annotation" log entries"""
+
+  template = 'clusterautoscaler::not_safe_to_evict_annotation'
+
+  def execute(self):
+    """
+    Check for "no.scale.down.node.pod.not.safe.to.evict.annotation" log entries
+    """
+    project = op.get(flags.PROJECT_ID)
+    project_path = crm.get_project(project)
+    cluster_location = op.get(flags.LOCATION)
+    cluster_name = op.get(flags.NAME)
+    error_message = 'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId=\
+      "no.scale.down.node.pod.not.safe.to.evict.annotation"'
+
+    log_entries = local_log_search(cluster_name, cluster_location,
+                                   error_message)
+
+    if log_entries:
+      for log_entry in log_entries:
+        sample_log = log_entry
+        break
+      op.add_failed(project_path,
+                    reason=op.prep_msg(op.FAILURE_REASON, LOG_ENTRY=sample_log),
+                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+    else:
+      op.add_ok(project_path,
+                reason=op.prep_msg(op.SUCCESS_REASON,
+                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
+                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+
+
+class CaPodKubeSystemUnmovable(runbook.Step):
+  """Check for "no.scale.down.node.pod.kube.system.unmovable" log entries"""
+
+  template = 'clusterautoscaler::pod_kube_system_unmovable'
+
+  def execute(self):
+    """
+    Check for "no.scale.down.node.pod.kube.system.unmovable" log entries
+    """
+    project = op.get(flags.PROJECT_ID)
+    project_path = crm.get_project(project)
+    cluster_location = op.get(flags.LOCATION)
+    cluster_name = op.get(flags.NAME)
+    error_message = 'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId=\
+      "no.scale.down.node.pod.kube.system.unmovable"'
+
+    log_entries = local_log_search(cluster_name, cluster_location,
+                                   error_message)
+
+    if log_entries:
+      for log_entry in log_entries:
+        sample_log = log_entry
+        break
+      op.add_failed(project_path,
+                    reason=op.prep_msg(op.FAILURE_REASON, LOG_ENTRY=sample_log),
+                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+    else:
+      op.add_ok(project_path,
+                reason=op.prep_msg(op.SUCCESS_REASON,
+                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
+                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+
+
+class CaPodNotEnoughPdb(runbook.Step):
+  """Check for "no.scale.down.node.pod.not.enough.pdb" log entries"""
+
+  template = 'clusterautoscaler::pod_not_enough_pdb'
+
+  def execute(self):
+    """
+    Check for "no.scale.down.node.pod.not.enough.pdb" log entries
+    """
+    project = op.get(flags.PROJECT_ID)
+    project_path = crm.get_project(project)
+    cluster_location = op.get(flags.LOCATION)
+    cluster_name = op.get(flags.NAME)
+    error_message = 'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId=\
+      "no.scale.down.node.pod.not.enough.pdb"'
+
+    log_entries = local_log_search(cluster_name, cluster_location,
+                                   error_message)
+
+    if log_entries:
+      for log_entry in log_entries:
+        sample_log = log_entry
+        break
+      op.add_failed(project_path,
+                    reason=op.prep_msg(op.FAILURE_REASON, LOG_ENTRY=sample_log),
+                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+    else:
+      op.add_ok(project_path,
+                reason=op.prep_msg(op.SUCCESS_REASON,
+                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
+                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+
+
+class CaPodControllerNotFound(runbook.Step):
+  """Check for "no.scale.down.node.pod.controller.not.found" log entries"""
+
+  template = 'clusterautoscaler::pod_controller_not_found'
+
+  def execute(self):
+    """
+    Check for "no.scale.down.node.pod.controller.not.found" log entries
+    """
+    project = op.get(flags.PROJECT_ID)
+    project_path = crm.get_project(project)
+    cluster_location = op.get(flags.LOCATION)
+    cluster_name = op.get(flags.NAME)
+    error_message = 'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId=\
+      "no.scale.down.node.pod.controller.not.found"'
+
+    log_entries = local_log_search(cluster_name, cluster_location,
+                                   error_message)
+
+    if log_entries:
+      for log_entry in log_entries:
+        sample_log = log_entry
+        break
+      op.add_failed(project_path,
+                    reason=op.prep_msg(op.FAILURE_REASON, LOG_ENTRY=sample_log),
+                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+    else:
+      op.add_ok(project_path,
+                reason=op.prep_msg(op.SUCCESS_REASON,
+                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
+                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+
+
+class CaPodUnexpectedError(runbook.Step):
+  """Check for "no.scale.down.node.pod.unexpected.error" log entries"""
+
+  template = 'clusterautoscaler::pod_unexpected_error'
+
+  def execute(self):
+    """
+    Check for "no.scale.down.node.pod.unexpected.error" log entries
+    """
+    project = op.get(flags.PROJECT_ID)
+    project_path = crm.get_project(project)
+    cluster_location = op.get(flags.LOCATION)
+    cluster_name = op.get(flags.NAME)
+    error_message = 'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId=\
+      "no.scale.down.node.pod.unexpected.error"'
+
+    log_entries = local_log_search(cluster_name, cluster_location,
+                                   error_message)
+
+    if log_entries:
+      for log_entry in log_entries:
+        sample_log = log_entry
+        break
+      op.add_failed(project_path,
+                    reason=op.prep_msg(op.FAILURE_REASON, LOG_ENTRY=sample_log),
+                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+    else:
+      op.add_ok(project_path,
+                reason=op.prep_msg(op.SUCCESS_REASON,
+                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
+                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
 
 
 class ClusterAutoscalerEnd(runbook.EndStep):

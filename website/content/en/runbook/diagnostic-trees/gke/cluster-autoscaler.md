@@ -26,6 +26,15 @@ If there are log entries that contain messages listed in the public documentatio
   The following ScaleDown logs messages are covered:
   - scale.down.error.failed.to.evict.pods
   - no.scale.down.node.node.group.min.size.reached
+  - no.scale.down.node.scale.down.disabled.annotation
+  - no.scale.down.node.minimal.resource.limits.exceeded
+  - no.scale.down.node.no.place.to.move.pods
+  - no.scale.down.node.pod.not.backed.by.controller
+  - no.scale.down.node.pod.not.safe.to.evict.annotation
+  - no.scale.down.node.pod.kube.system.unmovable
+  - no.scale.down.node.pod.not.enough.pdb
+  - no.scale.down.node.pod.controller.not.found
+  - no.scale.down.node.pod.unexpected.error
 
 ### Executing this runbook
 
@@ -67,6 +76,24 @@ gcpdiag runbook --help
   - [Ca Min Size Reached](/runbook/steps/gke/ca-min-size-reached)
 
   - [Ca Failed To Evict Pods](/runbook/steps/gke/ca-failed-to-evict-pods)
+
+  - [Ca Disabled Annotation](/runbook/steps/gke/ca-disabled-annotation)
+
+  - [Ca Min Resource Limit Exceeded](/runbook/steps/gke/ca-min-resource-limit-exceeded)
+
+  - [Ca No Place To Move Pods](/runbook/steps/gke/ca-no-place-to-move-pods)
+
+  - [Ca Pods Not Backed By Controller](/runbook/steps/gke/ca-pods-not-backed-by-controller)
+
+  - [Ca Not Safe To Evict Annotation](/runbook/steps/gke/ca-not-safe-to-evict-annotation)
+
+  - [Ca Pod Kube System Unmovable](/runbook/steps/gke/ca-pod-kube-system-unmovable)
+
+  - [Ca Pod Not Enough Pdb](/runbook/steps/gke/ca-pod-not-enough-pdb)
+
+  - [Ca Pod Controller Not Found](/runbook/steps/gke/ca-pod-controller-not-found)
+
+  - [Ca Pod Unexpected Error](/runbook/steps/gke/ca-pod-unexpected-error)
 
   - [Cluster Autoscaler End](/runbook/steps/gke/cluster-autoscaler-end)
 

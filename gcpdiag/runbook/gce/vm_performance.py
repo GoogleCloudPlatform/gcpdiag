@@ -106,6 +106,7 @@ class VmPerformance(runbook.DiagnosticTree):
     disk_util_check.instance_name = op.get(flags.NAME)
 
     vm_lifecycle_check = gce_gs.VmLifecycleState()
+    vm_lifecycle_check.expected_lifecycle_status = 'RUNNING'
     vm_lifecycle_check.project_id = op.get(flags.PROJECT_ID)
     vm_lifecycle_check.zone = op.get(flags.ZONE)
     vm_lifecycle_check.instance_name = op.get(flags.NAME)

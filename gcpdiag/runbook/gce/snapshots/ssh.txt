@@ -554,7 +554,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 
    - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [FAIL]
      [REASON]
-     The GCE Instance projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances/faulty-windows-ssh is not in the TERMINATED.
+     The GCE Instance projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances/faulty-windows-ssh is in TERMINATED state.
 
      [REMEDIATION]
      Restart VM projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances/faulty-windows-ssh and ensure VM lifecycle transitions from TERMINATED to RUNNING.
