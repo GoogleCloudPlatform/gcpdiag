@@ -14,9 +14,18 @@ Please follow the below documentation [1] to add ipv4 range to the autopilot clu
 {% endblock pod_ip_exhaustion_failure_remediation %}
 
 {% block pod_ip_exhaustion_failure_remediation_a1 %}
-Please follow the below documentation [1] to add ipv4 pod range to a standard cluster to mitgate the issue.
+Consider leveraging the Class E IPv4 address space (240.0.0.0/4) to support your growth.
+While these addresses are reserved for future use (see Google VPC network valid IPv4 ranges [1]), they can be used in certain situations.
 
-[1] https://cloud.google.com/kubernetes-engine/docs/how-to/multi-pod-cidr#cluster-add-pod-ipv4-range
+The linked documentation [2] addresses common misconceptions about Class E, discusses its benefits and considerations, and provides guidance on planning and using GKE clusters with this address space.
+It also includes a real-world example of how Class E successfully solved IP exhaustion challenges.
+
+Additionally, the documentation [3] provides instructions to add ipv4 pod range to a standard cluster to mitgate the issue.
+
+[1] https://cloud.google.com/vpc/docs/subnets#valid-ranges
+[2] https://cloud.google.com/blog/products/containers-kubernetes/how-class-e-addresses-solve-for-ip-address-exhaustion-in-gke
+[3] https://cloud.google.com/kubernetes-engine/docs/how-to/multi-pod-cidr#cluster-add-pod-ipv4-range
+
 {% endblock pod_ip_exhaustion_failure_remediation_a1 %}
 
 
