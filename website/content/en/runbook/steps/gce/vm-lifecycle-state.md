@@ -19,7 +19,7 @@ This step is crucial for confirming the VM's availability and operational readin
 
 ### Failure Reason
 
-The GCE Instance {full_resource_path} is not in the {status}.
+The GCE Instance {full_resource_path} is in {status} state.
 
 ### Failure Remediation
 

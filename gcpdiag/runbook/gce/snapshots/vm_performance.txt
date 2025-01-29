@@ -21,6 +21,11 @@ gce/vm-performance:  Google Compute Engine VM performance checks
   
 [START]: Verify GCE Instance is in a "RUNNING" state.
 [AUTOMATED STEP]: Verify GCE Instance is in a "RUNNING" state.
+
+   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [OK]
+     [REASON]
+     The GCE Instance projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances/faulty-linux-ssh is in RUNNING state.
+
 [AUTOMATED STEP]: Verify VM CPU utilization is within optimal levels.
 
    - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
@@ -319,7 +324,7 @@ gce/vm-performance:  Google Compute Engine VM performance checks
 
    - gcpdiag-gce-vm-performance/faulty-windows-ssh                        [FAIL]
      [REASON]
-     The GCE Instance projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances/faulty-windows-ssh is not in the TERMINATED.
+     The GCE Instance projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances/faulty-windows-ssh is in TERMINATED state.
 
      [REMEDIATION]
      Restart VM projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances/faulty-windows-ssh and ensure VM lifecycle transitions from TERMINATED to RUNNING.
@@ -332,6 +337,21 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      to identify and resolve potential startup issues.
 
 [AUTOMATED STEP]: Verify GCE Instance is in a "RUNNING" state.
+
+   - gcpdiag-gce-vm-performance/faulty-windows-ssh                        [FAIL]
+     [REASON]
+     The GCE Instance projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances/faulty-windows-ssh is in TERMINATED state.
+
+     [REMEDIATION]
+     Restart VM projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances/faulty-windows-ssh and ensure VM lifecycle transitions from TERMINATED to RUNNING.
+
+     You can [restart a compute instance](https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm)
+     with this guide.
+
+     If you encounter any difficulties starting the VM, consult the [VM Startup troubleshooting
+     documentation](https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting)
+     to identify and resolve potential startup issues.
+
 [AUTOMATED STEP]: Verify VM CPU utilization is within optimal levels.
 
    - gcpdiag-gce-vm-performance/faulty-windows-ssh                        [FAIL]
