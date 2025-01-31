@@ -16,19 +16,21 @@ None
 
 ### Success Reason
 
-Health check logging is enabled
+Health check logging is enabled for health check {hc_url}.
 
 ### Uncertain Reason
 
-Logging is not enabled for health check
+Logging is not enabled for health check {hc_url}.
 
 ### Uncertain Remediation
 
-Enable logging for the health check using the following gcloud command:
+Enable logging for the health check using the following `gcloud` command:
 
-gcloud compute health-checks update {protocol} {hc_name} {additional_flags}--enable-logging
+```
+gcloud compute health-checks update {protocol} {hc_name} {additional_flags} --enable-logging
+```
 
-This will log any future changes in health status but won't show any past activity. Note that the new health check logs will only appear when a health state transition occurs.
+This will log any future changes in health status, but won't show past activity. Note that new health check logs will only appear when a health state transition occurs.
 
 
 

@@ -20,9 +20,9 @@ The load balancer is performing health checks using the same protocol ({hc_proto
 
 ### Uncertain Reason
 
-The load balancer uses {serving_protocol} for traffic but {hc_protocol} for health checks. If not intended, this protocol mismatch can lead to incorrect health assessments, causing traffic to be sent to failing backends or unnecessary failovers.
+The load balancer uses {serving_protocol} for traffic but {hc_protocol} for health checks on backend service {bs_resource}. If not intended, this protocol mismatch can lead to incorrect health assessments, potentially causing traffic to be sent to failing backends or triggering unnecessary failovers.
 
-**Important:** Health checks using {hc_protocol} might be passing while the application serving {serving_protocol} traffic is failing, because the success criteria for the two protocols can be different. More details on the health check success criteria can be found in [docs](https://cloud.google.com/load-balancing/docs/health-check-concepts#criteria-protocol-http).
+**Important:** Health checks using {hc_protocol} might be passing while the application serving {serving_protocol} traffic is failing because the success criteria for the two protocols can differ. More details on the health check success criteria can be found in [docs](https://cloud.google.com/load-balancing/docs/health-check-concepts#criteria-protocol-http).
 
 
 

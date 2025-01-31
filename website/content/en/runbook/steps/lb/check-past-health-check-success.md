@@ -16,7 +16,7 @@ None
 
 ### Uncertain Remediation
 
-Check the logs and monitoring metrics for those instances, focusing on the given timeframes to see if there were any errors, crashes, or resource exhaustion issues that coincide with the unhealthy transition. You can also inspect any application-specific logs for errors or warnings around the timestamp.
+Check the logs and monitoring metrics for the instances associated with backend service {bs_url}, focusing on recent timeframes to see if there were any errors, crashes, or resource exhaustion issues. You can also inspect any application-specific logs for errors or warnings.
 
 
 

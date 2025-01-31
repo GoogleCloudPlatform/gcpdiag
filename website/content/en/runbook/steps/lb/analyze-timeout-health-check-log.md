@@ -16,7 +16,9 @@ None
 
 ### Uncertain Reason
 
-Health check logs show the detailed health state "TIMEOUT".
+Health check logs for backend service {bs_url} show the detailed health state "TIMEOUT".
+
+Responses received from backends: {probe_results_text_str}
 
 The backend might be timing out because:
 
@@ -34,7 +36,7 @@ The following responses were received from your backends: {probe_results_text_st
 
 2. Investigate your application's configuration to ensure it is correctly handling health check probe requests. {success_criteria}
 
-3. Check if firewall rules or iptables configurations are not blocking the health check probes from reaching the backend instances, resulting in timeouts.
+3. Check if firewall rules or iptables configurations are blocking the health check probes from reaching the backend instances, resulting in timeouts.
 
 
 

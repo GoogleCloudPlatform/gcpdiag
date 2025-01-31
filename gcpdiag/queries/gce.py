@@ -1278,6 +1278,15 @@ class HealthCheck(models.Resource):
     return False
 
   @property
+  def region(self):
+    url = self._resource_data.get('region', '')
+    match = re.search(r'/([^/]+)/?$', url)
+    if match:
+      region = match.group(1)
+      return region
+    return None
+
+  @property
   def type(self) -> str:
     return self._resource_data['type']
 
