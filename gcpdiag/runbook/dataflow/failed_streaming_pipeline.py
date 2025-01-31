@@ -92,7 +92,7 @@ class FailedStreamingPipelineStart(runbook.StartStep):
       op.info(f'name: {project.name}: id: {project.id}')
     product = self.__module__.split('.')[-2]
 
-    if not apis.is_enabled(op.context.project_id, 'dataflow'):
+    if not apis.is_enabled(op.get(flags.PROJECT_ID), 'dataflow'):
       op.add_skipped(project, reason='Dataflow API is not enabled')
 
     job = dataflow.get_job(op.get(flags.PROJECT_ID), job_id, job_region)

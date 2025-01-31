@@ -112,7 +112,8 @@ class LogsStart(runbook.StartStep):
     project_path = crm.get_project(project)
 
     # Checks if there are clusters in the project
-    clusters = gke.get_clusters(op.context)
+    clusters = gke.get_clusters(
+        op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
     if not clusters:
       op.add_skipped(
           project_path,
@@ -192,7 +193,8 @@ class ClusterLevelLoggingEnabled(runbook.Step):
 
   def execute(self):
     """Checks if GKE level logging is disabled"""
-    clusters = gke.get_clusters(op.context)
+    clusters = gke.get_clusters(
+        op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
     partial_path = f'{op.get(flags.LOCATION)}/clusters/{op.get(flags.NAME)}'
     cluster_obj = util.get_cluster_object(clusters, partial_path)
 
@@ -238,7 +240,8 @@ class NodePoolCloudLoggingAccessScope(runbook.Step):
         'https://www.googleapis.com/auth/logging.admin'
     ]
 
-    clusters = gke.get_clusters(op.context)
+    clusters = gke.get_clusters(
+        op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
     partial_path = f'{op.get(flags.LOCATION)}/clusters/{op.get(flags.NAME)}'
     cluster_obj = util.get_cluster_object(clusters, partial_path)
 
@@ -276,17 +279,18 @@ class ServiceAccountLoggingPermission(runbook.Step):
     """
     Verifies the node pool's service account has a role with the correct logging IAM permissions
     """
-    clusters = gke.get_clusters(op.context)
+    clusters = gke.get_clusters(
+        op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
     partial_path = f'{op.get(flags.LOCATION)}/clusters/{op.get(flags.NAME)}'
     cluster_obj = util.get_cluster_object(clusters, partial_path)
-    iam_policy = iam.get_project_policy(op.context.project_id)
+    iam_policy = iam.get_project_policy(op.get(flags.PROJECT_ID))
 
     logging_role = 'roles/logging.logWriter'
 
     # Verifies service-account permissions for every nodepool.
     for np in cluster_obj.nodepools:
       sa = np.service_account
-      if not iam.is_service_account_enabled(sa, op.context.project_id):
+      if not iam.is_service_account_enabled(sa, op.get(flags.PROJECT_ID)):
         op.add_failed(
             np,
             reason=f'The service account {sa} is disabled or deleted.',
@@ -328,9 +332,9 @@ class LoggingWriteApiQuotaExceeded(runbook.Step):
             op.get(flags.END_TIME).strftime("d\'%Y/%m/%d-%H:%M:%S'")
     }
 
-    query_results_per_project_id[op.context.project_id] = \
+    query_results_per_project_id[op.get(flags.PROJECT_ID)] = \
         monitoring.query(
-            op.context.project_id,
+            op.get(flags.PROJECT_ID),
             quotas.QUOTA_EXCEEDED_QUERY_WINDOW_TEMPLATE.format_map(params))
 
     project = op.get(flags.PROJECT_ID)

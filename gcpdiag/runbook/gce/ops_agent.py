@@ -140,7 +140,8 @@ class OpsAgentStart(runbook.StartStep):
                                     op.get(flags.ID))
       elif (op.get(flags.NAME) or op.get(flags.ID)) and not op.get(flags.ZONE):
         # find the instance if we only know the instance ID or name
-        instances = gce.get_instances(op.context)
+        instances = gce.get_instances(
+            op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
         if op.get(flags.ID):
           instance = instances.get(op.get(flags.ID))
         elif op.get(flags.NAME):

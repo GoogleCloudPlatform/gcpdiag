@@ -13,7 +13,7 @@
 # limitations under the License.
 """GKE Node Auto Repair runbook"""
 
-from gcpdiag import models, runbook
+from gcpdiag import runbook
 from gcpdiag.queries import crm, gke, logs
 from gcpdiag.runbook import op
 from gcpdiag.runbook.gke import flags
@@ -175,14 +175,15 @@ class NodeAutoRepairStart(runbook.StartStep):
     # check if there are clusters in the project
     if name:
       clusters = gke.get_clusters(
-          models.Context(project_id=project, resources=[name]))
+          op.get_new_context(project_id=project, resources=[name]))
       if not clusters:
         op.add_skipped(
             project_path,
             reason=f'No {name} GKE cluster found in project {project}')
         return
     else:
-      clusters = gke.get_clusters(op.context)
+      clusters = gke.get_clusters(
+          op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
       if not clusters:
         op.add_skipped(project_path,
                        reason=f'No GKE clusters found in project {project}')

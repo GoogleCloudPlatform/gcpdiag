@@ -104,7 +104,7 @@ class LbLatencyStart(runbook.StartStep):
     """Fetch the specified forwarding rule."""
     proj = crm.get_project(op.get(flags.PROJECT_ID))
 
-    if not apis.is_enabled(op.context.project_id, 'compute'):
+    if not apis.is_enabled(op.get(flags.PROJECT_ID), 'compute'):
       op.add_skipped(proj, reason='Compute API is not enabled')
       return  # Early exit if Compute API is disabled
 
