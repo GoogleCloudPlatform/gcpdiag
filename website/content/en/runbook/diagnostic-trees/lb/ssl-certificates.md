@@ -73,7 +73,7 @@ gcpdiag runbook --help
 
   - [Analyze Failed Not Visible Domains](/runbook/steps/lb/analyze-failed-not-visible-domains)
 
-  - [Check Certificate Attachment](/runbook/steps/lb/check-certificate-attachment)
+  - [Analyze Failed Not Visible Domains](/runbook/steps/lb/analyze-failed-not-visible-domains)
 
   - [Ssl Certificates End](/runbook/steps/lb/ssl-certificates-end)
 

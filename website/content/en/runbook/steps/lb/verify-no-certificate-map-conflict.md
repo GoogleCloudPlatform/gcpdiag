@@ -28,7 +28,7 @@ If this is not intended, please detach the certificate map from the target proxi
 
 ### Success Reason
 
-All target proxies associated with the certificate {name} do not have a certificate map.
+All target proxies associated with the SSL certificate "{name}" do not have a certificate map.
 
 
 

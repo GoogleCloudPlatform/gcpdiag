@@ -4,7 +4,7 @@ linkTitle: "Verify Dns Records"
 weight: 3
 type: docs
 description: >
-  Checks the DNS records for specific domain associated with the SSL certificate.
+  Check the DNS records for specific domain associated with the SSL certificate.
 ---
 
 **Product**: [Load balancing](https://cloud.google.com/load-balancing)\
@@ -16,11 +16,17 @@ None
 
 ### Failure Reason
 
-DNS records for domain {domain} resolve to IP addresses: {unresolved_ip_addresses}, which do not point to any load balancer associated with certificate {name}. This prevents certificate provisioning.
+DNS records for domain {domain} currently resolve to the following IP addresses: {unresolved_ip_addresses}. These IP addresses do not point to any load balancer associated with certificate {name}. Certificate provisioning is therefore blocked.
 
 ### Failure Remediation
 
-Configure DNS records for {domain} to point to the correct load balancer IP address(es) for certificate {name}. See the load balancer configuration for details. Check: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns
+Configure DNS records for {domain} to point to the correct load balancer IP address(es) for certificate {name}.
+
+The following load balancer IP addresses are associated with this certificate:
+
+{fr_ip_message}
+
+Check: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns
 
 ### Success Reason
 
@@ -32,7 +38,13 @@ Some DNS records for domain {domain} resolve to the following unexpected IP addr
 
 ### Uncertain Remediation
 
-Configure DNS records for {domain} to point to the correct load balancer IP address(es) for certificate {name}. See the load balancer configuration for details. Check: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns
+Configure DNS records for {domain} to point to the correct load balancer IP address(es) for certificate {name}.
+
+The following load balancer IP addresses are associated with this certificate:
+
+{fr_ip_message}
+
+Check: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns
 
 
 

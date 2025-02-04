@@ -16,11 +16,11 @@ None
 
 ### Success Reason
 
-No recent changes were detected for forwarding rules and target proxies associated with the certificate {name}.
+No recent changes were detected for forwarding rules and target proxies associated with the SSL certificate "{name}".
 
 ### Uncertain Reason
 
-The certificate {name} has recently had associated resources modified. This might affect DNS validation. Details are below:
+The SSL certificate "{name}" has recently had associated resources modified. This might affect DNS validation. Details are below:
 {recently_changed}
 
 ### Uncertain Remediation

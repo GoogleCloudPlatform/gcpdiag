@@ -22,11 +22,11 @@ There must be at least one load balancer's forwarding rule that use TCP port 443
 
 ### Failure Remediation
 
-Configure the load balancer to listen on port 443 for certificate {name}.
+Configure the load balancer to listen on port 443 for SSL certificate "{name}".
 
 ### Success Reason
 
-Certificate {name} has forwarding rules configured for HTTPS (port 443) on all associated IP addresses.
+The SSL certificate "{name}" has forwarding rules configured for HTTPS (port 443) on all associated IP addresses.
 
 
 
