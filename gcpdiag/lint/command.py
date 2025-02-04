@@ -309,8 +309,9 @@ def _parse_args_run_repo(
   if credentials:
     apis.set_credentials(credentials)
 
-  # Allow to change defaults using a hook function.
-  hooks.set_lint_args_hook(args)
+  if args.interface == 'cli':
+    # Allow to change defaults using a hook function.
+    hooks.set_lint_args_hook(args)
   # Initialize configuration
   config.init(vars(args), terminal_output.is_cloud_shell())
   try:
@@ -379,29 +380,45 @@ def _parse_args_run_repo(
   # Verify that we have access and that the CRM API is enabled
   try:
     apis.verify_access(context.project_id)
-  except (utils.GcpApiError, exceptions.GoogleAuthError) as err:
-    raise err
+  except (utils.GcpApiError, exceptions.GoogleAuthError, ValueError) as err:
+    if args.interface == 'api':
+      logger.error('Access verifications failed for API interface: %s', err)
+      result = repo.result.create_rule_report(
+          lint.LintRule(
+              product='',
+              rule_class=lint.LintRuleClass.ERR,
+              rule_id='',
+              short_desc='Access verification failed',
+              long_desc='Access verification failed',
+              keywords=[],
+          ))
+      result.add_skipped(None, f'API Error: {err}', None)
+      result.finish()
+      return repo
+    else:
+      raise err
 
   # Warn end user to fallback on serial logs buffer if project isn't storing in
   # cloud logging
-  if not gce.is_project_serial_port_logging_enabled(context.project_id) and \
-    not config.get('enable_gce_serial_buffer'):
-    # Only print the warning if GCE is enabled in the first place
-    if apis.is_enabled(context.project_id, 'compute'):
-      logger.warning(
-          '''Serial output to cloud logging maybe disabled for certain GCE instances.
-          Fallback on serial output buffers by using flag --enable-gce-serial-buffer \n'''
-      )
+  if args.interface == 'cli':
+    if not gce.is_project_serial_port_logging_enabled(context.project_id) and \
+      not config.get('enable_gce_serial_buffer'):
+      # Only print the warning if GCE is enabled in the first place
+      if apis.is_enabled(context.project_id, 'compute'):
+        logger.warning(
+            '''Serial output to cloud logging maybe disabled for certain GCE instances.
+            Fallback on serial output buffers by using flag --enable-gce-serial-buffer \n'''
+        )
 
   # Run the tests.
   repo.run_rules(context)
   if args.interface == 'cli':
     output.display_footer(repo.result)
-  hooks.post_lint_hook(repo.result.get_rule_statuses())
-  if credentials:
-    apis.set_credentials(None)
-  # Clean up the kubeconfig file generated for gcpdiag
-  kubectl.clean_up()
+    hooks.post_lint_hook(repo.result.get_rule_statuses())
+    if credentials:
+      apis.set_credentials(None)
+    # Clean up the kubeconfig file generated for gcpdiag
+    kubectl.clean_up()
 
   return repo
 

@@ -5,8 +5,8 @@ import os
 import re
 import subprocess
 import sys
-from datetime import datetime
 import textwrap
+from datetime import datetime
 
 # update pyinstaller/hook-gcpdiag-runbook.py when adding any new modules
 SUPPORTED_PRODUCTS = {

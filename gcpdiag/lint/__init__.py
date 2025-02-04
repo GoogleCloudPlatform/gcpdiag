@@ -625,7 +625,7 @@ class SyncExecutionStrategy:
         logging.warning('%s: %s while processing rule: %s',
                         type(err).__name__, err, rule)
         rule_report.add_skipped(None, f'API error: {err}', None)
-      except (RuntimeError, ValueError, KeyError) as err:
+      except (RuntimeError, ValueError, KeyError, TypeError) as err:
         logging.warning('%s: %s while processing rule: %s',
                         type(err).__name__, err, rule)
         rule_report.add_skipped(None, f'Error: {err}', None)
