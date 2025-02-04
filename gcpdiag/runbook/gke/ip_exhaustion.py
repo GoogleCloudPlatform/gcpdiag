@@ -24,8 +24,8 @@ from gcpdiag.utils import GcpApiError
 
 def local_realtime_query(filter_str):
   result = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
-                               start_time_utc=op.get(flags.START_TIME),
-                               end_time_utc=op.get(flags.END_TIME),
+                               start_time=op.get(flags.START_TIME),
+                               end_time=op.get(flags.END_TIME),
                                filter_str=filter_str)
   return result
 

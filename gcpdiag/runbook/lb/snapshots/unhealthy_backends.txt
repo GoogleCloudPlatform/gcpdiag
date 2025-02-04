@@ -117,11 +117,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      [REMEDIATION]
      Update your firewall rules to allow inbound traffic from the Google Cloud health check IP ranges (found at https://cloud.google.com/load-balancing/docs/health-check-concepts#ip-ranges) to your backends.
 
-[COMPOSITE STEP]: Checks if the VM performance is degraded.
-
-    In this step one unhealthy instance from each group is analyzed - disks,
-    memory and cpu utilization are being checked.
-    
+[COMPOSITE STEP]: Checks if the VM performance is degraded. In this step one unhealthy instance from each group is analyzed - disks, memory and cpu utilization are being checked.
 [AUTOMATED STEP]: Verify VM memory utilization is within optimal levels.
 
    - gcpdiag-lb2-aaaa/vm-pn3l                                             [FAIL]
@@ -333,11 +329,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      [REASON]
      Firewalls are correctly configured and are not blocking the health check probes.
 
-[COMPOSITE STEP]: Checks if the VM performance is degraded.
-
-    In this step one unhealthy instance from each group is analyzed - disks,
-    memory and cpu utilization are being checked.
-    
+[COMPOSITE STEP]: Checks if the VM performance is degraded. In this step one unhealthy instance from each group is analyzed - disks, memory and cpu utilization are being checked.
 [AUTOMATED STEP]: Verify VM memory utilization is within optimal levels.
 
    - gcpdiag-lb2-aaaa/neg-vm                                              [FAIL]

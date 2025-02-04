@@ -545,8 +545,8 @@ class AnalyzeLatestHealthCheckLog(runbook.Gateway):
       serial_log_entries = logs.realtime_query(
           project_id=op.get(flags.PROJECT_ID),
           filter_str=filter_str,
-          start_time_utc=datetime.now() - timedelta(days=14),
-          end_time_utc=datetime.now(),
+          start_time=datetime.now() - timedelta(days=14),
+          end_time=datetime.now(),
       )
 
       if serial_log_entries:
@@ -778,8 +778,8 @@ class CheckPastHealthCheckSuccess(runbook.Step):
       serial_log_entries = logs.realtime_query(
           project_id=op.get(flags.PROJECT_ID),
           filter_str=filter_str,
-          start_time_utc=datetime.now() - timedelta(days=14),
-          end_time_utc=datetime.now(),
+          start_time=datetime.now() - timedelta(days=14),
+          end_time=datetime.now(),
       )
 
       if serial_log_entries:

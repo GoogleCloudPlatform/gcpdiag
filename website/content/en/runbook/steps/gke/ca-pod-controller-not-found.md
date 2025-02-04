@@ -18,15 +18,16 @@ None
 
 Pod is blocking the ScaleDown event because its controller (for example, a Deployment or ReplicaSet) can't be found.
 Example log entry that would help identify involved objects:
-{LOG_ENTRY}
+{log_entry}
 
 ### Failure Remediation
 
-To determine what actions were taken that left the Pod running after its controller was removed, review the logs. To resolve this issue, manually delete the Pod.
+To determine what actions were taken that left the Pod running after its controller was removed, review the logs. To
+resolve this issue, manually delete the Pod.
 
 ### Success Reason
 
-No "no.scale.down.node.pod.controller.not.found" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+No "no.scale.down.node.pod.controller.not.found" errors found between {start_time} and {end_time}
 
 
 

@@ -636,8 +636,8 @@ class VmHasOpsAgent(runbook.Step):
   zone: str
   instance_name: str
   instance_id: str
-  start_time_utc: datetime
-  end_time_utc: datetime
+  start_time: datetime
+  end_time: datetime
 
   def _has_ops_agent_subagent(self, metric_data):
     """Checks if ops agent logging agent and metric agent is installed"""
@@ -662,10 +662,9 @@ class VmHasOpsAgent(runbook.Step):
 
   def execute(self):
     """Verify GCE Instance's has ops agent installed and currently active"""
-    self.end_time_utc = getattr(self, 'end_time', None) or op.get(
-        self.end_time_utc)
-    self.start_time_utc = getattr(self, 'start_time', None) or op.get(
-        self.start_time_utc)
+    self.end_time = getattr(self, 'end_time', None) or op.get(self.end_time)
+    self.start_time = getattr(self, 'start_time', None) or op.get(
+        self.start_time)
     instance = gce.get_instance(project_id=self.project_id,
                                 zone=self.zone,
                                 instance_name=self.instance_name or
@@ -678,8 +677,8 @@ class VmHasOpsAgent(runbook.Step):
                           resource.labels.instance_id="{}"
                           "LogPingOpsAgent"'''.format(self.project_id,
                                                       self.instance_id),
-          start_time_utc=self.start_time_utc,
-          end_time_utc=self.end_time_utc)
+          start_time=self.start_time,
+          end_time=self.end_time)
       if serial_log_entries:
         op.add_ok(resource=instance,
                   reason=op.prep_msg(op.SUCCESS_REASON,

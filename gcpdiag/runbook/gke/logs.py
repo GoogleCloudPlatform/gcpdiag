@@ -339,8 +339,8 @@ class LoggingWriteApiQuotaExceeded(runbook.Step):
     if len(query_results_per_project_id[project]) == 0:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME),
-                                   END_TIME_UTC=op.get(flags.END_TIME)))
+                                   start_time=op.get(flags.START_TIME),
+                                   end_time=op.get(flags.END_TIME)))
     else:
       exceeded_quotas = []
       for i in query_results_per_project_id[project].values():

@@ -16,18 +16,20 @@ None
 
 ### Failure Reason
 
-The scaleDown event failed because the node is annotated with cluster-autoscaler.kubernetes.io/scale-down-disabled: true.
+The scaleDown event failed because the node is annotated with cluster-autoscaler.kubernetes.io/scale-down-disabled:
+true.
 Example log entry that would help identify involved objects:
-{LOG_ENTRY}
+{log_entry}
 
 ### Failure Remediation
 
-Cluster autoscaler skips nodes with this annotation without considering their utilization and this message is logged regardless of the node's utilization factor.
+Cluster autoscaler skips nodes with this annotation without considering their utilization and this message is logged
+regardless of the node's utilization factor.
 If you want cluster autoscaler to scale down these nodes, remove the annotation.
 
 ### Success Reason
 
-No "no.scale.down.node.scale.down.disabled.annotation" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+No "no.scale.down.node.scale.down.disabled.annotation" errors found between {start_time} and {end_time}
 
 
 

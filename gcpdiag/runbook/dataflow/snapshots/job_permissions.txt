@@ -24,7 +24,7 @@ dataflow/job-permissions: Analysis and Resolution of Dataflow Jobs Permissions i
   
 [START]: Executing default start step for runbooks.
 [AUTOMATED STEP]: Check the Authenticated User account permissions.
-[AUTOMATED STEP]: Verify IAM policy
+[AUTOMATED STEP]: Verify that user:user@xyz.com has required permissions/roles in project/gcpdiag-dataflow1-aaaa.
 
    - projects/gcpdiag-dataflow1-aaaa                                      [FAIL]
      [REASON]
@@ -41,7 +41,7 @@ dataflow/job-permissions: Analysis and Resolution of Dataflow Jobs Permissions i
      [1] https://cloud.google.com/iam/docs/grant-role-console
      [2] https://cloud.google.com/iam/docs/understanding-roles
 
-[AUTOMATED STEP]: Verify IAM policy
+[AUTOMATED STEP]: Verify that serviceAccount:service-12340010@dataflow-service-producer-prod.iam.gserviceaccount.com has required permissions/roles in project/gcpdiag-dataflow1-aaaa.
 
    - projects/gcpdiag-dataflow1-aaaa                                      [FAIL]
      [REASON]

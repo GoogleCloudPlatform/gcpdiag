@@ -188,8 +188,8 @@ class CheckClusterQuota(runbook.StartStep):
         cluster_name=cluster_name,
         message_filter=f'protoPayload.status.message=~"{quota_log_match_str}"',
         log_id='cloudaudit.googleapis.com/activity',
-        start_time_utc=op.get(flags.START_TIME),
-        end_time_utc=op.get(flags.END_TIME),
+        start_time=op.get(flags.START_TIME),
+        end_time=op.get(flags.END_TIME),
     )
 
     if quota_log_entries:
@@ -238,8 +238,8 @@ class CheckClusterStockOut(runbook.Step):
         cluster_name=cluster_name,
         message_filter=f'protoPayload.status.message=~({message_filter})',
         log_id='cloudaudit.googleapis.com/activity',
-        start_time_utc=op.get(flags.START_TIME),
-        end_time_utc=op.get(flags.END_TIME),
+        start_time=op.get(flags.START_TIME),
+        end_time=op.get(flags.END_TIME),
     )
 
     if stockout_filter_log_entries:
@@ -806,8 +806,8 @@ class CheckInitScriptFailure(runbook.Step):
     log_entries = logs.realtime_query(
         project_id=op.get(flags.PROJECT_ID),
         filter_str=log_search_filter,
-        start_time_utc=op.get(flags.START_TIME),
-        end_time_utc=op.get(flags.END_TIME),
+        start_time=op.get(flags.START_TIME),
+        end_time=op.get(flags.END_TIME),
     )
     if log_entries:
       op.add_failed(
@@ -849,8 +849,8 @@ def get_log_entries(
     cluster_name,
     message_filter,
     log_id,
-    start_time_utc,
-    end_time_utc,
+    start_time,
+    end_time,
 ):
   """Get log entries for given parameters.
 
@@ -859,8 +859,8 @@ def get_log_entries(
     cluster_name:
     message_filter:
     log_id:
-    start_time_utc:
-    end_time_utc:
+    start_time:
+    end_time:
 
   Returns:
   """
@@ -875,6 +875,6 @@ def get_log_entries(
   return logs.realtime_query(
       project_id=project_id,
       filter_str=log_search_filter,
-      start_time_utc=start_time_utc,
-      end_time_utc=end_time_utc,
+      start_time=start_time,
+      end_time=end_time,
   )

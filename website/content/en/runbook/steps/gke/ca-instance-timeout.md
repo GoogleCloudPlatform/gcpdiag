@@ -18,7 +18,7 @@ None
 
 The scaleUp event failed because instances in some of the MIGs failed to appear in time.
 Example log entry that would help identify involved objects:
-{LOG_ENTRY}
+{log_entry}
 
 ### Failure Remediation
 
@@ -26,7 +26,7 @@ This message is transient. If it persists, engage Google Cloud Support for furth
 
 ### Success Reason
 
-No "scale.up.error.waiting.for.instances.timeout" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+No "scale.up.error.waiting.for.instances.timeout" errors found between {start_time} and {end_time}
 
 
 

@@ -21,8 +21,8 @@ from gcpdiag.runbook.gke import flags
 
 def local_realtime_query(filter_str):
   result = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
-                               start_time_utc=op.get(flags.START_TIME),
-                               end_time_utc=op.get(flags.END_TIME),
+                               start_time=op.get(flags.START_TIME),
+                               end_time=op.get(flags.END_TIME),
                                filter_str=filter_str)
   return result
 
@@ -169,8 +169,8 @@ class NodeAutoRepairStart(runbook.StartStep):
     node = op.get(flags.NODE)
     name = op.get(flags.NAME)
     project_path = crm.get_project(project)
-    start_time_utc = op.get(flags.START_TIME)
-    end_time_utc = op.get(flags.END_TIME)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
 
     # check if there are clusters in the project
     if name:
@@ -210,7 +210,7 @@ class NodeAutoRepairStart(runbook.StartStep):
         reason += f' in cluster {name}'
       if location:
         reason += f' in location {location}'
-      reason += f' in the provided time range {start_time_utc} - {end_time_utc}.'
+      reason += f' in the provided time range {start_time} - {end_time}.'
       op.add_skipped(project_path, reason=reason)
       return
 
@@ -233,10 +233,10 @@ class NodeNotReady(runbook.Step):
                             name,
                             unhealthy_status='NodeNotReady'):
       op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, NODE=node),
+                    reason=op.prep_msg(op.FAILURE_REASON, node=node),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
-      op.add_ok(project_path, reason=op.prep_msg(op.SUCCESS_REASON, NODE=node))
+      op.add_ok(project_path, reason=op.prep_msg(op.SUCCESS_REASON, node=node))
 
 
 class NodeDiskFull(runbook.Step):
@@ -257,10 +257,10 @@ class NodeDiskFull(runbook.Step):
                             name,
                             unhealthy_status='NodeHasDiskPressure'):
       op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, NODE=node),
+                    reason=op.prep_msg(op.FAILURE_REASON, node=node),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
-      op.add_ok(project_path, reason=op.prep_msg(op.SUCCESS_REASON, NODE=node))
+      op.add_ok(project_path, reason=op.prep_msg(op.SUCCESS_REASON, node=node))
 
 
 class UnallocatableGpu(runbook.Step):
@@ -278,10 +278,10 @@ class UnallocatableGpu(runbook.Step):
 
     if unallocatable_gpu_tpu(node, location, name, tpu=False, gpu=True):
       op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, NODE=node),
+                    reason=op.prep_msg(op.FAILURE_REASON, node=node),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
-      op.add_ok(project_path, reason=op.prep_msg(op.SUCCESS_REASON, NODE=node))
+      op.add_ok(project_path, reason=op.prep_msg(op.SUCCESS_REASON, node=node))
 
 
 class UnallocatableTpu(runbook.Step):
@@ -299,10 +299,10 @@ class UnallocatableTpu(runbook.Step):
 
     if unallocatable_gpu_tpu(node, location, name, tpu=True, gpu=False):
       op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, NODE=node),
+                    reason=op.prep_msg(op.FAILURE_REASON, node=node),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
-      op.add_ok(project_path, reason=op.prep_msg(op.SUCCESS_REASON, NODE=node))
+      op.add_ok(project_path, reason=op.prep_msg(op.SUCCESS_REASON, node=node))
 
 
 class NodeAutoRepairEnd(runbook.EndStep):

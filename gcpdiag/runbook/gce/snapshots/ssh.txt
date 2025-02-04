@@ -168,11 +168,8 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      - Support Scope: https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
      - Out of Scope Support: https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support
 
-[COMPOSITE STEP]: Verify overall user permissions for SSH access
-
-    Note: Only roles granted at the project level are checked. Permissions inherited from
-    ancestor resources such as folder(s) or organization and groups are not checked.
-[AUTOMATED STEP]: Verify that the principal has "compute.instance.get" permission.
+[COMPOSITE STEP]: Verify overall user permissions for SSH access. Note: Only roles granted at the project level are checked. Permissions inherited from ancestor resources such as folder(s) or organization and groups are not checked.
+[AUTOMATED STEP]: Verify that the user:cannotssh@example.com has "compute.instance.get" permission.
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
@@ -197,7 +194,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      metadata to `TRUE`.For detailed instructions on enabling OS Login,
      refer to: https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#enable_os_login
 
-[AUTOMATED STEP]: Verify whether principal has at least one valid OS login role.
+[AUTOMATED STEP]: Verify whether user:cannotssh@example.com has at least one valid OS login role.
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
@@ -210,7 +207,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 
-[AUTOMATED STEP]: Verify that the principal has "roles/iam.serviceAccountUser" role.
+[AUTOMATED STEP]: Verify that the user:cannotssh@example.com has "roles/iam.serviceAccountUser" role.
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
@@ -223,11 +220,11 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 
-[AUTOMATED STEP]: Verify that the principal has "roles/iap.tunnelResourceAccessor" role.
+[AUTOMATED STEP]: Verify that the user:cannotssh@example.com has "roles/iap.tunnelResourceAccessor" role.
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
-     principal does not have the "roles/iap.tunnelResourceAccessor" role necessary to Tunnel through IAP for access.
+     user:cannotssh@example.com does not have the "roles/iap.tunnelResourceAccessor" role necessary to Tunnel through IAP for access.
 
      [REMEDIATION]
      Ensure that "user:cannotssh@example.com" is assigned the "roles/iap.tunnelResourceAccessor" role to enable the required access.
@@ -443,11 +440,8 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      - Support Scope: https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
      - Out of Scope Support: https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support
 
-[COMPOSITE STEP]: Verify overall user permissions for SSH access
-
-    Note: Only roles granted at the project level are checked. Permissions inherited from
-    ancestor resources such as folder(s) or organization and groups are not checked.
-[AUTOMATED STEP]: Verify that the principal has "compute.instance.get" permission.
+[COMPOSITE STEP]: Verify overall user permissions for SSH access. Note: Only roles granted at the project level are checked. Permissions inherited from ancestor resources such as folder(s) or organization and groups are not checked.
+[AUTOMATED STEP]: Verify that the serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com has "compute.instance.get" permission.
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [OK]
      [REASON]
@@ -460,21 +454,21 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      [REASON]
      OS Login is enabled on this VM.
 
-[AUTOMATED STEP]: Verify whether principal has at least one valid OS login role.
+[AUTOMATED STEP]: Verify whether serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com has at least one valid OS login role.
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [OK]
      [REASON]
      "serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com" possesses at least one of the required OS Login roles:
      roles/compute.osAdminLogin, roles/compute.osLogin, roles/owner.
 
-[AUTOMATED STEP]: Verify that the principal has "roles/iam.serviceAccountUser" role.
+[AUTOMATED STEP]: Verify that the serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com has "roles/iam.serviceAccountUser" role.
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [OK]
      [REASON]
      "serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com" has the "roles/iam.serviceAccountUser"
      required to impersonate the attached service account.
 
-[AUTOMATED STEP]: Verify that the principal has "roles/iap.tunnelResourceAccessor" role.
+[AUTOMATED STEP]: Verify that the serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com has "roles/iap.tunnelResourceAccessor" role.
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [OK]
      [REASON]
@@ -702,13 +696,9 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      6. [Using PowerShell to connect to Windows
      instances](https://cloud.google.com/compute/docs/instances/windows/connecting-powershell)
 
-[MANUAL STEP]: Manually verify if the necessary Google guest agents, especially `google-compute-engine-ssh`,
-are operational on the VM.
-[COMPOSITE STEP]: Verify overall user permissions for SSH access
-
-    Note: Only roles granted at the project level are checked. Permissions inherited from
-    ancestor resources such as folder(s) or organization and groups are not checked.
-[AUTOMATED STEP]: Verify that the principal has "compute.instance.get" permission.
+[MANUAL STEP]: Manually verify if the necessary Google guest agents, especially `google-compute-engine-ssh`, are operational on the VM.
+[COMPOSITE STEP]: Verify overall user permissions for SSH access. Note: Only roles granted at the project level are checked. Permissions inherited from ancestor resources such as folder(s) or organization and groups are not checked.
+[AUTOMATED STEP]: Verify that the user:cannot@example.com has "compute.instance.get" permission.
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
@@ -728,7 +718,7 @@ are operational on the VM.
      [REASON]
      OS Login is enabled on this VM.
 
-[AUTOMATED STEP]: Verify whether principal has at least one valid OS login role.
+[AUTOMATED STEP]: Verify whether user:cannot@example.com has at least one valid OS login role.
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
@@ -741,7 +731,7 @@ are operational on the VM.
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 
-[AUTOMATED STEP]: Verify that the principal has "roles/iam.serviceAccountUser" role.
+[AUTOMATED STEP]: Verify that the user:cannot@example.com has "roles/iam.serviceAccountUser" role.
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
@@ -754,11 +744,11 @@ are operational on the VM.
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 
-[AUTOMATED STEP]: Verify that the principal has "roles/iap.tunnelResourceAccessor" role.
+[AUTOMATED STEP]: Verify that the user:cannot@example.com has "roles/iap.tunnelResourceAccessor" role.
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
-     principal does not have the "roles/iap.tunnelResourceAccessor" role necessary to Tunnel through IAP for access.
+     user:cannot@example.com does not have the "roles/iap.tunnelResourceAccessor" role necessary to Tunnel through IAP for access.
 
      [REMEDIATION]
      Ensure that "user:cannot@example.com" is assigned the "roles/iap.tunnelResourceAccessor" role to enable the required access.

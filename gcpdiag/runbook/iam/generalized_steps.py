@@ -77,7 +77,7 @@ class VmHasAnActiveServiceAccount(runbook.Step):
 
 
 class IamPolicyCheck(runbook.Step):
-  """Checks if a principal has specified permissions or is a member of specified roles.
+  """Verify if specificd principal has permissions or roles permission/role in project.
 
   This step supports checking for either all specified permissions/roles are present or
   at least one for the principal (user or service account). It reports the present and missing
@@ -102,7 +102,7 @@ class IamPolicyCheck(runbook.Step):
   project = None
 
   def execute(self):
-    """Verify IAM policy"""
+    """Verify that {principal} has required permissions/roles in project/{project}."""
     project_id = self.project or op.get(flags.PROJECT_ID)
     iam_policy = iam.get_project_policy(project_id)
     principal = self.principal or op.get(flags.PRINCIPAL)

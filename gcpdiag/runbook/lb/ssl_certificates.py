@@ -442,7 +442,7 @@ class VerifyDnsRecords(runbook.Gateway):
   certificate_name: str
 
   @property
-  def execution_message(self):
+  def name(self):
     return (
         f'Checks the DNS records for domain "{self.domain}" associated with the'
         f' SSL certificate "{self.certificate_name}".')
@@ -646,8 +646,8 @@ class CheckProvisioningTime(runbook.Step):
       serial_log_entries = logs.realtime_query(
           project_id=op.get(flags.PROJECT_ID),
           filter_str=filter_str,
-          start_time_utc=datetime.now() - timedelta(days=1),
-          end_time_utc=datetime.now(),
+          start_time=datetime.now() - timedelta(days=1),
+          end_time=datetime.now(),
       )
 
       if serial_log_entries:
@@ -679,8 +679,8 @@ class CheckProvisioningTime(runbook.Step):
       serial_log_entries = logs.realtime_query(
           project_id=op.get(flags.PROJECT_ID),
           filter_str=filter_str,
-          start_time_utc=datetime.now() - timedelta(days=1),
-          end_time_utc=datetime.now(),
+          start_time=datetime.now() - timedelta(days=1),
+          end_time=datetime.now(),
       )
 
       if serial_log_entries:

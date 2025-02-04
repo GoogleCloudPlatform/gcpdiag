@@ -16,7 +16,7 @@ None
 
 ### Failure Reason
 
-The node {NODE} was removed by the cluster autoscaler.
+The node {node} was removed by the cluster autoscaler.
 
 ### Failure Remediation
 
@@ -27,7 +27,7 @@ https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-autoscaler-visibi
 
 ### Success Reason
 
-The node {NODE} was unavailable for reasons other than scale down by the cluster autoscaler.
+The node {node} was unavailable for reasons other than scale down by the cluster autoscaler.
 
 
 

@@ -16,10 +16,12 @@ None
 
 ### Failure Reason
 
-The connection from Node to restricted.googleapis.com (199.36.153.4/30) or private.googleapis.com (199.36.153.8/30) is timing out, preventing image pull. It is probable that a firewall rule is blocking this IP range. A firewall to permit this egress should be created.
+The connection from Node to restricted.googleapis.com (199.36.153.4/30) or private.googleapis.com (199.36.153.8/30) is
+timing out, preventing image pull. It is probable that a firewall rule is blocking this IP range. A firewall to permit
+this egress should be created.
 Example log entry that would help identify involved objects:
 
-{LOG_ENTRY}
+{log_entry}
 
 ### Failure Remediation
 
@@ -28,7 +30,8 @@ https://cloud.google.com/vpc-service-controls/docs/set-up-private-connectivity
 
 ### Success Reason
 
-No "Failed to pull image.*dial tcp.*199.36.153.\d:443: i/o timeout" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+No "Failed to pull image.*dial tcp.*199.36.153.\d:443: i/o timeout" errors found between {start_time} and {end_time}
+UTC
 
 
 

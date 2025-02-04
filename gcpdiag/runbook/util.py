@@ -153,15 +153,15 @@ def load_template_block(module_name, file_name, block_name):
 
   env.loader = FileSystemLoader(os.path.dirname(template_file))
   template = env.get_template(os.path.basename(template_file))
-  prompts = {}
+  observations = {}
 
   for entry in step_outcomes:
     t_block_name = f'{block_name}_{entry}'
     # Attempt to load each sub-block if it exists within the main block
     if t_block_name in template.blocks:
-      prompts[entry] = ''.join(template.blocks[t_block_name](
+      observations[entry] = ''.join(template.blocks[t_block_name](
           template.new_context()))
-  return prompts
+  return observations
 
 
 def render_template(file_dir,

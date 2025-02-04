@@ -240,18 +240,17 @@ def _execute_query_job(job: _LogsQueryJob):
 
 
 @caching.cached_api_call
-def realtime_query(project_id, filter_str, start_time_utc, end_time_utc):
+def realtime_query(project_id, filter_str, start_time, end_time):
   """Intended for use in only runbooks. use logs.query() for lint rules."""
   logging_api = apis.get_api('logging', 'v2', project_id)
 
   filter_lines = [filter_str]
   filter_lines.append('timestamp>"%s"' %
-                      start_time_utc.isoformat(timespec='seconds'))
-  filter_lines.append('timestamp<"%s"' %
-                      end_time_utc.isoformat(timespec='seconds'))
+                      start_time.isoformat(timespec='seconds'))
+  filter_lines.append('timestamp<"%s"' % end_time.isoformat(timespec='seconds'))
   filter_str = '\n'.join(filter_lines)
   logging.info('searching logs in project %s for logs between %s and %s',
-               project_id, str(start_time_utc), str(end_time_utc))
+               project_id, str(start_time), str(end_time))
   deque = Deque()
   req = logging_api.entries().list(
       body={

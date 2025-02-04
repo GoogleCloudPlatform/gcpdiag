@@ -204,7 +204,7 @@ dataproc/cluster-creation: Provides a comprehensive analysis of common issues wh
 [INFO]: 12340005-compute@developer.gserviceaccount.com
 [INFO]: VM Service Account associated with Dataproc cluster was found in the same project
 [INFO]: Checking permissions.
-[AUTOMATED STEP]: Verify IAM policy
+[AUTOMATED STEP]: Verify that serviceAccount:12340005-compute@developer.gserviceaccount.com has required permissions/roles in project/gcpdiag-dataproc1-aaaa.
 
    - projects/gcpdiag-dataproc1-aaaa                                      [FAIL]
      [REASON]

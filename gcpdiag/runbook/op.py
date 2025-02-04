@@ -98,6 +98,11 @@ def prep_msg(key, **kwargs):
       str: The parsed message from the linked Jinja template.
 
 """
+  # set default template variables
+  if 'start_time' not in kwargs:
+    kwargs['start_time'] = operator.parameters['start_time']
+  if 'end_time' not in kwargs:
+    kwargs['end_time'] = operator.parameters['end_time']
   return operator.messages.get_msg(key, **kwargs)
 
 

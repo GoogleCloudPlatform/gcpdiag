@@ -18,16 +18,17 @@ None
 
 The scaleDown event failed the pod doesn't have enough PodDisruptionBudget.
 Example log entry that would help identify involved objects:
-{LOG_ENTRY}
+{log_entry}
 
 ### Failure Remediation
 
 Review the PodDisruptionBudget for the Pod and consider making it less restrictive.
-To learn more, see https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-down#not-enough-pdb
+To learn more, see
+https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-down#not-enough-pdb
 
 ### Success Reason
 
-No "no.scale.down.node.pod.not.enough.pdb" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+No "no.scale.down.node.pod.not.enough.pdb" errors found between {start_time} and {end_time}
 
 
 

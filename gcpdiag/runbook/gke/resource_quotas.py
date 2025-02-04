@@ -75,6 +75,7 @@ class ResourceQuotas(runbook.DiagnosticTree):
     start = ResourceQuotasStart()
     project_logging_check = gcp_gs.ServiceApiStatusCheck()
     project_logging_check.api_name = 'logging'
+    project_logging_check.project_id = op.get(flags.PROJECT_ID)
     project_logging_check.expected_state = gcp_gs.constants.APIState.ENABLED
 
     clusterversion = ClusterVersion()
@@ -147,6 +148,7 @@ class ClusterVersion(runbook.Step):
     for cluster in clusters.values():
       resource_quota_exceeded = ResourceQuotaExceeded()
       resource_quota_exceeded.cluster_name = cluster.name
+      resource_quota_exceeded.project_id = op.get(flags.PROJECT_ID)
       resource_quota_exceeded.cluster_location = cluster.location
 
       if cluster.master_version >= self.GKE_QUOTA_ENFORCEMENT_MIN_VERSION:
@@ -157,54 +159,51 @@ class ClusterVersion(runbook.Step):
 
 
 class ResourceQuotaExceeded(runbook.Step):
-  """Verifies that Kubernetes resource quotas have been exceeded or not.
-  """
+  """Verify that Kubernetes resource quotas have not been exceeded."""
   cluster_name: str
   cluster_location: str
+  project_id: str
   template: str = 'resourcequotas::lower_version_quota_exceeded'
 
   def execute(self):
-    """
-    Verifies that Kubernetes resource quotas have been exceeded or not.
+    """Verify that Kubernetes resource quotas for cluster
 
-    If value for "start_time_utc" and "end_time_utc" are not provided as parameter
-    then this step will check the logs for last 8 hours.
-    Check if there is any "forbidden: exceeded quota" log entries.
+    project/{project_id}/locations/{cluster_location}/clusters/{cluster_name} were not
+    exceeded between {start_time} and {end_time}
     """
 
-    project = op.get(flags.PROJECT_ID)
-    project_path = crm.get_project(project)
+    project = crm.get_project(self.project_id)
     error_message = 'protoPayload.status.message:"forbidden: exceeded quota"'
     filter_str = f'resource.labels.location="{self.cluster_location}" \
       resource.labels.cluster_name="{self.cluster_name}" {error_message}'
 
-    log_entries = logs.realtime_query(project_id=project,
+    log_entries = logs.realtime_query(project_id=project.project_id,
                                       filter_str=filter_str,
-                                      start_time_utc=op.get(flags.START_TIME),
-                                      end_time_utc=op.get(flags.END_TIME))
+                                      start_time=op.get(flags.START_TIME),
+                                      end_time=op.get(flags.END_TIME))
 
     if log_entries:
       # taking the last log entry to provide as output, because the latest log entry is always
       # more relevant than the 1st
       sample_log = 'No message' or log_entries[-1]['protoPayload']['status'][
           'message']
-      op.add_failed(project_path,
+      op.add_failed(project,
                     reason=op.prep_msg(op.FAILURE_REASON,
-                                       LOG_ENTRY=sample_log,
-                                       CLUSTER=self.cluster_name,
-                                       PROJECT=project,
-                                       LOCATION=self.cluster_location,
-                                       START_TIME_UTC=op.get(flags.START_TIME),
-                                       END_TIME_UTC=op.get(flags.END_TIME)),
+                                       log_entry=sample_log,
+                                       cluster=self.cluster_name,
+                                       project=project,
+                                       location=self.cluster_location,
+                                       start_time=op.get(flags.START_TIME),
+                                       end_time=op.get(flags.END_TIME)),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
-      op.add_ok(project_path,
+      op.add_ok(project,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   CLUSTER=self.cluster_name,
-                                   PROJECT=project,
-                                   LOCATION=self.cluster_location,
-                                   START_TIME_UTC=op.get(flags.START_TIME),
-                                   END_TIME_UTC=op.get(flags.END_TIME)))
+                                   cluster=self.cluster_name,
+                                   project=project,
+                                   location=self.cluster_location,
+                                   start_time=op.get(flags.START_TIME),
+                                   end_time=op.get(flags.END_TIME)))
 
 
 class ResourceQuotasEnd(runbook.EndStep):

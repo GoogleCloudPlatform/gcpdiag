@@ -238,7 +238,6 @@ class Ssh(runbook.DiagnosticTree):
     lifecycle_check.instance_name = op.get(flags.INSTANCE_NAME)
     lifecycle_check.expected_lifecycle_status = 'RUNNING'
     performance_check = VmPerformanceChecks()
-    gce_permission_check = GcpSshPermissions()
     gce_firewall_check = GceFirewallAllowsSsh()
     # Prepare parameters given by the user
     # Inform the user values that will be used.
@@ -251,7 +250,9 @@ class Ssh(runbook.DiagnosticTree):
     self.add_step(parent=lifecycle_check, child=VmGuestOsType())
     # gce_* checks are not depend on the lifecycle, performnce or guest of the VM
     # assign add as a child of start
-    self.add_step(parent=start, child=gce_permission_check)
+    if op.get(flags.PRINCIPAL):
+      gce_permission_check = GcpSshPermissions()
+      self.add_step(parent=start, child=gce_permission_check)
     self.add_step(parent=start, child=gce_firewall_check)
 
     # Check for Guest Agent status
@@ -445,19 +446,23 @@ class GcpSshPermissions(runbook.CompositeStep):
   """
 
   def execute(self):
-    """Verify overall user permissions for SSH access
+    """Verify overall user permissions for SSH access.
 
     Note: Only roles granted at the project level are checked. Permissions inherited from
     ancestor resources such as folder(s) or organization and groups are not checked."""
     # Check user has permisssion to access the VM in the first place
     if op.get(CLIENT) == SSH_IN_BROWSER:
       console_permission = iam_gs.IamPolicyCheck()
+      console_permission.project = op.get(flags.PROJECT_ID)
       console_permission.template = 'gcpdiag.runbook.gce::permissions::console_view_permission'
       console_permission.permissions = ['compute.projects.get']
+      console_permission.principal = op.get(flags.PRINCIPAL)
       console_permission.require_all = False
       self.add_child(console_permission)
     # Both OS login and gcloud key based require this.
     instance_fetch_perm_check = iam_gs.IamPolicyCheck()
+    instance_fetch_perm_check.project = op.get(flags.PROJECT_ID)
+    instance_fetch_perm_check.principal = op.get(flags.PRINCIPAL)
     instance_fetch_perm_check.template = 'gcpdiag.runbook.gce::permissions::instances_get'
     instance_fetch_perm_check.permissions = ['compute.instances.get']
     instance_fetch_perm_check.require_all = False
@@ -468,6 +473,8 @@ class GcpSshPermissions(runbook.CompositeStep):
 
     if op.get(flags.PROXY) == IAP:
       iap_role_check = iam_gs.IamPolicyCheck()
+      iap_role_check.project = op.get(flags.PROJECT_ID)
+      iap_role_check.principal = op.get(flags.PRINCIPAL)
       iap_role_check.template = 'gcpdiag.runbook.gce::permissions::iap_role'
       iap_role_check.roles = [gce_const.IAP_ROLE]
       iap_role_check.require_all = False
@@ -495,6 +502,8 @@ class OsLoginStatusCheck(runbook.Gateway):
       self.add_child(os_login_check)
 
       os_login_role_check = iam_gs.IamPolicyCheck()
+      os_login_role_check.project = op.get(flags.PROJECT_ID)
+      os_login_role_check.principal = op.get(flags.PRINCIPAL)
       os_login_role_check.template = 'gcpdiag.runbook.gce::permissions::has_os_login'
       os_login_role_check.roles = [
           gce_const.OSLOGIN_ROLE, gce_const.OSLOGIN_ADMIN_ROLE,
@@ -503,6 +512,8 @@ class OsLoginStatusCheck(runbook.Gateway):
       os_login_role_check.require_all = False
       self.add_child(os_login_role_check)
       sa_user_role_check = iam_gs.IamPolicyCheck()
+      sa_user_role_check.project = op.get(flags.PROJECT_ID)
+      sa_user_role_check.principal = op.get(flags.PRINCIPAL)
       sa_user_role_check.template = 'gcpdiag.runbook.gce::permissions::sa_user_role'
       sa_user_role_check.roles = [gce_const.SA_USER_ROLE]
       sa_user_role_check.require_all = False
@@ -510,6 +521,8 @@ class OsLoginStatusCheck(runbook.Gateway):
 
       if op.get(flags.ACCESS_METHOD) == SSH_KEY_IN_METADATA:
         metadata_perm_check = iam_gs.IamPolicyCheck()
+        metadata_perm_check.project = op.get(flags.PROJECT_ID)
+        metadata_perm_check.principal = op.get(flags.PRINCIPAL)
         metadata_perm_check.template = 'gcpdiag.runbook.gce::permissions::can_set_metadata'
         metadata_perm_check.permissions = [
             'compute.instances.setMetadata',

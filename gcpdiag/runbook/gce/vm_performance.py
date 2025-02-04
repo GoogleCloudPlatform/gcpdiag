@@ -194,8 +194,8 @@ class CheckLiveMigrations(runbook.Step):
     log_entries = logs.realtime_query(
         project_id=op.get(flags.PROJECT_ID),
         filter_str=f'{logging_filter}\nresource.labels.instance_id="{vm.id}"',
-        start_time_utc=op.get(flags.START_TIME),
-        end_time_utc=op.get(flags.END_TIME))
+        start_time=op.get(flags.START_TIME),
+        end_time=op.get(flags.END_TIME))
 
     time_frame_list = [op.get(flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')]
     if log_entries:

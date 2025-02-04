@@ -29,7 +29,7 @@ vpc/vm-external-ip-connectivity: Troubleshooting for common issues which affect 
         by a Public NAT Gateway and check there are no issues on the NATGW.
     
 [START]: Starting VM external connectivity diagnostics
-[AUTOMATED STEP]: Verify Cloud API state.
+[AUTOMATED STEP]: Verify networkmanagement.googleapis.com API is ENABLED in project gcpdiag-vpc2-runbook.
 
    - gcpdiag-vpc2-runbook                                                 [OK]
      [REASON]
@@ -99,7 +99,7 @@ vpc/vm-external-ip-connectivity: Troubleshooting for common issues which affect 
         by a Public NAT Gateway and check there are no issues on the NATGW.
     
 [START]: Starting VM external connectivity diagnostics
-[AUTOMATED STEP]: Verify Cloud API state.
+[AUTOMATED STEP]: Verify networkmanagement.googleapis.com API is ENABLED in project gcpdiag-vpc2-runbook.
 
    - gcpdiag-vpc2-runbook                                                 [OK]
      [REASON]

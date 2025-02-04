@@ -105,6 +105,7 @@ class VmExternalIpConnectivity(runbook.DiagnosticTree):
     # Check that the networkmanagement api is enabled
     service_api_status_check = gcp_gs.ServiceApiStatusCheck()
     service_api_status_check.api_name = 'networkmanagement'
+    service_api_status_check.project_id = op.get(flags.PROJECT_ID)
     service_api_status_check.expected_state = gcp_gs.constants.APIState.ENABLED
 
     # add to the debugging tree

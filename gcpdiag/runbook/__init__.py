@@ -22,9 +22,13 @@ import os
 import re
 import sys
 import textwrap
+import types
 from abc import abstractmethod
 from collections import OrderedDict
 from datetime import datetime, timedelta, timezone
+from enum import Enum
+from functools import cached_property
+from string import Formatter
 from typing import (Callable, Deque, Dict, List, Mapping, Optional, Set, Tuple,
                     final)
 
@@ -75,7 +79,7 @@ class Step(metaclass=MetaStep):
     self.uuid = uuid or util.generate_uuid()
     self.steps = []
     self.type = step_type
-    self.prompts: models.Messages = models.Messages()
+    self.observations: models.Messages = models.Messages()
     self.product = self.__module__.split('.')[-2]
     self.doc_file_name = util.pascal_case_to_kebab_case(self.__class__.__name__)
     # allow developers to set this
@@ -89,7 +93,7 @@ class Step(metaclass=MetaStep):
       for attribute, value in parameters.items():
         setattr(self, attribute, value)
 
-    self.set_prompts()
+    self.set_observations()
 
   @property
   def id(self):
@@ -112,22 +116,25 @@ class Step(metaclass=MetaStep):
         context: The context in which the step is executed.
         interface: The interface used for interactions during execution.
     """
-    self.load_prompts()
-    operator.set_messages(m=self.prompts)
-    operator.interface.info(step_type=self.type.value,
-                            message=self.execution_message)
+    self.load_observations()
+    operator.set_messages(m=self.observations)
+    try:
+      name = self.name
+    except KeyError:
+      name = self.__class__.__name__
+    operator.interface.info(step_type=self.type.value, message=name)
     self.execute()
 
   def execute(self):
     """Executes the main diagnostic log for this step."""
     pass
 
-  def set_prompts(self, prompt: models.Messages = None):
+  def set_observations(self, prompt: models.Messages = None):
     # override existing messages
     if prompt:
-      self.prompts.update(prompt)
+      self.observations.update(prompt)
 
-  def load_prompts(self):
+  def load_observations(self):
     if hasattr(self, 'template'):
       name = getattr(self, 'template').split('::')
     else:
@@ -135,13 +142,13 @@ class Step(metaclass=MetaStep):
 
     if len(name) == 2:
       file_name, block_name = name[0], name[1]
-      self.prompts.update(
+      self.observations.update(
           util.load_template_block(module_name=self.__module__,
                                    block_name=block_name,
                                    file_name=file_name))
     if len(name) == 3:
       file_name, block_name = name[1], name[2]
-      self.prompts.update(
+      self.observations.update(
           util.load_template_block(module_name=name[0],
                                    block_name=block_name,
                                    file_name=file_name))
@@ -165,25 +172,82 @@ class Step(metaclass=MetaStep):
 
   @property
   def label(self):
-    label = self.prompts.get_msg(constants.STEP_LABEL)
+    label = self.observations.get_msg(constants.STEP_LABEL)
     if 'NOTICE' in label:
       label = util.pascal_case_to_title(self.__class__.__name__)
     return label
 
-  @property
-  def execution_message(self):
-    attributes = vars(self)
-    if self.prompts.get(constants.STEP_MESSAGE):
-      formatted_message = self.prompts[constants.STEP_MESSAGE].format(
-          attributes)
-      formatted_message = formatted_message.rstrip('\n')
-      return formatted_message.format(attributes)
-    else:
-      if self.execute.__doc__:
-        return self.execute.__doc__.format(attributes)
+  @cached_property
+  def name(self):
+    # Get the step name template from observations or execute()'s docstring.
+    step_name = self.observations.get(
+        constants.STEP_NAME) or self.execute.__doc__
+    if not step_name:
       raise exceptions.InvalidStepOperation(
-          f'Step {self} does not have an introductory message. '
-          'Make sure execute() method has a docstring on the first line.')
+          f'Step {self} does not have an step name. '
+          'Make sure the execute() method has a docstring on the first line '
+          f'or a {self.template}_step_name block has been defined in the step template'
+      )
+
+    # Clean up the template
+    step_name = ' '.join(step_name.split())
+
+    # Extract all field names used in the step_name template.
+    placeholders = {
+        field for _, field, _, _ in Formatter().parse(step_name) if field
+    }
+
+    # Default variables not found on self.
+    defaults = {
+        'universe_domain': config.get('universe_domain'),
+        'start_time': op.get(flags.START_TIME),
+        'end_time': op.get(flags.END_TIME)
+    }
+
+    attributes = {}
+
+    for key in placeholders:
+      if key in constants.RESTRICTED_ATTRIBUTES:
+        continue
+
+      # Prefer a default value if available, otherwise use the attribute on self.
+      if key in defaults:
+        value = defaults[key]
+      elif hasattr(self, key):
+        value = getattr(self, key)
+      else:
+        # If the placeholder isn't found anywhere, you might either set it to an empty
+        # string or raise an error. Here, we default to an empty string.
+        value = ''
+
+      # Process the value based on its type.
+      if isinstance(value, Enum):
+        value = value.value
+      elif isinstance(value, datetime):
+        value = value.isoformat()
+      elif isinstance(value, (list, tuple, set)):
+        if isinstance(value, set):
+          value = list(value)
+        # If the list/tuple items are not of a simple type, skip this attribute.
+        if value and not isinstance(value[0], (int, str, bool, float)):
+          continue
+        value = ', '.join(str(item) for item in value)
+      elif isinstance(value, dict):
+        dict_values = list(value.values())
+        if dict_values and not isinstance(dict_values[0],
+                                          (int, str, bool, float)):
+          continue
+        value = ', '.join(f'{k}={v}' for k, v in value.items())
+      elif isinstance(
+          value,
+          (types.FunctionType, types.MethodType, types.BuiltinFunctionType)):
+        continue
+      else:
+        value = str(value)
+
+      attributes[key] = value
+
+    return step_name.format(**attributes)
 
   @property
   def long_desc(self):

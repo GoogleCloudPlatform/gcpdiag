@@ -26,8 +26,8 @@ from gcpdiag.runbook.gke import flags
 def local_realtime_query(filter_list):
   filter_str = '\n'.join(filter_list)
   result = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
-                               start_time_utc=op.get(flags.START_TIME),
-                               end_time_utc=op.get(flags.END_TIME),
+                               start_time=op.get(flags.START_TIME),
+                               end_time=op.get(flags.END_TIME),
                                filter_str=filter_str)
   return result
 
@@ -196,8 +196,8 @@ class ImageNotFound(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    start_time_utc = op.get(flags.START_TIME)
-    end_time_utc = op.get(flags.END_TIME)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
     filter_list = [
         'log_id("events")',
         'resource.type="k8s_pod"',
@@ -216,16 +216,16 @@ class ImageNotFound(runbook.Step):
       op.add_failed(project_path,
                     reason=op.prep_msg(
                         op.FAILURE_REASON,
-                        LOG_ENTRY=sample_log,
-                        START_TIME_UTC=start_time_utc,
-                        END_TIME_UTC=end_time_utc,
+                        log_entry=sample_log,
+                        start_time=start_time,
+                        end_time=end_time,
                     ),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=start_time_utc,
-                                   END_TIME_UTC=end_time_utc))
+                                   start_time=start_time,
+                                   end_time=end_time))
 
 
 class ImageForbidden(runbook.Step):
@@ -238,8 +238,8 @@ class ImageForbidden(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    start_time_utc = op.get(flags.START_TIME)
-    end_time_utc = op.get(flags.END_TIME)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
     filter_list = [
         'log_id("events")',
         'resource.type="k8s_pod"',
@@ -257,16 +257,16 @@ class ImageForbidden(runbook.Step):
       op.add_failed(project_path,
                     reason=op.prep_msg(
                         op.FAILURE_REASON,
-                        LOG_ENTRY=sample_log,
-                        START_TIME_UTC=start_time_utc,
-                        END_TIME_UTC=end_time_utc,
+                        log_entry=sample_log,
+                        start_time=start_time,
+                        end_time=end_time,
                     ),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=start_time_utc,
-                                   END_TIME_UTC=end_time_utc))
+                                   start_time=start_time,
+                                   end_time=end_time))
 
 
 class ImageDnsIssue(runbook.Step):
@@ -279,8 +279,8 @@ class ImageDnsIssue(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    start_time_utc = op.get(flags.START_TIME)
-    end_time_utc = op.get(flags.END_TIME)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
     filter_list = [
         'log_id("events")',
         'resource.type="k8s_pod"',
@@ -299,16 +299,16 @@ class ImageDnsIssue(runbook.Step):
       op.add_failed(project_path,
                     reason=op.prep_msg(
                         op.FAILURE_REASON,
-                        LOG_ENTRY=sample_log,
-                        START_TIME_UTC=start_time_utc,
-                        END_TIME_UTC=end_time_utc,
+                        log_entry=sample_log,
+                        start_time=start_time,
+                        end_time=end_time,
                     ),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=start_time_utc,
-                                   END_TIME_UTC=end_time_utc))
+                                   start_time=start_time,
+                                   end_time=end_time))
 
 
 class ImageConnectionTimeoutRestrictedPrivate(runbook.Step):
@@ -323,8 +323,8 @@ class ImageConnectionTimeoutRestrictedPrivate(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    start_time_utc = op.get(flags.START_TIME)
-    end_time_utc = op.get(flags.END_TIME)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
     filter_list = [
         'log_id("events")',
         'resource.type="k8s_pod"',
@@ -343,16 +343,16 @@ class ImageConnectionTimeoutRestrictedPrivate(runbook.Step):
       op.add_failed(project_path,
                     reason=op.prep_msg(
                         op.FAILURE_REASON,
-                        LOG_ENTRY=sample_log,
-                        START_TIME_UTC=start_time_utc,
-                        END_TIME_UTC=end_time_utc,
+                        log_entry=sample_log,
+                        start_time=start_time,
+                        end_time=end_time,
                     ),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=start_time_utc,
-                                   END_TIME_UTC=end_time_utc))
+                                   start_time=start_time,
+                                   end_time=end_time))
 
 
 class ImageConnectionTimeout(runbook.Step):
@@ -367,8 +367,8 @@ class ImageConnectionTimeout(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    start_time_utc = op.get(flags.START_TIME)
-    end_time_utc = op.get(flags.END_TIME)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
     filter_list = [
         'log_id("events")',
         'resource.type="k8s_pod"',
@@ -387,16 +387,16 @@ class ImageConnectionTimeout(runbook.Step):
       op.add_failed(project_path,
                     reason=op.prep_msg(
                         op.FAILURE_REASON,
-                        LOG_ENTRY=sample_log,
-                        START_TIME_UTC=start_time_utc,
-                        END_TIME_UTC=end_time_utc,
+                        log_entry=sample_log,
+                        start_time=start_time,
+                        end_time=end_time,
                     ),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=start_time_utc,
-                                   END_TIME_UTC=end_time_utc))
+                                   start_time=start_time,
+                                   end_time=end_time))
 
 
 class ImageNotFoundInsufficientScope(runbook.Step):
@@ -411,8 +411,8 @@ class ImageNotFoundInsufficientScope(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    start_time_utc = op.get(flags.START_TIME)
-    end_time_utc = op.get(flags.END_TIME)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
     filter_list = [
         'log_id("events")',
         'resource.type="k8s_pod"',
@@ -430,16 +430,16 @@ class ImageNotFoundInsufficientScope(runbook.Step):
       op.add_failed(project_path,
                     reason=op.prep_msg(
                         op.FAILURE_REASON,
-                        LOG_ENTRY=sample_log,
-                        START_TIME_UTC=start_time_utc,
-                        END_TIME_UTC=end_time_utc,
+                        log_entry=sample_log,
+                        start_time=start_time,
+                        end_time=end_time,
                     ),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=start_time_utc,
-                                   END_TIME_UTC=end_time_utc))
+                                   start_time=start_time,
+                                   end_time=end_time))
 
 
 class ImagePullEnd(runbook.EndStep):

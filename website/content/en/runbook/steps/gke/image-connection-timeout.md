@@ -16,10 +16,11 @@ None
 
 ### Failure Reason
 
-The connection from Node to Google APIs is timing out. It is probable that a firewall rule is blocking this IP range. Expand results to see the blocked IP range.
+The connection from Node to Google APIs is timing out. It is probable that a firewall rule is blocking this IP range.
+Expand results to see the blocked IP range.
 Example log entry that would help identify involved objects:
 
-{LOG_ENTRY}
+{log_entry}
 
 ### Failure Remediation
 
@@ -28,7 +29,7 @@ https://cloud.google.com/kubernetes-engine/docs/concepts/firewall-rules
 
 ### Success Reason
 
-No "Failed to pull image.*dial tcp.*i/o timeout" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+No "Failed to pull image.*dial tcp.*i/o timeout" errors found between {start_time} and {end_time}
 
 
 

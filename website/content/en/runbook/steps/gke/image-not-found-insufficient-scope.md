@@ -16,10 +16,11 @@ None
 
 ### Failure Reason
 
-Either user or service account that's trying to pull the image doesn't have the necessary permissions to access it or Image doesn't exist.
+Either user or service account that's trying to pull the image doesn't have the necessary permissions to access it or
+Image doesn't exist.
 Example log entry that would help identify involved objects:
 
-{LOG_ENTRY}
+{log_entry}
 
 ### Failure Remediation
 
@@ -29,7 +30,7 @@ https://cloud.google.com/kubernetes-engine/docs/troubleshooting/deployed-workloa
 
 ### Success Reason
 
-No "Failed to pull image.*insufficient_scope" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+No "Failed to pull image.*insufficient_scope" errors found between {start_time} and {end_time}
 
 
 

@@ -18,7 +18,7 @@ None
 
 Pod is blocking the ScaleDown event because of an unexpected error.
 Example log entry that would help identify involved objects:
-{LOG_ENTRY}
+{log_entry}
 
 ### Failure Remediation
 
@@ -26,7 +26,7 @@ The root cause of this error is unknown. Contact Cloud Customer Care for further
 
 ### Success Reason
 
-No "no.scale.down.node.pod.unexpected.error" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+No "no.scale.down.node.pod.unexpected.error" errors found between {start_time} and {end_time}
 
 
 

@@ -16,25 +16,14 @@ gke/node-bootstrapping: Analyses issues experienced when adding nodes to your GK
   any errors that might have occurred when the instances.insert method was invoked for the given
   parameters.
   
-[START]: 
-    Check the provided parameters.
-    
-[AUTOMATED STEP]: 
-    Check for any errors during instances.insert method for the given location (region or zone)
-    and nodepool pair.
-    
+[START]: Check the provided parameters.
+[AUTOMATED STEP]: Check for any errors during instances.insert method for the given location (region or zone) and nodepool pair.
 
    - gcpdiag-gke1-aaaa                                                    [SKIP]
      [REASON]
      No nodepool or GKE cluster name provided, skipping this step . 
      Please provide nodepool name (-p nodepool=<nodepoolname>) and GKE cluster name (-p name=<gke-cluster-name>) if you see issues with nodes not appearing in the nodepool.
-[AUTOMATED STEP]: 
-    Verify if Node Registration Checker completed running.
-
-    If the node was successfully registered, provide log entry proving successful registration
-    If the node wasn't registered successfully, provide Node Registration Checker summary to
-    understand why.
-    
+[AUTOMATED STEP]: Verify if Node Registration Checker completed running. If the node was successfully registered, provide log entry proving successful registration If the node wasn't registered successfully, provide Node Registration Checker summary to understand why.
 
    - gcpdiag-gke1-aaaa                                                    [SKIP]
      [REASON]

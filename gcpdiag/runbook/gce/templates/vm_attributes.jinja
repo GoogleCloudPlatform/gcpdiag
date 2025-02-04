@@ -15,13 +15,13 @@ Read more on how to properly authorize ops agent.
 https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/authorization#authorize_with_an_attached_service_account
 {% endblock service_account_exists_failure_remediation %}
 
-{% block service_account_exists_step_message %}
+{% block service_account_exists_step_name %}
 Verify Service Account exists
-{% endblock service_account_exists_step_message %}
+{% endblock service_account_exists_step_name %}
 
-{% block access_scope_step_message %}
+{% block access_scope_step_name %}
 Verify GCE Instance has sufficient access scope
-{% endblock access_scope_step_message %}
+{% endblock access_scope_step_name %}
 
 {% block access_scope_success_reason %}
 GCE instance {full_resource_path} has at least one of the required scope:
@@ -43,9 +43,9 @@ Update `{full_resource_path}` to enable at least one of the following access sco
 [1] https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes
 {% endblock access_scope_failure_remediation %}
 
-{% block running_step_message %}
+{% block running_step_name %}
 Verify GCE Instance is in a "RUNNING" state.
-{% endblock running_step_message %}
+{% endblock running_step_name %}
 
 {% block running_success_reason %}
 The GCE Instance {full_resource_path} is in {status} state.
@@ -70,9 +70,9 @@ documentation](https://cloud.google.com/compute/docs/troubleshooting/vm-startup#
 to identify and resolve potential startup issues.
 {% endblock running_failure_remediation %}
 
-{% block terminated_vm_running_step_message %}
+{% block terminated_vm_running_step_name %}
 Verify that the terminated VM is currently running
-{% endblock terminated_vm_running_step_message %}
+{% endblock terminated_vm_running_step_name %}
 
 {% block terminated_vm_running_success_reason %}
 The terminated VM is currently up and running indicating proper functionality.

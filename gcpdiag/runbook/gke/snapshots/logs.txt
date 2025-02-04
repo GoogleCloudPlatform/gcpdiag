@@ -43,9 +43,7 @@ gke/logs: Provides a methodical approach to troubleshooting GKE logging issues.
    - gcpdiag-gke-cluster-autoscaler-rrrr/europe-west10/gcp-cluster/default-pool [OK]
      [REASON]
      The node pool projects/gcpdiag-gke-cluster-autoscaler-rrrr/locations/europe-west10/clusters/gcp-cluster/nodePools/default-pool has the correct Cloud Logging access scope.
-[AUTOMATED STEP]: 
-    Verifies the node pool's service account has a role with the correct logging IAM permissions
-    
+[AUTOMATED STEP]: Verifies the node pool's service account has a role with the correct logging IAM permissions
 
    - gcpdiag-gke-cluster-autoscaler-rrrr/europe-west10/gcp-cluster/default-pool [OK]
      [REASON]

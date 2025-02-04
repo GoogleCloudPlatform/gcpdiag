@@ -200,8 +200,8 @@ class CheckWorkbenchInstanceSyslogsJupyterRunningOnPort8080(runbook.Step):
 
   def execute(self):
     """Verify Jupyter is running on port 127.0.0.1:8080"""
-    start_time_utc = op.get(flags.START_TIME)
-    end_time_utc = op.get(flags.END_TIME)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
     project_id: str = self.project_id or op.get(flags.PROJECT_ID)
     instance_name: str = self.instance_name or op.get(flags.INSTANCE_NAME)
     zone: str = self.zone or op.get(flags.ZONE)
@@ -220,8 +220,8 @@ class CheckWorkbenchInstanceSyslogsJupyterRunningOnPort8080(runbook.Step):
     serial_log_entries_jupyter_running = logs.realtime_query(
         project_id=project_id,
         filter_str=filter_str,
-        start_time_utc=start_time_utc,
-        end_time_utc=end_time_utc)
+        start_time=start_time,
+        end_time=end_time)
     if serial_log_entries_jupyter_running:
       op.info(
           'Jupyter is running! Verifying if it\'s running on port 127.0.0.1:8080.'
@@ -241,8 +241,8 @@ class CheckWorkbenchInstanceSyslogsJupyterRunningOnPort8080(runbook.Step):
       serial_log_entries_jupyter_port = logs.realtime_query(
           project_id=project_id,
           filter_str=filter_str,
-          start_time_utc=start_time_utc,
-          end_time_utc=end_time_utc)
+          start_time=start_time,
+          end_time=end_time)
       if serial_log_entries_jupyter_port:
         #User will need to fix their instance o create a new one
         op.add_failed(resource=workbench_instance,
