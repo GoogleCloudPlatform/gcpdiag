@@ -21,12 +21,12 @@
 ">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://gcpdiag.dev/runbook/steps/lb/check-provisioning-time/"><meta property="og:image" content="https://gcpdiag.dev/images/website-preview.jpg"><meta property="article:section" content="runbook">
-<meta property="article:modified_time" content="2025-01-10T03:48:02-08:00"><meta property="og:site_name" content="gcpdiag">
+<meta property="article:modified_time" content="2025-02-04T12:35:59+00:00"><meta property="og:site_name" content="gcpdiag">
 <meta itemprop=name content="lb/Check Provisioning Time">
 <meta itemprop=description content="Checks if the SSL certificate associated resources has been updated recently.
 ">
-<meta itemprop=dateModified content="2025-01-10T03:48:02-08:00">
-<meta itemprop=wordCount content="103"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
+<meta itemprop=dateModified content="2025-02-04T12:35:59+00:00">
+<meta itemprop=wordCount content="105"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta itemprop=keywords content><meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta name=twitter:title content="lb/Check Provisioning Time">
@@ -1018,14 +1018,14 @@
 <h3 id=description>Description</h3>
 <p>None</p>
 <h3 id=success-reason>Success Reason</h3>
-<p>No recent changes were detected for forwarding rules and target proxies associated with the certificate {name}.</p>
+<p>No recent changes were detected for forwarding rules and target proxies associated with the SSL certificate &ldquo;{name}&rdquo;.</p>
 <h3 id=uncertain-reason>Uncertain Reason</h3>
-<p>The certificate {name} has recently had associated resources modified. This might affect DNS validation. Details are below:
+<p>The SSL certificate &ldquo;{name}&rdquo; has recently had associated resources modified. This might affect DNS validation. Details are below:
 {recently_changed}</p>
 <h3 id=uncertain-remediation>Uncertain Remediation</h3>
 <p>DNS validation automatically checks your domain&rsquo;s A and AAAA records against your Google Cloud load balancer&rsquo;s IP address. This process includes an automatic retry mechanism with increasing wait times. If you recently attached {name} to a target proxy or the target proxy to forwarding rule, validation could take up to 24 hours to complete.</p>
 <div class="text-muted mt-5 pt-3 border-top">
-Last modified January 10, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/9082d31c7b2652f7ae722c8e349b2fd54b8ab7e2>Merge "Fix LB runbook messages to follow the recommendations" -- Branch commit log -- commit 025bdec8ccecd86f7e6884b5adc6576571344790 Author: Natalia Kaczor &lt;nataliakaczor@google.com> Date: 2025-01-03T13:42:07Z (9082d31c7)</a>
+Last modified February 4, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/eff50591bbaf31251e0d7b335a4a5b7181d116ce>SSL cert style updates (eff50591b)</a>
 </div>
 </div>
 </main>
