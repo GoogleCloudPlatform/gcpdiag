@@ -21,12 +21,12 @@
 ">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://gcpdiag.dev/runbook/steps/lb/analyze-unhealthy-health-check-log/"><meta property="og:image" content="https://gcpdiag.dev/images/website-preview.jpg"><meta property="article:section" content="runbook">
-<meta property="article:modified_time" content="2025-01-10T03:48:02-08:00"><meta property="og:site_name" content="gcpdiag">
+<meta property="article:modified_time" content="2025-01-31T11:31:14+00:00"><meta property="og:site_name" content="gcpdiag">
 <meta itemprop=name content="lb/Analyze Unhealthy Health Check Log">
 <meta itemprop=description content="Analyzes logs with detailed health state UNHEALTHY.
 ">
-<meta itemprop=dateModified content="2025-01-10T03:48:02-08:00">
-<meta itemprop=wordCount content="75"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
+<meta itemprop=dateModified content="2025-01-31T11:31:14+00:00">
+<meta itemprop=wordCount content="81"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta itemprop=keywords content><meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta name=twitter:title content="lb/Analyze Unhealthy Health Check Log">
@@ -1017,14 +1017,14 @@
 <h3 id=description>Description</h3>
 <p>None</p>
 <h3 id=uncertain-reason>Uncertain Reason</h3>
-<p>Health check logs show the detailed health state UNHEALTHY meaning the endpoint is reachable but doesn&rsquo;t meet the health check requirements.
-Responses received from backends: {probe_results_text_str}</p>
+<p>Health check logs for backend service {bs_url} indicate a detailed health state of UNHEALTHY. The backend instances are reachable but are not passing the health check requirements.</p>
+<p>Responses received from backends: {probe_results_text_str}</p>
 <h3 id=uncertain-remediation>Uncertain Remediation</h3>
 <p>{success_criteria}</p>
 <p>Please investigate the configuration of your application to ensure it aligns with these health check expectations.</p>
 <p>If you intend to check a different endpoint or expect a different response, adjust the health check settings accordingly.</p>
 <div class="text-muted mt-5 pt-3 border-top">
-Last modified January 10, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/9082d31c7b2652f7ae722c8e349b2fd54b8ab7e2>Merge "Fix LB runbook messages to follow the recommendations" -- Branch commit log -- commit 025bdec8ccecd86f7e6884b5adc6576571344790 Author: Natalia Kaczor &lt;nataliakaczor@google.com> Date: 2025-01-03T13:42:07Z (9082d31c7)</a>
+Last modified January 31, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/9e95392f117610a4314e5c718f3730e62eca349a>Update style for lb/unhealthy_backends runbook (9e95392f1)</a>
 </div>
 </div>
 </main>

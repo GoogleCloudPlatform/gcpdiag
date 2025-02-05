@@ -21,12 +21,12 @@
 ">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://gcpdiag.dev/runbook/steps/lb/analyze-timeout-health-check-log/"><meta property="og:image" content="https://gcpdiag.dev/images/website-preview.jpg"><meta property="article:section" content="runbook">
-<meta property="article:modified_time" content="2025-01-21T11:53:46+00:00"><meta property="og:site_name" content="gcpdiag">
+<meta property="article:modified_time" content="2025-01-31T11:31:14+00:00"><meta property="og:site_name" content="gcpdiag">
 <meta itemprop=name content="lb/Analyze Timeout Health Check Log">
 <meta itemprop=description content="Analyzes logs with the detailed health check state TIMEOUT
 ">
-<meta itemprop=dateModified content="2025-01-21T11:53:46+00:00">
-<meta itemprop=wordCount content="139"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
+<meta itemprop=dateModified content="2025-01-31T11:31:14+00:00">
+<meta itemprop=wordCount content="147"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta itemprop=keywords content><meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta name=twitter:title content="lb/Analyze Timeout Health Check Log">
@@ -1017,7 +1017,8 @@
 <h3 id=description>Description</h3>
 <p>None</p>
 <h3 id=uncertain-reason>Uncertain Reason</h3>
-<p>Health check logs show the detailed health state &ldquo;TIMEOUT&rdquo;.</p>
+<p>Health check logs for backend service {bs_url} show the detailed health state &ldquo;TIMEOUT&rdquo;.</p>
+<p>Responses received from backends: {probe_results_text_str}</p>
 <p>The backend might be timing out because:</p>
 <ol>
 <li>
@@ -1040,11 +1041,11 @@
 <p>Investigate your application&rsquo;s configuration to ensure it is correctly handling health check probe requests. {success_criteria}</p>
 </li>
 <li>
-<p>Check if firewall rules or iptables configurations are not blocking the health check probes from reaching the backend instances, resulting in timeouts.</p>
+<p>Check if firewall rules or iptables configurations are blocking the health check probes from reaching the backend instances, resulting in timeouts.</p>
 </li>
 </ol>
 <div class="text-muted mt-5 pt-3 border-top">
-Last modified January 21, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/15bda49a2052a2cb01e243f7024a4bc13520873b>Add new step to unhealthy backends runbook - check for protocol mismatch for health check and serving traffic (15bda49a2)</a>
+Last modified January 31, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/9e95392f117610a4314e5c718f3730e62eca349a>Update style for lb/unhealthy_backends runbook (9e95392f1)</a>
 </div>
 </div>
 </main>

@@ -21,12 +21,12 @@
 ">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://gcpdiag.dev/runbook/steps/lb/verify-health-check-logging-enabled/"><meta property="og:image" content="https://gcpdiag.dev/images/website-preview.jpg"><meta property="article:section" content="runbook">
-<meta property="article:modified_time" content="2024-08-05T10:17:04+00:00"><meta property="og:site_name" content="gcpdiag">
+<meta property="article:modified_time" content="2025-01-31T11:31:14+00:00"><meta property="og:site_name" content="gcpdiag">
 <meta itemprop=name content="lb/Verify Health Check Logging Enabled">
 <meta itemprop=description content="Check if health check logging is enabled.
 ">
-<meta itemprop=dateModified content="2024-08-05T10:17:04+00:00">
-<meta itemprop=wordCount content="75"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
+<meta itemprop=dateModified content="2025-01-31T11:31:14+00:00">
+<meta itemprop=wordCount content="79"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta itemprop=keywords content><meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta name=twitter:title content="lb/Verify Health Check Logging Enabled">
@@ -1018,15 +1018,15 @@
 <h3 id=description>Description</h3>
 <p>None</p>
 <h3 id=success-reason>Success Reason</h3>
-<p>Health check logging is enabled</p>
+<p>Health check logging is enabled for health check {hc_url}.</p>
 <h3 id=uncertain-reason>Uncertain Reason</h3>
-<p>Logging is not enabled for health check</p>
+<p>Logging is not enabled for health check {hc_url}.</p>
 <h3 id=uncertain-remediation>Uncertain Remediation</h3>
-<p>Enable logging for the health check using the following gcloud command:</p>
-<p>gcloud compute health-checks update {protocol} {hc_name} {additional_flags}&ndash;enable-logging</p>
-<p>This will log any future changes in health status but won&rsquo;t show any past activity. Note that the new health check logs will only appear when a health state transition occurs.</p>
+<p>Enable logging for the health check using the following <code>gcloud</code> command:</p>
+<pre tabindex=0><code>gcloud compute health-checks update {protocol} {hc_name} {additional_flags} --enable-logging
+</code></pre><p>This will log any future changes in health status, but won&rsquo;t show past activity. Note that new health check logs will only appear when a health state transition occurs.</p>
 <div class="text-muted mt-5 pt-3 border-top">
-Last modified August 5, 2024: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/ea1aea0cf3acfb2384f944ec663d5fd2e8afb0f8>Runbook for unhealthy backends troubleshooting (ea1aea0cf)</a>
+Last modified January 31, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/9e95392f117610a4314e5c718f3730e62eca349a>Update style for lb/unhealthy_backends runbook (9e95392f1)</a>
 </div>
 </div>
 </main>
