@@ -18,9 +18,7 @@ nat/public-nat-ip-allocation-failed: Troubleshooting for IP Allocation issues fo
       verify the VM is served by a Public NAT Gateway and check there are no issues on the NATGW.
     
 [START]: Starting Nat IP Allocation Failed diagnostics
-[AUTOMATED STEP]: Checking the nat_allocation_failed metric for NAT IP allocation failure
-      and the NAT router status.
-    
+[AUTOMATED STEP]: Checking the nat_allocation_failed metric for NAT IP allocation failure and the NAT router status.
 
    - gcpdiag-nat1-aaaa                                                    [FAIL]
      [REASON]
@@ -31,10 +29,7 @@ nat/public-nat-ip-allocation-failed: Troubleshooting for IP Allocation issues fo
      IP exhaustion issue on public-nat-gateway
 
 [GATEWAY]: Checks if the NATGW router is configured with manual or automatic IP allocation
-[AUTOMATED STEP]: NAT IP allocation is configured with MANUAL_ONLY.
-
-    Running diagnostic for NAT Gateway configured as MANUAL_ONLY only
-    
+[AUTOMATED STEP]: NAT IP allocation is configured with MANUAL_ONLY. Running diagnostic for NAT Gateway configured as MANUAL_ONLY only
 
    - gcpdiag-nat1-aaaa                                                    [OK]
      [REASON]

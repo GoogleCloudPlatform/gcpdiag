@@ -4,7 +4,7 @@ linkTitle: "Analyze Failed Caa Check"
 weight: 3
 type: docs
 description: >
-  Analyzes domains in "FAILED_CAA_CHECKING" or "FAILED_CAA_FORBIDDEN" state.
+  Analyze domains in "FAILED_CAA_CHECKING" or "FAILED_CAA_FORBIDDEN" state.
 ---
 
 **Product**: [Load balancing](https://cloud.google.com/load-balancing)\
@@ -16,7 +16,7 @@ None
 
 ### Failure Reason
 
-The following domains are in "FAILED_CAA_CHECKING" or "FAILED_CAA_FORBIDDEN" state: {domains}. This indicates misconfigured CAA records.  CAA records authorize specific Certificate Authorities to issue certificates for your domain.
+The following domains are in FAILED_CAA_CHECKING or FAILED_CAA_FORBIDDEN state: {domains} for SSL certificate "{name}". This indicates misconfigured CAA records.  CAA records authorize specific Certificate Authorities to issue certificates for your domain.
 
 ### Failure Remediation
 

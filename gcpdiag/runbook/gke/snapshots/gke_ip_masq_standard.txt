@@ -38,7 +38,7 @@ gke/gke-ip-masq-standard: This runbook will analyze symptoms for IP Masquerading
 
      [1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#checking_the_ip-masq-agent_daemonset
 
-[AUTOMATED STEP]: Lets confirm if config map  is configure.
+[AUTOMATED STEP]: Lets confirm if config map is configure.
 
    - gcpdiag-gke4-aaaa                                                    [UNCERTAIN]
      [REASON]

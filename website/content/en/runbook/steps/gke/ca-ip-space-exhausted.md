@@ -16,9 +16,10 @@ None
 
 ### Failure Reason
 
-The scaleUp event failed because the cluster doesn't have enough unallocated IP address space to use to add new nodes or Pods.
+The scaleUp event failed because the cluster doesn't have enough unallocated IP address space to use to add new nodes or
+Pods.
 Example log entry that would help identify involved objects:
-{LOG_ENTRY}
+{log_entry}
 
 ### Failure Remediation
 
@@ -27,7 +28,7 @@ https://cloud.google.com/kubernetes-engine/docs/how-to/alias-ips#not_enough_spac
 
 ### Success Reason
 
-No "scale.up.error.ip.space.exhausted" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+No "scale.up.error.ip.space.exhausted" errors found between {start_time} and {end_time}
 
 
 

@@ -16,7 +16,7 @@ None
 
 ### Failure Reason
 
-The node {NODE} was preempted.
+The node {node} was preempted.
 
 ### Failure Remediation
 
@@ -27,7 +27,7 @@ https://cloud.google.com/kubernetes-engine/docs/how-to/preemptible-vms
 
 ### Success Reason
 
-The node {NODE} was unavailable for reasons other than preemption.
+The node {node} was unavailable for reasons other than preemption.
 
 
 

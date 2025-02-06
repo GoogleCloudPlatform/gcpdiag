@@ -16,20 +16,23 @@ None
 
 ### Failure Reason
 
-The scaleDown event failed because the pod is a non-DaemonSet, non-mirrored, Pod without a PodDisruptionBudget in the kube-system namespace.
+The scaleDown event failed because the pod is a non-DaemonSet, non-mirrored, Pod without a PodDisruptionBudget in the
+kube-system namespace.
 Example log entry that would help identify involved objects:
-{LOG_ENTRY}
+{log_entry}
 
 ### Failure Remediation
 
 By default, Pods in the kube-system namespace aren't removed by cluster autoscaler.
 
-To resolve this issue, either add a PodDisruptionBudget for the kube-system Pods or use a combination of node pools taints and tolerations to separate kube-system Pods from your application Pods.
-To learn more, see https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-down#kube-system-unmoveable
+To resolve this issue, either add a PodDisruptionBudget for the kube-system Pods or use a combination of node pools
+taints and tolerations to separate kube-system Pods from your application Pods.
+To learn more, see
+https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-down#kube-system-unmoveable
 
 ### Success Reason
 
-No "no.scale.down.node.pod.kube.system.unmovable" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+No "no.scale.down.node.pod.kube.system.unmovable" errors found between {start_time} and {end_time}
 
 
 

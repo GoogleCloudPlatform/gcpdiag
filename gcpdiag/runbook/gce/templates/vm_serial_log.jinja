@@ -40,9 +40,9 @@ https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_k
 https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
 {% endblock default_uncertain_remediation %}
 
-{% block kernel_panic_step_message %}
+{% block kernel_panic_step_name %}
 Examine Guest OS if there are any indications of kernel panic.
-{% endblock kernel_panic_step_message %}
+{% endblock kernel_panic_step_name %}
 
 {% block kernel_panic_success_reason %}
 A review of the serial console logs for the GCE instance `{full_resource_path}` from `{start_time}` to `{end_time}`
@@ -124,9 +124,9 @@ There are no logs to examine.
 {% endblock kernel_panic_skipped_reason %}
 
 
-{% block sshguard_step_message %}
+{% block sshguard_step_name %}
 Verify if SSHGuard is installed and blocking SSH connectivity
-{% endblock sshguard_step_message %}
+{% endblock sshguard_step_name %}
 
 {% block sshguard_failure_reason %}
 SSHGuard is active and may be blocking IP addresses.
@@ -165,10 +165,10 @@ There are no logs to examine
 Verify if the `google-compute-engine-ssh` agent is installed on the Windows VM.
 {% endblock windows_gce_ssh_agent_instructions_message %}
 
-{% block windows_gce_ssh_agent_step_message %}
+{% block windows_gce_ssh_agent_step_name %}
 Manually verify if the necessary Google guest agents, especially `google-compute-engine-ssh`,
 are operational on the VM.
-{% endblock windows_gce_ssh_agent_step_message %}
+{% endblock windows_gce_ssh_agent_step_name %}
 
 {% block windows_gce_ssh_agent_uncertain_reason %}
 Uncertain if the `google-compute-engine-ssh` agent is installed on the VM.
@@ -195,9 +195,9 @@ https://cloud.google.com/compute/docs/connect/windows-ssh#startup-script
 {% endblock windows_gce_ssh_agent_failure_remediation %}
 
 
-{% block sshd_step_message %}
+{% block sshd_step_name %}
 Verify OpenSSH daemon (sshd) has started from most recent serial logs.
-{% endblock sshd_step_message %}
+{% endblock sshd_step_name %}
 
 {% block sshd_failure_reason %}
 The latest OpenSSH daemon (sshd) logs indicate that the daemon has either failed to start or is misconfigured.
@@ -238,9 +238,9 @@ to conclusively assess if sshd.service is up and running correctly.
 There are no logs to examine
 {% endblock sshd_skipped_reason %}
 
-{% block windows_bootup_step_message %}
+{% block windows_bootup_step_name %}
 Verify Windows bootup process have succesfully completed.
-{% endblock windows_bootup_step_message %}
+{% endblock windows_bootup_step_name %}
 
 {% block windows_bootup_success_reason %}
 Confirmed the presence of the expected guest agent logs in the serial console output
@@ -286,9 +286,9 @@ https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-
 {% endblock windows_bootup_uncertain_remediation %}
 
 
-{% block serial_log_start_point_step_message %}
+{% block serial_log_start_point_step_name %}
 Verify all logs available since last boot of the instance
-{% endblock serial_log_start_point_step_message %}
+{% endblock serial_log_start_point_step_name %}
 
 {% block serial_log_start_point_success_reason %}
 Found all logs since last boot of the VM.
@@ -308,9 +308,9 @@ There are no logs to examine.
 {% endblock serial_log_start_point_skipped_reason %}
 
 
-{% block time_sync_issue_step_message %}
+{% block time_sync_issue_step_name %}
 Check for Time Sync related errors from GCE serial logs.
-{% endblock time_sync_issue_step_message %}
+{% endblock time_sync_issue_step_name %}
 
 {% block time_sync_issue_failure_reason %}
 Found time sync error messages in Serial console logs. It looks like VM's time is out of syc.
@@ -339,9 +339,9 @@ To verify, please check your system Logs for below patterns:
 {% endblock time_sync_issue_uncertain_remediation %}
 
 
-{% block guest_agent_step_message %}
+{% block guest_agent_step_name %}
 Checking for Guest Agent startup logs
-{% endblock guest_agent_step_message %}
+{% endblock guest_agent_step_name %}
 
 {% block guest_agent_failure_reason %}
 Could not find the Google Guest Agent startup log in Serial console logs.
@@ -387,9 +387,9 @@ For manual validation of the Guest Agent, refer to [Installing and configuring t
 environment](https://cloud.google.com/compute/docs/images/install-guest-environment#wgei).
 {% endblock guest_agent_uncertain_remediation %}
 
-{% block network_errors_step_message %}
+{% block network_errors_step_name %}
 Check for metadata network connectivity errors
-{% endblock network_errors_step_message %}
+{% endblock network_errors_step_name %}
 
 {% block network_errors_failure_reason %}
 The metadata server(169.254.169.254) is unreachable from the GCE Instance.
@@ -417,9 +417,9 @@ There are no logs to examine.
 No success or failed logs to help deduce a conlusion on certainity of Network issues on the instance.
 {% endblock network_errors_uncertain_reason %}
 
-{% block linux_fs_corruption_step_message %}
+{% block linux_fs_corruption_step_name %}
 Verify any Filesystem corruption related errors in Serial console logs
-{% endblock linux_fs_corruption_step_message %}
+{% endblock linux_fs_corruption_step_name %}
 
 {% block linux_fs_corruption_failure_reason %}
 Possibe filesystem corruption detected.
@@ -449,9 +449,9 @@ These resources provide detailed steps for diagnosing and resolving filesystem i
 There are no logs to examine.
 {% endblock linux_fs_corruption_skipped_reason %}
 
-{% block sshd_auth_failure_step_message %}
+{% block sshd_auth_failure_step_name %}
 Examining SSHD authentication failures via serial logs.
-{% endblock sshd_auth_failure_step_message %}
+{% endblock sshd_auth_failure_step_name %}
 
 {% block sshd_auth_failure_failure_reason %}
 Dectected SSHD authentication issues in the GCE Instance, which is affecting SSH access.
@@ -505,9 +505,9 @@ No evidence Filesystem corruption errors present in the serial logs.
 
 {% endblock linux_fs_corruption_uncertain_remediation %}
 
-{% block cloud_init_startup_check_step_message %}
+{% block cloud_init_startup_check_step_name %}
 Checking for Cloud-init startup logs
-{% endblock cloud_init_startup_check_step_message %}
+{% endblock cloud_init_startup_check_step_name %}
 
 {% block cloud_init_startup_check_failure_reason %}
 Could not find the Cloud-init startup log in Serial console logs.
@@ -552,9 +552,9 @@ systemctl enable cloud-init
 {% endblock cloud_init_startup_check_uncertain_remediation %}
 
 
-{% block cloud_init_step_message %}
+{% block cloud_init_step_name %}
 Verify Network interface received IP through cloud-init
-{% endblock cloud_init_step_message %}
+{% endblock cloud_init_step_name %}
 
 {% block cloud_init_failure_reason %}
 NIC did not received any IP through cloud-init

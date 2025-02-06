@@ -1,9 +1,9 @@
 {% block confirmation_success_reason %}
-The certificate "{name}" is in ACTIVE state.
+The SSL certificate "{name}" is in ACTIVE state.
 {% endblock confirmation_success_reason %}
 
 {% block confirmation_skipped_reason %}
-SSL certificate {name} does not exist or project {project_id} does not exist.
+The SSL certificate "{name}" does not exist or project {project_id} does not exist.
 {% endblock confirmation_skipped_reason %}
 
 {% block confirmation_skipped_reason_a1 %}
@@ -11,15 +11,15 @@ The certificate "{name}" is self-managed. Customers are responsible for obtainin
 {% endblock confirmation_skipped_reason_a1 %}
 
 {% block confirmation_failure_reason %}
-The certificate "{name}" is not in ACTIVE state.
+The Google-managed SSL certificate "{name}" is not in ACTIVE state.
 {% endblock confirmation_failure_reason %}
 
 {% block cert_status_success_reason %}
-The certificate "{name}" is in {status} state.
+The Google-managed SSL certificate "{name}" is in {status} state.
 {% endblock cert_status_success_reason %}
 
 {% block cert_status_failure_reason %}
-The certificate {name} is in the "PROVISIONING_FAILED_PERMANENTLY" state. This is a non-recoverable state.
+The Google-managed SSL certificate "{name}" is in the PROVISIONING_FAILED_PERMANENTLY state. This is a non-recoverable state.
 {% endblock cert_status_failure_reason %}
 
 {% block cert_status_failure_remediation %}
@@ -27,27 +27,27 @@ Please recreate the certificate. See the documentation for instructions on creat
 {% endblock cert_status_failure_remediation %}
 
 {% block cert_status_uncertain_reason %}
-The certificate {name} is in the "{status}" state. {context}.
+The Google-managed SSL certificate "{name}" is in the {status} state. {context}.
 {% endblock cert_status_uncertain_reason %}
 
 {% block domain_status_success_reason %}
-All domains associated with the certificate "{name}" are in the "ACTIVE" state. No issues detected with domain provisioning
+All domains associated with the SSL certificate "{name}" are in the ACTIVE state. No issues detected with domain provisioning
 {% endblock domain_status_success_reason %}
 
 {% block failed_not_visible_domains_failure_reason %}
-The following domains are in "FAILED_NOT_VISIBLE" state: {domains}. This usually means the domain's DNS records aren't correctly pointing to your load balancer.
+The following domains are in FAILED_NOT_VISIBLE state: {domains} for SSL certificate "{name}". This usually means the domain's DNS records aren't correctly pointing to your load balancer.
 {% endblock failed_not_visible_domains_failure_reason %}
 
 {% block provisioning_domains_uncertain_reason %}
-The following domains are in "PROVISIONING" state: {domains}.
+The following domains are in PROVISIONING state: {domains} for SSL certificate "{name}".
 {% endblock provisioning_domains_uncertain_reason %}
 
 {% block provisioning_domains_uncertain_remediation %}
-The provisioning process can take some time.  The runbook will proactively check other potential issues while the domains are provisioning.
+The provisioning process can take some time. The runbook will proactively check other potential issues while the domains are provisioning.
 {% endblock provisioning_domains_uncertain_remediation %}
 
 {% block failed_rate_limited_domains_failure_reason %}
-The following domains are in "FAILED_RATE_LIMITED" state: {domains}. This indicates rate limiting by the Certificate Authority.  You've likely exceeded the allowed number of certificate requests in a short period.
+The following domains are in FAILED_RATE_LIMITED state: {domains} for SSL certificate "{name}". This indicates rate limiting by the Certificate Authority.  You've likely exceeded the allowed number of certificate requests in a short period.
 {% endblock failed_rate_limited_domains_failure_reason %}
 
 {% block failed_rate_limited_domains_failure_remediation %}
@@ -55,7 +55,7 @@ Wait for a while and then check the certificate status again. If the issue persi
 {% endblock failed_rate_limited_domains_failure_remediation %}
 
 {% block failed_caa_check_domains_failure_reason %}
-The following domains are in "FAILED_CAA_CHECKING" or "FAILED_CAA_FORBIDDEN" state: {domains}. This indicates misconfigured CAA records.  CAA records authorize specific Certificate Authorities to issue certificates for your domain.
+The following domains are in FAILED_CAA_CHECKING or FAILED_CAA_FORBIDDEN state: {domains} for SSL certificate "{name}". This indicates misconfigured CAA records.  CAA records authorize specific Certificate Authorities to issue certificates for your domain.
 {% endblock failed_caa_check_domains_failure_reason %}
 
 {% block failed_caa_check_domains_failure_remediation %}
@@ -63,7 +63,7 @@ Please ensure the CAA records are configured correctly and try again. See the do
 {% endblock failed_caa_check_domains_failure_remediation %}
 
 {% block check_certificate_attachment_failure_reason %}
-The SSL certificate {name} is not attached to any target proxies. Please attach the certificate to a target proxy and try again.
+The SSL certificate "{name}" is not attached to any target proxies. Please attach the certificate to a target proxy and try again.
 {% endblock check_certificate_attachment_failure_reason %}
 
 {% block check_certificate_attachment_failure_remediation %}
@@ -71,7 +71,7 @@ Please follow the documentation to attach the certificate to a target proxy: htt
 {% endblock check_certificate_attachment_failure_remediation %}
 
 {% block check_certificate_attachment_success_reason %}
-The SSL certificate {name} is attached to target proxies ({target_proxies}) that are in use by forwarding rules.
+The SSL certificate "{name}" is attached to target proxies ({target_proxies}) that are in use by forwarding rules.
 {% endblock check_certificate_attachment_success_reason %}
 
 {% block verify_dns_records_success_reason %}
@@ -79,15 +79,21 @@ DNS records for domain {domain} are correctly configured. All resolved IP addres
 {% endblock verify_dns_records_success_reason %}
 
 {% block verify_dns_records_failure_reason %}
-DNS records for domain {domain} resolve to IP addresses: {unresolved_ip_addresses}, which do not point to any load balancer associated with certificate {name}. This prevents certificate provisioning.
+DNS records for domain {domain} currently resolve to the following IP addresses: {unresolved_ip_addresses}. These IP addresses do not point to any load balancer associated with certificate {name}. Certificate provisioning is therefore blocked.
 {% endblock verify_dns_records_failure_reason %}
 
 {% block verify_dns_records_failure_remediation %}
-Configure DNS records for {domain} to point to the correct load balancer IP address(es) for certificate {name}. See the load balancer configuration for details. Check: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns
+Configure DNS records for {domain} to point to the correct load balancer IP address(es) for certificate {name}.
+
+The following load balancer IP addresses are associated with this certificate:
+
+{fr_ip_message}
+
+Check: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns
 {% endblock verify_dns_records_failure_remediation %}
 
 {% block verify_dns_records_failure_reason_a1 %}
-Domain {domain} does not resolve to any IP addresses. This prevents certificate provisioning.
+Domain {domain} does not resolve to any IP addresses. In order to provision the certificate, the domain must resolve to an IP address that points to a load balancer associated with the certificate.
 {% endblock verify_dns_records_failure_reason_a1 %}
 
 {% block verify_dns_records_uncertain_reason %}
@@ -95,11 +101,17 @@ Some DNS records for domain {domain} resolve to the following unexpected IP addr
 {% endblock verify_dns_records_uncertain_reason %}
 
 {% block verify_dns_records_uncertain_remediation %}
-Configure DNS records for {domain} to point to the correct load balancer IP address(es) for certificate {name}. See the load balancer configuration for details. Check: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns
+Configure DNS records for {domain} to point to the correct load balancer IP address(es) for certificate {name}.
+
+The following load balancer IP addresses are associated with this certificate:
+
+{fr_ip_message}
+
+Check: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns
 {% endblock verify_dns_records_uncertain_remediation %}
 
 {% block verify_forwarding_rules_port_success_reason %}
-Certificate {name} has forwarding rules configured for HTTPS (port 443) on all associated IP addresses.
+The SSL certificate "{name}" has forwarding rules configured for HTTPS (port 443) on all associated IP addresses.
 {% endblock verify_forwarding_rules_port_success_reason %}
 
 {% block verify_forwarding_rules_port_failure_reason %}
@@ -108,11 +120,11 @@ There must be at least one load balancer's forwarding rule that use TCP port 443
 {% endblock verify_forwarding_rules_port_failure_reason %}
 
 {% block verify_forwarding_rules_port_failure_remediation %}
-Configure the load balancer to listen on port 443 for certificate {name}.
+Configure the load balancer to listen on port 443 for SSL certificate "{name}".
 {% endblock verify_forwarding_rules_port_failure_remediation %}
 
 {% block verify_no_certificate_map_conflict_success_reason %}
-All target proxies associated with the certificate {name} do not have a certificate map.
+All target proxies associated with the SSL certificate "{name}" do not have a certificate map.
 {% endblock verify_no_certificate_map_conflict_success_reason %}
 
 {% block verify_no_certificate_map_conflict_failure_reason %}
@@ -128,11 +140,11 @@ If this is not intended, please detach the certificate map from the target proxi
 {% endblock verify_no_certificate_map_conflict_failure_remediation %}
 
 {% block check_provisioning_time_success_reason %}
-No recent changes were detected for forwarding rules and target proxies associated with the certificate {name}.
+No recent changes were detected for forwarding rules and target proxies associated with the SSL certificate "{name}".
 {% endblock check_provisioning_time_success_reason %}
 
 {% block check_provisioning_time_uncertain_reason %}
-The certificate {name} has recently had associated resources modified. This might affect DNS validation. Details are below:
+The SSL certificate "{name}" has recently had associated resources modified. This might affect DNS validation. Details are below:
 {recently_changed}
 {% endblock check_provisioning_time_uncertain_reason %}
 

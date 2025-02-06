@@ -225,10 +225,12 @@ class InvestigateLoggingMonitoring(runbook.Gateway):
     if op.get(CHECK_LOGGING):
       logging_api = gcp_gs.ServiceApiStatusCheck()
       logging_api.api_name = 'logging'
+      logging_api.project_id = op.get(flags.PROJECT_ID)
       logging_api.expected_state = constants.APIState.ENABLED
       self.add_child(logging_api)
 
       log_permission_check = iam_gs.IamPolicyCheck()
+      log_permission_check.project = op.get(flags.PROJECT_ID)
       log_permission_check.principal = (
           f'serviceAccount:{op.get(flags.SERVICE_ACCOUNT)}')
       log_permission_check.roles = [
@@ -254,8 +256,8 @@ class InvestigateLoggingMonitoring(runbook.Gateway):
       logging_subagent_check.zone = op.get(flags.ZONE)
       logging_subagent_check.instance_name = op.get(flags.NAME)
       logging_subagent_check.instance_id = op.get(flags.ID)
-      logging_subagent_check.start_time_utc = op.get(flags.START_TIME)
-      logging_subagent_check.end_time_utc = op.get(flags.END_TIME)
+      logging_subagent_check.start_time = op.get(flags.START_TIME)
+      logging_subagent_check.end_time = op.get(flags.END_TIME)
       logging_subagent_check.check_logging = True
       logging_subagent_check.check_metrics = False
       logging_access_scope.add_child(logging_subagent_check)
@@ -265,11 +267,13 @@ class InvestigateLoggingMonitoring(runbook.Gateway):
 
     if op.get(CHECK_MONITORING):
       monitoring_api = gcp_gs.ServiceApiStatusCheck()
+      monitoring_api.project_id = op.get(flags.PROJECT_ID)
       monitoring_api.api_name = 'monitoring'
       monitoring_api.expected_state = constants.APIState.ENABLED
       self.add_child(monitoring_api)
 
       monitoring_permission_check = iam_gs.IamPolicyCheck()
+      monitoring_permission_check.project = op.get(flags.PROJECT_ID)
       monitoring_permission_check.principal = f'serviceAccount:{op.get(flags.SERVICE_ACCOUNT)}'
       monitoring_permission_check.roles = [
           'roles/monitoring.metricWriter', 'roles/monitoring.admin',
@@ -292,8 +296,8 @@ class InvestigateLoggingMonitoring(runbook.Gateway):
       metric_subagent_check.zone = op.get(flags.ZONE)
       metric_subagent_check.instance_name = op.get(flags.NAME)
       metric_subagent_check.instance_id = op.get(flags.ID)
-      metric_subagent_check.start_time_utc = op.get(flags.START_TIME)
-      metric_subagent_check.end_time_utc = op.get(flags.END_TIME)
+      metric_subagent_check.start_time = op.get(flags.START_TIME)
+      metric_subagent_check.end_time = op.get(flags.END_TIME)
       metric_subagent_check.check_logging = False
       metric_subagent_check.check_metrics = True
       monitoring_access_scope.add_child(metric_subagent_check)
@@ -346,8 +350,8 @@ class OpsAgentEnd(runbook.EndStep):
                         resource.labels.instance_id="{}" AND
                         "LogPingOpsAgent"'''.format(op.get(flags.PROJECT_ID),
                                                     op.get(flags.ID)),
-          start_time_utc=op.get(flags.END_TIME),
-          end_time_utc=datetime.now())
+          start_time=op.get(flags.END_TIME),
+          end_time=datetime.now())
       if serial_log_entries:
         has_expected_opsagent_logs = True
         op.info(

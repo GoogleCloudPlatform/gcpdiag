@@ -16,19 +16,20 @@ None
 
 ### Failure Reason
 
-The scaleDown event failed because  it would violate cluster-wide minimal resource limits.
+The scaleDown event failed because it would violate cluster-wide minimal resource limits.
 These are the resource limits set for node auto-provisioning.
 Example log entry that would help identify involved objects:
-{LOG_ENTRY}
+{log_entry}
 
 ### Failure Remediation
 
-Review your limits for memory and vCPU and, if you want cluster autoscaler to scale down this node, decrease the limits by following the documentation
+Review your limits for memory and vCPU and, if you want cluster autoscaler to scale down this node, decrease the limits
+by following the documentation
 https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-provisioning#enable
 
 ### Success Reason
 
-No "no.scale.down.node.minimal.resource.limits.exceeded" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+No "no.scale.down.node.minimal.resource.limits.exceeded" errors found between {start_time} and {end_time}
 
 
 

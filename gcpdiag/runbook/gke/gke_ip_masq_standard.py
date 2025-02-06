@@ -196,8 +196,8 @@ class Nodeproblem(runbook.Step):
     log_entries = logs.realtime_query(
         project_id=op.get(flags.PROJECT_ID),
         filter_str=f'''"{op.get(flags.DEST_IP)}" OR "{op.get(flags.SRC_IP)}"''',
-        start_time_utc=op.get(flags.END_TIME),
-        end_time_utc=datetime.now())
+        start_time=op.get(flags.END_TIME),
+        end_time=datetime.now())
 
     if log_entries:
       op.add_ok(project_path, reason=op.prep_msg(op.SUCCESS_REASON))

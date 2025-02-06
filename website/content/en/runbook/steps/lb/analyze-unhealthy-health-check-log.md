@@ -16,7 +16,8 @@ None
 
 ### Uncertain Reason
 
-Health check logs show the detailed health state UNHEALTHY meaning the endpoint is reachable but doesn't meet the health check requirements.
+Health check logs for backend service {bs_url} indicate a detailed health state of UNHEALTHY. The backend instances are reachable but are not passing the health check requirements.
+
 Responses received from backends: {probe_results_text_str}
 
 ### Uncertain Remediation

@@ -27,12 +27,8 @@ gke/cluster-autoscaler: Analyses logs in the project where the cluster is runnin
   - no.scale.down.node.pod.unexpected.error
 
   
-[START]: 
-    Check the provided parameters.
-    
-[AUTOMATED STEP]: 
-    Check for "scale.up.error.out.of.resources" log entries
-    
+[START]: Check the provided parameters.
+[AUTOMATED STEP]: Check for "scale.up.error.out.of.resources" log entries
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
      [REASON]
@@ -44,9 +40,7 @@ gke/cluster-autoscaler: Analyses logs in the project where the cluster is runnin
      Follow the documentation:
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-vm-creation#resource_availability
 
-[AUTOMATED STEP]: 
-    Check for "scale.up.error.quota.exceeded" log entries
-    
+[AUTOMATED STEP]: Check for "scale.up.error.quota.exceeded" log entries
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
      [REASON]
@@ -55,12 +49,11 @@ gke/cluster-autoscaler: Analyses logs in the project where the cluster is runnin
      {'protoPayload': {'@type': 'type.googleapis.com/google.cloud.audit.AuditLog', 'authenticationInfo': {'principalEmail': 'service-12340002@container-engine-robot.iam.gserviceaccount.com'}, 'requestMetadata': {'callerIp': '2002:a17:907:3ea4::', 'callerSuppliedUserAgent': 'google-api-go-client/0.5 GoogleContainerEngine/v1'}, 'serviceName': 'compute.googleapis.com', 'methodName': 'beta.compute.instanceGroupManagers.insert', 'resourceName': 'projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-dc4a8b29-grp', 'request': {'@type': 'type.googleapis.com/compute.instanceGroupManagers.insert'}}, 'insertId': '-tt9mudi768', 'resource': {'type': 'gce_instance_group_manager', 'labels': {'location': 'europe-west4-a', 'instance_group_manager_id': '318228385164940970', 'project_id': 'gcpdiag-gke1-aaaa', 'instance_group_manager_name': 'gke-gke1-default-pool-dc4a8b29-grp'}}, 'timestamp': '2021-11-24T16:29:21.943390Z', 'severity': 'NOTICE', 'logName': 'projects/gcpdiag-gke1-aaaa/logs/cloudaudit.googleapis.com%2Factivity', 'operation': {'id': 'operation-1637771331527-5d18b5a706163-f238dbec-106555c8', 'producer': 'compute.googleapis.com', 'last': True}, 'receiveTimestamp': '2021-11-24T16:29:22.710110506Z'}
 
      [REMEDIATION]
-     Check the Errors tab of the MIG in Google Cloud console to see what quota is being exceeded. Follow the instructions to request a quota increase:
+     Check the Errors tab of the MIG in Google Cloud console to see what quota is being exceeded. Follow the instructions to
+     request a quota increase:
      https://cloud.google.com/compute/quotas#requesting_additional_quota
 
-[AUTOMATED STEP]: 
-    Check for "scale.up.error.waiting.for.instances.timeout" log entries
-    
+[AUTOMATED STEP]: Check for "scale.up.error.waiting.for.instances.timeout" log entries
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
      [REASON]
@@ -71,13 +64,12 @@ gke/cluster-autoscaler: Analyses logs in the project where the cluster is runnin
      [REMEDIATION]
      This message is transient. If it persists, engage Google Cloud Support for further investigation.
 
-[AUTOMATED STEP]: 
-    Check for "scale.up.error.ip.space.exhausted" log entries
-    
+[AUTOMATED STEP]: Check for "scale.up.error.ip.space.exhausted" log entries
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
      [REASON]
-     The scaleUp event failed because the cluster doesn't have enough unallocated IP address space to use to add new nodes or Pods.
+     The scaleUp event failed because the cluster doesn't have enough unallocated IP address space to use to add new nodes or
+     Pods.
      Example log entry that would help identify involved objects:
      {'protoPayload': {'@type': 'type.googleapis.com/google.cloud.audit.AuditLog', 'authenticationInfo': {'principalEmail': 'service-12340002@container-engine-robot.iam.gserviceaccount.com'}, 'requestMetadata': {'callerIp': '2002:a17:907:3ea4::', 'callerSuppliedUserAgent': 'google-api-go-client/0.5 GoogleContainerEngine/v1'}, 'serviceName': 'compute.googleapis.com', 'methodName': 'beta.compute.instanceGroupManagers.insert', 'resourceName': 'projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-dc4a8b29-grp', 'request': {'@type': 'type.googleapis.com/compute.instanceGroupManagers.insert'}}, 'insertId': '-tt9mudi768', 'resource': {'type': 'gce_instance_group_manager', 'labels': {'location': 'europe-west4-a', 'instance_group_manager_id': '318228385164940970', 'project_id': 'gcpdiag-gke1-aaaa', 'instance_group_manager_name': 'gke-gke1-default-pool-dc4a8b29-grp'}}, 'timestamp': '2021-11-24T16:29:21.943390Z', 'severity': 'NOTICE', 'logName': 'projects/gcpdiag-gke1-aaaa/logs/cloudaudit.googleapis.com%2Factivity', 'operation': {'id': 'operation-1637771331527-5d18b5a706163-f238dbec-106555c8', 'producer': 'compute.googleapis.com', 'last': True}, 'receiveTimestamp': '2021-11-24T16:29:22.710110506Z'}
 
@@ -85,9 +77,7 @@ gke/cluster-autoscaler: Analyses logs in the project where the cluster is runnin
      Refer to the troubleshooting steps to address the lack of IP address space for the nodes or pods.
      https://cloud.google.com/kubernetes-engine/docs/how-to/alias-ips#not_enough_space
 
-[AUTOMATED STEP]: 
-    Check for "scale.up.error.service.account.deleted" log entries
-    
+[AUTOMATED STEP]: Check for "scale.up.error.service.account.deleted" log entries
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
      [REASON]
@@ -98,9 +88,7 @@ gke/cluster-autoscaler: Analyses logs in the project where the cluster is runnin
      [REMEDIATION]
      Engage Google Cloud Support for further investigation.
 
-[AUTOMATED STEP]: 
-    Check for "no.scale.down.node.node.group.min.size.reached" log entries
-    
+[AUTOMATED STEP]: Check for "no.scale.down.node.node.group.min.size.reached" log entries
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
      [REASON]
@@ -112,9 +100,7 @@ gke/cluster-autoscaler: Analyses logs in the project where the cluster is runnin
      Review and adjust the minimum value set for node pool autoscaling.
      https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-autoscaler#resizing_a_node_pool
 
-[AUTOMATED STEP]: 
-    Check for "scale.down.error.failed.to.evict.pods" log entries
-    
+[AUTOMATED STEP]: Check for "scale.down.error.failed.to.evict.pods" log entries
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
      [REASON]
@@ -123,41 +109,39 @@ gke/cluster-autoscaler: Analyses logs in the project where the cluster is runnin
      {'protoPayload': {'@type': 'type.googleapis.com/google.cloud.audit.AuditLog', 'authenticationInfo': {'principalEmail': 'service-12340002@container-engine-robot.iam.gserviceaccount.com'}, 'requestMetadata': {'callerIp': '2002:a17:907:3ea4::', 'callerSuppliedUserAgent': 'google-api-go-client/0.5 GoogleContainerEngine/v1'}, 'serviceName': 'compute.googleapis.com', 'methodName': 'beta.compute.instanceGroupManagers.insert', 'resourceName': 'projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-dc4a8b29-grp', 'request': {'@type': 'type.googleapis.com/compute.instanceGroupManagers.insert'}}, 'insertId': '-tt9mudi768', 'resource': {'type': 'gce_instance_group_manager', 'labels': {'location': 'europe-west4-a', 'instance_group_manager_id': '318228385164940970', 'project_id': 'gcpdiag-gke1-aaaa', 'instance_group_manager_name': 'gke-gke1-default-pool-dc4a8b29-grp'}}, 'timestamp': '2021-11-24T16:29:21.943390Z', 'severity': 'NOTICE', 'logName': 'projects/gcpdiag-gke1-aaaa/logs/cloudaudit.googleapis.com%2Factivity', 'operation': {'id': 'operation-1637771331527-5d18b5a706163-f238dbec-106555c8', 'producer': 'compute.googleapis.com', 'last': True}, 'receiveTimestamp': '2021-11-24T16:29:22.710110506Z'}
 
      [REMEDIATION]
-     Review best practices for Pod Disruption Budgets to ensure that the rules allow for eviction of application replicas when acceptable.
+     Review best practices for Pod Disruption Budgets to ensure that the rules allow for eviction of application replicas
+     when acceptable.
      https://cloud.google.com/architecture/best-practices-for-running-cost-effective-kubernetes-applications-on-gke#add-pod_disruption_budget-to-your-application
 
-[AUTOMATED STEP]: 
-    Check for "no.scale.down.node.scale.down.disabled.annotation" log entries
-    
+[AUTOMATED STEP]: Check for "no.scale.down.node.scale.down.disabled.annotation" log entries
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
      [REASON]
-     The scaleDown event failed because the node is annotated with cluster-autoscaler.kubernetes.io/scale-down-disabled: true.
+     The scaleDown event failed because the node is annotated with cluster-autoscaler.kubernetes.io/scale-down-disabled:
+     true.
      Example log entry that would help identify involved objects:
      {'protoPayload': {'@type': 'type.googleapis.com/google.cloud.audit.AuditLog', 'authenticationInfo': {'principalEmail': 'service-12340002@container-engine-robot.iam.gserviceaccount.com'}, 'requestMetadata': {'callerIp': '2002:a17:907:3ea4::', 'callerSuppliedUserAgent': 'google-api-go-client/0.5 GoogleContainerEngine/v1'}, 'serviceName': 'compute.googleapis.com', 'methodName': 'beta.compute.instanceGroupManagers.insert', 'resourceName': 'projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-dc4a8b29-grp', 'request': {'@type': 'type.googleapis.com/compute.instanceGroupManagers.insert'}}, 'insertId': '-tt9mudi768', 'resource': {'type': 'gce_instance_group_manager', 'labels': {'location': 'europe-west4-a', 'instance_group_manager_id': '318228385164940970', 'project_id': 'gcpdiag-gke1-aaaa', 'instance_group_manager_name': 'gke-gke1-default-pool-dc4a8b29-grp'}}, 'timestamp': '2021-11-24T16:29:21.943390Z', 'severity': 'NOTICE', 'logName': 'projects/gcpdiag-gke1-aaaa/logs/cloudaudit.googleapis.com%2Factivity', 'operation': {'id': 'operation-1637771331527-5d18b5a706163-f238dbec-106555c8', 'producer': 'compute.googleapis.com', 'last': True}, 'receiveTimestamp': '2021-11-24T16:29:22.710110506Z'}
 
      [REMEDIATION]
-     Cluster autoscaler skips nodes with this annotation without considering their utilization and this message is logged regardless of the node's utilization factor.
+     Cluster autoscaler skips nodes with this annotation without considering their utilization and this message is logged
+     regardless of the node's utilization factor.
      If you want cluster autoscaler to scale down these nodes, remove the annotation.
 
-[AUTOMATED STEP]: 
-    Check for "no.scale.down.node.minimal.resource.limits.exceeded" log entries
-    
+[AUTOMATED STEP]: Check for "no.scale.down.node.minimal.resource.limits.exceeded" log entries
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
      [REASON]
-     The scaleDown event failed because  it would violate cluster-wide minimal resource limits.
+     The scaleDown event failed because it would violate cluster-wide minimal resource limits.
      These are the resource limits set for node auto-provisioning.
      Example log entry that would help identify involved objects:
      {'protoPayload': {'@type': 'type.googleapis.com/google.cloud.audit.AuditLog', 'authenticationInfo': {'principalEmail': 'service-12340002@container-engine-robot.iam.gserviceaccount.com'}, 'requestMetadata': {'callerIp': '2002:a17:907:3ea4::', 'callerSuppliedUserAgent': 'google-api-go-client/0.5 GoogleContainerEngine/v1'}, 'serviceName': 'compute.googleapis.com', 'methodName': 'beta.compute.instanceGroupManagers.insert', 'resourceName': 'projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-dc4a8b29-grp', 'request': {'@type': 'type.googleapis.com/compute.instanceGroupManagers.insert'}}, 'insertId': '-tt9mudi768', 'resource': {'type': 'gce_instance_group_manager', 'labels': {'location': 'europe-west4-a', 'instance_group_manager_id': '318228385164940970', 'project_id': 'gcpdiag-gke1-aaaa', 'instance_group_manager_name': 'gke-gke1-default-pool-dc4a8b29-grp'}}, 'timestamp': '2021-11-24T16:29:21.943390Z', 'severity': 'NOTICE', 'logName': 'projects/gcpdiag-gke1-aaaa/logs/cloudaudit.googleapis.com%2Factivity', 'operation': {'id': 'operation-1637771331527-5d18b5a706163-f238dbec-106555c8', 'producer': 'compute.googleapis.com', 'last': True}, 'receiveTimestamp': '2021-11-24T16:29:22.710110506Z'}
 
      [REMEDIATION]
-     Review your limits for memory and vCPU and, if you want cluster autoscaler to scale down this node, decrease the limits by following the documentation
+     Review your limits for memory and vCPU and, if you want cluster autoscaler to scale down this node, decrease the limits
+     by following the documentation
      https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-provisioning#enable
 
-[AUTOMATED STEP]: 
-    Check for "no.scale.down.node.no.place.to.move.pods" log entries
-    
+[AUTOMATED STEP]: Check for "no.scale.down.node.no.place.to.move.pods" log entries
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
      [REASON]
@@ -166,25 +150,25 @@ gke/cluster-autoscaler: Analyses logs in the project where the cluster is runnin
      {'protoPayload': {'@type': 'type.googleapis.com/google.cloud.audit.AuditLog', 'authenticationInfo': {'principalEmail': 'service-12340002@container-engine-robot.iam.gserviceaccount.com'}, 'requestMetadata': {'callerIp': '2002:a17:907:3ea4::', 'callerSuppliedUserAgent': 'google-api-go-client/0.5 GoogleContainerEngine/v1'}, 'serviceName': 'compute.googleapis.com', 'methodName': 'beta.compute.instanceGroupManagers.insert', 'resourceName': 'projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-dc4a8b29-grp', 'request': {'@type': 'type.googleapis.com/compute.instanceGroupManagers.insert'}}, 'insertId': '-tt9mudi768', 'resource': {'type': 'gce_instance_group_manager', 'labels': {'location': 'europe-west4-a', 'instance_group_manager_id': '318228385164940970', 'project_id': 'gcpdiag-gke1-aaaa', 'instance_group_manager_name': 'gke-gke1-default-pool-dc4a8b29-grp'}}, 'timestamp': '2021-11-24T16:29:21.943390Z', 'severity': 'NOTICE', 'logName': 'projects/gcpdiag-gke1-aaaa/logs/cloudaudit.googleapis.com%2Factivity', 'operation': {'id': 'operation-1637771331527-5d18b5a706163-f238dbec-106555c8', 'producer': 'compute.googleapis.com', 'last': True}, 'receiveTimestamp': '2021-11-24T16:29:22.710110506Z'}
 
      [REMEDIATION]
-     If you expect that the Pod should be rescheduled, review the scheduling requirements of the Pods on the underutilized node to determine if they can be moved to another node in the cluster.
-     To learn more, see the link https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-down#no-place-to-move-pods
+     If you expect that the Pod should be rescheduled, review the scheduling requirements of the Pods on the underutilized
+     node to determine if they can be moved to another node in the cluster.
+     To learn more, see the link
+     https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-down#no-place-to-move-pods
 
-[AUTOMATED STEP]: 
-    Check for "no.scale.down.node.pod.not.backed.by.controller" log entries
-    
+[AUTOMATED STEP]: Check for "no.scale.down.node.pod.not.backed.by.controller" log entries
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
      [REASON]
-     The scaleDown event failed because a Pod is not backed by a controller such as ReplicationController, DaemonSet, Job, StatefulSet, or ReplicaSet.
+     The scaleDown event failed because a Pod is not backed by a controller such as ReplicationController, DaemonSet, Job,
+     StatefulSet, or ReplicaSet.
      Example log entry that would help identify involved objects:
      {'protoPayload': {'@type': 'type.googleapis.com/google.cloud.audit.AuditLog', 'authenticationInfo': {'principalEmail': 'service-12340002@container-engine-robot.iam.gserviceaccount.com'}, 'requestMetadata': {'callerIp': '2002:a17:907:3ea4::', 'callerSuppliedUserAgent': 'google-api-go-client/0.5 GoogleContainerEngine/v1'}, 'serviceName': 'compute.googleapis.com', 'methodName': 'beta.compute.instanceGroupManagers.insert', 'resourceName': 'projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-dc4a8b29-grp', 'request': {'@type': 'type.googleapis.com/compute.instanceGroupManagers.insert'}}, 'insertId': '-tt9mudi768', 'resource': {'type': 'gce_instance_group_manager', 'labels': {'location': 'europe-west4-a', 'instance_group_manager_id': '318228385164940970', 'project_id': 'gcpdiag-gke1-aaaa', 'instance_group_manager_name': 'gke-gke1-default-pool-dc4a8b29-grp'}}, 'timestamp': '2021-11-24T16:29:21.943390Z', 'severity': 'NOTICE', 'logName': 'projects/gcpdiag-gke1-aaaa/logs/cloudaudit.googleapis.com%2Factivity', 'operation': {'id': 'operation-1637771331527-5d18b5a706163-f238dbec-106555c8', 'producer': 'compute.googleapis.com', 'last': True}, 'receiveTimestamp': '2021-11-24T16:29:22.710110506Z'}
 
      [REMEDIATION]
-     Set the annotation "cluster-autoscaler.kubernetes.io/safe-to-evict": "true" for the Pod or define an acceptable controller
+     Set the annotation "cluster-autoscaler.kubernetes.io/safe-to-evict": "true" for the Pod or define an acceptable
+     controller
 
-[AUTOMATED STEP]: 
-    Check for "no.scale.down.node.pod.not.safe.to.evict.annotation" log entries
-    
+[AUTOMATED STEP]: Check for "no.scale.down.node.pod.not.safe.to.evict.annotation" log entries
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
      [REASON]
@@ -193,27 +177,27 @@ gke/cluster-autoscaler: Analyses logs in the project where the cluster is runnin
      {'protoPayload': {'@type': 'type.googleapis.com/google.cloud.audit.AuditLog', 'authenticationInfo': {'principalEmail': 'service-12340002@container-engine-robot.iam.gserviceaccount.com'}, 'requestMetadata': {'callerIp': '2002:a17:907:3ea4::', 'callerSuppliedUserAgent': 'google-api-go-client/0.5 GoogleContainerEngine/v1'}, 'serviceName': 'compute.googleapis.com', 'methodName': 'beta.compute.instanceGroupManagers.insert', 'resourceName': 'projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-dc4a8b29-grp', 'request': {'@type': 'type.googleapis.com/compute.instanceGroupManagers.insert'}}, 'insertId': '-tt9mudi768', 'resource': {'type': 'gce_instance_group_manager', 'labels': {'location': 'europe-west4-a', 'instance_group_manager_id': '318228385164940970', 'project_id': 'gcpdiag-gke1-aaaa', 'instance_group_manager_name': 'gke-gke1-default-pool-dc4a8b29-grp'}}, 'timestamp': '2021-11-24T16:29:21.943390Z', 'severity': 'NOTICE', 'logName': 'projects/gcpdiag-gke1-aaaa/logs/cloudaudit.googleapis.com%2Factivity', 'operation': {'id': 'operation-1637771331527-5d18b5a706163-f238dbec-106555c8', 'producer': 'compute.googleapis.com', 'last': True}, 'receiveTimestamp': '2021-11-24T16:29:22.710110506Z'}
 
      [REMEDIATION]
-     If the Pod can be safely evicted, edit the manifest of the Pod and update the annotation to "cluster-autoscaler.kubernetes.io/safe-to-evict": "true".
+     If the Pod can be safely evicted, edit the manifest of the Pod and update the annotation to
+     "cluster-autoscaler.kubernetes.io/safe-to-evict": "true".
 
-[AUTOMATED STEP]: 
-    Check for "no.scale.down.node.pod.kube.system.unmovable" log entries
-    
+[AUTOMATED STEP]: Check for "no.scale.down.node.pod.kube.system.unmovable" log entries
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
      [REASON]
-     The scaleDown event failed because the pod is a non-DaemonSet, non-mirrored, Pod without a PodDisruptionBudget in the kube-system namespace.
+     The scaleDown event failed because the pod is a non-DaemonSet, non-mirrored, Pod without a PodDisruptionBudget in the
+     kube-system namespace.
      Example log entry that would help identify involved objects:
      {'protoPayload': {'@type': 'type.googleapis.com/google.cloud.audit.AuditLog', 'authenticationInfo': {'principalEmail': 'service-12340002@container-engine-robot.iam.gserviceaccount.com'}, 'requestMetadata': {'callerIp': '2002:a17:907:3ea4::', 'callerSuppliedUserAgent': 'google-api-go-client/0.5 GoogleContainerEngine/v1'}, 'serviceName': 'compute.googleapis.com', 'methodName': 'beta.compute.instanceGroupManagers.insert', 'resourceName': 'projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-dc4a8b29-grp', 'request': {'@type': 'type.googleapis.com/compute.instanceGroupManagers.insert'}}, 'insertId': '-tt9mudi768', 'resource': {'type': 'gce_instance_group_manager', 'labels': {'location': 'europe-west4-a', 'instance_group_manager_id': '318228385164940970', 'project_id': 'gcpdiag-gke1-aaaa', 'instance_group_manager_name': 'gke-gke1-default-pool-dc4a8b29-grp'}}, 'timestamp': '2021-11-24T16:29:21.943390Z', 'severity': 'NOTICE', 'logName': 'projects/gcpdiag-gke1-aaaa/logs/cloudaudit.googleapis.com%2Factivity', 'operation': {'id': 'operation-1637771331527-5d18b5a706163-f238dbec-106555c8', 'producer': 'compute.googleapis.com', 'last': True}, 'receiveTimestamp': '2021-11-24T16:29:22.710110506Z'}
 
      [REMEDIATION]
      By default, Pods in the kube-system namespace aren't removed by cluster autoscaler.
 
-     To resolve this issue, either add a PodDisruptionBudget for the kube-system Pods or use a combination of node pools taints and tolerations to separate kube-system Pods from your application Pods.
-     To learn more, see https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-down#kube-system-unmoveable
+     To resolve this issue, either add a PodDisruptionBudget for the kube-system Pods or use a combination of node pools
+     taints and tolerations to separate kube-system Pods from your application Pods.
+     To learn more, see
+     https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-down#kube-system-unmoveable
 
-[AUTOMATED STEP]: 
-    Check for "no.scale.down.node.pod.not.enough.pdb" log entries
-    
+[AUTOMATED STEP]: Check for "no.scale.down.node.pod.not.enough.pdb" log entries
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
      [REASON]
@@ -223,11 +207,10 @@ gke/cluster-autoscaler: Analyses logs in the project where the cluster is runnin
 
      [REMEDIATION]
      Review the PodDisruptionBudget for the Pod and consider making it less restrictive.
-     To learn more, see https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-down#not-enough-pdb
+     To learn more, see
+     https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-down#not-enough-pdb
 
-[AUTOMATED STEP]: 
-    Check for "no.scale.down.node.pod.controller.not.found" log entries
-    
+[AUTOMATED STEP]: Check for "no.scale.down.node.pod.controller.not.found" log entries
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
      [REASON]
@@ -236,11 +219,10 @@ gke/cluster-autoscaler: Analyses logs in the project where the cluster is runnin
      {'protoPayload': {'@type': 'type.googleapis.com/google.cloud.audit.AuditLog', 'authenticationInfo': {'principalEmail': 'service-12340002@container-engine-robot.iam.gserviceaccount.com'}, 'requestMetadata': {'callerIp': '2002:a17:907:3ea4::', 'callerSuppliedUserAgent': 'google-api-go-client/0.5 GoogleContainerEngine/v1'}, 'serviceName': 'compute.googleapis.com', 'methodName': 'beta.compute.instanceGroupManagers.insert', 'resourceName': 'projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-dc4a8b29-grp', 'request': {'@type': 'type.googleapis.com/compute.instanceGroupManagers.insert'}}, 'insertId': '-tt9mudi768', 'resource': {'type': 'gce_instance_group_manager', 'labels': {'location': 'europe-west4-a', 'instance_group_manager_id': '318228385164940970', 'project_id': 'gcpdiag-gke1-aaaa', 'instance_group_manager_name': 'gke-gke1-default-pool-dc4a8b29-grp'}}, 'timestamp': '2021-11-24T16:29:21.943390Z', 'severity': 'NOTICE', 'logName': 'projects/gcpdiag-gke1-aaaa/logs/cloudaudit.googleapis.com%2Factivity', 'operation': {'id': 'operation-1637771331527-5d18b5a706163-f238dbec-106555c8', 'producer': 'compute.googleapis.com', 'last': True}, 'receiveTimestamp': '2021-11-24T16:29:22.710110506Z'}
 
      [REMEDIATION]
-     To determine what actions were taken that left the Pod running after its controller was removed, review the logs. To resolve this issue, manually delete the Pod.
+     To determine what actions were taken that left the Pod running after its controller was removed, review the logs. To
+     resolve this issue, manually delete the Pod.
 
-[AUTOMATED STEP]: 
-    Check for "no.scale.down.node.pod.unexpected.error" log entries
-    
+[AUTOMATED STEP]: Check for "no.scale.down.node.pod.unexpected.error" log entries
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
      [REASON]

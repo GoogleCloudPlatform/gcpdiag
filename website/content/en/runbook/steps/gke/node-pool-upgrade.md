@@ -16,7 +16,7 @@ None
 
 ### Failure Reason
 
-The node {NODE} was unavailable due to a node pool upgrade.
+The node {node} was unavailable due to a node pool upgrade.
 
 ### Failure Remediation
 
@@ -31,7 +31,7 @@ https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-upgrades
 
 ### Success Reason
 
-The node {NODE} was unavailable for reasons other than a node pool upgrade.
+The node {node} was unavailable for reasons other than a node pool upgrade.
 
 
 

@@ -27,8 +27,8 @@ PRODUCT_FLAG = 'dataflow'
 def local_realtime_query(filter_str):
   result = logs.realtime_query(
       project_id=op.get(flags.PROJECT_ID),
-      start_time_utc=op.get(flags.START_TIME),
-      end_time_utc=op.get(flags.END_TIME),
+      start_time=op.get(flags.START_TIME),
+      end_time=op.get(flags.END_TIME),
       filter_str=filter_str,
   )
   return result
@@ -99,6 +99,7 @@ class JobPermissions(runbook.DiagnosticTree):
 
     project = crm.get_project(op.get(flags.PROJECT_ID))
     service_agent_check = iam_gs.IamPolicyCheck()
+    service_agent_check.project = op.get(flags.PROJECT_ID)
     service_agent_check.roles = [dataflow_constants.DATAFLOW_SERVICE_AGENT_ROLE]
     service_agent_check.principal = f'serviceAccount:service-{project.number}@dataflow-service-producer-prod.iam.gserviceaccount.com'  # pylint: disable=line-too-long
     service_agent_check.template = 'gcpdiag.runbook.dataflow::permissions::dataflow_service_account'  # pylint: disable=line-too-long
@@ -125,6 +126,7 @@ class DataflowUserAccountPermissions(runbook.Step):
   def execute(self):
     """Check the Authenticated User account permissions."""
     dataflow_developer_role_check = iam_gs.IamPolicyCheck()
+    dataflow_developer_role_check.project = op.get(flags.PROJECT_ID)
     dataflow_developer_role_check.roles = [
         dataflow_constants.DATAFLOW_DEVELOPER_ROLE,
         dataflow_constants.DATAFLOW_IAM_SERVICE_ACCOUNT_USER,

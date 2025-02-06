@@ -4,7 +4,7 @@ linkTitle: "Iam Policy Check"
 weight: 3
 type: docs
 description: >
-  Checks if a principal has specified permissions or is a member of specified roles.
+  Verify if specificd principal has permissions or roles permission/role in project.
 ---
 
 **Product**: [Identity and Access Management (IAM)](https://cloud.google.com/iam)\

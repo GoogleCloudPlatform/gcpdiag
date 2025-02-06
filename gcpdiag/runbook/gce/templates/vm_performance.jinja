@@ -1,6 +1,6 @@
-{% block high_cpu_utilization_step_message %}
+{% block high_cpu_utilization_step_name %}
 Verify VM CPU utilization is within optimal levels.
-{% endblock high_cpu_utilization_step_message %}
+{% endblock high_cpu_utilization_step_name %}
 
 {% block high_cpu_utilization_failure_reason %}
 CPU utilization on this VM has surpassed recommended operational levels,
@@ -43,9 +43,9 @@ Follow the guide to increase disk size:
 https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
 {% endblock high_disk_utilization_failure_remediation %}
 
-{% block high_disk_utilization_step_message %}
+{% block high_disk_utilization_step_name %}
 Check if VM's boot disk space utilization is within optimal levels.
-{% endblock high_disk_utilization_step_message %}
+{% endblock high_disk_utilization_step_name %}
 
 {% block high_disk_utilization_success_reason %}
 The boot disk space usage for the Compute Engine VM {full_resource_path}, is within optimal levels.
@@ -82,9 +82,9 @@ Memory utilization on this VM is within optimal range.
 There are no serial logs to investigate possible memory issues.
 {% endblock high_memory_usage_logs_skipped_reason %}
 
-{% block high_memory_usage_logs_step_message %}
+{% block high_memory_usage_logs_step_name %}
 Check for memory related errors in VM serial logs.
-{% endblock high_memory_usage_logs_step_message %}
+{% endblock high_memory_usage_logs_step_name %}
 
 {% block high_memory_usage_logs_success_reason %}
 No memory-related errors found in Serial console logs.
@@ -155,9 +155,9 @@ Follow the guide to increase disk size:
 https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
 {% endblock high_disk_utilization_error_failure_remediation %}
 
-{% block high_disk_utilization_error_step_message %}
+{% block high_disk_utilization_error_step_name %}
 Checking for high disk utilization related logs in serial console logs
-{% endblock high_disk_utilization_error_step_message %}
+{% endblock high_disk_utilization_error_step_name %}
 
 {% block high_disk_utilization_error_success_reason %}
 No high disk utilisation related errors found in Serial console logs.
@@ -187,9 +187,9 @@ https://cloud.google.com/compute/docs/instances/live-migration-process#how_does_
 
 {% endblock live_migrations_failure_remediation %}
 
-{% block live_migrations_step_message %}
+{% block live_migrations_step_name %}
 Verify live migrations happened for the instance
-{% endblock live_migrations_step_message %}
+{% endblock live_migrations_step_name %}
 
 {% block live_migrations_success_reason %}
 No live migrations detected for the VM during mentioned period
@@ -200,9 +200,9 @@ There are no logs to examine !
 {% endblock live_migrations_skipped_reason %}
 
 
-{% block slow_disk_io_step_message %}
+{% block slow_disk_io_step_name %}
 Verify any slow Disk operations related errors in Serial console logs
-{% endblock slow_disk_io_step_message %}
+{% endblock slow_disk_io_step_name %}
 
 {% block slow_disk_io_failure_reason %}
 Possibe Disk IO slowness detected.
@@ -264,9 +264,9 @@ This does not rule out disk performance issues.
 Check for high disk utilization using the command iostat to further troubleshoot.
 {% endblock slow_disk_io_uncertain_remediation %}
 
-{% block disk_io_usage_check_step_message %}
+{% block disk_io_usage_check_step_name %}
 Verify the Disk IOPS/Throughput usage is within optimal limits
-{% endblock disk_io_usage_check_step_message %}
+{% endblock disk_io_usage_check_step_name %}
 
 {% block disk_io_usage_check_failure_reason %}
 Disk IOPS/Throughput usage is NOT within optimal limits
@@ -300,9 +300,9 @@ https://cloud.google.com/compute/docs/disks/modify-persistent-disk#disk_type
 {% endblock disk_io_usage_check_failure_remediation %}
 
 
-{% block disk_health_check_step_message %}
+{% block disk_health_check_step_name %}
 Verify instance disks are healthy
-{% endblock disk_health_check_step_message %}
+{% endblock disk_health_check_step_name %}
 
 {% block disk_health_check_success_reason %}
 Instance disk "{disk_name}" is healthy.
@@ -333,9 +333,9 @@ They'll be happy to investigate further and assist you.
 {% endblock disk_health_check_failure_remediation %}
 
 
-{% block disk_io_latency_check_step_message %}
+{% block disk_io_latency_check_step_name %}
 Verify Instance's Disk Avg IO Latency is within optimal limits
-{% endblock disk_io_latency_check_step_message %}
+{% endblock disk_io_latency_check_step_name %}
 
 {% block disk_io_latency_check_success_reason %}
 Instance disk "{disk_name}"'s IO latency is within the optimal limtis.

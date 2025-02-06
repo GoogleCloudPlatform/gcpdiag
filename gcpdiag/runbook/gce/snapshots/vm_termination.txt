@@ -25,7 +25,7 @@ gce/vm-termination: GCE Instance shutdowns and reboots Root Cause Analysis (RCA)
 [AUTOMATED STEP]: Investigating VM termination reason.
 [INFO]: 
 
-No GCE Instance was terminated between {start_time_utc} and {end_time_utc}
+No GCE Instance was terminated between {start_time} and {end_time}
 
 [AUTOMATED STEP]: Verify that the terminated VM is currently running
 
@@ -63,7 +63,7 @@ gce/vm-termination: GCE Instance shutdowns and reboots Root Cause Analysis (RCA)
 [AUTOMATED STEP]: Investigating VM termination reason.
 [INFO]: 
 
-No GCE Instance was terminated between {start_time_utc} and {end_time_utc}
+No GCE Instance was terminated between {start_time} and {end_time}
 
 [AUTOMATED STEP]: Verify that the terminated VM is currently running
 
@@ -101,7 +101,7 @@ gce/vm-termination: GCE Instance shutdowns and reboots Root Cause Analysis (RCA)
 [AUTOMATED STEP]: Investigating VM termination reason.
 [INFO]: 
 
-No GCE Instance was terminated between {start_time_utc} and {end_time_utc}
+No GCE Instance was terminated between {start_time} and {end_time}
 
 [AUTOMATED STEP]: Verify that the terminated VM is currently running
 

@@ -26,7 +26,7 @@
 # - check if node's service account has logging permissions, otherwise we don't have logs to look
 #   into
 # - check if node exists and it's running
-#   - check if START_TIME_UTC is before node boot, so we can capture the boot time logs
+#   - check if START_TIME is before node boot, so we can capture the boot time logs
 #   - if yes, check for Node Registration Checker logs:
 #     - if "Node ready and registered." found, all good, return OK result
 #     - else if "Completed running Node Registration Checker" found, then it's a failure and
@@ -66,8 +66,8 @@ def get_node_instance(project, location, node):
 
 def local_realtime_query(filter_str):
   result = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
-                               start_time_utc=op.get(flags.START_TIME),
-                               end_time_utc=op.get(flags.END_TIME),
+                               start_time=op.get(flags.START_TIME),
+                               end_time=op.get(flags.END_TIME),
                                filter_str=filter_str)
   return result
 
@@ -204,8 +204,8 @@ class NodeBootstrappingStart(runbook.StartStep):
     node = op.get(flags.NODE)
     name = op.get(flags.NAME)
     project_path = crm.get_project(project)
-    start_time_utc = op.get(flags.START_TIME)
-    end_time_utc = op.get(flags.END_TIME)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
 
     # check if there are clusters in the project
     if name:
@@ -261,7 +261,7 @@ class NodeBootstrappingStart(runbook.StartStep):
             reason=
             (f'There are no log entries for the provided node {node} and location '
              f'{location} in the provided time range '
-             f'{start_time_utc} - {end_time_utc}.\n'
+             f'{start_time} - {end_time}.\n'
              'Please make sure the node/location pair is correct and it was booted '
              'in the time range provided, then try again this runbook.'))
         return
@@ -284,8 +284,8 @@ class NodeInsertCheck(runbook.Step):
     node = op.get(flags.NODE)
     name = op.get(flags.NAME)
     project_path = crm.get_project(project)
-    start_time_utc = op.get(flags.START_TIME)
-    end_time_utc = op.get(flags.END_TIME)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
 
     if nodepool and name:
       if not node:
@@ -311,23 +311,23 @@ class NodeInsertCheck(runbook.Step):
             break
           op.add_failed(project_path,
                         reason=op.prep_msg(op.FAILURE_REASON,
-                                           LOG_ENTRY=sample_log,
+                                           log_entry=sample_log,
                                            NODEPOOL=nodepool,
                                            NAME=name,
-                                           LOCATION=location,
+                                           location=location,
                                            NR_ERRORS=nr_errors,
-                                           START_TIME_UTC=start_time_utc,
-                                           END_TIME_UTC=end_time_utc),
+                                           start_time=start_time,
+                                           end_time=end_time),
                         remediation=op.prep_msg(op.FAILURE_REMEDIATION))
           return
         else:
           op.add_ok(project_path,
                     reason=op.prep_msg(op.SUCCESS_REASON,
-                                       START_TIME_UTC=start_time_utc,
-                                       END_TIME_UTC=end_time_utc,
+                                       start_time=start_time,
+                                       end_time=end_time,
                                        NODEPOOL=nodepool,
                                        NAME=name,
-                                       LOCATION=location))
+                                       location=location))
           return
       else:
         op.add_skipped(
@@ -421,8 +421,8 @@ class NodeRegistrationSuccess(runbook.Step):
       # output:
       if node_vm and node_vm.is_running and node_vm.is_serial_port_logging_enabled(
       ):
-        # check if START_TIME_UTC is after node's boot time if yes we might not find Node
-        # Registration Checker logs, so the user needs to set earlier START_TIME_UTC
+        # check if START_TIME is after node's boot time if yes we might not find Node
+        # Registration Checker logs, so the user needs to set earlier START_TIME
 
         # get the offset-aware datetime instead of offset-naive
         node_start_time = datetime.fromisoformat(str(
@@ -432,10 +432,10 @@ class NodeRegistrationSuccess(runbook.Step):
               project_path,
               reason=
               (f'The node {node} in the location {location} booted at {node_start_time} before '
-               f'the provided START_TIME_UTC {op.get(flags.START_TIME)} '
+               f'the provided START_TIME {op.get(flags.START_TIME)} '
                '(default is 8 hours from now)'),
               remediation=
-              ('Please provide the START_TIME_UTC parameter (-p start_time_utc) with a date '
+              ('Please provide the START_TIME parameter (-p start_time) with a date '
                f'before {node_start_time}, so that the runbook can find the Node Registration '
                'Checker logs for the node'))
           return
@@ -454,8 +454,8 @@ class NodeRegistrationSuccess(runbook.Step):
           sample_log = str(sample_log).replace(', ', '\n')
           op.add_ok(project_path,
                     reason=op.prep_msg(op.SUCCESS_REASON,
-                                       LOG_ENTRY=sample_log,
-                                       NODE=node))
+                                       log_entry=sample_log,
+                                       node=node))
 
         else:
           # node failed to register, need to find Node Registration Checker summary verify if
@@ -488,9 +488,9 @@ class NodeRegistrationSuccess(runbook.Step):
 
             op.add_failed(project_path,
                           reason=op.prep_msg(op.FAILURE_REASON,
-                                             LOG_ENTRIES=nrc_summary,
-                                             NODE=node,
-                                             LOCATION=location),
+                                             log_entries=nrc_summary,
+                                             node=node,
+                                             location=location),
                           remediation=op.prep_msg(op.FAILURE_REMEDIATION))
             return
 
@@ -514,23 +514,23 @@ class NodeRegistrationSuccess(runbook.Step):
 
               op.add_failed(project_path,
                             reason=op.prep_msg(op.FAILURE_REASON_ALT1,
-                                               LOG_ENTRIES=nrc_summary,
-                                               NODE=node,
-                                               LOCATION=location),
+                                               log_entries=nrc_summary,
+                                               node=node,
+                                               location=location),
                             remediation=op.prep_msg(op.FAILURE_REMEDIATION))
               return
             else:
               # node is running, but there's no "Completed running Node Registration Checker" log
               # entry in the provided time range
               op.add_failed(project_path,
-                            reason=op.prep_msg(
-                                op.UNCERTAIN_REASON,
-                                NODE=node,
-                                LOCATION=location,
-                                START_TIME_UTC=op.get(flags.START_TIME),
-                                END_TIME_UTC=op.get(flags.END_TIME)),
+                            reason=op.prep_msg(op.UNCERTAIN_REASON,
+                                               node=node,
+                                               location=location,
+                                               start_time=op.get(
+                                                   flags.START_TIME),
+                                               end_time=op.get(flags.END_TIME)),
                             remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION,
-                                                    NODE=node))
+                                                    node=node))
               return
 
       else:
@@ -550,8 +550,8 @@ class NodeRegistrationSuccess(runbook.Step):
           sample_log = str(sample_log).replace(', ', '\n')
           op.add_ok(project_path,
                     reason=op.prep_msg(op.SUCCESS_REASON_ALT1,
-                                       LOG_ENTRY=sample_log,
-                                       NODE=node))
+                                       log_entry=sample_log,
+                                       node=node))
         else:
           filter_str = [
               f'labels."compute.googleapis.com/resource_name"="{node}"',
@@ -569,9 +569,9 @@ class NodeRegistrationSuccess(runbook.Step):
 
             op.add_failed(project_path,
                           reason=op.prep_msg(op.FAILURE_REASON_ALT2,
-                                             LOG_ENTRIES=nrc_summary,
-                                             NODE=node,
-                                             LOCATION=location),
+                                             log_entries=nrc_summary,
+                                             node=node,
+                                             location=location),
                           remediation=op.prep_msg(op.FAILURE_REMEDIATION))
             return
 
@@ -580,8 +580,8 @@ class NodeRegistrationSuccess(runbook.Step):
             # probably the node was deleted before Node Registration Checker could finish running.
             op.add_failed(project_path,
                           reason=op.prep_msg(op.FAILURE_REASON_ALT3,
-                                             NODE=node,
-                                             LOCATION=location),
+                                             node=node,
+                                             location=location),
                           remediation=op.prep_msg(op.FAILURE_REMEDIATION_ALT3))
             return
     else:

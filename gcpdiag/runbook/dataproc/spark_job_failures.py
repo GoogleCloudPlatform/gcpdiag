@@ -224,18 +224,18 @@ class JobExists(runbook.StartStep):
       return
 
     # Start date is the date for when the job was running
-    start_time_utc = datetime.strptime(
+    start_time = datetime.strptime(
         job.status_history['RUNNING'],
         '%Y-%m-%dT%H:%M:%S.%fZ').replace(tzinfo=timezone.utc)
 
     # End date is the start date + 7 days
-    end_time_utc = start_time_utc + timedelta(days=7)
+    end_time = start_time + timedelta(days=7)
 
     # Saving cluster parameters
-    op.put(flags.START_TIME, start_time_utc)
-    op.info(f'Start time utc:{start_time_utc}')
-    op.put(flags.END_TIME, end_time_utc)
-    op.info(f'End time utc:{end_time_utc}')
+    op.put(flags.START_TIME, start_time)
+    op.info(f'Start time utc:{start_time}')
+    op.put(flags.END_TIME, end_time)
+    op.info(f'End time utc:{end_time}')
     op.put(flags.CLUSTER_UUID, job.cluster_uuid)
     op.put(flags.CLUSTER_NAME, job.cluster_name)
 
@@ -427,12 +427,12 @@ class CheckTaskNotFound(runbook.CompositeStep):
                                     op.get(flags.REGION), op.get(flags.JOB_ID))
 
     cluster_uuid = job.cluster_uuid
-    start_time_utc = op.get(flags.START_TIME)
-    end_time_utc = op.get(flags.END_TIME)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
 
     additional_message = (
         f'Unable to find the cluster deletion log between'
-        f' {start_time_utc} and {end_time_utc}. It could be some other issue.'
+        f' {start_time} and {end_time}. It could be some other issue.'
         f'Please raise a support case to investigate further.')
 
     log_search_filter = f"""resource.type="cloud_dataproc_cluster"
@@ -443,8 +443,8 @@ class CheckTaskNotFound(runbook.CompositeStep):
     log_entries = logs.realtime_query(
         project_id=op.get(flags.PROJECT_ID),
         filter_str=log_search_filter,
-        start_time_utc=start_time_utc,
-        end_time_utc=end_time_utc,
+        start_time=start_time,
+        end_time=end_time,
     )
 
     if log_entries:
@@ -597,14 +597,14 @@ class CheckMasterOOM(runbook.Step):
     "{job_id}"
     jsonPayload.message=~"{log_message}" """
 
-    start_time_utc = op.get(flags.START_TIME)
-    end_time_utc = op.get(flags.END_TIME)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
 
     log_entries = logs.realtime_query(
         project_id=op.get(flags.PROJECT_ID),
         filter_str=log_search_filter,
-        start_time_utc=start_time_utc,
-        end_time_utc=end_time_utc,
+        start_time=start_time,
+        end_time=end_time,
     )
 
     if log_entries:
@@ -620,8 +620,8 @@ class CheckMasterOOM(runbook.Step):
       log_entries_check_sigterm = logs.realtime_query(
           project_id=op.get(flags.PROJECT_ID),
           filter_str=log_search_filter_check_sigterm,
-          start_time_utc=start_time_utc,
-          end_time_utc=end_time_utc,
+          start_time=start_time,
+          end_time=end_time,
       )
 
       if log_entries_check_sigterm:
@@ -647,8 +647,8 @@ class CheckMasterOOM(runbook.Step):
         log_entries_check_yarn_metrics = logs.realtime_query(
             project_id=op.get(flags.PROJECT_ID),
             filter_str=log_search_filter_check_yarn_metrics,
-            start_time_utc=start_time_utc,
-            end_time_utc=end_time_utc,
+            start_time=start_time,
+            end_time=end_time,
         )
         if log_entries_check_yarn_metrics:
           op.add_failed(
@@ -808,14 +808,14 @@ class CheckShuffleFailures(runbook.Step):
       )
       return
 
-    start_time_utc = op.get(flags.START_TIME)
-    end_time_utc = op.get(flags.END_TIME)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
 
     log_entries = logs.realtime_query(
         project_id=project.id,
         filter_str=log_search_filter,
-        start_time_utc=start_time_utc,
-        end_time_utc=end_time_utc,
+        start_time=start_time,
+        end_time=end_time,
     )
 
     if log_entries:

@@ -22,7 +22,8 @@ The logging health check failed because the service account lacks necessary perm
 
 ### Failure Remediation
 
-Grant the service account the 'roles/logging.logWriter' role or equivalent permissions. See instructions: https://cloud.google.com/kubernetes-engine/docs/troubleshooting/logging#verify_the_node_pools_service_account_has_a_role_with_the_correct_permissions
+Grant the service account the 'roles/logging.logWriter' role or equivalent permissions. See instructions:
+https://cloud.google.com/kubernetes-engine/docs/troubleshooting/logging#verify_the_node_pools_service_account_has_a_role_with_the_correct_permissions
 
 ### Success Reason
 

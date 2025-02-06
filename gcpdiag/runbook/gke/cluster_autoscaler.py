@@ -49,8 +49,8 @@ def local_log_search(cluster_name, cluster_location, error_message):
     filter_str += f'{error_message}'
 
   log_entries = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
-                                    start_time_utc=op.get(flags.START_TIME),
-                                    end_time_utc=op.get(flags.END_TIME),
+                                    start_time=op.get(flags.START_TIME),
+                                    end_time=op.get(flags.END_TIME),
                                     filter_str=filter_str)
 
   return log_entries
@@ -251,13 +251,13 @@ class CaOutOfResources(runbook.Step):
         sample_log = log_entry
         break
       op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, LOG_ENTRY=sample_log),
+                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME),
-                                   END_TIME_UTC=op.get(flags.END_TIME)))
+                                   start_time=op.get(flags.START_TIME),
+                                   end_time=op.get(flags.END_TIME)))
 
 
 class CaQuotaExceeded(runbook.Step):
@@ -284,13 +284,13 @@ class CaQuotaExceeded(runbook.Step):
         sample_log = log_entry
         break
       op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, LOG_ENTRY=sample_log),
+                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME),
-                                   END_TIME_UTC=op.get(flags.END_TIME)))
+                                   start_time=op.get(flags.START_TIME),
+                                   end_time=op.get(flags.END_TIME)))
 
 
 class CaInstanceTimeout(runbook.Step):
@@ -317,13 +317,13 @@ class CaInstanceTimeout(runbook.Step):
         sample_log = log_entry
         break
       op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, LOG_ENTRY=sample_log),
+                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME),
-                                   END_TIME_UTC=op.get(flags.END_TIME)))
+                                   start_time=op.get(flags.START_TIME),
+                                   end_time=op.get(flags.END_TIME)))
 
 
 class CaIpSpaceExhausted(runbook.Step):
@@ -350,13 +350,13 @@ class CaIpSpaceExhausted(runbook.Step):
         sample_log = log_entry
         break
       op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, LOG_ENTRY=sample_log),
+                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME),
-                                   END_TIME_UTC=op.get(flags.END_TIME)))
+                                   start_time=op.get(flags.START_TIME),
+                                   end_time=op.get(flags.END_TIME)))
 
 
 class CaServiceAccountDeleted(runbook.Step):
@@ -383,13 +383,13 @@ class CaServiceAccountDeleted(runbook.Step):
         sample_log = log_entry
         break
       op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, LOG_ENTRY=sample_log),
+                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME),
-                                   END_TIME_UTC=op.get(flags.END_TIME)))
+                                   start_time=op.get(flags.START_TIME),
+                                   end_time=op.get(flags.END_TIME)))
 
 
 class CaMinSizeReached(runbook.Step):
@@ -416,13 +416,13 @@ class CaMinSizeReached(runbook.Step):
         sample_log = log_entry
         break
       op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, LOG_ENTRY=sample_log),
+                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME),
-                                   END_TIME_UTC=op.get(flags.END_TIME)))
+                                   start_time=op.get(flags.START_TIME),
+                                   end_time=op.get(flags.END_TIME)))
 
 
 class CaFailedToEvictPods(runbook.Step):
@@ -449,13 +449,13 @@ class CaFailedToEvictPods(runbook.Step):
         sample_log = log_entry
         break
       op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, LOG_ENTRY=sample_log),
+                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME),
-                                   END_TIME_UTC=op.get(flags.END_TIME)))
+                                   start_time=op.get(flags.START_TIME),
+                                   end_time=op.get(flags.END_TIME)))
 
 
 class CaDisabledAnnotation(runbook.Step):
@@ -482,13 +482,13 @@ class CaDisabledAnnotation(runbook.Step):
         sample_log = log_entry
         break
       op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, LOG_ENTRY=sample_log),
+                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
-                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+                                   start_time=op.get(flags.START_TIME),
+                                   end_time=op.get(flags.END_TIME)))
 
 
 class CaMinResourceLimitExceeded(runbook.Step):
@@ -515,13 +515,13 @@ class CaMinResourceLimitExceeded(runbook.Step):
         sample_log = log_entry
         break
       op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, LOG_ENTRY=sample_log),
+                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
-                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+                                   start_time=op.get(flags.START_TIME),
+                                   end_time=op.get(flags.END_TIME)))
 
 
 class CaNoPlaceToMovePods(runbook.Step):
@@ -548,13 +548,13 @@ class CaNoPlaceToMovePods(runbook.Step):
         sample_log = log_entry
         break
       op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, LOG_ENTRY=sample_log),
+                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
-                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+                                   start_time=op.get(flags.START_TIME),
+                                   end_time=op.get(flags.END_TIME)))
 
 
 class CaPodsNotBackedByController(runbook.Step):
@@ -581,13 +581,13 @@ class CaPodsNotBackedByController(runbook.Step):
         sample_log = log_entry
         break
       op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, LOG_ENTRY=sample_log),
+                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
-                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+                                   start_time=op.get(flags.START_TIME),
+                                   end_time=op.get(flags.END_TIME)))
 
 
 class CaNotSafeToEvictAnnotation(runbook.Step):
@@ -614,13 +614,13 @@ class CaNotSafeToEvictAnnotation(runbook.Step):
         sample_log = log_entry
         break
       op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, LOG_ENTRY=sample_log),
+                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
-                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+                                   start_time=op.get(flags.START_TIME),
+                                   end_time=op.get(flags.END_TIME)))
 
 
 class CaPodKubeSystemUnmovable(runbook.Step):
@@ -647,13 +647,13 @@ class CaPodKubeSystemUnmovable(runbook.Step):
         sample_log = log_entry
         break
       op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, LOG_ENTRY=sample_log),
+                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
-                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+                                   start_time=op.get(flags.START_TIME),
+                                   end_time=op.get(flags.END_TIME)))
 
 
 class CaPodNotEnoughPdb(runbook.Step):
@@ -680,13 +680,13 @@ class CaPodNotEnoughPdb(runbook.Step):
         sample_log = log_entry
         break
       op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, LOG_ENTRY=sample_log),
+                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
-                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+                                   start_time=op.get(flags.START_TIME),
+                                   end_time=op.get(flags.END_TIME)))
 
 
 class CaPodControllerNotFound(runbook.Step):
@@ -713,13 +713,13 @@ class CaPodControllerNotFound(runbook.Step):
         sample_log = log_entry
         break
       op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, LOG_ENTRY=sample_log),
+                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
-                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+                                   start_time=op.get(flags.START_TIME),
+                                   end_time=op.get(flags.END_TIME)))
 
 
 class CaPodUnexpectedError(runbook.Step):
@@ -746,13 +746,13 @@ class CaPodUnexpectedError(runbook.Step):
         sample_log = log_entry
         break
       op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, LOG_ENTRY=sample_log),
+                    reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
-                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+                                   start_time=op.get(flags.START_TIME),
+                                   end_time=op.get(flags.END_TIME)))
 
 
 class ClusterAutoscalerEnd(runbook.EndStep):

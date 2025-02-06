@@ -16,12 +16,13 @@ None
 
 ### Failure Reason
 
-Unhealthy backends were found in backend service {name} in scope {region}.
+The backend service {name} in the {region} scope has unhealthy backends.
+
 {detailed_reason}
 
 ### Success Reason
 
-All backends are healthy in backend service {name} in scope {region}
+All backends are healthy in backend service {name} in scope {region}.
 
 
 

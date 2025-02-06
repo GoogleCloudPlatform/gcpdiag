@@ -176,8 +176,8 @@ class SingleTerminationCheck(runbook.Step):
         project_id=op.get(flags.PROJECT_ID),
         filter_str=
         f'{LOGGING_FILTER}\nresource.labels.instance_id="{op.get(flags.ID)}"',
-        start_time_utc=op.get(flags.START_TIME),
-        end_time_utc=op.get(flags.END_TIME))
+        start_time=op.get(flags.START_TIME),
+        end_time=op.get(flags.END_TIME))
 
     termination_details: Dict[str, set] = {}
     # TODO: implement https://cloud.google.com/compute/shielded-vm/
@@ -207,8 +207,8 @@ class SingleTerminationCheck(runbook.Step):
     else:
       op.add_ok(resource=vm,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   start_time_utc=op.get(flags.START_TIME),
-                                   end_time_utc=op.get(flags.END_TIME)))
+                                   start_time=op.get(flags.START_TIME),
+                                   end_time=op.get(flags.END_TIME)))
 
     status_check = gcp_gs.ResourceAttributeCheck()
     status_check.resource_query = gce.get_instance
@@ -248,8 +248,8 @@ class MultipleTerminationCheck(runbook.Step):
     """Investigating Reasons for multiple VM termination."""
     log_entries = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
                                       filter_str=LOGGING_FILTER,
-                                      start_time_utc=op.get(flags.START_TIME),
-                                      end_time_utc=op.get(flags.END_TIME))
+                                      start_time=op.get(flags.START_TIME),
+                                      end_time=op.get(flags.END_TIME))
 
     termination_details: Dict[str, set] = {}
 

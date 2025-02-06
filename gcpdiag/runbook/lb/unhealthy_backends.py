@@ -121,6 +121,13 @@ class UnhealthyBackendsStart(runbook.StartStep):
 
   template = 'unhealthy_backends::confirmation'
 
+  @property
+  def name(self):
+    region = op.get(flags.REGION, 'global')
+    return (f'Analyze unhealthy backends for backend service'
+            f' "{op.get(flags.BACKEND_SERVICE_NAME)}" in region'
+            f' "{region}".')
+
   def execute(self):
     """Checks the health of a specified load balancer's backends."""
 
@@ -208,6 +215,13 @@ class CheckVmPerformance(runbook.CompositeStep):
 
   template = 'unhealthy_backends::vm_performance'
 
+  @property
+  def name(self):
+    region = op.get(flags.REGION, 'global')
+    return (f'Check VMs performance for unhealthy backends in backend service'
+            f' "{op.get(flags.BACKEND_SERVICE_NAME)}" in region'
+            f' "{region}".')
+
   def execute(self):
     """Checks if the VM performance is degraded.
 
@@ -263,6 +277,13 @@ class VerifyFirewallRules(runbook.Step):
 
   template = 'unhealthy_backends::firewall_rules'
 
+  @property
+  def name(self):
+    region = op.get(flags.REGION, 'global')
+    return (f'Verify firewall rules allow health checks for backend service'
+            f' "{op.get(flags.BACKEND_SERVICE_NAME)}" in region'
+            f' "{region}".')
+
   def execute(self):
     """Checks if firewall rules are configured correctly."""
     if not apis.is_enabled(op.context.project_id, 'recommender'):
@@ -311,13 +332,22 @@ class VerifyFirewallRules(runbook.Step):
                 remediation=op.prep_msg(op.FAILURE_REMEDIATION),
             )
             return  # Exit the loop after finding a match
-    op.add_ok(backend_service, reason=op.prep_msg(op.SUCCESS_REASON))
+    op.add_ok(backend_service,
+              reason=op.prep_msg(op.SUCCESS_REASON,
+                                 bs_url=backend_service.full_path))
 
 
 class ValidateBackendServicePortConfiguration(runbook.Step):
   """Checks if health check sends probe requests to the different port than serving port."""
 
   template = 'unhealthy_backends::port_mismatch'
+
+  @property
+  def name(self):
+    region = op.get(flags.REGION, 'global')
+    return (f'Validate port configuration for backend service'
+            f' "{op.get(flags.BACKEND_SERVICE_NAME)}" in region'
+            f' "{region}".')
 
   def execute(self):
     """Checks if health check sends probe requests to the different port than serving port."""
@@ -354,7 +384,9 @@ class ValidateBackendServicePortConfiguration(runbook.Step):
                     hc_port=info.get('healthCheckPortNumber'),
                     serving_port_name=info.get('servingPortName'),
                     formatted_igs=formatted_igs,
+                    bs_resource=backend_service.full_path,
                 ),
+                remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION),
             )
             return  # Exit the loop after finding a match
     op.add_ok(backend_service, reason=op.prep_msg(op.SUCCESS_REASON))
@@ -387,6 +419,13 @@ class ValidateBackendServiceProtocolConfiguration(runbook.Step):
   """Checks if health check uses the same protocol as backend service for serving traffic."""
 
   template = 'unhealthy_backends::protocol_mismatch'
+
+  @property
+  def name(self):
+    region = op.get(flags.REGION, 'global')
+    return (f'Validate protocol configuration for backend service'
+            f' "{op.get(flags.BACKEND_SERVICE_NAME)}" in region'
+            f' "{region}".')
 
   def execute(self):
     """Checks if health check uses the same protocol as backend service for serving traffic."""
@@ -448,7 +487,10 @@ class VerifyHealthCheckLoggingEnabled(runbook.Gateway):
     )
 
     if health_check.is_log_enabled:
-      op.add_ok(health_check, reason=op.prep_msg(op.SUCCESS_REASON))
+      op.add_ok(
+          health_check,
+          reason=op.prep_msg(op.SUCCESS_REASON, hc_url=health_check.full_path),
+      )
       self.add_child(AnalyzeLatestHealthCheckLog())
       self.add_child(CheckPastHealthCheckSuccess())
     else:
@@ -457,7 +499,8 @@ class VerifyHealthCheckLoggingEnabled(runbook.Gateway):
         additional_flags = f'--region={op.get(flags.REGION)} '
       op.add_uncertain(
           backend_service,
-          reason=op.prep_msg(op.UNCERTAIN_REASON),
+          reason=op.prep_msg(op.UNCERTAIN_REASON,
+                             hc_url=health_check.full_path),
           remediation=op.prep_msg(
               op.UNCERTAIN_REMEDIATION,
               hc_name=health_check.name,
@@ -545,8 +588,8 @@ class AnalyzeLatestHealthCheckLog(runbook.Gateway):
       serial_log_entries = logs.realtime_query(
           project_id=op.get(flags.PROJECT_ID),
           filter_str=filter_str,
-          start_time_utc=datetime.now() - timedelta(days=14),
-          end_time_utc=datetime.now(),
+          start_time=datetime.now() - timedelta(days=14),
+          end_time=datetime.now(),
       )
 
       if serial_log_entries:
@@ -580,6 +623,13 @@ class AnalyzeTimeoutHealthCheckLog(runbook.Step):
 
   logs: list[dict]
   template = 'unhealthy_backends::timeout_hc_state_log'
+
+  @property
+  def name(self):
+    region = op.get(flags.REGION, 'global')
+    return (f'Analyze TIMEOUT health check logs for backend service'
+            f' "{op.get(flags.BACKEND_SERVICE_NAME)}" in region'
+            f' "{region}".')
 
   def execute(self):
     """Analyzes logs with the detailed health check state TIMEOUT"""
@@ -618,7 +668,8 @@ class AnalyzeTimeoutHealthCheckLog(runbook.Step):
     op.add_uncertain(
         backend_service,
         reason=op.prep_msg(op.UNCERTAIN_REASON,
-                           probe_results_text_str=probe_results_text_str),
+                           probe_results_text_str=probe_results_text_str,
+                           bs_url=backend_service.full_path),
         remediation=op.prep_msg(
             op.UNCERTAIN_REMEDIATION,
             success_criteria=success_criteria,
@@ -633,6 +684,13 @@ class AnalyzeUnhealthyHealthCheckLog(runbook.Step):
 
   template = 'unhealthy_backends::unhealthy_hc_state_log'
   logs: list[dict]
+
+  @property
+  def name(self):
+    region = op.get(flags.REGION, 'global')
+    return (f'Analyze UNHEALTHY health check logs for backend service'
+            f' "{op.get(flags.BACKEND_SERVICE_NAME)}" in region'
+            f' "{region}".')
 
   def execute(self):
     """Analyzes logs with detailed health state UNHEALTHY."""
@@ -673,7 +731,8 @@ class AnalyzeUnhealthyHealthCheckLog(runbook.Step):
     op.add_uncertain(
         backend_service,
         reason=op.prep_msg(op.UNCERTAIN_REASON,
-                           probe_results_text_str=probe_results_text_str),
+                           probe_results_text_str=probe_results_text_str,
+                           bs_url=backend_service.full_path),
         remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION,
                                 success_criteria=success_criteria),
     )
@@ -684,6 +743,13 @@ class AnalyzeUnknownHealthCheckLog(runbook.Step):
 
   template = 'unhealthy_backends::unknown_hc_state_log'
 
+  @property
+  def name(self):
+    region = op.get(flags.REGION, 'global')
+    return (f'Analyze UNKNOWN health check logs for backend service'
+            f' "{op.get(flags.BACKEND_SERVICE_NAME)}" in region'
+            f' "{region}".')
+
   def execute(self):
     """Analyze logs with detailed health state UNKNOWN."""
     backend_service = lb.get_backend_service(
@@ -693,7 +759,8 @@ class AnalyzeUnknownHealthCheckLog(runbook.Step):
     )
     op.add_uncertain(
         backend_service,
-        reason=op.prep_msg(op.UNCERTAIN_REASON),
+        reason=op.prep_msg(op.UNCERTAIN_REASON,
+                           bs_url=backend_service.full_path),
         remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION),
     )
 
@@ -702,6 +769,13 @@ class CheckPastHealthCheckSuccess(runbook.Step):
   """Checks if the health check has worked successfully in the past."""
 
   template = 'unhealthy_backends::past_hc_success'
+
+  @property
+  def name(self):
+    region = op.get(flags.REGION, 'global')
+    return (f'Check past health check success for backend service'
+            f' "{op.get(flags.BACKEND_SERVICE_NAME)}" in region'
+            f' "{region}".')
 
   def execute(self):
     """Checks if the health check has worked successfully in the past."""
@@ -778,8 +852,8 @@ class CheckPastHealthCheckSuccess(runbook.Step):
       serial_log_entries = logs.realtime_query(
           project_id=op.get(flags.PROJECT_ID),
           filter_str=filter_str,
-          start_time_utc=datetime.now() - timedelta(days=14),
-          end_time_utc=datetime.now(),
+          start_time=datetime.now() - timedelta(days=14),
+          end_time=datetime.now(),
       )
 
       if serial_log_entries:
@@ -798,12 +872,15 @@ class CheckPastHealthCheckSuccess(runbook.Step):
       op.add_uncertain(
           backend_service,
           reason=message,
-          remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION),
+          remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION,
+                                  bs_url=backend_service.full_path),
       )
     else:
       op.add_skipped(
           backend_service,
-          reason='No past health check success found in the logs',
+          reason=(
+              'No past health check success found in the logs for the backend'
+              f' service {backend_service.full_path}'),
       )
 
 
@@ -817,11 +894,13 @@ class UnhealthyBackendsEnd(runbook.EndStep):
   def execute(self):
     """Finalize unhealthy backends diagnostics."""
     if not config.get(flags.INTERACTIVE_MODE):
+      region = op.get(flags.REGION, 'global')
       response = op.prompt(
           kind=op.CONFIRMATION,
           message=(
               'Are you still experiencing health check issues on the backend'
-              f' service {op.get(flags.BACKEND_SERVICE_NAME)}'),
+              f' service {op.get(flags.BACKEND_SERVICE_NAME)} in region'
+              f' {region}?'),
           choice_msg='Enter an option: ',
       )
       if response == op.NO:
