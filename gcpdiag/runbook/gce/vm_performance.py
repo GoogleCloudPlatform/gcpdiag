@@ -1200,9 +1200,9 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
                     '\n\t Max Write-Throughput: {} MB/s\n').format(
                         disktype, int(total_disk_size[disktype]),
                         min(data[1], provisions_iops['pd-extreme']),
-                        min(data[2], data[3]),
+                        max(data[2], data[3]),
                         min(data[5], provisions_iops['pd-extreme']),
-                        min(data[6], data[7])))
+                        max(data[6], data[7])))
 
                 self.actual_usage_comparision(
                     vm, disktype,
