@@ -1,0 +1,3 @@
+*  asm/WARN/2025_002: Upstream connection established successfully with no protocol errors
+   (logging api is disabled)                                              [SKIP]
+
