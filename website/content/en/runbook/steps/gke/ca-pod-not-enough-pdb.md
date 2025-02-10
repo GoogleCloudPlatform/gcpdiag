@@ -18,6 +18,7 @@ None
 
 The scaleDown event failed the pod doesn't have enough PodDisruptionBudget.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 
 ### Failure Remediation

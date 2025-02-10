@@ -18,6 +18,7 @@ None
 
 The scaleUp event failed because some of the MIGs could not be increased due to lack of resources.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 
 ### Failure Remediation

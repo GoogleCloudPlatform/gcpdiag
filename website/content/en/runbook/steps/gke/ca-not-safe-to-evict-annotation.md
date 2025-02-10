@@ -18,6 +18,7 @@ None
 
 The scaleDown event failed because a Pod on the node has the safe-to-evict=false annotation
 Example log entry that would help identify involved objects:
+
 {log_entry}
 
 ### Failure Remediation

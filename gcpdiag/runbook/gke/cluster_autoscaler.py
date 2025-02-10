@@ -13,6 +13,8 @@
 # limitations under the License.
 """GKE Cluster Autoscaler runbook"""
 
+import json
+
 from gcpdiag import runbook
 from gcpdiag.queries import apis, crm, gke, logs
 from gcpdiag.runbook import op
@@ -30,23 +32,26 @@ def local_log_search(cluster_name, cluster_location, error_message):
   Returns:
     A string representing the filter for the logs query.
   """
-  filter_str = (
-      'log_id("container.googleapis.com/cluster-autoscaler-visibility") AND'
-      ' resource.type="k8s_cluster" AND ')
+  filter_list = [
+      'log_id("container.googleapis.com/cluster-autoscaler-visibility")',
+      'resource.type="k8s_cluster"',
+  ]
 
   if cluster_name and cluster_location:
-    filter_str += (
-        f'resource.labels.location="{cluster_location}" AND      '
-        f' resource.labels.cluster_name="{cluster_name}" AND {error_message}')
+    filter_list.append(f'resource.labels.location="{cluster_location}"')
+    filter_list.append(f'resource.labels.cluster_name="{cluster_name}"')
+    filter_list.append(f'{error_message}')
 
   elif cluster_name:
-    filter_str += (
-        f'resource.labels.cluster_name="{cluster_name}" AND {error_message}')
+    filter_list.append(f'resource.labels.cluster_name="{cluster_name}"')
+    filter_list.append(f'{error_message}')
   elif cluster_location:
-    filter_str += (
-        f'resource.labels.location="{cluster_location}" AND {error_message}')
+    filter_list.append(f'resource.labels.location="{cluster_location}"')
+    filter_list.append(f'{error_message}')
   else:
-    filter_str += f'{error_message}'
+    filter_list.append(f'{error_message}')
+
+  filter_str = '\n'.join(filter_list)
 
   log_entries = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
                                     start_time=op.get(flags.START_TIME),
@@ -240,15 +245,15 @@ class CaOutOfResources(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    error_message = 'jsonPayload.resultInfo.results.errorMsg.messageId=\
-      "scale.up.error.out.of.resources"'
+    error_message = ('jsonPayload.resultInfo.results.errorMsg.messageId='
+                     '"scale.up.error.out.of.resources"')
 
     log_entries = local_log_search(cluster_name, cluster_location,
                                    error_message)
 
     if log_entries:
       for log_entry in log_entries:
-        sample_log = log_entry
+        sample_log = json.dumps(log_entry, indent=2)
         break
       op.add_failed(project_path,
                     reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
@@ -273,15 +278,15 @@ class CaQuotaExceeded(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    error_message = 'jsonPayload.resultInfo.results.errorMsg.messageId=\
-      "scale.up.error.quota.exceeded"'
+    error_message = ('jsonPayload.resultInfo.results.errorMsg.messageId='
+                     '"scale.up.error.quota.exceeded"')
 
     log_entries = local_log_search(cluster_name, cluster_location,
                                    error_message)
 
     if log_entries:
       for log_entry in log_entries:
-        sample_log = log_entry
+        sample_log = json.dumps(log_entry, indent=2)
         break
       op.add_failed(project_path,
                     reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
@@ -306,15 +311,15 @@ class CaInstanceTimeout(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    error_message = 'jsonPayload.resultInfo.results.errorMsg.messageId=\
-      "scale.up.error.waiting.for.instances.timeout"'
+    error_message = ('jsonPayload.resultInfo.results.errorMsg.messageId='
+                     '"scale.up.error.waiting.for.instances.timeout"')
 
     log_entries = local_log_search(cluster_name, cluster_location,
                                    error_message)
 
     if log_entries:
       for log_entry in log_entries:
-        sample_log = log_entry
+        sample_log = json.dumps(log_entry, indent=2)
         break
       op.add_failed(project_path,
                     reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
@@ -339,15 +344,15 @@ class CaIpSpaceExhausted(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    error_message = 'jsonPayload.resultInfo.results.errorMsg.messageId=\
-      "scale.up.error.ip.space.exhausted"'
+    error_message = ('jsonPayload.resultInfo.results.errorMsg.messageId='
+                     '"scale.up.error.ip.space.exhausted"')
 
     log_entries = local_log_search(cluster_name, cluster_location,
                                    error_message)
 
     if log_entries:
       for log_entry in log_entries:
-        sample_log = log_entry
+        sample_log = json.dumps(log_entry, indent=2)
         break
       op.add_failed(project_path,
                     reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
@@ -372,15 +377,15 @@ class CaServiceAccountDeleted(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    error_message = 'jsonPayload.resultInfo.results.errorMsg.messageId=\
-      "scale.up.error.service.account.deleted"'
+    error_message = ('jsonPayload.resultInfo.results.errorMsg.messageId='
+                     '"scale.up.error.service.account.deleted"')
 
     log_entries = local_log_search(cluster_name, cluster_location,
                                    error_message)
 
     if log_entries:
       for log_entry in log_entries:
-        sample_log = log_entry
+        sample_log = json.dumps(log_entry, indent=2)
         break
       op.add_failed(project_path,
                     reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
@@ -405,15 +410,15 @@ class CaMinSizeReached(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    error_message = 'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId=\
-      "no.scale.down.node.node.group.min.size.reached"'
-
+    error_message = (
+        'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
+        '"no.scale.down.node.node.group.min.size.reached"')
     log_entries = local_log_search(cluster_name, cluster_location,
                                    error_message)
 
     if log_entries:
       for log_entry in log_entries:
-        sample_log = log_entry
+        sample_log = json.dumps(log_entry, indent=2)
         break
       op.add_failed(project_path,
                     reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
@@ -438,15 +443,15 @@ class CaFailedToEvictPods(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    error_message = 'jsonPayload.resultInfo.results.errorMsg.messageId=\
-      "scale.down.error.failed.to.evict.pods"'
+    error_message = ('jsonPayload.resultInfo.results.errorMsg.messageId='
+                     '"scale.down.error.failed.to.evict.pods"')
 
     log_entries = local_log_search(cluster_name, cluster_location,
                                    error_message)
 
     if log_entries:
       for log_entry in log_entries:
-        sample_log = log_entry
+        sample_log = json.dumps(log_entry, indent=2)
         break
       op.add_failed(project_path,
                     reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
@@ -471,15 +476,16 @@ class CaDisabledAnnotation(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    error_message = 'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId=\
-      "no.scale.down.node.scale.down.disabled.annotation"'
+    error_message = (
+        'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
+        '"no.scale.down.node.scale.down.disabled.annotation"')
 
     log_entries = local_log_search(cluster_name, cluster_location,
                                    error_message)
 
     if log_entries:
       for log_entry in log_entries:
-        sample_log = log_entry
+        sample_log = json.dumps(log_entry, indent=2)
         break
       op.add_failed(project_path,
                     reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
@@ -504,15 +510,16 @@ class CaMinResourceLimitExceeded(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    error_message = 'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId=\
-      "no.scale.down.node.minimal.resource.limits.exceeded"'
+    error_message = (
+        'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
+        '"no.scale.down.node.minimal.resource.limits.exceeded"')
 
     log_entries = local_log_search(cluster_name, cluster_location,
                                    error_message)
 
     if log_entries:
       for log_entry in log_entries:
-        sample_log = log_entry
+        sample_log = json.dumps(log_entry, indent=2)
         break
       op.add_failed(project_path,
                     reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
@@ -537,15 +544,16 @@ class CaNoPlaceToMovePods(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    error_message = 'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId=\
-      "no.scale.down.node.no.place.to.move.pods"'
+    error_message = (
+        'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
+        '"no.scale.down.node.no.place.to.move.pods"')
 
     log_entries = local_log_search(cluster_name, cluster_location,
                                    error_message)
 
     if log_entries:
       for log_entry in log_entries:
-        sample_log = log_entry
+        sample_log = json.dumps(log_entry, indent=2)
         break
       op.add_failed(project_path,
                     reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
@@ -570,15 +578,16 @@ class CaPodsNotBackedByController(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    error_message = 'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId=\
-      "no.scale.down.node.pod.not.backed.by.controller"'
+    error_message = (
+        'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
+        '"no.scale.down.node.pod.not.backed.by.controller"')
 
     log_entries = local_log_search(cluster_name, cluster_location,
                                    error_message)
 
     if log_entries:
       for log_entry in log_entries:
-        sample_log = log_entry
+        sample_log = json.dumps(log_entry, indent=2)
         break
       op.add_failed(project_path,
                     reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
@@ -603,15 +612,16 @@ class CaNotSafeToEvictAnnotation(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    error_message = 'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId=\
-      "no.scale.down.node.pod.not.safe.to.evict.annotation"'
+    error_message = (
+        'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
+        '"no.scale.down.node.pod.not.safe.to.evict.annotation"')
 
     log_entries = local_log_search(cluster_name, cluster_location,
                                    error_message)
 
     if log_entries:
       for log_entry in log_entries:
-        sample_log = log_entry
+        sample_log = json.dumps(log_entry, indent=2)
         break
       op.add_failed(project_path,
                     reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
@@ -636,15 +646,16 @@ class CaPodKubeSystemUnmovable(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    error_message = 'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId=\
-      "no.scale.down.node.pod.kube.system.unmovable"'
+    error_message = (
+        'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
+        '"no.scale.down.node.pod.kube.system.unmovable"')
 
     log_entries = local_log_search(cluster_name, cluster_location,
                                    error_message)
 
     if log_entries:
       for log_entry in log_entries:
-        sample_log = log_entry
+        sample_log = json.dumps(log_entry, indent=2)
         break
       op.add_failed(project_path,
                     reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
@@ -669,15 +680,16 @@ class CaPodNotEnoughPdb(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    error_message = 'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId=\
-      "no.scale.down.node.pod.not.enough.pdb"'
+    error_message = (
+        'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
+        '"no.scale.down.node.pod.not.enough.pdb"')
 
     log_entries = local_log_search(cluster_name, cluster_location,
                                    error_message)
 
     if log_entries:
       for log_entry in log_entries:
-        sample_log = log_entry
+        sample_log = json.dumps(log_entry, indent=2)
         break
       op.add_failed(project_path,
                     reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
@@ -702,15 +714,16 @@ class CaPodControllerNotFound(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    error_message = 'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId=\
-      "no.scale.down.node.pod.controller.not.found"'
+    error_message = (
+        'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
+        '"no.scale.down.node.pod.controller.not.found"')
 
     log_entries = local_log_search(cluster_name, cluster_location,
                                    error_message)
 
     if log_entries:
       for log_entry in log_entries:
-        sample_log = log_entry
+        sample_log = json.dumps(log_entry, indent=2)
         break
       op.add_failed(project_path,
                     reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),
@@ -735,15 +748,16 @@ class CaPodUnexpectedError(runbook.Step):
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
     cluster_name = op.get(flags.NAME)
-    error_message = 'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId=\
-      "no.scale.down.node.pod.unexpected.error"'
+    error_message = (
+        'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
+        '"no.scale.down.node.pod.unexpected.error"')
 
     log_entries = local_log_search(cluster_name, cluster_location,
                                    error_message)
 
     if log_entries:
       for log_entry in log_entries:
-        sample_log = log_entry
+        sample_log = json.dumps(log_entry, indent=2)
         break
       op.add_failed(project_path,
                     reason=op.prep_msg(op.FAILURE_REASON, log_entry=sample_log),

@@ -18,6 +18,7 @@ None
 
 The scaleUp event failed because instances in some of the MIGs failed to appear in time.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 
 ### Failure Remediation

@@ -1,6 +1,7 @@
 {% block out_of_resources_failure_reason %}
 The scaleUp event failed because some of the MIGs could not be increased due to lack of resources.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 {% endblock out_of_resources_failure_reason %}
 
@@ -16,6 +17,7 @@ No "scale.up.error.out.of.resources" errors found between {start_time} and {end_
 {% block quota_exceeded_failure_reason %}
 The scaleUp event failed because some of the MIGs could not be increased, due to exceeded Compute Engine quota.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 {% endblock quota_exceeded_failure_reason %}
 
@@ -32,6 +34,7 @@ No "scale.up.error.quota.exceeded errors" found between {start_time} and {end_ti
 {% block instance_timeout_failure_reason %}
 The scaleUp event failed because instances in some of the MIGs failed to appear in time.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 {% endblock instance_timeout_failure_reason %}
 
@@ -47,6 +50,7 @@ No "scale.up.error.waiting.for.instances.timeout" errors found between {start_ti
 The scaleUp event failed because the cluster doesn't have enough unallocated IP address space to use to add new nodes or
 Pods.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 {% endblock ip_space_exhausted_failure_reason %}
 
@@ -62,6 +66,7 @@ No "scale.up.error.ip.space.exhausted" errors found between {start_time} and {en
 {% block service_account_deleted_failure_reason %}
 The scaleUp event failed because a service account used by Cluster Autoscaler has been deleted.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 {% endblock service_account_deleted_failure_reason %}
 
@@ -76,6 +81,7 @@ No "scale.up.error.service.account.deleted" errors found between {start_time} an
 {% block min_size_reached_failure_reason %}
 Node cannot be removed because its node group is already at its minimum size.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 {% endblock min_size_reached_failure_reason %}
 
@@ -91,6 +97,7 @@ No "no.scale.down.node.node.group.min.size.reached" errors found between {start_
 {% block failed_evict_pods_failure_reason %}
 The scaleDown event failed because some of the Pods could not be evicted from a node.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 {% endblock failed_evict_pods_failure_reason %}
 
@@ -109,6 +116,7 @@ No "scale.down.error.failed.to.evict.pods" errors found between {start_time} and
 The scaleDown event failed because the node is annotated with cluster-autoscaler.kubernetes.io/scale-down-disabled:
 true.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 {% endblock disabled_annotation_failure_reason %}
 
@@ -127,6 +135,7 @@ No "no.scale.down.node.scale.down.disabled.annotation" errors found between {sta
 The scaleDown event failed because it would violate cluster-wide minimal resource limits.
 These are the resource limits set for node auto-provisioning.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 {% endblock min_resource_limit_exceeded_failure_reason %}
 
@@ -144,6 +153,7 @@ No "no.scale.down.node.minimal.resource.limits.exceeded" errors found between {s
 {% block no_place_to_move_pods_failure_reason %}
 The scaleDown event failed because there's no place to move Pods.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 {% endblock no_place_to_move_pods_failure_reason %}
 
@@ -163,6 +173,7 @@ No "no.scale.down.node.no.place.to.move.pods" errors found between {start_time} 
 The scaleDown event failed because a Pod is not backed by a controller such as ReplicationController, DaemonSet, Job,
 StatefulSet, or ReplicaSet.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 {% endblock pod_not_backed_by_controller_failure_reason %}
 
@@ -179,6 +190,7 @@ No "no.scale.down.node.pod.not.backed.by.controller" errors found between {start
 {% block not_safe_to_evict_annotation_failure_reason %}
 The scaleDown event failed because a Pod on the node has the safe-to-evict=false annotation
 Example log entry that would help identify involved objects:
+
 {log_entry}
 {% endblock not_safe_to_evict_annotation_failure_reason %}
 
@@ -196,6 +208,7 @@ No "no.scale.down.node.pod.not.safe.to.evict.annotation" errors found between {s
 The scaleDown event failed because the pod is a non-DaemonSet, non-mirrored, Pod without a PodDisruptionBudget in the
 kube-system namespace.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 {% endblock pod_kube_system_unmovable_failure_reason %}
 
@@ -216,6 +229,7 @@ No "no.scale.down.node.pod.kube.system.unmovable" errors found between {start_ti
 {% block pod_not_enough_pdb_failure_reason %}
 The scaleDown event failed the pod doesn't have enough PodDisruptionBudget.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 {% endblock pod_not_enough_pdb_failure_reason %}
 
@@ -233,6 +247,7 @@ No "no.scale.down.node.pod.not.enough.pdb" errors found between {start_time} and
 {% block pod_controller_not_found_failure_reason %}
 Pod is blocking the ScaleDown event because its controller (for example, a Deployment or ReplicaSet) can't be found.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 {% endblock pod_controller_not_found_failure_reason %}
 
@@ -249,6 +264,7 @@ No "no.scale.down.node.pod.controller.not.found" errors found between {start_tim
 {% block pod_unexpected_error_failure_reason %}
 Pod is blocking the ScaleDown event because of an unexpected error.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 {% endblock pod_unexpected_error_failure_reason %}
 

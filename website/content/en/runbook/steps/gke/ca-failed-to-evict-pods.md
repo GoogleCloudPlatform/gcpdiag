@@ -18,6 +18,7 @@ None
 
 The scaleDown event failed because some of the Pods could not be evicted from a node.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 
 ### Failure Remediation

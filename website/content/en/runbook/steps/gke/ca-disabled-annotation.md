@@ -19,6 +19,7 @@ None
 The scaleDown event failed because the node is annotated with cluster-autoscaler.kubernetes.io/scale-down-disabled:
 true.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 
 ### Failure Remediation

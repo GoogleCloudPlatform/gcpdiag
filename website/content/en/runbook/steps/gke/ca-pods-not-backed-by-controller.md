@@ -19,6 +19,7 @@ None
 The scaleDown event failed because a Pod is not backed by a controller such as ReplicationController, DaemonSet, Job,
 StatefulSet, or ReplicaSet.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 
 ### Failure Remediation

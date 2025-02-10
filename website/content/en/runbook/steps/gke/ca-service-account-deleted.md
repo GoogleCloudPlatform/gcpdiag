@@ -18,6 +18,7 @@ None
 
 The scaleUp event failed because a service account used by Cluster Autoscaler has been deleted.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 
 ### Failure Remediation
