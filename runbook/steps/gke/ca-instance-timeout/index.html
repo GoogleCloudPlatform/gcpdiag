@@ -21,11 +21,11 @@
 ">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://gcpdiag.dev/runbook/steps/gke/ca-instance-timeout/"><meta property="og:image" content="https://gcpdiag.dev/images/website-preview.jpg"><meta property="article:section" content="runbook">
-<meta property="article:modified_time" content="2025-02-04T08:42:18-08:00"><meta property="og:site_name" content="gcpdiag">
+<meta property="article:modified_time" content="2025-02-10T09:30:12-08:00"><meta property="og:site_name" content="gcpdiag">
 <meta itemprop=name content="gke/Ca Instance Timeout">
 <meta itemprop=description content="Check for &#34;scale.up.error.waiting.for.instances.timeout&#34; log entries
 ">
-<meta itemprop=dateModified content="2025-02-04T08:42:18-08:00">
+<meta itemprop=dateModified content="2025-02-10T09:30:12-08:00">
 <meta itemprop=wordCount content="64"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta itemprop=keywords content><meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="https://gcpdiag.dev/images/website-preview.jpg">
@@ -1019,14 +1019,14 @@
 <p>None</p>
 <h3 id=failure-reason>Failure Reason</h3>
 <p>The scaleUp event failed because instances in some of the MIGs failed to appear in time.
-Example log entry that would help identify involved objects:
-{log_entry}</p>
+Example log entry that would help identify involved objects:</p>
+<p>{log_entry}</p>
 <h3 id=failure-remediation>Failure Remediation</h3>
 <p>This message is transient. If it persists, engage Google Cloud Support for further investigation.</p>
 <h3 id=success-reason>Success Reason</h3>
 <p>No &ldquo;scale.up.error.waiting.for.instances.timeout&rdquo; errors found between {start_time} and {end_time}</p>
 <div class="text-muted mt-5 pt-3 border-top">
-Last modified February 4, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/a65d10459832025bb55cf275b134e49ae59248e7>Merge "[Runbook] Step class attributes interpolation in step names" -- Branch commit log -- commit d00714acdb7b389a0891712cd13a27c08354b4e0 Author: Kwesi Graham &lt;akyen@google.com> Date: 2025-01-30T21:34:43Z (a65d10459)</a>
+Last modified February 10, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/b40cb1ab45ba4e617e4252b62cfecb6e861304cf>Merge "Adjusting the output to look a little bit better. Changing the way the log query filter is created, so it's similar to other runbooks." -- Branch commit log -- commit 0fd2abe3c97b9c4c4736188167e196ef88fd9a77 Author: gcpdiag team &lt;noreply@google.com> Date: 2025-02-07T11:22:32Z (b40cb1ab4)</a>
 </div>
 </div>
 </main>
