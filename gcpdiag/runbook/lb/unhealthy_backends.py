@@ -489,12 +489,13 @@ class ValidateBackendServiceProtocolConfiguration(runbook.Step):
     else:
       op.add_uncertain(
           backend_service,
-          reason=op.prep_msg(op.UNCERTAIN_REASON),
-          remediation=op.prep_msg(
-              op.UNCERTAIN_REMEDIATION,
+          reason=op.prep_msg(
+              op.UNCERTAIN_REASON,
               hc_protocol=health_check.type,
               serving_protocol=backend_service.protocol,
+              bs_resource=backend_service.full_path,
           ),
+          remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION,),
       )
 
 
