@@ -704,7 +704,7 @@ def get_instance(project_id: str, zone: str, instance_name: str) -> Instance:
 
 @caching.cached_api_call(in_memory=True)
 def get_disk(project_id: str, zone: str, disk_name: str) -> Disk:
-  """Returns disk object matching disk name and zone"""
+  """Returns disk object matching disk name and zone."""
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.disks().get(project=project_id, zone=zone, disk=disk_name)
   response = request.execute(num_retries=config.API_RETRIES)
@@ -719,32 +719,39 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
   if not apis.is_enabled(context.project_id, 'compute'):
     return instances
   gce_api = apis.get_api('compute', 'v1', context.project_id)
-  requests = [
-      gce_api.instances().list(project=context.project_id, zone=zone)
-      for zone in get_gce_zones(context.project_id)
-  ]
+  request = gce_api.instances().aggregatedList(project=context.project_id,
+                                               returnPartialSuccess=True)
   logging.info('listing gce instances of project %s', context.project_id)
-  items = apis_utils.multi_list_all(
-      requests=requests,
-      next_function=gce_api.instances().list_next,
-  )
-  for i in items:
-    result = re.match(
-        r'https://www.googleapis.com/compute/v1/projects/[^/]+/zones/([^/]+)/',
-        i['selfLink'],
-    )
-    if not result:
-      logging.error("instance %s selfLink didn't match regexp: %s", i['id'],
-                    i['selfLink'])
-      continue
-    zone = result.group(1)
-    labels = i.get('labels', {})
-    resource = i.get('name', '')
-    if not context.match_project_resource(
-        location=zone, labels=labels, resource=resource):
-      continue
-    instances[i['id']] = Instance(project_id=context.project_id,
-                                  resource_data=i)
+  while request:  # Continue as long as there are pages
+    response = request.execute(num_retries=config.API_RETRIES)
+    instances_by_zones = response.get('items', {})
+    for _, data_ in instances_by_zones.items():
+      if 'instances' not in data_:
+        continue
+      for instance in data_['instances']:
+        result = re.match(
+            r'https://www.googleapis.com/compute/v1/projects/[^/]+/zones/([^/]+)/',
+            instance['selfLink'],
+        )
+        if not result:
+          logging.error(
+              "instance %s selfLink didn't match regexp: %s",
+              instance['id'],
+              instance['selfLink'],
+          )
+          continue
+        zone = result.group(1)
+        labels = instance.get('labels', {})
+        resource = instance.get('name', '')
+        if not context.match_project_resource(
+            location=zone, labels=labels, resource=resource):
+          continue
+        instances.update({
+            instance['id']:
+                Instance(project_id=context.project_id, resource_data=instance)
+        })
+    request = gce_api.instances().aggregatedList_next(
+        previous_request=request, previous_response=response)
   return instances
 
 
@@ -755,32 +762,37 @@ def get_instance_groups(context: models.Context) -> Mapping[str, InstanceGroup]:
   if not apis.is_enabled(context.project_id, 'compute'):
     return groups
   gce_api = apis.get_api('compute', 'v1', context.project_id)
-  requests = [
-      gce_api.instanceGroups().list(project=context.project_id, zone=zone)
-      for zone in get_gce_zones(context.project_id)
-  ]
+  request = gce_api.instanceGroups().aggregatedList(project=context.project_id,
+                                                    returnPartialSuccess=True)
   logging.info('listing gce instance groups of project %s', context.project_id)
-  items = apis_utils.multi_list_all(
-      requests=requests,
-      next_function=gce_api.instanceGroups().list_next,
-  )
-  for i in items:
-    result = re.match(
-        r'https://www.googleapis.com/compute/v1/projects/[^/]+/zones/([^/]+)',
-        i['selfLink'],
-    )
-    if not result:
-      logging.error("instance %s selfLink didn't match regexp: %s", i['id'],
-                    i['selfLink'])
-      continue
-    zone = result.group(1)
-    labels = i.get('labels', {})
-    resource = i.get('name', '')
-    if not context.match_project_resource(
-        location=zone, labels=labels, resource=resource):
-      continue
-    instance_group = InstanceGroup(context.project_id, i)
-    groups[instance_group.full_path] = instance_group
+  while request:  # Continue as long as there are pages
+    response = request.execute(num_retries=config.API_RETRIES)
+    groups_by_zones = response.get('items', {})
+    for _, data_ in groups_by_zones.items():
+      if 'instanceGroups' not in data_:
+        continue
+      for group in data_['instanceGroups']:
+        result = re.match(
+            r'https://www.googleapis.com/compute/v1/projects/[^/]+/zones/([^/]+)',
+            group['selfLink'],
+        )
+        if not result:
+          logging.error(
+              "instance %s selfLink didn't match regexp: %s",
+              group['id'],
+              group['selfLink'],
+          )
+          continue
+        zone = result.group(1)
+        labels = group.get('labels', {})
+        resource = group.get('name', '')
+        if not context.match_project_resource(
+            location=zone, labels=labels, resource=resource):
+          continue
+        instance_group = InstanceGroup(context.project_id, resource_data=group)
+        groups[instance_group.full_path] = instance_group
+    request = gce_api.instanceGroups().aggregatedList_next(
+        previous_request=request, previous_response=response)
   return groups
 
 
@@ -793,34 +805,38 @@ def get_managed_instance_groups(
   if not apis.is_enabled(context.project_id, 'compute'):
     return migs
   gce_api = apis.get_api('compute', 'v1', context.project_id)
-  requests = [
-      gce_api.instanceGroupManagers().list(project=context.project_id,
-                                           zone=zone)
-      for zone in get_gce_zones(context.project_id)
-  ]
+  request = gce_api.instanceGroupManagers().aggregatedList(
+      project=context.project_id, returnPartialSuccess=True)
   logging.info('listing zonal managed instance groups of project %s',
                context.project_id)
-  items = apis_utils.multi_list_all(
-      requests=requests,
-      next_function=gce_api.instanceGroupManagers().list_next,
-  )
-  for i in items:
-    result = re.match(
-        r'https://www.googleapis.com/compute/v1/projects/[^/]+/(?:regions|zones)/([^/]+)/',
-        i['selfLink'],
-    )
-    if not result:
-      logging.error("mig %s selfLink didn't match regexp: %s", i['name'],
-                    i['selfLink'])
-      continue
-    location = result.group(1)
-    labels = i.get('labels', {})
-    resource = i.get('name', '')
-    if not context.match_project_resource(
-        location=location, labels=labels, resource=resource):
-      continue
-    migs[i['id']] = ManagedInstanceGroup(project_id=context.project_id,
-                                         resource_data=i)
+  while request:  # Continue as long as there are pages
+    response = request.execute(num_retries=config.API_RETRIES)
+    migs_by_zones = response.get('items', {})
+    for _, data_ in migs_by_zones.items():
+      if 'instanceGroupManagers' not in data_:
+        continue
+      for mig in data_['instanceGroupManagers']:
+        result = re.match(
+            r'https://www.googleapis.com/compute/v1/projects/[^/]+/(?:regions|zones)/([^/]+)/',
+            mig['selfLink'],
+        )
+        if not result:
+          logging.error(
+              "mig %s selfLink didn't match regexp: %s",
+              mig['name'],
+              mig['selfLink'],
+          )
+          continue
+        location = result.group(1)
+        labels = mig.get('labels', {})
+        resource = mig.get('name', '')
+        if not context.match_project_resource(
+            location=location, labels=labels, resource=resource):
+          continue
+        migs[mig['id']] = ManagedInstanceGroup(project_id=context.project_id,
+                                               resource_data=mig)
+    request = gce_api.instanceGroupManagers().aggregatedList_next(
+        previous_request=request, previous_response=response)
   return migs
 
 

@@ -17,6 +17,7 @@
 
 import ipaddress
 import re
+import unittest
 from unittest import mock
 
 import pytest
@@ -42,7 +43,7 @@ DUMMY_DEFAULT_NAME = 'default'
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
-class TestCluster:
+class TestCluster(unittest.TestCase):
   """Test gke.Cluster."""
 
   def test_get_clusters_by_label(self):

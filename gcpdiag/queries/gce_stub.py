@@ -70,6 +70,21 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
     else:
       raise RuntimeError(f"can't list for mock state {self.mock_state}")
 
+  def aggregatedList(self, project, returnPartialSuccess=True):
+    return apis_stub.RestCallStub(project,
+                                  f'compute-{self.mock_state}-aggregated')
+
+  def aggregatedList_next(self, previous_request, previous_response):
+    if isinstance(previous_response,
+                  dict) and previous_response.get('nextPageToken'):
+      return apis_stub.RestCallStub(
+          project_id=previous_request.project_id,
+          json_basename=previous_request.json_basename,
+          page=previous_request.page + 1,
+      )
+    else:
+      return None
+
   def list_next(self, previous_request, previous_response):
     if isinstance(previous_response,
                   dict) and previous_response.get('nextPageToken'):
@@ -241,6 +256,20 @@ class InstanceGroupManagersApiStub(ComputeEngineApiStub):
     return apis_stub.RestCallStub(project,
                                   f'compute-migs-{zone}',
                                   default='compute-migs-empty')
+
+  def aggregatedList(self, project, returnPartialSuccess=True):
+    return apis_stub.RestCallStub(project, 'compute-migs-aggregated')
+
+  def aggregatedList_next(self, previous_request, previous_response):
+    if isinstance(previous_response,
+                  dict) and previous_response.get('nextPageToken'):
+      return apis_stub.RestCallStub(
+          project_id=previous_request.project_id,
+          json_basename=previous_request.json_basename,
+          page=previous_request.page + 1,
+      )
+    else:
+      return None
 
 
 class RegionInstanceGroupManagersApiStub(ComputeEngineApiStub):

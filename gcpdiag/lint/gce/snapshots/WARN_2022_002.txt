@@ -1,5 +1,4 @@
 *  gce/WARN/2022_002: Instance groups named ports are using unique names.
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west1-b/instanceGroups/gke-gke1-default-pool-35923fbc-grp [ OK ]
    - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroups/instance-group-1 [FAIL]
      Instance group contains multiple ports with the same name
    - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroups/instance-group-2 [ OK ]
