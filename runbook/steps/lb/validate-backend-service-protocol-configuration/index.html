@@ -21,12 +21,12 @@
 ">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://gcpdiag.dev/runbook/steps/lb/validate-backend-service-protocol-configuration/"><meta property="og:image" content="https://gcpdiag.dev/images/website-preview.jpg"><meta property="article:section" content="runbook">
-<meta property="article:modified_time" content="2025-01-31T11:31:14+00:00"><meta property="og:site_name" content="gcpdiag">
+<meta property="article:modified_time" content="2025-02-12T08:49:19-08:00"><meta property="og:site_name" content="gcpdiag">
 <meta itemprop=name content="lb/Validate Backend Service Protocol Configuration">
 <meta itemprop=description content="Checks if health check uses the same protocol as backend service for serving traffic.
 ">
-<meta itemprop=dateModified content="2025-01-31T11:31:14+00:00">
-<meta itemprop=wordCount content="117"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
+<meta itemprop=dateModified content="2025-02-12T08:49:19-08:00">
+<meta itemprop=wordCount content="138"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta itemprop=keywords content><meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta name=twitter:title content="lb/Validate Backend Service Protocol Configuration">
@@ -997,6 +997,7 @@
 <li><a href=#description>Description</a></li>
 <li><a href=#success-reason>Success Reason</a></li>
 <li><a href=#uncertain-reason>Uncertain Reason</a></li>
+<li><a href=#uncertain-remediation>Uncertain Remediation</a></li>
 </ul>
 </li>
 </ul>
@@ -1021,8 +1022,10 @@
 <h3 id=uncertain-reason>Uncertain Reason</h3>
 <p>The load balancer uses {serving_protocol} for traffic but {hc_protocol} for health checks on backend service {bs_resource}. If not intended, this protocol mismatch can lead to incorrect health assessments, potentially causing traffic to be sent to failing backends or triggering unnecessary failovers.</p>
 <p><strong>Important:</strong> Health checks using {hc_protocol} might be passing while the application serving {serving_protocol} traffic is failing because the success criteria for the two protocols can differ. More details on the health check success criteria can be found in <a href=https://cloud.google.com/load-balancing/docs/health-check-concepts#criteria-protocol-http>docs</a>.</p>
+<h3 id=uncertain-remediation>Uncertain Remediation</h3>
+<p>Verify that the health check and serving protocol are correctly configured to match the protocol used by your application.</p>
 <div class="text-muted mt-5 pt-3 border-top">
-Last modified January 31, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/9e95392f117610a4314e5c718f3730e62eca349a>Update style for lb/unhealthy_backends runbook (9e95392f1)</a>
+Last modified February 12, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/871fbcc46eb878fe8abaef54cb3663a6563abeaf>Merge "Add remediation for mismatch protocol check" -- Branch commit log -- commit 267523190c431391c968ef4572e173236a6f00e7 Author: Natalia Kaczor &lt;nataliakaczor@google.com> Date: 2025-02-12T15:28:31Z (871fbcc46)</a>
 </div>
 </div>
 </main>
