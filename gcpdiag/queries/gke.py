@@ -397,6 +397,14 @@ class Cluster(models.Resource):
     return self._resource_data['nodePools']
 
   @property
+  def get_network_string(self) -> str:
+    if 'networkConfig' not in self._resource_data:
+      return ''
+    if 'network' not in self._resource_data['networkConfig']:
+      return ''
+    return self._resource_data['networkConfig']['network']
+
+  @property
   def is_private(self) -> bool:
     if not 'privateClusterConfig' in self._resource_data:
       return False

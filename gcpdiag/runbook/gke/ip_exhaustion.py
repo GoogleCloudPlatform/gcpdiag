@@ -244,10 +244,17 @@ class PodIpRangeExhaustion(runbook.Step):
                       reason=op.prep_msg(op.FAILURE_REASON, cluster_name=name),
                       remediation=op.prep_msg(op.FAILURE_REMEDIATION))
       else:
+        location = op.get(flags.LOCATION)
         op.info('Cluster is a Standard cluster')
         op.add_failed(cluster,
                       reason=op.prep_msg(op.FAILURE_REASON, cluster_name=name),
-                      remediation=op.prep_msg(op.FAILURE_REMEDIATION_ALT1))
+                      remediation=op.prep_msg(
+                          op.FAILURE_REMEDIATION_ALT1,
+                          cluster_name=name,
+                          project_name=project,
+                          subnet_name=node_subnet,
+                          region=location,
+                          network=cluster.get_network_string))
     else:
       op.add_ok(
           cluster,
