@@ -21,11 +21,11 @@
 ">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://gcpdiag.dev/runbook/steps/lb/analyze-unknown-health-check-log/"><meta property="og:image" content="https://gcpdiag.dev/images/website-preview.jpg"><meta property="article:section" content="runbook">
-<meta property="article:modified_time" content="2025-01-31T11:31:14+00:00"><meta property="og:site_name" content="gcpdiag">
+<meta property="article:modified_time" content="2025-02-14T17:20:04+00:00"><meta property="og:site_name" content="gcpdiag">
 <meta itemprop=name content="lb/Analyze Unknown Health Check Log">
 <meta itemprop=description content="Analyze logs with detailed health state UNKNOWN.
 ">
-<meta itemprop=dateModified content="2025-01-31T11:31:14+00:00">
+<meta itemprop=dateModified content="2025-02-14T17:20:04+00:00">
 <meta itemprop=wordCount content="189"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta itemprop=keywords content><meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="https://gcpdiag.dev/images/website-preview.jpg">
@@ -995,8 +995,8 @@
 <li>
 <ul>
 <li><a href=#description>Description</a></li>
-<li><a href=#uncertain-reason>Uncertain Reason</a></li>
-<li><a href=#uncertain-remediation>Uncertain Remediation</a></li>
+<li><a href=#failure-reason>Failure Reason</a></li>
+<li><a href=#failure-remediation>Failure Remediation</a></li>
 </ul>
 </li>
 </ul>
@@ -1016,13 +1016,13 @@
 <strong>Step Type</strong>: AUTOMATED STEP</p>
 <h3 id=description>Description</h3>
 <p>None</p>
-<h3 id=uncertain-reason>Uncertain Reason</h3>
+<h3 id=failure-reason>Failure Reason</h3>
 <p>Health check logs for backend service {bs_url} show entries with the detailed health state UNKNOWN. This indicates that the health checking system is aware of the instance, but its health status is undetermined. This situation can arise when a new endpoint is unresponsive to health checks and there&rsquo;s a substantial configured timeout period (approximately 25 seconds or longer). In such cases, the &ldquo;UNKNOWN&rdquo; state might be published while the health checker waits for the timeout to expire. Additionally, &ldquo;UNKNOWN&rdquo; could also be published during outage scenarios if the health checkers themselves are crashing. In this critical situation, endpoints that previously had known health states could transition to &ldquo;UNKNOWN&rdquo;.</p>
-<h3 id=uncertain-remediation>Uncertain Remediation</h3>
+<h3 id=failure-remediation>Failure Remediation</h3>
 <p>For new endpoints: Consider reducing the timeout period for health checks if appropriate, especially during initial setup or testing phases.</p>
 <p>For potential Google Cloud outages: Use Personalized Service Health to check for any ongoing incidents that might be affecting your project or the specific service in question. If an incident is identified, follow any recommended mitigation steps or wait for the issue to be resolved by Google Cloud.</p>
 <div class="text-muted mt-5 pt-3 border-top">
-Last modified January 31, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/9e95392f117610a4314e5c718f3730e62eca349a>Update style for lb/unhealthy_backends runbook (9e95392f1)</a>
+Last modified February 14, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/27cb93b6134dc5f5c8e9806ed6fdd3e3e1a185b6>Change the steps status for unhealthy backend logs to FAILURE (27cb93b61)</a>
 </div>
 </div>
 </main>

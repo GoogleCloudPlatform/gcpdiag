@@ -21,11 +21,11 @@
 ">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://gcpdiag.dev/runbook/steps/lb/analyze-timeout-health-check-log/"><meta property="og:image" content="https://gcpdiag.dev/images/website-preview.jpg"><meta property="article:section" content="runbook">
-<meta property="article:modified_time" content="2025-01-31T11:31:14+00:00"><meta property="og:site_name" content="gcpdiag">
+<meta property="article:modified_time" content="2025-02-14T17:20:04+00:00"><meta property="og:site_name" content="gcpdiag">
 <meta itemprop=name content="lb/Analyze Timeout Health Check Log">
 <meta itemprop=description content="Analyzes logs with the detailed health check state TIMEOUT
 ">
-<meta itemprop=dateModified content="2025-01-31T11:31:14+00:00">
+<meta itemprop=dateModified content="2025-02-14T17:20:04+00:00">
 <meta itemprop=wordCount content="147"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta itemprop=keywords content><meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="https://gcpdiag.dev/images/website-preview.jpg">
@@ -995,8 +995,8 @@
 <li>
 <ul>
 <li><a href=#description>Description</a></li>
-<li><a href=#uncertain-reason>Uncertain Reason</a></li>
-<li><a href=#uncertain-remediation>Uncertain Remediation</a></li>
+<li><a href=#failure-reason>Failure Reason</a></li>
+<li><a href=#failure-remediation>Failure Remediation</a></li>
 </ul>
 </li>
 </ul>
@@ -1016,7 +1016,7 @@
 <strong>Step Type</strong>: AUTOMATED STEP</p>
 <h3 id=description>Description</h3>
 <p>None</p>
-<h3 id=uncertain-reason>Uncertain Reason</h3>
+<h3 id=failure-reason>Failure Reason</h3>
 <p>Health check logs for backend service {bs_url} show the detailed health state &ldquo;TIMEOUT&rdquo;.</p>
 <p>Responses received from backends: {probe_results_text_str}</p>
 <p>The backend might be timing out because:</p>
@@ -1032,7 +1032,7 @@
 </li>
 </ol>
 <p>The following responses were received from your backends: {probe_results_text_str}</p>
-<h3 id=uncertain-remediation>Uncertain Remediation</h3>
+<h3 id=failure-remediation>Failure Remediation</h3>
 <ol>
 <li>
 <p>Make sure that the backend service timeout (current value: {bs_timeout_sec}s) and health check timeout (current value: {hc_timeout_sec}s) are appropriately configured to accommodate your application&rsquo;s expected response time.</p>
@@ -1045,7 +1045,7 @@
 </li>
 </ol>
 <div class="text-muted mt-5 pt-3 border-top">
-Last modified January 31, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/9e95392f117610a4314e5c718f3730e62eca349a>Update style for lb/unhealthy_backends runbook (9e95392f1)</a>
+Last modified February 14, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/27cb93b6134dc5f5c8e9806ed6fdd3e3e1a185b6>Change the steps status for unhealthy backend logs to FAILURE (27cb93b61)</a>
 </div>
 </div>
 </main>

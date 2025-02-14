@@ -21,11 +21,11 @@
 ">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://gcpdiag.dev/runbook/steps/lb/analyze-unhealthy-health-check-log/"><meta property="og:image" content="https://gcpdiag.dev/images/website-preview.jpg"><meta property="article:section" content="runbook">
-<meta property="article:modified_time" content="2025-01-31T11:31:14+00:00"><meta property="og:site_name" content="gcpdiag">
+<meta property="article:modified_time" content="2025-02-14T17:20:04+00:00"><meta property="og:site_name" content="gcpdiag">
 <meta itemprop=name content="lb/Analyze Unhealthy Health Check Log">
 <meta itemprop=description content="Analyzes logs with detailed health state UNHEALTHY.
 ">
-<meta itemprop=dateModified content="2025-01-31T11:31:14+00:00">
+<meta itemprop=dateModified content="2025-02-14T17:20:04+00:00">
 <meta itemprop=wordCount content="81"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta itemprop=keywords content><meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="https://gcpdiag.dev/images/website-preview.jpg">
@@ -995,8 +995,8 @@
 <li>
 <ul>
 <li><a href=#description>Description</a></li>
-<li><a href=#uncertain-reason>Uncertain Reason</a></li>
-<li><a href=#uncertain-remediation>Uncertain Remediation</a></li>
+<li><a href=#failure-reason>Failure Reason</a></li>
+<li><a href=#failure-remediation>Failure Remediation</a></li>
 </ul>
 </li>
 </ul>
@@ -1016,15 +1016,15 @@
 <strong>Step Type</strong>: AUTOMATED STEP</p>
 <h3 id=description>Description</h3>
 <p>None</p>
-<h3 id=uncertain-reason>Uncertain Reason</h3>
+<h3 id=failure-reason>Failure Reason</h3>
 <p>Health check logs for backend service {bs_url} indicate a detailed health state of UNHEALTHY. The backend instances are reachable but are not passing the health check requirements.</p>
 <p>Responses received from backends: {probe_results_text_str}</p>
-<h3 id=uncertain-remediation>Uncertain Remediation</h3>
+<h3 id=failure-remediation>Failure Remediation</h3>
 <p>{success_criteria}</p>
 <p>Please investigate the configuration of your application to ensure it aligns with these health check expectations.</p>
 <p>If you intend to check a different endpoint or expect a different response, adjust the health check settings accordingly.</p>
 <div class="text-muted mt-5 pt-3 border-top">
-Last modified January 31, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/9e95392f117610a4314e5c718f3730e62eca349a>Update style for lb/unhealthy_backends runbook (9e95392f1)</a>
+Last modified February 14, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/27cb93b6134dc5f5c8e9806ed6fdd3e3e1a185b6>Change the steps status for unhealthy backend logs to FAILURE (27cb93b61)</a>
 </div>
 </div>
 </main>
