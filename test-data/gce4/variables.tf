@@ -4,7 +4,7 @@ variable "project_id" {
 }
 variable "billing_account_id" {}
 
-variable "org_id" {}
+variable "org_id" { default = "" }
 variable "folder_id" { default = "" }
 
 variable "roles" {

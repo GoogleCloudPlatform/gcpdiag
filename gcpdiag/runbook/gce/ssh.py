@@ -291,6 +291,7 @@ class SshStart(runbook.StartStep):
 
   def execute(self):
     """Starting SSH diagnostics"""
+
     project = crm.get_project(op.get(flags.PROJECT_ID))
     try:
       vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
