@@ -74,31 +74,31 @@ Firewall rules are correctly configured and are not blocking health check probes
 Check the logs and monitoring metrics for the instances associated with backend service {bs_url}, focusing on recent timeframes to see if there were any errors, crashes, or resource exhaustion issues. You can also inspect any application-specific logs for errors or warnings.
 {% endblock past_hc_success_uncertain_remediation %}
 
-{% block unknown_hc_state_log_uncertain_reason %}
+{% block unknown_hc_state_log_failure_reason %}
 Health check logs for backend service {bs_url} show entries with the detailed health state UNKNOWN. This indicates that the health checking system is aware of the instance, but its health status is undetermined. This situation can arise when a new endpoint is unresponsive to health checks and there's a substantial configured timeout period (approximately 25 seconds or longer). In such cases, the "UNKNOWN" state might be published while the health checker waits for the timeout to expire. Additionally, "UNKNOWN" could also be published during outage scenarios if the health checkers themselves are crashing. In this critical situation, endpoints that previously had known health states could transition to "UNKNOWN".
-{% endblock unknown_hc_state_log_uncertain_reason %}
+{% endblock unknown_hc_state_log_failure_reason %}
 
-{% block unknown_hc_state_log_uncertain_remediation %}
+{% block unknown_hc_state_log_failure_remediation %}
 For new endpoints: Consider reducing the timeout period for health checks if appropriate, especially during initial setup or testing phases.
 
 For potential Google Cloud outages: Use Personalized Service Health to check for any ongoing incidents that might be affecting your project or the specific service in question. If an incident is identified, follow any recommended mitigation steps or wait for the issue to be resolved by Google Cloud.
-{% endblock unknown_hc_state_log_uncertain_remediation %}
+{% endblock unknown_hc_state_log_failure_remediation %}
 
-{% block unhealthy_hc_state_log_uncertain_reason %}
+{% block unhealthy_hc_state_log_failure_reason %}
 Health check logs for backend service {bs_url} indicate a detailed health state of UNHEALTHY. The backend instances are reachable but are not passing the health check requirements.
 
 Responses received from backends: {probe_results_text_str}
-{% endblock unhealthy_hc_state_log_uncertain_reason %}
+{% endblock unhealthy_hc_state_log_failure_reason %}
 
-{% block unhealthy_hc_state_log_uncertain_remediation %}
+{% block unhealthy_hc_state_log_failure_remediation %}
 {success_criteria}
 
 Please investigate the configuration of your application to ensure it aligns with these health check expectations.
 
 If you intend to check a different endpoint or expect a different response, adjust the health check settings accordingly.
-{% endblock unhealthy_hc_state_log_uncertain_remediation %}
+{% endblock unhealthy_hc_state_log_failure_remediation %}
 
-{% block timeout_hc_state_log_uncertain_reason %}
+{% block timeout_hc_state_log_failure_reason %}
 Health check logs for backend service {bs_url} show the detailed health state "TIMEOUT".
 
 Responses received from backends: {probe_results_text_str}
@@ -112,12 +112,12 @@ The backend might be timing out because:
 3. Connection to the endpoint cannot be established - the backend instance has crashed or is otherwise unresponsive.
 
 The following responses were received from your backends: {probe_results_text_str}
-{% endblock timeout_hc_state_log_uncertain_reason %}
+{% endblock timeout_hc_state_log_failure_reason %}
 
-{% block timeout_hc_state_log_uncertain_remediation %}
+{% block timeout_hc_state_log_failure_remediation %}
 1. Make sure that the backend service timeout (current value: {bs_timeout_sec}s) and health check timeout (current value: {hc_timeout_sec}s) are appropriately configured to accommodate your application's expected response time.
 
 2. Investigate your application's configuration to ensure it is correctly handling health check probe requests. {success_criteria}
 
 3. Check if firewall rules or iptables configurations are blocking the health check probes from reaching the backend instances, resulting in timeouts.
-{% endblock timeout_hc_state_log_uncertain_remediation %}
+{% endblock timeout_hc_state_log_failure_remediation %}

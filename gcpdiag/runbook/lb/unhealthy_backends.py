@@ -739,11 +739,11 @@ class AnalyzeTimeoutHealthCheckLog(runbook.Step):
 
     op.add_uncertain(
         backend_service,
-        reason=op.prep_msg(op.UNCERTAIN_REASON,
+        reason=op.prep_msg(op.FAILURE_REASON,
                            probe_results_text_str=probe_results_text_str,
                            bs_url=backend_service.full_path),
         remediation=op.prep_msg(
-            op.UNCERTAIN_REMEDIATION,
+            op.FAILURE_REMEDIATION,
             success_criteria=success_criteria,
             bs_timeout_sec=backend_service.timeout_sec or 30,
             hc_timeout_sec=health_check.timeout_sec,
@@ -804,10 +804,10 @@ class AnalyzeUnhealthyHealthCheckLog(runbook.Step):
 
     op.add_uncertain(
         backend_service,
-        reason=op.prep_msg(op.UNCERTAIN_REASON,
+        reason=op.prep_msg(op.FAILURE_REASON,
                            probe_results_text_str=probe_results_text_str,
                            bs_url=backend_service.full_path),
-        remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION,
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION,
                                 success_criteria=success_criteria),
     )
 
@@ -835,9 +835,8 @@ class AnalyzeUnknownHealthCheckLog(runbook.Step):
     )
     op.add_uncertain(
         backend_service,
-        reason=op.prep_msg(op.UNCERTAIN_REASON,
-                           bs_url=backend_service.full_path),
-        remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION),
+        reason=op.prep_msg(op.FAILURE_REASON, bs_url=backend_service.full_path),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
     )
 
 

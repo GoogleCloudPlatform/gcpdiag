@@ -173,16 +173,10 @@ json-dumps/iam-roles-custom.json:
 		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/iam-roles-get.json:
- 	$(CURL) -fsS \
- 		'https://iam.googleapis.com/v1/roles/container.nodeServiceAgent' \
- 		| $(SED_SUBST_FAKE) \
-		| jq '{"roles": [.]}' >$@.tmp
 	$(CURL) -fsS \
-		'https://iam.googleapis.com/v1/roles/container.defaultNodeServiceAccount' \
+		'https://iam.googleapis.com/v1/roles/container.nodeServiceAgent' \
 		| $(SED_SUBST_FAKE) \
-		| jq '{"roles": [.]}' >>$@.tmp
-	jq -s '. | {"roles": map(.)}' $@.tmp > $@
-	rm $@.tmp
+		| jq '{"roles": [.]}' >$@
 
 json-dumps/iam-service-accounts.json:
 	$(CURL) -fsS \
