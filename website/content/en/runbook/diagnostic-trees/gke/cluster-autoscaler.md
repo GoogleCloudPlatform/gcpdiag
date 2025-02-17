@@ -50,8 +50,8 @@ gcpdiag runbook gke/cluster-autoscaler \
 | Name | Required | Default | Type | Help |
 |------|----------|---------|------|------|
 | `project_id` | True | None | str | The ID of the project hosting the GKE Cluster |
-| `name` | False | None | str | (Optional) The name of the GKE cluster, to limit search only for this cluster |
-| `location` | False | None | str | The zone or region of the GKE cluster |
+| `name` | True | None | str | The name of the GKE cluster, to limit search only for this cluster |
+| `location` | True | None | str | The zone or region of the GKE cluster |
 
 Get help on available commands
 

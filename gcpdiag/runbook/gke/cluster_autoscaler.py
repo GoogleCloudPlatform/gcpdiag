@@ -19,6 +19,7 @@ from gcpdiag import runbook
 from gcpdiag.queries import apis, crm, gke, logs
 from gcpdiag.runbook import op
 from gcpdiag.runbook.gke import flags
+from gcpdiag.utils import GcpApiError
 
 
 def local_log_search(cluster_name, cluster_location, error_message):
@@ -35,21 +36,9 @@ def local_log_search(cluster_name, cluster_location, error_message):
   filter_list = [
       'log_id("container.googleapis.com/cluster-autoscaler-visibility")',
       'resource.type="k8s_cluster"',
+      f'resource.labels.location="{cluster_location}"',
+      f'resource.labels.cluster_name="{cluster_name}"', f'{error_message}'
   ]
-
-  if cluster_name and cluster_location:
-    filter_list.append(f'resource.labels.location="{cluster_location}"')
-    filter_list.append(f'resource.labels.cluster_name="{cluster_name}"')
-    filter_list.append(f'{error_message}')
-
-  elif cluster_name:
-    filter_list.append(f'resource.labels.cluster_name="{cluster_name}"')
-    filter_list.append(f'{error_message}')
-  elif cluster_location:
-    filter_list.append(f'resource.labels.location="{cluster_location}"')
-    filter_list.append(f'{error_message}')
-  else:
-    filter_list.append(f'{error_message}')
 
   filter_str = '\n'.join(filter_list)
 
@@ -100,14 +89,14 @@ class ClusterAutoscaler(runbook.DiagnosticTree):
           'type':
               str,
           'help':
-              '(Optional) The name of the GKE cluster, to limit search only for this cluster',
+              'The name of the GKE cluster, to limit search only for this cluster',
           'required':
-              False
+              True
       },
       flags.LOCATION: {
           'type': str,
           'help': 'The zone or region of the GKE cluster',
-          'required': False
+          'required': True
       }
   }
 
@@ -160,10 +149,7 @@ class ClusterAutoscalerStart(runbook.StartStep):
 
   Check
   - if logging API is enabled
-  - if there are GKE clusters in the project
-  - if a cluster name is provided, verify if that cluster exists in the project
-  - if a location is provided, verify there are clusters in that location
-  - if both a location and a name are provided, verify that the cluster exists at that location
+  - verify that the cluster exists at that location
   """
 
   def execute(self):
@@ -178,59 +164,23 @@ class ClusterAutoscalerStart(runbook.StartStep):
                      reason=('Logging disabled in project {}').format(project))
       return
 
-    # check if there are clusters in the project
-    clusters = gke.get_clusters(op.context)
-    if not clusters:
+    # verify if the provided cluster at location is present
+    project = crm.get_project(op.get(flags.PROJECT_ID))
+    try:
+      cluster = gke.get_cluster(op.get(flags.PROJECT_ID),
+                                cluster_id=op.get(flags.NAME),
+                                location=op.get(flags.LOCATION))
+    except GcpApiError:
       op.add_skipped(
-          project_path,
-          reason=('No GKE clusters found in project {}').format(project))
-      return
-
-    # following checks are necessary, depending on what input is provided:
-    # - no input, get all clusters available
-    # - just cluster name is provided, check if there's a cluster with that name
-    # - just location is provided, check if there are clusters at that location
-    # - cluster name and location are provided, check if there's that cluster at that location
-    cluster_name = op.get(flags.NAME)
-    cluster_location = op.get(flags.LOCATION)
-    found_cluster = False
-    found_cluster_with_location = False
-    found_clusters_at_location = False
-    if cluster_name and cluster_location:
-      for cluster in clusters.values():
-        if cluster_name == str(cluster).rsplit('/', maxsplit=1)[-1] \
-          and cluster_location == str(cluster).split('/')[-3]:
-          found_cluster_with_location = True
-          break
-    elif cluster_name:
-      for cluster in clusters.values():
-        if cluster_name == str(cluster).rsplit('/', maxsplit=1)[-1]:
-          found_cluster = True
-          break
-    elif cluster_location:
-      for cluster in clusters.values():
-        if cluster_location == str(cluster).split('/')[-3]:
-          found_clusters_at_location = True
-          break
-
-    if not found_cluster_with_location and cluster_location and cluster_name:
-      op.add_skipped(
-          project_path,
-          reason=('Cluster with the name {} in {} does not exist in project {}'
-                 ).format(cluster_name, cluster_location, project))
-    # next check includes found_cluster_with_location because we found a cluster at a particular
-    # location thus we cannot skip these checks
-    elif not found_cluster and not found_cluster_with_location and cluster_name:
-      op.add_skipped(
-          project_path,
-          reason=(
-              'Cluster with the name {} does not exist in project {}').format(
-                  cluster_name, project))
-    elif not found_clusters_at_location and not found_cluster_with_location and cluster_location:
-      op.add_skipped(
-          project_path,
-          reason=('No clusters found at location {} in project {}').format(
-              cluster_location, project))
+          project,
+          reason=('Cluster {} does not exist in {} for project {}').format(
+              op.get(flags.NAME), op.get(flags.LOCATION),
+              op.get(flags.PROJECT_ID)))
+    else:
+      op.add_ok(project,
+                reason=('Cluster {} found in {} for project {}').format(
+                    cluster.name, op.get(flags.LOCATION),
+                    op.get(flags.PROJECT_ID)))
 
 
 class CaOutOfResources(runbook.Step):
