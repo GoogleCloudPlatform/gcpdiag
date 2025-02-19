@@ -21,7 +21,7 @@ This step steps starts the NAT IP Allocation Failed Check debugging process by
 
 ### Skipped Reason
 
-Unable to fetch the network {netwrok} confirm it exists in the project {project_id}.
+Unable to fetch the network {network} confirm it exists in the project {project_id}.
 
 
 ### Skipped Reason [Alternative 2]

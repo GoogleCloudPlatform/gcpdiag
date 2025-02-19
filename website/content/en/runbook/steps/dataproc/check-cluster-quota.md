@@ -26,7 +26,7 @@ Solution: Request additional quota [1] from the Google Cloud console or use anot
 
 ### Success Reason
 
-No issues with unsufficient quota in project {project_id} has been identified for the ivestigated cluster {cluster_name}, please double-check if you have provided
+No issues with insufficient quota in project {project_id} has been identified for the ivestigated cluster {cluster_name}, please double-check if you have provided
 the right cluster_name parameter if the cluster you are trying to create doesn't appear in Dataproc UI.
 
 

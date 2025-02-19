@@ -52,7 +52,7 @@ class MetaStep(type):
     return '.'.join([cls.__module__, cls.__name__])
 
   def __new__(mcs, name, bases, namespace):
-    """Register all steps into StepRegistry exluding base classes"""
+    """Register all steps into StepRegistry excluding base classes"""
     new_class = super().__new__(mcs, name, bases, namespace)
     if name not in ('Step', 'Gateway', 'LintWrapper', 'StartStep', 'EndStep',
                     'CompositeStep') and bases[0] == Step:
@@ -942,7 +942,7 @@ class DiagnosticEngine:
     """Executes a list of steps present in a bundle
 
     Args:
-      bundle: bundle to be excuted
+      bundle: bundle to be executed
     """
     operator = op.Operator(interface=self.interface)
     operator.set_parameters(bundle.parameter)

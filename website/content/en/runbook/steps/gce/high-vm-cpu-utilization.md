@@ -33,7 +33,7 @@ Additionally, use the Compute Engine observability metrics for an in-depth analy
 https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics
 https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization
 
-Alternatively, you can connect via serial console if SSH is unvailable to stop offending processes
+Alternatively, you can connect via serial console if SSH is unavailable to stop offending processes
 https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console.
 
 ### Success Reason

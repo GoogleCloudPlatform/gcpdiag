@@ -42,7 +42,7 @@ class HumanTask(runbook.Step):
     super().__init__(step_type=step_type, uuid=uuid, parent=parent)
 
   def execute(self):
-    """Human task: Follow the guide below and confirm if issue is occuring or not."""
+    """Human task: Follow the guide below and confirm if issue is occurring or not."""
 
     instructions = self.instructions or op.prep_msg(op.INSTRUCTIONS_MESSAGE)
     options = self.options or op.DEFAULT_INSTRUCTIONS_OPTIONS

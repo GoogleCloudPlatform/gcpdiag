@@ -74,7 +74,7 @@ class LogsQuery:
   def entries(self) -> Sequence:
     if not self.job.future:
       raise RuntimeError(
-          'log query wasn\'t executed. did you forget to call execute_queries()?'
+          'log query was\'t executed. did you forget to call execute_queries()?'
       )
     elif self.job.future.running():
       logging.info(

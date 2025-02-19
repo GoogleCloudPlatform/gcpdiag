@@ -27,7 +27,7 @@ push:
 	docker push $(IMAGE):$(VERSION)
 
 # We mark in Cloud Storage what version clients should use by default. This is
-# much faster than running 'docker pull' everytime (and also avoids the bad
+# much faster than running 'docker pull' every time (and also avoids the bad
 # practice of using generic docker image tags like 'default')
 update-default:
 	echo -e "DOCKER_IMAGE=$(IMAGE)\nDOCKER_IMAGE_VERSION=$(VERSION)\nWRAPPER_VERSION=$(WRAPPER_VERSION)" | gsutil -h "Content-Type: text/plain" -h "Cache-Control: max-age=300" cp - "gs://$(RELEASE_BUCKET_NAME)/$(OBJECT_NAME_RELEASE_VERSION)"

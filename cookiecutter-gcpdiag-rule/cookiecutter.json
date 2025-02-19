@@ -13,6 +13,6 @@
   "__prompts__": {
     "rule_name": "short description of the lint rule",
     "title": "a one-line description of the rule, that states the GOOD/EXPECTED state of the product/feature",
-    "description": "3-4 sentenses that explain the issue in greater details"
+    "description": "3-4 sentences that explain the issue in greater details"
   }
 }

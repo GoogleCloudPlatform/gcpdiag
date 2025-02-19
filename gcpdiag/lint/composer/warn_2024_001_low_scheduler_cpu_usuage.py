@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Cloud Composer Scheduler CPU usuage above 30%-35%.
+"""Cloud Composer Scheduler CPU usage above 30%-35%.
 
 Scheduler CPU usage is consistently below 30%-35%, Recommended to Reduce the
 number of schedulers and Reduce the CPU of schedulers for Optimize environment
@@ -70,6 +70,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   for env in envs:
     env_cluster_name = env.gke_cluster.split('/')[-1]
     if env_cluster_name in under_usuage_envs:
-      report.add_failed(env, 'Scheduler CPU usuage below 30-35%')
+      report.add_failed(env, 'Scheduler CPU usage below 30-35%')
     else:
       report.add_ok(env)

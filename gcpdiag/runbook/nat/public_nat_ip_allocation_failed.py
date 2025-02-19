@@ -302,7 +302,7 @@ class NatIpAllocationManualOnly(runbook.Step):
 
   If the NAT IP allocation is configured as MANUAL_ONLY:
     - Confirm if the number of NAT IP's required by the gateway is over 300
-    - Follow the NAT IP Quota Incrase Process
+    - Follow the NAT IP Quota Increase Process
   """
 
   template = 'nat_ip_allocation_failed::nat_allocation_manual_only'

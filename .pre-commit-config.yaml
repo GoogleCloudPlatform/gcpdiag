@@ -37,6 +37,12 @@ repos:
   - id: pyupgrade
     args: [--py36-plus]
 
+- repo: https://github.com/codespell-project/codespell
+  rev: v2.3.0
+  hooks:
+  - id: codespell
+    exclude: (^test-data/.*|^.*_test\.py$|^.*_unittest\.py$|^.*\.lock$|^pyinstaller/.*$|^.*\.spec$|^website/content/en/runbook/.*$|^gcpdiag/lint/snapshots/.*$|^gcpdiag/runbook/snapshots/.*$)
+
 - repo: https://github.com/pre-commit/mirrors-mypy
   rev: v1.2.0
   hooks:

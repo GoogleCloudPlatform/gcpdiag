@@ -56,7 +56,7 @@ Please don't hesitate to reach out to Google Cloud Support if issue is not resol
 
 ### Success Reason
 
-Instance disk "{disk_name}"'s IO latency is within the optimal limtis.
+Instance disk "{disk_name}"'s IO latency is within the optimal limits.
 
 
 

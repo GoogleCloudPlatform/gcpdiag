@@ -137,7 +137,7 @@ necessary firewall rules, external/internal IP configuration.
   }
 
   def build_tree(self):
-    """Desribes step relationships."""
+    """Describes step relationships."""
     # Instantiate your step classes
     quota_check = CheckClusterQuota()
     self.add_start(quota_check)

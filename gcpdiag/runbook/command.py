@@ -85,7 +85,7 @@ def expand_and_validate_path(arg) -> str:
           f'The {arg} folder must be located in your home directory')
   if not expanded_path or not os.path.exists(expanded_path):
     raise argparse.ArgumentTypeError(
-        f"Dirctory '{arg}' does not exist. Create one mkdir -p {arg} and try again"
+        f"Directory '{arg}' does not exist. Create one mkdir -p {arg} and try again"
     )
   return expanded_path
 
@@ -329,7 +329,7 @@ def run_and_get_report(argv=None, credentials: str = None) -> dict:
   # ^^^ If you add gcpdiag/runbook/[NEW-PRODUCT] directory, update also
   # pyinstaller/hook-gcpdiag.runbook.py and bin/precommit-required-files
 
-  # Initialize proper output formater
+  # Initialize proper output formatter
   output_ = _initialize_output(args.interface)
   dt_engine.interface.output = output_
   # Logging setup.

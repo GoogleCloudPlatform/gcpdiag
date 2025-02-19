@@ -1,6 +1,6 @@
-*  composer/WARN/2024_001: Cloud Composer Scheduler CPU usuage above 30%-35%.
+*  composer/WARN/2024_001: Cloud Composer Scheduler CPU usage above 30%-35%.
    - projects/gcpdiag-composer1-aaaa/locations/us-central1/environments/env2 [FAIL]
-     Scheduler CPU usuage below 30-35%
+     Scheduler CPU usage below 30-35%
    - projects/gcpdiag-composer1-aaaa/locations/us-central1/environments/env1 [ OK ]
 
    Scheduler CPU usage is consistently below 30%-35%, Recommended to Reduce the

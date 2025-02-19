@@ -36,5 +36,5 @@ class ExponentialRandomTimeoutRetryStrategy:
       yield apis_utils.get_nth_exponential_random_retry(
           n=i,
           random_pct=self._random_pct,
-          mutiplier=self._multiplier,
+          multiplier=self._multiplier,
           random_fn=self._random.generate)

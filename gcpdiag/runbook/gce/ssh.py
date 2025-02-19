@@ -451,7 +451,7 @@ class GcpSshPermissions(runbook.CompositeStep):
 
     Note: Only roles granted at the project level are checked. Permissions inherited from
     ancestor resources such as folder(s) or organization and groups are not checked."""
-    # Check user has permisssion to access the VM in the first place
+    # Check user has permission to access the VM in the first place
     if op.get(CLIENT) == SSH_IN_BROWSER:
       console_permission = iam_gs.IamPolicyCheck()
       console_permission.project = op.get(flags.PROJECT_ID)

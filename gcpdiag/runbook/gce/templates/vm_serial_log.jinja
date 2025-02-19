@@ -239,7 +239,7 @@ There are no logs to examine
 {% endblock sshd_skipped_reason %}
 
 {% block windows_bootup_step_name %}
-Verify Windows bootup process have succesfully completed.
+Verify Windows boot up process have successfully completed.
 {% endblock windows_bootup_step_name %}
 
 {% block windows_bootup_success_reason %}
@@ -278,7 +278,7 @@ Consulting the troubleshooting guide to investigate windows boot up issues. [1][
 Resources:
 [1] https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-windows
 
-Connecting to the Windows Special Administrative Console (SAC) to troubleshoot bootup issues.
+Connecting to the Windows Special Administrative Console (SAC) to troubleshoot boot up issues.
 [2] https://cloud.google.com/compute/docs/instances/connecting-to-sac
 
 Google Cloud Platform Support Scope
@@ -295,7 +295,7 @@ Found all logs since last boot of the VM.
 {% endblock serial_log_start_point_success_reason %}
 
 {% block serial_log_start_point_failure_reason %}
-No serial console logs availabe since the instance's startup due to auto purge,
+No serial console logs available since the instance's startup due to auto purge,
 hence the check might not have correct results.
 {% endblock serial_log_start_point_failure_reason %}
 
@@ -414,7 +414,7 @@ There are no logs to examine.
 {% endblock network_errors_skipped_reason %}
 
 {% block network_errors_uncertain_reason %}
-No success or failed logs to help deduce a conlusion on certainity of Network issues on the instance.
+No success or failed logs to help deduce a conlusion on certainty of Network issues on the instance.
 {% endblock network_errors_uncertain_reason %}
 
 {% block linux_fs_corruption_step_name %}
@@ -422,7 +422,7 @@ Verify any Filesystem corruption related errors in Serial console logs
 {% endblock linux_fs_corruption_step_name %}
 
 {% block linux_fs_corruption_failure_reason %}
-Possibe filesystem corruption detected.
+Possible filesystem corruption detected.
 
 The patterns used:
 'Corruption of in-memory data detected. Shutting down filesystem',
@@ -454,7 +454,7 @@ Examining SSHD authentication failures via serial logs.
 {% endblock sshd_auth_failure_step_name %}
 
 {% block sshd_auth_failure_failure_reason %}
-Dectected SSHD authentication issues in the GCE Instance, which is affecting SSH access.
+Detected SSHD authentication issues in the GCE Instance, which is affecting SSH access.
 Found the error "Authentication refused: bad ownership or modes for directory"
 {% endblock sshd_auth_failure_failure_reason %}
 

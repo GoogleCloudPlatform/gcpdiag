@@ -366,7 +366,7 @@ class Instance(models.Resource):
     return bool(value and value.upper() in POSITIVE_BOOL_VALUES)
 
   def is_metadata_enabled(self, metadata_name) -> bool:
-    """Use to check for common boolen metadata value"""
+    """Use to check for common boolean metadata value"""
     value = self.get_metadata(metadata_name)
     return bool(value and value.upper() in POSITIVE_BOOL_VALUES)
 

@@ -627,10 +627,10 @@ def get_node_by_instance_id(context: models.Context, instance_id: str) -> Node:
 
 @caching.cached_api_call
 def get_release_schedule() -> Dict:
-  """Extract the release schdule for gke clusters
+  """Extract the release schedule for gke clusters
 
   Returns:
-    A dictionary of release schdule.
+    A dictionary of release schedule.
   """
   page_url = 'https://cloud.google.com/kubernetes-engine/docs/release-schedule'
   release_data = {}
