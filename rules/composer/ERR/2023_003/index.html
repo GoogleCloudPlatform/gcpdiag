@@ -21,11 +21,11 @@
 ">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://gcpdiag.dev/rules/composer/ERR/2023_003/"><meta property="og:image" content="https://gcpdiag.dev/images/website-preview.jpg"><meta property="article:section" content="rules">
-<meta property="article:modified_time" content="2023-12-19T13:40:37+00:00"><meta property="og:site_name" content="gcpdiag">
+<meta property="article:modified_time" content="2025-02-19T09:37:25-08:00"><meta property="og:site_name" content="gcpdiag">
 <meta itemprop=name content="composer/ERR/2023_003">
 <meta itemprop=description content="Cloud Composer Dags are not getting timed out by the Dag Processor
 ">
-<meta itemprop=dateModified content="2023-12-19T13:40:37+00:00">
+<meta itemprop=dateModified content="2025-02-19T09:37:25-08:00">
 <meta itemprop=wordCount content="146"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta itemprop=keywords content><meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="https://gcpdiag.dev/images/website-preview.jpg">
@@ -1186,7 +1186,7 @@
 <p>Sometimes we can see dag processor logs with task time out error. &ldquo;Processor
 for/home/airflow/gcs/dags/exampledagname.py with PID 12345678 started at
 has timed out, killing it.&rdquo; In an ideal composer environment this
-error shouldnot occur as it is a cause of scheduler resource constarint and
+error shouldnot occur as it is a cause of scheduler resource constraint and
 complex DAGparsing implementation.</p>
 <h3 id=remediation>Remediation</h3>
 <p>Use the dag code <a href=https://airflow.apache.org/docs/apache-airflow/stable/best-practices.html#top-level-python-code>best practices</a> so that parse time get improved.
@@ -1196,7 +1196,7 @@ You may start reducing the schdeuler&rsquo;s work by increasing the <a href=http
 <h3 id=further-information>Further information</h3>
 <p>Please visit <a href=https://cloud.google.com/composer/docs/composer-2/troubleshooting-scheduling#inspect-dag-processor-logs>this page</a> for more information about DAG parsing inspection.</p>
 <div class="text-muted mt-5 pt-3 border-top">
-Last modified December 19, 2023: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/53b9bd3dbcb097e9b5cb1f1ad57f5c2990e91f7c>DAG timeout issue (53b9bd3db)</a>
+Last modified February 19, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/6b15df6639ee40e47ae127b116d6163f741cca61>Merge "pre-commit codespell check" -- Branch commit log -- commit 44c6be1c3de3049e1e4eba510b878ec09c29f397 Author: gcpdiag team &lt;noreply@google.com> Date: 2025-02-12T09:55:03Z (6b15df663)</a>
 </div>
 </div>
 </main>

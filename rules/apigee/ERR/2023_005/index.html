@@ -21,11 +21,11 @@
 ">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://gcpdiag.dev/rules/apigee/ERR/2023_005/"><meta property="og:image" content="https://gcpdiag.dev/images/website-preview.jpg"><meta property="article:section" content="rules">
-<meta property="article:modified_time" content="2023-10-05T22:07:11-04:00"><meta property="og:site_name" content="gcpdiag">
+<meta property="article:modified_time" content="2025-02-19T09:37:25-08:00"><meta property="og:site_name" content="gcpdiag">
 <meta itemprop=name content="apigee/ERR/2023_005">
 <meta itemprop=description content="Apigee connectivity: Load balancer to Managed Instance Group connectivity.
 ">
-<meta itemprop=dateModified content="2023-10-05T22:07:11-04:00">
+<meta itemprop=dateModified content="2025-02-19T09:37:25-08:00">
 <meta itemprop=wordCount content="209"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta itemprop=keywords content><meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="https://gcpdiag.dev/images/website-preview.jpg">
@@ -1195,7 +1195,7 @@ the External Load Balancer (XLB) to the MIG must be allowed by the firewall rule
 <p>IP address ranges <code>130.211.0.0/22</code> and <code>35.191.0.0/16</code> are the source IP address ranges for Google Load Balancing</p>
 </li>
 <li>
-<p>The target parameters needs to have the <code>target-tags</code> of the MIG which can be identifed from the MIG template.</p>
+<p>The target parameters needs to have the <code>target-tags</code> of the MIG which can be identified from the MIG template.</p>
 </li>
 <li>
 <p>By default <code>gke-apigee-proxy</code> is the tag used by the MIG instance template.</p>
@@ -1211,7 +1211,7 @@ the External Load Balancer (XLB) to the MIG must be allowed by the firewall rule
 <p>Identify the tags used for the instance template from the above configuration</p>
 </li>
 <li>
-<p>Create the firewall rule with the target tag identifed from the Instance Template</p>
+<p>Create the firewall rule with the target tag identified from the Instance Template</p>
 <pre tabindex=0><code>gcloud compute firewall-rules create FIREWALL_RULE_NAME \
   --description &quot;Allow incoming from GLB on TCP port 443 to Apigee Proxy&quot; \
   --project {PROJECT_ID} --network {VPC_NAME} --allow=tcp:443 \
@@ -1225,7 +1225,7 @@ the External Load Balancer (XLB) to the MIG must be allowed by the firewall rule
 <li><a href=https://cloud.google.com/firewall/docs/using-firewalls>About Using VPC Firewall Rules</a></li>
 </ul>
 <div class="text-muted mt-5 pt-3 border-top">
-Last modified October 5, 2023: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/ce2d18e0e98c65b56870eb0d943c891bca69aa5b>Updating working and typos in multiple files (ce2d18e0e)</a>
+Last modified February 19, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/6b15df6639ee40e47ae127b116d6163f741cca61>Merge "pre-commit codespell check" -- Branch commit log -- commit 44c6be1c3de3049e1e4eba510b878ec09c29f397 Author: gcpdiag team &lt;noreply@google.com> Date: 2025-02-12T09:55:03Z (6b15df663)</a>
 </div>
 </div>
 </main>
