@@ -42,22 +42,31 @@ gke/ip-exhaustion: Troubleshooting ip exhaustion issues on GKE clusters.
      [REMEDIATION]
      Here are some commands you can run to add an additional IPv4 pod range to address this issue, and you can find more detailed instructions at the documentation [1].
 
-     # Allocate IP addresses with designed length and create a pod range
+     **Allocate IP addresses with designed length and create a pod range**
+
+     ```
      export POD_IP_RANGE_PREFIX_LENGTH=14
      export POD_RANGE_NAME="range-`tr -dc a-z0-9 </dev/urandom | head -c 13`"
      gcloud network-connectivity internal-ranges create $POD_RANGE_NAME \
          --network=projects/gcpdiag-gke3-gggg/global/networks/default \
          --prefix-length=$POD_IP_RANGE_PREFIX_LENGTH
+     ```
 
-     # Assign the pod range to subnet
+     **Assign the pod range to subnet**
+
+     ```
      gcloud compute networks subnets update public-subnet \
          --region=us-central1-c \
          --add-secondary-ranges-with-reserved-internal-range="$POD_RANGE_NAME=//networkconnectivity.googleapis.com/projects/gcpdiag-gke3-gggg/locations/global/internalRanges/$POD_RANGE_NAME"
+     ```
 
-     # Add additional pod range to your cluster
+     **Add additional pod range to your cluster**
+
+     ```
      gcloud container clusters update cluster-1 \
          --additional-pod-ipv4-ranges=$POD_RANGE_NAME \
          --location=us-central1-c
+     ```
 
      Following execution of these commands, you should be able to create a new node pool that utilizes the newly configured pod IP range without encountering pod IP exhaustion issues.
 

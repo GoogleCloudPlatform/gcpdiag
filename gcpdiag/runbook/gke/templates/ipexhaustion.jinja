@@ -16,22 +16,31 @@ Please follow the below documentation [1] to add ipv4 range to the autopilot clu
 {% block pod_ip_exhaustion_failure_remediation_a1 %}
 Here are some commands you can run to add an additional IPv4 pod range to address this issue, and you can find more detailed instructions at the documentation [1].
 
-# Allocate IP addresses with designed length and create a pod range
+**Allocate IP addresses with designed length and create a pod range**
+
+```
 export POD_IP_RANGE_PREFIX_LENGTH=14
 export POD_RANGE_NAME="range-`tr -dc a-z0-9 </dev/urandom | head -c 13`"
 gcloud network-connectivity internal-ranges create $POD_RANGE_NAME \
     --network={network} \
     --prefix-length=$POD_IP_RANGE_PREFIX_LENGTH
+```
 
-# Assign the pod range to subnet
+**Assign the pod range to subnet**
+
+```
 gcloud compute networks subnets update {subnet_name} \
     --region={region} \
     --add-secondary-ranges-with-reserved-internal-range="$POD_RANGE_NAME=//networkconnectivity.googleapis.com/projects/{project_name}/locations/global/internalRanges/$POD_RANGE_NAME"
+```
 
-# Add additional pod range to your cluster
+**Add additional pod range to your cluster**
+
+```
 gcloud container clusters update {cluster_name} \
     --additional-pod-ipv4-ranges=$POD_RANGE_NAME \
     --location={region}
+```
 
 Following execution of these commands, you should be able to create a new node pool that utilizes the newly configured pod IP range without encountering pod IP exhaustion issues.
 
