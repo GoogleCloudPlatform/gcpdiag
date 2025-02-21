@@ -28,7 +28,7 @@ High disk I/O latency can significantly impact the performance of your applicati
 and workloads running on the instance, leading to slow response times, increased
 processing time, and overall sluggishness.
 
-Potential Bottlenecks -
+**Potential Bottlenecks**
 - Disk Type: To optimize disk performance, ensure your disk type is appropriate
 for your workload and provides acceptable latency for your system architecture.
 Choosing the right disk type can significantly impact performance.
@@ -38,7 +38,7 @@ https://cloud.google.com/compute/docs/disks
 many small, random I/O operations will generally have higher latency than those
 with sequential I/O
 
-Optimize Disk Usage:
+**Optimize Disk Usage**
 - Reduce I/O Operations: Optimize your applications and database queries to minimize
 the number of disk I/O operations.
 - Increase I/O Request Size: Larger I/O requests can be more efficient than many small
@@ -49,7 +49,7 @@ frequently used data.
 
 Choose the Right Disk Type with lesser IO Latency - https://cloud.google.com/compute/docs/disks
 
-You may also look into Optimizing persistent disk performance. -
+You may also look into Optimizing persistent disk performance -
 https://cloud.google.com/compute/docs/disks/optimizing-pd-performance
 
 Please don't hesitate to reach out to Google Cloud Support if issue is not resolved.

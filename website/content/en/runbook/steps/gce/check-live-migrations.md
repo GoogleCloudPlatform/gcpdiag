@@ -25,10 +25,8 @@ https://cloud.google.com/compute/docs/instances/simulating-host-maintenance?hl=e
 and see if issue still persists. If yes, please reach out to Google Cloud Platform Support teams via case.
 
 Note: During live migration, VMs might experience a decrease in performance in disk,
-CPU, memory, and network utilization for a short period of time.
-
-https://cloud.google.com/compute/docs/instances/live-migration-process#how_does_the_live_migration_process_work
-
+CPU, memory, and network utilization for a short period of time
+(https://cloud.google.com/compute/docs/instances/live-migration-process#how_does_the_live_migration_process_work).
 
 ### Success Reason
 

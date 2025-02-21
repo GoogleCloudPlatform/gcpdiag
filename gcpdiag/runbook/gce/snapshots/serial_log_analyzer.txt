@@ -54,24 +54,24 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      Kernel panics can be caused by different issues within the guest.
      Address underlying issues causing boot problems to solve the kernel panic:
 
-     General Kernel panic Troubleshooting
+     **General Kernel panic Troubleshooting**
      1. Consult the Troubleshooting Guide for Kernel Panic Errors:
-     - Kernel panic is commonly caused by file system errors in Linux Guest OS.
-     - Check `/etc/fstab` for incorrect entries that could halt the boot process.
-     - Refer to this guide for resolving [kernel panic issues caused by
+        - Kernel panic is commonly caused by file system errors in Linux Guest OS.
+        - Check `/etc/fstab` for incorrect entries that could halt the boot process.
+        - Refer to this guide for resolving [kernel panic issues caused by
      /etc/fstab](https://cloud.google.com/compute/docs/troubleshooting/fstab-errors).
 
      2. Resources for Kernel panic
-     - [Troubleshooting GCE Instance experiencing Kernel
+        - [Troubleshooting GCE Instance experiencing Kernel
      Panic](https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error)
-     - [Common Red Hat Kernel Panic
+        - [Common Red Hat Kernel Panic
      Issues](https://access.redhat.com/search/knowledgebase?q=kernel+panic&p=1&rows=10&documentKind=Solution%26Documentation&sort=relevant)
-     - [Common SUSE Kernel Panic Issues](https://www.suse.com/support/kb/?id=&q=kernel+panic&bu_suse=true&advanced=false)
+        - [Common SUSE Kernel Panic Issues](https://www.suse.com/support/kb/?id=&q=kernel+panic&bu_suse=true&advanced=false)
 
      3. Rescue an instance experiencing kernel panic
-     - [How to rescue a experiencing kernel panic](https://cloud.google.com/compute/docs/troubleshooting/rescue-vm) to
+        - [How to rescue a experiencing kernel panic](https://cloud.google.com/compute/docs/troubleshooting/rescue-vm) to
      recover faulty VMs.
-     - Watch this video for a walkthrough: [Rescue VM Guide](https://www.youtube.com/watch?v=oD6IFpjEtEw)
+        - Watch this video for a walkthrough: [Rescue VM Guide](https://www.youtube.com/watch?v=oD6IFpjEtEw)
 
      4 Google Cloud Platform Support Scope:
      [Understand GCP support for kernel-related
@@ -84,12 +84,14 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      Possible filesystem corruption detected.
 
      The patterns used:
+     ```
      'Corruption of in-memory data detected. Shutting down filesystem',
      'Corruption of in-memory data detected', 'warning: mounting fs with errors',
      'Failed to mount /',
      'A stop job is running for Security \.\.\..* Service ',
      'I/O Error Detected. Shutting down filesystem',
      'metadata I/O error in'
+     ```
 
      [REMEDIATION]
      To resolve filesystem corruption, admins can use [gce-rescue](https://github.com/GoogleCloudPlatform/gce-rescue),
@@ -108,13 +110,17 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      [REASON]
      Found high disk utilisation errors in Serial console logs.
      The patterns used:
-     'No space left on device', 'No usable temporary directory found',
+     ```
+     'No space left on device',
+     'No usable temporary directory found',
      'A stop job is running for Security \.\.\..* Service ',
      'disk is at or near capacity'
+     ```
 
      [REMEDIATION]
      To mitigate high disk usage, consider expanding the VM's boot disk capacity.
      This action can help avoid performance issues and ensure accessibility of the VM.
+
      Follow the guide to increase disk size:
      https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
 
@@ -128,7 +134,7 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      [REMEDIATION]
      There can be multiple reasons which can cause Slow Disk IOs:
 
-     - CPU Starvation - Small instances(with lesser CPUs) may not have enough CPU to serve all I/Os inflight.
+     - CPU Starvation - Small instances (with lesser CPUs) may not have enough CPU to serve all I/Os inflight.
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#cpu_and_memory_performance
 
      - Network Throttling - High sent/received network traffic can cause network throttling that impacts disk operations.
@@ -149,7 +155,6 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      - If needed, please change your disk type to get better Disk IOPS/throughput limits -
      https://cloud.google.com/compute/docs/disks/modify-persistent-disk#disk_type
 
-
 [AUTOMATED STEP]: Check for memory related errors in VM serial logs.
 
    - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [UNCERTAIN]
@@ -161,30 +166,26 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
 
      [REMEDIATION]
      1. Manually investigate by accessing the Guest OS to Analyze Memory Usage:
-     * Identify processes with consistently high memory consumption:
-     - Run `top` and press "M" to sort processes by memory usage.
-     - Alternatively, use the command:
-     ```bash
-     ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5
-     ```
-     * Focus on processes with recent spikes or consistently high memory usage.
-     * If SSH access is unavailable, consider [troubleshooting via the serial
+        * Identify processes with consistently high memory consumption:
+          - Run `top` and press "M" to sort processes by memory usage.
+          - Alternatively, use the command: `ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5`
+        * Focus on processes with recent spikes or consistently high memory usage.
+        * If SSH access is unavailable, consider [troubleshooting via the serial
      console](https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console).
 
      2. Review Application or Configuration Changes:
-     * Investigate if recent deployments, updates, or configuration changes correlate with increased memory usage.
+        * Investigate if recent deployments, updates, or configuration changes correlate with increased memory usage.
 
      3. Resolve Identified Bottlenecks:
-     * For applications causing excessive memory usage:
-     - Optimize their configuration or update them to a stable version.
-     - Explore alternatives if optimization is insufficient.
-     * Evaluate scaling up resources if the high memory usage results from legitimate application demands.
+        * For applications causing excessive memory usage:
+          - Optimize their configuration or update them to a stable version.
+          - Explore alternatives if optimization is insufficient.
+        * Evaluate scaling up resources if the high memory usage results from legitimate application demands.
 
      4. Increase Instance Memory if Necessary:
-     * If additional memory is required for the application:
-     - Stop the VM and [change its machine
-     type](https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud).
-     - Consult the [machine type documentation](https://cloud.google.com/compute/docs/machine-types) to select an appropriate
+        * If additional memory is required for the application:
+          - Stop the VM and [change its machine type](https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud).
+          - Consult the [machine type documentation](https://cloud.google.com/compute/docs/machine-types) to select an appropriate
      configuration.
 
      **Note:**
@@ -246,12 +247,10 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      [REMEDIATION]
      To mitigate "bad ownership or modes for directory" errors:
      1. Follow either of the below steps to check the permissions:
-     a. these steps to rescue the vm:
+        * these steps to rescue the vm:
      https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
-
-     b. these steps login through serial console:
+        * these steps login through serial console:
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
-
      2. Refer to the standard permissions required for ssh connection:
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-ssh-errors#permissions
 
@@ -335,24 +334,24 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      Kernel panics can be caused by different issues within the guest.
      Address underlying issues causing boot problems to solve the kernel panic:
 
-     General Kernel panic Troubleshooting
+     **General Kernel panic Troubleshooting**
      1. Consult the Troubleshooting Guide for Kernel Panic Errors:
-     - Kernel panic is commonly caused by file system errors in Linux Guest OS.
-     - Check `/etc/fstab` for incorrect entries that could halt the boot process.
-     - Refer to this guide for resolving [kernel panic issues caused by
+        - Kernel panic is commonly caused by file system errors in Linux Guest OS.
+        - Check `/etc/fstab` for incorrect entries that could halt the boot process.
+        - Refer to this guide for resolving [kernel panic issues caused by
      /etc/fstab](https://cloud.google.com/compute/docs/troubleshooting/fstab-errors).
 
      2. Resources for Kernel panic
-     - [Troubleshooting GCE Instance experiencing Kernel
+        - [Troubleshooting GCE Instance experiencing Kernel
      Panic](https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error)
-     - [Common Red Hat Kernel Panic
+        - [Common Red Hat Kernel Panic
      Issues](https://access.redhat.com/search/knowledgebase?q=kernel+panic&p=1&rows=10&documentKind=Solution%26Documentation&sort=relevant)
-     - [Common SUSE Kernel Panic Issues](https://www.suse.com/support/kb/?id=&q=kernel+panic&bu_suse=true&advanced=false)
+        - [Common SUSE Kernel Panic Issues](https://www.suse.com/support/kb/?id=&q=kernel+panic&bu_suse=true&advanced=false)
 
      3. Rescue an instance experiencing kernel panic
-     - [How to rescue a experiencing kernel panic](https://cloud.google.com/compute/docs/troubleshooting/rescue-vm) to
+        - [How to rescue a experiencing kernel panic](https://cloud.google.com/compute/docs/troubleshooting/rescue-vm) to
      recover faulty VMs.
-     - Watch this video for a walkthrough: [Rescue VM Guide](https://www.youtube.com/watch?v=oD6IFpjEtEw)
+        - Watch this video for a walkthrough: [Rescue VM Guide](https://www.youtube.com/watch?v=oD6IFpjEtEw)
 
      4 Google Cloud Platform Support Scope:
      [Understand GCP support for kernel-related
@@ -384,6 +383,7 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      [REMEDIATION]
      To mitigate high disk usage, consider expanding the VM's boot disk capacity.
      This action can help avoid performance issues and ensure accessibility of the VM.
+
      Follow the guide to increase disk size:
      https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
 
@@ -397,7 +397,7 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      [REMEDIATION]
      There can be multiple reasons which can cause Slow Disk IOs:
 
-     - CPU Starvation - Small instances(with lesser CPUs) may not have enough CPU to serve all I/Os inflight.
+     - CPU Starvation - Small instances (with lesser CPUs) may not have enough CPU to serve all I/Os inflight.
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#cpu_and_memory_performance
 
      - Network Throttling - High sent/received network traffic can cause network throttling that impacts disk operations.
@@ -418,7 +418,6 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      - If needed, please change your disk type to get better Disk IOPS/throughput limits -
      https://cloud.google.com/compute/docs/disks/modify-persistent-disk#disk_type
 
-
 [AUTOMATED STEP]: Check for memory related errors in VM serial logs.
 
    - gcpdiag-gce-vm-performance/valid-linux-ssh                           [UNCERTAIN]
@@ -430,30 +429,26 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
 
      [REMEDIATION]
      1. Manually investigate by accessing the Guest OS to Analyze Memory Usage:
-     * Identify processes with consistently high memory consumption:
-     - Run `top` and press "M" to sort processes by memory usage.
-     - Alternatively, use the command:
-     ```bash
-     ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5
-     ```
-     * Focus on processes with recent spikes or consistently high memory usage.
-     * If SSH access is unavailable, consider [troubleshooting via the serial
+        * Identify processes with consistently high memory consumption:
+          - Run `top` and press "M" to sort processes by memory usage.
+          - Alternatively, use the command: `ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5`
+        * Focus on processes with recent spikes or consistently high memory usage.
+        * If SSH access is unavailable, consider [troubleshooting via the serial
      console](https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console).
 
      2. Review Application or Configuration Changes:
-     * Investigate if recent deployments, updates, or configuration changes correlate with increased memory usage.
+        * Investigate if recent deployments, updates, or configuration changes correlate with increased memory usage.
 
      3. Resolve Identified Bottlenecks:
-     * For applications causing excessive memory usage:
-     - Optimize their configuration or update them to a stable version.
-     - Explore alternatives if optimization is insufficient.
-     * Evaluate scaling up resources if the high memory usage results from legitimate application demands.
+        * For applications causing excessive memory usage:
+          - Optimize their configuration or update them to a stable version.
+          - Explore alternatives if optimization is insufficient.
+        * Evaluate scaling up resources if the high memory usage results from legitimate application demands.
 
      4. Increase Instance Memory if Necessary:
-     * If additional memory is required for the application:
-     - Stop the VM and [change its machine
-     type](https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud).
-     - Consult the [machine type documentation](https://cloud.google.com/compute/docs/machine-types) to select an appropriate
+        * If additional memory is required for the application:
+          - Stop the VM and [change its machine type](https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud).
+          - Consult the [machine type documentation](https://cloud.google.com/compute/docs/machine-types) to select an appropriate
      configuration.
 
      **Note:**
@@ -513,12 +508,10 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      [REMEDIATION]
      To mitigate "bad ownership or modes for directory" errors:
      1. Follow either of the below steps to check the permissions:
-     a. these steps to rescue the vm:
+        * these steps to rescue the vm:
      https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
-
-     b. these steps login through serial console:
+        * these steps login through serial console:
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
-
      2. Refer to the standard permissions required for ssh connection:
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-ssh-errors#permissions
 

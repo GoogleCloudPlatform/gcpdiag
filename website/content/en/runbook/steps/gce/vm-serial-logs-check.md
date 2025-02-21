@@ -24,11 +24,11 @@ Anomalies detected in the serial logs which align with the investigated bad patt
 
 Investigate potential issues through the serial console.
 If GRUB_TIMEOUT is greater than 0, access the interactive session for more insights.
-Explore rescue options for inaccessible VMs or review possible guest OS issues,
+Explore rescue options for inaccessible VMs or review possible guest OS issues.
 - Interactive Serial Console: https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 - Rescuing VMs: https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
 
-If escalating Guest OS related issues to Google Cloud Support
+If escalating Guest OS related issues to Google Cloud Support,
 do check to ensure is in line with Google Cloud Platform's Guest OS support policy
 - Google Cloud Platform Support Scope:
 https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope

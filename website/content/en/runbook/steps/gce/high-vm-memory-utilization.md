@@ -28,12 +28,11 @@ Consider enhancing the VM's memory capacity by changing to a machine type with m
 Guidance on stopping and changing the machine type can be found here:
 - Changing machine type:
 https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
-For deeper analysis of memory issues:
 
 Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
 https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization
 
-Or connect via the Serial Console if SSH is not available to mitigate the issue.
+Or connect via the Serial Console if SSH is not available to mitigate the issue:
 https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 
 ### Success Reason
