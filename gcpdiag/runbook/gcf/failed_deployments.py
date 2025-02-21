@@ -62,7 +62,7 @@ class FailedDeployments(runbook.DiagnosticTree):
       },
       flags.GAC_SERVICE_ACCOUNT: {
           'type': str,
-          'help': 'Service account used by the user for delpoyment.'
+          'help': 'Service account used by the user for deployment.'
       }
   }
 

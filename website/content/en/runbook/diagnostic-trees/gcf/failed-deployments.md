@@ -40,7 +40,7 @@ gcpdiag runbook gcf/failed-deployments \
 | `region` | True | None | str | Region of the cloud function failing deployment |
 | `start_time` | False | None | datetime | Start time of the issue Format: YYYY-MM-DDTHH:MM:SSZ |
 | `end_time` | False | None | datetime | End time of the issue. Format: YYYY-MM-DDTHH:MM:SSZ |
-| `gac_service_account` | False | None | str | Service account used by the user for delpoyment. |
+| `gac_service_account` | False | None | str | Service account used by the user for deployment. |
 
 Get help on available commands
 
