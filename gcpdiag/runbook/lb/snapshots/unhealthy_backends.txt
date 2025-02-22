@@ -100,6 +100,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      The load balancer is conducting health checks on port 88 for the backend service projects/gcpdiag-lb2-aaaa/global/backendServices/web-backend-service. However, this health check port differs from the port used by the load balancer for serving traffic on some backend instance groups. The backend service is configured to use the "http" port, which is then translated to a specific port number based on the "http" port mapping within each backend instance group.
 
      Affected backends:
+
      projects/gcpdiag-lb2-aaaa/zones/us-east1-b/instanceGroups/lb-backend-example - port name "http" translates to port 80
 
      This configuration can be problematic unless you have configured the load balancer to use a different port for health checks purposefully.

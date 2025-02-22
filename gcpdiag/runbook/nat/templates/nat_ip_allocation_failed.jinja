@@ -35,8 +35,7 @@ Manual NAT IP allocation is enabled on the NAT GW {nat_gateway_name}
 {% endblock nat_ip_allocation_auto_only_failure_reason %}
 
 {% block nat_ip_allocation_auto_only_failure_remediation %}
-IP exhaustion issues on {nat_gateway_name} can be remediated by taking the following steps in [1]:
-[1]
+IP exhaustion issues on {nat_gateway_name} can be remediated by taking the following steps in:
 https://cloud.google.com/knowledge/kb/cloud-nat-is-dropping-or-limiting-egress-connectivity-000004263#:~:text=If%20the%20metric%20indicates%20that,on%20the%20Port%20reservation%20procedure.
 {% endblock nat_ip_allocation_auto_only_failure_remediation %}
 
@@ -59,7 +58,7 @@ IP exhaustion issue on {nat_gateway_name}
 {% endblock nat_allocation_metric_check_failure_remediation %}
 
 {% block nat_allocation_metric_check_skipped_reason %}
-No issues detected on the nat_allocation_failed metric for the gateway: {nat_gateway_name}
+No issues detected on the nat_allocation_failed metric for the gateway: {nat_gateway_name}.
 Checks on the status of the cloud router for the NAT gateway: {router_name} does not indicate
 extra IPs are needed.
 {% endblock nat_allocation_metric_check_skipped_reason %}
