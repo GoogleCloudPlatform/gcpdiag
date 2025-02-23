@@ -155,7 +155,7 @@ class VmExternalIpConnectivityTest(runbook.Step):
           """.format(op.get(flags.NAME), dest_ip),
                          remediation="""
           If a VM instance or custom NAT is being used as a NAT Gateway, check that
-          it is configured and functioning correctly. Otherwise, enusre that a public
+          it is configured and functioning correctly. Otherwise, ensure that a public
           Cloud NAT is configured for the VPC Network [1]:
 
           Check that the destination IP is a Google Service IP address and

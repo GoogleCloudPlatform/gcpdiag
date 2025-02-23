@@ -37,8 +37,8 @@ gcpdiag runbook gke/image-pull \
 | Name | Required | Default | Type | Help |
 |------|----------|---------|------|------|
 | `project_id` | True | None | str | The Project ID of the resource under investigation |
-| `name` | False | None | str | (Optional) The name of the GKE cluster, to limit search only for this cluster |
-| `location` | False | None | str | (Optional) The zone or region of the GKE cluster |
+| `name` | True | None | str | The name of the GKE cluster, to limit search only for this cluster |
+| `location` | True | None | str | The zone or region of the GKE cluster |
 | `start_time` | False | None | datetime | (Optional) The start window to query the logs. Format: YYYY-MM-DDTHH:MM:SSZ |
 | `end_time` | False | None | datetime | (Optional) The end window for the logs. Format: YYYY-MM-DDTHH:MM:SSZ |
 

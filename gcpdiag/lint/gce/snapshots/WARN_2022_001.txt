@@ -1,16 +1,11 @@
 *  gce/WARN/2022_001: GCE connectivity: IAP service can connect to SSH/RDP port on instances.
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west1-b/instances/gke-gke1-default-pool-35923fbc-2xxp [ OK ]
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west1-b/instances/gke-gke1-default-pool-35923fbc-c12f [ OK ]
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west1-b/instances/gke-gke1-default-pool-35923fbc-fv50 [ OK ]
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west1-b/instances/gke-gke1-default-pool-35923fbc-k05c [ OK ]
    - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce1       [FAIL]
      connections from 35.235.240.0/20 to tcp:3389 blocked by vpc firewall rule: gce-secured-instance-test-deny (instance: gce1)
    - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce2       [FAIL]
-     connections from 35.235.240.0/20 to tcp:22 blocked by vpc firewall rule: gce-secured-instance-test-deny (instance: gce2)
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-4h21   [ OK ]
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-7pvl   [ OK ]
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/windows-test [FAIL]
-     connections from 35.235.240.0/20 to tcp:3389 blocked by vpc firewall rule: gce-secured-instance-test-deny (instance: windows-test)
+     connections from 35.235.240.0/20 to tcp:3389 blocked by vpc firewall rule: gce-secured-instance-test-deny (instance: gce2)
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gke-gke1-default-pool-35923fbc-2xxp [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-bzvx   [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-l40g   [ OK ]
    - projects/gcpdiag-gce1-aaaa/zones/europe-west4-b/instances/gce1       [FAIL]
      connections from 35.235.240.0/20 to tcp:3389 blocked by vpc firewall rule: gce-secured-instance-test-deny (instance: gce1)
 

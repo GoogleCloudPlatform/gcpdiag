@@ -1,21 +1,13 @@
 *  gce/ERR/2024_003: GCE Shielded VM secure boot validations
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west1-b/instances/gke-gke1-default-pool-35923fbc-2xxp [SKIP]
-     Secure Boot is disabled for the instance
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west1-b/instances/gke-gke1-default-pool-35923fbc-c12f [SKIP]
-     Secure Boot is disabled for the instance
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west1-b/instances/gke-gke1-default-pool-35923fbc-fv50 [SKIP]
-     Secure Boot is disabled for the instance
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west1-b/instances/gke-gke1-default-pool-35923fbc-k05c [SKIP]
-     Secure Boot is disabled for the instance
    - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce1       [SKIP]
      Secure Boot is disabled for the instance
    - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce2       [SKIP]
      Secure Boot is disabled for the instance
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-4h21   [SKIP]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gke-gke1-default-pool-35923fbc-2xxp [SKIP]
      Secure Boot is disabled for the instance
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-7pvl   [SKIP]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-bzvx   [SKIP]
      Secure Boot is disabled for the instance
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/windows-test [SKIP]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-l40g   [SKIP]
      Secure Boot is disabled for the instance
    - projects/gcpdiag-gce1-aaaa/zones/europe-west4-b/instances/gce1       [SKIP]
      Secure Boot is disabled for the instance

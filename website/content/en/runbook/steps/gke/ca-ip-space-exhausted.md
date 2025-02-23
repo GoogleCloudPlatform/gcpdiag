@@ -19,6 +19,7 @@ None
 The scaleUp event failed because the cluster doesn't have enough unallocated IP address space to use to add new nodes or
 Pods.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 
 ### Failure Remediation

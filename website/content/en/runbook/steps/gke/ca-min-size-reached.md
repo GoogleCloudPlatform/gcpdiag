@@ -18,6 +18,7 @@ None
 
 Node cannot be removed because its node group is already at its minimum size.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 
 ### Failure Remediation

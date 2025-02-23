@@ -3,11 +3,9 @@
      VM Manager is needed for the legacy agent detection. Please enable it at: https://cloud.google.com/compute/docs/manage-os#automatic and run this check again.
    - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce2       [SKIP] Unable to confirm legacy monitoring agent installation
      VM Manager is needed for the legacy agent detection. Please enable it at: https://cloud.google.com/compute/docs/manage-os#automatic and run this check again.
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-4h21   [SKIP] Unable to confirm legacy monitoring agent installation
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-bzvx   [SKIP] Unable to confirm legacy monitoring agent installation
      VM Manager is needed for the legacy agent detection. Please enable it at: https://cloud.google.com/compute/docs/manage-os#automatic and run this check again.
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-7pvl   [SKIP] Unable to confirm legacy monitoring agent installation
-     VM Manager is needed for the legacy agent detection. Please enable it at: https://cloud.google.com/compute/docs/manage-os#automatic and run this check again.
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/windows-test [SKIP] Unable to confirm legacy monitoring agent installation
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-l40g   [SKIP] Unable to confirm legacy monitoring agent installation
      VM Manager is needed for the legacy agent detection. Please enable it at: https://cloud.google.com/compute/docs/manage-os#automatic and run this check again.
    - projects/gcpdiag-gce1-aaaa/zones/europe-west4-b/instances/gce1       [SKIP] Unable to confirm legacy monitoring agent installation
      VM Manager is needed for the legacy agent detection. Please enable it at: https://cloud.google.com/compute/docs/manage-os#automatic and run this check again.

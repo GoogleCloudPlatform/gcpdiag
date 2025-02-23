@@ -43,7 +43,7 @@ class HighVmMemoryUtilization(runbook.Step):
   instance_name: str
   serial_console_file = None
 
-  # Typcial Memory exhaustion logs in serial console.
+  # Typical Memory exhaustion logs in serial console.
 
   def execute(self):
     """Verify VM memory utilization is within optimal levels."""
@@ -387,7 +387,7 @@ class VmSerialLogsCheck(runbook.Step):
                                full_resource_path=vm.full_path,
                                start_time=op.get(flags.START_TIME),
                                end_time=op.get(flags.END_TIME)),
-            # uncetain uses the same remediation steps as failed
+            # uncertain uses the same remediation steps as failed
             remediation=op.prep_msg(op.FAILURE_REMEDIATION,
                                     full_resource_path=vm.full_path,
                                     start_time=op.get(flags.START_TIME),
@@ -398,7 +398,7 @@ class VmSerialLogsCheck(runbook.Step):
             vm,
             reason=op.prep_msg(op.UNCERTAIN_REASON,
                                full_resource_path=vm.full_path),
-            # uncetain uses the same remediation steps as failed
+            # uncertain uses the same remediation steps as failed
             remediation=op.prep_msg(op.FAILURE_REMEDIATION,
                                     full_resource_path=vm.full_path,
                                     start_time=op.get(flags.START_TIME),
@@ -412,7 +412,7 @@ class VmSerialLogsCheck(runbook.Step):
                                full_resource_path=vm.full_path,
                                start_time=op.get(flags.START_TIME),
                                end_time=op.get(flags.END_TIME)),
-            # uncetain uses the same remediation steps as failed
+            # uncertain uses the same remediation steps as failed
             remediation=op.prep_msg(op.FAILURE_REMEDIATION,
                                     full_resource_path=vm.full_path,
                                     start_time=op.get(flags.START_TIME),

@@ -120,7 +120,7 @@ def get_project(project_id: str) -> Project:
       print(f'[ERROR]:can\'t access project {project_id}: {error.message}.',
             file=sys.stderr)
     print(
-        f'[DEBUG]: An Http Error occured whiles accessing projects.get \n\n{e}',
+        f'[DEBUG]: An Http Error occurred whiles accessing projects.get \n\n{e}',
         file=sys.stderr)
     raise error from e
   else:
@@ -161,7 +161,7 @@ def get_all_projects_in_parent(project_id: str) -> List[ProjectBillingInfo]:
         continue
       else:
         print(
-            f'[ERROR]: An Http Error occured whiles accessing projects.get \n\n{error}',
+            f'[ERROR]: An Http Error occurred whiles accessing projects.get \n\n{error}',
             file=sys.stderr)
       raise error from error
   return projects

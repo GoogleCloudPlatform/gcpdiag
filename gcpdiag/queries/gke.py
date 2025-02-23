@@ -408,6 +408,14 @@ class Cluster(models.Resource):
     return self._resource_data['nodePools']
 
   @property
+  def get_network_string(self) -> str:
+    if 'networkConfig' not in self._resource_data:
+      return ''
+    if 'network' not in self._resource_data['networkConfig']:
+      return ''
+    return self._resource_data['networkConfig']['network']
+
+  @property
   def is_private(self) -> bool:
     if not 'privateClusterConfig' in self._resource_data:
       return False
@@ -630,10 +638,10 @@ def get_node_by_instance_id(context: models.Context, instance_id: str) -> Node:
 
 @caching.cached_api_call
 def get_release_schedule() -> Dict:
-  """Extract the release schdule for gke clusters
+  """Extract the release schedule for gke clusters
 
   Returns:
-    A dictionary of release schdule.
+    A dictionary of release schedule.
   """
   page_url = 'https://cloud.google.com/kubernetes-engine/docs/release-schedule'
   release_data = {}

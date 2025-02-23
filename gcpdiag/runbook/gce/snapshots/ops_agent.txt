@@ -36,7 +36,7 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
    - gcpdiag-gce3-aaaa                                                    [FAIL]
      [REASON]
-     The `logging.googleapis.com` service is not in the exptected state `ENABLED`
+     The `logging.googleapis.com` service is not in the expected state `ENABLED`
 
      [REMEDIATION]
      This service is expected to be enabled.
@@ -109,7 +109,7 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
    - gcpdiag-gce3-aaaa                                                    [FAIL]
      [REASON]
-     The `monitoring.googleapis.com` service is not in the exptected state `ENABLED`
+     The `monitoring.googleapis.com` service is not in the expected state `ENABLED`
 
      [REMEDIATION]
      This service is expected to be enabled.
@@ -205,7 +205,7 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
    - gcpdiag-gce3-aaaa                                                    [FAIL]
      [REASON]
-     The `logging.googleapis.com` service is not in the exptected state `ENABLED`
+     The `logging.googleapis.com` service is not in the expected state `ENABLED`
 
      [REMEDIATION]
      This service is expected to be enabled.
@@ -268,7 +268,7 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
    - gcpdiag-gce3-aaaa                                                    [FAIL]
      [REASON]
-     The `monitoring.googleapis.com` service is not in the exptected state `ENABLED`
+     The `monitoring.googleapis.com` service is not in the expected state `ENABLED`
 
      [REMEDIATION]
      This service is expected to be enabled.
@@ -354,7 +354,7 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
    - gcpdiag-gce3-aaaa                                                    [FAIL]
      [REASON]
-     The `logging.googleapis.com` service is not in the exptected state `ENABLED`
+     The `logging.googleapis.com` service is not in the expected state `ENABLED`
 
      [REMEDIATION]
      This service is expected to be enabled.
@@ -403,7 +403,7 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
    - gcpdiag-gce3-aaaa                                                    [FAIL]
      [REASON]
-     The `monitoring.googleapis.com` service is not in the exptected state `ENABLED`
+     The `monitoring.googleapis.com` service is not in the expected state `ENABLED`
 
      [REMEDIATION]
      This service is expected to be enabled.

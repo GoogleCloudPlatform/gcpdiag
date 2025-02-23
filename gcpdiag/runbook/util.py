@@ -34,14 +34,14 @@ step_outcomes = constants.StepConstants.keys()
 
 def generate_uuid(length: int = 8,
                   separator_interval: int = 4,
-                  seperator: str = '.'):
+                  separator: str = '.'):
   """
   Generates a UUID string with the specified length and separators.
 
   Args:
-      length: The desired length of the final UUID string excluding seperators. Default 8
+      length: The desired length of the final UUID string excluding separators. Default 8
       separator_interval: The number of characters between separators. Default: 4
-      seperator: uuid separator. Default `.`
+      separator: uuid separator. Default `.`
 
   Returns:
       A UUID string formatted with the specified length and separators.
@@ -53,7 +53,7 @@ def generate_uuid(length: int = 8,
   else:
     uuid_str = uuid_str.ljust(length, '0')
 
-  unique_id = seperator.join(
+  unique_id = separator.join(
       uuid_str[i:i + separator_interval]
       for i in range(0, len(uuid_str), separator_interval))
 

@@ -18,6 +18,7 @@ None
 
 Pod is blocking the ScaleDown event because of an unexpected error.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 
 ### Failure Remediation

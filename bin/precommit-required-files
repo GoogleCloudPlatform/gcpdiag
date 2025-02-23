@@ -296,7 +296,7 @@ def gen_step_page(step: runbook.Step):
   step_page = f'{product_steps_dir}/{step.doc_file_name}.md'
   rendered_content = runbook.util.render_template('bin/templates/',
                                                   'steps.jinja', context)
-  # For some reason there are \n at the end dispite striping new line and block lines
+  # For some reason there are \n at the end despite striping new line and block lines
   # Many strip it if any still exists at the end.
   rendered_content = rendered_content.rstrip('\n')
   md_page_content = ''

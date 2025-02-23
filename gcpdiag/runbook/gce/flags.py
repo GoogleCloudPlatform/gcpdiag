@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Paramaters applicable to GCE runbooks."""
+"""Parameters applicable to GCE runbooks."""
 # pylint: disable=wildcard-import, unused-wildcard-import
 from gcpdiag.runbook.gcp.flags import *
 from gcpdiag.runbook.iam.flags import *

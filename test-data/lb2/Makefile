@@ -38,7 +38,8 @@ all:	\
 	json-dumps/backendService-web-backend-service-get-health-instanceGroups-lb-backend-example-$(ZONE1).json \
 	json-dumps/regionBackendService-backend-service-2-$(REGION1)-get-health-networkEndpointGroups-neg1-$(ZONE2).json \
 	json-dumps/logging-entries-1.json \
-	json-dumps/monitoring-query.json
+	json-dumps/monitoring-query.json \
+	json-dumps/compute-igs-aggregated.json
 
 include ../Makefile.inc
 

@@ -18,6 +18,7 @@ None
 
 Pod is blocking the ScaleDown event because its controller (for example, a Deployment or ReplicaSet) can't be found.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 
 ### Failure Remediation

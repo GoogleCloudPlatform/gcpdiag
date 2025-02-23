@@ -40,17 +40,45 @@ gke/ip-exhaustion: Troubleshooting ip exhaustion issues on GKE clusters.
      Pod IP exhaustion is detected in the cluster cluster-1
 
      [REMEDIATION]
-     Consider leveraging the Class E IPv4 address space (240.0.0.0/4) to support your growth.
-     While these addresses are reserved for future use (see Google VPC network valid IPv4 ranges [1]), they can be used in certain situations.
+     Here are some commands you can run to add an additional IPv4 pod range to address this issue, and you can find more detailed instructions at the documentation [1].
 
-     The linked documentation [2] addresses common misconceptions about Class E, discusses its benefits and considerations, and provides guidance on planning and using GKE clusters with this address space.
+     **Allocate IP addresses with designed length and create a pod range**
+
+     ```
+     export POD_IP_RANGE_PREFIX_LENGTH=14
+     export POD_RANGE_NAME="range-`tr -dc a-z0-9 </dev/urandom | head -c 13`"
+     gcloud network-connectivity internal-ranges create $POD_RANGE_NAME \
+         --network=projects/gcpdiag-gke3-gggg/global/networks/default \
+         --prefix-length=$POD_IP_RANGE_PREFIX_LENGTH
+     ```
+
+     **Assign the pod range to subnet**
+
+     ```
+     gcloud compute networks subnets update public-subnet \
+         --region=us-central1-c \
+         --add-secondary-ranges-with-reserved-internal-range="$POD_RANGE_NAME=//networkconnectivity.googleapis.com/projects/gcpdiag-gke3-gggg/locations/global/internalRanges/$POD_RANGE_NAME"
+     ```
+
+     **Add additional pod range to your cluster**
+
+     ```
+     gcloud container clusters update cluster-1 \
+         --additional-pod-ipv4-ranges=$POD_RANGE_NAME \
+         --location=us-central1-c
+     ```
+
+     Following execution of these commands, you should be able to create a new node pool that utilizes the newly configured pod IP range without encountering pod IP exhaustion issues.
+
+     Additionally, consider leveraging the Class E IPv4 address space (240.0.0.0/4) to support your growth.
+     While these addresses are reserved for future use (see Google VPC network valid IPv4 ranges [2]), they can be used in certain situations.
+
+     The linked documentation [3] addresses common misconceptions about Class E, discusses its benefits and considerations, and provides guidance on planning and using GKE clusters with this address space.
      It also includes a real-world example of how Class E successfully solved IP exhaustion challenges.
 
-     Additionally, the documentation [3] provides instructions to add ipv4 pod range to a standard cluster to mitgate the issue.
-
-     [1] https://cloud.google.com/vpc/docs/subnets#valid-ranges
-     [2] https://cloud.google.com/blog/products/containers-kubernetes/how-class-e-addresses-solve-for-ip-address-exhaustion-in-gke
-     [3] https://cloud.google.com/kubernetes-engine/docs/how-to/multi-pod-cidr#cluster-add-pod-ipv4-range
+     [1] https://cloud.google.com/kubernetes-engine/docs/how-to/multi-pod-cidr#cluster-add-pod-ipv4-range
+     [2] https://cloud.google.com/vpc/docs/subnets#valid-ranges
+     [3] https://cloud.google.com/blog/products/containers-kubernetes/how-class-e-addresses-solve-for-ip-address-exhaustion-in-gke
 
 
 [END]: Finalize VM external connectivity diagnostics.

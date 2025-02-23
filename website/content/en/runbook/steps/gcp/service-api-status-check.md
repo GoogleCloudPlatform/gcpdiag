@@ -24,7 +24,7 @@ Checks is a Cloud API service is enabled or not. Guides the user to enable
 
 ### Failure Reason
 
-The `{service_name}` service is not in the exptected state `{expected_state}`
+The `{service_name}` service is not in the expected state `{expected_state}`
 
 ### Failure Remediation
 

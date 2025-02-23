@@ -40,7 +40,7 @@
 
 #### Deprecation
 
-- Flag `--project`: Full deprecation in **runbook command** to allow multiple project ids/numbers to be spcified via `--parameter`
+- Flag `--project`: Full deprecation in **runbook command** to allow multiple project ids/numbers to be specified via `--parameter`
 
 ## 0.76 (2024-10-1)
 
@@ -76,7 +76,7 @@
 #### Deprecation
 
 - apis\_utils.batch\_list\_all: Replaced by apis\utils.multi\_list\_all
-- Flag `--project`: Soft deprecation in **runbook command** to allow multiple project ids/numbers to be spcified via `--parameter`
+- Flag `--project`: Soft deprecation in **runbook command** to allow multiple project ids/numbers to be specified via `--parameter`
 - Deprecated pre-commit hook gke-eol-file
 
 ## 0.75 (2024-9-2)
@@ -170,7 +170,7 @@ dataproc/cluster\_creation Dataproc cluster creation diagnostic tree
 - Handle when gcloud command is not installed when running runbook generator
 - Allow to query logs for each test data separately in logs\_stub
 - Update GKE EOL date
-- Relax contraints on location of end steps in runbook
+- Relax constraints on location of end steps in runbook
 - Update pip dependencies; security fix for pdoc
 - Added monitoring to the list of supported products runbook steps
 - generic\_api/datafusion apis.make\_request() re-implementation
@@ -293,7 +293,7 @@ dataproc/cluster\_creation Dataproc cluster creation diagnostic tree
 
 #### New lint rules
 - pubsub/ERR\_2024\_001 bq subscription table not found
-- composer/WARN\_2024\_001 low scheduler cpu usuage
+- composer/WARN\_2024\_001 low scheduler cpu usage
 - datafusion/WARN\_2024\_001 data fusion version
 - composer/WARN\_2024\_002 worker pod eviction
 - gce/ERR\_2024\_002 performance
@@ -598,7 +598,7 @@ dataproc/cluster\_creation Dataproc cluster creation diagnostic tree
 - datafusion/ERR/2022\_009: Cloud Dataproc Service Account has a Cloud Data Fusion Runner role
 - datafusion/ERR/2022\_010: Cloud Dataproc Service Account has a Dataproc Worker role
 - datafusion/ERR/2022\_011: The Dataproc SA for a CDF instance with version > 6.2.0 has Storage Admin role
-- dataproc/ERR/2022\_004: Dataproc on GCE master VM is able to communicate with atleast one worker VM
+- dataproc/ERR/2022\_004: Dataproc on GCE master VM is able to communicate with at least one worker VM
 - dataproc/ERR/2023\_001: Dataproc cluster initialization completed by the end of the timeout period
 - dataproc/WARN/2022\_004: Cluster should normally spend most of the time in RUNNING state
 - dataproc/WARN/2023\_001: Concurrent Job limit was not exceeded

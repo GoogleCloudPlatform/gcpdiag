@@ -1,0 +1,3963 @@
+{
+  "kind": "compute#operationAggregatedList",
+  "id": "projects/gcpdiag-gce-vm-performance/aggregated/operations",
+  "items": {
+    "global": {
+      "operations": [
+        {
+          "kind": "compute#operation",
+          "id": "2280940156284294438",
+          "name": "operation-1737649096607-62c61f525c87f-d1d29f27-d62045ab",
+          "clientOperationId": "d08eb18f-fe42-4c43-896d-00d2870e4bf4",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-bqstjjlfsp354musmjzdi345",
+          "targetId": "1996836131292892473",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:18:17.093-08:00",
+          "startTime": "2025-01-23T08:18:17.096-08:00",
+          "endTime": "2025-01-23T08:18:20.933-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649096607-62c61f525c87f-d1d29f27-d62045ab"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "8179155603566875966",
+          "name": "operation-1737649104592-62c61f59f9dcd-788bd067-7e26ed5f",
+          "clientOperationId": "7e8d7897-4cb8-41a9-9ef4-def5327d367f",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-osxkx4opuon5ucunoiypoydn-1",
+          "targetId": "6803491094905539841",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:18:25.134-08:00",
+          "startTime": "2025-01-23T08:18:25.137-08:00",
+          "endTime": "2025-01-23T08:18:29.377-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649104592-62c61f59f9dcd-788bd067-7e26ed5f"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "1721636277909968183",
+          "name": "operation-1737649112522-62c61f6189dac-df29eecb-12f9eb07",
+          "clientOperationId": "3a73403f-09fa-4a95-ab64-f0e106e4fbaa",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-osxkx4opuon5ucunoiypoydn-2",
+          "targetId": "6931654070069415193",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:18:32.922-08:00",
+          "startTime": "2025-01-23T08:18:32.926-08:00",
+          "endTime": "2025-01-23T08:18:37.115-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649112522-62c61f6189dac-df29eecb-12f9eb07"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "8309398734471419151",
+          "name": "operation-1737649120226-62c61f68e2c23-9428894d-3d8b9aca",
+          "clientOperationId": "e10205fa-fc69-46fc-af1f-e1af53bb9b13",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-osxkx4opuon5ucunoiypoydn-3",
+          "targetId": "7813216409883823378",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:18:40.730-08:00",
+          "startTime": "2025-01-23T08:18:40.733-08:00",
+          "endTime": "2025-01-23T08:18:44.597-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649120226-62c61f68e2c23-9428894d-3d8b9aca"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "7317416668127286535",
+          "name": "operation-1737649128059-62c61f705b2de-eefc8570-6b49f792",
+          "clientOperationId": "d25121ab-440d-4da7-b0fd-f7c444d71c14",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-hurqvi6k3jkozy7huzl7xhbu",
+          "targetId": "5769124955549649634",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:18:48.445-08:00",
+          "startTime": "2025-01-23T08:18:48.450-08:00",
+          "endTime": "2025-01-23T08:18:52.289-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649128059-62c61f705b2de-eefc8570-6b49f792"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "5028999114327577887",
+          "name": "operation-1737649135841-62c61f77c724e-a1ca3d52-ec2a6a6c",
+          "clientOperationId": "4a229748-f629-4982-9173-6408f5cb1623",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-vgagxd3vkgdryop7ecokzyn4-1",
+          "targetId": "5207014470666209994",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:18:56.308-08:00",
+          "startTime": "2025-01-23T08:18:56.311-08:00",
+          "endTime": "2025-01-23T08:19:00.341-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649135841-62c61f77c724e-a1ca3d52-ec2a6a6c"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "53074387158422807",
+          "name": "operation-1737649143830-62c61f7f65964-f9a64678-5da915a0",
+          "clientOperationId": "e8bb01d6-1a3e-409b-8886-70b3adc1fcc5",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-vgagxd3vkgdryop7ecokzyn4-2",
+          "targetId": "5065499558870567618",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:19:04.386-08:00",
+          "startTime": "2025-01-23T08:19:04.389-08:00",
+          "endTime": "2025-01-23T08:19:08.206-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649143830-62c61f7f65964-f9a64678-5da915a0"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "619542820738290415",
+          "name": "operation-1737649151748-62c61f86f2b49-39ba97e4-4ddf44cd",
+          "clientOperationId": "92d9b901-d7b8-4cf4-a33f-9200203440ee",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-vgagxd3vkgdryop7ecokzyn4-3",
+          "targetId": "8091231506969709274",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:19:12.187-08:00",
+          "startTime": "2025-01-23T08:19:12.189-08:00",
+          "endTime": "2025-01-23T08:19:15.016-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649151748-62c61f86f2b49-39ba97e4-4ddf44cd"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "2576999076700607207",
+          "name": "operation-1737649159673-62c61f8e816be-f7bc9bdf-49401784",
+          "clientOperationId": "f6c35350-34e3-4bac-afba-68bdd0b5314e",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-qb6kf24l7veqxzstj6m2wx6e",
+          "targetId": "2119620085120289451",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:19:20.219-08:00",
+          "startTime": "2025-01-23T08:19:20.222-08:00",
+          "endTime": "2025-01-23T08:19:24.015-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649159673-62c61f8e816be-f7bc9bdf-49401784"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "3340945055669015295",
+          "name": "operation-1737649167701-62c61f9629599-ead58c3d-28640548",
+          "clientOperationId": "bb92ba88-4b71-47e1-b9ec-19f8f2c64da9",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-oex36nljuf35kulysab6c5pa",
+          "targetId": "7864150130694343355",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:19:28.045-08:00",
+          "startTime": "2025-01-23T08:19:28.049-08:00",
+          "endTime": "2025-01-23T08:19:30.721-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649167701-62c61f9629599-ead58c3d-28640548"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "7612210505926562552",
+          "name": "operation-1737649175456-62c61f9d8ead5-d8b1ab41-7e9476af",
+          "clientOperationId": "61349dee-558d-4aa7-9dfe-5146cf9da4f8",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-gfyf7htggnqwwiatuhyltkaa-1",
+          "targetId": "4256891507776211612",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:19:35.800-08:00",
+          "startTime": "2025-01-23T08:19:35.803-08:00",
+          "endTime": "2025-01-23T08:19:39.414-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649175456-62c61f9d8ead5-d8b1ab41-7e9476af"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "2668576386565788400",
+          "name": "operation-1737649183264-62c61fa500e6f-b8167430-6178dfc5",
+          "clientOperationId": "ff2de066-c09f-471d-a510-9a790dffe96d",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-gfyf7htggnqwwiatuhyltkaa-2",
+          "targetId": "5500281464771627668",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:19:43.621-08:00",
+          "startTime": "2025-01-23T08:19:43.624-08:00",
+          "endTime": "2025-01-23T08:19:47.274-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649183264-62c61fa500e6f-b8167430-6178dfc5"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "1438312304893481672",
+          "name": "operation-1737649190921-62c61fac4e461-4c773ad3-87fa14cb",
+          "clientOperationId": "746f28cd-ee32-40de-964c-63f69d92cdc9",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-gfyf7htggnqwwiatuhyltkaa-3",
+          "targetId": "1166273495871572589",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:19:51.390-08:00",
+          "startTime": "2025-01-23T08:19:51.393-08:00",
+          "endTime": "2025-01-23T08:19:55.094-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649190921-62c61fac4e461-4c773ad3-87fa14cb"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "6759137092208415424",
+          "name": "operation-1737649198737-62c61fb3c28ec-67a4c26a-01f68192",
+          "clientOperationId": "88526acc-9f88-473f-82fa-c4fc1ce9b974",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-y3zv3cp7ua7oj54ap4xfk5la-1",
+          "targetId": "6773624759912548989",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:19:59.350-08:00",
+          "startTime": "2025-01-23T08:19:59.352-08:00",
+          "endTime": "2025-01-23T08:20:02.120-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649198737-62c61fb3c28ec-67a4c26a-01f68192"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "5042539020203053784",
+          "name": "operation-1737649206970-62c61fbb9c7c1-6e7adc39-ffeded41",
+          "clientOperationId": "ad5e5fac-25b3-4f34-99ca-d1fefc6f338d",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-y3zv3cp7ua7oj54ap4xfk5la-2",
+          "targetId": "3262119855878359669",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:20:07.484-08:00",
+          "startTime": "2025-01-23T08:20:07.487-08:00",
+          "endTime": "2025-01-23T08:20:11.281-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649206970-62c61fbb9c7c1-6e7adc39-ffeded41"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "2722835090668245712",
+          "name": "operation-1737649214929-62c61fc333c2e-a40eba05-9d0aba7f",
+          "clientOperationId": "f5f85191-e542-4117-96be-b74ea0977858",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-y3zv3cp7ua7oj54ap4xfk5la-3",
+          "targetId": "8961853830641797709",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:20:15.256-08:00",
+          "startTime": "2025-01-23T08:20:15.259-08:00",
+          "endTime": "2025-01-23T08:20:18.083-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649214929-62c61fc333c2e-a40eba05-9d0aba7f"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "2811129606705238697",
+          "name": "operation-1737649222665-62c61fca94658-718b0717-18c91e2b",
+          "clientOperationId": "a950b83d-230f-4f80-a903-2d53389db86b",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-bqstjjlfsp354musmjzdi345",
+          "targetId": "9220472906987521038",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:20:22.970-08:00",
+          "startTime": "2025-01-23T08:20:22.975-08:00",
+          "endTime": "2025-01-23T08:20:26.699-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649222665-62c61fca94658-718b0717-18c91e2b"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "9097898934096876193",
+          "name": "operation-1737649230397-62c61fd1f3f39-dda298b5-fd36bbbd",
+          "clientOperationId": "10d40e88-cc8c-43f5-b246-ce89e1b7e99d",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-osxkx4opuon5ucunoiypoydn-1",
+          "targetId": "3246009124342383638",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:20:31.108-08:00",
+          "startTime": "2025-01-23T08:20:31.111-08:00",
+          "endTime": "2025-01-23T08:20:34.874-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649230397-62c61fd1f3f39-dda298b5-fd36bbbd"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "4334139866158715577",
+          "name": "operation-1737649238656-62c61fd9d4518-8587b7f9-d2c7c3db",
+          "clientOperationId": "481581b1-be85-42b6-a3f7-989a38935f1b",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-osxkx4opuon5ucunoiypoydn-2",
+          "targetId": "5220328779118462446",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:20:38.994-08:00",
+          "startTime": "2025-01-23T08:20:38.998-08:00",
+          "endTime": "2025-01-23T08:20:42.784-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649238656-62c61fd9d4518-8587b7f9-d2c7c3db"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "8864284169534952113",
+          "name": "operation-1737649246382-62c61fe1328f6-414e7556-582757b2",
+          "clientOperationId": "a253fbbb-1ffb-47a3-947b-fd27c9ec4fdd",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-osxkx4opuon5ucunoiypoydn-3",
+          "targetId": "6429786170898171366",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:20:47.006-08:00",
+          "startTime": "2025-01-23T08:20:47.009-08:00",
+          "endTime": "2025-01-23T08:20:50.876-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649246382-62c61fe1328f6-414e7556-582757b2"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "8201699517536391817",
+          "name": "operation-1737649254420-62c61fe8dd02d-379e4b11-3b77ee6e",
+          "clientOperationId": "d4696be5-b09b-4ceb-b9cc-4761ed54b71b",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-hurqvi6k3jkozy7huzl7xhbu",
+          "targetId": "6285103965534864886",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:20:54.943-08:00",
+          "startTime": "2025-01-23T08:20:54.947-08:00",
+          "endTime": "2025-01-23T08:20:58.715-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649254420-62c61fe8dd02d-379e4b11-3b77ee6e"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "2309323834206966401",
+          "name": "operation-1737649262537-62c61ff09a999-464ea9b0-a2cbc5d0",
+          "clientOperationId": "77d5c244-aa20-4d52-9fa0-577aa4d71d7e",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-vgagxd3vkgdryop7ecokzyn4-1",
+          "targetId": "3720557999293122014",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:21:03.007-08:00",
+          "startTime": "2025-01-23T08:21:03.010-08:00",
+          "endTime": "2025-01-23T08:21:06.826-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649262537-62c61ff09a999-464ea9b0-a2cbc5d0"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "3565347991554347672",
+          "name": "operation-1737649270406-62c61ff81bd3f-3cdd3220-a949cbe0",
+          "clientOperationId": "0309913d-a529-4be6-9477-b0b1f777b727",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-vgagxd3vkgdryop7ecokzyn4-2",
+          "targetId": "8632835747836773846",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:21:11.170-08:00",
+          "startTime": "2025-01-23T08:21:11.181-08:00",
+          "endTime": "2025-01-23T08:21:14.787-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649270406-62c61ff81bd3f-3cdd3220-a949cbe0"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "5136571037021885073",
+          "name": "operation-1737649278470-62c61fffcc971-d1d388c8-8362ab6c",
+          "clientOperationId": "3ad8e549-bb5c-486d-a7fc-0a5905d458f5",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-vgagxd3vkgdryop7ecokzyn4-3",
+          "targetId": "4795957251172648366",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:21:18.955-08:00",
+          "startTime": "2025-01-23T08:21:18.957-08:00",
+          "endTime": "2025-01-23T08:21:22.268-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649278470-62c61fffcc971-d1d388c8-8362ab6c"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "6134545549111579241",
+          "name": "operation-1737649286392-62c620075aace-b02671ea-f0604491",
+          "clientOperationId": "06e1623e-82c4-4800-b47d-f1b559ee44a2",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-qb6kf24l7veqxzstj6m2wx6e",
+          "targetId": "3115415446797075903",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:21:26.895-08:00",
+          "startTime": "2025-01-23T08:21:26.898-08:00",
+          "endTime": "2025-01-23T08:21:30.608-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649286392-62c620075aace-b02671ea-f0604491"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "8675212798562652769",
+          "name": "operation-1737649294406-62c6200eff44e-9b60b922-c0a0b728",
+          "clientOperationId": "3144459b-b020-4e95-b4f1-9603782fdd30",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-oex36nljuf35kulysab6c5pa",
+          "targetId": "6866034520368006543",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:21:34.750-08:00",
+          "startTime": "2025-01-23T08:21:34.753-08:00",
+          "endTime": "2025-01-23T08:21:38.509-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649294406-62c6200eff44e-9b60b922-c0a0b728"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "8411801595305513593",
+          "name": "operation-1737649302027-62c6201643e49-26d7881b-55d180b7",
+          "clientOperationId": "2e62f4ac-abeb-4748-be1c-704fc7164072",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-gfyf7htggnqwwiatuhyltkaa-1",
+          "targetId": "6698757647406646639",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:21:42.429-08:00",
+          "startTime": "2025-01-23T08:21:42.434-08:00",
+          "endTime": "2025-01-23T08:21:46.190-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649302027-62c6201643e49-26d7881b-55d180b7"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "4478548795637879409",
+          "name": "operation-1737649309837-62c6201db67f2-eb38b076-6d277da3",
+          "clientOperationId": "1fcd856a-a29d-46a8-a278-a34672f74063",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-gfyf7htggnqwwiatuhyltkaa-2",
+          "targetId": "4432689205039777127",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:21:50.381-08:00",
+          "startTime": "2025-01-23T08:21:50.385-08:00",
+          "endTime": "2025-01-23T08:21:54.180-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649309837-62c6201db67f2-eb38b076-6d277da3"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "7127580286170157641",
+          "name": "operation-1737649317848-62c620255a693-264d7dd3-834c1ef2",
+          "clientOperationId": "daf09f71-e425-477f-a2a5-2c0e58d65207",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-gfyf7htggnqwwiatuhyltkaa-3",
+          "targetId": "1010549908871759231",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:21:58.324-08:00",
+          "startTime": "2025-01-23T08:21:58.326-08:00",
+          "endTime": "2025-01-23T08:22:02.328-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649317848-62c620255a693-264d7dd3-834c1ef2"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "6584230166896038465",
+          "name": "operation-1737649325819-62c6202cf4703-22e0e693-765eccc8",
+          "clientOperationId": "1aa9543e-fd79-407a-bce6-291692446870",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-y3zv3cp7ua7oj54ap4xfk5la-1",
+          "targetId": "7348220830718543183",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:22:06.196-08:00",
+          "startTime": "2025-01-23T08:22:06.199-08:00",
+          "endTime": "2025-01-23T08:22:09.881-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649325819-62c6202cf4703-22e0e693-765eccc8"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "3298290618760942170",
+          "name": "operation-1737649333556-62c6203455390-9f9ed3c1-4cf46589",
+          "clientOperationId": "a797f833-1315-4e0d-b67c-e5702b3045e1",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-y3zv3cp7ua7oj54ap4xfk5la-2",
+          "targetId": "879777719600727367",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:22:13.893-08:00",
+          "startTime": "2025-01-23T08:22:13.897-08:00",
+          "endTime": "2025-01-23T08:22:17.734-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649333556-62c6203455390-9f9ed3c1-4cf46589"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "6705250641511436882",
+          "name": "operation-1737649341252-62c6203bac30f-e83fb2b3-bdc976e0",
+          "clientOperationId": "4f50f4e9-9f92-4732-bb54-e40ad38d7a16",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-y3zv3cp7ua7oj54ap4xfk5la-3",
+          "targetId": "3440525646262617439",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-23T08:22:21.700-08:00",
+          "startTime": "2025-01-23T08:22:21.703-08:00",
+          "endTime": "2025-01-23T08:22:25.579-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1737649341252-62c6203bac30f-e83fb2b3-bdc976e0"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "6493470309565841570",
+          "name": "operation-1738178124662-62cdd21ad4804-b4a752a4-61716485",
+          "clientOperationId": "2e5c5e98-c29e-49a0-a0bc-159605dc0ba1",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-bqstjjlfsp354musmjzdi345",
+          "targetId": "1996836131292892473",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:15:25.201-08:00",
+          "startTime": "2025-01-29T11:15:25.205-08:00",
+          "endTime": "2025-01-29T11:15:29.281-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178124662-62cdd21ad4804-b4a752a4-61716485"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "8011095753771958458",
+          "name": "operation-1738178132995-62cdd222c6e04-99314cbc-092e0901",
+          "clientOperationId": "927852c3-9728-4fec-965d-d345690029c5",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-bqstjjlfsp354musmjzdi345-v6",
+          "targetId": "3942264717889817905",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:15:33.336-08:00",
+          "startTime": "2025-01-29T11:15:33.339-08:00",
+          "endTime": "2025-01-29T11:15:37.267-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178132995-62cdd222c6e04-99314cbc-092e0901"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "7162928601455116466",
+          "name": "operation-1738178140798-62cdd22a37e15-5f282c2e-6dc7adc3",
+          "clientOperationId": "ff7e865b-999b-4f27-a2f8-005ab499bdae",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-osxkx4opuon5ucunoiypoydn-2",
+          "targetId": "6931654070069415193",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:15:41.392-08:00",
+          "startTime": "2025-01-29T11:15:41.395-08:00",
+          "endTime": "2025-01-29T11:16:04.119-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178140798-62cdd22a37e15-5f282c2e-6dc7adc3"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "4584857400946180250",
+          "name": "operation-1738178165127-62cdd2416baed-c32aa4b9-6d87ccc2",
+          "clientOperationId": "43257851-565e-486a-9fc7-29e3735ced07",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-osxkx4opuon5ucunoiypoydn-3",
+          "targetId": "7813216409883823378",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:16:05.494-08:00",
+          "startTime": "2025-01-29T11:16:05.497-08:00",
+          "endTime": "2025-01-29T11:16:09.356-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178165127-62cdd2416baed-c32aa4b9-6d87ccc2"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "5197488641239662738",
+          "name": "operation-1738178172956-62cdd248e2fa4-162b9631-a90f6815",
+          "clientOperationId": "24f4863c-d311-4906-9bac-294d3c73066a",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-hurqvi6k3jkozy7huzl7xhbu",
+          "targetId": "5769124955549649634",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:16:13.492-08:00",
+          "startTime": "2025-01-29T11:16:13.496-08:00",
+          "endTime": "2025-01-29T11:16:17.452-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178172956-62cdd248e2fa4-162b9631-a90f6815"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "8298186039444881514",
+          "name": "operation-1738178180989-62cdd2508c0a9-4b38df5d-b5e34303",
+          "clientOperationId": "b9367c89-8ae7-40f4-b7ad-d90e8e92828a",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-hurqvi6k3jkozy7huzl7xhbu-v6",
+          "targetId": "3077326989592414970",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:16:21.393-08:00",
+          "startTime": "2025-01-29T11:16:21.397-08:00",
+          "endTime": "2025-01-29T11:16:25.532-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178180989-62cdd2508c0a9-4b38df5d-b5e34303"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "8363895740538798178",
+          "name": "operation-1738178188972-62cdd25829271-f82a0cc4-c70db555",
+          "clientOperationId": "786a1edd-0514-43bb-a35d-eafcc106d8e5",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-vgagxd3vkgdryop7ecokzyn4-2",
+          "targetId": "5065499558870567618",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:16:29.532-08:00",
+          "startTime": "2025-01-29T11:16:29.536-08:00",
+          "endTime": "2025-01-29T11:16:33.500-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178188972-62cdd25829271-f82a0cc4-c70db555"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "6340366721307099258",
+          "name": "operation-1738178197067-62cdd25fe1693-08edeb5e-882c1507",
+          "clientOperationId": "39b368e8-549d-4f24-ac16-55d4907ce9fb",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-vgagxd3vkgdryop7ecokzyn4-3",
+          "targetId": "8091231506969709274",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:16:37.566-08:00",
+          "startTime": "2025-01-29T11:16:37.569-08:00",
+          "endTime": "2025-01-29T11:16:41.839-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178197067-62cdd25fe1693-08edeb5e-882c1507"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "1155659274487578738",
+          "name": "operation-1738178205177-62cdd2679d670-73d5830b-9a5fb8f9",
+          "clientOperationId": "643c3a7b-ab6b-498d-a6af-4b24e94b0241",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-qb6kf24l7veqxzstj6m2wx6e",
+          "targetId": "2119620085120289451",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:16:45.556-08:00",
+          "startTime": "2025-01-29T11:16:45.560-08:00",
+          "endTime": "2025-01-29T11:16:48.277-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178205177-62cdd2679d670-73d5830b-9a5fb8f9"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "5723094309288788042",
+          "name": "operation-1738178212970-62cdd26f0c142-b47f90e6-a566340a",
+          "clientOperationId": "1583affe-0e70-4c8c-b5af-253a9282a47d",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-qb6kf24l7veqxzstj6m2wx6e-v6",
+          "targetId": "5890257185214089891",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:16:53.504-08:00",
+          "startTime": "2025-01-29T11:16:53.508-08:00",
+          "endTime": "2025-01-29T11:16:57.353-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178212970-62cdd26f0c142-b47f90e6-a566340a"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "4413500639766102082",
+          "name": "operation-1738178221026-62cdd276bab05-527699c5-0c7604f5",
+          "clientOperationId": "29dee6cf-cf6c-49b7-abae-9491db1a28ba",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-oex36nljuf35kulysab6c5pa",
+          "targetId": "7864150130694343355",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:17:01.375-08:00",
+          "startTime": "2025-01-29T11:17:01.378-08:00",
+          "endTime": "2025-01-29T11:17:05.346-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178221026-62cdd276bab05-527699c5-0c7604f5"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "823396863552503898",
+          "name": "operation-1738178228783-62cdd27e20927-ff0c6977-63702492",
+          "clientOperationId": "1cfd2278-2d86-435f-9158-959883f91dbe",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-gfyf7htggnqwwiatuhyltkaa-2",
+          "targetId": "5500281464771627668",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:17:09.117-08:00",
+          "startTime": "2025-01-29T11:17:09.122-08:00",
+          "endTime": "2025-01-29T11:17:13.004-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178228783-62cdd27e20927-ff0c6977-63702492"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "6355366649775243347",
+          "name": "operation-1738178236540-62cdd2858651d-3223cd96-bc68975e",
+          "clientOperationId": "3a66306e-c181-4b63-87ff-9289e2f75758",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-gfyf7htggnqwwiatuhyltkaa-3",
+          "targetId": "1166273495871572589",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:17:16.884-08:00",
+          "startTime": "2025-01-29T11:17:16.887-08:00",
+          "endTime": "2025-01-29T11:17:19.826-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178236540-62cdd2858651d-3223cd96-bc68975e"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "2903347510942089259",
+          "name": "operation-1738178244354-62cdd28cfa22b-c5d454fd-ce37c0ad",
+          "clientOperationId": "eb75843a-c1f0-447c-b283-37a7623cabb1",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-y3zv3cp7ua7oj54ap4xfk5la-2",
+          "targetId": "3262119855878359669",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:17:24.678-08:00",
+          "startTime": "2025-01-29T11:17:24.680-08:00",
+          "endTime": "2025-01-29T11:17:48.344-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178244354-62cdd28cfa22b-c5d454fd-ce37c0ad"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "35636480633716785",
+          "name": "operation-1738178270182-62cdd2a59bbd4-1a8275fb-259287e2",
+          "clientOperationId": "3e1c55b5-6d72-4344-8d81-b3a4e6bf11b6",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/cross-region-vpc-y3zv3cp7ua7oj54ap4xfk5la-3",
+          "targetId": "8961853830641797709",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:17:50.765-08:00",
+          "startTime": "2025-01-29T11:17:50.769-08:00",
+          "endTime": "2025-01-29T11:17:54.543-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178270182-62cdd2a59bbd4-1a8275fb-259287e2"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "3260309793465155593",
+          "name": "operation-1738178278264-62cdd2ad50d80-8495d0ec-7a37c89c",
+          "clientOperationId": "b10eff1d-9bb9-4917-9198-af9940f70a1e",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-bqstjjlfsp354musmjzdi345",
+          "targetId": "9220472906987521038",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:17:58.734-08:00",
+          "startTime": "2025-01-29T11:17:58.748-08:00",
+          "endTime": "2025-01-29T11:18:02.658-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178278264-62cdd2ad50d80-8495d0ec-7a37c89c"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "4533888388389388289",
+          "name": "operation-1738178286180-62cdd2b4dda6e-2e9feb83-468abf50",
+          "clientOperationId": "0356b524-89ec-4783-9cf7-2d4e89ce2f1c",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-bqstjjlfsp354musmjzdi345-v6",
+          "targetId": "258455239321633798",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:18:06.770-08:00",
+          "startTime": "2025-01-29T11:18:06.774-08:00",
+          "endTime": "2025-01-29T11:18:10.732-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178286180-62cdd2b4dda6e-2e9feb83-468abf50"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "7388359511992942617",
+          "name": "operation-1738178294345-62cdd2bca6ef5-85ef3cba-174e324d",
+          "clientOperationId": "27feeaf2-0e8e-43bf-a0b9-efafe10293a3",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-osxkx4opuon5ucunoiypoydn-2",
+          "targetId": "5220328779118462446",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:18:14.848-08:00",
+          "startTime": "2025-01-29T11:18:14.851-08:00",
+          "endTime": "2025-01-29T11:18:18.588-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178294345-62cdd2bca6ef5-85ef3cba-174e324d"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "3350115188802568209",
+          "name": "operation-1738178302408-62cdd2c457600-ae6228cf-1f129894",
+          "clientOperationId": "2bce7270-fcc9-4d21-981d-4285b5ab1542",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-osxkx4opuon5ucunoiypoydn-3",
+          "targetId": "6429786170898171366",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:18:22.929-08:00",
+          "startTime": "2025-01-29T11:18:22.932-08:00",
+          "endTime": "2025-01-29T11:18:26.803-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178302408-62cdd2c457600-ae6228cf-1f129894"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "5185798294310732265",
+          "name": "operation-1738178310407-62cdd2cbf86d2-84a632d4-1f103ee2",
+          "clientOperationId": "dd08a060-dc13-4e58-abc4-1ea3c5d6456c",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-hurqvi6k3jkozy7huzl7xhbu",
+          "targetId": "6285103965534864886",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:18:30.753-08:00",
+          "startTime": "2025-01-29T11:18:30.756-08:00",
+          "endTime": "2025-01-29T11:18:34.533-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178310407-62cdd2cbf86d2-84a632d4-1f103ee2"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "19085308762505697",
+          "name": "operation-1738178318204-62cdd2d367fd6-cfbd054c-47fbabd3",
+          "clientOperationId": "7999f734-457d-4ad0-a799-3ccefdc940c0",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-hurqvi6k3jkozy7huzl7xhbu-v6",
+          "targetId": "6266197974764406222",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:18:38.733-08:00",
+          "startTime": "2025-01-29T11:18:38.736-08:00",
+          "endTime": "2025-01-29T11:18:42.684-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178318204-62cdd2d367fd6-cfbd054c-47fbabd3"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "1250010690844344825",
+          "name": "operation-1738178326255-62cdd2db15642-cdcfdf99-9c9d4a15",
+          "clientOperationId": "0490b90e-26a9-43b4-ab85-374f19222d30",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-vgagxd3vkgdryop7ecokzyn4-2",
+          "targetId": "8632835747836773846",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:18:46.642-08:00",
+          "startTime": "2025-01-29T11:18:46.645-08:00",
+          "endTime": "2025-01-29T11:18:49.603-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178326255-62cdd2db15642-cdcfdf99-9c9d4a15"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "6839932960418284017",
+          "name": "operation-1738178334098-62cdd2e290458-69e65150-866c940d",
+          "clientOperationId": "a9f0c1e7-495e-424b-a1ec-eb7136ab9a8d",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-vgagxd3vkgdryop7ecokzyn4-3",
+          "targetId": "4795957251172648366",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:18:54.644-08:00",
+          "startTime": "2025-01-29T11:18:54.647-08:00",
+          "endTime": "2025-01-29T11:18:58.431-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178334098-62cdd2e290458-69e65150-866c940d"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "9131984752335110601",
+          "name": "operation-1738178342156-62cdd2ea3f7c4-eb4a1f34-fcdbe74c",
+          "clientOperationId": "2b703cc2-8488-44d3-87ac-bc1a6caa5fdc",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-qb6kf24l7veqxzstj6m2wx6e",
+          "targetId": "3115415446797075903",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:19:02.760-08:00",
+          "startTime": "2025-01-29T11:19:02.763-08:00",
+          "endTime": "2025-01-29T11:19:06.685-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178342156-62cdd2ea3f7c4-eb4a1f34-fcdbe74c"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "5798446847617384897",
+          "name": "operation-1738178350244-62cdd2f1f61b2-5c345168-6161a171",
+          "clientOperationId": "1e02c11c-df5e-40f8-a708-9e89f43ad13c",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-qb6kf24l7veqxzstj6m2wx6e-v6",
+          "targetId": "5236448134977734071",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:19:10.624-08:00",
+          "startTime": "2025-01-29T11:19:10.628-08:00",
+          "endTime": "2025-01-29T11:19:13.412-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178350244-62cdd2f1f61b2-5c345168-6161a171"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "4509512984400740825",
+          "name": "operation-1738178358087-62cdd2f970ec1-5daa25e9-df5d46e5",
+          "clientOperationId": "4e25d6ae-9331-4110-b347-53217ff5e846",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-oex36nljuf35kulysab6c5pa",
+          "targetId": "6866034520368006543",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:19:18.622-08:00",
+          "startTime": "2025-01-29T11:19:18.625-08:00",
+          "endTime": "2025-01-29T11:19:22.519-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178358087-62cdd2f970ec1-5daa25e9-df5d46e5"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "3983582728493187537",
+          "name": "operation-1738178366270-62cdd3013ecf5-4fda13c5-cc4f8522",
+          "clientOperationId": "3e9a871d-3de5-49e5-9a1a-58f75577f6a3",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-gfyf7htggnqwwiatuhyltkaa-2",
+          "targetId": "4432689205039777127",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:19:26.772-08:00",
+          "startTime": "2025-01-29T11:19:26.775-08:00",
+          "endTime": "2025-01-29T11:19:30.805-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178366270-62cdd3013ecf5-4fda13c5-cc4f8522"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "3939314474803511721",
+          "name": "operation-1738178374345-62cdd308f21e1-360ac4a0-0344fc0d",
+          "clientOperationId": "af731eb6-4c13-4b8c-a9f9-1b9b0dbaba6c",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-gfyf7htggnqwwiatuhyltkaa-3",
+          "targetId": "1010549908871759231",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:19:34.794-08:00",
+          "startTime": "2025-01-29T11:19:34.797-08:00",
+          "endTime": "2025-01-29T11:19:37.540-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178374345-62cdd308f21e1-360ac4a0-0344fc0d"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "904747740321792417",
+          "name": "operation-1738178382277-62cdd31082b46-ca641c5e-1e975846",
+          "clientOperationId": "caaec6db-9054-40a3-91bb-69282a780033",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-y3zv3cp7ua7oj54ap4xfk5la-2",
+          "targetId": "879777719600727367",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:19:42.599-08:00",
+          "startTime": "2025-01-29T11:19:42.601-08:00",
+          "endTime": "2025-01-29T11:19:47.225-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178382277-62cdd31082b46-ca641c5e-1e975846"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "3851686026589749689",
+          "name": "operation-1738178390048-62cdd317ec0d2-61aa39bd-ff80c46a",
+          "clientOperationId": "3de46e09-bc3e-4187-849a-f823fcb29f8e",
+          "operationType": "patch",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/default-y3zv3cp7ua7oj54ap4xfk5la-3",
+          "targetId": "3440525646262617439",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-01-29T11:19:50.386-08:00",
+          "startTime": "2025-01-29T11:19:50.389-08:00",
+          "endTime": "2025-01-29T11:20:11.394-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738178390048-62cdd317ec0d2-61aa39bd-ff80c46a"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "3372994239067492603",
+          "name": "operation-1738747411858-62d61add684d6-cc2eabca-5d2667eb",
+          "operationType": "compute.instanceTemplates.insert",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/instanceTemplates/mig-template",
+          "targetId": "2206878216970211580",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T01:23:32.154-08:00",
+          "startTime": "2025-02-05T01:23:32.159-08:00",
+          "endTime": "2025-02-05T01:23:32.738-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738747411858-62d61add684d6-cc2eabca-5d2667eb"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "8258823514577866944",
+          "name": "operation-1738747439661-62d61af7ebff2-4a5191ac-98012e54",
+          "operationType": "insert",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/gce-secured-instance-test-deny",
+          "targetId": "3706877660854390976",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T01:24:00.049-08:00",
+          "startTime": "2025-02-05T01:24:00.090-08:00",
+          "endTime": "2025-02-05T01:24:04.195-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738747439661-62d61af7ebff2-4a5191ac-98012e54"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "1197276755963842716",
+          "name": "operation-1738747507094-62d61b383b5ad-4679118d-2b47f8fb",
+          "clientOperationId": "f197732e-94b5-4e01-b599-c94ac0e411f2",
+          "operationType": "delete",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/gce-secured-instance-test-deny",
+          "targetId": "3706877660854390976",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T01:25:07.437-08:00",
+          "startTime": "2025-02-05T01:25:07.440-08:00",
+          "endTime": "2025-02-05T01:25:11.993-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738747507094-62d61b383b5ad-4679118d-2b47f8fb"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "4813030742589112075",
+          "name": "operation-1738752484606-62d62dc32825b-944f3fc0-27f69a2a",
+          "operationType": "delete",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/instanceTemplates/mig-template",
+          "targetId": "2206878216970211580",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T02:48:04.783-08:00",
+          "startTime": "2025-02-05T02:48:04.794-08:00",
+          "endTime": "2025-02-05T02:48:05.413-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738752484606-62d62dc32825b-944f3fc0-27f69a2a"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "3580759687123886410",
+          "name": "operation-1738760101437-62d64a2322042-0f71bd37-ab2f0da3",
+          "operationType": "compute.instanceTemplates.insert",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/instanceTemplates/mig-template",
+          "targetId": "6736262122156515658",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T04:55:01.806-08:00",
+          "startTime": "2025-02-05T04:55:01.810-08:00",
+          "endTime": "2025-02-05T04:55:02.401-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738760101437-62d64a2322042-0f71bd37-ab2f0da3"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "5589617922706170158",
+          "name": "operation-1738760128931-62d64a3d5a682-0765339b-1107e2ae",
+          "operationType": "insert",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/gce-secured-instance-test-deny",
+          "targetId": "4564544778318831918",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T04:55:29.363-08:00",
+          "startTime": "2025-02-05T04:55:29.406-08:00",
+          "endTime": "2025-02-05T04:55:32.537-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738760128931-62d64a3d5a682-0765339b-1107e2ae"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "5373875242912374472",
+          "name": "operation-1738760231266-62d64a9ef290c-a08e6b81-dd33b19e",
+          "clientOperationId": "80418335-c93d-4cb9-be96-be464895d9a7",
+          "operationType": "delete",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/firewalls/gce-secured-instance-test-deny",
+          "targetId": "4564544778318831918",
+          "status": "DONE",
+          "user": "gceenforcer-enforcer@system.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T04:57:11.635-08:00",
+          "startTime": "2025-02-05T04:57:11.639-08:00",
+          "endTime": "2025-02-05T04:57:15.856-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/global/operations/operation-1738760231266-62d64a9ef290c-a08e6b81-dd33b19e"
+        }
+      ]
+    },
+    "regions/us-central1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/us-central1'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/us-central1"
+          }
+        ]
+      }
+    },
+    "regions/us-central2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/us-central2'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/us-central2"
+          }
+        ]
+      }
+    },
+    "regions/europe-west1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/europe-west1'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-west1"
+          }
+        ]
+      }
+    },
+    "regions/us-west1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/us-west1'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/us-west1"
+          }
+        ]
+      }
+    },
+    "regions/asia-east1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/asia-east1'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/asia-east1"
+          }
+        ]
+      }
+    },
+    "regions/us-east1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/us-east1'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/us-east1"
+          }
+        ]
+      }
+    },
+    "regions/asia-northeast1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/asia-northeast1'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/asia-northeast1"
+          }
+        ]
+      }
+    },
+    "regions/asia-southeast1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/asia-southeast1'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/asia-southeast1"
+          }
+        ]
+      }
+    },
+    "regions/us-east4": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/us-east4'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/us-east4"
+          }
+        ]
+      }
+    },
+    "regions/australia-southeast1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/australia-southeast1'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/australia-southeast1"
+          }
+        ]
+      }
+    },
+    "regions/europe-west2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/europe-west2'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-west2"
+          }
+        ]
+      }
+    },
+    "regions/europe-west3": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/europe-west3'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-west3"
+          }
+        ]
+      }
+    },
+    "regions/southamerica-east1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/southamerica-east1'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/southamerica-east1"
+          }
+        ]
+      }
+    },
+    "regions/asia-south1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/asia-south1'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/asia-south1"
+          }
+        ]
+      }
+    },
+    "regions/northamerica-northeast1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/northamerica-northeast1'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/northamerica-northeast1"
+          }
+        ]
+      }
+    },
+    "regions/europe-west4": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/europe-west4'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-west4"
+          }
+        ]
+      }
+    },
+    "regions/europe-north1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/europe-north1'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-north1"
+          }
+        ]
+      }
+    },
+    "regions/us-west2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/us-west2'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/us-west2"
+          }
+        ]
+      }
+    },
+    "regions/asia-east2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/asia-east2'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/asia-east2"
+          }
+        ]
+      }
+    },
+    "regions/europe-west6": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/europe-west6'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-west6"
+          }
+        ]
+      }
+    },
+    "regions/asia-northeast2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/asia-northeast2'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/asia-northeast2"
+          }
+        ]
+      }
+    },
+    "regions/asia-northeast3": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/asia-northeast3'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/asia-northeast3"
+          }
+        ]
+      }
+    },
+    "regions/us-west3": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/us-west3'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/us-west3"
+          }
+        ]
+      }
+    },
+    "regions/us-west4": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/us-west4'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/us-west4"
+          }
+        ]
+      }
+    },
+    "regions/asia-southeast2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/asia-southeast2'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/asia-southeast2"
+          }
+        ]
+      }
+    },
+    "regions/europe-central2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/europe-central2'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-central2"
+          }
+        ]
+      }
+    },
+    "regions/northamerica-northeast2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/northamerica-northeast2'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/northamerica-northeast2"
+          }
+        ]
+      }
+    },
+    "regions/asia-south2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/asia-south2'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/asia-south2"
+          }
+        ]
+      }
+    },
+    "regions/australia-southeast2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/australia-southeast2'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/australia-southeast2"
+          }
+        ]
+      }
+    },
+    "regions/southamerica-west1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/southamerica-west1'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/southamerica-west1"
+          }
+        ]
+      }
+    },
+    "regions/us-east7": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/us-east7'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/us-east7"
+          }
+        ]
+      }
+    },
+    "regions/europe-west8": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/europe-west8'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-west8"
+          }
+        ]
+      }
+    },
+    "regions/europe-west9": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/europe-west9'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-west9"
+          }
+        ]
+      }
+    },
+    "regions/us-east5": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/us-east5'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/us-east5"
+          }
+        ]
+      }
+    },
+    "regions/europe-southwest1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/europe-southwest1'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-southwest1"
+          }
+        ]
+      }
+    },
+    "regions/us-south1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/us-south1'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/us-south1"
+          }
+        ]
+      }
+    },
+    "regions/me-west1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/me-west1'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/me-west1"
+          }
+        ]
+      }
+    },
+    "regions/europe-west12": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/europe-west12'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-west12"
+          }
+        ]
+      }
+    },
+    "regions/me-central1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/me-central1'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/me-central1"
+          }
+        ]
+      }
+    },
+    "regions/europe-west10": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/europe-west10'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-west10"
+          }
+        ]
+      }
+    },
+    "regions/me-central2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/me-central2'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/me-central2"
+          }
+        ]
+      }
+    },
+    "regions/africa-south1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/africa-south1'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/africa-south1"
+          }
+        ]
+      }
+    },
+    "regions/us-west8": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/us-west8'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/us-west8"
+          }
+        ]
+      }
+    },
+    "regions/northamerica-south1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/northamerica-south1'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/northamerica-south1"
+          }
+        ]
+      }
+    },
+    "regions/europe-north2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'regions/europe-north2'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/europe-north2"
+          }
+        ]
+      }
+    },
+    "zones/us-central1-a": {
+      "operations": [
+        {
+          "kind": "compute#operation",
+          "id": "3724520394368914064",
+          "name": "operation-1738747007329-62d6195b9e3f5-e474c15b-57b43e9d",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/us-central1-a",
+          "operationType": "delete",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/us-central1-a/autoscalers/gl7-ilb-mig-a",
+          "targetId": "895263327236662199",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T01:16:47.400-08:00",
+          "startTime": "2025-02-05T01:16:47.409-08:00",
+          "endTime": "2025-02-05T01:16:47.883-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/us-central1-a/operations/operation-1738747007329-62d6195b9e3f5-e474c15b-57b43e9d"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "4736856628556370534",
+          "name": "operation-1738747017138-62d61964f9278-2cf53284-d61a1788",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/us-central1-a",
+          "operationType": "compute.instanceGroupManagers.delete",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/us-central1-a/instanceGroupManagers/gl7-ilb-mig-a",
+          "targetId": "6543805410705417128",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T01:16:57.306-08:00",
+          "startTime": "2025-02-05T01:16:57.311-08:00",
+          "endTime": "2025-02-05T01:17:59.288-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/us-central1-a/operations/operation-1738747017138-62d61964f9278-2cf53284-d61a1788"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "5151614567994790500",
+          "name": "operation-1738747019542-62d6196743fe1-be3a9d47-b32f9f11",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/us-central1-a",
+          "clientOperationId": "3b9068a6-c207-495a-9941-828ab68ad488",
+          "operationType": "delete",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/us-central1-a/instances/gl7-ilb-mig-a-27j7",
+          "targetId": "8300037737297343422",
+          "status": "DONE",
+          "user": "123456270@cloudservices.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T01:16:59.716-08:00",
+          "startTime": "2025-02-05T01:16:59.729-08:00",
+          "endTime": "2025-02-05T01:17:45.514-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/us-central1-a/operations/operation-1738747019542-62d6196743fe1-be3a9d47-b32f9f11"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "6285958702666249497",
+          "name": "systemevent-1738525633000-62d2e0ac9b240-12ca31cf-4a9513ee",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/us-central1-a",
+          "operationType": "compute.instances.migrateOnHostMaintenance",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/us-central1-a/instances/gl7-ilb-mig-a-27j7",
+          "targetId": "8300037737297343422",
+          "status": "DONE",
+          "statusMessage": "Instance migrated during Compute Engine maintenance.",
+          "user": "system",
+          "progress": 100,
+          "insertTime": "2025-02-02T11:47:13.000-08:00",
+          "startTime": "2025-02-02T11:47:13.000-08:00",
+          "endTime": "2025-02-02T11:47:13.000-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/us-central1-a/operations/systemevent-1738525633000-62d2e0ac9b240-12ca31cf-4a9513ee"
+        }
+      ]
+    },
+    "zones/us-central1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-central1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-central1-b"
+          }
+        ]
+      }
+    },
+    "zones/us-central1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-central1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-central1-c"
+          }
+        ]
+      }
+    },
+    "zones/us-central1-f": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-central1-f'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-central1-f"
+          }
+        ]
+      }
+    },
+    "zones/us-central2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-central2-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-central2-b"
+          }
+        ]
+      }
+    },
+    "zones/us-central2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-central2-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-central2-a"
+          }
+        ]
+      }
+    },
+    "zones/us-central2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-central2-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-central2-c"
+          }
+        ]
+      }
+    },
+    "zones/us-central2-d": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-central2-d'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-central2-d"
+          }
+        ]
+      }
+    },
+    "zones/europe-west1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-west1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west1-b"
+          }
+        ]
+      }
+    },
+    "zones/europe-west1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-west1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west1-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-west1-d": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-west1-d'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west1-d"
+          }
+        ]
+      }
+    },
+    "zones/us-west1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-west1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west1-a"
+          }
+        ]
+      }
+    },
+    "zones/us-west1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-west1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west1-b"
+          }
+        ]
+      }
+    },
+    "zones/us-west1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-west1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west1-c"
+          }
+        ]
+      }
+    },
+    "zones/asia-east1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-east1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-east1-a"
+          }
+        ]
+      }
+    },
+    "zones/asia-east1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-east1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-east1-b"
+          }
+        ]
+      }
+    },
+    "zones/asia-east1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-east1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-east1-c"
+          }
+        ]
+      }
+    },
+    "zones/us-east1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-east1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east1-b"
+          }
+        ]
+      }
+    },
+    "zones/us-east1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-east1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east1-c"
+          }
+        ]
+      }
+    },
+    "zones/us-east1-d": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-east1-d'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east1-d"
+          }
+        ]
+      }
+    },
+    "zones/asia-northeast1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-northeast1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast1-a"
+          }
+        ]
+      }
+    },
+    "zones/asia-northeast1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-northeast1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast1-b"
+          }
+        ]
+      }
+    },
+    "zones/asia-northeast1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-northeast1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast1-c"
+          }
+        ]
+      }
+    },
+    "zones/asia-southeast1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-southeast1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-southeast1-a"
+          }
+        ]
+      }
+    },
+    "zones/asia-southeast1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-southeast1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-southeast1-b"
+          }
+        ]
+      }
+    },
+    "zones/asia-southeast1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-southeast1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-southeast1-c"
+          }
+        ]
+      }
+    },
+    "zones/us-east4-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-east4-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east4-a"
+          }
+        ]
+      }
+    },
+    "zones/us-east4-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-east4-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east4-b"
+          }
+        ]
+      }
+    },
+    "zones/us-east4-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-east4-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east4-c"
+          }
+        ]
+      }
+    },
+    "zones/australia-southeast1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/australia-southeast1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/australia-southeast1-c"
+          }
+        ]
+      }
+    },
+    "zones/australia-southeast1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/australia-southeast1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/australia-southeast1-a"
+          }
+        ]
+      }
+    },
+    "zones/australia-southeast1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/australia-southeast1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/australia-southeast1-b"
+          }
+        ]
+      }
+    },
+    "zones/europe-west2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-west2-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west2-a"
+          }
+        ]
+      }
+    },
+    "zones/europe-west2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-west2-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west2-b"
+          }
+        ]
+      }
+    },
+    "zones/europe-west2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-west2-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west2-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-west3-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-west3-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west3-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-west3-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-west3-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west3-a"
+          }
+        ]
+      }
+    },
+    "zones/europe-west3-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-west3-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west3-b"
+          }
+        ]
+      }
+    },
+    "zones/southamerica-east1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/southamerica-east1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/southamerica-east1-a"
+          }
+        ]
+      }
+    },
+    "zones/southamerica-east1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/southamerica-east1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/southamerica-east1-b"
+          }
+        ]
+      }
+    },
+    "zones/southamerica-east1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/southamerica-east1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/southamerica-east1-c"
+          }
+        ]
+      }
+    },
+    "zones/asia-south1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-south1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-south1-b"
+          }
+        ]
+      }
+    },
+    "zones/asia-south1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-south1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-south1-a"
+          }
+        ]
+      }
+    },
+    "zones/asia-south1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-south1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-south1-c"
+          }
+        ]
+      }
+    },
+    "zones/northamerica-northeast1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/northamerica-northeast1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-northeast1-a"
+          }
+        ]
+      }
+    },
+    "zones/northamerica-northeast1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/northamerica-northeast1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-northeast1-b"
+          }
+        ]
+      }
+    },
+    "zones/northamerica-northeast1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/northamerica-northeast1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-northeast1-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-west4-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-west4-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west4-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-west4-b": {
+      "operations": [
+        {
+          "kind": "compute#operation",
+          "id": "7299878937969987832",
+          "name": "operation-1738747414923-62d61ae05477c-7fa693d1-d0a704af",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b",
+          "operationType": "insert",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b/instances/gce1",
+          "targetId": "5259249240161292536",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T01:23:35.990-08:00",
+          "startTime": "2025-02-05T01:23:35.991-08:00",
+          "endTime": "2025-02-05T01:23:43.773-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b/operations/operation-1738747414923-62d61ae05477c-7fa693d1-d0a704af"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "8635556369083044062",
+          "name": "operation-1738747441366-62d61af98c55c-96ae2060-440e4931",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b",
+          "operationType": "compute.instanceGroups.insert",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b/instanceGroups/instance-group-1",
+          "targetId": "8902174216398213342",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T01:24:01.566-08:00",
+          "startTime": "2025-02-05T01:24:01.569-08:00",
+          "endTime": "2025-02-05T01:24:06.878-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b/operations/operation-1738747441366-62d61af98c55c-96ae2060-440e4931"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "4638586587117949138",
+          "name": "operation-1738747453216-62d61b04d9872-03f350ec-dbfa7659",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b",
+          "operationType": "compute.instanceGroups.addInstances",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b/instanceGroups/instance-group-1",
+          "targetId": "8902174216398213342",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T01:24:13.409-08:00",
+          "startTime": "2025-02-05T01:24:13.426-08:00",
+          "endTime": "2025-02-05T01:24:13.426-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b/operations/operation-1738747453216-62d61b04d9872-03f350ec-dbfa7659"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "8364649013375336344",
+          "name": "operation-1738752375165-62d62d5ac922b-8e6e176d-a9fce594",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b",
+          "operationType": "compute.instanceGroups.delete",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b/instanceGroups/instance-group-1",
+          "targetId": "8902174216398213342",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T02:46:15.347-08:00",
+          "startTime": "2025-02-05T02:46:15.351-08:00",
+          "endTime": "2025-02-05T02:46:27.413-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b/operations/operation-1738752375165-62d62d5ac922b-8e6e176d-a9fce594"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "2660550389766487914",
+          "name": "operation-1738752389041-62d62d6804e17-f844ed3b-d38ec01e",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b",
+          "operationType": "delete",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b/instances/gce1",
+          "targetId": "5259249240161292536",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T02:46:29.290-08:00",
+          "startTime": "2025-02-05T02:46:29.308-08:00",
+          "endTime": "2025-02-05T02:47:15.122-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b/operations/operation-1738752389041-62d62d6804e17-f844ed3b-d38ec01e"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "7617782938227113822",
+          "name": "operation-1738752433860-62d62d92c2e68-91563631-9f61bdfa",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b",
+          "operationType": "deleteInstanceNetworkInterfaces",
+          "status": "DONE",
+          "progress": 100,
+          "insertTime": "2025-02-05T02:47:13.861-08:00",
+          "startTime": "2025-02-05T02:47:13.861-08:00",
+          "endTime": "2025-02-05T02:47:14.030-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b/operations/operation-1738752433860-62d62d92c2e68-91563631-9f61bdfa"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "2573392871831822662",
+          "name": "operation-1738760103957-62d64a2589316-3f295f1f-8bbc488a",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b",
+          "operationType": "insert",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b/instances/gce1",
+          "targetId": "4008916034740216135",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T04:55:05.269-08:00",
+          "startTime": "2025-02-05T04:55:05.269-08:00",
+          "endTime": "2025-02-05T04:55:18.479-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b/operations/operation-1738760103957-62d64a2589316-3f295f1f-8bbc488a"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "7473153672630690093",
+          "name": "operation-1738760130755-62d64a3f179f5-919db895-16bcc7d1",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b",
+          "operationType": "compute.instanceGroups.insert",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b/instanceGroups/instance-group-1",
+          "targetId": "361518988230844717",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T04:55:30.986-08:00",
+          "startTime": "2025-02-05T04:55:30.989-08:00",
+          "endTime": "2025-02-05T04:55:35.277-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b/operations/operation-1738760130755-62d64a3f179f5-919db895-16bcc7d1"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "757473358983913789",
+          "name": "operation-1738760146039-62d64a4dab257-0d569310-30a7483b",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b",
+          "operationType": "compute.instanceGroups.addInstances",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b/instanceGroups/instance-group-1",
+          "targetId": "361518988230844717",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T04:55:46.195-08:00",
+          "startTime": "2025-02-05T04:55:46.207-08:00",
+          "endTime": "2025-02-05T04:55:46.207-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-b/operations/operation-1738760146039-62d64a4dab257-0d569310-30a7483b"
+        }
+      ]
+    },
+    "zones/europe-west4-a": {
+      "operations": [
+        {
+          "kind": "compute#operation",
+          "id": "1685631025898492156",
+          "name": "operation-1738747408877-62d61ada907a9-9d0f813e-f07449a1",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "operationType": "insert",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/disks/unattached-disk",
+          "targetId": "6953270790805426431",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T01:23:31.548-08:00",
+          "startTime": "2025-02-05T01:23:31.553-08:00",
+          "endTime": "2025-02-05T01:23:32.219-08:00",
+          "warnings": [
+            {
+              "code": "DEPRECATED_RESOURCE_USED",
+              "message": "The resource 'projects/debian-cloud/global/images/debian-9-stretch-v20200805' is deprecated. A suggested replacement is 'projects/debian-cloud/global/images/debian-9-stretch-v20200902'.",
+              "data": [
+                {
+                  "key": "resource_name",
+                  "value": "projects/debian-cloud/global/images/debian-9-stretch-v20200805"
+                },
+                {
+                  "key": "replacement_suggestion",
+                  "value": "A suggested replacement is 'projects/debian-cloud/global/images/debian-9-stretch-v20200902'."
+                }
+              ]
+            }
+          ],
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738747408877-62d61ada907a9-9d0f813e-f07449a1"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "4802011922386817272",
+          "name": "operation-1738747414610-62d61ae00819c-1ae008f6-bdd30571",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "operationType": "insert",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instances/gce2",
+          "targetId": "2767531853241815288",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T01:23:35.682-08:00",
+          "startTime": "2025-02-05T01:23:35.683-08:00",
+          "endTime": "2025-02-05T01:23:43.626-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738747414610-62d61ae00819c-1ae008f6-bdd30571"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "1352869565533425909",
+          "name": "operation-1738747414893-62d61ae04d2d3-de871a42-9984398f",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "operationType": "compute.instanceGroupManagers.insert",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instanceGroupManagers/mig",
+          "targetId": "1150095616799314165",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T01:23:38.382-08:00",
+          "startTime": "2025-02-05T01:23:38.385-08:00",
+          "endTime": "2025-02-05T01:24:01.160-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738747414893-62d61ae04d2d3-de871a42-9984398f"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "8847423991943434487",
+          "name": "operation-1738747415972-62d61ae154a58-e05669f8-723490a4",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "operationType": "insert",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instances/gce1",
+          "targetId": "7276406499315716343",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T01:23:36.880-08:00",
+          "startTime": "2025-02-05T01:23:36.880-08:00",
+          "endTime": "2025-02-05T01:23:46.385-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738747415972-62d61ae154a58-e05669f8-723490a4"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "1384003714742653120",
+          "name": "operation-1738747439771-62d61af806d82-4ebbf5d7-24acef88",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "operationType": "compute.instanceGroups.insert",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instanceGroups/instance-group-2",
+          "targetId": "685289583101776064",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T01:23:59.997-08:00",
+          "startTime": "2025-02-05T01:24:00.002-08:00",
+          "endTime": "2025-02-05T01:24:04.289-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738747439771-62d61af806d82-4ebbf5d7-24acef88"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "2096195015671714014",
+          "name": "operation-1738747441099-62d61af94b403-74fffca4-0c9a8fb9",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "operationType": "compute.instanceGroups.insert",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instanceGroups/instance-group-1",
+          "targetId": "5126889459178967262",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T01:24:01.318-08:00",
+          "startTime": "2025-02-05T01:24:01.321-08:00",
+          "endTime": "2025-02-05T01:24:06.794-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738747441099-62d61af94b403-74fffca4-0c9a8fb9"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "4861706435883339997",
+          "name": "operation-1738747441948-62d61afa1a7d4-174f4852-23871217",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "clientOperationId": "f763fc54-1fbc-3f63-848c-06ebb1f05296",
+          "operationType": "insert",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instances/mig-l40g",
+          "targetId": "7786653639192252637",
+          "status": "DONE",
+          "user": "123456270@cloudservices.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T01:24:02.370-08:00",
+          "startTime": "2025-02-05T01:24:02.370-08:00",
+          "endTime": "2025-02-05T01:24:12.538-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738747441948-62d61afa1a7d4-174f4852-23871217"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "5794338479467827421",
+          "name": "operation-1738747442035-62d61afa2f96e-e5edb2fc-aec03ffe",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "clientOperationId": "3a3993c0-da77-3988-b31c-5b1b56ddcd40",
+          "operationType": "insert",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instances/mig-bzvx",
+          "targetId": "4335690972119601373",
+          "status": "DONE",
+          "user": "123456270@cloudservices.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T01:24:02.617-08:00",
+          "startTime": "2025-02-05T01:24:02.618-08:00",
+          "endTime": "2025-02-05T01:24:11.569-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738747442035-62d61afa2f96e-e5edb2fc-aec03ffe"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "4800699324546584784",
+          "name": "operation-1738747454988-62d61b0689feb-60effcf0-5387d4be",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "operationType": "compute.instanceGroups.addInstances",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instanceGroups/instance-group-2",
+          "targetId": "685289583101776064",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T01:24:15.134-08:00",
+          "startTime": "2025-02-05T01:24:15.148-08:00",
+          "endTime": "2025-02-05T01:24:15.148-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738747454988-62d61b0689feb-60effcf0-5387d4be"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "14036514573815983",
+          "name": "operation-1738747456352-62d61b07d71c2-98b6f713-591d5e59",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "operationType": "compute.instanceGroups.addInstances",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instanceGroups/instance-group-1",
+          "targetId": "5126889459178967262",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T01:24:16.483-08:00",
+          "startTime": "2025-02-05T01:24:16.493-08:00",
+          "endTime": "2025-02-05T01:24:16.493-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738747456352-62d61b07d71c2-98b6f713-591d5e59"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "4665897794526969752",
+          "name": "operation-1738752375159-62d62d5ac7c81-6ab87d2d-f48e8032",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "operationType": "compute.instanceGroups.delete",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instanceGroups/instance-group-1",
+          "targetId": "5126889459178967262",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T02:46:15.349-08:00",
+          "startTime": "2025-02-05T02:46:15.353-08:00",
+          "endTime": "2025-02-05T02:46:23.560-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738752375159-62d62d5ac7c81-6ab87d2d-f48e8032"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "8275472461379600280",
+          "name": "operation-1738752375162-62d62d5ac86ca-cc818808-46a8ff2e",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "operationType": "compute.instanceGroupManagers.delete",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instanceGroupManagers/mig",
+          "targetId": "1150095616799314165",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T02:46:15.295-08:00",
+          "startTime": "2025-02-05T02:46:15.297-08:00",
+          "endTime": "2025-02-05T02:47:32.220-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738752375162-62d62d5ac86ca-cc818808-46a8ff2e"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "5681832674437562264",
+          "name": "operation-1738752375167-62d62d5ac9870-6e5ad865-b7457901",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "operationType": "compute.instanceGroups.delete",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instanceGroups/instance-group-2",
+          "targetId": "685289583101776064",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T02:46:15.330-08:00",
+          "startTime": "2025-02-05T02:46:15.333-08:00",
+          "endTime": "2025-02-05T02:46:23.530-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738752375167-62d62d5ac9870-6e5ad865-b7457901"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "7378605216059293590",
+          "name": "operation-1738752376997-62d62d5c887bd-ce207daa-dc0d9c46",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "clientOperationId": "9522381a-6f56-4f71-8907-a0034c9a9a85",
+          "operationType": "delete",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instances/mig-bzvx",
+          "targetId": "4335690972119601373",
+          "status": "DONE",
+          "user": "123456270@cloudservices.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T02:46:17.164-08:00",
+          "startTime": "2025-02-05T02:46:17.179-08:00",
+          "endTime": "2025-02-05T02:47:12.367-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738752376997-62d62d5c887bd-ce207daa-dc0d9c46"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "2560464745392963478",
+          "name": "operation-1738752377049-62d62d5c9525c-1265037d-132960c4",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "clientOperationId": "656226e6-6ce5-4679-9355-fccafc12bfea",
+          "operationType": "delete",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instances/mig-l40g",
+          "targetId": "7786653639192252637",
+          "status": "DONE",
+          "user": "123456270@cloudservices.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T02:46:17.186-08:00",
+          "startTime": "2025-02-05T02:46:17.197-08:00",
+          "endTime": "2025-02-05T02:47:15.719-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738752377049-62d62d5c9525c-1265037d-132960c4"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "7441798555944026006",
+          "name": "operation-1738752377074-62d62d5c9b2d1-be498266-b2a69c60",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "operationType": "delete",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/disks/unattached-disk",
+          "targetId": "6953270790805426431",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T02:46:17.193-08:00",
+          "startTime": "2025-02-05T02:46:17.204-08:00",
+          "endTime": "2025-02-05T02:46:17.369-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738752377074-62d62d5c9b2d1-be498266-b2a69c60"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "561518048789331818",
+          "name": "operation-1738752389039-62d62d680477c-f4a64c5e-019153d6",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "operationType": "delete",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instances/gce1",
+          "targetId": "7276406499315716343",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T02:46:29.253-08:00",
+          "startTime": "2025-02-05T02:46:29.265-08:00",
+          "endTime": "2025-02-05T02:46:53.832-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738752389039-62d62d680477c-f4a64c5e-019153d6"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "4581826086040436585",
+          "name": "operation-1738752390349-62d62d694435e-9f345930-41901d4b",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "operationType": "delete",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instances/gce2",
+          "targetId": "2767531853241815288",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T02:46:30.606-08:00",
+          "startTime": "2025-02-05T02:46:30.618-08:00",
+          "endTime": "2025-02-05T02:46:58.825-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738752390349-62d62d694435e-9f345930-41901d4b"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "4908585814940639560",
+          "name": "operation-1738760102900-62d64a248730c-2bb4806c-3a6bab00",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "operationType": "insert",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/disks/unattached-disk",
+          "targetId": "694992541288685897",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T04:55:03.393-08:00",
+          "startTime": "2025-02-05T04:55:03.397-08:00",
+          "endTime": "2025-02-05T04:55:04.024-08:00",
+          "warnings": [
+            {
+              "code": "DEPRECATED_RESOURCE_USED",
+              "message": "The resource 'projects/debian-cloud/global/images/debian-9-stretch-v20200805' is deprecated. A suggested replacement is 'projects/debian-cloud/global/images/debian-9-stretch-v20200902'.",
+              "data": [
+                {
+                  "key": "resource_name",
+                  "value": "projects/debian-cloud/global/images/debian-9-stretch-v20200805"
+                },
+                {
+                  "key": "replacement_suggestion",
+                  "value": "A suggested replacement is 'projects/debian-cloud/global/images/debian-9-stretch-v20200902'."
+                }
+              ]
+            }
+          ],
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738760102900-62d64a248730c-2bb4806c-3a6bab00"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "601841551111283015",
+          "name": "operation-1738760103937-62d64a2584737-260dc094-70ed5d1e",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "operationType": "insert",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instances/gce1",
+          "targetId": "7734413015668154695",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T04:55:04.955-08:00",
+          "startTime": "2025-02-05T04:55:04.955-08:00",
+          "endTime": "2025-02-05T04:55:12.983-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738760103937-62d64a2584737-260dc094-70ed5d1e"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "3915142334434435398",
+          "name": "operation-1738760104007-62d64a25957c3-60a30d23-1164d9d5",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "operationType": "insert",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instances/gce2",
+          "targetId": "3427402889068208455",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T04:55:05.061-08:00",
+          "startTime": "2025-02-05T04:55:05.061-08:00",
+          "endTime": "2025-02-05T04:55:16.951-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738760104007-62d64a25957c3-60a30d23-1164d9d5"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "1144399772905300291",
+          "name": "operation-1738760104797-62d64a26566ea-9a472cc1-6611ed5e",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "operationType": "compute.instanceGroupManagers.insert",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instanceGroupManagers/mig",
+          "targetId": "8396330882583945539",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T04:55:08.124-08:00",
+          "startTime": "2025-02-05T04:55:08.126-08:00",
+          "endTime": "2025-02-05T04:55:21.835-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738760104797-62d64a26566ea-9a472cc1-6611ed5e"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "4699679361577443668",
+          "name": "operation-1738760122760-62d64a3777c52-d9d5de4a-3df1090b",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "clientOperationId": "186b2cde-969a-3386-bc6e-7ffbbc66d3e9",
+          "operationType": "insert",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instances/mig-lpq6",
+          "targetId": "7382059078434873685",
+          "status": "DONE",
+          "user": "123456270@cloudservices.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T04:55:23.096-08:00",
+          "startTime": "2025-02-05T04:55:23.096-08:00",
+          "endTime": "2025-02-05T04:55:32.819-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738760122760-62d64a3777c52-d9d5de4a-3df1090b"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "6515331697394770260",
+          "name": "operation-1738760122858-62d64a378fabe-f0934472-24433aac",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "clientOperationId": "e5221191-dedb-30e2-9966-7a64d8983b0d",
+          "operationType": "insert",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instances/mig-mv82",
+          "targetId": "7593829016559083860",
+          "status": "DONE",
+          "user": "123456270@cloudservices.gserviceaccount.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T04:55:23.314-08:00",
+          "startTime": "2025-02-05T04:55:23.314-08:00",
+          "endTime": "2025-02-05T04:55:32.099-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738760122858-62d64a378fabe-f0934472-24433aac"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "6947624682632700206",
+          "name": "operation-1738760128998-62d64a3d6ade0-ffd89247-95f155ae",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "operationType": "compute.instanceGroups.insert",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instanceGroups/instance-group-2",
+          "targetId": "5283965411150192942",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T04:55:29.189-08:00",
+          "startTime": "2025-02-05T04:55:29.190-08:00",
+          "endTime": "2025-02-05T04:55:34.578-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738760128998-62d64a3d6ade0-ffd89247-95f155ae"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "2540219974661628204",
+          "name": "operation-1738760130308-62d64a3eaab71-bf77f19c-6931df00",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "operationType": "compute.instanceGroups.insert",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instanceGroups/instance-group-1",
+          "targetId": "4588026214929588524",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T04:55:31.505-08:00",
+          "startTime": "2025-02-05T04:55:31.507-08:00",
+          "endTime": "2025-02-05T04:55:36.461-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738760130308-62d64a3eaab71-bf77f19c-6931df00"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "549539281921564991",
+          "name": "operation-1738760144156-62d64a4bdf65a-79218dba-ac07d35d",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "operationType": "compute.instanceGroups.addInstances",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instanceGroups/instance-group-2",
+          "targetId": "5283965411150192942",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T04:55:44.329-08:00",
+          "startTime": "2025-02-05T04:55:44.340-08:00",
+          "endTime": "2025-02-05T04:55:44.340-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738760144156-62d64a4bdf65a-79218dba-ac07d35d"
+        },
+        {
+          "kind": "compute#operation",
+          "id": "2761961937788920125",
+          "name": "operation-1738760146601-62d64a4e347eb-fb2cdaa8-454e7719",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a",
+          "operationType": "compute.instanceGroups.addInstances",
+          "targetLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/instanceGroups/instance-group-1",
+          "targetId": "4588026214929588524",
+          "status": "DONE",
+          "user": "ppoormina@google.com",
+          "progress": 100,
+          "insertTime": "2025-02-05T04:55:46.754-08:00",
+          "startTime": "2025-02-05T04:55:46.767-08:00",
+          "endTime": "2025-02-05T04:55:46.767-08:00",
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/zones/europe-west4-a/operations/operation-1738760146601-62d64a4e347eb-fb2cdaa8-454e7719"
+        }
+      ]
+    },
+    "zones/europe-north1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-north1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-north1-b"
+          }
+        ]
+      }
+    },
+    "zones/europe-north1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-north1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-north1-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-north1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-north1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-north1-a"
+          }
+        ]
+      }
+    },
+    "zones/us-west2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-west2-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west2-c"
+          }
+        ]
+      }
+    },
+    "zones/us-west2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-west2-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west2-b"
+          }
+        ]
+      }
+    },
+    "zones/us-west2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-west2-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west2-a"
+          }
+        ]
+      }
+    },
+    "zones/asia-east2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-east2-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-east2-c"
+          }
+        ]
+      }
+    },
+    "zones/asia-east2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-east2-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-east2-b"
+          }
+        ]
+      }
+    },
+    "zones/asia-east2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-east2-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-east2-a"
+          }
+        ]
+      }
+    },
+    "zones/europe-west6-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-west6-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west6-b"
+          }
+        ]
+      }
+    },
+    "zones/europe-west6-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-west6-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west6-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-west6-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-west6-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west6-a"
+          }
+        ]
+      }
+    },
+    "zones/asia-northeast2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-northeast2-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast2-b"
+          }
+        ]
+      }
+    },
+    "zones/asia-northeast2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-northeast2-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast2-c"
+          }
+        ]
+      }
+    },
+    "zones/asia-northeast2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-northeast2-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast2-a"
+          }
+        ]
+      }
+    },
+    "zones/asia-northeast3-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-northeast3-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast3-a"
+          }
+        ]
+      }
+    },
+    "zones/asia-northeast3-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-northeast3-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast3-c"
+          }
+        ]
+      }
+    },
+    "zones/asia-northeast3-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-northeast3-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast3-b"
+          }
+        ]
+      }
+    },
+    "zones/us-west3-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-west3-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west3-a"
+          }
+        ]
+      }
+    },
+    "zones/us-west3-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-west3-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west3-b"
+          }
+        ]
+      }
+    },
+    "zones/us-west3-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-west3-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west3-c"
+          }
+        ]
+      }
+    },
+    "zones/us-west4-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-west4-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west4-c"
+          }
+        ]
+      }
+    },
+    "zones/us-west4-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-west4-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west4-a"
+          }
+        ]
+      }
+    },
+    "zones/us-west4-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-west4-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west4-b"
+          }
+        ]
+      }
+    },
+    "zones/asia-southeast2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-southeast2-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-southeast2-a"
+          }
+        ]
+      }
+    },
+    "zones/asia-southeast2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-southeast2-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-southeast2-c"
+          }
+        ]
+      }
+    },
+    "zones/asia-southeast2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-southeast2-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-southeast2-b"
+          }
+        ]
+      }
+    },
+    "zones/europe-central2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-central2-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-central2-b"
+          }
+        ]
+      }
+    },
+    "zones/europe-central2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-central2-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-central2-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-central2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-central2-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-central2-a"
+          }
+        ]
+      }
+    },
+    "zones/northamerica-northeast2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/northamerica-northeast2-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-northeast2-b"
+          }
+        ]
+      }
+    },
+    "zones/northamerica-northeast2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/northamerica-northeast2-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-northeast2-a"
+          }
+        ]
+      }
+    },
+    "zones/northamerica-northeast2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/northamerica-northeast2-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-northeast2-c"
+          }
+        ]
+      }
+    },
+    "zones/asia-south2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-south2-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-south2-a"
+          }
+        ]
+      }
+    },
+    "zones/asia-south2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-south2-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-south2-c"
+          }
+        ]
+      }
+    },
+    "zones/asia-south2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/asia-south2-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-south2-b"
+          }
+        ]
+      }
+    },
+    "zones/australia-southeast2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/australia-southeast2-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/australia-southeast2-a"
+          }
+        ]
+      }
+    },
+    "zones/australia-southeast2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/australia-southeast2-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/australia-southeast2-c"
+          }
+        ]
+      }
+    },
+    "zones/australia-southeast2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/australia-southeast2-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/australia-southeast2-b"
+          }
+        ]
+      }
+    },
+    "zones/southamerica-west1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/southamerica-west1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/southamerica-west1-a"
+          }
+        ]
+      }
+    },
+    "zones/southamerica-west1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/southamerica-west1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/southamerica-west1-b"
+          }
+        ]
+      }
+    },
+    "zones/southamerica-west1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/southamerica-west1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/southamerica-west1-c"
+          }
+        ]
+      }
+    },
+    "zones/us-east7-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-east7-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east7-a"
+          }
+        ]
+      }
+    },
+    "zones/us-east7-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-east7-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east7-b"
+          }
+        ]
+      }
+    },
+    "zones/us-east7-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-east7-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east7-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-west8-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-west8-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west8-a"
+          }
+        ]
+      }
+    },
+    "zones/europe-west8-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-west8-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west8-b"
+          }
+        ]
+      }
+    },
+    "zones/europe-west8-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-west8-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west8-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-west9-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-west9-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west9-b"
+          }
+        ]
+      }
+    },
+    "zones/europe-west9-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-west9-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west9-a"
+          }
+        ]
+      }
+    },
+    "zones/europe-west9-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-west9-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west9-c"
+          }
+        ]
+      }
+    },
+    "zones/us-east5-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-east5-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east5-c"
+          }
+        ]
+      }
+    },
+    "zones/us-east5-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-east5-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east5-b"
+          }
+        ]
+      }
+    },
+    "zones/us-east5-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-east5-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east5-a"
+          }
+        ]
+      }
+    },
+    "zones/europe-southwest1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-southwest1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-southwest1-b"
+          }
+        ]
+      }
+    },
+    "zones/europe-southwest1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-southwest1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-southwest1-a"
+          }
+        ]
+      }
+    },
+    "zones/europe-southwest1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-southwest1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-southwest1-c"
+          }
+        ]
+      }
+    },
+    "zones/us-south1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-south1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-south1-c"
+          }
+        ]
+      }
+    },
+    "zones/us-south1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-south1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-south1-a"
+          }
+        ]
+      }
+    },
+    "zones/us-south1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-south1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-south1-b"
+          }
+        ]
+      }
+    },
+    "zones/me-west1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/me-west1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-west1-b"
+          }
+        ]
+      }
+    },
+    "zones/me-west1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/me-west1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-west1-a"
+          }
+        ]
+      }
+    },
+    "zones/me-west1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/me-west1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-west1-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-west12-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-west12-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west12-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-west12-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-west12-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west12-a"
+          }
+        ]
+      }
+    },
+    "zones/europe-west12-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-west12-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west12-b"
+          }
+        ]
+      }
+    },
+    "zones/me-central1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/me-central1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-central1-a"
+          }
+        ]
+      }
+    },
+    "zones/me-central1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/me-central1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-central1-b"
+          }
+        ]
+      }
+    },
+    "zones/me-central1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/me-central1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-central1-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-west10-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-west10-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west10-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-west10-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-west10-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west10-a"
+          }
+        ]
+      }
+    },
+    "zones/europe-west10-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-west10-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west10-b"
+          }
+        ]
+      }
+    },
+    "zones/me-central2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/me-central2-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-central2-c"
+          }
+        ]
+      }
+    },
+    "zones/me-central2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/me-central2-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-central2-a"
+          }
+        ]
+      }
+    },
+    "zones/me-central2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/me-central2-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-central2-b"
+          }
+        ]
+      }
+    },
+    "zones/africa-south1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/africa-south1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/africa-south1-b"
+          }
+        ]
+      }
+    },
+    "zones/africa-south1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/africa-south1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/africa-south1-a"
+          }
+        ]
+      }
+    },
+    "zones/africa-south1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/africa-south1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/africa-south1-c"
+          }
+        ]
+      }
+    },
+    "zones/us-west8-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-west8-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west8-c"
+          }
+        ]
+      }
+    },
+    "zones/us-west8-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-west8-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west8-a"
+          }
+        ]
+      }
+    },
+    "zones/us-west8-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/us-west8-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west8-b"
+          }
+        ]
+      }
+    },
+    "zones/northamerica-south1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/northamerica-south1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-south1-b"
+          }
+        ]
+      }
+    },
+    "zones/northamerica-south1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/northamerica-south1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-south1-a"
+          }
+        ]
+      }
+    },
+    "zones/northamerica-south1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/northamerica-south1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-south1-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-north2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-north2-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-north2-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-north2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-north2-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-north2-a"
+          }
+        ]
+      }
+    },
+    "zones/europe-north2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 'zones/europe-north2-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-north2-b"
+          }
+        ]
+      }
+    }
+  },
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce-vm-performance/aggregated/operations"
+}

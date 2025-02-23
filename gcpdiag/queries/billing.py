@@ -139,7 +139,7 @@ class CostInsights(models.Resource):
 
   def build_anomaly_description(self):
     return self.description + '\nCost ' + self.anomaly_type + \
-           ' forcast, Forecasted: ' + self.forecasted_units + \
+           ' forecast, Forecasted: ' + self.forecasted_units + \
            ' ' + self.forecasted_currency + ', Actual: ' + \
            self.actual_units + ' ' + self.actual_currency + \
            '\nAnomaly Period From: ' + self.start_time + ', To: ' + self.end_time
@@ -243,7 +243,7 @@ def get_all_projects_in_billing_account(
         continue
       else:
         print(
-            f'[ERROR]: An Http Error occured whiles accessing projects.get \n\n{error}',
+            f'[ERROR]: An Http Error occurred whiles accessing projects.get \n\n{error}',
             file=sys.stderr)
       raise error from error
   return projects

@@ -1,13 +1,9 @@
 *  gce/BP/2021_001: Serial port logging is enabled.
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west1-b/instances/gke-gke1-default-pool-35923fbc-2xxp [ OK ]
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west1-b/instances/gke-gke1-default-pool-35923fbc-c12f [ OK ]
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west1-b/instances/gke-gke1-default-pool-35923fbc-fv50 [ OK ]
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west1-b/instances/gke-gke1-default-pool-35923fbc-k05c [ OK ]
    - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce1       [ OK ]
    - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce2       [FAIL]
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-4h21   [ OK ]
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-7pvl   [ OK ]
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/windows-test [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gke-gke1-default-pool-35923fbc-2xxp [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-bzvx   [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-l40g   [ OK ]
    - projects/gcpdiag-gce1-aaaa/zones/europe-west4-b/instances/gce1       [ OK ]
 
    Serial port output can be often useful for troubleshooting, and enabling

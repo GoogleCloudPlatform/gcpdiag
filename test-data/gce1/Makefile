@@ -12,6 +12,10 @@ FAKE_PROJECT_ID_SUFFIX = aaaa
 FAKE_PROJECT_NR = 12340001
 FAKE_ORG_ID = 11112222
 
+SED_SUBST_FAKE = sed -e "s/$(PROJECT_ID_SUFFIX)/$(FAKE_PROJECT_ID_SUFFIX)/" \
+		     -e "s/$(PROJECT_NR)/$(FAKE_PROJECT_NR)/" \
+		     -e "s/$(ORG_ID)/$(FAKE_ORG_ID)/"
+
 COMPUTE_INSTANCES_MAXRESULTS=3
 
 INSTANCE_NAME_GCE2=gce2
@@ -49,8 +53,10 @@ all:	\
 	json-dumps/project.json \
 	json-dumps/services.json \
 	json-dumps/serial-port-logging-entries-1.json \
-	json-dumps/healthChecks.json
-
+	json-dumps/healthChecks.json \
+  json-dumps/compute-instances-aggregated.json \
+	json-dumps/compute-igs-aggregated.json \
+	json-dumps/compute-migs-aggregated.json
 
 include ../Makefile.inc
 

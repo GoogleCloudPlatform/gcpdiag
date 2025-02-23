@@ -14,7 +14,7 @@ description: >
 
 None
 
-### Uncertain Reason
+### Failure Reason
 
 Health check logs for backend service {bs_url} show the detailed health state "TIMEOUT".
 
@@ -30,7 +30,7 @@ The backend might be timing out because:
 
 The following responses were received from your backends: {probe_results_text_str}
 
-### Uncertain Remediation
+### Failure Remediation
 
 1. Make sure that the backend service timeout (current value: {bs_timeout_sec}s) and health check timeout (current value: {hc_timeout_sec}s) are appropriately configured to accommodate your application's expected response time.
 

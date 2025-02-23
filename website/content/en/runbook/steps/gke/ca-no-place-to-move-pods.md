@@ -18,6 +18,7 @@ None
 
 The scaleDown event failed because there's no place to move Pods.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 
 ### Failure Remediation

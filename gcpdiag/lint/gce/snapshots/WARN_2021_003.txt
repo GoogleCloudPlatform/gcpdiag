@@ -1,13 +1,12 @@
 *  gce/WARN/2021_003: GCE VM Instance Access Scope, GCE VM Attached Service Account Permissions and APIs Required for Monitoring.
    - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce1       [ OK ]
    - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce2       [ OK ]
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-4h21   [FAIL] VM does not have a Service Account attached
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-bzvx   [FAIL] VM does not have a Service Account attached
      Follow https://cloud.google.com/compute/docs/instances/change-service-account
-     to attach a Service Account to the VM mig-4h21.
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-7pvl   [FAIL] VM does not have a Service Account attached
+     to attach a Service Account to the VM mig-bzvx.
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-l40g   [FAIL] VM does not have a Service Account attached
      Follow https://cloud.google.com/compute/docs/instances/change-service-account
-     to attach a Service Account to the VM mig-7pvl.
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/windows-test [ OK ]
+     to attach a Service Account to the VM mig-l40g.
    - projects/gcpdiag-gce1-aaaa/zones/europe-west4-b/instances/gce1       [ OK ]
 
    A GCP project should have Cloud Monitoring API enabled. The service account

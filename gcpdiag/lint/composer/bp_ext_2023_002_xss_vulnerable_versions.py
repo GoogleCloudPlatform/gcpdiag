@@ -15,7 +15,7 @@
 
 Airflow UI in Airflow 2.2.3 or earlier versions is vulnerable to CVE-2021-45229.
 "Trigger DAG with config" screen was susceptible to XSS attacks through the
-origin query argument. Highly recommened to upgrade to the latest Cloud Composer
+origin query argument. Highly recommended to upgrade to the latest Cloud Composer
 version that supports Airflow 2.2.5.
 """
 

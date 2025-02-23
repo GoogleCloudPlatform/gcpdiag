@@ -49,13 +49,13 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      Group https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/zones/us-east1-b/instanceGroups/lb-backend-example has 2/2 unhealthy backends
 
 
-[GATEWAY]: Check if health check logging is enabled.
+[GATEWAY]: Verify health check logging enabled for backend service "web-backend-service" in region "global".
 
    - gcpdiag-lb2-aaaa/http-basic-check                                    [OK]
      [REASON]
      Health check logging is enabled for health check projects/gcpdiag-lb1-aaaa/global/healthChecks/http-basic-check.
 
-[GATEWAY]: Look for the latest health check logs and based on that decide what to do next.
+[GATEWAY]: Analyze latest health check log for backend service "web-backend-service" in region "global".
 [AUTOMATED STEP]: Analyze TIMEOUT health check logs for backend service "web-backend-service" in region "global".
 
    - gcpdiag-lb2-aaaa/web-backend-service                                 [UNCERTAIN]
@@ -219,7 +219,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics
      https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization
 
-     Alternatively, you can connect via serial console if SSH is unvailable to stop offending processes
+     Alternatively, you can connect via serial console if SSH is unavailable to stop offending processes
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console.
 
 [END]: Finalize unhealthy backends diagnostics.
@@ -276,13 +276,13 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      Group https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/zones/europe-west4-b/networkEndpointGroups/neg1 has 1/1 unhealthy backends
 
 
-[GATEWAY]: Check if health check logging is enabled.
+[GATEWAY]: Verify health check logging enabled for backend service "backend-service-2" in region "europe-west4".
 
    - gcpdiag-lb2-aaaa/tcp-basic-check-2                                   [OK]
      [REASON]
      Health check logging is enabled for health check projects/gcpdiag-lb2-aaaa/regions/europe-west4/healthChecks/tcp-basic-check-2.
 
-[GATEWAY]: Look for the latest health check logs and based on that decide what to do next.
+[GATEWAY]: Analyze latest health check log for backend service "backend-service-2" in region "europe-west4".
 [AUTOMATED STEP]: Analyze TIMEOUT health check logs for backend service "backend-service-2" in region "europe-west4".
 
    - gcpdiag-lb2-aaaa/backend-service-2                                   [UNCERTAIN]
@@ -434,7 +434,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics
      https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization
 
-     Alternatively, you can connect via serial console if SSH is unvailable to stop offending processes
+     Alternatively, you can connect via serial console if SSH is unavailable to stop offending processes
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console.
 
 [END]: Finalize unhealthy backends diagnostics.

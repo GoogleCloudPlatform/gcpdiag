@@ -70,6 +70,34 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
     else:
       raise RuntimeError(f"can't list for mock state {self.mock_state}")
 
+  def aggregatedList(
+      self,
+      project,
+      filter=None,  # pylint:disable=redefined-builtin
+      returnPartialSuccess=None,
+      orderBy=None,
+      maxResults=None,
+      serviceProjectNumber=None,
+  ):
+    if self.mock_state == 'projects':
+      return apis_stub.RestCallStub(project, 'compute-project')
+    elif self.mock_state == 'globalOperations':
+      return apis_stub.RestCallStub(project, 'global-operations')
+    else:
+      return apis_stub.RestCallStub(project,
+                                    f'compute-{self.mock_state}-aggregated')
+
+  def aggregatedList_next(self, previous_request, previous_response):
+    if isinstance(previous_response,
+                  dict) and previous_response.get('nextPageToken'):
+      return apis_stub.RestCallStub(
+          project_id=previous_request.project_id,
+          json_basename=previous_request.json_basename,
+          page=previous_request.page + 1,
+      )
+    else:
+      return None
+
   def list_next(self, previous_request, previous_response):
     if isinstance(previous_response,
                   dict) and previous_response.get('nextPageToken'):
@@ -83,6 +111,9 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
 
   def instances(self):
     return ComputeEngineApiStub('instances')
+
+  def globalOperations(self):
+    return ComputeEngineApiStub('globalOperations')
 
   def instanceGroupManagers(self):
     return InstanceGroupManagersApiStub()
@@ -215,8 +246,10 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
             else:
               return interfaces
       elif self.mock_state == 'disk':
-        with open(json_dir / f'compute-instances-disks-{self.zone}.json',
-                  encoding='utf-8') as json_file:
+        with open(
+            json_dir / f'compute-instances-disks-{self.zone}.json',
+            encoding='utf-8',
+        ) as json_file:
           disks = json.load(json_file)['items']
           for disk in disks:
             if disk['name'] == self.disk:
@@ -241,6 +274,20 @@ class InstanceGroupManagersApiStub(ComputeEngineApiStub):
     return apis_stub.RestCallStub(project,
                                   f'compute-migs-{zone}',
                                   default='compute-migs-empty')
+
+  def aggregatedList(self, project, returnPartialSuccess=True):
+    return apis_stub.RestCallStub(project, 'compute-migs-aggregated')
+
+  def aggregatedList_next(self, previous_request, previous_response):
+    if isinstance(previous_response,
+                  dict) and previous_response.get('nextPageToken'):
+      return apis_stub.RestCallStub(
+          project_id=previous_request.project_id,
+          json_basename=previous_request.json_basename,
+          page=previous_request.page + 1,
+      )
+    else:
+      return None
 
 
 class RegionInstanceGroupManagersApiStub(ComputeEngineApiStub):

@@ -19,6 +19,7 @@ None
 The scaleDown event failed because it would violate cluster-wide minimal resource limits.
 These are the resource limits set for node auto-provisioning.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 
 ### Failure Remediation

@@ -47,7 +47,9 @@ all:	\
 	json-dumps/iam-service-account-policy.json \
 	json-dumps/logging-entries-1.json \
 	json-dumps/project.json \
-	json-dumps/services.json
+	json-dumps/services.json \
+	json-dumps/compute-instances-aggregated.json \
+	json-dumps/compute-migs-aggregated.json
 
 include ../Makefile.inc
 
@@ -134,6 +136,7 @@ json-dumps/compute-disks-%.json:
 
 json-dumps/compute-disks-empty.json: json-dumps/compute-disks-$(ZONE_EMPTY).json
 	ln -sf $(notdir $<) $@
+
 
 # cloudresourcemanager.googleapis.com
 

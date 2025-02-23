@@ -31,7 +31,7 @@ dataproc/cluster-creation: Provides a comprehensive analysis of common issues wh
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
-     No issues with unsufficient quota in project gcpdiag-dataproc1-aaaa has been identified for the ivestigated cluster good, please double-check if you have provided
+     No issues with insufficient quota in project gcpdiag-dataproc1-aaaa has been identified for the ivestigated cluster good, please double-check if you have provided
      the right cluster_name parameter if the cluster you are trying to create doesn't appear in Dataproc UI.
 
 [AUTOMATED STEP]: Verify cluster stockout issue.
@@ -91,7 +91,7 @@ dataproc/cluster-creation: Provides a comprehensive analysis of common issues wh
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
-     No issues with unsufficient quota in project gcpdiag-dataproc1-aaaa has been identified for the ivestigated cluster good, please double-check if you have provided
+     No issues with insufficient quota in project gcpdiag-dataproc1-aaaa has been identified for the ivestigated cluster good, please double-check if you have provided
      the right cluster_name parameter if the cluster you are trying to create doesn't appear in Dataproc UI.
 
 [AUTOMATED STEP]: Verify cluster stockout issue.
@@ -150,7 +150,7 @@ dataproc/cluster-creation: Provides a comprehensive analysis of common issues wh
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
-     No issues with unsufficient quota in project gcpdiag-dataproc1-aaaa has been identified for the ivestigated cluster test-deny-icmp, please double-check if you have provided
+     No issues with insufficient quota in project gcpdiag-dataproc1-aaaa has been identified for the ivestigated cluster test-deny-icmp, please double-check if you have provided
      the right cluster_name parameter if the cluster you are trying to create doesn't appear in Dataproc UI.
 
 [AUTOMATED STEP]: Verify cluster stockout issue.

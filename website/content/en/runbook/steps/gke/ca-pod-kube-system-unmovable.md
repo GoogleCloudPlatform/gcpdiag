@@ -19,6 +19,7 @@ None
 The scaleDown event failed because the pod is a non-DaemonSet, non-mirrored, Pod without a PodDisruptionBudget in the
 kube-system namespace.
 Example log entry that would help identify involved objects:
+
 {log_entry}
 
 ### Failure Remediation

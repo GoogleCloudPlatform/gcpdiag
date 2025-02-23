@@ -561,9 +561,9 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
                        '\n\t Max Write-IOPS Count: {}, \n\t Max Write-Throughput: {} MB/s\n'
                       ).format(disktype, int(total_disk_size[disktype]),
                                min(data[1], provisions_iops['pd-extreme']),
-                               min(data[2], data[3]),
+                               max(data[2], data[3]),
                                min(data[5], provisions_iops['pd-extreme']),
-                               min(data[6], data[7])))
+                               max(data[6], data[7])))
 
                 else:
                   next_hop = 'VM vCPU count'

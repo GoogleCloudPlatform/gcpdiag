@@ -32,14 +32,14 @@ https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performanc
 operations.
 https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#network_performance
 
-- Insufficient Machine Resources - If your machine's IOPS and throughput limts are not enought to serve your workloads,
+- Insufficient Machine Resources - If your machine's IOPS and throughput limits are not enough to serve your workloads,
 this can also cause CPU or Disk IOPS/throughput Starvation.
 https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#storage_performance
 
 To fix this issue:
-- Please optmize your application workloads.
+- Please optimize your application workloads.
 - If needed, please add more resources(CPU, Memory) to the VM.
-- Please optmize your Disk performance -
+- Please optimize your Disk performance -
 https://cloud.google.com/compute/docs/disks/optimizing-pd-performance
 - If needed, please change your disk type to get better Disk IOPS/throughput limits -
 https://cloud.google.com/compute/docs/disks/modify-persistent-disk#disk_type

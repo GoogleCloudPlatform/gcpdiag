@@ -115,9 +115,9 @@ def should_retry(resp_status):
   return False
 
 
-def get_nth_exponential_random_retry(n, random_pct, mutiplier, random_fn=None):
+def get_nth_exponential_random_retry(n, random_pct, multiplier, random_fn=None):
   random_fn = random_fn or random.random
-  return (1 - random_fn() * random_pct) * mutiplier**n
+  return (1 - random_fn() * random_pct) * multiplier**n
 
 
 def batch_execute_all(api, requests: list):
@@ -190,7 +190,7 @@ def batch_execute_all(api, requests: list):
     sleep_time = get_nth_exponential_random_retry(
         n=retry_count,
         random_pct=config.API_RETRY_SLEEP_RANDOMNESS_PCT,
-        mutiplier=config.API_RETRY_SLEEP_MULTIPLIER)
+        multiplier=config.API_RETRY_SLEEP_MULTIPLIER)
     logging.debug('sleeping %.2f seconds before retry #%d', sleep_time,
                   retry_count + 1)
     time.sleep(sleep_time)

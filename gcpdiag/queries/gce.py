@@ -21,7 +21,7 @@ import ipaddress
 import logging
 import re
 from datetime import datetime, timezone
-from typing import Dict, Iterable, List, Mapping, Optional, Sequence, Set
+from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Set
 
 import googleapiclient.errors
 
@@ -176,6 +176,9 @@ class ManagedInstanceGroup(models.Resource):
 
     Note that the results are based on heuristics (the mig name),
     which is not ideal.
+
+    Returns:
+        bool: True if this managed instance group is part of a GKE cluster.
     """
 
     # gke- is normal GKE, gk3- is GKE autopilot
@@ -300,7 +303,8 @@ class Instance(models.Resource):
 
   @property
   def short_path(self) -> str:
-    # Note: instance names must be unique per project, so no need to add the zone.
+    # Note: instance names must be unique per project,
+    # so no need to add the zone.
     path = self.project_id + '/' + self.name
     return path
 
@@ -362,7 +366,7 @@ class Instance(models.Resource):
     return bool(value and value.upper() in POSITIVE_BOOL_VALUES)
 
   def is_metadata_enabled(self, metadata_name) -> bool:
-    """Use to check for common boolen metadata value"""
+    """Use to check for common boolean metadata value"""
     value = self.get_metadata(metadata_name)
     return bool(value and value.upper() in POSITIVE_BOOL_VALUES)
 
@@ -395,7 +399,7 @@ class Instance(models.Resource):
 
   def machine_type(self):
     if 'machineType' in self._resource_data:
-      #return self._resource_data['machineType']
+      # return self._resource_data['machineType']
       machine_type_uri = self._resource_data['machineType']
       mt = re.search(r'/machineTypes/([^/]+)$', machine_type_uri)
       if mt:
@@ -406,7 +410,7 @@ class Instance(models.Resource):
     return None
 
   def check_license(self, licenses: List[str]) -> bool:
-    """Checks that a license is contained in a given license list"""
+    """Checks that a license is contained in a given license list."""
     if 'disks' in self._resource_data:
       for disk in self._resource_data['disks']:
         if 'license' in str(disk):
@@ -417,7 +421,7 @@ class Instance(models.Resource):
     return False
 
   def get_boot_disk_image(self) -> str:
-    """Get VM's boot disk image"""
+    """Get VM's boot disk image."""
     boot_disk_image: str = ''
     for disk in self.disks:
       if disk.get('boot', False):
@@ -481,7 +485,7 @@ class Instance(models.Resource):
 
   def get_network_ip_for_instance_interface(
       self, network: str) -> Optional[network_q.IPv4NetOrIPv6Net]:
-    """Get the network ip for a nic given a network name"""
+    """Get the network ip for a nic given a network name."""
     for nic in self._resource_data['networkInterfaces']:
       if nic.get('network') == network:
         return ipaddress.ip_network(nic.get('networkIP'))
@@ -528,12 +532,12 @@ class Instance(models.Resource):
 
   @property
   def status(self) -> str:
-    """VM Status"""
+    """VM Status."""
     return self._resource_data.get('status', None)
 
   @property
   def is_running(self) -> bool:
-    """VM Status is indicated as running"""
+    """VM Status is indicated as running."""
     return self._resource_data.get('status', False) == 'RUNNING'
 
   @property  # type: ignore
@@ -703,8 +707,41 @@ def get_instance(project_id: str, zone: str, instance_name: str) -> Instance:
 
 
 @caching.cached_api_call(in_memory=True)
+def get_global_operations(
+    project: str,
+    filter_str: Optional[str] = None,
+    order_by: Optional[str] = None,
+    max_results: Optional[int] = None,
+    service_project_number: Optional[int] = None,
+) -> List[Dict[str, Any]]:
+  """Returns global operations object matching project id."""
+  compute = apis.get_api('compute', 'v1', project)
+  logging.info(('searching compute global operations'
+                'logs in project %s with filter %s'), project, filter_str)
+  operations: List[Dict[str, Any]] = []
+  request = compute.globalOperations().aggregatedList(
+      project=project,
+      filter=filter_str,
+      orderBy=order_by,
+      maxResults=max_results,
+      serviceProjectNumber=service_project_number,
+      returnPartialSuccess=True,
+  )
+  while request:
+    response = request.execute(num_retries=config.API_RETRIES)
+    operations_by_regions = response.get('items', {})
+    for _, data in operations_by_regions.items():
+      if 'operations' not in data:
+        continue
+      operations.extend(data['operations'])
+    request = compute.globalOperations().aggregatedList_next(
+        previous_request=request, previous_response=response)
+  return operations
+
+
+@caching.cached_api_call(in_memory=True)
 def get_disk(project_id: str, zone: str, disk_name: str) -> Disk:
-  """Returns disk object matching disk name and zone"""
+  """Returns disk object matching disk name and zone."""
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.disks().get(project=project_id, zone=zone, disk=disk_name)
   response = request.execute(num_retries=config.API_RETRIES)
@@ -719,32 +756,39 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
   if not apis.is_enabled(context.project_id, 'compute'):
     return instances
   gce_api = apis.get_api('compute', 'v1', context.project_id)
-  requests = [
-      gce_api.instances().list(project=context.project_id, zone=zone)
-      for zone in get_gce_zones(context.project_id)
-  ]
+  request = gce_api.instances().aggregatedList(project=context.project_id,
+                                               returnPartialSuccess=True)
   logging.info('listing gce instances of project %s', context.project_id)
-  items = apis_utils.multi_list_all(
-      requests=requests,
-      next_function=gce_api.instances().list_next,
-  )
-  for i in items:
-    result = re.match(
-        r'https://www.googleapis.com/compute/v1/projects/[^/]+/zones/([^/]+)/',
-        i['selfLink'],
-    )
-    if not result:
-      logging.error("instance %s selfLink didn't match regexp: %s", i['id'],
-                    i['selfLink'])
-      continue
-    zone = result.group(1)
-    labels = i.get('labels', {})
-    resource = i.get('name', '')
-    if not context.match_project_resource(
-        location=zone, labels=labels, resource=resource):
-      continue
-    instances[i['id']] = Instance(project_id=context.project_id,
-                                  resource_data=i)
+  while request:  # Continue as long as there are pages
+    response = request.execute(num_retries=config.API_RETRIES)
+    instances_by_zones = response.get('items', {})
+    for _, data_ in instances_by_zones.items():
+      if 'instances' not in data_:
+        continue
+      for instance in data_['instances']:
+        result = re.match(
+            r'https://www.googleapis.com/compute/v1/projects/[^/]+/zones/([^/]+)/',
+            instance['selfLink'],
+        )
+        if not result:
+          logging.error(
+              "instance %s selfLink didn't match regexp: %s",
+              instance['id'],
+              instance['selfLink'],
+          )
+          continue
+        zone = result.group(1)
+        labels = instance.get('labels', {})
+        resource = instance.get('name', '')
+        if not context.match_project_resource(
+            location=zone, labels=labels, resource=resource):
+          continue
+        instances.update({
+            instance['id']:
+                Instance(project_id=context.project_id, resource_data=instance)
+        })
+    request = gce_api.instances().aggregatedList_next(
+        previous_request=request, previous_response=response)
   return instances
 
 
@@ -755,32 +799,37 @@ def get_instance_groups(context: models.Context) -> Mapping[str, InstanceGroup]:
   if not apis.is_enabled(context.project_id, 'compute'):
     return groups
   gce_api = apis.get_api('compute', 'v1', context.project_id)
-  requests = [
-      gce_api.instanceGroups().list(project=context.project_id, zone=zone)
-      for zone in get_gce_zones(context.project_id)
-  ]
+  request = gce_api.instanceGroups().aggregatedList(project=context.project_id,
+                                                    returnPartialSuccess=True)
   logging.info('listing gce instance groups of project %s', context.project_id)
-  items = apis_utils.multi_list_all(
-      requests=requests,
-      next_function=gce_api.instanceGroups().list_next,
-  )
-  for i in items:
-    result = re.match(
-        r'https://www.googleapis.com/compute/v1/projects/[^/]+/zones/([^/]+)',
-        i['selfLink'],
-    )
-    if not result:
-      logging.error("instance %s selfLink didn't match regexp: %s", i['id'],
-                    i['selfLink'])
-      continue
-    zone = result.group(1)
-    labels = i.get('labels', {})
-    resource = i.get('name', '')
-    if not context.match_project_resource(
-        location=zone, labels=labels, resource=resource):
-      continue
-    instance_group = InstanceGroup(context.project_id, i)
-    groups[instance_group.full_path] = instance_group
+  while request:  # Continue as long as there are pages
+    response = request.execute(num_retries=config.API_RETRIES)
+    groups_by_zones = response.get('items', {})
+    for _, data_ in groups_by_zones.items():
+      if 'instanceGroups' not in data_:
+        continue
+      for group in data_['instanceGroups']:
+        result = re.match(
+            r'https://www.googleapis.com/compute/v1/projects/[^/]+/zones/([^/]+)',
+            group['selfLink'],
+        )
+        if not result:
+          logging.error(
+              "instance %s selfLink didn't match regexp: %s",
+              group['id'],
+              group['selfLink'],
+          )
+          continue
+        zone = result.group(1)
+        labels = group.get('labels', {})
+        resource = group.get('name', '')
+        if not context.match_project_resource(
+            location=zone, labels=labels, resource=resource):
+          continue
+        instance_group = InstanceGroup(context.project_id, resource_data=group)
+        groups[instance_group.full_path] = instance_group
+    request = gce_api.instanceGroups().aggregatedList_next(
+        previous_request=request, previous_response=response)
   return groups
 
 
@@ -793,34 +842,38 @@ def get_managed_instance_groups(
   if not apis.is_enabled(context.project_id, 'compute'):
     return migs
   gce_api = apis.get_api('compute', 'v1', context.project_id)
-  requests = [
-      gce_api.instanceGroupManagers().list(project=context.project_id,
-                                           zone=zone)
-      for zone in get_gce_zones(context.project_id)
-  ]
+  request = gce_api.instanceGroupManagers().aggregatedList(
+      project=context.project_id, returnPartialSuccess=True)
   logging.info('listing zonal managed instance groups of project %s',
                context.project_id)
-  items = apis_utils.multi_list_all(
-      requests=requests,
-      next_function=gce_api.instanceGroupManagers().list_next,
-  )
-  for i in items:
-    result = re.match(
-        r'https://www.googleapis.com/compute/v1/projects/[^/]+/(?:regions|zones)/([^/]+)/',
-        i['selfLink'],
-    )
-    if not result:
-      logging.error("mig %s selfLink didn't match regexp: %s", i['name'],
-                    i['selfLink'])
-      continue
-    location = result.group(1)
-    labels = i.get('labels', {})
-    resource = i.get('name', '')
-    if not context.match_project_resource(
-        location=location, labels=labels, resource=resource):
-      continue
-    migs[i['id']] = ManagedInstanceGroup(project_id=context.project_id,
-                                         resource_data=i)
+  while request:  # Continue as long as there are pages
+    response = request.execute(num_retries=config.API_RETRIES)
+    migs_by_zones = response.get('items', {})
+    for _, data_ in migs_by_zones.items():
+      if 'instanceGroupManagers' not in data_:
+        continue
+      for mig in data_['instanceGroupManagers']:
+        result = re.match(
+            r'https://www.googleapis.com/compute/v1/projects/[^/]+/(?:regions|zones)/([^/]+)/',
+            mig['selfLink'],
+        )
+        if not result:
+          logging.error(
+              "mig %s selfLink didn't match regexp: %s",
+              mig['name'],
+              mig['selfLink'],
+          )
+          continue
+        location = result.group(1)
+        labels = mig.get('labels', {})
+        resource = mig.get('name', '')
+        if not context.match_project_resource(
+            location=location, labels=labels, resource=resource):
+          continue
+        migs[mig['id']] = ManagedInstanceGroup(project_id=context.project_id,
+                                               resource_data=mig)
+    request = gce_api.instanceGroupManagers().aggregatedList_next(
+        previous_request=request, previous_response=response)
   return migs
 
 
@@ -838,8 +891,10 @@ def get_region_managed_instance_groups(
                                                  region=r.name)
       for r in get_all_regions(context.project_id)
   ]
-  logging.info('listing regional managed instance groups of project %s',
-               context.project_id)
+  logging.info(
+      'listing regional managed instance groups of project %s',
+      context.project_id,
+  )
   items = apis_utils.multi_list_all(
       requests=requests,
       next_function=gce_api.regionInstanceGroupManagers().list_next,
@@ -1119,8 +1174,11 @@ def get_all_disks_of_instance(project_id: str, zone: str,
   try:
     gce_api = apis.get_api('compute', 'v1', project_id)
     requests = [gce_api.disks().list(project=project_id, zone=zone)]
-    logging.info('listing gce disks attached to instance %s in project %s',
-                 instance_name, project_id)
+    logging.info(
+        'listing gce disks attached to instance %s in project %s',
+        instance_name,
+        project_id,
+    )
     items = apis_utils.multi_list_all(
         requests=requests,
         next_function=gce_api.disks().list_next,
@@ -1154,7 +1212,7 @@ class InstanceEffectiveFirewalls(network_q.EffectiveFirewalls):
 @caching.cached_api_call(in_memory=True)
 def get_instance_interface_effective_firewalls(
     instance: Instance, nic: str) -> InstanceEffectiveFirewalls:
-  """Return effective firewalls for a network interface on the instance"""
+  """Return effective firewalls for a network interface on the instance."""
   compute = apis.get_api('compute', 'v1', instance.project_id)
   request = compute.instances().getEffectiveFirewalls(
       project=instance.project_id,
@@ -1219,8 +1277,9 @@ jobs_todo: Dict[models.Context, _SerialOutputJob] = {}
 
 def execute_fetch_serial_port_outputs(executor: concurrent.futures.Executor):
   # start a thread to fetch serial log; processing logs can be large
-  # depending on he number of instances in the project which aren't logging to cloud logging
-  # currently expects only one job but implementing it so support for multiple projects is possible.
+  # depending on he number of instances in the project which aren't
+  # logging to cloud logging. currently expects only one job but
+  # implementing it so support for multiple projects is possible.
   global jobs_todo
   jobs_executing = jobs_todo
   jobs_todo = {}

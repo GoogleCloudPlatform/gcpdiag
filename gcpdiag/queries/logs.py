@@ -44,11 +44,12 @@ import threading
 from typing import (Any, Deque, Dict, List, Mapping, Optional, Sequence, Set,
                     Tuple, Union)
 
+import apiclient.errors
 import dateutil.parser
 import ratelimit
 from boltons.iterutils import get_path
 
-from gcpdiag import caching, config, models
+from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis
 
 
@@ -73,7 +74,7 @@ class LogsQuery:
   def entries(self) -> Sequence:
     if not self.job.future:
       raise RuntimeError(
-          'log query wasn\'t executed. did you forget to call execute_queries()?'
+          'log query was\'t executed. did you forget to call execute_queries()?'
       )
     elif self.job.future.running():
       logging.info(
@@ -162,7 +163,12 @@ def query(project_id: str, resource_type: str, log_name: str,
                   period=config.get('logging_ratelimit_period_seconds'))
 def _ratelimited_execute(req):
   """Wrapper to req.execute() with rate limiting to avoid hitting quotas."""
-  return req.execute(num_retries=config.API_RETRIES)
+  try:
+    return req.execute(num_retries=config.API_RETRIES)
+  except apiclient.errors.HttpError as err:
+    logging.error('failed to execute logging request for request %s. Error: %s',
+                  req, err)
+    raise utils.GcpApiError(err) from err
 
 
 def _execute_query_job(job: _LogsQueryJob):
@@ -240,7 +246,11 @@ def _execute_query_job(job: _LogsQueryJob):
 
 
 @caching.cached_api_call
-def realtime_query(project_id, filter_str, start_time, end_time):
+def realtime_query(project_id,
+                   filter_str,
+                   start_time,
+                   end_time,
+                   disable_paging=False):
   """Intended for use in only runbooks. use logs.query() for lint rules."""
   logging_api = apis.get_api('logging', 'v2', project_id)
 
@@ -283,6 +293,8 @@ def realtime_query(project_id, filter_str, start_time, end_time):
           'maximum query runtime for log query reached (project: %s, query: %s).',
           project_id, filter_str.replace('\n', ' AND '))
       return deque
+    if disable_paging:
+      break
     req = logging_api.entries().list_next(req, res)
     if req is not None:
       logging.info('still fetching logs (project: %s, max wait: %ds)',

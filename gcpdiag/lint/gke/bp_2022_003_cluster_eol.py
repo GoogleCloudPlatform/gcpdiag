@@ -48,7 +48,7 @@ def _estimate_oss_release_date(version: Version) -> date:
   https://kubernetes.io/blog/2021/07/20/new-kubernetes-release-cadence/
 
   This function doesn't return a valid date for K8s versions older that v1.23.
-  The precision of the functon is +-30days and could be bigger for v1.100+
+  The precision of the function is +-30days and could be bigger for v1.100+
   """
   # Return a date of already EOLed version for versions older than BASE_OSS_K8S_VERSION
   if version.major <= BASE_OSS_K8S_VERSION.major and version.minor <= BASE_OSS_K8S_VERSION.minor:

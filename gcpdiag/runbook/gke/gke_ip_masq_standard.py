@@ -228,7 +228,7 @@ class CheckDaemonSet(runbook.Step):
 
 
 class CheckConfigMap(runbook.Step):
-  """ This will confirm confif map is present as that llow user to make changes on ip-agent.
+  """ This will confirm config map is present as that llow user to make changes on ip-agent.
 
   This will check if config map is present ?
   """

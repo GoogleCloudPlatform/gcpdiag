@@ -109,7 +109,7 @@ class TestGenerateUUID(unittest.TestCase):
 
   def test_custom_separator(self):
     """Test with a custom separator."""
-    result = util.generate_uuid(seperator='-')
+    result = util.generate_uuid(separator='-')
     self.assertTrue('-' in result)
 
   def test_custom_interval(self):

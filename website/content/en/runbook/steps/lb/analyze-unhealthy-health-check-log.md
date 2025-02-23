@@ -14,13 +14,13 @@ description: >
 
 None
 
-### Uncertain Reason
+### Failure Reason
 
 Health check logs for backend service {bs_url} indicate a detailed health state of UNHEALTHY. The backend instances are reachable but are not passing the health check requirements.
 
 Responses received from backends: {probe_results_text_str}
 
-### Uncertain Remediation
+### Failure Remediation
 
 {success_criteria}
 

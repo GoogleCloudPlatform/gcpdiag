@@ -4,7 +4,7 @@ linkTitle: "Check Config Map"
 weight: 3
 type: docs
 description: >
-  This will confirm confif map is present as that llow user to make changes on ip-agent.
+  This will confirm config map is present as that llow user to make changes on ip-agent.
 ---
 
 **Product**: [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine)\

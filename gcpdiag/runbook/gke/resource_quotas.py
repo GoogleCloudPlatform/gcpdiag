@@ -13,15 +13,16 @@
 # limitations under the License.
 """GKE Resource Quotas runbook"""
 
-import re
 from datetime import datetime
+
+from boltons.iterutils import get_path
 
 from gcpdiag import runbook
 from gcpdiag.queries import crm, gke, logs
 from gcpdiag.runbook import op
 from gcpdiag.runbook.gcp import generalized_steps as gcp_gs
 from gcpdiag.runbook.gke import flags
-from gcpdiag.utils import Version
+from gcpdiag.utils import GcpApiError, Version
 
 
 class ResourceQuotas(runbook.DiagnosticTree):
@@ -45,12 +46,12 @@ class ResourceQuotas(runbook.DiagnosticTree):
           'help':
               '(Optional) The name of the GKE cluster, to limit search only for this cluster',
           'required':
-              False
+              True
       },
       flags.LOCATION: {
           'type': str,
           'help': '(Optional) The zone or region of the GKE cluster',
-          'required': False
+          'required': True
       },
       flags.START_TIME: {
           'type':
@@ -102,37 +103,22 @@ class ResourceQuotasStart(runbook.StartStep):
     """
     Check the provided parameters.
     """
-    project = op.get(flags.PROJECT_ID)
-    project_path = crm.get_project(project)
-    cluster_name = op.get(flags.NAME)
-    cluster_location = op.get(flags.LOCATION)
-
-    if cluster_location:
-      op.context.locations_pattern = re.compile(cluster_location)
-    if cluster_name:
-      op.context.resources_pattern = re.compile(cluster_name)
-
-    # check if there are clusters in the project
-    # following checks are necessary, depending on what input is provided:
-    # - no input, get all clusters available
-    # - just cluster name is provided, check if there's a cluster with that name
-    # - just location is provided, check if there are clusters at that location
-    # - cluster name and location are provided, check if there's that cluster at that location
-    clusters = gke.get_clusters(op.context)
-    if not clusters:
-      reason = f'No GKE clusters found in project {project}'
-      remediation = 'Please verify the provided GKE cluster project id'
-      if cluster_location and cluster_name:
-        reason = f'No {cluster_name} cluster found at {cluster_location} in project {project}.'
-        remediation = 'Please verify the provided GKE cluster name and location'
-      elif cluster_location:
-        reason = f'No clusters found at location {cluster_location} in project {project}'
-        remediation = 'Please verify the provided GKE cluster location'
-      elif cluster_name:
-        reason = f'Cluster with the name {cluster_name} does not exist in project {project}'
-        remediation = 'Please verify the provided GKE cluster name'
-
-      op.add_failed(project_path, reason=reason, remediation=remediation)
+    project = crm.get_project(op.get(flags.PROJECT_ID))
+    try:
+      cluster = gke.get_cluster(op.get(flags.PROJECT_ID),
+                                cluster_id=op.get(flags.NAME),
+                                location=op.get(flags.LOCATION))
+    except GcpApiError:
+      op.add_skipped(
+          project,
+          reason=('Cluster {} does not exist in {} for project {}').format(
+              op.get(flags.NAME), op.get(flags.LOCATION),
+              op.get(flags.PROJECT_ID)))
+    else:
+      op.add_ok(project,
+                reason=('Cluster {} found in {} for project {}').format(
+                    cluster.name, op.get(flags.LOCATION),
+                    op.get(flags.PROJECT_ID)))
 
 
 class ClusterVersion(runbook.Step):
@@ -141,21 +127,22 @@ class ClusterVersion(runbook.Step):
 
   def execute(self):
     """
-    Verify clusters running version. GKE doesn't enforce the Kubernetes
+    Verify cluster's running version. GKE doesn't enforce the Kubernetes
     resource quotas for clusters running version 1.28 or later.
     """
-    clusters = gke.get_clusters(op.context)
-    for cluster in clusters.values():
-      resource_quota_exceeded = ResourceQuotaExceeded()
-      resource_quota_exceeded.cluster_name = cluster.name
-      resource_quota_exceeded.project_id = op.get(flags.PROJECT_ID)
-      resource_quota_exceeded.cluster_location = cluster.location
+    cluster = gke.get_cluster(op.get(flags.PROJECT_ID),
+                              cluster_id=op.get(flags.NAME),
+                              location=op.get(flags.LOCATION))
+    resource_quota_exceeded = ResourceQuotaExceeded()
+    resource_quota_exceeded.cluster_name = cluster.name
+    resource_quota_exceeded.project_id = op.get(flags.PROJECT_ID)
+    resource_quota_exceeded.cluster_location = cluster.location
 
-      if cluster.master_version >= self.GKE_QUOTA_ENFORCEMENT_MIN_VERSION:
-        resource_quota_exceeded.template = 'resourcequotas::higher_version_quota_exceeded'
-      else:
-        resource_quota_exceeded.template = 'resourcequotas::lower_version_quota_exceeded'
-      self.add_child(resource_quota_exceeded)
+    if cluster.master_version >= self.GKE_QUOTA_ENFORCEMENT_MIN_VERSION:
+      resource_quota_exceeded.template = 'resourcequotas::higher_version_quota_exceeded'
+    else:
+      resource_quota_exceeded.template = 'resourcequotas::lower_version_quota_exceeded'
+    self.add_child(resource_quota_exceeded)
 
 
 class ResourceQuotaExceeded(runbook.Step):
@@ -173,9 +160,15 @@ class ResourceQuotaExceeded(runbook.Step):
     """
 
     project = crm.get_project(self.project_id)
-    error_message = 'protoPayload.status.message:"forbidden: exceeded quota"'
-    filter_str = f'resource.labels.location="{self.cluster_location}" \
-      resource.labels.cluster_name="{self.cluster_name}" {error_message}'
+    filter_list = [
+        'log_id("cloudaudit.googleapis.com/activity")',
+        'resource.type="k8s_cluster"',
+        f'resource.labels.location="{self.cluster_location}"',
+        f'resource.labels.cluster_name="{self.cluster_name}"',
+        'protoPayload.status.message:"forbidden: exceeded quota"'
+    ]
+
+    filter_str = '\n'.join(filter_list)
 
     log_entries = logs.realtime_query(project_id=project.project_id,
                                       filter_str=filter_str,
@@ -185,8 +178,11 @@ class ResourceQuotaExceeded(runbook.Step):
     if log_entries:
       # taking the last log entry to provide as output, because the latest log entry is always
       # more relevant than the 1st
-      sample_log = 'No message' or log_entries[-1]['protoPayload']['status'][
-          'message']
+
+      json_payload = get_path(log_entries[-1], ('protoPayload', 'status'),
+                              default={})
+      sample_log = f"Log Message: {json_payload.get('message', 'N/A')}"
+
       op.add_failed(project,
                     reason=op.prep_msg(op.FAILURE_REASON,
                                        log_entry=sample_log,

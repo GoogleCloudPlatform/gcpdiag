@@ -81,7 +81,7 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
 
    - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
      [REASON]
-     Possibe filesystem corruption detected.
+     Possible filesystem corruption detected.
 
      The patterns used:
      'Corruption of in-memory data detected. Shutting down filesystem',
@@ -134,7 +134,7 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      - Network Throttling - High sent/received network traffic can cause network throttling that impacts disk operations.
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#network_performance
 
-     - Insufficient Machine Resources - If your machine's IOPS and throughput limts are not enought to serve your workloads,
+     - Insufficient Machine Resources - If your machine's IOPS and throughput limits are not enough to serve your workloads,
      this can also cause CPU or Disk IOPS/throughput Starvation.
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#storage_performance
 
@@ -142,9 +142,9 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      to the disk and cause IO operations to be queued, causing throttling at disk and CPU levels.
 
      To fix this issue:
-     - Please optmize your application workloads.
+     - Please optimize your application workloads.
      - If needed, please add more resources(CPU, Memory) to the VM.
-     - Please optmize your Disk performance -
+     - Please optimize your Disk performance -
      https://cloud.google.com/compute/docs/disks/optimizing-pd-performance
      - If needed, please change your disk type to get better Disk IOPS/throughput limits -
      https://cloud.google.com/compute/docs/disks/modify-persistent-disk#disk_type
@@ -240,7 +240,7 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
 
    - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
      [REASON]
-     Dectected SSHD authentication issues in the GCE Instance, which is affecting SSH access.
+     Detected SSHD authentication issues in the GCE Instance, which is affecting SSH access.
      Found the error "Authentication refused: bad ownership or modes for directory"
 
      [REMEDIATION]
@@ -403,7 +403,7 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      - Network Throttling - High sent/received network traffic can cause network throttling that impacts disk operations.
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#network_performance
 
-     - Insufficient Machine Resources - If your machine's IOPS and throughput limts are not enought to serve your workloads,
+     - Insufficient Machine Resources - If your machine's IOPS and throughput limits are not enough to serve your workloads,
      this can also cause CPU or Disk IOPS/throughput Starvation.
      https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#storage_performance
 
@@ -411,9 +411,9 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
      to the disk and cause IO operations to be queued, causing throttling at disk and CPU levels.
 
      To fix this issue:
-     - Please optmize your application workloads.
+     - Please optimize your application workloads.
      - If needed, please add more resources(CPU, Memory) to the VM.
-     - Please optmize your Disk performance -
+     - Please optimize your Disk performance -
      https://cloud.google.com/compute/docs/disks/optimizing-pd-performance
      - If needed, please change your disk type to get better Disk IOPS/throughput limits -
      https://cloud.google.com/compute/docs/disks/modify-persistent-disk#disk_type
@@ -473,7 +473,7 @@ gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
 
    - gcpdiag-gce-vm-performance/valid-linux-ssh                           [UNCERTAIN]
      [REASON]
-     No success or failed logs to help deduce a conlusion on certainity of Network issues on the instance.
+     No success or failed logs to help deduce a conlusion on certainty of Network issues on the instance.
 
      [REMEDIATION]
      Attempt to log in to the instance via the serial console using a password and check the status of the network stack.

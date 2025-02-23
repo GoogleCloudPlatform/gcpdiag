@@ -62,7 +62,7 @@ def find_queries(file, commit):
           if final:
             return final
           else:
-            return file + ': No funcation implemented'
+            return file + ': No function implemented'
   else:
     return file + ': No file found'
 

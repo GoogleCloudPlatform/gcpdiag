@@ -14,7 +14,7 @@
 """Cloud Composer is not in ERROR state
 
 The ERROR state indicates that the environment has encountered an error and
-cannot be used. Creating/updateing environment through misconfigured Terraform
+cannot be used. Creating/updating environment through misconfigured Terraform
 config, errors in PyPI Package or etc could be the cause of the issue.
 """
 

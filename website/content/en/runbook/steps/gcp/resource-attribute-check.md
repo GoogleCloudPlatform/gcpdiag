@@ -68,7 +68,7 @@ Update the resource to have the expected value
 
 ### Success Reason
 
-Resrouce has the expected value
+Resource has the expected value
 
 
 

@@ -24,6 +24,10 @@ The load balancer uses {serving_protocol} for traffic but {hc_protocol} for heal
 
 **Important:** Health checks using {hc_protocol} might be passing while the application serving {serving_protocol} traffic is failing because the success criteria for the two protocols can differ. More details on the health check success criteria can be found in [docs](https://cloud.google.com/load-balancing/docs/health-check-concepts#criteria-protocol-http).
 
+### Uncertain Remediation
+
+Verify that the health check and serving protocol are correctly configured to match the protocol used by your application.
+
 
 
 <!--

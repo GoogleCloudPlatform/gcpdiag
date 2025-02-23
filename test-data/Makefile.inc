@@ -164,6 +164,20 @@ json-dumps/compute-zones.json:
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones' \
 		| $(SED_SUBST_FAKE) >$@
 
+json-dumps/compute-instances-aggregated.json:
+	$(CURL) -fsS \
+	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/aggregated/instances' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-igs-aggregated.json:
+	$(CURL) -fsS \
+	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/aggregated/instanceGroups' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-migs-aggregated.json:
+	$(CURL) -fsS \
+	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/aggregated/instanceGroupManagers' \
+		| $(SED_SUBST_FAKE) >$@
 
 # cloudresourcemanager.googleapis.com
 

@@ -1,5 +1,5 @@
 {% block cluster_quota_success_reason %}
-No issues with unsufficient quota in project {project_id} has been identified for the ivestigated cluster {cluster_name}, please double-check if you have provided
+No issues with insufficient quota in project {project_id} has been identified for the ivestigated cluster {cluster_name}, please double-check if you have provided
 the right cluster_name parameter if the cluster you are trying to create doesn't appear in Dataproc UI.
 {% endblock cluster_quota_success_reason %}
 
@@ -383,7 +383,7 @@ Didn't find logs messages related to "{log}" on the cluster: {cluster_name}.
 
 {% block gcs_412_failure_reason %}
 Found logs messages related to "{log}" on the cluster: {cluster_name}.
-This error message is occuring, when multiple applications/jobs write to same output directory.
+This error message is occurring, when multiple applications/jobs write to same output directory.
 GCS Hadoop File Committer doesn't have support for concurrent writes to a GCS bucket.
 {% endblock gcs_412_failure_reason %}
 
