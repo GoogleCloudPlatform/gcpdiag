@@ -20,21 +20,37 @@ Node {node} in zone {location} is currently running, but it failed registration 
 Registration Checker summary:
 
 {log_entries[0]}
+
 {log_entries[1]}
+
 {log_entries[2]}
+
 {log_entries[3]}
+
 {log_entries[4]}
+
 {log_entries[5]}
+
 {log_entries[6]}
+
 {log_entries[7]}
+
 {log_entries[8]}
+
 {log_entries[9]}
+
 {log_entries[10]}
+
 {log_entries[11]}
+
 {log_entries[12]}
+
 {log_entries[13]}
+
 {log_entries[14]}
+
 {log_entries[15]}
+
 
 ### Failure Remediation
 
@@ -66,21 +82,37 @@ Node {node} in zone {location} is not currently running. While checking logs it 
 with kube-apiserver. Below is the Node Registration Checker summary:
 
 {log_entries[0]}
+
 {log_entries[1]}
+
 {log_entries[2]}
+
 {log_entries[3]}
+
 {log_entries[4]}
+
 {log_entries[5]}
+
 {log_entries[6]}
+
 {log_entries[7]}
+
 {log_entries[8]}
+
 {log_entries[9]}
+
 {log_entries[10]}
+
 {log_entries[11]}
+
 {log_entries[12]}
+
 {log_entries[13]}
+
 {log_entries[14]}
+
 {log_entries[15]}
+
 
 
 ### Failure Reason [Alternative 3]
