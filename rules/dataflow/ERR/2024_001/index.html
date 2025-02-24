@@ -21,12 +21,12 @@
 ">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://gcpdiag.dev/rules/dataflow/ERR/2024_001/"><meta property="og:image" content="https://gcpdiag.dev/images/website-preview.jpg"><meta property="article:section" content="rules">
-<meta property="article:modified_time" content="2024-02-28T06:21:05+00:00"><meta property="og:site_name" content="gcpdiag">
+<meta property="article:modified_time" content="2025-02-24T09:58:04-08:00"><meta property="og:site_name" content="gcpdiag">
 <meta itemprop=name content="dataflow/ERR/2024_001">
 <meta itemprop=description content="Dataflow job is not facing GCE resource constraints.
 ">
-<meta itemprop=dateModified content="2024-02-28T06:21:05+00:00">
-<meta itemprop=wordCount content="86"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
+<meta itemprop=dateModified content="2025-02-24T09:58:04-08:00">
+<meta itemprop=wordCount content="296"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta itemprop=keywords content><meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta name=twitter:title content="dataflow/ERR/2024_001">
@@ -1188,15 +1188,40 @@
 <pre tabindex=0><code>resource_type='dataflow_step',
 severity&gt;=WARNING
 log_id(&quot;dataflow.googleapis.com/job-message&quot;)
-textPayload~=&quot;has insufficient quota(s) to execute this workflow&quot; OR &quot;The quota check has failed&quot; OR &quot;Quota exceeded&quot;
+textPayload~=&quot;has insufficient quota(s) to execute this workflow&quot; OR &quot;The quota check has failed&quot; OR &quot;Quota exceeded&quot; OR &quot;Compute Engine API has not fully initialized&quot; OR &quot;Throttling logger worker&quot; OR &quot;This workload is drawing too much egress bandwidth from Cloud Storage&quot; OR &quot;Per-customer shuffle size limit exceeded&quot; OR &quot;RESOURCE_EXHAUSTED: Exceeds 'AppendRows throughput' quota&quot; OR &quot;RESOURCE_EXHAUSTED: Exceeds 'Concurrent connections'&quot; OR &quot;RESOURCE_EXHAUSTED: Exceeds 'CreateWriteStream requests'&quot;
 </code></pre><h3 id=remediation>Remediation</h3>
-<p>Please refer to the following <a href=https://cloud.google.com/compute/resource-usage>documentation</a> to request for a quota increase.</p>
+<p>Below are the remediation for different types of errors:</p>
+<ol>
+<li>
+<p>&lsquo;has insufficient quota(s) to execute this workflow&rsquo;, &lsquo;The quota check has failed&rsquo;, &lsquo;Quota exceeded&rsquo;,
+Please refer to the following <a href=https://cloud.google.com/compute/resource-usage>documentation</a> to request for a quota increase.</p>
+</li>
+<li>
+<p>&ldquo;Compute Engine API has not fully initialized&rdquo;
+Please reach out to Cloud Support Team to help increase quota.</p>
+</li>
+<li>
+<p>&ldquo;Throttling logger worker&rdquo;
+Dataflow job is running into Dataflow abusive logs quota. This limit is hardcoded and cannot be increased. Possible mitigations include logging only on errors or writing these logs to storage sink (BigQuery, GCS, etc.).
+<a href=https://cloud.google.com/dataflow/docs/guides/logging#LogLimits>Reference</a></p>
+</li>
+<li>
+<p>&ldquo;This workload is drawing too much egress bandwidth from Cloud Storage&rdquo;
+Dataflow job is running into Cloud Storage egress bandwidth quota errors. This quota depends on bucket settings and may be different for single or multi-region buckets.</p>
+</li>
+</ol>
+<p>Please check the documentation on how to increase the limits for the project.
+<a href=https://cloud.google.com/storage/docs/bandwidth-usage#increase>Reference</a></p>
+<ol start=5>
+<li>&ldquo;Per-customer shuffle size limit exceeded&rdquo; OR &ldquo;RESOURCE_EXHAUSTED: Exceeds &lsquo;AppendRows throughput&rsquo; quota&rdquo; OR &ldquo;RESOURCE_EXHAUSTED: Exceeds &lsquo;Concurrent connections&rsquo; quota&rdquo; OR &ldquo;RESOURCE_EXHAUSTED: Exceeds &lsquo;CreateWriteStream requests&rsquo; quota&rdquo;
+Please reach out to Cloud Support Team to help increase quota.</li>
+</ol>
 <h3 id=further-information>Further information</h3>
 <ul>
 <li><a href=https://cloud.google.com/compute/resource-usage>GCE Allocation quotas</a></li>
 </ul>
 <div class="text-muted mt-5 pt-3 border-top">
-Last modified February 28, 2024: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/20d9ee96f75edccc419de04de3f46512b13525eb>new rule: gke dataflow job is not facing gce resource constraints (20d9ee96f)</a>
+Last modified February 24, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/68fc2557c65182e09ba124b4e4a06148a8a6b9c6>Merge "Added scenario:Dataflow job is not facing GCE resource constraints." -- Branch commit log -- commit 294122add246210bf619840f018dd7aabb7a79c9 Author: Tamanna Kakkar &lt;tamannakakkar@google.com> Date: 2025-02-21T10:33:21Z (68fc2557c)</a>
 </div>
 </div>
 </main>
