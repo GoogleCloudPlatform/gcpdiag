@@ -174,13 +174,11 @@ class ReportManager:
 
   def serialize_report(self, report: Report):
 
-    def remove_line_breaks(text):
+    def improve_formatting(text):
       if text is None:
         return None
-      # First, replace escaped line breaks like \n, \r, etc.
-      text = re.sub(r'\\n|\\r|\\t|\\r\\n|\\x0b|\\x0c', ' ', text)
-      # Then, replace any remaining literal newline characters
-      text = re.sub(r'\n|\r', ' ', text)
+      # Decode escaped sequences like \\n, \\r, \\t to their actual characters
+      text = text.encode('utf-8').decode('unicode_escape')
       # Remove extra spaces at start / end of string
       text = text.strip()
       return text
@@ -192,9 +190,10 @@ class ReportManager:
           'status':
               r.status,
           'reason':
-              remove_line_breaks(str(r.reason)),
+              improve_formatting(str(r.reason)),
           'remediation':
-              r.remediation if r.remediation else 'No remediation needed',
+              improve_formatting(r.remediation)
+              if r.remediation else 'No remediation needed',
           'remediation_skipped':
               False if config.get('auto') else r.remediation_skipped
       } for r in eval_list]
@@ -203,9 +202,9 @@ class ReportManager:
       return {
           'execution_id': entry.step.execution_id,
           'totals_by_status': entry.totals_by_status,
-          'description': remove_line_breaks(entry.step.__doc__),
-          'name': remove_line_breaks(entry.step.name) or '',
-          'execution_message': remove_line_breaks(entry.step.name) or '',
+          'description': improve_formatting(entry.step.__doc__),
+          'name': improve_formatting(entry.step.name) or '',
+          'execution_message': improve_formatting(entry.step.name) or '',
           'overall_status': entry.overall_status,
           'start_time': entry.start_time,
           'end_time': entry.end_time,
