@@ -29,6 +29,13 @@ MATCH_STRINGS = [
     'has insufficient quota(s) to execute this workflow',
     'The quota check has failed',
     'Quota exceeded',
+    'Compute Engine API has not fully initialized',
+    'Throttling logger worker',
+    'This workload is drawing too much egress bandwidth from Cloud Storage',
+    'Per-customer shuffle size limit exceeded',
+    'RESOURCE_EXHAUSTED: Exceeds \'AppendRows throughput\' quota',
+    'RESOURCE_EXHAUSTED: Exceeds \'Concurrent connections\'',
+    'RESOURCE_EXHAUSTED: Exceeds \'CreateWriteStream requests\'',
 ]
 LOG_FILTER = [
     'severity>=WARNING',
