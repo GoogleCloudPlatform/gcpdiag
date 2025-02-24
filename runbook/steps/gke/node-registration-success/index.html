@@ -21,11 +21,11 @@
 ">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://gcpdiag.dev/runbook/steps/gke/node-registration-success/"><meta property="og:image" content="https://gcpdiag.dev/images/website-preview.jpg"><meta property="article:section" content="runbook">
-<meta property="article:modified_time" content="2025-02-04T08:42:18-08:00"><meta property="og:site_name" content="gcpdiag">
+<meta property="article:modified_time" content="2025-02-24T09:41:39-08:00"><meta property="og:site_name" content="gcpdiag">
 <meta itemprop=name content="gke/Node Registration Success">
 <meta itemprop=description content="Verify Node Registration Checker output
 ">
-<meta itemprop=dateModified content="2025-02-04T08:42:18-08:00">
+<meta itemprop=dateModified content="2025-02-24T09:41:39-08:00">
 <meta itemprop=wordCount content="271"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta itemprop=keywords content><meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="https://gcpdiag.dev/images/website-preview.jpg">
@@ -1055,22 +1055,22 @@
 <h3 id=failure-reason>Failure Reason</h3>
 <p>Node {node} in zone {location} is currently running, but it failed registration with kube-apiserver, below is the Node
 Registration Checker summary:</p>
-<p>{log_entries[0]}
-{log_entries[1]}
-{log_entries[2]}
-{log_entries[3]}
-{log_entries[4]}
-{log_entries[5]}
-{log_entries[6]}
-{log_entries[7]}
-{log_entries[8]}
-{log_entries[9]}
-{log_entries[10]}
-{log_entries[11]}
-{log_entries[12]}
-{log_entries[13]}
-{log_entries[14]}
-{log_entries[15]}</p>
+<p>{log_entries[0]}</p>
+<p>{log_entries[1]}</p>
+<p>{log_entries[2]}</p>
+<p>{log_entries[3]}</p>
+<p>{log_entries[4]}</p>
+<p>{log_entries[5]}</p>
+<p>{log_entries[6]}</p>
+<p>{log_entries[7]}</p>
+<p>{log_entries[8]}</p>
+<p>{log_entries[9]}</p>
+<p>{log_entries[10]}</p>
+<p>{log_entries[11]}</p>
+<p>{log_entries[12]}</p>
+<p>{log_entries[13]}</p>
+<p>{log_entries[14]}</p>
+<p>{log_entries[15]}</p>
 <h3 id=failure-remediation>Failure Remediation</h3>
 <p>To understand why the node failed registration with kube-apiserver, please check the following documentation page:
 <a href=https://cloud.google.com/kubernetes-engine/docs/troubleshooting/node-registration#use-nrc>https://cloud.google.com/kubernetes-engine/docs/troubleshooting/node-registration#use-nrc</a></p>
@@ -1088,29 +1088,29 @@ Please try the runbook with a different node in the same nodepool.</p>
 <h3 id=failure-reason-alternative-2>Failure Reason [Alternative 2]</h3>
 <p>Node {node} in zone {location} is not currently running. While checking logs it was found that it failed registration
 with kube-apiserver. Below is the Node Registration Checker summary:</p>
-<p>{log_entries[0]}
-{log_entries[1]}
-{log_entries[2]}
-{log_entries[3]}
-{log_entries[4]}
-{log_entries[5]}
-{log_entries[6]}
-{log_entries[7]}
-{log_entries[8]}
-{log_entries[9]}
-{log_entries[10]}
-{log_entries[11]}
-{log_entries[12]}
-{log_entries[13]}
-{log_entries[14]}
-{log_entries[15]}</p>
+<p>{log_entries[0]}</p>
+<p>{log_entries[1]}</p>
+<p>{log_entries[2]}</p>
+<p>{log_entries[3]}</p>
+<p>{log_entries[4]}</p>
+<p>{log_entries[5]}</p>
+<p>{log_entries[6]}</p>
+<p>{log_entries[7]}</p>
+<p>{log_entries[8]}</p>
+<p>{log_entries[9]}</p>
+<p>{log_entries[10]}</p>
+<p>{log_entries[11]}</p>
+<p>{log_entries[12]}</p>
+<p>{log_entries[13]}</p>
+<p>{log_entries[14]}</p>
+<p>{log_entries[15]}</p>
 <h3 id=failure-reason-alternative-3>Failure Reason [Alternative 3]</h3>
 <p>Could not find summary from Node Registration Checker for node {node} in zone {location}. The node might have been
 deleted before Node Registration Checker could finish running.</p>
 <h3 id=failure-remediation-alternative-3>Failure Remediation [Alternative 3]</h3>
 <p>Try to run the runbook with a node that is currently running.</p>
 <div class="text-muted mt-5 pt-3 border-top">
-Last modified February 4, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/a65d10459832025bb55cf275b134e49ae59248e7>Merge "[Runbook] Step class attributes interpolation in step names" -- Branch commit log -- commit d00714acdb7b389a0891712cd13a27c08354b4e0 Author: Kwesi Graham &lt;akyen@google.com> Date: 2025-01-30T21:34:43Z (a65d10459)</a>
+Last modified February 24, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/3ba8d163e8b5f97d3a9b387454270042e46187ae>Merge "Review and update gke runbook templates." -- Branch commit log -- commit 25f04be5f0c8a8d5567e4678f116b10a467c7d66 Author: gcpdiag team &lt;noreply@google.com> Date: 2025-02-21T19:20:33Z (3ba8d163e)</a>
 </div>
 </div>
 </main>

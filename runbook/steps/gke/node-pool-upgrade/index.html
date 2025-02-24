@@ -21,11 +21,11 @@
 ">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://gcpdiag.dev/runbook/steps/gke/node-pool-upgrade/"><meta property="og:image" content="https://gcpdiag.dev/images/website-preview.jpg"><meta property="article:section" content="runbook">
-<meta property="article:modified_time" content="2025-02-04T08:42:18-08:00"><meta property="og:site_name" content="gcpdiag">
+<meta property="article:modified_time" content="2025-02-24T09:41:39-08:00"><meta property="og:site_name" content="gcpdiag">
 <meta itemprop=name content="gke/Node Pool Upgrade">
 <meta itemprop=description content="Checks if the node was removed by Cluster Upgrade Operation.
 ">
-<meta itemprop=dateModified content="2025-02-04T08:42:18-08:00">
+<meta itemprop=dateModified content="2025-02-24T09:41:39-08:00">
 <meta itemprop=wordCount content="87"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta itemprop=keywords content><meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="https://gcpdiag.dev/images/website-preview.jpg">
@@ -1052,13 +1052,13 @@
 <h3 id=failure-remediation>Failure Remediation</h3>
 <p>This is expected behavior, when the upgrade is performed, nodes are drained and re-created to match the desired version.</p>
 <p>To list the node upgrade operations, please issue the following gcloud command:</p>
-<p>gcloud container operations list &ndash;filter=operationType:UPGRADE_NODES</p>
-<p>For more details about node upgrades please consult the documentation:
+<pre tabindex=0><code>gcloud container operations list --filter=operationType:UPGRADE_NODES
+</code></pre><p>For more details about node upgrades please consult the documentation:
 <a href=https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-upgrades>https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-upgrades</a></p>
 <h3 id=success-reason>Success Reason</h3>
 <p>The node {node} was unavailable for reasons other than a node pool upgrade.</p>
 <div class="text-muted mt-5 pt-3 border-top">
-Last modified February 4, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/a65d10459832025bb55cf275b134e49ae59248e7>Merge "[Runbook] Step class attributes interpolation in step names" -- Branch commit log -- commit d00714acdb7b389a0891712cd13a27c08354b4e0 Author: Kwesi Graham &lt;akyen@google.com> Date: 2025-01-30T21:34:43Z (a65d10459)</a>
+Last modified February 24, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/3ba8d163e8b5f97d3a9b387454270042e46187ae>Merge "Review and update gke runbook templates." -- Branch commit log -- commit 25f04be5f0c8a8d5567e4678f116b10a467c7d66 Author: gcpdiag team &lt;noreply@google.com> Date: 2025-02-21T19:20:33Z (3ba8d163e)</a>
 </div>
 </div>
 </main>
