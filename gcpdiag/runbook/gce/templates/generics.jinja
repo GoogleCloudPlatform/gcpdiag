@@ -6,11 +6,19 @@ the VM's guest or application functionality.
 {% block gce_serial_logs_check_failure_remediation %}
 Please refer to our detailed guide to connect to the VM to further
 diagnose the issue:
-Linux: https://cloud.google.com/compute/docs/connect/standard-ssh
+
+Linux:
+
+https://cloud.google.com/compute/docs/connect/standard-ssh
+
 Windows:
+
 https://cloud.google.com/compute/docs/instances/connecting-to-windows
+
 https://cloud.google.com/compute/docs/instances/connecting-to-sac
+
 https://cloud.google.com/compute/docs/connect/windows-ssh
+
 https://cloud.google.com/compute/docs/instances/windows/connecting-powershell
 {% endblock gce_serial_logs_check_failure_remediation %}
 
@@ -28,7 +36,9 @@ This may limit our ability to detect specific issues.
 Consider enabling more detailed logging if disabled or
 turn on the VM if shut down.
 Review our troubleshooting documentation for guidance on common issues with Serial logs
+
 https://cloud.google.com/compute/docs/troubleshooting/viewing-serial-port-output
+
 https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
 {% endblock gce_serial_logs_check_uncertain_remediation %}
 
