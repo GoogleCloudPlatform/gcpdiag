@@ -96,7 +96,6 @@ class TestDiagnosticEngine(unittest.TestCase):
   @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
   def test_find_path_dfs_normal_operation(self, mock_run_step):
     op = Operator(interface=None)
-    op.create_context(p={}, project_id='')
     current_step = Mock(execution_id='1')
     current_step.steps = []
     visited = set()
@@ -112,7 +111,6 @@ class TestDiagnosticEngine(unittest.TestCase):
   @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
   def test_find_path_dfs_finite_loop(self, mock_run_step):
     op = Operator(interface=None)
-    op.create_context(p={}, project_id='')
     current_step = Mock(execution_id='1', type=StepType.AUTOMATED)
     current_step.steps = [current_step]
     visited = set()
@@ -127,7 +125,6 @@ class TestDiagnosticEngine(unittest.TestCase):
   @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
   def test_find_path_all_child_step_executions(self, mock_run_step):
     op = Operator(interface=None)
-    op.create_context(p={}, project_id='')
     first_step = Mock(execution_id='1')
     intermidiate_step = Mock(execution_id='2')
     first_step.steps = [intermidiate_step]
@@ -137,7 +134,6 @@ class TestDiagnosticEngine(unittest.TestCase):
     visited = set()
 
     self.de.find_path_dfs(operator=op, step=first_step, executed_steps=visited)
-
     self.assertIn(first_step, visited)
     self.assertIn(intermidiate_step, visited)
     self.assertIn(last_step, visited)

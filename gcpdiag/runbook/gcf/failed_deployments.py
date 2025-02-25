@@ -179,7 +179,7 @@ class UserServiceAccountCheck(runbook.Step):
       #                            'service_config', 'service_account_email'),
       #                           default='')
       runtime_account = f'{project_num}-compute@developer.gserviceaccount.com'
-      policy_list = iam.get_service_account_iam_policy(op.context.project_id,
+      policy_list = iam.get_service_account_iam_policy(op.get(flags.PROJECT_ID),
                                                        runtime_account)
 
       #Check if User account/Service account has 'roles/iam.serviceAccountUser'

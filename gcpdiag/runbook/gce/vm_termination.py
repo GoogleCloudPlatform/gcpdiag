@@ -123,7 +123,8 @@ class VmTerminationStart(runbook.StartStep):
                               zone=op.get(flags.ZONE),
                               instance_name=op.get(flags.NAME))
       elif op.get(flags.NAME) and not op.get(flags.ZONE):
-        vm = gce.get_instances(op.context)[flags.NAME]
+        vm = gce.get_instances(
+            op.get_new_context(project_id=op.get(flags.PROJECT_ID)))[flags.NAME]
     except (googleapiclient.errors.HttpError, KeyError):
       op.add_skipped(
           project,

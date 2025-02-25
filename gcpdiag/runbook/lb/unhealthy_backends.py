@@ -21,7 +21,7 @@ from typing import Optional
 import googleapiclient.errors
 from boltons.iterutils import get_path
 
-from gcpdiag import config, models, runbook
+from gcpdiag import config, runbook
 from gcpdiag.queries import apis, crm, gce, lb, logs
 from gcpdiag.runbook import op
 from gcpdiag.runbook.gce import generalized_steps as gce_gs
@@ -393,7 +393,8 @@ class ValidateBackendServicePortConfiguration(runbook.Step):
         self.backend_service_name,
         self.region,
     )
-    igs = gce.get_instance_groups(models.Context(project_id=self.project_id))
+    igs = gce.get_instance_groups(
+        op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
     insights = lb.get_lb_insights_for_a_project(self.project_id, self.region)
     for insight in insights:
       if insight.is_health_check_port_mismatch_insight:
@@ -1030,7 +1031,7 @@ def _get_zonal_network_endpoint_group(
     project: str, zone: str, name: str) -> Optional[gce.NetworkEndpointGroup]:
   """Returns a map of Network Endpoint Groups in the project."""
   groups = gce.get_zonal_network_endpoint_groups(
-      models.Context(project_id=project))
+      op.get_new_context(project_id=project))
   url = f"""projects/{project}/zones/{zone}/networkEndpointGroups/{name}"""
 
   if url in groups:

@@ -22,6 +22,7 @@ import os
 import re
 import sys
 import textwrap
+import threading
 import types
 from abc import abstractmethod
 from collections import OrderedDict
@@ -41,6 +42,9 @@ from gcpdiag.runbook import constants, exceptions, flags, op, report, util
 
 RunbookRegistry: Dict[str, 'DiagnosticTree'] = {}
 StepRegistry: Dict[str, 'Step'] = {}
+
+registry_lock = threading.Lock()
+report_lock = threading.Lock()
 
 
 class MetaStep(type):
@@ -411,9 +415,9 @@ class DiagnosticTree(metaclass=RunbookRule):
     return self.start.find_step(step_id)
 
   @final
-  def hook_build_tree(self):
+  def hook_build_tree(self, operator: op.Operator):
     if hasattr(self, 'legacy_parameter_handler'):
-      self.legacy_parameter_handler(op.operator.parameters)
+      self.legacy_parameter_handler(operator.parameters)
     try:
       self.build_tree()
     except exceptions.InvalidDiagnosticTree as err:
@@ -541,7 +545,8 @@ class DiagnosticEngine:
     self.task_queue: Deque = Deque()
 
   def add_task(self, new_task: Tuple):
-    self.task_queue.appendleft(new_task)
+    with registry_lock:
+      self.task_queue.appendleft(new_task)
 
   def get_similar_trees(self, name: str) -> List[str]:
     """Returns a list of similar trees to the given name."""
@@ -559,33 +564,35 @@ class DiagnosticEngine:
       name: The name of the diagnostic tree to load.
     """
     # ex: product/gce-runbook
-    name = util.runbook_name_parser(name)
-    runbook = RunbookRegistry.get(name)
-    if not runbook:
-      message = f"The runbook `{name}` doesn't exist or hasn't been registered."
-      similar_runbooks = self.get_similar_trees(name)
-      if similar_runbooks:
-        message += f' Did you mean: "{similar_runbooks[0]}"?'
+    with registry_lock:
+      name = util.runbook_name_parser(name)
+      runbook = RunbookRegistry.get(name)
+      if not runbook:
+        message = f"The runbook `{name}` doesn't exist or hasn't been registered."
+        similar_runbooks = self.get_similar_trees(name)
+        if similar_runbooks:
+          message += f' Did you mean: "{similar_runbooks[0]}"?'
 
-      # If this error occurs during development, it may be because the class hasn't been registered.
-      # Note: Runbooks use Python metaclasses and might not register automatically when there are
-      # syntax errors.
-      # For more information on metaclasses and registration issues, see:
-      # https://docs.python.org/3/reference/datamodel.html#metaclasses
-      if 'test' in config.VERSION:
-        m = re.search(r'([^/]+)/([^/]+)', name)
-        if m:
-          product = m.group(1)
-          clazz = util.kebab_case_to_pascal_case(m.group(2))
-          mod_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                  product)
-          message += (
-              '\n\nPlease verify the following:'
-              f"\n1. Ensure that the class `{clazz}` exists in the product's module `{mod_path}`."
-              '\n2. If the class exists, ensure there are no syntax errors '
-              f'in the file containing the class `{clazz}`.\n')
-      raise exceptions.DiagnosticTreeNotFound(message)
-    return runbook
+        # If this error occurs during development, it may be because the class
+        # hasn't been registered.
+        # Note: Runbooks use Python metaclasses and might not register
+        # automatically when there are syntax errors.
+        # For more information on metaclasses and registration issues, see:
+        # https://docs.python.org/3/reference/datamodel.html#metaclasses
+        if 'test' in config.VERSION:
+          m = re.search(r'([^/]+)/([^/]+)', name)
+          if m:
+            product = m.group(1)
+            clazz = util.kebab_case_to_pascal_case(m.group(2))
+            mod_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                    product)
+            message += (
+                '\n\nPlease verify the following:'
+                f"\n1. Ensure that the class `{clazz}` exists in the product's module `{mod_path}`."
+                '\n2. If the class exists, ensure there are no syntax errors '
+                f'in the file containing the class `{clazz}`.\n')
+        raise exceptions.DiagnosticTreeNotFound(message)
+      return runbook
 
   def load_steps(self, parameter: Mapping[str, Mapping],
                  steps_to_run: List) -> Bundle:
@@ -595,15 +602,16 @@ class DiagnosticEngine:
       parameter: User provided parameter
       steps_to_run: List of steps to from a bundle specification.
     """
-    bundle: Bundle = Bundle()
-    bundle.parameter = models.Parameter(parameter)
-    for id_ in steps_to_run:
-      step_def = StepRegistry.get(id_)
-      if not step_def:
-        logging.error('skipping step "%s": no step definition found', id_)
-        continue
-      bundle.steps.append(step_def)
-    return bundle
+    with registry_lock:
+      bundle: Bundle = Bundle()
+      bundle.parameter = models.Parameter(parameter)
+      for id_ in steps_to_run:
+        step_def = StepRegistry.get(id_)
+        if not step_def:
+          logging.error('skipping step "%s": no step definition found', id_)
+          continue
+        bundle.steps.append(step_def)
+      return bundle
 
   def _get_billing_project(self, parameter: models.Parameter):
     project_id = parameter.get('project_id')
@@ -787,21 +795,22 @@ class DiagnosticEngine:
       operator.set_tree(tree)
       operator.set_parameters(parameter)
       operator.set_run_id(tree.run_id)
-      project_id = self._get_billing_project(parameter)
-      operator.create_context(p=parameter, project_id=project_id)
-      self.interface.rm.reports[tree.run_id] = report.Report(
-          run_id=tree.run_id, parameters=parameter)
-      self.interface.rm.reports[tree.run_id].run_start_time = datetime.now(
-          timezone.utc).isoformat()
+      with report_lock:
+        self.interface.rm.reports[tree.run_id] = report.Report(
+            run_id=tree.run_id, parameters=parameter)
+        self.interface.rm.reports[tree.run_id].run_start_time = datetime.now(
+            timezone.utc).isoformat()
       if operator.tree:
         self.interface.rm.reports[tree.run_id].runbook_name = operator.tree.name
       with op.operator_context(operator):
         self.process_parameters(runbook=tree, caller_args=parameter)
-        tree.hook_build_tree()
+        tree.hook_build_tree(operator)
       self.finalize = False
-      self.find_path_dfs(step=tree.start,
-                         operator=operator,
-                         executed_steps=set())
+      self.find_path_dfs(
+          step=tree.start,
+          operator=operator,
+          executed_steps=set(),
+      )
 
     except (RuntimeError, exceptions.InvalidDiagnosticTree) as err:
       logging.warning('%s: %s while processing runbook rule: %s',
@@ -828,9 +837,11 @@ class DiagnosticEngine:
           return
       for child in step.steps:  # Iterate over the children of the current step
         if child not in executed_steps:
-          self.find_path_dfs(step=child,
-                             operator=operator,
-                             executed_steps=executed_steps)
+          self.find_path_dfs(
+              step=child,
+              operator=operator,
+              executed_steps=executed_steps,
+          )
       return executed_steps
 
   def run_step(self, step: Step, operator: op.Operator):
@@ -841,7 +852,7 @@ class DiagnosticEngine:
       operator: The execution operations object containing the context.
     """
     try:
-      user_input = self._run(step, operator)
+      user_input = self._run(step, operator=operator)
       while True:
         if user_input is constants.RETEST:
           operator.interface.info(step_type=constants.RETEST,
@@ -869,8 +880,9 @@ class DiagnosticEngine:
     except Exception as err:  # pylint: disable=broad-exception-caught
       error_msg = str(err)
       end = datetime.now(timezone.utc).isoformat()
-      self.interface.rm.reports[operator.run_id].results[
-          step.execution_id].end_time = end
+      with report_lock:
+        self.interface.rm.reports[operator.run_id].results[
+            step.execution_id].end_time = end
       if isinstance(err, TemplateNotFound):
         error_msg = (
             f'could not load messages linked to step: {step.id}.'
@@ -894,8 +906,9 @@ class DiagnosticEngine:
               err,
               step.execution_id,
           )
-          self.interface.rm.reports[operator.run_id].results[
-              step.execution_id].step_error = err
+          with report_lock:
+            self.interface.rm.reports[operator.run_id].results[
+                step.execution_id].step_error = err
         elif err.status == 401:
           logging.error(
               '%s: %s request is missing required authentication credential to'
@@ -904,8 +917,9 @@ class DiagnosticEngine:
               err,
               step.execution_id,
           )
-          self.interface.rm.reports[operator.run_id].results[
-              step.execution_id].step_error = err
+          with report_lock:
+            self.interface.rm.reports[operator.run_id].results[
+                step.execution_id].step_error = err
           return
         logging.error(
             '%s: %s while processing step: %s',
@@ -913,8 +927,9 @@ class DiagnosticEngine:
             err,
             step.execution_id,
         )
-        self.interface.rm.reports[operator.run_id].results[
-            step.execution_id].step_error = err
+        with report_lock:
+          self.interface.rm.reports[operator.run_id].results[
+              step.execution_id].step_error = err
       else:
         logging.error(
             '%s: %s while processing step: %s',
@@ -922,19 +937,22 @@ class DiagnosticEngine:
             err,
             step.execution_id,
         )
-      self.interface.rm.reports[operator.run_id].results[
-          step.execution_id].step_error = error_msg
+      with report_lock:
+        self.interface.rm.reports[operator.run_id].results[
+            step.execution_id].step_error = error_msg
 
   def _run(self, step: Step, operator: op.Operator):
     start = datetime.now(timezone.utc).isoformat()
-    self.interface.rm.reports[operator.run_id].results[
-        step.execution_id] = report.StepResult(step=step)
+    with report_lock:
+      self.interface.rm.reports[operator.run_id].results[
+          step.execution_id] = report.StepResult(step=step)
     self.interface.rm.reports[operator.run_id].results[
         step.execution_id].start_time = start
     step.execute_hook(operator)
     end = datetime.now(timezone.utc).isoformat()
-    self.interface.rm.reports[operator.run_id].results[
-        step.execution_id].end_time = end
+    with report_lock:
+      self.interface.rm.reports[operator.run_id].results[
+          step.execution_id].end_time = end
     return self.interface.rm.reports[operator.run_id].results[
         step.execution_id].prompt_response
 
@@ -944,23 +962,23 @@ class DiagnosticEngine:
     Args:
       bundle: bundle to be executed
     """
-    operator = op.Operator(interface=self.interface)
-    operator.set_parameters(bundle.parameter)
-    operator.set_run_id(bundle.run_id)
-    project_id = self._get_billing_project(bundle.parameter)
-    operator.create_context(p=bundle.parameter, project_id=project_id)
-    self.interface.rm.reports[bundle.run_id] = report.Report(
-        run_id=bundle.run_id, parameters=bundle.parameter)
-    with op.operator_context(operator):
-      for step in bundle.steps:
-        self._check_required_paramaters(parameter_def=step.parameters,
-                                        caller_args=bundle.parameter)
-        self.parse_parameters(parameter_def=step.parameters,
-                              caller_args=bundle.parameter)
-        if callable(step):
-          step_obj = step(**bundle.parameter)
-          operator.set_step(step_obj)
-          self.run_step(step=step_obj, operator=operator)
+    with registry_lock:
+      operator = op.Operator(interface=self.interface)
+      operator.set_parameters(bundle.parameter)
+      operator.set_run_id(bundle.run_id)
+      with report_lock:
+        self.interface.rm.reports[bundle.run_id] = report.Report(
+            run_id=bundle.run_id, parameters=bundle.parameter)
+      with op.operator_context(operator):
+        for step in bundle.steps:
+          self._check_required_paramaters(parameter_def=step.parameters,
+                                          caller_args=bundle.parameter)
+          self.parse_parameters(parameter_def=step.parameters,
+                                caller_args=bundle.parameter)
+          if callable(step):
+            step_obj = step(**bundle.parameter)
+            operator.set_step(step_obj)
+            self.run_step(step=step_obj, operator=operator)
 
 
 class ExpandTreeFromAst(ast.NodeVisitor):

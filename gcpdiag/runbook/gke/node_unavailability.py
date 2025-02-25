@@ -98,7 +98,7 @@ class NodeUnavailabilityStart(runbook.StartStep):
     global LOG_MIGRATED, LOG_DELETED, LOG_PREEMPTED
 
     # check if there are clusters in the project
-    clusters = gke.get_clusters(op.context)
+    clusters = gke.get_clusters(op.get_new_context(project_id=project))
     if not clusters:
       op.add_skipped(project_path,
                      reason=f'No GKE clusters found in project {project}')

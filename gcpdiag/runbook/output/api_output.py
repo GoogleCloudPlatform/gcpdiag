@@ -22,8 +22,19 @@ from gcpdiag.runbook.output.base_output import BaseOutput
 class ApiOutput(BaseOutput):
   """API output implementation."""
 
+  def __init__(self, execution_id=None):
+    super().__init__()
+    self.execution_id = execution_id
+
   def get_logging_handler(self) -> logging.Handler:
     stream_handler = logging.StreamHandler(stream=sys.stdout)
-    formatter = logging.Formatter('%(levelname)-6s: %(message)s')
+    formatter = logging.Formatter(self._get_log_format())
     stream_handler.setFormatter(formatter)
     return stream_handler
+
+  def _get_log_format(self):
+    log_format = '[%(levelname)-6s] '
+    if self.execution_id:
+      log_format += f'[EID: {self.execution_id}] '
+    log_format += '%(message)s'
+    return log_format

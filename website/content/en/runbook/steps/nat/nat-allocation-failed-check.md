@@ -39,7 +39,7 @@ metric for the gateway is visible on cloud console.
 
 ### Skipped Reason
 
-No issues detected on the nat_allocation_failed metric for the gateway: {nat_gateway_name}
+No issues detected on the nat_allocation_failed metric for the gateway: {nat_gateway_name}.
 Checks on the status of the cloud router for the NAT gateway: {router_name} does not indicate
 extra IPs are needed.
 

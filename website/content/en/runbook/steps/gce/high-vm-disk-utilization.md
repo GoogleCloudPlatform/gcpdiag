@@ -26,6 +26,7 @@ potentially affecting application performance.
 
 To mitigate high disk usage, consider expanding the VM's boot disk capacity.
 This action can help avoid performance issues and ensure smoother SSH connections.
+
 Follow the guide to increase disk size:
 https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
 
