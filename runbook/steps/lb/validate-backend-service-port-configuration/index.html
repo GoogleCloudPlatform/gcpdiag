@@ -21,11 +21,11 @@
 ">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://gcpdiag.dev/runbook/steps/lb/validate-backend-service-port-configuration/"><meta property="og:image" content="https://gcpdiag.dev/images/website-preview.jpg"><meta property="article:section" content="runbook">
-<meta property="article:modified_time" content="2025-01-31T11:31:14+00:00"><meta property="og:site_name" content="gcpdiag">
+<meta property="article:modified_time" content="2025-02-22T00:25:01+00:00"><meta property="og:site_name" content="gcpdiag">
 <meta itemprop=name content="lb/Validate Backend Service Port Configuration">
 <meta itemprop=description content="Checks if health check sends probe requests to the different port than serving port.
 ">
-<meta itemprop=dateModified content="2025-01-31T11:31:14+00:00">
+<meta itemprop=dateModified content="2025-02-22T00:25:01+00:00">
 <meta itemprop=wordCount content="157"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta itemprop=keywords content><meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="https://gcpdiag.dev/images/website-preview.jpg">
@@ -1051,13 +1051,13 @@
 <p>The load balancer is performing health checks on the same port that it is using for serving traffic. This is the standard configuration.</p>
 <h3 id=uncertain-reason>Uncertain Reason</h3>
 <p>The load balancer is conducting health checks on port {hc_port} for the backend service {bs_resource}. However, this health check port differs from the port used by the load balancer for serving traffic on some backend instance groups. The backend service is configured to use the &ldquo;{serving_port_name}&rdquo; port, which is then translated to a specific port number based on the &ldquo;{serving_port_name}&rdquo; port mapping within each backend instance group.</p>
-<p>Affected backends:
-{formatted_igs}</p>
+<p>Affected backends:</p>
+<p>{formatted_igs}</p>
 <p>This configuration can be problematic unless you have configured the load balancer to use a different port for health checks purposefully.</p>
 <h3 id=uncertain-remediation>Uncertain Remediation</h3>
 <p>Verify that the health check port is correctly configured to match the port used by your application if the health check is intended to check the serving port.</p>
 <div class="text-muted mt-5 pt-3 border-top">
-Last modified January 31, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/9e95392f117610a4314e5c718f3730e62eca349a>Update style for lb/unhealthy_backends runbook (9e95392f1)</a>
+Last modified February 22, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/ffca8f644f498892e4547b25ace95050b1f14591>Review and update NAT and LB runbooks (ffca8f644)</a>
 </div>
 </div>
 </main>
