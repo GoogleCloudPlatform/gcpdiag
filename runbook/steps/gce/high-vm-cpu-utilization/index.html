@@ -21,11 +21,11 @@
 ">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://gcpdiag.dev/runbook/steps/gce/high-vm-cpu-utilization/"><meta property="og:image" content="https://gcpdiag.dev/images/website-preview.jpg"><meta property="article:section" content="runbook">
-<meta property="article:modified_time" content="2025-02-19T09:37:25-08:00"><meta property="og:site_name" content="gcpdiag">
+<meta property="article:modified_time" content="2025-02-21T23:07:56+00:00"><meta property="og:site_name" content="gcpdiag">
 <meta itemprop=name content="gce/High Vm Cpu Utilization">
 <meta itemprop=description content="Evaluates the CPU of a VM for high utilization that might indicate performance issues.
 ">
-<meta itemprop=dateModified content="2025-02-19T09:37:25-08:00">
+<meta itemprop=dateModified content="2025-02-21T23:07:56+00:00">
 <meta itemprop=wordCount content="161"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta itemprop=keywords content><meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="https://gcpdiag.dev/images/website-preview.jpg">
@@ -1059,18 +1059,20 @@ powerful machine type with higher CPU capabilities.
 Detailed instructions for resizing and restarting VMs are available here:</p>
 <ul>
 <li>Stopping a VM: <a href=https://cloud.google.com/compute/docs/instances/stop-start-instance>https://cloud.google.com/compute/docs/instances/stop-start-instance</a></li>
-<li>Resizing a VM: <a href=https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud</a>
-Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
-<a href=https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics>https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics</a>
-<a href=https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization>https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization</a></li>
+<li>Resizing a VM: <a href=https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud</a></li>
+</ul>
+<p>Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:</p>
+<ul>
+<li><a href=https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics>https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics</a></li>
+<li><a href=https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization>https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization</a></li>
 </ul>
 <p>Alternatively, you can connect via serial console if SSH is unavailable to stop offending processes
-<a href=https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console</a>.</p>
+(<a href=https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console)>https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console)</a>.</p>
 <h3 id=success-reason>Success Reason</h3>
 <p>The Compute Engine VM {full_resource_path},
 has CPU utilization within the optimal range.</p>
 <div class="text-muted mt-5 pt-3 border-top">
-Last modified February 19, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/6b15df6639ee40e47ae127b116d6163f741cca61>Merge "pre-commit codespell check" -- Branch commit log -- commit 44c6be1c3de3049e1e4eba510b878ec09c29f397 Author: gcpdiag team &lt;noreply@google.com> Date: 2025-02-12T09:55:03Z (6b15df663)</a>
+Last modified February 21, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/6f73cbb0d12d02c6877d64105889f55d70a518b9>Update formatting of gce runbooks. I did not change rca.jinja because it is not used by GCA yet. This file is an essay which requires major works in the formatting. (6f73cbb0d)</a>
 </div>
 </div>
 </main>

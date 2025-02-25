@@ -21,12 +21,12 @@
 ">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://gcpdiag.dev/runbook/steps/gce/high-vm-memory-utilization/"><meta property="og:image" content="https://gcpdiag.dev/images/website-preview.jpg"><meta property="article:section" content="runbook">
-<meta property="article:modified_time" content="2025-01-23T13:52:53-08:00"><meta property="og:site_name" content="gcpdiag">
+<meta property="article:modified_time" content="2025-02-21T23:07:56+00:00"><meta property="og:site_name" content="gcpdiag">
 <meta itemprop=name content="gce/High Vm Memory Utilization">
 <meta itemprop=description content="Diagnoses high memory utilization issues in a Compute Engine VM.
 ">
-<meta itemprop=dateModified content="2025-01-23T13:52:53-08:00">
-<meta itemprop=wordCount content="174"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
+<meta itemprop=dateModified content="2025-02-21T23:07:56+00:00">
+<meta itemprop=wordCount content="168"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta itemprop=keywords content><meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta name=twitter:title content="gce/High Vm Memory Utilization">
@@ -1059,19 +1059,18 @@ Consider enhancing the VM&rsquo;s memory capacity by changing to a machine type 
 Guidance on stopping and changing the machine type can be found here:</p>
 <ul>
 <li>Changing machine type:
-<a href=https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud</a>
-For deeper analysis of memory issues:</li>
+<a href=https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud</a></li>
 </ul>
 <p>Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
 <a href=https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization>https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization</a></p>
-<p>Or connect via the Serial Console if SSH is not available to mitigate the issue.
+<p>Or connect via the Serial Console if SSH is not available to mitigate the issue:
 <a href=https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console</a></p>
 <h3 id=success-reason>Success Reason</h3>
 <p>Memory utilization on this VM is within optimal range.</p>
 <h3 id=skipped-reason>Skipped Reason</h3>
 <p>There are no logs to examine!</p>
 <div class="text-muted mt-5 pt-3 border-top">
-Last modified January 23, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/e1abea4ccfd79ec6a9cbe2624a491a6e60866d78>Merge "[Runbook Update] Improve SSH observation tone" -- Branch commit log -- commit 1557b7a1060430705750eb5c436c72a1258ced48 Author: Kwesi Graham &lt;akyen@google.com> Date: 2025-01-22T16:05:04Z (e1abea4cc)</a>
+Last modified February 21, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/6f73cbb0d12d02c6877d64105889f55d70a518b9>Update formatting of gce runbooks. I did not change rca.jinja because it is not used by GCA yet. This file is an essay which requires major works in the formatting. (6f73cbb0d)</a>
 </div>
 </div>
 </main>

@@ -21,11 +21,11 @@
 ">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://gcpdiag.dev/runbook/steps/gce/vm-serial-logs-check/"><meta property="og:image" content="https://gcpdiag.dev/images/website-preview.jpg"><meta property="article:section" content="runbook">
-<meta property="article:modified_time" content="2025-01-23T13:52:53-08:00"><meta property="og:site_name" content="gcpdiag">
+<meta property="article:modified_time" content="2025-02-21T23:07:56+00:00"><meta property="og:site_name" content="gcpdiag">
 <meta itemprop=name content="gce/Vm Serial Logs Check">
 <meta itemprop=description content="Searches for predefined good or bad patterns in the serial logs of a GCE Instance.
 ">
-<meta itemprop=dateModified content="2025-01-23T13:52:53-08:00">
+<meta itemprop=dateModified content="2025-02-21T23:07:56+00:00">
 <meta itemprop=wordCount content="231"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta itemprop=keywords content><meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="https://gcpdiag.dev/images/website-preview.jpg">
@@ -1057,12 +1057,12 @@ patterns, the step categorizes the VM&rsquo;s status as &lsquo;OK&rsquo;, &lsquo
 <h3 id=failure-remediation>Failure Remediation</h3>
 <p>Investigate potential issues through the serial console.
 If GRUB_TIMEOUT is greater than 0, access the interactive session for more insights.
-Explore rescue options for inaccessible VMs or review possible guest OS issues,</p>
+Explore rescue options for inaccessible VMs or review possible guest OS issues.</p>
 <ul>
 <li>Interactive Serial Console: <a href=https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console</a></li>
 <li>Rescuing VMs: <a href=https://cloud.google.com/compute/docs/troubleshooting/rescue-vm>https://cloud.google.com/compute/docs/troubleshooting/rescue-vm</a></li>
 </ul>
-<p>If escalating Guest OS related issues to Google Cloud Support
+<p>If escalating Guest OS related issues to Google Cloud Support,
 do check to ensure is in line with Google Cloud Platform&rsquo;s Guest OS support policy</p>
 <ul>
 <li>Google Cloud Platform Support Scope:
@@ -1088,7 +1088,7 @@ keeping in mind certain guest OS faults may be beyond Google Cloud Platform&rsqu
 <h3 id=skipped-reason>Skipped Reason</h3>
 <p>There are no logs to examine.</p>
 <div class="text-muted mt-5 pt-3 border-top">
-Last modified January 23, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/e1abea4ccfd79ec6a9cbe2624a491a6e60866d78>Merge "[Runbook Update] Improve SSH observation tone" -- Branch commit log -- commit 1557b7a1060430705750eb5c436c72a1258ced48 Author: Kwesi Graham &lt;akyen@google.com> Date: 2025-01-22T16:05:04Z (e1abea4cc)</a>
+Last modified February 21, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/6f73cbb0d12d02c6877d64105889f55d70a518b9>Update formatting of gce runbooks. I did not change rca.jinja because it is not used by GCA yet. This file is an essay which requires major works in the formatting. (6f73cbb0d)</a>
 </div>
 </div>
 </main>

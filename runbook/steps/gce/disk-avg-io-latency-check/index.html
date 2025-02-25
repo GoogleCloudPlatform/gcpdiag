@@ -21,12 +21,12 @@
 ">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://gcpdiag.dev/runbook/steps/gce/disk-avg-io-latency-check/"><meta property="og:image" content="https://gcpdiag.dev/images/website-preview.jpg"><meta property="article:section" content="runbook">
-<meta property="article:modified_time" content="2025-02-19T09:37:25-08:00"><meta property="og:site_name" content="gcpdiag">
+<meta property="article:modified_time" content="2025-02-21T23:07:56+00:00"><meta property="og:site_name" content="gcpdiag">
 <meta itemprop=name content="gce/Disk Avg Io Latency Check">
 <meta itemprop=description content="Check Disk Avg IO Latency
 ">
-<meta itemprop=dateModified content="2025-02-19T09:37:25-08:00">
-<meta itemprop=wordCount content="264"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
+<meta itemprop=dateModified content="2025-02-21T23:07:56+00:00">
+<meta itemprop=wordCount content="263"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta itemprop=keywords content><meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta name=twitter:title content="gce/Disk Avg Io Latency Check">
@@ -1057,7 +1057,7 @@ disk.
 High disk I/O latency can significantly impact the performance of your applications
 and workloads running on the instance, leading to slow response times, increased
 processing time, and overall sluggishness.</p>
-<p>Potential Bottlenecks -</p>
+<p><strong>Potential Bottlenecks</strong></p>
 <ul>
 <li>
 <p>Disk Type: To optimize disk performance, ensure your disk type is appropriate
@@ -1071,7 +1071,7 @@ many small, random I/O operations will generally have higher latency than those
 with sequential I/O</p>
 </li>
 </ul>
-<p>Optimize Disk Usage:</p>
+<p><strong>Optimize Disk Usage</strong></p>
 <ul>
 <li>Reduce I/O Operations: Optimize your applications and database queries to minimize
 the number of disk I/O operations.</li>
@@ -1082,13 +1082,13 @@ request size.</li>
 frequently used data.</li>
 </ul>
 <p>Choose the Right Disk Type with lesser IO Latency - <a href=https://cloud.google.com/compute/docs/disks>https://cloud.google.com/compute/docs/disks</a></p>
-<p>You may also look into Optimizing persistent disk performance. -
+<p>You may also look into Optimizing persistent disk performance -
 <a href=https://cloud.google.com/compute/docs/disks/optimizing-pd-performance>https://cloud.google.com/compute/docs/disks/optimizing-pd-performance</a></p>
 <p>Please don&rsquo;t hesitate to reach out to Google Cloud Support if issue is not resolved.</p>
 <h3 id=success-reason>Success Reason</h3>
 <p>Instance disk &ldquo;{disk_name}"&rsquo;s IO latency is within the optimal limits.</p>
 <div class="text-muted mt-5 pt-3 border-top">
-Last modified February 19, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/6b15df6639ee40e47ae127b116d6163f741cca61>Merge "pre-commit codespell check" -- Branch commit log -- commit 44c6be1c3de3049e1e4eba510b878ec09c29f397 Author: gcpdiag team &lt;noreply@google.com> Date: 2025-02-12T09:55:03Z (6b15df663)</a>
+Last modified February 21, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/6f73cbb0d12d02c6877d64105889f55d70a518b9>Update formatting of gce runbooks. I did not change rca.jinja because it is not used by GCA yet. This file is an essay which requires major works in the formatting. (6f73cbb0d)</a>
 </div>
 </div>
 </main>

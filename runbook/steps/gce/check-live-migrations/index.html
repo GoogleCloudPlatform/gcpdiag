@@ -21,11 +21,11 @@
 ">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://gcpdiag.dev/runbook/steps/gce/check-live-migrations/"><meta property="og:image" content="https://gcpdiag.dev/images/website-preview.jpg"><meta property="article:section" content="runbook">
-<meta property="article:modified_time" content="2024-08-24T07:19:43+00:00"><meta property="og:site_name" content="gcpdiag">
+<meta property="article:modified_time" content="2025-02-21T23:07:56+00:00"><meta property="og:site_name" content="gcpdiag">
 <meta itemprop=name content="gce/Check Live Migrations">
 <meta itemprop=description content="Checking if live migrations happened for the instance
 ">
-<meta itemprop=dateModified content="2024-08-24T07:19:43+00:00">
+<meta itemprop=dateModified content="2025-02-21T23:07:56+00:00">
 <meta itemprop=wordCount content="105"><meta itemprop=image content="https://gcpdiag.dev/images/website-preview.jpg">
 <meta itemprop=keywords content><meta name=twitter:card content="summary_large_image">
 <meta name=twitter:image content="https://gcpdiag.dev/images/website-preview.jpg">
@@ -1055,14 +1055,14 @@
 <a href="https://cloud.google.com/compute/docs/instances/simulating-host-maintenance?hl=en#testingpolicies">https://cloud.google.com/compute/docs/instances/simulating-host-maintenance?hl=en#testingpolicies</a> ,
 and see if issue still persists. If yes, please reach out to Google Cloud Platform Support teams via case.</p>
 <p>Note: During live migration, VMs might experience a decrease in performance in disk,
-CPU, memory, and network utilization for a short period of time.</p>
-<p><a href=https://cloud.google.com/compute/docs/instances/live-migration-process#how_does_the_live_migration_process_work>https://cloud.google.com/compute/docs/instances/live-migration-process#how_does_the_live_migration_process_work</a></p>
+CPU, memory, and network utilization for a short period of time
+(<a href=https://cloud.google.com/compute/docs/instances/live-migration-process#how_does_the_live_migration_process_work)>https://cloud.google.com/compute/docs/instances/live-migration-process#how_does_the_live_migration_process_work)</a>.</p>
 <h3 id=success-reason>Success Reason</h3>
 <p>No live migrations detected for the VM during mentioned period</p>
 <h3 id=skipped-reason>Skipped Reason</h3>
 <p>There are no logs to examine !</p>
 <div class="text-muted mt-5 pt-3 border-top">
-Last modified August 24, 2024: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/38fc03c70595be61dc3e6ada834add70466a8f43>Use of a product name acronym or abbreviation is a violation of Google Cloud brand guidelines (38fc03c70)</a>
+Last modified February 21, 2025: <a href=https://github.com/GoogleCloudPlatform/gcpdiag/commit/6f73cbb0d12d02c6877d64105889f55d70a518b9>Update formatting of gce runbooks. I did not change rca.jinja because it is not used by GCA yet. This file is an essay which requires major works in the formatting. (6f73cbb0d)</a>
 </div>
 </div>
 </main>
