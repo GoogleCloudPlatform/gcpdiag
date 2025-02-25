@@ -176,6 +176,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      [REMEDIATION]
      To remedy this, ensure the user user:cannotssh@example.com is granted a role encompassing the necessary permissions:
      - Permissions needed: compute.instances.get
+
      For guidance on assigning instance admin roles, consult:
      https://cloud.google.com/compute/docs/access/iam#connectinginstanceadmin
 
@@ -201,7 +202,9 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      [REMEDIATION]
      Assign the principal one of the role required to have OS Login privileges.
      For more information:
+
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
+
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 
 [AUTOMATED STEP]: Verify that the user:cannotssh@example.com has "roles/iam.serviceAccountUser" role.
@@ -214,7 +217,9 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      [REMEDIATION]
      Assign the "roles/iam.serviceAccountUser" role to "user:cannotssh@example.com".
      Guidelines:
+
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
+
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 
 [AUTOMATED STEP]: Verify that the user:cannotssh@example.com has "roles/iap.tunnelResourceAccessor" role.
@@ -695,6 +700,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      [REMEDIATION]
      To remedy this, ensure the user user:cannot@example.com is granted a role encompassing the necessary permissions:
      - Permissions needed: compute.instances.get
+
      For guidance on assigning instance admin roles, consult:
      https://cloud.google.com/compute/docs/access/iam#connectinginstanceadmin
 
@@ -715,7 +721,9 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      [REMEDIATION]
      Assign the principal one of the role required to have OS Login privileges.
      For more information:
+
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
+
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 
 [AUTOMATED STEP]: Verify that the user:cannot@example.com has "roles/iam.serviceAccountUser" role.
@@ -728,7 +736,9 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      [REMEDIATION]
      Assign the "roles/iam.serviceAccountUser" role to "user:cannot@example.com".
      Guidelines:
+
      https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
+
      https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 
 [AUTOMATED STEP]: Verify that the user:cannot@example.com has "roles/iap.tunnelResourceAccessor" role.

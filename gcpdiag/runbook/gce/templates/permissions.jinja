@@ -10,6 +10,7 @@ The following permissions are required: {permissions_or_roles}.
 {% block instances_get_failure_remediation %}
 To remedy this, ensure the user {principal} is granted a role encompassing the necessary permissions:
 - Permissions needed: {missing_permissions_or_roles}
+
 For guidance on assigning instance admin roles, consult:
 https://cloud.google.com/compute/docs/access/iam#connectinginstanceadmin
 {% endblock instances_get_failure_remediation %}
@@ -35,7 +36,9 @@ Verify whether {principal} has at least one valid OS login role.
 {% block has_os_login_failure_remediation %}
 Assign the principal one of the role required to have OS Login privileges.
 For more information:
+
 https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
+
 https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 {% endblock has_os_login_failure_remediation %}
 
@@ -51,7 +54,9 @@ constituent permissions required to be able to impersonate the attached service 
 {% block sa_user_role_failure_remediation %}
 Assign the "roles/iam.serviceAccountUser" role to "{principal}".
 Guidelines:
+
 https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
+
 https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
 {% endblock sa_user_role_failure_remediation %}
 
@@ -124,6 +129,7 @@ https://cloud.google.com/compute/docs/connect/add-ssh-keys#expandable-2
 - For instance-level SSH key management, ensure roles include 'compute.instances.setMetadata'
 permission. Step-by-step instructions are available here:
 https://cloud.google.com/compute/docs/connect/add-ssh-keys#expandable-3
+
 Adjusting these permissions will allow for the proper management of SSH keys and, by extension,
 SSH access to the VM especially if using gcloud / cloud console.
 {% endblock can_set_metadata_failure_remediation %}
