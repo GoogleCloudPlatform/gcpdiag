@@ -77,7 +77,9 @@ gke/ip-exhaustion: Troubleshooting ip exhaustion issues on GKE clusters.
      It also includes a real-world example of how Class E successfully solved IP exhaustion challenges.
 
      [1] https://cloud.google.com/kubernetes-engine/docs/how-to/multi-pod-cidr#cluster-add-pod-ipv4-range
+
      [2] https://cloud.google.com/vpc/docs/subnets#valid-ranges
+
      [3] https://cloud.google.com/blog/products/containers-kubernetes/how-class-e-addresses-solve-for-ip-address-exhaustion-in-gke
 
 
