@@ -88,20 +88,11 @@ class FailedDeploymentsStart(runbook.StartStep):
       op.add_skipped(
           project, reason=f'Project {op.get(flags.PROJECT_ID)} does not exist')
 
-    #try:
-    # gcf.get_cloudfunction(project_id=op.get(flags.PROJECT_ID),
-    #                          location=op.get(flags.REGION),
-    #                          name=op.get(flags.NAME))
-    #except googleapiclient.errors.HttpError:
-    #  op.add_skipped(project,
-    #                 reason=('Function {} does not exist on project {}').format(
-    #                     op.get(flags.NAME), op.get(flags.PROJECT_ID)))'''
-
 
 class DefaultServiceAccountCheck(runbook.Step):
   """Check if cloud run function default service account and agent exists and is enabled."""
 
-  template = 'gcpdiag.runbook.gcf::failed_deployments::default_service_account_check'
+  template = 'failed_deployments::default_service_account_check'
 
   def execute(self):
     """Check if cloud run function default service account and agent exists and is enabled."""
@@ -117,7 +108,7 @@ class DefaultServiceAccountCheck(runbook.Step):
           flags.PROJECT_ID)) and iam.is_service_account_enabled(
               service_agent, op.get(flags.PROJECT_ID)):
         console_permission = iam_gs.IamPolicyCheck()
-        console_permission.template = 'gcpdiag.runbook.gcf::failed_deployments::agent_permission'
+        console_permission.template = 'failed_deployments::agent_permission'
         console_permission.principal = f'serviceAccount:{service_agent}'
         console_permission.roles = [gcf_const.SERVICE_AGENT_ROLE]
         console_permission.require_all = False
@@ -147,14 +138,13 @@ class DefaultServiceAccountCheck(runbook.Step):
 class UserServiceAccountCheck(runbook.Step):
   """Check if User/Service account has permissions on Cloud function runtime service account"""
 
-  template = 'gcpdiag.runbook.gcf::failed_deployments::user_service_account_check'
+  template = 'failed_deployments::user_service_account_check'
 
   def execute(self):
     """Check if User/Service account has permissions on Cloud function runtime service account"""
 
     name = op.get(flags.NAME)
 
-    #project_path = crm.get_project(project)
     project = crm.get_project(op.get(flags.PROJECT_ID))
     project_num = crm.get_project(op.get(flags.PROJECT_ID)).number
     logging_filter = '''
@@ -173,11 +163,7 @@ class UserServiceAccountCheck(runbook.Step):
           latest_entry,
           ('protoPayload', 'authenticationInfo', 'principalEmail'),
           default='')
-      #first_entry = log_entries[1]
-      #runtime_account = get_path(latest_entry,
-      #                           ('protoPayload', 'request', 'function',
-      #                            'service_config', 'service_account_email'),
-      #                           default='')
+
       runtime_account = f'{project_num}-compute@developer.gserviceaccount.com'
       policy_list = iam.get_service_account_iam_policy(op.get(flags.PROJECT_ID),
                                                        runtime_account)
@@ -213,7 +199,7 @@ class UserServiceAccountCheck(runbook.Step):
 class FunctionGlobalScopeCheck(runbook.Step):
   """Check for deployment failures due to global scope code errors"""
 
-  template = 'gcpdiag.runbook.gcf::failed_deployments::global_scope_check'
+  template = 'failed_deployments::global_scope_check'
 
   def execute(self):
     """Check for deployment failures due to global scope code errors"""
@@ -241,7 +227,7 @@ class FunctionGlobalScopeCheck(runbook.Step):
 class LocationConstraintCheck(runbook.Step):
   """Check for deployment failures due to resource location constraint"""
 
-  template = 'gcpdiag.runbook.gcf::failed_deployments::location_constraint_check'
+  template = 'failed_deployments::location_constraint_check'
 
   def execute(self):
     """Check for deployment failures due to resource location constraint"""
