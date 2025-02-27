@@ -78,6 +78,7 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
      Update `projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent` to enable at least one of the following access scopes:
      https://www.googleapis.com/auth/cloud-platform, https://www.googleapis.com/auth/logging.admin, https://www.googleapis.com/auth/logging.write
+
      [1] https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes
 
 [AUTOMATED STEP]: Verify GCE Instance's has ops agent installed and currently active
@@ -151,6 +152,7 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
      Update `projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent` to enable at least one of the following access scopes:
      https://www.googleapis.com/auth/cloud-platform, https://www.googleapis.com/auth/monitoring, https://www.googleapis.com/auth/monitoring.write
+
      [1] https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes
 
 [AUTOMATED STEP]: Verify GCE Instance's has ops agent installed and currently active
@@ -237,6 +239,7 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
      Update `projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent-no-sa` to enable at least one of the following access scopes:
      https://www.googleapis.com/auth/cloud-platform, https://www.googleapis.com/auth/logging.admin, https://www.googleapis.com/auth/logging.write
+
      [1] https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes
 
 [AUTOMATED STEP]: Verify GCE Instance's has ops agent installed and currently active
@@ -300,6 +303,7 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
      Update `projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent-no-sa` to enable at least one of the following access scopes:
      https://www.googleapis.com/auth/cloud-platform, https://www.googleapis.com/auth/monitoring, https://www.googleapis.com/auth/monitoring.write
+
      [1] https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes
 
 [AUTOMATED STEP]: Verify GCE Instance's has ops agent installed and currently active
