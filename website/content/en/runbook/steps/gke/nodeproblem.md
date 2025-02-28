@@ -22,7 +22,7 @@ destination IP.
 ### Failure Remediation
 
 Enable VPC flow logs by following the documentation and look if traffic id going out to destination:
-https://cloud.google.com/vpc/docs/using-flow-logs#enable-logging-existing
+<https://cloud.google.com/vpc/docs/using-flow-logs#enable-logging-existing>
 
 ### Success Reason
 

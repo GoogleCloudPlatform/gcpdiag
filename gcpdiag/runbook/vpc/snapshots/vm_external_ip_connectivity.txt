@@ -118,8 +118,8 @@ vpc/vm-external-ip-connectivity: Troubleshooting for common issues which affect 
      [REMEDIATION]
      Follow [1] to create or update VPC firewall rules.
      Follow [2] on how to create or modify Firewall policies.
-     [1] https://cloud.google.com/firewall/docs/using-firewalls#creating_firewall_rules
-     [2] https://cloud.google.com/firewall/docs/using-firewall-policies
+     [1] <https://cloud.google.com/firewall/docs/using-firewalls#creating_firewall_rules>
+     [2] <https://cloud.google.com/firewall/docs/using-firewall-policies>
 
 [AUTOMATED STEP]: Evaluating the VPC routing rules.
 

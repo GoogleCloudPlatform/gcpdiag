@@ -26,7 +26,7 @@ Example log entry that would help identify involved objects:
 ### Failure Remediation
 
 Follow the documentation:
-https://cloud.google.com/vpc-service-controls/docs/set-up-private-connectivity
+<https://cloud.google.com/vpc-service-controls/docs/set-up-private-connectivity>
 
 ### Success Reason
 

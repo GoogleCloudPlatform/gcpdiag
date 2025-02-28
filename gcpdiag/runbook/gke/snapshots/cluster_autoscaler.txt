@@ -75,7 +75,7 @@ gke/cluster-autoscaler: Analyses logs in the project where the cluster is runnin
 
      [REMEDIATION]
      Follow the documentation:
-     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-vm-creation#resource_availability
+     <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-vm-creation#resource_availability>
 
 [AUTOMATED STEP]: Check for "scale.up.error.quota.exceeded" log entries
 
@@ -125,7 +125,7 @@ gke/cluster-autoscaler: Analyses logs in the project where the cluster is runnin
      [REMEDIATION]
      Check the Errors tab of the MIG in Google Cloud console to see what quota is being exceeded. Follow the instructions to
      request a quota increase:
-     https://cloud.google.com/compute/quotas#requesting_additional_quota
+     <https://cloud.google.com/compute/quotas#requesting_additional_quota>
 
 [AUTOMATED STEP]: Check for "scale.up.error.waiting.for.instances.timeout" log entries
 
@@ -223,7 +223,7 @@ gke/cluster-autoscaler: Analyses logs in the project where the cluster is runnin
 
      [REMEDIATION]
      Refer to the troubleshooting steps to address the lack of IP address space for the nodes or pods.
-     https://cloud.google.com/kubernetes-engine/docs/how-to/alias-ips#not_enough_space
+     <https://cloud.google.com/kubernetes-engine/docs/how-to/alias-ips#not_enough_space>
 
 [AUTOMATED STEP]: Check for "scale.up.error.service.account.deleted" log entries
 
@@ -320,7 +320,7 @@ gke/cluster-autoscaler: Analyses logs in the project where the cluster is runnin
 
      [REMEDIATION]
      Review and adjust the minimum value set for node pool autoscaling.
-     https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-autoscaler#resizing_a_node_pool
+     <https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-autoscaler#resizing_a_node_pool>
 
 [AUTOMATED STEP]: Check for "scale.down.error.failed.to.evict.pods" log entries
 
@@ -370,7 +370,7 @@ gke/cluster-autoscaler: Analyses logs in the project where the cluster is runnin
      [REMEDIATION]
      Review best practices for Pod Disruption Budgets to ensure that the rules allow for eviction of application replicas
      when acceptable.
-     https://cloud.google.com/architecture/best-practices-for-running-cost-effective-kubernetes-applications-on-gke#add-pod_disruption_budget-to-your-application
+     <https://cloud.google.com/architecture/best-practices-for-running-cost-effective-kubernetes-applications-on-gke#add-pod_disruption_budget-to-your-application>
 
 [AUTOMATED STEP]: Check for "no.scale.down.node.scale.down.disabled.annotation" log entries
 
@@ -472,7 +472,7 @@ gke/cluster-autoscaler: Analyses logs in the project where the cluster is runnin
      [REMEDIATION]
      Review your limits for memory and vCPU and, if you want cluster autoscaler to scale down this node, decrease the limits
      by following the documentation
-     https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-provisioning#enable
+     <https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-provisioning#enable>
 
 [AUTOMATED STEP]: Check for "no.scale.down.node.no.place.to.move.pods" log entries
 
@@ -523,7 +523,7 @@ gke/cluster-autoscaler: Analyses logs in the project where the cluster is runnin
      If you expect that the Pod should be rescheduled, review the scheduling requirements of the Pods on the underutilized
      node to determine if they can be moved to another node in the cluster.
      To learn more, see the link
-     https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-down#no-place-to-move-pods
+     <https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-down#no-place-to-move-pods>
 
 [AUTOMATED STEP]: Check for "no.scale.down.node.pod.not.backed.by.controller" log entries
 
@@ -676,7 +676,7 @@ gke/cluster-autoscaler: Analyses logs in the project where the cluster is runnin
      To resolve this issue, either add a PodDisruptionBudget for the kube-system Pods or use a combination of node pools
      taints and tolerations to separate kube-system Pods from your application Pods.
      To learn more, see
-     https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-down#kube-system-unmoveable
+     <https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-down#kube-system-unmoveable>
 
 [AUTOMATED STEP]: Check for "no.scale.down.node.pod.not.enough.pdb" log entries
 
@@ -726,7 +726,7 @@ gke/cluster-autoscaler: Analyses logs in the project where the cluster is runnin
      [REMEDIATION]
      Review the PodDisruptionBudget for the Pod and consider making it less restrictive.
      To learn more, see
-     https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-down#not-enough-pdb
+     <https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-down#not-enough-pdb>
 
 [AUTOMATED STEP]: Check for "no.scale.down.node.pod.controller.not.found" log entries
 

@@ -29,7 +29,7 @@ By default, Pods in the kube-system namespace aren't removed by cluster autoscal
 To resolve this issue, either add a PodDisruptionBudget for the kube-system Pods or use a combination of node pools
 taints and tolerations to separate kube-system Pods from your application Pods.
 To learn more, see
-https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-down#kube-system-unmoveable
+<https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-down#kube-system-unmoveable>
 
 ### Success Reason
 

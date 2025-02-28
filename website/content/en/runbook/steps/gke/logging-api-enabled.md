@@ -24,7 +24,7 @@ The logging health check failed because the Cloud Logging API is not enabled for
 ### Failure Remediation
 
 Enable the Cloud Logging API for your project through the Google Cloud Console or relevant API calls. See instructions:
-https://cloud.google.com/kubernetes-engine/docs/troubleshooting/logging#verify_logging_is_enabled_in_the_project
+<https://cloud.google.com/kubernetes-engine/docs/troubleshooting/logging#verify_logging_is_enabled_in_the_project>
 
 ### Success Reason
 

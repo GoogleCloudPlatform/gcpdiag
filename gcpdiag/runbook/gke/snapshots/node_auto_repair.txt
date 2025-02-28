@@ -19,7 +19,7 @@ gke/node-auto-repair: Provides the reason why a Node was auto-repaired
 
      [REMEDIATION]
      The auto-repair should have fixed the detected NotReady state.
-     For more details check: https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair
+     For more details check: <https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair>
 
 [AUTOMATED STEP]: Checking if there is the node is in NodeHasDiskPressure status.
 
@@ -29,7 +29,7 @@ gke/node-auto-repair: Provides the reason why a Node was auto-repaired
 
      [REMEDIATION]
      The auto-repair should have fixed the detected disk pressure.
-     For more details check: https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair
+     For more details check: <https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair>
 
 [AUTOMATED STEP]: Verify whether the node was auto-repaired because of Unallocatable GPUs.
 
@@ -39,7 +39,7 @@ gke/node-auto-repair: Provides the reason why a Node was auto-repaired
 
      [REMEDIATION]
      The auto-repair should have fixed the detected unallocatable GPU(s).
-     For more details check: https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair
+     For more details check: <https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair>
 
 [AUTOMATED STEP]: Verify whether the node was auto-repaired because of Unallocatable TPUs.
 
@@ -49,7 +49,7 @@ gke/node-auto-repair: Provides the reason why a Node was auto-repaired
 
      [REMEDIATION]
      The auto-repair should have fixed the detected unallocatable TPU(s).
-     For more details check: https://cloud.google.com/kubernetes-engine/docs/how-to/tpus#node-auto-repair
+     For more details check: <https://cloud.google.com/kubernetes-engine/docs/how-to/tpus#node-auto-repair>
 
 [END]: Finalize `Node AutoRepair` diagnostics.
 

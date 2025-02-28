@@ -25,13 +25,15 @@ Anomalies detected in the serial logs which align with the investigated bad patt
 Investigate potential issues through the serial console.
 If GRUB_TIMEOUT is greater than 0, access the interactive session for more insights.
 Explore rescue options for inaccessible VMs or review possible guest OS issues.
-- Interactive Serial Console: https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
-- Rescuing VMs: https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
+
+- Interactive Serial Console: <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
+- Rescuing VMs: <https://cloud.google.com/compute/docs/troubleshooting/rescue-vm>
 
 If escalating Guest OS related issues to Google Cloud Support,
 do check to ensure is in line with Google Cloud Platform's Guest OS support policy
+
 - Google Cloud Platform Support Scope:
-https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
+<https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope>
 
 ### Success Reason
 
@@ -48,11 +50,12 @@ inconclusive
 Confirm the VM's operational status by reviewing available serial logs.
 Address any detected guest OS issues using the provided documentation,
 keeping in mind certain guest OS faults may be beyond Google Cloud Platform's support scope.
-- Viewing Serial Port Output: https://cloud.google.com/compute/docs/troubleshooting/viewing-serial-port-output
+
+- Viewing Serial Port Output: <https://cloud.google.com/compute/docs/troubleshooting/viewing-serial-port-output>
 - Resolving Kernel Panic:
-https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error
+<https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error>
 - Google Cloud Platform Support Scope:
-https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
+<https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope>
 
 ### Skipped Reason
 

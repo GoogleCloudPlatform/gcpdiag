@@ -24,7 +24,7 @@ The local user "{local_user}" lacks at least one valid SSH key for VM: "{full_re
 ### Failure Remediation
 
 Ensure "{local_user}" has a valid SSH key by following the guide:
-https://cloud.google.com/compute/docs/connect/add-ssh-keys#add_ssh_keys_to_instance_metadata
+<https://cloud.google.com/compute/docs/connect/add-ssh-keys#add_ssh_keys_to_instance_metadata>
 
 ### Success Reason
 

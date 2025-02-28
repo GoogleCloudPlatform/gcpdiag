@@ -18,13 +18,13 @@ This will check node IP address is present default non-masquerade destinations.
 
 When ip-masq-agent daemonset is deployed without a configmap, it uses the default non-masq destinations [1].
 
-[1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap
+[1] <https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap>
 
 ### Uncertain Remediation
 
 Follow the steps for including the Node IP CIDRs in nonMasqueradeCIDRs [1].
 
-[1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#edit-ip-masq-agent-configmap
+[1] <https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#edit-ip-masq-agent-configmap>
 
 
 

@@ -25,7 +25,7 @@ Example log entry that would help identify involved objects:
 ### Failure Remediation
 
 Follow the documentation:
-https://cloud.google.com/vpc/docs/configure-private-google-access#requirements
+<https://cloud.google.com/vpc/docs/configure-private-google-access#requirements>
 
 ### Success Reason
 

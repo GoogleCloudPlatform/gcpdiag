@@ -21,7 +21,7 @@ The node {node} was auto-repaired because it had disk pressure for more than 30 
 ### Failure Remediation
 
 The auto-repair should have fixed the detected disk pressure.
-For more details check: https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair
+For more details check: <https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair>
 
 ### Success Reason
 

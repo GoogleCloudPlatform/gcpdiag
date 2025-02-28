@@ -66,7 +66,7 @@ log_id("cloudaudit.googleapis.com/system_event")
 
 Resources:
 [1]
-https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-reboots#:~:text=Getting%20support.-,Method,compute.instances.hostError,-System%20event
+<https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-reboots#:~:text=Getting%20support.-,Method,compute.instances.hostError,-System%20event>
 {% endif %}
 {% if method == 'compute.instances.preempted' %}
 The following instance(s) were preempted as part of a spot VM normal process.
@@ -76,8 +76,8 @@ Spot VMs have significant discounts, but Compute Engine might preemptively stop 
 
 Read more on here the preemption process occurs here [1]
 
-[1] https://cloud.google.com/compute/docs/instances/spot#preemption
-https://cloud.google.com/compute/docs/instances/spot
+[1] <https://cloud.google.com/compute/docs/instances/spot#preemption>
+<https://cloud.google.com/compute/docs/instances/spot>
 {% endif %}
 
 {% if 'compute.instances.stop' in method or 'compute.instances.suspend' in method %}
@@ -85,15 +85,15 @@ A user or service account stopped your VM [1]
 
 You can simply restarted by the VM by following
 
-[1] https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm
+[1] <https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm>
 {% endif %}
 {% if method == 'compute.instances.repair.recreateInstance' %}
 This termination is a normal Managed Instance group process. [1][2]
 
 There should be a replacement for this created instance.
 
-[1] https://cloud.google.com/compute/docs/instance-groups/working-with-managed-instances#autoscaling
-[2] https://cloud.google.com/compute/docs/autoscaler
+[1] <https://cloud.google.com/compute/docs/instance-groups/working-with-managed-instances#autoscaling>
+[2] <https://cloud.google.com/compute/docs/autoscaler>
 {% endif %}
 {% if method == 'compute.instances.guestTerminate' %}
 Your VM's operating system initiated the shutdown.
@@ -109,9 +109,9 @@ stops your VM when there is a maintenance event where Google must move
 If you want to change your VM's onHostMaintenance policy to restart automatically
 or live migrate [1]. Read more about Host Events [2] and how to set your termination policies[3].
 
-[1] https://cloud.google.com/compute/docs/instances/live-migration-process
-[2] https://cloud.google.com/compute/docs/instances/setting-vm-host-options
-[3] https://cloud.google.com/compute/docs/instances/host-maintenance-overview
+[1] <https://cloud.google.com/compute/docs/instances/live-migration-process>
+[2] <https://cloud.google.com/compute/docs/instances/setting-vm-host-options>
+[3] <https://cloud.google.com/compute/docs/instances/host-maintenance-overview>
 {% endif %}
 {% endfor %}
 {% endblock vm_termination_rca %}

@@ -25,8 +25,8 @@ how it works.
 
 Note: You may want to doublecheck with your organization admins of the best approach here.
 
-[1] https://cloud.google.com/resource-manager/docs/organization-policy/using-constraints
-[2] https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints
+[1] <https://cloud.google.com/resource-manager/docs/organization-policy/using-constraints>
+[2] <https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints>
 
 ### Success Reason
 

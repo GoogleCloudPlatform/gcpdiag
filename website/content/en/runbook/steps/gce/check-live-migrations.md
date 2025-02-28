@@ -21,12 +21,12 @@ Live migrations detected for the VM during mentioned period.
 ### Failure Remediation
 
 As remediation, you may try to simulate the migration (move the VM to another host) using
-https://cloud.google.com/compute/docs/instances/simulating-host-maintenance?hl=en#testingpolicies ,
+<https://cloud.google.com/compute/docs/instances/simulating-host-maintenance?hl=en#testingpolicies> ,
 and see if issue still persists. If yes, please reach out to Google Cloud Platform Support teams via case.
 
 Note: During live migration, VMs might experience a decrease in performance in disk,
 CPU, memory, and network utilization for a short period of time
-(https://cloud.google.com/compute/docs/instances/live-migration-process#how_does_the_live_migration_process_work).
+(<https://cloud.google.com/compute/docs/instances/live-migration-process#how_does_the_live_migration_process_work>).
 
 ### Success Reason
 

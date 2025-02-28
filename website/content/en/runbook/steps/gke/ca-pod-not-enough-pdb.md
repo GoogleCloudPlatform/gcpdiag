@@ -25,7 +25,7 @@ Example log entry that would help identify involved objects:
 
 Review the PodDisruptionBudget for the Pod and consider making it less restrictive.
 To learn more, see
-https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-down#not-enough-pdb
+<https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-down#not-enough-pdb>
 
 ### Success Reason
 

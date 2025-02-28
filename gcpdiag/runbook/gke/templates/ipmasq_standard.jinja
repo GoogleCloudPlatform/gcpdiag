@@ -5,7 +5,7 @@ destination IP.
 
 {% block Nodeproblem_failure_remediation %}
 Enable VPC flow logs by following the documentation and look if traffic id going out to destination:
-https://cloud.google.com/vpc/docs/using-flow-logs#enable-logging-existing
+<https://cloud.google.com/vpc/docs/using-flow-logs#enable-logging-existing>
 {% endblock Nodeproblem_failure_remediation %}
 
 {% block Nodeproblem_success_reason %}
@@ -22,57 +22,53 @@ Check for ip-masq-agent daemonSet is deployed in the Cluster. If yes follow chec
 If No, please follow [1] to deploy ip-masq-agent DaemonSet in the kube-system namespace and wait for around 5 minutes
 for the DaemonSet to be ready.
 
-[1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#checking_the_ip-masq-agent_daemonset
+[1] <https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#checking_the_ip-masq-agent_daemonset>
 {% endblock daemon_uncertain_remediation %}
-
 
 {% block configmap_uncertain_reason %}
 When ip-masq-agent daemonset is deployed without a configmap, it uses the default non-masq destinations [1].
 
-[1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap
+[1] <https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap>
 {% endblock configmap_uncertain_reason %}
 
 {% block configmap_uncertain_remediation %}
 If you needs to customize the configmap, then follow the steps [1] to deploy ip-masq-agent ConfigMap in the kube-system
 namespace.
-[1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap
+[1] <https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap>
 {% endblock configmap_uncertain_remediation %}
-
 
 {% block pod_uncertain_reason %}
 When ip-masq-agent daemonset is deployed without a configmap, it uses the default non-masq destinations [1].
 
-[1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap
+[1] <https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap>
 {% endblock pod_uncertain_reason %}
 
 {% block pod_uncertain_remediation %}
 Follow the steps for including the pod IP CIDRs in nonMasqueradeCIDRs [1].
 
-[1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#edit-ip-masq-agent-configmap
+[1] <https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#edit-ip-masq-agent-configmap>
 {% endblock pod_uncertain_remediation %}
-
 
 {% block node_uncertain_reason %}
 When ip-masq-agent daemonset is deployed without a configmap, it uses the default non-masq destinations [1].
 
-[1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap
+[1] <https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap>
 {% endblock node_uncertain_reason %}
 
 {% block node_uncertain_remediation %}
 Follow the steps for including the Node IP CIDRs in nonMasqueradeCIDRs [1].
 
-[1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#edit-ip-masq-agent-configmap
+[1] <https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#edit-ip-masq-agent-configmap>
 {% endblock node_uncertain_remediation %}
-
 
 {% block destination_uncertain_reason %}
 When ip-masq-agent daemonset is deployed without a configmap, it uses the default non-masq destinations [1].
 
-[1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap
+[1] <https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap>
 {% endblock destination_uncertain_reason %}
 
 {% block destination_uncertain_remediation %}
 Follow the steps for including the Destination IP CIDRs in nonMasqueradeCIDRs [1].
 
-[1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#edit-ip-masq-agent-configmap
+[1] <https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#edit-ip-masq-agent-configmap>
 {% endblock destination_uncertain_remediation %}

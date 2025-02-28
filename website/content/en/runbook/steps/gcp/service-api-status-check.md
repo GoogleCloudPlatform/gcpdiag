@@ -34,7 +34,7 @@ Execute the command below to enable {service_name} in {project_id}
 gcloud services enable {service_name} --project={project_id}
 
 Resources
-https://cloud.google.com/service-usage/docs/enable-disable#enabling
+<https://cloud.google.com/service-usage/docs/enable-disable#enabling>
 
 ### Success Reason
 

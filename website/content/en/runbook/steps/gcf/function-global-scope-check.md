@@ -23,7 +23,7 @@ which could be throwing an exception, crashing, or timing out.
 ### Failure Remediation
 
 Please use the following document as reference to address this error:
-https://cloud.google.com/functions/docs/troubleshooting#global
+<https://cloud.google.com/functions/docs/troubleshooting#global>
 
 ### Success Reason
 

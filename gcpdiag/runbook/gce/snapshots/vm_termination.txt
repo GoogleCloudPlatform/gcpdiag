@@ -119,9 +119,9 @@ No GCE Instance was terminated between {start_time} and {end_time}
 
      Resources:
 
-     [1] https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm
+     [1] <https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm>
 
-     [2] https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting
+     [2] <https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting>
 
 [END]: Finalize VM terminations diagnostics.
 

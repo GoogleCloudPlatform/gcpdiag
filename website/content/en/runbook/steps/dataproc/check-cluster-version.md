@@ -21,7 +21,7 @@ The cluster {cluster_name} is using an unsupported Dataproc image version. Pleas
 ### Failure Remediation
 
 Please find supported Dataproc image versions from this document[1].
-[1] https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-version-clusters
+[1] <https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-version-clusters>
 
 ### Success Reason
 

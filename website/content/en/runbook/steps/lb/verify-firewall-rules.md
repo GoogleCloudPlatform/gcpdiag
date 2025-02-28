@@ -21,7 +21,7 @@ The health checks are currently failing due to a misconfigured firewall. This pr
 
 ### Failure Remediation
 
-Update your firewall rules to allow inbound traffic from the Google Cloud health check IP ranges (found at https://cloud.google.com/load-balancing/docs/health-check-concepts#ip-ranges) to your backends.
+Update your firewall rules to allow inbound traffic from the Google Cloud health check IP ranges (found at <https://cloud.google.com/load-balancing/docs/health-check-concepts#ip-ranges>) to your backends.
 
 ### Success Reason
 

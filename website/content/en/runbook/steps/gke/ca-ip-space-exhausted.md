@@ -25,7 +25,7 @@ Example log entry that would help identify involved objects:
 ### Failure Remediation
 
 Refer to the troubleshooting steps to address the lack of IP address space for the nodes or pods.
-https://cloud.google.com/kubernetes-engine/docs/how-to/alias-ips#not_enough_space
+<https://cloud.google.com/kubernetes-engine/docs/how-to/alias-ips#not_enough_space>
 
 ### Success Reason
 

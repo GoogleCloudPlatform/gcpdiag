@@ -26,7 +26,7 @@ Example log entry that would help identify involved objects:
 
 Review your limits for memory and vCPU and, if you want cluster autoscaler to scale down this node, decrease the limits
 by following the documentation
-https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-provisioning#enable
+<https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-provisioning#enable>
 
 ### Success Reason
 

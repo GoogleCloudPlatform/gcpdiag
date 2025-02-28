@@ -38,8 +38,8 @@ dataflow/job-permissions: Analysis and Resolution of Dataflow Jobs Permissions i
      Note: You may want to doublecheck with your project admins of the best way to grant the role
      or custom roles which can be used.
 
-     [1] https://cloud.google.com/iam/docs/grant-role-console
-     [2] https://cloud.google.com/iam/docs/understanding-roles
+     [1] <https://cloud.google.com/iam/docs/grant-role-console>
+     [2] <https://cloud.google.com/iam/docs/understanding-roles>
 
 [AUTOMATED STEP]: Verify that serviceAccount:service-12340010@dataflow-service-producer-prod.iam.gserviceaccount.com has required permissions/roles in project/gcpdiag-dataflow1-aaaa.
 
@@ -51,7 +51,7 @@ dataflow/job-permissions: Analysis and Resolution of Dataflow Jobs Permissions i
      [REMEDIATION]
      Follow Guide [1] to grant a role which has the correct permissions.
 
-     [1] https://cloud.google.com/dataflow/docs/concepts/security-and-permissions#df-service-account
+     [1] <https://cloud.google.com/dataflow/docs/concepts/security-and-permissions#df-service-account>
 
 [GATEWAY]: Checking dataflow worker service account permissions.
 [INFO]: dataflow-worker@gcpdiag-dataflow1-aaaa.iam.gserviceaccount.com

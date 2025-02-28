@@ -59,7 +59,7 @@ The following domains are in FAILED_CAA_CHECKING or FAILED_CAA_FORBIDDEN state: 
 {% endblock failed_caa_check_domains_failure_reason %}
 
 {% block failed_caa_check_domains_failure_remediation %}
-Please ensure the CAA records are configured correctly and try again. See the documentation for instructions on configuring CAA records: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#caa
+Please ensure the CAA records are configured correctly and try again. See the documentation for instructions on configuring CAA records: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#caa>
 {% endblock failed_caa_check_domains_failure_remediation %}
 
 {% block check_certificate_attachment_failure_reason %}
@@ -67,7 +67,7 @@ The SSL certificate "{name}" is not attached to any target proxies. Please attac
 {% endblock check_certificate_attachment_failure_reason %}
 
 {% block check_certificate_attachment_failure_remediation %}
-Please follow the documentation to attach the certificate to a target proxy: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#load-balancer
+Please follow the documentation to attach the certificate to a target proxy: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#load-balancer>
 {% endblock check_certificate_attachment_failure_remediation %}
 
 {% block check_certificate_attachment_success_reason %}
@@ -89,7 +89,7 @@ The following load balancer IP addresses are associated with this certificate:
 
 {fr_ip_message}
 
-Check: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns
+Check: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns>
 {% endblock verify_dns_records_failure_remediation %}
 
 {% block verify_dns_records_failure_reason_a1 %}
@@ -107,7 +107,7 @@ The following load balancer IP addresses are associated with this certificate:
 
 {fr_ip_message}
 
-Check: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns
+Check: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns>
 {% endblock verify_dns_records_uncertain_remediation %}
 
 {% block verify_forwarding_rules_port_success_reason %}

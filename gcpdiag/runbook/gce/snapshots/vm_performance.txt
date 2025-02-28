@@ -37,15 +37,16 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      Excessive CPU usage can lead to performance bottlenecks. Consider resizing the VM to a more
      powerful machine type with higher CPU capabilities.
      Detailed instructions for resizing and restarting VMs are available here:
-     - Stopping a VM: https://cloud.google.com/compute/docs/instances/stop-start-instance
-     - Resizing a VM: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+
+     - Stopping a VM: <https://cloud.google.com/compute/docs/instances/stop-start-instance>
+     - Resizing a VM: <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
 
      Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
-     * https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics
-     * https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization
+     - <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics>
+     - <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization>
 
      Alternatively, you can connect via serial console if SSH is unavailable to stop offending processes
-     (https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console).
+     (<https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>).
 
 [AUTOMATED STEP]: Checking if CPU is overcommited
 
@@ -62,14 +63,15 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      Elevated memory usage can result in slow or unresponsive or termimated applications.
      Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
      Guidance on stopping and changing the machine type can be found here:
+
      - Changing machine type:
-     https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+     <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
 
      Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
-     https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization
+     <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization>
 
      Or connect via the Serial Console if SSH is not available to mitigate the issue:
-     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+     <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 
 [AUTOMATED STEP]: Check for memory related errors in VM serial logs.
 
@@ -81,25 +83,26 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      You may manually verify memory utilization on the Guest OS side a likely cause.
 
      [REMEDIATION]
+
      1. Manually investigate by accessing the Guest OS to Analyze Memory Usage:
-        * Identify processes with consistently high memory consumption:
+        - Identify processes with consistently high memory consumption:
           - Run `top` and press "M" to sort processes by memory usage.
           - Alternatively, use the command: `ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5`
-        * Focus on processes with recent spikes or consistently high memory usage.
-        * If SSH access is unavailable, consider [troubleshooting via the serial
+        - Focus on processes with recent spikes or consistently high memory usage.
+        - If SSH access is unavailable, consider [troubleshooting via the serial
      console](https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console).
 
      2. Review Application or Configuration Changes:
-        * Investigate if recent deployments, updates, or configuration changes correlate with increased memory usage.
+        - Investigate if recent deployments, updates, or configuration changes correlate with increased memory usage.
 
      3. Resolve Identified Bottlenecks:
-        * For applications causing excessive memory usage:
+        - For applications causing excessive memory usage:
           - Optimize their configuration or update them to a stable version.
           - Explore alternatives if optimization is insufficient.
-        * Evaluate scaling up resources if the high memory usage results from legitimate application demands.
+        - Evaluate scaling up resources if the high memory usage results from legitimate application demands.
 
      4. Increase Instance Memory if Necessary:
-        * If additional memory is required for the application:
+        - If additional memory is required for the application:
           - Stop the VM and [change its machine type](https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud).
           - Consult the [machine type documentation](https://cloud.google.com/compute/docs/machine-types) to select an appropriate
      configuration.
@@ -124,14 +127,14 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      To better understand the situation with your Compute Engine or Persistent Disks,
      could you please take a look at the Google Cloud Status page:
 
-     https://status.cloud.google.com
+     <https://status.cloud.google.com>
 
      This page provides real-time updates on the health of Google Cloud services.
 
      Additionally, it may be helpful to check the Service Health dashboard in your
      Google Cloud Console for any reported incidents:
 
-     https://console.cloud.google.com/servicehealth/incidents
+     <https://console.cloud.google.com/servicehealth/incidents>
 
      If you don't find any information about an ongoing issue related to your concern,
      please don't hesitate to reach out to Google Cloud Support by creating a support case.
@@ -149,7 +152,7 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      This action can help avoid performance issues and ensure smoother SSH connections.
 
      Follow the guide to increase disk size:
-     https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
+     <https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk>
 
 [AUTOMATED STEP]: Verify any slow Disk operations related errors in Serial console logs
 
@@ -162,25 +165,26 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      There can be multiple reasons which can cause Slow Disk IOs:
 
      - CPU Starvation - Small instances (with lesser CPUs) may not have enough CPU to serve all I/Os inflight.
-     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#cpu_and_memory_performance
+     <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#cpu_and_memory_performance>
 
      - Network Throttling - High sent/received network traffic can cause network throttling that impacts disk operations.
-     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#network_performance
+     <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#network_performance>
 
      - Insufficient Machine Resources - If your machine's IOPS and throughput limits are not enough to serve your workloads,
      this can also cause CPU or Disk IOPS/throughput Starvation.
-     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#storage_performance
+     <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#storage_performance>
 
      - Application and GuestOS Operations - Unmanaged and untested application workloads can cause the high influx of IOs
      to the disk and cause IO operations to be queued, causing throttling at disk and CPU levels.
 
      To fix this issue:
+
      - Please optimize your application workloads.
      - If needed, please add more resources(CPU, Memory) to the VM.
      - Please optimize your Disk performance -
-     https://cloud.google.com/compute/docs/disks/optimizing-pd-performance
+     <https://cloud.google.com/compute/docs/disks/optimizing-pd-performance>
      - If needed, please change your disk type to get better Disk IOPS/throughput limits -
-     https://cloud.google.com/compute/docs/disks/modify-persistent-disk#disk_type
+     <https://cloud.google.com/compute/docs/disks/modify-persistent-disk#disk_type>
 
 [AUTOMATED STEP]: Verify any Filesystem corruption related errors in Serial console logs
 
@@ -189,6 +193,7 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      Possible filesystem corruption detected.
 
      The patterns used:
+
      ```
      'Corruption of in-memory data detected. Shutting down filesystem',
      'Corruption of in-memory data detected', 'warning: mounting fs with errors',
@@ -198,12 +203,14 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      'metadata I/O error in'
      ```
 
+
      [REMEDIATION]
      To resolve filesystem corruption, admins can use [gce-rescue](https://github.com/GoogleCloudPlatform/gce-rescue),
      available in Cloud Shell, to rescue faulty VMs. Alternatively, you can follow the
      [manual method](https://cloud.google.com/compute/docs/troubleshooting/rescue-vm) to repair the filesystem.
 
      Additional resources for reference:
+
      - [Red Hat article on filesystem repair](https://access.redhat.com/solutions/1750923)
      - [Video guide on rescuing VMs](https://www.youtube.com/watch?v=oD6IFpjEtEw)
 
@@ -225,16 +232,18 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      processing time, and overall sluggishness.
 
      **Potential Bottlenecks**
+
      - Disk Type: To optimize disk performance, ensure your disk type is appropriate
      for your workload and provides acceptable latency for your system architecture.
      Choosing the right disk type can significantly impact performance.
-     https://cloud.google.com/compute/docs/disks
+     <https://cloud.google.com/compute/docs/disks>
 
      - Workload: The nature of your workload also influences latency. Workloads with
      many small, random I/O operations will generally have higher latency than those
      with sequential I/O
 
      **Optimize Disk Usage**
+
      - Reduce I/O Operations: Optimize your applications and database queries to minimize
      the number of disk I/O operations.
      - Increase I/O Request Size: Larger I/O requests can be more efficient than many small
@@ -243,10 +252,10 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      - Caching: Implement caching mechanisms to reduce the need to access the disk for
      frequently used data.
 
-     Choose the Right Disk Type with lesser IO Latency - https://cloud.google.com/compute/docs/disks
+     Choose the Right Disk Type with lesser IO Latency - <https://cloud.google.com/compute/docs/disks>
 
      You may also look into Optimizing persistent disk performance -
-     https://cloud.google.com/compute/docs/disks/optimizing-pd-performance
+     <https://cloud.google.com/compute/docs/disks/optimizing-pd-performance>
 
      Please don't hesitate to reach out to Google Cloud Support if issue is not resolved.
 
@@ -361,15 +370,16 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      Excessive CPU usage can lead to performance bottlenecks. Consider resizing the VM to a more
      powerful machine type with higher CPU capabilities.
      Detailed instructions for resizing and restarting VMs are available here:
-     - Stopping a VM: https://cloud.google.com/compute/docs/instances/stop-start-instance
-     - Resizing a VM: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+
+     - Stopping a VM: <https://cloud.google.com/compute/docs/instances/stop-start-instance>
+     - Resizing a VM: <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
 
      Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
-     * https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics
-     * https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization
+     - <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics>
+     - <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization>
 
      Alternatively, you can connect via serial console if SSH is unavailable to stop offending processes
-     (https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console).
+     (<https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>).
 
 [AUTOMATED STEP]: Checking if CPU is overcommited
 
@@ -386,14 +396,15 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      Elevated memory usage can result in slow or unresponsive or termimated applications.
      Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
      Guidance on stopping and changing the machine type can be found here:
+
      - Changing machine type:
-     https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
+     <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
 
      Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
-     https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization
+     <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization>
 
      Or connect via the Serial Console if SSH is not available to mitigate the issue:
-     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+     <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 
 [AUTOMATED STEP]: Check for memory related errors in VM serial logs.
 
@@ -405,25 +416,26 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      You may manually verify memory utilization on the Guest OS side a likely cause.
 
      [REMEDIATION]
+
      1. Manually investigate by accessing the Guest OS to Analyze Memory Usage:
-        * Identify processes with consistently high memory consumption:
+        - Identify processes with consistently high memory consumption:
           - Run `top` and press "M" to sort processes by memory usage.
           - Alternatively, use the command: `ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5`
-        * Focus on processes with recent spikes or consistently high memory usage.
-        * If SSH access is unavailable, consider [troubleshooting via the serial
+        - Focus on processes with recent spikes or consistently high memory usage.
+        - If SSH access is unavailable, consider [troubleshooting via the serial
      console](https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console).
 
      2. Review Application or Configuration Changes:
-        * Investigate if recent deployments, updates, or configuration changes correlate with increased memory usage.
+        - Investigate if recent deployments, updates, or configuration changes correlate with increased memory usage.
 
      3. Resolve Identified Bottlenecks:
-        * For applications causing excessive memory usage:
+        - For applications causing excessive memory usage:
           - Optimize their configuration or update them to a stable version.
           - Explore alternatives if optimization is insufficient.
-        * Evaluate scaling up resources if the high memory usage results from legitimate application demands.
+        - Evaluate scaling up resources if the high memory usage results from legitimate application demands.
 
      4. Increase Instance Memory if Necessary:
-        * If additional memory is required for the application:
+        - If additional memory is required for the application:
           - Stop the VM and [change its machine type](https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud).
           - Consult the [machine type documentation](https://cloud.google.com/compute/docs/machine-types) to select an appropriate
      configuration.
@@ -448,14 +460,14 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      To better understand the situation with your Compute Engine or Persistent Disks,
      could you please take a look at the Google Cloud Status page:
 
-     https://status.cloud.google.com
+     <https://status.cloud.google.com>
 
      This page provides real-time updates on the health of Google Cloud services.
 
      Additionally, it may be helpful to check the Service Health dashboard in your
      Google Cloud Console for any reported incidents:
 
-     https://console.cloud.google.com/servicehealth/incidents
+     <https://console.cloud.google.com/servicehealth/incidents>
 
      If you don't find any information about an ongoing issue related to your concern,
      please don't hesitate to reach out to Google Cloud Support by creating a support case.
@@ -473,7 +485,7 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      This action can help avoid performance issues and ensure smoother SSH connections.
 
      Follow the guide to increase disk size:
-     https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
+     <https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk>
 
 [AUTOMATED STEP]: Verify any slow Disk operations related errors in Serial console logs
 
@@ -486,25 +498,26 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      There can be multiple reasons which can cause Slow Disk IOs:
 
      - CPU Starvation - Small instances (with lesser CPUs) may not have enough CPU to serve all I/Os inflight.
-     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#cpu_and_memory_performance
+     <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#cpu_and_memory_performance>
 
      - Network Throttling - High sent/received network traffic can cause network throttling that impacts disk operations.
-     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#network_performance
+     <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#network_performance>
 
      - Insufficient Machine Resources - If your machine's IOPS and throughput limits are not enough to serve your workloads,
      this can also cause CPU or Disk IOPS/throughput Starvation.
-     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#storage_performance
+     <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-performance#storage_performance>
 
      - Application and GuestOS Operations - Unmanaged and untested application workloads can cause the high influx of IOs
      to the disk and cause IO operations to be queued, causing throttling at disk and CPU levels.
 
      To fix this issue:
+
      - Please optimize your application workloads.
      - If needed, please add more resources(CPU, Memory) to the VM.
      - Please optimize your Disk performance -
-     https://cloud.google.com/compute/docs/disks/optimizing-pd-performance
+     <https://cloud.google.com/compute/docs/disks/optimizing-pd-performance>
      - If needed, please change your disk type to get better Disk IOPS/throughput limits -
-     https://cloud.google.com/compute/docs/disks/modify-persistent-disk#disk_type
+     <https://cloud.google.com/compute/docs/disks/modify-persistent-disk#disk_type>
 
 [AUTOMATED STEP]: Verify any Filesystem corruption related errors in Serial console logs
 
@@ -518,6 +531,7 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      [manual method](https://cloud.google.com/compute/docs/troubleshooting/rescue-vm) to repair the filesystem.
 
      Additional resources for reference:
+
      - [Red Hat article on filesystem repair](https://access.redhat.com/solutions/1750923)
      - [Video guide on rescuing VMs](https://www.youtube.com/watch?v=oD6IFpjEtEw)
 
@@ -539,16 +553,18 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      processing time, and overall sluggishness.
 
      **Potential Bottlenecks**
+
      - Disk Type: To optimize disk performance, ensure your disk type is appropriate
      for your workload and provides acceptable latency for your system architecture.
      Choosing the right disk type can significantly impact performance.
-     https://cloud.google.com/compute/docs/disks
+     <https://cloud.google.com/compute/docs/disks>
 
      - Workload: The nature of your workload also influences latency. Workloads with
      many small, random I/O operations will generally have higher latency than those
      with sequential I/O
 
      **Optimize Disk Usage**
+
      - Reduce I/O Operations: Optimize your applications and database queries to minimize
      the number of disk I/O operations.
      - Increase I/O Request Size: Larger I/O requests can be more efficient than many small
@@ -557,10 +573,10 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      - Caching: Implement caching mechanisms to reduce the need to access the disk for
      frequently used data.
 
-     Choose the Right Disk Type with lesser IO Latency - https://cloud.google.com/compute/docs/disks
+     Choose the Right Disk Type with lesser IO Latency - <https://cloud.google.com/compute/docs/disks>
 
      You may also look into Optimizing persistent disk performance -
-     https://cloud.google.com/compute/docs/disks/optimizing-pd-performance
+     <https://cloud.google.com/compute/docs/disks/optimizing-pd-performance>
 
      Please don't hesitate to reach out to Google Cloud Support if issue is not resolved.
 

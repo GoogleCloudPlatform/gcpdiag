@@ -32,7 +32,7 @@ gke/image-pull: Analysis and Resolution of Image Pull Failures on GKE clusters.
 
      [REMEDIATION]
      Follow the documentation:
-     https://cloud.google.com/kubernetes-engine/docs/troubleshooting#ImagePullBackOff
+     <https://cloud.google.com/kubernetes-engine/docs/troubleshooting#ImagePullBackOff>
 
 [AUTOMATED STEP]: Check for "Failed to pull image.*403 Forbidden" log entries.
 
@@ -53,7 +53,7 @@ gke/image-pull: Analysis and Resolution of Image Pull Failures on GKE clusters.
 
      [REMEDIATION]
      Follow the documentation:
-     https://cloud.google.com/artifact-registry/docs/integrate-gke#permissions
+     <https://cloud.google.com/artifact-registry/docs/integrate-gke#permissions>
 
 [AUTOMATED STEP]: Check for "Failed to pull image.*lookup.*server misbehaving" log entries.
 
@@ -74,7 +74,7 @@ gke/image-pull: Analysis and Resolution of Image Pull Failures on GKE clusters.
 
      [REMEDIATION]
      Follow the documentation:
-     https://cloud.google.com/vpc/docs/configure-private-google-access#requirements
+     <https://cloud.google.com/vpc/docs/configure-private-google-access#requirements>
 
 [AUTOMATED STEP]: Check for "Failed to pull image.*dial tcp.*199.36.153.\d:443: i/o timeout" log entries
 
@@ -96,7 +96,7 @@ gke/image-pull: Analysis and Resolution of Image Pull Failures on GKE clusters.
 
      [REMEDIATION]
      Follow the documentation:
-     https://cloud.google.com/vpc-service-controls/docs/set-up-private-connectivity
+     <https://cloud.google.com/vpc-service-controls/docs/set-up-private-connectivity>
 
 [AUTOMATED STEP]: Check for "Failed to pull image.*dial tcp.*i/o timeout" log entries
 
@@ -117,7 +117,7 @@ gke/image-pull: Analysis and Resolution of Image Pull Failures on GKE clusters.
 
      [REMEDIATION]
      Follow the documentation:
-     https://cloud.google.com/kubernetes-engine/docs/concepts/firewall-rules
+     <https://cloud.google.com/kubernetes-engine/docs/concepts/firewall-rules>
 
 [AUTOMATED STEP]: Check for "Failed to pull image.*insufficient_scope" log entries
 
@@ -137,9 +137,10 @@ gke/image-pull: Analysis and Resolution of Image Pull Failures on GKE clusters.
      Last Timestamp: N/A
 
      [REMEDIATION]
+
      1. Verify that the name of the image is correct.
      2. Follow the documentation:
-     https://cloud.google.com/kubernetes-engine/docs/troubleshooting/deployed-workloads#image-not-found
+     <https://cloud.google.com/kubernetes-engine/docs/troubleshooting/deployed-workloads#image-not-found>
 
 [END]: Finalize `GKE Image Pull runbbok` diagnostics.
 

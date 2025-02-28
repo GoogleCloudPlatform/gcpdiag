@@ -11,10 +11,10 @@ exporting logs/metrics.
 Follow [1] to attach an active service account to this GCE Instance.
 Read more on how to properly authorize ops agent.
 
-[1] https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes
+[1] <https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes>
 
 [2]
-https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/authorization#authorize_with_an_attached_service_account
+<https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/authorization#authorize_with_an_attached_service_account>
 {% endblock service_account_exists_failure_remediation %}
 
 {% block service_account_exists_step_name %}
@@ -43,7 +43,7 @@ Access scopes don't apply for calls made using gRPC.
 Update `{full_resource_path}` to enable at least one of the following access scopes:
 {required_access_scope}
 
-[1] https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes
+[1] <https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes>
 {% endblock access_scope_failure_remediation %}
 
 {% block running_step_name %}
@@ -95,7 +95,7 @@ documentation to identify and resolve potential startup issues [2].
 
 Resources:
 
-[1] https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm
+[1] <https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm>
 
-[2] https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting
+[2] <https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting>
 {% endblock terminated_vm_running_failure_remediation %}

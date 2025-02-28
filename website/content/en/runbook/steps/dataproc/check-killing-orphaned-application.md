@@ -22,7 +22,7 @@ Found logs messages related to "{log}" on the cluster: {cluster_name}.
 
 Please set dataproc:dataproc.yarn.orphaned-app-termination.enable to false if you don't want to kill orphaned yarn application.
 You can find more details in the documentation [1].
-[1] https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/cluster-properties
+[1] <https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/cluster-properties>
 
 ### Success Reason
 

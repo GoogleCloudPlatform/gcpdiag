@@ -26,7 +26,7 @@ Example log entry that would help identify involved objects:
 If you expect that the Pod should be rescheduled, review the scheduling requirements of the Pods on the underutilized
 node to determine if they can be moved to another node in the cluster.
 To learn more, see the link
-https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-down#no-place-to-move-pods
+<https://cloud.google.com/kubernetes-engine/docs/troubleshooting/cluster-autoscaler-scale-down#no-place-to-move-pods>
 
 ### Success Reason
 

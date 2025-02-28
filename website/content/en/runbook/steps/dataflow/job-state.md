@@ -23,7 +23,7 @@ Usually the specific error is logged in the Dataflow Monitoring Interface.
   Check Dataflow Monitoring Interface for the specific error, and find the error among
   common errors here[1] to resolve the job errors.
 
-  [1] https://cloud.google.com/dataflow/docs/guides/common-errors#pipeline_errors
+  [1] <https://cloud.google.com/dataflow/docs/guides/common-errors#pipeline_errors>
 
 ### Success Reason
 

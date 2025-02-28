@@ -55,7 +55,7 @@ Registration Checker summary:
 ### Failure Remediation
 
 To understand why the node failed registration with kube-apiserver, please check the following documentation page:
-https://cloud.google.com/kubernetes-engine/docs/troubleshooting/node-registration#use-nrc
+<https://cloud.google.com/kubernetes-engine/docs/troubleshooting/node-registration#use-nrc>
 
 ### Success Reason
 

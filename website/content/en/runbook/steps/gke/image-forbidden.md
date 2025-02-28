@@ -25,7 +25,7 @@ Example log entry that would help identify involved objects:
 ### Failure Remediation
 
 Follow the documentation:
-https://cloud.google.com/artifact-registry/docs/integrate-gke#permissions
+<https://cloud.google.com/artifact-registry/docs/integrate-gke#permissions>
 
 ### Success Reason
 

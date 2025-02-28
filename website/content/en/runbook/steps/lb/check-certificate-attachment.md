@@ -21,7 +21,7 @@ The SSL certificate "{name}" is not attached to any target proxies. Please attac
 
 ### Failure Remediation
 
-Please follow the documentation to attach the certificate to a target proxy: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#load-balancer
+Please follow the documentation to attach the certificate to a target proxy: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#load-balancer>
 
 ### Success Reason
 

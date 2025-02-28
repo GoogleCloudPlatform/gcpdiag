@@ -21,7 +21,7 @@ The node {node} was auto-repaired because it had unallocatable TPU(s) for more t
 ### Failure Remediation
 
 The auto-repair should have fixed the detected unallocatable TPU(s).
-For more details check: https://cloud.google.com/kubernetes-engine/docs/how-to/tpus#node-auto-repair
+For more details check: <https://cloud.google.com/kubernetes-engine/docs/how-to/tpus#node-auto-repair>
 
 ### Success Reason
 

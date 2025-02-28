@@ -25,7 +25,7 @@ The logging health check failed because node pools have insufficient access scop
 ### Failure Remediation
 
 Adjust node pool access scope to grant necessary logging permissions. See instructions:
-https://cloud.google.com/kubernetes-engine/docs/troubleshooting/logging#verify_nodes_in_the_node_pools_have_access_scope
+<https://cloud.google.com/kubernetes-engine/docs/troubleshooting/logging#verify_nodes_in_the_node_pools_have_access_scope>
 
 ### Success Reason
 
