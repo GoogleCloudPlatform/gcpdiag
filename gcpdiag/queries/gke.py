@@ -61,6 +61,17 @@ class NodeConfig:
   def oauth_scopes(self) -> list:
     return self._resource_data['oauthScopes']
 
+  @property
+  def has_serial_port_logging_enabled(self) -> bool:
+    """ Check if serial port logging is enabled in the node config.
+
+    Returns:
+      bool: True if serial port logging is enabled or not explicitly disabled.
+            False if explicitly disabled.
+    """
+    metadata = self._resource_data.get('metadata', {})
+    return metadata.get('serial-port-logging-enable', 'true').lower() == 'true'
+
 
 class NodePool(models.Resource):
   """Represents a GKE node pool."""
