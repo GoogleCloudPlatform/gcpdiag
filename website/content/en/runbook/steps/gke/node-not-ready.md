@@ -21,7 +21,7 @@ The node {node} was auto-repaired because it was in a NotReady state for more th
 ### Failure Remediation
 
 The auto-repair should have fixed the detected NotReady state.
-For more details check: https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair
+For more details check: <https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair>
 
 ### Success Reason
 

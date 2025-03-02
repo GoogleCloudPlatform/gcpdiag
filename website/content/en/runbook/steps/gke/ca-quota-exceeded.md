@@ -25,7 +25,7 @@ Example log entry that would help identify involved objects:
 
 Check the Errors tab of the MIG in Google Cloud console to see what quota is being exceeded. Follow the instructions to
 request a quota increase:
-https://cloud.google.com/compute/quotas#requesting_additional_quota
+<https://cloud.google.com/compute/quotas#requesting_additional_quota>
 
 ### Success Reason
 

@@ -24,7 +24,7 @@ gke/gke-ip-masq-standard: This runbook will analyze symptoms for IP Masquerading
 
      [REMEDIATION]
      Enable VPC flow logs by following the documentation and look if traffic id going out to destination:
-     https://cloud.google.com/vpc/docs/using-flow-logs#enable-logging-existing
+     <https://cloud.google.com/vpc/docs/using-flow-logs#enable-logging-existing>
 
 [AUTOMATED STEP]: Lets check if Daemon set present..
 
@@ -36,7 +36,7 @@ gke/gke-ip-masq-standard: This runbook will analyze symptoms for IP Masquerading
      If No, please follow [1] to deploy ip-masq-agent DaemonSet in the kube-system namespace and wait for around 5 minutes
      for the DaemonSet to be ready.
 
-     [1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#checking_the_ip-masq-agent_daemonset
+     [1] <https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#checking_the_ip-masq-agent_daemonset>
 
 [AUTOMATED STEP]: Lets confirm if config map is configure.
 
@@ -44,12 +44,12 @@ gke/gke-ip-masq-standard: This runbook will analyze symptoms for IP Masquerading
      [REASON]
      When ip-masq-agent daemonset is deployed without a configmap, it uses the default non-masq destinations [1].
 
-     [1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap
+     [1] <https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap>
 
      [REMEDIATION]
      If you needs to customize the configmap, then follow the steps [1] to deploy ip-masq-agent ConfigMap in the kube-system
      namespace.
-     [1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap
+     [1] <https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap>
 
 [AUTOMATED STEP]: Lets check pod ip present..
 
@@ -57,12 +57,12 @@ gke/gke-ip-masq-standard: This runbook will analyze symptoms for IP Masquerading
      [REASON]
      When ip-masq-agent daemonset is deployed without a configmap, it uses the default non-masq destinations [1].
 
-     [1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap
+     [1] <https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap>
 
      [REMEDIATION]
      Follow the steps for including the pod IP CIDRs in nonMasqueradeCIDRs [1].
 
-     [1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#edit-ip-masq-agent-configmap
+     [1] <https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#edit-ip-masq-agent-configmap>
 
 [AUTOMATED STEP]: Lets check node IP is present under non-masq cidr.
 
@@ -70,12 +70,12 @@ gke/gke-ip-masq-standard: This runbook will analyze symptoms for IP Masquerading
      [REASON]
      When ip-masq-agent daemonset is deployed without a configmap, it uses the default non-masq destinations [1].
 
-     [1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap
+     [1] <https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap>
 
      [REMEDIATION]
      Follow the steps for including the Node IP CIDRs in nonMasqueradeCIDRs [1].
 
-     [1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#edit-ip-masq-agent-configmap
+     [1] <https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#edit-ip-masq-agent-configmap>
 
 [AUTOMATED STEP]: Lets check if pod ip address is present.
 
@@ -83,12 +83,12 @@ gke/gke-ip-masq-standard: This runbook will analyze symptoms for IP Masquerading
      [REASON]
      When ip-masq-agent daemonset is deployed without a configmap, it uses the default non-masq destinations [1].
 
-     [1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap
+     [1] <https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap>
 
      [REMEDIATION]
      Follow the steps for including the Destination IP CIDRs in nonMasqueradeCIDRs [1].
 
-     [1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#edit-ip-masq-agent-configmap
+     [1] <https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#edit-ip-masq-agent-configmap>
 
 [END]: Finalize connectivity diagnostics.
 [INFO]: If all check passed consider please contact support for further troubleshooting

@@ -25,7 +25,7 @@ Example log entry that would help identify involved objects:
 ### Failure Remediation
 
 Follow the documentation:
-https://cloud.google.com/kubernetes-engine/docs/concepts/firewall-rules
+<https://cloud.google.com/kubernetes-engine/docs/concepts/firewall-rules>
 
 ### Success Reason
 

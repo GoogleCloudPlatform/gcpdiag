@@ -24,9 +24,10 @@ Example log entry that would help identify involved objects:
 
 ### Failure Remediation
 
+
 1. Verify that the name of the image is correct.
 2. Follow the documentation:
-https://cloud.google.com/kubernetes-engine/docs/troubleshooting/deployed-workloads#image-not-found
+<https://cloud.google.com/kubernetes-engine/docs/troubleshooting/deployed-workloads#image-not-found>
 
 ### Success Reason
 

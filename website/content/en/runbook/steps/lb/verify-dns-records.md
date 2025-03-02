@@ -26,7 +26,7 @@ The following load balancer IP addresses are associated with this certificate:
 
 {fr_ip_message}
 
-Check: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns
+Check: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns>
 
 ### Success Reason
 
@@ -44,7 +44,7 @@ The following load balancer IP addresses are associated with this certificate:
 
 {fr_ip_message}
 
-Check: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns
+Check: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns>
 
 
 

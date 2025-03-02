@@ -32,6 +32,7 @@ The following responses were received from your backends: {probe_results_text_st
 
 ### Failure Remediation
 
+
 1. Make sure that the backend service timeout (current value: {bs_timeout_sec}s) and health check timeout (current value: {hc_timeout_sec}s) are appropriately configured to accommodate your application's expected response time.
 
 2. Investigate your application's configuration to ensure it is correctly handling health check probe requests. {success_criteria}

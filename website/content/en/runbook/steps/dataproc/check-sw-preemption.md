@@ -24,7 +24,7 @@ This error occurs when secondary nodes are preempted.
 Please confirm if you are using secondary workers with preemptible instances. (The default Dataproc secondary worker type is a standard preemptible VM.)
 
 You can recreate a cluster configured with non-preemptible secondary workers to ensure the secondary workers are not preemptible.
-[1] https://cloud.google.com/dataproc/docs/concepts/compute/secondary-vms#non-preemptible_workers
+[1] <https://cloud.google.com/dataproc/docs/concepts/compute/secondary-vms#non-preemptible_workers>
 
 ### Success Reason
 

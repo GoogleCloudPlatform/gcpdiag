@@ -36,8 +36,8 @@ you can undelete it, if it's been
 After 30 days, IAM permanently removes the service account. Google Cloud cannot recover the
 service account after it is permanently removed, even if you file a support request.
 Follow [1] to and [2] to verify service account is deleted.
-[1] https://cloud.google.com/iam/docs/service-accounts-delete-undelete#deleting
-[2] https://cloud.google.com/iam/docs/service-accounts-delete-undelete#undeleting
+[1] <https://cloud.google.com/iam/docs/service-accounts-delete-undelete#deleting>
+[2] <https://cloud.google.com/iam/docs/service-accounts-delete-undelete#undeleting>
 
 ### Success Reason
 

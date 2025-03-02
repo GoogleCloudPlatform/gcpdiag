@@ -218,8 +218,8 @@ dataproc/cluster-creation: Provides a comprehensive analysis of common issues wh
      Note: You may want to doublecheck with your project admins of the best way to grant the role
      or custom roles which can be used.
 
-     [1] https://cloud.google.com/iam/docs/grant-role-console
-     [2] https://cloud.google.com/iam/docs/understanding-roles
+     [1] <https://cloud.google.com/iam/docs/grant-role-console>
+     [2] <https://cloud.google.com/iam/docs/understanding-roles>
 
 [AUTOMATED STEP]: Verify service account roles based on Shared VPC.
 

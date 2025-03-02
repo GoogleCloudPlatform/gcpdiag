@@ -22,7 +22,7 @@ The cluster {cluster_name} in project {project_id} could not be created due to i
 
 This issue occurs when the requested Dataproc cluster exceeds the project's available quota for resources such as CPU, disk space, or IP addresses.
 Solution: Request additional quota [1] from the Google Cloud console or use another project.
-[1] https://cloud.google.com/docs/quotas/view-manage#managing_your_quota_console
+[1] <https://cloud.google.com/docs/quotas/view-manage#managing_your_quota_console>
 
 ### Success Reason
 

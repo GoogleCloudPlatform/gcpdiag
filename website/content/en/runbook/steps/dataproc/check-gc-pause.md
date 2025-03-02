@@ -25,9 +25,9 @@ If memory allocation seems adequate, investigate potential garbage collection op
 Additionally, there is some guidance that tuning spark.memory.fraction can be effective, particularly for workloads that heavily rely on RDD caching. See Memory Management Overview for more discussion of this configuration property.
 Additionally, tuning the spark.memory.fraction can be effective, particularly for workloads that rely heavily on RDD caching. Refer to the Memory Management Overview for a detailed discussion of this configuration property.
 
-[1] https://spark.apache.org/docs/latest/configuration.html
-[2] https://spark.apache.org/docs/latest/tuning.html#garbage-collection-tuning
-[3] https://spark.apache.org/docs/latest/tuning.html#memory-management-overview
+[1] <https://spark.apache.org/docs/latest/configuration.html>
+[2] <https://spark.apache.org/docs/latest/tuning.html#garbage-collection-tuning>
+[3] <https://spark.apache.org/docs/latest/tuning.html#memory-management-overview>
 
 ### Success Reason
 

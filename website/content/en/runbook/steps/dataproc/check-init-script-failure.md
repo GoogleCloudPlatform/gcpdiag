@@ -24,7 +24,7 @@ A Dataproc cluster init script failure means that a script intended to run durin
 Solution:
 See initialization actions considerations and guidelines [1].
 Examine the output logs. The error message should provide a link to the logs in Cloud Storage.
-[1]https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/init-actions#important_considerations_and_guidelines
+[1]<https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/init-actions#important_considerations_and_guidelines>
 
 ### Success Reason
 

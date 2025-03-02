@@ -25,7 +25,7 @@ Example log entry that would help identify involved objects:
 
 Review best practices for Pod Disruption Budgets to ensure that the rules allow for eviction of application replicas
 when acceptable.
-https://cloud.google.com/architecture/best-practices-for-running-cost-effective-kubernetes-applications-on-gke#add-pod_disruption_budget-to-your-application
+<https://cloud.google.com/architecture/best-practices-for-running-cost-effective-kubernetes-applications-on-gke#add-pod_disruption_budget-to-your-application>
 
 ### Success Reason
 

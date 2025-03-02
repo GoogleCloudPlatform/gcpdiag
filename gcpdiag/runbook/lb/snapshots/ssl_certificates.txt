@@ -66,7 +66,7 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
      - forwarding rule "https-content-rule" in "global": 1.2.3.4
 
 
-     Check: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns
+     Check: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns>
 
 [GATEWAY]: Verify the DNS records for domain "second.natka123.com" associated with the SSL certificate "cert1".
 
@@ -82,7 +82,7 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
      - forwarding rule "https-content-rule" in "global": 1.2.3.4
 
 
-     Check: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns
+     Check: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns>
 
 [AUTOMATED STEP]: Check if the load balancer with certificate "cert1" is configured to listen on port 443.
 
@@ -185,7 +185,7 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
      - forwarding rule "https-content-rule-working" in "global": 2600:1901:0:d0d7::
 
 
-     Check: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns
+     Check: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns>
 
 [AUTOMATED STEP]: Check if the load balancer with certificate "cert2" is configured to listen on port 443.
 
@@ -288,7 +288,7 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
      - forwarding rule "ssl-rule" in "global": 192.168.3.5
 
 
-     Check: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns
+     Check: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns>
 
 [GATEWAY]: Verify the DNS records for domain "test.org" associated with the SSL certificate "cert3".
 
@@ -377,7 +377,7 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
      The SSL certificate "unused-cert4" is not attached to any target proxies. Please attach the certificate to a target proxy and try again.
 
      [REMEDIATION]
-     Please follow the documentation to attach the certificate to a target proxy: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#load-balancer
+     Please follow the documentation to attach the certificate to a target proxy: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#load-balancer>
 
 [END]: Finalize SSL Certificate diagnostics.
 

@@ -24,7 +24,7 @@ Node IP exhaustion is detected in the cluster {cluster_name} for the subnet {nod
 Please follow the below documentation [1] to expand the ip range of the node subnet.
 The subnet that has exhausted its IP space is {node_subnet}.
 
-[1] https://cloud.google.com/vpc/docs/create-modify-vpc-networks#expand-subnet
+[1] <https://cloud.google.com/vpc/docs/create-modify-vpc-networks#expand-subnet>
 
 ### Success Reason
 

@@ -14,6 +14,20 @@ description: >
 
 None
 
+### Failure Reason
+
+The user principal '{user_principal}' does not have roles/iam.serviceAccountUser role on the runtime Service Account '{runtime_account}'
+
+### Failure Remediation
+
+Assign the user, the Service Account User role (roles/iam.serviceAccountUser) on the default or the non-default runtime service account.
+This role includes the iam.serviceAccounts.actAs permission.
+<https://cloud.google.com/functions/docs/reference/iam/roles#additional-configuration>
+
+### Success Reason
+
+The user principal '{user_principal}' has roles/iam.serviceAccountUser role on the runtime Service Account '{runtime_account}'
+
 
 
 <!--

@@ -25,7 +25,7 @@ You can try using a high-memory machine type for your worker nodes or repartitio
 
 You can find more details in the troubleshooting guide [1].
 If it still not work, please contact Google Cloud Support.
-[1] https://cloud.google.com/dataproc/docs/support/troubleshoot-oom-errors#oom_solutions
+[1] <https://cloud.google.com/dataproc/docs/support/troubleshoot-oom-errors#oom_solutions>
 
 ### Success Reason
 

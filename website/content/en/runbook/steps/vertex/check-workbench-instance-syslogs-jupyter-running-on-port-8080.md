@@ -29,11 +29,11 @@ Only port 8080 is supported. Installed extensions, packages or custom scripts ma
 2. If it doesn't work, recover data by diagnosing the instance with the --enable-copy-home-files [4]
 3. Create a new Instance and migrate your data [5]
 
-[1] https://cloud.google.com/vertex-ai/docs/general/troubleshooting-workbench?component=any#verify-jupyter-service
-[2] https://cloud.google.com/vertex-ai/docs/general/troubleshooting-workbench?component=any#verify-jupyter-internal-api
-[3] https://cloud.google.com/vertex-ai/docs/general/troubleshooting-workbench?component=any#restart-jupyter-service
-[4] https://cloud.google.com/sdk/gcloud/reference/workbench/instances/diagnose
-[5] https://cloud.google.com/vertex-ai/docs/workbench/instances/migrate
+[1] <https://cloud.google.com/vertex-ai/docs/general/troubleshooting-workbench?component=any#verify-jupyter-service>
+[2] <https://cloud.google.com/vertex-ai/docs/general/troubleshooting-workbench?component=any#verify-jupyter-internal-api>
+[3] <https://cloud.google.com/vertex-ai/docs/general/troubleshooting-workbench?component=any#restart-jupyter-service>
+[4] <https://cloud.google.com/sdk/gcloud/reference/workbench/instances/diagnose>
+[5] <https://cloud.google.com/vertex-ai/docs/workbench/instances/migrate>
 
 ### Success Reason
 

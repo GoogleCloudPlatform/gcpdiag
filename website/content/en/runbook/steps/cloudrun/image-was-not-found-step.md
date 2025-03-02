@@ -21,7 +21,7 @@ Provided image {image} does not exist.
 ### Failure Remediation
 
 The provided image does not exist. Make sure that it is correct. Try following
-quickstart guide and see how to correctly specify image names. https://cloud.google.com/run/docs/quickstarts
+quickstart guide and see how to correctly specify image names. <https://cloud.google.com/run/docs/quickstarts>
 
 
 

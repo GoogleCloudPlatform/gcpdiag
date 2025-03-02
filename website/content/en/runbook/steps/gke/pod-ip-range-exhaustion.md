@@ -22,7 +22,7 @@ Pod IP exhaustion is detected in the cluster {cluster_name}
 
 Please follow the below documentation [1] to add ipv4 range to the autopilot cluster to mitgate the issue.
 
-[1] https://cloud.google.com/kubernetes-engine/docs/how-to/multi-pod-cidr#add-pod-ipv4-range-in-autopilot-cluster
+[1] <https://cloud.google.com/kubernetes-engine/docs/how-to/multi-pod-cidr#add-pod-ipv4-range-in-autopilot-cluster>
 
 
 

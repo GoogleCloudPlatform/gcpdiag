@@ -18,13 +18,13 @@ This will check if config map is present ?
 
 When ip-masq-agent daemonset is deployed without a configmap, it uses the default non-masq destinations [1].
 
-[1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap
+[1] <https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap>
 
 ### Uncertain Remediation
 
 If you needs to customize the configmap, then follow the steps [1] to deploy ip-masq-agent ConfigMap in the kube-system
 namespace.
-[1] https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap
+[1] <https://cloud.google.com/kubernetes-engine/docs/how-to/ip-masquerade-agent#creating_the_ip-masq-agent_configmap>
 
 
 

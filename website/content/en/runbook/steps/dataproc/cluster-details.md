@@ -28,7 +28,7 @@ cluster is deleted. The runbook will assume that it is enabled, however if not, 
 
 Consider enabling it by creating a cluster with property dataproc:dataproc.logging.stackdriver.enable = true
 Review our guide for more details:
-https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/cluster-properties
+<https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/cluster-properties>
 
 
 

@@ -23,7 +23,7 @@ Live migration check failed for node {node}.
 There was a live migration event for the node {node}.
 
 For more details about Live migration process during maintenance events, please consult the documentation:
-https://cloud.google.com/compute/docs/instances/live-migration-process
+<https://cloud.google.com/compute/docs/instances/live-migration-process>
 
 ### Success Reason
 

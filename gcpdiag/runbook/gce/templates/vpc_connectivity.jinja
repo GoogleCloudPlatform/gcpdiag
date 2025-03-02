@@ -1,15 +1,15 @@
 {% block default_ingress_failure_reason %}
 Consider using our recommended methods for connecting Compute Engine virtual
 machine (VM) instance through its internal IP address:
-https://cloud.google.com/compute/docs/connect/ssh-internal-ip
+<https://cloud.google.com/compute/docs/connect/ssh-internal-ip>
 {% endblock default_ingress_failure_reason %}
 
 {% block default_ingress_failure_remediation %}
 If connecting to a non-public VM and do not wish to allow external access, choose one of the following connection
 options for VMs
-https://cloud.google.com/compute/docs/connect/ssh-internal-ip
+<https://cloud.google.com/compute/docs/connect/ssh-internal-ip>
 Alternatively, create/update a firewall rule to allow access
-https://cloud.google.com/firewall/docs/using-firewalls#creating_firewall_rules
+<https://cloud.google.com/firewall/docs/using-firewalls#creating_firewall_rules>
 {% endblock default_ingress_failure_remediation %}
 
 {% block default_ingress_success_reason %}
@@ -18,15 +18,15 @@ Ingress Traffic from source IP/CIDR {address}, {protocol}:{port} to the GCE inst
 
 {% block tti_ingress_failure_reason %}
 Allow ingress traffic from the VIP range 35.235.240.0/20
-https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-ssh-errors#diagnosis_methods_for_linux_and_windows_vms'
+<https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-ssh-errors#diagnosis_methods_for_linux_and_windows_vms>'
 {% endblock tti_ingress_failure_reason %}
 
 {% block tti_ingress_failure_remediation %}
 If connecting to a non-public VM and do not wish to allow external access, choose one of the following connection
 options for VMs
-https://cloud.google.com/compute/docs/connect/ssh-internal-ip
+<https://cloud.google.com/compute/docs/connect/ssh-internal-ip>
 Alternatively, create/update a firewall rule to allow access
-https://cloud.google.com/firewall/docs/using-firewalls#creating_firewall_rules
+<https://cloud.google.com/firewall/docs/using-firewalls#creating_firewall_rules>
 {% endblock tti_ingress_failure_remediation %}
 
 {% block tti_ingress_success_reason %}
@@ -42,9 +42,9 @@ to instance {name} is not allowed by: {result}
 {% block ingress_traffic_failure_remediation %}
 If connecting to a non-public VM and do not wish to allow external access, choose one of the following connection
 options for VMs
-https://cloud.google.com/compute/docs/connect/ssh-internal-ip
+<https://cloud.google.com/compute/docs/connect/ssh-internal-ip>
 Alternatively, create/update a firewall rule to allow access
-https://cloud.google.com/firewall/docs/using-firewalls#creating_firewall_rules
+<https://cloud.google.com/firewall/docs/using-firewalls#creating_firewall_rules>
 {% endblock ingress_traffic_failure_remediation %}
 
 {% block ingress_traffic_success_reason %}

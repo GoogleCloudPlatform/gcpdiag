@@ -10,13 +10,15 @@ There are no logs to examine.
 Investigate potential issues through the serial console.
 If GRUB_TIMEOUT is greater than 0, access the interactive session for more insights.
 Explore rescue options for inaccessible VMs or review possible guest OS issues.
-- Interactive Serial Console: https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
-- Rescuing VMs: https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
+
+- Interactive Serial Console: <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
+- Rescuing VMs: <https://cloud.google.com/compute/docs/troubleshooting/rescue-vm>
 
 If escalating Guest OS related issues to Google Cloud Support,
 do check to ensure is in line with Google Cloud Platform's Guest OS support policy
+
 - Google Cloud Platform Support Scope:
-https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
+<https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope>
 {% endblock default_failure_remediation %}
 
 {% block default_success_reason %}
@@ -33,11 +35,12 @@ inconclusive
 Confirm the VM's operational status by reviewing available serial logs.
 Address any detected guest OS issues using the provided documentation,
 keeping in mind certain guest OS faults may be beyond Google Cloud Platform's support scope.
-- Viewing Serial Port Output: https://cloud.google.com/compute/docs/troubleshooting/viewing-serial-port-output
+
+- Viewing Serial Port Output: <https://cloud.google.com/compute/docs/troubleshooting/viewing-serial-port-output>
 - Resolving Kernel Panic:
-https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error
+<https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error>
 - Google Cloud Platform Support Scope:
-https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
+<https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope>
 {% endblock default_uncertain_remediation %}
 
 {% block kernel_panic_step_name %}
@@ -59,6 +62,7 @@ Kernel panics can be caused by different issues within the guest.
 Address underlying issues causing boot problems to solve the kernel panic:
 
 **General Kernel panic Troubleshooting**
+
 1. Consult the Troubleshooting Guide for Kernel Panic Errors:
    - Kernel panic is commonly caused by file system errors in Linux Guest OS.
    - Check `/etc/fstab` for incorrect entries that could halt the boot process.
@@ -96,6 +100,7 @@ Kernel panics can be caused by different issues within the guest.
 Address underlying issues causing boot problems to solve the kernel panic:
 
 **General Kernel panic Troubleshooting**
+
 1. Consult the Troubleshooting Guide for Kernel Panic Errors:
    - Kernel panic is commonly caused by file system errors in Linux Guest OS.
    - Check `/etc/fstab` for incorrect entries that could halt the boot process.
@@ -123,7 +128,6 @@ issues](https://cloud.google.com/compute/docs/images/support-maintenance-policy#
 There are no logs to examine.
 {% endblock kernel_panic_skipped_reason %}
 
-
 {% block sshguard_step_name %}
 Verify if SSHGuard is installed and blocking SSH connectivity
 {% endblock sshguard_step_name %}
@@ -137,8 +141,9 @@ Verify if your IP is blocked by SSHGuard on the VM.
 Note: Issues related to SSHGuard fall outside the standard support scope for Google Cloud Platform.
 Consult the most appropriate team within your organisation to assist with resolution.
 For guest OS issues and SSHGuard configurations, refer to:
-- Support Scope: https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
-- Out of Scope Support: https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support
+
+- Support Scope: <https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope>
+- Out of Scope Support: <https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support>
 {% endblock sshguard_failure_remediation %}
 
 {% block sshguard_success_reason %}
@@ -154,7 +159,7 @@ Manually review the GCE serial logs to determine if SSHGuard is a likely cause.
 {% block sshguard_uncertain_remediation %}
 If SSHGuard or similar application is a concern,
 manually inspect its configuration via the interactive serial console:
-https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+<https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 {% endblock sshguard_uncertain_remediation %}
 
 {% block sshguard_skipped_reason %}
@@ -177,7 +182,7 @@ Uncertain if the `google-compute-engine-ssh` agent is installed on the VM.
 {% block windows_gce_ssh_agent_uncertain_remediation %}
 Utilize RDP or a startup script to check for the presence and functionality of the
 `google-compute-engine-ssh` agent. For instructions on implementing startup scripts, refer to:
-https://cloud.google.com/compute/docs/connect/windows-ssh#startup-script
+<https://cloud.google.com/compute/docs/connect/windows-ssh#startup-script>
 {% endblock windows_gce_ssh_agent_uncertain_remediation %}
 
 {% block windows_gce_ssh_agent_success_reason %}
@@ -191,9 +196,8 @@ Unable to confirm the installation of the `google-compute-engine-ssh` agent on t
 {% block windows_gce_ssh_agent_failure_remediation %}
 Ensure the `google-compute-engine-ssh` agent is correctly installed and configured.
 Consult the following guide for assistance with agent installation and configuration:
-https://cloud.google.com/compute/docs/connect/windows-ssh#startup-script
+<https://cloud.google.com/compute/docs/connect/windows-ssh#startup-script>
 {% endblock windows_gce_ssh_agent_failure_remediation %}
-
 
 {% block sshd_step_name %}
 Verify OpenSSH daemon (sshd) has started from most recent serial logs.
@@ -219,8 +223,8 @@ errors](https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-ss
 issues](https://cloud.google.com/knowledge/kb/ssh-in-cloud-serial-console-fails-with-warning-message-000004554)
 
 Note: Guest OS issues are outside the scope of Google Cloud Platform support:
-https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope and
-https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support
+<https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope> and
+<https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support>
 {% endblock sshd_failure_remediation %}
 
 {% block sshd_success_reason %}
@@ -254,6 +258,7 @@ Fix boot issues preventing a successful startup. If the Google Compute Engine (G
 startup process should include the expected guest agent logs.
 
 Resources
+
 1. [Troubleshooting Windows instances](https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-windows)
 2. [Connecting to the Windows Special Administrative Console
 (SAC)](https://cloud.google.com/compute/docs/instances/connecting-to-sac)
@@ -275,14 +280,13 @@ Consulting the troubleshooting guide to investigate windows boot up issues: [1],
 
 Resources:
 
-[1] https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-windows
+[1] <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-windows>
 
-[2] Connecting to the Windows Special Administrative Console (SAC) to troubleshoot boot up issues: https://cloud.google.com/compute/docs/instances/connecting-to-sac
+[2] Connecting to the Windows Special Administrative Console (SAC) to troubleshoot boot up issues: <https://cloud.google.com/compute/docs/instances/connecting-to-sac>
 
 Google Cloud Platform Support Scope:
-https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope
+<https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope>
 {% endblock windows_bootup_uncertain_remediation %}
-
 
 {% block serial_log_start_point_step_name %}
 Verify all logs available since last boot of the instance
@@ -304,7 +308,6 @@ Consider restarting the instance and then using gcpdiag to analyze the serial co
 {% block serial_log_start_point_skipped_reason %}
 There are no logs to examine.
 {% endblock serial_log_start_point_skipped_reason %}
-
 
 {% block time_sync_issue_step_name %}
 Check for Time Sync related errors from GCE serial logs.
@@ -330,14 +333,15 @@ No Time sync related errors in Serial console logs.
 
 {% block time_sync_issue_uncertain_remediation %}
 To verify, please check your system Logs for below patterns:
+
 ```
 'time may be out of sync',
 'System clock is unsynchronized',
 'Time drift detected',
 'no servers can be used, system clock unsynchronized'
 ```
-{% endblock time_sync_issue_uncertain_remediation %}
 
+{% endblock time_sync_issue_uncertain_remediation %}
 
 {% block guest_agent_step_name %}
 Checking for Guest Agent startup logs
@@ -356,10 +360,12 @@ In case Guest Agent is not started during instance startup, users might face log
 
 The `google-guest-agent.service` service should be in running state.
 If the service is disabled, enable and start the service, by running the following commands:
+
 ```
 systemctl enable google-guest-agent.service
 systemctl start google-guest-agent.service
 ```
+
 Verify that the Linux Google Agent scripts are installed and running. If the Linux Google
 Agent is not installed, re-install it.
 {% endblock guest_agent_failure_remediation %}
@@ -380,6 +386,7 @@ No success or failed logs found for Google Guest Agent startup.
 Each supported operating system on Compute Engine requires specific guest environment packages.
 
 To determine the presence of a guest environment:
+
 - Inspect system logs emitted to the console during instance startup.
 - List the installed packages while connected to the instance.
 
@@ -425,6 +432,7 @@ Verify any Filesystem corruption related errors in Serial console logs
 Possible filesystem corruption detected.
 
 The patterns used:
+
 ```
 'Corruption of in-memory data detected. Shutting down filesystem',
 'Corruption of in-memory data detected', 'warning: mounting fs with errors',
@@ -433,6 +441,7 @@ The patterns used:
 'I/O Error Detected. Shutting down filesystem',
 'metadata I/O error in'
 ```
+
 {% endblock linux_fs_corruption_failure_reason %}
 
 {% block linux_fs_corruption_failure_remediation %}
@@ -441,6 +450,7 @@ available in Cloud Shell, to rescue faulty VMs. Alternatively, you can follow th
 [manual method](https://cloud.google.com/compute/docs/troubleshooting/rescue-vm) to repair the filesystem.
 
 Additional resources for reference:
+
 - [Red Hat article on filesystem repair](https://access.redhat.com/solutions/1750923)
 - [Video guide on rescuing VMs](https://www.youtube.com/watch?v=oD6IFpjEtEw)
 
@@ -462,13 +472,14 @@ Found the error "Authentication refused: bad ownership or modes for directory"
 
 {% block sshd_auth_failure_failure_remediation %}
 To mitigate "bad ownership or modes for directory" errors:
+
 1. Follow either of the below steps to check the permissions:
-   * these steps to rescue the vm:
-https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
-   * these steps login through serial console:
-https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+   - these steps to rescue the vm:
+<https://cloud.google.com/compute/docs/troubleshooting/rescue-vm>
+   - these steps login through serial console:
+<https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 2. Refer to the standard permissions required for ssh connection:
-https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-ssh-errors#permissions
+<https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-ssh-errors#permissions>
 {% endblock sshd_auth_failure_failure_remediation %}
 
 {% block sshd_auth_failure_success_reason %}
@@ -485,17 +496,20 @@ No evidence of successful or failed SSHD authentication attempts is present in t
 
 {% block sshd_auth_failure_uncertain_remediation %}
 To check if sshd_auth_failures are happening due to wrong directory permissions:
+
 1. Follow either of the below steps to check the permissions:
-   * these steps to rescue the vm:
-https://cloud.google.com/compute/docs/troubleshooting/rescue-vm
-   * these steps login through serial console:
-https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+   - these steps to rescue the vm:
+<https://cloud.google.com/compute/docs/troubleshooting/rescue-vm>
+   - these steps login through serial console:
+<https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 
 2. Check the system logs for following error messages:
+
 ```
 'Authentication refused: bad ownership or modes for directory'
 'Error updating SSH keys for user1: mkdir /home/USER/.ssh: no such file or directory'
 ```
+
 {% endblock sshd_auth_failure_uncertain_remediation %}
 
 {% block linux_fs_corruption_uncertain_reason %}
@@ -521,16 +535,20 @@ Cloud-init failures can be caused by internal issues, problems with other system
 errors.
 
 Check if Cloud-init process is in running state.
+
 ```
 systemctl status cloud-init
 ```
+
 Verify if the cloud init package is installed. Otherwise reinstall cloud-init and enable it
+
 ```
 dpkg -l | grep -i cloud-init
 
 apt-get install -f cloud-init -y
 systemctl enable cloud-init
 ```
+
 {% endblock cloud_init_startup_check_failure_remediation %}
 
 {% block cloud_init_startup_check_success_reason %}
@@ -547,12 +565,13 @@ No evidence of successful or failed cloud-init startup attempts in the {full_res
 
 {% block cloud_init_startup_check_uncertain_remediation %}
 Check if cloud-init package is installed in VM
+
 ```
 dpkg -l | grep -i cloud-init
 systemctl enable cloud-init
 ```
-{% endblock cloud_init_startup_check_uncertain_remediation %}
 
+{% endblock cloud_init_startup_check_uncertain_remediation %}
 
 {% block cloud_init_step_name %}
 Verify Network interface received IP through cloud-init
@@ -569,16 +588,20 @@ Cloud-init failures can be caused by internal issues, problems with other system
 errors.
 
 Check if Cloud-init process is in running state.
+
 ```
 systemctl status cloud-init
 ```
+
 Verify if the cloud init package is installed. Otherwise reinstall cloud-init and enable it
+
 ```
 dpkg -l | grep -i cloud-init
 
 apt-get install -f cloud-init -y
 systemctl enable cloud-init
 ```
+
 {% endblock cloud_init_failure_remediation %}
 
 {% block cloud_init_success_reason %}
@@ -598,12 +621,16 @@ or an issue with the initialization process during {start_time} - {end_time}.
 {% block cloud_init_uncertain_remediation %}
 The Cloud-init package may not be installed or active on the VM {full_resource_path}.
 To verify, check if the package is installed by running:
+
 ```
 dpkg -l | grep -i cloud-init.
 ```
+
 If the package is not installed, install it using the appropriate package manager.
 Additionally, ensure that the service is enabled by running:
+
 ```
 systemctl enable cloud-init.
 ```
+
 {% endblock cloud_init_uncertain_remediation %}

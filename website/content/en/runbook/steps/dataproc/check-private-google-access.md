@@ -20,12 +20,12 @@ Google Private Access in subnet: {subnetwork_uri} is disabled.
 
 ### Failure Remediation
 
-You may create a Dataproc cluster that is isolated from the public internet whose VM instances communicate over a private IP subnetwork (cluster VMs are not assigned public IP addresses)[1].
+You may create a Dataproc cluster that is isolated from the public internet whose VM instances communicate over a private IP subnetwork [cluster VMs are not assigned public IP addresses](1).
 To do this, the subnetwork must have Private Google Access enabled to allow cluster nodes to access Google APIs and services, such as Cloud Storage, from internal IPs.
 Please configure Private Google Access in the cluster subnet[2].
 References:
-[1] https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/network#create-a-dataproc-cluster-with-internal-IP-addresses-only
-[2] https://cloud.google.com/vpc/docs/configure-private-google-access
+[1] <https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/network#create-a-dataproc-cluster-with-internal-IP-addresses-only>
+[2] <https://cloud.google.com/vpc/docs/configure-private-google-access>
 
 ### Success Reason
 

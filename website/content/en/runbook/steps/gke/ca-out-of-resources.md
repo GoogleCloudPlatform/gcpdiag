@@ -24,7 +24,7 @@ Example log entry that would help identify involved objects:
 ### Failure Remediation
 
 Follow the documentation:
-https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-vm-creation#resource_availability
+<https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-vm-creation#resource_availability>
 
 ### Success Reason
 

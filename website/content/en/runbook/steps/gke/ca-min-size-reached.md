@@ -24,7 +24,7 @@ Example log entry that would help identify involved objects:
 ### Failure Remediation
 
 Review and adjust the minimum value set for node pool autoscaling.
-https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-autoscaler#resizing_a_node_pool
+<https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-autoscaler#resizing_a_node_pool>
 
 ### Success Reason
 

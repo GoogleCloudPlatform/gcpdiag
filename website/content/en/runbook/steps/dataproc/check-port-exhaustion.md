@@ -23,6 +23,7 @@ Found logs messages related to "{log}" on the cluster: {cluster_name}.
 This issue occurs when Spark Jobs was not able to find available port after 1000 retries.
 COLSE_WAIT connections are possible cause of this issue.
 To identify any CLOSE_WAIT connections, please analyze the netstat output.
+
 1. netstat plant >> open_connections.txt
 2. cat open_connections.txt | grep “CLOSE_WAIT”
 

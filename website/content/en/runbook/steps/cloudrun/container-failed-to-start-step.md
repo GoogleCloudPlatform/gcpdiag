@@ -21,7 +21,7 @@ Container failed to start in service {name}.
 ### Failure Remediation
 
 The container failed to start. Please check
-https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start
+<https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start>
 for the next steps.
 
 

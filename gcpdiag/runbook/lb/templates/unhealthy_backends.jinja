@@ -64,7 +64,7 @@ The health checks are currently failing due to a misconfigured firewall. This pr
 {% endblock firewall_rules_failure_reason %}
 
 {% block firewall_rules_failure_remediation %}
-Update your firewall rules to allow inbound traffic from the Google Cloud health check IP ranges (found at https://cloud.google.com/load-balancing/docs/health-check-concepts#ip-ranges) to your backends.
+Update your firewall rules to allow inbound traffic from the Google Cloud health check IP ranges (found at <https://cloud.google.com/load-balancing/docs/health-check-concepts#ip-ranges>) to your backends.
 {% endblock firewall_rules_failure_remediation %}
 
 {% block firewall_rules_success_reason %}
@@ -116,6 +116,7 @@ The following responses were received from your backends: {probe_results_text_st
 {% endblock timeout_hc_state_log_failure_reason %}
 
 {% block timeout_hc_state_log_failure_remediation %}
+
 1. Make sure that the backend service timeout (current value: {bs_timeout_sec}s) and health check timeout (current value: {hc_timeout_sec}s) are appropriately configured to accommodate your application's expected response time.
 
 2. Investigate your application's configuration to ensure it is correctly handling health check probe requests. {success_criteria}

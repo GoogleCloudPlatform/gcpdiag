@@ -22,9 +22,10 @@ The cluster {cluster_name} creation in project {project_id} failed due to insuff
 
 Dataproc cluster stockout occurs when there are insufficient resources available in a specific zone or region to create your requested cluster.
 Solutions to resolve the issue include:
+
 - Create the cluster in a different zone or region.
 - Use the Dataproc Auto Zone placement feature by not specifying the zone [1].
-[1] https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/auto-zone
+[1] <https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/auto-zone>
 
 ### Success Reason
 

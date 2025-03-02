@@ -21,7 +21,7 @@ cloudrun/service-deployment: Investigates the necessary GCP components searching
 
      [REMEDIATION]
      The container failed to start. Please check
-     https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start
+     <https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start>
      for the next steps.
 
 [AUTOMATED STEP]: Verify if specified image exists.
@@ -53,7 +53,7 @@ cloudrun/service-deployment: Investigates the necessary GCP components searching
 
      [REMEDIATION]
      The provided image does not exist. Make sure that it is correct. Try following
-     quickstart guide and see how to correctly specify image names. https://cloud.google.com/run/docs/quickstarts
+     quickstart guide and see how to correctly specify image names. <https://cloud.google.com/run/docs/quickstarts>
 
 [AUTOMATED STEP]: Verify if Cloud Run service agent can fetch the image.
 [END]: Finalize runbook investigations.

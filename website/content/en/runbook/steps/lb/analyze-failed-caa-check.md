@@ -20,7 +20,7 @@ The following domains are in FAILED_CAA_CHECKING or FAILED_CAA_FORBIDDEN state: 
 
 ### Failure Remediation
 
-Please ensure the CAA records are configured correctly and try again. See the documentation for instructions on configuring CAA records: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#caa
+Please ensure the CAA records are configured correctly and try again. See the documentation for instructions on configuring CAA records: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#caa>
 
 
 

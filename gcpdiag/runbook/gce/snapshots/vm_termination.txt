@@ -112,13 +112,16 @@ No GCE Instance was terminated between {start_time} and {end_time}
      [REMEDIATION]
      This step failed because GCE Virtual Machine faulty-windows-ssh is expected to be in a RUNNING state:
 
-     To initiate the lifecycle transition from TERMINATED to RUNNING state follow guide [1]
+     To initiate the lifecycle transition from TERMINATED to RUNNING state follow guide [1].
 
      If you encounter any difficulties during the startup process, consult the troubleshooting
-     documentation to identify and resolve potential startup issues [2]
+     documentation to identify and resolve potential startup issues [2].
+
      Resources:
-     [1] https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm
-     [2] https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting
+
+     [1] <https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm>
+
+     [2] <https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting>
 
 [END]: Finalize VM terminations diagnostics.
 

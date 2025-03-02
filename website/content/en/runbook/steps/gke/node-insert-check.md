@@ -25,7 +25,7 @@ Below is the latest log entry found that can help you identify the issue and inv
 ### Failure Remediation
 
 Please refer to the troubleshooting steps to learn how to resolve the errors:
-https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-vm-creation
+<https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-vm-creation>
 
 ### Success Reason
 

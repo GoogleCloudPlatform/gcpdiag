@@ -23,7 +23,7 @@ The node {node} was removed by the cluster autoscaler.
 This is expected behavior. GKE's cluster autoscaler automatically resizes the number of nodes in a given node pool, based on the demands of your workloads. When demand is low, the cluster autoscaler scales back down to a minimum size that you designate.
 
 For more details about Cluster Autoscaler ScaleDown events please consult the documentation:
-https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-autoscaler-visibility#scaledown-event
+<https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-autoscaler-visibility#scaledown-event>
 
 ### Success Reason
 

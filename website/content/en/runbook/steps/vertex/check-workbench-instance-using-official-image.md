@@ -19,7 +19,7 @@ Users have the option to create Workbench Instances with any image
 
 image: {image}
 images without '{images_family}' text in the image name are not supported but might work with Workbench Instances [1]
-[1] https://cloud.google.com/vertex-ai/docs/workbench/instances/introduction#limitations
+[1] <https://cloud.google.com/vertex-ai/docs/workbench/instances/introduction#limitations>
 
 ### Failure Remediation
 
@@ -28,7 +28,7 @@ Create a Workbench Instance with the official '{images_family}' family of images
 Officially supported images are found in the Google Cloud Console:
 Vertex AI Workbench UI > Instances > Create form > Advanced > Environment > Previous versions dropdown.
 You may also follow the documentation [1] to use Custom Containers
-[1] https://cloud.google.com/vertex-ai/docs/workbench/instances/create-custom-container
+[1] <https://cloud.google.com/vertex-ai/docs/workbench/instances/create-custom-container>
 
 ### Success Reason
 
@@ -38,7 +38,7 @@ OK! Workbench Instance {instance_name} is using an official '{image_family}' ima
 
 image: {image}
 '{images_family}' images might work with Workbench Instances, but are unsupported [1]
-[1] https://cloud.google.com/vertex-ai/docs/workbench/instances/introduction#limitations
+[1] <https://cloud.google.com/vertex-ai/docs/workbench/instances/introduction#limitations>
 
 ### Uncertain Remediation
 

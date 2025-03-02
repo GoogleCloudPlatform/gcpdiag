@@ -10,18 +10,22 @@ Continue for connectivity test confirmation or apply remediation step and retest
 {% block firewall_exists_failure_remediation %}
 Follow [1] to create or update VPC firewall rules.
 Follow [2] on how to create or modify Firewall policies.
-[1] https://cloud.google.com/firewall/docs/using-firewalls#creating_firewall_rules
-[2] https://cloud.google.com/firewall/docs/using-firewall-policies
+[1] <https://cloud.google.com/firewall/docs/using-firewalls#creating_firewall_rules>
+[2] <https://cloud.google.com/firewall/docs/using-firewall-policies>
 {% endblock firewall_exists_failure_remediation %}
 
 # `step_name` is mostly used when working with generalized step and prefer
-# a more customized introduction message for the step.
+
+# a more customized introduction message for the step
+
 {% block firewall_exists_step_name %}
 Verify Firewall exists
 {% endblock firewall_exists_step_name %}
 
 #############################################################
+
 # messages for the VPC route check for gateway nexthop step #
+
 #############################################################
 
 {% block vpc_route_check_for_nexthop_gateway_success_reason %}
@@ -29,14 +33,15 @@ Matching VPC route with nexthop gateway found
 {% endblock vpc_route_check_for_nexthop_gateway_success_reason %}
 
 # messages for the VPC route check for gateway nexthop
+
 {% block vpc_route_check_for_nexthop_gateway_failure_reason %}
 No matching VPC route found that forwards traffic to the external IP {address}
 {% endblock vpc_route_check_for_nexthop_gateway_failure_reason %}
 
 {% block vpc_route_check_for_nexthop_gateway_failure_remediation %}
 Follow [1] or [2] to create a default route to the default internet gateway.
-[1] https://cloud.google.com/vpc/docs/using-routes#add-default-route-ipv4
-[2] https://cloud.google.com/vpc/docs/using-routes#addingroute-ipv6
+[1] <https://cloud.google.com/vpc/docs/using-routes#add-default-route-ipv4>
+[2] <https://cloud.google.com/vpc/docs/using-routes#addingroute-ipv6>
 {% endblock vpc_route_check_for_nexthop_gateway_failure_remediation %}
 
 {% block vpc_route_check_for_nexthop_gateway_uncertain_reason %}
@@ -51,7 +56,9 @@ Next Hop: {next_hop_link}
 {% endblock vpc_route_check_for_nexthop_gateway_uncertain_remediation %}
 
 #############################################################
+
 # Messages for Connectivity Tests Step #
+
 #############################################################
 
 {% block connectivity_test_success_reason %}
@@ -80,7 +87,6 @@ CONNECTIVIT TEST RESULT:
 {trace}
 {% endblock connectivity_test_uncertain_reason %}
 
-
 {% block connectivity_test_uncertain_remediation %}
 Review the connectivity test output, resolve issues and retest.
 {% endblock connectivity_test_uncertain_remediation %}
@@ -89,9 +95,10 @@ Review the connectivity test output, resolve issues and retest.
 Review the connectivity test output, resolve issues and retest.
 {% endblock connectivity_test_failure_remediation %}
 
-
 #############################################################
+
 # Messages for NAT IP Exhaustion Check #
+
 #############################################################
 
 {% block nat_ip_exhaustion_check_success_reason %}
@@ -105,11 +112,13 @@ NAT IP allocation failure found on the NAT GW {nat_gateway_name}
 {% block nat_ip_exhaustion_check_failure_remediation %}
 IP exhaustion issues on {nat_gateway_name} can be remediated by taking the following steps in [1]:
 [1]
-https://cloud.google.com/knowledge/kb/cloud-nat-is-dropping-or-limiting-egress-connectivity-000004263#:~:text=If%20the%20metric%20indicates%20that,on%20the%20Port%20reservation%20procedure.
+<https://cloud.google.com/knowledge/kb/cloud-nat-is-dropping-or-limiting-egress-connectivity-000004263#:~:text=If%20the%20metric%20indicates%20that,on%20the%20Port%20reservation%20procedure>.
 {% endblock nat_ip_exhaustion_check_failure_remediation %}
 
 #############################################################
+
 # Messages for Resource Exhaustion Check #
+
 #############################################################
 
 {% block nat_resource_exhaustion_check_success_reason %}
@@ -123,11 +132,13 @@ No {metric_reason} issues on the dropped_sent_packet metric for the NAT GW {nat_
 {% block nat_resource_exhaustion_check_failure_remediation %}
 Resource exhaustion issues can be remediated by taking the following steps in [1]:
 [1]
-https://cloud.google.com/knowledge/kb/cloud-nat-is-dropping-or-limiting-egress-connectivity-000004263#:~:text=If%20the%20metric%20indicates%20that,on%20the%20Port%20reservation%20procedure
+<https://cloud.google.com/knowledge/kb/cloud-nat-is-dropping-or-limiting-egress-connectivity-000004263#:~:text=If%20the%20metric%20indicates%20that,on%20the%20Port%20reservation%20procedure>
 {% endblock nat_resource_exhaustion_check_failure_remediation %}
 
 #############################################################
+
 # Messages for NAT received packet drop check #
+
 #############################################################
 
 {% block nat_dropped_received_packet_check_success_reason %}
@@ -144,12 +155,14 @@ NAT gateways could be dropping packets for various reasons; however, the drops a
 Checking received_packet_drop metrics at the VM level as well. Open a case to GCP Support for confirmation
 of the reason for the drops
 See more on troubleshooting cloud NAT reducing the drops here [1] and [2]:
-[1] https://cloud.google.com/nat/docs/troubleshooting
-[2] https://cloud.google.com/knowledge/kb/reduce-received-packets-dropped-count-on-cloud-nat-000006744
+[1] <https://cloud.google.com/nat/docs/troubleshooting>
+[2] <https://cloud.google.com/knowledge/kb/reduce-received-packets-dropped-count-on-cloud-nat-000006744>
 {% endblock nat_dropped_received_packet_check_uncertain_remediation %}
 
 #############################################################
+
 # Messages for VM received packet drop check #
+
 #############################################################
 
 {% block vm_dropped_received_packet_check_success_reason %}
@@ -165,6 +178,6 @@ Elevated received_packet_drop_count metric noticed for following VMs
 VMs could be dropping packets for various reasons; however, the drops are not always indicative of an issue.
 See more on troubleshooting cloud NAT and reducing the drops here [1] and [2]:
 Open a case to GCP Support for justification for the packet drops.
-[1] https://cloud.google.com/nat/docs/troubleshooting
-[2] https://cloud.google.com/knowledge/kb/reduce-received-packets-dropped-count-on-cloud-nat-000006744
+[1] <https://cloud.google.com/nat/docs/troubleshooting>
+[2] <https://cloud.google.com/knowledge/kb/reduce-received-packets-dropped-count-on-cloud-nat-000006744>
 {% endblock vm_dropped_received_packet_check_uncertain_remediation %}

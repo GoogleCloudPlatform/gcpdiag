@@ -10,7 +10,7 @@ The cluster {cluster_name} in project {project_id} could not be created due to i
 {% block cluster_quota_failure_remediation %}
 This issue occurs when the requested Dataproc cluster exceeds the project's available quota for resources such as CPU, disk space, or IP addresses.
 Solution: Request additional quota [1] from the Google Cloud console or use another project.
-[1] https://cloud.google.com/docs/quotas/view-manage#managing_your_quota_console
+[1] <https://cloud.google.com/docs/quotas/view-manage#managing_your_quota_console>
 {% endblock cluster_quota_failure_remediation %}
 
 {% block cluster_stockout_success_reason %}
@@ -25,9 +25,10 @@ The cluster {cluster_name} creation in project {project_id} failed due to insuff
 {% block cluster_stockout_failure_remediation %}
 Dataproc cluster stockout occurs when there are insufficient resources available in a specific zone or region to create your requested cluster.
 Solutions to resolve the issue include:
+
 - Create the cluster in a different zone or region.
 - Use the Dataproc Auto Zone placement feature by not specifying the zone [1].
-[1] https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/auto-zone
+[1] <https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/auto-zone>
 {% endblock cluster_stockout_failure_remediation %}
 
 {% block cluster_init_success_reason %}
@@ -43,7 +44,7 @@ A Dataproc cluster init script failure means that a script intended to run durin
 Solution:
 See initialization actions considerations and guidelines [1].
 Examine the output logs. The error message should provide a link to the logs in Cloud Storage.
-[1]https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/init-actions#important_considerations_and_guidelines
+[1]<https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/init-actions#important_considerations_and_guidelines>
 {% endblock cluster_init_failure_remediation %}
 
 {% block port_exhaustion_success_reason %}
@@ -58,6 +59,7 @@ Found logs messages related to "{log}" on the cluster: {cluster_name}.
 This issue occurs when Spark Jobs was not able to find available port after 1000 retries.
 COLSE_WAIT connections are possible cause of this issue.
 To identify any CLOSE_WAIT connections, please analyze the netstat output.
+
 1. netstat plant >> open_connections.txt
 2. cat open_connections.txt | grep “CLOSE_WAIT”
 
@@ -76,7 +78,7 @@ Found logs messages related to "{log}" on the cluster: {cluster_name}.
 {% block kill_orphaned_application_failure_remediation %}
 Please set dataproc:dataproc.yarn.orphaned-app-termination.enable to false if you don't want to kill orphaned yarn application.
 You can find more details in the documentation [1].
-[1] https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/cluster-properties
+[1] <https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/cluster-properties>
 {% endblock kill_orphaned_application_failure_remediation %}
 
 {% block gcs_access_deny_success_reason %}
@@ -104,7 +106,7 @@ Found logs messages related to Master OOM on the cluster: {cluster_name}.
 {% block master_oom_failure_remediation %}
 Please follow the troubleshooting guide [1] to adjust the driver memory used for the job.
 
-[1] https://cloud.google.com/dataproc/docs/support/troubleshoot-oom-errors#oom_solutions
+[1] <https://cloud.google.com/dataproc/docs/support/troubleshoot-oom-errors#oom_solutions>
 {% endblock master_oom_failure_remediation %}
 
 {% block worker_oom_success_reason %}
@@ -115,14 +117,13 @@ Didn't find logs messages related to Worker OOM on the cluster: {cluster_name}.
 Found logs messages related to Worker OOM on the cluster: {cluster_name}.
 {% endblock worker_oom_failure_reason %}
 
-
 {% block worker_oom_failure_remediation %}
 The log indicates that worker OOM (out-of-memory) errors may have occurred on your cluster.
 You can try using a high-memory machine type for your worker nodes or repartition your data to avoid data skew.
 
 You can find more details in the troubleshooting guide [1].
 If it still not work, please contact Google Cloud Support.
-[1] https://cloud.google.com/dataproc/docs/support/troubleshoot-oom-errors#oom_solutions
+[1] <https://cloud.google.com/dataproc/docs/support/troubleshoot-oom-errors#oom_solutions>
 {% endblock worker_oom_failure_remediation %}
 
 {% block sw_preemption_success_reason %}
@@ -138,7 +139,7 @@ This error occurs when secondary nodes are preempted.
 Please confirm if you are using secondary workers with preemptible instances. (The default Dataproc secondary worker type is a standard preemptible VM.)
 
 You can recreate a cluster configured with non-preemptible secondary workers to ensure the secondary workers are not preemptible.
-[1] https://cloud.google.com/dataproc/docs/concepts/compute/secondary-vms#non-preemptible_workers
+[1] <https://cloud.google.com/dataproc/docs/concepts/compute/secondary-vms#non-preemptible_workers>
 {% endblock sw_preemption_failure_remediation %}
 
 {% block worker_disk_usage_success_reason %}
@@ -170,9 +171,9 @@ If memory allocation seems adequate, investigate potential garbage collection op
 Additionally, there is some guidance that tuning spark.memory.fraction can be effective, particularly for workloads that heavily rely on RDD caching. See Memory Management Overview for more discussion of this configuration property.
 Additionally, tuning the spark.memory.fraction can be effective, particularly for workloads that rely heavily on RDD caching. Refer to the Memory Management Overview for a detailed discussion of this configuration property.
 
-[1] https://spark.apache.org/docs/latest/configuration.html
-[2] https://spark.apache.org/docs/latest/tuning.html#garbage-collection-tuning
-[3] https://spark.apache.org/docs/latest/tuning.html#memory-management-overview
+[1] <https://spark.apache.org/docs/latest/configuration.html>
+[2] <https://spark.apache.org/docs/latest/tuning.html#garbage-collection-tuning>
+[3] <https://spark.apache.org/docs/latest/tuning.html#memory-management-overview>
 {% endblock gc_pause_failure_remediation %}
 
 {% block default_success_reason %}
@@ -299,7 +300,6 @@ Found logs messages related to "{log}" on the cluster: {cluster_name}.
 The job failed due to python import failure. {additional_message}
 {% endblock check_python_import_failure_failure_remediation %}
 
-
 {% block shuffle_service_kill_preemptible_workers_failure_reason %}
 Cluster {cluster.name} uses preemptible workers and their count exceeds 50% of the total worker count leading to shuffle fetch failures.
 {% endblock shuffle_service_kill_preemptible_workers_failure_reason %}
@@ -353,12 +353,13 @@ The metadata server can serve 10 requests/s. This limit is not restricted to a p
 
 {% block gcs_429_gce_failure_remediation %}
 There are several recommendations to address the issue:
+
 1. If this is a Spark job and the number of shuffle partition is high,
 try setting the offset value to a more comfortable number in the offset file and restart the application.
 2. It is advised to run the applications on spark cluster mode to avoid stress on driver node.
 3. If possible, you can modify your workload to reduce the frequent authentication requests.
 If this is not possible try to move to file based authentication mechanism:
-https://github.com/GoogleCloudDataproc/hadoop-connectors/blob/master/gcs/CONFIGURATION.md#authentication
+<https://github.com/GoogleCloudDataproc/hadoop-connectors/blob/master/gcs/CONFIGURATION.md#authentication>
 {% endblock gcs_429_gce_failure_remediation %}
 
 {% block gcs_429_driveroutput_success_reason %}
@@ -373,8 +374,8 @@ There are too many writes to the driver output file and logs are not written, fa
 
 {% block gcs_429_driveroutput_failure_remediation %}
 Our recommendation is to use the "core:fs.gs.outputstream.sync.min.interval" property to control the sync time (in minutes):
-https://github.com/GoogleCloudDataproc/hadoop-connectors/blob/master/gcs/CONFIGURATION.md
-https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/cluster-properties#file-prefixed_properties_table
+<https://github.com/GoogleCloudDataproc/hadoop-connectors/blob/master/gcs/CONFIGURATION.md>
+<https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/cluster-properties#file-prefixed_properties_table>
 {% endblock gcs_429_driveroutput_failure_remediation %}
 
 {% block gcs_412_success_reason %}
@@ -389,7 +390,7 @@ GCS Hadoop File Committer doesn't have support for concurrent writes to a GCS bu
 
 {% block gcs_412_failure_remediation %}
 Use the DataprocFileOutputCommitter that allows concurrent writes from Spark jobs:
-https://cloud.google.com/dataproc/docs/guides/dataproc-fileoutput-committer
+<https://cloud.google.com/dataproc/docs/guides/dataproc-fileoutput-committer>
 {% endblock gcs_412_failure_remediation %}
 
 {% block bq_resource_success_reason %}
@@ -401,6 +402,7 @@ Found logs messages related to "{log}" on the cluster: {cluster_name}.
 
 When the job was streaming writing to BigQuery, a quota was hit resulting in a RESOURCE_EXHAUSTED error.
 The error message can be of type:
+
 - Concurrent stream usage exceeded
 - Exceeds 'AppendRows throughput' quota
 - CreateWriteStream requests quota
@@ -411,13 +413,14 @@ that leverages Bigquery Storage Write API.
 
 {% block bq_resource_failure_remediation %}
 Try one of the following:
+
 - For a permanent solution: Use the INDIRECT write method, which doesn't leverage the BQ Streaming Write API
 and doesn't need quotas:
-https://github.com/GoogleCloudDataproc/spark-bigquery-connector#indirect-write
+<https://github.com/GoogleCloudDataproc/spark-bigquery-connector#indirect-write>
 
 - For the "CreateWriteStream" enable property "writeAtLeastOnce".
 This solves the issue but introduces at-least-once behavior into the pipeline so we do not guarantee that records won't be duplicated.
-https://github.com/GoogleCloudDataproc/spark-bigquery-connector#properties
+<https://github.com/GoogleCloudDataproc/spark-bigquery-connector#properties>
 
 - Contact the Support team to increase the Quota for the project. Provide your BigQuery jar installed and driver output of the failed job.
 {% endblock bq_resource_failure_remediation %}

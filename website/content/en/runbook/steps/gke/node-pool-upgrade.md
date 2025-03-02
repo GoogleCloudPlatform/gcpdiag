@@ -23,11 +23,13 @@ The node {node} was unavailable due to a node pool upgrade.
 This is expected behavior, when the upgrade is performed, nodes are drained and re-created to match the desired version.
 
 To list the node upgrade operations, please issue the following gcloud command:
+
 ```
 gcloud container operations list --filter=operationType:UPGRADE_NODES
 ```
+
 For more details about node upgrades please consult the documentation:
-https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-upgrades
+<https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-upgrades>
 
 ### Success Reason
 

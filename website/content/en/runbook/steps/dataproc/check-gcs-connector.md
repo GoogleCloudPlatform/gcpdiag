@@ -22,13 +22,13 @@ Didn't identify any user specified Cloud Storage connector version. The cluster 
 
 Identified a user specified Cloud Storage connector version. Please have in mind that all Dataproc clusters have pre-installed GCS connector.
 If your application doesn't depend on a non-default connector version we would recommend to not specify one.
-https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-version-clusters#supported-dataproc-image-versions
+<https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-version-clusters#supported-dataproc-image-versions>
 
 ### Uncertain Remediation
 
 If you would like to use the non-default connector make sure that the setup has been done correctly following:
-https://cloud.google.com/dataproc/docs/concepts/connectors/cloud-storage#non-default_connector_versions
-https://cloud.google.com/dataproc/docs/concepts/connectors/cloud-storage#service_account_permissions
+<https://cloud.google.com/dataproc/docs/concepts/connectors/cloud-storage#non-default_connector_versions>
+<https://cloud.google.com/dataproc/docs/concepts/connectors/cloud-storage#service_account_permissions>
 
 
 
