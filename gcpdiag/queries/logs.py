@@ -44,10 +44,10 @@ import threading
 from typing import (Any, Deque, Dict, List, Mapping, Optional, Sequence, Set,
                     Tuple, Union)
 
-import apiclient.errors
 import dateutil.parser
 import ratelimit
 from boltons.iterutils import get_path
+from googleapiclient import errors
 
 from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis
@@ -165,7 +165,7 @@ def _ratelimited_execute(req):
   """Wrapper to req.execute() with rate limiting to avoid hitting quotas."""
   try:
     return req.execute(num_retries=config.API_RETRIES)
-  except apiclient.errors.HttpError as err:
+  except errors.HttpError as err:
     logging.error('failed to execute logging request for request %s. Error: %s',
                   req, err)
     raise utils.GcpApiError(err) from err
