@@ -139,8 +139,8 @@ def get_all_projects_in_parent(project_id: str) -> List[ProjectBillingInfo]:
     +' parent.id:'+project.parent.split('/')[1] if project.parent else ''
 
   api = apis.get_api('cloudresourcemanager', 'v3')
-  for p in apis_utils.list_all(request=api.projects().list(filter=p_filter),
-                               next_function=api.projects().list_next,
+  for p in apis_utils.list_all(request=api.projects().search(query=p_filter),
+                               next_function=api.projects().search_next,
                                response_keyword='projects'):
     try:
       crm_api = apis.get_api('cloudresourcemanager', 'v3', p['projectId'])

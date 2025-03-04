@@ -47,6 +47,12 @@ class CrmApiStub:
   def list_next(self, previous_request, previous_response):
     return None
 
+  def search(self, query=None):
+    return apis_stub.RestCallStub(DUMMY_PROJECT_ID, 'projects')
+
+  def search_next(self, previous_request, previous_response):
+    return None
+
   # pylint: disable=invalid-name
   def get(self, project_id=None, name=None):
     if not project_id and name is not None:
