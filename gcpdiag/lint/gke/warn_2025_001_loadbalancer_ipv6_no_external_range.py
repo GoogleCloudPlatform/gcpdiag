@@ -11,7 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""If you're using a Google Kubernetes Engine (GKE) cluster with a
+
+# pylint: disable=line-too-long
+"""GKE external LB services are successfully created without encountering IP allocation failures due to external IPv6 subnet configurations.
+
+If you're using a Google Kubernetes Engine (GKE) cluster with a
 
 dual-stack subnet configured for internal IPv6 access, you won't
 be able to create or update an external load balancer service.

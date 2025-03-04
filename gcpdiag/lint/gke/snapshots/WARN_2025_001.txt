@@ -1,3 +1,3 @@
-*  gke/WARN/2025_001: If you're using a Google Kubernetes Engine (GKE) cluster with a
+*  gke/WARN/2025_001: GKE external LB services are successfully created without encountering IP allocation failures due to external IPv6 subnet configurations.
    (logging api is disabled)                                              [SKIP]
 
