@@ -1,3 +1,43 @@
+## 0.78 (2025-03-04)
+
+#### New Lints
+
+gke/warn/2025\_001: new rule: GKE external LB services are successfully created without encountering IP allocation failures due to external IPv6 subnet configurations.
+asm/warn/2025\_002: new rule: Upstream connection established successfully with no protocol errors
+asm/warn/2025\_001: new rule: ASM: Envoy doesn't report connection failure
+gke/err/2025\_001: GKE cluster complies with the serial port logging organization policy.
+#### New Runbooks
+
+gcf/failed-deployments: Cloud Run Functions runbook to assist users to check reasons for failed deployments of Gen2 cloud functions
+nat/public-nat-ip-allocation-failed: public nat ip allocation failed runbook
+dataproc/spark-job-failures: Dataproc Spark Job Runbook
+lb/latency: new runbook: Load Balancer Latency v1
+
+#### New Queries
+
+gce.get\_global\_operations: Returns global operations object in the given project id.
+cloudasset.search\_all\_resources: Searches all cloud asset inventory in the project.
+lb.get\_load\_balancer\_type\_name: Returns a human-readable name for the given load balancer type.
+dataproc.list\_auto\_scaling\_policies: Lists all autoscaling policies in the given project and region.
+
+### New Features
+
+pre-commit codespell check eliminate typos in the repositories
+Step class attributes interpolation in step names
+Check deprecated parameters in runbooks
+Migrate repository to python 3.12
+output/api\_output.py: implement api output module
+Create threading.local() in op.py for data isolation.
+
+#### Fixes
+
+Update gke/err/2024\_003 to check for `container.defaultNodeServiceAccount` role
+Update formatting/style of all runbooks.
+fix runbook functionality to properly detect pod IP exhaustion and node IP exhaustion
+Explicitly handle HTTP 401 errors - Add step_error for exceptions caused by GcpApiError - Handle edge case where
+Improve error handling for iam.roles()
+
+
 ## 0.77 (2024-11-13)
 
 #### New Lint Rules
