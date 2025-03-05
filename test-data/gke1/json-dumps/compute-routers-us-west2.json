@@ -1,0 +1,22 @@
+{
+  "kind": "compute#routerList",
+  "id": "projects/gcpdiag-gke1-aaaa/regions/us-west2/routers",
+  "items": [
+    {
+      "kind": "compute#router",
+      "id": "920111616522135406",
+      "creationTimestamp": "2022-12-20T11:14:09.645-08:00",
+      "name": "dummy-router3",
+      "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west2",
+      "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+      "bgp": {
+        "asn": 64512,
+        "advertiseMode": "DEFAULT",
+        "keepaliveInterval": 20
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-east4/routers/dummy-router3",
+      "encryptedInterconnectRouter": false
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/us-west2/routers"
+}

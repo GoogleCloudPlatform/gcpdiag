@@ -1,0 +1,17 @@
+*  interconnect/WARN/2025_001: VLAN attachment MTU matches VPC MTU
+   - projects/gcpdiag-gke1-aaaa/regions/us-east4/interconnectAttachments/dummy-attachment1 [ OK ]
+   - projects/gcpdiag-gke1-aaaa/regions/us-east4/interconnectAttachments/dummy-attachment2 [ OK ]
+   - projects/gcpdiag-gke1-aaaa/regions/us-east4/interconnectAttachments/dummy-attachment3 [ OK ]
+   - projects/gcpdiag-gke1-aaaa/regions/us-east4/interconnectAttachments/dummy-attachment4 [ OK ]
+   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment5 [FAIL]  MTU mismatch: 1450 vs VPC MTU 1460
+   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6 [FAIL]  MTU mismatch: 1440 vs VPC MTU 1460
+   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6 [FAIL]  MTU mismatch: 1440 vs VPC MTU 1460
+   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6 [FAIL]  MTU mismatch: 1440 vs VPC MTU 1460
+   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6 [FAIL]  MTU mismatch: 1440 vs VPC MTU 1460
+   - projects/gcpdiag-gke1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6 [FAIL]  MTU mismatch: 1440 vs VPC MTU 1460
+
+   Mismatched MTU may cause potential connection issues. Please check VLAN
+   attachment and VPC network MTU configurations.
+
+   https://gcpdiag.dev/rules/interconnect/WARN/2025_001
+

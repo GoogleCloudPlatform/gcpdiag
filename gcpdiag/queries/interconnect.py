@@ -20,6 +20,8 @@ from typing import List
 from gcpdiag import caching, config, models
 from gcpdiag.queries import apis
 
+DEFAULT_MTU = 1440
+
 
 class Interconnect(models.Resource):
   """Represents an Interconnect.
@@ -185,6 +187,13 @@ class VlanAttachment(models.Resource):
   @property
   def region(self) -> str:
     return self._resource_data['region'].split('/')[-1]
+
+  @property
+  def mtu(self) -> int:
+    if 'mtu' in self._resource_data:
+      return self._resource_data['mtu']
+    else:
+      return DEFAULT_MTU
 
   @property
   def ead(self) -> str:

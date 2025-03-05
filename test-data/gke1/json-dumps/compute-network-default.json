@@ -7,6 +7,7 @@
   "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
   "selfLinkWithId": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/7246553118008778977",
   "autoCreateSubnetworks": true,
+  "mtu": 1460,
   "subnetworks": [
     "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west1/subnetworks/default",
     "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks/gke1-subnet",

@@ -415,3 +415,24 @@ class TestNetwork:
 
       if address.name == 'address4':
         assert address.short_path == 'gcpdiag-vpc1-aaaa/address4'
+
+  def test_get_router_by_name(self):
+    router = network.get_router_by_name(project_id='gcpdiag-gke1-aaaa',
+                                        region='europe-west4',
+                                        router_name='gke-default-router')
+    assert router.name == 'gke-default-router'
+
+    router = network.get_router_by_name(project_id='gcpdiag-gke1-aaaa',
+                                        region='us-east4',
+                                        router_name='dummy-router1')
+    assert router.name == 'dummy-router1'
+
+    router = network.get_router_by_name(project_id='gcpdiag-gke1-aaaa',
+                                        region='us-east4',
+                                        router_name='dummy-router2')
+    assert router.name == 'dummy-router2'
+
+    router = network.get_router_by_name(project_id='gcpdiag-gke1-aaaa',
+                                        region='us-east4',
+                                        router_name='dummy-router3')
+    assert router.name == 'dummy-router3'

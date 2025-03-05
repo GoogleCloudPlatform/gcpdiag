@@ -28,6 +28,8 @@ IPv4AddrOrIPv6Addr = Union[ipaddress.IPv4Address, ipaddress.IPv6Address]
 IPv4NetOrIPv6Net = Union[ipaddress.IPv4Network, ipaddress.IPv6Network]
 IPAddrOrNet = Union[IPv4AddrOrIPv6Addr, IPv4NetOrIPv6Net]
 
+DEFAULT_MTU = 1460
+
 
 class Subnetwork(models.Resource):
   """A VPC subnetwork."""
@@ -268,6 +270,16 @@ class Router(models.Resource):
     return self._resource_data.get('selfLink', '')
 
   @property
+  def network(self) -> str:
+    return self._resource_data['network']
+
+  def get_network_name(self) -> str:
+    logging.info('inside get_network_name function')
+    if self._resource_data['network']:
+      return self._resource_data['network'].split('/')[-1]
+    return ''
+
+  @property
   def nats(self):
     return self._resource_data.get('nats', [])
 
@@ -425,6 +437,12 @@ class Network(models.Resource):
   @property
   def firewall(self) -> 'EffectiveFirewalls':
     return _get_effective_firewalls(self)
+
+  @property
+  def mtu(self) -> int:
+    if 'mtu' in self._resource_data:
+      return self._resource_data['mtu']
+    return DEFAULT_MTU
 
   @property
   def subnetworks(self) -> Dict[str, Subnetwork]:
@@ -1234,6 +1252,20 @@ def get_router(project_id: str, region: str, network) -> Router:
                                    filter=f'network="{network.self_link}"')
   response = request.execute(num_retries=config.API_RETRIES)
   return Router(project_id, next(iter(response.get('items', [{}]))))
+
+
+@caching.cached_api_call(in_memory=True)
+def get_router_by_name(project_id: str, region: str,
+                       router_name: str) -> Router:
+  logging.info('fetching router list: %s/%s in region %s', project_id,
+               router_name, region)
+  compute = apis.get_api('compute', 'v1', project_id)
+  request = compute.routers().list(project=project_id, region=region)
+  response = request.execute(num_retries=config.API_RETRIES)
+  return next(
+      Router(project_id, item)
+      for item in response.get('items', [])
+      if item['name'] == router_name)
 
 
 @caching.cached_api_call(in_memory=True)

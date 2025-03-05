@@ -56,6 +56,9 @@ class NetworkApiStub:
   def get_routers(self, project, region, network):
     return apis_stub.RestCallStub(project, f'compute-network-{region}')
 
+  def get_router_by_name(self, project, region, router_name):
+    return apis_stub.RestCallStub(project, f'compute-network-{region}')
+
   def nat_router_status(self, project, router_name, region):
     return apis_stub.RestCallStub(
         project, f'compute-routers-routerStatus-{router_name}')
@@ -77,6 +80,8 @@ class NetworkApiStub:
       return apis_stub.RestCallStub(
           project, f'compute-subnetworks-{SUBNETWORKS_REGION}')
     elif self.mock_state == 'routers':
+      if region:
+        return apis_stub.RestCallStub(project, f'compute-routers-{region}')
       return apis_stub.RestCallStub(project,
                                     f'compute-routers-{SUBNETWORKS_REGION}')
     elif self.mock_state == 'networks':
