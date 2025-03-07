@@ -36,7 +36,7 @@ Manual NAT IP allocation is enabled on the NAT GW {nat_gateway_name}
 
 {% block nat_ip_allocation_auto_only_failure_remediation %}
 IP exhaustion issues on {nat_gateway_name} can be remediated by taking the following steps in:
-https://cloud.google.com/knowledge/kb/cloud-nat-is-dropping-or-limiting-egress-connectivity-000004263#:~:text=If%20the%20metric%20indicates%20that,on%20the%20Port%20reservation%20procedure.
+<https://cloud.google.com/knowledge/kb/cloud-nat-is-dropping-or-limiting-egress-connectivity-000004263#:~:text=If%20the%20metric%20indicates%20that,on%20the%20Port%20reservation%20procedure>
 {% endblock nat_ip_allocation_auto_only_failure_remediation %}
 
 
@@ -109,20 +109,20 @@ The number of NAT IPs required is less than quota limit of 300. Consider
 taking the steps in [1] to allocate more IP address or further optimize
 port utilization on the gateway [2]
 
-1. https://cloud.google.com/nat/docs/troubleshooting#allocate-more-IPs
-2. https://cloud.google.com/nat/docs/troubleshooting#reduce-ports
+1. <https://cloud.google.com/nat/docs/troubleshooting#allocate-more-IPs>
+2. <https://cloud.google.com/nat/docs/troubleshooting#reduce-ports>
 {% endblock nat_allocation_manual_only_success_reason_a1 %}
 
 {% block nat_allocation_manual_only_failure_reason %}
 The number of NAT IPs in use on the NAT Gateway is >= 300 which is above the quota limit [1].
 
-1. https://cloud.google.com/nat/quota#quotas
+1. <https://cloud.google.com/nat/quota#quotas>
 {% endblock nat_allocation_manual_only_failure_reason %}
 
 {% block nat_allocation_manual_only_failure_remediation %}
 Consider creating additional NAT gateways or optimise port usage [1]:
 
-1. https://cloud.google.com/nat/docs/troubleshooting#reduce-ports
+1. <https://cloud.google.com/nat/docs/troubleshooting#reduce-ports>
 {% endblock nat_allocation_manual_only_failure_remediation %}
 
 

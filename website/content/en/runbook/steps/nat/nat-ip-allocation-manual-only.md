@@ -20,13 +20,13 @@ If the NAT IP allocation is configured as MANUAL_ONLY:
 
 The number of NAT IPs in use on the NAT Gateway is >= 300 which is above the quota limit [1].
 
-1. https://cloud.google.com/nat/quota#quotas
+1. <https://cloud.google.com/nat/quota#quotas>
 
 ### Failure Remediation
 
 Consider creating additional NAT gateways or optimise port usage [1]:
 
-1. https://cloud.google.com/nat/docs/troubleshooting#reduce-ports
+1. <https://cloud.google.com/nat/docs/troubleshooting#reduce-ports>
 
 ### Success Reason
 

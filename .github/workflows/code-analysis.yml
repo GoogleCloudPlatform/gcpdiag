@@ -9,6 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+    - name: Install Graphviz
+      run: sudo apt-get install -y graphviz
+
+    - name: Install Ruby
+      run: |
+        sudo apt-get install -y ruby
+
     - name: Checkout repository
       uses: actions/checkout@v4
 

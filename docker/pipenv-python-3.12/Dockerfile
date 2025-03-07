@@ -30,7 +30,11 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 	bash \
 	unzip \
 	publicsuffix \
-	build-essential
+	build-essential \
+	# dependency for pydot
+	graphviz \
+	# dependency for markdownlint
+	ruby
 
 
 # terraform

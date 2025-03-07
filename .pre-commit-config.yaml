@@ -81,22 +81,28 @@ repos:
     language: script
     files: ^gcpdiag/lint/[^/]+/(bp|warn|err|sec)_.*.py
     exclude: .*_test.py
-# - repo: local
-#   hooks:
-#   - id: gcpdiag-custom-runbook-rule
-#     name: Check and generate runbook docs
-#     entry: ./bin/precommit-required-files-wrapper runbook
-#     language: script
-#     files: ^gcpdiag/runbook/[^/]+/.*.py
-#     exclude: >
-#       .*_test.py|
-#       ^gcpdiag/runbook/(output|report)|
-#       ^gcpdiag/runbook/[^/]+/snapshots/|
-#       ^gcpdiag/runbook/[^/]+/(constants|command|flags|util).py|
-#       ^gcpdiag/runbook/(constants|command|flags|exceptions|report|util).py
+- repo: local
+  hooks:
+  - id: gcpdiag-custom-runbook-rule
+    name: Check and generate runbook docs
+    entry: ./bin/precommit-required-files-wrapper runbook
+    language: script
+    files: ^gcpdiag/runbook/[^/]+/.*.py
+    exclude: >
+      .*_test.py|
+      ^gcpdiag/runbook/(output|report)|
+      ^gcpdiag/runbook/[^/]+/snapshots/|
+      ^gcpdiag/runbook/[^/]+/(constants|command|flags|util).py|
+      ^gcpdiag/runbook/(constants|command|flags|exceptions|report|util).py
 - repo: local
   hooks:
   - id: todo-annotations
     name: Check presence of "TODO:" comments
     entry: ./bin/precommit-todo-annotations
     language: script
+- repo: https://github.com/markdownlint/markdownlint
+  rev: v0.13.0
+  hooks:
+  - id: markdownlint
+    files: \.(jinja)$
+    entry: mdl --rules MD034

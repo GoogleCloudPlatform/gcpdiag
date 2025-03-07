@@ -49,8 +49,8 @@ nat/public-nat-ip-allocation-failed: Troubleshooting for IP Allocation issues fo
      taking the steps in [1] to allocate more IP address or further optimize
      port utilization on the gateway [2]
 
-     1. https://cloud.google.com/nat/docs/troubleshooting#allocate-more-IPs
-     2. https://cloud.google.com/nat/docs/troubleshooting#reduce-ports
+     1. <https://cloud.google.com/nat/docs/troubleshooting#allocate-more-IPs>
+     2. <https://cloud.google.com/nat/docs/troubleshooting#reduce-ports>
 
 [END]: Concludes the NAT IP allocation failed diagnostics process
 
