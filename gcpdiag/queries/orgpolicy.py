@@ -14,7 +14,7 @@
 """Queries related to organization policy constraints."""
 
 import logging
-from typing import Dict
+from typing import Dict, List
 
 import googleapiclient.errors
 
@@ -30,10 +30,6 @@ PREFETCH_ORG_CONSTRAINTS = (
     'constraints/compute.disableSshInBrowser',
     'constraints/iam.disableCrossProjectServiceAccountUsage',
 )
-
-# TODO: list policy constraints of interest (not yet supported)
-# 'constraints/compute.vmCanIpForward'
-# 'restrictSharedVpcSubnetworks'
 
 
 class PolicyConstraint:
@@ -52,6 +48,22 @@ class BooleanPolicyConstraint(PolicyConstraint):
 
   def is_enforced(self) -> bool:
     return self._resource_data.get('enforced', False)
+
+
+class ListPolicyConstraint(PolicyConstraint):
+
+  def allowed_values(self) -> List[str]:
+    return self._resource_data.get('allowedValues', [])
+
+  def denied_values(self) -> List[str]:
+    return self._resource_data.get('deniedValues', [])
+
+
+class RestoreDefaultPolicyConstraint(PolicyConstraint):
+
+  def is_default_restored(self) -> bool:
+    """Indicates that the constraintDefault enforcement behavior is restored."""
+    return True
 
 
 @caching.cached_api_call
@@ -97,3 +109,51 @@ def get_effective_org_policy(project_id: str, constraint: str):
     raise ValueError(
         f'constraint {constraint} not supported {list(all_constraints)}')
   return all_constraints[constraint]
+
+
+@caching.cached_api_call
+def get_all_project_org_policies(project_id: str):
+  """list all the org policies set for a particular resource.
+
+  Args:
+      project_id: The project ID.
+
+  Returns:
+      A dictionary of PolicyConstraint objects, keyed by constraint name.
+
+  Raises:
+      utils.GcpApiError: on API errors.
+  """
+  crm_api = apis.get_api('cloudresourcemanager', 'v1', project_id)
+  resource = f'projects/{project_id}'
+  all_constraints: Dict[str, PolicyConstraint] = {}
+  logging.info('listing org policies of %s', project_id)
+
+  request = crm_api.projects().listOrgPolicies(resource=resource)
+
+  while request:
+    try:
+      response = request.execute(num_retries=config.API_RETRIES)
+    except googleapiclient.errors.HttpError as err:
+      raise utils.GcpApiError(err) from err
+
+    policies_list = response.get('policies', [])
+
+    for policy in policies_list:
+      constraint_name = policy.get('constraint')
+
+      if 'booleanPolicy' in policy:
+        all_constraints[constraint_name] = BooleanPolicyConstraint(
+            constraint_name, policy['booleanPolicy'])
+      elif 'listPolicy' in policy:
+        all_constraints[constraint_name] = ListPolicyConstraint(
+            constraint_name, policy['listPolicy'])
+      elif 'restoreDefault' in policy:
+        all_constraints[constraint_name] = RestoreDefaultPolicyConstraint(
+            constraint_name, policy['restoreDefault'])
+      else:
+        logging.warning('unknown constraint type: %s', policy)
+
+    request = crm_api.projects().listOrgPolicies_next(request, response)
+
+  return all_constraints

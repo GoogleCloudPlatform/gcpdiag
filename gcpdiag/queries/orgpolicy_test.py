@@ -13,6 +13,7 @@
 # limitations under the License.
 """Test code in crm.py."""
 
+import unittest
 from unittest import mock
 
 from gcpdiag.queries import apis_stub, orgpolicy
@@ -21,7 +22,7 @@ DUMMY_PROJECT_ID = 'gcpdiag-fw-policy-aaaa'
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
-class Test:
+class Test(unittest.TestCase):
   """Test project.py"""
 
   def test_get_effective_org_policy(self):
@@ -32,3 +33,17 @@ class Test:
     p = orgpolicy.get_effective_org_policy(
         DUMMY_PROJECT_ID, 'constraints/compute.requireOsLogin')
     assert not p.is_enforced()
+
+  def test_get_all_project_org_policies(self):
+    policies = orgpolicy.get_all_project_org_policies(DUMMY_PROJECT_ID)
+    assert len(policies) == 2
+    assert isinstance(
+        policies['constraints/cloudbuild.allowedWorkerPools'],
+        orgpolicy.ListPolicyConstraint,
+    )
+    assert isinstance(
+        policies['constraints/compute.skipDefaultNetworkCreation'],
+        orgpolicy.BooleanPolicyConstraint,
+    )
+    assert policies['constraints/cloudbuild.allowedWorkerPools'].allowed_values(
+    ) == ['projects/12340004/locations/us-central1/workerPools/test-pool']

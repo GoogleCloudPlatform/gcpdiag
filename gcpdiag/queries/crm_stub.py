@@ -80,3 +80,21 @@ class CrmApiStub:
       raise ValueError(
           f"constraint doesn\'t start with constraints/: {body['constraint']}")
     return apis_stub.RestCallStub(project_id, f'org-constraint-{m.group(1)}')
+
+  def listOrgPolicies(self, resource):
+    m = re.match(r'projects/([^/]+)', resource)
+    if not m:
+      raise ValueError('only projects are supported for listOrgPolicies stub')
+    project_id = m.group(1)
+    return apis_stub.RestCallStub(project_id, 'org-policies')
+
+  def listOrgPolicies_next(self, previous_request, previous_response):
+    if isinstance(previous_response,
+                  dict) and previous_response.get('nextPageToken'):
+      return apis_stub.RestCallStub(
+          project_id=previous_request.project_id,
+          json_basename=previous_request.json_basename,
+          page=previous_request.page + 1,
+      )
+    else:
+      return None

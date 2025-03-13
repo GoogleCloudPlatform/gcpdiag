@@ -31,6 +31,7 @@ all:	\
 	json-dumps/iam-service-accounts.json \
 	json-dumps/project.json \
 	json-dumps/services.json \
-	$(ORG_POLICY_CONSTRAINTS)
+	$(ORG_POLICY_CONSTRAINTS) \
+	json-dumps/org-policies.json
 
 include ../Makefile.inc

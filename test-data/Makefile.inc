@@ -202,6 +202,13 @@ json-dumps/project.json:
 		'https://cloudresourcemanager.googleapis.com/v3/projects/$(PROJECT_ID)' \
 		| $(SED_SUBST_FAKE) >$@
 
+json-dumps/org-policies.json:
+	$(CURL) -fsS \
+		'https://cloudresourcemanager.googleapis.com/v1/projects/$(PROJECT_ID):listOrgPolicies' \
+		-X POST  --header "Content-Type:text/json" \
+		-d "" \
+		| $(JSON_CLEANER) other \
+		| $(SED_SUBST_FAKE) >$@
 
 # iam.googleapis.com
 
