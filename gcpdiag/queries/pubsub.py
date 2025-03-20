@@ -66,8 +66,8 @@ def get_topics(context: models.Context) -> Mapping[str, Topic]:
   if not apis.is_enabled(context.project_id, 'pubsub'):
     return topics
   pubsub_api = apis.get_api('pubsub', 'v1', context.project_id)
-  logging.info('fetching list of PubSub topics in project %s',
-               context.project_id)
+  logging.debug('fetching list of PubSub topics in project %s',
+                context.project_id)
   query = pubsub_api.projects().topics().list(
       project=f'projects/{context.project_id}')
   try:
@@ -202,8 +202,8 @@ def get_subscriptions(context: models.Context) -> Mapping[str, Subscription]:
   if not apis.is_enabled(context.project_id, 'pubsub'):
     return subscriptions
   pubsub_api = apis.get_api('pubsub', 'v1', context.project_id)
-  logging.info('fetching list of PubSub subscriptions in project %s',
-               context.project_id)
+  logging.debug('fetching list of PubSub subscriptions in project %s',
+                context.project_id)
   query = pubsub_api.projects().subscriptions().list(
       project=f'projects/{context.project_id}')
   try:
@@ -238,7 +238,7 @@ def get_subscription(project_id: str,
   if not apis.is_enabled(project_id, 'pubsub'):
     return None
   pubsub_api = apis.get_api('pubsub', 'v1', project_id)
-  logging.info('fetching PubSub subscription in project %s', project_id)
+  logging.debug('fetching PubSub subscription in project %s', project_id)
   query = pubsub_api.projects().subscriptions().get(
       subscription=f'projects/{project_id}/subscriptions/{subscription_name}')
   try:

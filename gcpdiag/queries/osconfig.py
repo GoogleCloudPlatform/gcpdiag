@@ -104,7 +104,7 @@ def list_inventories(
   if not apis.is_enabled(context.project_id, 'osconfig'):
     return inventories
   osconfig_api = apis.get_api('osconfig', 'v1', context.project_id)
-  logging.info(
+  logging.debug(
       'fetching inventory data for all VMs under zone %s in project %s',
       location,
       context.project_id,
@@ -139,7 +139,7 @@ def get_inventory(context: models.Context, location: str,
   if not apis.is_enabled(context.project_id, 'osconfig'):
     return None
   osconfig_api = apis.get_api('osconfig', 'v1', context.project_id)
-  logging.info(
+  logging.debug(
       'fetching inventory data for VM %s in zone %s in project %s',
       instance_name,
       location,

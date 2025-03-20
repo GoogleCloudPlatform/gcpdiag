@@ -120,7 +120,7 @@ def get_services(context: models.Context) -> Mapping[str, Service]:
       continue
     region = m.group(1)
     cloudrun_api = apis.get_api('run', 'v2', context.project_id)
-    logging.info(
+    logging.debug(
         'fetching list of cloud run services in the project %s for the region %s',
         context.project_id, region)
     query = cloudrun_api.projects().locations().services().list(

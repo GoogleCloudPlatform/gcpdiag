@@ -243,7 +243,7 @@ class BackendServices(models.Resource):
 
 @caching.cached_api_call(in_memory=True)
 def get_backend_services(project_id: str) -> List[BackendServices]:
-  logging.info('fetching Backend Services: %s', project_id)
+  logging.debug('fetching Backend Services: %s', project_id)
   compute = apis.get_api('compute', 'v1', project_id)
   backend_services = []
   request = compute.backendServices().aggregatedList(project=project_id)
@@ -614,7 +614,7 @@ def get_target_proxy_reference(target_proxy_self_link: str) -> str:
 
 @caching.cached_api_call(in_memory=True)
 def get_forwarding_rules(project_id: str) -> List[ForwardingRules]:
-  logging.info('fetching Forwarding Rules: %s', project_id)
+  logging.debug('fetching Forwarding Rules: %s', project_id)
   compute = apis.get_api('compute', 'v1', project_id)
   forwarding_rules = []
   request = compute.forwardingRules().aggregatedList(project=project_id)
@@ -703,7 +703,7 @@ class TargetHttpsProxy(models.Resource):
 
 @caching.cached_api_call(in_memory=True)
 def get_target_https_proxies(project_id: str) -> List[TargetHttpsProxy]:
-  logging.info('fetching Target HTTPS Proxies: %s', project_id)
+  logging.debug('fetching Target HTTPS Proxies: %s', project_id)
   compute = apis.get_api('compute', 'v1', project_id)
   target_https_proxies = []
   request = compute.targetHttpsProxies().aggregatedList(project=project_id)
@@ -777,7 +777,7 @@ class TargetSslProxy(models.Resource):
 
 @caching.cached_api_call(in_memory=True)
 def get_target_ssl_proxies(project_id: str) -> List[TargetSslProxy]:
-  logging.info('fetching Target SSL Proxies: %s', project_id)
+  logging.debug('fetching Target SSL Proxies: %s', project_id)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.targetSslProxies().list(project=project_id)
   response = request.execute(num_retries=config.API_RETRIES)

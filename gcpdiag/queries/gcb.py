@@ -194,7 +194,7 @@ def get_builds(context: models.Context) -> Mapping[str, Build]:
   start_time = datetime.datetime.now(
       datetime.timezone.utc) - datetime.timedelta(
           days=config.get('within_days'))
-  logging.info('fetching list of builds in the project %s', context.project_id)
+  logging.debug('fetching list of builds in the project %s', context.project_id)
   for location in LOCATIONS:
     query = build_api.projects().locations().builds().list(
         parent=f'projects/{context.project_id}/locations/{location}',
@@ -241,8 +241,8 @@ def get_triggers(context: models.Context) -> Mapping[str, Trigger]:
   if not apis.is_enabled(context.project_id, 'cloudbuild'):
     return triggers
   build_api = apis.get_api('cloudbuild', 'v1', context.project_id)
-  logging.info('fetching list of triggers in the project %s',
-               context.project_id)
+  logging.debug('fetching list of triggers in the project %s',
+                context.project_id)
   query = build_api.projects().locations().triggers().list(
       parent=f'projects/{context.project_id}/locations/global')
   try:

@@ -89,7 +89,7 @@ class Interconnect(models.Resource):
 
 @caching.cached_api_call(in_memory=True)
 def get_interconnect(project_id: str, interconnect_name: str) -> Interconnect:
-  logging.info('fetching interconnect: %s', interconnect_name)
+  logging.debug('fetching interconnect: %s', interconnect_name)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.interconnects().get(project=project_id,
                                         interconnect=interconnect_name)
@@ -221,7 +221,7 @@ class VlanAttachment(models.Resource):
 @caching.cached_api_call(in_memory=True)
 def get_vlan_attachment(project_id: str, region: str,
                         vlan_attachment: str) -> VlanAttachment:
-  logging.info('fetching vlan attachment: %s', vlan_attachment)
+  logging.debug('fetching vlan attachment: %s', vlan_attachment)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.interconnectAttachments().get(
       project=project_id, region=region, interconnectAttachment=vlan_attachment)

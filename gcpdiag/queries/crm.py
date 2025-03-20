@@ -104,7 +104,7 @@ def get_project(project_id: str) -> Project:
           # use project data
   '''
   try:
-    logging.info('retrieving project %s ', project_id)
+    logging.debug('retrieving project %s ', project_id)
     crm_api = apis.get_api('cloudresourcemanager', 'v3', project_id)
     request = crm_api.projects().get(name=f'projects/{project_id}')
     response = request.execute(num_retries=config.API_RETRIES)

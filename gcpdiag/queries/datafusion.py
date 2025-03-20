@@ -184,8 +184,8 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
   if not apis.is_enabled(context.project_id, 'datafusion'):
     return instances
 
-  logging.info('fetching list of Data Fusion instances in project %s',
-               context.project_id)
+  logging.debug('fetching list of Data Fusion instances in project %s',
+                context.project_id)
   datafusion_api = apis.get_api('datafusion', 'v1', context.project_id)
   query = datafusion_api.projects().locations().instances().list(
       parent=f'projects/{context.project_id}/locations/-'
@@ -356,8 +356,8 @@ class Profile(models.Resource):
 def get_instance_system_compute_profile(
     context: models.Context, instance: Instance) -> Iterable[Profile]:
   """Get a list of datafusion Instance dataproc System compute profile."""
-  logging.info('fetching dataproc System compute profile list: %s',
-               context.project_id)
+  logging.debug('fetching dataproc System compute profile list: %s',
+                context.project_id)
   system_profiles: List[Profile] = []
   cdap_endpoint = instance.api_endpoint
   datafusion = get_generic.get_generic_api('datafusion', cdap_endpoint)
@@ -374,8 +374,8 @@ def get_instance_system_compute_profile(
 def get_instance_user_compute_profile(context: models.Context,
                                       instance: Instance) -> Iterable[Profile]:
   """Get a list of datafusion Instance dataproc User compute profile."""
-  logging.info('fetching dataproc User compute profile list: %s',
-               context.project_id)
+  logging.debug('fetching dataproc User compute profile list: %s',
+                context.project_id)
   user_profiles: List[Profile] = []
   cdap_endpoint = instance.api_endpoint
   datafusion = get_generic.get_generic_api('datafusion', cdap_endpoint)
@@ -470,7 +470,7 @@ class Preference(models.Resource):
 def get_system_preferences(context: models.Context,
                            instance: Instance) -> Preference:
   """Get datafusion Instance system preferences."""
-  logging.info('fetching dataproc System preferences: %s', context.project_id)
+  logging.debug('fetching dataproc System preferences: %s', context.project_id)
   cdap_endpoint = instance.api_endpoint
   datafusion = get_generic.get_generic_api('datafusion', cdap_endpoint)
   response = datafusion.get_system_preferences()
@@ -481,8 +481,8 @@ def get_namespace_preferences(context: models.Context,
                               instance: Instance) -> Mapping[str, Preference]:
   """Get datafusion cdap namespace preferences.
   """
-  logging.info('fetching dataproc namespace preferences: %s',
-               context.project_id)
+  logging.debug('fetching dataproc namespace preferences: %s',
+                context.project_id)
   cdap_endpoint = instance.api_endpoint
   datafusion = get_generic.get_generic_api('datafusion', cdap_endpoint)
   namespaces = datafusion.get_all_namespaces()
@@ -500,8 +500,8 @@ def get_namespace_preferences(context: models.Context,
 def get_application_preferences(context: models.Context,
                                 instance: Instance) -> Mapping[str, Preference]:
   """Get datafusion cdap application preferences."""
-  logging.info('fetching dataproc application preferences: %s',
-               context.project_id)
+  logging.debug('fetching dataproc application preferences: %s',
+                context.project_id)
   cdap_endpoint = instance.api_endpoint
   datafusion = get_generic.get_generic_api('datafusion', cdap_endpoint)
   applications_preferences = {}

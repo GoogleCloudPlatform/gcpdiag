@@ -77,7 +77,7 @@ class LogsQuery:
           'log query was\'t executed. did you forget to call execute_queries()?'
       )
     elif self.job.future.running():
-      logging.info(
+      logging.debug(
           'waiting for logs query results (project: %s, resource type: %s)',
           self.job.project_id, self.job.resource_type)
     return self.job.future.result()
@@ -195,8 +195,8 @@ def _execute_query_job(job: _LogsQueryJob):
         '(' + ' OR '.join(['(' + val + ')' for val in sorted(job.filters)]) +
         ')')
   filter_str = '\n'.join(filter_lines)
-  logging.info('searching logs in project %s (resource type: %s)',
-               job.project_id, job.resource_type)
+  logging.debug('searching logs in project %s (resource type: %s)',
+                job.project_id, job.resource_type)
   # Fetch all logs and put the results in temporary storage (diskcache.Deque)
   deque = caching.get_tmp_deque('tmp-logs-')
   req = logging_api.entries().list(
@@ -232,7 +232,7 @@ def _execute_query_job(job: _LogsQueryJob):
       return deque
     req = logging_api.entries().list_next(req, res)
     if req is not None:
-      logging.info(
+      logging.debug(
           'still fetching logs (project: %s, resource type: %s, max wait: %ds)',
           job.project_id, job.resource_type,
           config.get('logging_fetch_max_time_seconds') - run_time)
@@ -259,8 +259,8 @@ def realtime_query(project_id,
                       start_time.isoformat(timespec='seconds'))
   filter_lines.append('timestamp<"%s"' % end_time.isoformat(timespec='seconds'))
   filter_str = '\n'.join(filter_lines)
-  logging.info('searching logs in project %s for logs between %s and %s',
-               project_id, str(start_time), str(end_time))
+  logging.debug('searching logs in project %s for logs between %s and %s',
+                project_id, str(start_time), str(end_time))
   deque = Deque()
   req = logging_api.entries().list(
       body={
@@ -297,9 +297,9 @@ def realtime_query(project_id,
       break
     req = logging_api.entries().list_next(req, res)
     if req is not None:
-      logging.info('still fetching logs (project: %s, max wait: %ds)',
-                   project_id,
-                   config.get('logging_fetch_max_time_seconds') - run_time)
+      logging.debug('still fetching logs (project: %s, max wait: %ds)',
+                    project_id,
+                    config.get('logging_fetch_max_time_seconds') - run_time)
 
   query_end_time = datetime.datetime.now()
   logging.debug('logging query run time: %s, pages: %d, query: %s',
@@ -360,6 +360,6 @@ def exclusions(project_id: str) -> Union[List[LogExclusion], None]:
     req = logging_api.exclusions().list_next(req, res)
     if req is not None:
       # pylint: disable=logging-fstring-interpolation
-      logging.info(f'still fetching log exclusions for project {project_id}')
+      logging.debug(f'still fetching log exclusions for project {project_id}')
       # pylint: enable=logging-fstring-interpolation
   return log_exclusions

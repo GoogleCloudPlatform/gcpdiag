@@ -159,7 +159,7 @@ def get_billing_info(project_id) -> ProjectBillingInfo:
   project_api = apis.get_api('cloudbilling', 'v1', project_id)
   project_id = 'projects/' + project_id if 'projects/' not in project_id else project_id
   query = project_api.projects().getBillingInfo(name=project_id)
-  logging.info('fetching Billing Information for project %s', project_id)
+  logging.debug('fetching Billing Information for project %s', project_id)
   try:
     resource_data = query.execute(num_retries=config.API_RETRIES)
   except googleapiclient.errors.HttpError as err:
@@ -179,7 +179,7 @@ def get_billing_account(project_id: str) -> Optional[BillingAccount]:
   billing_account_api = apis.get_api('cloudbilling', 'v1', project_id)
   query = billing_account_api.billingAccounts().get(
       name=billing_info.billing_account_name)
-  logging.info('fetching Billing Account for project %s', project_id)
+  logging.debug('fetching Billing Account for project %s', project_id)
   try:
     resource_data = query.execute(num_retries=config.API_RETRIES)
   except googleapiclient.errors.HttpError as error:

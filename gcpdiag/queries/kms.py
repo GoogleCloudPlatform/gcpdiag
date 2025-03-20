@@ -64,9 +64,9 @@ def get_crypto_key(key_name: str) -> CryptoKey:
   kms_api = apis.get_api('cloudkms', 'v1', project_id)
   query = kms_api.projects().locations().keyRings().cryptoKeys().get(
       name=key_name)
-  logging.info('fetching KMS Key %s in project %s',
-               utils.extract_value_from_res_name(key_name, 'cryptoKeys'),
-               project_id)
+  logging.debug('fetching KMS Key %s in project %s',
+                utils.extract_value_from_res_name(key_name, 'cryptoKeys'),
+                project_id)
   try:
     resource_data = query.execute(num_retries=config.API_RETRIES)
   except googleapiclient.errors.HttpError as err:

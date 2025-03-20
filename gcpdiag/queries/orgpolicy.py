@@ -83,7 +83,7 @@ def _get_effective_org_policy_all_constraints(
         resource=f'projects/{project_id}', body={'constraint': c}))
 
   all_constraints: Dict[str, PolicyConstraint] = {}
-  logging.info('getting org constraints of %s', project_id)
+  logging.debug('getting org constraints of %s', project_id)
   for req in requests:
     try:
       result = req.execute(num_retries=config.API_RETRIES)
@@ -127,7 +127,7 @@ def get_all_project_org_policies(project_id: str):
   crm_api = apis.get_api('cloudresourcemanager', 'v1', project_id)
   resource = f'projects/{project_id}'
   all_constraints: Dict[str, PolicyConstraint] = {}
-  logging.info('listing org policies of %s', project_id)
+  logging.debug('listing org policies of %s', project_id)
 
   request = crm_api.projects().listOrgPolicies(resource=resource)
 

@@ -1134,7 +1134,7 @@ def _get_effective_firewalls(network: Network):
 
 @caching.cached_api_call(in_memory=True)
 def get_network(project_id: str, network_name: str) -> Network:
-  logging.info('fetching network: %s/%s', project_id, network_name)
+  logging.debug('fetching network: %s/%s', project_id, network_name)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.networks().get(project=project_id, network=network_name)
   response = request.execute(num_retries=config.API_RETRIES)
@@ -1163,7 +1163,7 @@ def get_network_from_url(url: str) -> Network:
 
 @caching.cached_api_call(in_memory=True)
 def get_networks(project_id: str) -> List[Network]:
-  logging.info('fetching network: %s', project_id)
+  logging.debug('fetching network: %s', project_id)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.networks().list(project=project_id)
   response = request.execute(num_retries=config.API_RETRIES)
@@ -1173,7 +1173,7 @@ def get_networks(project_id: str) -> List[Network]:
 @caching.cached_api_call(in_memory=True)
 def get_subnetwork(project_id: str, region: str,
                    subnetwork_name: str) -> Subnetwork:
-  logging.info('fetching network: %s/%s', project_id, subnetwork_name)
+  logging.debug('fetching network: %s/%s', project_id, subnetwork_name)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.subnetworks().get(project=project_id,
                                       region=region,
@@ -1210,7 +1210,7 @@ def _batch_get_subnetworks(
 
 @caching.cached_api_call(in_memory=True)
 def get_routes(project_id: str) -> List[Route]:
-  logging.info('fetching routes: %s', project_id)
+  logging.debug('fetching routes: %s', project_id)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.routes().list(project=project_id)
   response = request.execute(num_retries=config.API_RETRIES)
@@ -1219,7 +1219,7 @@ def get_routes(project_id: str) -> List[Route]:
 
 @caching.cached_api_call(in_memory=True)
 def get_zones(project_id: str) -> List[ManagedZone]:
-  logging.info('fetching DNS zones: %s', project_id)
+  logging.debug('fetching DNS zones: %s', project_id)
   dns = apis.get_api('dns', 'v1beta2', project_id)
   request = dns.managedZones().list(project=project_id)
   response = request.execute(num_retries=config.API_RETRIES)
@@ -1234,7 +1234,7 @@ def get_zones(project_id: str) -> List[ManagedZone]:
 
 @caching.cached_api_call(in_memory=True)
 def get_routers(project_id: str, region: str, network) -> List[Router]:
-  logging.info('fetching routers: %s/%s', project_id, region)
+  logging.debug('fetching routers: %s/%s', project_id, region)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.routers().list(project=project_id,
                                    region=region,
@@ -1245,7 +1245,7 @@ def get_routers(project_id: str, region: str, network) -> List[Router]:
 
 @caching.cached_api_call(in_memory=True)
 def get_router(project_id: str, region: str, network) -> Router:
-  logging.info('fetching routers: %s/%s', project_id, region)
+  logging.debug('fetching routers: %s/%s', project_id, region)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.routers().list(project=project_id,
                                    region=region,
@@ -1257,8 +1257,8 @@ def get_router(project_id: str, region: str, network) -> Router:
 @caching.cached_api_call(in_memory=True)
 def get_router_by_name(project_id: str, region: str,
                        router_name: str) -> Router:
-  logging.info('fetching router list: %s/%s in region %s', project_id,
-               router_name, region)
+  logging.debug('fetching router list: %s/%s in region %s', project_id,
+                router_name, region)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.routers().list(project=project_id, region=region)
   response = request.execute(num_retries=config.API_RETRIES)
@@ -1271,8 +1271,8 @@ def get_router_by_name(project_id: str, region: str,
 @caching.cached_api_call(in_memory=True)
 def nat_router_status(project_id: str, router_name: str,
                       region: str) -> RouterStatus:
-  logging.info('fetching router status: %s/%s in region %s', project_id,
-               router_name, region)
+  logging.debug('fetching router status: %s/%s in region %s', project_id,
+                router_name, region)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.routers().getRouterStatus(project=project_id,
                                               router=router_name,
@@ -1281,16 +1281,16 @@ def nat_router_status(project_id: str, router_name: str,
   if 'result' in str(response):
     return RouterStatus(project_id, response)
   else:
-    logging.info('unable to fetch router status: %s/%s in region %s',
-                 project_id, router_name, region)
+    logging.debug('unable to fetch router status: %s/%s in region %s',
+                  project_id, router_name, region)
     return RouterStatus(project_id, {})
 
 
 @caching.cached_api_call(in_memory=True)
 def get_nat_ip_info(project_id: str, router_name: str,
                     region: str) -> RouterNatIpInfo:
-  logging.info('fetching NAT IP info for router: %s/%s in region %s',
-               project_id, router_name, region)
+  logging.debug('fetching NAT IP info for router: %s/%s in region %s',
+                project_id, router_name, region)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.routers().getNatIpInfo(project=project_id,
                                            router=router_name,
@@ -1299,8 +1299,8 @@ def get_nat_ip_info(project_id: str, router_name: str,
   if 'result' in str(response):
     return RouterNatIpInfo(project_id, response)
   else:
-    logging.info('unable to fetch Nat IP Info for router: %s/%s in region %s',
-                 project_id, router_name, region)
+    logging.debug('unable to fetch Nat IP Info for router: %s/%s in region %s',
+                  project_id, router_name, region)
     return RouterNatIpInfo(project_id, {})
 
 
@@ -1366,7 +1366,7 @@ class Address(models.Resource):
 
 @caching.cached_api_call(in_memory=True)
 def get_addresses(project_id: str) -> List[Address]:
-  logging.info('fetching addresses list: %s', project_id)
+  logging.debug('fetching addresses list: %s', project_id)
   compute = apis.get_api('compute', 'v1', project_id)
   addresses = []
   request = compute.addresses().aggregatedList(project=project_id)
