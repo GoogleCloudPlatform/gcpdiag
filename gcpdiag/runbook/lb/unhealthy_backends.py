@@ -151,7 +151,7 @@ class UnhealthyBackendsStart(runbook.StartStep):
   @property
   def name(self):
     return (f'Analyze unhealthy backends for backend service'
-            f' "{self.backend_service_name}" in region'
+            f' "{self.backend_service_name}" in scope'
             f' "{self.region}".')
 
   def execute(self):
@@ -245,7 +245,7 @@ class CheckVmPerformance(runbook.CompositeStep):
   @property
   def name(self):
     return (f'Check VMs performance for unhealthy backends in backend service'
-            f' "{self.backend_service_name}" in region'
+            f' "{self.backend_service_name}" in scope'
             f' "{self.region}".')
 
   def execute(self):
@@ -309,7 +309,7 @@ class VerifyFirewallRules(runbook.Step):
   @property
   def name(self):
     return (f'Verify firewall rules allow health checks for backend service'
-            f' "{self.backend_service_name}" in region'
+            f' "{self.backend_service_name}" in scope'
             f' "{self.region}".')
 
   def execute(self):
@@ -375,7 +375,7 @@ class ValidateBackendServicePortConfiguration(runbook.Step):
   @property
   def name(self):
     return (f'Validate port configuration for backend service'
-            f' "{self.backend_service_name}" in region'
+            f' "{self.backend_service_name}" in scope'
             f' "{self.region}".')
 
   def execute(self):
@@ -455,7 +455,7 @@ class ValidateBackendServiceProtocolConfiguration(runbook.Step):
   @property
   def name(self):
     return (f'Validate protocol configuration for backend service'
-            f' "{self.backend_service_name}" in region'
+            f' "{self.backend_service_name}" in scope'
             f' "{self.region}".')
 
   def execute(self):
@@ -511,7 +511,7 @@ class VerifyHealthCheckLoggingEnabled(runbook.Gateway):
   @property
   def name(self):
     return (f'Verify health check logging enabled for backend service'
-            f' "{self.backend_service_name}" in region'
+            f' "{self.backend_service_name}" in scope'
             f' "{self.region}".')
 
   def execute(self):
@@ -572,7 +572,7 @@ class AnalyzeLatestHealthCheckLog(runbook.Gateway):
   def name(self):
 
     return (f'Analyze latest health check log for backend service'
-            f' "{self.backend_service_name}" in region'
+            f' "{self.backend_service_name}" in scope'
             f' "{self.region}".')
 
   def execute(self):
@@ -701,7 +701,7 @@ class AnalyzeTimeoutHealthCheckLog(runbook.Step):
   @property
   def name(self):
     return (f'Analyze TIMEOUT health check logs for backend service'
-            f' "{self.backend_service_name}" in region'
+            f' "{self.backend_service_name}" in scope'
             f' "{self.region}".')
 
   def execute(self):
@@ -764,7 +764,7 @@ class AnalyzeUnhealthyHealthCheckLog(runbook.Step):
   @property
   def name(self):
     return (f'Analyze UNHEALTHY health check logs for backend service'
-            f' "{self.backend_service_name}" in region'
+            f' "{self.backend_service_name}" in scope'
             f' "{self.region}".')
 
   def execute(self):
@@ -824,7 +824,7 @@ class AnalyzeUnknownHealthCheckLog(runbook.Step):
   @property
   def name(self):
     return (f'Analyze UNKNOWN health check logs for backend service'
-            f' "{self.backend_service_name}" in region'
+            f' "{self.backend_service_name}" in scope'
             f' "{self.region}".')
 
   def execute(self):
@@ -852,7 +852,7 @@ class CheckPastHealthCheckSuccess(runbook.Step):
   @property
   def name(self):
     return (f'Check past health check success for backend service'
-            f' "{self.backend_service_name}" in region'
+            f' "{self.backend_service_name}" in scope'
             f' "{self.region}".')
 
   def execute(self):
@@ -979,7 +979,7 @@ class UnhealthyBackendsEnd(runbook.EndStep):
           kind=op.CONFIRMATION,
           message=(
               'Are you still experiencing health check issues on the backend'
-              f' service {backend_service_name} in region'
+              f' service {backend_service_name} in scope'
               f' {region}?'),
           choice_msg='Enter an option: ',
       )
