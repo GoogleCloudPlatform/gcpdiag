@@ -2,6 +2,7 @@
 
 [![code analysis badge](https://github.com/GoogleCloudPlatform/gcpdiag/actions/workflows/code-analysis.yml/badge.svg?branch=main&event=push)](https://github.com/GoogleCloudPlatform/gcpdiag/actions/workflows/code-analysis.yml?query=branch%3Amain+event%3Apush)
 [![test badge](https://github.com/GoogleCloudPlatform/gcpdiag/actions/workflows/test.yml/badge.svg?branch=main&event=push)](https://github.com/GoogleCloudPlatform/gcpdiag/actions/workflows/test.yml?query=branch%3Amain+event%3Apush)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/GoogleCloudPlatform/gcpdiag/badge)](https://scorecard.dev/viewer/?uri=github.com/GoogleCloudPlatform/gcpdiag)
 
 **gcpdiag** is a command-line diagnostics tool for GCP customers. It finds
 and helps to fix common issues in Google Cloud Platform projects. It is used to
@@ -131,7 +132,7 @@ to be present).
 
 ## Further Information
 
-See http://gcpdiag.dev for more information:
+See <http://gcpdiag.dev> for more information:
 
 - <a href="https://gcpdiag.dev/docs/">Documentation</a>
 - <a href="https://gcpdiag.dev/rules/">Lint rule descriptions</a>
