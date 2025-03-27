@@ -1,4 +1,4 @@
-name=faulty-opsagent,project_id=gcpdiag-gce3-aaaa,zone=europe-west2-a
+instance_name=faulty-opsagent,project_id=gcpdiag-gce3-aaaa,zone=europe-west2-a
 
 gce/ops-agent: Investigates the necessary GCP components for the proper functioning of the Ops Agent in a VM
 
@@ -169,7 +169,7 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 [INFO]: There are new logs indicating ops agent is exporting serial logs
 
 
-name=faulty-opsagent-no-sa,project_id=gcpdiag-gce3-aaaa,zone=europe-west2-a
+instance_name=faulty-opsagent-no-sa,project_id=gcpdiag-gce3-aaaa,zone=europe-west2-a
 
 gce/ops-agent: Investigates the necessary GCP components for the proper functioning of the Ops Agent in a VM
 
@@ -320,7 +320,7 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 [INFO]: There are new logs indicating ops agent is exporting serial logs
 
 
-name=working-opsagent,project_id=gcpdiag-gce3-aaaa,zone=europe-west2-a
+instance_name=working-opsagent,project_id=gcpdiag-gce3-aaaa,zone=europe-west2-a
 
 gce/ops-agent: Investigates the necessary GCP components for the proper functioning of the Ops Agent in a VM
 

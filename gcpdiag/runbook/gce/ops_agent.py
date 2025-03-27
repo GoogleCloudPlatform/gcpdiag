@@ -60,17 +60,19 @@ class OpsAgent(runbook.DiagnosticTree):
           'help': 'The Project ID containing the VM',
           'required': True
       },
-      flags.NAME: {
+      flags.INSTANCE_NAME: {
           'type': str,
           'help': 'Name of the GCE instance running the Ops Agent',
+          'required': True
       },
-      flags.ID: {
+      flags.INSTANCE_ID: {
           'type': str,
           'help': 'ID of the GCE instance running the Ops Agent',
       },
       flags.ZONE: {
           'type': str,
           'help': 'Zone of the GCE instance running the Ops Agent',
+          'required': True
       },
       flags.START_TIME: {
           'type': datetime,
@@ -128,41 +130,22 @@ class OpsAgentStart(runbook.StartStep):
     project = crm.get_project(op.get(flags.PROJECT_ID))
 
     try:
-      if not op.get(flags.NAME) and not op.get(flags.ID):
-        op.add_skipped(project,
-                       reason='Provide an instance name or id to investigate')
-        return
-
-      if (op.get(flags.NAME) or op.get(flags.ID)) and op.get(flags.ZONE):
-        instance = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
-                                    zone=op.get(flags.ZONE),
-                                    instance_name=op.get(flags.NAME) or
-                                    op.get(flags.ID))
-      elif (op.get(flags.NAME) or op.get(flags.ID)) and not op.get(flags.ZONE):
-        # find the instance if we only know the instance ID or name
-        instances = gce.get_instances(
-            op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
-        if op.get(flags.ID):
-          instance = instances.get(op.get(flags.ID))
-        elif op.get(flags.NAME):
-          instance = None
-          for i in instances.values():
-            if i.name.lower() == op.get(flags.NAME).lower():
-              instance = i
-              break
+      instance = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
+                                  zone=op.get(flags.ZONE),
+                                  instance_name=op.get(flags.INSTANCE_NAME))
     except googleapiclient.errors.HttpError:
       op.add_skipped(
           project,
           reason=('Instance {} does not exist in zone {} or project {}').format(
-              (op.get(flags.NAME) or op.get(flags.ID)), op.get(flags.ZONE),
+              op.get(flags.INSTANCE_NAME), op.get(flags.ZONE),
               op.get(flags.PROJECT_ID)))
     else:
       # Prepare extra parameters.
-      if instance and op.get(flags.NAME):
-        op.put(flags.ID, instance.id)
+      if instance and op.get(flags.INSTANCE_NAME):
+        op.put(flags.INSTANCE_ID, instance.id)
 
-      if instance and op.get(flags.ID):
-        op.put(flags.NAME, instance.name)
+      if instance and op.get(flags.INSTANCE_ID):
+        op.put(flags.INSTANCE_NAME, instance.name)
 
 
 class VmHasAServiceAccount(runbook.Step):
@@ -179,7 +162,7 @@ class VmHasAServiceAccount(runbook.Step):
     """Verify Ops Agent has a service account."""
     instance = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                                 zone=op.get(flags.ZONE),
-                                instance_name=op.get(flags.NAME))
+                                instance_name=op.get(flags.INSTANCE_NAME))
 
     if not op.get(GAC_SERVICE_ACCOUNT):
       if instance.service_account:
@@ -244,7 +227,7 @@ class InvestigateLoggingMonitoring(runbook.Gateway):
       logging_access_scope = gce_gs.VmScope()
       logging_access_scope.project_id = op.get(flags.PROJECT_ID)
       logging_access_scope.zone = op.get(flags.ZONE)
-      logging_access_scope.instance_name = op.get(flags.NAME)
+      logging_access_scope.instance_name = op.get(flags.INSTANCE_NAME)
       logging_access_scope.access_scopes = {
           'https://www.googleapis.com/auth/logging.write',
           'https://www.googleapis.com/auth/cloud-platform',
@@ -255,8 +238,8 @@ class InvestigateLoggingMonitoring(runbook.Gateway):
       logging_subagent_check = gce_gs.VmHasOpsAgent()
       logging_subagent_check.project_id = op.get(flags.PROJECT_ID)
       logging_subagent_check.zone = op.get(flags.ZONE)
-      logging_subagent_check.instance_name = op.get(flags.NAME)
-      logging_subagent_check.instance_id = op.get(flags.ID)
+      logging_subagent_check.instance_name = op.get(flags.INSTANCE_NAME)
+      logging_subagent_check.instance_id = op.get(flags.INSTANCE_ID)
       logging_subagent_check.start_time = op.get(flags.START_TIME)
       logging_subagent_check.end_time = op.get(flags.END_TIME)
       logging_subagent_check.check_logging = True
@@ -284,7 +267,7 @@ class InvestigateLoggingMonitoring(runbook.Gateway):
       monitoring_access_scope = gce_gs.VmScope()
       monitoring_access_scope.project_id = op.get(flags.PROJECT_ID)
       monitoring_access_scope.zone = op.get(flags.ZONE)
-      monitoring_access_scope.instance_name = op.get(flags.NAME)
+      monitoring_access_scope.instance_name = op.get(flags.INSTANCE_NAME)
       monitoring_access_scope.access_scopes = {
           'https://www.googleapis.com/auth/monitoring.write',
           'https://www.googleapis.com/auth/cloud-platform',
@@ -295,8 +278,8 @@ class InvestigateLoggingMonitoring(runbook.Gateway):
       metric_subagent_check = gce_gs.VmHasOpsAgent()
       metric_subagent_check.project_id = op.get(flags.PROJECT_ID)
       metric_subagent_check.zone = op.get(flags.ZONE)
-      metric_subagent_check.instance_name = op.get(flags.NAME)
-      metric_subagent_check.instance_id = op.get(flags.ID)
+      metric_subagent_check.instance_name = op.get(flags.INSTANCE_NAME)
+      metric_subagent_check.instance_id = op.get(flags.INSTANCE_ID)
       metric_subagent_check.start_time = op.get(flags.START_TIME)
       metric_subagent_check.end_time = op.get(flags.END_TIME)
       metric_subagent_check.check_logging = False
@@ -321,7 +304,7 @@ class CheckSerialPortLogging(runbook.CompositeStep):
     serial_logging_md_check = gce_gs.VmMetadataCheck()
     serial_logging_md_check.project_id = op.get(flags.PROJECT_ID)
     serial_logging_md_check.zone = op.get(flags.ZONE)
-    serial_logging_md_check.instance_name = op.get(flags.NAME)
+    serial_logging_md_check.instance_name = op.get(flags.INSTANCE_NAME)
     serial_logging_md_check.metadata_key = 'serial-port-logging-enable'
     serial_logging_md_check.expected_value = True
     self.add_child(serial_logging_md_check)
@@ -350,7 +333,7 @@ class OpsAgentEnd(runbook.EndStep):
                         log_name="projects/{}/logs/ops-agent-health"
                         resource.labels.instance_id="{}" AND
                         "LogPingOpsAgent"'''.format(op.get(flags.PROJECT_ID),
-                                                    op.get(flags.ID)),
+                                                    op.get(flags.INSTANCE_ID)),
           start_time=op.get(flags.END_TIME),
           end_time=datetime.now())
       if serial_log_entries:
@@ -368,7 +351,7 @@ class OpsAgentEnd(runbook.EndStep):
                 | every 1m
                 | group_by [resource.instance_id, metric.version],
                     [value_uptime_aggregate: aggregate(value.uptime)]
-              """.format(op.get(flags.ID)))
+              """.format(op.get(flags.INSTANCE_ID)))
 
       for entry in ops_agent_uptime.values():
         version = get_path(entry, ('labels', 'metric.version'), '')
@@ -382,6 +365,7 @@ class OpsAgentEnd(runbook.EndStep):
         response = op.prompt(
             kind=op.CONFIRMATION,
             message=
-            f'Is your ops agent issues resolved for "{op.get(flags.NAME)}?"')
+            f'Is your ops agent issues resolved for "{op.get(flags.INSTANCE_NAME)}?"'
+        )
         if response == op.NO:
           op.info(message=op.END_MESSAGE)
