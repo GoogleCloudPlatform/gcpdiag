@@ -1,0 +1,340 @@
+{
+  "id": "projects/gcpdiag-gce6-aaaa/zones/us-central1-c/instances",
+  "items": [
+    {
+      "cpuPlatform": "Intel Broadwell",
+      "creationTimestamp": "2025-03-27T19:22:44.707-07:00",
+      "deletionProtection": false,
+      "disks": [
+        {
+          "architecture": "X86_64",
+          "autoDelete": true,
+          "boot": true,
+          "deviceName": "persistent-disk-0",
+          "diskSizeGb": "10",
+          "guestOsFeatures": [
+            {
+              "type": "UEFI_COMPATIBLE"
+            },
+            {
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "GVNIC"
+            }
+          ],
+          "index": 0,
+          "interface": "SCSI",
+          "kind": "compute#attachedDisk",
+          "licenses": [
+            "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-11-bullseye"
+          ],
+          "mode": "READ_WRITE",
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c/disks/apache-instance-7b70",
+          "type": "PERSISTENT"
+        }
+      ],
+      "fingerprint": "REDACTED",
+      "id": "6199621613681096987",
+      "kind": "compute#instance",
+      "labelFingerprint": "vezUS-42LLM=",
+      "labels": {
+        "goog-terraform-provisioned": "true"
+      },
+      "lastStartTimestamp": "2025-03-27T20:16:56.742-07:00",
+      "lastStopTimestamp": "2025-03-27T20:16:38.411-07:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c/machineTypes/e2-micro",
+      "metadata": {
+        "fingerprint": "REDACTED",
+        "items": [
+          {
+            "key": "instance-template",
+            "value": "projects/1234560123456/global/instanceTemplates/apache-instance-template"
+          },
+          {
+            "key": "created-by",
+            "value": "projects/1234560123456/zones/us-central1-c/instanceGroupManagers/apache-mig-timeout"
+          }
+        ],
+        "kind": "compute#metadata"
+      },
+      "name": "apache-instance-7b70",
+      "networkInterfaces": [
+        {
+          "accessConfigs": [
+            {
+              "kind": "compute#accessConfig",
+              "name": "external-nat",
+              "natIP": "104.198.226.122",
+              "networkTier": "PREMIUM",
+              "type": "ONE_TO_ONE_NAT"
+            }
+          ],
+          "fingerprint": "REDACTED",
+          "kind": "compute#networkInterface",
+          "name": "nic0",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/global/networks/default",
+          "networkIP": "10.128.0.4",
+          "stackType": "IPV4_ONLY",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/regions/us-central1/subnetworks/default"
+        }
+      ],
+      "satisfiesPzi": true,
+      "scheduling": {
+        "automaticRestart": true,
+        "onHostMaintenance": "MIGRATE",
+        "preemptible": false,
+        "provisioningModel": "STANDARD"
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c/instances/apache-instance-7b70",
+      "shieldedInstanceConfig": {
+        "enableIntegrityMonitoring": true,
+        "enableSecureBoot": false,
+        "enableVtpm": true
+      },
+      "shieldedInstanceIntegrityPolicy": {
+        "updateAutoLearnPolicy": true
+      },
+      "startRestricted": false,
+      "status": "RUNNING",
+      "tags": {
+        "fingerprint": "REDACTED"
+      },
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c"
+    },
+    {
+      "cpuPlatform": "Intel Broadwell",
+      "creationTimestamp": "2025-03-27T19:22:44.414-07:00",
+      "deletionProtection": false,
+      "disks": [
+        {
+          "architecture": "X86_64",
+          "autoDelete": true,
+          "boot": true,
+          "deviceName": "persistent-disk-0",
+          "diskSizeGb": "10",
+          "guestOsFeatures": [
+            {
+              "type": "UEFI_COMPATIBLE"
+            },
+            {
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "GVNIC"
+            }
+          ],
+          "index": 0,
+          "interface": "SCSI",
+          "kind": "compute#attachedDisk",
+          "licenses": [
+            "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-11-bullseye"
+          ],
+          "mode": "READ_WRITE",
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c/disks/apache-instance-bnb7",
+          "type": "PERSISTENT"
+        }
+      ],
+      "fingerprint": "REDACTED",
+      "id": "8213709800874948891",
+      "kind": "compute#instance",
+      "labelFingerprint": "vezUS-42LLM=",
+      "labels": {
+        "goog-terraform-provisioned": "true"
+      },
+      "lastStartTimestamp": "2025-03-27T19:23:04.083-07:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c/machineTypes/e2-micro",
+      "metadata": {
+        "fingerprint": "REDACTED",
+        "items": [
+          {
+            "key": "instance-template",
+            "value": "projects/1234560123456/global/instanceTemplates/apache-instance-template"
+          },
+          {
+            "key": "created-by",
+            "value": "projects/1234560123456/zones/us-central1-c/instanceGroupManagers/apache-mig-timeout"
+          }
+        ],
+        "kind": "compute#metadata"
+      },
+      "name": "apache-instance-bnb7",
+      "networkInterfaces": [
+        {
+          "accessConfigs": [
+            {
+              "kind": "compute#accessConfig",
+              "name": "external-nat",
+              "natIP": "34.66.230.36",
+              "networkTier": "PREMIUM",
+              "type": "ONE_TO_ONE_NAT"
+            }
+          ],
+          "fingerprint": "REDACTED",
+          "kind": "compute#networkInterface",
+          "name": "nic0",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/global/networks/default",
+          "networkIP": "10.128.0.3",
+          "stackType": "IPV4_ONLY",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/regions/us-central1/subnetworks/default"
+        }
+      ],
+      "satisfiesPzi": true,
+      "scheduling": {
+        "automaticRestart": true,
+        "onHostMaintenance": "MIGRATE",
+        "preemptible": false,
+        "provisioningModel": "STANDARD"
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c/instances/apache-instance-bnb7",
+      "shieldedInstanceConfig": {
+        "enableIntegrityMonitoring": true,
+        "enableSecureBoot": false,
+        "enableVtpm": true
+      },
+      "shieldedInstanceIntegrityPolicy": {
+        "updateAutoLearnPolicy": true
+      },
+      "startRestricted": false,
+      "status": "RUNNING",
+      "tags": {
+        "fingerprint": "REDACTED"
+      },
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c"
+    },
+    {
+      "canIpForward": false,
+      "cpuPlatform": "Intel Haswell",
+      "creationTimestamp": "2025-03-27T19:27:15.933-07:00",
+      "deletionProtection": false,
+      "disks": [
+        {
+          "architecture": "X86_64",
+          "autoDelete": true,
+          "boot": true,
+          "deviceName": "persistent-disk-0",
+          "diskSizeGb": "10",
+          "guestOsFeatures": [
+            {
+              "type": "VIRTIO_SCSI_MULTIQUEUE"
+            },
+            {
+              "type": "SEV_CAPABLE"
+            },
+            {
+              "type": "SEV_SNP_CAPABLE"
+            },
+            {
+              "type": "SEV_LIVE_MIGRATABLE"
+            },
+            {
+              "type": "SEV_LIVE_MIGRATABLE_V2"
+            },
+            {
+              "type": "IDPF"
+            },
+            {
+              "type": "TDX_CAPABLE"
+            },
+            {
+              "type": "UEFI_COMPATIBLE"
+            },
+            {
+              "type": "GVNIC"
+            }
+          ],
+          "index": 0,
+          "interface": "SCSI",
+          "kind": "compute#attachedDisk",
+          "licenses": [
+            "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/licenses/ubuntu-2204-lts"
+          ],
+          "mode": "READ_WRITE",
+          "shieldedInstanceInitialState": {
+            "dbxs": [
+              {
+                "content": "REDACTED",
+                "fileType": "BIN"
+              }
+            ]
+          },
+          "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c/disks/existing-instance",
+          "type": "PERSISTENT"
+        }
+      ],
+      "fingerprint": "REDACTED",
+      "id": "4912196469396322285",
+      "kind": "compute#instance",
+      "labelFingerprint": "vezUS-42LLM=",
+      "labels": {
+        "goog-terraform-provisioned": "true"
+      },
+      "lastStartTimestamp": "2025-03-27T19:27:31.080-07:00",
+      "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c/machineTypes/f1-micro",
+      "metadata": {
+        "fingerprint": "REDACTED",
+        "items": [
+          {
+            "key": "startup-script",
+            "value": "# Fetch instance name and zone from metadata server\nINSTANCE_NAME=$(curl -H \"Metadata-Flavor: Google\" -s http://metadata.google.internal/computeMetadata/v1/instance/name)\nZONE=$(curl -H \"Metadata-Flavor: Google\" -s http://metadata.google.internal/computeMetadata/v1/instance/zone | awk -F'/' '{print $NF}')\n\n# create another instance with the same VM details\necho \"0 * * * * gcloud compute instances create $INSTANCE_NAME --zone=$ZONE\" | crontab -\n"
+          }
+        ],
+        "kind": "compute#metadata"
+      },
+      "name": "existing-instance",
+      "networkInterfaces": [
+        {
+          "accessConfigs": [
+            {
+              "kind": "compute#accessConfig",
+              "name": "external-nat",
+              "natIP": "35.184.107.186",
+              "networkTier": "PREMIUM",
+              "type": "ONE_TO_ONE_NAT"
+            }
+          ],
+          "fingerprint": "REDACTED",
+          "kind": "compute#networkInterface",
+          "name": "nic0",
+          "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/global/networks/default",
+          "networkIP": "10.128.0.5",
+          "stackType": "IPV4_ONLY",
+          "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/regions/us-central1/subnetworks/default"
+        }
+      ],
+      "satisfiesPzi": true,
+      "scheduling": {
+        "automaticRestart": true,
+        "onHostMaintenance": "MIGRATE",
+        "preemptible": false,
+        "provisioningModel": "STANDARD"
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c/instances/existing-instance",
+      "serviceAccounts": [
+        {
+          "email": "no-compute-perm-sa@gcpdiag-gce6-aaaa.iam.gserviceaccount.com",
+          "scopes": [
+            "https://www.googleapis.com/auth/cloud-platform"
+          ]
+        }
+      ],
+      "shieldedInstanceConfig": {
+        "enableIntegrityMonitoring": true,
+        "enableSecureBoot": true,
+        "enableVtpm": true
+      },
+      "shieldedInstanceIntegrityPolicy": {
+        "updateAutoLearnPolicy": true
+      },
+      "startRestricted": false,
+      "status": "RUNNING",
+      "tags": {
+        "fingerprint": "REDACTED"
+      },
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c"
+    }
+  ],
+  "kind": "compute#instanceList",
+  "nextPageToken": "CkYIjoas7OmrjAM6OwoCGAMKAyDSDwoCGAIKByCxvNLnuRIKAhgHChMqEWV4aXN0aW5nLWluc3RhbmNlCgog7e-uypuV6JVE",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c/instances"
+}

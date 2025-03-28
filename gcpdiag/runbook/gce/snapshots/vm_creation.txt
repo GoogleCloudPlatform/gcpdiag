@@ -1,0 +1,46 @@
+instance_name=existing-instance,project_id=gcpdiag-gce6-aaaa,zone=us-central1-c
+
+gce/vm-creation: Runbook for diagnosing VM creation issues.
+
+    This runbook helps identify and resolve issues related to VM creation in Google Cloud.
+
+    - Checks for quota-related issues.
+    - Checks for permission-related issues.
+    - Checks for conflicts such as resource already existing.
+  
+[START]: Executing default start step for runbooks.
+[GATEWAY]: Query logs to determine the cause of VM creation failure.
+
+   - gcpdiag-gce6-aaaa                                                    [FAIL]
+     [REASON]
+     Required 'compute.instances.create' permission for 'projects/gcpdiag-gce6-aaaa/zones/us-central1-c/instances/existing-instance'
+
+     [REMEDIATION]
+     Grant the missing permission to be able to create an instance <https://cloud.google.com/compute/docs/instances/create-start-instance#expandable-1>
+
+[END]: Finalize runbook investigations.
+
+
+instance_name=non-existing-gpu-instance,project_id=gcpdiag-gce6-aaaa,zone=us-central1-c
+
+gce/vm-creation: Runbook for diagnosing VM creation issues.
+
+    This runbook helps identify and resolve issues related to VM creation in Google Cloud.
+
+    - Checks for quota-related issues.
+    - Checks for permission-related issues.
+    - Checks for conflicts such as resource already existing.
+  
+[START]: Executing default start step for runbooks.
+[GATEWAY]: Query logs to determine the cause of VM creation failure.
+
+   - gcpdiag-gce6-aaaa                                                    [FAIL]
+     [REASON]
+     Required 'compute.instances.create' permission for 'projects/gcpdiag-gce6-aaaa/zones/us-central1-c/instances/existing-instance'
+
+     [REMEDIATION]
+     Grant the missing permission to be able to create an instance <https://cloud.google.com/compute/docs/instances/create-start-instance#expandable-1>
+
+[END]: Finalize runbook investigations.
+
+

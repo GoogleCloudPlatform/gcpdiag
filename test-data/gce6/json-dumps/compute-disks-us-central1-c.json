@@ -1,0 +1,198 @@
+{
+  "kind": "compute#diskList",
+  "id": "projects/gcpdiag-gce6-aaaa/zones/us-central1-c/disks",
+  "items": [
+    {
+      "kind": "compute#disk",
+      "id": "3842325145369422477",
+      "creationTimestamp": "2025-03-27T20:15:46.925-07:00",
+      "name": "apache-instance-7b70",
+      "sizeGb": "10",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c/disks/apache-instance-7b70",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-11-bullseye-v20250311",
+      "sourceImageId": "6139874332219611556",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c/diskTypes/pd-standard",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-11-bullseye"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "GVNIC"
+        }
+      ],
+      "lastAttachTimestamp": "2025-03-27T20:16:43.101-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c/instances/apache-instance-7b70"
+      ],
+      "labelFingerprint": "42WmSpB8rSM=",
+      "licenseCodes": [
+        "3853522013536123851"
+      ],
+      "physicalBlockSizeBytes": "4096",
+      "enableConfidentialCompute": false,
+      "architecture": "X86_64"
+    },
+    {
+      "kind": "compute#disk",
+      "id": "1899967056662214939",
+      "creationTimestamp": "2025-03-27T19:22:44.425-07:00",
+      "name": "apache-instance-bnb7",
+      "sizeGb": "10",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c/disks/apache-instance-bnb7",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/images/debian-11-bullseye-v20250311",
+      "sourceImageId": "6139874332219611556",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c/diskTypes/pd-standard",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-11-bullseye"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "GVNIC"
+        }
+      ],
+      "lastAttachTimestamp": "2025-03-27T19:22:45.277-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c/instances/apache-instance-bnb7"
+      ],
+      "labelFingerprint": "42WmSpB8rSM=",
+      "licenseCodes": [
+        "3853522013536123851"
+      ],
+      "physicalBlockSizeBytes": "4096",
+      "enableConfidentialCompute": false,
+      "satisfiesPzi": true,
+      "architecture": "X86_64"
+    },
+    {
+      "kind": "compute#disk",
+      "id": "8346470418270107629",
+      "creationTimestamp": "2025-03-27T19:27:15.942-07:00",
+      "name": "existing-instance",
+      "sizeGb": "10",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c/disks/existing-instance",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/ubuntu-2204-jammy-v20250312",
+      "sourceImageId": "6817663366014267458",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c/diskTypes/pd-standard",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/licenses/ubuntu-2204-lts"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "SEV_CAPABLE"
+        },
+        {
+          "type": "SEV_SNP_CAPABLE"
+        },
+        {
+          "type": "SEV_LIVE_MIGRATABLE"
+        },
+        {
+          "type": "SEV_LIVE_MIGRATABLE_V2"
+        },
+        {
+          "type": "IDPF"
+        },
+        {
+          "type": "TDX_CAPABLE"
+        },
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "GVNIC"
+        }
+      ],
+      "lastAttachTimestamp": "2025-03-27T19:27:17.008-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c/instances/existing-instance"
+      ],
+      "labelFingerprint": "42WmSpB8rSM=",
+      "licenseCodes": [
+        "5511465778777431107"
+      ],
+      "physicalBlockSizeBytes": "4096",
+      "enableConfidentialCompute": false,
+      "satisfiesPzi": true,
+      "architecture": "X86_64"
+    },
+    {
+      "kind": "compute#disk",
+      "id": "9013476464221990385",
+      "creationTimestamp": "2025-03-27T20:10:22.326-07:00",
+      "name": "gpu-instance-creator",
+      "sizeGb": "10",
+      "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c",
+      "status": "READY",
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c/disks/gpu-instance-creator",
+      "sourceImage": "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/images/ubuntu-2204-jammy-v20250312",
+      "sourceImageId": "6817663366014267458",
+      "type": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c/diskTypes/pd-standard",
+      "licenses": [
+        "https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/licenses/ubuntu-2204-lts"
+      ],
+      "guestOsFeatures": [
+        {
+          "type": "VIRTIO_SCSI_MULTIQUEUE"
+        },
+        {
+          "type": "SEV_CAPABLE"
+        },
+        {
+          "type": "SEV_SNP_CAPABLE"
+        },
+        {
+          "type": "SEV_LIVE_MIGRATABLE"
+        },
+        {
+          "type": "SEV_LIVE_MIGRATABLE_V2"
+        },
+        {
+          "type": "IDPF"
+        },
+        {
+          "type": "TDX_CAPABLE"
+        },
+        {
+          "type": "UEFI_COMPATIBLE"
+        },
+        {
+          "type": "GVNIC"
+        }
+      ],
+      "lastAttachTimestamp": "2025-03-27T20:10:23.041-07:00",
+      "users": [
+        "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c/instances/gpu-instance-creator"
+      ],
+      "labelFingerprint": "42WmSpB8rSM=",
+      "licenseCodes": [
+        "5511465778777431107"
+      ],
+      "physicalBlockSizeBytes": "4096",
+      "enableConfidentialCompute": false,
+      "satisfiesPzi": true,
+      "architecture": "X86_64"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/zones/us-central1-c/disks"
+}
