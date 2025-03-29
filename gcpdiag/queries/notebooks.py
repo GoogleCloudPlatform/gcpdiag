@@ -105,7 +105,7 @@ class Instance(models.Resource):
 
   @property
   def name(self) -> str:
-    logging.info(self._resource_data)
+    logging.debug(self._resource_data)
     return self._resource_data[NAME_KEY]
 
 
@@ -143,7 +143,7 @@ class Runtime(models.Resource):
 
   @property
   def name(self) -> str:
-    logging.info(self._resource_data)
+    logging.debug(self._resource_data)
     return self._resource_data[NAME_KEY]
 
   @property
@@ -286,7 +286,7 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
   instances: Dict[str, Instance] = {}
   if not apis.is_enabled(context.project_id, 'notebooks'):
     return instances
-  logging.info(
+  logging.debug(
       'fetching list of Vertex AI Workbench notebook instances in project %s',
       context.project_id)
   notebooks_api = apis.get_api('notebooks', 'v1', context.project_id)
@@ -323,7 +323,7 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
 
 @caching.cached_api_call
 def _get_instance_health(context: models.Context, name: str) -> dict:
-  logging.info(
+  logging.debug(
       'fetching Vertex AI user-managed notebook instance health state in '
       'project %s', context.project_id)
   notebooks_api = apis.get_api('notebooks', 'v1', context.project_id)
@@ -367,7 +367,7 @@ def instance_is_upgradeable(
   if not notebook_instance:
     logging.error('notebookInstance not provided')
     return is_upgradeable
-  logging.info(
+  logging.debug(
       'fetching Vertex AI user-managed notebook instance is upgradeable in project %s',
       context.project_id)
   notebooks_api = apis.get_api('notebooks', 'v1', context.project_id)
@@ -391,7 +391,7 @@ def get_runtimes(context: models.Context) -> Mapping[str, Runtime]:
   runtimes: Dict[str, Runtime] = {}
   if not apis.is_enabled(context.project_id, 'notebooks'):
     return runtimes
-  logging.info(
+  logging.debug(
       'fetching list of Vertex AI Workbench managed notebook runtimes in project %s',
       context.project_id)
   notebooks_api = apis.get_api('notebooks', 'v1', context.project_id)
@@ -460,7 +460,7 @@ def workbench_instance_check_upgradability(
   if not workbench_instance_name:
     logging.error('Workbench Instance name not provided')
     return check_upgradability
-  logging.info(
+  logging.debug(
       'fetching Vertex AI Workbench Instance is upgradeable in project %s',
       project_id)
   notebooks_api = apis.get_api('notebooks', 'v2', project_id)

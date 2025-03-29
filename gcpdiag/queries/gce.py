@@ -24,6 +24,7 @@ from datetime import datetime, timezone
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Set
 
 import googleapiclient.errors
+from boltons.iterutils import get_path
 
 from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis, apis_utils, crm
@@ -245,6 +246,11 @@ class ManagedInstanceGroup(models.Resource):
       )
     return templates[template_self_link]
 
+  @property
+  def version_target_reached(self) -> bool:
+    return get_path(self._resource_data,
+                    ('status', 'versionTarget', 'isReached'))
+
 
 class SerialPortOutput:
   """Represents the full Serial Port Output (/dev/ttyS0 or COM1) of an instance.
@@ -383,6 +389,24 @@ class Instance(models.Resource):
     return ('scheduling' in self._resource_data and
             'preemptible' in self._resource_data['scheduling'] and
             self._resource_data['scheduling']['preemptible'])
+
+  @property
+  def created_by_mig(self) -> bool:
+    """Return bool indicating if the instance part of a mig.
+
+    MIG which were part of MIG however have been removed or terminated will return True.
+    """
+    created_by = self.get_metadata('created-by')
+    if created_by is None:
+      return False
+
+    created_by_match = re.match(
+        r'projects/([^/]+)/((?:regions|zones)/[^/]+/instanceGroupManagers/[^/]+)$',
+        created_by,
+    )
+    if not created_by_match:
+      return False
+    return True
 
   def is_windows_machine(self) -> bool:
     if 'disks' in self._resource_data:
@@ -669,7 +693,7 @@ class Disk(models.Resource):
 def get_gce_zones(project_id: str) -> Set[str]:
   try:
     gce_api = apis.get_api('compute', 'v1', project_id)
-    logging.info('listing gce zones of project %s', project_id)
+    logging.debug('listing gce zones of project %s', project_id)
     request = gce_api.zones().list(project=project_id)
     response = request.execute(num_retries=config.API_RETRIES)
     if not response or 'items' not in response:
@@ -683,7 +707,7 @@ def get_gce_public_licences(project_id: str) -> List[str]:
   """Returns a list of licenses based on publicly available image project"""
   licenses = []
   gce_api = apis.get_api('compute', 'v1', project_id)
-  logging.info('listing licenses of project %s', project_id)
+  logging.debug('listing licenses of project %s', project_id)
   request = gce_api.licenses().list(project=project_id)
   while request is not None:
     response = request.execute()
@@ -716,8 +740,8 @@ def get_global_operations(
 ) -> List[Dict[str, Any]]:
   """Returns global operations object matching project id."""
   compute = apis.get_api('compute', 'v1', project)
-  logging.info(('searching compute global operations'
-                'logs in project %s with filter %s'), project, filter_str)
+  logging.debug(('searching compute global operations'
+                 'logs in project %s with filter %s'), project, filter_str)
   operations: List[Dict[str, Any]] = []
   request = compute.globalOperations().aggregatedList(
       project=project,
@@ -758,7 +782,7 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
   gce_api = apis.get_api('compute', 'v1', context.project_id)
   request = gce_api.instances().aggregatedList(project=context.project_id,
                                                returnPartialSuccess=True)
-  logging.info('listing gce instances of project %s', context.project_id)
+  logging.debug('listing gce instances of project %s', context.project_id)
   while request:  # Continue as long as there are pages
     response = request.execute(num_retries=config.API_RETRIES)
     instances_by_zones = response.get('items', {})
@@ -801,7 +825,7 @@ def get_instance_groups(context: models.Context) -> Mapping[str, InstanceGroup]:
   gce_api = apis.get_api('compute', 'v1', context.project_id)
   request = gce_api.instanceGroups().aggregatedList(project=context.project_id,
                                                     returnPartialSuccess=True)
-  logging.info('listing gce instance groups of project %s', context.project_id)
+  logging.debug('listing gce instance groups of project %s', context.project_id)
   while request:  # Continue as long as there are pages
     response = request.execute(num_retries=config.API_RETRIES)
     groups_by_zones = response.get('items', {})
@@ -844,8 +868,8 @@ def get_managed_instance_groups(
   gce_api = apis.get_api('compute', 'v1', context.project_id)
   request = gce_api.instanceGroupManagers().aggregatedList(
       project=context.project_id, returnPartialSuccess=True)
-  logging.info('listing zonal managed instance groups of project %s',
-               context.project_id)
+  logging.debug('listing zonal managed instance groups of project %s',
+                context.project_id)
   while request:  # Continue as long as there are pages
     response = request.execute(num_retries=config.API_RETRIES)
     migs_by_zones = response.get('items', {})
@@ -891,7 +915,7 @@ def get_region_managed_instance_groups(
                                                  region=r.name)
       for r in get_all_regions(context.project_id)
   ]
-  logging.info(
+  logging.debug(
       'listing regional managed instance groups of project %s',
       context.project_id,
   )
@@ -942,7 +966,7 @@ def get_instance_templates(project_id: str) -> Mapping[str, InstanceTemplate]:
 @caching.cached_api_call
 def get_project_metadata(project_id) -> Mapping[str, str]:
   gce_api = apis.get_api('compute', 'v1', project_id)
-  logging.info('fetching metadata of project %s\n', project_id)
+  logging.debug('fetching metadata of project %s\n', project_id)
   query = gce_api.projects().get(project=project_id)
   try:
     response = query.execute(num_retries=config.API_RETRIES)
@@ -1155,7 +1179,7 @@ def get_all_disks(project_id: str) -> Iterable[Disk]:
         gce_api.disks().list(project=project_id, zone=zone)
         for zone in get_gce_zones(project_id)
     ]
-    logging.info('listing gce disks of project %s', project_id)
+    logging.debug('listing gce disks of project %s', project_id)
     items = apis_utils.multi_list_all(
         requests=requests,
         next_function=gce_api.disks().list_next,
@@ -1174,7 +1198,7 @@ def get_all_disks_of_instance(project_id: str, zone: str,
   try:
     gce_api = apis.get_api('compute', 'v1', project_id)
     requests = [gce_api.disks().list(project=project_id, zone=zone)]
-    logging.info(
+    logging.debug(
         'listing gce disks attached to instance %s in project %s',
         instance_name,
         project_id,
@@ -1265,7 +1289,7 @@ class SerialOutputQuery:
       raise RuntimeError("Fetching serial logs wasn't executed. did you call"
                          ' execute_get_serial_port_output()?')
     elif self.job.future.running():
-      logging.info(
+      logging.debug(
           'waiting for serial output results for project: %s',
           self.job.context.project_id,
       )
@@ -1393,7 +1417,7 @@ class HealthCheck(models.Resource):
 def get_health_check(project_id: str,
                      health_check: str,
                      region: str = None) -> object:
-  logging.info('fetching health check: %s', health_check)
+  logging.debug('fetching health check: %s', health_check)
   compute = apis.get_api('compute', 'v1', project_id)
   if not region:
     request = compute.healthChecks().get(project=project_id,
@@ -1456,8 +1480,8 @@ def get_zonal_network_endpoint_groups(
                                            zone=zone)
       for zone in get_gce_zones(context.project_id)
   ]
-  logging.info('listing gce networkEndpointGroups of project %s',
-               context.project_id)
+  logging.debug('listing gce networkEndpointGroups of project %s',
+                context.project_id)
   items = apis_utils.multi_list_all(
       requests=requests,
       next_function=gce_api.networkEndpointGroups().list_next,

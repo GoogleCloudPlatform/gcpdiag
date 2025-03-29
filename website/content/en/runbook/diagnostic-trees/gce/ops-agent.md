@@ -33,8 +33,8 @@ This runbook will examine the following key areas:
 ```shell
 gcpdiag runbook gce/ops-agent \
   -p project_id=value \
-  -p name=value \
-  -p id=value \
+  -p instance_name=value \
+  -p instance_id=value \
   -p zone=value \
   -p start_time=value \
   -p end_time=value \
@@ -49,9 +49,9 @@ gcpdiag runbook gce/ops-agent \
 | Name | Required | Default | Type | Help |
 |------|----------|---------|------|------|
 | `project_id` | True | None | str | The Project ID containing the VM |
-| `name` | False | None | str | Name of the GCE instance running the Ops Agent |
-| `id` | False | None | str | ID of the GCE instance running the Ops Agent |
-| `zone` | False | None | str | Zone of the GCE instance running the Ops Agent |
+| `instance_name` | True | None | str | Name of the GCE instance running the Ops Agent |
+| `instance_id` | False | None | str | ID of the GCE instance running the Ops Agent |
+| `zone` | True | None | str | Zone of the GCE instance running the Ops Agent |
 | `start_time` | False | None | datetime | Start time of the issue |
 | `end_time` | False | None | datetime | End time of the issue |
 | `gac_service_account` | False | None | str | GOOGLE_APPLICATION_CREDENTIALS used by ops agent, if applicable |

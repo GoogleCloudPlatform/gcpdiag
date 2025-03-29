@@ -1,6 +1,25 @@
-{% block vm_termination_rca %}
-{% for method in termination_details %}
-{% if method == 'compute.instances.hostError' %}
+---
+title: "gce/Host Error"
+linkTitle: "Host Error"
+weight: 3
+type: docs
+description: >
+  Investigate the cause of a host error
+---
+
+**Product**: [Compute Engine](https://cloud.google.com/compute)\
+**Step Type**: AUTOMATED STEP
+
+### Description
+
+Host errors should be rare. This step provides insights into the root cause of the issue.
+
+### Failure Reason
+
+{status_message}
+
+### Failure Remediation
+
 A host error (compute.instances.hostError) means that there was a hardware or software issue
 on the physical machine hosting your VM that caused your VM to crash. A host error which
 involves total hardware/software failure might prevent a live migration of your VM. If
@@ -67,55 +86,12 @@ log_id("cloudaudit.googleapis.com/system_event")
 Resources:
 [1]
 <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-reboots#:~:text=Getting%20support.-,Method,compute.instances.hostError,-System%20event>
-{% endif %}
-{% if method == 'compute.instances.preempted' %}
-The following instance(s) were preempted as part of a spot VM normal process.
 
-Spot VMs have significant discounts, but Compute Engine might preemptively stop or delete
-(preempt) Spot VMs to reclaim capacity at any time.
 
-Read more on here the preemption process occurs here [1]
 
-[1] <https://cloud.google.com/compute/docs/instances/spot#preemption>
-<https://cloud.google.com/compute/docs/instances/spot>
-{% endif %}
+<!--
+This file is auto-generated. DO NOT EDIT
 
-{% if 'compute.instances.stop' in method or 'compute.instances.suspend' in method %}
-A user or service account stopped your VM [1]
-
-You can simply restarted by the VM by following
-
-[1] <https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm>
-{% endif %}
-{% if method == 'compute.instances.repair.recreateInstance' %}
-This termination is a normal Managed Instance group process. [1][2]
-
-There should be a replacement for this created instance.
-
-[1] <https://cloud.google.com/compute/docs/instance-groups/working-with-managed-instances#autoscaling>
-[2] <https://cloud.google.com/compute/docs/autoscaler>
-{% endif %}
-{% if method == 'compute.instances.guestTerminate' %}
-Your VM's operating system initiated the shutdown.
-
-This can be caused by
-{% endif %}
-{% if method == 'compute.instances.terminateOnHostMaintenance' %}
-This VM termination is expected.
-
-Your VM's host maintenance policy is set to TERMINATE, Compute Engine
-stops your VM when there is a maintenance event where Google must move
-
-If you want to change your VM's onHostMaintenance policy to restart automatically
-or live migrate [1]. Read more about Host Events [2] and how to set your termination policies[3].
-
-[1] <https://cloud.google.com/compute/docs/instances/live-migration-process>
-[2] <https://cloud.google.com/compute/docs/instances/setting-vm-host-options>
-[3] <https://cloud.google.com/compute/docs/instances/host-maintenance-overview>
-{% endif %}
-{% endfor %}
-{% endblock vm_termination_rca %}
-
-{% block vm_termination_success_reason %}
-No GCE Instance was terminated between {start_time} and {end_time}
-{% endblock vm_termination_success_reason %}
+Make pages changes in the corresponding jinja template
+or python code
+-->

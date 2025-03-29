@@ -1,127 +1,79 @@
-name=faulty-linux-ssh,project_id=gcpdiag-gce-faultyssh-runbook,zone=europe-west2-a
+end_time=2025-03-19T00:00:00+00:00,instance_name=start-and-stop-vm,project_id=gcpdiag-
+gce5-aaaa,start_time=2025-03-17T00:00:00+00:00,zone=us-central1-c
 
-gce/vm-termination: GCE Instance shutdowns and reboots Root Cause Analysis (RCA)
+gce/vm-termination: GCE Instance unexpected shutdowns and reboots diagnostics
 
-  This runbook is designed to assist you in investigating and understanding the underlying reasons
-  behind the unexpected termination or reboot of your GCE Virtual Machines (VMs) within Google
-  Cloud Platform.
+  This runbook assists in investigating and understanding the reasons behind unexpected
+  terminations or reboots of GCE Virtual Machines (VMs).
 
-  Key Investigation Areas:
+  Areas investigated:
 
-  System Event-Triggered Shutdowns/Reboots: Identifies terminations initiated by internal Google
-  Cloud systems due to system maintenance events, normal hardware failures,
-  resource constraints.
+  - System event-triggered shutdowns and reboots: Identifies terminations initiated by Google Cloud
+    systems due to maintenance events, hardware failures, or resource constraints.
 
-  System Admin Activities-Triggered Shutdowns/Reboots: Investigates terminations caused by
-  direct actions, such as API calls made by users or service accounts. These actions
-  may include manual shutdowns, restarts, or automated processes impacting VM states.
-
-  RCA Text Generation: Provides a detailed Root Cause Analysis text, outlining the identified
-  cause of termination, the involved systems or activities, and recommendations
-  to prevent future occurrences where applicable.
+  - Admin activities-triggered shutdown/reboot: Investigates terminations caused by direct actions,
+    such as API calls made by users or service accounts, including manual shutdowns, restarts, or
+    automated processes impacting VM states.
   
-[START]: Starting VM Termination diagnostics
-[GATEWAY]: Determining whether to investigate one or more terminations
-[AUTOMATED STEP]: Investigating VM termination reason.
-[INFO]: 
-
-No GCE Instance was terminated between {start_time} and {end_time}
-
-[AUTOMATED STEP]: Verify that the terminated VM is currently running
-
-   - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [OK]
-     [REASON]
-     The terminated VM is currently up and running indicating proper functionality.
-
+[START]: Validate the provided parameters to investigate VM terminations.
+[GATEWAY]: Investigate VM termination reason.
+[GATEWAY]: Decision point to investigate various stop operation types
+[AUTOMATED STEP]: Investigate the scheduled stop policy
 [END]: Finalize VM terminations diagnostics.
 
 
-name=valid-linux-ssh,project_id=gcpdiag-gce-faultyssh-runbook,zone=europe-west2-a
+end_time=2025-03-19T00:00:00+00:00,instance_name=spot-vm-termination,project_id=gcpdiag-
+gce5-aaaa,start_time=2025-03-17T00:00:00+00:00,zone=us-central1-c
 
-gce/vm-termination: GCE Instance shutdowns and reboots Root Cause Analysis (RCA)
+gce/vm-termination: GCE Instance unexpected shutdowns and reboots diagnostics
 
-  This runbook is designed to assist you in investigating and understanding the underlying reasons
-  behind the unexpected termination or reboot of your GCE Virtual Machines (VMs) within Google
-  Cloud Platform.
+  This runbook assists in investigating and understanding the reasons behind unexpected
+  terminations or reboots of GCE Virtual Machines (VMs).
 
-  Key Investigation Areas:
+  Areas investigated:
 
-  System Event-Triggered Shutdowns/Reboots: Identifies terminations initiated by internal Google
-  Cloud systems due to system maintenance events, normal hardware failures,
-  resource constraints.
+  - System event-triggered shutdowns and reboots: Identifies terminations initiated by Google Cloud
+    systems due to maintenance events, hardware failures, or resource constraints.
 
-  System Admin Activities-Triggered Shutdowns/Reboots: Investigates terminations caused by
-  direct actions, such as API calls made by users or service accounts. These actions
-  may include manual shutdowns, restarts, or automated processes impacting VM states.
-
-  RCA Text Generation: Provides a detailed Root Cause Analysis text, outlining the identified
-  cause of termination, the involved systems or activities, and recommendations
-  to prevent future occurrences where applicable.
+  - Admin activities-triggered shutdown/reboot: Investigates terminations caused by direct actions,
+    such as API calls made by users or service accounts, including manual shutdowns, restarts, or
+    automated processes impacting VM states.
   
-[START]: Starting VM Termination diagnostics
-[GATEWAY]: Determining whether to investigate one or more terminations
-[AUTOMATED STEP]: Investigating VM termination reason.
-[INFO]: 
-
-No GCE Instance was terminated between {start_time} and {end_time}
-
-[AUTOMATED STEP]: Verify that the terminated VM is currently running
-
-   - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [OK]
-     [REASON]
-     The terminated VM is currently up and running indicating proper functionality.
-
+[START]: Validate the provided parameters to investigate VM terminations.
+[GATEWAY]: Investigate VM termination reason.
+[GATEWAY]: Decision point to investigate various stop operation types
+[AUTOMATED STEP]: Investigate the scheduled stop policy
 [END]: Finalize VM terminations diagnostics.
 
 
-name=faulty-windows-ssh,project_id=gcpdiag-gce-faultyssh-runbook,zone=europe-west2-a
+end_time=2025-03-19T00:00:00+00:00,instance_name=shielded-vm-integrity-failure,project_id=gcpdiag-
+gce5-aaaa,start_time=2025-03-17T00:00:00+00:00,zone=us-central1-c
 
-gce/vm-termination: GCE Instance shutdowns and reboots Root Cause Analysis (RCA)
+gce/vm-termination: GCE Instance unexpected shutdowns and reboots diagnostics
 
-  This runbook is designed to assist you in investigating and understanding the underlying reasons
-  behind the unexpected termination or reboot of your GCE Virtual Machines (VMs) within Google
-  Cloud Platform.
+  This runbook assists in investigating and understanding the reasons behind unexpected
+  terminations or reboots of GCE Virtual Machines (VMs).
 
-  Key Investigation Areas:
+  Areas investigated:
 
-  System Event-Triggered Shutdowns/Reboots: Identifies terminations initiated by internal Google
-  Cloud systems due to system maintenance events, normal hardware failures,
-  resource constraints.
+  - System event-triggered shutdowns and reboots: Identifies terminations initiated by Google Cloud
+    systems due to maintenance events, hardware failures, or resource constraints.
 
-  System Admin Activities-Triggered Shutdowns/Reboots: Investigates terminations caused by
-  direct actions, such as API calls made by users or service accounts. These actions
-  may include manual shutdowns, restarts, or automated processes impacting VM states.
-
-  RCA Text Generation: Provides a detailed Root Cause Analysis text, outlining the identified
-  cause of termination, the involved systems or activities, and recommendations
-  to prevent future occurrences where applicable.
+  - Admin activities-triggered shutdown/reboot: Investigates terminations caused by direct actions,
+    such as API calls made by users or service accounts, including manual shutdowns, restarts, or
+    automated processes impacting VM states.
   
-[START]: Starting VM Termination diagnostics
-[GATEWAY]: Determining whether to investigate one or more terminations
-[AUTOMATED STEP]: Investigating VM termination reason.
-[INFO]: 
+[START]: Validate the provided parameters to investigate VM terminations.
+[GATEWAY]: Investigate VM termination reason.
+[GATEWAY]: Decision point to investigate various stop operation types
+[AUTOMATED STEP]: Investigate the scheduled stop policy
 
-No GCE Instance was terminated between {start_time} and {end_time}
-
-[AUTOMATED STEP]: Verify that the terminated VM is currently running
-
-   - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [FAIL]
+   - gcpdiag-gce5-aaaa/shielded-vm-integrity-failure                      [FAIL]
      [REASON]
-     The terminated VM is still shutdown. You can turn it on if there are no other concerns.
+     Instance projects/gcpdiag-gce5-aaaa/zones/us-central1-c/instances/shielded-vm-integrity-failure was terminated by account service-123456012345@compute-system.iam.gserviceaccount.com due to a scheduled stop policy.
 
      [REMEDIATION]
-     This step failed because GCE Virtual Machine faulty-windows-ssh is expected to be in a RUNNING state:
-
-     To initiate the lifecycle transition from TERMINATED to RUNNING state follow guide [1].
-
-     If you encounter any difficulties during the startup process, consult the troubleshooting
-     documentation to identify and resolve potential startup issues [2].
-
-     Resources:
-
-     [1] <https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm>
-
-     [2] <https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting>
+     No action required. VM is currently running.
 
 [END]: Finalize VM terminations diagnostics.
 

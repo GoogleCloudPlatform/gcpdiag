@@ -39,7 +39,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
       - Checks if the instances performance is degraded - disks, memory and cpu
       utilization are being checked.
   
-[START]: Analyze unhealthy backends for backend service "web-backend-service" in region "global".
+[START]: Analyze unhealthy backends for backend service "web-backend-service" in scope "global".
 [INFO]: name: web-backend-service, region: global
 
    - gcpdiag-lb2-aaaa/web-backend-service                                 [FAIL]
@@ -49,14 +49,14 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      Group https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/zones/us-east1-b/instanceGroups/lb-backend-example has 2/2 unhealthy backends
 
 
-[GATEWAY]: Verify health check logging enabled for backend service "web-backend-service" in region "global".
+[GATEWAY]: Verify health check logging enabled for backend service "web-backend-service" in scope "global".
 
    - gcpdiag-lb2-aaaa/http-basic-check                                    [OK]
      [REASON]
      Health check logging is enabled for health check projects/gcpdiag-lb1-aaaa/global/healthChecks/http-basic-check.
 
-[GATEWAY]: Analyze latest health check log for backend service "web-backend-service" in region "global".
-[AUTOMATED STEP]: Analyze TIMEOUT health check logs for backend service "web-backend-service" in region "global".
+[GATEWAY]: Analyze latest health check log for backend service "web-backend-service" in scope "global".
+[AUTOMATED STEP]: Analyze TIMEOUT health check logs for backend service "web-backend-service" in scope "global".
 
    - gcpdiag-lb2-aaaa/web-backend-service                                 [UNCERTAIN]
      [REASON]
@@ -84,7 +84,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 
      3. Check if firewall rules or iptables configurations are blocking the health check probes from reaching the backend instances, resulting in timeouts.
 
-[AUTOMATED STEP]: Check past health check success for backend service "web-backend-service" in region "global".
+[AUTOMATED STEP]: Check past health check success for backend service "web-backend-service" in scope "global".
 
    - gcpdiag-lb2-aaaa/web-backend-service                                 [UNCERTAIN]
      [REASON]
@@ -94,7 +94,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      [REMEDIATION]
      Check the logs and monitoring metrics for the instances associated with backend service projects/gcpdiag-lb2-aaaa/global/backendServices/web-backend-service, focusing on recent timeframes to see if there were any errors, crashes, or resource exhaustion issues. You can also inspect any application-specific logs for errors or warnings.
 
-[AUTOMATED STEP]: Validate port configuration for backend service "web-backend-service" in region "global".
+[AUTOMATED STEP]: Validate port configuration for backend service "web-backend-service" in scope "global".
 
    - gcpdiag-lb2-aaaa/web-backend-service                                 [UNCERTAIN]
      [REASON]
@@ -109,13 +109,13 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      [REMEDIATION]
      Verify that the health check port is correctly configured to match the port used by your application if the health check is intended to check the serving port.
 
-[AUTOMATED STEP]: Validate protocol configuration for backend service "web-backend-service" in region "global".
+[AUTOMATED STEP]: Validate protocol configuration for backend service "web-backend-service" in scope "global".
 
    - gcpdiag-lb2-aaaa/web-backend-service                                 [OK]
      [REASON]
      The load balancer is performing health checks using the same protocol (HTTP) that it is using for serving traffic. This is the standard configuration.
 
-[AUTOMATED STEP]: Verify firewall rules allow health checks for backend service "web-backend-service" in region "global".
+[AUTOMATED STEP]: Verify firewall rules allow health checks for backend service "web-backend-service" in scope "global".
 
    - gcpdiag-lb2-aaaa/web-backend-service                                 [FAIL]
      [REASON]
@@ -125,7 +125,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      [REMEDIATION]
      Update your firewall rules to allow inbound traffic from the Google Cloud health check IP ranges (found at <https://cloud.google.com/load-balancing/docs/health-check-concepts#ip-ranges>) to your backends.
 
-[COMPOSITE STEP]: Check VMs performance for unhealthy backends in backend service "web-backend-service" in region "global".
+[COMPOSITE STEP]: Check VMs performance for unhealthy backends in backend service "web-backend-service" in scope "global".
 [AUTOMATED STEP]: Verify VM memory utilization is within optimal levels.
 
    - gcpdiag-lb2-aaaa/vm-pn3l                                             [FAIL]
@@ -268,7 +268,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
       - Checks if the instances performance is degraded - disks, memory and cpu
       utilization are being checked.
   
-[START]: Analyze unhealthy backends for backend service "backend-service-2" in region "europe-west4".
+[START]: Analyze unhealthy backends for backend service "backend-service-2" in scope "europe-west4".
 [INFO]: name: backend-service-2, region: europe-west4
 
    - gcpdiag-lb2-aaaa/backend-service-2                                   [FAIL]
@@ -278,14 +278,14 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      Group https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/zones/europe-west4-b/networkEndpointGroups/neg1 has 1/1 unhealthy backends
 
 
-[GATEWAY]: Verify health check logging enabled for backend service "backend-service-2" in region "europe-west4".
+[GATEWAY]: Verify health check logging enabled for backend service "backend-service-2" in scope "europe-west4".
 
    - gcpdiag-lb2-aaaa/tcp-basic-check-2                                   [OK]
      [REASON]
      Health check logging is enabled for health check projects/gcpdiag-lb2-aaaa/regions/europe-west4/healthChecks/tcp-basic-check-2.
 
-[GATEWAY]: Analyze latest health check log for backend service "backend-service-2" in region "europe-west4".
-[AUTOMATED STEP]: Analyze TIMEOUT health check logs for backend service "backend-service-2" in region "europe-west4".
+[GATEWAY]: Analyze latest health check log for backend service "backend-service-2" in scope "europe-west4".
+[AUTOMATED STEP]: Analyze TIMEOUT health check logs for backend service "backend-service-2" in scope "europe-west4".
 
    - gcpdiag-lb2-aaaa/backend-service-2                                   [UNCERTAIN]
      [REASON]
@@ -313,7 +313,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 
      3. Check if firewall rules or iptables configurations are blocking the health check probes from reaching the backend instances, resulting in timeouts.
 
-[AUTOMATED STEP]: Check past health check success for backend service "backend-service-2" in region "europe-west4".
+[AUTOMATED STEP]: Check past health check success for backend service "backend-service-2" in scope "europe-west4".
 
    - gcpdiag-lb2-aaaa/backend-service-2                                   [UNCERTAIN]
      [REASON]
@@ -323,25 +323,25 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      [REMEDIATION]
      Check the logs and monitoring metrics for the instances associated with backend service projects/gcpdiag-lb2-aaaa/regions/europe-west4/backendServices/backend-service-2, focusing on recent timeframes to see if there were any errors, crashes, or resource exhaustion issues. You can also inspect any application-specific logs for errors or warnings.
 
-[AUTOMATED STEP]: Validate port configuration for backend service "backend-service-2" in region "europe-west4".
+[AUTOMATED STEP]: Validate port configuration for backend service "backend-service-2" in scope "europe-west4".
 
    - gcpdiag-lb2-aaaa/backend-service-2                                   [OK]
      [REASON]
      The load balancer is performing health checks on the same port that it is using for serving traffic. This is the standard configuration.
 
-[AUTOMATED STEP]: Validate protocol configuration for backend service "backend-service-2" in region "europe-west4".
+[AUTOMATED STEP]: Validate protocol configuration for backend service "backend-service-2" in scope "europe-west4".
 
    - gcpdiag-lb2-aaaa/backend-service-2                                   [OK]
      [REASON]
      The load balancer is performing health checks using the same protocol (TCP) that it is using for serving traffic. This is the standard configuration.
 
-[AUTOMATED STEP]: Verify firewall rules allow health checks for backend service "backend-service-2" in region "europe-west4".
+[AUTOMATED STEP]: Verify firewall rules allow health checks for backend service "backend-service-2" in scope "europe-west4".
 
    - gcpdiag-lb2-aaaa/backend-service-2                                   [OK]
      [REASON]
      Firewall rules are correctly configured and are not blocking health check probes for backend service projects/gcpdiag-lb2-aaaa/regions/europe-west4/backendServices/backend-service-2.
 
-[COMPOSITE STEP]: Check VMs performance for unhealthy backends in backend service "backend-service-2" in region "europe-west4".
+[COMPOSITE STEP]: Check VMs performance for unhealthy backends in backend service "backend-service-2" in scope "europe-west4".
 [AUTOMATED STEP]: Verify VM memory utilization is within optimal levels.
 
    - gcpdiag-lb2-aaaa/neg-vm                                              [FAIL]

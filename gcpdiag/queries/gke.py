@@ -488,8 +488,8 @@ def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
   if not apis.is_enabled(context.project_id, 'container'):
     return clusters
   container_api = apis.get_api('container', 'v1', context.project_id)
-  logging.info('fetching list of GKE clusters in project %s',
-               context.project_id)
+  logging.debug('fetching list of GKE clusters in project %s',
+                context.project_id)
   query = container_api.projects().locations().clusters().list(
       parent=f'projects/{context.project_id}/locations/-')
   try:
@@ -519,8 +519,8 @@ def get_cluster(project_id, cluster_id, location) -> Union[Cluster, None]:
   if not apis.is_enabled(project_id, 'container'):
     return None
   container_api = apis.get_api('container', 'v1', project_id)
-  logging.info('fetching the GKE cluster %s in project %s', cluster_id,
-               project_id)
+  logging.debug('fetching the GKE cluster %s in project %s', cluster_id,
+                project_id)
   query = container_api.projects().locations().clusters().get(
       name=f'projects/{project_id}/locations/{location}/clusters/{cluster_id}')
   try:

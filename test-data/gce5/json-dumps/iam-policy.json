@@ -1,0 +1,37 @@
+{
+  "bindings": [
+    {
+      "members": [
+        "serviceAccount:service-123456012345@compute-system.iam.gserviceaccount.com"
+      ],
+      "role": "projects/gcpdiag-gce5-aaaa/roles/instanceScheduler"
+    },
+    {
+      "members": [
+        "serviceAccount:service-123456012345@compute-system.iam.gserviceaccount.com"
+      ],
+      "role": "roles/compute.serviceAgent"
+    },
+    {
+      "members": [
+        "serviceAccount:123456012345-compute@developer.gserviceaccount.com",
+        "serviceAccount:123456012345@cloudservices.gserviceaccount.com"
+      ],
+      "role": "roles/editor"
+    },
+    {
+      "members": [
+        "user:testuser@example.com"
+      ],
+      "role": "roles/owner"
+    },
+    {
+      "members": [
+        "serviceAccount:service-123456012345@gcp-sa-websecurityscanner.iam.gserviceaccount.com"
+      ],
+      "role": "roles/websecurityscanner.serviceAgent"
+    }
+  ],
+  "etag": "BwYwTlwh9Vo=",
+  "version": 1
+}

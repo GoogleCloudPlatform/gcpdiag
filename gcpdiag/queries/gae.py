@@ -94,8 +94,8 @@ def get_services(context: models.Context) -> Mapping[str, Service]:
   if not apis.is_enabled(context.project_id, 'appengine'):
     return services
   appengine_api = apis.get_api('appengine', 'v1', context.project_id)
-  logging.info('fetching list of app engine services in the project %s',
-               context.project_id)
+  logging.debug('fetching list of app engine services in the project %s',
+                context.project_id)
   query = appengine_api.apps().services().list(appsId=context.project_id)
   try:
     resp = query.execute(num_retries=config.API_RETRIES)
@@ -150,7 +150,7 @@ def get_versions(context: models.Context) -> Mapping[str, Version]:
     except googleapiclient.errors.HttpError as err:
       raise utils.GcpApiError(err) from err
 
-    logging.info('fetching list of app engine services in the project %s',
-                 context.project_id)
+    logging.debug('fetching list of app engine services in the project %s',
+                  context.project_id)
 
   return versions

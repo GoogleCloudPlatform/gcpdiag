@@ -123,12 +123,12 @@ class Featurestore(models.Resource):
 
   @property
   def name(self) -> str:
-    logging.info(self._resource_data)
+    logging.debug(self._resource_data)
     return self._resource_data[NAME_KEY]
 
   @property
   def state(self) -> str:
-    logging.info(self._resource_data)
+    logging.debug(self._resource_data)
     return self._resource_data[STATE_KEY]
 
 
@@ -140,7 +140,7 @@ def get_featurestores(context: models.Context) -> Dict[str, Featurestore]:
   for region in FEATURE_REGIONS[FEATURESTORES_KEY]:
     featurestores_res: Dict[str, Featurestore] = {}
     region_name = REGIONS[region]
-    logging.info(
+    logging.debug(
         'fetching list of Vertex AI featurestores in project %s for region %s',
         context.project_id, region_name)
     vertex_api = apis.get_api('aiplatform', 'v1', context.project_id,

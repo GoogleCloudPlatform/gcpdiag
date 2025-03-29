@@ -77,6 +77,10 @@ class ProjectBillingInfo(models.Resource):
     return self._resource_data['name']
 
   @property
+  def project_id(self) -> str:
+    return self._resource_data['projectId']
+
+  @property
   def billing_account_name(self) -> str:
     return self._resource_data['billingAccountName']
 
@@ -150,17 +154,17 @@ class CostInsights(models.Resource):
 
 
 @caching.cached_api_call
-def get_billing_info(project_id):
+def get_billing_info(project_id) -> ProjectBillingInfo:
   """Get Billing Information for a project, caching the result."""
   project_api = apis.get_api('cloudbilling', 'v1', project_id)
   project_id = 'projects/' + project_id if 'projects/' not in project_id else project_id
   query = project_api.projects().getBillingInfo(name=project_id)
-  logging.info('fetching Billing Information for project %s', project_id)
+  logging.debug('fetching Billing Information for project %s', project_id)
   try:
     resource_data = query.execute(num_retries=config.API_RETRIES)
   except googleapiclient.errors.HttpError as err:
     raise GcpApiError(err) from err
-  return resource_data
+  return ProjectBillingInfo(project_id, resource_data)
 
 
 @caching.cached_api_call
@@ -168,14 +172,14 @@ def get_billing_account(project_id: str) -> Optional[BillingAccount]:
   """Get a Billing Account object by its project name, caching the result."""
   if not apis.is_enabled(project_id, 'cloudbilling'):
     return None
-  billing_info = ProjectBillingInfo(project_id, get_billing_info(project_id))
+  billing_info = get_billing_info(project_id)
   if not billing_info.is_billing_enabled():
     return None
 
   billing_account_api = apis.get_api('cloudbilling', 'v1', project_id)
   query = billing_account_api.billingAccounts().get(
       name=billing_info.billing_account_name)
-  logging.info('fetching Billing Account for project %s', project_id)
+  logging.debug('fetching Billing Account for project %s', project_id)
   try:
     resource_data = query.execute(num_retries=config.API_RETRIES)
   except googleapiclient.errors.HttpError as error:
