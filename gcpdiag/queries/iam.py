@@ -158,6 +158,37 @@ def _get_iam_role(name: str, default_project_id: str) -> Role:
   return parent_roles[name]
 
 
+def _get_group_members(group_email: str, project_id: str, processed_groups: Optional[set] = None) -> List[str]:
+    """Retrieve members of the IAM group, including nested groups."""
+
+    if processed_groups is None:
+        processed_groups = set()
+
+    # Avoid processing the same group multiple times
+    if group_email in processed_groups:
+        return []
+
+    processed_groups.add(group_email)
+
+    service = googleapiclient.discovery.build('cloudidentity', 'v1', cache_discovery=False)
+    group_name = f'groups/{group_email}'
+    members = []
+
+    request = service.groups().memberships().list(parent=group_name)
+    while request is not None:
+        response = request.execute()
+        for membership in response.get('memberships', []):
+            member_id = membership['memberKey']['id']
+            members.append(member_id)
+            # Check if the member is a group and resolve its members recursively
+            if member_id.startswith('group:'):
+                nested_group_members = _get_group_members(member_id.split(':')[1], project_id, processed_groups)
+                members.extend(nested_group_members)
+        request = service.groups().memberships().list_next(previous_request=request, previous_response=response)
+
+    return members
+
+
 class BaseIAMPolicy(models.Resource):
   """Common class for IAM policies"""
 
@@ -220,6 +251,13 @@ class BaseIAMPolicy(models.Resource):
       for member in binding['members']:
         member_policy = policy_by_member[member]
         member_policy.setdefault('roles', set()).add(binding['role'])
+        # Check if the member is a group and expand its members
+        if member.startswith('group:'):
+          group_members = _get_group_members(member.split(':')[1], self.project_id)
+          for group_member in group_members:
+            group_member_policy = policy_by_member[group_member]
+            group_member_policy.setdefault('roles', set()).add(binding['role'])
+
 
     # Populate cache for IAM roles used in the policy
     # Unlike `has_role_permissions` this part will be executed inside
