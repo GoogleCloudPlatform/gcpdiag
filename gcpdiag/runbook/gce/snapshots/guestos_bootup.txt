@@ -1,0 +1,243 @@
+instance_name=faulty-linux-ssh,project_id=gcpdiag-gce-vm-performance,zone=europe-west2-a
+
+gce/guestos-bootup:  Google Compute Engine VM Guest OS boot-up runbook.
+
+    This runbook is designed to investigate the various boot-up stages of a Linux or Windows Guest
+    OS running on Google Compute Engine. It is intended to help you identify and troubleshoot issues
+    that may arise during the boot process. The runbook provides a structured approach to resolve
+    issues.
+
+    Key Investigation Areas:
+
+    Boot Issues:
+        - Check for Boot issues happening due to Kernel panics
+        - Check for GRUB related issues.
+        - Check if system failed to find boot disk.
+        - Check if Filesystem corruption is causing issues with system boot.
+        - Check if "/" Filesystem consumption is causing issues with system boot.
+
+    Cloud-init checks:
+        - Check if cloud-init has initialised or started.
+        - Check if NIC has received the IP.
+
+    Network related issues:
+        - Check if metadata server became unreachable since last boot.
+        - Check if there are any time sync related errors.
+
+    Google Guest Agent checks:
+        - Check if there are logs related to successful startup of Google Guest Agent.
+  
+[START]: Verify GCE Instance is in a "RUNNING" state.
+[AUTOMATED STEP]: Examine Guest OS if there are any indications of kernel panic.
+
+   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
+     [REASON]
+     Detected kernel panic logs in projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances/faulty-linux-ssh serial logs,
+     which is likely preventing the VM from booting up correctly.
+
+     [REMEDIATION]
+     Kernel panics can be caused by different issues within the guest.
+     Address underlying issues causing boot problems to solve the kernel panic:
+
+     **General Kernel panic Troubleshooting**
+
+     1. Consult the Troubleshooting Guide for Kernel Panic Errors:
+        - Kernel panic is commonly caused by file system errors in Linux Guest OS.
+        - Check `/etc/fstab` for incorrect entries that could halt the boot process.
+        - Refer to this guide for resolving [kernel panic issues caused by
+     /etc/fstab](https://cloud.google.com/compute/docs/troubleshooting/fstab-errors).
+
+     2. Resources for Kernel panic
+        - [Troubleshooting GCE Instance experiencing Kernel
+     Panic](https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error)
+        - [Common Red Hat Kernel Panic
+     Issues](https://access.redhat.com/search/knowledgebase?q=kernel+panic&p=1&rows=10&documentKind=Solution%26Documentation&sort=relevant)
+        - [Common SUSE Kernel Panic Issues](https://www.suse.com/support/kb/?id=&q=kernel+panic&bu_suse=true&advanced=false)
+
+     3. Rescue an instance experiencing kernel panic
+        - [How to rescue a experiencing kernel panic](https://cloud.google.com/compute/docs/troubleshooting/rescue-vm) to
+     recover faulty VMs.
+        - Watch this video for a walkthrough: [Rescue VM Guide](https://www.youtube.com/watch?v=oD6IFpjEtEw)
+
+     4 Google Cloud Platform Support Scope:
+     [Understand GCP support for kernel-related
+     issues](https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope).
+
+[AUTOMATED STEP]: Verify any Filesystem corruption related errors in Serial console logs
+
+   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
+     [REASON]
+     Possible filesystem corruption detected.
+
+     The patterns used:
+
+     ```
+     'Corruption of in-memory data detected. Shutting down filesystem',
+     'Corruption of in-memory data detected', 'warning: mounting fs with errors',
+     'Failed to mount /',
+     'A stop job is running for Security \.\.\..* Service ',
+     'I/O Error Detected. Shutting down filesystem',
+     'metadata I/O error in'
+     ```
+
+
+     [REMEDIATION]
+     To resolve filesystem corruption, admins can use [gce-rescue](https://github.com/GoogleCloudPlatform/gce-rescue),
+     available in Cloud Shell, to rescue faulty VMs. Alternatively, you can follow the
+     [manual method](https://cloud.google.com/compute/docs/troubleshooting/rescue-vm) to repair the filesystem.
+
+     Additional resources for reference:
+
+     - [Red Hat article on filesystem repair](https://access.redhat.com/solutions/1750923)
+     - [Video guide on rescuing VMs](https://www.youtube.com/watch?v=oD6IFpjEtEw)
+
+     These resources provide detailed steps for diagnosing and resolving filesystem issues.
+
+[COMPOSITE STEP]: Cloud init related checks
+
+   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [SKIP]
+     [REASON]
+     This VM is not Ubuntu or it does not uses cloud-init
+[AUTOMATED STEP]: Check for metadata network connectivity errors
+
+   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
+     [REASON]
+     The metadata server(169.254.169.254) is unreachable from the GCE Instance.
+     The instance might not have IP assigned to its primary NIC.
+
+     [REMEDIATION]
+     Attempt to log in to the instance via the serial console using a password and check the status of the network stack.
+
+     If login via the serial console is unsuccessful, consider restarting the instance.
+
+     If the issue persists after a reboot, follow the [rescue VM
+     guide](https://cloud.google.com/compute/docs/troubleshooting/rescue-vm) for further troubleshooting.
+
+     Additionally, refer to the [troubleshooting metadata server
+     guide](https://cloud.google.com/compute/docs/troubleshooting/troubleshoot-metadata-server) to address potential issues
+     with the Compute Engine metadata server.
+
+[AUTOMATED STEP]: Checking for Guest Agent startup logs
+
+   - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [OK]
+     [REASON]
+     Detected that Google Guest Agent is running within the VM
+
+[END]: Finalize runbook investigations.
+
+
+instance_name=valid-linux-ssh,project_id=gcpdiag-gce-vm-performance,zone=europe-west2-a
+
+gce/guestos-bootup:  Google Compute Engine VM Guest OS boot-up runbook.
+
+    This runbook is designed to investigate the various boot-up stages of a Linux or Windows Guest
+    OS running on Google Compute Engine. It is intended to help you identify and troubleshoot issues
+    that may arise during the boot process. The runbook provides a structured approach to resolve
+    issues.
+
+    Key Investigation Areas:
+
+    Boot Issues:
+        - Check for Boot issues happening due to Kernel panics
+        - Check for GRUB related issues.
+        - Check if system failed to find boot disk.
+        - Check if Filesystem corruption is causing issues with system boot.
+        - Check if "/" Filesystem consumption is causing issues with system boot.
+
+    Cloud-init checks:
+        - Check if cloud-init has initialised or started.
+        - Check if NIC has received the IP.
+
+    Network related issues:
+        - Check if metadata server became unreachable since last boot.
+        - Check if there are any time sync related errors.
+
+    Google Guest Agent checks:
+        - Check if there are logs related to successful startup of Google Guest Agent.
+  
+[START]: Verify GCE Instance is in a "RUNNING" state.
+[AUTOMATED STEP]: Examine Guest OS if there are any indications of kernel panic.
+
+   - gcpdiag-gce-vm-performance/valid-linux-ssh                           [UNCERTAIN]
+     [REASON]
+     No serial logs were found for the VM projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances/valid-linux-ssh. However, this does not rule out the possibility of a kernel
+     panic.
+
+     [REMEDIATION]
+     Kernel panics can be caused by different issues within the guest.
+     Address underlying issues causing boot problems to solve the kernel panic:
+
+     **General Kernel panic Troubleshooting**
+
+     1. Consult the Troubleshooting Guide for Kernel Panic Errors:
+        - Kernel panic is commonly caused by file system errors in Linux Guest OS.
+        - Check `/etc/fstab` for incorrect entries that could halt the boot process.
+        - Refer to this guide for resolving [kernel panic issues caused by
+     /etc/fstab](https://cloud.google.com/compute/docs/troubleshooting/fstab-errors).
+
+     2. Resources for Kernel panic
+        - [Troubleshooting GCE Instance experiencing Kernel
+     Panic](https://cloud.google.com/compute/docs/troubleshooting/kernel-panic#resolve_the_kernel_panic_error)
+        - [Common Red Hat Kernel Panic
+     Issues](https://access.redhat.com/search/knowledgebase?q=kernel+panic&p=1&rows=10&documentKind=Solution%26Documentation&sort=relevant)
+        - [Common SUSE Kernel Panic Issues](https://www.suse.com/support/kb/?id=&q=kernel+panic&bu_suse=true&advanced=false)
+
+     3. Rescue an instance experiencing kernel panic
+        - [How to rescue a experiencing kernel panic](https://cloud.google.com/compute/docs/troubleshooting/rescue-vm) to
+     recover faulty VMs.
+        - Watch this video for a walkthrough: [Rescue VM Guide](https://www.youtube.com/watch?v=oD6IFpjEtEw)
+
+     4 Google Cloud Platform Support Scope:
+     [Understand GCP support for kernel-related
+     issues](https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope).
+
+[AUTOMATED STEP]: Verify any Filesystem corruption related errors in Serial console logs
+
+   - gcpdiag-gce-vm-performance/valid-linux-ssh                           [UNCERTAIN]
+     [REASON]
+     No evidence Filesystem corruption errors present in the serial logs.
+
+     [REMEDIATION]
+     To resolve filesystem corruption, admins can use [gce-rescue](https://github.com/GoogleCloudPlatform/gce-rescue),
+     available in Cloud Shell, to rescue faulty VMs. Alternatively, you can follow the
+     [manual method](https://cloud.google.com/compute/docs/troubleshooting/rescue-vm) to repair the filesystem.
+
+     Additional resources for reference:
+
+     - [Red Hat article on filesystem repair](https://access.redhat.com/solutions/1750923)
+     - [Video guide on rescuing VMs](https://www.youtube.com/watch?v=oD6IFpjEtEw)
+
+     These resources provide detailed steps for diagnosing and resolving filesystem issues.
+
+[COMPOSITE STEP]: Cloud init related checks
+
+   - gcpdiag-gce-vm-performance/valid-linux-ssh                           [SKIP]
+     [REASON]
+     This VM is not Ubuntu or it does not uses cloud-init
+[AUTOMATED STEP]: Check for metadata network connectivity errors
+
+   - gcpdiag-gce-vm-performance/valid-linux-ssh                           [UNCERTAIN]
+     [REASON]
+     No success or failed logs to help deduce a conlusion on certainty of Network issues on the instance.
+
+     [REMEDIATION]
+     Attempt to log in to the instance via the serial console using a password and check the status of the network stack.
+
+     If login via the serial console is unsuccessful, consider restarting the instance.
+
+     If the issue persists after a reboot, follow the [rescue VM
+     guide](https://cloud.google.com/compute/docs/troubleshooting/rescue-vm) for further troubleshooting.
+
+     Additionally, refer to the [troubleshooting metadata server
+     guide](https://cloud.google.com/compute/docs/troubleshooting/troubleshoot-metadata-server) to address potential issues
+     with the Compute Engine metadata server.
+
+[AUTOMATED STEP]: Checking for Guest Agent startup logs
+
+   - gcpdiag-gce-vm-performance/valid-linux-ssh                           [OK]
+     [REASON]
+     Detected that Google Guest Agent is running within the VM
+
+[END]: Finalize runbook investigations.
+
+
