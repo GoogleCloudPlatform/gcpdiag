@@ -350,6 +350,12 @@ class RouterStatus(models.Resource):
     nat_status = self._resource_data.get('result', {}).get('natStatus', {})
     return nat_status[0].get('numVmEndpointsWithNatMappings', None)
 
+  @property
+  def bgp_peer_status(self) -> str:
+    bgp_peer_status = self._resource_data.get('result',
+                                              {}).get('bgpPeerStatus', {})
+    return bgp_peer_status
+
 
 class RouterNatIpInfo(models.Resource):
   """NAT IP Info"""

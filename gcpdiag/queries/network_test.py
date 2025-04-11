@@ -17,6 +17,8 @@ import ipaddress
 import re
 from unittest import mock
 
+from boltons.iterutils import get_path
+
 from gcpdiag.queries import apis_stub, network
 
 DUMMY_PROJECT_ID = 'gcpdiag-fw-policy-aaaa'
@@ -436,3 +438,20 @@ class TestNetwork:
                                         region='us-east4',
                                         router_name='dummy-router3')
     assert router.name == 'dummy-router3'
+
+  def test_bgp_peer_status(self):
+    vlan_router_status = network.nat_router_status('gcpdiag-interconnect1-aaaa',
+                                                   router_name='dummy-router1',
+                                                   region='us-east4')
+    assert get_path(vlan_router_status.bgp_peer_status[0], ('state'),
+                    default=None) == 'Established'
+    assert get_path(vlan_router_status.bgp_peer_status[1], ('state'),
+                    default=None) == 'Established'
+
+    vlan_router_status = network.nat_router_status('gcpdiag-interconnect1-aaaa',
+                                                   router_name='dummy-router2',
+                                                   region='us-east4')
+    assert get_path(vlan_router_status.bgp_peer_status[0], ('state'),
+                    default=None) == 'Established'
+    assert get_path(vlan_router_status.bgp_peer_status[1], ('state'),
+                    default=None) == 'Idle'

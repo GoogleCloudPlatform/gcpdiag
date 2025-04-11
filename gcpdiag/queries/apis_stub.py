@@ -126,6 +126,9 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/gce3/json-dumps',
     'gcpdiag-gke3-gggg':
         pathlib.Path(__file__).parents[2] / 'test-data/gke3/json-dumps',
+    'gcpdiag-interconnect1-aaaa':
+        pathlib.Path(__file__).parents[2] /
+        'test-data/interconnect1/json-dumps',
     '12340032':
         pathlib.Path(__file__).parents[2] / 'test-data/gke3/json-dumps',
     'gcpdiag-gke4-runbook':

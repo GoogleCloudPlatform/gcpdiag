@@ -1,0 +1,73 @@
+{
+  "kind": "compute#network",
+  "id": "7246553118008778977",
+  "creationTimestamp": "2022-03-30T02:08:30.014-07:00",
+  "name": "default",
+  "description": "Default network for the project",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/networks/default",
+  "selfLinkWithId": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/networks/7246553118008778977",
+  "autoCreateSubnetworks": true,
+  "mtu": 1460,
+  "subnetworks": [
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/europe-west1/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/europe-west4/subnetworks/gke1-subnet",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/asia-east1/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west4/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/europe-west4/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/europe-west6/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/asia-south2/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/asia-southeast2/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/northamerica-northeast2/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/asia-east2/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/asia-southeast1/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/europe-west2/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/asia-south1/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east1/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/asia-northeast2/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/europe-west3/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/australia-southeast2/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/australia-southeast1/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/asia-northeast3/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/europe-north1/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/asia-northeast1/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west1/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/southamerica-east1/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/northamerica-northeast1/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west3/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-central1/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/southamerica-west1/subnetworks/default",
+    "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/europe-central2/subnetworks/default"
+  ],
+  "peerings": [
+    {
+      "name": "gke-ne6f5d919f4c34558948-1e4e-2883-peer",
+      "network": "https://www.googleapis.com/compute/v1/projects/gke-prod-europe-west4-a-55a0/global/networks/gke-ne6f5d919f4c34558948-1e4e-e59b-net",
+      "state": "ACTIVE",
+      "stateDetails": "[2022-03-30T02:11:12.613-07:00]: Connected.",
+      "autoCreateRoutes": true,
+      "exportCustomRoutes": false,
+      "importCustomRoutes": false,
+      "exchangeSubnetRoutes": true,
+      "exportSubnetRoutesWithPublicIp": true,
+      "importSubnetRoutesWithPublicIp": false
+    },
+    {
+      "name": "gke-ne6f5d919f4c34558948-e4c5-1a39-peer",
+      "network": "https://www.googleapis.com/compute/v1/projects/gke-prod-europe-west4-559c/global/networks/gke-ne6f5d919f4c34558948-e4c5-32e2-net",
+      "state": "ACTIVE",
+      "stateDetails": "[2022-03-30T02:12:15.512-07:00]: Connected.",
+      "autoCreateRoutes": true,
+      "exportCustomRoutes": false,
+      "importCustomRoutes": false,
+      "exchangeSubnetRoutes": true,
+      "exportSubnetRoutesWithPublicIp": true,
+      "importSubnetRoutesWithPublicIp": false
+    }
+  ],
+  "routingConfig": {
+    "routingMode": "REGIONAL"
+  },
+  "networkFirewallPolicyEnforcementOrder": "AFTER_CLASSIC_FIREWALL"
+}
