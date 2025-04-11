@@ -25,6 +25,7 @@ from gcpdiag.runbook.dataproc import constants as dp_const
 from gcpdiag.runbook.dataproc import flags
 from gcpdiag.runbook.dataproc import generalized_steps as dp_gs
 from gcpdiag.runbook.iam import generalized_steps as iam_gs
+from gcpdiag.utils import GcpApiError
 
 
 class SparkJobFailures(runbook.DiagnosticTree):
@@ -203,12 +204,8 @@ class JobExists(runbook.StartStep):
       job = dataproc.get_job_by_jobid(project_id=op.get(flags.PROJECT_ID),
                                       region=op.get(flags.REGION),
                                       job_id=op.get(flags.JOB_ID))
-    except (
-        AttributeError,
-        TypeError,
-        ValueError,
-        IndexError,
-    ) as e:
+    except (AttributeError, GcpApiError, IndexError, TypeError,
+            ValueError) as e:
       op.put(flags.JOB_EXIST, 'false')
       op.add_failed(
           project,
