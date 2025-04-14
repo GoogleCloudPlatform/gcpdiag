@@ -30,9 +30,10 @@ chmod +x gcpdiag
 
 ## Usage
 
-Currently gcpdiag mainly supports one subcommand: `lint`, which is used
+Currently gcpdiag mainly supports subcommand: `lint` and `Runbooks`, which is used
 to run diagnostics on one or more GCP projects.
 
+#### LINT
 ```
 usage:
 
@@ -76,8 +77,40 @@ optional arguments:
                         Configure timeout for logging queries (default: 120 seconds)
   --output FORMATTER    Format output as one of [terminal, json, csv] (default: terminal)
 ```
+#### RUNBOOK
+```
+usage:
 
-### Authentication
+gcpdiag runbook --project=project_id /name=instance_name [OPTIONS]
+
+bin/gcpdiag runbook gce/ops-agent-exporting-logs-metrics --project gcpdiag-release-project-p name=debian-test -p zone=us-central1-a
+
+optional arguments:
+  -h, --help                              show this help message and exit
+  --auth-adc                              Authenticate using Application Default Credentials
+  --auth-key FILE                         Authenticate using a service account private key file
+  --billing-project P                     Project used for billing/quota of API calls done by
+                                          gcpdiag (default is the inspected project, requires 'serviceusage.services.use' permission)
+  -v                                      Increase log verbosity
+
+  Descriptions for Logging Options logging-related options:
+  --logging-ratelimit-requests R`:        rate limit for API requests.
+  --logging-ratelimit-period-seconds S`:  period in seconds for the API rate limit.
+  --logging-page-size P`:                 page size for API requests.
+  --logging-fetch-max-entries E`:         maximum number of entries to fetch.
+  --logging-fetch-max-time-seconds S`:    maximum time in seconds to fetch logs.
+```
+
+## Further Information
+
+See <http://gcpdiag.dev> for more information:
+
+- <a href="https://gcpdiag.dev/docs/">Documentation</a>
+- <a href="https://gcpdiag.dev/rules/">Lint rule descriptions</a>
+- <a href="https://gcpdiag.dev/runbook/">Runbook description</a>
+- <a href="https://gcpdiag.dev/docs/development/">Development guides</a>
+
+## Authentication
 
 gcpdiag supports authentication using multiple mechanisms:
 
@@ -106,7 +139,7 @@ The Editor and Owner roles include all the required permissions, but if you use
 service account authentication (`--auth-key`), we recommend to only grant the
 Viewer+Service Usage Consumer on that service account.
 
-### Test Products, Classes, and IDs
+## Test Products, Classes, and IDs
 
 Tests are organized by product, class, and ID.
 
@@ -129,11 +162,3 @@ Each test also has a **short_description** and a **long_description**. The short
 description is a statement about the **good state** that is being verified to be
 true (i.e. we don't test for errors, we test for compliance, i.e. an problem not
 to be present).
-
-## Further Information
-
-See <http://gcpdiag.dev> for more information:
-
-- <a href="https://gcpdiag.dev/docs/">Documentation</a>
-- <a href="https://gcpdiag.dev/rules/">Lint rule descriptions</a>
-- <a href="https://gcpdiag.dev/docs/development/">Development guides</a>
