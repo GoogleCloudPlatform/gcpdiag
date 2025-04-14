@@ -33,7 +33,8 @@ chmod +x gcpdiag
 Currently gcpdiag mainly supports subcommand: `lint` and `Runbooks`, which is used
 to run diagnostics on one or more GCP projects.
 
-#### LINT
+### LINT
+
 ```
 usage:
 
@@ -77,13 +78,16 @@ optional arguments:
                         Configure timeout for logging queries (default: 120 seconds)
   --output FORMATTER    Format output as one of [terminal, json, csv] (default: terminal)
 ```
+
 #### RUNBOOK
+
 ```
 usage:
 
 gcpdiag runbook --project=project_id /name=instance_name [OPTIONS]
 
-bin/gcpdiag runbook gce/ops-agent-exporting-logs-metrics --project gcpdiag-release-project-p name=debian-test -p zone=us-central1-a
+example:
+gcpdiag runbook gce/ssh --project "project_id" -p "name=vm-id" -p "zone=us-central1-a"
 
 optional arguments:
   -h, --help                              show this help message and exit
@@ -105,10 +109,10 @@ optional arguments:
 
 See <http://gcpdiag.dev> for more information:
 
-- <a href="https://gcpdiag.dev/docs/">Documentation</a>
-- <a href="https://gcpdiag.dev/rules/">Lint rule descriptions</a>
-- <a href="https://gcpdiag.dev/runbook/">Runbook description</a>
-- <a href="https://gcpdiag.dev/docs/development/">Development guides</a>
+- [Documentation](https://gcpdiag.dev/docs/)
+- [Lint rule description](https://gcpdiag.dev/rules/)
+- [Runbook description](https://gcpdiag.dev/runbook/)
+- [Development guides](https://gcpdiag.dev/docs/development/)
 
 ## Authentication
 
