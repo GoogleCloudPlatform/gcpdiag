@@ -18,6 +18,7 @@ from datetime import datetime, timedelta, timezone
 from unittest.mock import Mock, patch
 
 from gcpdiag import models, runbook
+from gcpdiag.runbook import exceptions
 from gcpdiag.runbook.constants import StepType
 from gcpdiag.runbook.gcp import flags
 from gcpdiag.runbook.op import Operator
@@ -56,11 +57,21 @@ class TestDiagnosticEngine(unittest.TestCase):
 
   # pylint: disable=protected-access
   def test_run_diagnostic_tree_missing_required_parameters(self):
-    with self.assertRaises(AttributeError):
+    with self.assertRaises(exceptions.MissingParameterError) as cm:
       dt = runbook.DiagnosticTree()
-      dt.parameters = {'missing_param': {'required': True,}}
+      dt.parameters = {
+          'missing_param': {
+              'required': True,
+              'help': 'Missing parameter help'
+          },
+      }
       self.de._check_required_paramaters(parameter_def=dt.parameters,
                                          caller_args=models.Parameter())
+    self.assertEqual(cm.exception.missing_parameters_list, ['missing_param'])
+    self.assertIn('Missing 1 required parameter', str(cm.exception))
+    self.assertIn('Parameter Explanation: Missing parameter help',
+                  str(cm.exception))
+    self.assertIn('-p missing_param=value', str(cm.exception))
 
   @patch('logging.warning')
   def test_run_diagnostic_tree_deprecated_parameters(self, mock_logging_error):
@@ -78,7 +89,7 @@ class TestDiagnosticEngine(unittest.TestCase):
 
   # pylint: disable=protected-access
   def test_both_new_and_deprecated_missing(self):
-    with self.assertRaises(AttributeError):
+    with self.assertRaises(exceptions.MissingParameterError):
       dt = LegacyParamHandler()
       user_supplied = models.Parameter({'random': 'value'})
       dt.legacy_parameter_handler(user_supplied)

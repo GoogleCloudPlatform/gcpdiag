@@ -84,7 +84,7 @@ optional arguments:
 ```
 usage:
 
-gcpdiag runbook --project=project_id /name=instance_name [OPTIONS]
+gcpdiag runbook --project=project_id -p "param_name=param_value" [OPTIONS]
 
 example:
 gcpdiag runbook gce/ssh --project "project_id" -p "name=vm-id" -p "zone=us-central1-a"
