@@ -972,6 +972,8 @@ class DiagnosticEngine:
       with report_lock:
         self.interface.rm.reports[bundle.run_id] = report.Report(
             run_id=bundle.run_id, parameters=bundle.parameter)
+        self.interface.rm.reports[bundle.run_id].run_start_time = datetime.now(
+            timezone.utc).isoformat()
       with op.operator_context(operator):
         for step in bundle.steps:
           self._check_required_paramaters(parameter_def=step.parameters,
@@ -982,6 +984,8 @@ class DiagnosticEngine:
             step_obj = step(**bundle.parameter)
             operator.set_step(step_obj)
             self.run_step(step=step_obj, operator=operator)
+    self.interface.rm.reports[bundle.run_id].run_end_time = datetime.now(
+        timezone.utc).isoformat()
 
 
 class ExpandTreeFromAst(ast.NodeVisitor):
