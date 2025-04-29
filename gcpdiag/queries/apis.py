@@ -169,7 +169,7 @@ def get_api(service_name: str,
     client_options.api_endpoint = f'https://{region}-{service_name}.{universe_domain}'
   else:
     client_options.api_endpoint = f'https://{service_name}.{universe_domain}'
-  if service_name in ['compute']:
+  if service_name in ['compute', 'bigquery', 'storage', 'dns']:
     client_options.api_endpoint += f'/{service_name}/{version}'
   api = discovery.build(service_name,
                         version,
