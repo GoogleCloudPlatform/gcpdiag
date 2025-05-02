@@ -105,6 +105,51 @@ optional arguments:
   --logging-fetch-max-time-seconds S`:    maximum time in seconds to fetch logs.
 ```
 
+##### BUNDLE
+
+Create a YAML file to execute a "bundle" of individual runbook steps. This YAML file
+allows you to define multiple bundles, each containing specific parameters and
+steps to execute.
+
+***Ex: test.yaml***
+
+```
+- bundle:
+  # Define the parameters that will be used in the steps.
+  parameter:
+    project_id: "project_name"
+    zone: "zone_name"
+    instance_name: "instance_name"
+  # Define the steps that will be executed.
+  steps:
+    - gcpdiag.runbook.gce.generalized_steps.VmLifecycleState
+    - gcpdiag.runbook.gce.ops_agent.VmHasAServiceAccount
+    - gcpdiag.runbook.gce.ssh.PosixUserHasValidSshKeyCheck
+
+- bundle:
+  # Define the parameters that will be used in the steps.
+  parameter:
+    project_id: "project_name"
+    principal: "project_name@appspot.gserviceaccount.com"
+  # Define the steps that will be executed.
+  steps:
+    - gcpdiag.runbook.iam.generalized_steps.IamPolicyCheck
+    - gcpdiag.runbook.gcf.failed_deployments.DefaultServiceAccountCheck
+```
+
+In this example, two bundles are defined:
+
+*   The first bundle includes parameters for a GCE instance and executes three
+    steps related to VM lifecycle, Ops Agent, and SSH key validation.
+*   The second bundle includes parameters for a service account and executes two
+    steps related to IAM policy and GCF default service account.
+
+***Executing a yaml file :***
+
+```
+gcpdiag runbook --bundle-spec  test.yaml
+```
+
 ## Further Information
 
 See <http://gcpdiag.dev> for more information:
