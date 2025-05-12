@@ -21,15 +21,19 @@ This runbook focuses on a range of potential problems for Dataproc clusters on
   - Stockout errors: Evaluates Logs Explorer logs regarding stockout in the
   region/zone.
 
-  - Quota availability: Checks for the quota availability in Dataproc cluster project.
+  - Quota availability: Checks for the quota availability in Dataproc cluster
+  project.
 
-  - Network configuration: Performs GCE Network Connectivity Tests, checks necessary firewall rules, external/internal IP configuration.
+  - Network configuration: Performs GCE Network Connectivity Tests, checks
+  necessary firewall rules, external/internal IP configuration.
 
-  - Cross-project configuration: Checks if the service account is not in the same
+  - Cross-project configuration: Checks if the service account is not in the
+  same
   project and reviews additional
     roles and organization policies enforcement.
 
-  - Shared VPC configuration: Checks if the Dataproc cluster uses a Shared VPC network and
+  - Shared VPC configuration: Checks if the Dataproc cluster uses a Shared VPC
+  network and
   evaluates if right service account roles are added.
 
   - Init actions script failures: Evaluates Logs Explorer

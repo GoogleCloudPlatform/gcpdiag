@@ -37,16 +37,19 @@ class ClusterCreation(runbook.DiagnosticTree):
   - Stockout errors: Evaluates Logs Explorer logs regarding stockout in the
   region/zone.
 
-  - Quota availability: Checks for the quota availability in Dataproc cluster project.
+  - Quota availability: Checks for the quota availability in Dataproc cluster
+  project.
 
-  - Network configuration: Performs GCE Network Connectivity Tests, checks \
-necessary firewall rules, external/internal IP configuration.
+  - Network configuration: Performs GCE Network Connectivity Tests, checks
+  necessary firewall rules, external/internal IP configuration.
 
-  - Cross-project configuration: Checks if the service account is not in the same
+  - Cross-project configuration: Checks if the service account is not in the
+  same
   project and reviews additional
     roles and organization policies enforcement.
 
-  - Shared VPC configuration: Checks if the Dataproc cluster uses a Shared VPC network and
+  - Shared VPC configuration: Checks if the Dataproc cluster uses a Shared VPC
+  network and
   evaluates if right service account roles are added.
 
   - Init actions script failures: Evaluates Logs Explorer
@@ -78,7 +81,7 @@ necessary firewall rules, external/internal IP configuration.
       flags.CLUSTER_UUID: {
           'type': str,
           'help': 'Dataproc cluster UUID',
-          #'required': True, cannot be required due
+          # 'required': True, cannot be required due
           # to limitations on Dataproc API side
       },
       flags.PROJECT_NUMBER: {
@@ -338,8 +341,6 @@ class ClusterInError(runbook.Gateway):
   to provision successfully and ends up in ERROR state.
   """
 
-  template = 'dataproc_attributes::error_status'
-
   def execute(self):
     """Verify cluster is in ERROR state."""
     # Taking cluster details
@@ -443,9 +444,11 @@ class CheckClusterNetwork(runbook.Step):
                                        flags.DATAPROC_CLUSTER_NAME))
     # Skip this step if the cluster does not exist
     if cluster is None:
-      op.add_uncertain(cluster,
-                       reason=op.prep_msg(op.UNCERTAIN_REASON),
-                       remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION))
+      op.add_uncertain(
+          cluster,
+          reason=op.prep_msg(op.UNCERTAIN_REASON),
+          remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION),
+      )
     else:
       # Add the zone of the cluster
       if not op.get(flags.ZONE):
@@ -458,9 +461,8 @@ class CheckClusterNetwork(runbook.Step):
       if cluster_zone is None:
         op.add_skipped(
             cluster,
-            reason=
-            (f'Zone cannot be retrieved from the cluster. Zone: {cluster_zone}'
-            ),
+            reason=('Zone cannot be retrieved from the cluster. Zone:'
+                    f' {cluster_zone}'),
         )
         return
       # Skip DPGKE clusters
@@ -509,11 +511,12 @@ class CheckClusterNetwork(runbook.Step):
           src_ip=str(source_ip)[:-3],
           dest_ip=str(target_ip)[:-3],
           dest_port=None,
-          protocol='ICMP')
+          protocol='ICMP',
+      )
       op.info('Connectivity test result: ' +
               connectivity_test_result['reachabilityDetails']['result'])
-      if connectivity_test_result['reachabilityDetails'][
-          'result'] != 'REACHABLE':
+      if (connectivity_test_result['reachabilityDetails']['result']
+          != 'REACHABLE'):
         is_connectivity_fine = False
         for trace in connectivity_test_result['reachabilityDetails']['traces']:
           op.info('Endpoint details: ' +
@@ -523,10 +526,10 @@ class CheckClusterNetwork(runbook.Step):
             last_step = step
           op.info('Last step: ' + json.dumps(last_step, indent=2))
           op.info('Full list of steps: ' + json.dumps(trace['steps'], indent=2))
-        op.info(
-            'ICMP traffic must be allowed. Check the result of the connectivity '
-            + 'test to verify what is blocking the traffic, ' +
-            'in particular Last step and Full list of steps.')
+        op.info('ICMP traffic must be allowed. Check the result of the'
+                ' connectivity ' +
+                'test to verify what is blocking the traffic, ' +
+                'in particular Last step and Full list of steps.')
       # TCP
       op.info('TCP test.')
       connectivity_test_result = networkmanagement.run_connectivity_test(
@@ -534,11 +537,12 @@ class CheckClusterNetwork(runbook.Step):
           src_ip=str(source_ip)[:-3],
           dest_ip=str(target_ip)[:-3],
           dest_port=8088,
-          protocol='TCP')
+          protocol='TCP',
+      )
       op.info('Connectivity test result: ' +
               connectivity_test_result['reachabilityDetails']['result'])
-      if connectivity_test_result['reachabilityDetails'][
-          'result'] != 'REACHABLE':
+      if (connectivity_test_result['reachabilityDetails']['result']
+          != 'REACHABLE'):
         is_connectivity_fine = False
         for trace in connectivity_test_result['reachabilityDetails']['traces']:
           op.info('Endpoint details: ' +
@@ -549,8 +553,8 @@ class CheckClusterNetwork(runbook.Step):
           op.info('Last step: ' + json.dumps(last_step, indent=2))
           op.info('Full list of steps: ' + json.dumps(trace['steps'], indent=2))
         op.info(
-            'TCP traffic must be allowed. Check the result of the connectivity test'
-            + 'to verify what is blocking the traffic, ' +
+            'TCP traffic must be allowed. Check the result of the connectivity'
+            ' test' + 'to verify what is blocking the traffic, ' +
             'in particular Last step and Full list of steps.')
       # UCP
       op.info('UDP test.')
@@ -559,11 +563,12 @@ class CheckClusterNetwork(runbook.Step):
           src_ip=str(source_ip)[:-3],
           dest_ip=str(target_ip)[:-3],
           dest_port=8088,
-          protocol='UDP')
+          protocol='UDP',
+      )
       op.info('Connectivity test result: ' +
               connectivity_test_result['reachabilityDetails']['result'])
-      if connectivity_test_result['reachabilityDetails'][
-          'result'] != 'REACHABLE':
+      if (connectivity_test_result['reachabilityDetails']['result']
+          != 'REACHABLE'):
         is_connectivity_fine = False
         for trace in connectivity_test_result['reachabilityDetails']['traces']:
           op.info('Endpoint details: ' +
@@ -574,8 +579,8 @@ class CheckClusterNetwork(runbook.Step):
           op.info('Last step: ' + json.dumps(last_step, indent=2))
           op.info('Full list of steps: ' + json.dumps(trace['steps'], indent=2))
         op.info(
-            'UDP traffic must be allowed. Check the result of the connectivity test '
-            + 'to verify what is blocking the traffic, ' +
+            'UDP traffic must be allowed. Check the result of the connectivity'
+            ' test ' + 'to verify what is blocking the traffic, ' +
             'in particular Last step and Full list of steps.')
 
       if is_connectivity_fine:
@@ -611,17 +616,21 @@ class InternalIpGateway(runbook.Gateway):
       if is_internal_ip_only is None:
         op.add_skipped(
             cluster,
-            'The cluster and the internalIpOnly config cannot be found, skipping this step. '
-            + 'Please provide internal_ip_only as input parameter ' +
-            'if the cluster is deleted or keep the cluster in error state.')
+            'The cluster and the internalIpOnly config cannot be found,'
+            ' skipping this step. ' +
+            'Please provide internal_ip_only as input parameter ' +
+            'if the cluster is deleted or keep the cluster in error state.',
+        )
         return
       subnetwork_uri = op.get(flags.SUBNETWORK)
       if subnetwork_uri is None:
         op.add_skipped(
             cluster,
-            'The cluster and the subnetworkUri config cannot be found, skipping this step. '
-            + 'Please provide subnetwork_uri as input parameter ' +
-            'if the cluster is deleted or keep the cluster in error state.')
+            'The cluster and the subnetworkUri config cannot be found, skipping'
+            ' this step. ' +
+            'Please provide subnetwork_uri as input parameter ' +
+            'if the cluster is deleted or keep the cluster in error state.',
+        )
         return
     else:
       is_internal_ip_only = cluster.is_internal_ip_only
@@ -769,12 +778,15 @@ class ServiceAccountExists(runbook.Gateway):
       self.add_child(child=compute_agent_permission_check)
 
     else:
-      op.add_failed(project,
-                    reason=op.prep_msg(op.FAILURE_REASON,
-                                       service_account=op.get(
-                                           flags.SERVICE_ACCOUNT),
-                                       project_id=op.get(flags.PROJECT_ID)),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_failed(
+          project,
+          reason=op.prep_msg(
+              op.FAILURE_REASON,
+              service_account=op.get(flags.SERVICE_ACCOUNT),
+              project_id=op.get(flags.PROJECT_ID),
+          ),
+          remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
 
 
 class CheckSharedVPCRoles(runbook.Step):
@@ -786,18 +798,20 @@ class CheckSharedVPCRoles(runbook.Step):
   def execute(self):
     """Verify service account roles based on Shared VPC."""
     project = crm.get_project(op.get(flags.PROJECT_ID))
-    if not op.get(flags.HOST_VPC_PROJECT_ID) == op.get(flags.PROJECT_ID):
-      #Check Service Agent Service Account role:
-      service_agent_sa = f'service-{project.number}@dataproc-accounts.iam.gserviceaccount.com'
+    if op.get(flags.HOST_VPC_PROJECT_ID) != op.get(flags.PROJECT_ID):
+      # Check Service Agent Service Account role:
+      service_agent_sa = (
+          f'service-{project.number}@dataproc-accounts.iam.gserviceaccount.com')
       service_agent_vpc_permission_check = iam_gs.IamPolicyCheck()
       service_agent_vpc_permission_check.project = op.get(
           flags.HOST_VPC_PROJECT_ID)
-      service_agent_vpc_permission_check.principal = f'serviceAccount:{service_agent_sa}'
+      service_agent_vpc_permission_check.principal = (
+          f'serviceAccount:{service_agent_sa}')
       service_agent_vpc_permission_check.require_all = True
       service_agent_vpc_permission_check.roles = ['roles/compute.networkUser']
       self.add_child(child=service_agent_vpc_permission_check)
 
-      #Check Google APIs Service Account
+      # Check Google APIs Service Account
       op.info('Checking Google APIs service account roles on host VPC project.')
       api_sa = f'{project.number}@cloudservices.gserviceaccount.com'
       api_vpc_permission_check = iam_gs.IamPolicyCheck()
@@ -857,9 +871,9 @@ class CheckInitScriptFailure(runbook.Step):
 
 
 class ClusterCreationEnd(runbook.EndStep):
-  """The end step of the runbook
+  """The end step of the runbook.
 
-  Points out all the failed steps to the user.
+  It points out all the failed steps to the user.
   """
 
   def execute(self):
