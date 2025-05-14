@@ -127,7 +127,7 @@ class Report:
   """Report for a runbook or bundle"""
   # Same as the runbook or bundle run_id
   run_id: str
-  runbook_name: str
+  runbook_name: Optional[str] = None
   run_start_time: str
   run_end_time: str
   execution_mode: str
