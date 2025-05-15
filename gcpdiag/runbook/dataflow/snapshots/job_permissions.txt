@@ -44,18 +44,23 @@ dataflow/job-permissions: Analysis and Resolution of Dataflow Jobs Permissions i
 
    - projects/gcpdiag-dataflow1-aaaa                                      [FAIL]
      [REASON]
-     NOTICE: No message available to parse for this step
+     The principal `serviceAccount:service-12340010@dataflow-service-producer-prod.iam.gserviceaccount.com` is missing at least one of the expected roles in the IAM policy:
+     Missing roles: roles/dataflow.serviceAgent.
+
      [REMEDIATION]
-     NOTICE: No message available to parse for this step
+     Grant a role that contains the required permissions. Refer to the guide [1] for details.
+
+     [1] <https://cloud.google.com/dataflow/docs/concepts/security-and-permissions#df-service-account>
+
 [GATEWAY]: Checking dataflow worker service account permissions.
 [INFO]: dataflow-worker@gcpdiag-dataflow1-aaaa.iam.gserviceaccount.com
 
    - gcpdiag-datafusion1-aaaa                                             [FAIL]
      [REASON]
-     Service Account dataflow-worker@gcpdiag-dataflow1-aaaa.iam.gserviceaccount.com associated with Dataproc cluster was not found in project gcpdiag-dataflow1-aaaa or cross project (if specified).
+     Service Account `dataflow-worker@gcpdiag-dataflow1-aaaa.iam.gserviceaccount.com` associated with the Dataflow job was not found in project `gcpdiag-dataflow1-aaaa` or the specified cross-project.
 
      [REMEDIATION]
-     Provide the project where the service account resides using the `cross_project` parameter.
+     Specify the project where the service account resides using the `cross_project_project` parameter.
 
 [AUTOMATED STEP]: Check the Dataflow Resource permissions.
 [INFO]: No Cloud Storage buckets related errors found in the logs

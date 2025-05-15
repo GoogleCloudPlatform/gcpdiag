@@ -19,11 +19,11 @@ Worker instances use the worker service account to access input and output
 
 ### Failure Reason
 
-Service Account {service_account} associated with Dataproc cluster was not found in project {project_id} or cross project (if specified).
+Service Account `{service_account}` associated with the Dataflow job was not found in project `{project_id}` or the specified cross-project.
 
 ### Failure Remediation
 
-Provide the project where the service account resides using the `cross_project` parameter.
+Specify the project where the service account resides using the `cross_project_project` parameter.
 
 
 

@@ -54,8 +54,7 @@ dataproc/spark-job-failures: Provides a comprehensive analysis of common issues 
      Service Account None associated with Dataproc cluster was not found in project gcpdiag-dataproc1-aaaa or cross project (if specified).
 
      [REMEDIATION]
-     Provide
-     project in which the service account resides by using the cross_project parameter.
+     Provide the project where the service account resides using the `cross_project` parameter.
 
 [AUTOMATED STEP]: Verify if OOM has happened on master .
 
@@ -237,8 +236,7 @@ dataproc/spark-job-failures: Provides a comprehensive analysis of common issues 
      Service Account None associated with Dataproc cluster was not found in project gcpdiag-dataproc1-aaaa or cross project (if specified).
 
      [REMEDIATION]
-     Provide
-     project in which the service account resides by using the cross_project parameter.
+     Provide the project where the service account resides using the `cross_project` parameter.
 
 [AUTOMATED STEP]: Verify if OOM has happened on master .
 
