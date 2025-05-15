@@ -16,15 +16,15 @@ Check if any vlan attachments have in BGP down state.
 
 ### Failure Reason
 
-    The interconnect {interconnect_name} attachment {attachment_name} has BGP down.
+    The interconnect `{interconnect_name}` attachment `{attachment_name}` has `BGP` down.
 
 ### Failure Remediation
 
-    Continue next step to check if there are interconnect maintenance events.
+    Check for `interconnect maintenance events`.
 
 ### Success Reason
 
-    No VLAN attachments have BGP down.
+    No `VLAN attachments` have `BGP` down.
 
 
 

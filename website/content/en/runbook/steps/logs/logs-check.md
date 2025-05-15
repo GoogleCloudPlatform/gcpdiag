@@ -20,9 +20,7 @@ A known bad value is present within the checked log entry indicating a problem
 
 ### Failure Remediation
 
-View Cloud logging to get more details of how to what is causing this issue.
-
-Run the following cloud logging query in GCP.
+Run the following Cloud Logging query in the Google Cloud console to find the log entry indicating the problem:
 
 Query:
 {query}
@@ -33,13 +31,11 @@ The expected good value is present within the checked log entry.
 
 ### Uncertain Reason
 
-The outcome could not be determined automatically. Please manually verify the relevant details in [Cloud Logging](https://cloud.google.com/logging).
+The outcome could not be determined automatically. Manually verify the relevant details in [Cloud Logging](https://cloud.google.com/logging).
 
 ### Uncertain Remediation
 
-View Cloud logging to get more details of how to what is causing this issue.
-
-Run the following cloud logging query in GCP.
+Run the following Cloud Logging query in the Google Cloud console to manually review the relevant log entries:
 
 Query:
 {query}

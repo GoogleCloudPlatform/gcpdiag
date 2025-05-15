@@ -23,13 +23,13 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
    - gcpdiag-gce3-aaaa/faulty-opsagent                                    [OK]
      [REASON]
-     Ops agent in projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent has no-logging-monitoring-perm@gcpdiag-gce3-aaaa.iam.gserviceaccount.com to use when exporting logs/metrics
+     The Ops Agent on instance projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent is configured with service account no-logging-monitoring-perm@gcpdiag-gce3-aaaa.iam.gserviceaccount.com for exporting logs and metrics.
 
 [AUTOMATED STEP]: Verify if the specified service account is active.
 
    - gcpdiag-gce3-aaaa/no-logging-monitoring-perm@gcpdiag-gce3-aaaa.iam.gserviceaccount.com [OK]
      [REASON]
-     Service account: projects/gcpdiag-gce3-aaaa/serviceAccounts/no-logging-monitoring-perm@gcpdiag-gce3-aaaa.iam.gserviceaccount.com is currently in active
+     Service account projects/gcpdiag-gce3-aaaa/serviceAccounts/no-logging-monitoring-perm@gcpdiag-gce3-aaaa.iam.gserviceaccount.com is active.
 
 [GATEWAY]: Decision point to investigate Logging and/or Monitoring related issues.
 [AUTOMATED STEP]: Verify logging.googleapis.com API is ENABLED in project gcpdiag-gce3-aaaa.
@@ -51,15 +51,14 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
    - projects/gcpdiag-gce3-aaaa                                           [FAIL]
      [REASON]
-     serviceAccount:no-logging-monitoring-perm@gcpdiag-gce3-aaaa.iam.gserviceaccount.com doesn't have at least one of the expected roles:
+     serviceAccount:no-logging-monitoring-perm@gcpdiag-gce3-aaaa.iam.gserviceaccount.com does not have at least one of the expected roles:
      roles/editor, roles/logging.admin, roles/logging.logWriter, roles/owner.
 
      [REMEDIATION]
-     Follow Guide [1] to grant a role which has the correct permissions.
-     [2] has a list of all Google predefined roles available to you.
+     Grant a role containing the missing permissions by following the instructions in [1].
+     Refer to [2] for a list of Google Cloud predefined roles.
 
-     Note: You may want to doublecheck with your project admins of the best way to grant the role
-     or custom roles which can be used.
+     Note: Consider consulting with project administrators regarding the most appropriate standard or custom role to grant.
 
      [1] <https://cloud.google.com/iam/docs/grant-role-console>
      [2] <https://cloud.google.com/iam/docs/understanding-roles>
@@ -79,13 +78,14 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
      Update `projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent` to enable at least one of the following access scopes:
      https://www.googleapis.com/auth/cloud-platform, https://www.googleapis.com/auth/logging.admin, https://www.googleapis.com/auth/logging.write
 
-     [1] <https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes>
+     Consult the following documentation for guidance on changing the service account and scopes:
+     <https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes>
 
 [AUTOMATED STEP]: Verify GCE Instance's has ops agent installed and currently active
 
    - gcpdiag-gce3-aaaa/faulty-opsagent                                    [OK]
      [REASON]
-     GCE Instance "projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent" has logging agent installed and currently exporting data
+     GCE Instance "projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent" has logging agent installed and is exporting data.
 
 [COMPOSITE STEP]: Verify GCP config required for serial port logging with ops agent
 [AUTOMATED STEP]: Checking Organization policy
@@ -125,15 +125,14 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
    - projects/gcpdiag-gce3-aaaa                                           [FAIL]
      [REASON]
-     serviceAccount:no-logging-monitoring-perm@gcpdiag-gce3-aaaa.iam.gserviceaccount.com doesn't have at least one of the expected roles:
+     serviceAccount:no-logging-monitoring-perm@gcpdiag-gce3-aaaa.iam.gserviceaccount.com does not have at least one of the expected roles:
      roles/editor, roles/monitoring.admin, roles/monitoring.editor, roles/monitoring.metricWriter, roles/owner.
 
      [REMEDIATION]
-     Follow Guide [1] to grant a role which has the correct permissions.
-     [2] has a list of all Google predefined roles available to you.
+     Grant a role containing the missing permissions by following the instructions in [1].
+     Refer to [2] for a list of Google Cloud predefined roles.
 
-     Note: You may want to doublecheck with your project admins of the best way to grant the role
-     or custom roles which can be used.
+     Note: Consider consulting with project administrators regarding the most appropriate standard or custom role to grant.
 
      [1] <https://cloud.google.com/iam/docs/grant-role-console>
      [2] <https://cloud.google.com/iam/docs/understanding-roles>
@@ -153,16 +152,18 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
      Update `projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent` to enable at least one of the following access scopes:
      https://www.googleapis.com/auth/cloud-platform, https://www.googleapis.com/auth/monitoring, https://www.googleapis.com/auth/monitoring.write
 
-     [1] <https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes>
+     Consult the following documentation for guidance on changing the service account and scopes:
+     <https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes>
 
 [AUTOMATED STEP]: Verify GCE Instance's has ops agent installed and currently active
 
    - gcpdiag-gce3-aaaa/faulty-opsagent                                    [FAIL]
      [REASON]
-     GCE Instance "projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent" does not have metrics agent installed and the subagent is not exporting data
+     GCE Instance "projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent" does not have metrics agent installed and is not exporting data.
 
      [REMEDIATION]
-     GCE Instance "projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent" does not have metrics agent installed and the subagent is not exporting data
+     Install the metrics agent on GCE Instance "projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent".
+     Consult the following documentation for troubleshooting assistance:
      <https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/troubleshoot-run-ingest>
 
 [END]: Finalize Ops agent checks
@@ -194,13 +195,13 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
    - gcpdiag-gce3-aaaa/faulty-opsagent-no-sa                              [OK]
      [REASON]
-     Ops agent in projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent-no-sa has 12345001-compute@developer.gserviceaccount.com to use when exporting logs/metrics
+     The Ops Agent on instance projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent-no-sa is configured with service account 12345001-compute@developer.gserviceaccount.com for exporting logs and metrics.
 
 [AUTOMATED STEP]: Verify if the specified service account is active.
 
    - gcpdiag-gce3-aaaa/12345001-compute@developer.gserviceaccount.com     [OK]
      [REASON]
-     Service account: projects/gcpdiag-gce3-aaaa/serviceAccounts/12345001-compute@developer.gserviceaccount.com is currently in active
+     Service account projects/gcpdiag-gce3-aaaa/serviceAccounts/12345001-compute@developer.gserviceaccount.com is active.
 
 [GATEWAY]: Decision point to investigate Logging and/or Monitoring related issues.
 [AUTOMATED STEP]: Verify logging.googleapis.com API is ENABLED in project gcpdiag-gce3-aaaa.
@@ -240,13 +241,14 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
      Update `projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent-no-sa` to enable at least one of the following access scopes:
      https://www.googleapis.com/auth/cloud-platform, https://www.googleapis.com/auth/logging.admin, https://www.googleapis.com/auth/logging.write
 
-     [1] <https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes>
+     Consult the following documentation for guidance on changing the service account and scopes:
+     <https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes>
 
 [AUTOMATED STEP]: Verify GCE Instance's has ops agent installed and currently active
 
    - gcpdiag-gce3-aaaa/faulty-opsagent-no-sa                              [OK]
      [REASON]
-     GCE Instance "projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent-no-sa" has logging agent installed and currently exporting data
+     GCE Instance "projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent-no-sa" has logging agent installed and is exporting data.
 
 [COMPOSITE STEP]: Verify GCP config required for serial port logging with ops agent
 [AUTOMATED STEP]: Checking Organization policy
@@ -304,16 +306,18 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
      Update `projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent-no-sa` to enable at least one of the following access scopes:
      https://www.googleapis.com/auth/cloud-platform, https://www.googleapis.com/auth/monitoring, https://www.googleapis.com/auth/monitoring.write
 
-     [1] <https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes>
+     Consult the following documentation for guidance on changing the service account and scopes:
+     <https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes>
 
 [AUTOMATED STEP]: Verify GCE Instance's has ops agent installed and currently active
 
    - gcpdiag-gce3-aaaa/faulty-opsagent-no-sa                              [FAIL]
      [REASON]
-     GCE Instance "projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent-no-sa" does not have metrics agent installed and the subagent is not exporting data
+     GCE Instance "projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent-no-sa" does not have metrics agent installed and is not exporting data.
 
      [REMEDIATION]
-     GCE Instance "projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent-no-sa" does not have metrics agent installed and the subagent is not exporting data
+     Install the metrics agent on GCE Instance "projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/faulty-opsagent-no-sa".
+     Consult the following documentation for troubleshooting assistance:
      <https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/troubleshoot-run-ingest>
 
 [END]: Finalize Ops agent checks
@@ -345,13 +349,13 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
    - gcpdiag-gce3-aaaa/working-opsagent                                   [OK]
      [REASON]
-     Ops agent in projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/working-opsagent has 12345001-compute@developer.gserviceaccount.com to use when exporting logs/metrics
+     The Ops Agent on instance projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/working-opsagent is configured with service account 12345001-compute@developer.gserviceaccount.com for exporting logs and metrics.
 
 [AUTOMATED STEP]: Verify if the specified service account is active.
 
    - gcpdiag-gce3-aaaa/12345001-compute@developer.gserviceaccount.com     [OK]
      [REASON]
-     Service account: projects/gcpdiag-gce3-aaaa/serviceAccounts/12345001-compute@developer.gserviceaccount.com is currently in active
+     Service account projects/gcpdiag-gce3-aaaa/serviceAccounts/12345001-compute@developer.gserviceaccount.com is active.
 
 [GATEWAY]: Decision point to investigate Logging and/or Monitoring related issues.
 [AUTOMATED STEP]: Verify logging.googleapis.com API is ENABLED in project gcpdiag-gce3-aaaa.
@@ -387,7 +391,7 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
    - gcpdiag-gce3-aaaa/working-opsagent                                   [OK]
      [REASON]
-     GCE Instance "projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/working-opsagent" has logging agent installed and currently exporting data
+     GCE Instance "projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/working-opsagent" has logging agent installed and is exporting data.
 
 [COMPOSITE STEP]: Verify GCP config required for serial port logging with ops agent
 [AUTOMATED STEP]: Checking Organization policy
@@ -436,10 +440,11 @@ gce/ops-agent: Investigates the necessary GCP components for the proper function
 
    - gcpdiag-gce3-aaaa/working-opsagent                                   [FAIL]
      [REASON]
-     GCE Instance "projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/working-opsagent" does not have metrics agent installed and the subagent is not exporting data
+     GCE Instance "projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/working-opsagent" does not have metrics agent installed and is not exporting data.
 
      [REMEDIATION]
-     GCE Instance "projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/working-opsagent" does not have metrics agent installed and the subagent is not exporting data
+     Install the metrics agent on GCE Instance "projects/gcpdiag-gce3-aaaa/zones/europe-west2-a/instances/working-opsagent".
+     Consult the following documentation for troubleshooting assistance:
      <https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/troubleshoot-run-ingest>
 
 [END]: Finalize Ops agent checks

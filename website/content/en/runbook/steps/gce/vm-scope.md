@@ -34,7 +34,8 @@ Access scopes don't apply for calls made using gRPC.
 Update `{full_resource_path}` to enable at least one of the following access scopes:
 {required_access_scope}
 
-[1] <https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes>
+Consult the following documentation for guidance on changing the service account and scopes:
+<https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes>
 
 ### Success Reason
 

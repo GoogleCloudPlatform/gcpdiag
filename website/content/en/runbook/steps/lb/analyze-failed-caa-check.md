@@ -16,11 +16,11 @@ None
 
 ### Failure Reason
 
-The following domains are in FAILED_CAA_CHECKING or FAILED_CAA_FORBIDDEN state: {domains} for SSL certificate "{name}". This indicates misconfigured CAA records.  CAA records authorize specific Certificate Authorities to issue certificates for your domain.
+The following domains are in FAILED_CAA_CHECKING or FAILED_CAA_FORBIDDEN state: {domains} for SSL certificate "{name}". This indicates misconfigured CAA records. CAA records authorize specific Certificate Authorities to issue certificates for the domain.
 
 ### Failure Remediation
 
-Please ensure the CAA records are configured correctly and try again. See the documentation for instructions on configuring CAA records: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#caa>
+Ensure the CAA records are configured correctly. Refer to the documentation for instructions on configuring CAA records: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#caa>
 
 
 

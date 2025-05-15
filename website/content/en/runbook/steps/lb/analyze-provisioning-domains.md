@@ -20,7 +20,7 @@ The following domains are in PROVISIONING state: {domains} for SSL certificate "
 
 ### Uncertain Remediation
 
-The provisioning process can take some time. The runbook will proactively check other potential issues while the domains are provisioning.
+The provisioning process can take some time. The diagnostic process will continue checking other potential issues while the domains are provisioning.
 
 
 

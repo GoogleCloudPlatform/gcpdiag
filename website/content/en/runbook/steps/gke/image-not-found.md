@@ -16,20 +16,19 @@ None
 
 ### Failure Reason
 
-Image cannot be pulled by a container on Pod, because the image is not found on the repository.
-Check if the image is correctly written or if it exists in the repository.
-Example log entry that would help identify involved objects:
+A container on pod on node failed to pull image because the image was not found in the repository.
+Example log entry:
 
 {log_entry}
 
 ### Failure Remediation
 
-Follow the documentation:
+Refer to the troubleshooting documentation:
 <https://cloud.google.com/kubernetes-engine/docs/troubleshooting#ImagePullBackOff>
 
 ### Success Reason
 
-No "Failed to pull image.*not found" errors found between {start_time} and {end_time}
+No "Failed to pull image.*not found" errors were found for cluster between {start_time} and {end_time}.
 
 
 

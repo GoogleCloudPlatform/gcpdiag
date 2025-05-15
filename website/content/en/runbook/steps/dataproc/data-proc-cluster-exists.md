@@ -16,15 +16,15 @@ None
 
 ### Failure Reason
 
-The cluster: {cluster_name} doesn't exists in project {project_id}
+The cluster `{cluster_name}` does not exist in project `{project_id}`.
 
 ### Failure Remediation
 
-Please check if you deleted the cluster.
+Verify that the cluster has not been deleted.
 
 ### Success Reason
 
-The cluster: {cluster_name} exists in project {project_id}
+The cluster `{cluster_name}` exists in project `{project_id}`.
 
 
 

@@ -24,9 +24,9 @@ Responses received from backends: {probe_results_text_str}
 
 {success_criteria}
 
-Please investigate the configuration of your application to ensure it aligns with these health check expectations.
+Investigate the configuration of the application to ensure it aligns with these health check expectations.
 
-If you intend to check a different endpoint or expect a different response, adjust the health check settings accordingly.
+If a different endpoint should be checked or a different response is expected, adjust the health check settings accordingly.
 
 
 

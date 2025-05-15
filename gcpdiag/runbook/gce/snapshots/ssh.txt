@@ -46,62 +46,56 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      Memory utilization on this VM has reached levels that may compromise its VM application performance.
 
      [REMEDIATION]
-     Elevated memory usage can result in slow or unresponsive or termimated applications.
-     Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
-     Guidance on stopping and changing the machine type can be found here:
+     Elevated memory usage can result in slow, unresponsive, or terminated applications.
+     Enhance the VM's memory capacity by changing to a machine type with more memory.
+
+     Consult the following documentation for guidance:
 
      - Changing machine type:
-     <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
+       <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
 
-     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
+     Additionally, analyze Compute Engine observability metrics to pinpoint high-usage processes:
      <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization>
 
-     Or connect via the Serial Console if SSH is not available to mitigate the issue:
+     If SSH is unavailable, connect via the serial console to mitigate the issue:
      <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 
-[AUTOMATED STEP]: Check for memory related errors in VM serial logs.
+[AUTOMATED STEP]: Verify memory related errors in VM serial logs.
 
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [UNCERTAIN]
      [REASON]
      Unable to investigate the high memory utilization error logs, likely due to the absence of logs.
      However, this does not eliminate the possibility of high memory usage.
 
-     You may manually verify memory utilization on the Guest OS side a likely cause.
+     Manual verification of memory utilization on the Guest OS is recommended as a potential cause.
 
      [REMEDIATION]
 
-     1. Manually investigate by accessing the Guest OS to Analyze Memory Usage:
-        - Identify processes with consistently high memory consumption:
-          - Run `top` and press "M" to sort processes by memory usage.
-          - Alternatively, use the command: `ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5`
+     1. Manually investigate memory usage by accessing the Guest OS:
+        - Identify processes with consistently high memory consumption using `top` (press "M") or `ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5`.
         - Focus on processes with recent spikes or consistently high memory usage.
-        - If SSH access is unavailable, consider [troubleshooting via the serial
-     console](https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console).
+        - If SSH access is unavailable, troubleshoot via the serial console:
+          <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 
-     2. Review Application or Configuration Changes:
+     2. Review recent application or configuration changes:
         - Investigate if recent deployments, updates, or configuration changes correlate with increased memory usage.
 
-     3. Resolve Identified Bottlenecks:
-        - For applications causing excessive memory usage:
-          - Optimize their configuration or update them to a stable version.
-          - Explore alternatives if optimization is insufficient.
-        - Evaluate scaling up resources if the high memory usage results from legitimate application demands.
+     3. Resolve identified bottlenecks:
+        - For applications causing excessive memory usage, optimize their configuration or update them. Explore alternatives if optimization is insufficient.
+        - Evaluate scaling up resources if high memory usage results from legitimate application demands.
 
-     4. Increase Instance Memory if Necessary:
-        - If additional memory is required for the application:
-          - Stop the VM and [change its machine type](https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud).
-          - Consult the [machine type documentation](https://cloud.google.com/compute/docs/machine-types) to select an appropriate
-     configuration.
+     4. Increase instance memory if necessary:
+        - Stop the VM and change its machine type:
+          <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
+        - Consult the machine type documentation to select an appropriate configuration:
+          <https://cloud.google.com/compute/docs/machine-types>
 
-     **Note:**
-     Non Google provided Application-specific issues may fall outside support scope. Collaborate with
-     relevant application teams for further investigation.
-     Refer to the [Google Cloud Platform support
-     policy](https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope)
-     for details, including [out-of-scope
-     items](https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support).
+     **Note:** Non-Google provided application-specific issues may fall outside the support scope. Collaborate with relevant application teams for further investigation. Refer to the Google Cloud Platform support policy for details, including out-of-scope items:
 
-[AUTOMATED STEP]: Check if VM's boot disk space utilization is within optimal levels.
+     - Support and maintenance policy: <https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope>
+     - Out-of-scope items: <https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support>
+
+[AUTOMATED STEP]: Verify VM's boot disk space utilization is within optimal levels.
 
    - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [FAIL]
      [REASON]
@@ -112,7 +106,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      To mitigate high disk usage, consider expanding the VM's boot disk capacity.
      This action can help avoid performance issues and ensure smoother SSH connections.
 
-     Follow the guide to increase disk size:
+     Consult the following guide to increase disk size:
      <https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk>
 
 [AUTOMATED STEP]: Verify VM CPU utilization is within optimal levels.
@@ -123,19 +117,22 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      which may affect its performance and SSH connectivity.
 
      [REMEDIATION]
-     Excessive CPU usage can lead to performance bottlenecks. Consider resizing the VM to a more
-     powerful machine type with higher CPU capabilities.
-     Detailed instructions for resizing and restarting VMs are available here:
+     Excessive CPU usage can lead to performance bottlenecks. Resizing the VM to a machine type with higher CPU capabilities may resolve the issue.
+
+     Consult the following documentation for guidance:
 
      - Stopping a VM: <https://cloud.google.com/compute/docs/instances/stop-start-instance>
      - Resizing a VM: <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
 
-     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
-     - <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics>
-     - <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization>
+     Additionally, analyze Compute Engine observability metrics to pinpoint high-usage processes:
 
-     Alternatively, you can connect via serial console if SSH is unavailable to stop offending processes
-     (<https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>).
+     - Accessing VM observability metrics:
+       <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics>
+     - Analyzing process utilization:
+       <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization>
+
+     If SSH is unavailable, connect via the serial console to stop offending processes:
+     <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 
 [GATEWAY]: Identify Guest OS type.
 [INFO]: Linux Guest OS detected. Proceeding with diagnostics specific to Linux systems.
@@ -159,10 +156,10 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      [REASON]
      The retrieved logs do not contain definitive entries, either positive or negative,
      to make a conclusive assessment.
-     Manually review the GCE serial logs to determine if SSHGuard is a likely cause.
+     Review the GCE serial logs to determine if SSHGuard is a likely cause.
 
      [REMEDIATION]
-     Note: Issues related to SSHGuard fall outside the standard support scope for Google Cloud Platform.
+     Issues related to SSHGuard fall outside the standard support scope for Google Cloud Platform.
      Consult the most appropriate team within your organisation to assist with resolution.
      For guest OS issues and SSHGuard configurations, refer to:
 
@@ -174,11 +171,11 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
-     The authenticated user user:cannotssh@example.com does not have the permissions needed to manage instances.
+     user:cannotssh@example.com does not have the permissions needed to manage instances.
      The following permissions are required: permissions.
 
      [REMEDIATION]
-     To remedy this, ensure the user user:cannotssh@example.com is granted a role encompassing the necessary permissions:
+     Ensure user:cannotssh@example.com is granted a role encompassing the necessary permissions:
 
      - Permissions needed: compute.instances.get
 
@@ -205,8 +202,8 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      roles/compute.osAdminLogin, roles/compute.osLogin, roles/owner.
 
      [REMEDIATION]
-     Assign the principal one of the role required to have OS Login privileges.
-     For more information:
+     Assign the principal one of the roles required for OS Login privileges.
+     Consult the following resources for more information:
 
      <https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users>
 
@@ -216,12 +213,11 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
-     "user:cannotssh@example.com" does not have the "roles/iam.serviceAccountUser" role or custom roles which has the
-     constituent permissions required to be able to impersonate the attached service account.
+     "user:cannotssh@example.com" lacks the "roles/iam.serviceAccountUser" role or a custom role with the necessary permissions to impersonate the attached service account.
 
      [REMEDIATION]
      Assign the "roles/iam.serviceAccountUser" role to "user:cannotssh@example.com".
-     Guidelines:
+     Consult the following guidelines:
 
      <https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users>
 
@@ -325,62 +321,56 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      Memory utilization on this VM has reached levels that may compromise its VM application performance.
 
      [REMEDIATION]
-     Elevated memory usage can result in slow or unresponsive or termimated applications.
-     Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
-     Guidance on stopping and changing the machine type can be found here:
+     Elevated memory usage can result in slow, unresponsive, or terminated applications.
+     Enhance the VM's memory capacity by changing to a machine type with more memory.
+
+     Consult the following documentation for guidance:
 
      - Changing machine type:
-     <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
+       <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
 
-     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
+     Additionally, analyze Compute Engine observability metrics to pinpoint high-usage processes:
      <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization>
 
-     Or connect via the Serial Console if SSH is not available to mitigate the issue:
+     If SSH is unavailable, connect via the serial console to mitigate the issue:
      <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 
-[AUTOMATED STEP]: Check for memory related errors in VM serial logs.
+[AUTOMATED STEP]: Verify memory related errors in VM serial logs.
 
    - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [UNCERTAIN]
      [REASON]
      Unable to investigate the high memory utilization error logs, likely due to the absence of logs.
      However, this does not eliminate the possibility of high memory usage.
 
-     You may manually verify memory utilization on the Guest OS side a likely cause.
+     Manual verification of memory utilization on the Guest OS is recommended as a potential cause.
 
      [REMEDIATION]
 
-     1. Manually investigate by accessing the Guest OS to Analyze Memory Usage:
-        - Identify processes with consistently high memory consumption:
-          - Run `top` and press "M" to sort processes by memory usage.
-          - Alternatively, use the command: `ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5`
+     1. Manually investigate memory usage by accessing the Guest OS:
+        - Identify processes with consistently high memory consumption using `top` (press "M") or `ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5`.
         - Focus on processes with recent spikes or consistently high memory usage.
-        - If SSH access is unavailable, consider [troubleshooting via the serial
-     console](https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console).
+        - If SSH access is unavailable, troubleshoot via the serial console:
+          <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 
-     2. Review Application or Configuration Changes:
+     2. Review recent application or configuration changes:
         - Investigate if recent deployments, updates, or configuration changes correlate with increased memory usage.
 
-     3. Resolve Identified Bottlenecks:
-        - For applications causing excessive memory usage:
-          - Optimize their configuration or update them to a stable version.
-          - Explore alternatives if optimization is insufficient.
-        - Evaluate scaling up resources if the high memory usage results from legitimate application demands.
+     3. Resolve identified bottlenecks:
+        - For applications causing excessive memory usage, optimize their configuration or update them. Explore alternatives if optimization is insufficient.
+        - Evaluate scaling up resources if high memory usage results from legitimate application demands.
 
-     4. Increase Instance Memory if Necessary:
-        - If additional memory is required for the application:
-          - Stop the VM and [change its machine type](https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud).
-          - Consult the [machine type documentation](https://cloud.google.com/compute/docs/machine-types) to select an appropriate
-     configuration.
+     4. Increase instance memory if necessary:
+        - Stop the VM and change its machine type:
+          <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
+        - Consult the machine type documentation to select an appropriate configuration:
+          <https://cloud.google.com/compute/docs/machine-types>
 
-     **Note:**
-     Non Google provided Application-specific issues may fall outside support scope. Collaborate with
-     relevant application teams for further investigation.
-     Refer to the [Google Cloud Platform support
-     policy](https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope)
-     for details, including [out-of-scope
-     items](https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support).
+     **Note:** Non-Google provided application-specific issues may fall outside the support scope. Collaborate with relevant application teams for further investigation. Refer to the Google Cloud Platform support policy for details, including out-of-scope items:
 
-[AUTOMATED STEP]: Check if VM's boot disk space utilization is within optimal levels.
+     - Support and maintenance policy: <https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope>
+     - Out-of-scope items: <https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support>
+
+[AUTOMATED STEP]: Verify VM's boot disk space utilization is within optimal levels.
 
    - gcpdiag-gce-faultyssh-runbook/valid-linux-ssh                        [FAIL]
      [REASON]
@@ -391,7 +381,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      To mitigate high disk usage, consider expanding the VM's boot disk capacity.
      This action can help avoid performance issues and ensure smoother SSH connections.
 
-     Follow the guide to increase disk size:
+     Consult the following guide to increase disk size:
      <https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk>
 
 [AUTOMATED STEP]: Verify VM CPU utilization is within optimal levels.
@@ -402,19 +392,22 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      which may affect its performance and SSH connectivity.
 
      [REMEDIATION]
-     Excessive CPU usage can lead to performance bottlenecks. Consider resizing the VM to a more
-     powerful machine type with higher CPU capabilities.
-     Detailed instructions for resizing and restarting VMs are available here:
+     Excessive CPU usage can lead to performance bottlenecks. Resizing the VM to a machine type with higher CPU capabilities may resolve the issue.
+
+     Consult the following documentation for guidance:
 
      - Stopping a VM: <https://cloud.google.com/compute/docs/instances/stop-start-instance>
      - Resizing a VM: <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
 
-     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
-     - <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics>
-     - <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization>
+     Additionally, analyze Compute Engine observability metrics to pinpoint high-usage processes:
 
-     Alternatively, you can connect via serial console if SSH is unavailable to stop offending processes
-     (<https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>).
+     - Accessing VM observability metrics:
+       <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics>
+     - Analyzing process utilization:
+       <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization>
+
+     If SSH is unavailable, connect via the serial console to stop offending processes:
+     <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 
 [GATEWAY]: Identify Guest OS type.
 [INFO]: Linux Guest OS detected. Proceeding with diagnostics specific to Linux systems.
@@ -438,10 +431,10 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      [REASON]
      The retrieved logs do not contain definitive entries, either positive or negative,
      to make a conclusive assessment.
-     Manually review the GCE serial logs to determine if SSHGuard is a likely cause.
+     Review the GCE serial logs to determine if SSHGuard is a likely cause.
 
      [REMEDIATION]
-     Note: Issues related to SSHGuard fall outside the standard support scope for Google Cloud Platform.
+     Issues related to SSHGuard fall outside the standard support scope for Google Cloud Platform.
      Consult the most appropriate team within your organisation to assist with resolution.
      For guest OS issues and SSHGuard configurations, refer to:
 
@@ -453,7 +446,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [OK]
      [REASON]
-     The user serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com possesses the appropriate permissions to fetch instance details.
+     serviceAccount:canssh@gcpdiag-gce-faultyssh-runbook.iam.gserviceaccount.com possesses the appropriate permissions to fetch instance details.
 
 [GATEWAY]: Identify OS Login Setup.
 [AUTOMATED STEP]: Verify that OS Login is set to `True` for the VM.
@@ -560,12 +553,12 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      [REMEDIATION]
      Restart VM projects/gcpdiag-gce-faultyssh-runbook/zones/europe-west2-a/instances/faulty-windows-ssh and ensure VM lifecycle transitions from TERMINATED to RUNNING.
 
-     You can [restart a compute instance](https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm)
-     with this guide.
+     Consult the following documentation:
 
-     If you encounter any difficulties starting the VM, consult the [VM Startup troubleshooting
-     documentation](https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting)
-     to identify and resolve potential startup issues.
+     - Restarting a compute instance:
+       <https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm>
+     - Troubleshooting VM startup issues:
+       <https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting>
 
 [COMPOSITE STEP]: Evaluating VM memory, CPU, and disk performance.
 [AUTOMATED STEP]: Verify VM memory utilization is within optimal levels.
@@ -575,62 +568,56 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      Memory utilization on this VM has reached levels that may compromise its VM application performance.
 
      [REMEDIATION]
-     Elevated memory usage can result in slow or unresponsive or termimated applications.
-     Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
-     Guidance on stopping and changing the machine type can be found here:
+     Elevated memory usage can result in slow, unresponsive, or terminated applications.
+     Enhance the VM's memory capacity by changing to a machine type with more memory.
+
+     Consult the following documentation for guidance:
 
      - Changing machine type:
-     <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
+       <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
 
-     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
+     Additionally, analyze Compute Engine observability metrics to pinpoint high-usage processes:
      <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization>
 
-     Or connect via the Serial Console if SSH is not available to mitigate the issue:
+     If SSH is unavailable, connect via the serial console to mitigate the issue:
      <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 
-[AUTOMATED STEP]: Check for memory related errors in VM serial logs.
+[AUTOMATED STEP]: Verify memory related errors in VM serial logs.
 
    - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [UNCERTAIN]
      [REASON]
      Unable to investigate the high memory utilization error logs, likely due to the absence of logs.
      However, this does not eliminate the possibility of high memory usage.
 
-     You may manually verify memory utilization on the Guest OS side a likely cause.
+     Manual verification of memory utilization on the Guest OS is recommended as a potential cause.
 
      [REMEDIATION]
 
-     1. Manually investigate by accessing the Guest OS to Analyze Memory Usage:
-        - Identify processes with consistently high memory consumption:
-          - Run `top` and press "M" to sort processes by memory usage.
-          - Alternatively, use the command: `ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5`
+     1. Manually investigate memory usage by accessing the Guest OS:
+        - Identify processes with consistently high memory consumption using `top` (press "M") or `ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5`.
         - Focus on processes with recent spikes or consistently high memory usage.
-        - If SSH access is unavailable, consider [troubleshooting via the serial
-     console](https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console).
+        - If SSH access is unavailable, troubleshoot via the serial console:
+          <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 
-     2. Review Application or Configuration Changes:
+     2. Review recent application or configuration changes:
         - Investigate if recent deployments, updates, or configuration changes correlate with increased memory usage.
 
-     3. Resolve Identified Bottlenecks:
-        - For applications causing excessive memory usage:
-          - Optimize their configuration or update them to a stable version.
-          - Explore alternatives if optimization is insufficient.
-        - Evaluate scaling up resources if the high memory usage results from legitimate application demands.
+     3. Resolve identified bottlenecks:
+        - For applications causing excessive memory usage, optimize their configuration or update them. Explore alternatives if optimization is insufficient.
+        - Evaluate scaling up resources if high memory usage results from legitimate application demands.
 
-     4. Increase Instance Memory if Necessary:
-        - If additional memory is required for the application:
-          - Stop the VM and [change its machine type](https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud).
-          - Consult the [machine type documentation](https://cloud.google.com/compute/docs/machine-types) to select an appropriate
-     configuration.
+     4. Increase instance memory if necessary:
+        - Stop the VM and change its machine type:
+          <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
+        - Consult the machine type documentation to select an appropriate configuration:
+          <https://cloud.google.com/compute/docs/machine-types>
 
-     **Note:**
-     Non Google provided Application-specific issues may fall outside support scope. Collaborate with
-     relevant application teams for further investigation.
-     Refer to the [Google Cloud Platform support
-     policy](https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope)
-     for details, including [out-of-scope
-     items](https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support).
+     **Note:** Non-Google provided application-specific issues may fall outside the support scope. Collaborate with relevant application teams for further investigation. Refer to the Google Cloud Platform support policy for details, including out-of-scope items:
 
-[AUTOMATED STEP]: Check if VM's boot disk space utilization is within optimal levels.
+     - Support and maintenance policy: <https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope>
+     - Out-of-scope items: <https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support>
+
+[AUTOMATED STEP]: Verify VM's boot disk space utilization is within optimal levels.
 
    - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [FAIL]
      [REASON]
@@ -641,7 +628,7 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      To mitigate high disk usage, consider expanding the VM's boot disk capacity.
      This action can help avoid performance issues and ensure smoother SSH connections.
 
-     Follow the guide to increase disk size:
+     Consult the following guide to increase disk size:
      <https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk>
 
 [AUTOMATED STEP]: Verify VM CPU utilization is within optimal levels.
@@ -652,19 +639,22 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      which may affect its performance and SSH connectivity.
 
      [REMEDIATION]
-     Excessive CPU usage can lead to performance bottlenecks. Consider resizing the VM to a more
-     powerful machine type with higher CPU capabilities.
-     Detailed instructions for resizing and restarting VMs are available here:
+     Excessive CPU usage can lead to performance bottlenecks. Resizing the VM to a machine type with higher CPU capabilities may resolve the issue.
+
+     Consult the following documentation for guidance:
 
      - Stopping a VM: <https://cloud.google.com/compute/docs/instances/stop-start-instance>
      - Resizing a VM: <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
 
-     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
-     - <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics>
-     - <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization>
+     Additionally, analyze Compute Engine observability metrics to pinpoint high-usage processes:
 
-     Alternatively, you can connect via serial console if SSH is unavailable to stop offending processes
-     (<https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>).
+     - Accessing VM observability metrics:
+       <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics>
+     - Analyzing process utilization:
+       <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization>
+
+     If SSH is unavailable, connect via the serial console to stop offending processes:
+     <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 
 [GATEWAY]: Identify Guest OS type.
 [INFO]: Windows Guest OS detected. Proceeding with diagnostics specific to Windows systems.
@@ -704,17 +694,17 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      6. [Using PowerShell to connect to Windows
      instances](https://cloud.google.com/compute/docs/instances/windows/connecting-powershell)
 
-[MANUAL STEP]: Manually verify if the necessary Google guest agents, especially `google-compute-engine-ssh`, are operational on the VM.
+[MANUAL STEP]: Verify if the necessary Google guest agents, especially `google-compute-engine-ssh`, are operational on the VM.
 [COMPOSITE STEP]: Verify overall user permissions for SSH access. Note: Only roles granted at the project level are checked. Permissions inherited from ancestor resources such as folder(s) or organization and groups are not checked.
 [AUTOMATED STEP]: Verify that the user:cannot@example.com has "compute.instance.get" permission.
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
-     The authenticated user user:cannot@example.com does not have the permissions needed to manage instances.
+     user:cannot@example.com does not have the permissions needed to manage instances.
      The following permissions are required: permissions.
 
      [REMEDIATION]
-     To remedy this, ensure the user user:cannot@example.com is granted a role encompassing the necessary permissions:
+     Ensure user:cannot@example.com is granted a role encompassing the necessary permissions:
 
      - Permissions needed: compute.instances.get
 
@@ -736,8 +726,8 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
      roles/compute.osAdminLogin, roles/compute.osLogin, roles/owner.
 
      [REMEDIATION]
-     Assign the principal one of the role required to have OS Login privileges.
-     For more information:
+     Assign the principal one of the roles required for OS Login privileges.
+     Consult the following resources for more information:
 
      <https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users>
 
@@ -747,12 +737,11 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 
    - projects/gcpdiag-gce-faultyssh-runbook                               [FAIL]
      [REASON]
-     "user:cannot@example.com" does not have the "roles/iam.serviceAccountUser" role or custom roles which has the
-     constituent permissions required to be able to impersonate the attached service account.
+     "user:cannot@example.com" lacks the "roles/iam.serviceAccountUser" role or a custom role with the necessary permissions to impersonate the attached service account.
 
      [REMEDIATION]
      Assign the "roles/iam.serviceAccountUser" role to "user:cannot@example.com".
-     Guidelines:
+     Consult the following guidelines:
 
      <https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users>
 

@@ -23,7 +23,7 @@ Gets the job and confirms it exists.
 
 ### Success Reason
 
-  Successful found job {job_id} in region {region}
+  Successfully found job {job_id} in region {region}
 
 
 

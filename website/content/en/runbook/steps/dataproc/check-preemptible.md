@@ -20,8 +20,11 @@ Cluster {cluster.name} uses preemptible workers and their count exceeds 50% of t
 
 ### Failure Remediation
 
-Consider reducing the number of preemptible workers or using non-preemptible workers for better stability.
-You may also explore Enhanced Flexibility Mode (EFM) for better control over preemptible instances.
+To improve stability:
+
+- Reduce the number of preemptible workers.
+- Use non-preemptible workers.
+- Explore Enhanced Flexibility Mode (EFM) for better control over preemptible instances.
 
 ### Success Reason
 

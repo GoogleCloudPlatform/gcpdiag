@@ -20,7 +20,7 @@ The Google-managed SSL certificate "{name}" is in the PROVISIONING_FAILED_PERMAN
 
 ### Failure Remediation
 
-Please recreate the certificate. See the documentation for instructions on creating SSL certificates.
+Recreate the certificate. Refer to the documentation for instructions on creating SSL certificates.
 
 ### Success Reason
 

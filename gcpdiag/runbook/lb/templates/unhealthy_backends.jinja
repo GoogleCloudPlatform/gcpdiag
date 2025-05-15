@@ -13,11 +13,11 @@ Health check logging is enabled for health check {hc_url}.
 {% endblock logging_enabled_success_reason %}
 
 {% block logging_enabled_uncertain_reason %}
-Logging is not enabled for health check {hc_url}, making troubleshooting considerably harder. Without logs, visibility into health check state changes and probe details is lacking, hindering the ability to diagnose the cause of failures.
+Logging is not enabled for health check {hc_url}. Lack of logs hinders troubleshooting, as logs provide visibility into health check state changes and probe details needed to diagnose failures.
 {% endblock logging_enabled_uncertain_reason %}
 
 {% block logging_enabled_uncertain_remediation %}
-To facilitate troubleshooting, enable logging for the health check using the following `gcloud` command:
+Enable logging for the health check using the following `gcloud` command:
 
 ```
 gcloud compute health-checks update {protocol} {hc_name} {additional_flags} --enable-logging
@@ -33,15 +33,15 @@ Affected backends:
 
 {formatted_igs}
 
-This configuration can be problematic unless you have configured the load balancer to use a different port for health checks purposefully.
+This configuration can be problematic unless the load balancer has been configured to use a different port for health checks purposefully.
 {% endblock port_mismatch_uncertain_reason %}
 
 {% block port_mismatch_uncertain_remediation %}
-Verify that the health check port is correctly configured to match the port used by your application if the health check is intended to check the serving port.
+Verify that the health check port is correctly configured to match the port used by the application if the health check is intended to check the serving port.
 {% endblock port_mismatch_uncertain_remediation %}
 
 {% block port_mismatch_success_reason %}
-The load balancer is performing health checks on the same port that it is using for serving traffic. This is the standard configuration.
+The load balancer is performing health checks on the same port used for serving traffic. This is the standard configuration.
 {% endblock port_mismatch_success_reason %}
 
 {% block protocol_mismatch_uncertain_reason %}
@@ -51,20 +51,20 @@ The load balancer uses {serving_protocol} for traffic but {hc_protocol} for heal
 {% endblock protocol_mismatch_uncertain_reason %}
 
 {% block protocol_mismatch_uncertain_remediation %}
-Verify that the health check and serving protocol are correctly configured to match the protocol used by your application.
+Verify that the health check and serving protocol are correctly configured to match the protocol used by the application.
 {% endblock protocol_mismatch_uncertain_remediation %}
 
 {% block protocol_mismatch_success_reason %}
-The load balancer is performing health checks using the same protocol ({hc_protocol}) that it is using for serving traffic. This is the standard configuration.
+The load balancer is performing health checks using the same protocol ({hc_protocol}) used for serving traffic. This is the standard configuration.
 {% endblock protocol_mismatch_success_reason %}
 
 {% block firewall_rules_failure_reason %}
 {insight}
-The health checks are currently failing due to a misconfigured firewall. This prevents Google Cloud probers from connecting to your backends, causing the load balancer to consider them unhealthy.
+The health checks are currently failing due to a misconfigured firewall. This prevents Google Cloud probers from connecting to the backends, causing the load balancer to consider them unhealthy.
 {% endblock firewall_rules_failure_reason %}
 
 {% block firewall_rules_failure_remediation %}
-Update your firewall rules to allow inbound traffic from the Google Cloud health check IP ranges (found at <https://cloud.google.com/load-balancing/docs/health-check-concepts#ip-ranges>) to your backends.
+Update the firewall rules to allow inbound traffic from the Google Cloud health check IP ranges (found at <https://cloud.google.com/load-balancing/docs/health-check-concepts#ip-ranges>) to the backends.
 {% endblock firewall_rules_failure_remediation %}
 
 {% block firewall_rules_success_reason %}
@@ -72,7 +72,7 @@ Firewall rules are correctly configured and are not blocking health check probes
 {% endblock firewall_rules_success_reason %}
 
 {% block past_hc_success_uncertain_remediation %}
-Check the logs and monitoring metrics for the instances associated with backend service {bs_url}, focusing on recent timeframes to see if there were any errors, crashes, or resource exhaustion issues. You can also inspect any application-specific logs for errors or warnings.
+Check the logs and monitoring metrics for the instances associated with backend service {bs_url}, focusing on recent timeframes to see if there were any errors, crashes, or resource exhaustion issues. Also inspect any application-specific logs for errors or warnings.
 {% endblock past_hc_success_uncertain_remediation %}
 
 {% block unknown_hc_state_log_failure_reason %}
@@ -82,7 +82,7 @@ Health check logs for backend service {bs_url} show entries with the detailed he
 {% block unknown_hc_state_log_failure_remediation %}
 For new endpoints: Consider reducing the timeout period for health checks if appropriate, especially during initial setup or testing phases.
 
-For potential Google Cloud outages: Use Personalized Service Health to check for any ongoing incidents that might be affecting your project or the specific service in question. If an incident is identified, follow any recommended mitigation steps or wait for the issue to be resolved by Google Cloud.
+For potential Google Cloud outages: Use Personalized Service Health to check for any ongoing incidents that might be affecting the project or the specific service in question. If an incident is identified, follow any recommended mitigation steps or wait for the issue to be resolved by Google Cloud.
 {% endblock unknown_hc_state_log_failure_remediation %}
 
 {% block unhealthy_hc_state_log_failure_reason %}
@@ -94,9 +94,9 @@ Responses received from backends: {probe_results_text_str}
 {% block unhealthy_hc_state_log_failure_remediation %}
 {success_criteria}
 
-Please investigate the configuration of your application to ensure it aligns with these health check expectations.
+Investigate the configuration of the application to ensure it aligns with these health check expectations.
 
-If you intend to check a different endpoint or expect a different response, adjust the health check settings accordingly.
+If a different endpoint should be checked or a different response is expected, adjust the health check settings accordingly.
 {% endblock unhealthy_hc_state_log_failure_remediation %}
 
 {% block timeout_hc_state_log_failure_reason %}
@@ -117,9 +117,9 @@ The following responses were received from your backends: {probe_results_text_st
 
 {% block timeout_hc_state_log_failure_remediation %}
 
-1. Make sure that the backend service timeout (current value: {bs_timeout_sec}s) and health check timeout (current value: {hc_timeout_sec}s) are appropriately configured to accommodate your application's expected response time.
+1. Make sure that the backend service timeout (current value: {bs_timeout_sec}s) and health check timeout (current value: {hc_timeout_sec}s) are appropriately configured to accommodate the application's expected response time.
 
-2. Investigate your application's configuration to ensure it is correctly handling health check probe requests. {success_criteria}
+2. Investigate the application's configuration to ensure it is correctly handling health check probe requests. {success_criteria}
 
 3. Check if firewall rules or iptables configurations are blocking the health check probes from reaching the backend instances, resulting in timeouts.
 {% endblock timeout_hc_state_log_failure_remediation %}

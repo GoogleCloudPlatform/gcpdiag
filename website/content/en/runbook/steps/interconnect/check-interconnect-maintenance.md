@@ -16,15 +16,15 @@ Check if any interconnects with BGP down are in maintenance state.
 
 ### Failure Reason
 
-    The interconnect {interconnect_name} with BGP down has no planned maintenance.
+    The interconnect `{interconnect_name}` with `BGP` down has no planned maintenance.
 
 ### Failure Remediation
 
-    Please continue to check router logging. Further debugging is needed.
+    Check `router logging` for details.
 
 ### Success Reason
 
-    Interconnects with BGP down are in planned maintenance.
+    `BGP` down events coincide with planned interconnect maintenance.
 
 
 

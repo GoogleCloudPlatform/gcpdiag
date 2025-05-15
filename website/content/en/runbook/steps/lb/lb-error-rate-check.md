@@ -20,7 +20,7 @@ The forwarding rule has an average error rate of {average_error_rate}% in the la
 
 ### Failure Remediation
 
-A high error rate indicates problems with your backend. Check the logs for 5xx errors and investigate the root cause. Common issues include application errors and resource exhaustion. If the errors are related to specific requests, examine those requests for patterns or anomalies.
+A high error rate indicates potential problems with the backend service. Check the logs for 5xx errors and investigate the root cause. Common issues include application errors and resource exhaustion. If the errors correlate with specific requests, examine those requests for patterns or anomalies.
 
 ### Success Reason
 

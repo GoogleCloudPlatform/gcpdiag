@@ -16,17 +16,16 @@ None
 
 ### Failure Reason
 
-Job {job_id} has completed successfully.
+Job `{job_id}` completed successfully.
 
 ### Failure Remediation
 
-The job you shared hasn't failed.
-If your job experienced slow performance, potential causes could include data skew, changes in data volume, or network latency.
-Please initiate a support case and share the Spark event log for both the fast and slow job runs.
+If the job experienced slow performance, potential causes include data skew, changes in data volume, or network latency.
+If performance issues persist, open a support case and share the Spark event log for both the fast and slow job runs.
 
 ### Success Reason
 
-Job {job_id} was failed. Run the rest steps to investigate further.
+Job `{job_id}` failed. Continue with the next steps to investigate the failure.
 
 
 

@@ -28,15 +28,14 @@ dataflow/job-permissions: Analysis and Resolution of Dataflow Jobs Permissions i
 
    - projects/gcpdiag-dataflow1-aaaa                                      [FAIL]
      [REASON]
-     user:user@xyz.com doesn't have at least one of the expected roles:
+     user:user@xyz.com does not have at least one of the expected roles:
      roles/dataflow.developer, roles/iam.serviceAccountUser.
 
      [REMEDIATION]
-     Follow Guide [1] to grant a role which has the correct permissions.
-     [2] has a list of all Google predefined roles available to you.
+     Grant a role containing the missing permissions by following the instructions in [1].
+     Refer to [2] for a list of Google Cloud predefined roles.
 
-     Note: You may want to doublecheck with your project admins of the best way to grant the role
-     or custom roles which can be used.
+     Note: Consider consulting with project administrators regarding the most appropriate standard or custom role to grant.
 
      [1] <https://cloud.google.com/iam/docs/grant-role-console>
      [2] <https://cloud.google.com/iam/docs/understanding-roles>
@@ -45,23 +44,18 @@ dataflow/job-permissions: Analysis and Resolution of Dataflow Jobs Permissions i
 
    - projects/gcpdiag-dataflow1-aaaa                                      [FAIL]
      [REASON]
-     serviceAccount:service-12340010@dataflow-service-producer-prod.iam.gserviceaccount.com doesn't have at least one of the expected roles:
-     roles/dataflow.serviceAgent.
-
+     NOTICE: No message available to parse for this step
      [REMEDIATION]
-     Follow Guide [1] to grant a role which has the correct permissions.
-
-     [1] <https://cloud.google.com/dataflow/docs/concepts/security-and-permissions#df-service-account>
-
+     NOTICE: No message available to parse for this step
 [GATEWAY]: Checking dataflow worker service account permissions.
 [INFO]: dataflow-worker@gcpdiag-dataflow1-aaaa.iam.gserviceaccount.com
 
    - gcpdiag-datafusion1-aaaa                                             [FAIL]
      [REASON]
-     Service Account dataflow-worker@gcpdiag-dataflow1-aaaa.iam.gserviceaccount.com associated with Dataflow Job was not found in project gcpdiag-dataflow1-aaaa or cross project (if specified).
+     Service Account dataflow-worker@gcpdiag-dataflow1-aaaa.iam.gserviceaccount.com associated with Dataproc cluster was not found in project gcpdiag-dataflow1-aaaa or cross project (if specified).
 
      [REMEDIATION]
-     Provide the project in which the service account resides by using the cross_project/project parameter.
+     Provide the project where the service account resides using the `cross_project` parameter.
 
 [AUTOMATED STEP]: Check the Dataflow Resource permissions.
 [INFO]: No Cloud Storage buckets related errors found in the logs

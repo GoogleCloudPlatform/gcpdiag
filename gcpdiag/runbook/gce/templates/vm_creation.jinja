@@ -3,8 +3,7 @@
 {% endblock logs_failure_reason %}
 
 {% block logs_failure_remediation %}
-The VM creation process failed because the VM `{instance_name}` already exists in zone `{zone}` within project
-`{project_id}`. Please delete the existing VM or choose a different name for the new VM.
+The VM creation process failed because the VM `{instance_name}` already exists in zone `{zone}` within project `{project_id}`. Delete the existing VM or choose a different name for the new VM.
 {% endblock logs_failure_remediation %}
 
 {% block logs_failure_reason_a1 %}
@@ -12,15 +11,17 @@ The VM creation process failed because the VM `{instance_name}` already exists i
 {% endblock logs_failure_reason_a1 %}
 
 {% block logs_failure_remediation_a1 %}
-The VM creation process failed due to {metric_name} quota limit being exceeded.
+The VM creation process failed because the {metric_name} quota limit was exceeded.
+The current {limit_name} limit is {limit}.
 
-Current {limit_name} limit is set at {limit}
-
-To resolve this issue follow our guide to adjust {metric_name} to value
+Increase the relevant quota by following the guidance provided in the documentation:
 <https://cloud.google.com/docs/quotas/view-manage#requesting_higher_quota>
-1. Navigate to the Google Cloud Console Quotas & System Limits page <https://console.cloud.google.com/iam-admin/quotas>
-2. Locate the quota metric and region associated with the failure.
-3. Request a quota increase.
+
+Alternatively, use these steps:
+
+- Navigate to the 'Quotas & System Limits' page in the Google Cloud Console: <https://console.cloud.google.com/iam-admin/quotas>
+- Locate the quota metric ({metric_name}) and region associated with the failure.
+- Request a quota increase for the identified metric and region.
 {% endblock logs_failure_remediation_a1 %}
 
 {% block logs_failure_reason_a2 %}
@@ -28,5 +29,7 @@ To resolve this issue follow our guide to adjust {metric_name} to value
 {% endblock logs_failure_reason_a2 %}
 
 {% block logs_failure_remediation_a2 %}
-Grant the missing permission to be able to create an instance <https://cloud.google.com/compute/docs/instances/create-start-instance#expandable-1>
+Grant the user or service account attempting the VM creation the required permissions to create a VM instance.
+Consult the following guide for details on required permissions:
+<https://cloud.google.com/compute/docs/instances/create-start-instance#expandable-1>
 {% endblock logs_failure_remediation_a2 %}

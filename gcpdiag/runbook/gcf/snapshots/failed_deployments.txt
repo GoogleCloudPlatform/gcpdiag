@@ -14,11 +14,11 @@ gcf/failed-deployments:  Cloud Run function failed deployments check
 
    - gcpdiag-gcf1-aaaa                                                    [FAIL]
      [REASON]
-     The cloud run function service agent or default service account either do not exist or are not enabled:
+     The Cloud Functions service agent or the default runtime service account does not exist or is not enabled:
      <https://cloud.google.com/functions/docs/concepts/iam#access_control_for_service_accounts>
 
      [REMEDIATION]
-     Review the IAM roles guide for providing default roles to cloud run function default service account and the service agent:
+     Refer to the IAM roles guide for providing default roles to the Cloud Run function default service account and the service agent:
      <https://cloud.google.com/functions/docs/concepts/iam#serviceaccount>
 
 [AUTOMATED STEP]: Check if User/Service account has permissions on Cloud function runtime service account
@@ -26,23 +26,22 @@ gcf/failed-deployments:  Cloud Run function failed deployments check
 
    - gcpdiag-gcf1-aaaa                                                    [FAIL]
      [REASON]
-     This error indicates that there was a problem with your code. The deployment pipeline finished deploying the function,
-     but failed at the last step- sending a health check to the function. This health check is meant to execute a functions global scope,
-     which could be throwing an exception, crashing, or timing out.
+     A problem with the function code was detected. The deployment pipeline completed the function deployment,
+     but failed at the last step- sending a health check to the function. This health check executes the function's global scope,
+     which may be throwing an exception, crashing, or timing out.
 
      [REMEDIATION]
-     Please use the following document as reference to address this error:
+     Refer to the following document to address this error:
      <https://cloud.google.com/functions/docs/troubleshooting#global>
 
 [AUTOMATED STEP]: Check for deployment failures due to resource location constraint
 
    - gcpdiag-gcf1-aaaa                                                    [FAIL]
      [REASON]
-     If your organization uses a resource location constraint policy,
-     it restricts function deployment in the regions restricted by the policy.
+     An active resource location constraint policy in the organization restricts function deployment in the regions specified by the policy.
 
      [REMEDIATION]
-     Please use the following document as reference to address this error:
+     Refer to the following document to address this error:
      <https://cloud.google.com/functions/docs/troubleshooting#resource-location>
 
 [END]: Finalizing cloud run function deployment failures

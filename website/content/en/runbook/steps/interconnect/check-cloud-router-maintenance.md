@@ -17,15 +17,15 @@ Check if any Cloud Router had maintenance event.
 
 ### Failure Reason
 
-    There are BGP flaps less than 60s without Cloud Router maintenance events.
+    `BGP` flaps (duration < 60s) detected that do not coincide with `Cloud Router maintenance` events.
 
 ### Failure Remediation
 
-    Please continue to check router logging. Further debugging is needed.
+    Check `router logging` for details.
 
 ### Success Reason
 
-    BGP flaps less than 60s are all caused by Cloud Router maintenance events.
+    `BGP` flaps (duration < 60s) coincide with `Cloud Router maintenance` events.
 
 
 

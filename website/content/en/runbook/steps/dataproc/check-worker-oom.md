@@ -20,11 +20,14 @@ Found logs messages related to Worker OOM on the cluster: {cluster_name}.
 
 ### Failure Remediation
 
-The log indicates that worker OOM (out-of-memory) errors may have occurred on your cluster.
-You can try using a high-memory machine type for your worker nodes or repartition your data to avoid data skew.
+The logs indicate that worker OOM (out-of-memory) errors may have occurred on the cluster.
+To resolve this issue:
 
-You can find more details in the troubleshooting guide [1].
-If it still not work, please contact Google Cloud Support.
+- Use a high-memory machine type for the worker nodes.
+- Repartition the data to avoid data skew.
+
+Refer to the troubleshooting guide [1] for more details.
+If the issue persists, contact Google Cloud Support.
 [1] <https://cloud.google.com/dataproc/docs/support/troubleshoot-oom-errors#oom_solutions>
 
 ### Success Reason

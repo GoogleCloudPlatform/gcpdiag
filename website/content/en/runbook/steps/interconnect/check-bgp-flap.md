@@ -16,23 +16,23 @@ Check if any BGP flap events, report error flaps with duration over 60 seconds.
 
 ### Failure Reason
 
-    The project {project_id} has BGP flaps with a duration over 60s.
+    `BGP` flaps lasting longer than 60 seconds detected in project `{project_id}`.
 
 ### Failure Remediation
 
-    Please continue to check router logging. Further debugging is needed.
+    Check `router logging` for details.
 
 ### Success Reason
 
-    No BGP flaps are found.
+    No `BGP` flaps are found.
 
 ### Uncertain Reason
 
-    There are BGP flaps with duration less than 60s.
+    `BGP` flaps lasting less than 60 seconds detected.
 
 ### Uncertain Remediation
 
-    Please continue to check if there are cloud router maintenance.
+    Check for `cloud router maintenance` events.
 
 
 

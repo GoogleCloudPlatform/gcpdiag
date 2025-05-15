@@ -21,8 +21,7 @@ This step queries logs to identify the root cause of VM creation failures,
 
 ### Failure Remediation
 
-The VM creation process failed because the VM `{instance_name}` already exists in zone `{zone}` within project
-`{project_id}`. Please delete the existing VM or choose a different name for the new VM.
+The VM creation process failed because the VM `{instance_name}` already exists in zone `{zone}` within project `{project_id}`. Delete the existing VM or choose a different name for the new VM.
 
 
 ### Failure Reason [Alternative 2]
@@ -31,7 +30,9 @@ The VM creation process failed because the VM `{instance_name}` already exists i
 
 ### Failure Remediation [Alternative 2]
 
-Grant the missing permission to be able to create an instance <https://cloud.google.com/compute/docs/instances/create-start-instance#expandable-1>
+Grant the user or service account attempting the VM creation the required permissions to create a VM instance.
+Consult the following guide for details on required permissions:
+<https://cloud.google.com/compute/docs/instances/create-start-instance#expandable-1>
 
 
 <!--

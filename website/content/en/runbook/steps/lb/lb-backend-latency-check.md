@@ -20,7 +20,7 @@ The forwarding rule has a backend latency of {average_latency} ms. This is highe
 
 ### Failure Remediation
 
-Investigate the increased backend latency. Check the health and performance of your backend instances, including CPU usage, memory usage, and disk I/O.
+Investigate the increased backend latency. Check the health and performance of the backend instances, examining metrics such as CPU utilization, memory usage, and disk I/O.
 
 ### Success Reason
 

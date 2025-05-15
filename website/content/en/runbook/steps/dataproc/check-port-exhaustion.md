@@ -16,23 +16,23 @@ None
 
 ### Failure Reason
 
-Found logs messages related to "{log}" on the cluster: {cluster_name}.
+Log messages related to "{log}" were found on the cluster: {cluster_name}.
 
 ### Failure Remediation
 
-This issue occurs when Spark Jobs was not able to find available port after 1000 retries.
-COLSE_WAIT connections are possible cause of this issue.
-To identify any CLOSE_WAIT connections, please analyze the netstat output.
+This issue occurs when Spark jobs cannot find an available port after 1000 retries.
+CLOSE_WAIT connections are a possible cause.
+To identify CLOSE_WAIT connections, analyze the netstat output:
 
-1. netstat plant >> open_connections.txt
-2. cat open_connections.txt | grep “CLOSE_WAIT”
+1. Run `netstat -plant >> open_connections.txt`.
+2. Run `cat open_connections.txt | grep "CLOSE_WAIT"`.
 
-If the blocked connections are due to a specific application, restarting that application is recommended.
-Alternatively, restarting the master node will also release the affected connections.
+If blocked connections are due to a specific application, restart that application.
+Alternatively, restart the master node to release the affected connections.
 
 ### Success Reason
 
-Didn't find logs messages related to "{log}" on the cluster: {cluster_name}.
+No log messages related to "{log}" were found on the cluster: {cluster_name}.
 
 
 

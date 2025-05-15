@@ -16,7 +16,7 @@ None
 
 ### Failure Reason
 
-The following domains are in FAILED_RATE_LIMITED state: {domains} for SSL certificate "{name}". This indicates rate limiting by the Certificate Authority.  You've likely exceeded the allowed number of certificate requests in a short period.
+The following domains are in FAILED_RATE_LIMITED state: {domains} for SSL certificate "{name}". This indicates rate limiting by the Certificate Authority. This likely means the allowed number of certificate requests in a short period was exceeded.
 
 ### Failure Remediation
 

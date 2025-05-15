@@ -16,18 +16,18 @@ Usually the specific error is logged in the Dataflow Monitoring Interface.
 
 ### Failure Reason
 
-  Job State for job {job_id} is Failed.
+  Job state for job {job_id} is Failed.
 
 ### Failure Remediation
 
-  Check Dataflow Monitoring Interface for the specific error, and find the error among
-  common errors here[1] to resolve the job errors.
+  Refer to the Dataflow Monitoring Interface for the specific error.
+  Refer to the common errors documentation [1] to resolve the job errors.
 
   [1] <https://cloud.google.com/dataflow/docs/guides/common-errors#pipeline_errors>
 
 ### Success Reason
 
-   Job State is successfully {state}
+   The Dataflow job state is {state}.
 
 
 

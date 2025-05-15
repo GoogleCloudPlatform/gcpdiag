@@ -24,12 +24,12 @@ Example log entry that would help identify involved objects:
 
 ### Failure Remediation
 
-Follow the documentation:
+Ensure the node service account has the necessary permissions to pull the image. Refer to the documentation:
 <https://cloud.google.com/artifact-registry/docs/integrate-gke#permissions>
 
 ### Success Reason
 
-No "Failed to pull image.*403 Forbidden" errors found between {start_time} and {end_time}
+No "Failed to pull image.*403 Forbidden" errors were found for cluster between {start_time} and {end_time}.
 
 
 

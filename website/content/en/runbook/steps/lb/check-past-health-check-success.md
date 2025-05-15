@@ -16,7 +16,7 @@ None
 
 ### Uncertain Remediation
 
-Check the logs and monitoring metrics for the instances associated with backend service {bs_url}, focusing on recent timeframes to see if there were any errors, crashes, or resource exhaustion issues. You can also inspect any application-specific logs for errors or warnings.
+Check the logs and monitoring metrics for the instances associated with backend service {bs_url}, focusing on recent timeframes to see if there were any errors, crashes, or resource exhaustion issues. Also inspect any application-specific logs for errors or warnings.
 
 
 

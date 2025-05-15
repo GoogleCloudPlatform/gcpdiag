@@ -22,7 +22,7 @@ Termination on host maintenance is normal behavior. This step verifies if it was
 ### Failure Remediation
 
 Instance {full_resource_path} maintenance policy is set to TERMINATE, Compute Engine
-stops your VM when there is a maintenance event where Google must move
+stops your VM when there is a maintenance event where Google must move your VM to another host.
 
 If you want to change your VM's onHostMaintenance policy to restart automatically
 or live migrate [1]. Read more about Host Events [2] and how to set your termination policies[3].

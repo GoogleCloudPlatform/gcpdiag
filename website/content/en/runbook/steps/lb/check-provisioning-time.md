@@ -25,7 +25,7 @@ The SSL certificate "{name}" has recently had associated resources modified. Thi
 
 ### Uncertain Remediation
 
-DNS validation automatically checks your domain's A and AAAA records against your Google Cloud load balancer's IP address. This process includes an automatic retry mechanism with increasing wait times. If you recently attached {name} to a target proxy or the target proxy to forwarding rule, validation could take up to 24 hours to complete.
+DNS validation automatically checks the domain's A and AAAA records against the Google Cloud load balancer's IP address. This process includes an automatic retry mechanism with increasing wait times. If {name} was recently attached to a target proxy or the target proxy to a forwarding rule, validation could take up to 24 hours to complete.
 
 
 

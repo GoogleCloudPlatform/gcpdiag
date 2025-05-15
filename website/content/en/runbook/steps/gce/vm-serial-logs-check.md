@@ -22,7 +22,7 @@ Anomalies detected in the serial logs which align with the investigated bad patt
 
 ### Failure Remediation
 
-Investigate potential issues through the serial console.
+Investigate potential issues via the serial console.
 If GRUB_TIMEOUT is greater than 0, access the interactive session for more insights.
 Explore rescue options for inaccessible VMs or review possible guest OS issues.
 
@@ -30,14 +30,14 @@ Explore rescue options for inaccessible VMs or review possible guest OS issues.
 - Rescuing VMs: <https://cloud.google.com/compute/docs/troubleshooting/rescue-vm>
 
 If escalating Guest OS related issues to Google Cloud Support,
-do check to ensure is in line with Google Cloud Platform's Guest OS support policy
+verify that the issue is in line with Google Cloud Platform's Guest OS support policy
 
 - Google Cloud Platform Support Scope:
 <https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope>
 
 ### Success Reason
 
-The VM's Linux OS shows no signs of interested anomalies,
+The VM's Linux OS shows no signs of anomalies,
 indicating a *likely* stable operational state.
 
 ### Uncertain Reason
@@ -47,7 +47,7 @@ inconclusive
 
 ### Uncertain Remediation
 
-Confirm the VM's operational status by reviewing available serial logs.
+Verify the VM's operational status by reviewing available serial logs.
 Address any detected guest OS issues using the provided documentation,
 keeping in mind certain guest OS faults may be beyond Google Cloud Platform's support scope.
 

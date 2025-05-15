@@ -76,9 +76,9 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 
      [REMEDIATION]
 
-     1. Make sure that the backend service timeout (current value: 30s) and health check timeout (current value: 5s) are appropriately configured to accommodate your application's expected response time.
+     1. Make sure that the backend service timeout (current value: 30s) and health check timeout (current value: 5s) are appropriately configured to accommodate the application's expected response time.
 
-     2. Investigate your application's configuration to ensure it is correctly handling health check probe requests. Your health check is using HTTP protocol, and it is set to: 
+     2. Investigate the application's configuration to ensure it is correctly handling health check probe requests. Your health check is using HTTP protocol, and it is set to: 
      - send a prober requests to the / path on port 80 
      - expect a response with an HTTP 200 (OK) status code
 
@@ -92,7 +92,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 
 
      [REMEDIATION]
-     Check the logs and monitoring metrics for the instances associated with backend service projects/gcpdiag-lb2-aaaa/global/backendServices/web-backend-service, focusing on recent timeframes to see if there were any errors, crashes, or resource exhaustion issues. You can also inspect any application-specific logs for errors or warnings.
+     Check the logs and monitoring metrics for the instances associated with backend service projects/gcpdiag-lb2-aaaa/global/backendServices/web-backend-service, focusing on recent timeframes to see if there were any errors, crashes, or resource exhaustion issues. Also inspect any application-specific logs for errors or warnings.
 
 [AUTOMATED STEP]: Validate port configuration for backend service "web-backend-service" in scope "global".
 
@@ -104,26 +104,26 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 
      projects/gcpdiag-lb2-aaaa/zones/us-east1-b/instanceGroups/lb-backend-example - port name "http" translates to port 80
 
-     This configuration can be problematic unless you have configured the load balancer to use a different port for health checks purposefully.
+     This configuration can be problematic unless the load balancer has been configured to use a different port for health checks purposefully.
 
      [REMEDIATION]
-     Verify that the health check port is correctly configured to match the port used by your application if the health check is intended to check the serving port.
+     Verify that the health check port is correctly configured to match the port used by the application if the health check is intended to check the serving port.
 
 [AUTOMATED STEP]: Validate protocol configuration for backend service "web-backend-service" in scope "global".
 
    - gcpdiag-lb2-aaaa/web-backend-service                                 [OK]
      [REASON]
-     The load balancer is performing health checks using the same protocol (HTTP) that it is using for serving traffic. This is the standard configuration.
+     The load balancer is performing health checks using the same protocol (HTTP) used for serving traffic. This is the standard configuration.
 
 [AUTOMATED STEP]: Verify firewall rules allow health checks for backend service "web-backend-service" in scope "global".
 
    - gcpdiag-lb2-aaaa/web-backend-service                                 [FAIL]
      [REASON]
      Health check firewall is not configured
-     The health checks are currently failing due to a misconfigured firewall. This prevents Google Cloud probers from connecting to your backends, causing the load balancer to consider them unhealthy.
+     The health checks are currently failing due to a misconfigured firewall. This prevents Google Cloud probers from connecting to the backends, causing the load balancer to consider them unhealthy.
 
      [REMEDIATION]
-     Update your firewall rules to allow inbound traffic from the Google Cloud health check IP ranges (found at <https://cloud.google.com/load-balancing/docs/health-check-concepts#ip-ranges>) to your backends.
+     Update the firewall rules to allow inbound traffic from the Google Cloud health check IP ranges (found at <https://cloud.google.com/load-balancing/docs/health-check-concepts#ip-ranges>) to the backends.
 
 [COMPOSITE STEP]: Check VMs performance for unhealthy backends in backend service "web-backend-service" in scope "global".
 [AUTOMATED STEP]: Verify VM memory utilization is within optimal levels.
@@ -133,62 +133,56 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      Memory utilization on this VM has reached levels that may compromise its VM application performance.
 
      [REMEDIATION]
-     Elevated memory usage can result in slow or unresponsive or termimated applications.
-     Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
-     Guidance on stopping and changing the machine type can be found here:
+     Elevated memory usage can result in slow, unresponsive, or terminated applications.
+     Enhance the VM's memory capacity by changing to a machine type with more memory.
+
+     Consult the following documentation for guidance:
 
      - Changing machine type:
-     <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
+       <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
 
-     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
+     Additionally, analyze Compute Engine observability metrics to pinpoint high-usage processes:
      <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization>
 
-     Or connect via the Serial Console if SSH is not available to mitigate the issue:
+     If SSH is unavailable, connect via the serial console to mitigate the issue:
      <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 
-[AUTOMATED STEP]: Check for memory related errors in VM serial logs.
+[AUTOMATED STEP]: Verify memory related errors in VM serial logs.
 
    - gcpdiag-lb2-aaaa/vm-pn3l                                             [UNCERTAIN]
      [REASON]
      Unable to investigate the high memory utilization error logs, likely due to the absence of logs.
      However, this does not eliminate the possibility of high memory usage.
 
-     You may manually verify memory utilization on the Guest OS side a likely cause.
+     Manual verification of memory utilization on the Guest OS is recommended as a potential cause.
 
      [REMEDIATION]
 
-     1. Manually investigate by accessing the Guest OS to Analyze Memory Usage:
-        - Identify processes with consistently high memory consumption:
-          - Run `top` and press "M" to sort processes by memory usage.
-          - Alternatively, use the command: `ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5`
+     1. Manually investigate memory usage by accessing the Guest OS:
+        - Identify processes with consistently high memory consumption using `top` (press "M") or `ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5`.
         - Focus on processes with recent spikes or consistently high memory usage.
-        - If SSH access is unavailable, consider [troubleshooting via the serial
-     console](https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console).
+        - If SSH access is unavailable, troubleshoot via the serial console:
+          <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 
-     2. Review Application or Configuration Changes:
+     2. Review recent application or configuration changes:
         - Investigate if recent deployments, updates, or configuration changes correlate with increased memory usage.
 
-     3. Resolve Identified Bottlenecks:
-        - For applications causing excessive memory usage:
-          - Optimize their configuration or update them to a stable version.
-          - Explore alternatives if optimization is insufficient.
-        - Evaluate scaling up resources if the high memory usage results from legitimate application demands.
+     3. Resolve identified bottlenecks:
+        - For applications causing excessive memory usage, optimize their configuration or update them. Explore alternatives if optimization is insufficient.
+        - Evaluate scaling up resources if high memory usage results from legitimate application demands.
 
-     4. Increase Instance Memory if Necessary:
-        - If additional memory is required for the application:
-          - Stop the VM and [change its machine type](https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud).
-          - Consult the [machine type documentation](https://cloud.google.com/compute/docs/machine-types) to select an appropriate
-     configuration.
+     4. Increase instance memory if necessary:
+        - Stop the VM and change its machine type:
+          <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
+        - Consult the machine type documentation to select an appropriate configuration:
+          <https://cloud.google.com/compute/docs/machine-types>
 
-     **Note:**
-     Non Google provided Application-specific issues may fall outside support scope. Collaborate with
-     relevant application teams for further investigation.
-     Refer to the [Google Cloud Platform support
-     policy](https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope)
-     for details, including [out-of-scope
-     items](https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support).
+     **Note:** Non-Google provided application-specific issues may fall outside the support scope. Collaborate with relevant application teams for further investigation. Refer to the Google Cloud Platform support policy for details, including out-of-scope items:
 
-[AUTOMATED STEP]: Check if VM's boot disk space utilization is within optimal levels.
+     - Support and maintenance policy: <https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope>
+     - Out-of-scope items: <https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support>
+
+[AUTOMATED STEP]: Verify VM's boot disk space utilization is within optimal levels.
 
    - gcpdiag-lb2-aaaa/vm-pn3l                                             [FAIL]
      [REASON]
@@ -199,7 +193,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      To mitigate high disk usage, consider expanding the VM's boot disk capacity.
      This action can help avoid performance issues and ensure smoother SSH connections.
 
-     Follow the guide to increase disk size:
+     Consult the following guide to increase disk size:
      <https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk>
 
 [AUTOMATED STEP]: Verify VM CPU utilization is within optimal levels.
@@ -210,19 +204,22 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      which may affect its performance and SSH connectivity.
 
      [REMEDIATION]
-     Excessive CPU usage can lead to performance bottlenecks. Consider resizing the VM to a more
-     powerful machine type with higher CPU capabilities.
-     Detailed instructions for resizing and restarting VMs are available here:
+     Excessive CPU usage can lead to performance bottlenecks. Resizing the VM to a machine type with higher CPU capabilities may resolve the issue.
+
+     Consult the following documentation for guidance:
 
      - Stopping a VM: <https://cloud.google.com/compute/docs/instances/stop-start-instance>
      - Resizing a VM: <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
 
-     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
-     - <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics>
-     - <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization>
+     Additionally, analyze Compute Engine observability metrics to pinpoint high-usage processes:
 
-     Alternatively, you can connect via serial console if SSH is unavailable to stop offending processes
-     (<https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>).
+     - Accessing VM observability metrics:
+       <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics>
+     - Analyzing process utilization:
+       <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization>
+
+     If SSH is unavailable, connect via the serial console to stop offending processes:
+     <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 
 [END]: Finalize unhealthy backends diagnostics.
 
@@ -305,9 +302,9 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 
      [REMEDIATION]
 
-     1. Make sure that the backend service timeout (current value: 30s) and health check timeout (current value: 5s) are appropriately configured to accommodate your application's expected response time.
+     1. Make sure that the backend service timeout (current value: 30s) and health check timeout (current value: 5s) are appropriately configured to accommodate the application's expected response time.
 
-     2. Investigate your application's configuration to ensure it is correctly handling health check probe requests. Your health check is using TCP protocol, and it is set to: 
+     2. Investigate the application's configuration to ensure it is correctly handling health check probe requests. Your health check is using TCP protocol, and it is set to: 
      - send a prober requests on port 80
      - expect a successful TCP handshake
 
@@ -321,19 +318,19 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 
 
      [REMEDIATION]
-     Check the logs and monitoring metrics for the instances associated with backend service projects/gcpdiag-lb2-aaaa/regions/europe-west4/backendServices/backend-service-2, focusing on recent timeframes to see if there were any errors, crashes, or resource exhaustion issues. You can also inspect any application-specific logs for errors or warnings.
+     Check the logs and monitoring metrics for the instances associated with backend service projects/gcpdiag-lb2-aaaa/regions/europe-west4/backendServices/backend-service-2, focusing on recent timeframes to see if there were any errors, crashes, or resource exhaustion issues. Also inspect any application-specific logs for errors or warnings.
 
 [AUTOMATED STEP]: Validate port configuration for backend service "backend-service-2" in scope "europe-west4".
 
    - gcpdiag-lb2-aaaa/backend-service-2                                   [OK]
      [REASON]
-     The load balancer is performing health checks on the same port that it is using for serving traffic. This is the standard configuration.
+     The load balancer is performing health checks on the same port used for serving traffic. This is the standard configuration.
 
 [AUTOMATED STEP]: Validate protocol configuration for backend service "backend-service-2" in scope "europe-west4".
 
    - gcpdiag-lb2-aaaa/backend-service-2                                   [OK]
      [REASON]
-     The load balancer is performing health checks using the same protocol (TCP) that it is using for serving traffic. This is the standard configuration.
+     The load balancer is performing health checks using the same protocol (TCP) used for serving traffic. This is the standard configuration.
 
 [AUTOMATED STEP]: Verify firewall rules allow health checks for backend service "backend-service-2" in scope "europe-west4".
 
@@ -349,62 +346,56 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      Memory utilization on this VM has reached levels that may compromise its VM application performance.
 
      [REMEDIATION]
-     Elevated memory usage can result in slow or unresponsive or termimated applications.
-     Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
-     Guidance on stopping and changing the machine type can be found here:
+     Elevated memory usage can result in slow, unresponsive, or terminated applications.
+     Enhance the VM's memory capacity by changing to a machine type with more memory.
+
+     Consult the following documentation for guidance:
 
      - Changing machine type:
-     <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
+       <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
 
-     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
+     Additionally, analyze Compute Engine observability metrics to pinpoint high-usage processes:
      <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization>
 
-     Or connect via the Serial Console if SSH is not available to mitigate the issue:
+     If SSH is unavailable, connect via the serial console to mitigate the issue:
      <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 
-[AUTOMATED STEP]: Check for memory related errors in VM serial logs.
+[AUTOMATED STEP]: Verify memory related errors in VM serial logs.
 
    - gcpdiag-lb2-aaaa/neg-vm                                              [UNCERTAIN]
      [REASON]
      Unable to investigate the high memory utilization error logs, likely due to the absence of logs.
      However, this does not eliminate the possibility of high memory usage.
 
-     You may manually verify memory utilization on the Guest OS side a likely cause.
+     Manual verification of memory utilization on the Guest OS is recommended as a potential cause.
 
      [REMEDIATION]
 
-     1. Manually investigate by accessing the Guest OS to Analyze Memory Usage:
-        - Identify processes with consistently high memory consumption:
-          - Run `top` and press "M" to sort processes by memory usage.
-          - Alternatively, use the command: `ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5`
+     1. Manually investigate memory usage by accessing the Guest OS:
+        - Identify processes with consistently high memory consumption using `top` (press "M") or `ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5`.
         - Focus on processes with recent spikes or consistently high memory usage.
-        - If SSH access is unavailable, consider [troubleshooting via the serial
-     console](https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console).
+        - If SSH access is unavailable, troubleshoot via the serial console:
+          <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 
-     2. Review Application or Configuration Changes:
+     2. Review recent application or configuration changes:
         - Investigate if recent deployments, updates, or configuration changes correlate with increased memory usage.
 
-     3. Resolve Identified Bottlenecks:
-        - For applications causing excessive memory usage:
-          - Optimize their configuration or update them to a stable version.
-          - Explore alternatives if optimization is insufficient.
-        - Evaluate scaling up resources if the high memory usage results from legitimate application demands.
+     3. Resolve identified bottlenecks:
+        - For applications causing excessive memory usage, optimize their configuration or update them. Explore alternatives if optimization is insufficient.
+        - Evaluate scaling up resources if high memory usage results from legitimate application demands.
 
-     4. Increase Instance Memory if Necessary:
-        - If additional memory is required for the application:
-          - Stop the VM and [change its machine type](https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud).
-          - Consult the [machine type documentation](https://cloud.google.com/compute/docs/machine-types) to select an appropriate
-     configuration.
+     4. Increase instance memory if necessary:
+        - Stop the VM and change its machine type:
+          <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
+        - Consult the machine type documentation to select an appropriate configuration:
+          <https://cloud.google.com/compute/docs/machine-types>
 
-     **Note:**
-     Non Google provided Application-specific issues may fall outside support scope. Collaborate with
-     relevant application teams for further investigation.
-     Refer to the [Google Cloud Platform support
-     policy](https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope)
-     for details, including [out-of-scope
-     items](https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support).
+     **Note:** Non-Google provided application-specific issues may fall outside the support scope. Collaborate with relevant application teams for further investigation. Refer to the Google Cloud Platform support policy for details, including out-of-scope items:
 
-[AUTOMATED STEP]: Check if VM's boot disk space utilization is within optimal levels.
+     - Support and maintenance policy: <https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope>
+     - Out-of-scope items: <https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support>
+
+[AUTOMATED STEP]: Verify VM's boot disk space utilization is within optimal levels.
 
    - gcpdiag-lb2-aaaa/neg-vm                                              [FAIL]
      [REASON]
@@ -415,7 +406,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      To mitigate high disk usage, consider expanding the VM's boot disk capacity.
      This action can help avoid performance issues and ensure smoother SSH connections.
 
-     Follow the guide to increase disk size:
+     Consult the following guide to increase disk size:
      <https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk>
 
 [AUTOMATED STEP]: Verify VM CPU utilization is within optimal levels.
@@ -426,19 +417,22 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      which may affect its performance and SSH connectivity.
 
      [REMEDIATION]
-     Excessive CPU usage can lead to performance bottlenecks. Consider resizing the VM to a more
-     powerful machine type with higher CPU capabilities.
-     Detailed instructions for resizing and restarting VMs are available here:
+     Excessive CPU usage can lead to performance bottlenecks. Resizing the VM to a machine type with higher CPU capabilities may resolve the issue.
+
+     Consult the following documentation for guidance:
 
      - Stopping a VM: <https://cloud.google.com/compute/docs/instances/stop-start-instance>
      - Resizing a VM: <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
 
-     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
-     - <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics>
-     - <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization>
+     Additionally, analyze Compute Engine observability metrics to pinpoint high-usage processes:
 
-     Alternatively, you can connect via serial console if SSH is unavailable to stop offending processes
-     (<https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>).
+     - Accessing VM observability metrics:
+       <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics>
+     - Analyzing process utilization:
+       <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization>
+
+     If SSH is unavailable, connect via the serial console to stop offending processes:
+     <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 
 [END]: Finalize unhealthy backends diagnostics.
 

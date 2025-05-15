@@ -16,7 +16,7 @@ None
 
 ### Success Reason
 
-All domains associated with the SSL certificate "{name}" are in the ACTIVE state. No issues detected with domain provisioning
+All domains associated with the SSL certificate "{name}" are in the ACTIVE state. Domain provisioning appears successful.
 
 
 

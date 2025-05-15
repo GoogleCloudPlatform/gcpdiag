@@ -20,10 +20,11 @@ Found logs messages related to secondary worker preemption on the cluster: {clus
 
 ### Failure Remediation
 
-This error occurs when secondary nodes are preempted.
-Please confirm if you are using secondary workers with preemptible instances. (The default Dataproc secondary worker type is a standard preemptible VM.)
+This error occurs when secondary worker nodes are preempted. By default, Dataproc secondary workers are preemptible VMs.
+To resolve this issue:
 
-You can recreate a cluster configured with non-preemptible secondary workers to ensure the secondary workers are not preemptible.
+- Verify if the cluster uses secondary workers with preemptible instances.
+- Recreate the cluster configured with non-preemptible secondary workers to ensure secondary workers are not preempted [1].
 [1] <https://cloud.google.com/dataproc/docs/concepts/compute/secondary-vms#non-preemptible_workers>
 
 ### Success Reason
