@@ -25,6 +25,7 @@ This runbook will assist users to check reasons for failed deployments of Gen2 c
 gcpdiag runbook gcf/failed-deployments \
   -p project_id=value \
   -p name=value \
+  -p cloud_function_name=value \
   -p region=value \
   -p start_time=value \
   -p end_time=value \
@@ -36,7 +37,8 @@ gcpdiag runbook gcf/failed-deployments \
 | Name | Required | Default | Type | Help |
 |------|----------|---------|------|------|
 | `project_id` | True | None | str | The Project ID containing the cloud function |
-| `name` | True | None | str | Name of the cloud function failing deployment |
+| `name` | False | None | str | Name of the cloud function failing deployment |
+| `cloud_function_name` | True | None | str | Name of the cloud function failing deployment |
 | `region` | True | None | str | Region of the cloud function failing deployment |
 | `start_time` | False | None | datetime | Start time of the issue Format: YYYY-MM-DDTHH:MM:SSZ |
 | `end_time` | False | None | datetime | End time of the issue. Format: YYYY-MM-DDTHH:MM:SSZ |

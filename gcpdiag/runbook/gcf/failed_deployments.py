@@ -45,6 +45,12 @@ class FailedDeployments(runbook.DiagnosticTree):
       flags.NAME: {
           'type': str,
           'help': 'Name of the cloud function failing deployment',
+          'deprecated': True,
+          'new_parameter': 'cloud_function_name',
+      },
+      flags.CLOUD_FUNCTION_NAME: {
+          'type': str,
+          'help': 'Name of the cloud function failing deployment',
           'required': True
       },
       flags.REGION: {
@@ -65,6 +71,10 @@ class FailedDeployments(runbook.DiagnosticTree):
           'help': 'Service account used by the user for deployment.'
       }
   }
+
+  def legacy_parameter_handler(self, parameters):
+    if flags.NAME in parameters:
+      parameters[flags.CLOUD_FUNCTION_NAME] = parameters.pop(flags.NAME)
 
   def build_tree(self):
     """Construct the diagnostic tree with appropriate steps."""
@@ -108,7 +118,7 @@ class DefaultServiceAccountCheck(runbook.Step):
           flags.PROJECT_ID)) and iam.is_service_account_enabled(
               service_agent, op.get(flags.PROJECT_ID)):
         console_permission = iam_gs.IamPolicyCheck()
-        console_permission.template = 'failed_deployments::agent_permission'
+        console_permission.template = 'gcpdiag.runbook.gcf::failed_deployments::agent_permission'
         console_permission.principal = f'serviceAccount:{service_agent}'
         console_permission.roles = [gcf_const.SERVICE_AGENT_ROLE]
         console_permission.require_all = False
@@ -143,7 +153,7 @@ class UserServiceAccountCheck(runbook.Step):
   def execute(self):
     """Check if User/Service account has permissions on Cloud function runtime service account"""
 
-    name = op.get(flags.NAME)
+    cloud_function_name = op.get(flags.CLOUD_FUNCTION_NAME)
 
     project = crm.get_project(op.get(flags.PROJECT_ID))
     project_num = crm.get_project(op.get(flags.PROJECT_ID)).number
@@ -151,7 +161,7 @@ class UserServiceAccountCheck(runbook.Step):
       protoPayload.methodName=("google.cloud.functions.v2.FunctionService.UpdateFunction"
       OR "google.cloud.functions.v2.FunctionService.CreateFunction")
       protoPayload.resourceName =~ "{}"
-      severity=NOTICE'''.format(name)
+      severity=NOTICE'''.format(cloud_function_name)
 
     try:
       log_entries = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
@@ -203,12 +213,12 @@ class FunctionGlobalScopeCheck(runbook.Step):
 
   def execute(self):
     """Check for deployment failures due to global scope code errors"""
-    name = op.get(flags.NAME)
+    cloud_function_name = op.get(flags.CLOUD_FUNCTION_NAME)
     project = crm.get_project(op.get(flags.PROJECT_ID))
     global_scope_filter = '''
       resource.type="cloud_function"
       SEARCH("Could not create or update Cloud Run service {},
-      Container Healthcheck failed.")'''.format(name)
+      Container Healthcheck failed.")'''.format(cloud_function_name)
 
     global_log_entries = logs.realtime_query(
         project_id=op.get(flags.PROJECT_ID),

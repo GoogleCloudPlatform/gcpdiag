@@ -44,6 +44,12 @@ gcf/failed-deployments:  Cloud Run function failed deployments check
      Refer to the following document to address this error:
      <https://cloud.google.com/functions/docs/troubleshooting#resource-location>
 
+[AUTOMATED STEP]: Verify that serviceAccount:service-12340003@gcf-admin-robot.iam.gserviceaccount.com has required permissions/roles in project/None.
+
+   - projects/gcpdiag-gcf1-aaaa                                           [OK]
+     [REASON]
+     Cloud function service agent has the required role permissions
+
 [END]: Finalizing cloud run function deployment failures
 
 
