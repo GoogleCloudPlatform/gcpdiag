@@ -58,6 +58,12 @@ class PublicNatIpAllocationFailed(runbook.DiagnosticTree):
       flags.NETWORK: {
           'type': str,
           'help': 'The VPC network of the target NATGW',
+          'new_parameter': 'nat_network',
+          'deprecated': True,
+      },
+      flags.NAT_NETWORK: {
+          'type': str,
+          'help': 'The VPC network of the target NATGW',
           'required': True
       },
       flags.REGION: {
@@ -66,6 +72,11 @@ class PublicNatIpAllocationFailed(runbook.DiagnosticTree):
           'required': True
       }
   }
+
+  def legacy_parameter_handler(self, parameters):
+    """Handles legacy parameters."""
+    if flags.NETWORK in parameters:
+      parameters[flags.NAT_NETWORK] = parameters.pop(flags.NETWORK)
 
   def build_tree(self):
     """Construct the diagnostic tree with appropriate steps."""
@@ -103,54 +114,72 @@ class NatIpAllocationFailedStart(runbook.StartStep):
     project = crm.get_project(op.get(flags.PROJECT_ID))
     # try to fetch the network for the NATGW
     try:
-      vpc_network = network.get_network(project_id=op.get(flags.PROJECT_ID),
-                                        network_name=op.get(flags.NETWORK))
+      vpc_network = network.get_network(
+          project_id=op.get(flags.PROJECT_ID),
+          network_name=op.get(flags.NAT_NETWORK),
+      )
     except googleapiclient.errors.HttpError:
-      op.add_skipped(project,
-                     reason=op.prep_msg(op.SKIPPED_REASON,
-                                        network=op.get(flags.NETWORK),
-                                        project_id=op.get(flags.PROJECT_ID)))
+      op.add_skipped(
+          project,
+          reason=op.prep_msg(
+              op.SKIPPED_REASON,
+              network=op.get(flags.NAT_NETWORK),
+              project_id=op.get(flags.PROJECT_ID),
+          ),
+      )
       return
     # try to get the cloud router
     try:
-      routers = network.get_routers(project_id=op.get(flags.PROJECT_ID),
-                                    region=op.get(flags.REGION),
-                                    network=vpc_network)
+      routers = network.get_routers(
+          project_id=op.get(flags.PROJECT_ID),
+          region=op.get(flags.REGION),
+          network=vpc_network,
+      )
     except googleapiclient.errors.HttpError:
-      op.add_skipped(project,
-                     reason=op.prep_msg(op.SKIPPED_REASON_ALT1,
-                                        cloud_router=op.get(
-                                            flags.CLOUD_ROUTER_NAME),
-                                        region=op.get(flags.REGION),
-                                        project_id=op.get(flags.PROJECT_ID)))
+      op.add_skipped(
+          project,
+          reason=op.prep_msg(
+              op.SKIPPED_REASON_ALT1,
+              cloud_router=op.get(flags.CLOUD_ROUTER_NAME),
+              region=op.get(flags.REGION),
+              project_id=op.get(flags.PROJECT_ID),
+          ),
+      )
     if routers:
       # Check that the cloud router name passed is valid.
       router = [r for r in routers if r.name == op.get(flags.CLOUD_ROUTER_NAME)]
       if not router:
-        op.add_skipped(project,
-                       reason=op.prep_msg(op.SKIPPED_REASON_ALT2,
-                                          cloud_router=op.get(
-                                              flags.CLOUD_ROUTER_NAME),
-                                          region=op.get(flags.REGION),
-                                          project_id=op.get(flags.PROJECT_ID)))
+        op.add_skipped(
+            project,
+            reason=op.prep_msg(
+                op.SKIPPED_REASON_ALT2,
+                cloud_router=op.get(flags.CLOUD_ROUTER_NAME),
+                region=op.get(flags.REGION),
+                project_id=op.get(flags.PROJECT_ID),
+            ),
+        )
       # Check that the natgateway name passed is served by the cloud router.
       nat_router = router[0]
       if not [
           n for n in nat_router.nats
           if n['name'] == op.get(flags.NAT_GATEWAY_NAME)
       ]:
-        op.add_skipped(project,
-                       reason=op.prep_msg(op.SKIPPED_REASON_ALT3,
-                                          cloud_router=op.get(
-                                              flags.NAT_GATEWAY_NAME),
-                                          region=op.get(flags.REGION),
-                                          project_id=op.get(flags.PROJECT_ID)))
+        op.add_skipped(
+            project,
+            reason=op.prep_msg(
+                op.SKIPPED_REASON_ALT3,
+                cloud_router=op.get(flags.NAT_GATEWAY_NAME),
+                region=op.get(flags.REGION),
+                project_id=op.get(flags.PROJECT_ID),
+            ),
+        )
 
 
 class NatAllocationFailedCheck(runbook.Step):
   """Checks NAT Allocation failed metric for the NATGW.
 
-  This step determines whether Cloud NAT has run into issues due to insufficient NAT IP addresses.
+  This step determines whether Cloud NAT has run into issues due to insufficient
+  NAT IP addresses.
   by checking the NAT Allocation failed metric.
   """
 
@@ -239,13 +268,13 @@ class NatIpAllocationMethodCheck(runbook.Gateway):
     # try to fetch the network for the NATGW
     try:
       vpc_network = network.get_network(project_id=op.get(flags.PROJECT_ID),
-                                        network_name=op.get(flags.NETWORK))
+                                        network_name=op.get(flags.NAT_NETWORK))
     except googleapiclient.errors.HttpError:
       op.add_skipped(
           project,
           reason=
           ("""Unable to fetch the network {} confirm it exists in the project {}"""
-          ).format(op.get(flags.NETWORK), op.get(flags.PROJECT_ID)))
+          ).format(op.get(flags.NAT_NETWORK), op.get(flags.PROJECT_ID)))
       return
     # try to get the router
     try:
@@ -256,7 +285,7 @@ class NatIpAllocationMethodCheck(runbook.Gateway):
       op.add_skipped(project,
                      reason=("""Failed to fetch routers in the vpc network {}
                   does not exist in region {} of project {}""").format(
-                         op.get(flags.NETWORK), op.get(flags.REGION),
+                         op.get(flags.NAT_NETWORK), op.get(flags.REGION),
                          op.get(flags.PROJECT_ID)))
 
     if routers:
@@ -321,13 +350,13 @@ class NatIpAllocationManualOnly(runbook.Step):
     # try to fetch the network for the NATGW
     try:
       vpc_network = network.get_network(project_id=op.get(flags.PROJECT_ID),
-                                        network_name=op.get(flags.NETWORK))
+                                        network_name=op.get(flags.NAT_NETWORK))
     except googleapiclient.errors.HttpError:
       op.add_skipped(
           project,
           reason=
           ("""Unable to fetch the network {} confirm it exists in the project {}"""
-          ).format(op.get(flags.NETWORK), op.get(flags.PROJECT_ID)))
+          ).format(op.get(flags.NAT_NETWORK), op.get(flags.PROJECT_ID)))
       return
     # try to get the router
     try:
@@ -338,7 +367,7 @@ class NatIpAllocationManualOnly(runbook.Step):
       op.add_skipped(project,
                      reason=("""Failed to fetch routers in the vpc network {}
                   does not exist in region {} of project {}""").format(
-                         op.get(flags.NETWORK), op.get(flags.REGION),
+                         op.get(flags.NAT_NETWORK), op.get(flags.REGION),
                          op.get(flags.PROJECT_ID)))
     if routers:
       # filter for the cloud router name specified.

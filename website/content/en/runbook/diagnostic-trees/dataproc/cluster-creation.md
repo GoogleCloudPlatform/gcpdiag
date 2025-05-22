@@ -50,6 +50,7 @@ gcpdiag runbook dataproc/cluster-creation \
   -p stackdriver=value \
   -p zone=value \
   -p network=value \
+  -p dataproc_network=value \
   -p subnetwork=value \
   -p internal_ip_only=value \
   -p start_time=value \
@@ -73,6 +74,7 @@ gcpdiag runbook dataproc/cluster-creation \
 | `stackdriver` | False | True | str | Checks if stackdriver logging is enabled for further troubleshooting |
 | `zone` | False | None | str | Dataproc cluster Zone |
 | `network` | False | None | str | Dataproc cluster Network |
+| `dataproc_network` | False | None | str | Dataproc cluster Network |
 | `subnetwork` | False | None | str | Dataproc cluster Subnetwork |
 | `internal_ip_only` | False | None | bool | Checks if the Dataproc cluster has been created with only Internal IP |
 | `start_time` | False | None | datetime | Start time of the issue |

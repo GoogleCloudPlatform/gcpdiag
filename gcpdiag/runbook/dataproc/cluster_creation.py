@@ -110,6 +110,12 @@ necessary firewall rules, external/internal IP configuration.
       flags.NETWORK: {
           'type': str,
           'help': 'Dataproc cluster Network',
+          'deprecated': True,
+          'new_parameter': 'dataproc_network',
+      },
+      flags.DATAPROC_NETWORK: {
+          'type': str,
+          'help': 'Dataproc cluster Network',
       },
       flags.SUBNETWORK: {
           'type': str,
@@ -143,9 +149,12 @@ necessary firewall rules, external/internal IP configuration.
   }
 
   def legacy_parameter_handler(self, parameters):
+    """Handles legacy parameters."""
     if flags.CLUSTER_NAME in parameters:
       parameters[flags.DATAPROC_CLUSTER_NAME] = parameters.pop(
           flags.CLUSTER_NAME)
+    if flags.NETWORK in parameters:
+      parameters[flags.DATAPROC_NETWORK] = parameters.pop(flags.NETWORK)
 
   def build_tree(self):
     """Describes step relationships."""
@@ -305,7 +314,7 @@ class ClusterExists(runbook.Step):
       return
     if cluster is None and (not op.get(flags.CLUSTER_UUID) or
                             not op.get(flags.SERVICE_ACCOUNT) or
-                            not op.get(flags.NETWORK) or
+                            not op.get(flags.DATAPROC_NETWORK) or
                             not op.get(flags.SUBNETWORK) or
                             not op.get(flags.INTERNAL_IP_ONLY)):
       op.add_failed(
@@ -402,15 +411,16 @@ class ClusterDetails(runbook.Step):
         op.put(flags.SERVICE_ACCOUNT, cluster.vm_service_account_email)
         op.info(('Service Account:{}').format(cluster.vm_service_account_email))
 
-    if not op.get(flags.NETWORK):
+    if not op.get(flags.DATAPROC_NETWORK):
       if cluster.gce_network_uri:
-        op.put(flags.NETWORK, cluster.gce_network_uri)
+        op.put(flags.DATAPROC_NETWORK, cluster.gce_network_uri)
         op.info(('Network: {}').format(cluster.gce_network_uri))
 
-    if network.get_network_from_url(op.get(flags.NETWORK)):
+    if network.get_network_from_url(op.get(flags.DATAPROC_NETWORK)):
       op.put(
           flags.HOST_VPC_PROJECT_ID,
-          network.get_network_from_url(op.get(flags.NETWORK)).project_id,
+          network.get_network_from_url(op.get(
+              flags.DATAPROC_NETWORK)).project_id,
       )
 
 
