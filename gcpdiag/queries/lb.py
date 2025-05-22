@@ -183,6 +183,11 @@ class BackendServices(models.Resource):
     return self._resource_data.get('enableCDN', False)
 
   @property
+  def draining_timeout_sec(self) -> int:
+    return self._resource_data.get('connectionDraining',
+                                   {}).get('drainingTimeoutSec', 0)
+
+  @property
   def load_balancing_scheme(self) -> str:
     return self._resource_data.get('loadBalancingScheme', None)
 
