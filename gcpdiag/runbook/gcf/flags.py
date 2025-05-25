@@ -16,3 +16,4 @@
 from gcpdiag.runbook.iam.flags import *
 
 GAC_SERVICE_ACCOUNT = 'gac_service_account'
+CLOUD_FUNCTION_NAME = 'cloud_function_name'

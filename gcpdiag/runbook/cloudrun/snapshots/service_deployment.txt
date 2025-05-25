@@ -20,9 +20,7 @@ cloudrun/service-deployment: Investigates the necessary GCP components searching
      Container failed to start in service invalid-container.
 
      [REMEDIATION]
-     The container failed to start. Please check
-     <https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start>
-     for the next steps.
+     The container failed to start. Refer to <https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start> for guidance.
 
 [AUTOMATED STEP]: Verify if specified image exists.
 [AUTOMATED STEP]: Verify if Cloud Run service agent can fetch the image.
@@ -52,8 +50,7 @@ cloudrun/service-deployment: Investigates the necessary GCP components searching
      Provided image us-central1-docker.pkg.dev/gcpdiag-cloudrun2-aaaa/cloudrun-repository/missing-image does not exist.
 
      [REMEDIATION]
-     The provided image does not exist. Make sure that it is correct. Try following
-     quickstart guide and see how to correctly specify image names. <https://cloud.google.com/run/docs/quickstarts>
+     The provided image does not exist. Verify that the image name is correct. Refer to <https://cloud.google.com/run/docs/quickstarts> for guidance on specifying image names.
 
 [AUTOMATED STEP]: Verify if Cloud Run service agent can fetch the image.
 [END]: Finalize runbook investigations.
@@ -83,9 +80,7 @@ cloudrun/service-deployment: Investigates the necessary GCP components searching
      Cloud Run Service agent service-123400010@serverless-robot-prod.iam.gserviceaccount.com does not have permissions to read image gcr.io/private-project/image..
 
      [REMEDIATION]
-     Please make sure that service-123400010@serverless-robot-prod.iam.gserviceaccount.com has roles/storage.objectViewer role if the image is stored in Container
-     Registry or roles/artifactregistry.reader if in Artifact Registry. Please note that the role needs to be granted in the
-     project where the image is stored.
+     Grant service-123400010@serverless-robot-prod.iam.gserviceaccount.com the roles/storage.objectViewer role if the image is stored in Container Registry or the roles/artifactregistry.reader role if in Artifact Registry. Note that the role must be granted in the project where the image is stored.
 
 [END]: Finalize runbook investigations.
 

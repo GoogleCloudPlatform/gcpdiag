@@ -31,15 +31,13 @@ dataproc/cluster-creation: Provides a comprehensive analysis of common issues wh
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
-     No issues with insufficient quota in project gcpdiag-dataproc1-aaaa has been identified for the ivestigated cluster good, please double-check if you have provided
-     the right cluster_name parameter if the cluster you are trying to create doesn't appear in Dataproc UI.
+     No issues with insufficient quota identified for cluster good in project gcpdiag-dataproc1-aaaa. If the intended cluster does not appear in the Dataproc UI, verify the provided cluster_name parameter.
 
 [AUTOMATED STEP]: Verify cluster stockout issue.
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
-     No issues with stockouts and insufficient resources in project gcpdiag-dataproc1-aaaa has been identified for good, please double-check if you have provided
-     the right cluster_name parameter if the cluster you are trying to create doesn't appear in Dataproc UI.
+     No issues with stockouts identified for cluster good in project gcpdiag-dataproc1-aaaa. If the intended cluster does not appear in the Dataproc UI, verify the provided cluster_name parameter.
 
 [AUTOMATED STEP]: Verify cluster exists in Dataproc UI.
 
@@ -91,15 +89,13 @@ dataproc/cluster-creation: Provides a comprehensive analysis of common issues wh
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
-     No issues with insufficient quota in project gcpdiag-dataproc1-aaaa has been identified for the ivestigated cluster good, please double-check if you have provided
-     the right cluster_name parameter if the cluster you are trying to create doesn't appear in Dataproc UI.
+     No issues with insufficient quota identified for cluster good in project gcpdiag-dataproc1-aaaa. If the intended cluster does not appear in the Dataproc UI, verify the provided cluster_name parameter.
 
 [AUTOMATED STEP]: Verify cluster stockout issue.
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
-     No issues with stockouts and insufficient resources in project gcpdiag-dataproc1-aaaa has been identified for good, please double-check if you have provided
-     the right cluster_name parameter if the cluster you are trying to create doesn't appear in Dataproc UI.
+     No issues with stockouts identified for cluster good in project gcpdiag-dataproc1-aaaa. If the intended cluster does not appear in the Dataproc UI, verify the provided cluster_name parameter.
 
 [AUTOMATED STEP]: Verify cluster exists in Dataproc UI.
 
@@ -150,15 +146,13 @@ dataproc/cluster-creation: Provides a comprehensive analysis of common issues wh
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
-     No issues with insufficient quota in project gcpdiag-dataproc1-aaaa has been identified for the ivestigated cluster test-deny-icmp, please double-check if you have provided
-     the right cluster_name parameter if the cluster you are trying to create doesn't appear in Dataproc UI.
+     No issues with insufficient quota identified for cluster test-deny-icmp in project gcpdiag-dataproc1-aaaa. If the intended cluster does not appear in the Dataproc UI, verify the provided cluster_name parameter.
 
 [AUTOMATED STEP]: Verify cluster stockout issue.
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
-     No issues with stockouts and insufficient resources in project gcpdiag-dataproc1-aaaa has been identified for test-deny-icmp, please double-check if you have provided
-     the right cluster_name parameter if the cluster you are trying to create doesn't appear in Dataproc UI.
+     No issues with stockouts identified for cluster test-deny-icmp in project gcpdiag-dataproc1-aaaa. If the intended cluster does not appear in the Dataproc UI, verify the provided cluster_name parameter.
 
 [AUTOMATED STEP]: Verify cluster exists in Dataproc UI.
 
@@ -208,15 +202,14 @@ dataproc/cluster-creation: Provides a comprehensive analysis of common issues wh
 
    - projects/gcpdiag-dataproc1-aaaa                                      [FAIL]
      [REASON]
-     serviceAccount:12340005-compute@developer.gserviceaccount.com doesn't have at least one of the expected roles:
+     serviceAccount:12340005-compute@developer.gserviceaccount.com does not have at least one of the expected roles:
      roles/dataproc.worker.
 
      [REMEDIATION]
-     Follow Guide [1] to grant a role which has the correct permissions.
-     [2] has a list of all Google predefined roles available to you.
+     Grant a role containing the missing permissions by following the instructions in [1].
+     Refer to [2] for a list of Google Cloud predefined roles.
 
-     Note: You may want to doublecheck with your project admins of the best way to grant the role
-     or custom roles which can be used.
+     Note: Consider consulting with project administrators regarding the most appropriate standard or custom role to grant.
 
      [1] <https://cloud.google.com/iam/docs/grant-role-console>
      [2] <https://cloud.google.com/iam/docs/understanding-roles>

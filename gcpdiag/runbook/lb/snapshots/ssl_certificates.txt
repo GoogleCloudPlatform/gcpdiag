@@ -44,7 +44,7 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert1               [FAIL]
      [REASON]
-     The following domains are in FAILED_NOT_VISIBLE state: natka123.com, second.natka123.com for SSL certificate "cert1". This usually means the domain's DNS records aren't correctly pointing to your load balancer.
+     The following domains are in FAILED_NOT_VISIBLE state: natka123.com, second.natka123.com for SSL certificate "cert1". This usually means the domain's DNS records are not correctly pointing to the load balancer.
 
 [GATEWAY]: Verify the SSL certificate "cert1" is attached to a target proxy.
 
@@ -101,7 +101,7 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
      If certificate map is set on a target proxy, the classic SSL certificates are ignored.
 
      [REMEDIATION]
-     If this is not intended, please detach the certificate map from the target proxies.
+     If this configuration is unintended, detach the certificate map from the target proxies.
 
 [AUTOMATED STEP]: Check if the SSL certificate "cert1" associated resources has been updated recently.
 
@@ -112,7 +112,7 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
      Target proxy https-lb-proxy in scope global has been modified at 2024-10-18T14:34:17.798905Z.
 
      [REMEDIATION]
-     DNS validation automatically checks your domain's A and AAAA records against your Google Cloud load balancer's IP address. This process includes an automatic retry mechanism with increasing wait times. If you recently attached cert1 to a target proxy or the target proxy to forwarding rule, validation could take up to 24 hours to complete.
+     DNS validation automatically checks the domain's A and AAAA records against the Google Cloud load balancer's IP address. This process includes an automatic retry mechanism with increasing wait times. If cert1 was recently attached to a target proxy or the target proxy to a forwarding rule, validation could take up to 24 hours to complete.
 
 [END]: Finalize SSL Certificate diagnostics.
 
@@ -163,7 +163,7 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert2               [FAIL]
      [REASON]
-     The following domains are in FAILED_NOT_VISIBLE state: test.natka123.com for SSL certificate "cert2". This usually means the domain's DNS records aren't correctly pointing to your load balancer.
+     The following domains are in FAILED_NOT_VISIBLE state: test.natka123.com for SSL certificate "cert2". This usually means the domain's DNS records are not correctly pointing to the load balancer.
 
 [GATEWAY]: Verify the SSL certificate "cert2" is attached to a target proxy.
 
@@ -195,7 +195,7 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
       projects/gcpdiag-lb3-aaaa/global/forwardingRules/https-content-rule-working 
       use IP address 2600:1901:0:d0d7:: but none of them listen on port 443. 
 
-     There must be at least one load balancer's forwarding rule that use TCP port 443 for the Google-managed certificate to be initially provisioned and automatically renewed.
+     There must be at least one load balancer's forwarding rule that uses TCP port 443 for the Google-managed certificate to be initially provisioned and automatically renewed.
 
      [REMEDIATION]
      Configure the load balancer to listen on port 443 for SSL certificate "cert2".
@@ -215,7 +215,7 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
      Target proxy https-lb-proxy-working in scope global has been modified at 2024-10-18T14:34:17.798905Z.
 
      [REMEDIATION]
-     DNS validation automatically checks your domain's A and AAAA records against your Google Cloud load balancer's IP address. This process includes an automatic retry mechanism with increasing wait times. If you recently attached cert2 to a target proxy or the target proxy to forwarding rule, validation could take up to 24 hours to complete.
+     DNS validation automatically checks the domain's A and AAAA records against the Google Cloud load balancer's IP address. This process includes an automatic retry mechanism with increasing wait times. If cert2 was recently attached to a target proxy or the target proxy to a forwarding rule, validation could take up to 24 hours to complete.
 
 [END]: Finalize SSL Certificate diagnostics.
 
@@ -266,7 +266,7 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert3               [FAIL]
      [REASON]
-     The following domains are in FAILED_NOT_VISIBLE state: second.test.org, test.org for SSL certificate "cert3". This usually means the domain's DNS records aren't correctly pointing to your load balancer.
+     The following domains are in FAILED_NOT_VISIBLE state: second.test.org, test.org for SSL certificate "cert3". This usually means the domain's DNS records are not correctly pointing to the load balancer.
 
 [GATEWAY]: Verify the SSL certificate "cert3" is attached to a target proxy.
 
@@ -317,7 +317,7 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
      Target proxy ssl-proxy in scope global has been modified at 2024-10-18T14:34:17.798905Z.
 
      [REMEDIATION]
-     DNS validation automatically checks your domain's A and AAAA records against your Google Cloud load balancer's IP address. This process includes an automatic retry mechanism with increasing wait times. If you recently attached cert3 to a target proxy or the target proxy to forwarding rule, validation could take up to 24 hours to complete.
+     DNS validation automatically checks the domain's A and AAAA records against the Google Cloud load balancer's IP address. This process includes an automatic retry mechanism with increasing wait times. If cert3 was recently attached to a target proxy or the target proxy to a forwarding rule, validation could take up to 24 hours to complete.
 
 [END]: Finalize SSL Certificate diagnostics.
 
@@ -368,16 +368,16 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/unused-cert4        [FAIL]
      [REASON]
-     The following domains are in FAILED_NOT_VISIBLE state: second.test.org, test.org for SSL certificate "unused-cert4". This usually means the domain's DNS records aren't correctly pointing to your load balancer.
+     The following domains are in FAILED_NOT_VISIBLE state: second.test.org, test.org for SSL certificate "unused-cert4". This usually means the domain's DNS records are not correctly pointing to the load balancer.
 
 [GATEWAY]: Verify the SSL certificate "unused-cert4" is attached to a target proxy.
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/unused-cert4        [FAIL]
      [REASON]
-     The SSL certificate "unused-cert4" is not attached to any target proxies. Please attach the certificate to a target proxy and try again.
+     The SSL certificate "unused-cert4" is not attached to any target proxies. Attach the certificate to a target proxy.
 
      [REMEDIATION]
-     Please follow the documentation to attach the certificate to a target proxy: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#load-balancer>
+     Follow the documentation to attach the certificate to a target proxy: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#load-balancer>
 
 [END]: Finalize SSL Certificate diagnostics.
 

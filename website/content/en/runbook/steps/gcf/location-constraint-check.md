@@ -16,12 +16,11 @@ None
 
 ### Failure Reason
 
-If your organization uses a resource location constraint policy,
-it restricts function deployment in the regions restricted by the policy.
+An active resource location constraint policy in the organization restricts function deployment in the regions specified by the policy.
 
 ### Failure Remediation
 
-Please use the following document as reference to address this error:
+Refer to the following document to address this error:
 <https://cloud.google.com/functions/docs/troubleshooting#resource-location>
 
 ### Success Reason

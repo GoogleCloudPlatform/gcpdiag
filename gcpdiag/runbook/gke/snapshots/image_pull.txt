@@ -17,9 +17,8 @@ gke/image-pull: Analysis and Resolution of Image Pull Failures on GKE clusters.
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
      [REASON]
-     Image cannot be pulled by a container on Pod, because the image is not found on the repository.
-     Check if the image is correctly written or if it exists in the repository.
-     Example log entry that would help identify involved objects:
+     A container on pod on node failed to pull image because the image was not found in the repository.
+     Example log entry:
 
      Cluster name: N/A
      Location: europe-west1-b
@@ -31,7 +30,7 @@ gke/image-pull: Analysis and Resolution of Image Pull Failures on GKE clusters.
      Last Timestamp: N/A
 
      [REMEDIATION]
-     Follow the documentation:
+     Refer to the troubleshooting documentation:
      <https://cloud.google.com/kubernetes-engine/docs/troubleshooting#ImagePullBackOff>
 
 [AUTOMATED STEP]: Check for "Failed to pull image.*403 Forbidden" log entries.
@@ -52,16 +51,15 @@ gke/image-pull: Analysis and Resolution of Image Pull Failures on GKE clusters.
      Last Timestamp: N/A
 
      [REMEDIATION]
-     Follow the documentation:
+     Ensure the node service account has the necessary permissions to pull the image. Refer to the documentation:
      <https://cloud.google.com/artifact-registry/docs/integrate-gke#permissions>
 
 [AUTOMATED STEP]: Check for "Failed to pull image.*lookup.*server misbehaving" log entries.
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
      [REASON]
-     The DNS resolver (metadata server - 169.254.169.254:53) on the Node is unable to resolve the IP of the repository,
-     preventing image pull. Check that the networking and DNS requirements mentioned in public documentation.
-     Example log entry that would help identify involved objects:
+     The DNS resolver (metadata server 169.254.169.254:53) on node was unable to resolve the image repository's IP address, preventing image pull. This often indicates issues with networking or DNS configuration.
+     Example log entry:
 
      Cluster name: N/A
      Location: europe-west1-b
@@ -73,17 +71,15 @@ gke/image-pull: Analysis and Resolution of Image Pull Failures on GKE clusters.
      Last Timestamp: N/A
 
      [REMEDIATION]
-     Follow the documentation:
+     Verify networking and DNS requirements, particularly for Private Google Access. Refer to the documentation:
      <https://cloud.google.com/vpc/docs/configure-private-google-access#requirements>
 
 [AUTOMATED STEP]: Check for "Failed to pull image.*dial tcp.*199.36.153.\d:443: i/o timeout" log entries
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
      [REASON]
-     The connection from Node to restricted.googleapis.com (199.36.153.4/30) or private.googleapis.com (199.36.153.8/30) is
-     timing out, preventing image pull. It is probable that a firewall rule is blocking this IP range. A firewall to permit
-     this egress should be created.
-     Example log entry that would help identify involved objects:
+     Connections from node to restricted.googleapis.com (199.36.153.4/30) or private.googleapis.com (199.36.153.8/30) timed out, preventing image pulls. This may be caused by a firewall rule blocking egress traffic to these IP ranges.
+     Example log entry:
 
      Cluster name: N/A
      Location: europe-west1-b
@@ -95,16 +91,15 @@ gke/image-pull: Analysis and Resolution of Image Pull Failures on GKE clusters.
      Last Timestamp: N/A
 
      [REMEDIATION]
-     Follow the documentation:
+     Ensure firewall rules permit egress traffic to restricted.googleapis.com (199.36.153.4/30) or private.googleapis.com (199.36.153.8/30). Refer to the documentation:
      <https://cloud.google.com/vpc-service-controls/docs/set-up-private-connectivity>
 
 [AUTOMATED STEP]: Check for "Failed to pull image.*dial tcp.*i/o timeout" log entries
 
    - gcpdiag-gke-cluster-autoscaler-rrrr                                  [FAIL]
      [REASON]
-     The connection from Node to Google APIs is timing out. It is probable that a firewall rule is blocking this IP range.
-     Expand results to see the blocked IP range.
-     Example log entry that would help identify involved objects:
+     Connections from node to Google APIs timed out, preventing image pulls. This may be caused by a firewall rule blocking egress traffic to Google APIs. The specific blocked IP range might be indicated in the log entry.
+     Example log entry:
 
      Cluster name: N/A
      Location: europe-west1-b
@@ -116,7 +111,7 @@ gke/image-pull: Analysis and Resolution of Image Pull Failures on GKE clusters.
      Last Timestamp: N/A
 
      [REMEDIATION]
-     Follow the documentation:
+     Ensure firewall rules permit egress traffic to Google APIs. Refer to the documentation:
      <https://cloud.google.com/kubernetes-engine/docs/concepts/firewall-rules>
 
 [AUTOMATED STEP]: Check for "Failed to pull image.*insufficient_scope" log entries
@@ -138,8 +133,8 @@ gke/image-pull: Analysis and Resolution of Image Pull Failures on GKE clusters.
 
      [REMEDIATION]
 
-     1. Verify that the name of the image is correct.
-     2. Follow the documentation:
+     1. Verify that the image name is correct.
+     2. Ensure the node's service account has the necessary permissions. Refer to the documentation:
      <https://cloud.google.com/kubernetes-engine/docs/troubleshooting/deployed-workloads#image-not-found>
 
 [END]: Finalize `GKE Image Pull runbbok` diagnostics.

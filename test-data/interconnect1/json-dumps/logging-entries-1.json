@@ -1,0 +1,68 @@
+{
+  "entries": [
+    {
+      "textPayload": "BGP Event: BGP peering with 169.254.1.1 went down with reason: BGP_PROCESS_STOPPED",
+      "insertId": "13v7syqfr0affx",
+      "resource": {
+        "type": "gce_router",
+        "labels": {
+          "region": "us-east4",
+          "router_id": "6988249776642123456",
+          "project_id": "gcpdiag-interconnect1-aaaa"
+        }
+      },
+      "timestamp": "2025-03-20T16:45:55.959348287Z",
+      "severity": "NOTICE",
+      "logName": "projects/gcpdiag-interconnect1-aaaa/logs/compute.googleapis.com%2Frouter_events",
+      "receiveTimestamp": "2025-03-20T16:45:55.967883881Z"
+    },
+    {
+      "textPayload": "BGP Event: BGP peering with 169.254.1.1 came up 0 seconds ago, hold time is 60 seconds, graceful restart timer is 60 seconds",
+      "insertId": "e688gpfsdnayp",
+      "resource": {
+        "type": "gce_router",
+        "labels": {
+          "project_id": "gcpdiag-interconnect1-aaaa",
+          "region": "us-east4",
+          "router_id": "6988249776642123456"
+        }
+      },
+      "timestamp": "2025-03-20T16:45:58.035612313Z",
+      "severity": "NOTICE",
+      "logName": "projects/gcpdiag-interconnect1-aaaa/logs/compute.googleapis.com%2Frouter_events",
+      "receiveTimestamp": "2025-03-20T16:45:58.287489651Z"
+    },
+    {
+      "textPayload": "BGP Event: BGP peering with 169.254.2.1 went down with reason: BGP_PROCESS_STOPPED",
+      "insertId": "lxwe2jf1e2pij",
+      "resource": {
+        "type": "gce_router",
+        "labels": {
+          "region": "us-east1",
+          "project_id": "gcpdiag-interconnect1-aaaa",
+          "router_id": "6988249776642123456"
+        }
+      },
+      "timestamp": "2025-03-27T23:32:19.397757310Z",
+      "severity": "NOTICE",
+      "logName": "projects/gcpdiag-interconnect1-aaaa/logs/compute.googleapis.com%2Frouter_events",
+      "receiveTimestamp": "2025-03-27T23:32:19.414761410Z"
+    },
+    {
+      "textPayload": "BGP Event: BGP peering with 169.254.2.1 came up 0 seconds ago, hold time is 60 seconds, graceful restart timer is 60 seconds",
+      "insertId": "h977eqf1i9jpn",
+      "resource": {
+        "type": "gce_router",
+        "labels": {
+          "router_id": "6988249776642123456",
+          "project_id": "gcpdiag-interconnect1-aaaa",
+          "region": "us-east4"
+        }
+      },
+      "timestamp": "2025-03-27T23:34:39.923120483Z",
+      "severity": "NOTICE",
+      "logName": "projects/gcpdiag-interconnect1-aaaa/logs/compute.googleapis.com%2Frouter_events",
+      "receiveTimestamp": "2025-03-27T23:34:39.928464648Z"
+    }
+  ]
+}

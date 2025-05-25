@@ -1,0 +1,80 @@
+#############################################################
+
+# Messages for BGP Down Flap Check #
+
+#############################################################
+  {% block start_success_reason %}
+    `VLAN attachments` found in project.
+  {% endblock start_success_reason %}
+
+  {% block start_skipped_reason%}
+    Unable to fetch the `vlan attachments` in `{project_id}`.
+  {% endblock start_skipped_reason %}
+
+  {% block start_skipped_reason_a1%}
+    Unable to fetch `vlan attachments` in region `{region}` in project `{project_id}`.
+  {% endblock start_skipped_reason_a1 %}
+
+  {% block bgpdown_success_reason %}
+    No `VLAN attachments` have `BGP` down.
+  {% endblock bgpdown_success_reason %}
+
+  {% block bgpdown_failure_reason %}
+    The interconnect `{interconnect_name}` attachment `{attachment_name}` has `BGP` down.
+  {% endblock bgpdown_failure_reason %}
+
+  {% block bgpdown_failure_reason_a1 %}
+    `BGP` down events found.
+  {% endblock bgpdown_failure_reason_a1 %}
+
+  {% block bgpdown_failure_remediation %}
+    Check for `interconnect maintenance events`.
+  {% endblock bgpdown_failure_remediation %}
+
+  {% block interconnect_maintenance_success_reason %}
+    `BGP` down events coincide with planned interconnect maintenance.
+  {% endblock interconnect_maintenance_success_reason %}
+
+  {% block interconnect_maintenance_failure_reason%}
+    The interconnect `{interconnect_name}` with `BGP` down has no planned maintenance.
+  {% endblock interconnect_maintenance_failure_reason %}
+
+  {% block interconnect_maintenance_failure_reason_a1 %}
+    The Interconnects with `BGP` down have no planned maintenance.
+  {% endblock interconnect_maintenance_failure_reason_a1 %}
+
+  {% block interconnect_maintenance_failure_remediation %}
+    Check `router logging` for details.
+  {% endblock interconnect_maintenance_failure_remediation %}
+
+  {% block bgpflap_success_reason %}
+    No `BGP` flaps are found.
+  {% endblock bgpflap_success_reason %}
+
+  {% block bgpflap_failure_reason%}
+    `BGP` flaps lasting longer than 60 seconds detected in project `{project_id}`.
+  {% endblock bgpflap_failure_reason %}
+
+  {% block bgpflap_failure_remediation %}
+    Check `router logging` for details.
+  {% endblock bgpflap_failure_remediation %}
+
+  {% block bgpflap_uncertain_reason%}
+    `BGP` flaps lasting less than 60 seconds detected.
+  {% endblock bgpflap_uncertain_reason %}
+
+  {% block bgpflap_uncertain_remediation %}
+    Check for `cloud router maintenance` events.
+  {% endblock bgpflap_uncertain_remediation %}
+
+  {% block cloud_router_maintenance_success_reason%}
+    `BGP` flaps (duration < 60s) coincide with `Cloud Router maintenance` events.
+  {% endblock cloud_router_maintenance_success_reason %}
+
+  {% block cloud_router_maintenance_failure_reason%}
+    `BGP` flaps (duration < 60s) detected that do not coincide with `Cloud Router maintenance` events.
+  {% endblock cloud_router_maintenance_failure_reason %}
+
+  {% block cloud_router_maintenance_failure_remediation %}
+    Check `router logging` for details.
+  {% endblock cloud_router_maintenance_failure_remediation %}

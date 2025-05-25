@@ -16,15 +16,15 @@ Ensures both project_id, region and job_id parameters are available.
 
 ### Failure Reason
 
-The job: {job_id} doesn't exists in project {project_id}
+The job `{job_id}` does not exist in project `{project_id}`.
 
 ### Failure Remediation
 
-Please check if the job id/region you provided is correct.
+Verify that the job ID and region are correct.
 
 ### Success Reason
 
-The job: {job_id} exists in project {project_id}
+The job `{job_id}` exists in project `{project_id}`.
 
 
 

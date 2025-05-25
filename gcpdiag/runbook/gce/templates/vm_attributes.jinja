@@ -1,20 +1,19 @@
 {% block service_account_exists_success_reason %}
-Ops agent in {full_resource_path} has {sa} to use when exporting logs/metrics
+The Ops Agent on instance {full_resource_path} is configured with service account {sa} for exporting logs and metrics.
 {% endblock service_account_exists_success_reason %}
 
 {% block service_account_exists_failure_reason %}
-Ops agent in {full_resource_path} doesn't have a service account to use when
-exporting logs/metrics.
+The Ops Agent on instance {full_resource_path} is not configured with a service account for exporting logs and metrics.
 {% endblock service_account_exists_failure_reason %}
 
 {% block service_account_exists_failure_remediation %}
-Follow [1] to attach an active service account to this GCE Instance.
-Read more on how to properly authorize ops agent.
+Attach an active service account to the GCE Instance {full_resource_path}.
+Consult the following documentation for guidance:
 
-[1] <https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes>
-
-[2]
-<https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/authorization#authorize_with_an_attached_service_account>
+- Attaching or changing a service account:
+  <https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes>
+- Authorizing the Ops Agent:
+  <https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/authorization#authorize_with_an_attached_service_account>
 {% endblock service_account_exists_failure_remediation %}
 
 {% block service_account_exists_step_name %}
@@ -43,7 +42,8 @@ Access scopes don't apply for calls made using gRPC.
 Update `{full_resource_path}` to enable at least one of the following access scopes:
 {required_access_scope}
 
-[1] <https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes>
+Consult the following documentation for guidance on changing the service account and scopes:
+<https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes>
 {% endblock access_scope_failure_remediation %}
 
 {% block running_step_name %}
@@ -55,7 +55,7 @@ The GCE Instance {full_resource_path} is in {status} state.
 {% endblock running_success_reason %}
 
 {% block running_skipped_reason %}
-Could not validate VM lifecycle.
+Could not validate VM lifecycle for GCE Instance {full_resource_path}.
 {% endblock running_skipped_reason %}
 
 {% block running_failure_reason %}
@@ -65,12 +65,12 @@ The GCE Instance {full_resource_path} is in {status} state.
 {% block running_failure_remediation %}
 Restart VM {full_resource_path} and ensure VM lifecycle transitions from {status} to RUNNING.
 
-You can [restart a compute instance](https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm)
-with this guide.
+Consult the following documentation:
 
-If you encounter any difficulties starting the VM, consult the [VM Startup troubleshooting
-documentation](https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting)
-to identify and resolve potential startup issues.
+- Restarting a compute instance:
+  <https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm>
+- Troubleshooting VM startup issues:
+  <https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting>
 {% endblock running_failure_remediation %}
 
 {% block terminated_vm_running_step_name %}
@@ -78,24 +78,19 @@ Verify that the terminated VM is currently running
 {% endblock terminated_vm_running_step_name %}
 
 {% block terminated_vm_running_success_reason %}
-The terminated VM is currently up and running indicating proper functionality.
+The GCE Instance {full_resource_path} is currently running.
 {% endblock terminated_vm_running_success_reason %}
 
 {% block terminated_vm_running_failure_reason %}
-The terminated VM is still shutdown. You can turn it on if there are no other concerns.
+The GCE Instance {full_resource_path} is in the {status} state, not RUNNING. Start the instance if required.
 {% endblock terminated_vm_running_failure_reason %}
 
 {% block terminated_vm_running_failure_remediation %}
-This step failed because GCE Virtual Machine {full_resource_path} is expected to be in a RUNNING state:
+Start the GCE Instance {full_resource_path} to transition it from the {status} state to the RUNNING state.
+Consult the following documentation for assistance:
 
-To initiate the lifecycle transition from {status} to RUNNING state follow guide [1].
-
-If you encounter any difficulties during the startup process, consult the troubleshooting
-documentation to identify and resolve potential startup issues [2].
-
-Resources:
-
-[1] <https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm>
-
-[2] <https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting>
+- Restarting a compute instance:
+  <https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm>
+- Troubleshooting VM startup issues:
+  <https://cloud.google.com/compute/docs/troubleshooting/vm-startup#identify_the_reason_why_the_boot_disk_isnt_booting>
 {% endblock terminated_vm_running_failure_remediation %}

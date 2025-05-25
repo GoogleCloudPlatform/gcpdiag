@@ -15,7 +15,7 @@ dataflow/failed-streaming-pipeline: Diagnostic checks for failed Dataflow Stream
 
    - gcs_to_pubsub                                                        [OK]
      [REASON]
-       Successful found job 2024-06-19_09_43_07-14927685200167458422 in region us-central1
+       Successfully found job 2024-06-19_09_43_07-14927685200167458422 in region us-central1
 
 [AUTOMATED STEP]: Checks if a Dataflow job is indeed a streaming job by field JobType.
 

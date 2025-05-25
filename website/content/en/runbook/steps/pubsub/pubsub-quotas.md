@@ -20,7 +20,7 @@ None
 
 ### Failure Remediation
 
-  Please review [1] for guidelines on quota limits and how to resolve quota errors.
+  Refer to [1] for guidance on quota limits and how to resolve quota errors.
 
   [1] <https://cloud.google.com/pubsub/quotas>.
 

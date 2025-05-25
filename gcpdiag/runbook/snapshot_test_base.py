@@ -34,10 +34,7 @@ class RulesSnapshotTestBase:
 
   def test_all_rules(self, snapshot):
     self.de = runbook.DiagnosticEngine()
-    tree = runbook.RunbookRegistry.get(self.runbook_name)
-    if not tree:
-      print(f'Runbook: {self.runbook_name} does not exist!', file=sys.stderr)
-      return
+    tree = self.de.load_tree(self.runbook_name)
     snapshot.snapshot_dir = path.join(path.dirname(self.rule_pkg.__file__),
                                       'snapshots')
     output_stream = io.StringIO()

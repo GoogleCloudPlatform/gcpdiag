@@ -196,6 +196,10 @@ class VlanAttachment(models.Resource):
       return DEFAULT_MTU
 
   @property
+  def ipv4address(self) -> str:
+    return self._resource_data['cloudRouterIpAddress'].split('/')[0]
+
+  @property
   def ead(self) -> str:
     if not self._ead:
       interconnect_obj = get_interconnect(self.project_id, self.interconnect)

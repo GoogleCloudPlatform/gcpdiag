@@ -19,22 +19,21 @@ This investigation only happens from the perspective googleapis and
 
 ### Failure Reason
 
-Ops agent in {full_resource_path} doesn't have a service account to use when
-exporting logs/metrics.
+The Ops Agent on instance {full_resource_path} is not configured with a service account for exporting logs and metrics.
 
 ### Failure Remediation
 
-Follow [1] to attach an active service account to this GCE Instance.
-Read more on how to properly authorize ops agent.
+Attach an active service account to the GCE Instance {full_resource_path}.
+Consult the following documentation for guidance:
 
-[1] <https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes>
-
-[2]
-<https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/authorization#authorize_with_an_attached_service_account>
+- Attaching or changing a service account:
+  <https://cloud.google.com/compute/docs/instances/change-service-account#changeserviceaccountandscopes>
+- Authorizing the Ops Agent:
+  <https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/authorization#authorize_with_an_attached_service_account>
 
 ### Success Reason
 
-Ops agent in {full_resource_path} has {sa} to use when exporting logs/metrics
+The Ops Agent on instance {full_resource_path} is configured with service account {sa} for exporting logs and metrics.
 
 
 

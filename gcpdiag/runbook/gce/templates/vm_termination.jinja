@@ -54,7 +54,6 @@ This is a normal process and no action is required.
 [3] <https://cloud.google.com/compute/docs/instances/spot>
 {% endblock preemptible_instance_failure_remediation_a1 %}
 
-
 {% block host_error_failure_reason %}
 {status_message}
 {% endblock host_error_failure_reason %}
@@ -145,7 +144,7 @@ Review guest shell history to determine who or what application triggered the sh
 
 {% block terminate_on_host_maintenance_failure_remediation %}
 Instance {full_resource_path} maintenance policy is set to TERMINATE, Compute Engine
-stops your VM when there is a maintenance event where Google must move
+stops your VM when there is a maintenance event where Google must move your VM to another host.
 
 If you want to change your VM's onHostMaintenance policy to restart automatically
 or live migrate [1]. Read more about Host Events [2] and how to set your termination policies[3].

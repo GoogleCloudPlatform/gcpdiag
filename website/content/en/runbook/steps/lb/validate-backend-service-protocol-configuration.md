@@ -16,7 +16,7 @@ None
 
 ### Success Reason
 
-The load balancer is performing health checks using the same protocol ({hc_protocol}) that it is using for serving traffic. This is the standard configuration.
+The load balancer is performing health checks using the same protocol ({hc_protocol}) used for serving traffic. This is the standard configuration.
 
 ### Uncertain Reason
 
@@ -26,7 +26,7 @@ The load balancer uses {serving_protocol} for traffic but {hc_protocol} for heal
 
 ### Uncertain Remediation
 
-Verify that the health check and serving protocol are correctly configured to match the protocol used by your application.
+Verify that the health check and serving protocol are correctly configured to match the protocol used by the application.
 
 
 

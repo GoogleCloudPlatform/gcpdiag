@@ -20,9 +20,7 @@ Cloud Run Service agent {sa} does not have permissions to read image {image}.
 
 ### Failure Remediation
 
-Please make sure that {sa} has roles/storage.objectViewer role if the image is stored in Container
-Registry or roles/artifactregistry.reader if in Artifact Registry. Please note that the role needs to be granted in the
-project where the image is stored.
+Grant {sa} the roles/storage.objectViewer role if the image is stored in Container Registry or the roles/artifactregistry.reader role if in Artifact Registry. Note that the role must be granted in the project where the image is stored.
 
 
 

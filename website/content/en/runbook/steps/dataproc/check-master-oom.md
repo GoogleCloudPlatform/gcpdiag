@@ -20,7 +20,7 @@ Found logs messages related to Master OOM on the cluster: {cluster_name}.
 
 ### Failure Remediation
 
-Please follow the troubleshooting guide [1] to adjust the driver memory used for the job.
+Follow the troubleshooting guide [1] to adjust the driver memory used for the job.
 
 [1] <https://cloud.google.com/dataproc/docs/support/troubleshoot-oom-errors#oom_solutions>
 

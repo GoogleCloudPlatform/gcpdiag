@@ -20,16 +20,17 @@ You can check for sub agents for logging and metrics
 
 ### Failure Reason
 
-GCE Instance "{full_resource_path}" does not have {subagent} agent installed and the subagent is not exporting data
+GCE Instance "{full_resource_path}" does not have {subagent} agent installed and is not exporting data.
 
 ### Failure Remediation
 
-GCE Instance "{full_resource_path}" does not have {subagent} agent installed and the subagent is not exporting data
+Install the {subagent} agent on GCE Instance "{full_resource_path}".
+Consult the following documentation for troubleshooting assistance:
 <https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/troubleshoot-run-ingest>
 
 ### Success Reason
 
-GCE Instance "{full_resource_path}" has {subagent} agent installed and currently exporting data
+GCE Instance "{full_resource_path}" has {subagent} agent installed and is exporting data.
 
 
 

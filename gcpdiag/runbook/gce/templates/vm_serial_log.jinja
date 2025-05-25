@@ -7,7 +7,7 @@ There are no logs to examine.
 {% endblock default_skipped_reason %}
 
 {% block default_failure_remediation %}
-Investigate potential issues through the serial console.
+Investigate potential issues via the serial console.
 If GRUB_TIMEOUT is greater than 0, access the interactive session for more insights.
 Explore rescue options for inaccessible VMs or review possible guest OS issues.
 
@@ -15,14 +15,14 @@ Explore rescue options for inaccessible VMs or review possible guest OS issues.
 - Rescuing VMs: <https://cloud.google.com/compute/docs/troubleshooting/rescue-vm>
 
 If escalating Guest OS related issues to Google Cloud Support,
-do check to ensure is in line with Google Cloud Platform's Guest OS support policy
+verify that the issue is in line with Google Cloud Platform's Guest OS support policy
 
 - Google Cloud Platform Support Scope:
 <https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope>
 {% endblock default_failure_remediation %}
 
 {% block default_success_reason %}
-The VM's Linux OS shows no signs of interested anomalies,
+The VM's Linux OS shows no signs of anomalies,
 indicating a *likely* stable operational state.
 {% endblock default_success_reason %}
 
@@ -32,7 +32,7 @@ inconclusive
 {% endblock default_uncertain_reason %}
 
 {% block default_uncertain_remediation %}
-Confirm the VM's operational status by reviewing available serial logs.
+Verify the VM's operational status by reviewing available serial logs.
 Address any detected guest OS issues using the provided documentation,
 keeping in mind certain guest OS faults may be beyond Google Cloud Platform's support scope.
 
@@ -125,7 +125,7 @@ issues](https://cloud.google.com/compute/docs/images/support-maintenance-policy#
 {% endblock kernel_panic_uncertain_remediation %}
 
 {% block kernel_panic_skipped_reason %}
-There are no logs to examine.
+No logs are available to examine.
 {% endblock kernel_panic_skipped_reason %}
 
 {% block sshguard_step_name %}
@@ -138,7 +138,7 @@ Verify if your IP is blocked by SSHGuard on the VM.
 {% endblock sshguard_failure_reason %}
 
 {% block sshguard_failure_remediation %}
-Note: Issues related to SSHGuard fall outside the standard support scope for Google Cloud Platform.
+Issues related to SSHGuard fall outside the standard support scope for Google Cloud Platform.
 Consult the most appropriate team within your organisation to assist with resolution.
 For guest OS issues and SSHGuard configurations, refer to:
 
@@ -147,23 +147,23 @@ For guest OS issues and SSHGuard configurations, refer to:
 {% endblock sshguard_failure_remediation %}
 
 {% block sshguard_success_reason %}
-SSHGuard doesn't appear to be blockaging IPs on the VM (if installed on the VM)
+SSHGuard does not appear to be blocking IPs on the VM (if installed on the VM)
 {% endblock sshguard_success_reason %}
 
 {% block sshguard_uncertain_reason %}
 The retrieved logs do not contain definitive entries, either positive or negative,
 to make a conclusive assessment.
-Manually review the GCE serial logs to determine if SSHGuard is a likely cause.
+Review the GCE serial logs to determine if SSHGuard is a likely cause.
 {% endblock sshguard_uncertain_reason %}
 
 {% block sshguard_uncertain_remediation %}
 If SSHGuard or similar application is a concern,
-manually inspect its configuration via the interactive serial console:
+Inspect its configuration via the interactive serial console:
 <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 {% endblock sshguard_uncertain_remediation %}
 
 {% block sshguard_skipped_reason %}
-There are no logs to examine
+No logs are available to examine
 {% endblock sshguard_skipped_reason %}
 
 {% block windows_gce_ssh_agent_instructions_message %}
@@ -171,7 +171,7 @@ Verify if the `google-compute-engine-ssh` agent is installed on the Windows VM.
 {% endblock windows_gce_ssh_agent_instructions_message %}
 
 {% block windows_gce_ssh_agent_step_name %}
-Manually verify if the necessary Google guest agents, especially `google-compute-engine-ssh`,
+Verify if the necessary Google guest agents, especially `google-compute-engine-ssh`,
 are operational on the VM.
 {% endblock windows_gce_ssh_agent_step_name %}
 
@@ -180,7 +180,7 @@ Uncertain if the `google-compute-engine-ssh` agent is installed on the VM.
 {% endblock windows_gce_ssh_agent_uncertain_reason %}
 
 {% block windows_gce_ssh_agent_uncertain_remediation %}
-Utilize RDP or a startup script to check for the presence and functionality of the
+Utilize RDP or a startup script to verify the presence and functionality of the
 `google-compute-engine-ssh` agent. For instructions on implementing startup scripts, refer to:
 <https://cloud.google.com/compute/docs/connect/windows-ssh#startup-script>
 {% endblock windows_gce_ssh_agent_uncertain_remediation %}
@@ -209,7 +209,7 @@ This issue is preventing proper SSH connectivity to the VM.
 {% endblock sshd_failure_reason %}
 
 {% block sshd_failure_remediation %}
-Google Cloud Compute Engine provides regional serial console gateways for troubleshooting the
+Google Cloud Compute Engine provides regional serial console gateways for troubleshooting
 Guest OS when SSHD is unavailable.
 
 Connect to the VM using the [interactive serial console
@@ -237,7 +237,7 @@ to conclusively assess if sshd.service is up and running correctly.
 {% endblock sshd_uncertain_reason %}
 
 {% block sshd_skipped_reason %}
-There are no logs to examine
+No logs are available to examine
 {% endblock sshd_skipped_reason %}
 
 {% block windows_bootup_step_name %}
@@ -276,7 +276,7 @@ inconclusive
 {% endblock windows_bootup_uncertain_reason %}
 
 {% block windows_bootup_uncertain_remediation %}
-Consulting the troubleshooting guide to investigate windows boot up issues: [1], [2]
+Consult the troubleshooting guide to investigate windows boot up issues: [1], [2]
 
 Resources:
 
@@ -306,7 +306,7 @@ Consider restarting the instance and then using gcpdiag to analyze the serial co
 {% endblock serial_log_start_point_failure_remediation %}
 
 {% block serial_log_start_point_skipped_reason %}
-There are no logs to examine.
+No logs are available to examine.
 {% endblock serial_log_start_point_skipped_reason %}
 
 {% block time_sync_issue_step_name %}
@@ -314,17 +314,17 @@ Check for Time Sync related errors from GCE serial logs.
 {% endblock time_sync_issue_step_name %}
 
 {% block time_sync_issue_failure_reason %}
-Found time sync error messages in Serial console logs. It looks like VM's time is out of syc.
+Found time sync error messages in Serial console logs. The VM's time is out of sync.
 {% endblock time_sync_issue_failure_reason %}
 
 {% block time_sync_issue_failure_remediation %}
 Connect to the GCE Instance and verify that the NTP server configuration adheres to Google Cloud Platform standards.
-For detailed guidance, refer to the [Google Cloud NTP configuration
+Refer to the [Google Cloud NTP configuration
 guide](https://cloud.google.com/compute/docs/instances/configure-ntp).
 {% endblock time_sync_issue_failure_remediation %}
 
 {% block time_sync_issue_skipped_reason %}
-There are no logs to examine.
+No logs are available to examine.
 {% endblock time_sync_issue_skipped_reason %}
 
 {% block time_sync_issue_uncertain_reason %}
@@ -375,7 +375,7 @@ Detected that Google Guest Agent is running within the VM
 {% endblock guest_agent_success_reason %}
 
 {% block guest_agent_skipped_reason %}
-There are no logs to examine.
+No logs are available to examine.
 {% endblock guest_agent_skipped_reason %}
 
 {% block guest_agent_uncertain_reason %}
@@ -390,7 +390,7 @@ To determine the presence of a guest environment:
 - Inspect system logs emitted to the console during instance startup.
 - List the installed packages while connected to the instance.
 
-For manual validation of the Guest Agent, refer to [Installing and configuring the guest
+For validation of the Guest Agent, refer to [Installing and configuring the guest
 environment](https://cloud.google.com/compute/docs/images/install-guest-environment#wgei).
 {% endblock guest_agent_uncertain_remediation %}
 
@@ -417,7 +417,7 @@ with the Compute Engine metadata server.
 {% endblock network_errors_failure_remediation %}
 
 {% block network_errors_skipped_reason %}
-There are no logs to examine.
+No logs are available to examine.
 {% endblock network_errors_skipped_reason %}
 
 {% block network_errors_uncertain_reason %}
@@ -458,7 +458,7 @@ These resources provide detailed steps for diagnosing and resolving filesystem i
 {% endblock linux_fs_corruption_failure_remediation %}
 
 {% block linux_fs_corruption_skipped_reason %}
-There are no logs to examine.
+No logs are available to examine.
 {% endblock linux_fs_corruption_skipped_reason %}
 
 {% block sshd_auth_failure_step_name %}
@@ -487,7 +487,7 @@ No errors detected for sshd auth failure due to bad permissions
 {% endblock sshd_auth_failure_success_reason %}
 
 {% block sshd_auth_failure_skipped_reason %}
-There are no logs to examine.
+No logs are available to examine.
 {% endblock sshd_auth_failure_skipped_reason %}
 
 {% block sshd_auth_failure_uncertain_reason %}
@@ -556,7 +556,7 @@ Detected that Cloud-init is running within {full_resource_path}
 {% endblock cloud_init_startup_check_success_reason %}
 
 {% block cloud_init_startup_check_skipped_reason %}
-There are no logs to examine.
+No logs are available to examine.
 {% endblock cloud_init_startup_check_skipped_reason %}
 
 {% block cloud_init_startup_check_uncertain_reason %}
@@ -609,7 +609,7 @@ Detected that NIC has received IP through cloud-init
 {% endblock cloud_init_success_reason %}
 
 {% block cloud_init_skipped_reason %}
-There are no logs to examine.
+No logs are available to examine.
 {% endblock cloud_init_skipped_reason %}
 
 {% block cloud_init_uncertain_reason %}

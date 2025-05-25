@@ -7,7 +7,7 @@ The SSL certificate "{name}" does not exist or project {project_id} does not exi
 {% endblock confirmation_skipped_reason %}
 
 {% block confirmation_skipped_reason_a1 %}
-The certificate "{name}" is self-managed. Customers are responsible for obtaining, provisioning, and renewing self-managed certificates.  This runbook supports only certificates managed by google
+The certificate "{name}" is self-managed. Self-managed certificates require manual handling for obtaining, provisioning, and renewal. This diagnostic check supports only Google-managed certificates.
 {% endblock confirmation_skipped_reason_a1 %}
 
 {% block confirmation_failure_reason %}
@@ -23,7 +23,7 @@ The Google-managed SSL certificate "{name}" is in the PROVISIONING_FAILED_PERMAN
 {% endblock cert_status_failure_reason %}
 
 {% block cert_status_failure_remediation %}
-Please recreate the certificate. See the documentation for instructions on creating SSL certificates.
+Recreate the certificate. Refer to the documentation for instructions on creating SSL certificates.
 {% endblock cert_status_failure_remediation %}
 
 {% block cert_status_uncertain_reason %}
@@ -31,11 +31,11 @@ The Google-managed SSL certificate "{name}" is in the {status} state. {context}.
 {% endblock cert_status_uncertain_reason %}
 
 {% block domain_status_success_reason %}
-All domains associated with the SSL certificate "{name}" are in the ACTIVE state. No issues detected with domain provisioning
+All domains associated with the SSL certificate "{name}" are in the ACTIVE state. Domain provisioning appears successful.
 {% endblock domain_status_success_reason %}
 
 {% block failed_not_visible_domains_failure_reason %}
-The following domains are in FAILED_NOT_VISIBLE state: {domains} for SSL certificate "{name}". This usually means the domain's DNS records aren't correctly pointing to your load balancer.
+The following domains are in FAILED_NOT_VISIBLE state: {domains} for SSL certificate "{name}". This usually means the domain's DNS records are not correctly pointing to the load balancer.
 {% endblock failed_not_visible_domains_failure_reason %}
 
 {% block provisioning_domains_uncertain_reason %}
@@ -43,11 +43,11 @@ The following domains are in PROVISIONING state: {domains} for SSL certificate "
 {% endblock provisioning_domains_uncertain_reason %}
 
 {% block provisioning_domains_uncertain_remediation %}
-The provisioning process can take some time. The runbook will proactively check other potential issues while the domains are provisioning.
+The provisioning process can take some time. The diagnostic process will continue checking other potential issues while the domains are provisioning.
 {% endblock provisioning_domains_uncertain_remediation %}
 
 {% block failed_rate_limited_domains_failure_reason %}
-The following domains are in FAILED_RATE_LIMITED state: {domains} for SSL certificate "{name}". This indicates rate limiting by the Certificate Authority.  You've likely exceeded the allowed number of certificate requests in a short period.
+The following domains are in FAILED_RATE_LIMITED state: {domains} for SSL certificate "{name}". This indicates rate limiting by the Certificate Authority. This likely means the allowed number of certificate requests in a short period was exceeded.
 {% endblock failed_rate_limited_domains_failure_reason %}
 
 {% block failed_rate_limited_domains_failure_remediation %}
@@ -55,19 +55,19 @@ Wait for a while and then check the certificate status again. If the issue persi
 {% endblock failed_rate_limited_domains_failure_remediation %}
 
 {% block failed_caa_check_domains_failure_reason %}
-The following domains are in FAILED_CAA_CHECKING or FAILED_CAA_FORBIDDEN state: {domains} for SSL certificate "{name}". This indicates misconfigured CAA records.  CAA records authorize specific Certificate Authorities to issue certificates for your domain.
+The following domains are in FAILED_CAA_CHECKING or FAILED_CAA_FORBIDDEN state: {domains} for SSL certificate "{name}". This indicates misconfigured CAA records. CAA records authorize specific Certificate Authorities to issue certificates for the domain.
 {% endblock failed_caa_check_domains_failure_reason %}
 
 {% block failed_caa_check_domains_failure_remediation %}
-Please ensure the CAA records are configured correctly and try again. See the documentation for instructions on configuring CAA records: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#caa>
+Ensure the CAA records are configured correctly. Refer to the documentation for instructions on configuring CAA records: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#caa>
 {% endblock failed_caa_check_domains_failure_remediation %}
 
 {% block check_certificate_attachment_failure_reason %}
-The SSL certificate "{name}" is not attached to any target proxies. Please attach the certificate to a target proxy and try again.
+The SSL certificate "{name}" is not attached to any target proxies. Attach the certificate to a target proxy.
 {% endblock check_certificate_attachment_failure_reason %}
 
 {% block check_certificate_attachment_failure_remediation %}
-Please follow the documentation to attach the certificate to a target proxy: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#load-balancer>
+Follow the documentation to attach the certificate to a target proxy: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#load-balancer>
 {% endblock check_certificate_attachment_failure_remediation %}
 
 {% block check_certificate_attachment_success_reason %}
@@ -116,7 +116,7 @@ The SSL certificate "{name}" has forwarding rules configured for HTTPS (port 443
 
 {% block verify_forwarding_rules_port_failure_reason %}
 {misconfigured_entities}
-There must be at least one load balancer's forwarding rule that use TCP port 443 for the Google-managed certificate to be initially provisioned and automatically renewed.
+There must be at least one load balancer's forwarding rule that uses TCP port 443 for the Google-managed certificate to be initially provisioned and automatically renewed.
 {% endblock verify_forwarding_rules_port_failure_reason %}
 
 {% block verify_forwarding_rules_port_failure_remediation %}
@@ -136,7 +136,7 @@ If certificate map is set on a target proxy, the classic SSL certificates are ig
 {% endblock verify_no_certificate_map_conflict_failure_reason %}
 
 {% block verify_no_certificate_map_conflict_failure_remediation %}
-If this is not intended, please detach the certificate map from the target proxies.
+If this configuration is unintended, detach the certificate map from the target proxies.
 {% endblock verify_no_certificate_map_conflict_failure_remediation %}
 
 {% block check_provisioning_time_success_reason %}
@@ -149,5 +149,5 @@ The SSL certificate "{name}" has recently had associated resources modified. Thi
 {% endblock check_provisioning_time_uncertain_reason %}
 
 {% block check_provisioning_time_uncertain_remediation %}
-DNS validation automatically checks your domain's A and AAAA records against your Google Cloud load balancer's IP address. This process includes an automatic retry mechanism with increasing wait times. If you recently attached {name} to a target proxy or the target proxy to forwarding rule, validation could take up to 24 hours to complete.
+DNS validation automatically checks the domain's A and AAAA records against the Google Cloud load balancer's IP address. This process includes an automatic retry mechanism with increasing wait times. If {name} was recently attached to a target proxy or the target proxy to a forwarding rule, validation could take up to 24 hours to complete.
 {% endblock check_provisioning_time_uncertain_remediation %}

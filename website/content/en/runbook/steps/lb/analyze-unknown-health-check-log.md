@@ -22,7 +22,7 @@ Health check logs for backend service {bs_url} show entries with the detailed he
 
 For new endpoints: Consider reducing the timeout period for health checks if appropriate, especially during initial setup or testing phases.
 
-For potential Google Cloud outages: Use Personalized Service Health to check for any ongoing incidents that might be affecting your project or the specific service in question. If an incident is identified, follow any recommended mitigation steps or wait for the issue to be resolved by Google Cloud.
+For potential Google Cloud outages: Use Personalized Service Health to check for any ongoing incidents that might be affecting the project or the specific service in question. If an incident is identified, follow any recommended mitigation steps or wait for the issue to be resolved by Google Cloud.
 
 
 

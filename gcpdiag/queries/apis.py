@@ -169,7 +169,7 @@ def get_api(service_name: str,
     client_options.api_endpoint = f'https://{region}-{service_name}.{universe_domain}'
   else:
     client_options.api_endpoint = f'https://{service_name}.{universe_domain}'
-  if service_name in ['compute']:
+  if service_name in ['compute', 'bigquery', 'storage', 'dns']:
     client_options.api_endpoint += f'/{service_name}/{version}'
   api = discovery.build(service_name,
                         version,
@@ -191,8 +191,18 @@ def _list_enabled_apis(project_id: str) -> Set[str]:
   try:
     while request is not None:
       response = request.execute(num_retries=config.API_RETRIES)
-      for service in response['services']:
-        enabled_apis.add(service['config']['name'])
+      if not response:
+        logging.debug("No 'services' found in the response for project: %s",
+                      project_id)
+        break
+      services = response.get('services', [])
+      if services is None:
+        logging.debug("No 'services' found in the response for project: %s",
+                      project_id)
+        break
+      for service in services:
+        if 'config' in service and 'name' in service['config']:
+          enabled_apis.add(service['config']['name'])
       request = serviceusage.services().list_next(request, response)
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err

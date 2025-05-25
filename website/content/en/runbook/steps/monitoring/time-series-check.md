@@ -18,13 +18,13 @@ Currently checks if an attribute
 
 ### Failure Reason
 
-A known bad value is present within the checked metric collection indicating a problem
+A known bad value is present within the checked metric collection.
 
 ### Failure Remediation
 
-View Cloud Monitoring to get more details of how to what is causing this issue.
+Review the metric data in Cloud Monitoring for more details.
 
-Run the following cloud logging query in GCP.
+Alternatively, run the following Cloud Logging query:
 
 Query:
 {query}
@@ -35,13 +35,13 @@ The expected good value is present within the checked metric collection.
 
 ### Uncertain Reason
 
-We are not sure of the outcome manually check this cloud logging
+The metric data analysis was inconclusive. Manual investigation using Cloud Logging is recommended.
 
 ### Uncertain Remediation
 
-View Cloud logging to get more details of how to what is causing this issue.
+Review the metric data in Cloud Monitoring for more details.
 
-Run the following cloud logging query in GCP.
+Alternatively, run the following Cloud Logging query:
 
 Query:
 {query}

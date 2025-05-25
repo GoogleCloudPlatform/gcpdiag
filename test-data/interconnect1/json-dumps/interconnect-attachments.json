@@ -1,0 +1,357 @@
+{
+  "id": "projects/gcpdiag-interconnect1-aaaa/aggregated/interconnectAttachments",
+  "items": {
+    "regions/asia-east1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/asia-east1"
+          }
+        ],
+        "message": "There are no results "
+      }
+    },
+    "regions/asia-east2": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/asia-east2"
+          }
+        ],
+        "message": "There are no results "
+      }
+    },
+    "regions/us-east1": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/us-east1"
+          }
+        ],
+        "message": "There are no results "
+      }
+    },
+    "regions/us-east4": {
+      "interconnectAttachments": [
+        {
+          "adminEnabled": true,
+          "bandwidth": "BPS_10G",
+          "cloudRouterIpAddress": "169.254.1.1/29",
+          "creationTimestamp": "2021-01-01T00:00:00-00:00",
+          "customerRouterIpAddress": "169.254.1.2/29",
+          "dataplaneVersion": 2,
+          "description": "Dummy Description",
+          "encryption": "IPSEC",
+          "id": "0000000000000000000",
+          "interconnect": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/interconnects/dummy-interconnect1",
+          "ipsecInternalAddresses": [
+            "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4/addresses/test-tange-1"
+          ],
+          "kind": "compute#interconnectAttachment",
+          "name": "dummy-attachment1",
+          "operationalStatus": "OS_ACTIVE",
+          "privateInterconnectInfo": {
+            "tag8021q": 1101
+          },
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4",
+          "mtu": 1460,
+          "router": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4/routers/dummy-router1",
+          "satisfiesPzs": false,
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4/interconnectAttachments/dummy-attachment1",
+          "stackType": "IPV4_ONLY",
+          "state": "ACTIVE",
+          "type": "DEDICATED",
+          "vlanTag8021q": 1101
+        },
+        {
+          "adminEnabled": true,
+          "bandwidth": "BPS_10G",
+          "cloudRouterIpAddress": "169.254.2.1/29",
+          "creationTimestamp": "2021-01-01T00:00:00-00:00",
+          "customerRouterIpAddress": "169.254.2.2/29",
+          "dataplaneVersion": 2,
+          "description": "Dummy Description",
+          "encryption": "IPSEC",
+          "id": "0000000000000000000",
+          "interconnect": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/interconnects/dummy-interconnect1",
+          "ipsecInternalAddresses": [
+            "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4/addresses/test-tange-1"
+          ],
+          "kind": "compute#interconnectAttachment",
+          "name": "dummy-attachment2",
+          "operationalStatus": "OS_ACTIVE",
+          "privateInterconnectInfo": {
+            "tag8021q": 1103
+          },
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4",
+          "mtu": 1460,
+          "router": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4/routers/dummy-router1",
+          "satisfiesPzs": false,
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4/interconnectAttachments/dummy-attachment2",
+          "stackType": "IPV4_ONLY",
+          "state": "ACTIVE",
+          "type": "DEDICATED",
+          "vlanTag8021q": 1103
+        },
+        {
+          "adminEnabled": true,
+          "bandwidth": "BPS_10G",
+          "cloudRouterIpAddress": "169.254.3.1/29",
+          "creationTimestamp": "2021-01-01T00:00:00-00:00",
+          "customerRouterIpAddress": "169.254.3.2/29",
+          "dataplaneVersion": 2,
+          "description": "Dummy Description",
+          "encryption": "IPSEC",
+          "id": "0000000000000000000",
+          "interconnect": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/interconnects/dummy-interconnect2",
+          "ipsecInternalAddresses": [
+            "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4/addresses/test-tange-1"
+          ],
+          "kind": "compute#interconnectAttachment",
+          "name": "dummy-attachment3",
+          "operationalStatus": "OS_ACTIVE",
+          "privateInterconnectInfo": {
+            "tag8021q": 1105
+          },
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4",
+          "mtu": 1460,
+          "router": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4/routers/dummy-router2",
+          "satisfiesPzs": false,
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4/interconnectAttachments/dummy-attachment3",
+          "stackType": "IPV4_ONLY",
+          "state": "ACTIVE",
+          "type": "DEDICATED",
+          "vlanTag8021q": 1105
+        },
+        {
+          "adminEnabled": true,
+          "bandwidth": "BPS_10G",
+          "cloudRouterIpAddress": "169.254.4.1/29",
+          "creationTimestamp": "2021-01-01T00:00:00-00:00",
+          "customerRouterIpAddress": "169.254.4.2/29",
+          "dataplaneVersion": 2,
+          "description": "Dummy Description",
+          "encryption": "IPSEC",
+          "id": "0000000000000000000",
+          "interconnect": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/interconnects/dummy-interconnect2",
+          "ipsecInternalAddresses": [
+            "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4/addresses/test-tange-1"
+          ],
+          "kind": "compute#interconnectAttachment",
+          "name": "dummy-attachment4",
+          "operationalStatus": "OS_ACTIVE",
+          "privateInterconnectInfo": {
+            "tag8021q": 1106
+          },
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4",
+          "mtu": 1460,
+          "router": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4/routers/dummy-router2",
+          "satisfiesPzs": false,
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-east4/interconnectAttachments/dummy-attachment4",
+          "stackType": "IPV4_ONLY",
+          "state": "ACTIVE",
+          "type": "DEDICATED",
+          "vlanTag8021q": 1106
+        }
+      ]
+    },
+    "regions/us-east5": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "data": [
+          {
+            "key": "scope",
+            "value": "regions/us-east5"
+          }
+        ],
+        "message": "There are no results "
+      }
+    },
+    "regions/us-west2": {
+      "interconnectAttachments": [
+        {
+          "adminEnabled": true,
+          "bandwidth": "BPS_10G",
+          "cloudRouterIpAddress": "169.254.3.1/29",
+          "creationTimestamp": "2021-01-01T00:00:00-00:00",
+          "customerRouterIpAddress": "169.254.3.2/29",
+          "dataplaneVersion": 2,
+          "description": "Dummy Description",
+          "encryption": "IPSEC",
+          "id": "0000000000000000000",
+          "interconnect": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/interconnects/dummy-interconnect3",
+          "ipsecInternalAddresses": [
+            "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/addresses/test-tange-1"
+          ],
+          "kind": "compute#interconnectAttachment",
+          "name": "dummy-attachment5",
+          "operationalStatus": "OS_ACTIVE",
+          "privateInterconnectInfo": {
+            "tag8021q": 1102
+          },
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2",
+          "mtu": 1450,
+          "router": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/routers/dummy-router3",
+          "satisfiesPzs": false,
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment5",
+          "stackType": "IPV4_ONLY",
+          "state": "ACTIVE",
+          "type": "DEDICATED",
+          "vlanTag8021q": 1102
+        },
+        {
+          "adminEnabled": true,
+          "bandwidth": "BPS_10G",
+          "cloudRouterIpAddress": "169.254.3.1/29",
+          "creationTimestamp": "2021-01-01T00:00:00-00:00",
+          "customerRouterIpAddress": "169.254.3.2/29",
+          "dataplaneVersion": 2,
+          "description": "Dummy Description",
+          "encryption": "IPSEC",
+          "id": "0000000000000000000",
+          "interconnect": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/interconnects/dummy-interconnect4",
+          "ipsecInternalAddresses": [
+            "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/addresses/test-tange-1"
+          ],
+          "kind": "compute#interconnectAttachment",
+          "name": "dummy-attachment6",
+          "operationalStatus": "OS_ACTIVE",
+          "privateInterconnectInfo": {
+            "tag8021q": 1104
+          },
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2",
+          "router": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/routers/dummy-router3",
+          "satisfiesPzs": false,
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6",
+          "stackType": "IPV4_ONLY",
+          "state": "ACTIVE",
+          "type": "DEDICATED",
+          "vlanTag8021q": 1104
+        },
+        {
+          "adminEnabled": true,
+          "bandwidth": "BPS_10G",
+          "cloudRouterIpAddress": "169.254.3.1/29",
+          "creationTimestamp": "2021-01-01T00:00:00-00:00",
+          "customerRouterIpAddress": "169.254.3.2/29",
+          "description": "Dummy Description",
+          "encryption": "IPSEC",
+          "id": "0000000000000000000",
+          "interconnect": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/interconnects/dummy-interconnect4",
+          "ipsecInternalAddresses": [
+            "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/addresses/test-tange-1"
+          ],
+          "kind": "compute#interconnectAttachment",
+          "name": "dummy-attachment7",
+          "operationalStatus": "OS_ACTIVE",
+          "privateInterconnectInfo": {
+            "tag8021q": 1104
+          },
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2",
+          "router": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/routers/dummy-router3",
+          "satisfiesPzs": false,
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6",
+          "stackType": "IPV4_ONLY",
+          "state": "ACTIVE",
+          "type": "DEDICATED",
+          "vlanTag8021q": 1104
+        },
+        {
+          "adminEnabled": true,
+          "bandwidth": "BPS_10G",
+          "cloudRouterIpAddress": "169.254.3.1/29",
+          "creationTimestamp": "2021-01-01T00:00:00-00:00",
+          "customerRouterIpAddress": "169.254.3.2/29",
+          "dataplaneVersion": 2,
+          "description": "Dummy Description",
+          "encryption": "IPSEC",
+          "id": "0000000000000000000",
+          "interconnect": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/interconnects/dummy-interconnect4",
+          "ipsecInternalAddresses": [
+            "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/addresses/test-tange-1"
+          ],
+          "kind": "compute#interconnectAttachment",
+          "name": "dummy-attachment8",
+          "operationalStatus": "OS_ACTIVE",
+          "privateInterconnectInfo": {
+            "tag8021q": 1104
+          },
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2",
+          "router": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/routers/dummy-router3",
+          "satisfiesPzs": false,
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6",
+          "stackType": "IPV4_ONLY",
+          "state": "ACTIVE",
+          "type": "DEDICATED",
+          "vlanTag8021q": 1104
+        },
+        {
+          "adminEnabled": true,
+          "bandwidth": "BPS_10G",
+          "cloudRouterIpAddress": "169.254.3.1/29",
+          "creationTimestamp": "2021-01-01T00:00:00-00:00",
+          "customerRouterIpAddress": "169.254.3.2/29",
+          "dataplaneVersion": 2,
+          "description": "Dummy Description",
+          "encryption": "IPSEC",
+          "id": "0000000000000000000",
+          "interconnect": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/interconnects/dummy-interconnect4",
+          "ipsecInternalAddresses": [
+            "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/addresses/test-tange-1"
+          ],
+          "kind": "compute#interconnectAttachment",
+          "name": "dummy-attachment9",
+          "operationalStatus": "OS_ACTIVE",
+          "privateInterconnectInfo": {
+            "tag8021q": 1104
+          },
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2",
+          "router": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/routers/dummy-router3",
+          "satisfiesPzs": false,
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6",
+          "stackType": "IPV4_ONLY",
+          "state": "ACTIVE",
+          "type": "DEDICATED",
+          "vlanTag8021q": 1104
+        },
+        {
+          "adminEnabled": true,
+          "bandwidth": "BPS_10G",
+          "cloudRouterIpAddress": "169.254.3.1/29",
+          "creationTimestamp": "2021-01-01T00:00:00-00:00",
+          "customerRouterIpAddress": "169.254.3.2/29",
+          "dataplaneVersion": 2,
+          "description": "Dummy Description",
+          "encryption": "IPSEC",
+          "id": "0000000000000000000",
+          "interconnect": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/global/interconnects/dummy-interconnect4",
+          "ipsecInternalAddresses": [
+            "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/addresses/test-tange-1"
+          ],
+          "kind": "compute#interconnectAttachment",
+          "name": "dummy-attachment10",
+          "operationalStatus": "OS_ACTIVE",
+          "privateInterconnectInfo": {
+            "tag8021q": 1104
+          },
+          "region": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2",
+          "router": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/routers/dummy-router3",
+          "satisfiesPzs": false,
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/regions/us-west2/interconnectAttachments/dummy-attachment6",
+          "stackType": "IPV4_ONLY",
+          "state": "DEFUNCT",
+          "type": "DEDICATED",
+          "vlanTag8021q": 1104
+        }
+      ]
+    }
+  },
+  "kind": "compute#interconnectAttachmentAggregatedList",
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-interconnect1-aaaa/aggregated/interconnectAttachments"
+}

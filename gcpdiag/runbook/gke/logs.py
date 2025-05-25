@@ -61,9 +61,16 @@ class Logs(runbook.DiagnosticTree):
           'type':
               str,
           'help':
-              '(Optional) The name of the GKE cluster, to limit search only for this cluster',
-          'required':
-              True
+              'The name of the GKE cluster, to limit search only for this cluster',
+          'deprecated':
+              True,
+          'new_parameter':
+              'gke_cluster_name',
+      },
+      flags.GKE_CLUSTER_NAME: {
+          'type': str,
+          'help': 'The name of the GKE cluster',
+          'required': True
       },
       flags.LOCATION: {
           'type': str,
@@ -71,6 +78,10 @@ class Logs(runbook.DiagnosticTree):
           'required': True
       }
   }
+
+  def legacy_parameter_handler(self, parameters):
+    if flags.NAME in parameters:
+      parameters[flags.GKE_CLUSTER_NAME] = parameters.pop(flags.NAME)
 
   def build_tree(self):
     """Construct the diagnostic tree with appropriate steps."""
@@ -123,7 +134,7 @@ class LogsStart(runbook.StartStep):
     # The following checks adjust based on the input provided:
     # - Both cluster name and location: Verify if that specific cluster exists at that location.
 
-    cluster_name = op.get(flags.NAME)
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     cluster_location = op.get(flags.LOCATION)
     found_cluster = False
     found_cluster_with_location = False
@@ -195,7 +206,7 @@ class ClusterLevelLoggingEnabled(runbook.Step):
     """Checks if GKE level logging is disabled"""
     clusters = gke.get_clusters(
         op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
-    partial_path = f'{op.get(flags.LOCATION)}/clusters/{op.get(flags.NAME)}'
+    partial_path = f'{op.get(flags.LOCATION)}/clusters/{op.get(flags.GKE_CLUSTER_NAME)}'
     cluster_obj = util.get_cluster_object(clusters, partial_path)
 
     if not cluster_obj.is_autopilot:
@@ -242,7 +253,7 @@ class NodePoolCloudLoggingAccessScope(runbook.Step):
 
     clusters = gke.get_clusters(
         op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
-    partial_path = f'{op.get(flags.LOCATION)}/clusters/{op.get(flags.NAME)}'
+    partial_path = f'{op.get(flags.LOCATION)}/clusters/{op.get(flags.GKE_CLUSTER_NAME)}'
     cluster_obj = util.get_cluster_object(clusters, partial_path)
 
     for nodepool in cluster_obj.nodepools:
@@ -281,7 +292,7 @@ class ServiceAccountLoggingPermission(runbook.Step):
     """
     clusters = gke.get_clusters(
         op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
-    partial_path = f'{op.get(flags.LOCATION)}/clusters/{op.get(flags.NAME)}'
+    partial_path = f'{op.get(flags.LOCATION)}/clusters/{op.get(flags.GKE_CLUSTER_NAME)}'
     cluster_obj = util.get_cluster_object(clusters, partial_path)
     iam_policy = iam.get_project_policy(op.get(flags.PROJECT_ID))
 

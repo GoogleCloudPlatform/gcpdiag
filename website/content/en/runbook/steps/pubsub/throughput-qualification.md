@@ -20,7 +20,7 @@ None
 
 ### Failure Remediation
 
-  Please review [1] to monitor and resolve the health issues of the subscription.
+  Monitor and resolve the health issues of the subscription by referring to [1].
 
   [1] <https://cloud.google.com/pubsub/docs/monitoring#delivery_latency_health>.
 

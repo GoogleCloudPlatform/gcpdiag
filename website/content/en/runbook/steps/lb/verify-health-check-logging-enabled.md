@@ -20,11 +20,11 @@ Health check logging is enabled for health check {hc_url}.
 
 ### Uncertain Reason
 
-Logging is not enabled for health check {hc_url}, making troubleshooting considerably harder. Without logs, visibility into health check state changes and probe details is lacking, hindering the ability to diagnose the cause of failures.
+Logging is not enabled for health check {hc_url}. Lack of logs hinders troubleshooting, as logs provide visibility into health check state changes and probe details needed to diagnose failures.
 
 ### Uncertain Remediation
 
-To facilitate troubleshooting, enable logging for the health check using the following `gcloud` command:
+Enable logging for the health check using the following `gcloud` command:
 
 ```
 gcloud compute health-checks update {protocol} {hc_name} {additional_flags} --enable-logging

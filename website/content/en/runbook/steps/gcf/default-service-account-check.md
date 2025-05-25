@@ -16,17 +16,17 @@ None
 
 ### Failure Reason
 
-The cloud run function service agent or default service account either do not exist or are not enabled:
+The Cloud Functions service agent or the default runtime service account does not exist or is not enabled:
 <https://cloud.google.com/functions/docs/concepts/iam#access_control_for_service_accounts>
 
 ### Failure Remediation
 
-Review the IAM roles guide for providing default roles to cloud run function default service account and the service agent:
+Refer to the IAM roles guide for providing default roles to the Cloud Run function default service account and the service agent:
 <https://cloud.google.com/functions/docs/concepts/iam#serviceaccount>
 
 ### Success Reason
 
-The service agent and default service account exists and are enabled.
+The service agent and default service account exist and are enabled.
 
 
 

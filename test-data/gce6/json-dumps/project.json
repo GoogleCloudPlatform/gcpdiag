@@ -1,0 +1,14 @@
+{
+  "name": "projects/1234560123456",
+  "parent": "folders/348077457356",
+  "projectId": "gcpdiag-gce6-aaaa",
+  "state": "ACTIVE",
+  "displayName": "gcpdiag test - VM Creation",
+  "createTime": "2025-03-28T02:08:04.542569Z",
+  "updateTime": "2025-03-28T02:08:04.542569Z",
+  "etag": "W/\"6db49499d1448e9b\"",
+  "labels": {
+    "gcpdiag": "test",
+    "goog-terraform-provisioned": "true"
+  }
+}

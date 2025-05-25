@@ -1,11 +1,86 @@
 #!/bin/bash
 set -e
-THIS_WRAPPER_VERSION=0.10
+THIS_WRAPPER_VERSION=0.11
 SUPPORTED_RUNTIME="docker podman"
-ARGS="$*"
-DEFAULT_OUTPUT_DIR="$HOME/tmp/gcpdiag"
+DEFAULT_OUTPUT_DIR="$HOME/tmp"
+
+# Initialize variables for wrapper arguments
+CONFIG_FILE=""
+AUTH_KEY=""
+TEST_RELEASE=""
+REPORT_DIR=""
+# Array to hold arguments intended for the gcpdiag command
+declare -a gcpdiag_args=()
+
+# Parse arguments, separating wrapper flags from gcpdiag flags
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --config=*)
+      CONFIG_FILE="${1#*=}"
+      gcpdiag_args+=("$1")
+      shift # consume argument
+      ;;
+    --config)
+      CONFIG_FILE="$2"
+       gcpdiag_args+=("$1" "$2")
+      shift 2 # consume flag
+      ;;
+    --auth-key=*)
+      AUTH_KEY="${1#*=}"
+      gcpdiag_args+=("$1")
+      shift # consume argument
+      ;;
+    --auth-key)
+      AUTH_KEY="$2"
+      gcpdiag_args+=("$1" "$2")
+      shift 2 # consume flag
+      ;;
+    --test-release=*)
+      TEST_RELEASE="${1#*=}"
+      shift # consume argument
+      ;;
+    --test-release)
+       TEST_RELEASE="$2"
+       shift 2 # consume flag
+      ;;
+    --report-dir=*)
+      REPORT_DIR="${1#*=}"
+      gcpdiag_args+=("$1")
+      shift # consume argument
+      ;;
+    --report-dir)
+      REPORT_DIR="$2"
+      gcpdiag_args+=("$1" "$2")
+      shift 2 # consume flag
+      ;;
+    *)
+      # Assume anything else is an argument for gcpdiag
+      gcpdiag_args+=("$1")
+      shift # consume argument
+      ;;
+  esac
+done
 
 eval $(curl -sf https://storage.googleapis.com/gcpdiag-dist/release-version|grep -Ei '^\w*=[0-9a-z/\._-]*$')
+
+# Modify image and tag if --test-release was used
+if [[ "$TEST_RELEASE" == "staging" ]]; then
+  echo "test-release specified: $TEST_RELEASE"
+  # Using bash parameter expansion for potentially safer version increment
+  if [[ "$DOCKER_IMAGE_VERSION" =~ ^([0-9]+)\.([0-9]+)$ ]]; then
+      major="${BASH_REMATCH[1]}"
+      minor="${BASH_REMATCH[2]}"
+      DOCKER_IMAGE_VERSION="${major}.$((minor + 1))-test"
+  else
+      echo "Warning: Could not parse DOCKER_IMAGE_VERSION ($DOCKER_IMAGE_VERSION) for incrementing."
+      # Fallback or alternative logic might be needed here
+      DOCKER_IMAGE_VERSION+="-test" # Simple append as fallback
+  fi
+  # Using bash parameter expansion for safer replacement
+  DOCKER_IMAGE="${DOCKER_IMAGE/release/staging}"
+  echo "DOCKER_IMAGE_VERSION: $DOCKER_IMAGE_VERSION"
+  echo "DOCKER_IMAGE: $DOCKER_IMAGE"
+fi
 
 # Test whether 1st arg is greater than or equal to the 2nd, when compared as version numbers (bash-only)
 version_ge () {
@@ -93,15 +168,14 @@ if ! version_ge "$THIS_WRAPPER_VERSION" "$WRAPPER_VERSION"; then
 fi
 
 [ -t 0 ] && USE_TTY="-it" || USE_TTY=""
-# Note: for some reason sometimes docker creates the container-path in the host
-# and this can result in ~/.cache/gcpdiag being owned by root. Workaround
-# this issue by creating ~/.cache/gcpdiag as well first, so that the
-# ownership is correct.
+
+# Ensure necessary host directories exist with correct ownership
 mkdir -p "$HOME/.cache/gcpdiag" \
          "$HOME/.cache/gcpdiag-dockerized" \
          "$HOME/.config/gcloud"
 
 # Set RUNTIME based on available container runtime cmd
+RUNTIME="" # Initialize RUNTIME
 for r in $SUPPORTED_RUNTIME; do
   if command -v "$r" >/dev/null; then
     RUNTIME="$r"
@@ -110,64 +184,40 @@ for r in $SUPPORTED_RUNTIME; do
 done
 
 if [ -z "$RUNTIME" ]; then
-  >&2 echo "No container runtime found - supported: $SUPPORTED_RUNTIME"
+  echo >&2 "ERROR: No container runtime found - supported: $SUPPORTED_RUNTIME"
   exit 1
 fi
 
+# Configure Podman if used
 if [ "$RUNTIME" = podman ]; then
   export PODMAN_USERNS=keep-id
 fi
 
-# Check if:
-# - config argument was provided via --config file or --config=file
-# - auth-key argument was provided via --auth-key file or --auth-key=file
-# - report-dir argument was provided via --report-dir path or --report-dir=path
-while [[ $# -gt 0 ]]; do
-  case $1 in
-    --config=*)
-      CONFIG_FILE="${1#*=}"
-      ;;
-    --config)
-      CONFIG_FILE="$2"
-      ;;
-    --auth-key=*)
-      AUTH_KEY="${1#*=}"
-      ;;
-    --auth-key)
-      AUTH_KEY="$2"
-      ;;
-    --report-dir=*)
-      REPORT_DIR="${1#*=}"
-      ;;
-    --report-dir)
-      REPORT_DIR="$2"
-      ;;
-  esac
-  shift
-done
-
-# If config argument was provided we need to check if file exists and mount it
-# inside container with the same path if absolute path was used or inside
-# root folder if relative path was used.
-if ! CONFIG_MOUNT=$(handle_mount_path "$CONFIG_FILE"); then
-    echo
-    echo "## ERROR:"
-    echo "## Configuration file: $CONFIG_FILE does not exist!"
-    echo
-    exit 1
+# Prepare config file mount
+CONFIG_MOUNT=""
+if [ -n "$CONFIG_FILE" ]; then
+    if ! CONFIG_MOUNT=$(handle_mount_path "$CONFIG_FILE"); then
+        echo >&2 # Print errors to stderr
+        echo >&2 "## ERROR:"
+        echo >&2 "## Configuration file: '$CONFIG_FILE' does not exist or is not a regular file!"
+        echo >&2
+        exit 1
+    fi
 fi
 
-# If auth-key argument was provided we need to check if file exists and mount it
-# inside container with the same path if absolute path was used or inside
-# root folder if relative path was used.
-if ! AUTH_KEY_MOUNT=$(handle_mount_path "$AUTH_KEY"); then
-    echo
-    echo "## ERROR:"
-    echo "## Authentication key: $AUTH_KEY does not exist!"
-    echo
-    exit 1
+# Prepare auth key mount
+AUTH_KEY_MOUNT=""
+if [ -n "$AUTH_KEY" ]; then
+    if ! AUTH_KEY_MOUNT=$(handle_mount_path "$AUTH_KEY"); then
+        echo >&2 # Print errors to stderr
+        echo >&2 "## ERROR:"
+        echo >&2 "## Authentication key file: '$AUTH_KEY' does not exist or is not a regular file!"
+        echo >&2
+        exit 1
+    fi
 fi
 
+# Execute the container
 if ! REPORT_DIR_MOUNT=$(handle_mount_dir "$REPORT_DIR"); then
     echo
     echo "## ERROR:"
@@ -189,4 +239,4 @@ exec "$RUNTIME" run $USE_TTY \
   $CONFIG_MOUNT \
   $AUTH_KEY_MOUNT \
   $REPORT_DIR_MOUNT \
-  "$DOCKER_IMAGE:$DOCKER_IMAGE_VERSION" /opt/gcpdiag/bin/gcpdiag $ARGS
+  "$DOCKER_IMAGE:$DOCKER_IMAGE_VERSION" /opt/gcpdiag/bin/gcpdiag "${gcpdiag_args[@]}"

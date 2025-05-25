@@ -17,11 +17,11 @@ This target proxy needs to be in use by a forwarding rule for the provisioning
 
 ### Failure Reason
 
-The SSL certificate "{name}" is not attached to any target proxies. Please attach the certificate to a target proxy and try again.
+The SSL certificate "{name}" is not attached to any target proxies. Attach the certificate to a target proxy.
 
 ### Failure Remediation
 
-Please follow the documentation to attach the certificate to a target proxy: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#load-balancer>
+Follow the documentation to attach the certificate to a target proxy: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#load-balancer>
 
 ### Success Reason
 

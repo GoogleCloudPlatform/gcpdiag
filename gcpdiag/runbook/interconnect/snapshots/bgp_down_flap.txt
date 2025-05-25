@@ -1,0 +1,65 @@
+custom_flag=interconnect,project_id=gcpdiag-interconnect1-aaaa,region=us-east4
+
+interconnect/bgp-down-flap: This rule book analyzes BGP down and BGP flap events in a region of a project.
+
+  The following steps are executed:
+
+  - Check BGP down status: Check if any vlan attachment has BGP down state.
+  - Check Interconnect maintenance: Check if there are interconnect maintenance events
+           are associated with the BGP down vlan attachments.
+  - Check BGP flap status: Check if any BGP flaps happened.
+  - Check Cloud Router maintenance: Check if there were Cloud Router maintenance events
+           are associated with the BGP flaps.
+
+  
+[START]: Check provided parameters.
+
+   - gcpdiag-interconnect1-aaaa                                           [OK]
+     [REASON]
+         `VLAN attachments` found in project.
+
+[AUTOMATED STEP]: Check if there is vlan attachment has BGP down.
+[INFO]:     The interconnect `dummy-interconnect2` attachment `dummy-attachment4` has `BGP` down.
+
+
+   - gcpdiag-interconnect1-aaaa                                           [FAIL]
+     [REASON]
+         `BGP` down events found.
+
+     [REMEDIATION]
+         Check for `interconnect maintenance events`.
+
+[AUTOMATED STEP]: Check if any BGP down interconnects are in maintenance state.
+[INFO]:     The interconnect `dummy-interconnect2` with `BGP` down has no planned maintenance.
+
+
+   - gcpdiag-interconnect1-aaaa                                           [FAIL]
+     [REASON]
+         The Interconnects with `BGP` down have no planned maintenance.
+
+     [REMEDIATION]
+         Check `router logging` for details.
+
+[AUTOMATED STEP]: Check if there are BGP flap events.
+[INFO]: 
+[INFO]: There are Cloud Router BGP flaps over 60s: 
+[INFO]: ['6988249776642123456', '169.254.2.1', 'went down', '2025-03-27T23:32:19.397757310Z']
+[INFO]: ['6988249776642123456', '169.254.2.1', 'came up', '2025-03-27T23:34:39.923120483Z', '140.0']
+
+   - gcpdiag-interconnect1-aaaa                                           [FAIL]
+     [REASON]
+         `BGP` flaps lasting longer than 60 seconds detected in project `gcpdiag-interconnect1-aaaa`.
+
+     [REMEDIATION]
+         Check `router logging` for details.
+
+[AUTOMATED STEP]: Check if the Cloud Router had maintenance event.
+
+   - gcpdiag-interconnect1-aaaa                                           [OK]
+     [REASON]
+         `BGP` flaps (duration < 60s) coincide with `Cloud Router maintenance` events.
+
+[END]: Finalizing connectivity diagnostics.
+[INFO]: If any further debugging is needed, consider please contact GCP support for further troubleshooting
+
+

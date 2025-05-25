@@ -16,13 +16,13 @@ None
 
 ### Failure Reason
 
-This error indicates that there was a problem with your code. The deployment pipeline finished deploying the function,
-but failed at the last step- sending a health check to the function. This health check is meant to execute a functions global scope,
-which could be throwing an exception, crashing, or timing out.
+A problem with the function code was detected. The deployment pipeline completed the function deployment,
+but failed at the last step- sending a health check to the function. This health check executes the function's global scope,
+which may be throwing an exception, crashing, or timing out.
 
 ### Failure Remediation
 
-Please use the following document as reference to address this error:
+Refer to the following document to address this error:
 <https://cloud.google.com/functions/docs/troubleshooting#global>
 
 ### Success Reason

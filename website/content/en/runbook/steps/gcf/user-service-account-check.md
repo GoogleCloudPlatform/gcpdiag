@@ -20,7 +20,7 @@ The user principal '{user_principal}' does not have roles/iam.serviceAccountUser
 
 ### Failure Remediation
 
-Assign the user, the Service Account User role (roles/iam.serviceAccountUser) on the default or the non-default runtime service account.
+Assign the Service Account User role (roles/iam.serviceAccountUser) to the user on the default or non-default runtime service account.
 This role includes the iam.serviceAccounts.actAs permission.
 <https://cloud.google.com/functions/docs/reference/iam/roles#additional-configuration>
 

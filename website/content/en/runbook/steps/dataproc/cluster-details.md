@@ -21,13 +21,12 @@ Stackdriver: Enabled
 
 ### Uncertain Reason
 
-Unable to find sufficient information if stackdriver.logging property is enabled. This may be due to the fact that the
-cluster is deleted. The runbook will assume that it is enabled, however if not, it might affect some of the runbooks steps.
+Could not determine if the `dataproc:dataproc.logging.stackdriver.enable` property is enabled for cluster, possibly because the cluster was deleted. Subsequent checks requiring Stackdriver logging might be affected.
 
 ### Uncertain Remediation
 
-Consider enabling it by creating a cluster with property dataproc:dataproc.logging.stackdriver.enable = true
-Review our guide for more details:
+Enable Stackdriver by creating a cluster with property dataproc:dataproc.logging.stackdriver.enable = true.
+Refer to the guide for more details:
 <https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/cluster-properties>
 
 

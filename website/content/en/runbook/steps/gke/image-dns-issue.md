@@ -16,20 +16,19 @@ None
 
 ### Failure Reason
 
-The DNS resolver (metadata server - 169.254.169.254:53) on the Node is unable to resolve the IP of the repository,
-preventing image pull. Check that the networking and DNS requirements mentioned in public documentation.
-Example log entry that would help identify involved objects:
+The DNS resolver (metadata server 169.254.169.254:53) on node was unable to resolve the image repository's IP address, preventing image pull. This often indicates issues with networking or DNS configuration.
+Example log entry:
 
 {log_entry}
 
 ### Failure Remediation
 
-Follow the documentation:
+Verify networking and DNS requirements, particularly for Private Google Access. Refer to the documentation:
 <https://cloud.google.com/vpc/docs/configure-private-google-access#requirements>
 
 ### Success Reason
 
-No "Failed to pull image.*lookup.*server misbehaving" errors found between {start_time} and {end_time}
+No "Failed to pull image.*lookup.*server misbehaving" errors were found for cluster between {start_time} and {end_time}.
 
 
 

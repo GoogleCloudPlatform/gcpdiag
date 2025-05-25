@@ -16,7 +16,7 @@ None
 
 ### Success Reason
 
-The load balancer is performing health checks on the same port that it is using for serving traffic. This is the standard configuration.
+The load balancer is performing health checks on the same port used for serving traffic. This is the standard configuration.
 
 ### Uncertain Reason
 
@@ -26,11 +26,11 @@ Affected backends:
 
 {formatted_igs}
 
-This configuration can be problematic unless you have configured the load balancer to use a different port for health checks purposefully.
+This configuration can be problematic unless the load balancer has been configured to use a different port for health checks purposefully.
 
 ### Uncertain Remediation
 
-Verify that the health check port is correctly configured to match the port used by your application if the health check is intended to check the serving port.
+Verify that the health check port is correctly configured to match the port used by the application if the health check is intended to check the serving port.
 
 
 

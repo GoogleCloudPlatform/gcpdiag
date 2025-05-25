@@ -94,6 +94,21 @@ _args: Dict[str, Any] = {}
 _config: Dict[str, Any] = {}
 _project_id: str = ''
 
+
+def _get_default_report_dir():
+  """Dynamically determine default report dir, using $HOME in Cloud Shell."""
+  default_path = '/tmp'
+
+  if os.getenv('CLOUD_SHELL'):
+    try:
+      home_path = os.path.expanduser('~')
+      return os.path.join(home_path, default_path.lstrip(os.sep))
+
+    except OSError:
+      return default_path
+  return default_path
+
+
 _defaults: Dict[str, Any] = {
     'auth_adc': False,
     'auth_key': None,
@@ -114,7 +129,7 @@ _defaults: Dict[str, Any] = {
     'logging_fetch_max_time_seconds': 120,
     'enable_gce_serial_buffer': False,
     'auto': False,
-    'report_dir': '/tmp',
+    'report_dir': _get_default_report_dir(),
     'interface': 'cli',
     'universe_domain': 'googleapis.com',
     'reason': None

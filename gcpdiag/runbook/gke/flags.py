@@ -20,6 +20,7 @@ from gcpdiag.runbook.iam.flags import *
 LOCATION = 'location'
 NODE = 'node'
 NODEPOOL = 'nodepool'
+GKE_CLUSTER_NAME = 'gke_cluster_name'
 
 OPS_AGENT_EXPORTING_METRICS = False
 PROTOCOL_TYPE = 'protocol_type'

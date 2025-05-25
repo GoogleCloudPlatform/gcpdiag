@@ -8,19 +8,22 @@ which may affect its performance and SSH connectivity.
 {% endblock high_cpu_utilization_failure_reason %}
 
 {% block high_cpu_utilization_failure_remediation %}
-Excessive CPU usage can lead to performance bottlenecks. Consider resizing the VM to a more
-powerful machine type with higher CPU capabilities.
-Detailed instructions for resizing and restarting VMs are available here:
+Excessive CPU usage can lead to performance bottlenecks. Resizing the VM to a machine type with higher CPU capabilities may resolve the issue.
+
+Consult the following documentation for guidance:
 
 - Stopping a VM: <https://cloud.google.com/compute/docs/instances/stop-start-instance>
 - Resizing a VM: <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
 
-Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
-- <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics>
-- <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization>
+Additionally, analyze Compute Engine observability metrics to pinpoint high-usage processes:
 
-Alternatively, you can connect via serial console if SSH is unavailable to stop offending processes
-(<https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>).
+- Accessing VM observability metrics:
+  <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics>
+- Analyzing process utilization:
+  <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization>
+
+If SSH is unavailable, connect via the serial console to stop offending processes:
+<https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 {% endblock high_cpu_utilization_failure_remediation %}
 
 {% block high_cpu_utilization_success_reason %}
@@ -42,12 +45,12 @@ Falling back to checking for filesystem utilization-related messages in the seri
 To mitigate high disk usage, consider expanding the VM's boot disk capacity.
 This action can help avoid performance issues and ensure smoother SSH connections.
 
-Follow the guide to increase disk size:
+Consult the following guide to increase disk size:
 <https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk>
 {% endblock high_disk_utilization_failure_remediation %}
 
 {% block high_disk_utilization_step_name %}
-Check if VM's boot disk space utilization is within optimal levels.
+Verify VM's boot disk space utilization is within optimal levels.
 {% endblock high_disk_utilization_step_name %}
 
 {% block high_disk_utilization_success_reason %}
@@ -55,7 +58,7 @@ The boot disk space usage for the Compute Engine VM {full_resource_path}, is wit
 {% endblock high_disk_utilization_success_reason %}
 
 {% block high_memory_utilization_skipped_reason %}
-There are no logs to examine!
+Serial logs are not available for examination.
 {% endblock high_memory_utilization_skipped_reason %}
 
 {% block high_memory_utilization_failure_reason %}
@@ -63,17 +66,18 @@ Memory utilization on this VM has reached levels that may compromise its VM appl
 {% endblock high_memory_utilization_failure_reason %}
 
 {% block high_memory_utilization_failure_remediation %}
-Elevated memory usage can result in slow or unresponsive or termimated applications.
-Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
-Guidance on stopping and changing the machine type can be found here:
+Elevated memory usage can result in slow, unresponsive, or terminated applications.
+Enhance the VM's memory capacity by changing to a machine type with more memory.
+
+Consult the following documentation for guidance:
 
 - Changing machine type:
-<https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
+  <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
 
-Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
+Additionally, analyze Compute Engine observability metrics to pinpoint high-usage processes:
 <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization>
 
-Or connect via the Serial Console if SSH is not available to mitigate the issue:
+If SSH is unavailable, connect via the serial console to mitigate the issue:
 <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 {% endblock high_memory_utilization_failure_remediation %}
 
@@ -82,11 +86,11 @@ Memory utilization on this VM is within optimal range.
 {% endblock high_memory_utilization_success_reason %}
 
 {% block high_memory_usage_logs_skipped_reason %}
-There are no serial logs to investigate possible memory issues.
+Serial logs are not available for investigating possible memory issues.
 {% endblock high_memory_usage_logs_skipped_reason %}
 
 {% block high_memory_usage_logs_step_name %}
-Check for memory related errors in VM serial logs.
+Verify memory related errors in VM serial logs.
 {% endblock high_memory_usage_logs_step_name %}
 
 {% block high_memory_usage_logs_success_reason %}
@@ -100,43 +104,36 @@ High memory utilization error logs have been detected on your VM instance within
 
 {% block high_memory_usage_logs_failure_remediation %}
 
-1. Manually investigate by accessing the Guest OS to Analyze Memory Usage:
-   - Identify processes with consistently high memory consumption:
-     - Run `top` and press "M" to sort processes by memory usage.
-     - Alternatively, use the command: `ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5`
+1. Manually investigate memory usage by accessing the Guest OS:
+   - Identify processes with consistently high memory consumption using `top` (press "M") or `ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5`.
    - Focus on processes with recent spikes or consistently high memory usage.
-   - If SSH access is unavailable, consider [troubleshooting via the serial
-console](https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console).
+   - If SSH access is unavailable, troubleshoot via the serial console:
+     <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 
-2. Review Application or Configuration Changes:
+2. Review recent application or configuration changes:
    - Investigate if recent deployments, updates, or configuration changes correlate with increased memory usage.
 
-3. Resolve Identified Bottlenecks:
-   - For applications causing excessive memory usage:
-     - Optimize their configuration or update them to a stable version.
-     - Explore alternatives if optimization is insufficient.
-   - Evaluate scaling up resources if the high memory usage results from legitimate application demands.
+3. Resolve identified bottlenecks:
+   - For applications causing excessive memory usage, optimize their configuration or update them. Explore alternatives if optimization is insufficient.
+   - Evaluate scaling up resources if high memory usage results from legitimate application demands.
 
-4. Increase Instance Memory if Necessary:
-   - If additional memory is required for the application:
-     - Stop the VM and [change its machine type](https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud).
-     - Consult the [machine type documentation](https://cloud.google.com/compute/docs/machine-types) to select an appropriate
-configuration.
+4. Increase instance memory if necessary:
+   - Stop the VM and change its machine type:
+     <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
+   - Consult the machine type documentation to select an appropriate configuration:
+     <https://cloud.google.com/compute/docs/machine-types>
 
-**Note:**
-Non Google provided Application-specific issues may fall outside support scope. Collaborate with
-relevant application teams for further investigation.
-Refer to the [Google Cloud Platform support
-policy](https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope)
-for details, including [out-of-scope
-items](https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support).
+**Note:** Non-Google provided application-specific issues may fall outside the support scope. Collaborate with relevant application teams for further investigation. Refer to the Google Cloud Platform support policy for details, including out-of-scope items:
+
+- Support and maintenance policy: <https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope>
+- Out-of-scope items: <https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support>
 {% endblock high_memory_usage_logs_failure_remediation %}
 
 {% block high_memory_usage_logs_uncertain_reason %}
 Unable to investigate the high memory utilization error logs, likely due to the absence of logs.
 However, this does not eliminate the possibility of high memory usage.
 
-You may manually verify memory utilization on the Guest OS side a likely cause.
+Manual verification of memory utilization on the Guest OS is recommended as a potential cause.
 {% endblock high_memory_usage_logs_uncertain_reason %}
 
 {% block high_disk_utilization_error_failure_reason %}
@@ -156,12 +153,12 @@ The patterns used:
 To mitigate high disk usage, consider expanding the VM's boot disk capacity.
 This action can help avoid performance issues and ensure accessibility of the VM.
 
-Follow the guide to increase disk size:
+Consult the following guide to increase disk size:
 <https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk>
 {% endblock high_disk_utilization_error_failure_remediation %}
 
 {% block high_disk_utilization_error_step_name %}
-Checking for high disk utilization related logs in serial console logs
+Verify high disk utilization related logs in serial console logs
 {% endblock high_disk_utilization_error_step_name %}
 
 {% block high_disk_utilization_error_success_reason %}
@@ -169,11 +166,11 @@ No high disk utilisation related errors found in Serial console logs.
 {% endblock high_disk_utilization_error_success_reason %}
 
 {% block high_disk_utilization_error_skipped_reason %}
-There are no logs to examine!
+Serial logs are not available for examination.
 {% endblock high_disk_utilization_error_skipped_reason %}
 
 {% block high_disk_utilization_error_uncertain_reason %}
-No Serial console logs to examine
+Serial console logs were not available for examination.
 {% endblock high_disk_utilization_error_uncertain_reason %}
 
 {% block live_migrations_failure_reason %}
@@ -181,17 +178,16 @@ Live migrations detected for the VM during mentioned period.
 {% endblock live_migrations_failure_reason %}
 
 {% block live_migrations_failure_remediation %}
-As remediation, you may try to simulate the migration (move the VM to another host) using
-<https://cloud.google.com/compute/docs/instances/simulating-host-maintenance?hl=en#testingpolicies> ,
-and see if issue still persists. If yes, please reach out to Google Cloud Platform Support teams via case.
+Simulate the migration (move the VM to another host) using the guidance provided here:
+<https://cloud.google.com/compute/docs/instances/simulating-host-maintenance?hl=en#testingpolicies>
+Verify if the issue persists after simulation. If it does, contact Google Cloud Platform Support by creating a support case.
 
-Note: During live migration, VMs might experience a decrease in performance in disk,
-CPU, memory, and network utilization for a short period of time
-(<https://cloud.google.com/compute/docs/instances/live-migration-process#how_does_the_live_migration_process_work>).
+Note: During live migration, VMs might experience a temporary decrease in performance (disk, CPU, memory, network). See the documentation for details:
+<https://cloud.google.com/compute/docs/instances/live-migration-process#how_does_the_live_migration_process_work>
 {% endblock live_migrations_failure_remediation %}
 
 {% block live_migrations_step_name %}
-Verify live migrations happened for the instance
+Verify live migrations for the instance
 {% endblock live_migrations_step_name %}
 
 {% block live_migrations_success_reason %}
@@ -279,7 +275,7 @@ Check for high disk utilization using the command iostat to further troubleshoot
 {% endblock slow_disk_io_uncertain_remediation %}
 
 {% block disk_io_usage_check_step_name %}
-Verify the Disk IOPS/Throughput usage is within optimal limits
+Verify Disk IOPS/Throughput usage is within optimal limits
 {% endblock disk_io_usage_check_step_name %}
 
 {% block disk_io_usage_check_failure_reason %}
@@ -315,7 +311,7 @@ To fix this issue:
 {% endblock disk_io_usage_check_failure_remediation %}
 
 {% block disk_health_check_step_name %}
-Verify instance disks are healthy
+Verify instance disks are healthy.
 {% endblock disk_health_check_step_name %}
 
 {% block disk_health_check_success_reason %}
@@ -347,7 +343,7 @@ They'll be happy to investigate further and assist you.
 {% endblock disk_health_check_failure_remediation %}
 
 {% block disk_io_latency_check_step_name %}
-Verify Instance's Disk Avg IO Latency is within optimal limits
+Verify Instance's Disk Avg IO Latency is within optimal limits.
 {% endblock disk_io_latency_check_step_name %}
 
 {% block disk_io_latency_check_success_reason %}

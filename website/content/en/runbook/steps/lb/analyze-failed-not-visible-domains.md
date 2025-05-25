@@ -16,7 +16,7 @@ None
 
 ### Failure Reason
 
-The following domains are in FAILED_NOT_VISIBLE state: {domains} for SSL certificate "{name}". This usually means the domain's DNS records aren't correctly pointing to your load balancer.
+The following domains are in FAILED_NOT_VISIBLE state: {domains} for SSL certificate "{name}". This usually means the domain's DNS records are not correctly pointing to the load balancer.
 
 
 
