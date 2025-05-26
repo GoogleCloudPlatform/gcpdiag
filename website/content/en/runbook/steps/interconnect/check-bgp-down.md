@@ -20,7 +20,7 @@ Check if any vlan attachments have in BGP down state.
 
 ### Failure Remediation
 
-    Check for `interconnect maintenance events`.
+     Check if interconnects with BGP down are in maintenance state. Analyze Cloud Router logs to identify the root cause. Refer to the Cloud Router log messages documentation for guidance. <https://cloud.google.com/network-connectivity/docs/interconnect/support/infrastructure-maintenance-events>
 
 ### Success Reason
 

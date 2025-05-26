@@ -1,6 +1,6 @@
 custom_flag=interconnect,project_id=gcpdiag-interconnect1-aaaa,region=us-east4
 
-interconnect/bgp-down-flap: This rule book analyzes BGP down and BGP flap events in a region of a project.
+interconnect/bgp-down-flap: This runbook analyzes BGP down and BGP flap events for a GCP project in a clolud region.
 
   The following steps are executed:
 
@@ -27,7 +27,7 @@ interconnect/bgp-down-flap: This rule book analyzes BGP down and BGP flap events
          `BGP` down events found.
 
      [REMEDIATION]
-         Check for `interconnect maintenance events`.
+          Check if interconnects with BGP down are in maintenance state. Analyze Cloud Router logs to identify the root cause. Refer to the Cloud Router log messages documentation for guidance. <https://cloud.google.com/network-connectivity/docs/interconnect/support/infrastructure-maintenance-events>
 
 [AUTOMATED STEP]: Check if any BGP down interconnects are in maintenance state.
 [INFO]:     The interconnect `dummy-interconnect2` with `BGP` down has no planned maintenance.
@@ -38,7 +38,7 @@ interconnect/bgp-down-flap: This rule book analyzes BGP down and BGP flap events
          The Interconnects with `BGP` down have no planned maintenance.
 
      [REMEDIATION]
-         Check `router logging` for details.
+         Analyze Cloud Router logs to identify the root cause. Refer to the Cloud Router log messages documentation for guidance. <https://cloud.google.com/network-connectivity/docs/router/support/troubleshoot-log-messages>
 
 [AUTOMATED STEP]: Check if there are BGP flap events.
 [INFO]: 
@@ -51,7 +51,7 @@ interconnect/bgp-down-flap: This rule book analyzes BGP down and BGP flap events
          `BGP` flaps lasting longer than 60 seconds detected in project `gcpdiag-interconnect1-aaaa`.
 
      [REMEDIATION]
-         Check `router logging` for details.
+         BGP flaps lasting longer than 60 seconds have been observed. These are unlikely to be caused by Cloud Router or Interconnect maintenance events. Analyze Cloud Router logs to identify the root cause. Refer to the Cloud Router log messages documentation for guidance.<https://cloud.google.com/network-connectivity/docs/router/support/troubleshoot-log-messages>
 
 [AUTOMATED STEP]: Check if the Cloud Router had maintenance event.
 

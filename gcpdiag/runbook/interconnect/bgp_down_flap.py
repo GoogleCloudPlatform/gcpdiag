@@ -43,7 +43,7 @@ def local_realtime_query(in_start_time, in_end_time, filter_str):
 
 
 class BgpDownFlap(runbook.DiagnosticTree):
-  """This rule book analyzes BGP down and BGP flap events in a region of a project.
+  """This runbook analyzes BGP down and BGP flap events for a GCP project in a clolud region.
 
   The following steps are executed:
 

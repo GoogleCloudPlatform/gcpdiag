@@ -224,8 +224,7 @@ No log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock not_enough_memory_success_reason %}
 
 {% block not_enough_memory_failure_reason %}
-Log messages related to "{log}" were found on the cluster: {cluster_name}.
-If no more amount of memory is available on the master VM, the job is rejected.
+The cluster "{cluster_name}" reported log messages concerning "{log}". These messages indicate the job was rejected because the master VM did not have enough available memory.
 {% endblock not_enough_memory_failure_reason %}
 
 {% block not_enough_memory_failure_remediation %}

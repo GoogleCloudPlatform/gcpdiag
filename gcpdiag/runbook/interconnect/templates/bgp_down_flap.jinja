@@ -28,7 +28,7 @@
   {% endblock bgpdown_failure_reason_a1 %}
 
   {% block bgpdown_failure_remediation %}
-    Check for `interconnect maintenance events`.
+     Check if interconnects with BGP down are in maintenance state. Analyze Cloud Router logs to identify the root cause. Refer to the Cloud Router log messages documentation for guidance. <https://cloud.google.com/network-connectivity/docs/interconnect/support/infrastructure-maintenance-events>
   {% endblock bgpdown_failure_remediation %}
 
   {% block interconnect_maintenance_success_reason %}
@@ -44,7 +44,7 @@
   {% endblock interconnect_maintenance_failure_reason_a1 %}
 
   {% block interconnect_maintenance_failure_remediation %}
-    Check `router logging` for details.
+    Analyze Cloud Router logs to identify the root cause. Refer to the Cloud Router log messages documentation for guidance. <https://cloud.google.com/network-connectivity/docs/router/support/troubleshoot-log-messages>
   {% endblock interconnect_maintenance_failure_remediation %}
 
   {% block bgpflap_success_reason %}
@@ -56,7 +56,7 @@
   {% endblock bgpflap_failure_reason %}
 
   {% block bgpflap_failure_remediation %}
-    Check `router logging` for details.
+    BGP flaps lasting longer than 60 seconds have been observed. These are unlikely to be caused by Cloud Router or Interconnect maintenance events. Analyze Cloud Router logs to identify the root cause. Refer to the Cloud Router log messages documentation for guidance.<https://cloud.google.com/network-connectivity/docs/router/support/troubleshoot-log-messages>
   {% endblock bgpflap_failure_remediation %}
 
   {% block bgpflap_uncertain_reason%}
@@ -76,5 +76,5 @@
   {% endblock cloud_router_maintenance_failure_reason %}
 
   {% block cloud_router_maintenance_failure_remediation %}
-    Check `router logging` for details.
+    BGP flaps lasting less than 60 seconds have been observed. No associated Cloud Router or Interconnect maintenance events could be found. Analyze Cloud Router logs to identify the root cause. Refer to the Cloud Router log messages documentation for guidance. <https://cloud.google.com/network-connectivity/docs/router/support/troubleshoot-log-messages>
   {% endblock cloud_router_maintenance_failure_remediation %}

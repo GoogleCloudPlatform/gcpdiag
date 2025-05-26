@@ -20,7 +20,7 @@ Check if any interconnects with BGP down are in maintenance state.
 
 ### Failure Remediation
 
-    Check `router logging` for details.
+    Analyze Cloud Router logs to identify the root cause. Refer to the Cloud Router log messages documentation for guidance. <https://cloud.google.com/network-connectivity/docs/router/support/troubleshoot-log-messages>
 
 ### Success Reason
 

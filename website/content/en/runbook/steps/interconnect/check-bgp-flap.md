@@ -20,7 +20,7 @@ Check if any BGP flap events, report error flaps with duration over 60 seconds.
 
 ### Failure Remediation
 
-    Check `router logging` for details.
+    BGP flaps lasting longer than 60 seconds have been observed. These are unlikely to be caused by Cloud Router or Interconnect maintenance events. Analyze Cloud Router logs to identify the root cause. Refer to the Cloud Router log messages documentation for guidance.<https://cloud.google.com/network-connectivity/docs/router/support/troubleshoot-log-messages>
 
 ### Success Reason
 

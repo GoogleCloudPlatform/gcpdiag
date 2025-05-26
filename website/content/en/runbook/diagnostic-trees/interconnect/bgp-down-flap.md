@@ -4,7 +4,7 @@ linkTitle: "interconnect/bgp-down-flap"
 weight: 3
 type: docs
 description: >
-  This rule book analyzes BGP down and BGP flap events in a region of a project.
+  This runbook analyzes BGP down and BGP flap events for a GCP project in a clolud region.
 ---
 
 **Product**: [Interconnect](https://cloud.google.com/network-connectivity/docs/interconnect)
