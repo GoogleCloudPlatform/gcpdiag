@@ -49,7 +49,9 @@ all:	\
 	json-dumps/project.json \
 	json-dumps/services.json \
 	json-dumps/compute-instances-aggregated.json \
-	json-dumps/compute-migs-aggregated.json
+	json-dumps/compute-migs-aggregated.json \
+	json-dumps/org-constraints.json \
+	json-dumps/org-constraint-custom.arEnforceImmutableTags.json
 
 include ../Makefile.inc
 

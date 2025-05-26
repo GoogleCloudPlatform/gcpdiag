@@ -21,15 +21,8 @@ import googleapiclient.errors
 from gcpdiag import caching, config, utils
 from gcpdiag.queries import apis
 
-PREFETCH_ORG_CONSTRAINTS = (
-    'constraints/compute.disableSerialPortAccess',
-    'constraints/compute.requireOsLogin',
-    'constraints/compute.requireShieldedVm',
-    'constraints/iam.automaticIamGrantsForDefaultServiceAccounts',
-    'constraints/compute.disableSerialPortLogging',
-    'constraints/compute.disableSshInBrowser',
-    'constraints/iam.disableCrossProjectServiceAccountUsage',
-)
+RESOURCE_TYPE_PROJECT = 'projects'
+RESOURCE_TYPE_ORGANIZATION = 'organizations'
 
 
 class PolicyConstraint:
@@ -67,6 +60,53 @@ class RestoreDefaultPolicyConstraint(PolicyConstraint):
 
 
 @caching.cached_api_call
+def _get_available_org_constraints(resource_id: str, resource_type: str):
+  """list all the org constraints available for a particular resource.
+
+  Args:
+      resource_id: The resource ID.
+      resource_type: The resource type (project or organization).
+
+  Returns:
+      A list of available org policy constraints.
+
+  Raises:
+      utils.GcpApiError: on API errors.
+  """
+  crm_api = apis.get_api('cloudresourcemanager', 'v1', resource_id)
+  resource = f'{resource_type}/{resource_id}'
+  org_constraint_name = []
+
+  if resource_type == RESOURCE_TYPE_PROJECT:
+    request = crm_api.projects().listAvailableOrgPolicyConstraints(
+        resource=resource)
+  elif resource_type == RESOURCE_TYPE_ORGANIZATION:
+    request = crm_api.organizations().listAvailableOrgPolicyConstraints(
+        resource=resource)
+  else:
+    raise ValueError(f'resource type {resource_type} not supported')
+
+  while request:
+    try:
+      response = request.execute(num_retries=config.API_RETRIES)
+    except googleapiclient.errors.HttpError as err:
+      raise utils.GcpApiError(err) from err
+
+    constraints_list = response.get('constraints', [])
+
+    for constraint in constraints_list:
+      org_constraint_name.append(constraint.get('name'))
+      if resource_type == RESOURCE_TYPE_PROJECT:
+        request = crm_api.projects().listAvailableOrgPolicyConstraints_next(
+            request, response)
+      elif resource_type == RESOURCE_TYPE_ORGANIZATION:
+        request = (
+            crm_api.organizations().listAvailableOrgPolicyConstraints_next(
+                request, response))
+  return org_constraint_name
+
+
+@caching.cached_api_call
 def _get_effective_org_policy_all_constraints(
     project_id: str) -> Dict[str, PolicyConstraint]:
   # in order to speed up execution, we fetch all constraints that we think
@@ -78,7 +118,10 @@ def _get_effective_org_policy_all_constraints(
 
   crm_api = apis.get_api('cloudresourcemanager', 'v1', project_id)
   requests = []
-  for c in PREFETCH_ORG_CONSTRAINTS:
+  prefetch_org_constraints = _get_available_org_constraints(
+      project_id, RESOURCE_TYPE_PROJECT)
+
+  for c in prefetch_org_constraints:
     requests.append(crm_api.projects().getEffectiveOrgPolicy(
         resource=f'projects/{project_id}', body={'constraint': c}))
 
@@ -94,9 +137,9 @@ def _get_effective_org_policy_all_constraints(
       all_constraints[result['constraint']] = BooleanPolicyConstraint(
           result['constraint'], result['booleanPolicy'])
     # TODO: list policy constraints
-    # elif 'listPolicy' in result:
-    #   all_constraints[result['constraint']] = ListPolicyConstraint(
-    #       result['constraint'], result['listPolicy'])
+    elif 'listPolicy' in result:
+      all_constraints[result['constraint']] = ListPolicyConstraint(
+          result['constraint'], result['listPolicy'])
     else:
       logging.warning('unknown constraint type: %s', result)
 

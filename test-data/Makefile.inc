@@ -210,6 +210,14 @@ json-dumps/org-policies.json:
 		| $(JSON_CLEANER) other \
 		| $(SED_SUBST_FAKE) >$@
 
+json-dumps/org-constraints.json:
+	$(CURL) -fsS \
+		'https://cloudresourcemanager.googleapis.com/v1/projects/$(PROJECT_ID):listAvailableOrgPolicyConstraints' \
+		-X POST  --header "Content-Type:text/json" \
+		-d "" \
+		| $(JSON_CLEANER) other \
+		| $(SED_SUBST_FAKE) >$@
+
 # iam.googleapis.com
 
 json-dumps/iam-roles-custom.json:
