@@ -28,13 +28,13 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_parameters = [
       {
           'project_id': project_id,
-          'cluster_name': 'job_failed',
+          'dataproc_cluster_name': 'job_failed',
           'region': 'us-central1',
           'job_id': failed_job_id,
       },
       {
           'project_id': project_id,
-          'cluster_name': 'job-not-failed',
+          'dataproc_cluster_name': 'job-not-failed',
           'region': 'us-central1',
           'job_id': success_job_id,
       },

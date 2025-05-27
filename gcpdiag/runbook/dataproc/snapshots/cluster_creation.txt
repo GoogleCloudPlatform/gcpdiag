@@ -1,5 +1,5 @@
-cluster_name=good,end_time=2024-06-22T01:00:00Z,project_id=gcpdiag-dataproc1-aaaa,region=us-
-central1,service_account=saworker@gcpdiag-
+dataproc_cluster_name=good,end_time=2024-06-22T01:00:00Z,project_id=gcpdiag-
+dataproc1-aaaa,region=us-central1,service_account=saworker@gcpdiag-
 dataproc1-aaaa.iam.gserviceaccount.com,start_time=2024-06-18T01:00:00Z
 
 dataproc/cluster-creation: Provides a comprehensive analysis of common issues which affect Dataproc cluster creation.
@@ -56,8 +56,8 @@ dataproc/cluster-creation: Provides a comprehensive analysis of common issues wh
         role grants'
 
 
-cluster_name=good,end_time=2024-06-24T01:00:00Z,project_id=gcpdiag-dataproc1-aaaa,region=us-
-central1,service_account=saworker@gcpdiag-
+dataproc_cluster_name=good,end_time=2024-06-24T01:00:00Z,project_id=gcpdiag-
+dataproc1-aaaa,region=us-central1,service_account=saworker@gcpdiag-
 dataproc1-aaaa.iam.gserviceaccount.com,start_time=2024-06-23T01:00:00Z
 
 dataproc/cluster-creation: Provides a comprehensive analysis of common issues which affect Dataproc cluster creation.
@@ -114,7 +114,7 @@ dataproc/cluster-creation: Provides a comprehensive analysis of common issues wh
         role grants'
 
 
-cluster_name=test-deny-icmp,end_time=2024-06-22T01:00:00Z,project_id=gcpdiag-
+dataproc_cluster_name=test-deny-icmp,end_time=2024-06-22T01:00:00Z,project_id=gcpdiag-
 dataproc1-aaaa,region=us-central1,start_time=2024-06-18T01:00:00Z
 
 dataproc/cluster-creation: Provides a comprehensive analysis of common issues which affect Dataproc cluster creation.

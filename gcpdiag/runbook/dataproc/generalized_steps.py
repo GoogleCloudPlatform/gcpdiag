@@ -126,7 +126,7 @@ class CheckClusterNetworkConnectivity(runbook.Step):
       project_id = self.project_id
 
     if not self.cluster_name:
-      cluster_name = op.get(flags.CLUSTER_NAME)
+      cluster_name = op.get(flags.DATAPROC_CLUSTER_NAME)
     else:
       cluster_name = self.cluster_name
 

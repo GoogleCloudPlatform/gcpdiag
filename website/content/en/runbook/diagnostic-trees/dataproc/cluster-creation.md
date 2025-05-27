@@ -41,6 +41,7 @@ This runbook focuses on a range of potential problems for Dataproc clusters on
 gcpdiag runbook dataproc/cluster-creation \
   -p project_id=value \
   -p cluster_name=value \
+  -p dataproc_cluster_name=value \
   -p region=value \
   -p cluster_uuid=value \
   -p project_number=value \
@@ -62,7 +63,8 @@ gcpdiag runbook dataproc/cluster-creation \
 | Name | Required | Default | Type | Help |
 |------|----------|---------|------|------|
 | `project_id` | True | None | str | The Project ID where the Dataproc cluster is located |
-| `cluster_name` | True | None | str | Dataproc cluster Name of an existing/active resource |
+| `cluster_name` | False | None | str | Dataproc cluster Name of an existing/active resource |
+| `dataproc_cluster_name` | True | None | str | Dataproc cluster Name of an existing/active resource |
 | `region` | True | None | str | Dataproc cluster Region |
 | `cluster_uuid` | False | None | str | Dataproc cluster UUID |
 | `project_number` | False | None | str | The Project Number where the Dataproc cluster is located |

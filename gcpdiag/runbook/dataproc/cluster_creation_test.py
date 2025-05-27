@@ -30,7 +30,7 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
               'saworker@gcpdiag-dataproc1-aaaa.iam.gserviceaccount.com',
           'region':
               'us-central1',
-          'cluster_name':
+          'dataproc_cluster_name':
               'good',
           'start_time':
               '2024-06-18T01:00:00Z',
@@ -44,7 +44,7 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
               'saworker@gcpdiag-dataproc1-aaaa.iam.gserviceaccount.com',
           'region':
               'us-central1',
-          'cluster_name':
+          'dataproc_cluster_name':
               'good',
           'start_time':
               '2024-06-23T01:00:00Z',
@@ -53,7 +53,7 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
       },
       {
           'project_id': 'gcpdiag-dataproc1-aaaa',
-          'cluster_name': 'test-deny-icmp',
+          'dataproc_cluster_name': 'test-deny-icmp',
           'region': 'us-central1',
           'start_time': '2024-06-18T01:00:00Z',
           'end_time': '2024-06-22T01:00:00Z',

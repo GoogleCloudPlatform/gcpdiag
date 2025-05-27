@@ -18,6 +18,7 @@ from gcpdiag.runbook.iam.flags import *
 
 CLUSTER_UUID = 'cluster_uuid'
 CLUSTER_NAME = 'cluster_name'
+DATAPROC_CLUSTER_NAME = 'dataproc_cluster_name'
 NETWORK = 'network'
 SUBNETWORK = 'subnetwork'
 REGION = 'region'

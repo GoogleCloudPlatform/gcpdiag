@@ -193,7 +193,7 @@ class JobExists(runbook.StartStep):
               op.FAILURE_REASON,
               project_id=project,
               job_id=op.get(flags.JOB_ID),
-              cluster_name=op.get(flags.CLUSTER_NAME),
+              cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
           ),
           remediation=op.prep_msg(op.FAILURE_REMEDIATION),
       )
@@ -213,7 +213,7 @@ class JobExists(runbook.StartStep):
               op.FAILURE_REASON,
               project_id=project,
               job_id=op.get(flags.JOB_ID),
-              cluster_name=op.get(flags.CLUSTER_NAME),
+              cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
               error=e,
           ),
           remediation=op.prep_msg(op.FAILURE_REMEDIATION),
@@ -234,7 +234,7 @@ class JobExists(runbook.StartStep):
     op.put(flags.END_TIME, end_time)
     op.info(f'End time utc:{end_time}')
     op.put(flags.CLUSTER_UUID, job.cluster_uuid)
-    op.put(flags.CLUSTER_NAME, job.cluster_name)
+    op.put(flags.DATAPROC_CLUSTER_NAME, job.cluster_name)
 
     if check_datetime_gap(op.get(flags.START_TIME), op.get(flags.END_TIME), 30):
       op.put(flags.JOB_OLDER_THAN_30_DAYS, True)
@@ -247,7 +247,7 @@ class JobExists(runbook.StartStep):
             op.SUCCESS_REASON,
             project_id=project,
             job_id=op.get(flags.JOB_ID),
-            cluster_name=op.get(flags.CLUSTER_NAME),
+            cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
         ),
     )
     return
@@ -267,12 +267,13 @@ class DataProcClusterExists(runbook.Step):
       op.add_skipped(project, reason="Job doesn't exist, skipping this step.")
       return
 
-    cluster = dataproc.get_cluster(cluster_name=op.get(flags.CLUSTER_NAME),
+    cluster = dataproc.get_cluster(cluster_name=op.get(
+        flags.DATAPROC_CLUSTER_NAME),
                                    region=op.get(flags.REGION),
                                    project=op.get(flags.PROJECT_ID))
 
     if cluster:
-      op.put(flags.CLUSTER_NAME, cluster.name)
+      op.put(flags.DATAPROC_CLUSTER_NAME, cluster.name)
       if not op.get(flags.SERVICE_ACCOUNT):
         #Saving Service Account parameter
         if cluster.vm_service_account_email:
@@ -291,7 +292,7 @@ class DataProcClusterExists(runbook.Step):
           cluster,
           reason=op.prep_msg(
               op.FAILURE_REASON,
-              cluster_name=op.get(flags.CLUSTER_NAME),
+              cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
               project_id=project,
           ),
           remediation=op.prep_msg(op.FAILURE_REMEDIATION),
@@ -310,7 +311,8 @@ class CheckStackdriverSetting(runbook.Step):
   def execute(self):
     """Checking Stackdriver setting."""
     # taking cluster details
-    cluster = dataproc.get_cluster(cluster_name=op.get(flags.CLUSTER_NAME),
+    cluster = dataproc.get_cluster(cluster_name=op.get(
+        flags.DATAPROC_CLUSTER_NAME),
                                    region=op.get(flags.REGION),
                                    project=op.get(flags.PROJECT_ID))
 
@@ -337,7 +339,8 @@ class CheckClusterVersion(runbook.Step):
     """Verify cluster version."""
 
     supported_versions = dataproc.extract_dataproc_supported_version()
-    cluster = dataproc.get_cluster(cluster_name=op.get(flags.CLUSTER_NAME),
+    cluster = dataproc.get_cluster(cluster_name=op.get(
+        flags.DATAPROC_CLUSTER_NAME),
                                    region=op.get(flags.REGION),
                                    project=op.get(flags.PROJECT_ID))
 
@@ -360,13 +363,13 @@ class CheckClusterVersion(runbook.Step):
       op.add_ok(
           cluster,
           reason=op.prep_msg(op.SUCCESS_REASON,
-                             cluster_name=op.get(flags.CLUSTER_NAME)),
+                             cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME)),
       )
     else:
       op.add_failed(
           cluster,
           reason=op.prep_msg(op.FAILURE_REASON,
-                             cluster_name=op.get(flags.CLUSTER_NAME)),
+                             cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME)),
           remediation=op.prep_msg(op.FAILURE_REMEDIATION),
       )
 
@@ -583,7 +586,7 @@ class CheckMasterOOM(runbook.Step):
 
     project = crm.get_project(op.get(flags.PROJECT_ID))
 
-    cluster_name = op.get(flags.CLUSTER_NAME)
+    cluster_name = op.get(flags.DATAPROC_CLUSTER_NAME)
     cluster_uuid = op.get(flags.CLUSTER_UUID)
     job_id = op.get(flags.JOB_ID)
     log_message = 'Task Not Acquired'
@@ -762,7 +765,8 @@ class CheckPythonImportFailure(runbook.CompositeStep):
     check_python_import.log_message = dp_const.PYTHON_IMPORT_LOG
     self.add_child(child=check_python_import)
 
-    cluster = dataproc.get_cluster(cluster_name=op.get(flags.CLUSTER_NAME),
+    cluster = dataproc.get_cluster(cluster_name=op.get(
+        flags.DATAPROC_CLUSTER_NAME),
                                    region=op.get(flags.REGION),
                                    project=op.get(flags.PROJECT_ID))
 
@@ -784,7 +788,7 @@ class CheckShuffleFailures(runbook.Step):
 
     project = crm.get_project(op.get(flags.PROJECT_ID))
 
-    cluster_name = op.get(flags.CLUSTER_NAME)
+    cluster_name = op.get(flags.DATAPROC_CLUSTER_NAME)
     cluster_uuid = op.get(flags.CLUSTER_UUID)
 
     log_search_filter = f"""resource.type="cloud_dataproc_cluster"
@@ -816,7 +820,8 @@ class CheckShuffleFailures(runbook.Step):
     )
 
     if log_entries:
-      cluster = dataproc.get_cluster(cluster_name=op.get(flags.CLUSTER_NAME),
+      cluster = dataproc.get_cluster(cluster_name=op.get(
+          flags.DATAPROC_CLUSTER_NAME),
                                      region=op.get(flags.REGION),
                                      project=op.get(flags.PROJECT_ID))
 
@@ -915,7 +920,7 @@ class CheckAutoscalingPolicy(runbook.Step):
 
     project = crm.get_project(op.get(flags.PROJECT_ID))
     cluster = dataproc.get_cluster(
-        cluster_name=op.get(flags.CLUSTER_NAME),
+        cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
         region=op.get(flags.REGION),
         project=op.get(flags.PROJECT_ID),
     )
@@ -932,7 +937,8 @@ class CheckAutoscalingPolicy(runbook.Step):
           op.add_failed(
               project,
               reason=op.prep_msg(op.FAILURE_REASON,
-                                 cluster_name=op.get(flags.CLUSTER_NAME)),
+                                 cluster_name=op.get(
+                                     flags.DATAPROC_CLUSTER_NAME)),
               remediation=op.prep_msg(op.FAILURE_REMEDIATION),
           )
         else:
@@ -940,7 +946,7 @@ class CheckAutoscalingPolicy(runbook.Step):
               project,
               reason=op.prep_msg(
                   op.SUCCESS_REASON,
-                  cluster_name=op.get(flags.CLUSTER_NAME),
+                  cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
               ),
           )
 
@@ -954,7 +960,8 @@ class CheckPreemptible(runbook.Step):
     """Checking worker count."""
 
     project = crm.get_project(op.get(flags.PROJECT_ID))
-    cluster = dataproc.get_cluster(cluster_name=op.get(flags.CLUSTER_NAME),
+    cluster = dataproc.get_cluster(cluster_name=op.get(
+        flags.DATAPROC_CLUSTER_NAME),
                                    region=op.get(flags.REGION),
                                    project=op.get(flags.PROJECT_ID))
 
@@ -971,14 +978,16 @@ class CheckPreemptible(runbook.Step):
         op.add_failed(
             project,
             reason=op.prep_msg(op.FAILURE_REASON,
-                               cluster_name=op.get(flags.CLUSTER_NAME)),
+                               cluster_name=op.get(
+                                   flags.DATAPROC_CLUSTER_NAME)),
             remediation=op.prep_msg(op.FAILURE_REMEDIATION),
         )
       else:
         op.add_ok(
             project,
             reason=op.prep_msg(op.SUCCESS_REASON,
-                               cluster_name=op.get(flags.CLUSTER_NAME)),
+                               cluster_name=op.get(
+                                   flags.DATAPROC_CLUSTER_NAME)),
         )
 
 
@@ -1057,7 +1066,8 @@ class CheckGCSConnector(runbook.CompositeStep):
 
   def execute(self):
     """Check for non-default GCS connector."""
-    cluster = dataproc.get_cluster(cluster_name=op.get(flags.CLUSTER_NAME),
+    cluster = dataproc.get_cluster(cluster_name=op.get(
+        flags.DATAPROC_CLUSTER_NAME),
                                    region=op.get(flags.REGION),
                                    project=op.get(flags.PROJECT_ID))
 
@@ -1105,7 +1115,8 @@ class CheckBQConnector(runbook.CompositeStep):
 
   def execute(self):
     """Check if non-default BigQuery connector version exists."""
-    cluster = dataproc.get_cluster(cluster_name=op.get(flags.CLUSTER_NAME),
+    cluster = dataproc.get_cluster(cluster_name=op.get(
+        flags.DATAPROC_CLUSTER_NAME),
                                    region=op.get(flags.REGION),
                                    project=op.get(flags.PROJECT_ID))
     job = dataproc.get_job_by_jobid(project_id=op.get(flags.PROJECT_ID),

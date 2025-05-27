@@ -62,6 +62,12 @@ necessary firewall rules, external/internal IP configuration.
       flags.CLUSTER_NAME: {
           'type': str,
           'help': ('Dataproc cluster Name of an existing/active resource'),
+          'deprecated': True,
+          'new_parameter': 'dataproc_cluster_name',
+      },
+      flags.DATAPROC_CLUSTER_NAME: {
+          'type': str,
+          'help': ('Dataproc cluster Name of an existing/active resource'),
           'required': True,
       },
       flags.REGION: {
@@ -136,6 +142,11 @@ necessary firewall rules, external/internal IP configuration.
       },
   }
 
+  def legacy_parameter_handler(self, parameters):
+    if flags.CLUSTER_NAME in parameters:
+      parameters[flags.DATAPROC_CLUSTER_NAME] = parameters.pop(
+          flags.CLUSTER_NAME)
+
   def build_tree(self):
     """Describes step relationships."""
     # Instantiate your step classes
@@ -180,7 +191,7 @@ class CheckClusterQuota(runbook.StartStep):
     """Verify cluster quota."""
 
     quota_log_match_str = 'Insufficient .* quota'
-    cluster_name = op.get(flags.CLUSTER_NAME)
+    cluster_name = op.get(flags.DATAPROC_CLUSTER_NAME)
     project = crm.get_project(op.get(flags.PROJECT_ID))
 
     quota_log_entries = get_log_entries(
@@ -196,7 +207,7 @@ class CheckClusterQuota(runbook.StartStep):
       op.add_failed(
           project,
           reason=op.prep_msg(op.FAILURE_REASON,
-                             cluster_name=op.get(flags.CLUSTER_NAME),
+                             cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
                              project_id=op.get(flags.PROJECT_ID)),
           remediation=op.prep_msg(op.FAILURE_REMEDIATION),
       )
@@ -205,7 +216,7 @@ class CheckClusterQuota(runbook.StartStep):
           project,
           reason=op.prep_msg(
               op.SUCCESS_REASON,
-              cluster_name=op.get(flags.CLUSTER_NAME),
+              cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
               project_id=op.get(flags.PROJECT_ID),
           ),
       )
@@ -230,7 +241,7 @@ class CheckClusterStockOut(runbook.Step):
     ]
 
     message_filter = '"' + '" OR "'.join(err_messages) + '"'
-    cluster_name = op.get(flags.CLUSTER_NAME)
+    cluster_name = op.get(flags.DATAPROC_CLUSTER_NAME)
     project = crm.get_project(op.get(flags.PROJECT_ID))
 
     stockout_filter_log_entries = get_log_entries(
@@ -245,7 +256,8 @@ class CheckClusterStockOut(runbook.Step):
     if stockout_filter_log_entries:
       op.add_failed(project,
                     reason=op.prep_msg(op.FAILURE_REASON,
-                                       cluster_name=op.get(flags.CLUSTER_NAME),
+                                       cluster_name=op.get(
+                                           flags.DATAPROC_CLUSTER_NAME),
                                        project_id=op.get(flags.PROJECT_ID)),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
       self.add_child(ClusterCreationEnd())
@@ -255,7 +267,7 @@ class CheckClusterStockOut(runbook.Step):
           project,
           reason=op.prep_msg(
               op.SUCCESS_REASON,
-              cluster_name=op.get(flags.CLUSTER_NAME),
+              cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
               project_id=op.get(flags.PROJECT_ID),
           ),
       )
@@ -273,14 +285,16 @@ class ClusterExists(runbook.Step):
     """Verify cluster exists in Dataproc UI."""
     project = crm.get_project(op.get(flags.PROJECT_ID))
 
-    if not op.get(flags.CLUSTER_UUID) and not op.get(flags.CLUSTER_NAME):
+    if not op.get(flags.CLUSTER_UUID) and not op.get(
+        flags.DATAPROC_CLUSTER_NAME):
       op.add_skipped(project,
                      reason='Provide a cluster UUID or name to investigate')
       return
       # uses the API to check for existing cluster based on cluster name
     cluster = dataproc.get_cluster(project=op.get(flags.PROJECT_ID),
                                    region=op.get(flags.REGION),
-                                   cluster_name=op.get(flags.CLUSTER_NAME))
+                                   cluster_name=op.get(
+                                       flags.DATAPROC_CLUSTER_NAME))
     if cluster:
       op.add_ok(
           cluster,
@@ -299,7 +313,7 @@ class ClusterExists(runbook.Step):
           reason=op.prep_msg(
               op.FAILURE_REASON,
               project_id=project,
-              cluster_name=op.get(flags.CLUSTER_NAME),
+              cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
           ),
           remediation=op.prep_msg(op.FAILURE_REMEDIATION),
       )
@@ -322,7 +336,8 @@ class ClusterInError(runbook.Gateway):
     # Taking cluster details
     cluster = dataproc.get_cluster(project=op.get(flags.PROJECT_ID),
                                    region=op.get(flags.REGION),
-                                   cluster_name=op.get(flags.CLUSTER_NAME))
+                                   cluster_name=op.get(
+                                       flags.DATAPROC_CLUSTER_NAME))
     # Checking for ERROR state
     if op.get(flags.CLUSTER_UUID):
       op.info(
@@ -357,7 +372,8 @@ class ClusterDetails(runbook.Step):
     # taking cluster details
     cluster = dataproc.get_cluster(project=op.get(flags.PROJECT_ID),
                                    region=op.get(flags.REGION),
-                                   cluster_name=op.get(flags.CLUSTER_NAME))
+                                   cluster_name=op.get(
+                                       flags.DATAPROC_CLUSTER_NAME))
 
     if cluster is not None or not op.get(flags.CLUSTER_UUID):
       op.put(flags.STACKDRIVER, cluster.is_stackdriver_logging_enabled)
@@ -413,7 +429,8 @@ class CheckClusterNetwork(runbook.Step):
     # Gathering cluster details.
     cluster = dataproc.get_cluster(project=op.get(flags.PROJECT_ID),
                                    region=op.get(flags.REGION),
-                                   cluster_name=op.get(flags.CLUSTER_NAME))
+                                   cluster_name=op.get(
+                                       flags.DATAPROC_CLUSTER_NAME))
     # Skip this step if the cluster does not exist
     if cluster is None:
       op.add_uncertain(cluster,
@@ -575,7 +592,8 @@ class InternalIpGateway(runbook.Gateway):
     # Gathering cluster details.
     cluster = dataproc.get_cluster(project=op.get(flags.PROJECT_ID),
                                    region=op.get(flags.REGION),
-                                   cluster_name=op.get(flags.CLUSTER_NAME))
+                                   cluster_name=op.get(
+                                       flags.DATAPROC_CLUSTER_NAME))
     is_internal_ip_only = None
     # If cluster cannot be found, gather details from flags
     if cluster is None:
@@ -630,7 +648,8 @@ class CheckPrivateGoogleAccess(runbook.Step):
     # taking cluster details
     cluster = dataproc.get_cluster(project=op.get(flags.PROJECT_ID),
                                    region=op.get(flags.REGION),
-                                   cluster_name=op.get(flags.CLUSTER_NAME))
+                                   cluster_name=op.get(
+                                       flags.DATAPROC_CLUSTER_NAME))
     subnetwork_uri = op.get(flags.SUBNETWORK)
     subnetwork_obj = network.get_subnetwork_from_url(subnetwork_uri)
 
@@ -794,7 +813,7 @@ class CheckInitScriptFailure(runbook.Step):
     """Verify Cluster init script failure."""
 
     init_script_log_match = 'Initialization action failed'
-    cluster_name = op.get(flags.CLUSTER_NAME)
+    cluster_name = op.get(flags.DATAPROC_CLUSTER_NAME)
     project = crm.get_project(op.get(flags.PROJECT_ID))
 
     log_search_filter = f"""resource.type="cloud_dataproc_cluster"
@@ -813,7 +832,7 @@ class CheckInitScriptFailure(runbook.Step):
       op.add_failed(
           project,
           reason=op.prep_msg(op.FAILURE_REASON,
-                             cluster_name=op.get(flags.CLUSTER_NAME)),
+                             cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME)),
           remediation=op.prep_msg(op.FAILURE_REMEDIATION),
       )
     else:
@@ -821,7 +840,7 @@ class CheckInitScriptFailure(runbook.Step):
           project,
           reason=op.prep_msg(
               op.SUCCESS_REASON,
-              cluster_name=op.get(flags.CLUSTER_NAME),
+              cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
               project_id=op.get(flags.PROJECT_ID),
           ),
       )
