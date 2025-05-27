@@ -49,7 +49,13 @@ class ServiceDeployment(runbook.DiagnosticTree):
       flags.SERVICE_NAME: {
           'type': str,
           'help': 'Name of the Cloud Run service',
-          'required': True,
+          'deprecated': True,
+          'new_parameter': 'cloudrun_service_name'
+      },
+      flags.CLOUDRUN_SERVICE_NAME: {
+          'type': str,
+          'help': 'Name of the Cloud Run service',
+          'required': True
       },
       flags.START_TIME: {
           'type': datetime,
@@ -60,6 +66,11 @@ class ServiceDeployment(runbook.DiagnosticTree):
           'help': 'End time of the issue',
       },
   }
+
+  def legacy_parameter_handler(self, parameters):
+    """Handle legacy parameters for cloudrun/service-deployment runbook."""
+    if flags.SERVICE_NAME in parameters:
+      parameters[flags.CLOUDRUN_SERVICE_NAME] = parameters[flags.SERVICE_NAME]
 
   def build_tree(self):
     """Construct the diagnostic tree with appropriate steps."""
@@ -79,11 +90,12 @@ class ServiceDeploymentStart(runbook.StartStep):
     project = crm.get_project(op.get(flags.PROJECT_ID))
     try:
       cloudrun.get_service(op.get(flags.PROJECT_ID), op.get(flags.REGION),
-                           op.get(flags.SERVICE_NAME))
+                           op.get(flags.CLOUDRUN_SERVICE_NAME))
     except googleapiclient.errors.HttpError:
       op.add_skipped(
           project,
-          reason=f'Service {op.get(flags.SERVICE_NAME)} does not exist in region '
+          reason=
+          f'Service {op.get(flags.CLOUDRUN_SERVICE_NAME)} does not exist in region '
           f'{op.get(flags.REGION)} or project {op.get(flags.PROJECT_ID)}')
 
 
@@ -113,7 +125,7 @@ class ContainerFailedToStartStep(runbook.Step):
     """Verify if there is an error that container failed to start."""
     service = cloudrun.get_service(op.get(flags.PROJECT_ID),
                                    op.get(flags.REGION),
-                                   op.get(flags.SERVICE_NAME))
+                                   op.get(flags.CLOUDRUN_SERVICE_NAME))
     match = self.message_re.match(service.conditions['RoutesReady'].message)
     if match:
       op.add_failed(service,
@@ -136,7 +148,7 @@ class ImageWasNotFoundStep(runbook.Step):
     """Verify if specified image exists."""
     service = cloudrun.get_service(op.get(flags.PROJECT_ID),
                                    op.get(flags.REGION),
-                                   op.get(flags.SERVICE_NAME))
+                                   op.get(flags.CLOUDRUN_SERVICE_NAME))
     match = self.message_re.match(service.conditions['RoutesReady'].message)
     if match:
       op.add_failed(service,
@@ -163,7 +175,7 @@ class NoPermissionForImageStep(runbook.Step):
     """Verify if Cloud Run service agent can fetch the image."""
     service = cloudrun.get_service(op.get(flags.PROJECT_ID),
                                    op.get(flags.REGION),
-                                   op.get(flags.SERVICE_NAME))
+                                   op.get(flags.CLOUDRUN_SERVICE_NAME))
     match = self.message_re.match(service.conditions['RoutesReady'].message)
     if match:
       op.add_failed(service,

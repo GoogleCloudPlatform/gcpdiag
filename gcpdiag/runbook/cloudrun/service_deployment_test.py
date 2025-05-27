@@ -25,17 +25,17 @@ class TestInvalidContainer(snapshot_test_base.RulesSnapshotTestBase):
   rule_parameters = [
       {
           'project_id': 'gcpdiag-cloudrun2-aaaa',
-          'service_name': 'invalid-container',
+          'cloudrun_service_name': 'invalid-container',
           'region': 'us-central1',
       },
       {
           'project_id': 'gcpdiag-cloudrun2-aaaa',
-          'service_name': 'image-does-not-exist',
+          'cloudrun_service_name': 'image-does-not-exist',
           'region': 'us-central1',
       },
       {
           'project_id': 'gcpdiag-cloudrun2-aaaa',
-          'service_name': 'no-image-permission',
+          'cloudrun_service_name': 'no-image-permission',
           'region': 'us-central1',
       },
   ]

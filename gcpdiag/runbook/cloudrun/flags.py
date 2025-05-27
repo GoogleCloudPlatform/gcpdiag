@@ -16,3 +16,4 @@
 from gcpdiag.runbook.gcp.flags import *
 
 SERVICE_NAME = 'service_name'
+CLOUDRUN_SERVICE_NAME = 'cloudrun_service_name'
