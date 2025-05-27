@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""TODO: String doc"""
+"""Flags for Dataflow runbooks."""
 # pylint: disable=unused-wildcard-import, wildcard-import
 from gcpdiag.runbook.gcp.flags import *
 from gcpdiag.runbook.iam.flags import *
@@ -21,3 +21,4 @@ JOB_REGION = 'job_region'
 WORKER_SERVICE_ACCOUNT = 'worker_service_account'
 PRINCIPAL = 'principal'
 CROSS_PROJECT_ID = 'cross_project_id'
+DATAFLOW_JOB_ID = 'dataflow_job_id'

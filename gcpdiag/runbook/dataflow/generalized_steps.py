@@ -28,8 +28,11 @@ class ValidSdk(runbook.Step):
 
   def execute(self):
     """Checks SDK is not in the list that might trigger known SDK issues."""
-    job = dataflow.get_job(op.get(flags.PROJECT_ID), op.get(flags.JOB_ID),
-                           op.get(flags.JOB_REGION))
+    job = dataflow.get_job(
+        op.get(flags.PROJECT_ID),
+        op.get(flags.DATAFLOW_JOB_ID),
+        op.get(flags.JOB_REGION),
+    )
     if job.sdk_support_status != 'SUPPORTED':
       op.add_failed(
           resource=None,

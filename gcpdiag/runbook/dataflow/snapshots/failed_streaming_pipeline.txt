@@ -1,4 +1,4 @@
-job_id=2024-06-19_09_43_07-14927685200167458422,job_region=us-central1,project_id=gcpdiag-
+dataflow_job_id=2024-06-19_09_43_07-14927685200167458422,job_region=us-central1,project_id=gcpdiag-
 dataflow1-aaaa
 
 dataflow/failed-streaming-pipeline: Diagnostic checks for failed Dataflow Streaming Pipelines.
