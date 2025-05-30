@@ -701,11 +701,21 @@ class ServiceAccountExists(runbook.Gateway):
     sa_email = op.get(flags.SERVICE_ACCOUNT)
     project = crm.get_project(op.get(flags.PROJECT_ID))
     op.info(op.get(flags.SERVICE_ACCOUNT))
+    if sa_email is None:
+      op.add_skipped(
+          project,
+          reason='Service account not provided as input parameter',
+      )
+      return
     sa_exists = iam.is_service_account_existing(email=sa_email,
                                                 billing_project_id=op.get(
                                                     flags.PROJECT_ID))
-    sa_exists_cross_project = iam.is_service_account_existing(
-        email=sa_email, billing_project_id=op.get(flags.CROSS_PROJECT_ID))
+    cross_project = op.get(flags.CROSS_PROJECT_ID)
+    # Only check in cross project when the flag is provided
+    sa_exists_cross_project = False
+    if cross_project:
+      sa_exists_cross_project = iam.is_service_account_existing(
+          email=sa_email, billing_project_id=cross_project)
 
     if sa_exists:
       op.info(
@@ -776,16 +786,26 @@ class ServiceAccountExists(runbook.Gateway):
           'roles/iam.serviceAccountTokenCreator'
       ]
       self.add_child(child=compute_agent_permission_check)
-
-    else:
+    elif cross_project and not sa_exists_cross_project:
       op.add_failed(
           project,
           reason=op.prep_msg(
               op.FAILURE_REASON,
               service_account=op.get(flags.SERVICE_ACCOUNT),
               project_id=op.get(flags.PROJECT_ID),
+              cross_project_id=cross_project,
           ),
           remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
+    else:
+      op.add_uncertain(
+          project,
+          reason=op.prep_msg(
+              op.UNCERTAIN_REASON,
+              service_account=op.get(flags.SERVICE_ACCOUNT),
+              project_id=op.get(flags.PROJECT_ID),
+          ),
+          remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION),
       )
 
 

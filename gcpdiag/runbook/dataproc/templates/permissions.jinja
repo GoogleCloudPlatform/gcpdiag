@@ -1,10 +1,18 @@
 {% block projectcheck_failure_reason %}
-Service Account {service_account} associated with Dataproc cluster was not found in project {project_id} or cross project (if specified).
+Service Account {service_account} associated with Dataproc cluster was not found in project {project_id} or cross project {cross_project_id}.
 {% endblock projectcheck_failure_reason %}
 
 {% block projectcheck_failure_remediation %}
 Provide the project where the service account resides using the `cross_project` parameter.
 {% endblock projectcheck_failure_remediation %}
+
+{% block projectcheck_uncertain_reason %}
+Service Account {service_account} associated with Dataproc cluster was not found in project {project_id}. It is possible that the service account is in a different project.
+{% endblock projectcheck_uncertain_reason %}
+
+{% block projectcheck_uncertain_remediation %}
+Provide the project where the service account resides using the `cross_project` parameter.
+{% endblock projectcheck_uncertain_remediation %}
 
 {% block permission_check_failure_reason %}
 Service Account {service_account} associated with Dataproc cluster was not found in project {project_id} or cross project (if specified).
