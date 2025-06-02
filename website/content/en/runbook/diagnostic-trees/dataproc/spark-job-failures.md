@@ -39,6 +39,7 @@ This runbook focuses on a range of potential problems for Dataproc Spark jobs
 gcpdiag runbook dataproc/spark-job-failures \
   -p project_id=value \
   -p job_id=value \
+  -p dataproc_job_id=value \
   -p region=value \
   -p zone=value \
   -p service_account=value \
@@ -51,7 +52,8 @@ gcpdiag runbook dataproc/spark-job-failures \
 | Name | Required | Default | Type | Help |
 |------|----------|---------|------|------|
 | `project_id` | True | None | str | The Project ID of the resource under investigation |
-| `job_id` | True | None | str | The Job ID of the resource under investigation |
+| `job_id` | False | None | str | The Job ID of the resource under investigation |
+| `dataproc_job_id` | True | None | str | The Job ID of the resource under investigation |
 | `region` | True | None | str | Dataproc job/cluster Region |
 | `zone` | False | None | str | Dataproc cluster Zone |
 | `service_account` | False | None | str | Dataproc cluster Service Account used to create the resource |

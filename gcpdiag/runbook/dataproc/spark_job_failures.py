@@ -62,6 +62,12 @@ class SparkJobFailures(runbook.DiagnosticTree):
       flags.JOB_ID: {
           'type': str,
           'help': 'The Job ID of the resource under investigation',
+          'deprecated': True,
+          'new_parameter': 'dataproc_job_id'
+      },
+      flags.DATAPROC_JOB_ID: {
+          'type': str,
+          'help': 'The Job ID of the resource under investigation',
           'required': True,
       },
       flags.REGION: {
@@ -93,6 +99,10 @@ class SparkJobFailures(runbook.DiagnosticTree):
           'default': False,
       },
   }
+
+  def legacy_parameter_handler(self, parameters):
+    if flags.JOB_ID in parameters:
+      parameters[flags.DATAPROC_JOB_ID] = parameters.pop(flags.JOB_ID)
 
   def build_tree(self):
     """Dataproc Spark Job Failures debug tree."""
@@ -186,13 +196,13 @@ class JobExists(runbook.StartStep):
     """Verify job exists in Dataproc UI."""
     project = crm.get_project(op.get(flags.PROJECT_ID))
 
-    if not op.get(flags.JOB_ID) or not op.get(flags.REGION):
+    if not op.get(flags.DATAPROC_JOB_ID) or not op.get(flags.REGION):
       op.add_failed(
           project,
           reason=op.prep_msg(
               op.FAILURE_REASON,
               project_id=project,
-              job_id=op.get(flags.JOB_ID),
+              job_id=op.get(flags.DATAPROC_JOB_ID),
               cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
           ),
           remediation=op.prep_msg(op.FAILURE_REMEDIATION),
@@ -203,7 +213,7 @@ class JobExists(runbook.StartStep):
     try:
       job = dataproc.get_job_by_jobid(project_id=op.get(flags.PROJECT_ID),
                                       region=op.get(flags.REGION),
-                                      job_id=op.get(flags.JOB_ID))
+                                      job_id=op.get(flags.DATAPROC_JOB_ID))
     except (AttributeError, GcpApiError, IndexError, TypeError,
             ValueError) as e:
       op.put(flags.JOB_EXIST, 'false')
@@ -212,7 +222,7 @@ class JobExists(runbook.StartStep):
           reason=op.prep_msg(
               op.FAILURE_REASON,
               project_id=project,
-              job_id=op.get(flags.JOB_ID),
+              job_id=op.get(flags.DATAPROC_JOB_ID),
               cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
               error=e,
           ),
@@ -246,7 +256,7 @@ class JobExists(runbook.StartStep):
         reason=op.prep_msg(
             op.SUCCESS_REASON,
             project_id=project,
-            job_id=op.get(flags.JOB_ID),
+            job_id=op.get(flags.DATAPROC_JOB_ID),
             cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
         ),
     )
@@ -387,18 +397,21 @@ class CheckIfJobFailed(runbook.Step):
       return
 
     job = dataproc.get_job_by_jobid(op.get(flags.PROJECT_ID),
-                                    op.get(flags.REGION), op.get(flags.JOB_ID))
+                                    op.get(flags.REGION),
+                                    op.get(flags.DATAPROC_JOB_ID))
 
     if job.state == 'DONE':
       op.add_failed(
           job,
-          reason=op.prep_msg(op.FAILURE_REASON, job_id=op.get(flags.JOB_ID)),
+          reason=op.prep_msg(op.FAILURE_REASON,
+                             job_id=op.get(flags.DATAPROC_JOB_ID)),
           remediation=op.prep_msg(op.FAILURE_REMEDIATION),
       )
     else:
       op.add_ok(
           job,
-          reason=op.prep_msg(op.SUCCESS_REASON, job_id=op.get(flags.JOB_ID)),
+          reason=op.prep_msg(op.SUCCESS_REASON,
+                             job_id=op.get(flags.DATAPROC_JOB_ID)),
       )
 
 
@@ -424,7 +437,8 @@ class CheckTaskNotFound(runbook.CompositeStep):
       return
 
     job = dataproc.get_job_by_jobid(op.get(flags.PROJECT_ID),
-                                    op.get(flags.REGION), op.get(flags.JOB_ID))
+                                    op.get(flags.REGION),
+                                    op.get(flags.DATAPROC_JOB_ID))
 
     cluster_uuid = job.cluster_uuid
     start_time = op.get(flags.START_TIME)
@@ -457,7 +471,7 @@ class CheckTaskNotFound(runbook.CompositeStep):
           job,
           reason=op.prep_msg(
               op.SUCCESS_REASON,
-              job_id=op.get(flags.JOB_ID),
+              job_id=op.get(flags.DATAPROC_JOB_ID),
               additional_message=additional_message,
           ),
       )
@@ -466,7 +480,7 @@ class CheckTaskNotFound(runbook.CompositeStep):
           job,
           reason=op.prep_msg(
               op.FAILURE_REASON,
-              job_id=op.get(flags.JOB_ID),
+              job_id=op.get(flags.DATAPROC_JOB_ID),
               additional_message=additional_message,
           ),
           remediation=op.prep_msg(op.FAILURE_REMEDIATION),
@@ -588,7 +602,7 @@ class CheckMasterOOM(runbook.Step):
 
     cluster_name = op.get(flags.DATAPROC_CLUSTER_NAME)
     cluster_uuid = op.get(flags.CLUSTER_UUID)
-    job_id = op.get(flags.JOB_ID)
+    job_id = op.get(flags.DATAPROC_JOB_ID)
     log_message = 'Task Not Acquired'
 
     log_search_filter = f"""resource.type="cloud_dataproc_cluster"
@@ -794,7 +808,7 @@ class CheckShuffleFailures(runbook.Step):
     log_search_filter = f"""resource.type="cloud_dataproc_cluster"
     resource.labels.cluster_name="{cluster_name}"
     resource.labels.cluster_uuid="{cluster_uuid}"
-    "{op.get(flags.JOB_ID)}"
+    "{op.get(flags.DATAPROC_JOB_ID)}"
     (
       ("ExecutorLostFailure" AND "Unable to create executor" AND "Unable to register with external shuffle server") OR
       ("java.io.IOException" AND "Exception while uploading shuffle data") OR
@@ -1121,7 +1135,7 @@ class CheckBQConnector(runbook.CompositeStep):
                                    project=op.get(flags.PROJECT_ID))
     job = dataproc.get_job_by_jobid(project_id=op.get(flags.PROJECT_ID),
                                     region=op.get(flags.REGION),
-                                    job_id=op.get(flags.JOB_ID))
+                                    job_id=op.get(flags.DATAPROC_JOB_ID))
 
     if cluster is not None:
       if version.parse(op.get(flags.IMAGE_VERSION)) > version.parse('2.0'):
