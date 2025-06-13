@@ -27,7 +27,8 @@ gcpdiag runbook gce/vm-creation \
   -p zone=value \
   -p principal=value \
   -p start_time=value \
-  -p end_time=value
+  -p end_time=value \
+  -p check_zone_separation_policy=value
 ```
 
 #### Parameters
@@ -40,6 +41,7 @@ gcpdiag runbook gce/vm-creation \
 | `principal` | False | None | str | The authenticated principal that initiated the VM creation. |
 | `start_time` | False | None | datetime | The start window to investigate vm termination. Format: YYYY-MM-DDTHH:MM:SSZ |
 | `end_time` | False | None | datetime | The end window for the investigation. Format: YYYY-MM-DDTHH:MM:SSZ |
+| `check_zone_separation_policy` | False | False | bool | Check if the zone separation policy is enforced. |
 
 Get help on available commands
 
@@ -52,6 +54,8 @@ gcpdiag runbook --help
   - [Start Step](/runbook/steps/gcpdiag/start-step)
 
   - [Investigate Vm Creation Log Failure](/runbook/steps/gce/investigate-vm-creation-log-failure)
+
+  - [Org Policy Check](/runbook/steps/crm/org-policy-check)
 
   - [End Step](/runbook/steps/gcpdiag/end-step)
 

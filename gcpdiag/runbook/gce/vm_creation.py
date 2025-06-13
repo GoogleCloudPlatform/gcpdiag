@@ -20,6 +20,7 @@ from boltons.iterutils import get_path
 from gcpdiag import runbook
 from gcpdiag.queries import crm, logs
 from gcpdiag.runbook import op
+from gcpdiag.runbook.crm import generalized_steps as crm_gs
 from gcpdiag.runbook.gce import flags
 
 VM_CREATION_FAILURE_FILTER = '''
@@ -74,6 +75,11 @@ class VmCreation(runbook.DiagnosticTree):
               datetime,
           'help':
               'The end window for the investigation. Format: YYYY-MM-DDTHH:MM:SSZ'
+      },
+      flags.CHECK_ZONE_SEPARATION_POLICY: {
+          'type': bool,
+          'default': False,
+          'help': 'Check if the zone separation policy is enforced.'
       }
   }
 
@@ -83,7 +89,15 @@ class VmCreation(runbook.DiagnosticTree):
     # add them to your tree
     self.add_start(start)
     self.add_step(parent=start, child=InvestigateVmCreationLogFailure())
-    # Ending your runbook
+    if op.get(flags.CHECK_ZONE_SEPARATION_POLICY):
+      self.add_step(
+          parent=start,
+          child=crm_gs.OrgPolicyCheck(
+              constraint='constraints/gcp.requiresPhysicalZoneSeparation',
+              is_enforced=True,
+          ),
+      )
+    # Ending the vm creation runbook.
     self.add_end(runbook.EndStep())
 
 
