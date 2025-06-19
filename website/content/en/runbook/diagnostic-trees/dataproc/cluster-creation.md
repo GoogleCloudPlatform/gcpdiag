@@ -94,49 +94,23 @@ gcpdiag runbook --help
 
 ### Potential Steps
 
-  - [Check Cluster Quota](/runbook/steps/dataproc/check-cluster-quota)
+  - [Cluster Creation Start](/runbook/steps/dataproc/cluster-creation-start)
 
-  - [Check Cluster Stock Out](/runbook/steps/dataproc/check-cluster-stock-out)
+  - [Cluster Details Dependency Gateway](/runbook/steps/dataproc/cluster-details-dependency-gateway)
 
-  - [Cluster Creation End](/runbook/steps/dataproc/cluster-creation-end)
-
-  - [Cluster Exists](/runbook/steps/dataproc/cluster-exists)
-
-  - [Cluster Creation End](/runbook/steps/dataproc/cluster-creation-end)
-
-  - [Cluster In Error](/runbook/steps/dataproc/cluster-in-error)
-
-  - [Cluster Details](/runbook/steps/dataproc/cluster-details)
-
-  - [Cluster Details](/runbook/steps/dataproc/cluster-details)
-
-  - [Cluster Creation End](/runbook/steps/dataproc/cluster-creation-end)
+  - [Check Init Script Failure](/runbook/steps/dataproc/check-init-script-failure)
 
   - [Check Cluster Network](/runbook/steps/dataproc/check-cluster-network)
 
   - [Internal Ip Gateway](/runbook/steps/dataproc/internal-ip-gateway)
 
-  - [Check Private Google Access](/runbook/steps/dataproc/check-private-google-access)
-
   - [Service Account Exists](/runbook/steps/dataproc/service-account-exists)
-
-  - [Iam Policy Check](/runbook/steps/iam/iam-policy-check)
-
-  - [Org Policy Check](/runbook/steps/crm/org-policy-check)
-
-  - [Iam Policy Check](/runbook/steps/iam/iam-policy-check)
-
-  - [Iam Policy Check](/runbook/steps/iam/iam-policy-check)
-
-  - [Iam Policy Check](/runbook/steps/iam/iam-policy-check)
 
   - [Check Shared Vpc Roles](/runbook/steps/dataproc/check-shared-vpc-roles)
 
-  - [Iam Policy Check](/runbook/steps/iam/iam-policy-check)
+  - [Cluster Creation Quota](/runbook/steps/dataproc/cluster-creation-quota)
 
-  - [Iam Policy Check](/runbook/steps/iam/iam-policy-check)
-
-  - [Check Init Script Failure](/runbook/steps/dataproc/check-init-script-failure)
+  - [Cluster Creation Stockout](/runbook/steps/dataproc/cluster-creation-stockout)
 
   - [Cluster Creation End](/runbook/steps/dataproc/cluster-creation-end)
 

@@ -1,19 +1,3 @@
-{% block cluster_name_exists_success_reason %}
-Cluster {cluster_name} exists in project {project_id}
-{% endblock cluster_name_exists_success_reason %}
-
-{% block cluster_name_exists_failure_reason %}
-Cluster {cluster_name} does not exist in project {project_id}
-{% endblock cluster_name_exists_failure_reason %}
-
-{% block cluster_name_exists_failure_remediation %}
-Create the cluster again and keep it in the ERROR state in the Dataproc UI, or manually provide additional parameters using the gcpdiag command:
-
-`gcpdiag runbook dataproc/cluster-creation -p cluster_name=CLUSTER_NAME -p cluster_uuid=CLUSTER_UUID -p network=NETWORK_URI -p subnetwork=SUBNETWORK_URI -p service_account=SERVICE_ACCOUNT -p internal_ip_only=True/False --project=PROJECT_ID`
-
-Refer to <https://gcpdiag.dev/runbook/diagnostic-trees/dataproc/> for guidance on specifying additional parameters.
-{% endblock cluster_name_exists_failure_remediation %}
-
 {% block stackdriver_success_reason %}
 Stackdriver: Enabled
 {% endblock stackdriver_success_reason %}

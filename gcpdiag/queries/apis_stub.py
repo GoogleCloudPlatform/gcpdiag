@@ -58,6 +58,10 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/datafusion1/json-dumps',
     'gcpdiag-dataproc1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/dataproc1/json-dumps',
+    'gcpdiag-dataproc2-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/dataproc2/json-dumps',
+    'gcpdiag-dataproc3-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/dataproc3/json-dumps',
     'gcpdiag-composer1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/composer1/json-dumps',
     'gcpdiag-cloudsql1-aaaa':

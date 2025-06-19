@@ -1,0 +1,102 @@
+{
+  "entries": [
+    {
+      "insertId": "nwjwc8e2b9iz",
+      "logName": "projects/gcpdiag-dataproc3-aaaa/logs/cloudaudit.googleapis.com%2Factivity",
+      "protoPayload": {
+        "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+        "authenticationInfo": {
+          "principalEmail": "testuser@example.com",
+          "principalSubject": "user:testuser@example.com"
+        },
+        "authorizationInfo": [
+          {
+            "granted": true,
+            "permission": "dataproc.clusters.create",
+            "permissionType": "ADMIN_WRITE",
+            "resource": "projects/gcpdiag-dataproc3-aaaa/regions/us-central1/clusters/cluster-stockout-issues",
+            "resourceAttributes": {
+              "name": "projects/gcpdiag-dataproc3-aaaa/regions/us-central1/clusters/cluster-stockout-issues",
+              "service": "dataproc.googleapis.com",
+              "type": "dataproc.googleapis.com/Cluster"
+            }
+          }
+        ],
+        "methodName": "google.cloud.dataproc.v1.ClusterController.CreateCluster",
+        "request": {
+          "@type": "type.googleapis.com/google.cloud.dataproc.v1.CreateClusterRequest",
+          "cluster": {
+            "clusterName": "cluster-stockout-issues",
+            "config": {
+              "gceClusterConfig": {
+                "internalIpOnly": false
+              },
+              "masterConfig": {
+                "accelerators": [
+                  {
+                    "acceleratorCount": 1,
+                    "acceleratorTypeUri": "nvidia-a100-80gb"
+                  }
+                ],
+                "diskConfig": {
+                  "bootDiskSizeGb": 30,
+                  "bootDiskType": "pd-standard"
+                },
+                "machineTypeUri": "a2-ultragpu-1g"
+              },
+              "workerConfig": {
+                "accelerators": [
+                  {
+                    "acceleratorCount": 4,
+                    "acceleratorTypeUri": "nvidia-a100-80gb"
+                  }
+                ],
+                "diskConfig": {
+                  "bootDiskSizeGb": 30,
+                  "bootDiskType": "pd-standard"
+                },
+                "machineTypeUri": "a2-ultragpu-1g",
+                "numInstances": 4
+              }
+            },
+            "projectId": "gcpdiag-dataproc3-aaaa"
+          },
+          "projectId": "gcpdiag-dataproc3-aaaa",
+          "region": "us-central1"
+        },
+        "requestMetadata": {
+          "callerIp": "gce-internal-ip",
+          "callerSuppliedUserAgent": "google-api-go-client/0.5 Terraform/1.5.7 (+https://www.terraform.io) Terraform-Plugin-SDK/2.36.0 terraform-provider-google/6.38.0,gzip(gfe)",
+          "destinationAttributes": {},
+          "requestAttributes": {
+            "auth": {},
+            "time": "2025-06-13T16:14:55.949855486Z"
+          }
+        },
+        "resourceLocation": {
+          "currentLocations": [
+            "us-central1"
+          ]
+        },
+        "resourceName": "projects/gcpdiag-dataproc3-aaaa/regions/us-central1/clusters/cluster-stockout-issues",
+        "serviceName": "dataproc.googleapis.com",
+        "status": {
+          "code": 3,
+          "message": "The zone 'projects/gcpdiag-dataproc3-aaaa/zones/us-central1-b' does not have enough resources available to fulfill the request.  '(resource type:compute)'."
+        }
+      },
+      "receiveTimestamp": "2025-06-13T16:14:58.745087897Z",
+      "resource": {
+        "labels": {
+          "cluster_name": "cluster-stockout-issues",
+          "cluster_uuid": "",
+          "project_id": "gcpdiag-dataproc3-aaaa",
+          "region": "us-central1"
+        },
+        "type": "cloud_dataproc_cluster"
+      },
+      "severity": "ERROR",
+      "timestamp": "2025-06-13T16:14:55.930548627Z"
+    }
+  ]
+}

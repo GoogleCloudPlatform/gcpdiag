@@ -1,37 +1,3 @@
-{% block cluster_quota_success_reason %}
-No issues with insufficient quota identified for cluster {cluster_name} in project {project_id}. If the intended cluster does not appear in the Dataproc UI, verify the provided cluster_name parameter.
-{% endblock cluster_quota_success_reason %}
-
-{% block cluster_quota_failure_reason %}
-The cluster {cluster_name} in project {project_id} could not be created due to insufficient quota in the project.
-{% endblock cluster_quota_failure_reason %}
-
-{% block cluster_quota_failure_remediation %}
-This issue occurs when the requested Dataproc cluster exceeds the project's available quota for resources such as CPU, disk space, or IP addresses.
-To resolve this issue:
-
-- Request additional quota [1] via the Google Cloud console.
-- Create the cluster in a different project.
-[1] <https://cloud.google.com/docs/quotas/view-manage#managing_your_quota_console>
-{% endblock cluster_quota_failure_remediation %}
-
-{% block cluster_stockout_success_reason %}
-No issues with stockouts identified for cluster {cluster_name} in project {project_id}. If the intended cluster does not appear in the Dataproc UI, verify the provided cluster_name parameter.
-{% endblock cluster_stockout_success_reason %}
-
-{% block cluster_stockout_failure_reason %}
-The cluster {cluster_name} creation in project {project_id} failed due to insufficient resources in the selected zone/region.
-{% endblock cluster_stockout_failure_reason %}
-
-{% block cluster_stockout_failure_remediation %}
-Dataproc cluster stockout occurs when there are insufficient resources available in a specific zone or region to create the requested cluster.
-To resolve this issue:
-
-- Create the cluster in a different zone or region.
-- Use the Dataproc Auto Zone placement feature by not specifying the zone [1].
-[1] <https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/auto-zone>
-{% endblock cluster_stockout_failure_remediation %}
-
 {% block cluster_init_success_reason %}
 The initialization actions for cluster {cluster_name} in project {project_id} completed successfully without errors.
 {% endblock cluster_init_success_reason %}

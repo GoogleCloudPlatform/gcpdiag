@@ -16,13 +16,14 @@
 import json
 from datetime import datetime
 
-from gcpdiag import runbook
+from gcpdiag import runbook, utils
 from gcpdiag.queries import (crm, dataproc, gce, iam, logs, network,
                              networkmanagement)
 from gcpdiag.runbook import op
 from gcpdiag.runbook.crm import generalized_steps as crm_gs
 from gcpdiag.runbook.dataproc import flags
 from gcpdiag.runbook.iam import generalized_steps as iam_gs
+from gcpdiag.runbook.logs import generalized_steps as logs_gs
 
 
 class ClusterCreation(runbook.DiagnosticTree):
@@ -161,268 +162,143 @@ class ClusterCreation(runbook.DiagnosticTree):
 
   def build_tree(self):
     """Describes step relationships."""
-    # Instantiate your step classes
-    quota_check = CheckClusterQuota()
-    self.add_start(quota_check)
-    # Check if cluster has stockout issue
-    stockout_check = CheckClusterStockOut()
-    self.add_step(parent=quota_check, child=stockout_check)
-    # Check if cluster exist
-    cluster_exist = ClusterExists()
-    self.add_step(parent=stockout_check, child=cluster_exist)
-    # Check if cluster is in error state
-    error_check = ClusterInError()
-    self.add_step(parent=cluster_exist, child=error_check)
-    # Check cluster network configuration
-    check_cluster_network = CheckClusterNetwork()
-    self.add_step(parent=cluster_exist, child=check_cluster_network)
-    # Check if cluster has an Internal IP
-    internal_ip_only = InternalIpGateway()
-    self.add_step(parent=check_cluster_network, child=internal_ip_only)
-    # Check Service Accounts roles
-    sa_exists = ServiceAccountExists()
-    self.add_step(parent=cluster_exist, child=sa_exists)
-    # Check if cluster is on a Shared VPC, if yes, if right role is added
-    check_shared_vpc = CheckSharedVPCRoles()
-    self.add_step(parent=cluster_exist, child=check_shared_vpc)
-    # Check if cluster has init script issue
-    init_script_check = CheckInitScriptFailure()
-    self.add_step(parent=check_shared_vpc, child=init_script_check)
+    start = ClusterCreationStart()
+    self.add_start(start)
+    cluster_details_gateway = ClusterDetailsDependencyGateway()
+    self.add_step(parent=start, child=cluster_details_gateway)
     self.add_end(ClusterCreationEnd())
 
 
-class CheckClusterQuota(runbook.StartStep):
-  """Verify if the Dataproc cluster has quota issues.
+class ClusterCreationStart(runbook.StartStep):
+  """Initiates diagnostics for SSH Cluster Creation issues.
 
-  Checks if the Dataproc cluster had creation issues due to quota.
+  This step interacts with the Dataproc API to get the cluster for investigation.
+  When the cluster is found and it is in `ERROR` state, the cluster details
+  are then used to set variables to be used by the subsequent child steps.
   """
 
-  template = 'logs_related::cluster_quota'
-
   def execute(self):
-    """Verify cluster quota."""
-
-    quota_log_match_str = 'Insufficient .* quota'
-    cluster_name = op.get(flags.DATAPROC_CLUSTER_NAME)
+    """
+    Initiating diagnostics for Cluster Creation issues.
+    """
     project = crm.get_project(op.get(flags.PROJECT_ID))
+    op.put('cluster_exists', False)
 
-    quota_log_entries = get_log_entries(
-        project_id=op.get(flags.PROJECT_ID),
-        cluster_name=cluster_name,
-        message_filter=f'protoPayload.status.message=~"{quota_log_match_str}"',
-        log_id='cloudaudit.googleapis.com/activity',
-        start_time=op.get(flags.START_TIME),
-        end_time=op.get(flags.END_TIME),
-    )
-
-    if quota_log_entries:
-      op.add_failed(
+    try:
+      cluster = dataproc.get_cluster(project=op.get(flags.PROJECT_ID),
+                                     region=op.get(flags.REGION),
+                                     cluster_name=op.get(
+                                         flags.DATAPROC_CLUSTER_NAME))
+    except utils.GcpApiError as err:
+      op.add_skipped(
           project,
-          reason=op.prep_msg(op.FAILURE_REASON,
-                             cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
-                             project_id=op.get(flags.PROJECT_ID)),
-          remediation=op.prep_msg(op.FAILURE_REMEDIATION),
-      )
+          reason=
+          (f'Could not get cluster {op.get(flags.DATAPROC_CLUSTER_NAME)}'
+           f'in region {op.get(flags.REGION)} and project {op.get(flags.PROJECT_ID)}'
+           f'due to {err}'))
     else:
-      op.add_ok(
-          project,
-          reason=op.prep_msg(
-              op.SUCCESS_REASON,
-              cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
-              project_id=op.get(flags.PROJECT_ID),
-          ),
-      )
+      if cluster:
+        op.put('cluster_exists', True)
+        if cluster.status == 'ERROR':
+          op.info(f'Cluster {op.get(flags.DATAPROC_CLUSTER_NAME)} in project' \
+          f'{op.get(flags.PROJECT_ID)} is in error state')
+          # set parameters required for the next stepsruinvestigates that require cluster details
+          if not cluster.is_stackdriver_logging_enabled:
+            op.put(flags.STACKDRIVER, cluster.is_stackdriver_logging_enabled)
+
+          if not op.get(flags.SERVICE_ACCOUNT):
+            if cluster.vm_service_account_email:
+              op.put(flags.SERVICE_ACCOUNT, cluster.vm_service_account_email)
+              op.info(f'Service Account:{cluster.vm_service_account_email}')
+
+          if not op.get(flags.DATAPROC_NETWORK):
+            if cluster.gce_network_uri:
+              op.put(flags.DATAPROC_NETWORK, cluster.gce_network_uri)
+              op.info(f'Network: {cluster.gce_network_uri}')
+
+          if network.get_network_from_url(op.get(flags.DATAPROC_NETWORK)):
+            op.put(
+                flags.HOST_VPC_PROJECT_ID,
+                network.get_network_from_url(op.get(
+                    flags.DATAPROC_NETWORK)).project_id,
+            )
+        else:
+          op.add_skipped(
+              project,
+              reason=
+              (f'Cluster {op.get(flags.DATAPROC_CLUSTER_NAME)} in project '
+               f'{op.get(flags.PROJECT_ID)} is not in error state due to cluster '
+               f'creation issues, please choose another issue category to investigate.'
+              ))
 
 
-class CheckClusterStockOut(runbook.Step):
-  """Verify if Dataproc cluster has stockout issue.
-
-  Checks if the zone being used to create the cluster has sufficient resources.
-  """
-
-  template = 'logs_related::cluster_stockout'
+class ClusterCreationStockout(runbook.Step):
+  """Check for cluster creation due to stockout"""
 
   def execute(self):
-    """Verify cluster stockout issue."""
-
-    err_messages = [
+    """Check for stockout entries in Cloud logging"""
+    stockout_error_logs = [
         'ZONE_RESOURCE_POOL_EXHAUSTED',
         'does not have enough resources available to fulfill the request',
         'resource pool exhausted',
         'does not exist in zone',
     ]
-
-    message_filter = '"' + '" OR "'.join(err_messages) + '"'
-    cluster_name = op.get(flags.DATAPROC_CLUSTER_NAME)
-    project = crm.get_project(op.get(flags.PROJECT_ID))
-
-    stockout_filter_log_entries = get_log_entries(
-        project_id=op.get(flags.PROJECT_ID),
-        cluster_name=cluster_name,
+    message_filter = '"' + '" OR "'.join(stockout_error_logs) + '"'
+    check_stockout_issue = logs_gs.CheckIssueLogEntry()
+    check_stockout_issue.project_id = op.get(flags.PROJECT_ID)
+    check_stockout_issue.filter_str = get_log_filter(
+        cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
         message_filter=f'protoPayload.status.message=~({message_filter})',
         log_id='cloudaudit.googleapis.com/activity',
-        start_time=op.get(flags.START_TIME),
-        end_time=op.get(flags.END_TIME),
     )
+    check_stockout_issue.template = 'logging::dataproc_cluster_stockout'
+    check_stockout_issue.resource_name = op.get(flags.DATAPROC_CLUSTER_NAME)
+    check_stockout_issue.issue_pattern = stockout_error_logs
+    self.add_child(child=check_stockout_issue)
 
-    if stockout_filter_log_entries:
-      op.add_failed(project,
-                    reason=op.prep_msg(op.FAILURE_REASON,
-                                       cluster_name=op.get(
-                                           flags.DATAPROC_CLUSTER_NAME),
-                                       project_id=op.get(flags.PROJECT_ID)),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
-      self.add_child(ClusterCreationEnd())
 
+class ClusterCreationQuota(runbook.Step):
+  """Check for cluster creation errors due to insufficient quota"""
+
+  def execute(self):
+    """Check for quota entries in Cloud logging"""
+    quota_log_match_str = 'Insufficient .* quota'
+    check_quota_issues = logs_gs.CheckIssueLogEntry()
+    check_quota_issues.project_id = op.get(flags.PROJECT_ID)
+    check_quota_issues.filter_str = get_log_filter(
+        cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
+        message_filter=f'protoPayload.status.message=~"{quota_log_match_str}"',
+        log_id='cloudaudit.googleapis.com/activity',
+    )
+    check_quota_issues.template = 'logging::dataproc_cluster_quota'
+    check_quota_issues.resource_name = op.get(flags.DATAPROC_CLUSTER_NAME)
+    check_quota_issues.issue_pattern = [quota_log_match_str]
+
+    self.add_child(child=check_quota_issues)
+
+
+class ClusterDetailsDependencyGateway(runbook.Gateway):
+  """Decision point for child steps that require cluster details and those that dont.
+
+  Uses cluster details from the Dataproc API set in the start step to reduce scope of
+  errors from invalid input
+  """
+
+  def execute(self):
+    """Execute child steps depending on if they require details from existing cluster or not"""
+
+    cluster_exists = op.get('cluster_exists', False)
+    if cluster_exists:
+      # add child steps that depend on cluster details from the API
+      self.add_child(CheckInitScriptFailure())
+      self.add_child(CheckClusterNetwork())
+      self.add_child(InternalIpGateway())
+      self.add_child(ServiceAccountExists())
+      self.add_child(CheckSharedVPCRoles())
     else:
-      op.add_ok(
-          project,
-          reason=op.prep_msg(
-              op.SUCCESS_REASON,
-              cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
-              project_id=op.get(flags.PROJECT_ID),
-          ),
-      )
-
-
-class ClusterExists(runbook.Step):
-  """Prepares the parameters required for the dataproc/cluster-creation runbook.
-
-  Ensures both project_id and cluster_name parameters are available.
-  """
-
-  template = 'dataproc_attributes::cluster_name_exists'
-
-  def execute(self):
-    """Verify cluster exists in Dataproc UI."""
-    project = crm.get_project(op.get(flags.PROJECT_ID))
-
-    if not op.get(flags.CLUSTER_UUID) and not op.get(
-        flags.DATAPROC_CLUSTER_NAME):
-      op.add_skipped(project,
-                     reason='Provide a cluster UUID or name to investigate')
-      return
-      # uses the API to check for existing cluster based on cluster name
-    cluster = dataproc.get_cluster(project=op.get(flags.PROJECT_ID),
-                                   region=op.get(flags.REGION),
-                                   cluster_name=op.get(
-                                       flags.DATAPROC_CLUSTER_NAME))
-    if cluster:
-      op.add_ok(
-          cluster,
-          reason=op.prep_msg(op.SUCCESS_REASON,
-                             cluster_name=cluster.name,
-                             project_id=project),
-      )
-      return
-    if cluster is None and (not op.get(flags.CLUSTER_UUID) or
-                            not op.get(flags.SERVICE_ACCOUNT) or
-                            not op.get(flags.DATAPROC_NETWORK) or
-                            not op.get(flags.SUBNETWORK) or
-                            not op.get(flags.INTERNAL_IP_ONLY)):
-      op.add_failed(
-          project,
-          reason=op.prep_msg(
-              op.FAILURE_REASON,
-              project_id=project,
-              cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
-          ),
-          remediation=op.prep_msg(op.FAILURE_REMEDIATION),
-      )
-      self.add_child(ClusterCreationEnd())
-      return
-
-
-class ClusterInError(runbook.Gateway):
-  """Verifies if the cluster is in Error state and gathers additional parameters.
-
-  This investigation is needed to identify if the issue is related to cluster
-  creation. The issue happens only when the cluster is not able
-  to provision successfully and ends up in ERROR state.
-  """
-
-  def execute(self):
-    """Verify cluster is in ERROR state."""
-    # Taking cluster details
-    cluster = dataproc.get_cluster(project=op.get(flags.PROJECT_ID),
-                                   region=op.get(flags.REGION),
-                                   cluster_name=op.get(
-                                       flags.DATAPROC_CLUSTER_NAME))
-    # Checking for ERROR state
-    if op.get(flags.CLUSTER_UUID):
-      op.info(
-          'Cluster is in ERROR state or not existing and additional parameters'
-          ' has been provided')
-      self.add_child(ClusterDetails())
-    elif ('ERROR' in cluster.status) or ('RUNNING' not in cluster.status):
-      op.put(flags.STATUS, cluster.status)
-      op.info(
-          'Cluster is in ERROR state or not existing and additional parameters'
-          ' has been provided')
-      self.add_child(ClusterDetails())
-    elif 'RUNNING' in cluster.status:
-      op.info(
-          'Cluster is in RUNNING state. Please choose another issue category to'
-          ' investigate, the issue is not related to cluster creation, as the'
-          ' cluster provisioned successfully.')
-      self.add_child(ClusterCreationEnd())
-
-
-class ClusterDetails(runbook.Step):
-  """Gathers cluster parameters needed for further investigation.
-
-  Additional parameters are needed for next steps. If values are provided
-  manually they will be used instead of values gathered here.
-  """
-
-  template = 'dataproc_attributes::stackdriver'
-
-  def execute(self):
-    """Gathering cluster details."""
-    # taking cluster details
-    cluster = dataproc.get_cluster(project=op.get(flags.PROJECT_ID),
-                                   region=op.get(flags.REGION),
-                                   cluster_name=op.get(
-                                       flags.DATAPROC_CLUSTER_NAME))
-
-    if cluster is not None or not op.get(flags.CLUSTER_UUID):
-      op.put(flags.STACKDRIVER, cluster.is_stackdriver_logging_enabled)
-      op.add_ok(cluster, reason=op.prep_msg(op.SUCCESS_REASON))
-    else:
-      op.add_uncertain(
-          cluster,
-          reason=op.prep_msg(op.UNCERTAIN_REASON),
-          remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION),
-      )
-
-    if not op.get(flags.CLUSTER_UUID):
-      if cluster.cluster_uuid:
-        op.put(flags.CLUSTER_UUID, cluster.cluster_uuid)
-      else:
-        op.add_skipped(
-            cluster,
-            reason=(
-                "Cluster UUID couldn't be identified, wait for the cluster to"
-                ' finish provisioning and use the runbook, when the cluster is'
-                ' in ERROR state'),
-        )
-
-    if not op.get(flags.SERVICE_ACCOUNT):
-      if cluster.vm_service_account_email:
-        op.put(flags.SERVICE_ACCOUNT, cluster.vm_service_account_email)
-        op.info(('Service Account:{}').format(cluster.vm_service_account_email))
-
-    if not op.get(flags.DATAPROC_NETWORK):
-      if cluster.gce_network_uri:
-        op.put(flags.DATAPROC_NETWORK, cluster.gce_network_uri)
-        op.info(('Network: {}').format(cluster.gce_network_uri))
-
-    if network.get_network_from_url(op.get(flags.DATAPROC_NETWORK)):
-      op.put(
-          flags.HOST_VPC_PROJECT_ID,
-          network.get_network_from_url(op.get(
-              flags.DATAPROC_NETWORK)).project_id,
-      )
+      # add child steps that do not depend on cluster details from the API
+      self.add_child(ClusterCreationQuota())
+      self.add_child(ClusterCreationStockout())
 
 
 class CheckClusterNetwork(runbook.Step):
@@ -454,7 +330,7 @@ class CheckClusterNetwork(runbook.Step):
       if not op.get(flags.ZONE):
         if cluster.zone:
           op.put(flags.ZONE, cluster.zone)
-          op.info(('Zone: {}').format(cluster.zone))
+          op.info(f'Zone: {cluster.zone}')
 
       # retrieve the zone from the cluster
       cluster_zone = op.get(flags.ZONE)
@@ -627,8 +503,8 @@ class InternalIpGateway(runbook.Gateway):
         op.add_skipped(
             cluster,
             'The cluster and the subnetworkUri config cannot be found, skipping'
-            ' this step. ' +
-            'Please provide subnetwork_uri as input parameter ' +
+            ' this step. '
+            'Please provide subnetwork_uri as input parameter '
             'if the cluster is deleted or keep the cluster in error state.',
         )
         return
@@ -641,11 +517,11 @@ class InternalIpGateway(runbook.Gateway):
       if not op.get(flags.INTERNAL_IP_ONLY):
         if cluster.is_internal_ip_only is not None:
           op.put(flags.INTERNAL_IP_ONLY, cluster.is_internal_ip_only)
-          op.info(('Internal IP only: {}').format(cluster.is_internal_ip_only),)
+          op.info(f'Internal IP only: {cluster.is_internal_ip_only}')
       # Add the subnetwork of the cluster
       if not op.get(flags.SUBNETWORK):
         op.put(flags.SUBNETWORK, subnetwork_uri)
-        op.add_ok(cluster, reason=('Subnetwork: {}').format(subnetwork_uri))
+        op.add_ok(cluster, reason=f'Subnetwork: {subnetwork_uri}')
     # If the cluster is in private subnet, check that PGA is enabled
     # otherwise end this step
     if is_internal_ip_only:
@@ -818,7 +694,8 @@ class CheckSharedVPCRoles(runbook.Step):
   def execute(self):
     """Verify service account roles based on Shared VPC."""
     project = crm.get_project(op.get(flags.PROJECT_ID))
-    if op.get(flags.HOST_VPC_PROJECT_ID) != op.get(flags.PROJECT_ID):
+    if op.get(flags.HOST_VPC_PROJECT_ID) and (op.get(flags.HOST_VPC_PROJECT_ID)
+                                              != op.get(flags.PROJECT_ID)):
       # Check Service Agent Service Account role:
       service_agent_sa = (
           f'service-{project.number}@dataproc-accounts.iam.gserviceaccount.com')
@@ -850,7 +727,6 @@ class CheckInitScriptFailure(runbook.Step):
 
   The initialization action provided during cluster creation failed to install.
   """
-
   template = 'logs_related::cluster_init'
 
   def execute(self):
@@ -898,35 +774,38 @@ class ClusterCreationEnd(runbook.EndStep):
 
   def execute(self):
     """This is the end step of the runbook."""
-    op.info(
-        """Please visit all the FAIL steps and address the suggested remediations.
-        If the cluster is still not able to be provisioned successfully,
-        run the runbook again and open a Support case. If you are missing
-        Service Account permissions, but are not able to see the Service Agent
-        Service Account go to the IAM page and check 'Include Google-provided
-        role grants'""")
+    if op.get('cluster_exists', False):
+      op.info(
+          """Please visit all the FAIL steps and address the suggested remediations.
+          If the cluster is still not able to be provisioned successfully,
+          run the runbook again and open a Support case. If you are missing
+          Service Account permissions, but are not able to see the Service Agent
+          Service Account go to the IAM page and check 'Include Google-provided
+          role grants'
+        """)
+    else:
+      op.info(
+          f"""Some steps were skipped because cluster {op.get(flags.DATAPROC_CLUSTER_NAME)}
+          could not be found in project {op.get(flags.PROJECT_ID)}. Most steps in this runbook
+          require that the cluster is in `ERROR` state and has not been deleted.
+          If the cluster was in `ERROR` and has been deleted, please create the cluster again and
+          rerun this runbook before deleting the cluster to rule out any cluster creation issues."""
+      )
 
 
-def get_log_entries(
-    project_id,
+def get_log_filter(
     cluster_name,
     message_filter,
     log_id,
-    start_time,
-    end_time,
 ):
-  """Get log entries for given parameters.
+  """Returns log filter string for given parameters.
 
   Args:
-    project_id:
     cluster_name:
     message_filter:
     log_id:
-    start_time:
-    end_time:
-
-  Returns:
   """
+
   log_search_filter = f"""
     resource.type="cloud_dataproc_cluster"
     {message_filter}
@@ -934,10 +813,4 @@ def get_log_entries(
     severity=ERROR
     log_id("{log_id}")
     """
-
-  return logs.realtime_query(
-      project_id=project_id,
-      filter_str=log_search_filter,
-      start_time=start_time,
-      end_time=end_time,
-  )
+  return log_search_filter
