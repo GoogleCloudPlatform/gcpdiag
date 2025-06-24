@@ -23,6 +23,7 @@ import re
 import sys
 import textwrap
 import threading
+import traceback
 import types
 from abc import abstractmethod
 from collections import OrderedDict
@@ -956,6 +957,20 @@ class DiagnosticEngine:
         with report_lock:
           self.interface.rm.reports[operator.run_id].results[
               step.execution_id].step_error = err
+      elif isinstance(err, TypeError):
+        trace = traceback.extract_tb(err.__traceback__)
+        if any('google/auth' in frame.filename for frame in trace):
+          logging.exception(
+              'Google Auth (ADC) TypeError encountered during step execution'
+              ' %s\nProbable cause: ADC metadata server returned an unexpected'
+              ' response format. \nLikely Reasons: \n- ADC not configured'
+              ' properly or metadata server issue. \nAborting further Runbook'
+              ' step execution to avoid redundant error messages.\nOriginal'
+              ' error: %s',
+              step.execution_id,
+              err,
+          )
+          raise err
       else:
         logging.error(
             '%s: %s while processing step: %s',
