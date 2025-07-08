@@ -27,14 +27,7 @@ dataproc/spark-job-failures: Provides a comprehensive analysis of common issues 
 [START]: Verify job exists in Dataproc UI.
 [INFO]: Start time utc:2024-11-01 03:12:35.635169+00:00
 [INFO]: End time utc:2024-11-08 03:12:35.635169+00:00
-
-   - gcpdiag-dataproc1-aaaa                                               [OK]
-     [REASON]
-     The job `1234567891` exists in project `projects/gcpdiag-dataproc1-aaaa`.
-
-[AUTOMATED STEP]: Verify cluster exists in Dataproc UI.
-[AUTOMATED STEP]: Checking Stackdriver setting.
-[AUTOMATED STEP]: Verify cluster version.
+[GATEWAY]: Execute child steps depending on if the required details exist or not
 [AUTOMATED STEP]: Verify if job failed.
 
    - gcpdiag-dataproc1-aaaa/1234567891/us-central1                        [OK]
@@ -47,16 +40,6 @@ dataproc/spark-job-failures: Provides a comprehensive analysis of common issues 
      [REASON]
      Job `1234567891` did not fail due to a 'task not found' error. Unable to find the cluster deletion log between 2024-11-01 03:12:35.635169+00:00 and 2024-11-08 03:12:35.635169+00:00. It could be some other issue.Please raise a support case to investigate further.
 
-[COMPOSITE STEP]: Verify permissions .
-[INFO]: Service Account:None
-
-   - gcpdiag-dataproc1-aaaa                                               [FAIL]
-     [REASON]
-     Service Account None associated with Dataproc cluster was not found in project gcpdiag-dataproc1-aaaa or cross project (if specified).
-
-     [REMEDIATION]
-     Provide the project where the service account resides using the `cross_project` parameter.
-
 [AUTOMATED STEP]: Verify if OOM has happened on master .
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
@@ -64,12 +47,18 @@ dataproc/spark-job-failures: Provides a comprehensive analysis of common issues 
      Didn't find logs messages related to Master OOM on the cluster: job-failed.
 
 [AUTOMATED STEP]: Verify if OOM has happened on worker nodes.
+[AUTOMATED STEP]: Check if investigated logs messages exist in the Dataproc cluster.
+
+   - gcpdiag-dataproc1-aaaa                                               [OK]
+     [REASON]
+     Didn't find logs messages related to Worker OOM on the cluster: job-failed.
+
 [COMPOSITE STEP]: Check if secondary worker preemption has happened.
 [AUTOMATED STEP]: Check if investigated logs messages exist in the Dataproc cluster.
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
-     Didn't find logs messages related to secondary worker preemption on the cluster: job-success.
+     Didn't find logs messages related to secondary worker preemption on the cluster: job-failed.
 
 [COMPOSITE STEP]: Check if secondary worker preemption has happened.
 [AUTOMATED STEP]: Check if investigated logs messages exist in the Dataproc cluster.
@@ -77,40 +66,33 @@ dataproc/spark-job-failures: Provides a comprehensive analysis of common issues 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
      NOTICE: No message available to parse for this step
-[AUTOMATED STEP]: Verify network connectivity among nodes in the cluster.
 [COMPOSITE STEP]: Verify if the port exhaustion has happened.
 [AUTOMATED STEP]: Check if investigated logs messages exist in the Dataproc cluster.
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
-     No log messages related to "Address already in use: Service 'sparkDriver' failed after 1000 retries" were found on the cluster: job-success.
+     No log messages related to "Address already in use: Service 'sparkDriver' failed after 1000 retries" were found on the cluster: job-failed.
 
 [COMPOSITE STEP]: Verify if the killing of Orphaned applications has happened.
 [AUTOMATED STEP]: Check if investigated logs messages exist in the Dataproc cluster.
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
-     No log messages related to "Killing orphaned yarn application" were found on the cluster: job-success.
+     No log messages related to "Killing orphaned yarn application" were found on the cluster: job-failed.
 
 [COMPOSITE STEP]: Check Python import failure.
 [AUTOMATED STEP]: Check if investigated logs messages exist in the Dataproc cluster.
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
-     No log messages related to "ImportError: cannot import name" were found on the cluster: job-success.
-
-[AUTOMATED STEP]: Check for logs indicating shuffle failures.
-
-   - gcpdiag-dataproc1-aaaa                                               [OK]
-     [REASON]
-     No shuffle failure logs found for cluster job-failed
+     No log messages related to "ImportError: cannot import name" were found on the cluster: job-failed.
 
 [COMPOSITE STEP]: Check Shuffle Service Kill logs and autoscaling & preemptibility.
 [AUTOMATED STEP]: Check if investigated logs messages exist in the Dataproc cluster.
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
-     No shuffle service failure detected in cluster job-success
+     No shuffle service failure detected in cluster job-failed
 
 [AUTOMATED STEP]: Checking autoscaling policies and graceful decommission timeouts.
 [COMPOSITE STEP]: Check if STW GC Pause has happened on the cluster.
@@ -118,54 +100,59 @@ dataproc/spark-job-failures: Provides a comprehensive analysis of common issues 
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
-     No log messages related to "Detected pause in JVM or host machine (eg GC)" were found on the cluster: job-success.
+     No log messages related to "Detected pause in JVM or host machine (eg GC)" were found on the cluster: job-failed.
 
 [COMPOSITE STEP]: Check for CheckYarnRuntimeException logs.
 [AUTOMATED STEP]: Check if investigated logs messages exist in the Dataproc cluster.
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
-     No log messages related to "YarnRuntimeException: Could not load history file .* /mapreduce-job-history/intermediate-done/root" were found on the cluster: job-success.
+     No log messages related to "YarnRuntimeException: Could not load history file .* /mapreduce-job-history/intermediate-done/root" were found on the cluster: job-failed.
 
 [COMPOSITE STEP]: Check for Job Throttling messages in the logs.
 [AUTOMATED STEP]: Check if investigated logs messages exist in the Dataproc cluster.
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
-     No log messages related to "Too many running jobs" were found on the cluster: job-success.
+     No log messages related to "Too many running jobs" were found on the cluster: job-failed.
 
 [AUTOMATED STEP]: Check if investigated logs messages exist in the Dataproc cluster.
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
-     No log messages related to "Not enough free memory" were found on the cluster: job-success.
+     No log messages related to "Not enough free memory" were found on the cluster: job-failed.
 
 [AUTOMATED STEP]: Check if investigated logs messages exist in the Dataproc cluster.
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
-     No log messages related to "High system memory usage" were found on the cluster: job-success.
+     No log messages related to "High system memory usage" were found on the cluster: job-failed.
 
 [AUTOMATED STEP]: Check if investigated logs messages exist in the Dataproc cluster.
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
-     No log messages related to "Rate limit" were found on the cluster: job-success.
+     No log messages related to "Rate limit" were found on the cluster: job-failed.
 
 [AUTOMATED STEP]: Check if investigated logs messages exist in the Dataproc cluster.
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
-     No log messages related to "Master agent not initialized" were found on the cluster: job-success.
+     No log messages related to "Master agent not initialized" were found on the cluster: job-failed.
 
 [AUTOMATED STEP]: Check if investigated logs messages exist in the Dataproc cluster.
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
-     No log messages related to "Disk space too low on Master" were found on the cluster: job-success.
+     No log messages related to "Disk space too low on Master" were found on the cluster: job-failed.
 
 [COMPOSITE STEP]: Check for non-default GCS connector.
-[COMPOSITE STEP]: Check if non-default BigQuery connector version exists.
+[AUTOMATED STEP]: Check for logs indicating shuffle failures.
+
+   - gcpdiag-dataproc1-aaaa                                               [OK]
+     [REASON]
+     No shuffle failure logs found for cluster job-failed
+
 [END]: This is the end step of the runbook.
 [INFO]: Please visit all the FAIL steps and address the suggested remediations.
         If the REMEDIATION suggestions were not able to solve your issue please open a Support case
@@ -206,14 +193,7 @@ dataproc/spark-job-failures: Provides a comprehensive analysis of common issues 
 [START]: Verify job exists in Dataproc UI.
 [INFO]: Start time utc:2024-11-01 02:58:22.604010+00:00
 [INFO]: End time utc:2024-11-08 02:58:22.604010+00:00
-
-   - gcpdiag-dataproc1-aaaa                                               [OK]
-     [REASON]
-     The job `1234567890` exists in project `projects/gcpdiag-dataproc1-aaaa`.
-
-[AUTOMATED STEP]: Verify cluster exists in Dataproc UI.
-[AUTOMATED STEP]: Checking Stackdriver setting.
-[AUTOMATED STEP]: Verify cluster version.
+[GATEWAY]: Execute child steps depending on if the required details exist or not
 [AUTOMATED STEP]: Verify if job failed.
 
    - gcpdiag-dataproc1-aaaa/1234567890/us-central1                        [FAIL]
@@ -230,16 +210,6 @@ dataproc/spark-job-failures: Provides a comprehensive analysis of common issues 
      [REASON]
      Job `1234567890` did not fail due to a 'task not found' error. Unable to find the cluster deletion log between 2024-11-01 02:58:22.604010+00:00 and 2024-11-08 02:58:22.604010+00:00. It could be some other issue.Please raise a support case to investigate further.
 
-[COMPOSITE STEP]: Verify permissions .
-[INFO]: Service Account:None
-
-   - gcpdiag-dataproc1-aaaa                                               [FAIL]
-     [REASON]
-     Service Account None associated with Dataproc cluster was not found in project gcpdiag-dataproc1-aaaa or cross project (if specified).
-
-     [REMEDIATION]
-     Provide the project where the service account resides using the `cross_project` parameter.
-
 [AUTOMATED STEP]: Verify if OOM has happened on master .
 
    - gcpdiag-dataproc1-aaaa                                               [OK]
@@ -247,6 +217,12 @@ dataproc/spark-job-failures: Provides a comprehensive analysis of common issues 
      Didn't find logs messages related to Master OOM on the cluster: job-success.
 
 [AUTOMATED STEP]: Verify if OOM has happened on worker nodes.
+[AUTOMATED STEP]: Check if investigated logs messages exist in the Dataproc cluster.
+
+   - gcpdiag-dataproc1-aaaa                                               [OK]
+     [REASON]
+     Didn't find logs messages related to Worker OOM on the cluster: job-success.
+
 [COMPOSITE STEP]: Check if secondary worker preemption has happened.
 [AUTOMATED STEP]: Check if investigated logs messages exist in the Dataproc cluster.
 
@@ -260,7 +236,6 @@ dataproc/spark-job-failures: Provides a comprehensive analysis of common issues 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
      NOTICE: No message available to parse for this step
-[AUTOMATED STEP]: Verify network connectivity among nodes in the cluster.
 [COMPOSITE STEP]: Verify if the port exhaustion has happened.
 [AUTOMATED STEP]: Check if investigated logs messages exist in the Dataproc cluster.
 
@@ -281,12 +256,6 @@ dataproc/spark-job-failures: Provides a comprehensive analysis of common issues 
    - gcpdiag-dataproc1-aaaa                                               [OK]
      [REASON]
      No log messages related to "ImportError: cannot import name" were found on the cluster: job-success.
-
-[AUTOMATED STEP]: Check for logs indicating shuffle failures.
-
-   - gcpdiag-dataproc1-aaaa                                               [OK]
-     [REASON]
-     No shuffle failure logs found for cluster job-success
 
 [COMPOSITE STEP]: Check Shuffle Service Kill logs and autoscaling & preemptibility.
 [AUTOMATED STEP]: Check if investigated logs messages exist in the Dataproc cluster.
@@ -348,7 +317,12 @@ dataproc/spark-job-failures: Provides a comprehensive analysis of common issues 
      No log messages related to "Disk space too low on Master" were found on the cluster: job-success.
 
 [COMPOSITE STEP]: Check for non-default GCS connector.
-[COMPOSITE STEP]: Check if non-default BigQuery connector version exists.
+[AUTOMATED STEP]: Check for logs indicating shuffle failures.
+
+   - gcpdiag-dataproc1-aaaa                                               [OK]
+     [REASON]
+     No shuffle failure logs found for cluster job-success
+
 [END]: This is the end step of the runbook.
 [INFO]: Please visit all the FAIL steps and address the suggested remediations.
         If the REMEDIATION suggestions were not able to solve your issue please open a Support case

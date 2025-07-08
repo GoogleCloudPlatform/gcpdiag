@@ -58,7 +58,7 @@ class CheckLogsExist(runbook.Step):
     if not (self.cluster_name and self.cluster_uuid):
       job = dataproc.get_job_by_jobid(op.get(flags.PROJECT_ID),
                                       op.get(flags.REGION),
-                                      op.get(flags.JOB_ID))
+                                      op.get(flags.DATAPROC_JOB_ID))
 
       cluster_name = job.cluster_name
       cluster_uuid = job.cluster_uuid

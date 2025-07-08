@@ -10,18 +10,6 @@ The job `{job_id}` does not exist in project `{project_id}`.
 Verify that the job ID and region are correct.
 {% endblock job_id_exists_failure_remediation %}
 
-{% block cluster_exists_success_reason %}
-The cluster `{cluster_name}` exists in project `{project_id}`.
-{% endblock cluster_exists_success_reason %}
-
-{% block cluster_exists_failure_reason %}
-The cluster `{cluster_name}` does not exist in project `{project_id}`.
-{% endblock cluster_exists_failure_reason %}
-
-{% block cluster_exists_failure_remediation %}
-Verify that the cluster has not been deleted.
-{% endblock cluster_exists_failure_remediation %}
-
 {% block job_failed_success_reason %}
 Job `{job_id}` failed. Continue with the next steps to investigate the failure.
 {% endblock job_failed_success_reason %}
