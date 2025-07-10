@@ -834,7 +834,7 @@ def get_instance_groups(context: models.Context) -> Mapping[str, InstanceGroup]:
         continue
       for group in data_['instanceGroups']:
         result = re.match(
-            r'https://www.googleapis.com/compute/v1/projects/[^/]+/zones/([^/]+)',
+            r'https://www.googleapis.com/compute/v1/projects/[^/]+/(zones|regions)/([^/]+)',
             group['selfLink'],
         )
         if not result:
@@ -844,11 +844,11 @@ def get_instance_groups(context: models.Context) -> Mapping[str, InstanceGroup]:
               group['selfLink'],
           )
           continue
-        zone = result.group(1)
+        location = result.group(2)
         labels = group.get('labels', {})
         resource = group.get('name', '')
         if not context.match_project_resource(
-            location=zone, labels=labels, resource=resource):
+            location=location, labels=labels, resource=resource):
           continue
         instance_group = InstanceGroup(context.project_id, resource_data=group)
         groups[instance_group.full_path] = instance_group
@@ -1396,6 +1396,18 @@ class HealthCheck(models.Resource):
   @property
   def timeout_sec(self) -> int:
     return self._resource_data.get('timeoutSec', 5)
+
+  @property
+  def check_interval_sec(self) -> int:
+    return self._resource_data.get('checkIntervalSec', 5)
+
+  @property
+  def unhealthy_threshold(self) -> int:
+    return self._resource_data.get('unhealthyThreshold', 2)
+
+  @property
+  def healthy_threshold(self) -> int:
+    return self._resource_data.get('healthyThreshold', 2)
 
   def get_health_check_property(self, property_name: str, default_value=None):
     health_check_types = {

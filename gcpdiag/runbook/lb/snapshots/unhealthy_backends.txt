@@ -48,6 +48,17 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 
      Group https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/zones/us-east1-b/instanceGroups/lb-backend-example has 2/2 unhealthy backends
 
+     The backend service web-backend-service uses the following health check: http-basic-check.
+
+     The health check is using HTTP protocol, and it is set to: 
+     - send a prober requests to the / path on port 80 
+     - expect a response with an HTTP 200 (OK) status code
+
+     The health check is configured with the following timing and threshold settings:
+     - **Check Interval:** A health check is performed every 5 seconds.
+     - **Timeout:** The prober will wait up to 5 seconds for a response.
+     - **Healthy Threshold:** It takes 2 consecutive successes for a backend to be considered healthy.
+     - **Unhealthy Threshold:** It takes 2 consecutive failures for a backend to be considered unhealthy.
 
 [GATEWAY]: Verify health check logging enabled for backend service "web-backend-service" in scope "global".
 
@@ -78,7 +89,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 
      1. Make sure that the backend service timeout (current value: 30s) and health check timeout (current value: 5s) are appropriately configured to accommodate the application's expected response time.
 
-     2. Investigate the application's configuration to ensure it is correctly handling health check probe requests. Your health check is using HTTP protocol, and it is set to: 
+     2. Investigate the application's configuration to ensure it is correctly handling health check probe requests. The health check is using HTTP protocol, and it is set to: 
      - send a prober requests to the / path on port 80 
      - expect a response with an HTTP 200 (OK) status code
 
@@ -274,6 +285,17 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 
      Group https://www.googleapis.com/compute/v1/projects/gcpdiag-lb2-aaaa/zones/europe-west4-b/networkEndpointGroups/neg1 has 1/1 unhealthy backends
 
+     The backend service backend-service-2 uses the following health check: tcp-basic-check-2.
+
+     The health check is using TCP protocol, and it is set to: 
+     - send a prober requests on port 80
+     - expect a successful TCP handshake
+
+     The health check is configured with the following timing and threshold settings:
+     - **Check Interval:** A health check is performed every 5 seconds.
+     - **Timeout:** The prober will wait up to 5 seconds for a response.
+     - **Healthy Threshold:** It takes 2 consecutive successes for a backend to be considered healthy.
+     - **Unhealthy Threshold:** It takes 2 consecutive failures for a backend to be considered unhealthy.
 
 [GATEWAY]: Verify health check logging enabled for backend service "backend-service-2" in scope "europe-west4".
 
@@ -304,7 +326,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 
      1. Make sure that the backend service timeout (current value: 30s) and health check timeout (current value: 5s) are appropriately configured to accommodate the application's expected response time.
 
-     2. Investigate the application's configuration to ensure it is correctly handling health check probe requests. Your health check is using TCP protocol, and it is set to: 
+     2. Investigate the application's configuration to ensure it is correctly handling health check probe requests. The health check is using TCP protocol, and it is set to: 
      - send a prober requests on port 80
      - expect a successful TCP handshake
 

@@ -206,6 +206,11 @@ class UnhealthyBackendsStart(runbook.StartStep):
     }
 
     if unhealthy_backends:
+      health_check = gce.get_health_check(
+          self.project_id,
+          backend_service.health_check,
+          backend_service.region,
+      )
       detailed_reason = ''
       for group, backends_in_group in backend_health_statuses_per_group.items():
         unhealthy_count = sum(
@@ -220,6 +225,9 @@ class UnhealthyBackendsStart(runbook.StartStep):
               name=self.backend_service_name,
               region=self.region,
               detailed_reason=detailed_reason,
+              hc_name=health_check.name,
+              success_criteria=get_health_check_success_criteria(health_check),
+              timing_and_threshold=_get_timing_and_threshold_info(health_check),
           ),
           remediation='',
       )
@@ -991,7 +999,7 @@ def get_health_check_success_criteria(health_check: gce.HealthCheck):
   """Constructs a human-readable description of a health check's success criteria."""
 
   success_criteria = (
-      f'Your health check is using {health_check.type} protocol, and ')
+      f'The health check is using {health_check.type} protocol, and ')
 
   port = ('serving port' if health_check.port_specification
           == 'USE_SERVING_PORT' else f'port {health_check.port}')
@@ -1025,6 +1033,23 @@ def get_health_check_success_criteria(health_check: gce.HealthCheck):
     raise ValueError(f'Unsupported health check type: {health_check.type}')
 
   return success_criteria
+
+
+def _get_timing_and_threshold_info(health_check: gce.HealthCheck) -> str:
+  """Constructs a human-readable description of a health check's timing and threshold settings."""
+
+  timing_and_threshold = (
+      f'The health check is configured with the following timing and threshold'
+      f' settings:\n- **Check Interval:** A health check is performed every'
+      f' {health_check.check_interval_sec} seconds.\n- **Timeout:** The prober'
+      f' will wait up to {health_check.timeout_sec} seconds for a'
+      f' response.\n- **Healthy Threshold:** It takes'
+      f' {health_check.healthy_threshold} consecutive successes for a backend to'
+      f' be considered healthy.\n- **Unhealthy Threshold:** It takes'
+      f' {health_check.unhealthy_threshold} consecutive failures for a backend'
+      f' to be considered unhealthy.')
+
+  return timing_and_threshold
 
 
 def _get_zonal_network_endpoint_group(

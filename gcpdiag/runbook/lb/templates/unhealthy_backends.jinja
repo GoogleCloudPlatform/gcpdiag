@@ -6,6 +6,11 @@ All backends are healthy in backend service {name} in scope {region}.
 The backend service {name} in the {region} scope has unhealthy backends.
 
 {detailed_reason}
+The backend service {name} uses the following health check: {hc_name}.
+
+{success_criteria}
+
+{timing_and_threshold}
 {% endblock confirmation_failure_reason %}
 
 {% block logging_enabled_success_reason %}

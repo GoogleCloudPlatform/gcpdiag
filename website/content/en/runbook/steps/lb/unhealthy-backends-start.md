@@ -19,6 +19,11 @@ None
 The backend service {name} in the {region} scope has unhealthy backends.
 
 {detailed_reason}
+The backend service {name} uses the following health check: {hc_name}.
+
+{success_criteria}
+
+{timing_and_threshold}
 
 ### Success Reason
 
