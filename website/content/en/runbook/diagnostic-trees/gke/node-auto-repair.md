@@ -25,6 +25,7 @@ This runbook checks if:
 gcpdiag runbook gke/node-auto-repair \
   -p project_id=value \
   -p name=value \
+  -p gke_cluster_name=value \
   -p node=value \
   -p location=value
 ```
@@ -35,6 +36,7 @@ gcpdiag runbook gke/node-auto-repair \
 |------|----------|---------|------|------|
 | `project_id` | True | None | str | The ID of the project hosting the GKE Cluster |
 | `name` | False | None | str | The name of the GKE cluster, to limit search only for this cluster |
+| `gke_cluster_name` | False | None | str | The name of the GKE cluster, to limit search only for this cluster |
 | `node` | True | None | str | The node name with issues. |
 | `location` | False | None | str | The zone or region of the GKE cluster |
 

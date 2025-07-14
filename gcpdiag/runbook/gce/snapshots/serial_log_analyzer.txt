@@ -1,4 +1,4 @@
-name=faulty-linux-ssh,project_id=gcpdiag-gce-vm-performance,zone=europe-west2-a
+instance_name=faulty-linux-ssh,project_id=gcpdiag-gce-vm-performance,zone=europe-west2-a
 
 gce/serial-log-analyzer:  Google Compute Engine VM Serial log analyzer
 

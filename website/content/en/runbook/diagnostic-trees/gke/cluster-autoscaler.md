@@ -42,6 +42,7 @@ If there are log entries that contain messages listed in the public documentatio
 gcpdiag runbook gke/cluster-autoscaler \
   -p project_id=value \
   -p name=value \
+  -p gke_cluster_name=value \
   -p location=value
 ```
 
@@ -50,7 +51,8 @@ gcpdiag runbook gke/cluster-autoscaler \
 | Name | Required | Default | Type | Help |
 |------|----------|---------|------|------|
 | `project_id` | True | None | str | The ID of the project hosting the GKE Cluster |
-| `name` | True | None | str | The name of the GKE cluster, to limit search only for this cluster |
+| `name` | False | None | str | The name of the GKE cluster, to limit search only for this cluster |
+| `gke_cluster_name` | True | None | str | The name of the GKE cluster, to limit search only for this cluster |
 | `location` | True | None | str | The zone or region of the GKE cluster |
 
 Get help on available commands

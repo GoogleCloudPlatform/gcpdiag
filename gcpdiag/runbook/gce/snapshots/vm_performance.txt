@@ -1,4 +1,4 @@
-name=faulty-linux-ssh,project_id=gcpdiag-gce-vm-performance,zone=europe-west2-a
+instance_name=faulty-linux-ssh,project_id=gcpdiag-gce-vm-performance,zone=europe-west2-a
 
 gce/vm-performance:  Google Compute Engine VM performance checks
 
@@ -303,7 +303,7 @@ Live Migration Detected at 2021/11/24 16:35:22, Checking further
 [END]: Finalize VM performance diagnostics.
 
 
-name=faulty-windows-ssh,project_id=gcpdiag-gce-vm-performance,zone=europe-west2-a
+instance_name=faulty-windows-ssh,project_id=gcpdiag-gce-vm-performance,zone=europe-west2-a
 
 gce/vm-performance:  Google Compute Engine VM performance checks
 

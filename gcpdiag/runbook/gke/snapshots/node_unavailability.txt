@@ -1,9 +1,10 @@
-location=europe-west10-a,name=gcp-cluster,node=gke-gcp-cluster-default-
+gke_cluster_name=gcp-cluster,location=europe-west10-a,node=gke-gcp-cluster-default-
 pool-82e0c046-8m8b,project_id=gcpdiag-gke-cluster-autoscaler-rrrr
 
 gke/node-unavailability: Identifies the reasons for a GKE node being unavailable.
 
-  This runbook investigates various factors that may have caused a node to become unavailable,
+  This runbook investigates various factors that may have caused a node to
+  become unavailable,
   including:
 
   - Live Migration

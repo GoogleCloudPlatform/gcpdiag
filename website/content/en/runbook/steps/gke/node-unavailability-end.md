@@ -12,10 +12,12 @@ description: >
 
 ### Description
 
-This step prompts the user to confirm satisfaction with the Root Cause Analysis (RCA)
+This step prompts the user to confirm satisfaction with the Root Cause
+  Analysis (RCA)
   performed for `Node Unavailability`.
 
-  Depending on the user's response, it may conclude the runbook execution or trigger additional
+  Depending on the user's response, it may conclude the runbook execution or
+  trigger additional
   steps, such as generating a report of the findings.
 
 

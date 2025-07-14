@@ -68,6 +68,13 @@ class VmExternalIpConnectivity(runbook.DiagnosticTree):
           'type': str,
           'help': 'The name of the GCE Instance',
           'group': 'instance',
+          'deprecated': True,
+          'new_parameter': 'instance_name'
+      },
+      flags.INSTANCE_NAME: {
+          'type': str,
+          'help': 'The name of the GCE Instance',
+          'group': 'instance',
           'required': True
       },
       flags.DEST_IP: {
@@ -96,6 +103,10 @@ class VmExternalIpConnectivity(runbook.DiagnosticTree):
           'required': True
       }
   }
+
+  def legacy_parameter_handler(self, parameters):
+    if flags.NAME in parameters:
+      parameters[flags.INSTANCE_NAME] = parameters.pop(flags.NAME)
 
   def build_tree(self):
     """Construct the diagnostic tree with appropriate steps."""
@@ -126,12 +137,13 @@ class VmExternalIpConnectivityStart(runbook.StartStep):
     try:
       vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                             zone=op.get(flags.ZONE),
-                            instance_name=op.get(flags.NAME))
+                            instance_name=op.get(flags.INSTANCE_NAME))
     except googleapiclient.errors.HttpError:
       op.add_skipped(
           project,
           reason=('Instance {} does not exist in zone {} or project {}').format(
-              op.get(flags.NAME), op.get(flags.ZONE), op.get(flags.PROJECT_ID)))
+              op.get(flags.INSTANCE_NAME), op.get(flags.ZONE),
+              op.get(flags.PROJECT_ID)))
     else:
       if vm:
         # Check for instance id and instance name
@@ -182,7 +194,7 @@ class VmHasExternalIp(runbook.Gateway):
 
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+                          instance_name=op.get(flags.INSTANCE_NAME))
 
     # If this an interface without an external IP address run checks for external interface
     if util.is_external_ip_on_nic(vm.get_network_interfaces,
@@ -214,7 +226,7 @@ class VmExternalIpConnectivityEnd(runbook.EndStep):
                            message="""
           Are you able to connect to external IP from the VM {}:
           after taking the remediation steps outlined.
-          """.format(op.get(flags.NAME)),
+          """.format(op.get(flags.INSTANCE_NAME)),
                            choice_msg='Enter an option: ')
       if response == op.NO:
         op.info(message=op.END_MESSAGE)

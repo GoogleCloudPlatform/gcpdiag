@@ -1,35 +1,32 @@
-location=europe-west4-a,nodepool=gke-gke1-default-pool-671518f6,project_id=gcpdiag-gke1-aaaa
+gke_cluster_name=gke-cluster-name,location=europe-west4-a,nodepool=gke-gke1-default-
+pool-671518f6,project_id=gcpdiag-gke1-aaaa
 
 gke/node-bootstrapping: Analyses issues experienced when adding nodes to your GKE Standard cluster.
 
   This runbook requires at least
-  - location and node parameters. Location here is the zone where the node is running,
+  - location and node parameters. Location here is the zone where the node is
+  running,
   for example us-central1-c.
-  - location, nodepool and cluster name parameters to be provided. Location is zone or region for
-  a nodepool, if the cluster is a regional cluster, then location for a nodepool will be the
+  - location, nodepool and cluster name parameters to be provided. Location is
+  zone or region for
+  a nodepool, if the cluster is a regional cluster, then location for a nodepool
+  will be the
   cluster region. For example a region could be us-central1.
 
-  If a location/node pair is provided, the runbook will check the Node Registration Checker output
+  If a location/node pair is provided, the runbook will check the Node
+  Registration Checker output
   for the given location/node pair.
 
-  If a location, nodepool and GKE cluster name parameters are provided, the runbook will check for
-  any errors that might have occurred when the instances.insert method was invoked for the given
+  If a location, nodepool and GKE cluster name parameters are provided, the
+  runbook will check for
+  any errors that might have occurred when the instances.insert method was
+  invoked for the given
   parameters.
   
 [START]: Check the provided parameters.
-[AUTOMATED STEP]: Check for any errors during instances.insert method for the given location (region or zone) and nodepool pair.
 
    - gcpdiag-gke1-aaaa                                                    [SKIP]
      [REASON]
-     No nodepool or GKE cluster name provided, skipping this step . 
-     Please provide nodepool name (-p nodepool=<nodepoolname>) and GKE cluster name (-p name=<gke-cluster-name>) if you see issues with nodes not appearing in the nodepool.
-[AUTOMATED STEP]: Verify if Node Registration Checker completed running. If the node was successfully registered, provide log entry proving successful registration If the node wasn't registered successfully, provide Node Registration Checker summary to understand why.
-
-   - gcpdiag-gke1-aaaa                                                    [SKIP]
-     [REASON]
-     No node name provided, skipping this step .
-     Please provide node name (-p node=<nodename>) if the node appears in the nodepool, but fails registration.
-
-[END]: Finalize `GKE Node Bootstrapping` diagnostics.
+     No gke-cluster-name GKE cluster found in project gcpdiag-gke1-aaaa
 
 

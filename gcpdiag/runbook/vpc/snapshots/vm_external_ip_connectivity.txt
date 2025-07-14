@@ -1,4 +1,4 @@
-dest_ip=151.101.3.5,dest_port=443,name=public-linux-valid,project_id=gcpdiag-
+dest_ip=151.101.3.5,dest_port=443,instance_name=public-linux-valid,project_id=gcpdiag-
 vpc2-runbook,src_nic=nic0,zone=us-central1-a
 
 vpc/vm-external-ip-connectivity: Troubleshooting for common issues which affect VM connectivity to external IP addresses.

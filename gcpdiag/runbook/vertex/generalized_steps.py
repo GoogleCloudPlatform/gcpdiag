@@ -282,7 +282,7 @@ class CheckWorkbenchInstancePerformance(runbook.CompositeStep):
     instance_name: str = self.instance_name or op.get(flags.INSTANCE_NAME)
     zone: str = self.zone or op.get(flags.ZONE)
     op.put(gce_flags.PROJECT_ID, project_id)
-    op.put(gce_flags.NAME, instance_name)
+    op.put(gce_flags.INSTANCE_NAME, instance_name)
     op.put(gce_flags.ZONE, zone)
     ops_agent_query = monitoring.query(
         op.get(flags.PROJECT_ID), """
@@ -292,7 +292,7 @@ class CheckWorkbenchInstancePerformance(runbook.CompositeStep):
               | align rate(5m)
               | every 5m
               | {}
-            """.format(op.get(gce_flags.NAME), within_str))
+            """.format(op.get(gce_flags.INSTANCE_NAME), within_str))
     if ops_agent_query:
       op.info(
           'Runbook will use ops agent metrics for VM performance investigation')

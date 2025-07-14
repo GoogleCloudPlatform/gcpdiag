@@ -53,8 +53,18 @@ class IpExhaustion(runbook.DiagnosticTree):
               str,
           'help':
               'The name of the GKE cluster, to limit search only for this cluster',
+          'deprecated':
+              True,
+          'new_parameter':
+              'gke_cluster_name'
+      },
+      flags.GKE_CLUSTER_NAME: {
+          'type':
+              str,
+          'help':
+              'The name of the GKE cluster, to limit search only for this cluster',
           'required':
-              True
+              True,
       },
       flags.LOCATION: {
           'type': str,
@@ -74,6 +84,10 @@ class IpExhaustion(runbook.DiagnosticTree):
               'The end window to investigate the ip exhaustion. Format: YYYY-MM-DDTHH:MM:SSZ'
       }
   }
+
+  def legacy_parameter_handler(self, parameters):
+    if flags.NAME in parameters:
+      parameters[flags.GKE_CLUSTER_NAME] = parameters.pop(flags.NAME)
 
   def build_tree(self):
     """Construct the diagnostic tree with appropriate steps."""
@@ -102,13 +116,13 @@ class IpExhaustionStart(runbook.StartStep):
     project = crm.get_project(op.get(flags.PROJECT_ID))
     try:
       cluster = gke.get_cluster(op.get(flags.PROJECT_ID),
-                                cluster_id=op.get(flags.NAME),
+                                cluster_id=op.get(flags.GKE_CLUSTER_NAME),
                                 location=op.get(flags.LOCATION))
     except GcpApiError:
       op.add_skipped(
           project,
           reason=('Cluster {} does not exist in {} for project {}').format(
-              op.get(flags.NAME), op.get(flags.LOCATION),
+              op.get(flags.GKE_CLUSTER_NAME), op.get(flags.LOCATION),
               op.get(flags.PROJECT_ID)))
     else:
       op.add_ok(project,
@@ -131,10 +145,10 @@ class NodeIpRangeExhaustion(runbook.Step):
     """Checking node IP Exhaustion and offering remediation steps"""
 
     cluster = gke.get_cluster(op.get(flags.PROJECT_ID),
-                              cluster_id=op.get(flags.NAME),
+                              cluster_id=op.get(flags.GKE_CLUSTER_NAME),
                               location=op.get(flags.LOCATION))
     location = op.get(flags.LOCATION)
-    name = op.get(flags.NAME)
+    name = op.get(flags.GKE_CLUSTER_NAME)
     error_msg = 'IP_SPACE_EXHAUSTED'
     node_subnet = cluster.get_subnet_name
     # adding fltr variable, because otherwise the filter string will be longer than 100 chars
@@ -188,11 +202,11 @@ class PodIpRangeExhaustion(runbook.Step):
     """Checking Pod IP Exhaustion and offering remediation steps"""
 
     cluster = gke.get_cluster(op.get(flags.PROJECT_ID),
-                              cluster_id=op.get(flags.NAME),
+                              cluster_id=op.get(flags.GKE_CLUSTER_NAME),
                               location=op.get(flags.LOCATION))
     project = op.get(flags.PROJECT_ID)
     location = op.get(flags.LOCATION)
-    name = op.get(flags.NAME)
+    name = op.get(flags.GKE_CLUSTER_NAME)
     error_msg = 'IP_SPACE_EXHAUSTED'
     node_subnet = cluster.get_subnet_name
     pool_config = cluster.get_nodepool_config
@@ -276,8 +290,9 @@ class IpExhaustionEnd(runbook.EndStep):
     if not config.get(flags.INTERACTIVE_MODE):
       response = op.prompt(
           kind=op.CONFIRMATION,
-          message=
-          f'Are you still experiencing exhaustion issues on the cluster {op.get(flags.NAME)}',
-          choice_msg='Enter an option: ')
+          message=('Are you still experiencing exhaustion issues on the cluster'
+                   f' {op.get(flags.GKE_CLUSTER_NAME)}'),
+          choice_msg='Enter an option: ',
+      )
       if response == op.NO:
         op.info(message=op.END_MESSAGE)

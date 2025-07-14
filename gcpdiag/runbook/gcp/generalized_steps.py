@@ -99,7 +99,7 @@ class ResourceAttributeCheck(runbook.Step):
       status_check.query_kwargs = {
           'project_id': op.get(flags.PROJECT_ID),
           'zone': op.get(flags.ZONE),
-          'instance_name': op.get(flags.NAME)
+          'instance_name': op.get(flags.INSTANCE_NAME)
       }
       status_check.attribute = ('status',)
       status_check.expected_value = 'RUNNING'

@@ -52,6 +52,7 @@ This runbook is designed to assist you in investigating the serial console logs 
 gcpdiag runbook gce/serial-log-analyzer \
   -p project_id=value \
   -p name=value \
+  -p instance_name=value \
   -p id=value \
   -p zone=value \
   -p serial_console_file=value
@@ -62,7 +63,8 @@ gcpdiag runbook gce/serial-log-analyzer \
 | Name | Required | Default | Type | Help |
 |------|----------|---------|------|------|
 | `project_id` | True | None | str | The Project ID associated with the VM for which you want to                 analyse the Serial logs. |
-| `name` | True | None | str | The name of the VM, for which you want to analyse the Serial logs. Or provide the id i.e -p name=<str> |
+| `name` | False | None | str | The name of the VM, for which you want to analyse the Serial logs. Or provide the id i.e -p name=<str> |
+| `instance_name` | True | None | str | The name of the VM, for which you want to analyse the Serial logs. Or provide the id i.e -p name=<str> |
 | `id` | False | None | str | The instance-id of the VM, for which you want to analyse the Serial logs. Or provide the id i.e -p id=<int> |
 | `zone` | True | None | str | The Google Cloud zone where the VM is located. |
 | `serial_console_file` | False | None | str | Absolute path of files contailing the Serial console logs, in case if gcpdiag is not able to reach the VM Serial logs. i.e -p serial_console_file="filepath1,filepath2"  |

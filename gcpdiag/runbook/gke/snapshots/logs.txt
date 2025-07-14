@@ -1,4 +1,5 @@
-location=europe-west10,name=gcp-cluster,project_id=gcpdiag-gke-cluster-autoscaler-rrrr
+gke_cluster_name=gcp-cluster,location=europe-west10,name=gcp-cluster,project_id=gcpdiag-gke-cluster-
+autoscaler-rrrr
 
 gke/logs: Provides a methodical approach to troubleshooting GKE logging issues.
 

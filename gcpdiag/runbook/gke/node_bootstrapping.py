@@ -102,76 +102,91 @@ class NodeBootstrapping(runbook.DiagnosticTree):
   """Analyses issues experienced when adding nodes to your GKE Standard cluster.
 
   This runbook requires at least
-  - location and node parameters. Location here is the zone where the node is running,
+  - location and node parameters. Location here is the zone where the node is
+  running,
   for example us-central1-c.
-  - location, nodepool and cluster name parameters to be provided. Location is zone or region for
-  a nodepool, if the cluster is a regional cluster, then location for a nodepool will be the
+  - location, nodepool and cluster name parameters to be provided. Location is
+  zone or region for
+  a nodepool, if the cluster is a regional cluster, then location for a nodepool
+  will be the
   cluster region. For example a region could be us-central1.
 
-  If a location/node pair is provided, the runbook will check the Node Registration Checker output
+  If a location/node pair is provided, the runbook will check the Node
+  Registration Checker output
   for the given location/node pair.
 
-  If a location, nodepool and GKE cluster name parameters are provided, the runbook will check for
-  any errors that might have occurred when the instances.insert method was invoked for the given
+  If a location, nodepool and GKE cluster name parameters are provided, the
+  runbook will check for
+  any errors that might have occurred when the instances.insert method was
+  invoked for the given
   parameters.
   """
+
   # Specify parameters common to all steps in the diagnostic tree class.
   parameters = {
       flags.PROJECT_ID: {
           'type': str,
           'help': 'The ID of the project hosting the GKE Cluster',
-          'required': True
+          'required': True,
       },
       flags.LOCATION: {
-          'type':
-              str,
-          'help':
-              'The location where the node or nodepool is. For a node, location will be the zone \
-where the node is running (i.e. us-central1-c). For a nodepool, this can be the zone or the \
-region (i.e. us-central1) where the nodepool is configured',
-          'required':
-              True
+          'type': str,
+          'help': (
+              'The location where the node or nodepool is. For a node, location'
+              ' will be the zone where the node is running (i.e.'
+              ' us-central1-c). For a nodepool, this can be the zone or the'
+              ' region (i.e. us-central1) where the nodepool is configured'),
+          'required': True,
       },
       flags.NODE: {
-          'type':
-              str,
+          'type': str,
           'help':
-              'The node name that is failing to register (if available). If node name is not \
-available, please provide the nodepool name where nodes aren\'t registering',
-          'required':
-              False
+              ('The node name that is failing to register (if available). If'
+               ' node name is not available, please provide the nodepool name'
+               " where nodes aren't registering"),
+          'required': False,
       },
       flags.NODEPOOL: {
-          'type':
-              str,
-          'help':
-              'The nodepool name where nodes aren\'t registering, if a node name is not \
-availalbe',
-          'required':
-              False
+          'type': str,
+          'help': (
+              "The nodepool name where nodes aren't registering, if a node name"
+              ' is not available'),
+          'required': False,
       },
       flags.NAME: {
-          'type':
-              str,
+          'type': str,
           'help':
-              'The GKE cluster name. When providing nodepool name, please provide the GKE cluster \
-name as well to be able to properly filter events in the logging query.',
-          'required':
-              False
+              ('The GKE cluster name. When providing nodepool name, please'
+               ' provide the GKE cluster name as well to be able to properly'
+               ' filter events in the logging query.'),
+          'deprecated': True,
+          'new_parameter': 'gke_cluster_name',
+      },
+      flags.GKE_CLUSTER_NAME: {
+          'type': str,
+          'help':
+              ('The GKE cluster name. When providing nodepool name, please'
+               ' provide the GKE cluster name as well to be able to properly'
+               ' filter events in the logging query.'),
+          'required': False,
       },
       flags.START_TIME: {
           'type':
               datetime,
-          'help':
-              'The start window to investigate vm termination. Format: YYYY-MM-DDTHH:MM:SSZ'
+          'help': ('The start window to investigate vm termination. Format:'
+                   ' YYYY-MM-DDTHH:MM:SSZ'),
       },
       flags.END_TIME: {
           'type':
               datetime,
-          'help':
-              'The end window for the investigation. Format: YYYY-MM-DDTHH:MM:SSZ'
-      }
+          'help': ('The end window for the investigation. Format:'
+                   ' YYYY-MM-DDTHH:MM:SSZ'),
+      },
   }
+
+  def legacy_parameter_handler(self, parameters):
+    if flags.NAME in parameters:
+      parameters[flags.GKE_CLUSTER_NAME] = parameters.pop(flags.NAME)
 
   def build_tree(self):
     start = NodeBootstrappingStart()
@@ -202,7 +217,7 @@ class NodeBootstrappingStart(runbook.StartStep):
     project = op.get(flags.PROJECT_ID)
     location = op.get(flags.LOCATION)
     node = op.get(flags.NODE)
-    name = op.get(flags.NAME)
+    name = op.get(flags.GKE_CLUSTER_NAME)
     project_path = crm.get_project(project)
     start_time = op.get(flags.START_TIME)
     end_time = op.get(flags.END_TIME)
@@ -283,7 +298,7 @@ class NodeInsertCheck(runbook.Step):
     location = op.get(flags.LOCATION)
     nodepool = op.get(flags.NODEPOOL)
     node = op.get(flags.NODE)
-    name = op.get(flags.NAME)
+    name = op.get(flags.GKE_CLUSTER_NAME)
     project_path = crm.get_project(project)
     start_time = op.get(flags.START_TIME)
     end_time = op.get(flags.END_TIME)

@@ -1,4 +1,4 @@
-name=gcf1,project_id=gcpdiag-gcf1-aaaa,region=us-central1
+cloud_function_name=gcf1,project_id=gcpdiag-gcf1-aaaa,region=us-central1-a
 
 gcf/failed-deployments:  Cloud Run function failed deployments check
 

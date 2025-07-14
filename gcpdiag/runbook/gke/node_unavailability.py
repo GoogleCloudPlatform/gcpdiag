@@ -23,17 +23,20 @@ LOG_PREEMPTED = LOG_DELETED = LOG_MIGRATED = None
 
 
 def local_realtime_query(filter_str):
-  result = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
-                               start_time=op.get(flags.START_TIME),
-                               end_time=op.get(flags.END_TIME),
-                               filter_str=filter_str)
+  result = logs.realtime_query(
+      project_id=op.get(flags.PROJECT_ID),
+      start_time=op.get(flags.START_TIME),
+      end_time=op.get(flags.END_TIME),
+      filter_str=filter_str,
+  )
   return result
 
 
 class NodeUnavailability(runbook.DiagnosticTree):
   """Identifies the reasons for a GKE node being unavailable.
 
-  This runbook investigates various factors that may have caused a node to become unavailable,
+  This runbook investigates various factors that may have caused a node to
+  become unavailable,
   including:
 
   - Live Migration
@@ -41,31 +44,42 @@ class NodeUnavailability(runbook.DiagnosticTree):
   - Removal by the Cluster Autoscaler
   - Node Pool Upgrade
   """
+
   parameters = {
       flags.PROJECT_ID: {
           'type': str,
           'help': 'The ID of the project hosting the GKE Cluster',
-          'required': True
+          'required': True,
       },
       flags.NAME: {
-          'type':
-              str,
-          'help':
-              'The name of the GKE cluster, to limit search only for this cluster',
-          'required':
-              False
+          'type': str,
+          'help': ('The name of the GKE cluster, to limit search only for this'
+                   ' cluster'),
+          'required': False,
+          'deprecated': True,
+          'new_parameter': 'gke_cluster_name',
+      },
+      flags.GKE_CLUSTER_NAME: {
+          'type': str,
+          'help': ('The name of the GKE cluster, to limit search only for this'
+                   ' cluster'),
+          'required': False,
       },
       flags.NODE: {
           'type': str,
           'help': 'The node name that was started.',
-          'required': True
+          'required': True,
       },
       flags.LOCATION: {
           'type': str,
           'help': 'The zone or region of the GKE cluster',
-          'required': False
-      }
+          'required': False,
+      },
   }
+
+  def legacy_parameter_handler(self, parameters):
+    if flags.NAME in parameters:
+      parameters[flags.GKE_CLUSTER_NAME] = parameters.pop(flags.NAME)
 
   def build_tree(self):
     """Construct the diagnostic tree with appropriate steps."""
@@ -91,7 +105,7 @@ class NodeUnavailabilityStart(runbook.StartStep):
     project = op.get(flags.PROJECT_ID)
     location = op.get(flags.LOCATION)
     node = op.get(flags.NODE)
-    name = op.get(flags.NAME)
+    name = op.get(flags.GKE_CLUSTER_NAME)
     project_path = crm.get_project(project)
     start_time = op.get(flags.START_TIME)
     end_time = op.get(flags.END_TIME)
@@ -130,14 +144,15 @@ class NodeUnavailabilityStart(runbook.StartStep):
         'resource.type="gce_instance"',
         'protoPayload.methodName="v1.compute.instances.delete"',
         'log_id("cloudaudit.googleapis.com/activity")',
-        f'protoPayload.resourceName:"{node}"'
+        f'protoPayload.resourceName:"{node}"',
     ]
 
     filter_str = '\n'.join(filter_str)
     LOG_DELETED = local_realtime_query(filter_str)
 
     if not (LOG_PREEMPTED or LOG_MIGRATED or LOG_DELETED):
-      reason = f'There are no log entries that would show node {node} being unavailable'
+      reason = (f'There are no log entries that would show node {node} being'
+                ' unavailable')
       if name:
         reason += f' in cluster {name}'
       if location:
@@ -195,7 +210,7 @@ class NodeRemovedByAutoscaler(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     location = op.get(flags.LOCATION)
     node = op.get(flags.NODE)
-    name = op.get(flags.NAME)
+    name = op.get(flags.GKE_CLUSTER_NAME)
     project_path = crm.get_project(project)
 
     filter_str = [
@@ -229,7 +244,7 @@ class NodePoolUpgrade(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     location = op.get(flags.LOCATION)
     node = op.get(flags.NODE)
-    name = op.get(flags.NAME)
+    name = op.get(flags.GKE_CLUSTER_NAME)
     project_path = crm.get_project(project)
 
     filter_str = [
@@ -258,10 +273,12 @@ class NodePoolUpgrade(runbook.Step):
 class NodeUnavailabilityEnd(runbook.EndStep):
   """Finalizes the diagnostics process for `Node Unavailability`.
 
-  This step prompts the user to confirm satisfaction with the Root Cause Analysis (RCA)
+  This step prompts the user to confirm satisfaction with the Root Cause
+  Analysis (RCA)
   performed for `Node Unavailability`.
 
-  Depending on the user's response, it may conclude the runbook execution or trigger additional
+  Depending on the user's response, it may conclude the runbook execution or
+  trigger additional
   steps, such as generating a report of the findings.
   """
 
@@ -269,10 +286,11 @@ class NodeUnavailabilityEnd(runbook.EndStep):
     """Finalize `Node Unavailability` diagnostics."""
     response = op.prompt(
         kind=op.CONFIRMATION,
-        message=
-        'Are you satisfied with the `GKE Node Unavailability` RCA performed?')
+        message=('Are you satisfied with the `GKE Node Unavailability` RCA'
+                 ' performed?'),
+    )
     if response == op.NO:
       op.info(message=(
-          'If no cause for the node\'s unavailability is found, you could try the node-auto-repair'
-          ' runbook, which would cover node unavailability due to node repair events.'
-      ))
+          "If no cause for the node's unavailability is found, you could"
+          ' try the node-auto-repair runbook, which would cover node'
+          ' unavailability due to node repair events.'))

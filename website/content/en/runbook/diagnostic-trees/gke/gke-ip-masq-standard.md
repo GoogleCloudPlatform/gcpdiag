@@ -29,6 +29,7 @@ gcpdiag runbook gke/gke-ip-masq-standard \
   -p dest_ip=value \
   -p pod_ip=value \
   -p name=value \
+  -p gke_cluster_name=value \
   -p location=value \
   -p node_ip=value \
   -p start_time=value \
@@ -44,6 +45,7 @@ gcpdiag runbook gke/gke-ip-masq-standard \
 | `dest_ip` | True | None | IPv4Address | The Destination IP is where the request is sending (Example : 8.8.8.8) |
 | `pod_ip` | False | None | str | GKE Pod IP address or pod address range(Example 192.168.1.0/24) |
 | `name` | False | None | str | The name of the GKE cluster, to limit search only for this cluster |
+| `gke_cluster_name` | False | None | str | The name of the GKE cluster, to limit search only for this cluster |
 | `location` | False | None | str | The zone or region of the GKE cluster |
 | `node_ip` | False | None | str | GKE Node IP address or address range/CIDR (Example 192.168.1.0/24) |
 | `start_time` | False | None | datetime | Start time of the issue |

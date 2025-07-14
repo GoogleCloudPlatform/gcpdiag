@@ -90,6 +90,16 @@ class ClusterAutoscaler(runbook.DiagnosticTree):
               str,
           'help':
               'The name of the GKE cluster, to limit search only for this cluster',
+          'deprecated':
+              True,
+          'new_parameter':
+              'gke_cluster_name',
+      },
+      flags.GKE_CLUSTER_NAME: {
+          'type':
+              str,
+          'help':
+              'The name of the GKE cluster, to limit search only for this cluster',
           'required':
               True
       },
@@ -99,6 +109,10 @@ class ClusterAutoscaler(runbook.DiagnosticTree):
           'required': True
       }
   }
+
+  def legacy_parameter_handler(self, parameters):
+    if flags.NAME in parameters:
+      parameters[flags.GKE_CLUSTER_NAME] = parameters.pop(flags.NAME)
 
   def build_tree(self):
     start = ClusterAutoscalerStart()
@@ -168,13 +182,13 @@ class ClusterAutoscalerStart(runbook.StartStep):
     project = crm.get_project(op.get(flags.PROJECT_ID))
     try:
       cluster = gke.get_cluster(op.get(flags.PROJECT_ID),
-                                cluster_id=op.get(flags.NAME),
+                                cluster_id=op.get(flags.GKE_CLUSTER_NAME),
                                 location=op.get(flags.LOCATION))
     except GcpApiError:
       op.add_skipped(
           project,
           reason=('Cluster {} does not exist in {} for project {}').format(
-              op.get(flags.NAME), op.get(flags.LOCATION),
+              op.get(flags.GKE_CLUSTER_NAME), op.get(flags.LOCATION),
               op.get(flags.PROJECT_ID)))
     else:
       op.add_ok(project,
@@ -194,7 +208,7 @@ class CaOutOfResources(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
-    cluster_name = op.get(flags.NAME)
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = ('jsonPayload.resultInfo.results.errorMsg.messageId='
                      '"scale.up.error.out.of.resources"')
 
@@ -227,7 +241,7 @@ class CaQuotaExceeded(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
-    cluster_name = op.get(flags.NAME)
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = ('jsonPayload.resultInfo.results.errorMsg.messageId='
                      '"scale.up.error.quota.exceeded"')
 
@@ -260,7 +274,7 @@ class CaInstanceTimeout(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
-    cluster_name = op.get(flags.NAME)
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = ('jsonPayload.resultInfo.results.errorMsg.messageId='
                      '"scale.up.error.waiting.for.instances.timeout"')
 
@@ -293,7 +307,7 @@ class CaIpSpaceExhausted(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
-    cluster_name = op.get(flags.NAME)
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = ('jsonPayload.resultInfo.results.errorMsg.messageId='
                      '"scale.up.error.ip.space.exhausted"')
 
@@ -326,7 +340,7 @@ class CaServiceAccountDeleted(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
-    cluster_name = op.get(flags.NAME)
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = ('jsonPayload.resultInfo.results.errorMsg.messageId='
                      '"scale.up.error.service.account.deleted"')
 
@@ -359,7 +373,7 @@ class CaMinSizeReached(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
-    cluster_name = op.get(flags.NAME)
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = (
         'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
         '"no.scale.down.node.node.group.min.size.reached"')
@@ -392,7 +406,7 @@ class CaFailedToEvictPods(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
-    cluster_name = op.get(flags.NAME)
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = ('jsonPayload.resultInfo.results.errorMsg.messageId='
                      '"scale.down.error.failed.to.evict.pods"')
 
@@ -425,7 +439,7 @@ class CaDisabledAnnotation(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
-    cluster_name = op.get(flags.NAME)
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = (
         'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
         '"no.scale.down.node.scale.down.disabled.annotation"')
@@ -459,7 +473,7 @@ class CaMinResourceLimitExceeded(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
-    cluster_name = op.get(flags.NAME)
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = (
         'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
         '"no.scale.down.node.minimal.resource.limits.exceeded"')
@@ -493,7 +507,7 @@ class CaNoPlaceToMovePods(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
-    cluster_name = op.get(flags.NAME)
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = (
         'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
         '"no.scale.down.node.no.place.to.move.pods"')
@@ -527,7 +541,7 @@ class CaPodsNotBackedByController(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
-    cluster_name = op.get(flags.NAME)
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = (
         'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
         '"no.scale.down.node.pod.not.backed.by.controller"')
@@ -561,7 +575,7 @@ class CaNotSafeToEvictAnnotation(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
-    cluster_name = op.get(flags.NAME)
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = (
         'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
         '"no.scale.down.node.pod.not.safe.to.evict.annotation"')
@@ -595,7 +609,7 @@ class CaPodKubeSystemUnmovable(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
-    cluster_name = op.get(flags.NAME)
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = (
         'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
         '"no.scale.down.node.pod.kube.system.unmovable"')
@@ -629,7 +643,7 @@ class CaPodNotEnoughPdb(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
-    cluster_name = op.get(flags.NAME)
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = (
         'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
         '"no.scale.down.node.pod.not.enough.pdb"')
@@ -663,7 +677,7 @@ class CaPodControllerNotFound(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
-    cluster_name = op.get(flags.NAME)
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = (
         'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
         '"no.scale.down.node.pod.controller.not.found"')
@@ -697,7 +711,7 @@ class CaPodUnexpectedError(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
-    cluster_name = op.get(flags.NAME)
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     error_message = (
         'jsonPayload.noDecisionStatus.noScaleDown.nodes.reason.messageId='
         '"no.scale.down.node.pod.unexpected.error"')

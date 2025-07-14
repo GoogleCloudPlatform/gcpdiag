@@ -25,6 +25,6 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
 
   rule_parameters = [{
       'project_id': 'gcpdiag-gcf1-aaaa',
-      'name': 'gcf1',
-      'region': 'us-central1'
+      'cloud_function_name': 'gcf1',
+      'region': 'us-central1-a'
   }]

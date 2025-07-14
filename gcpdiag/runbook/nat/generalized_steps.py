@@ -33,7 +33,7 @@ class NatIpExhaustionCheck(runbook.Step):
 
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+                          instance_name=op.get(flags.INSTANCE_NAME))
 
     region = utils.region_from_zone(op.get(flags.ZONE))
 
@@ -82,7 +82,7 @@ class NatResourceExhaustionCheck(runbook.Step):
 
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+                          instance_name=op.get(flags.INSTANCE_NAME))
 
     region = utils.region_from_zone(op.get(flags.ZONE))
 
@@ -138,7 +138,7 @@ class NatDroppedReceivedPacketCheck(runbook.Step):
 
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+                          instance_name=op.get(flags.INSTANCE_NAME))
 
     region = utils.region_from_zone(op.get(flags.ZONE))
 

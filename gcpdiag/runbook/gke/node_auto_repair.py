@@ -129,6 +129,18 @@ class NodeAutoRepair(runbook.DiagnosticTree):
           'help':
               'The name of the GKE cluster, to limit search only for this cluster',
           'required':
+              False,
+          'deprecated':
+              True,
+          'new_parameter':
+              'gke_cluster_name'
+      },
+      flags.GKE_CLUSTER_NAME: {
+          'type':
+              str,
+          'help':
+              'The name of the GKE cluster, to limit search only for this cluster',
+          'required':
               False
       },
       flags.NODE: {
@@ -142,6 +154,10 @@ class NodeAutoRepair(runbook.DiagnosticTree):
           'required': False
       }
   }
+
+  def legacy_parameter_handler(self, parameters):
+    if flags.NAME in parameters:
+      parameters[flags.NAME] = parameters.pop(flags.GKE_CLUSTER_NAME)
 
   def build_tree(self):
     """Construct the diagnostic tree with appropriate steps."""
@@ -167,7 +183,7 @@ class NodeAutoRepairStart(runbook.StartStep):
     project = op.get(flags.PROJECT_ID)
     location = op.get(flags.LOCATION)
     node = op.get(flags.NODE)
-    name = op.get(flags.NAME)
+    name = op.get(flags.GKE_CLUSTER_NAME)
     project_path = crm.get_project(project)
     start_time = op.get(flags.START_TIME)
     end_time = op.get(flags.END_TIME)
@@ -226,7 +242,7 @@ class NodeNotReady(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     location = op.get(flags.LOCATION)
     node = op.get(flags.NODE)
-    name = op.get(flags.NAME)
+    name = op.get(flags.GKE_CLUSTER_NAME)
     project_path = crm.get_project(project)
 
     if check_node_unhealthy(node,
@@ -250,7 +266,7 @@ class NodeDiskFull(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     location = op.get(flags.LOCATION)
     node = op.get(flags.NODE)
-    name = op.get(flags.NAME)
+    name = op.get(flags.GKE_CLUSTER_NAME)
     project_path = crm.get_project(project)
 
     if check_node_unhealthy(node,
@@ -274,7 +290,7 @@ class UnallocatableGpu(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     location = op.get(flags.LOCATION)
     node = op.get(flags.NODE)
-    name = op.get(flags.NAME)
+    name = op.get(flags.GKE_CLUSTER_NAME)
     project_path = crm.get_project(project)
 
     if unallocatable_gpu_tpu(node, location, name, tpu=False, gpu=True):
@@ -295,7 +311,7 @@ class UnallocatableTpu(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     location = op.get(flags.LOCATION)
     node = op.get(flags.NODE)
-    name = op.get(flags.NAME)
+    name = op.get(flags.GKE_CLUSTER_NAME)
     project_path = crm.get_project(project)
 
     if unallocatable_gpu_tpu(node, location, name, tpu=True, gpu=False):

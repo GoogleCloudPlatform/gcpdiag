@@ -38,38 +38,43 @@ class ResourceQuotas(runbook.DiagnosticTree):
       flags.PROJECT_ID: {
           'type': str,
           'help': 'The Project ID of the resource under investigation',
-          'required': True
+          'required': True,
       },
       flags.NAME: {
-          'type':
-              str,
-          'help':
-              '(Optional) The name of the GKE cluster, to limit search only for this cluster',
-          'required':
-              True
+          'type': str,
+          'help': ('The name of the GKE cluster, to limit search only for this'
+                   ' cluster'),
+          'deprecated': True,
+          'new_parameter': 'gke_cluster_name',
+      },
+      flags.GKE_CLUSTER_NAME: {
+          'type': str,
+          'help': ('The name of the GKE cluster, to limit search only for'
+                   ' this cluster'),
+          'required': True,
       },
       flags.LOCATION: {
           'type': str,
           'help': '(Optional) The zone or region of the GKE cluster',
-          'required': True
+          'required': True,
       },
       flags.START_TIME: {
-          'type':
-              datetime,
-          'help':
-              '(Optional) The start window to query the logs. Format: YYYY-MM-DDTHH:MM:SSZ',
-          'required':
-              False
+          'type': datetime,
+          'help': ('(Optional) The start window to query the logs. Format:'
+                   ' YYYY-MM-DDTHH:MM:SSZ'),
+          'required': False,
       },
       flags.END_TIME: {
-          'type':
-              datetime,
-          'help':
-              '(Optional) The end window for the logs. Format: YYYY-MM-DDTHH:MM:SSZ',
-          'required':
-              False
-      }
+          'type': datetime,
+          'help': ('(Optional) The end window for the logs. Format:'
+                   ' YYYY-MM-DDTHH:MM:SSZ'),
+          'required': False,
+      },
   }
+
+  def legacy_parameter_handler(self, parameters):
+    if flags.NAME in parameters:
+      parameters[flags.GKE_CLUSTER_NAME] = parameters.pop(flags.NAME)
 
   def build_tree(self):
 
@@ -106,13 +111,13 @@ class ResourceQuotasStart(runbook.StartStep):
     project = crm.get_project(op.get(flags.PROJECT_ID))
     try:
       cluster = gke.get_cluster(op.get(flags.PROJECT_ID),
-                                cluster_id=op.get(flags.NAME),
+                                cluster_id=op.get(flags.GKE_CLUSTER_NAME),
                                 location=op.get(flags.LOCATION))
     except GcpApiError:
       op.add_skipped(
           project,
           reason=('Cluster {} does not exist in {} for project {}').format(
-              op.get(flags.NAME), op.get(flags.LOCATION),
+              op.get(flags.GKE_CLUSTER_NAME), op.get(flags.LOCATION),
               op.get(flags.PROJECT_ID)))
     else:
       op.add_ok(project,
@@ -131,7 +136,7 @@ class ClusterVersion(runbook.Step):
     resource quotas for clusters running version 1.28 or later.
     """
     cluster = gke.get_cluster(op.get(flags.PROJECT_ID),
-                              cluster_id=op.get(flags.NAME),
+                              cluster_id=op.get(flags.GKE_CLUSTER_NAME),
                               location=op.get(flags.LOCATION))
     resource_quota_exceeded = ResourceQuotaExceeded()
     resource_quota_exceeded.cluster_name = cluster.name

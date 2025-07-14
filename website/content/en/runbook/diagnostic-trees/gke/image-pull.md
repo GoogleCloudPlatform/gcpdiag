@@ -27,6 +27,7 @@ This runbook investigates the gke cluster for Image pull failures and recommends
 gcpdiag runbook gke/image-pull \
   -p project_id=value \
   -p name=value \
+  -p gke_cluster_name=value \
   -p location=value \
   -p start_time=value \
   -p end_time=value
@@ -37,7 +38,8 @@ gcpdiag runbook gke/image-pull \
 | Name | Required | Default | Type | Help |
 |------|----------|---------|------|------|
 | `project_id` | True | None | str | The Project ID of the resource under investigation |
-| `name` | True | None | str | The name of the GKE cluster, to limit search only for this cluster |
+| `name` | False | None | str | The name of the GKE cluster, to limit search only for this cluster |
+| `gke_cluster_name` | True | None | str | The name of the GKE cluster, to limit search only for this cluster |
 | `location` | True | None | str | The zone or region of the GKE cluster |
 | `start_time` | False | None | datetime | (Optional) The start window to query the logs. Format: YYYY-MM-DDTHH:MM:SSZ |
 | `end_time` | False | None | datetime | (Optional) The end window for the logs. Format: YYYY-MM-DDTHH:MM:SSZ |

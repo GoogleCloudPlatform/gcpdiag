@@ -33,7 +33,7 @@ class VpcFirewallCheck(runbook.Step):
     """Evaluating VPC network firewall rules."""
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+                          instance_name=op.get(flags.INSTANCE_NAME))
 
     result = None
     if self.traffic == 'ingress':
@@ -83,7 +83,7 @@ class VpcRouteCheck(runbook.Step):
     """Evaluating the VPC routing rules."""
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+                          instance_name=op.get(flags.INSTANCE_NAME))
     # get project, network info from nic
     nic_info = util.get_nic_info(vm.get_network_interfaces,
                                  op.get(flags.SRC_NIC))
@@ -125,7 +125,7 @@ class VmExternalIpConnectivityTest(runbook.Step):
     """Running a connectivity test to the external ip address."""
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+                          instance_name=op.get(flags.INSTANCE_NAME))
 
     dest_ip = op.get(flags.DEST_IP)
     dest_ip = dest_ip.exploded
@@ -152,7 +152,7 @@ class VmExternalIpConnectivityTest(runbook.Step):
                          reason="""
           A NAT gateway is not found in the external traffic path for the VM: {},
           connecting to the external IP address {}.
-          """.format(op.get(flags.NAME), dest_ip),
+          """.format(op.get(flags.INSTANCE_NAME), dest_ip),
                          remediation="""
           If a VM instance or custom NAT is being used as a NAT Gateway, check that
           it is configured and functioning correctly. Otherwise, ensure that a public

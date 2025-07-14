@@ -24,10 +24,10 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
 
   rule_parameters = [{
       'project_id': 'gcpdiag-gce-vm-performance',
-      'name': 'faulty-linux-ssh',
+      'instance_name': 'faulty-linux-ssh',
       'zone': 'europe-west2-a'
   }, {
       'project_id': 'gcpdiag-gce-vm-performance',
-      'name': 'faulty-windows-ssh',
+      'instance_name': 'faulty-windows-ssh',
       'zone': 'europe-west2-a'
   }]

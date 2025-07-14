@@ -63,6 +63,18 @@ class GkeIpMasqStandard(runbook.DiagnosticTree):
               str,
           'help':
               'The name of the GKE cluster, to limit search only for this cluster',
+          'required':
+              False,
+          'deprecated':
+              True,
+          'new_parameter':
+              'gke_cluster_name',
+      },
+      flags.GKE_CLUSTER_NAME: {
+          'type':
+              str,
+          'help':
+              'The name of the GKE cluster, to limit search only for this cluster',
       },
       flags.LOCATION: {
           'type': str,
@@ -83,6 +95,10 @@ class GkeIpMasqStandard(runbook.DiagnosticTree):
           'help': 'End time of the issue',
       }
   }
+
+  def legacy_parameter_handler(self, parameters):
+    if flags.NAME in parameters:
+      parameters[flags.GKE_CLUSTER_NAME] = parameters.pop(flags.NAME)
 
   def build_tree(self):
     """Construct the diagnostic tree with appropriate steps."""
@@ -127,7 +143,7 @@ class GkeIpMasqStandardStart(runbook.StartStep):
     # - just cluster name is provided, check if there's a cluster with that name
     # - just location is provided, check if there are clusters at that location
     # - cluster name and location are provided, check if there's that cluster at that location
-    cluster_name = op.get(flags.NAME)
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     cluster_location = op.get(flags.LOCATION)
     found_cluster = False
     found_cluster_with_location = False

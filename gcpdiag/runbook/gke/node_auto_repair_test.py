@@ -19,7 +19,7 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
 
   rule_parameters = [{
       'project_id': 'gcpdiag-gke-cluster-autoscaler-rrrr',
-      'name': 'gcp-cluster',
+      'gke_cluster_name': 'gcp-cluster',
       'node': 'gke-gcp-cluster-default-pool-82e0c046-8m8b',
       'location': 'europe-west10-a'
   }]

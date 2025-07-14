@@ -35,6 +35,7 @@ This runbook is designed to assist you in investigating and understanding the un
 gcpdiag runbook gce/vm-performance \
   -p project_id=value \
   -p name=value \
+  -p instance_name=value \
   -p zone=value \
   -p start_time=value \
   -p end_time=value
@@ -45,7 +46,8 @@ gcpdiag runbook gce/vm-performance \
 | Name | Required | Default | Type | Help |
 |------|----------|---------|------|------|
 | `project_id` | True | None | str | The Project ID associated with the VM having performance issues. |
-| `name` | True | None | str | The name of the VM having performance issues. Or provide the id i.e -p name=<int> |
+| `name` | False | None | str | The name of the VM having performance issues. Or provide the id i.e -p name=<int> |
+| `instance_name` | True | None | str | The name of the VM having performance issues. Or provide the id i.e -p name=<int> |
 | `zone` | True | None | str | The Google Cloud zone where the VM having performance issues, is located. |
 | `start_time` | False | None | datetime | The start window(in UTC) to investigate vm performance issues.Format: YYYY-MM-DDTHH:MM:SSZ |
 | `end_time` | False | None | datetime | The end window(in UTC) for the investigation. Format: YYYY-MM-DDTHH:MM:SSZ |

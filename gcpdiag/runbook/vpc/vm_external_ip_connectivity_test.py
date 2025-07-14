@@ -24,7 +24,7 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
 
   rule_parameters = [{
       'project_id': 'gcpdiag-vpc2-runbook',
-      'name': 'public-linux-valid',
+      'instance_name': 'public-linux-valid',
       'zone': 'us-central1-a',
       'dest_ip': '151.101.3.5',
       'src_nic': 'nic0',

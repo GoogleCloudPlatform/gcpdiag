@@ -43,6 +43,7 @@ This runbook investigates components required for VMs to establish connectivity
 gcpdiag runbook vpc/vm-external-ip-connectivity \
   -p project_id=value \
   -p name=value \
+  -p instance_name=value \
   -p dest_ip=value \
   -p dest_port=value \
   -p protocol_type=value \
@@ -55,7 +56,8 @@ gcpdiag runbook vpc/vm-external-ip-connectivity \
 | Name | Required | Default | Type | Help |
 |------|----------|---------|------|------|
 | `project_id` | True | None | str | The Project ID of the resource under investigation |
-| `name` | True | None | str | The name of the GCE Instance |
+| `name` | False | None | str | The name of the GCE Instance |
+| `instance_name` | True | None | str | The name of the GCE Instance |
 | `dest_ip` | True | None | IPv4Address | External IP the VM is connecting to |
 | `dest_port` | False | 443 | int | External IP the VM is connecting to |
 | `protocol_type` | False | tcp | str | Protocol used to connect to SSH |
