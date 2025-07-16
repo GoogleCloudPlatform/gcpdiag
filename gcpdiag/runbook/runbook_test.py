@@ -15,11 +15,10 @@
 
 import unittest
 from datetime import datetime, timedelta, timezone
-from unittest.mock import Mock, patch
+from unittest.mock import Mock, call, patch
 
 from gcpdiag import models, runbook
-from gcpdiag.runbook import exceptions
-from gcpdiag.runbook.constants import StepType
+from gcpdiag.runbook import constants, exceptions
 from gcpdiag.runbook.gcp import flags
 from gcpdiag.runbook.op import Operator
 
@@ -122,7 +121,7 @@ class TestDiagnosticEngine(unittest.TestCase):
   @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
   def test_find_path_dfs_finite_loop(self, mock_run_step):
     op = Operator(interface=None)
-    current_step = Mock(execution_id='1', type=StepType.AUTOMATED)
+    current_step = Mock(execution_id='1', type=constants.StepType.AUTOMATED)
     current_step.steps = [current_step]
     visited = set()
 
@@ -132,6 +131,86 @@ class TestDiagnosticEngine(unittest.TestCase):
 
     mock_run_step.assert_called()
     self.assertIn(current_step, visited)
+
+  @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
+  def test_find_path_dfs_dynamically_added_child(self, mock_run_step):
+    """Test that find_path_dfs executes dynamically added step as child."""
+    op = Operator(interface=None)
+    step_root = Mock(execution_id='root_step')
+    step_initial_a = Mock(execution_id='initial_child_A', steps=[])
+    step_initial_a._was_initially_defined = True
+    step_initial_b = Mock(execution_id='initial_child_B', steps=[])
+    step_initial_b._was_initially_defined = True
+    step_dynamic_b = Mock(execution_id='dynamic_child_B', steps=[])
+    del step_dynamic_b._was_initially_defined
+
+    step_root.steps = [step_initial_a]
+    step_initial_a.steps = [step_initial_b, step_dynamic_b]
+    mock_run_step.return_value = None
+    executed_steps = set()
+    self.de.find_path_dfs(
+        step=step_root,
+        operator=op,
+        executed_steps=executed_steps,
+    )
+    expected_run_step_calls = [
+        call(step=step_root, operator=op),
+        call(step=step_initial_a, operator=op),
+        call(step=step_dynamic_b, operator=op),
+        call(step=step_initial_b, operator=op),
+    ]
+
+    mock_run_step.assert_has_calls(expected_run_step_calls, any_order=False)
+
+    self.assertIn(step_root, executed_steps)
+    self.assertIn(step_initial_a, executed_steps)
+    self.assertIn(step_dynamic_b, executed_steps)
+    self.assertEqual(len(executed_steps), 4)
+
+  @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
+  def test_find_path_dfs_dynamic_end_step_stops_execution(self, mock_run_step):
+    op_instance = Operator(interface=None)
+    root_step = Mock(execution_id='root')
+    intermediate_step = Mock(execution_id='intermediate')
+    finalize_step = Mock(execution_id='finalize_investigation',
+                         type=constants.StepType.END)
+    should_not_run_step = Mock(execution_id='should_not_run')
+    should_not_run_step._was_initially_defined = True
+    root_step.steps = [intermediate_step, should_not_run_step]
+    intermediate_step.steps = [finalize_step]
+
+    def side_effect_for_run_step(step, operator):  # pylint: disable=unused-argument
+      if step.type == constants.StepType.END:
+        # This step signals to stop the investigation
+        return constants.FINALIZE_INVESTIGATION
+      # Other steps just continue normally
+      return None
+
+    mock_run_step.side_effect = side_effect_for_run_step
+
+    executed_steps_tracker = set()
+    self.de.find_path_dfs(
+        step=root_step,
+        operator=op_instance,
+        executed_steps=executed_steps_tracker,
+    )
+
+    expected_calls = [
+        call(step=root_step, operator=op_instance),
+        call(step=intermediate_step, operator=op_instance),
+        call(step=finalize_step, operator=op_instance),
+    ]
+    mock_run_step.assert_has_calls(expected_calls, any_order=False)
+    self.assertNotIn(
+        call(step=should_not_run_step, operator=op_instance),
+        mock_run_step.call_args_list,
+    )
+    self.assertEqual(mock_run_step.call_count, 3)
+    self.assertIn(root_step, executed_steps_tracker)
+    self.assertIn(intermediate_step, executed_steps_tracker)
+    self.assertIn(finalize_step, executed_steps_tracker)
+    self.assertNotIn(should_not_run_step, executed_steps_tracker)
+    self.assertTrue(self.de.finalize)
 
   @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
   def test_find_path_all_child_step_executions(self, mock_run_step):

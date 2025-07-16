@@ -21,6 +21,12 @@ gcf/failed-deployments:  Cloud Run function failed deployments check
      Refer to the IAM roles guide for providing default roles to the Cloud Run function default service account and the service agent:
      <https://cloud.google.com/functions/docs/concepts/iam#serviceaccount>
 
+[AUTOMATED STEP]: Verify that serviceAccount:service-12340003@gcf-admin-robot.iam.gserviceaccount.com has required permissions/roles in project/None.
+
+   - projects/gcpdiag-gcf1-aaaa                                           [OK]
+     [REASON]
+     Cloud function service agent has the required role permissions
+
 [AUTOMATED STEP]: Check if User/Service account has permissions on Cloud function runtime service account
 [AUTOMATED STEP]: Check for deployment failures due to global scope code errors
 
@@ -43,12 +49,6 @@ gcf/failed-deployments:  Cloud Run function failed deployments check
      [REMEDIATION]
      Refer to the following document to address this error:
      <https://cloud.google.com/functions/docs/troubleshooting#resource-location>
-
-[AUTOMATED STEP]: Verify that serviceAccount:service-12340003@gcf-admin-robot.iam.gserviceaccount.com has required permissions/roles in project/None.
-
-   - projects/gcpdiag-gcf1-aaaa                                           [OK]
-     [REASON]
-     Cloud function service agent has the required role permissions
 
 [END]: Finalizing cloud run function deployment failures
 

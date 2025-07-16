@@ -394,6 +394,7 @@ class DiagnosticTree(metaclass=RunbookRule):
     parent_step = self.start.find_step(parent)
     if parent_step:
       parent_step.add_child(child)
+      setattr(child, '_was_initially_defined', True)
     else:
       raise ValueError(
           f'Parent step with {parent.execution_id} not found. Add parent first')
@@ -410,6 +411,7 @@ class DiagnosticTree(metaclass=RunbookRule):
       if self.start.steps[-1].type == constants.StepType.END:
         raise ValueError('end already exist')
     self.start.add_child(child=step)
+    setattr(step, '_was_initially_defined', True)
 
   def find_step(self, step_id):
     return self.start.find_step(step_id)
@@ -438,6 +440,7 @@ class DiagnosticTree(metaclass=RunbookRule):
     # Add the default step
     if self.start.steps[-1].type != constants.StepType.END:
       self.start.add_child(EndStep())
+      setattr(self.start.steps[-1], '_was_initially_defined', True)
 
   @abstractmethod
   def legacy_parameter_handler(self, parameters):
@@ -827,7 +830,7 @@ class DiagnosticEngine:
 
     Args:
       step: The current step to execute.
-      operator: The operator used duing execution.
+      operator: The operator used during execution.
       executed_steps: A set of executed step IDs to avoid cycles.
     """
     if not self.finalize:
@@ -838,14 +841,34 @@ class DiagnosticEngine:
         if outcome == constants.FINALIZE_INVESTIGATION:
           self.finalize = True
           return
-      for child in step.steps:  # Iterate over the children of the current step
-        if child not in executed_steps:
-          self.find_path_dfs(
-              step=child,
-              operator=operator,
-              executed_steps=executed_steps,
-          )
-      return executed_steps
+    # Prioritize processing of dynamically added, unexecuted children
+    for child in step.steps:
+      if child not in executed_steps and not hasattr(child,
+                                                     '_was_initially_defined'):
+        self.find_path_dfs(step=child,
+                           operator=operator,
+                           executed_steps=executed_steps)
+        if self.finalize:
+          return
+
+    # Process initially defined or already encountered children
+    for child in step.steps:
+      if not self.finalize:
+        if (hasattr(child, '_was_initially_defined') and
+            child not in executed_steps):
+          self.find_path_dfs(step=child,
+                             operator=operator,
+                             executed_steps=executed_steps)
+          if self.finalize:
+            return
+        elif not any(c for c in executed_steps if c == child):
+          self.find_path_dfs(step=child,
+                             operator=operator,
+                             executed_steps=executed_steps)
+          if self.finalize:
+            return
+
+    return executed_steps
 
   def run_step(self, step: Step, operator: op.Operator):
     """Executes a single step, handling user decisions for step re-evaluation or termination.
