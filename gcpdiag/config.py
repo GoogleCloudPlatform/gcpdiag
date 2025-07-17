@@ -88,7 +88,7 @@ CACHE_LOCK_TIMEOUT = 120
 STATIC_DOCUMENTS_EXPIRY_SECONDS = 3600 * 24
 
 # Prefetch worker threads
-MAX_WORKERS = 10
+MAX_WORKERS = 20
 
 _args: Dict[str, Any] = {}
 _config: Dict[str, Any] = {}
