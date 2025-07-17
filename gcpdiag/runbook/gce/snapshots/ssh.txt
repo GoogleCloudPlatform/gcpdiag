@@ -241,10 +241,17 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 [GATEWAY]: Evaluating VPC network firewall rules for SSH access.
 [AUTOMATED STEP]: Evaluating VPC network traffic rules.
 
-   - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [OK]
+   - gcpdiag-gce-faultyssh-runbook/faulty-linux-ssh                       [FAIL]
      [REASON]
-     Ingress Traffic from source IP/CIDR 35.235.240.0/20, tcp:22 to the GCE
-     instance faulty-linux-ssh is allowed by: vpc firewall rule: gce-secured-instance-test-allow
+     Allow ingress traffic from the VIP range 35.235.240.0/20
+     <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-ssh-errors#diagnosis_methods_for_linux_and_windows_vms>'
+
+     [REMEDIATION]
+     If connecting to a non-public VM and do not wish to allow external access, choose one of the following connection
+     options for VMs
+     <https://cloud.google.com/compute/docs/connect/ssh-internal-ip>
+     Alternatively, create/update a firewall rule to allow access
+     <https://cloud.google.com/firewall/docs/using-firewalls#creating_firewall_rules>
 
 [AUTOMATED STEP]: Checking for Guest Agent startup logs
 
@@ -765,10 +772,17 @@ gce/ssh: A comprehensive troubleshooting guide for common issues which affects S
 [GATEWAY]: Evaluating VPC network firewall rules for SSH access.
 [AUTOMATED STEP]: Evaluating VPC network traffic rules.
 
-   - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [OK]
+   - gcpdiag-gce-faultyssh-runbook/faulty-windows-ssh                     [FAIL]
      [REASON]
-     Ingress Traffic from source IP/CIDR 35.235.240.0/20, tcp:22 to the GCE
-     instance faulty-windows-ssh is allowed by: vpc firewall rule: gce-secured-instance-test-allow
+     Allow ingress traffic from the VIP range 35.235.240.0/20
+     <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-ssh-errors#diagnosis_methods_for_linux_and_windows_vms>'
+
+     [REMEDIATION]
+     If connecting to a non-public VM and do not wish to allow external access, choose one of the following connection
+     options for VMs
+     <https://cloud.google.com/compute/docs/connect/ssh-internal-ip>
+     Alternatively, create/update a firewall rule to allow access
+     <https://cloud.google.com/firewall/docs/using-firewalls#creating_firewall_rules>
 
 [AUTOMATED STEP]: Checking for Guest Agent startup logs
 

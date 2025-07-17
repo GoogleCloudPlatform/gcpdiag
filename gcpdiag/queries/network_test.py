@@ -455,3 +455,40 @@ class TestNetwork:
                     default=None) == 'Established'
     assert get_path(vlan_router_status.bgp_peer_status[1], ('state'),
                     default=None) == 'Idle'
+
+  def test_firewall_policy_sorting_same_ip(self):
+    net = network.get_network(project_id=DUMMY_PROJECT_ID,
+                              network_name=DUMMY_DEFAULT_NETWORK)
+    # Check that deny rule is matched before allow rule with same priority and
+    # same src ip range
+    r = net.firewall.check_connectivity_ingress(
+        src_ip=ipaddress.ip_network('10.104.0.1/32'),
+        ip_protocol='tcp',
+        port=80)
+    assert r.action == 'deny'
+    assert r.matched_by_str == (
+        'policy: test-sorting-same-ip-policy, rule: deny rule with priority'
+        ' 1000 and same src ip range')
+
+  def test_firewall_policy_sorting(self):
+    net = network.get_network(project_id=DUMMY_PROJECT_ID,
+                              network_name=DUMMY_DEFAULT_NETWORK)
+    # Check that deny rule is matched before allow rule with same priority
+    r = net.firewall.check_connectivity_ingress(
+        src_ip=ipaddress.ip_network('10.104.0.1/32'),
+        ip_protocol='tcp',
+        port=80)
+    assert r.action == 'deny'
+    expected_matched_str = (
+        'policy: test-sorting-same-ip-policy, rule: deny rule with priority'
+        ' 1000 and same src ip range')
+    assert r.matched_by_str == expected_matched_str
+
+    # Check that allow rule with lower priority is matched before deny rule
+    # with higher priority
+    r = net.firewall.check_connectivity_ingress(
+        src_ip=ipaddress.ip_network('10.101.0.1/32'),
+        ip_protocol='tcp',
+        port=2001)
+    assert r.action == 'allow'
+    assert r.matched_by_str == 'policy: parent-folder-policy'

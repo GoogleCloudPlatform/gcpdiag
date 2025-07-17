@@ -646,8 +646,13 @@ class _FirewallPolicy:
         'INGRESS': [],
         'EGRESS': [],
     }
-    for rule in sorted(resource_data['rules'],
-                       key=lambda r: int(r['priority'])):
+    # sort by priority, and then by action (deny before allow)
+    action_priority = {'deny': 1, 'allow': 2, 'goto_next': 3}
+    for rule in sorted(
+        resource_data['rules'],
+        key=lambda r: (int(r.get('priority', 65535)),
+                       action_priority.get(r.get('action'), 99)),
+    ):
       rule_decoded = copy.deepcopy(rule)
       if 'match' in rule:
         # decode network ranges
@@ -763,7 +768,10 @@ class _VpcFirewall:
         'INGRESS': [],
         'EGRESS': [],
     }
-    for r in sorted(rules_list, key=lambda r: int(r['priority'])):
+    # sort by primary key and then by deny action
+    for r in sorted(rules_list,
+                    key=lambda r: (int(r['priority']), 1
+                                   if r.get('denied') else 2)):
       r_decoded = copy.deepcopy(r)
       # decode network ranges
       if 'sourceRanges' in r:
@@ -1121,7 +1129,8 @@ class EffectiveFirewalls:
 class VPCEffectiveFirewalls(EffectiveFirewalls):
   """Effective firewall rules for a VPC network.
 
-  Includes org/folder firewall policies)."""
+  Includes org/folder firewall policies).
+  """
   _network: Network
 
   def __init__(self, network, resource_data):
