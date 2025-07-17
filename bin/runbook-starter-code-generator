@@ -190,7 +190,12 @@ def gen_starter_code(args_: dict):
   id_ = parts[1]
 
   if product not in SUPPORTED_PRODUCTS:
-    print(f'Product {product} is not supported yet.')
+    print(f"Product '{product}' is not supported yet or registered.", file=sys.stderr)
+    print('Please ensure this product is added to all necessary configuration files.', file=sys.stderr)
+    print(f'Specifically, you need to update:')
+    print(f"  1. The `SUPPORTED_PRODUCTS` set in '{__file__}'", file=sys.stderr)
+    print(f"  2. The `PRODUCTS` dictionary in 'bin/precommit-required-files.py'", file=sys.stderr)
+    print("Example for `bin/precommit-required-files.py`: 'your_new_product': '[Your New Product Name](https://cloud.google.com/your-new-product-url)'", file=sys.stderr)
     return
 
   if args_['prepenv']:

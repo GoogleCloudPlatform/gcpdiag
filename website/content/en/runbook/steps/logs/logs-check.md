@@ -7,7 +7,7 @@ description: >
   Assess if a given log query is present or not..
 ---
 
-**Product**: \
+**Product**: [Cloud Logging](https://cloud.google.com/logging)\
 **Step Type**: AUTOMATED STEP
 
 ### Description

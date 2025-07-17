@@ -21,6 +21,8 @@ def get_product_list() -> Dict:
           '[CloudSQL](https://cloud.google.com/sql)',
       'composer':
           '[Cloud Composer](https://cloud.google.com/composer)',
+      'crm':
+          '[Cloud Resource Manager](https://cloud.google.com/resource-manager)',
       'dataflow':
           '[Dataflow](https://cloud.google.com/dataflow)',
       'datafusion':
@@ -45,6 +47,8 @@ def get_product_list() -> Dict:
           '[Interconnect](https://cloud.google.com/network-connectivity/docs/interconnect)',
       'lb':
           '[Load balancing](https://cloud.google.com/load-balancing)',
+      'logs':
+          '[Cloud Logging](https://cloud.google.com/logging)',
       'monitoring':
           'https://cloud.google.com/monitoring',
       'notebooks':

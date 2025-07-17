@@ -7,7 +7,7 @@ description: >
   Checks if an organization policy is effective in a project
 ---
 
-**Product**: \
+**Product**: [Cloud Resource Manager](https://cloud.google.com/resource-manager)\
 **Step Type**: AUTOMATED STEP
 
 ### Description
