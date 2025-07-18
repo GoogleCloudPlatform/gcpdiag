@@ -20,7 +20,7 @@ from typing import Dict, List, Literal, Optional
 
 import googleapiclient
 
-from gcpdiag import caching, config, models
+from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis, apis_utils
 
 
@@ -270,15 +270,20 @@ def get_backend_service(project_id: str,
                         region: str = None) -> BackendServices:
   """Returns instance object matching backend service name and region"""
   compute = apis.get_api('compute', 'v1', project_id)
-  if not region or region == 'global':
-    request = compute.backendServices().get(project=project_id,
-                                            backendService=backend_service_name)
-  else:
-    request = compute.regionBackendServices().get(
-        project=project_id, region=region, backendService=backend_service_name)
+  try:
+    if not region or region == 'global':
+      request = compute.backendServices().get(
+          project=project_id, backendService=backend_service_name)
+    else:
+      request = compute.regionBackendServices().get(
+          project=project_id,
+          region=region,
+          backendService=backend_service_name)
 
-  response = request.execute(num_retries=config.API_RETRIES)
-  return BackendServices(project_id, resource_data=response)
+    response = request.execute(num_retries=config.API_RETRIES)
+    return BackendServices(project_id, resource_data=response)
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
 
 
 def get_backend_service_by_self_link(
@@ -335,26 +340,26 @@ def get_backend_service_health(
   for backend in backend_service.backends:
     group = backend['group']
     if not backend_service.region:
-      response = compute.backendServices().getHealth(
+      response = (compute.backendServices().getHealth(
           project=project_id,
           backendService=backend_service.name,
           body={
               'group': group
           },
-      ).execute(num_retries=config.API_RETRIES)
+      ).execute(num_retries=config.API_RETRIES))
       # None is returned when backend type doesn't support health check
       if response is not None:
         for health_status in response.get('healthStatus', []):
           backend_heath_statuses.append(BackendHealth(health_status, group))
     else:
-      response = compute.regionBackendServices().getHealth(
+      response = (compute.regionBackendServices().getHealth(
           project=project_id,
           region=backend_service.region,
           backendService=backend_service.name,
           body={
               'group': group
           },
-      ).execute(num_retries=config.API_RETRIES)
+      ).execute(num_retries=config.API_RETRIES))
       if response is not None:
         for health_status in response.get('healthStatus', []):
           backend_heath_statuses.append(BackendHealth(health_status, group))
