@@ -7,7 +7,7 @@ description: >
   Checks logs for problematic entry using filter string provided.
 ---
 
-**Product**: \
+**Product**: [Cloud Logging](https://cloud.google.com/logging)\
 **Step Type**: AUTOMATED STEP
 
 ### Description
