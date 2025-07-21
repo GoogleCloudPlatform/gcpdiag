@@ -172,6 +172,9 @@ class ReportManager:
   def add_step_eval(self, run_id, execution_id, evaluation: ResourceEvaluation):
     self.reports[run_id].results[execution_id].results.append(evaluation)
 
+  def add_step_prompt_response(self, run_id, execution_id, prompt_response):
+    self.reports[run_id].results[execution_id].prompt_response = prompt_response
+
   def serialize_report(self, report: Report):
 
     def improve_formatting(text):
@@ -452,8 +455,11 @@ class InteractionInterface:
     # assign a human task to be completed
     choice = self.output.prompt(kind=constants.HUMAN_TASK,
                                 message=human_task_msg)
+
     if not config.get(INTERACTIVE_MODE):
-      result.prompt_response = choice
+      self.rm.add_step_prompt_response(run_id=run_id,
+                                       execution_id=step_execution_id,
+                                       prompt_response=choice)
 
       if choice is constants.CONTINUE or choice is constants.STOP:
         result.remediation_skipped = True
@@ -480,7 +486,9 @@ class InteractionInterface:
                                 message=human_task_msg)
 
     if not config.get(INTERACTIVE_MODE):
-      result.prompt_response = choice
+      self.rm.add_step_prompt_response(run_id=run_id,
+                                       execution_id=step_execution_id,
+                                       prompt_response=choice)
       if choice is constants.CONTINUE or choice is constants.STOP:
         result.remediation_skipped = True
       return choice

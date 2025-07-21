@@ -87,6 +87,21 @@ class TestTerminalReportManager(unittest.TestCase):
       self.assertTrue(report_path.endswith('.json'))
       self.assertTrue(report_path.startswith(fd.return_value))
 
+  def test_add_step_prompt_response(self):
+    step_result = StepResult(Step(uuid='prompt.response.step'))
+    self.trm.add_step_result(run_id='test', result=step_result)
+    prompt_response = 'continue'
+    self.trm.add_step_prompt_response(
+        run_id='test',
+        execution_id=step_result.execution_id,
+        prompt_response=prompt_response,
+    )
+    self.assertEqual(
+        self.trm.reports['test'].results[
+            step_result.execution_id].prompt_response,
+        prompt_response,
+    )
+
   #pylint:disable=protected-access
   @patch('builtins.open', new_callable=mock_open)
   @patch('logging.error')
