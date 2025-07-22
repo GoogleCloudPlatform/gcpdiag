@@ -1,0 +1,13 @@
+{
+  "name": "projects/12340031",
+  "parent": "folders/348077457356",
+  "projectId": "gcpdiag-looker1-ijtqsckn",
+  "state": "ACTIVE",
+  "displayName": "gcpdiag test - looker1",
+  "createTime": "2024-12-22T17:32:41.842157Z",
+  "updateTime": "2024-12-22T17:32:41.842157Z",
+  "etag": "W/\"1866d6f7d7a9afd9\"",
+  "labels": {
+    "goog-terraform-provisioned": "true"
+  }
+}

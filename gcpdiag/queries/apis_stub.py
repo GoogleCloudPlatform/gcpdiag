@@ -190,6 +190,8 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/gce5/json-dumps',
     '123456012345':
         pathlib.Path(__file__).parents[2] / 'test-data/gce5/json-dumps',
+    'gcpdiag-looker1-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/looker1/json-dumps',
     'gcpdiag-gce6-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/gce6/json-dumps',
     '1234560123456':
@@ -440,5 +442,8 @@ def get_api_stub(service_name: str,
   elif service_name == 'cloudasset':
     from gcpdiag.queries import cloudasset_stub
     return cloudasset_stub.CloudAssetApiStub()
+  elif service_name == 'looker':
+    from gcpdiag.queries import looker_stub
+    return looker_stub.LookerApiStub()
   else:
     raise ValueError('unsupported service: %s' % service_name)
