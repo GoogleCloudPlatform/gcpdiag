@@ -60,98 +60,50 @@ class RestoreDefaultPolicyConstraint(PolicyConstraint):
 
 
 @caching.cached_api_call
-def _get_available_org_constraints(resource_id: str, resource_type: str):
-  """list all the org constraints available for a particular resource.
-
-  Args:
-      resource_id: The resource ID.
-      resource_type: The resource type (project or organization).
-
-  Returns:
-      A list of available org policy constraints.
-
-  Raises:
-      utils.GcpApiError: on API errors.
-  """
-  crm_api = apis.get_api('cloudresourcemanager', 'v1', resource_id)
-  resource = f'{resource_type}/{resource_id}'
-  org_constraint_name = []
-
-  if resource_type == RESOURCE_TYPE_PROJECT:
-    request = crm_api.projects().listAvailableOrgPolicyConstraints(
-        resource=resource)
-  elif resource_type == RESOURCE_TYPE_ORGANIZATION:
-    request = crm_api.organizations().listAvailableOrgPolicyConstraints(
-        resource=resource)
-  else:
-    raise ValueError(f'resource type {resource_type} not supported')
-
-  while request:
-    try:
-      response = request.execute(num_retries=config.API_RETRIES)
-    except googleapiclient.errors.HttpError as err:
-      raise utils.GcpApiError(err) from err
-
-    constraints_list = response.get('constraints', [])
-
-    for constraint in constraints_list:
-      org_constraint_name.append(constraint.get('name'))
-      if resource_type == RESOURCE_TYPE_PROJECT:
-        request = crm_api.projects().listAvailableOrgPolicyConstraints_next(
-            request, response)
-      elif resource_type == RESOURCE_TYPE_ORGANIZATION:
-        request = (
-            crm_api.organizations().listAvailableOrgPolicyConstraints_next(
-                request, response))
-  return org_constraint_name
-
-
-@caching.cached_api_call
 def _get_effective_org_policy_all_constraints(
     project_id: str) -> Dict[str, PolicyConstraint]:
+  # NOTE: this function doesn't get the "effective" org policy, but just
+  # the policies that are directly set on the project. This is a deliberate
+  # choice to improve performance.
+  #
   # in order to speed up execution, we fetch all constraints that we think
   # could be useful on the first call to get_effective_org_policy()
 
   # note: it would be probably better to use this API, but then this would
   # require users to enable it :-( :
   # https://cloud.google.com/resource-manager/docs/reference/orgpolicy/rest/v2/projects.policies/getEffectivePolicy
-
-  crm_api = apis.get_api('cloudresourcemanager', 'v1', project_id)
-  requests = []
-  prefetch_org_constraints = _get_available_org_constraints(
-      project_id, RESOURCE_TYPE_PROJECT)
-
-  for c in prefetch_org_constraints:
-    requests.append(crm_api.projects().getEffectiveOrgPolicy(
-        resource=f'projects/{project_id}', body={'constraint': c}))
-
-  all_constraints: Dict[str, PolicyConstraint] = {}
-  logging.debug('getting org constraints of %s', project_id)
-  for req in requests:
-    try:
-      result = req.execute(num_retries=config.API_RETRIES)
-    except googleapiclient.errors.HttpError as err:
-      raise utils.GcpApiError(err) from err
-
-    if 'booleanPolicy' in result:
-      all_constraints[result['constraint']] = BooleanPolicyConstraint(
-          result['constraint'], result['booleanPolicy'])
-    # TODO: list policy constraints
-    elif 'listPolicy' in result:
-      all_constraints[result['constraint']] = ListPolicyConstraint(
-          result['constraint'], result['listPolicy'])
-    else:
-      logging.warning('unknown constraint type: %s', result)
-
-  return all_constraints
+  return get_all_project_org_policies(project_id)
 
 
 def get_effective_org_policy(project_id: str, constraint: str):
+  """Get the effective org policy for a project and a given constraint.
+
+  This function will first try to get the policy from a cached list of all
+  policies that are set on the project. If the policy is not found, it will
+  make a direct API call to get the effective policy for the given constraint.
+  """
   all_constraints = _get_effective_org_policy_all_constraints(project_id)
-  if constraint not in all_constraints:
-    raise ValueError(
-        f'constraint {constraint} not supported {list(all_constraints)}')
-  return all_constraints[constraint]
+  if constraint in all_constraints:
+    return all_constraints[constraint]
+
+  # If the constraint is not in the list of all policies, it means that
+  # the policy is not set on the project. In this case, we need to get the
+  # effective policy directly.
+  crm_api = apis.get_api('cloudresourcemanager', 'v1', project_id)
+  try:
+    req = crm_api.projects().getEffectiveOrgPolicy(
+        resource=f'projects/{project_id}', body={'constraint': constraint})
+    result = req.execute(num_retries=config.API_RETRIES)
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
+
+  if 'booleanPolicy' in result:
+    return BooleanPolicyConstraint(result['constraint'],
+                                   result['booleanPolicy'])
+  elif 'listPolicy' in result:
+    return ListPolicyConstraint(result['constraint'], result['listPolicy'])
+  else:
+    raise ValueError(f'unknown constraint type: {result}')
 
 
 @caching.cached_api_call
