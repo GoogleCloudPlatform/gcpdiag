@@ -300,6 +300,8 @@ class CpuOvercommitmentCheck(runbook.Step):
                           zone=op.get(flags.ZONE),
                           instance_name=op.get(flags.INSTANCE_NAME))
 
+    op.info(f'vm.min_cpu_platform: {vm.min_cpu_platform()}')
+
     if vm.is_sole_tenant_vm or 'e2' in vm.machine_type():
 
       start_dt_pst = datetime.strptime(vm.laststarttimestamp(),

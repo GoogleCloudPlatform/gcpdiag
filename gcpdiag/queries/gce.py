@@ -390,11 +390,17 @@ class Instance(models.Resource):
             'preemptible' in self._resource_data['scheduling'] and
             self._resource_data['scheduling']['preemptible'])
 
+  def min_cpu_platform(self) -> str:
+    if 'minCpuPlatform' in self._resource_data:
+      return self._resource_data['minCpuPlatform']
+    return 'None'
+
   @property
   def created_by_mig(self) -> bool:
     """Return bool indicating if the instance part of a mig.
 
-    MIG which were part of MIG however have been removed or terminated will return True.
+    MIG which were part of MIG however have been removed or terminated will
+    return True.
     """
     created_by = self.get_metadata('created-by')
     if created_by is None:

@@ -139,6 +139,14 @@ class TestGce(unittest.TestCase):
     assert instances_by_path[DUMMY_INSTANCE2_PATH].is_preemptible_vm() is True
     assert instances_by_path[DUMMY_INSTANCE3_PATH].is_preemptible_vm() is False
 
+  def test_min_cpu_platform(self):
+    instance = gce.get_instance(DUMMY_PROJECT_NAME, DUMMY_ZONE,
+                                DUMMY_INSTANCE1_NAME)
+    self.assertEqual(instance.min_cpu_platform(), 'Intel Skylake')
+    instance2 = gce.get_instance(DUMMY_PROJECT_NAME, DUMMY_ZONE,
+                                 DUMMY_INSTANCE2_NAME)
+    self.assertEqual(instance2.min_cpu_platform(), 'None')
+
   def test_network(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     instances = gce.get_instances(context)

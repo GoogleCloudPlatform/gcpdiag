@@ -52,6 +52,7 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 
 [AUTOMATED STEP]: Checking if CPU is overcommited
+[INFO]: vm.min_cpu_platform: None
 
    - gcpdiag-gce-vm-performance/faulty-linux-ssh                          [FAIL]
      [REASON]
@@ -382,6 +383,7 @@ gce/vm-performance:  Google Compute Engine VM performance checks
      <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 
 [AUTOMATED STEP]: Checking if CPU is overcommited
+[INFO]: vm.min_cpu_platform: None
 
    - gcpdiag-gce-vm-performance/faulty-windows-ssh                        [FAIL]
      [REASON]

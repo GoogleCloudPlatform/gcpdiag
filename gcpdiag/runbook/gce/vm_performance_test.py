@@ -21,6 +21,7 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = gce
   runbook_name = 'gce/vm-performance'
   config.init({'auto': True, 'interface': 'cli'})
+  min_cpu_platform = 'Intel Ice Lake'
 
   rule_parameters = [{
       'project_id': 'gcpdiag-gce-vm-performance',
