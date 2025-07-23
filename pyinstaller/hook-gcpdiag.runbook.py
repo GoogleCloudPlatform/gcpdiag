@@ -18,6 +18,7 @@ from PyInstaller.utils.hooks import collect_submodules
 # update also bin/precommit-required-files
 # note: keep in sync with modules in bin/runbook-starter-code-generator
 hiddenimports = \
+ collect_submodules('gcpdiag.runbook.bigquery') + \
  collect_submodules('gcpdiag.runbook.cloudrun') + \
  collect_submodules('gcpdiag.runbook.composer') + \
  collect_submodules('gcpdiag.runbook.crm') + \

@@ -1,0 +1,694 @@
+{
+  "kind": "bigquery#job",
+  "etag": "lBg4aOpx3Gc1+nHTj6N6Ug==",
+  "id": "gcpdiag-bigquery1-aaaa:US.information_schema_job1",
+  "selfLink": "https://content-bigquery.googleapis.com/bigquery/v2/projects/gcpdiag-bigquery1-aaaa/jobs/information_schema_job1?location=US",
+  "user_email": "test@example.com",
+  "configuration": {
+    "query": {
+      "query": "    SELECT\n        job_id,\n        user_email,\n        CAST(start_time AS STRING) as start_time_str,\n        CAST(end_time AS STRING) as end_time_str,\n        query\n      FROM\n        `gcpdiag-bigquery1-aaaa`.`region-US`.INFORMATION_SCHEMA.JOBS\n      ORDER BY\n  creation_time DESC\nLIMIT 3;\n",
+      "destinationTable": {
+        "projectId": "gcpdiag-bigquery1-aaaa",
+        "datasetId": "_11c155205196a0e73322cbd54ea20431b103d392",
+        "tableId": "anone4907f0f_68b8_4fd1_9ab7_8a634b72e336"
+      },
+      "writeDisposition": "WRITE_TRUNCATE",
+      "priority": "INTERACTIVE",
+      "useLegacySql": false,
+      "systemVariables": {
+        "types": {
+          "time_zone": {
+            "typeKind": "STRING"
+          }
+        },
+        "values": {
+          "time_zone": "America/Los_Angeles"
+        }
+      }
+    },
+    "jobType": "QUERY"
+  },
+  "jobReference": {
+    "projectId": "gcpdiag-bigquery1-aaaa",
+    "jobId": "information_schema_job1",
+    "location": "US"
+  },
+  "statistics": {
+    "creationTime": "1744544630658",
+    "startTime": "1744544630778",
+    "endTime": "1744544709589",
+    "totalBytesProcessed": "23985834934",
+    "query": {
+      "queryPlan": [
+        {
+          "name": "S00: Input",
+          "id": "0",
+          "startMs": "1744544650808",
+          "endMs": "1744544699676",
+          "waitRatioAvg": 0.753929010841052,
+          "waitMsAvg": "32477",
+          "waitRatioMax": 1,
+          "waitMsMax": "43077",
+          "readRatioAvg": 0.0078696288042342782,
+          "readMsAvg": "339",
+          "readRatioMax": 0.19353715439793859,
+          "readMsMax": "8337",
+          "computeRatioAvg": 0.00083571279337001179,
+          "computeMsAvg": "36",
+          "computeRatioMax": 0.12681941639389929,
+          "computeMsMax": "5463",
+          "writeRatioAvg": 6.9642732780834325e-05,
+          "writeMsAvg": "3",
+          "writeRatioMax": 0.08649627411379622,
+          "writeMsMax": "3726",
+          "shuffleOutputBytes": "1069596",
+          "shuffleOutputBytesSpilled": "0",
+          "recordsRead": "3106",
+          "recordsWritten": "2681",
+          "parallelInputs": "2345811",
+          "completedParallelInputs": "2345811",
+          "status": "COMPLETE",
+          "steps": [
+            {
+              "kind": "READ",
+              "substeps": [
+                "$10:creation_time, $11:change_timestamp, $12:organization_number, $13:project_id, $14:user_email, $15:job_id, $16:job.$is_not_null, $17:job.statistics.start_time, $18:job.statistics.end_time, $19:job.configuration.query.query",
+                "FROM gcpdiag-bigquery1-aaaa.region-US.INFORMATION_SCHEMA.JOBS",
+                "WHERE equal($13, 'gcpdiag-bigquery1-aaaa')"
+              ]
+            },
+            {
+              "kind": "AGGREGATE",
+              "substeps": [
+                "GROUP BY $60 := $10, $61 := $12, $62 := $13, $63 := $15",
+                "$40 := ANY_VALUE($14)",
+                "$41 := SHARD_ARRAY_AGG($16 ORDER BY $50 ASC, $11 DESC LIMIT 1)",
+                "$42 := SHARD_ARRAY_AGG($17 ORDER BY $50 ASC, $11 DESC LIMIT 1)",
+                "$43 := SHARD_ARRAY_AGG($18 ORDER BY $50 ASC, $11 DESC LIMIT 1)",
+                "$44 := SHARD_ARRAY_AGG($19 ORDER BY $50 ASC, $11 DESC LIMIT 1)"
+              ]
+            },
+            {
+              "kind": "COMPUTE",
+              "substeps": [
+                "$50 := is_null($16)"
+              ]
+            },
+            {
+              "kind": "WRITE",
+              "substeps": [
+                "$60, $61, $62, $63, $40, $41, $42, $43, $44",
+                "TO __stage00_output",
+                "BY HASH($60, $61, $62, $63)"
+              ]
+            }
+          ],
+          "slotMs": "93254539",
+          "computeMode": "BIGQUERY"
+        },
+        {
+          "name": "S01: Input",
+          "id": "1",
+          "startMs": "1744544699698",
+          "endMs": "1744544700040",
+          "waitRatioAvg": 2.3214244260278106e-05,
+          "waitMsAvg": "1",
+          "waitRatioMax": 2.3214244260278106e-05,
+          "waitMsMax": "1",
+          "readRatioAvg": 0.00773034333867261,
+          "readMsAvg": "333",
+          "readRatioMax": 0.00773034333867261,
+          "readMsMax": "333",
+          "computeRatioAvg": 0.00020892819834250295,
+          "computeMsAvg": "9",
+          "computeRatioMax": 0.00020892819834250295,
+          "computeMsMax": "9",
+          "writeRatioAvg": 4.6428488520556212e-05,
+          "writeMsAvg": "2",
+          "writeRatioMax": 4.6428488520556212e-05,
+          "writeMsMax": "2",
+          "shuffleOutputBytes": "0",
+          "shuffleOutputBytesSpilled": "0",
+          "recordsRead": "0",
+          "recordsWritten": "0",
+          "parallelInputs": "8",
+          "completedParallelInputs": "8",
+          "status": "COMPLETE",
+          "steps": [
+            {
+              "kind": "READ",
+              "substeps": [
+                "$1:creation_time, $2:job_id, $3:project_id, $4:deletion_time, $5:replacement_job_id",
+                "FROM gcpdiag-bigquery1-aaaa.region-US.INFORMATION_SCHEMA.JOBS",
+                "WHERE equal($3, 'gcpdiag-bigquery1-aaaa')"
+              ]
+            },
+            {
+              "kind": "WRITE",
+              "substeps": [
+                "$1, $2, $3, $4, $5",
+                "TO __stage01_output"
+              ]
+            }
+          ],
+          "slotMs": "739",
+          "computeMode": "BIGQUERY"
+        },
+        {
+          "name": "S02: Join+",
+          "id": "2",
+          "startMs": "1744544700113",
+          "endMs": "1744544700390",
+          "inputStages": [
+            "0",
+            "1"
+          ],
+          "waitRatioAvg": 0.0041785639668500589,
+          "waitMsAvg": "180",
+          "waitRatioMax": 0.0057571325765489708,
+          "waitMsMax": "248",
+          "readRatioAvg": 0,
+          "readMsAvg": "0",
+          "readRatioMax": 0,
+          "readMsMax": "0",
+          "computeRatioAvg": 0.0015785686096989112,
+          "computeMsAvg": "68",
+          "computeRatioMax": 0.0023214244260278106,
+          "computeMsMax": "100",
+          "writeRatioAvg": 2.3214244260278106e-05,
+          "writeMsAvg": "1",
+          "writeRatioMax": 0.00013928546556166865,
+          "writeMsMax": "6",
+          "shuffleOutputBytes": "656695",
+          "shuffleOutputBytesSpilled": "0",
+          "recordsRead": "2681",
+          "recordsWritten": "2169",
+          "parallelInputs": "1000",
+          "completedParallelInputs": "1000",
+          "status": "COMPLETE",
+          "steps": [
+            {
+              "kind": "READ",
+              "substeps": [
+                "$60, $61, $62, $63, $40, $41, $42, $43, $44",
+                "FROM __stage00_output"
+              ]
+            },
+            {
+              "kind": "READ",
+              "substeps": [
+                "$1, $2, $3, $4, $5",
+                "FROM __stage01_output"
+              ]
+            },
+            {
+              "kind": "COMPUTE",
+              "substeps": [
+                "$20 := CAST(timestamp_millis(array_at_offset($95, 0)) AS STRING)",
+                "$21 := CAST(timestamp_millis(array_at_offset($96, 0)) AS STRING)",
+                "$22 := if(not(is_null($90)), NULL, if(starts_with($94, 'principal://'), '', $94))",
+                "$23 := if(is_null($90), $93, $91)",
+                "$24 := if(is_null($90), array_at_offset($97, 0), NULL)"
+              ]
+            },
+            {
+              "kind": "SORT",
+              "substeps": [
+                "$80 DESC",
+                "LIMIT 3"
+              ]
+            },
+            {
+              "kind": "JOIN",
+              "substeps": [
+                "$80 := $70, $81 := $73, $82 := $30, $83 := $32, $84 := $33, $85 := $34, $86 := $4, $87 := $5",
+                "LEFT OUTER HASH JOIN EACH  WITH ALL  ON $70 = $1, $73 = $2, $72 = $3"
+              ]
+            },
+            {
+              "kind": "FILTER",
+              "substeps": [
+                "not(is_null(array_at_offset($31, 0)))"
+              ]
+            },
+            {
+              "kind": "AGGREGATE",
+              "substeps": [
+                "GROUP BY $70 := $60, $71 := $61, $72 := $62, $73 := $63",
+                "$30 := ANY_VALUE($40)",
+                "$31 := ROOT_ARRAY_AGG($41 ORDER BY  ASC,  DESC LIMIT 1)",
+                "$32 := ROOT_ARRAY_AGG($42 ORDER BY  ASC,  DESC LIMIT 1)",
+                "$33 := ROOT_ARRAY_AGG($43 ORDER BY  ASC,  DESC LIMIT 1)",
+                "$34 := ROOT_ARRAY_AGG($44 ORDER BY  ASC,  DESC LIMIT 1)"
+              ]
+            },
+            {
+              "kind": "WRITE",
+              "substeps": [
+                "$92, $20, $21, $22, $23, $24",
+                "TO __stage02_output"
+              ]
+            }
+          ],
+          "slotMs": "125882",
+          "computeMode": "BIGQUERY"
+        },
+        {
+          "name": "S03: Output",
+          "id": "3",
+          "startMs": "1744544700292",
+          "endMs": "1744544700397",
+          "inputStages": [
+            "2"
+          ],
+          "waitRatioAvg": 0.005710704088028414,
+          "waitMsAvg": "246",
+          "waitRatioMax": 0.005710704088028414,
+          "waitMsMax": "246",
+          "readRatioAvg": 0,
+          "readMsAvg": "0",
+          "readRatioMax": 0,
+          "readMsMax": "0",
+          "computeRatioAvg": 0.00039464215242472779,
+          "computeMsAvg": "17",
+          "computeRatioMax": 0.00039464215242472779,
+          "computeMsMax": "17",
+          "writeRatioAvg": 0.00016249970982194675,
+          "writeMsAvg": "7",
+          "writeRatioMax": 0.00016249970982194675,
+          "writeMsMax": "7",
+          "shuffleOutputBytes": "1236",
+          "shuffleOutputBytesSpilled": "0",
+          "recordsRead": "2169",
+          "recordsWritten": "3",
+          "parallelInputs": "1",
+          "completedParallelInputs": "1",
+          "status": "COMPLETE",
+          "steps": [
+            {
+              "kind": "READ",
+              "substeps": [
+                "$92, $20, $21, $22, $23, $24",
+                "FROM __stage02_output"
+              ]
+            },
+            {
+              "kind": "SORT",
+              "substeps": [
+                "$92 DESC",
+                "LIMIT 3"
+              ]
+            },
+            {
+              "kind": "WRITE",
+              "substeps": [
+                "$100, $101, $102, $103, $104",
+                "TO __stage03_output"
+              ]
+            }
+          ],
+          "slotMs": "107",
+          "computeMode": "BIGQUERY"
+        }
+      ],
+      "estimatedBytesProcessed": "590823461618180",
+      "timeline": [
+        {
+          "elapsedMs": "20222",
+          "totalSlotMs": "500586",
+          "pendingUnits": "2345811",
+          "completedUnits": "0",
+          "activeUnits": "13",
+          "estimatedRunnableUnits": "0"
+        },
+        {
+          "elapsedMs": "21222",
+          "totalSlotMs": "1105525",
+          "pendingUnits": "2345810",
+          "completedUnits": "1",
+          "activeUnits": "81",
+          "estimatedRunnableUnits": "0"
+        },
+        {
+          "elapsedMs": "22222",
+          "totalSlotMs": "1609604",
+          "pendingUnits": "2345806",
+          "completedUnits": "5",
+          "activeUnits": "1373",
+          "estimatedRunnableUnits": "0"
+        },
+        {
+          "elapsedMs": "37222",
+          "totalSlotMs": "11300509",
+          "pendingUnits": "2345806",
+          "completedUnits": "5",
+          "activeUnits": "1373",
+          "estimatedRunnableUnits": "0"
+        },
+        {
+          "elapsedMs": "38222",
+          "totalSlotMs": "12895419",
+          "pendingUnits": "2344982",
+          "completedUnits": "829",
+          "activeUnits": "1547",
+          "estimatedRunnableUnits": "763"
+        },
+        {
+          "elapsedMs": "39222",
+          "totalSlotMs": "14895419",
+          "pendingUnits": "2344980",
+          "completedUnits": "831",
+          "activeUnits": "2447",
+          "estimatedRunnableUnits": "274"
+        },
+        {
+          "elapsedMs": "41222",
+          "totalSlotMs": "18895419",
+          "pendingUnits": "2343866",
+          "completedUnits": "1945",
+          "activeUnits": "2335",
+          "estimatedRunnableUnits": "338"
+        },
+        {
+          "elapsedMs": "42222",
+          "totalSlotMs": "20895419",
+          "pendingUnits": "2343528",
+          "completedUnits": "2283",
+          "activeUnits": "2335",
+          "estimatedRunnableUnits": "338"
+        },
+        {
+          "elapsedMs": "43222",
+          "totalSlotMs": "22895419",
+          "pendingUnits": "2343489",
+          "completedUnits": "2322",
+          "activeUnits": "3261",
+          "estimatedRunnableUnits": "0"
+        },
+        {
+          "elapsedMs": "45222",
+          "totalSlotMs": "26895419",
+          "pendingUnits": "2342545",
+          "completedUnits": "3266",
+          "activeUnits": "3918",
+          "estimatedRunnableUnits": "0"
+        },
+        {
+          "elapsedMs": "47222",
+          "totalSlotMs": "30895419",
+          "pendingUnits": "2342545",
+          "completedUnits": "3266",
+          "activeUnits": "3918",
+          "estimatedRunnableUnits": "0"
+        },
+        {
+          "elapsedMs": "48222",
+          "totalSlotMs": "32895419",
+          "pendingUnits": "2341207",
+          "completedUnits": "4604",
+          "activeUnits": "4472",
+          "estimatedRunnableUnits": "136"
+        },
+        {
+          "elapsedMs": "51222",
+          "totalSlotMs": "38895419",
+          "pendingUnits": "2339285",
+          "completedUnits": "6526",
+          "activeUnits": "3699",
+          "estimatedRunnableUnits": "211"
+        },
+        {
+          "elapsedMs": "52222",
+          "totalSlotMs": "40895419",
+          "pendingUnits": "2337737",
+          "completedUnits": "8074",
+          "activeUnits": "2938",
+          "estimatedRunnableUnits": "0"
+        },
+        {
+          "elapsedMs": "54222",
+          "totalSlotMs": "44895419",
+          "pendingUnits": "2337496",
+          "completedUnits": "8315",
+          "activeUnits": "3151",
+          "estimatedRunnableUnits": "826"
+        },
+        {
+          "elapsedMs": "55222",
+          "totalSlotMs": "46895419",
+          "pendingUnits": "2336264",
+          "completedUnits": "9547",
+          "activeUnits": "2493",
+          "estimatedRunnableUnits": "826"
+        },
+        {
+          "elapsedMs": "56222",
+          "totalSlotMs": "48895419",
+          "pendingUnits": "2335237",
+          "completedUnits": "10574",
+          "activeUnits": "2044",
+          "estimatedRunnableUnits": "329"
+        },
+        {
+          "elapsedMs": "57222",
+          "totalSlotMs": "50895419",
+          "pendingUnits": "2334351",
+          "completedUnits": "11460",
+          "activeUnits": "2156",
+          "estimatedRunnableUnits": "466"
+        },
+        {
+          "elapsedMs": "58222",
+          "totalSlotMs": "52895419",
+          "pendingUnits": "2334332",
+          "completedUnits": "11479",
+          "activeUnits": "2156",
+          "estimatedRunnableUnits": "466"
+        },
+        {
+          "elapsedMs": "59222",
+          "totalSlotMs": "54895419",
+          "pendingUnits": "2333780",
+          "completedUnits": "12031",
+          "activeUnits": "2605",
+          "estimatedRunnableUnits": "398"
+        },
+        {
+          "elapsedMs": "60222",
+          "totalSlotMs": "56895419",
+          "pendingUnits": "2333357",
+          "completedUnits": "12454",
+          "activeUnits": "2764",
+          "estimatedRunnableUnits": "110"
+        },
+        {
+          "elapsedMs": "61222",
+          "totalSlotMs": "58895419",
+          "pendingUnits": "2333099",
+          "completedUnits": "12712",
+          "activeUnits": "2993",
+          "estimatedRunnableUnits": "49"
+        },
+        {
+          "elapsedMs": "62222",
+          "totalSlotMs": "60895419",
+          "pendingUnits": "2330543",
+          "completedUnits": "15268",
+          "activeUnits": "2372",
+          "estimatedRunnableUnits": "49"
+        },
+        {
+          "elapsedMs": "63222",
+          "totalSlotMs": "62895419",
+          "pendingUnits": "1769",
+          "completedUnits": "2344042",
+          "activeUnits": "2482",
+          "estimatedRunnableUnits": "990"
+        },
+        {
+          "elapsedMs": "64222",
+          "totalSlotMs": "64895419",
+          "pendingUnits": "14",
+          "completedUnits": "2345797",
+          "activeUnits": "2362",
+          "estimatedRunnableUnits": "998"
+        },
+        {
+          "elapsedMs": "65222",
+          "totalSlotMs": "66895419",
+          "pendingUnits": "10",
+          "completedUnits": "2345801",
+          "activeUnits": "2141",
+          "estimatedRunnableUnits": "0"
+        },
+        {
+          "elapsedMs": "66222",
+          "totalSlotMs": "68895419",
+          "pendingUnits": "9",
+          "completedUnits": "2345802",
+          "activeUnits": "1936",
+          "estimatedRunnableUnits": "0"
+        },
+        {
+          "elapsedMs": "67222",
+          "totalSlotMs": "70895419",
+          "pendingUnits": "3",
+          "completedUnits": "2345808",
+          "activeUnits": "1641",
+          "estimatedRunnableUnits": "0"
+        },
+        {
+          "elapsedMs": "68222",
+          "totalSlotMs": "72895419",
+          "pendingUnits": "2",
+          "completedUnits": "2345809",
+          "activeUnits": "1490",
+          "estimatedRunnableUnits": "0"
+        },
+        {
+          "elapsedMs": "69222",
+          "totalSlotMs": "74895419",
+          "pendingUnits": "1",
+          "completedUnits": "2345818",
+          "activeUnits": "1",
+          "estimatedRunnableUnits": "115"
+        },
+        {
+          "elapsedMs": "70222",
+          "totalSlotMs": "76895419",
+          "pendingUnits": "0",
+          "completedUnits": "2346820",
+          "activeUnits": "0",
+          "estimatedRunnableUnits": "0"
+        },
+        {
+          "elapsedMs": "71222",
+          "totalSlotMs": "78895419",
+          "pendingUnits": "0",
+          "completedUnits": "2346820",
+          "activeUnits": "0",
+          "estimatedRunnableUnits": "0"
+        },
+        {
+          "elapsedMs": "72222",
+          "totalSlotMs": "80895419",
+          "pendingUnits": "0",
+          "completedUnits": "2346820",
+          "activeUnits": "0",
+          "estimatedRunnableUnits": "0"
+        },
+        {
+          "elapsedMs": "73222",
+          "totalSlotMs": "82895419",
+          "pendingUnits": "0",
+          "completedUnits": "2346820",
+          "activeUnits": "0",
+          "estimatedRunnableUnits": "0"
+        },
+        {
+          "elapsedMs": "74222",
+          "totalSlotMs": "84895419",
+          "pendingUnits": "0",
+          "completedUnits": "2346820",
+          "activeUnits": "0",
+          "estimatedRunnableUnits": "0"
+        },
+        {
+          "elapsedMs": "75222",
+          "totalSlotMs": "86895419",
+          "pendingUnits": "0",
+          "completedUnits": "2346820",
+          "activeUnits": "0",
+          "estimatedRunnableUnits": "0"
+        },
+        {
+          "elapsedMs": "76222",
+          "totalSlotMs": "88895419",
+          "pendingUnits": "0",
+          "completedUnits": "2346820",
+          "activeUnits": "0",
+          "estimatedRunnableUnits": "0"
+        },
+        {
+          "elapsedMs": "77222",
+          "totalSlotMs": "90895419",
+          "pendingUnits": "0",
+          "completedUnits": "2346820",
+          "activeUnits": "0",
+          "estimatedRunnableUnits": "0"
+        },
+        {
+          "elapsedMs": "78473",
+          "totalSlotMs": "93381269",
+          "pendingUnits": "0",
+          "completedUnits": "2346820",
+          "activeUnits": "0",
+          "estimatedRunnableUnits": "0"
+        }
+      ],
+      "totalPartitionsProcessed": "192",
+      "totalBytesProcessed": "23985834934",
+      "totalBytesBilled": "23986176000",
+      "billingTier": 1,
+      "totalSlotMs": "93381269",
+      "cacheHit": false,
+      "referencedTables": [
+        {
+          "projectId": "gcpdiag-bigquery1-aaaa",
+          "datasetId": "region-US",
+          "tableId": "INFORMATION_SCHEMA.JOBS"
+        }
+      ],
+      "statementType": "SELECT",
+      "searchStatistics": {
+        "indexUsageMode": "UNUSED",
+        "indexUnusedReasons": [
+          {
+            "code": "OTHER_REASON",
+            "message": "Search indexes cannot be used in the search query."
+          }
+        ]
+      },
+      "performanceInsights": {
+        "stagePerformanceStandaloneInsights": [
+          {
+            "slotContention": true,
+            "insufficientShuffleQuota": false
+          }
+        ]
+      },
+      "transferredBytes": "0",
+      "metadataCacheStatistics": {
+        "tableMetadataCacheUsage": [
+          {
+            "tableReference": {
+              "projectId": "gcpdiag-bigquery1-aaaa",
+              "datasetId": "region-US",
+              "tableId": "INFORMATION_SCHEMA.JOBS_DELETE"
+            },
+            "unusedReason": "OTHER_REASON",
+            "explanation": "Table does not have CMETA."
+          },
+          {
+            "tableReference": {
+              "projectId": "gcpdiag-bigquery1-aaaa",
+              "datasetId": "region-US",
+              "tableId": "INFORMATION_SCHEMA.JOBS"
+            },
+            "unusedReason": "OTHER_REASON",
+            "explanation": "Table does not have CMETA."
+          }
+        ]
+      }
+    },
+    "totalSlotMs": "93381269",
+    "finalExecutionDurationMs": "58493"
+  },
+  "status": {
+    "state": "DONE"
+  },
+  "principal_subject": "user:test@example.com",
+  "jobCreationReason": {
+    "code": "REQUESTED"
+  }
+}

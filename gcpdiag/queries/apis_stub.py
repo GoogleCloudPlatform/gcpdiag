@@ -19,7 +19,7 @@ import pathlib
 import re
 from typing import Optional
 
-import googleapiclient.errors
+import googleapiclient
 import httplib2
 
 # pylint: disable=unused-argument
@@ -424,6 +424,9 @@ def get_api_stub(service_name: str,
   elif service_name == 'dataflow':
     from gcpdiag.queries import dataflow_stub
     return dataflow_stub.DataflowApiStub()
+  elif service_name == 'bigquery':
+    from gcpdiag.queries import bigquery_stub
+    return bigquery_stub.BigQueryApiStub()
   elif 'aiplatform' in service_name:
     from gcpdiag.queries import vertex_stub
     return vertex_stub.VertexApiStub()

@@ -39,6 +39,9 @@ class CrmApiStub:
   def projects(self):
     return self
 
+  def organizations(self):
+    return self
+
   # pylint: disable=redefined-builtin
   def list(self, parent=None, page_token=None, filter=None):
     if not parent:
@@ -59,6 +62,14 @@ class CrmApiStub:
       m = re.match(r'projects/(.*)', name)
       project_id = m.group(1)
     return apis_stub.RestCallStub(project_id, 'project')
+
+  # pylint: disable=invalid-name
+  def getAncestry(self, projectId='gcpdiag-bigquery1-aaaa', project_id=None):
+    if not project_id and projectId is not None:
+      #m = re.match(r'^(.*?):getAncestry$', projectId)
+      #project_id = m.group(1)
+      project_id = projectId
+    return apis_stub.RestCallStub(project_id, 'ancestor')
 
   # pylint: disable=invalid-name
   def getIamPolicy(self, resource):
