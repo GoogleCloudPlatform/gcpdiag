@@ -4,13 +4,14 @@
 [![test badge](https://github.com/GoogleCloudPlatform/gcpdiag/actions/workflows/test.yml/badge.svg?branch=main&event=push)](https://github.com/GoogleCloudPlatform/gcpdiag/actions/workflows/test.yml?query=branch%3Amain+event%3Apush)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/GoogleCloudPlatform/gcpdiag/badge)](https://scorecard.dev/viewer/?uri=github.com/GoogleCloudPlatform/gcpdiag)
 
-**gcpdiag** is a command-line diagnostics tool for GCP customers. It finds
-and helps to fix common issues in Google Cloud Platform projects. It is used to
-test projects against a wide range of best practices and frequent mistakes,
-based on the troubleshooting experience of the Google Cloud Support team.
 
-gcpdiag is open-source and contributions are welcome! Note that this is not
-an officially supported Google product, but a community effort. The Google Cloud
+**gcpdiag** is a command-line diagnostics tool for GCP customers. It finds and
+helps to fix common issues in Google Cloud Platform projects. It is used to test
+projects against a wide range of best practices and frequent mistakes, based on
+the troubleshooting experience of the Google Cloud Support team.
+
+gcpdiag is open-source and contributions are welcome! Note that this is not an
+officially supported Google product, but a community effort. The Google Cloud
 Support team maintains this code and we do our best to avoid causing any
 problems in your projects, but we give no guarantees to that end.
 
@@ -30,8 +31,8 @@ chmod +x gcpdiag
 
 ## Usage
 
-Currently gcpdiag mainly supports subcommand: `lint` and `Runbooks`, which is used
-to run diagnostics on one or more GCP projects.
+Currently gcpdiag mainly supports subcommand: `lint` and `Runbooks`, which is
+used to run diagnostics on one or more GCP projects.
 
 ### LINT
 
@@ -107,9 +108,9 @@ optional arguments:
 
 ##### BUNDLE
 
-Create a YAML file to execute a "bundle" of individual runbook steps. This YAML file
-allows you to define multiple bundles, each containing specific parameters and
-steps to execute.
+Create a YAML file to execute a "bundle" of individual runbook steps. This YAML
+file allows you to define multiple bundles, each containing specific parameters
+and steps to execute.
 
 ***Ex: test.yaml***
 
@@ -154,35 +155,36 @@ gcpdiag runbook --bundle-spec  test.yaml
 
 See <http://gcpdiag.dev> for more information:
 
-- [Documentation](https://gcpdiag.dev/docs/)
-- [Lint rule description](https://gcpdiag.dev/rules/)
-- [Runbook description](https://gcpdiag.dev/runbook/)
-- [Development guides](https://gcpdiag.dev/docs/development/)
+-   [Documentation](https://gcpdiag.dev/docs/)
+-   [Lint rule description](https://gcpdiag.dev/rules/)
+-   [Runbook description](https://gcpdiag.dev/runbook/)
+-   [Development guides](https://gcpdiag.dev/docs/development/)
 
 ## Authentication
 
 gcpdiag supports authentication using multiple mechanisms:
 
-1. Application default credentials
+1.  Application default credentials
 
-   gcpdiag can use Cloud SDK's [Application Default
-   Credentials](https://google-auth.readthedocs.io/en/latest/reference/google.auth.html#google.auth.default).
-   This might require that you first run `gcloud auth login --update-adc` to
-   update the cached credentials. This is the default in Cloud Shell because in
-   that environment, ADC credentials are automatically provisioned.
+    gcpdiag can use Cloud SDK's
+    [Application Default Credentials](https://google-auth.readthedocs.io/en/latest/reference/google.auth.html#google.auth.default).
+    This might require that you first run `gcloud auth login --update-adc` to
+    update the cached credentials. This is the default in Cloud Shell because in
+    that environment, ADC credentials are automatically provisioned.
 
-1. Service account key
+1.  Service account key
 
-   You can also use the `--auth-key` parameter to specify the [private
-   key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys)
-   of a service account.
+    You can also use the `--auth-key` parameter to specify the
+    [private key](https://cloud.google.com/iam/docs/creating-managing-service-account-keys)
+    of a service account.
 
-The authenticated principal will need as minimum the following roles granted (both of them):
+The authenticated principal will need as minimum the following roles granted
+(both of them):
 
-- `Viewer` on the inspected project
-- `Service Usage Consumer` on the project used for billing/quota enforcement,
-  which is per default the project being inspected, but can be explicitly set
-  using the `--billing-project` option
+-   `Viewer` on the inspected project
+-   `Service Usage Consumer` on the project used for billing/quota enforcement,
+    which is per default the project being inspected, but can be explicitly set
+    using the `--billing-project` option
 
 The Editor and Owner roles include all the required permissions, but if you use
 service account authentication (`--auth-key`), we recommend to only grant the
@@ -196,12 +198,12 @@ The **product** is the GCP service that is being tested. Examples: GKE or GCE.
 
 The **class** is what kind of test it is, currently we have:
 
-| Class name | Description                                     |
-| ---------- | ----------------------------------------------- |
-| BP         | Best practice, opinionated recommendations      |
-| WARN       | Warnings: things that are possibly wrong        |
-| ERR        | Errors: things that are very likely to be wrong |
-| SEC        | Potential security issues                       |
+Class name | Description
+---------- | -----------------------------------------------
+BP         | Best practice, opinionated recommendations
+WARN       | Warnings: things that are possibly wrong
+ERR        | Errors: things that are very likely to be wrong
+SEC        | Potential security issues
 
 The **ID** is currently formatted as YYYY_NNN, where YYYY is the year the test
 was written, and NNN is a counter. The ID must be unique per product/class
@@ -211,3 +213,22 @@ Each test also has a **short_description** and a **long_description**. The short
 description is a statement about the **good state** that is being verified to be
 true (i.e. we don't test for errors, we test for compliance, i.e. an problem not
 to be present).
+
+## Adding Support for New GCP Products
+
+When adding lint rules or runbooks for a new GCP product that gcpdiag doesn't
+currently support, you need to update the following files to register the new
+product modules:
+
+[gcpdiag/product_list.py](https://github.com/GoogleCloudPlatform/gcpdiag/blob/main/gcpdiag/product_list.py):
+Add the new product identifier to the central list used by gcpdiag. Update the
+list of known products for the runbook code generator script.
+
+[pyinstaller/hook-gcpdiag.runbook.py](https://github.com/GoogleCloudPlatform/gcpdiag/blob/main/pyinstaller/hook-gcpdiag.runbook.py):
+Ensure PyInstaller includes the new runbook modules during the build process.
+
+[pyinstaller/hook-gcpdiag.lint.py](https://github.com/GoogleCloudPlatform/gcpdiag/blob/main/pyinstaller/hook-gcpdiag.lint.py):
+Ensure PyInstaller includes the new lint rule modules during the build process.
+
+[bin/runbook-starter-code-generator](https://github.com/GoogleCloudPlatform/gcpdiag/blob/main/bin/runbook-starter-code-generator):
+Update product set in the starter code generator script.
