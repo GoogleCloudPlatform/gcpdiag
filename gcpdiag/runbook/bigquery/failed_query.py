@@ -18,6 +18,7 @@ job status and analyzing the error message against a set of known issues to
 provide root cause and remediation steps.
 """
 
+from google.auth import exceptions
 from googleapiclient import errors
 
 from gcpdiag import runbook, utils
@@ -95,7 +96,7 @@ class BigQueryFailedQueryStart(runbook.StartStep):
     user_email = ''
     try:
       user_email = apis.get_user_email()
-    except RuntimeError:
+    except (RuntimeError, exceptions.DefaultCredentialsError):
       op.add_info(
           'Unable to fetch user email. Please make sure to authenticate properly before '
           'executing the investigation. Attempting to run the investigation.')
@@ -223,7 +224,7 @@ class BigQueryJobExists(runbook.Gateway):
         user_email = ''
         try:
           user_email = apis.get_user_email()
-        except RuntimeError:
+        except (RuntimeError, exceptions.DefaultCredentialsError):
           op.warning(
               message=
               'Unable to fetch user email. Please make sure to authenticate properly'

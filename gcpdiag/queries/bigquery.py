@@ -5,6 +5,7 @@ import time
 import uuid
 from typing import Any, Dict, List, Optional, Set, Union
 
+from google.auth import exceptions
 from googleapiclient import errors
 
 from gcpdiag import caching, config, models, utils
@@ -764,7 +765,7 @@ def get_information_schema_job_metadata(
   user_email = ''
   try:
     user_email = apis.get_user_email()
-  except RuntimeError:
+  except (RuntimeError, exceptions.DefaultCredentialsError):
     pass
   except AttributeError as err:
     if (('has no attribute' in str(err)) and
@@ -843,7 +844,8 @@ def get_bigquery_job(project_id: str, region: str,
       user_email = ''
       try:
         user_email = apis.get_user_email()
-      except (RuntimeError, AttributeError) as error:
+      except (RuntimeError, AttributeError,
+              exceptions.DefaultCredentialsError) as error:
         if (('has no attribute' in str(error)) and
             ('with_quota_project' in str(error))):
           op.info('Running the investigation within the GCA context.')

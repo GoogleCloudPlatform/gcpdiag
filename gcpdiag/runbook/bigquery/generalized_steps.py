@@ -16,6 +16,8 @@
 import logging
 from typing import Dict, Set
 
+from google.auth import exceptions
+
 from gcpdiag import runbook, utils
 from gcpdiag.queries import apis
 from gcpdiag.queries import bigquery as bq_queries
@@ -57,7 +59,7 @@ class RunPermissionChecks(runbook.Gateway):
     })
     try:
       self.principal_email = apis.get_user_email()
-    except (RuntimeError, AttributeError):
+    except (RuntimeError, AttributeError, exceptions.DefaultCredentialsError):
       op.add_skipped(
           project_placeholder,
           reason=
