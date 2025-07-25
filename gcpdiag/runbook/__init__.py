@@ -591,6 +591,10 @@ class DiagnosticEngine:
             mod_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                     product)
             message += (
+                '\n\nPlease refer to Adding Support for New GCP Products '
+                'instructions at '
+                'https://github.com/GoogleCloudPlatform/gcpdiag/blob/main/'
+                'README.md#adding-support-for-new-gcp-products'
                 '\n\nPlease verify the following:'
                 f"\n1. Ensure that the class `{clazz}` exists in the product's module `{mod_path}`."
                 '\n2. If the class exists, ensure there are no syntax errors '
