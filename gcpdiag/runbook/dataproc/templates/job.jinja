@@ -2,26 +2,9 @@
 The job `{job_id}` exists in project `{project_id}`.
 {% endblock job_id_exists_success_reason %}
 
-{% block job_id_exists_failure_reason %}
-The job `{job_id}` does not exist in project `{project_id}`.
-{% endblock job_id_exists_failure_reason %}
-
-{% block job_id_exists_failure_remediation %}
-Verify that the job ID and region are correct.
-{% endblock job_id_exists_failure_remediation %}
-
-{% block job_failed_success_reason %}
-Job `{job_id}` failed. Continue with the next steps to investigate the failure.
-{% endblock job_failed_success_reason %}
-
-{% block job_failed_failure_reason %}
-Job `{job_id}` completed successfully.
-{% endblock job_failed_failure_reason %}
-
-{% block job_failed_failure_remediation %}
-If the job experienced slow performance, potential causes include data skew, changes in data volume, or network latency.
-If performance issues persist, open a support case and share the Spark event log for both the fast and slow job runs.
-{% endblock job_failed_failure_remediation %}
+{% block job_id_exists_skipped_reason %}
+The job `{job_id}` not found in project `{project_id}`.
+{% endblock job_id_exists_skipped_reason %}
 
 {% block task_not_found_success_reason %}
 Job `{job_id}` did not fail due to a 'task not found' error. {additional_message}

@@ -72,8 +72,6 @@ gcpdiag runbook --help
 
   - [Job Details Dependency Gateway](/runbook/steps/dataproc/job-details-dependency-gateway)
 
-  - [Check If Job Failed](/runbook/steps/dataproc/check-if-job-failed)
-
   - [Check Task Not Found](/runbook/steps/dataproc/check-task-not-found)
 
   - [Check Master Oom](/runbook/steps/dataproc/check-master-oom)

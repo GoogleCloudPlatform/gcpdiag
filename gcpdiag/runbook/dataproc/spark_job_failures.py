@@ -123,41 +123,36 @@ class JobStart(runbook.StartStep):
   template = 'job::job_id_exists'
 
   def execute(self):
-    """Verify job exists in Dataproc UI."""
+    """Verify job exists in customer's project."""
     project = crm.get_project(op.get(flags.PROJECT_ID))
-
-    if not op.get(flags.DATAPROC_JOB_ID) or not op.get(flags.REGION):
-      op.add_failed(
-          project,
-          reason=op.prep_msg(
-              op.FAILURE_REASON,
-              project_id=project,
-              job_id=op.get(flags.DATAPROC_JOB_ID),
-              cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
-          ),
-          remediation=op.prep_msg(op.FAILURE_REMEDIATION),
-      )
-      return
 
     # uses the API to get the cluster information from the job id
     try:
       job = dataproc.get_job_by_jobid(project_id=op.get(flags.PROJECT_ID),
                                       region=op.get(flags.REGION),
                                       job_id=op.get(flags.DATAPROC_JOB_ID))
-    except (AttributeError, GcpApiError, IndexError, TypeError,
-            ValueError) as e:
-      op.put(flags.JOB_EXIST, 'false')
-      op.add_failed(
+    except (AttributeError, GcpApiError, IndexError, TypeError, ValueError):
+      op.add_skipped(
           project,
           reason=op.prep_msg(
-              op.FAILURE_REASON,
+              op.SKIPPED_REASON,
               project_id=project,
               job_id=op.get(flags.DATAPROC_JOB_ID),
               cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
-              error=e,
           ),
-          remediation=op.prep_msg(op.FAILURE_REMEDIATION),
       )
+      return
+
+    if job.state == 'DONE':
+      op.add_skipped(
+          project,
+          reason=(
+              'Job {} completed successfully.'
+              'If the job experienced slow performance, potential causes'
+              'include data skew, changes in data volume, or network latency.'
+              'If performance issues persist, open a support case and share the'
+              'Spark event log for both the fast and slow job runs.'.format(
+                  op.get(flags.DATAPROC_JOB_ID))))
       return
 
     # Start date is the date for when the job was running
@@ -215,32 +210,30 @@ class JobDetailsDependencyGateway(runbook.Gateway):
   def execute(self):
     """Execute child steps depending on if the required details exist or not"""
 
-    if op.get(flags.JOB_EXIST) != 'false':
-      # add child steps that depend on job details from the API
-      self.add_child(CheckIfJobFailed())
-      self.add_child(CheckTaskNotFound())
-      self.add_child(CheckMasterOOM())
-      self.add_child(CheckWorkerOOM())
-      self.add_child(CheckSWPreemption())
-      self.add_child(CheckWorkerDiskUsageIssue())
-      self.add_child(CheckPortExhaustion())
-      self.add_child(CheckKillingOrphanedApplication())
-      self.add_child(CheckPythonImportFailure())
-      self.add_child(CheckShuffleServiceKill())
-      self.add_child(CheckGCPause())
-      self.add_child(CheckYarnRuntimeException())
-      self.add_child(CheckJobThrottling())
-      self.add_child(CheckGCSConnector())
-      self.add_child(CheckShuffleFailures())
+    # add child steps that depend on job details from the API
+    self.add_child(CheckTaskNotFound())
+    self.add_child(CheckMasterOOM())
+    self.add_child(CheckWorkerOOM())
+    self.add_child(CheckSWPreemption())
+    self.add_child(CheckWorkerDiskUsageIssue())
+    self.add_child(CheckPortExhaustion())
+    self.add_child(CheckKillingOrphanedApplication())
+    self.add_child(CheckPythonImportFailure())
+    self.add_child(CheckShuffleServiceKill())
+    self.add_child(CheckGCPause())
+    self.add_child(CheckYarnRuntimeException())
+    self.add_child(CheckJobThrottling())
+    self.add_child(CheckGCSConnector())
+    self.add_child(CheckShuffleFailures())
 
-      cluster_exists = op.get('cluster_exists', False)
-      if cluster_exists:
-        # add child steps that depend on cluster details from the API
-        self.add_child(CheckStackdriverSetting())
-        self.add_child(CheckClusterVersion())
-        self.add_child(CheckPermissions())
-        self.add_child(dp_gs.CheckClusterNetworkConnectivity())
-        self.add_child(CheckBQConnector())
+    cluster_exists = op.get('cluster_exists', False)
+    if cluster_exists:
+      # add child steps that depend on cluster details from the API
+      self.add_child(CheckStackdriverSetting())
+      self.add_child(CheckClusterVersion())
+      self.add_child(CheckPermissions())
+      self.add_child(dp_gs.CheckClusterNetworkConnectivity())
+      self.add_child(CheckBQConnector())
 
 
 class CheckStackdriverSetting(runbook.Step):
@@ -303,32 +296,6 @@ class CheckClusterVersion(runbook.Step):
           reason=op.prep_msg(op.FAILURE_REASON,
                              cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME)),
           remediation=op.prep_msg(op.FAILURE_REMEDIATION),
-      )
-
-
-class CheckIfJobFailed(runbook.Step):
-  """Verify if dataproc job failed."""
-
-  template = 'job::job_failed'
-
-  def execute(self):
-    """Verify if job failed."""
-    job = dataproc.get_job_by_jobid(op.get(flags.PROJECT_ID),
-                                    op.get(flags.REGION),
-                                    op.get(flags.DATAPROC_JOB_ID))
-
-    if job.state == 'DONE':
-      op.add_failed(
-          job,
-          reason=op.prep_msg(op.FAILURE_REASON,
-                             job_id=op.get(flags.DATAPROC_JOB_ID)),
-          remediation=op.prep_msg(op.FAILURE_REMEDIATION),
-      )
-    else:
-      op.add_ok(
-          job,
-          reason=op.prep_msg(op.SUCCESS_REASON,
-                             job_id=op.get(flags.DATAPROC_JOB_ID)),
       )
 
 
@@ -493,12 +460,12 @@ class CheckPermissions(runbook.CompositeStep):
       self.add_child(child=compute_agent_permission_check)
 
     else:
-      op.add_failed(project,
-                    reason=op.prep_msg(op.FAILURE_REASON,
-                                       service_account=op.get(
-                                           flags.SERVICE_ACCOUNT),
-                                       project_id=op.get(flags.PROJECT_ID)),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_uncertain(project,
+                       reason=op.prep_msg(op.UNCERTAIN_REASON,
+                                          service_account=op.get(
+                                              flags.SERVICE_ACCOUNT),
+                                          project_id=op.get(flags.PROJECT_ID)),
+                       remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION))
 
 
 class CheckMasterOOM(runbook.Step):
