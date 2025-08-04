@@ -758,6 +758,7 @@ def get_information_schema_job_metadata(
     region: str,
     job_id: str,
     creation_time_milis: Optional[int] = None,
+    skip_permission_check: bool = False,
 ) -> Optional[dict[str, Any]]:
   """Fetch metadata about a BigQuery job from the INFORMATION_SCHEMA."""
   if not apis.is_enabled(project_id, 'bigquery'):
@@ -772,21 +773,26 @@ def get_information_schema_job_metadata(
         ('with_quota_project' in str(err))):
       op.info('Running the investigation within the GCA context.')
   user = 'user:' + user_email
-  try:
-    policy = iam.get_project_policy(project_id)
-    if (not policy.has_permission(user, 'bigquery.jobs.create')) or (
-        not policy.has_permission(user, 'bigquery.jobs.listAll')):
+  if not skip_permission_check:
+    try:
+      policy = iam.get_project_policy(project_id)
+      if (not policy.has_permission(user, 'bigquery.jobs.create')) or (
+          not policy.has_permission(user, 'bigquery.jobs.listAll')):
+        op.info(
+            f'WARNING: Unable to run INFORMATION_SCHEMA view analysis due to missing permissions.\
+            \nMake sure to grant {user_email} "bigquery.jobs.create" and "bigquery.jobs.listAll".\
+            \nContinuing the investigation with the BigQuery job metadata obtained from the API.'
+        )
+        return None
+    except utils.GcpApiError:
       op.info(
-          f'WARNING: Unable to run INFORMATION_SCHEMA view analysis due to missing permissions.\
-          \nMake sure to grant {user_email} "bigquery.jobs.create" and "bigquery.jobs.listAll".\
-          \nContinuing the investigation with the BigQuery job metadata obtained from the API.'
-      )
-      return None
-  except utils.GcpApiError:
+          'Attempting to query INFORMATION_SCHEMA with no knowledge of project'
+          ' level permissions        \n(due to missing'
+          ' resourcemanager.projects.get permission).')
+  else:
     op.info(
-        'Attempting to query INFORMATION_SCHEMA with no knowledge of project'
-        ' level permissions        \n(due to missing'
-        ' resourcemanager.projects.get permission).')
+        'Attempting to query INFORMATION_SCHEMA without checking project level permissions.'
+    )
   try:
     creation_time_milis_filter = ' '
     if creation_time_milis:
@@ -830,8 +836,11 @@ def get_information_schema_job_metadata(
     return None
 
 
-def get_bigquery_job(project_id: str, region: str,
-                     job_id: str) -> Union[BigQueryJob, None]:
+def get_bigquery_job(
+    project_id: str,
+    region: str,
+    job_id: str,
+    skip_permission_check: bool = False) -> Union[BigQueryJob, None]:
   """Fetch a BigQuery job, combining API and INFORMATION_SCHEMA data."""
   try:
     job_api_resource_data = get_bigquery_job_api_resource_data(
@@ -874,7 +883,7 @@ def get_bigquery_job(project_id: str, region: str,
     except (ValueError, TypeError):
       pass
   information_schema_job_metadata = get_information_schema_job_metadata(
-      project_id, region, job_id, job_creation_millis)
+      project_id, region, job_id, job_creation_millis, skip_permission_check)
   return BigQueryJob(
       project_id=project_id,
       job_api_resource_data=job_api_resource_data,

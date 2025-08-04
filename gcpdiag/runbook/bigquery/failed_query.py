@@ -207,7 +207,8 @@ class BigQueryJobExists(runbook.Gateway):
     job = None
     try:
       job = bigquery.get_bigquery_job(project_id, op.get(flags.BQ_JOB_REGION),
-                                      op.get(flags.BQ_JOB_ID))
+                                      op.get(flags.BQ_JOB_ID),
+                                      op.get(flags.BQ_SKIP_PERMISSION_CHECK))
     except utils.GcpApiError as err:
       if 'not found' in err.message.lower():
         op.add_failed(
@@ -270,11 +271,10 @@ class ConfirmBQJobIsDone(runbook.Gateway):
 
   def execute(self):
     """Confirming job is in a 'DONE' state..."""
-    job = bigquery.get_bigquery_job(
-        op.get(flags.PROJECT_ID),
-        op.get(flags.BQ_JOB_REGION),
-        op.get(flags.BQ_JOB_ID),
-    )
+    job = bigquery.get_bigquery_job(op.get(flags.PROJECT_ID),
+                                    op.get(flags.BQ_JOB_REGION),
+                                    op.get(flags.BQ_JOB_ID),
+                                    op.get(flags.BQ_SKIP_PERMISSION_CHECK))
     if not job:
       op.add_skipped(op.get(flags.PROJECT_ID),
                      reason='Cannot retrieve job details.')
@@ -305,11 +305,10 @@ class CheckBQJobHasFailed(runbook.Gateway):
 
   def execute(self):
     """Verifies if a completed job contains an error result."""
-    job = bigquery.get_bigquery_job(
-        op.get(flags.PROJECT_ID),
-        op.get(flags.BQ_JOB_REGION),
-        op.get(flags.BQ_JOB_ID),
-    )
+    job = bigquery.get_bigquery_job(op.get(flags.PROJECT_ID),
+                                    op.get(flags.BQ_JOB_REGION),
+                                    op.get(flags.BQ_JOB_ID),
+                                    op.get(flags.BQ_SKIP_PERMISSION_CHECK))
     if not job:
       op.add_skipped(op.get(flags.PROJECT_ID),
                      reason='Cannot retrieve job details.')
@@ -344,11 +343,10 @@ class BigQueryErrorIdentification(runbook.Step):
 
   def execute(self):
     """Analyzing error message for known root causes and remediation steps."""
-    job = bigquery.get_bigquery_job(
-        op.get(flags.PROJECT_ID),
-        op.get(flags.BQ_JOB_REGION),
-        op.get(flags.BQ_JOB_ID),
-    )
+    job = bigquery.get_bigquery_job(op.get(flags.PROJECT_ID),
+                                    op.get(flags.BQ_JOB_REGION),
+                                    op.get(flags.BQ_JOB_ID),
+                                    op.get(flags.BQ_SKIP_PERMISSION_CHECK))
     if not job or not job.job_error_result:
       op.add_skipped(op.get(flags.PROJECT_ID),
                      reason='Cannot retrieve job error details for analysis.')

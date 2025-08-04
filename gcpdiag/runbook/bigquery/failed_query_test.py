@@ -29,35 +29,41 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
           'project_id': 'gcpdiag-bigquery1-aaaa',
           'bigquery_job_id': 'test_csv_error',
           'bigquery_job_region': 'us',
+          'bigquery_skip_permission_check': False,
       },
       # Test Case 2: A failed job with an unknown error.
       {
           'project_id': 'gcpdiag-bigquery1-aaaa',
           'bigquery_job_id': 'test_unknown',
           'bigquery_job_region': 'us',
+          'bigquery_skip_permission_check': False,
       },
       # Test Case 3: A job that completed successfully (no error).
       {
           'project_id': 'gcpdiag-bigquery1-aaaa',
           'bigquery_job_id': 'test_success',
           'bigquery_job_region': 'us',
+          'bigquery_skip_permission_check': False,
       },
       # Test Case 4: A job that is still running.
       {
           'project_id': 'gcpdiag-bigquery1-aaaa',
           'bigquery_job_id': 'test_running',
           'bigquery_job_region': 'us',
+          'bigquery_skip_permission_check': False,
       },
       # Test Case 5: A job ID that does not exist.
       {
           'project_id': 'gcpdiag-bigquery1-aaaa',
           'bigquery_job_id': 'test_notfound',
           'bigquery_job_region': 'us',
+          'bigquery_skip_permission_check': False,
       },
       # Test Case 6: An invalid region is provided.
       {
           'project_id': 'gcpdiag-bigquery1-aaaa',
           'bigquery_job_id': 'any_id',
           'bigquery_job_region': 'invalid-region',
+          'bigquery_skip_permission_check': False,
       },
   ]

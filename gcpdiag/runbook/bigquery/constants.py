@@ -91,18 +91,18 @@ ERROR_MAP: Dict[
         'would affect rows in the streaming buffer',
     ): {
         'cause':
-            ('BigQuery does supported running mutating Data Manipulation'
+            ('BigQuery does not support running mutating Data Manipulation'
              ' Language (DML) statements (UPDATE, DELETE, or MERGE) against any'
              ' data recently streamed into BigQuery using the legacy streaming'
              ' API using `tabledata.insertall` within the last 30 minutes.'),
         'remediation':
             ('Consider switching to use the BigQuery Storage Write API where'
-             ' this limitations has been lifted.'),
+             ' this limitation has been lifted.'),
     },
     ('No matching signature',): {
         'cause':
             ('This error is returned if at least one of the arguments passed to'
-             ' the function do not match the expected argument type.'),
+             ' the function does not match the expected argument type.'),
         'remediation':
             ('Read through the error message details to identify which'
              ' parameter(s) result in a type mismatch and correct the statement'
@@ -143,7 +143,7 @@ ERROR_MAP: Dict[
             'Adding a LIMIT clause can sometimes help, or removing the ORDER BY'
             ' clause. If you want to ensure that large results can return, you'
             ' can set the allowLargeResults property to True and specify a'
-            ' destination table - this can be done specifying the'
+            ' destination table - this can be done by specifying the'
             ' `--destination_table` flag when using the bq tool or configuring'
             ' Query settings in BigQuery Studio.'),
     },
@@ -152,7 +152,7 @@ ERROR_MAP: Dict[
             'This error occurs when on-demand queries use too much CPU relative'
             ' to the amount of data scanned.'),
         'remediation': (
-            'Otimize your query following the steps outlined in the public'
+            'Optimize your query following the steps outlined in the public'
             ' documentation -'
             ' https://cloud.google.com/bigquery/docs/troubleshoot-queries#ts-resources-exceeded.'
             ' Otherwise, switch to a capacity-based pricing model and use'
@@ -176,7 +176,7 @@ ERROR_MAP: Dict[
             ' dataset\'s time travel window.\nScenario 2: Check to see if there'
             ' is a scheduled query or application that performs this operation'
             ' that ran at the same time as the failed query. If there is, try'
-            ' movingthe process that performs the drop and re-create operation'
+            ' moving the process that performs the drop and re-create operation'
             ' to run at a time that doesn\'t conflict with queries that read'
             ' that table.'),
     },
@@ -186,8 +186,8 @@ ERROR_MAP: Dict[
              ' https://cloud.google.com/bigquery/quotas#query_jobs for actual'
              ' limits.'),
         'remediation':
-            ('To stay within this limit, consider 1)replacing large arrays or'
-             ' lists with query parameters and 2)breaking a long query into'
+            ('To stay within this limit, consider 1) replacing large arrays or'
+             ' lists with query parameters and 2) breaking a long query into'
              ' multiple queries in the session.'),
     },
     ('Transaction is aborted due to concurrent update against table',): {
@@ -196,7 +196,7 @@ ERROR_MAP: Dict[
             ' with an existing transaction performing DML statements that has'
             ' not yet been committed or rolled back. There are two possible'
             ' scenarios: \nScenario 1: A DML operation updated the table after'
-            ' the transaction has already started.\nScenario 2: This error is'
+            ' the transaction has already started.\nScenario 2: This error'
             ' can be encountered if a previous transaction encountered an'
             ' error, but there was no exception handler. It is important to'
             ' understand that BigQuery automatically rolls back the transaction'
@@ -276,12 +276,13 @@ ERROR_MAP: Dict[
         'cause':
             ('This error occurs when a query can\'t access sufficient shuffle'
              ' resources - there is more data that needs to get written to'
-             ' shuffle than there available shuffle capacity.'),
+             ' shuffle than there is available shuffle capacity.'),
         'remediation': (
-            'There are three possible solutions to this issue: provisioning more'
-            ' resources, reducing the amount of data processed by the'
-            ' query or reducing concurrency of queries or materializing intermediate results to '
-            'reduce dependence on resources.\n1. Provisioning more resources: If you are using'
+            'There are three possible solutions to this issue: provisioning'
+            ' more resources, reducing the amount of data processed by the'
+            ' query or reducing concurrency of queries or materializing'
+            ' intermediate results to reduce dependence on resources.\n1.'
+            ' Provisioning more resources: If you are using'
             ' on-demand pricing, consider switching to capacity-based analysis'
             ' pricing by purchasing reservations. Reservations give you'
             ' dedicated slots and shuffle capacity for your projects\' queries.'
@@ -298,8 +299,9 @@ ERROR_MAP: Dict[
             ' Certain operations in SQL tend to make more extensive usage of'
             ' shuffle, particularly JOIN operations and GROUP BY clauses. Where'
             ' possible, reducing the amount of data in these operations might'
-            ' reduce shuffle usage.\n3. Reduce concurrency of queries or materializing'
-            ' intermediate results to reduce dependence on resources.'),
+            ' reduce shuffle usage.\n3. Reduce concurrency of queries or'
+            ' materializing intermediate results to reduce dependence on'
+            ' resources.'),
     },
     (
         'Cannot return an invalid timestamp value',
@@ -320,7 +322,7 @@ ERROR_MAP: Dict[
         'The model might be too large.',
     ): {
         'cause': (
-            'Common causes of this issue include and are not limited to: too'
+            'Common causes of this issue include but are not limited to: too'
             ' many categorical values in columns; too many features; complex'
             ' architecture of the model (i.e. the number and depth of trees, or'
             ' hidden units in neural nets).'),
@@ -354,7 +356,7 @@ ERROR_MAP: Dict[
             'The HSM symmetric cryptographic requests per region quota is being'
             ' exceeded.'),
         'remediation': (
-            'There are to possible remediations: \n1. Reduce the rate at which'
+            'There are two possible remediations: \n1. Reduce the rate at which'
             ' your '
             'projects are making requests that use Cloud KMS resources. \n2.'
             ' Request '
@@ -394,10 +396,10 @@ ERROR_MAP: Dict[
         'Dataset',
         'was not found in location',
     ): {
-        'cause': (
-            'This error returns when you refer to a dataset resource that'
-            ' doesn\'t exist,or when the location in the request does not match'
-            ' the location of the dataset.'),
+        'cause':
+            ('This error returns when you refer to a dataset resource that'
+             ' doesn\'t exist, or when the location in the request does not'
+             ' match the location of the dataset.'),
         'remediation':
             ('To address this issue, specify the location of the dataset in the'
              ' query or confirm that the dataset exists in the mentioned'
@@ -419,7 +421,7 @@ ERROR_MAP: Dict[
             ' https://cloud.google.com/bigquery/docs/best-practices-performance-overview.'
             '\nHowever, if this is a job that previously succeeded much faster, you'
             ' should look into troubleshooting this as a slow query. Currently'
-            ' there is a troubleshootiong article available in the public'
+            ' there is a troubleshooting article available in the public'
             ' documentation -'
             'https://cloud.google.com/bigquery/docs/troubleshoot-queries#troubleshoot_slow_queries'
             ' .Also consider investigating if there was a shortage of available'
@@ -437,7 +439,7 @@ ERROR_MAP: Dict[
     ): {
         'cause':
             ('This can happen when a table has reasonably wide rows and those'
-             ' rows need to be updated to a much larger value in size, e.g. 20x'
+             ' rows need to be updated to a much larger value in size, e.g. 20'
              ' times the original row size. If there is a large number of rows'
              ' that need to be updated, this can also lead to the encountered'
              ' error.'),
@@ -456,7 +458,7 @@ ERROR_MAP: Dict[
     ): {
         'cause': (
             'Query contains too many nested function calls. Sometimes, parts of'
-            ' a query are translated to function calls during parsing. For'
+            ' the query are translated to function calls during parsing. For'
             ' example, an expression with repeated concatenation operators,'
             ' such as A || B || C || ..., becomes CONCAT(A, CONCAT(B, CONCAT(C,'
             ' ...))).'),
@@ -469,7 +471,7 @@ ERROR_MAP: Dict[
     ): {
         'cause': (
             'The issue is caused by the complexity of the query statement (i.e.'
-            ' number if columns, statements, literals, etc.).'),
+            ' number of columns, statements, literals, etc.).'),
         'remediation':
             (' - Split the query into smaller queries containing fewer'
              ' literals.\n - Materialize inner query results to use them in'
@@ -480,10 +482,10 @@ ERROR_MAP: Dict[
         'executed in the allotted memory',
         'ORDER BY',
     ): {
-        'cause':
-            ('An ORDER BY operation is quite expensive and cannot be processed'
-             ' in parallel - sorting will happen on asingle compute unit, which'
-             ' can run out of memory if it needs to process too many rows.'),
+        'cause': (
+            'An ORDER BY operation is quite expensive and cannot be processed'
+            ' in parallel - sorting will happen on a single compute unit, which'
+            ' can run out of memory if it needs to process too many rows.'),
         'remediation': (' - Use a LIMIT clause to reduce the result set.'
                         '\n - Use additional filters to reduce the result set.'
                         '\n - Remove the ORDER BY clause from the query.'),
@@ -499,7 +501,13 @@ ERROR_MAP: Dict[
             ' - Try removing an ORDER BY clause.\n - If your query uses JOIN,'
             ' ensure that the larger table is on the left side of the clause.'
             ' Also ensure that your data does not contain duplicate join'
-            ' keys.\n - If your query uses FLATTEN, determine if it\'s necessary'
+            " keys.\n - If your query uses FLATTEN, determine if it's necessary"
+            ' for your use case. For more information, see'
+            ' https://cloud.google.com/bigquery/docs/data#nested.\n - If your'
+            ' query uses EXACT_COUNT_DISTINCT, consider using COUNT(DISTINCT)'
+            ' ensure that the larger table is on the left side of the clause.'
+            ' Also ensure that your data does not contain duplicate join'
+            " keys.\n - If your query uses FLATTEN, determine if it's necessary"
             ' for your use case. For more information, see'
             ' https://cloud.google.com/bigquery/docs/data#nested.\n - If your'
             ' query uses EXACT_COUNT_DISTINCT, consider using COUNT(DISTINCT)'
@@ -512,7 +520,7 @@ ERROR_MAP: Dict[
             ' materializes many rows using a LIMIT clause, consider filtering'
             ' on another column, for example ROW_NUMBER(), or removing the'
             ' LIMIT clause altogether to allow write parallelization.\n - If'
-            ' your query used deeply nested views and a WITH clause, this can'
+            ' your query uses deeply nested views and a WITH clause, this can'
             ' cause an exponential growth in complexity, thereby reaching the'
             ' limits.\n - Use temporary tables to store intermediate results'
             ' instead of using WITH clauses. WITH clauses might have to be'
@@ -564,7 +572,7 @@ ERROR_MAP: Dict[
             'https://cloud.google.com/bigquery/docs/best-practices-performance-overview.'
             ' \n - Optimize query model. BigQuery'
             ' is not a relational database. It is not optimized for an infinite'
-            'number of small queries. Running a large number of small queries\''
+            ' number of small queries. Running a large number of small queries'
             ' quickly depletes your quotas. Such queries don\'t run as'
             ' efficiently as they do with the smaller database products.'
             ' BigQuery is a large data warehouse and this is its primary use'
@@ -598,27 +606,36 @@ ERROR_MAP: Dict[
         'Number of partition modifications',
         'column partitioned table',
     ): {
-        'cause': '',
-        'remediation':
-            'This quota cannot be increased. To mitigate, do the following:'
-            '\n - Change the partitioning on the table to have more data in each partition, '
-            'in order to decrease the total number of partitions. For example, change from '
-            'partitioning by day to partitioning by month or change how you partition the table.'
-            '\n - Use clustering instead of partitioning.'
-            '\n - If you frequently load data from multiple small files stored in Cloud Storage '
-            'that uses a job per file, then combine multiple load jobs into a single job. You can'
-            ' load from multiple Cloud Storage URIs with a comma-separated list (for example, '
-            'gs://my_path/file_1,gs://my_path/file_2), or by using wildcards (for example, '
-            'gs://my_path/*).'
-            '\n - If you use load, select or copy jobs to append single rows of data to a table, '
-            'for example, then you should consider batching multiple jobs into one job. BigQuery '
-            'doesn\'t perform well when used as a relational database. As a best practice, avoid '
-            'running frequent, single-row append actions.'
-            '\n - To append data at a high rate, consider using BigQuery Storage Write API. It is'
-            'a recommended solution for high-performance data ingestion. The BigQuery Storage '
-            'Write API has robust features, including exactly-once delivery semantics.'
-            'To monitor the number of modified partitions on a table, use the INFORMATION_SCHEMA '
-            'view.'
+        'cause': (' Your column-partitioned table reaches the quota of the'
+                  ' number of partition modifications permitted per day.'
+                  ' Partition modifications include the total of all load jobs,'
+                  ' copy jobs, and query jobs that append or overwrite a'
+                  ' destination partition.'),
+        'remediation': (
+            ' This quota cannot be increased. To mitigate, do the following:'
+            ' \n - Change the partitioning on the table to have more data in'
+            ' each partition, in order to decrease the total number of'
+            ' partitions. For example, change from'
+            ' partitioning by day to partitioning by month or change how you'
+            ' partition the table.\n - Use clustering instead of partitioning.'
+            ' \n - If you frequently load data from multiple small files stored'
+            ' in Cloud Storage that uses a job per file, then combine multiple'
+            ' load jobs into a single job. You can load from multiple Cloud'
+            ' Storage URIs with a comma-separated list (for example,'
+            ' gs://my_path/file_1,gs://my_path/file_2), or by using wildcards'
+            ' (for example, gs://my_path/*).'
+            ' \n - If you use load, select or copy jobs to append single rows'
+            ' of data to a table, for example, then you should consider'
+            ' batching multiple jobs into one job. BigQuery'
+            ' doesn\'t perform well when used as a relational database.'
+            ' As a best practice, avoid running frequent, single-row append'
+            ' actions.'
+            ' \n - To append data at a high rate, consider using BigQuery'
+            ' Storage Write API. It is a recommended solution for'
+            ' high-performance data ingestion. The BigQuery Storage Write API'
+            ' has robust features, including exactly-once delivery semantics.'
+            ' To monitor the number of modified partitions on a table, use the'
+            ' INFORMATION_SCHEMA view.')
     },
     (
         'Input',
@@ -627,11 +644,11 @@ ERROR_MAP: Dict[
         'maximum allowed size',
     ): {
         'cause':
-            'If you load a large CSV file using the bq load command with the '
-            '--allow_quoted_newlines flag, you might encounter this error.',
+            ('If you load a large CSV file using the bq load command with the '
+             '--allow_quoted_newlines flag, you might encounter this error.'),
         'remediation':
-            '1. Set the --allow_quoted_newlines flag to false. \n2. Split the CSV '
-            'file into smaller chunks that are each less than 4 GB.'
+            ('1. Set the --allow_quoted_newlines flag to false. \n2. Split the'
+             ' CSV file into smaller chunks that are each less than 4 GB.')
     },
     (
         'table',
@@ -639,120 +656,134 @@ ERROR_MAP: Dict[
         'imports or query appends per table',
     ): {
         'cause':
-            'BigQuery returns this error message when your table reaches the limit '
-            'for table operations per day for Standard tables. Table operations include the '
-            'combined total of all load jobs, copy jobs, and query jobs that append or overwrite '
-            'a destination table. The limit can be found here: '
+            ' BigQuery returns this error message when your table reaches the'
+            ' limit for table operations per day for Standard tables. Table'
+            ' operations include the combined total of all load jobs, copy'
+            ' jobs, and query jobs that append or overwrite a destination'
+            ' table. The limit can be found here: '
             'https://cloud.google.com/bigquery/quotas#standard_tables .',
         'remediation':
-            'This quota cannot be increased. To remediate, do the following:'
-            '\n - If you frequently load data from multiple small files stored in Cloud Storage '
-            'that uses a job per file, then combine multiple load jobs into a single job. You '
-            'can load from multiple Cloud Storage URIs with a comma-separated list (for example, '
-            'gs://my_path/file_1,gs://my_path/file_2), or by using wildcards (for example, '
-            'gs://my_path/*).'
-            '\n - If you use load, select or copy jobs to append single rows of data to a table, '
-            'for example, then you should consider batching multiple jobs into one job. BigQuery '
-            'doesn\'t perform well when used as a relational database. As a best practice, avoid '
-            'running frequent, single-row append actions.'
-            '\n - To append data at a high rate, consider using BigQuery Storage Write API. It is'
-            ' a recommended solution for high-performance data ingestion. The BigQuery Storage '
-            'Write API has robust features, including exactly-once delivery semantics.'
-            '\n - To monitor the number of modified partitions on a table, use the '
-            'INFORMATION_SCHEMA view.'
+            ' This quota cannot be increased. To remediate, do the following:'
+            ' \n - If you frequently load data from multiple small files stored'
+            ' in Cloud Storage that uses a job per file, then combine multiple'
+            ' load jobs into a single job. You can load from multiple Cloud'
+            ' Storage URIs with a comma-separated list (for example,'
+            ' gs://my_path/file_1,gs://my_path/file_2), or by using wildcards'
+            ' (for example, gs://my_path/*).'
+            ' \n - If you use load, select or copy jobs to append single rows'
+            ' of data to a table, for example, then you should consider'
+            ' batching multiple jobs into one job. BigQuery doesn\'t perform'
+            ' well when used as a relational database. As a best practice,'
+            ' avoid running frequent, single-row append actions.'
+            ' \n - To append data at a high rate, consider using BigQuery'
+            ' Storage Write API. It is a recommended solution for'
+            ' high-performance data ingestion. The BigQuery Storage Write API'
+            ' has robust features, including exactly-once delivery semantics.'
+            ' \n - To monitor the number of modified partitions on a table, use'
+            ' the INFORMATION_SCHEMA view.'
     },
     (
         'Exceeded rate limits',
         'too many table update operations',
     ): {
         'cause':
-            'The table reached the limit for maximum rate of table metadata update '
-            'operations per table for Standard tables. Table operations include the combined '
-            'total of all load jobs, copy jobs, and query jobs that append to or overwrite a '
-            'destination table. API calls like PatchTable, UpdateTable or '
-            'InsertTable also count as table metadata update operations. To diagnose where the '
-            'operations are coming from, follow the steps in '
+            ' The table reached the limit for maximum rate of table metadata'
+            ' update operations per table for Standard tables. Table operations'
+            ' include the combined total of all load jobs, copy jobs, and query'
+            ' jobs that append to or overwrite a destination table. API calls'
+            ' like PatchTable, UpdateTable or InsertTable also count as table'
+            ' metadata update operations. To diagnose where the operations are'
+            ' coming from, follow the steps in '
             'https://cloud.google.com/bigquery/docs/troubleshoot-quotas'
             '#ts-maximum-update-table-metadata-limit-diagnose.',
         'remediation':
             ' - Reduce the update rate for the table metadata.'
-            '\n - Add a delay between jobs or table operations to make sure that the update '
-            'rate is within the limit.'
-            '\n - For data inserts or modification, consider using DML operations. DML operations'
-            ' are not affected by the Maximum rate of table metadata update operations per table '
-            'rate limit (DML operations have their own limits).'
-            '\n - If you frequently load data from multiple small files stored in Cloud Storage '
-            'that uses a job per file, then combine multiple load jobs into a single job. You can'
-            ' load from multiple Cloud Storage URIs with a comma-separated list (for example, '
-            'gs://my_path/file_1,gs://my_path/file_2), or by using wildcards (for example, '
-            'gs://my_path/*).'
-            '\n - If you use load, select or copy jobs to append single rows of data to a table, '
-            'for example, then you should consider batching multiple jobs into one job. BigQuery '
-            'doesn\'t perform well when used as a relational database. As a best practice, avoid '
-            'running frequent, single-row append actions.'
-            '\n - To append data at a high rate, consider using BigQuery Storage Write API. It '
-            'is a recommended solution for high-performance data ingestion. The BigQuery Storage '
-            'Write API has robust features, including exactly-once delivery semantics.'
+            ' \n - Add a delay between jobs or table operations to make sure'
+            ' that the update rate is within the limit.'
+            ' \n - For data inserts or modification, consider using DML'
+            ' operations. DML operations are not affected by the Maximum rate'
+            ' of table metadata update operations per table rate limit'
+            ' (DML operations have their own limits).'
+            ' \n - If you frequently load data from multiple small files stored'
+            ' in Cloud Storage that uses a job per file, then combine multiple'
+            ' load jobs into a single job. You can load from multiple Cloud'
+            ' Storage URIs with a comma-separated list (for example,'
+            ' gs://my_path/file_1,gs://my_path/file_2), or by using wildcards'
+            ' (for example, gs://my_path/*).'
+            ' \n - If you use load, select or copy jobs to append single rows'
+            ' of data to a table, for example, then you should consider'
+            ' batching multiple jobs into one job. BigQuery doesn\'t perform'
+            ' well when used as a relational database. As a best practice,'
+            ' avoid running frequent, single-row append actions.'
+            ' \n - To append data at a high rate, consider using BigQuery'
+            ' Storage Write API. It is a recommended solution for'
+            ' high-performance data ingestion. The BigQuery Storage Write API'
+            ' has robust features, including exactly-once delivery semantics.'
     },
     (
         'project',
         'exceeded quota for free query bytes scanned',
     ): {
-        'cause':
-            'BigQuery returns this error when you run a query in the free usage tier '
-            'and the account reaches the monthly limit of data size that can be queried without '
-            'a paid Cloud Billing account.',
+        'cause': (
+            'BigQuery returns this error when you run a query in the free'
+            ' usage tier and the account reaches the monthly limit of data size'
+            ' that can be queried without a paid Cloud Billing account.'),
         'remediation':
-            'To continue using BigQuery, you need to upgrade the account to a '
-            'paid Cloud Billing account.'
+            ('To continue using BigQuery, you need to upgrade the account to a '
+             'paid Cloud Billing account.'),
     },
     ('exceeded quota for copies per project',): {
         'cause':
-            'Your project has exceeded the daily limit for table copy jobs. See the '
-            'limit here: https://cloud.google.com/bigquery/quotas#copy_jobs.',
+            (' Your project has exceeded the daily limit for table copy jobs.'
+             ' See the limit here:'
+             ' https://cloud.google.com/bigquery/quotas#copy_jobs.'),
         'remediation':
-            'Wait for the daily quota to be replenished.'
-            '\nIf the goal of the frequent copy operations is to create a snapshot '
-            'of data, consider using table snapshots instead. Table snapshots are cheaper and '
-            'faster alternative to copying full tables.'
-            '\nYou can request a quota increase by contacting support or sales if you need a '
-            'bigger quota. It might take several days to review and process the request. We '
-            'recommend stating the priority, use case, and the project ID in the request.'
+            ('Wait for the daily quota to be replenished. \nIf the goal of the'
+             ' frequent copy operations is to create a snapshot of data,'
+             ' consider using table snapshots instead. Table snapshots are'
+             ' cheaper and faster alternative to copying full tables. \nYou'
+             ' can request a quota increase by contacting support or sales'
+             ' if you need a bigger quota. It might take several days to review'
+             ' and process the request. We recommend stating the priority, use'
+             ' case, and the project ID in the request.'),
     },
     (
         'exceeded quota',
         'ExtractBytesPerDay',
     ): {
         'cause':
-            'The export exceeds the default 50 TiB (Tebibytes) daily limit in a project',
-        'remediation':
-            'To export more than 50 TiB(Tebibytes) of data per day, do one of '
-            'the following: '
-            '\n - Create a slot reservation or use an existing reservation and assign your '
-            'project into the reservation with job type PIPELINE. You will be billed using '
-            'capacity-based pricing.'
-            '\n - Use the EXPORT DATA SQL statement. You will be billed using either on-demand '
-            'or capacity-based pricing, depending on how the project query pricing is configured.'
-            '\n - Use the Storage Read API. You will be billed using the price for streaming '
-            'reads. The expiration time is guaranteed to be at least 6 hours from session '
-            'creation time.'
+            ('The export exceeds the default 50 TiB (Tebibytes) daily limit in'
+             ' a project'),
+        'remediation': (
+            ' To export more than 50 TiB(Tebibytes) of data per day, do one of'
+            ' the following: '
+            ' \n - Create a slot reservation or use an existing reservation and'
+            ' assign your project to the reservation with the PIPELINE job'
+            ' type. You will be billed using capacity-based pricing.'
+            ' \n - Use the EXPORT DATA SQL statement. You will be billed using'
+            ' either on-demand or capacity-based pricing, depending on how the'
+            ' project query pricing is configured.'
+            ' \n - Use the Storage Read API. You will be billed using the price'
+            ' for streaming reads. The expiration time is guaranteed to be at'
+            ' least 6 hours from session creation time.'),
     },
     ('too many concurrent queries with remote functions',): {
         'cause':
-            'The number of concurrent queries that contain remote functions exceeds the '
-            'limit.',
+            (' The number of concurrent queries that contain remote functions'
+             ' exceeds the limit.'),
         'remediation':
-            'Follow the best practices for using remote functions outlined here:'
-            'https://cloud.google.com/bigquery/docs/remote-functions'
-            '#best_practices_for_remote_functions.'
-            '\nYou can request a quota increase by contacting support or sales if you need a '
-            'bigger quota.'
+            (' Follow the best practices for using remote functions outlined'
+             ' here: https://cloud.google.com/bigquery/docs/remote-functions'
+             '#best_practices_for_remote_functions .'
+             ' \nYou can request a quota increase by contacting support or'
+             ' sales if you need a bigger quota.'),
     },
     ('exceeded quota for CREATE MODEL queries per project',): {
-        'cause': 'You have exceeded the quota for CREATE MODEL statements.',
+        'cause': ('You have exceeded the quota for CREATE MODEL statements.'),
         'remediation':
-            'If you exceed the quota for CREATE MODEL statements, send an email '
-            'to bqml-feedback@google.com and request a quota increase through sales or support.'
+            (' If you exceed the quota for CREATE MODEL statements, send an'
+             ' email to bqml-feedback@google.com and request a quota increase'
+             ' through sales or support.'),
     },
     (
         'UPDATE/MERGE',
@@ -760,40 +791,42 @@ ERROR_MAP: Dict[
         'one source row for each target row',
     ): {
         'cause':
-            'This error will be raised if the table contains duplicated rows. Multiple rows '
-            'in the source table match a single row in the target table.',
-        'remediation': 'Remove duplicate rows from the table.',
+            (' This error will be raised if the table contains duplicated rows.'
+             ' Multiple rows in the source table match a single row in the'
+             ' target table.'),
+        'remediation': ('Remove duplicate rows from the table.'),
     },
     ('Not found: Table',): {
-        'cause': (
-            'The query references a table that does not exist or could not be located in '
-            'the specified region and project.'),
+        'cause':
+            (' The query references a table that does not exist or could not be'
+             ' located in the specified region and project.'),
         'remediation': (
-            'Make sure the table exists in the specified dataset and the table '
-            'identifier provided is correct.\nAfter that confirm that the query is '
-            'executed in the correct region (where the dataset is located).'),
+            ' Make sure the table exists in the specified dataset and the table'
+            ' identifier provided is correct.\nAfter that confirm that the'
+            ' query is executed in the correct region (where the dataset is'
+            ' located).'),
     },
     ('Not found: View',): {
-        'cause': (
-            'The query references a view that does not exist or could not be located in '
-            'the specified region and project.'),
-        'remediation': (
-            'Make sure the view exists in the specified dataset and the view '
-            'identifier provided is correct.\nAfter that confirm that the query is '
-            'executed in the correct region (where the dataset is located).'),
+        'cause':
+            (' The query references a view that does not exist or could not be'
+             ' located in the specified region and project.'),
+        'remediation':
+            (' Make sure the view exists in the specified dataset and the view'
+             ' identifier provided is correct.\nAfter that confirm that the'
+             ' query is executed in the correct region (where the dataset is'
+             ' located).'),
     },
     ('Syntax Error',): {
-        'cause':
-            'This is a user side SQL statement issue.',
+        'cause': ('This is a user side SQL statement issue.'),
         'remediation':
-            ('Check your query for syntax errors for the methods or variables'
+            (' Check your query for syntax errors for the methods or variables'
              ' mentioned in the error message at the specified location.'),
     },
     ('User requested cancellation',): {
         'cause': ('The job was manually stopped by a user request before it'
-                  ' couldcomplete or the userconfigured job timeout.'),
+                  ' could complete or a user configured the job timeout.'),
         'remediation': (
-            'The job did not fail - a user sent a cancel request to stop the'
+            ' The job did not fail - a user sent a cancel request to stop the'
             ' execution of this job. You can inspect Cloud Logging and look for'
             ' a jobs.cancel request to understand who initiated the'
             ' cancellation.'),
@@ -802,13 +835,13 @@ ERROR_MAP: Dict[
         'Job execution was cancelled',
         'Job timed out after',
     ): {
-        'cause': (
-            'The job timed out before it could complete. This can happen when a'
-            ' job execution reaches an exiting BigQuery limit or when a'
-            ' user-defined timeout value is set in the job configuration.'),
+        'cause':
+            (' The job timed out before it could complete. This can happen when'
+             ' a job execution reaches an existing BigQuery limit or when a'
+             ' user-defined timeout value is set in the job configuration.'),
         'remediation': (
-            'Inspect the job configuration to understand if a timeout value was'
-            ' set. If no custom timeout was set, this means that one of the'
+            ' Inspect the job configuration to understand if a timeout value'
+            ' was set. If no custom timeout was set, this means that one of the'
             ' execution limits has been reached. See'
             ' https://cloud.google.com/bigquery/quotas for more information'
             ' about execution time limits. Follow'
@@ -821,61 +854,67 @@ ERROR_MAP: Dict[
             ' for an example query to get concurrency information.'),
     },
     ('exceeded rate limits',): {
-        'cause': (
-            'Too many requests have been made in a short period, triggering a rate limit to '
-            'protect the service.'),
-        'remediation': (
-            'Retry the operation after few seconds. Use exponential backoff between '
-            'retry attempts. That is, exponentially increase the delay between each retry.'
-        ),
+        'cause':
+            (' Too many requests have been made in a short period, triggering a'
+             ' rate limit to protect the service.'),
+        'remediation':
+            (' Retry the operation after a few seconds. Use exponential backoff'
+             ' between retry attempts. That is, exponentially increase the'
+             ' delay between each retry.'),
     },
     (
         'User does not have',
         'permission in project',
     ): {
-        'cause':
-            'User does not have sufficient permissions in the mentioned project.',
-        'remediation': (
-            'Read the error message carefully and grant the permission specified in '
-            'the error message to the user who attempted to run the job'),
+        'cause': ('User does not have sufficient permissions in the mentioned'
+                  ' project.'),
+        'remediation':
+            ('Read the error message carefully and grant the permission'
+             ' specified in the error message to the user who attempted to run'
+             ' the job'),
     },
-    ('User does not have permission to query table or perhaps it does not exist',): {
+    ('User does not have permission to query table or perhaps it does not'
+     ' exist',): {
         'cause':
-            'There are two possible root causes: the user either does not have the necessary '
-            'permissions to look up tables in the project, or the tables does not exist.',
+            (' There are two possible root causes: the user either does not'
+             ' have the necessary permissions to look up tables in the project,'
+             ' or the tables does not exist.'),
         'remediation': (
-            'Follow the troubleshooting advice documented here: '
+            ' Follow the troubleshooting advice documented here: '
             'https://cloud.google.com/bigquery/docs/troubleshoot-queries#user_perm'
         ),
     },
     ('csv processing encountered too many errors', 'while parsing'): {
         'cause':
-            'There was an issue processing the CSV file(s) submitted by the user in the load job.',
+            (' There was an issue processing the CSV file(s) submitted by the'
+             ' user in the load job.'),
         'remediation': (
-            'Carefully read through the error messages above to understand the specific '
-            'problem(s) with the file(s). Visit '
+            ' Carefully read through the error messages above to understand the'
+            ' specific problem(s) with the file(s). Visit '
             'https://cloud.google.com/bigquery/docs/loading-data-cloud-storage-csv'
             '#troubleshoot_parsing_errors'
             ' for guidance on how to resolve parsing errors.'),
     },
     ('csv processing encountered too many errors',): {
         'cause':
-            'There was an issue processing the CSV file(s) submitted by the user in the load job.',
-        'remediation': (
-            'There are two possible remediations:\n'
-            '1. Use --max_bad_records to instruct BigQuery to skip a defined number of rows that '
-            'cannot be parsed and let the job complete.\n'
-            '2. Fix the file(s) by editing the rows causing the failures and retry the job.\n'
-            'If there are additional error messages, they will be printed as well to provide the '
-            'location(s) of the problematic row(s).'),
+            ('There was an issue processing the CSV file(s) submitted by the'
+             ' user in the load job.'),
+        'remediation':
+            ('There are two possible remediations:\n'
+             ' 1. Use --max_bad_records to instruct BigQuery to skip a defined'
+             ' number of rows that cannot be parsed and let the job complete.\n'
+             ' 2. Fix the file(s) by editing the rows causing the failures and'
+             ' retry the job.\n If there are additional error messages, they'
+             ' will be printed as well to provide the location(s) of the'
+             ' problematic row(s).'),
     },
     ('error while reading data', 'error message', 'unable to parse'): {
-        'cause':
-            'There was an issue reading the mentioned file.',
+        'cause': ('There was an issue reading the mentioned file.'),
         'remediation': (
-            'The error message above specifies the problem that was encountered, mentions the '
-            'problematic file and the position in the file at which the error occurred. Fix the '
-            'issue with the file and retry the job. Visit '
+            ' The error message above specifies the problem that was'
+            ' encountered, mentions the problematic file and the position in'
+            ' the file at which the error occurred. Fix the issue with the file'
+            ' and retry the job. Visit '
             'https://cloud.google.com/bigquery/docs/loading-data-cloud-storage-csv'
             '#troubleshoot_parsing_errors'
             ' for guidance on how to resolve parsing errors.'),
@@ -884,33 +923,36 @@ ERROR_MAP: Dict[
         'error while reading data',
         'error message',
     ): {
-        'cause':
-            'There was an issue reading the mentioned file.',
-        'remediation': (
-            'The error message above specifies the problem that was encountered, mentions the '
-            'problematic file and the position in the file at which the error occurred. Fix the '
-            'issue with the file and retry the job.'),
+        'cause': ('There was an issue reading the mentioned file.'),
+        'remediation':
+            (' The error message above specifies the problem that was'
+             ' encountered, mentions the problematic file and the position in'
+             ' the file at which the error occurred. Fix the'
+             ' issue with the file and retry the job.'),
     },
     (
         'internal error',
         'retry',
     ): {
         'cause':
-            'This error usually means that the job failed due to an intermittent issue on '
-            'the BigQuery service side. The client has no way to fix or control these errors - '
-            'it is only possible to mitigate them by retrying the job.',
-        'remediation': (
-            ' The main recommendation is to retry the job using truncated exponential '
-            'backoffs. For more information about exponential backoffs, see '
-            'https://en.wikipedia.org/wiki/Exponential_backoff. \nIf the retries are '
-            'not effective and the issues persist, you can calculate the rate of '
-            'failing requests by following this article - '
-            'https://cloud.google.com/bigquery/docs/error-messages'
-            '#calculate-rate-of-failing-requests-and-uptime'
-            ' - and contact support with the rate of failing requests.'
-            '\nAlso, if you observe a specific job persistently fail with this '
-            'internal error, even when retried using exponential backoff on '
-            'multiple workflow restart attempts, you should escalate this to '
-            'Cloud Support to troubleshoot the issue from the BigQuery side,'),
+            (' This error usually means that the job failed due to an'
+             ' intermittent issue on the BigQuery service side. The client has'
+             ' no way to fix or control these errors - it is only possible to'
+             ' mitigate them by retrying the job.'),
+        'remediation':
+            (' The main recommendation is to retry the job using truncated'
+             ' exponential backoff. For more information about exponential'
+             ' backoff, see '
+             'https://en.wikipedia.org/wiki/Exponential_backoff. \nIf the'
+             ' retries are not effective and the issues persist, you can'
+             ' calculate the rate of failing requests by following this article'
+             ' - https://cloud.google.com/bigquery/docs/error-messages'
+             '#calculate-rate-of-failing-requests-and-uptime'
+             ' - and contact support with the rate of failing requests.\nAlso,'
+             ' if you observe a specific job persistently fail with this'
+             ' internal error, even when retried using exponential backoff on'
+             ' multiple workflow restart attempts, you should escalate this to'
+             ' Cloud Support to troubleshoot the issue from the BigQuery side,'
+            ),
     },
 }
