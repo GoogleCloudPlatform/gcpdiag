@@ -49,6 +49,10 @@ def unallocatable_gpu_tpu(node, location=None, name=None, gpu=False, tpu=False):
 
   log_entries_event = local_realtime_query(filter_str)
 
+  # If there are no "NodeNotSchedulable" events, no need to check for other logs.
+  if not log_entries_event:
+    return False
+
   filter_str = [
       'log_id("kubelet")', f'resource.labels.node_name="{node}"',
       'jsonPayload.MESSAGE:"Updated allocatable"'
