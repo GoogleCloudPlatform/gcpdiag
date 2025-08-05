@@ -8,11 +8,23 @@ bigquery/failed-query: Diagnoses issues with a failed BigQuery query job.
   provide targeted remediation steps.
   
 [START]: Verifying input parameters and the BigQuery API status.
+[INFO]: Provided job input parameters have the correct format
+[INFO]: The BigQuery API is enabled.
 [GATEWAY]: Verifying permissions.
 
-   - gcpdiag-bigquery1-aaaa                                               [SKIP]
+   - gcpdiag-cloudsql1-aaaa                                               [FAIL]
      [REASON]
-     Permission check is being skipped because it's not possible to successfully identify the user executing the investigation.
+     Execution halted. The principal fake-user@google.com is missing the following mandatory IAM permission(s) required to run this runbook: bigquery.jobs.create, bigquery.jobs.get, serviceusage.services.list, serviceusage.services.use.
+
+     [REMEDIATION]
+     Grant the principal fake-user@google.com the missing permission(s) on the project to proceed.
+
+[INFO]: A sub-analysis was skipped: Project-level analysis requiring: bigquery.jobs.listAll.
+	To enable this analysis, grant the principal fake-user@google.com the IAM permission at the project level
+
+   - gcpdiag-cloudsql1-aaaa                                               [OK]
+     [REASON]
+     All permission checks are complete.
 [GATEWAY]: Verify that the BigQuery Job exists
 
    - gcpdiag-cloudsql1-aaaa                                               [FAIL]
@@ -36,14 +48,26 @@ bigquery/failed-query: Diagnoses issues with a failed BigQuery query job.
   provide targeted remediation steps.
   
 [START]: Verifying input parameters and the BigQuery API status.
+[INFO]: Provided job input parameters have the correct format
+[INFO]: The BigQuery API is enabled.
 [GATEWAY]: Verifying permissions.
 
-   - gcpdiag-bigquery1-aaaa                                               [SKIP]
+   - gcpdiag-cloudsql1-aaaa                                               [FAIL]
      [REASON]
-     Permission check is being skipped because it's not possible to successfully identify the user executing the investigation.
+     Execution halted. The principal fake-user@google.com is missing the following mandatory IAM permission(s) required to run this runbook: bigquery.jobs.create, bigquery.jobs.get, serviceusage.services.list, serviceusage.services.use.
+
+     [REMEDIATION]
+     Grant the principal fake-user@google.com the missing permission(s) on the project to proceed.
+
+[INFO]: A sub-analysis was skipped: Project-level analysis requiring: bigquery.jobs.listAll.
+	To enable this analysis, grant the principal fake-user@google.com the IAM permission at the project level
+
+   - gcpdiag-cloudsql1-aaaa                                               [OK]
+     [REASON]
+     All permission checks are complete.
 [GATEWAY]: Verify that the BigQuery Job exists
 [INFO]: WARNING: Unable to run INFORMATION_SCHEMA view analysis due to missing permissions.            
-Make sure to grant  "bigquery.jobs.create" and "bigquery.jobs.listAll".            
+Make sure to grant fake-user@google.com "bigquery.jobs.create" and "bigquery.jobs.listAll".            
 Continuing the investigation with the BigQuery job metadata obtained from the API.
 
    - gcpdiag-bigquery1-aaaa:us.test_unknown                               [OK]
@@ -88,14 +112,26 @@ bigquery/failed-query: Diagnoses issues with a failed BigQuery query job.
   provide targeted remediation steps.
   
 [START]: Verifying input parameters and the BigQuery API status.
+[INFO]: Provided job input parameters have the correct format
+[INFO]: The BigQuery API is enabled.
 [GATEWAY]: Verifying permissions.
 
-   - gcpdiag-bigquery1-aaaa                                               [SKIP]
+   - gcpdiag-cloudsql1-aaaa                                               [FAIL]
      [REASON]
-     Permission check is being skipped because it's not possible to successfully identify the user executing the investigation.
+     Execution halted. The principal fake-user@google.com is missing the following mandatory IAM permission(s) required to run this runbook: bigquery.jobs.create, bigquery.jobs.get, serviceusage.services.list, serviceusage.services.use.
+
+     [REMEDIATION]
+     Grant the principal fake-user@google.com the missing permission(s) on the project to proceed.
+
+[INFO]: A sub-analysis was skipped: Project-level analysis requiring: bigquery.jobs.listAll.
+	To enable this analysis, grant the principal fake-user@google.com the IAM permission at the project level
+
+   - gcpdiag-cloudsql1-aaaa                                               [OK]
+     [REASON]
+     All permission checks are complete.
 [GATEWAY]: Verify that the BigQuery Job exists
 [INFO]: WARNING: Unable to run INFORMATION_SCHEMA view analysis due to missing permissions.            
-Make sure to grant  "bigquery.jobs.create" and "bigquery.jobs.listAll".            
+Make sure to grant fake-user@google.com "bigquery.jobs.create" and "bigquery.jobs.listAll".            
 Continuing the investigation with the BigQuery job metadata obtained from the API.
 
    - gcpdiag-bigquery1-aaaa:us.test_success                               [OK]
@@ -130,14 +166,26 @@ bigquery/failed-query: Diagnoses issues with a failed BigQuery query job.
   provide targeted remediation steps.
   
 [START]: Verifying input parameters and the BigQuery API status.
+[INFO]: Provided job input parameters have the correct format
+[INFO]: The BigQuery API is enabled.
 [GATEWAY]: Verifying permissions.
 
-   - gcpdiag-bigquery1-aaaa                                               [SKIP]
+   - gcpdiag-cloudsql1-aaaa                                               [FAIL]
      [REASON]
-     Permission check is being skipped because it's not possible to successfully identify the user executing the investigation.
+     Execution halted. The principal fake-user@google.com is missing the following mandatory IAM permission(s) required to run this runbook: bigquery.jobs.create, bigquery.jobs.get, serviceusage.services.list, serviceusage.services.use.
+
+     [REMEDIATION]
+     Grant the principal fake-user@google.com the missing permission(s) on the project to proceed.
+
+[INFO]: A sub-analysis was skipped: Project-level analysis requiring: bigquery.jobs.listAll.
+	To enable this analysis, grant the principal fake-user@google.com the IAM permission at the project level
+
+   - gcpdiag-cloudsql1-aaaa                                               [OK]
+     [REASON]
+     All permission checks are complete.
 [GATEWAY]: Verify that the BigQuery Job exists
 [INFO]: WARNING: Unable to run INFORMATION_SCHEMA view analysis due to missing permissions.            
-Make sure to grant  "bigquery.jobs.create" and "bigquery.jobs.listAll".            
+Make sure to grant fake-user@google.com "bigquery.jobs.create" and "bigquery.jobs.listAll".            
 Continuing the investigation with the BigQuery job metadata obtained from the API.
 
    - gcpdiag-bigquery1-aaaa:us.test_running                               [OK]
@@ -167,14 +215,26 @@ bigquery/failed-query: Diagnoses issues with a failed BigQuery query job.
   provide targeted remediation steps.
   
 [START]: Verifying input parameters and the BigQuery API status.
+[INFO]: Provided job input parameters have the correct format
+[INFO]: The BigQuery API is enabled.
 [GATEWAY]: Verifying permissions.
 
-   - gcpdiag-bigquery1-aaaa                                               [SKIP]
+   - gcpdiag-cloudsql1-aaaa                                               [FAIL]
      [REASON]
-     Permission check is being skipped because it's not possible to successfully identify the user executing the investigation.
+     Execution halted. The principal fake-user@google.com is missing the following mandatory IAM permission(s) required to run this runbook: bigquery.jobs.create, bigquery.jobs.get, serviceusage.services.list, serviceusage.services.use.
+
+     [REMEDIATION]
+     Grant the principal fake-user@google.com the missing permission(s) on the project to proceed.
+
+[INFO]: A sub-analysis was skipped: Project-level analysis requiring: bigquery.jobs.listAll.
+	To enable this analysis, grant the principal fake-user@google.com the IAM permission at the project level
+
+   - gcpdiag-cloudsql1-aaaa                                               [OK]
+     [REASON]
+     All permission checks are complete.
 [GATEWAY]: Verify that the BigQuery Job exists
 [INFO]: WARNING: Unable to run INFORMATION_SCHEMA view analysis due to missing permissions.            
-Make sure to grant  "bigquery.jobs.create" and "bigquery.jobs.listAll".            
+Make sure to grant fake-user@google.com "bigquery.jobs.create" and "bigquery.jobs.listAll".            
 Continuing the investigation with the BigQuery job metadata obtained from the API.
 
    - gcpdiag-bigquery1-aaaa:us.test_notfound                              [OK]
@@ -219,45 +279,9 @@ bigquery/failed-query: Diagnoses issues with a failed BigQuery query job.
   provide targeted remediation steps.
   
 [START]: Verifying input parameters and the BigQuery API status.
-[GATEWAY]: Verifying permissions.
 
    - gcpdiag-bigquery1-aaaa                                               [SKIP]
      [REASON]
-     Permission check is being skipped because it's not possible to successfully identify the user executing the investigation.
-[GATEWAY]: Verify that the BigQuery Job exists
-[INFO]: WARNING: Unable to run INFORMATION_SCHEMA view analysis due to missing permissions.            
-Make sure to grant  "bigquery.jobs.create" and "bigquery.jobs.listAll".            
-Continuing the investigation with the BigQuery job metadata obtained from the API.
-
-   - gcpdiag-bigquery1-aaaa:invalid-region.any_id                         [OK]
-     [REASON]
-     Job gcpdiag-bigquery1-aaaa:invalid-region.any_id was successfully located.
-
-[GATEWAY]: Confirm the BigQuery job has finished execution
-
-   - gcpdiag-bigquery1-aaaa:invalid-region.any_id                         [OK]
-     [REASON]
-     Job gcpdiag-bigquery1-aaaa:invalid-region.any_id has finished execution.
-
-[GATEWAY]: Verify the BigQuery job failed
-
-   - gcpdiag-bigquery1-aaaa:invalid-region.any_id                         [OK]
-     [REASON]
-     Job finished execution with an error. Continuing the investigation.
-
-[AUTOMATED STEP]: Analyze BigQuery job errors for known mitigations
-
-   - gcpdiag-bigquery1-aaaa:invalid-region.any_id                         [UNCERTAIN]
-     [REASON]
-     Job gcpdiag-bigquery1-aaaa:invalid-region.any_id failed with an error that does not have a publicly documented mitigation and root cause.
-     Full error message(s) reported:
-     "Invalid value for location: invalid-region is not a valid value"
-
-     [REMEDIATION]
-     Please retry the job to confirm whether the error is transient and can be mitigated through a retry with exponential backoff. See <https://cloud.google.com/bigquery/docs/error-messages>.
-     If the issue persists, contact Google Cloud Support at <https://cloud.google.com/support> and provide this report with the full BigQuery Job Id.
-
-[END]: End step.
-[INFO]: No more checks to perform.
+     Invalid job region provided. Please provide a valid BigQuery region.
 
 

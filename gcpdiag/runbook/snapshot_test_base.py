@@ -23,6 +23,8 @@ from gcpdiag.queries import apis_stub, dns_stub, kubectl_stub
 from gcpdiag.runbook import command, util
 
 
+@mock.patch('gcpdiag.queries.apis.get_user_email',
+            new=lambda: 'fake-user@google.com')
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
 @mock.patch('gcpdiag.queries.kubectl.verify_auth', new=kubectl_stub.verify_auth)
 @mock.patch('gcpdiag.queries.kubectl.check_gke_ingress',
