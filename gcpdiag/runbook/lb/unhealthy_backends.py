@@ -562,7 +562,7 @@ class VerifyHealthCheckLoggingEnabled(runbook.Gateway):
           remediation=op.prep_msg(
               op.UNCERTAIN_REMEDIATION,
               hc_name=health_check.name,
-              protocol=health_check.type,
+              protocol=health_check.type.lower(),
               additional_flags=additional_flags,
           ),
       )
