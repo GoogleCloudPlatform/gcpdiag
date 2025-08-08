@@ -441,3 +441,39 @@ class TestSetDefaultParameters(unittest.TestCase):
     parameters[flags.END_TIME] = end_time_invalid
     with self.assertRaises(ValueError):
       self.de.parse_parameters(parameter_def={}, caller_args=parameters)
+
+
+class TestMetaStepRegistry(unittest.TestCase):
+  """Test for meta step registry."""
+
+  def setUp(self):
+    # Clear the registry before each test
+    runbook.StepRegistry.clear()
+
+  def test_register_step_subclass(self):
+
+    class MyStep(runbook.Step):
+      pass
+
+    self.assertIn(MyStep.id, runbook.StepRegistry)
+    self.assertIs(runbook.StepRegistry[MyStep.id], MyStep)
+
+  def test_register_gateway_subclass(self):
+
+    class MyGateway(runbook.Gateway):
+      pass
+
+    self.assertIn(MyGateway.id, runbook.StepRegistry)
+    self.assertIs(runbook.StepRegistry[MyGateway.id], MyGateway)
+
+  def test_dont_register_base_classes(self):
+    self.assertNotIn(runbook.Step.id, runbook.StepRegistry)
+    self.assertNotIn(runbook.Gateway.id, runbook.StepRegistry)
+
+  def test_dont_register_other_classes(self):
+
+    class NotAStep:
+      pass
+
+    not_a_step_id = '.'.join([NotAStep.__module__, NotAStep.__name__])
+    self.assertNotIn(not_a_step_id, runbook.StepRegistry)

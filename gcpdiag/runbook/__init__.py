@@ -60,7 +60,7 @@ class MetaStep(type):
     """Register all steps into StepRegistry excluding base classes"""
     new_class = super().__new__(mcs, name, bases, namespace)
     if name not in ('Step', 'Gateway', 'LintWrapper', 'StartStep', 'EndStep',
-                    'CompositeStep') and bases[0] == Step:
+                    'CompositeStep') and bases[0] in (Step, Gateway):
       StepRegistry[new_class.id] = new_class
     return new_class
 
@@ -315,11 +315,11 @@ class Gateway(Step):
   Represents a decision point in a workflow, determining which path to take based on a condition.
   """
 
-  def __init__(self):
+  def __init__(self, **parameters):
     """
     Initializes a new instance of the Gateway step.
     """
-    super().__init__(step_type=constants.StepType.GATEWAY)
+    super().__init__(**parameters, step_type=constants.StepType.GATEWAY)
 
 
 class RunbookRule(type):
