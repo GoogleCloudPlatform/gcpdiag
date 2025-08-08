@@ -18,15 +18,15 @@ More specifically, check if all IP addresses associated with the certificate
 ### Failure Reason
 
 {misconfigured_entities}
-There must be at least one load balancer's forwarding rule that use TCP port 443 for the Google-managed certificate to be initially provisioned and automatically renewed.
+There must be at least one load balancer's forwarding rule that uses TCP port 443 for the Google-managed certificate to be initially provisioned and automatically renewed.
 
 ### Failure Remediation
 
-Configure the load balancer to listen on port 443 for certificate {name}.
+Configure the load balancer to listen on port 443 for SSL certificate "{name}".
 
 ### Success Reason
 
-Certificate {name} has forwarding rules configured for HTTPS (port 443) on all associated IP addresses.
+The SSL certificate "{name}" has forwarding rules configured for HTTPS (port 443) on all associated IP addresses.
 
 
 

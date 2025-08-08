@@ -200,8 +200,8 @@ class CheckWorkbenchInstanceSyslogsJupyterRunningOnPort8080(runbook.Step):
 
   def execute(self):
     """Verify Jupyter is running on port 127.0.0.1:8080"""
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
     project_id: str = self.project_id or op.get(flags.PROJECT_ID)
     instance_name: str = self.instance_name or op.get(flags.INSTANCE_NAME)
     zone: str = self.zone or op.get(flags.ZONE)
@@ -220,11 +220,11 @@ class CheckWorkbenchInstanceSyslogsJupyterRunningOnPort8080(runbook.Step):
     serial_log_entries_jupyter_running = logs.realtime_query(
         project_id=project_id,
         filter_str=filter_str,
-        start_time_utc=start_time_utc,
-        end_time_utc=end_time_utc)
+        start_time=start_time,
+        end_time=end_time)
     if serial_log_entries_jupyter_running:
       op.info(
-          'Jupyter is running! Verifying if it\'s running on port 127.0.0.1:8080...'
+          'Jupyter is running! Verifying if it\'s running on port 127.0.0.1:8080.'
       )
       filter_str = r'''severity=INFO
                     AND
@@ -241,8 +241,8 @@ class CheckWorkbenchInstanceSyslogsJupyterRunningOnPort8080(runbook.Step):
       serial_log_entries_jupyter_port = logs.realtime_query(
           project_id=project_id,
           filter_str=filter_str,
-          start_time_utc=start_time_utc,
-          end_time_utc=end_time_utc)
+          start_time=start_time,
+          end_time=end_time)
       if serial_log_entries_jupyter_port:
         #User will need to fix their instance o create a new one
         op.add_failed(resource=workbench_instance,
@@ -274,7 +274,7 @@ class CheckWorkbenchInstancePerformance(runbook.CompositeStep):
   zone: str = ''
 
   def execute(self):
-    """Evaluating Workbench Instance Compute Engine VM memory, CPU, and disk performance..."""
+    """Evaluating Workbench Instance Compute Engine VM memory, CPU, and disk performance."""
     within_hours = 8
     within_str = 'within %dh, d\'%s\'' % (within_hours,
                                           monitoring.period_aligned_now(5))
@@ -282,7 +282,7 @@ class CheckWorkbenchInstancePerformance(runbook.CompositeStep):
     instance_name: str = self.instance_name or op.get(flags.INSTANCE_NAME)
     zone: str = self.zone or op.get(flags.ZONE)
     op.put(gce_flags.PROJECT_ID, project_id)
-    op.put(gce_flags.NAME, instance_name)
+    op.put(gce_flags.INSTANCE_NAME, instance_name)
     op.put(gce_flags.ZONE, zone)
     ops_agent_query = monitoring.query(
         op.get(flags.PROJECT_ID), """
@@ -292,7 +292,7 @@ class CheckWorkbenchInstancePerformance(runbook.CompositeStep):
               | align rate(5m)
               | every 5m
               | {}
-            """.format(op.get(gce_flags.NAME), within_str))
+            """.format(op.get(gce_flags.INSTANCE_NAME), within_str))
     if ops_agent_query:
       op.info(
           'Runbook will use ops agent metrics for VM performance investigation')

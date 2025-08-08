@@ -4,17 +4,16 @@
 {% endblock default_success_reason %}
 
 {% block default_failure_reason %}
-{principal} doesn't have at least one of the expected {permissions_or_roles}:
+{principal} does not have at least one of the expected {permissions_or_roles}:
 {missing_permissions_or_roles}.
 {% endblock default_failure_reason %}
 
 {% block default_failure_remediation %}
-Follow Guide [1] to grant a role which has the correct permissions.
-[2] has a list of all Google predefined roles available to you.
+Grant a role containing the missing permissions by following the instructions in [1].
+Refer to [2] for a list of Google Cloud predefined roles.
 
-Note: You may want to doublecheck with your project admins of the best way to grant the role
-or custom roles which can be used.
+Note: Consider consulting with project administrators regarding the most appropriate standard or custom role to grant.
 
-[1] https://cloud.google.com/iam/docs/grant-role-console
-[2] https://cloud.google.com/iam/docs/understanding-roles
+[1] <https://cloud.google.com/iam/docs/grant-role-console>
+[2] <https://cloud.google.com/iam/docs/understanding-roles>
 {% endblock default_failure_remediation %}

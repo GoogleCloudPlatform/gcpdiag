@@ -4,7 +4,7 @@ linkTitle: "Vm Termination Start"
 weight: 3
 type: docs
 description: >
-  Start VM Termination Checks
+  VM termination pre-runbook checks
 ---
 
 **Product**: [Compute Engine](https://cloud.google.com/compute)\

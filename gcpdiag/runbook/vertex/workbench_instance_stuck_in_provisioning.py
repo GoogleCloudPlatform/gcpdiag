@@ -83,11 +83,11 @@ class WorkbenchInstanceStuckInProvisioning(runbook.DiagnosticTree):
           'default': 'us-central1-a',
           'required': True
       },
-      flags.START_TIME_UTC: {
+      flags.START_TIME: {
           'type': datetime,
           'help': 'Start time of the issue',
       },
-      flags.END_TIME_UTC: {
+      flags.END_TIME: {
           'type': datetime,
           'help': 'End time of the issue',
       }
@@ -131,7 +131,7 @@ class WorkbenchInstanceStuckInProvisioning(runbook.DiagnosticTree):
 
 
 class WorkbenchInstanceStuckInProvisioningStart(runbook.StartStep):
-  """Checking if the Workbench Instance is in PROVISIONING state and gathering its details...
+  """Checking if the Workbench Instance is in PROVISIONING state and gathering its details.
 
   If the instance is stopped, user must try to start it to start the checks
   """
@@ -252,7 +252,7 @@ class CheckWorkbenchInstanceUsingCustomContainer(runbook.Step):
   template = 'workbench_container::custom'
 
   def execute(self):
-    """Checking if the Workbench Instance is using a custom container..."""
+    """Checking if the Workbench Instance is using a custom container."""
     project_id: str = op.get(flags.PROJECT_ID)
     instance_name: str = op.get(flags.INSTANCE_NAME)
     zone: str = op.get(flags.ZONE)
@@ -398,7 +398,7 @@ class CheckWorkbenchInstanceJupyterSpace(runbook.Step):
 
 
 class WorkbenchInstanceStuckInProvisioningEnd(runbook.EndStep):
-  """Checking if the Workbench Instance is now in ACTIVE state...
+  """Checking if the Workbench Instance is now in ACTIVE state.
 
   If Workbench Instance is still stuck in PROVISIONING state, then
   Diagnostic Logs should be captured and analyzed by the user or support

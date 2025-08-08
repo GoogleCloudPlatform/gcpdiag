@@ -26,7 +26,7 @@
 # - check if node's service account has logging permissions, otherwise we don't have logs to look
 #   into
 # - check if node exists and it's running
-#   - check if START_TIME_UTC is before node boot, so we can capture the boot time logs
+#   - check if START_TIME is before node boot, so we can capture the boot time logs
 #   - if yes, check for Node Registration Checker logs:
 #     - if "Node ready and registered." found, all good, return OK result
 #     - else if "Completed running Node Registration Checker" found, then it's a failure and
@@ -46,7 +46,7 @@ from datetime import datetime, timedelta, timezone
 
 import googleapiclient.errors
 
-from gcpdiag import models, runbook
+from gcpdiag import runbook
 from gcpdiag.queries import crm, gce, gke, iam, logs
 from gcpdiag.runbook import op
 from gcpdiag.runbook.gke import flags
@@ -66,8 +66,8 @@ def get_node_instance(project, location, node):
 
 def local_realtime_query(filter_str):
   result = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
-                               start_time_utc=op.get(flags.START_TIME_UTC),
-                               end_time_utc=op.get(flags.END_TIME_UTC),
+                               start_time=op.get(flags.START_TIME),
+                               end_time=op.get(flags.END_TIME),
                                filter_str=filter_str)
   return result
 
@@ -102,76 +102,91 @@ class NodeBootstrapping(runbook.DiagnosticTree):
   """Analyses issues experienced when adding nodes to your GKE Standard cluster.
 
   This runbook requires at least
-  - location and node parameters. Location here is the zone where the node is running,
+  - location and node parameters. Location here is the zone where the node is
+  running,
   for example us-central1-c.
-  - location, nodepool and cluster name parameters to be provided. Location is zone or region for
-  a nodepool, if the cluster is a regional cluster, then location for a nodepool will be the
+  - location, nodepool and cluster name parameters to be provided. Location is
+  zone or region for
+  a nodepool, if the cluster is a regional cluster, then location for a nodepool
+  will be the
   cluster region. For example a region could be us-central1.
 
-  If a location/node pair is provided, the runbook will check the Node Registration Checker output
+  If a location/node pair is provided, the runbook will check the Node
+  Registration Checker output
   for the given location/node pair.
 
-  If a location, nodepool and GKE cluster name parameters are provided, the runbook will check for
-  any errors that might have occurred when the instances.insert method was invoked for the given
+  If a location, nodepool and GKE cluster name parameters are provided, the
+  runbook will check for
+  any errors that might have occurred when the instances.insert method was
+  invoked for the given
   parameters.
   """
+
   # Specify parameters common to all steps in the diagnostic tree class.
   parameters = {
       flags.PROJECT_ID: {
           'type': str,
           'help': 'The ID of the project hosting the GKE Cluster',
-          'required': True
+          'required': True,
       },
       flags.LOCATION: {
-          'type':
-              str,
-          'help':
-              'The location where the node or nodepool is. For a node, location will be the zone \
-where the node is running (i.e. us-central1-c). For a nodepool, this can be the zone or the \
-region (i.e. us-central1) where the nodepool is configured',
-          'required':
-              True
+          'type': str,
+          'help': (
+              'The location where the node or nodepool is. For a node, location'
+              ' will be the zone where the node is running (i.e.'
+              ' us-central1-c). For a nodepool, this can be the zone or the'
+              ' region (i.e. us-central1) where the nodepool is configured'),
+          'required': True,
       },
       flags.NODE: {
-          'type':
-              str,
+          'type': str,
           'help':
-              'The node name that is failing to register (if available). If node name is not \
-available, please provide the nodepool name where nodes aren\'t registering',
-          'required':
-              False
+              ('The node name that is failing to register (if available). If'
+               ' node name is not available, please provide the nodepool name'
+               " where nodes aren't registering"),
+          'required': False,
       },
       flags.NODEPOOL: {
-          'type':
-              str,
-          'help':
-              'The nodepool name where nodes aren\'t registering, if a node name is not \
-availalbe',
-          'required':
-              False
+          'type': str,
+          'help': (
+              "The nodepool name where nodes aren't registering, if a node name"
+              ' is not available'),
+          'required': False,
       },
       flags.NAME: {
-          'type':
-              str,
+          'type': str,
           'help':
-              'The GKE cluster name. When providing nodepool name, please provide the GKE cluster \
-name as well to be able to properly filter events in the logging query.',
-          'required':
-              False
+              ('The GKE cluster name. When providing nodepool name, please'
+               ' provide the GKE cluster name as well to be able to properly'
+               ' filter events in the logging query.'),
+          'deprecated': True,
+          'new_parameter': 'gke_cluster_name',
       },
-      flags.START_TIME_UTC: {
+      flags.GKE_CLUSTER_NAME: {
+          'type': str,
+          'help':
+              ('The GKE cluster name. When providing nodepool name, please'
+               ' provide the GKE cluster name as well to be able to properly'
+               ' filter events in the logging query.'),
+          'required': False,
+      },
+      flags.START_TIME: {
           'type':
               datetime,
-          'help':
-              'The start window to investigate vm termination. Format: YYYY-MM-DDTHH:MM:SSZ'
+          'help': ('The start window to investigate vm termination. Format:'
+                   ' YYYY-MM-DDTHH:MM:SSZ'),
       },
-      flags.END_TIME_UTC: {
+      flags.END_TIME: {
           'type':
               datetime,
-          'help':
-              'The end window for the investigation. Format: YYYY-MM-DDTHH:MM:SSZ'
-      }
+          'help': ('The end window for the investigation. Format:'
+                   ' YYYY-MM-DDTHH:MM:SSZ'),
+      },
   }
+
+  def legacy_parameter_handler(self, parameters):
+    if flags.NAME in parameters:
+      parameters[flags.GKE_CLUSTER_NAME] = parameters.pop(flags.NAME)
 
   def build_tree(self):
     start = NodeBootstrappingStart()
@@ -202,22 +217,23 @@ class NodeBootstrappingStart(runbook.StartStep):
     project = op.get(flags.PROJECT_ID)
     location = op.get(flags.LOCATION)
     node = op.get(flags.NODE)
-    name = op.get(flags.NAME)
+    name = op.get(flags.GKE_CLUSTER_NAME)
     project_path = crm.get_project(project)
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
 
     # check if there are clusters in the project
     if name:
       clusters = gke.get_clusters(
-          models.Context(project_id=project, resources=[name]))
+          op.get_new_context(project_id=project, resources=[name]))
       if not clusters:
         op.add_skipped(
             project_path,
-            reason=(f'No {name} GKE cluster found in project {project}'))
+            reason=f'No {name} GKE cluster found in project {project}')
         return
     else:
-      clusters = gke.get_clusters(op.context)
+      clusters = gke.get_clusters(
+          op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
       if not clusters:
         op.add_skipped(
             project_path,
@@ -261,7 +277,7 @@ class NodeBootstrappingStart(runbook.StartStep):
             reason=
             (f'There are no log entries for the provided node {node} and location '
              f'{location} in the provided time range '
-             f'{start_time_utc} - {end_time_utc}.\n'
+             f'{start_time} - {end_time}.\n'
              'Please make sure the node/location pair is correct and it was booted '
              'in the time range provided, then try again this runbook.'))
         return
@@ -282,10 +298,10 @@ class NodeInsertCheck(runbook.Step):
     location = op.get(flags.LOCATION)
     nodepool = op.get(flags.NODEPOOL)
     node = op.get(flags.NODE)
-    name = op.get(flags.NAME)
+    name = op.get(flags.GKE_CLUSTER_NAME)
     project_path = crm.get_project(project)
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
 
     if nodepool and name:
       if not node:
@@ -311,35 +327,35 @@ class NodeInsertCheck(runbook.Step):
             break
           op.add_failed(project_path,
                         reason=op.prep_msg(op.FAILURE_REASON,
-                                           LOG_ENTRY=sample_log,
+                                           log_entry=sample_log,
                                            NODEPOOL=nodepool,
                                            NAME=name,
-                                           LOCATION=location,
+                                           location=location,
                                            NR_ERRORS=nr_errors,
-                                           START_TIME_UTC=start_time_utc,
-                                           END_TIME_UTC=end_time_utc),
+                                           start_time=start_time,
+                                           end_time=end_time),
                         remediation=op.prep_msg(op.FAILURE_REMEDIATION))
           return
         else:
           op.add_ok(project_path,
                     reason=op.prep_msg(op.SUCCESS_REASON,
-                                       START_TIME_UTC=start_time_utc,
-                                       END_TIME_UTC=end_time_utc,
+                                       start_time=start_time,
+                                       end_time=end_time,
                                        NODEPOOL=nodepool,
                                        NAME=name,
-                                       LOCATION=location))
+                                       location=location))
           return
       else:
         op.add_skipped(
             project_path,
             reason=
             ('Node parameter provided together with nodepool parameter, proceeding with Node '
-             'Registration Checkout output verification ...'))
+             'Registration Checkout output verification .'))
     else:
       op.add_skipped(
           project_path,
           reason=
-          ('No nodepool or GKE cluster name provided, skipping this step ... \n'
+          ('No nodepool or GKE cluster name provided, skipping this step . \n'
            'Please provide nodepool name (-p nodepool=<nodepoolname>) and GKE cluster name '
            '(-p name=<gke-cluster-name>) if you see issues with nodes not appearing in the '
            'nodepool.'))
@@ -421,21 +437,21 @@ class NodeRegistrationSuccess(runbook.Step):
       # output:
       if node_vm and node_vm.is_running and node_vm.is_serial_port_logging_enabled(
       ):
-        # check if START_TIME_UTC is after node's boot time if yes we might not find Node
-        # Registration Checker logs, so the user needs to set earlier START_TIME_UTC
+        # check if START_TIME is after node's boot time if yes we might not find Node
+        # Registration Checker logs, so the user needs to set earlier START_TIME
 
         # get the offset-aware datetime instead of offset-naive
         node_start_time = datetime.fromisoformat(str(
             node_vm.creation_timestamp)).replace(tzinfo=timezone.utc)
-        if node_start_time < op.get(flags.START_TIME_UTC):
+        if node_start_time < op.get(flags.START_TIME):
           op.add_failed(
               project_path,
               reason=
               (f'The node {node} in the location {location} booted at {node_start_time} before '
-               f'the provided START_TIME_UTC {op.get(flags.START_TIME_UTC)} '
+               f'the provided START_TIME {op.get(flags.START_TIME)} '
                '(default is 8 hours from now)'),
               remediation=
-              ('Please provide the START_TIME_UTC parameter (-p start_time_utc) with a date '
+              ('Please provide the START_TIME parameter (-p start_time) with a date '
                f'before {node_start_time}, so that the runbook can find the Node Registration '
                'Checker logs for the node'))
           return
@@ -454,8 +470,8 @@ class NodeRegistrationSuccess(runbook.Step):
           sample_log = str(sample_log).replace(', ', '\n')
           op.add_ok(project_path,
                     reason=op.prep_msg(op.SUCCESS_REASON,
-                                       LOG_ENTRY=sample_log,
-                                       NODE=node))
+                                       log_entry=sample_log,
+                                       node=node))
 
         else:
           # node failed to register, need to find Node Registration Checker summary verify if
@@ -488,9 +504,9 @@ class NodeRegistrationSuccess(runbook.Step):
 
             op.add_failed(project_path,
                           reason=op.prep_msg(op.FAILURE_REASON,
-                                             LOG_ENTRIES=nrc_summary,
-                                             NODE=node,
-                                             LOCATION=location),
+                                             log_entries=nrc_summary,
+                                             node=node,
+                                             location=location),
                           remediation=op.prep_msg(op.FAILURE_REMEDIATION))
             return
 
@@ -514,23 +530,23 @@ class NodeRegistrationSuccess(runbook.Step):
 
               op.add_failed(project_path,
                             reason=op.prep_msg(op.FAILURE_REASON_ALT1,
-                                               LOG_ENTRIES=nrc_summary,
-                                               NODE=node,
-                                               LOCATION=location),
+                                               log_entries=nrc_summary,
+                                               node=node,
+                                               location=location),
                             remediation=op.prep_msg(op.FAILURE_REMEDIATION))
               return
             else:
               # node is running, but there's no "Completed running Node Registration Checker" log
               # entry in the provided time range
               op.add_failed(project_path,
-                            reason=op.prep_msg(
-                                op.UNCERTAIN_REASON,
-                                NODE=node,
-                                LOCATION=location,
-                                START_TIME_UTC=op.get(flags.START_TIME_UTC),
-                                END_TIME_UTC=op.get(flags.END_TIME_UTC)),
+                            reason=op.prep_msg(op.UNCERTAIN_REASON,
+                                               node=node,
+                                               location=location,
+                                               start_time=op.get(
+                                                   flags.START_TIME),
+                                               end_time=op.get(flags.END_TIME)),
                             remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION,
-                                                    NODE=node))
+                                                    node=node))
               return
 
       else:
@@ -550,8 +566,8 @@ class NodeRegistrationSuccess(runbook.Step):
           sample_log = str(sample_log).replace(', ', '\n')
           op.add_ok(project_path,
                     reason=op.prep_msg(op.SUCCESS_REASON_ALT1,
-                                       LOG_ENTRY=sample_log,
-                                       NODE=node))
+                                       log_entry=sample_log,
+                                       node=node))
         else:
           filter_str = [
               f'labels."compute.googleapis.com/resource_name"="{node}"',
@@ -569,9 +585,9 @@ class NodeRegistrationSuccess(runbook.Step):
 
             op.add_failed(project_path,
                           reason=op.prep_msg(op.FAILURE_REASON_ALT2,
-                                             LOG_ENTRIES=nrc_summary,
-                                             NODE=node,
-                                             LOCATION=location),
+                                             log_entries=nrc_summary,
+                                             node=node,
+                                             location=location),
                           remediation=op.prep_msg(op.FAILURE_REMEDIATION))
             return
 
@@ -580,15 +596,15 @@ class NodeRegistrationSuccess(runbook.Step):
             # probably the node was deleted before Node Registration Checker could finish running.
             op.add_failed(project_path,
                           reason=op.prep_msg(op.FAILURE_REASON_ALT3,
-                                             NODE=node,
-                                             LOCATION=location),
+                                             node=node,
+                                             location=location),
                           remediation=op.prep_msg(op.FAILURE_REMEDIATION_ALT3))
             return
     else:
       op.add_skipped(
           project_path,
           reason=
-          ('No node name provided, skipping this step ...\n'
+          ('No node name provided, skipping this step .\n'
            'Please provide node name (-p node=<nodename>) if the node appears in the nodepool, '
            'but fails registration.\n'))
 
@@ -604,7 +620,7 @@ class NodeBootstrappingEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing `GKE Node Bootstrapping` diagnostics..."""
+    """Finalize `GKE Node Bootstrapping` diagnostics."""
     response = op.prompt(
         kind=op.CONFIRMATION,
         message='Are you satisfied with the `GKE Node Bootstrapping` analysis?')

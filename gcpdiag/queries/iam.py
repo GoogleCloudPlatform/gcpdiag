@@ -16,10 +16,10 @@
 """Queries related to GCP Identity and Access Management."""
 
 import abc
+import collections
 import functools
 import logging
 import re
-from collections import defaultdict
 from typing import Any, Dict, List, Optional, Tuple, Type
 
 import googleapiclient
@@ -66,7 +66,7 @@ def _fetch_iam_roles(parent: str, api_project_id: str) -> Dict[str, Role]:
     resource_name = resource_data['name']
     return resource_name, Role(resource_data)
 
-  logging.info('fetching IAM roles of \'%s\'', parent)
+  logging.info("fetching IAM roles of '%s'", parent)
   iam_api = apis.get_api('iam', 'v1', api_project_id)
   if parent.startswith('projects/'):
     roles_api = iam_api.projects().roles()
@@ -102,7 +102,7 @@ def _get_predefined_role(name: str, api_project_id: str) -> Role:
   roles.list. For all other roles, _get_predefined_roles should be preferred
   because of caching efficiency
   """
-  logging.info('fetching IAM role \'%s\'', name)
+  logging.info("fetching IAM role '%s'", name)
   iam_api = apis.get_api('iam', 'v1', api_project_id)
   request = iam_api.roles().get(name=name)
 
@@ -206,14 +206,15 @@ class BaseIAMPolicy(models.Resource):
     """
 
     policy_roles = set()
-    policy_by_member: Dict[str, Any] = defaultdict(dict)
+    policy_by_member: Dict[str, Any] = collections.defaultdict(dict)
 
     # Empty lists are omitted in GCP API responses
     for binding in resource_data.get('bindings', []):
       if 'condition' in binding:
         logging.warning(
             'IAM binding contains a condition, which would be ignored: %s',
-            binding)
+            binding,
+        )
 
       # IAM binding should always have a role and at least one member
       policy_roles.add(binding['role'])
@@ -260,8 +261,7 @@ class BaseIAMPolicy(models.Resource):
     Permissions are using "lazy" initialization and only expanded if needed
     """
     member_policy = self._policy_by_member.get(member)
-    if not member_policy or \
-        'permissions' in member_policy:
+    if not member_policy or 'permissions' in member_policy:
       return
 
     permissions = set()
@@ -297,7 +297,8 @@ class BaseIAMPolicy(models.Resource):
 
     return True
 
-  def __init__(self, project_id: str, name: str, resource_data: Dict[str, Any]):
+  def __init__(self, project_id: Optional[str], name: str,
+               resource_data: Dict[str, Any]):
     super().__init__(project_id)
     self._name = name
     self._policy_by_member = self._expand_policy(resource_data)
@@ -372,7 +373,8 @@ class BaseIAMPolicy(models.Resource):
     It performs exact match and doesn't expand role to list of permissions.
     Note that this method is not public because users of this module should
     use has_role_permissions(), i.e. verify effective permissions instead of
-    roles."""
+    roles.
+    """
 
     if member not in self._policy_by_member:
       return False
@@ -398,17 +400,25 @@ class BaseIAMPolicy(models.Resource):
         if self._is_resource_permission(p)
     }
 
-    missing_roles = role_permissions - self._policy_by_member[member][
-        'permissions']
+    missing_roles = (role_permissions -
+                     self._policy_by_member[member]['permissions'])
     if missing_roles:
-      logging.debug('member \'%s\' doesn\'t have permissions %s', member,
-                    ','.join(missing_roles))
+      logging.debug(
+          "member '%s' doesn't have permissions %s",
+          member,
+          ','.join(missing_roles),
+      )
       return False
     return self._is_active_member(member)
 
 
-def fetch_iam_policy(request, resource_class: Type[BaseIAMPolicy],
-                     project_id: str, name: str):
+def fetch_iam_policy(
+    request,
+    resource_class: Type[BaseIAMPolicy],
+    project_id: Optional[str],
+    name: str,
+    raise_error_if_fails=True,
+):
   """Executes `getIamPolicy` request and converts into a resource class
 
   Supposed to be used by `get_*_policy` functions in gcpdiag.queries.* and
@@ -426,11 +436,14 @@ def fetch_iam_policy(request, resource_class: Type[BaseIAMPolicy],
   Note: API calls aren't cached and it should be done externally
   """
 
-  logging.info('fetching IAM policy of \'%s\'', name)
+  logging.info("fetching IAM policy of '%s'", name)
   try:
     response = request.execute(num_retries=config.API_RETRIES)
   except googleapiclient.errors.HttpError as err:
-    raise utils.GcpApiError(err) from err
+    if raise_error_if_fails:
+      raise utils.GcpApiError(err) from err
+    else:
+      return
   return resource_class(project_id, name, response)
 
 
@@ -450,14 +463,15 @@ class ProjectPolicy(BaseIAMPolicy):
     #
     # https://cloud.google.com/resource-manager/docs/access-control-proj#permissions
     # https://cloud.google.com/monitoring/access-control#custom_roles
-    if permission.startswith('resourcemanager.projects.') or \
-        permission.startswith('stackdriver.projects.'):
+    if permission.startswith('resourcemanager.projects.'
+                            ) or permission.startswith('stackdriver.projects.'):
       return False
     return True
 
 
 @caching.cached_api_call(in_memory=True)
-def get_project_policy(project_id: str) -> ProjectPolicy:
+def get_project_policy(project_id: str,
+                       raise_error_if_fails=True) -> ProjectPolicy:
   """Return the ProjectPolicy object for a project, caching the result."""
 
   resource_name = f'projects/{project_id}'
@@ -465,15 +479,47 @@ def get_project_policy(project_id: str) -> ProjectPolicy:
   crm_api = apis.get_api('cloudresourcemanager', 'v3', project_id)
   request = crm_api.projects().getIamPolicy(resource='projects/' + project_id)
 
-  return fetch_iam_policy(request, ProjectPolicy, project_id, resource_name)
+  return fetch_iam_policy(request, ProjectPolicy, project_id, resource_name,
+                          raise_error_if_fails)
+
+
+class OrganizationPolicy(BaseIAMPolicy):
+  """Represents the IAM policy of a single organization using v1 API.
+
+  See also the API documentation:
+  https://cloud.google.com/resource-manager/reference/rest/v1/organizations/getIamPolicy
+  """
+
+  def _is_resource_permission(self, permission: str) -> bool:
+    # Filter out permissions that can be granted only on projects or folders
+    if permission.startswith(
+        'resourcemanager.projects.') or permission.startswith(
+            'resourcemanager.folders.'):
+      return False
+    return True
+
+
+@caching.cached_api_call(in_memory=True)
+def get_organization_policy(organization_id: str,
+                            raise_error_if_fails=True) -> OrganizationPolicy:
+  """Return the OrganizationPolicy object for an organization, caching the result."""
+
+  resource_name = f'organizations/{organization_id}'
+
+  crm_api = apis.get_api('cloudresourcemanager', 'v1')
+  request = crm_api.organizations().getIamPolicy(resource=resource_name)
+
+  return fetch_iam_policy(request, OrganizationPolicy, None, resource_name,
+                          raise_error_if_fails)
 
 
 class ServiceAccount(models.Resource):
-  """ Class represents the service account.
+  """Class represents the service account.
 
   Add more fields as needed from the declaration:
   https://cloud.google.com/iam/docs/reference/rest/v1/projects.serviceAccounts#ServiceAccount
   """
+
   _resource_data: dict
 
   def __init__(self, project_id, resource_data):
@@ -514,7 +560,6 @@ class ServiceAccount(models.Resource):
 SERVICE_AGENT_DOMAINS = (
     # https://cloud.google.com/iam/docs/service-accounts
     'cloudservices.gserviceaccount.com',
-
     # https://cloud.google.com/iam/docs/service-agents
     'cloudbuild.gserviceaccount.com',
     'cloudcomposer-accounts.iam.gserviceaccount.com',
@@ -542,7 +587,6 @@ SERVICE_AGENT_DOMAINS = (
     'service-consumer-management.iam.gserviceaccount.com',
     'service-networking.iam.gserviceaccount.com',
     'sourcerepo-service-accounts.iam.gserviceaccount.com',
-
     # https://firebase.google.com/support/guides/service-accounts
     'appspot.gserviceaccount.com',
     'cloudservices.gserviceaccount.com',
@@ -554,8 +598,10 @@ SERVICE_AGENT_DOMAINS = (
     'system.gserviceaccount.com',
 )
 
-DEFAULT_SERVICE_ACCOUNT_DOMAINS = ('appspot.gserviceaccount.com',
-                                   'developer.gserviceaccount.com')
+DEFAULT_SERVICE_ACCOUNT_DOMAINS = (
+    'appspot.gserviceaccount.com',
+    'developer.gserviceaccount.com',
+)
 
 # The main reason to have two dicts instead of using for example None as value,
 # is that it works better for static typing (i.e. avoiding Optional[]).
@@ -567,8 +613,10 @@ _service_account_cache_is_not_found: Dict[str, bool] = {}
 def _batch_fetch_service_accounts(emails: List[str], billing_project_id: str):
   """Retrieve a list of service accounts.
 
-  This function is used when inspecting a project, to retrieve all service accounts
-  that are used in the IAM policy, so that we can do this in a single batch request.
+  This function is used when inspecting a project, to retrieve all service
+  accounts
+  that are used in the IAM policy, so that we can do this in a single batch
+  request.
   The goal is to be able to call is_service_account_enabled() without triggering
   another API call.
 
@@ -608,28 +656,33 @@ def _batch_fetch_service_accounts(emails: List[str], billing_project_id: str):
         email = m.group(2)
 
         # 403 or 404 is expected for Google-managed service agents.
-        if email.partition('@')[2] in SERVICE_AGENT_DOMAINS or \
-          email.partition('@')[2].startswith('gcp-sa-'):
+        if email.partition('@')[2] in SERVICE_AGENT_DOMAINS or email.partition(
+            '@')[2].startswith('gcp-sa-'):
           # Too noisy even for debug-level
           # logging.debug(
           #     'ignoring error retrieving google-managed service agent %s: %s', email, exception)
           pass
-        elif isinstance(exception,
-                        utils.GcpApiError) and exception.status == 404:
+        elif (isinstance(exception, utils.GcpApiError) and
+              exception.status == 404):
           _service_account_cache_is_not_found[email] = True
         else:
           # Determine if the failing service account belongs to a different project.
           # Retrieving service account details may fail due to various conditions.
           if sa_project_id != billing_project_id:
             logging.warning(
-                "can't retrieve service account %s belonging to project %s but used in project: %s",
-                email, sa_project_id, billing_project_id)
+                "can't retrieve service account %s belonging to project %s but"
+                ' used in project: %s',
+                email,
+                sa_project_id,
+                billing_project_id,
+            )
             _service_account_cache_is_not_found[email] = True
             continue
 
           project_nr = crm.get_project(sa_project_id).number
-          if ((sa_project_id == billing_project_id) and re.match(rf'{project_nr}-\w+@', email) \
-              or email.endswith(f'@{billing_project_id}.iam.gserviceaccount.com')):
+          if ((sa_project_id == billing_project_id) and
+              re.match(rf'{project_nr}-\w+@', email) or
+              email.endswith(f'@{billing_project_id}.iam.gserviceaccount.com')):
             # if retrieving service accounts from the project being inspected fails,
             # we need to fail hard because many rules won't work correctly.
             raise utils.GcpApiError(err) from err
@@ -643,14 +696,15 @@ def _extract_project_id(email: str):
   if email in _service_account_cache:
     return _service_account_cache[email].project_id
 
-  if email.endswith('.iam.gserviceaccount.com') and \
-    not (email.startswith('service-') or email.split('@')[1].startswith('gcp-sa-')):
+  if email.endswith('.iam.gserviceaccount.com') and not (
+      email.startswith('service-') or
+      email.split('@')[1].startswith('gcp-sa-')):
     project_id = re.split(r'[@ .]', email)[1]
     return project_id
     # extract project number from service agents and compute default SA
-  elif email.partition('@')[2] in SERVICE_AGENT_DOMAINS or \
-      email.partition('@')[2].startswith('gcp-sa-') or \
-      email.endswith(DEFAULT_SERVICE_ACCOUNT_DOMAINS[1]):
+  elif (email.partition('@')[2] in SERVICE_AGENT_DOMAINS or
+        email.partition('@')[2].startswith('gcp-sa-') or
+        email.endswith(DEFAULT_SERVICE_ACCOUNT_DOMAINS[1])):
     # AppEngine Default SA is unique
     if email.endswith(DEFAULT_SERVICE_ACCOUNT_DOMAINS[0]):
       return email.partition('@')[0]
@@ -667,10 +721,13 @@ def _extract_project_id(email: str):
         # https://cloud.google.com/iam/docs/reference/rest/v1/projects.serviceAccounts/get
         logging.warning(
             'Using "-" wildcard to infer host project for service account: %s. '
-            'Rules which rely on method: projects.serviceAccounts.get to determine '
+            'Rules which rely on method: projects.serviceAccounts.get to'
+            ' determine '
             'disabled vrs deleted status of %s may produce misleading results. '
             'See: https://cloud.google.com/iam/docs/reference/rest/v1/projects.serviceAccounts/get',
-            email, email)
+            email,
+            email,
+        )
         return '-'
       else:
         return project_id
@@ -680,14 +737,17 @@ def _extract_project_id(email: str):
         'Rules which rely on method: projects.serviceAccounts.get to determine '
         'disabled vrs deleted status of %s may produce misleading results. '
         'See: https://cloud.google.com/iam/docs/reference/rest/v1/projects.serviceAccounts/get',
-        email, email)
+        email,
+        email,
+    )
     return '-'
 
 
 def is_service_account_existing(email: str, billing_project_id: str) -> bool:
   """Verify that a service account exists.
 
-  If we get a non-404 API error when retrieving the service account, we will assume
+  If we get a non-404 API error when retrieving the service account, we will
+  assume
   that the service account exists, not to throw false positives (but
   a warning will be printed out).
   """
@@ -705,8 +765,9 @@ def is_service_account_enabled(email: str, billing_project_id: str) -> bool:
   a warning will be printed out).
   """
   _batch_fetch_service_accounts([email], billing_project_id)
-  return (email not in _service_account_cache_is_not_found) and \
-      not (email in _service_account_cache and _service_account_cache[email].disabled)
+  return (email not in _service_account_cache_is_not_found
+         ) and not (email in _service_account_cache and
+                    _service_account_cache[email].disabled)
 
 
 class ServiceAccountIAMPolicy(BaseIAMPolicy):
@@ -723,8 +784,8 @@ def get_service_account_iam_policy(
   resource_name = f'projects/{project_id}/serviceAccounts/{service_account}'
 
   iam_api = apis.get_api('iam', 'v1', project_id)
-  request = iam_api.projects().serviceAccounts().getIamPolicy(
-      resource=resource_name)
+  request = (iam_api.projects().serviceAccounts().getIamPolicy(
+      resource=resource_name))
 
   return fetch_iam_policy(request, ServiceAccountIAMPolicy, project_id,
                           resource_name)

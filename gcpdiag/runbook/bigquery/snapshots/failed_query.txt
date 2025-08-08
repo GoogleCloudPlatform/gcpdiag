@@ -1,0 +1,287 @@
+bigquery_job_id=test_csv_error,bigquery_job_region=us,bigquery_skip_permission_check=False,project_i
+d=gcpdiag-bigquery1-aaaa
+
+bigquery/failed-query: Diagnoses issues with a failed BigQuery query job.
+
+  This runbook investigates why a specific BigQuery job failed by verifying the
+  job's status and analyzing the error message against a set of known issues to
+  provide targeted remediation steps.
+  
+[START]: Verifying input parameters and the BigQuery API status.
+[INFO]: Provided job input parameters have the correct format
+[INFO]: The BigQuery API is enabled.
+[GATEWAY]: Verifying permissions.
+
+   - gcpdiag-cloudsql1-aaaa                                               [FAIL]
+     [REASON]
+     Execution halted. The principal fake-user@google.com is missing the following mandatory IAM permission(s) required to run this runbook: bigquery.jobs.create, bigquery.jobs.get, serviceusage.services.list, serviceusage.services.use.
+
+     [REMEDIATION]
+     Grant the principal fake-user@google.com the missing permission(s) on the project to proceed.
+
+[INFO]: A sub-analysis was skipped: Project-level analysis requiring: bigquery.jobs.listAll.
+	To enable this analysis, grant the principal fake-user@google.com the IAM permission at the project level
+
+   - gcpdiag-cloudsql1-aaaa                                               [OK]
+     [REASON]
+     All permission checks are complete.
+[GATEWAY]: Verify that the BigQuery Job exists
+
+   - gcpdiag-cloudsql1-aaaa                                               [FAIL]
+     [REASON]
+     Job gcpdiag-bigquery1-aaaa:us.test_csv_error does not exist.
+
+     [REMEDIATION]
+     Please check the corresponding job Region and make sure to provide the correct Job and Project identifiers.
+
+[END]: End step.
+[INFO]: No more checks to perform.
+
+
+bigquery_job_id=test_unknown,bigquery_job_region=us,bigquery_skip_permission_check=False,project_id=
+gcpdiag-bigquery1-aaaa
+
+bigquery/failed-query: Diagnoses issues with a failed BigQuery query job.
+
+  This runbook investigates why a specific BigQuery job failed by verifying the
+  job's status and analyzing the error message against a set of known issues to
+  provide targeted remediation steps.
+  
+[START]: Verifying input parameters and the BigQuery API status.
+[INFO]: Provided job input parameters have the correct format
+[INFO]: The BigQuery API is enabled.
+[GATEWAY]: Verifying permissions.
+
+   - gcpdiag-cloudsql1-aaaa                                               [FAIL]
+     [REASON]
+     Execution halted. The principal fake-user@google.com is missing the following mandatory IAM permission(s) required to run this runbook: bigquery.jobs.create, bigquery.jobs.get, serviceusage.services.list, serviceusage.services.use.
+
+     [REMEDIATION]
+     Grant the principal fake-user@google.com the missing permission(s) on the project to proceed.
+
+[INFO]: A sub-analysis was skipped: Project-level analysis requiring: bigquery.jobs.listAll.
+	To enable this analysis, grant the principal fake-user@google.com the IAM permission at the project level
+
+   - gcpdiag-cloudsql1-aaaa                                               [OK]
+     [REASON]
+     All permission checks are complete.
+[GATEWAY]: Verify that the BigQuery Job exists
+[INFO]: WARNING: Unable to run INFORMATION_SCHEMA view analysis due to missing permissions.            
+Make sure to grant fake-user@google.com "bigquery.jobs.create" and "bigquery.jobs.listAll".            
+Continuing the investigation with the BigQuery job metadata obtained from the API.
+
+   - gcpdiag-bigquery1-aaaa:us.test_unknown                               [OK]
+     [REASON]
+     Job gcpdiag-bigquery1-aaaa:us.test_unknown was successfully located.
+
+[GATEWAY]: Confirm the BigQuery job has finished execution
+
+   - gcpdiag-bigquery1-aaaa:us.test_unknown                               [OK]
+     [REASON]
+     Job gcpdiag-bigquery1-aaaa:us.test_unknown has finished execution.
+
+[GATEWAY]: Verify the BigQuery job failed
+
+   - gcpdiag-bigquery1-aaaa:us.test_unknown                               [OK]
+     [REASON]
+     Job finished execution with an error. Continuing the investigation.
+
+[AUTOMATED STEP]: Analyze BigQuery job errors for known mitigations
+
+   - gcpdiag-bigquery1-aaaa:us.test_unknown                               [UNCERTAIN]
+     [REASON]
+     Job gcpdiag-bigquery1-aaaa:us.test_unknown failed with an error that does not have a publicly documented mitigation and root cause.
+     Full error message(s) reported:
+     "An internal error occurred."
+
+     [REMEDIATION]
+     Please retry the job to confirm whether the error is transient and can be mitigated through a retry with exponential backoff. See <https://cloud.google.com/bigquery/docs/error-messages>.
+     If the issue persists, contact Google Cloud Support at <https://cloud.google.com/support> and provide this report with the full BigQuery Job Id.
+
+[END]: End step.
+[INFO]: No more checks to perform.
+
+
+bigquery_job_id=test_success,bigquery_job_region=us,bigquery_skip_permission_check=False,project_id=
+gcpdiag-bigquery1-aaaa
+
+bigquery/failed-query: Diagnoses issues with a failed BigQuery query job.
+
+  This runbook investigates why a specific BigQuery job failed by verifying the
+  job's status and analyzing the error message against a set of known issues to
+  provide targeted remediation steps.
+  
+[START]: Verifying input parameters and the BigQuery API status.
+[INFO]: Provided job input parameters have the correct format
+[INFO]: The BigQuery API is enabled.
+[GATEWAY]: Verifying permissions.
+
+   - gcpdiag-cloudsql1-aaaa                                               [FAIL]
+     [REASON]
+     Execution halted. The principal fake-user@google.com is missing the following mandatory IAM permission(s) required to run this runbook: bigquery.jobs.create, bigquery.jobs.get, serviceusage.services.list, serviceusage.services.use.
+
+     [REMEDIATION]
+     Grant the principal fake-user@google.com the missing permission(s) on the project to proceed.
+
+[INFO]: A sub-analysis was skipped: Project-level analysis requiring: bigquery.jobs.listAll.
+	To enable this analysis, grant the principal fake-user@google.com the IAM permission at the project level
+
+   - gcpdiag-cloudsql1-aaaa                                               [OK]
+     [REASON]
+     All permission checks are complete.
+[GATEWAY]: Verify that the BigQuery Job exists
+[INFO]: WARNING: Unable to run INFORMATION_SCHEMA view analysis due to missing permissions.            
+Make sure to grant fake-user@google.com "bigquery.jobs.create" and "bigquery.jobs.listAll".            
+Continuing the investigation with the BigQuery job metadata obtained from the API.
+
+   - gcpdiag-bigquery1-aaaa:us.test_success                               [OK]
+     [REASON]
+     Job gcpdiag-bigquery1-aaaa:us.test_success was successfully located.
+
+[GATEWAY]: Confirm the BigQuery job has finished execution
+
+   - gcpdiag-bigquery1-aaaa:us.test_success                               [OK]
+     [REASON]
+     Job gcpdiag-bigquery1-aaaa:us.test_success has finished execution.
+
+[GATEWAY]: Verify the BigQuery job failed
+
+   - gcpdiag-bigquery1-aaaa:us.test_success                               [SKIP]
+     [REASON]
+     Job successfully finished execution without any errors.
+
+     Only failed BigQuery jobs can be analyzed for failure reasons. Restart the investigation and provide a job that failed during execution.
+
+[END]: End step.
+[INFO]: No more checks to perform.
+
+
+bigquery_job_id=test_running,bigquery_job_region=us,bigquery_skip_permission_check=False,project_id=
+gcpdiag-bigquery1-aaaa
+
+bigquery/failed-query: Diagnoses issues with a failed BigQuery query job.
+
+  This runbook investigates why a specific BigQuery job failed by verifying the
+  job's status and analyzing the error message against a set of known issues to
+  provide targeted remediation steps.
+  
+[START]: Verifying input parameters and the BigQuery API status.
+[INFO]: Provided job input parameters have the correct format
+[INFO]: The BigQuery API is enabled.
+[GATEWAY]: Verifying permissions.
+
+   - gcpdiag-cloudsql1-aaaa                                               [FAIL]
+     [REASON]
+     Execution halted. The principal fake-user@google.com is missing the following mandatory IAM permission(s) required to run this runbook: bigquery.jobs.create, bigquery.jobs.get, serviceusage.services.list, serviceusage.services.use.
+
+     [REMEDIATION]
+     Grant the principal fake-user@google.com the missing permission(s) on the project to proceed.
+
+[INFO]: A sub-analysis was skipped: Project-level analysis requiring: bigquery.jobs.listAll.
+	To enable this analysis, grant the principal fake-user@google.com the IAM permission at the project level
+
+   - gcpdiag-cloudsql1-aaaa                                               [OK]
+     [REASON]
+     All permission checks are complete.
+[GATEWAY]: Verify that the BigQuery Job exists
+[INFO]: WARNING: Unable to run INFORMATION_SCHEMA view analysis due to missing permissions.            
+Make sure to grant fake-user@google.com "bigquery.jobs.create" and "bigquery.jobs.listAll".            
+Continuing the investigation with the BigQuery job metadata obtained from the API.
+
+   - gcpdiag-bigquery1-aaaa:us.test_running                               [OK]
+     [REASON]
+     Job gcpdiag-bigquery1-aaaa:us.test_running was successfully located.
+
+[GATEWAY]: Confirm the BigQuery job has finished execution
+
+   - gcpdiag-bigquery1-aaaa:us.test_running                               [FAIL]
+     [REASON]
+     Job gcpdiag-bigquery1-aaaa:us.test_running is currently in the RUNNING state and has not yet completed.
+
+     [REMEDIATION]
+     Wait for the job to finish execution and restart the investigation.
+
+[END]: End step.
+[INFO]: No more checks to perform.
+
+
+bigquery_job_id=test_notfound,bigquery_job_region=us,bigquery_skip_permission_check=False,project_id
+=gcpdiag-bigquery1-aaaa
+
+bigquery/failed-query: Diagnoses issues with a failed BigQuery query job.
+
+  This runbook investigates why a specific BigQuery job failed by verifying the
+  job's status and analyzing the error message against a set of known issues to
+  provide targeted remediation steps.
+  
+[START]: Verifying input parameters and the BigQuery API status.
+[INFO]: Provided job input parameters have the correct format
+[INFO]: The BigQuery API is enabled.
+[GATEWAY]: Verifying permissions.
+
+   - gcpdiag-cloudsql1-aaaa                                               [FAIL]
+     [REASON]
+     Execution halted. The principal fake-user@google.com is missing the following mandatory IAM permission(s) required to run this runbook: bigquery.jobs.create, bigquery.jobs.get, serviceusage.services.list, serviceusage.services.use.
+
+     [REMEDIATION]
+     Grant the principal fake-user@google.com the missing permission(s) on the project to proceed.
+
+[INFO]: A sub-analysis was skipped: Project-level analysis requiring: bigquery.jobs.listAll.
+	To enable this analysis, grant the principal fake-user@google.com the IAM permission at the project level
+
+   - gcpdiag-cloudsql1-aaaa                                               [OK]
+     [REASON]
+     All permission checks are complete.
+[GATEWAY]: Verify that the BigQuery Job exists
+[INFO]: WARNING: Unable to run INFORMATION_SCHEMA view analysis due to missing permissions.            
+Make sure to grant fake-user@google.com "bigquery.jobs.create" and "bigquery.jobs.listAll".            
+Continuing the investigation with the BigQuery job metadata obtained from the API.
+
+   - gcpdiag-bigquery1-aaaa:us.test_notfound                              [OK]
+     [REASON]
+     Job gcpdiag-bigquery1-aaaa:us.test_notfound was successfully located.
+
+[GATEWAY]: Confirm the BigQuery job has finished execution
+
+   - gcpdiag-bigquery1-aaaa:us.test_notfound                              [OK]
+     [REASON]
+     Job gcpdiag-bigquery1-aaaa:us.test_notfound has finished execution.
+
+[GATEWAY]: Verify the BigQuery job failed
+
+   - gcpdiag-bigquery1-aaaa:us.test_notfound                              [OK]
+     [REASON]
+     Job finished execution with an error. Continuing the investigation.
+
+[AUTOMATED STEP]: Analyze BigQuery job errors for known mitigations
+
+   - gcpdiag-bigquery1-aaaa:us.test_notfound                              [UNCERTAIN]
+     [REASON]
+     Job gcpdiag-bigquery1-aaaa:us.test_notfound failed with an error that does not have a publicly documented mitigation and root cause.
+     Full error message(s) reported:
+     "Not found: Job gcpdiag-bigquery1-aaaa:us.test_notfound"
+
+     [REMEDIATION]
+     Please retry the job to confirm whether the error is transient and can be mitigated through a retry with exponential backoff. See <https://cloud.google.com/bigquery/docs/error-messages>.
+     If the issue persists, contact Google Cloud Support at <https://cloud.google.com/support> and provide this report with the full BigQuery Job Id.
+
+[END]: End step.
+[INFO]: No more checks to perform.
+
+
+bigquery_job_id=any_id,bigquery_job_region=invalid-
+region,bigquery_skip_permission_check=False,project_id=gcpdiag-bigquery1-aaaa
+
+bigquery/failed-query: Diagnoses issues with a failed BigQuery query job.
+
+  This runbook investigates why a specific BigQuery job failed by verifying the
+  job's status and analyzing the error message against a set of known issues to
+  provide targeted remediation steps.
+  
+[START]: Verifying input parameters and the BigQuery API status.
+
+   - gcpdiag-bigquery1-aaaa                                               [SKIP]
+     [REASON]
+     Invalid job region provided. Please provide a valid BigQuery region.
+
+

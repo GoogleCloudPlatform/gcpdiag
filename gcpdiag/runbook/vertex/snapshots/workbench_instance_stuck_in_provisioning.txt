@@ -75,25 +75,25 @@ vertex/workbench-instance-stuck-in-provisioning: Runbook to Troubleshoot Issue: 
      [REASON]
      OK! Workbench Instance notebooks2instance-provisioning-stuck is in PROVISIONING, STARTING or INITIALIZING state.
 
-[AUTOMATED STEP]: Checking if the Workbench Instance is using a custom container...
+[AUTOMATED STEP]: Checking if the Workbench Instance is using a custom container.
 
    - gcpdiag-notebooks2-aaaa/us-west1-a/notebooks2instance-provisioning-stuck [OK]
      [REASON]
      OK! Workbench Instance notebooks2instance-provisioning-stuck is not using a custom container.
 
-[AUTOMATED STEP]: Checking if Workbench Instance Compute Engine VM's boot disk image is part of the official family of images...
+[AUTOMATED STEP]: Verify Workbench Instance Compute Engine VM's boot disk image is part of the official family of images
 
    - gcpdiag-notebooks2-aaaa/notebooks2instance-provisioning-stuck        [UNCERTAIN]
      [REASON]
      image: https://www.googleapis.com/compute/v1/projects/deeplearning-platform-release/global/images/tf-2-11-cu113-notebooks-v20240613-debian-11-py310
      'projects/deeplearning-platform-release' images might work with Workbench Instances, but are unsupported [1]
-     [1] https://cloud.google.com/vertex-ai/docs/workbench/instances/introduction#limitations
+     [1] <https://cloud.google.com/vertex-ai/docs/workbench/instances/introduction#limitations>
 
      [REMEDIATION]
      Officially supported images are found in the Google Cloud Console:
      Vertex AI Workbench UI > Instances > Create form > Advanced > Environment > Previous versions dropdown.
 
-[AUTOMATED STEP]: Checking if Workbench Instance has custom post-startup or startup scripts...
+[AUTOMATED STEP]: Verify Workbench Instance has custom post-startup or startup scripts
 
    - gcpdiag-notebooks2-aaaa/us-west1-a/notebooks2instance-provisioning-stuck [UNCERTAIN]
      [REASON]
@@ -107,7 +107,7 @@ vertex/workbench-instance-stuck-in-provisioning: Runbook to Troubleshoot Issue: 
      - Jupyter runs on port 127.0.0.1:8080
      - If packages are installed they should not add breaking changes to the Jupyter configuration
 
-[AUTOMATED STEP]: Checking if Workbench Instance is using the latest environment version...
+[AUTOMATED STEP]: Verify Workbench Instance is using the latest environment version
 [INFO]: instance is upgradeable: False
 [INFO]: instance upgrade info: Current and latest available image are the same
 
@@ -115,38 +115,65 @@ vertex/workbench-instance-stuck-in-provisioning: Runbook to Troubleshoot Issue: 
      [REASON]
      OK! Workbench Instance notebooks2instance-provisioning-stuck is using the latest environment version M0
 
-[COMPOSITE STEP]: Evaluating Workbench Instance Compute Engine VM memory, CPU, and disk performance...
+[COMPOSITE STEP]: Evaluating Workbench Instance Compute Engine VM memory, CPU, and disk performance.
 [INFO]: Runbook will use ops agent metrics for VM performance investigation
-[AUTOMATED STEP]: Verifying VM memory utilization is within optimal levels...
+[AUTOMATED STEP]: Verify VM memory utilization is within optimal levels.
 
    - gcpdiag-notebooks2-aaaa/notebooks2instance-provisioning-stuck        [FAIL]
      [REASON]
      Memory utilization on this VM has reached levels that may compromise its VM application performance.
 
      [REMEDIATION]
-     Elevated memory usage can result in slow or unresponsive or termimated applications.
-     Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
-     Guidance on stopping and changing the machine type can be found here:
-     - Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
-     For deeper analysis of memory issues:
+     Elevated memory usage can result in slow, unresponsive, or terminated applications.
+     Enhance the VM's memory capacity by changing to a machine type with more memory.
 
-     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
-     https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization
+     Consult the following documentation for guidance:
 
-     Or connect via the Serial Console if SSH is not available to mitigate the issue.
-     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+     - Changing machine type:
+       <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
 
-[AUTOMATED STEP]: Checking if there are any memory related errors in Serial logs
+     Additionally, analyze Compute Engine observability metrics to pinpoint high-usage processes:
+     <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization>
+
+     If SSH is unavailable, connect via the serial console to mitigate the issue:
+     <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
+
+[AUTOMATED STEP]: Verify memory related errors in VM serial logs.
 
    - gcpdiag-notebooks2-aaaa/notebooks2instance-provisioning-stuck        [UNCERTAIN]
      [REASON]
-     We did not find any Memory related errors in Serial console logs
+     Unable to investigate the high memory utilization error logs, likely due to the absence of logs.
+     However, this does not eliminate the possibility of high memory usage.
+
+     Manual verification of memory utilization on the Guest OS is recommended as a potential cause.
 
      [REMEDIATION]
-     You may check if VM is facing high memory utilisation from GuestOS side using `free -m`
-     or `cat /proc/meminfo` commands.
 
-[AUTOMATED STEP]: Checking if VM's Boot disk space utilization is within optimal levels.
+     1. Manually investigate memory usage by accessing the Guest OS:
+        - Identify processes with consistently high memory consumption using `top` (press "M") or `ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head -n 5`.
+        - Focus on processes with recent spikes or consistently high memory usage.
+        - If SSH access is unavailable, troubleshoot via the serial console:
+          <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
+
+     2. Review recent application or configuration changes:
+        - Investigate if recent deployments, updates, or configuration changes correlate with increased memory usage.
+
+     3. Resolve identified bottlenecks:
+        - For applications causing excessive memory usage, optimize their configuration or update them. Explore alternatives if optimization is insufficient.
+        - Evaluate scaling up resources if high memory usage results from legitimate application demands.
+
+     4. Increase instance memory if necessary:
+        - Stop the VM and change its machine type:
+          <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
+        - Consult the machine type documentation to select an appropriate configuration:
+          <https://cloud.google.com/compute/docs/machine-types>
+
+     **Note:** Non-Google provided application-specific issues may fall outside the support scope. Collaborate with relevant application teams for further investigation. Refer to the Google Cloud Platform support policy for details, including out-of-scope items:
+
+     - Support and maintenance policy: <https://cloud.google.com/compute/docs/images/support-maintenance-policy#support-scope>
+     - Out-of-scope items: <https://cloud.google.com/compute/docs/images/support-maintenance-policy#out-of-scope_for_support>
+
+[AUTOMATED STEP]: Verify VM's boot disk space utilization is within optimal levels.
 
    - gcpdiag-notebooks2-aaaa/notebooks2instance-provisioning-stuck        [FAIL]
      [REASON]
@@ -156,10 +183,11 @@ vertex/workbench-instance-stuck-in-provisioning: Runbook to Troubleshoot Issue: 
      [REMEDIATION]
      To mitigate high disk usage, consider expanding the VM's boot disk capacity.
      This action can help avoid performance issues and ensure smoother SSH connections.
-     Follow the guide to increase disk size:
-     https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
 
-[AUTOMATED STEP]: Verifying VM CPU utilization is within optimal levels
+     Consult the following guide to increase disk size:
+     <https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk>
+
+[AUTOMATED STEP]: Verify VM CPU utilization is within optimal levels.
 
    - gcpdiag-notebooks2-aaaa/notebooks2instance-provisioning-stuck        [FAIL]
      [REASON]
@@ -167,47 +195,24 @@ vertex/workbench-instance-stuck-in-provisioning: Runbook to Troubleshoot Issue: 
      which may affect its performance and SSH connectivity.
 
      [REMEDIATION]
-     Excessive CPU usage can lead to performance bottlenecks. Consider resizing the VM to a more
-     powerful machine type with higher CPU capabilities.
-     Detailed instructions for resizing and restarting VMs are available here:
-     - Stopping a VM: https://cloud.google.com/compute/docs/instances/stop-start-instance
-     - Resizing a VM: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
-     Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
-     https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics
-     https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization
+     Excessive CPU usage can lead to performance bottlenecks. Resizing the VM to a machine type with higher CPU capabilities may resolve the issue.
 
-     Alternatively, you can connect via serial console if SSH is unvailable to stop offending processes
-     https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console.
+     Consult the following documentation for guidance:
+
+     - Stopping a VM: <https://cloud.google.com/compute/docs/instances/stop-start-instance>
+     - Resizing a VM: <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
+
+     Additionally, analyze Compute Engine observability metrics to pinpoint high-usage processes:
+
+     - Accessing VM observability metrics:
+       <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics>
+     - Analyzing process utilization:
+       <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization>
+
+     If SSH is unavailable, connect via the serial console to stop offending processes:
+     <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 
 [GATEWAY]: Decision point to investigate Serial Port Logs
-
-   - gcpdiag-notebooks2-aaaa/us-west1-a/notebooks2instance-provisioning-stuck [OK]
-     [REASON]
-     OK! Workbench Instance notebooks2instance-provisioning-stuck Serial Port Logging is enabled and instance is initializing.
-     Checking Workbench Instance syslogs for issues...
-
-[AUTOMATED STEP]: Checking if Workbench Instance Jupyter is running on port 127.0.0.1:8080...
-[INFO]: Jupyter is running! Verifying if it's running on port 127.0.0.1:8080...
-
-   - gcpdiag-notebooks2-aaaa/us-west1-a/notebooks2instance-provisioning-stuck [FAIL]
-     [REASON]
-     Workbench Instance notebooks2instance-provisioning-stuck syslogs indicate Jupyter is running on a port different to 127.0.0.1:8080
-
-     [REMEDIATION]
-     If the instance is stopped, start it and rerun this check.
-     You may also need to extend the logging query start and end times.
-     Only port 8080 is supported. Installed extensions, packages or custom scripts may cause the port to change.
-
-     1. Try following documentation [1] [2] [3]
-     2. If it doesn't work, recover data by diagnosing the instance with the --enable-copy-home-files [4]
-     3. Create a new Instance and migrate your data [5]
-
-     [1] https://cloud.google.com/vertex-ai/docs/general/troubleshooting-workbench?component=any#verify-jupyter-service
-     [2] https://cloud.google.com/vertex-ai/docs/general/troubleshooting-workbench?component=any#verify-jupyter-internal-api
-     [3] https://cloud.google.com/vertex-ai/docs/general/troubleshooting-workbench?component=any#restart-jupyter-service
-     [4] https://cloud.google.com/sdk/gcloud/reference/workbench/instances/diagnose
-     [5] https://cloud.google.com/vertex-ai/docs/workbench/instances/migrate
-
 [COMPOSITE STEP]: Check if user is able to SSH to the Workbench Instance Compute Engine VM
 [INFO]: Workbench Instance Compute Engine VM is Running!
 
@@ -222,11 +227,12 @@ vertex/workbench-instance-stuck-in-provisioning: Runbook to Troubleshoot Issue: 
      [REASON]
      OK! Workbench Instance notebooks2instance-provisioning-stuck's "/home/jupyter" space usage is below 85%
 
-[AUTOMATED STEP]: Checking if Workbench Instance has external IP disabled...
+[AUTOMATED STEP]: Verify Workbench Instance has external IP disabled
 
    - gcpdiag-notebooks2-aaaa/us-west1-a/notebooks2instance-provisioning-stuck [UNCERTAIN]
      [REASON]
      Workbench Instance notebooks2instance-provisioning-stuck has external IP disabled.
+
      - network: https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks2-aaaa/global/networks/wbi-test-default
      - subnetwork: https://www.googleapis.com/compute/v1/projects/gcpdiag-notebooks2-aaaa/regions/us-west1/subnetworks/wbi-test-default
      This may cause networking issues if configuration was not done correctly.
@@ -234,10 +240,10 @@ vertex/workbench-instance-stuck-in-provisioning: Runbook to Troubleshoot Issue: 
      [REMEDIATION]
      Follow the public documentation to configure Private Networking for a Workbench Instance [1] [2] [3] [4]
 
-     [1] https://cloud.google.com/vertex-ai/docs/workbench/instances/create#network-options
-     [2] https://cloud.google.com/vpc/docs/access-apis-external-ip#requirements
-     [3] https://cloud.google.com/vpc/docs/configure-private-google-access
-     [4] https://cloud.google.com/vpc/docs/configure-private-google-access#requirements
+     [1] <https://cloud.google.com/vertex-ai/docs/workbench/instances/create#network-options>
+     [2] <https://cloud.google.com/vpc/docs/access-apis-external-ip#requirements>
+     [3] <https://cloud.google.com/vpc/docs/configure-private-google-access>
+     [4] <https://cloud.google.com/vpc/docs/configure-private-google-access#requirements>
 
 [END]: Check if the instance is now in ACTIVE state
 [INFO]: instance state: PROVISIONING
@@ -253,11 +259,11 @@ vertex/workbench-instance-stuck-in-provisioning: Runbook to Troubleshoot Issue: 
      2. Inspect the diagnostics output logs to find issues
      3. Create a new Instance and migrate your data [2]
 
-     [1] https://cloud.google.com/sdk/gcloud/reference/workbench/instances/diagnose
-     [2] https://cloud.google.com/vertex-ai/docs/workbench/instances/migrate
+     [1] <https://cloud.google.com/sdk/gcloud/reference/workbench/instances/diagnose>
+     [2] <https://cloud.google.com/vertex-ai/docs/workbench/instances/migrate>
 
 [INFO]: Before reaching out to Google Cloud Support: 
-1. We encourage you to thoroughly investigate the issue with the most appropriate team within your organization. Many issues can be resolved internally and fall within the scope of your operational responsibilities:https://cloud.google.com/architecture/framework/security/shared-responsibility-shared-fate
+1. Thoroughly investigate the issue with the most appropriate team within your organization. Many issues can be resolved internally and fall within the scope of your operational responsibilities:https://cloud.google.com/architecture/framework/security/shared-responsibility-shared-fate
 
 2. If your internal investigation suggests that the issue is related to the Google Cloud Platform and requires intervention by Google engineers, please contact Google Cloud Support for further assistance.
 

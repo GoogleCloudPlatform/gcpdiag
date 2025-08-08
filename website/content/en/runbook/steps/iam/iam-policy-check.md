@@ -4,7 +4,7 @@ linkTitle: "Iam Policy Check"
 weight: 3
 type: docs
 description: >
-  Checks if a principal has specified permissions or is a member of specified roles.
+  Verify if specificd principal has permissions or roles permission/role in project.
 ---
 
 **Product**: [Identity and Access Management (IAM)](https://cloud.google.com/iam)\
@@ -28,19 +28,18 @@ This step supports checking for either all specified permissions/roles are prese
 
 ### Failure Reason
 
-{principal} doesn't have at least one of the expected {permissions_or_roles}:
+{principal} does not have at least one of the expected {permissions_or_roles}:
 {missing_permissions_or_roles}.
 
 ### Failure Remediation
 
-Follow Guide [1] to grant a role which has the correct permissions.
-[2] has a list of all Google predefined roles available to you.
+Grant a role containing the missing permissions by following the instructions in [1].
+Refer to [2] for a list of Google Cloud predefined roles.
 
-Note: You may want to doublecheck with your project admins of the best way to grant the role
-or custom roles which can be used.
+Note: Consider consulting with project administrators regarding the most appropriate standard or custom role to grant.
 
-[1] https://cloud.google.com/iam/docs/grant-role-console
-[2] https://cloud.google.com/iam/docs/understanding-roles
+[1] <https://cloud.google.com/iam/docs/grant-role-console>
+[2] <https://cloud.google.com/iam/docs/understanding-roles>
 
 ### Success Reason
 

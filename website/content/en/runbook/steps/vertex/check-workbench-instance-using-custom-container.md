@@ -26,7 +26,7 @@ WARNING: This runbook may not be applicable for Workbench Instances created with
 ### Uncertain Remediation
 
 Follow the documentation to create a Workbench Instance with a custom container [1]
-[1] https://cloud.google.com/vertex-ai/docs/workbench/instances/create-custom-container
+[1] <https://cloud.google.com/vertex-ai/docs/workbench/instances/create-custom-container>
 
 
 

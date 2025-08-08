@@ -48,12 +48,12 @@ def prefetch_rule(context: models.Context):
   # TODO: DELETE/REPLACE this comment and the function's body
   #
   # The prefetch_rule() function is an OPTIONAL one and is executed after
-  # prefetch_rule() and BEFORE run_rule(). It is called in parrallel
+  # prefetch_rule() and BEFORE run_rule(). It is called in parallel
   # with prefetch_rule() functions defined by other lint rules.
   #
   # It's a good place to fetch/prepare/filter/pre-process data that is going
   # to be used in run_rule(), e.g., to fetch metrics from Cloud Monitoring or
-  # some auxillary data from a relevant GCP API.
+  # some auxiliary data from a relevant GCP API.
   #
   #  Example:
   #

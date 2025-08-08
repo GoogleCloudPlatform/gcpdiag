@@ -22,11 +22,11 @@ The network communication among nodes in cluster {cluster_name} is blocked.
 
 ### Failure Remediation
 
-You must create your own rule that meets Dataproc connectivity requirements[1] and apply it to your cluster’s VPC network.
-Please check the documentation[2] for more details.
+Create a firewall rule that meets Dataproc connectivity requirements[1] and apply it to the cluster's VPC network.
+Review the documentation[2] for more details.
 References:
-[1] https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/network#dataproc_connectivity_requirements
-[2] https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/network
+[1] <https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/network#dataproc_connectivity_requirements>
+[2] <https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/network>
 
 ### Success Reason
 
@@ -38,9 +38,9 @@ The cluster has not been found, it may have been deleted. Skipping the connectiv
 
 ### Uncertain Remediation
 
-Please check if the Dataproc connectivity requirements[1] are satisfied.
+Verify that Dataproc connectivity requirements[1] are satisfied.
 References:
-[1] https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/network#dataproc_connectivity_requirements
+[1] <https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/network#dataproc_connectivity_requirements>
 
 
 

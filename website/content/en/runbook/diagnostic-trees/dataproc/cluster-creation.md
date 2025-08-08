@@ -21,15 +21,19 @@ This runbook focuses on a range of potential problems for Dataproc clusters on
   - Stockout errors: Evaluates Logs Explorer logs regarding stockout in the
   region/zone.
 
-  - Quota availability: Checks for the quota availability in Dataproc cluster project.
+  - Quota availability: Checks for the quota availability in Dataproc cluster
+  project.
 
-  - Network configuration: Performs GCE Network Connectivity Tests, checks necessary firewall rules, external/internal IP configuration.
+  - Network configuration: Performs GCE Network Connectivity Tests, checks
+  necessary firewall rules, external/internal IP configuration.
 
-  - Cross-project configuration: Checks if the service account is not in the same
+  - Cross-project configuration: Checks if the service account is not in the
+  same
   project and reviews additional
     roles and organization policies enforcement.
 
-  - Shared VPC configuration: Checks if the Dataproc cluster uses a Shared VPC network and
+  - Shared VPC configuration: Checks if the Dataproc cluster uses a Shared VPC
+  network and
   evaluates if right service account roles are added.
 
   - Init actions script failures: Evaluates Logs Explorer
@@ -41,6 +45,7 @@ This runbook focuses on a range of potential problems for Dataproc clusters on
 gcpdiag runbook dataproc/cluster-creation \
   -p project_id=value \
   -p cluster_name=value \
+  -p dataproc_cluster_name=value \
   -p region=value \
   -p cluster_uuid=value \
   -p project_number=value \
@@ -49,10 +54,11 @@ gcpdiag runbook dataproc/cluster-creation \
   -p stackdriver=value \
   -p zone=value \
   -p network=value \
+  -p dataproc_network=value \
   -p subnetwork=value \
   -p internal_ip_only=value \
-  -p start_time_utc=value \
-  -p end_time_utc=value \
+  -p start_time=value \
+  -p end_time=value \
   -p cross_project=value \
   -p host_vpc_project=value
 ```
@@ -62,7 +68,8 @@ gcpdiag runbook dataproc/cluster-creation \
 | Name | Required | Default | Type | Help |
 |------|----------|---------|------|------|
 | `project_id` | True | None | str | The Project ID where the Dataproc cluster is located |
-| `cluster_name` | True | None | str | Dataproc cluster Name of an existing/active resource |
+| `cluster_name` | False | None | str | Dataproc cluster Name of an existing/active resource |
+| `dataproc_cluster_name` | True | None | str | Dataproc cluster Name of an existing/active resource |
 | `region` | True | None | str | Dataproc cluster Region |
 | `cluster_uuid` | False | None | str | Dataproc cluster UUID |
 | `project_number` | False | None | str | The Project Number where the Dataproc cluster is located |
@@ -71,10 +78,11 @@ gcpdiag runbook dataproc/cluster-creation \
 | `stackdriver` | False | True | str | Checks if stackdriver logging is enabled for further troubleshooting |
 | `zone` | False | None | str | Dataproc cluster Zone |
 | `network` | False | None | str | Dataproc cluster Network |
+| `dataproc_network` | False | None | str | Dataproc cluster Network |
 | `subnetwork` | False | None | str | Dataproc cluster Subnetwork |
 | `internal_ip_only` | False | None | bool | Checks if the Dataproc cluster has been created with only Internal IP |
-| `start_time_utc` | False | None | datetime | Start time of the issue |
-| `end_time_utc` | False | None | datetime | End time of the issue |
+| `start_time` | False | None | datetime | Start time of the issue |
+| `end_time` | False | None | datetime | End time of the issue |
 | `cross_project` | False | None | str | Cross Project ID, where service account is located if it is not in the same project as the Dataproc cluster |
 | `host_vpc_project` | False | None | str | Project ID of the Shared VPC network |
 
@@ -86,49 +94,23 @@ gcpdiag runbook --help
 
 ### Potential Steps
 
-  - [Check Cluster Quota](/runbook/steps/dataproc/check-cluster-quota)
+  - [Cluster Creation Start](/runbook/steps/dataproc/cluster-creation-start)
 
-  - [Check Cluster Stock Out](/runbook/steps/dataproc/check-cluster-stock-out)
+  - [Cluster Details Dependency Gateway](/runbook/steps/dataproc/cluster-details-dependency-gateway)
 
-  - [Cluster Creation End](/runbook/steps/dataproc/cluster-creation-end)
-
-  - [Cluster Exists](/runbook/steps/dataproc/cluster-exists)
-
-  - [Cluster Creation End](/runbook/steps/dataproc/cluster-creation-end)
-
-  - [Cluster In Error](/runbook/steps/dataproc/cluster-in-error)
-
-  - [Cluster Details](/runbook/steps/dataproc/cluster-details)
-
-  - [Cluster Details](/runbook/steps/dataproc/cluster-details)
-
-  - [Cluster Creation End](/runbook/steps/dataproc/cluster-creation-end)
+  - [Check Init Script Failure](/runbook/steps/dataproc/check-init-script-failure)
 
   - [Check Cluster Network](/runbook/steps/dataproc/check-cluster-network)
 
   - [Internal Ip Gateway](/runbook/steps/dataproc/internal-ip-gateway)
 
-  - [Check Private Google Access](/runbook/steps/dataproc/check-private-google-access)
-
   - [Service Account Exists](/runbook/steps/dataproc/service-account-exists)
-
-  - [Iam Policy Check](/runbook/steps/iam/iam-policy-check)
-
-  - [Org Policy Check](/runbook/steps/crm/org-policy-check)
-
-  - [Iam Policy Check](/runbook/steps/iam/iam-policy-check)
-
-  - [Iam Policy Check](/runbook/steps/iam/iam-policy-check)
-
-  - [Iam Policy Check](/runbook/steps/iam/iam-policy-check)
 
   - [Check Shared Vpc Roles](/runbook/steps/dataproc/check-shared-vpc-roles)
 
-  - [Iam Policy Check](/runbook/steps/iam/iam-policy-check)
+  - [Cluster Creation Quota](/runbook/steps/dataproc/cluster-creation-quota)
 
-  - [Iam Policy Check](/runbook/steps/iam/iam-policy-check)
-
-  - [Check Init Script Failure](/runbook/steps/dataproc/check-init-script-failure)
+  - [Cluster Creation Stockout](/runbook/steps/dataproc/cluster-creation-stockout)
 
   - [Cluster Creation End](/runbook/steps/dataproc/cluster-creation-end)
 

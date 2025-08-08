@@ -71,8 +71,8 @@ def get_cloudfunctions(context: models.Context) -> Mapping[str, CloudFunction]:
   if not apis.is_enabled(context.project_id, 'cloudfunctions'):
     return cloudfunctions
   gcf_api = apis.get_api('cloudfunctions', 'v1', context.project_id)
-  logging.info('fetching list of GCF functions in project %s',
-               context.project_id)
+  logging.debug('fetching list of GCF functions in project %s',
+                context.project_id)
   query = gcf_api.projects().locations().functions().list(
       parent=f'projects/{context.project_id}/locations/-')
   try:

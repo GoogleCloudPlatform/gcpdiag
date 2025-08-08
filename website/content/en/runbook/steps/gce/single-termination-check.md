@@ -20,7 +20,7 @@ It analyzes log entries to identify whether the termination was normal or abnorm
 
 ### Success Reason
 
-No GCE VM was terminated between {start_time_utc} and {end_time_utc}
+No GCE Instance was terminated between {start_time} and {end_time}
 
 
 

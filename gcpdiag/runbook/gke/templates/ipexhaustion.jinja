@@ -1,29 +1,74 @@
 #########################################################
-#          messages for the pod IP exhaustion           #
+
+# messages for the pod IP exhaustion #
+
 #########################################################
+
 # messages for pod IP exhaustion
+
 {% block pod_ip_exhaustion_failure_reason %}
 Pod IP exhaustion is detected in the cluster {cluster_name}
 {% endblock pod_ip_exhaustion_failure_reason %}
 
-
 {% block pod_ip_exhaustion_failure_remediation %}
 Please follow the below documentation [1] to add ipv4 range to the autopilot cluster to mitgate the issue.
 
-[1] https://cloud.google.com/kubernetes-engine/docs/how-to/multi-pod-cidr#add-pod-ipv4-range-in-autopilot-cluster
+[1] <https://cloud.google.com/kubernetes-engine/docs/how-to/multi-pod-cidr#add-pod-ipv4-range-in-autopilot-cluster>
 {% endblock pod_ip_exhaustion_failure_remediation %}
 
 {% block pod_ip_exhaustion_failure_remediation_a1 %}
-Please follow the below documentation [1] to add ipv4 pod range to a standard cluster to mitgate the issue.
+Here are some commands you can run to add an additional IPv4 pod range to address this issue, and you can find more detailed instructions at the documentation [1].
 
-[1] https://cloud.google.com/kubernetes-engine/docs/how-to/multi-pod-cidr#cluster-add-pod-ipv4-range
+**Allocate IP addresses with designed length and create a pod range**
+
+```
+export POD_IP_RANGE_PREFIX_LENGTH=14
+export POD_RANGE_NAME="range-`tr -dc a-z0-9 </dev/urandom | head -c 13`"
+gcloud network-connectivity internal-ranges create $POD_RANGE_NAME \
+    --network={network} \
+    --prefix-length=$POD_IP_RANGE_PREFIX_LENGTH
+```
+
+**Assign the pod range to subnet**
+
+```
+gcloud compute networks subnets update {subnet_name} \
+    --region={region} \
+    --add-secondary-ranges-with-reserved-internal-range="$POD_RANGE_NAME=//networkconnectivity.googleapis.com/projects/{project_name}/locations/global/internalRanges/$POD_RANGE_NAME"
+```
+
+**Add additional pod range to your cluster**
+
+```
+gcloud container clusters update {cluster_name} \
+    --additional-pod-ipv4-ranges=$POD_RANGE_NAME \
+    --location={region}
+```
+
+Following execution of these commands, you should be able to create a new node pool that utilizes the newly configured pod IP range without encountering pod IP exhaustion issues.
+
+Additionally, consider leveraging the Class E IPv4 address space (240.0.0.0/4) to support your growth.
+While these addresses are reserved for future use (see Google VPC network valid IPv4 ranges [2]), they can be used in certain situations.
+
+The linked documentation [3] addresses common misconceptions about Class E, discusses its benefits and considerations, and provides guidance on planning and using GKE clusters with this address space.
+It also includes a real-world example of how Class E successfully solved IP exhaustion challenges.
+
+[1] <https://cloud.google.com/kubernetes-engine/docs/how-to/multi-pod-cidr#cluster-add-pod-ipv4-range>
+
+[2] <https://cloud.google.com/vpc/docs/subnets#valid-ranges>
+
+[3] <https://cloud.google.com/blog/products/containers-kubernetes/how-class-e-addresses-solve-for-ip-address-exhaustion-in-gke>
+
 {% endblock pod_ip_exhaustion_failure_remediation_a1 %}
 
+#############################################################
+
+# Messages for Node IP exhaustion #
 
 #############################################################
-#          Messages for Node IP exhaustion                  #
-#############################################################
+
 # messages for node IP exhaustion
+
 {% block node_ip_exhaustion_success_reason %}
 No Node IP exhaustion detected in the cluster {cluster_name}
 
@@ -38,5 +83,5 @@ Node IP exhaustion is detected in the cluster {cluster_name} for the subnet {nod
 Please follow the below documentation [1] to expand the ip range of the node subnet.
 The subnet that has exhausted its IP space is {node_subnet}.
 
-[1] https://cloud.google.com/vpc/docs/create-modify-vpc-networks#expand-subnet
+[1] <https://cloud.google.com/vpc/docs/create-modify-vpc-networks#expand-subnet>
 {% endblock node_ip_exhaustion_failure_remediation %}

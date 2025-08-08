@@ -11,14 +11,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Paramaters applicable to Dataproc runbooks."""
+"""Parameters applicable to Dataproc runbooks."""
 # pylint: disable=wildcard-import, unused-wildcard-import
 from gcpdiag.runbook.gcp.flags import *
 from gcpdiag.runbook.iam.flags import *
 
 CLUSTER_UUID = 'cluster_uuid'
 CLUSTER_NAME = 'cluster_name'
+DATAPROC_CLUSTER_NAME = 'dataproc_cluster_name'
+DATAPROC_JOB_ID = 'dataproc_job_id'
 NETWORK = 'network'
+DATAPROC_NETWORK = 'dataproc_network'
 SUBNETWORK = 'subnetwork'
 REGION = 'region'
 STATUS = 'status'

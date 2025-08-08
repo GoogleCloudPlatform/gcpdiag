@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Dataproc on GCE master VM is able to communicate with atleast one worker VM
+"""Dataproc on GCE master VM is able to communicate with at least one worker VM
 
 The Compute Engine Virtual Machine instances (VMs) in a Dataproc cluster
 must be able to communicate with each other using ICMP, TCP (all ports),

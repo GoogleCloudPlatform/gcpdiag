@@ -3,7 +3,7 @@ The `{service_name}` service is currently in the expected state: `{expected_stat
 {% endblock default_success_reason %}
 
 {% block default_failure_reason %}
-The `{service_name}` service is not in the exptected state `{expected_state}`
+The `{service_name}` service is not in the expected state `{expected_state}`
 {% endblock default_failure_reason %}
 
 {% block default_failure_remediation %}
@@ -13,7 +13,7 @@ Execute the command below to enable {service_name} in {project_id}
 gcloud services enable {service_name} --project={project_id}
 
 Resources
-https://cloud.google.com/service-usage/docs/enable-disable#enabling
+<https://cloud.google.com/service-usage/docs/enable-disable#enabling>
 {% endblock default_failure_remediation %}
 
 {% block default_failure_remediation_a1 %}
@@ -23,5 +23,5 @@ Execute the command below to disable {service_name} in {project_id}
 gcloud services disable {service_name} --project={project_id}
 
 Resources
-https://cloud.google.com/service-usage/docs/enable-disable#disabling
+<https://cloud.google.com/service-usage/docs/enable-disable#disabling>
 {% endblock default_failure_remediation_a1 %}

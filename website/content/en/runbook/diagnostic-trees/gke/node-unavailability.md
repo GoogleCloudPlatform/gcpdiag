@@ -12,7 +12,8 @@ description: >
 
 ### Description
 
-This runbook investigates various factors that may have caused a node to become unavailable,
+This runbook investigates various factors that may have caused a node to
+  become unavailable,
   including:
 
   - Live Migration
@@ -26,6 +27,7 @@ This runbook investigates various factors that may have caused a node to become 
 gcpdiag runbook gke/node-unavailability \
   -p project_id=value \
   -p name=value \
+  -p gke_cluster_name=value \
   -p node=value \
   -p location=value
 ```
@@ -36,8 +38,9 @@ gcpdiag runbook gke/node-unavailability \
 |------|----------|---------|------|------|
 | `project_id` | True | None | str | The ID of the project hosting the GKE Cluster |
 | `name` | False | None | str | The name of the GKE cluster, to limit search only for this cluster |
+| `gke_cluster_name` | False | None | str | The name of the GKE cluster, to limit search only for this cluster |
 | `node` | True | None | str | The node name that was started. |
-| `location` | False | None | str | The zone of the GKE node |
+| `location` | False | None | str | The zone or region of the GKE cluster |
 
 Get help on available commands
 

@@ -1,0 +1,5 @@
+{
+  "id": "gcpdiag-bigquery1-aaaa:us.test_unknown",
+  "status": { "state": "DONE", "errorResult": { "reason": "internalError", "message": "An internal error occurred." } },
+  "jobReference": { "projectId": "gcpdiag-bigquery1-aaaa", "jobId": "test_unknown", "location": "us" }
+}

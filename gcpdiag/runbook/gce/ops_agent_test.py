@@ -24,14 +24,14 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
 
   rule_parameters = [{
       'project_id': 'gcpdiag-gce3-aaaa',
-      'name': 'faulty-opsagent',
+      'instance_name': 'faulty-opsagent',
       'zone': 'europe-west2-a'
   }, {
       'project_id': 'gcpdiag-gce3-aaaa',
-      'name': 'faulty-opsagent-no-sa',
+      'instance_name': 'faulty-opsagent-no-sa',
       'zone': 'europe-west2-a'
   }, {
       'project_id': 'gcpdiag-gce3-aaaa',
-      'name': 'working-opsagent',
+      'instance_name': 'working-opsagent',
       'zone': 'europe-west2-a'
   }]

@@ -61,7 +61,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not push_request_count:
     report.add_skipped(None, 'no subscription metrics found')
 
-  failing_subscriptions = set()
+  failing_subs = set()
   for subscription_name, push_metric in push_request_count.items():
     if (not push_metric
        ):  # empty for subscription without traffic for the duration
@@ -74,23 +74,22 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
                                   ('labels', 'metric.response_class'))
 
         if response_class != 'ack':
-          failing_subscriptions.add(subscription_name)
+          failing_subs.add(subscription_name)
 
   # reporting
-  if failing_subscriptions:
-    extra_subscriptions = ''
-    if len(failing_subscriptions) > MAX_SUBSCRIPTIONS_TO_DISPLAY:
-      extra_subscriptions = (
-          ', and'
-          f' {len(failing_subscriptions) - MAX_SUBSCRIPTIONS_TO_DISPLAY} more'
-          ' subscriptions')
+  if failing_subs:
+    extra_subs = ''
+    if len(failing_subs) > MAX_SUBSCRIPTIONS_TO_DISPLAY:
+      extra_subs = (', and'
+                    f' {len(failing_subs) - MAX_SUBSCRIPTIONS_TO_DISPLAY} more'
+                    ' subscriptions')
 
   # pylint: disable=line-too-long
     report.add_failed(
         project,
-        f'{len(failing_subscriptions)} subscriptions have non-ack responses'
+        f'{len(failing_subs)} subscriptions have non-ack responses'
         ' from the endpoint:'
-        f' {", ".join(islice(failing_subscriptions, MAX_SUBSCRIPTIONS_TO_DISPLAY))}{extra_subscriptions}',
+        f" {', '.join(islice(failing_subs, MAX_SUBSCRIPTIONS_TO_DISPLAY))}{extra_subs}",
     )
   # pylint: enable=line-too-long
   else:

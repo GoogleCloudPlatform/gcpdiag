@@ -16,12 +16,12 @@ None
 
 ### Failure Reason
 
-The cluster {cluster_name} is using an unsupported Dataproc image version. Please try to run the job on a supported image version.
+The cluster {cluster_name} is using an unsupported Dataproc image version. Run the job on a supported image version.
 
 ### Failure Remediation
 
-Please find supported Dataproc image versions from this document[1].
-[1] https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-version-clusters
+Find supported Dataproc image versions in this document[1].
+[1] <https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-version-clusters>
 
 ### Success Reason
 

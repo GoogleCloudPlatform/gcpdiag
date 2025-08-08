@@ -1,6 +1,6 @@
-{% block disabled_step_message %}
-Checking if Workbench Instance has external IP disabled...
-{% endblock disabled_step_message %}
+{% block disabled_step_name %}
+Verify Workbench Instance has external IP disabled
+{% endblock disabled_step_name %}
 
 {% block disabled_success_reason %}
 OK! Workbench Instance {instance_name} has an external IP
@@ -8,6 +8,7 @@ OK! Workbench Instance {instance_name} has an external IP
 
 {% block disabled_uncertain_reason %}
 Workbench Instance {instance_name} has external IP disabled.
+
 - network: {network}
 - subnetwork: {subnetwork}
 This may cause networking issues if configuration was not done correctly.
@@ -16,8 +17,8 @@ This may cause networking issues if configuration was not done correctly.
 {% block disabled_uncertain_remediation %}
 Follow the public documentation to configure Private Networking for a Workbench Instance [1] [2] [3] [4]
 
-[1] https://cloud.google.com/vertex-ai/docs/workbench/instances/create#network-options
-[2] https://cloud.google.com/vpc/docs/access-apis-external-ip#requirements
-[3] https://cloud.google.com/vpc/docs/configure-private-google-access
-[4] https://cloud.google.com/vpc/docs/configure-private-google-access#requirements
+[1] <https://cloud.google.com/vertex-ai/docs/workbench/instances/create#network-options>
+[2] <https://cloud.google.com/vpc/docs/access-apis-external-ip#requirements>
+[3] <https://cloud.google.com/vpc/docs/configure-private-google-access>
+[4] <https://cloud.google.com/vpc/docs/configure-private-google-access#requirements>
 {% endblock disabled_uncertain_remediation %}

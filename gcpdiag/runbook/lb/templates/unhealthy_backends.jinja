@@ -1,95 +1,130 @@
-{% block confirmation_skipped_reason %}
-All backends are healthy in backend service {name} in scope {region}
-{% endblock confirmation_skipped_reason %}
+{% block confirmation_success_reason %}
+All backends are healthy in backend service {name} in scope {region}.
+{% endblock confirmation_success_reason %}
 
 {% block confirmation_failure_reason %}
- We found unhealthy backends in backend service {name} in scope {region}
- {detailed_reason}
+The backend service {name} in the {region} scope has unhealthy backends.
+
+{detailed_reason}
+The backend service {name} uses the following health check: {hc_name}.
+
+{success_criteria}
+
+{timing_and_threshold}
 {% endblock confirmation_failure_reason %}
 
-{% block confirmation_failure_remediation %}
-Further investigation is required to identify the root cause and apply appropriate fixes.
-{% endblock confirmation_failure_remediation %}
-
 {% block logging_enabled_success_reason %}
-Health check logging is enabled
+Health check logging is enabled for health check {hc_url}.
 {% endblock logging_enabled_success_reason %}
 
 {% block logging_enabled_uncertain_reason %}
-Logging is not enabled for health check
+Logging is not enabled for health check {hc_url}. Lack of logs hinders troubleshooting, as logs provide visibility into health check state changes and probe details needed to diagnose failures.
 {% endblock logging_enabled_uncertain_reason %}
 
 {% block logging_enabled_uncertain_remediation %}
-Enable logging for the health check using the following gcloud command:
+Enable logging for the health check using the following `gcloud` command:
 
-gcloud compute health-checks update {protocol} {hc_name} {additional_flags}--enable-logging
+```
+gcloud compute health-checks update {protocol} {hc_name} {additional_flags} --enable-logging
+```
 
-This will log any future changes in health status but won't show any past activity. Note that the new health check logs will only appear when a health state transition occurs.
+This will log any future changes in health status, but won't show past activity. Note that new health check logs will only appear when a health state transition occurs.
 {% endblock logging_enabled_uncertain_remediation %}
 
 {% block port_mismatch_uncertain_reason %}
-The load balancer is performing health checks on port {hc_port}. We detected that within some backend instance groups, this is different than the port that the load balancer is using for serving traffic. The backend service is configured to use the "{serving_port_name}" port, which is translated to a port number based on the "{serving_port_name}" port mapping within each backend instance group.
+The load balancer is conducting health checks on port {hc_port} for the backend service {bs_resource}. However, this health check port differs from the port used by the load balancer for serving traffic on some backend instance groups. The backend service is configured to use the "{serving_port_name}" port, which is then translated to a specific port number based on the "{serving_port_name}" port mapping within each backend instance group.
 
 Affected backends:
+
 {formatted_igs}
 
-This configuration can be problematic unless you have configured the load balancer to use a different port for health checks purposefully.
+This configuration can be problematic unless the load balancer has been configured to use a different port for health checks purposefully.
 {% endblock port_mismatch_uncertain_reason %}
 
+{% block port_mismatch_uncertain_remediation %}
+Verify that the health check port is correctly configured to match the port used by the application if the health check is intended to check the serving port.
+{% endblock port_mismatch_uncertain_remediation %}
+
 {% block port_mismatch_success_reason %}
-The load balancer is performing health checks on the same port that it is using for serving traffic. This is the standard configuration.
+The load balancer is performing health checks on the same port used for serving traffic. This is the standard configuration.
 {% endblock port_mismatch_success_reason %}
+
+{% block protocol_mismatch_uncertain_reason %}
+The load balancer uses {serving_protocol} for traffic but {hc_protocol} for health checks on backend service {bs_resource}. If not intended, this protocol mismatch can lead to incorrect health assessments, potentially causing traffic to be sent to failing backends or triggering unnecessary failovers.
+
+**Important:** Health checks using {hc_protocol} might be passing while the application serving {serving_protocol} traffic is failing because the success criteria for the two protocols can differ. More details on the health check success criteria can be found in [docs](https://cloud.google.com/load-balancing/docs/health-check-concepts#criteria-protocol-http).
+{% endblock protocol_mismatch_uncertain_reason %}
+
+{% block protocol_mismatch_uncertain_remediation %}
+Verify that the health check and serving protocol are correctly configured to match the protocol used by the application.
+{% endblock protocol_mismatch_uncertain_remediation %}
+
+{% block protocol_mismatch_success_reason %}
+The load balancer is performing health checks using the same protocol ({hc_protocol}) used for serving traffic. This is the standard configuration.
+{% endblock protocol_mismatch_success_reason %}
 
 {% block firewall_rules_failure_reason %}
 {insight}
-The health checks are currently failing due to a misconfigured firewall. This is preventing Google Cloud probers from connecting to your backends, causing the load balancer to consider them unhealthy.
+The health checks are currently failing due to a misconfigured firewall. This prevents Google Cloud probers from connecting to the backends, causing the load balancer to consider them unhealthy.
 {% endblock firewall_rules_failure_reason %}
 
 {% block firewall_rules_failure_remediation %}
-Update your firewall rules to allow inbound traffic from the Google Cloud health check IP ranges (found at https://cloud.google.com/load-balancing/docs/health-check-concepts#ip-ranges) to your backends.
+Update the firewall rules to allow inbound traffic from the Google Cloud health check IP ranges (found at <https://cloud.google.com/load-balancing/docs/health-check-concepts#ip-ranges>) to the backends.
 {% endblock firewall_rules_failure_remediation %}
 
 {% block firewall_rules_success_reason %}
-Firewalls are correctly configured and are not blocking the health check probes.
+Firewall rules are correctly configured and are not blocking health check probes for backend service {bs_url}.
 {% endblock firewall_rules_success_reason %}
 
 {% block past_hc_success_uncertain_remediation %}
-Check the logs and monitoring metrics for those instances, focusing on the given timeframes to see if there were any errors, crashes, or resource exhaustion issues that coincide with the unhealthy transition. You can also inspect any application-specific logs for errors or warnings around the timestamp.
+Check the logs and monitoring metrics for the instances associated with backend service {bs_url}, focusing on recent timeframes to see if there were any errors, crashes, or resource exhaustion issues. Also inspect any application-specific logs for errors or warnings.
 {% endblock past_hc_success_uncertain_remediation %}
 
-{% block unknown_hc_state_log_uncertain_reason %}
-In the health check logs, we observed entries with the detailed health state "UNKNOWN." This indicates that the health checking system is aware of the instance, but its health status is currently undetermined. This situation can arise when a new endpoint is unresponsive to health checks and there's a substantial configured timeout period (approximately 25 seconds or longer). In such cases, the "UNKNOWN" state might be published while the health checker waits for the timeout to expire. Additionally, "UNKNOWN" could also be published during outage scenarios if the health checkers themselves are crashing. In this critical situation, endpoints that previously had known health states could transition to "UNKNOWN.
-{% endblock unknown_hc_state_log_uncertain_reason %}
+{% block unknown_hc_state_log_failure_reason %}
+Health check logs for backend service {bs_url} show entries with the detailed health state UNKNOWN. This indicates that the health checking system is aware of the instance, but its health status is undetermined. This situation can arise when a new endpoint is unresponsive to health checks and there's a substantial configured timeout period (approximately 25 seconds or longer). In such cases, the "UNKNOWN" state might be published while the health checker waits for the timeout to expire. Additionally, "UNKNOWN" could also be published during outage scenarios if the health checkers themselves are crashing. In this critical situation, endpoints that previously had known health states could transition to "UNKNOWN".
+{% endblock unknown_hc_state_log_failure_reason %}
 
-{% block unknown_hc_state_log_uncertain_remediation %}
-For the new endpoints: Consider reducing the timeout period for health checks if appropriate, especially during initial setup or testing phases.
-For potential Google Cloud outages: Use Personalized Service Health to check for any ongoing incidents that might be affecting your project or the specific service in question. If an incident is identified, follow any recommended mitigation steps or wait for the issue to be resolved by Google Cloud.
-{% endblock unknown_hc_state_log_uncertain_remediation %}
+{% block unknown_hc_state_log_failure_remediation %}
+For new endpoints: Consider reducing the timeout period for health checks if appropriate, especially during initial setup or testing phases.
 
-{% block unhealthy_hc_state_log_uncertain_reason %}
-In the health check logs, we found logs with the detailed health state UNHEALTHY, which means the endpoint is reachable but does not conform to the requirements defined by the health check.
-The following responses were received from your backends: {probe_results_text_str}
-{% endblock unhealthy_hc_state_log_uncertain_reason %}
+For potential Google Cloud outages: Use Personalized Service Health to check for any ongoing incidents that might be affecting the project or the specific service in question. If an incident is identified, follow any recommended mitigation steps or wait for the issue to be resolved by Google Cloud.
+{% endblock unknown_hc_state_log_failure_remediation %}
 
-{% block unhealthy_hc_state_log_uncertain_remediation %}
+{% block unhealthy_hc_state_log_failure_reason %}
+Health check logs for backend service {bs_url} indicate a detailed health state of UNHEALTHY. The backend instances are reachable but are not passing the health check requirements.
+
+Responses received from backends: {probe_results_text_str}
+{% endblock unhealthy_hc_state_log_failure_reason %}
+
+{% block unhealthy_hc_state_log_failure_remediation %}
 {success_criteria}
 
-Please investigate the configuration of your application to ensure it aligns with these health check expectations.
+Investigate the configuration of the application to ensure it aligns with these health check expectations.
 
-If you intend to check a different endpoint or expect a different response, adjust the health check settings accordingly.
-{% endblock unhealthy_hc_state_log_uncertain_remediation %}
+If a different endpoint should be checked or a different response is expected, adjust the health check settings accordingly.
+{% endblock unhealthy_hc_state_log_failure_remediation %}
 
-{% block timeout_hc_state_log_uncertain_reason %}
-In the health check logs, we found logs with the detailed health state TIMEOUT.
+{% block timeout_hc_state_log_failure_reason %}
+Health check logs for backend service {bs_url} show the detailed health state "TIMEOUT".
+
+Responses received from backends: {probe_results_text_str}
+
 The backend might be timing out because:
-1. The application is overloaded and taking too long to respond.
-2. The backend service or health check timeout is too low.
-3. Connection to the endpoint cannot be established - the backend instance has crashed or is otherwise unresponsive.
-The following responses were received from your backends: {probe_results_text_str}
-{% endblock timeout_hc_state_log_uncertain_reason %}
 
-{% block timeout_hc_state_log_uncertain_remediation %}
-1. Make sure that the backend service timeout (current value: {bs_timeout_sec}s) and health check timeout (current value: {hc_timeout_sec}s) are appropriately configured to accommodate your application's expected response time.
-2. Investigate your application's configuration to ensure it is correctly handling health check probe requests. {success_criteria}
-3. Check if firewall rules or iptables configurations are not blocking the health check probes from reaching the backend instances, resulting in timeouts.
-{% endblock timeout_hc_state_log_uncertain_remediation %}
+1. The application is overloaded and taking too long to respond.
+
+2. The backend service or health check timeout is too low.
+
+3. Connection to the endpoint cannot be established - the backend instance has crashed or is otherwise unresponsive.
+
+The following responses were received from your backends: {probe_results_text_str}
+{% endblock timeout_hc_state_log_failure_reason %}
+
+{% block timeout_hc_state_log_failure_remediation %}
+
+1. Make sure that the backend service timeout (current value: {bs_timeout_sec}s) and health check timeout (current value: {hc_timeout_sec}s) are appropriately configured to accommodate the application's expected response time.
+
+2. Investigate the application's configuration to ensure it is correctly handling health check probe requests. {success_criteria}
+
+3. Check if firewall rules or iptables configurations are blocking the health check probes from reaching the backend instances, resulting in timeouts.
+{% endblock timeout_hc_state_log_failure_remediation %}

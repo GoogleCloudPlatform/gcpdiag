@@ -22,40 +22,48 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
   runbook_name = 'dataproc/cluster-creation'
   config.init({'auto': True, 'interface': 'cli'})
 
-  rule_parameters = [
-      {
-          'project_id':
-              'gcpdiag-dataproc1-aaaa',
-          'service_account':
-              'saworker@gcpdiag-dataproc1-aaaa.iam.gserviceaccount.com',
-          'region':
-              'us-central1',
-          'cluster_name':
-              'good',
-          'start_time_utc':
-              '2024-06-18T01:00:00Z',
-          'end_time_utc':
-              '2024-06-22T01:00:00Z',
-      },
-      {
-          'project_id':
-              'gcpdiag-dataproc1-aaaa',
-          'service_account':
-              'saworker@gcpdiag-dataproc1-aaaa.iam.gserviceaccount.com',
-          'region':
-              'us-central1',
-          'cluster_name':
-              'good',
-          'start_time_utc':
-              '2024-06-23T01:00:00Z',
-          'end_time_utc':
-              '2024-06-24T01:00:00Z',
-      },
-      {
-          'project_id': 'gcpdiag-dataproc1-aaaa',
-          'cluster_name': 'test-deny-icmp',
-          'region': 'us-central1',
-          'start_time_utc': '2024-06-18T01:00:00Z',
-          'end_time_utc': '2024-06-22T01:00:00Z',
-      },
-  ]
+  rule_parameters = [{
+      'project_id':
+          'gcpdiag-dataproc1-aaaa',
+      'service_account':
+          'saworker@gcpdiag-dataproc1-aaaa.iam.gserviceaccount.com',
+      'region':
+          'us-central1',
+      'dataproc_cluster_name':
+          'good',
+      'start_time':
+          '2024-06-18T01:00:00Z',
+      'end_time':
+          '2024-06-22T01:00:00Z',
+  }, {
+      'project_id':
+          'gcpdiag-dataproc1-aaaa',
+      'service_account':
+          'saworker@gcpdiag-dataproc1-aaaa.iam.gserviceaccount.com',
+      'region':
+          'us-central1',
+      'dataproc_cluster_name':
+          'good',
+      'start_time':
+          '2024-06-23T01:00:00Z',
+      'end_time':
+          '2024-06-24T01:00:00Z',
+  }, {
+      'project_id': 'gcpdiag-dataproc1-aaaa',
+      'dataproc_cluster_name': 'test-deny-icmp',
+      'region': 'us-central1',
+      'start_time': '2024-06-18T01:00:00Z',
+      'end_time': '2024-06-22T01:00:00Z',
+  }, {
+      'project_id': 'gcpdiag-dataproc2-aaaa',
+      'dataproc_cluster_name': 'cluster-quota-issues',
+      'region': 'us-central1',
+      'start_time': '2025-06-13T16:00:55Z',
+      'end_time': '2025-06-13T17:00:55Z',
+  }, {
+      'project_id': 'gcpdiag-dataproc3-aaaa',
+      'dataproc_cluster_name': 'cluster-stockout-issues',
+      'region': 'us-central1',
+      'start_time': '2025-06-13T16:00:55Z',
+      'end_time': '2025-06-13T17:00:55Z',
+  }]

@@ -109,7 +109,7 @@ class TreeNameGateway(runbook.Gateway):
   """
 
   def execute(self):
-    """TODO: One line string for the decision being performed at this split point..."""
+    """TODO: One line string for the decision being performed at this split point."""
     # Decision points.
     if op.get(CUSTOM_FLAG) == 'gce':
       num = len(gce.get_instances(op.context))
@@ -132,14 +132,16 @@ class TreeNameCompositeStep(runbook.CompositeStep):
   """
 
   def execute(self):
-    """TODO: One line string for the collection of step grouped in this Composite Step..."""
+    """TODO: One line string for the collection of step grouped in this Composite Step."""
     using_a_generalized_class = iam_gs.IamPolicyCheck()
+    using_a_generalized_class.project = op.get(flags.PROJECT_ID)
     using_a_generalized_class.permissions = ['test.perm.one', 'test.perm.two']
     using_a_generalized_class.principal = 'user:user_one@example.com'
     using_a_generalized_class.require_all = False
     self.add_child(using_a_generalized_class)
 
     using_another_generalized_class = iam_gs.IamPolicyCheck(name='unique_name')
+    using_another_generalized_class.project = op.get(flags.PROJECT_ID)
     using_another_generalized_class.roles = [
         'roles/test.one', 'role/test.two'
     ]

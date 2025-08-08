@@ -43,15 +43,14 @@ class HighVmMemoryUtilization(runbook.Step):
   instance_name: str
   serial_console_file = None
 
-  # Typcial Memory exhaustion logs in serial console.
+  # Typical Memory exhaustion logs in serial console.
 
   def execute(self):
-    """Verifying VM memory utilization is within optimal levels..."""
+    """Verify VM memory utilization is within optimal levels."""
 
     start_formatted_string = op.get(
-        flags.START_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
-    end_formatted_string = op.get(
-        flags.END_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+        flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')
+    end_formatted_string = op.get(flags.END_TIME).strftime('%Y/%m/%d %H:%M:%S')
     within_str = f'within d\'{start_formatted_string}\', d\'{end_formatted_string}\''
 
     mark_no_ops_agent = False
@@ -89,19 +88,23 @@ class HighVmMemoryUtilization(runbook.Step):
               """.format(vm.id, UTILIZATION_THRESHOLD, within_str))
     else:
       mark_no_ops_agent = True
+      op.info(
+          f'VM instance {vm.id} not export memory metrics. Falling back on serial logs'
+      )
 
     if mem_usage_metrics:
       op.add_failed(vm,
-                    reason=op.prep_msg(op.FAILURE_REASON),
+                    reason=op.prep_msg(op.FAILURE_REASON,
+                                       full_resource_path=vm.full_path),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     elif mark_no_ops_agent:
       op.add_skipped(vm,
-                     reason='Ops Agent not installed on the VM, '
-                     'Unable to fetch memory utilisation data via metrics\n'
-                     'Falling back to check for Memory related error messages '
-                     'in Serial logs\n')
+                     reason=op.prep_msg(op.SKIPPED_REASON,
+                                        full_resource_path=vm.full_path))
     else:
-      op.add_ok(vm, reason=op.prep_msg(op.SUCCESS_REASON))
+      op.add_ok(vm,
+                reason=op.prep_msg(op.SUCCESS_REASON,
+                                   full_resource_path=vm.full_path))
 
     # Checking for OOM related errors
     oom_errors = VmSerialLogsCheck()
@@ -109,7 +112,7 @@ class HighVmMemoryUtilization(runbook.Step):
     oom_errors.zone = self.zone
     oom_errors.instance_name = self.instance_name
     oom_errors.serial_console_file = self.serial_console_file
-    oom_errors.template = 'vm_performance::memory_error'
+    oom_errors.template = 'vm_performance::high_memory_usage_logs'
     oom_errors.negative_pattern = constants.OOM_PATTERNS
     self.add_child(oom_errors)
 
@@ -130,12 +133,11 @@ class HighVmDiskUtilization(runbook.Step):
   serial_console_file: str = ''
 
   def execute(self):
-    """Verifying VM's Boot disk space utilization is within optimal levels."""
+    """Verify VM's Boot disk space utilization is within optimal levels."""
 
     start_formatted_string = op.get(
-        flags.START_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
-    end_formatted_string = op.get(
-        flags.END_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+        flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')
+    end_formatted_string = op.get(flags.END_TIME).strftime('%Y/%m/%d %H:%M:%S')
     within_str = f'within d\'{start_formatted_string}\', d\'{end_formatted_string}\''
 
     mark_no_ops_agent = False
@@ -158,19 +160,20 @@ class HighVmDiskUtilization(runbook.Step):
             | filter (cast_units(percent_used,"")/100) >= {}
             | {}
           """.format(vm.id, UTILIZATION_THRESHOLD, within_str))
+      op.add_metadata('Disk Utilization Threshold (fraction of 1)',
+                      UTILIZATION_THRESHOLD)
     else:
       mark_no_ops_agent = True
 
     if disk_usage_metrics:
       op.add_failed(vm,
                     reason=op.prep_msg(op.FAILURE_REASON),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+                    remediation=op.prep_msg(op.FAILURE_REMEDIATION,
+                                            full_resource_path=vm.full_path))
     elif mark_no_ops_agent:
       op.add_skipped(vm,
-                     reason='Ops Agent not installed on the VM, '
-                     'Unable to fetch disk utilisation data via metrics.\n'
-                     'Falling back to check for filesystem utilization related'
-                     ' messages in Serial logs\n')
+                     reason=op.prep_msg(op.SKIPPED_REASON,
+                                        full_resource_path=vm.full_path))
       # Fallback to check for filesystem utilization related messages in Serial logs
       fs_util = VmSerialLogsCheck()
       fs_util.project_id = self.project_id
@@ -181,7 +184,9 @@ class HighVmDiskUtilization(runbook.Step):
       fs_util.negative_pattern = constants.DISK_EXHAUSTION_ERRORS
       self.add_child(fs_util)
     else:
-      op.add_ok(vm, reason=op.prep_msg(op.SUCCESS_REASON))
+      op.add_ok(vm,
+                reason=op.prep_msg(op.SUCCESS_REASON,
+                                   full_resource_path=vm.full_path))
 
 
 class HighVmCpuUtilization(runbook.Step):
@@ -200,12 +205,11 @@ class HighVmCpuUtilization(runbook.Step):
   instance_name: str
 
   def execute(self):
-    """Verifying VM CPU utilization is within optimal levels"""
+    """Verify VM CPU utilization is within optimal levels"""
 
     start_formatted_string = op.get(
-        flags.START_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
-    end_formatted_string = op.get(
-        flags.END_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+        flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')
+    end_formatted_string = op.get(flags.END_TIME).strftime('%Y/%m/%d %H:%M:%S')
     within_str = f'within d\'{start_formatted_string}\', d\'{end_formatted_string}\''
 
     vm = gce.get_instance(
@@ -239,10 +243,14 @@ class HighVmCpuUtilization(runbook.Step):
     # Get Performance issues corrected.
     if cpu_usage_metrics:
       op.add_failed(vm,
-                    reason=op.prep_msg(op.FAILURE_REASON),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+                    reason=op.prep_msg(op.FAILURE_REASON,
+                                       full_resource_path=vm.full_path),
+                    remediation=op.prep_msg(op.FAILURE_REMEDIATION,
+                                            full_resource_path=vm.full_path))
     else:
-      op.add_ok(vm, reason=op.prep_msg(op.SUCCESS_REASON))
+      op.add_ok(vm,
+                reason=op.prep_msg(op.SUCCESS_REASON,
+                                   full_resource_path=vm.full_path))
 
 
 class VmLifecycleState(runbook.Step):
@@ -259,29 +267,34 @@ class VmLifecycleState(runbook.Step):
   project_id: str
   zone: str
   instance_name: str
+  expected_lifecycle_status: str
 
   def execute(self):
-    """Verifying VM is in the RUNNING state..."""
+    """Verify GCE Instance is in the {expected_lifecycle_status} state."""
     vm = gce.get_instance(project_id=self.project_id,
                           zone=self.zone,
                           instance_name=self.instance_name)
-    if vm and vm.is_running:
+    if not vm:
+      op.add_skipped(None, reason=op.prep_msg(op.SKIPPED_REASON))
+      return
+
+    if vm.status == self.expected_lifecycle_status:
       op.add_ok(vm,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   vm_name=vm.name,
+                                   full_resource_path=vm.full_path,
                                    status=vm.status))
     else:
       op.add_failed(vm,
                     reason=op.prep_msg(op.FAILURE_REASON,
-                                       vm_name=vm.name,
+                                       full_resource_path=vm.full_path,
                                        status=vm.status),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                            vm_name=vm.name,
+                                            full_resource_path=vm.full_path,
                                             status=vm.status))
 
 
 class VmSerialLogsCheck(runbook.Step):
-  """Searches for predefined good or bad patterns in the serial logs of a GCE VM.
+  """Searches for predefined good or bad patterns in the serial logs of a GCE Instance.
 
   This diagnostic step checks the VM's serial logs for patterns that are indicative of successful
   operations ('GOOD_PATTERN') or potential issues ('BAD_PATTERN'). Based on the presence of these
@@ -302,7 +315,7 @@ class VmSerialLogsCheck(runbook.Step):
   negative_pattern_operator = 'OR'
 
   def execute(self):
-    """Analyzing serial logs for predefined patterns..."""
+    """Analyzing serial logs for predefined patterns."""
     # All kernel failures.
     good_pattern_detected = False
     bad_pattern_detected = False
@@ -334,46 +347,82 @@ class VmSerialLogsCheck(runbook.Step):
             patterns=self.positive_pattern,
             contents=instance_serial_log,
             operator=self.positive_pattern_operator)
+        op.add_metadata('Positive patterns searched in serial logs',
+                        self.positive_pattern)
         if good_pattern_detected:
           op.add_ok(vm,
-                    reason=op.prep_msg(op.SUCCESS_REASON,
-                                       instance_name=vm.name))
+                    reason=op.prep_msg(
+                        op.SUCCESS_REASON,
+                        full_resource_path=vm.full_path,
+                        start_time=op.get(flags.START_TIME),
+                        end_time=op.get(flags.END_TIME),
+                    ))
       if hasattr(self, 'negative_pattern'):
         # Check for bad patterns
         bad_pattern_detected = util.search_pattern_in_serial_logs(
             patterns=self.negative_pattern,
             contents=instance_serial_log,
             operator=self.negative_pattern_operator)
+        op.add_metadata('Negative patterns searched in serial logs',
+                        self.negative_pattern)
+
         if bad_pattern_detected:
           op.add_failed(vm,
                         reason=op.prep_msg(op.FAILURE_REASON,
+                                           start_time=op.get(flags.START_TIME),
+                                           end_time=op.get(flags.END_TIME),
+                                           full_resource_path=vm.full_path,
                                            instance_name=vm.name),
-                        remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+                        remediation=op.prep_msg(
+                            op.FAILURE_REMEDIATION,
+                            full_resource_path=vm.full_path,
+                            start_time=op.get(flags.START_TIME),
+                            end_time=op.get(flags.END_TIME)))
 
       if hasattr(self, 'positive_pattern') and not hasattr(
           self, 'negative_pattern') and good_pattern_detected is False:
-        op.add_uncertain(vm,
-                         reason=op.prep_msg(op.UNCERTAIN_REASON),
-                         remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION))
+        op.add_uncertain(
+            vm,
+            reason=op.prep_msg(op.UNCERTAIN_REASON,
+                               full_resource_path=vm.full_path,
+                               start_time=op.get(flags.START_TIME),
+                               end_time=op.get(flags.END_TIME)),
+            # uncertain uses the same remediation steps as failed
+            remediation=op.prep_msg(op.FAILURE_REMEDIATION,
+                                    full_resource_path=vm.full_path,
+                                    start_time=op.get(flags.START_TIME),
+                                    end_time=op.get(flags.END_TIME)))
       elif hasattr(self, 'negative_pattern') and not hasattr(
           self, 'positive_pattern') and bad_pattern_detected is False:
-        op.add_uncertain(vm,
-                         reason=op.prep_msg(op.UNCERTAIN_REASON),
-                         remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION))
+        op.add_uncertain(
+            vm,
+            reason=op.prep_msg(op.UNCERTAIN_REASON,
+                               full_resource_path=vm.full_path),
+            # uncertain uses the same remediation steps as failed
+            remediation=op.prep_msg(op.FAILURE_REMEDIATION,
+                                    full_resource_path=vm.full_path,
+                                    start_time=op.get(flags.START_TIME),
+                                    end_time=op.get(flags.END_TIME)))
       elif (hasattr(self, 'positive_pattern') and
             good_pattern_detected is False) and (hasattr(
                 self, 'negative_pattern') and bad_pattern_detected is False):
-        op.add_uncertain(vm,
-                         reason=op.prep_msg(op.UNCERTAIN_REASON),
-                         remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION))
+        op.add_uncertain(
+            vm,
+            reason=op.prep_msg(op.UNCERTAIN_REASON,
+                               full_resource_path=vm.full_path,
+                               start_time=op.get(flags.START_TIME),
+                               end_time=op.get(flags.END_TIME)),
+            # uncertain uses the same remediation steps as failed
+            remediation=op.prep_msg(op.FAILURE_REMEDIATION,
+                                    full_resource_path=vm.full_path,
+                                    start_time=op.get(flags.START_TIME),
+                                    end_time=op.get(flags.END_TIME)))
     else:
-      op.add_skipped(vm,
-                     reason=op.prep_msg(op.SKIPPED_REASON,
-                                        instance_name=vm.name))
+      op.add_skipped(None, reason=op.prep_msg(op.SKIPPED_REASON))
 
 
 class VmMetadataCheck(runbook.Step):
-  """Validates a specific boolean metadata key-value pair on a GCE VM instance.
+  """Validates a specific boolean metadata key-value pair on a GCE Instance instance.
 
   This step checks if the VM's metadata contains a specified key with the expected boolean value,
   facilitating configuration verification and compliance checks."""
@@ -425,7 +474,7 @@ class VmMetadataCheck(runbook.Step):
       raise ValueError('Unsupported Type')
 
   def execute(self):
-    """Verifying VM metadata value..."""
+    """Verify VM metadata value."""
     vm = gce.get_instance(project_id=self.project_id,
                           zone=self.zone,
                           instance_name=self.instance_name)
@@ -451,9 +500,9 @@ class VmMetadataCheck(runbook.Step):
 
 
 class GceVpcConnectivityCheck(runbook.Step):
-  """Checks whether ingress or egress traffic is allowed to a GCE VM from a specified source IP.
+  """Checks if ingress or egress traffic is allowed to a GCE Instance from a specified source IP.
 
-  Evaluates VPC firewall rules to verify if a GCE VM permits ingress or egress traffic from a
+  Evaluates VPC firewall rules to verify if a GCE Instance permits ingress or egress traffic from a
   designated source IP through a specified port and protocol.
   """
   project_id: str
@@ -466,7 +515,7 @@ class GceVpcConnectivityCheck(runbook.Step):
   traffic = None
 
   def execute(self):
-    """Evaluating VPC network traffic rules..."""
+    """Evaluating VPC network traffic rules."""
     vm = gce.get_instance(project_id=self.project_id,
                           zone=self.zone,
                           instance_name=self.instance_name)
@@ -506,7 +555,7 @@ class GceVpcConnectivityCheck(runbook.Step):
 
 
 class VmScope(runbook.Step):
-  """Verifies that a GCE VM has at least one of a list of required access scopes
+  """Verifies that a GCE Instance has at least one of a list of required access scopes
 
   Confirms that the VM has the necessary OAuth scope
   https://cloud.google.com/compute/docs/access/service-accounts#accesscopesiam
@@ -525,7 +574,7 @@ class VmScope(runbook.Step):
   instance_name: str
 
   def execute(self):
-    """Verifying GCE VM access scope"""
+    """Verify GCE Instance access scope"""
     instance = gce.get_instance(project_id=self.project_id,
                                 zone=self.zone,
                                 instance_name=self.instance_name)
@@ -550,7 +599,7 @@ class VmScope(runbook.Step):
     if outcome:
       op.add_ok(resource=instance,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   vm_name=instance.name,
+                                   full_resource_path=instance.full_path,
                                    present_access_scopes=', '.join(
                                        sorted(present_access_scopes))))
     else:
@@ -558,19 +607,19 @@ class VmScope(runbook.Step):
           resource=instance,
           reason=op.prep_msg(
               op.FAILURE_REASON,
-              vm_name=instance.name,
+              full_resource_path=instance.full_path,
               required_access_scope=', '.join(sorted(self.access_scopes)),
               missing_access_scopes=', '.join(sorted(missing_access_scopes))),
           remediation=op.prep_msg(
               op.FAILURE_REMEDIATION,
-              vm_name=instance.name,
+              full_resource_path=instance.full_path,
               required_access_scope=', '.join(sorted(self.access_scopes)),
               present_access_scopes=', '.join(sorted(present_access_scopes)),
               missing_access_scopes=', '.join(sorted(missing_access_scopes))))
 
 
 class VmHasOpsAgent(runbook.Step):
-  """Verifies that a GCE VM has at ops agent installed and
+  """Verifies that a GCE Instance has at ops agent installed and
 
   You can check for sub agents for logging and metrics
 
@@ -587,8 +636,8 @@ class VmHasOpsAgent(runbook.Step):
   zone: str
   instance_name: str
   instance_id: str
-  start_time_utc: datetime
-  end_time_utc: datetime
+  start_time: datetime
+  end_time: datetime
 
   def _has_ops_agent_subagent(self, metric_data):
     """Checks if ops agent logging agent and metric agent is installed"""
@@ -612,11 +661,10 @@ class VmHasOpsAgent(runbook.Step):
     return subagents
 
   def execute(self):
-    """Verifying GCE VM's has ops agent installed and currently active"""
-    self.end_time_utc = getattr(self, 'end_time_utc', None) or op.get(
-        self.end_time_utc)
-    self.start_time_utc = getattr(self, 'start_time_utc', None) or op.get(
-        self.start_time_utc)
+    """Verify GCE Instance's has ops agent installed and currently active"""
+    self.end_time = getattr(self, 'end_time', None) or op.get(self.end_time)
+    self.start_time = getattr(self, 'start_time', None) or op.get(
+        self.start_time)
     instance = gce.get_instance(project_id=self.project_id,
                                 zone=self.zone,
                                 instance_name=self.instance_name or
@@ -629,21 +677,22 @@ class VmHasOpsAgent(runbook.Step):
                           resource.labels.instance_id="{}"
                           "LogPingOpsAgent"'''.format(self.project_id,
                                                       self.instance_id),
-          start_time_utc=self.start_time_utc,
-          end_time_utc=self.end_time_utc)
+          start_time=self.start_time,
+          end_time=self.end_time)
       if serial_log_entries:
         op.add_ok(resource=instance,
                   reason=op.prep_msg(op.SUCCESS_REASON,
-                                     vm_name=instance.name,
+                                     full_resource_path=instance.full_path,
                                      subagent='logging'))
       else:
         op.add_failed(resource=instance,
                       reason=op.prep_msg(op.FAILURE_REASON,
-                                         vm_name=instance.name,
+                                         full_resource_path=instance.full_path,
                                          subagent='logging'),
-                      remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                              vm_name=instance.name,
-                                              subagent='logging'))
+                      remediation=op.prep_msg(
+                          op.FAILURE_REMEDIATION,
+                          full_resource_path=instance.full_path,
+                          subagent='logging'))
 
     if self.check_metrics:
       ops_agent_uptime = monitoring.query(
@@ -660,13 +709,14 @@ class VmHasOpsAgent(runbook.Step):
       if subagents['metrics_subagent_installed']:
         op.add_ok(resource=instance,
                   reason=op.prep_msg(op.SUCCESS_REASON,
-                                     vm_name=instance.name,
+                                     full_resource_path=instance.full_path,
                                      subagent='metrics'))
       else:
         op.add_failed(resource=instance,
                       reason=op.prep_msg(op.FAILURE_REASON,
-                                         vm_name=instance.name,
+                                         full_resource_path=instance.full_path,
                                          subagent='metrics'),
-                      remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                              vm_name=instance.name,
-                                              subagent='metrics'))
+                      remediation=op.prep_msg(
+                          op.FAILURE_REMEDIATION,
+                          full_resource_path=instance.full_path,
+                          subagent='metrics'))

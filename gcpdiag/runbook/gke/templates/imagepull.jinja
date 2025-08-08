@@ -1,74 +1,99 @@
 {% block image_not_found_failure_reason %}
-Image cannot be pulled by a container on Pod, because the image is not found on the repository. Check if the image is correctly written or if it exists in the repository.
-Example log entry that would help identify involved objects:
-{LOG_ENTRY}
+A container on pod on node failed to pull image because the image was not found in the repository.
+Example log entry:
+
+{log_entry}
 {% endblock image_not_found_failure_reason %}
 
 {% block image_not_found_failure_remediation %}
-Follow the documentation:
-https://cloud.google.com/kubernetes-engine/docs/troubleshooting#ImagePullBackOff
+Refer to the troubleshooting documentation:
+<https://cloud.google.com/kubernetes-engine/docs/troubleshooting#ImagePullBackOff>
 {% endblock image_not_found_failure_remediation %}
 
 {% block image_not_found_success_reason %}
-No "Failed to pull image.*not found" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+No "Failed to pull image.*not found" errors were found for cluster between {start_time} and {end_time}.
 {% endblock image_not_found_success_reason %}
 
 {% block image_forbidden_failure_reason %}
-Image cannot be pulled by a container on Pod, because there are not enough permissions to pull it from the repository. Verify the node SA has the correct permissions.
+Image cannot be pulled by a container on Pod, because there are not enough permissions to pull it from the repository.
+Verify the node SA has the correct permissions.
 Example log entry that would help identify involved objects:
-{LOG_ENTRY}
+
+{log_entry}
 {% endblock image_forbidden_failure_reason %}
 
 {% block image_forbidden_failure_remediation %}
-Follow the documentation:
-https://cloud.google.com/artifact-registry/docs/integrate-gke#permissions
+Ensure the node service account has the necessary permissions to pull the image. Refer to the documentation:
+<https://cloud.google.com/artifact-registry/docs/integrate-gke#permissions>
 {% endblock image_forbidden_failure_remediation %}
 
 {% block image_forbidden_success_reason %}
-No "Failed to pull image.*403 Forbidden" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+No "Failed to pull image.*403 Forbidden" errors were found for cluster between {start_time} and {end_time}.
 {% endblock image_forbidden_success_reason %}
 
 {% block image_dns_issue_failure_reason %}
-The DNS resolver (metadata server - 169.254.169.254:53) on the Node is unable to resolve the IP of the repository, preventing image pull. Check that the networking and DNS requirements mentioned in public documentation.
-Example log entry that would help identify involved objects:
-{LOG_ENTRY}
+The DNS resolver (metadata server 169.254.169.254:53) on node was unable to resolve the image repository's IP address, preventing image pull. This often indicates issues with networking or DNS configuration.
+Example log entry:
+
+{log_entry}
 {% endblock image_dns_issue_failure_reason %}
 
 {% block image_dns_issue_failure_remediation %}
-Follow the documentation:
-https://cloud.google.com/vpc/docs/configure-private-google-access#requirements
+Verify networking and DNS requirements, particularly for Private Google Access. Refer to the documentation:
+<https://cloud.google.com/vpc/docs/configure-private-google-access#requirements>
 {% endblock image_dns_issue_failure_remediation %}
 
 {% block image_dns_issue_success_reason %}
-No "Failed to pull image.*lookup.*server misbehaving" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+No "Failed to pull image.*lookup.*server misbehaving" errors were found for cluster between {start_time} and {end_time}.
 {% endblock image_dns_issue_success_reason %}
 
 {% block image_connection_timeout_restricted_private_failure_reason %}
-The connection from Node to restricted.googleapis.com (199.36.153.4/30) or private.googleapis.com (199.36.153.8/30) is timing out, preventing image pull. It is probable that a firewall rule is blocking this IP range. A firewall to permit this egress should be created.
-Example log entry that would help identify involved objects:
-{LOG_ENTRY}
+Connections from node to restricted.googleapis.com (199.36.153.4/30) or private.googleapis.com (199.36.153.8/30) timed out, preventing image pulls. This may be caused by a firewall rule blocking egress traffic to these IP ranges.
+Example log entry:
+
+{log_entry}
 {% endblock image_connection_timeout_restricted_private_failure_reason %}
 
 {% block image_connection_timeout_restricted_private_failure_remediation %}
-Follow the documentation:
-https://cloud.google.com/vpc-service-controls/docs/set-up-private-connectivity
+Ensure firewall rules permit egress traffic to restricted.googleapis.com (199.36.153.4/30) or private.googleapis.com (199.36.153.8/30). Refer to the documentation:
+<https://cloud.google.com/vpc-service-controls/docs/set-up-private-connectivity>
 {% endblock image_connection_timeout_restricted_private_failure_remediation %}
 
 {% block image_connection_timeout_restricted_private_success_reason %}
-No "Failed to pull image.*dial tcp.*199.36.153.\d:443: i/o timeout" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+No "Failed to pull image.*dial tcp.*199.36.153.\d:443: i/o timeout" errors were found for cluster between {start_time} and {end_time}.
 {% endblock image_connection_timeout_restricted_private_success_reason %}
 
 {% block image_connection_timeout_failure_reason %}
-The connection from Node to Google APIs is timing out. It is probable that a firewall rule is blocking this IP range. Expand results to see the blocked IP range.
-Example log entry that would help identify involved objects:
-{LOG_ENTRY}
+Connections from node to Google APIs timed out, preventing image pulls. This may be caused by a firewall rule blocking egress traffic to Google APIs. The specific blocked IP range might be indicated in the log entry.
+Example log entry:
+
+{log_entry}
 {% endblock image_connection_timeout_failure_reason %}
 
 {% block image_connection_timeout_failure_remediation %}
-Follow the documentation:
-https://cloud.google.com/kubernetes-engine/docs/concepts/firewall-rules
+Ensure firewall rules permit egress traffic to Google APIs. Refer to the documentation:
+<https://cloud.google.com/kubernetes-engine/docs/concepts/firewall-rules>
 {% endblock image_connection_timeout_failure_remediation %}
 
 {% block image_connection_timeout_success_reason %}
-No "Failed to pull image.*dial tcp.*i/o timeout" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+No "Failed to pull image.*dial tcp.*i/o timeout" errors were found for cluster between {start_time} and {end_time}.
 {% endblock image_connection_timeout_success_reason %}
+
+{% block image_not_found_insufficient_scope_failure_reason %}
+Either user or service account that's trying to pull the image doesn't have the necessary permissions to access it or
+Image doesn't exist.
+Example log entry that would help identify involved objects:
+
+{log_entry}
+{% endblock image_not_found_insufficient_scope_failure_reason %}
+
+{% block image_not_found_insufficient_scope_failure_remediation %}
+
+1. Verify that the image name is correct.
+2. Ensure the node's service account has the necessary permissions. Refer to the documentation:
+<https://cloud.google.com/kubernetes-engine/docs/troubleshooting/deployed-workloads#image-not-found>
+{% endblock image_not_found_insufficient_scope_failure_remediation %}
+
+{% block image_not_found_insufficient_scope_success_reason %}
+No "Failed to pull image.*insufficient_scope" errors found between {start_time} and {end_time}
+{% endblock image_not_found_insufficient_scope_success_reason %}

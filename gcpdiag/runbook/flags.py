@@ -15,8 +15,6 @@
 
 # Runbook command specific flags
 INTERACTIVE_MODE = 'auto'
-START_TIME_UTC = 'start_time_utc'
-END_TIME_UTC = 'end_time_utc'
 START_TIME = 'start_time'
 END_TIME = 'end_time'
 TIMEZONE = 'timezone'

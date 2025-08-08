@@ -1,6 +1,6 @@
-{% block upgradable_step_message %}
-Checking if Workbench Instance is using the latest environment version...
-{% endblock upgradable_step_message %}
+{% block upgradable_step_name %}
+Verify Workbench Instance is using the latest environment version
+{% endblock upgradable_step_name %}
 
 {% block upgradable_success_reason %}
 OK! Workbench Instance {instance_name} is using the latest environment version M{environment_version}
@@ -41,5 +41,5 @@ Workbench Instance {instance_name} is using a previous environment version M{env
 Upgrade the instance to use the latest version {upgrade_version} which has the latest updates and fixes [1]
 Upgrade version image: {upgrade_image}
 Remember to backup your data before an upgrade.
-[1] https://cloud.google.com/vertex-ai/docs/workbench/instances/upgrade
+[1] <https://cloud.google.com/vertex-ai/docs/workbench/instances/upgrade>
 {% endblock upgradable_failure_remediation %}

@@ -4,7 +4,7 @@ linkTitle: "Workbench Instance Stuck In Provisioning Start"
 weight: 3
 type: docs
 description: >
-  Checking if the Workbench Instance is in PROVISIONING state and gathering its details...
+  Checking if the Workbench Instance is in PROVISIONING state and gathering its details.
 ---
 
 **Product**: [Vertex AI](https://cloud.google.com/vertex-ai)\

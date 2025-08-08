@@ -16,22 +16,23 @@ None
 
 ### Failure Reason
 
-Found logs messages related to "{log}" on the cluster: {cluster_name}.
+Log messages related to "{log}" were found on the cluster: {cluster_name}.
 
 ### Failure Remediation
 
-If allocated memory appears insufficient, consider increasing the spark.executor.memory configuration to allocate additional memory.[1]
-If memory allocation seems adequate, investigate potential garbage collection optimization. The Apache Spark documentation provides a comprehensive guide on Garbage Collection Tuning.[2]
-Additionally, there is some guidance that tuning spark.memory.fraction can be effective, particularly for workloads that heavily rely on RDD caching. See Memory Management Overview for more discussion of this configuration property.
-Additionally, tuning the spark.memory.fraction can be effective, particularly for workloads that rely heavily on RDD caching. Refer to the Memory Management Overview for a detailed discussion of this configuration property.
+To address potential GC pause issues:
 
-[1] https://spark.apache.org/docs/latest/configuration.html
-[2] https://spark.apache.org/docs/latest/tuning.html#garbage-collection-tuning
-[3] https://spark.apache.org/docs/latest/tuning.html#memory-management-overview
+- Increase the `spark.executor.memory` configuration to allocate additional memory if allocated memory appears insufficient [1].
+- If memory allocation seems adequate, investigate potential garbage collection optimization. Refer to the Apache Spark documentation for a comprehensive guide on Garbage Collection Tuning [2].
+- Additionally, tuning the `spark.memory.fraction` property can be effective, particularly for workloads that rely heavily on RDD caching. Refer to the Memory Management Overview [3] for a detailed discussion of this configuration property.
+
+[1] <https://spark.apache.org/docs/latest/configuration.html>
+[2] <https://spark.apache.org/docs/latest/tuning.html#garbage-collection-tuning>
+[3] <https://spark.apache.org/docs/latest/tuning.html#memory-management-overview>
 
 ### Success Reason
 
-Didn't find logs messages related to "{log}" on the cluster: {cluster_name}.
+No log messages related to "{log}" were found on the cluster: {cluster_name}.
 
 
 

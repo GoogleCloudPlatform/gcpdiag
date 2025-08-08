@@ -1,7 +1,8 @@
 """Queries related to Dataflow."""
 
+import logging
 from datetime import datetime
-from typing import List, Union
+from typing import List, Optional, Union
 
 import googleapiclient.errors
 
@@ -54,6 +55,10 @@ class Job(models.Resource):
   @property
   def job_type(self) -> str:
     return self._resource_data['type']
+
+  @property
+  def location(self) -> str:
+    return self._resource_data['location']
 
   @property
   def sdk_support_status(self) -> str:
@@ -136,6 +141,32 @@ def get_job(project_id: str, job: str, region: str) -> Union[Job, None]:
     return Job(project_id, resp)
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
+
+
+@caching.cached_api_call
+def get_all_dataflow_jobs_for_project(
+    project_id: str,
+    filter_str: Optional[str] = None,
+) -> Union[List[Job], None]:
+  """Fetch all Dataflow jobs for a project."""
+  api = apis.get_api('dataflow', 'v1b3', project_id)
+
+  if not apis.is_enabled(project_id, 'dataflow'):
+    return None
+
+  jobs: List[Job] = []
+
+  request = (api.projects().jobs().aggregated(projectId=project_id,
+                                              filter=filter_str))
+  logging.debug('listing dataflow jobs of project %s', project_id)
+
+  while request:  # Continue as long as there are pages
+    response = request.execute(num_retries=config.API_RETRIES)
+    if 'jobs' in response:
+      jobs.extend([Job(project_id, job) for job in response['jobs']])
+    request = (api.projects().jobs().aggregated_next(
+        previous_request=request, previous_response=response))
+  return jobs
 
 
 @caching.cached_api_call

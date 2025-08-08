@@ -3,10 +3,8 @@
      12340001-compute@developer.gserviceaccount.com has a basic role granted.
    - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce2       [FAIL]
      12340001-compute@developer.gserviceaccount.com has a basic role granted.
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-4h21   [ OK ]
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-7pvl   [ OK ]
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/windows-test [FAIL]
-     12340001-compute@developer.gserviceaccount.com has a basic role granted.
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-bzvx   [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-l40g   [ OK ]
    - projects/gcpdiag-gce1-aaaa/zones/europe-west4-b/instances/gce1       [FAIL]
      12340001-compute@developer.gserviceaccount.com has a basic role granted.
 

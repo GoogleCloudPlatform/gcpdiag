@@ -63,6 +63,18 @@ class GkeIpMasqStandard(runbook.DiagnosticTree):
               str,
           'help':
               'The name of the GKE cluster, to limit search only for this cluster',
+          'required':
+              False,
+          'deprecated':
+              True,
+          'new_parameter':
+              'gke_cluster_name',
+      },
+      flags.GKE_CLUSTER_NAME: {
+          'type':
+              str,
+          'help':
+              'The name of the GKE cluster, to limit search only for this cluster',
       },
       flags.LOCATION: {
           'type': str,
@@ -74,15 +86,19 @@ class GkeIpMasqStandard(runbook.DiagnosticTree):
           'help':
               'GKE Node IP address or address range/CIDR (Example 192.168.1.0/24)'
       },
-      flags.START_TIME_UTC: {
+      flags.START_TIME: {
           'type': datetime,
           'help': 'Start time of the issue',
       },
-      flags.END_TIME_UTC: {
+      flags.END_TIME: {
           'type': datetime,
           'help': 'End time of the issue',
       }
   }
+
+  def legacy_parameter_handler(self, parameters):
+    if flags.NAME in parameters:
+      parameters[flags.GKE_CLUSTER_NAME] = parameters.pop(flags.NAME)
 
   def build_tree(self):
     """Construct the diagnostic tree with appropriate steps."""
@@ -113,20 +129,21 @@ class GkeIpMasqStandardStart(runbook.StartStep):
   """
 
   def execute(self):
-    """Lets check the provided parameters..."""
+    """Lets check the provided parameters."""
     #     # skip if logging is disabled
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
 
     # check if there are clusters in the project
-    clusters = gke.get_clusters(op.context)
+    clusters = gke.get_clusters(
+        op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
 
     # following checks are necessary, depending on what input is provided:
     # - no input, get all clusters available
     # - just cluster name is provided, check if there's a cluster with that name
     # - just location is provided, check if there are clusters at that location
     # - cluster name and location are provided, check if there's that cluster at that location
-    cluster_name = op.get(flags.NAME)
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     cluster_location = op.get(flags.LOCATION)
     found_cluster = False
     found_cluster_with_location = False
@@ -196,8 +213,8 @@ class Nodeproblem(runbook.Step):
     log_entries = logs.realtime_query(
         project_id=op.get(flags.PROJECT_ID),
         filter_str=f'''"{op.get(flags.DEST_IP)}" OR "{op.get(flags.SRC_IP)}"''',
-        start_time_utc=op.get(flags.END_TIME_UTC),
-        end_time_utc=datetime.now())
+        start_time=op.get(flags.END_TIME),
+        end_time=datetime.now())
 
     if log_entries:
       op.add_ok(project_path, reason=op.prep_msg(op.SUCCESS_REASON))
@@ -228,14 +245,14 @@ class CheckDaemonSet(runbook.Step):
 
 
 class CheckConfigMap(runbook.Step):
-  """ This will confirm confif map is present as that llow user to make changes on ip-agent.
+  """ This will confirm config map is present as that llow user to make changes on ip-agent.
 
   This will check if config map is present ?
   """
   template = 'ipmasq_standard::configmap'
 
   def execute(self):
-    """Lets confirm if config map  is configure.."""
+    """Lets confirm if config map  is configure."""
 
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
@@ -271,7 +288,7 @@ class CheckNodeIP(runbook.Step):
   template = 'ipmasq_standard::node'
 
   def execute(self):
-    '''Lets check node IP is present under non-masq cidr...'''
+    '''Lets check node IP is present under non-masq cidr.'''
 
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
@@ -307,7 +324,7 @@ class GkeIpMasqStandardEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing connectivity diagnostics.."""
+    """Finalize connectivity diagnostics."""
 
     op.info(
         message=

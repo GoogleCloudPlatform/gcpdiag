@@ -22,15 +22,21 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
   config.init({'auto': True, 'interface': 'cli'})
 
   rule_parameters = [{
-      'project_id': 'gcpdiag-gce-faultyssh-runbook',
-      'name': 'faulty-linux-ssh',
-      'zone': 'europe-west2-a'
+      'project_id': 'gcpdiag-gce5-aaaa',
+      'instance_name': 'start-and-stop-vm',
+      'zone': 'us-central1-c',
+      'start_time': '2025-03-17T00:00:00+00:00',
+      'end_time': '2025-03-19T00:00:00+00:00'
   }, {
-      'project_id': 'gcpdiag-gce-faultyssh-runbook',
-      'name': 'valid-linux-ssh',
-      'zone': 'europe-west2-a'
+      'project_id': 'gcpdiag-gce5-aaaa',
+      'instance_name': 'spot-vm-termination',
+      'zone': 'us-central1-c',
+      'start_time': '2025-03-17T00:00:00+00:00',
+      'end_time': '2025-03-19T00:00:00+00:00'
   }, {
-      'project_id': 'gcpdiag-gce-faultyssh-runbook',
-      'name': 'faulty-windows-ssh',
-      'zone': 'europe-west2-a'
+      'project_id': 'gcpdiag-gce5-aaaa',
+      'instance_name': 'shielded-vm-integrity-failure',
+      'zone': 'us-central1-c',
+      'start_time': '2025-03-17T00:00:00+00:00',
+      'end_time': '2025-03-19T00:00:00+00:00'
   }]

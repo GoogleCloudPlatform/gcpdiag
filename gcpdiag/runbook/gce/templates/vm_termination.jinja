@@ -1,0 +1,210 @@
+{% block vm_termination_success_reason %}
+No GCE Instance was terminated between {start_time} and {end_time}
+{% endblock vm_termination_success_reason %}
+
+{% block mig_instance_recreation_failure_reason %}
+{status_message}
+{% endblock mig_instance_recreation_failure_reason %}
+
+{% block mig_instance_recreation_failure_remediation %}
+Instance "{full_resource_path}" was terminated as part of a normal Managed Instance Group recreation process
+and a replacement instance has been created after this termination. No action required.
+[1] <https://cloud.google.com/compute/docs/instance-groups/working-with-managed-instances#autoscaling>
+[2] <https://cloud.google.com/compute/docs/autoscaler>
+{% endblock mig_instance_recreation_failure_remediation %}
+
+{% block mig_instance_recreation_failure_remediation_a1 %}
+Instance "{full_resource_path}" was terminated as part of a normal Managed Instance Group recreation process
+and a replacement instance has not been created after this termination. Please investigate the MIG
+to understand the root cause of the issue and take necessary actions to recreate the instance.
+[1] <https://cloud.google.com/compute/docs/instance-groups/working-with-managed-instances#autoscaling>
+[2] <https://cloud.google.com/compute/docs/autoscaler>
+{% endblock mig_instance_recreation_failure_remediation_a1 %}
+
+{% block preemptible_instance_failure_reason %}
+{status_message}
+{% endblock preemptible_instance_failure_reason %}
+
+{% block preemptible_instance_failure_remediation %}
+Instance {full_resource_path} were preempted as part of a spot VM normal process.
+
+Spot VMs have significant discounts, but Compute Engine might preemptively stop or delete
+(preempt) Spot VMs to reclaim capacity at any time.
+
+Read more on here the preemption process occurs here [1][2]
+
+This is a normal process and no action is required.
+
+[1] <https://cloud.google.com/compute/docs/instances/spot#preemption>
+[2] <https://cloud.google.com/compute/docs/instances/spot>
+{% endblock preemptible_instance_failure_remediation %}
+
+{% block preemptible_instance_failure_remediation_a1 %}
+Instance {full_resource_path} were preempted as part of a spot VM normal process however
+is currently shutdown.
+
+Follow our guide to restart the VM [1]
+
+Read more on here the preemption process occurs here [2][3]
+
+This is a normal process and no action is required.
+
+[1] <https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm>
+[2] <https://cloud.google.com/compute/docs/instances/spot#preemption>
+[3] <https://cloud.google.com/compute/docs/instances/spot>
+{% endblock preemptible_instance_failure_remediation_a1 %}
+
+{% block host_error_failure_reason %}
+{status_message}
+{% endblock host_error_failure_reason %}
+
+{% block host_error_failure_remediation %}
+A host error (compute.instances.hostError) means that there was a hardware or software issue
+on the physical machine hosting your VM that caused your VM to crash. A host error which
+involves total hardware/software failure might prevent a live migration of your VM. If
+your VM is set to automatically restart, which is the default setting, Google restarts your
+VM, typically within three minutes from the time the error was detected. Depending on the
+issue, the restart might take up to 5.5 minutes.
+
+Note that this is a known behavior that cannot be completely eliminated and should be planned
+for while designing your systems on GCE.
+
+Mitigation Strategies
+The following mitigation strategies are implemented by Google to prevent & minimize occurrence
+of such events:
+
+Live Migrations. Live migration lets Google Cloud perform maintenance without interrupting a
+workload, rebooting a VM, or modifying any of the VM's properties, such as IP addresses,
+metadata, block storage data, application state, and network settings. Additionally our
+systems proactively monitor for hardware or software failure symptoms on hosts. If a potential
+failure is detected, we initiate live migration to seamlessly relocate the VM and prevent
+termination. A 'hostError' will only occur in the rare instance where the failures prevent
+successful live migration.
+
+Google reliability engineering. We are continuously monitoring the health of GCP hosts and
+taking steps to prevent errors from occurring, while using a variety of HA techniques to
+detect and mitigate hardware failures, such as using redundant components and monitoring for
+signs of failure.
+
+Software Patching: We are continuously implementing a rigorous software patching schedule to
+ensure the timely application of security updates and bug fixes. This proactive approach is
+mitigating the risk of software defects, and bugs that could lead to operational instability.
+
+RCA
+Kindly note:
+RCA by Google for Host errors is not common practice. Host errors can happen occasionally and
+typically do not undergo individual RCA. Should you request an RCA for a host error, you must
+provide a compelling business justification for why further details are necessary.
+
+Any root cause provided will be limited to if the issue was hardware or software related and
+if it was related to a single host or a rack.
+
+Review Logs and Create Log-Based Metrics:
+For tracking HostErrors: To proactively track host errors within your projects, create a
+log-based metric dashboard. This will provide a visual representation of error trends.
+For customer-facing evidence: If you need root cause information as evidence for your own
+customers, utilize Cloud Logging to query and export relevant logs. These logs provide
+granular error messages and timestamps.
+
+For timely response to errors: To ensure prompt reaction to critical host errors,
+configure a log-based alert.
+
+Alerting (2)
+
+Follow the Instructions here using the below query to build a log based alert on your project
+to get notified in case of a hostError.
+
+Make sure to include labels with the information you need exposed on the notification.
+
+resource.type="gce_instance"
+protoPayload.serviceName="compute.googleapis.com"
+(protoPayload.methodName:"compute.instances.hostError" OR
+operation.producer:"compute.instances.hostError")
+log_id("cloudaudit.googleapis.com/system_event")
+
+Resources:
+[1]
+<https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-reboots#:~:text=Getting%20support.-,Method,compute.instances.hostError,-System%20event>
+{% endblock host_error_failure_remediation %}
+
+{% block guest_os_issued_shutdown_failure_reason %}
+{status_message}
+{% endblock guest_os_issued_shutdown_failure_reason %}
+
+{% block guest_os_issued_shutdown_failure_remediation %}
+Instance {full_resource_path} shutdown was initiated from the operating system.
+
+This is usually caused by a sudoer posix user issuing a shutdown or reboot command
+Review guest shell history to determine who or what application triggered the shutdown.
+{% endblock guest_os_issued_shutdown_failure_remediation %}
+
+{% block terminate_on_host_maintenance_failure_reason %}
+{status_message}
+{% endblock terminate_on_host_maintenance_failure_reason %}
+
+{% block terminate_on_host_maintenance_failure_remediation %}
+Instance {full_resource_path} maintenance policy is set to TERMINATE, Compute Engine
+stops your VM when there is a maintenance event where Google must move your VM to another host.
+
+If you want to change your VM's onHostMaintenance policy to restart automatically
+or live migrate [1]. Read more about Host Events [2] and how to set your termination policies[3].
+
+[1] <https://cloud.google.com/compute/docs/instances/live-migration-process>
+[2] <https://cloud.google.com/compute/docs/instances/setting-vm-host-options>
+[3] <https://cloud.google.com/compute/docs/instances/host-maintenance-overview>
+{% endblock terminate_on_host_maintenance_failure_remediation %}
+
+{% block user_stop_failure_reason %}
+Account {stop_account} stopped the VM.
+{% endblock user_stop_failure_reason %}
+
+{% block user_stop_failure_remediation %}
+Instance {full_resource_path} was intentionally stopped by account {stop_account}.
+
+Simply restart the VM when safe to do so by following [1]
+
+[1] <https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm>
+{% endblock user_stop_failure_remediation %}
+
+{% block user_stop_failure_remediation_a1 %}
+Instance {full_resource_path} was intentionally stopped by account {stop_account}.
+
+No action required. VM is currently running.
+{% endblock user_stop_failure_remediation_a1 %}
+
+{% block compute_cluster_manager_termination_failure_reason %}
+Instance {full_resource_path} was terminated by account {stop_account}.
+{% endblock compute_cluster_manager_termination_failure_reason %}
+
+{% block compute_cluster_manager_termination_failure_remediation_a1 %}
+Billing has been disabled for project/{shared_vpc_project} caused the Instance {full_resource_path} to be stopped by
+account {stop_account}. This is because instance {full_resource_path} uses network {network_name}
+on project/{shared_vpc_project}. Re-enable billing for project/{shared_vpc_project} to start the Instance {full_resource_path}.
+
+Manually run this log query below in projects/{shared_vpc_project} cloud logging explorer for details.
+
+```
+protoPayload.methodName="DisableResourceBilling"
+resource.type="project"
+protoPayload.resourceName="projects/{shared_vpc_project}"
+```
+
+Investigate to ensure this was not a malicious action.
+
+[1] <https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-reboots#investigating_mass_vm_shutdown_across_projects>
+[2] <https://cloud.google.com/vpc/docs/provisioning-shared-vpc#org-policies>
+[3] <https://cloud.google.com/billing/docs/how-to/modify-project#enable_billing_for_a_project>
+{% endblock compute_cluster_manager_termination_failure_remediation_a1 %}
+
+{% block scheduled_stop_policy_failure_reason %}
+Instance {full_resource_path} was terminated by account {stop_account} due to a scheduled stop policy.
+{% endblock scheduled_stop_policy_failure_reason %}
+
+{% block scheduled_stop_policy_failure_remediation %}
+No action required. VM is currently running.
+{% endblock scheduled_stop_policy_failure_remediation %}
+
+{% block scheduled_stop_policy_failure_remediation_a1 %}
+Instance {full_resource_path} is currently shutdown. Restart the VM when safe to do so by following [1]
+[1] <https://cloud.google.com/compute/docs/instances/stop-start-instance#restart-vm>
+{% endblock scheduled_stop_policy_failure_remediation_a1 %}

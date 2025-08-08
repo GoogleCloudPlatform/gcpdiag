@@ -4,7 +4,7 @@ linkTitle: "Service Account Exists"
 weight: 3
 type: docs
 description: >
-  Validating service account and permissions in Dataproc cluster project or another project.
+  Verify service account and permissions in Dataproc cluster project or another project.
 ---
 
 **Product**: [Cloud Dataproc](https://cloud.google.com/dataproc)\
@@ -18,12 +18,19 @@ Decides whether to check for service account roles
 
 ### Failure Reason
 
-Service Account {service_account} associated with Dataproc cluster was not found in project {project_id} or cross project (if specified).
+Service Account {service_account} associated with Dataproc cluster was not found in project {project_id} or cross project {cross_project_id}.
 
 ### Failure Remediation
 
-Provide
-project in which the service account resides by using the cross_project parameter.
+Provide the project where the service account resides using the `cross_project` parameter.
+
+### Uncertain Reason
+
+Service Account {service_account} associated with Dataproc cluster was not found in project {project_id}. It is possible that the service account is in a different project.
+
+### Uncertain Remediation
+
+Provide the project where the service account resides using the `cross_project` parameter.
 
 
 

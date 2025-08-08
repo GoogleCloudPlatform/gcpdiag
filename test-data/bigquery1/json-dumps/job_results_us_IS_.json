@@ -1,0 +1,101 @@
+{
+  "kind": "bigquery#getQueryResultsResponse",
+  "etag": "KnMpAXh+mTBFcY6apEUfRw==",
+  "schema": {
+    "fields": [
+      {
+        "name": "job_id",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "user_email",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "start_time_str",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "end_time_str",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      },
+      {
+        "name": "query",
+        "type": "STRING",
+        "mode": "NULLABLE"
+      }
+    ]
+  },
+  "jobReference": {
+    "projectId": "gcpdiag-bigquery1-aaaa",
+    "jobId": "bquxjob_3b44b580_1962ef6851c",
+    "location": "US"
+  },
+  "totalRows": "3",
+  "rows": [
+    {
+      "f": [
+        {
+          "v": "bquxjob_48eeafd0_1962ef45483"
+        },
+        {
+          "v": "test@example.com"
+        },
+        {
+          "v": "2025-04-13 04:41:27.340-07"
+        },
+        {
+          "v": "2025-04-13 04:41:55.221-07"
+        },
+        {
+          "v": "    SELECT\n        job_id,\n        user_email,\n        CAST(start_time AS STRING) as start_time_str,\n        CAST(end_time AS STRING) as end_time_str,\n        query\n      FROM\n        `gcpdiag-bigquery1-aaaa`.`region-US`.INFORMATION_SCHEMA.JOBS\n      WHERE CAST(start_time AS STRING) \u003e \"2025-04-12\"\n      ORDER BY end_time DESC\n      LIMIT 2"
+        }
+      ]
+    },
+    {
+      "f": [
+        {
+          "v": "bquxjob_452cc6c1_1962ef0116e"
+        },
+        {
+          "v": "test@example.com"
+        },
+        {
+          "v": "2025-04-13 04:36:48.039-07"
+        },
+        {
+          "v": "2025-04-13 04:37:48.031-07"
+        },
+        {
+          "v": "    SELECT\n        job_id,\n        user_email,\n        CAST(start_time AS STRING) as start_time_str,\n        CAST(end_time AS STRING) as end_time_str,\n        query\n      FROM\n        `gcpdiag-bigquery1-aaaa`.`region-US`.INFORMATION_SCHEMA.JOBS\n      ORDER BY end_time DESC\n      LIMIT 1"
+        }
+      ]
+    },
+    {
+      "f": [
+        {
+          "v": "bquxjob_3e454a13_1962eef9f2a"
+        },
+        {
+          "v": "test@example.com"
+        },
+        {
+          "v": "2025-04-13 04:36:18.806-07"
+        },
+        {
+          "v": "2025-04-13 04:36:18.806-07"
+        },
+        {
+          "v": "    SELECT\n        job_id,\n        user_email,\n        CAST(start_time AS STRING) as start_time_str,\n        CAST(end_time AS STRING) as end_time_str,\n        query\n      FROM\n        `gcpdiag-bigquery1-aaaa`.US.INFORMATION_SCHEMA.JOBS\n      ORDER BY end_time DESC\n      LIMIT 1"
+        }
+      ]
+    }
+  ],
+  "totalBytesProcessed": "23985834934",
+  "jobComplete": true,
+  "cacheHit": false
+}

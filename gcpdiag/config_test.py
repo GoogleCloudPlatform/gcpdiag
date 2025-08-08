@@ -76,7 +76,7 @@ class Test:
   def test_static_properties(self):
     assert config.CACHE_LOCK_TIMEOUT == 120
     assert config.STATIC_DOCUMENTS_EXPIRY_SECONDS == 3600 * 24
-    assert config.MAX_WORKERS == 10
+    assert config.MAX_WORKERS == 20
 
   def test_default_dynamic_properties(self):
     config.init({})

@@ -16,17 +16,17 @@ None
 
 ### Failure Reason
 
-Found logs messages related to "{log}" on the cluster: {cluster_name}.
+Log messages related to "{log}" were found on the cluster: {cluster_name}.
 
 ### Failure Remediation
 
-Please set dataproc:dataproc.yarn.orphaned-app-termination.enable to false if you don't want to kill orphaned yarn application.
-You can find more details in the documentation [1].
-[1] https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/cluster-properties
+To prevent orphaned YARN applications from being killed, set the cluster property `dataproc:dataproc.yarn.orphaned-app-termination.enable` to `false`.
+More details are available in the documentation [1].
+[1] <https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/cluster-properties>
 
 ### Success Reason
 
-Didn't find logs messages related to "{log}" on the cluster: {cluster_name}.
+No log messages related to "{log}" were found on the cluster: {cluster_name}.
 
 
 

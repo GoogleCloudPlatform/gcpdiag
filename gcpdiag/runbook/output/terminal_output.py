@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# pylint: disable=cyclic-import
 """ Output implementation that prints result in human-readable format. """
 
 import logging
@@ -24,7 +25,7 @@ import blessings
 
 # pylint: disable=unused-import (lint is used in type hints)
 from gcpdiag import config, models, runbook
-from gcpdiag.runbook import constants, report
+from gcpdiag.runbook import constants
 from gcpdiag.runbook.flags import INTERACTIVE_MODE
 from gcpdiag.runbook.output.base_output import BaseOutput
 
@@ -78,7 +79,7 @@ class TerminalOutput(BaseOutput):
   def display_runbook_description(self, tree):
     self.terminal_print_line(f'{self.term.yellow(tree.name)}: {tree.__doc__}')
 
-  def display_footer(self, result: 'report.ReportManager') -> None:
+  def display_footer(self, result) -> None:
     totals = result.get_totals_by_status()
     state_strs = [
         f'{totals.get(state, 0)} {state}'

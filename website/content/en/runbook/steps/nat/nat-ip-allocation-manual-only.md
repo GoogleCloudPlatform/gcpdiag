@@ -14,28 +14,28 @@ description: >
 
 If the NAT IP allocation is configured as MANUAL_ONLY:
     - Confirm if the number of NAT IP's required by the gateway is over 300
-    - Follow the NAT IP Quota Incrase Process
+    - Follow the NAT IP Quota Increase Process
 
 ### Failure Reason
 
-    The number of NAT IPs in use on the NAT Gateway is >= 300 which is above the quota limit [1].
+The number of NAT IPs in use on the NAT Gateway is >= 300 which is above the quota limit [1].
 
-      1. https://cloud.google.com/nat/quota#quotas
+1. <https://cloud.google.com/nat/quota#quotas>
 
 ### Failure Remediation
 
-    Consider creating additional NAT gateways or optimise port usage [1]:
+Consider creating additional NAT gateways or optimise port usage [1]:
 
-    1. https://cloud.google.com/nat/docs/troubleshooting#reduce-ports
+1. <https://cloud.google.com/nat/docs/troubleshooting#reduce-ports>
 
 ### Success Reason
 
-    Checking on the status and configuration of the Cloud NAT Router {router_name} and Gateway:
+Checking on the status and configuration of the Cloud NAT Router {router_name} and Gateway:
 
-       1. Minimum extra NAT IPs Needed: {extra_ips_needed}
-       2. Number of VM Endpoints With NAT mappings: {vms_with_nat_mappings}
-       3. Dynamic port allocation enabled: {enable_dynamic_port_allocation}
-       4. Number of NAT Gateway IPs in use: {nat_gw_ips_in_use}
+1. Minimum extra NAT IPs Needed: {extra_ips_needed}
+2. Number of VM Endpoints With NAT mappings: {vms_with_nat_mappings}
+3. Dynamic port allocation enabled: {enable_dynamic_port_allocation}
+4. Number of NAT Gateway IPs in use: {nat_gw_ips_in_use}
 
 
 

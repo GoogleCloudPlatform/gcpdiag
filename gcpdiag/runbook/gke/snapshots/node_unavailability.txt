@@ -1,9 +1,10 @@
-location=europe-west10-a,name=gcp-cluster,node=gke-gcp-cluster-default-
+gke_cluster_name=gcp-cluster,location=europe-west10-a,node=gke-gcp-cluster-default-
 pool-82e0c046-8m8b,project_id=gcpdiag-gke-cluster-autoscaler-rrrr
 
 gke/node-unavailability: Identifies the reasons for a GKE node being unavailable.
 
-  This runbook investigates various factors that may have caused a node to become unavailable,
+  This runbook investigates various factors that may have caused a node to
+  become unavailable,
   including:
 
   - Live Migration
@@ -22,7 +23,7 @@ gke/node-unavailability: Identifies the reasons for a GKE node being unavailable
      There was a live migration event for the node gke-gcp-cluster-default-pool-82e0c046-8m8b.
 
      For more details about Live migration process during maintenance events, please consult the documentation:
-     https://cloud.google.com/compute/docs/instances/live-migration-process
+     <https://cloud.google.com/compute/docs/instances/live-migration-process>
 
 [AUTOMATED STEP]: Checks for preemption logs.
 
@@ -34,7 +35,7 @@ gke/node-unavailability: Identifies the reasons for a GKE node being unavailable
      Compute Engine might stop (preempt) preemptible instances if it needs to reclaim the compute capacity for allocation to other VMs.
 
      For more details about preemptible VMs in GKE please consult the documentation:
-     https://cloud.google.com/kubernetes-engine/docs/how-to/preemptible-vms
+     <https://cloud.google.com/kubernetes-engine/docs/how-to/preemptible-vms>
 
 [AUTOMATED STEP]: Checks for Cluster Autoscaler ScaleDown logs.
 
@@ -46,7 +47,7 @@ gke/node-unavailability: Identifies the reasons for a GKE node being unavailable
      This is expected behavior. GKE's cluster autoscaler automatically resizes the number of nodes in a given node pool, based on the demands of your workloads. When demand is low, the cluster autoscaler scales back down to a minimum size that you designate.
 
      For more details about Cluster Autoscaler ScaleDown events please consult the documentation:
-     https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-autoscaler-visibility#scaledown-event
+     <https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-autoscaler-visibility#scaledown-event>
 
 [AUTOMATED STEP]: Checks for Node Upgrade operation logs.
 
@@ -59,11 +60,13 @@ gke/node-unavailability: Identifies the reasons for a GKE node being unavailable
 
      To list the node upgrade operations, please issue the following gcloud command:
 
+     ```
      gcloud container operations list --filter=operationType:UPGRADE_NODES
+     ```
 
      For more details about node upgrades please consult the documentation:
-     https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-upgrades
+     <https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-upgrades>
 
-[END]: Finalizing `Node Unavailability` diagnostics...
+[END]: Finalize `Node Unavailability` diagnostics.
 
 

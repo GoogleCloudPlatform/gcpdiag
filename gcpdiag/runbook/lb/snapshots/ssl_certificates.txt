@@ -26,63 +26,71 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
     - Checks Cloud Logging to determine when the certificate was attached and
     allows sufficient time for propagation.
   
-[START]: Verifies the existence type and status of the SSL certificate.
+[START]: Verify the existence and status of the SSL certificate "cert1".
 [INFO]: name: cert1
 
    - gcpdiag-lb3-aaaa                                                     [FAIL]
      [REASON]
-     We detected that the certificate "cert1" is not in ACTIVE state.
+     The Google-managed SSL certificate "cert1" is not in ACTIVE state.
 
-     [REMEDIATION]
-     Further investigation is required to identify the root cause and apply appropriate fixes
-
-[GATEWAY]: Checks the status of the Google-managed certificate.
+[GATEWAY]: Analyze the status of the Google-managed SSL certificate "cert1".
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert1               [UNCERTAIN]
      [REASON]
-     The certificate cert1 is in the "PROVISIONING" state. Further investigation into the status of each domain is necessary..
+     The Google-managed SSL certificate "cert1" is in the PROVISIONING state. Further investigation into the status of each domain is necessary..
 
-[GATEWAY]: Checks the status of each individual domain associated with the SSL certificate.
-[AUTOMATED STEP]: Analyzes domains in "FAILED_NOT_VISIBLE" state.
+[GATEWAY]: Check the status of each individual domain associated with the SSL certificate "cert1".
+[AUTOMATED STEP]: Analyze domains in FAILED_NOT_VISIBLE state for certificate "cert1".
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert1               [FAIL]
      [REASON]
-     The following domains are in "FAILED_NOT_VISIBLE" state: natka123.com, second.natka123.com. This usually means the domain's DNS records aren't correctly pointing to your load balancer.
+     The following domains are in FAILED_NOT_VISIBLE state: natka123.com, second.natka123.com for SSL certificate "cert1". This usually means the domain's DNS records are not correctly pointing to the load balancer.
 
-     [REMEDIATION]
-     Further investigation is required. This runbook will proceed with additional checks.
-
-[GATEWAY]: Checks if the SSL certificate is attached to a target proxy.
+[GATEWAY]: Verify the SSL certificate "cert1" is attached to a target proxy.
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert1               [OK]
      [REASON]
-     The SSL certificate cert1 is attached to target proxies (projects/gcpdiag-lb3-aaaa/global/targetHttpsProxies/https-lb-proxy) that are in use by forwarding rules.
+     The SSL certificate "cert1" is attached to target proxies (projects/gcpdiag-lb3-aaaa/global/targetHttpsProxies/https-lb-proxy) that are in use by forwarding rules.
 
-[GATEWAY]: Checks the DNS records for domain "natka123.com" associated with the SSL certificate "cert1".
+[GATEWAY]: Verify the DNS records for domain "natka123.com" associated with the SSL certificate "cert1".
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert1               [UNCERTAIN]
      [REASON]
      Some DNS records for domain natka123.com resolve to the following unexpected IP address(es): 1.2.3.5.  While other records point to the expected IP addresses: 1.2.3.4. The unexpected IP addresses do not point to any load balancer associated with certificate cert1. This can cause certificate provisioning issues.
 
      [REMEDIATION]
-     Configure DNS records for natka123.com to point to the correct load balancer IP address(es) for certificate cert1. See the load balancer configuration for details. Check: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns
+     Configure DNS records for natka123.com to point to the correct load balancer IP address(es) for certificate cert1.
 
-[GATEWAY]: Checks the DNS records for domain "second.natka123.com" associated with the SSL certificate "cert1".
+     The following load balancer IP addresses are associated with this certificate:
+
+     - forwarding rule "https-content-rule" in "global": 1.2.3.4
+
+
+     Check: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns>
+
+[GATEWAY]: Verify the DNS records for domain "second.natka123.com" associated with the SSL certificate "cert1".
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert1               [FAIL]
      [REASON]
-     DNS records for domain second.natka123.com resolve to IP addresses: 2600:1901:0:d0d7::, which do not point to any load balancer associated with certificate cert1. This prevents certificate provisioning.
+     DNS records for domain second.natka123.com currently resolve to the following IP addresses: 2600:1901:0:d0d7::. These IP addresses do not point to any load balancer associated with certificate cert1. Certificate provisioning is therefore blocked.
 
      [REMEDIATION]
-     Configure DNS records for second.natka123.com to point to the correct load balancer IP address(es) for certificate cert1. See the load balancer configuration for details. Check: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns
+     Configure DNS records for second.natka123.com to point to the correct load balancer IP address(es) for certificate cert1.
 
-[AUTOMATED STEP]: Checks if the load balancer is configured to listen on port 443.
+     The following load balancer IP addresses are associated with this certificate:
+
+     - forwarding rule "https-content-rule" in "global": 1.2.3.4
+
+
+     Check: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns>
+
+[AUTOMATED STEP]: Check if the load balancer with certificate "cert1" is configured to listen on port 443.
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert1               [OK]
      [REASON]
-     Certificate cert1 has forwarding rules configured for HTTPS (port 443) on all associated IP addresses.
+     The SSL certificate "cert1" has forwarding rules configured for HTTPS (port 443) on all associated IP addresses.
 
-[AUTOMATED STEP]: Checks for conflicting certificate map set on a target proxy.
+[AUTOMATED STEP]: Check for conflicting certificate map set on a target proxy for certificate "cert1".
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert1               [FAIL]
      [REASON]
@@ -93,20 +101,20 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
      If certificate map is set on a target proxy, the classic SSL certificates are ignored.
 
      [REMEDIATION]
-     If this is not intended, please detach the certificate map from the target proxies.
+     If this configuration is unintended, detach the certificate map from the target proxies.
 
-[AUTOMATED STEP]: Checks if the SSL certificate associated resources has been updated recently.
+[AUTOMATED STEP]: Check if the SSL certificate "cert1" associated resources has been updated recently.
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert1               [UNCERTAIN]
      [REASON]
-     The certificate cert1 has recently had associated resources modified. This might affect DNS validation. Details are below:
+     The SSL certificate "cert1" has recently had associated resources modified. This might affect DNS validation. Details are below:
      Forwarding rule https-content-rule in scope global has been modified at 2024-10-18T14:34:17.798905Z.
      Target proxy https-lb-proxy in scope global has been modified at 2024-10-18T14:34:17.798905Z.
 
      [REMEDIATION]
-     DNS validation automatically checks your domain's A and AAAA records against your Google Cloud load balancer's IP address. This process includes an automatic retry mechanism with increasing wait times. If you recently attached cert1 to a target proxy or the target proxy to forwarding rule, validation could take up to 24 hours to complete.
+     DNS validation automatically checks the domain's A and AAAA records against the Google Cloud load balancer's IP address. This process includes an automatic retry mechanism with increasing wait times. If cert1 was recently attached to a target proxy or the target proxy to a forwarding rule, validation could take up to 24 hours to complete.
 
-[END]: Finalizing SSL Certificate diagnostics...
+[END]: Finalize SSL Certificate diagnostics.
 
 
 certificate_name=cert2,project_id=gcpdiag-lb3-aaaa
@@ -137,48 +145,49 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
     - Checks Cloud Logging to determine when the certificate was attached and
     allows sufficient time for propagation.
   
-[START]: Verifies the existence type and status of the SSL certificate.
+[START]: Verify the existence and status of the SSL certificate "cert2".
 [INFO]: name: cert2
 
    - gcpdiag-lb3-aaaa                                                     [FAIL]
      [REASON]
-     We detected that the certificate "cert2" is not in ACTIVE state.
+     The Google-managed SSL certificate "cert2" is not in ACTIVE state.
 
-     [REMEDIATION]
-     Further investigation is required to identify the root cause and apply appropriate fixes
-
-[GATEWAY]: Checks the status of the Google-managed certificate.
+[GATEWAY]: Analyze the status of the Google-managed SSL certificate "cert2".
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert2               [UNCERTAIN]
      [REASON]
-     The certificate cert2 is in the "PROVISIONING" state. Further investigation into the status of each domain is necessary..
+     The Google-managed SSL certificate "cert2" is in the PROVISIONING state. Further investigation into the status of each domain is necessary..
 
-[GATEWAY]: Checks the status of each individual domain associated with the SSL certificate.
-[AUTOMATED STEP]: Analyzes domains in "FAILED_NOT_VISIBLE" state.
+[GATEWAY]: Check the status of each individual domain associated with the SSL certificate "cert2".
+[AUTOMATED STEP]: Analyze domains in FAILED_NOT_VISIBLE state for certificate "cert2".
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert2               [FAIL]
      [REASON]
-     The following domains are in "FAILED_NOT_VISIBLE" state: test.natka123.com. This usually means the domain's DNS records aren't correctly pointing to your load balancer.
+     The following domains are in FAILED_NOT_VISIBLE state: test.natka123.com for SSL certificate "cert2". This usually means the domain's DNS records are not correctly pointing to the load balancer.
 
-     [REMEDIATION]
-     Further investigation is required. This runbook will proceed with additional checks.
-
-[GATEWAY]: Checks if the SSL certificate is attached to a target proxy.
+[GATEWAY]: Verify the SSL certificate "cert2" is attached to a target proxy.
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert2               [OK]
      [REASON]
-     The SSL certificate cert2 is attached to target proxies (projects/gcpdiag-lb3-aaaa/global/targetHttpsProxies/https-lb-proxy-working) that are in use by forwarding rules.
+     The SSL certificate "cert2" is attached to target proxies (projects/gcpdiag-lb3-aaaa/global/targetHttpsProxies/https-lb-proxy-working) that are in use by forwarding rules.
 
-[GATEWAY]: Checks the DNS records for domain "test.natka123.com" associated with the SSL certificate "cert2".
+[GATEWAY]: Verify the DNS records for domain "test.natka123.com" associated with the SSL certificate "cert2".
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert2               [FAIL]
      [REASON]
-     DNS records for domain test.natka123.com resolve to IP addresses: 192.168.3.4, which do not point to any load balancer associated with certificate cert2. This prevents certificate provisioning.
+     DNS records for domain test.natka123.com currently resolve to the following IP addresses: 192.168.3.4. These IP addresses do not point to any load balancer associated with certificate cert2. Certificate provisioning is therefore blocked.
 
      [REMEDIATION]
-     Configure DNS records for test.natka123.com to point to the correct load balancer IP address(es) for certificate cert2. See the load balancer configuration for details. Check: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns
+     Configure DNS records for test.natka123.com to point to the correct load balancer IP address(es) for certificate cert2.
 
-[AUTOMATED STEP]: Checks if the load balancer is configured to listen on port 443.
+     The following load balancer IP addresses are associated with this certificate:
+
+     - forwarding rule "https-content-rule-working" in "global": 2600:1901:0:d0d7::
+
+
+     Check: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns>
+
+[AUTOMATED STEP]: Check if the load balancer with certificate "cert2" is configured to listen on port 443.
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert2               [FAIL]
      [REASON]
@@ -186,29 +195,29 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
       projects/gcpdiag-lb3-aaaa/global/forwardingRules/https-content-rule-working 
       use IP address 2600:1901:0:d0d7:: but none of them listen on port 443. 
 
-     There must be at least one load balancer's forwarding rule that use TCP port 443 for the Google-managed certificate to be initially provisioned and automatically renewed.
+     There must be at least one load balancer's forwarding rule that uses TCP port 443 for the Google-managed certificate to be initially provisioned and automatically renewed.
 
      [REMEDIATION]
-     Configure the load balancer to listen on port 443 for certificate cert2.
+     Configure the load balancer to listen on port 443 for SSL certificate "cert2".
 
-[AUTOMATED STEP]: Checks for conflicting certificate map set on a target proxy.
+[AUTOMATED STEP]: Check for conflicting certificate map set on a target proxy for certificate "cert2".
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert2               [OK]
      [REASON]
-     All target proxies associated with the certificate cert2 do not have a certificate map.
+     All target proxies associated with the SSL certificate "cert2" do not have a certificate map.
 
-[AUTOMATED STEP]: Checks if the SSL certificate associated resources has been updated recently.
+[AUTOMATED STEP]: Check if the SSL certificate "cert2" associated resources has been updated recently.
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert2               [UNCERTAIN]
      [REASON]
-     The certificate cert2 has recently had associated resources modified. This might affect DNS validation. Details are below:
+     The SSL certificate "cert2" has recently had associated resources modified. This might affect DNS validation. Details are below:
      Forwarding rule https-content-rule-working in scope global has been modified at 2024-10-18T14:34:17.798905Z.
      Target proxy https-lb-proxy-working in scope global has been modified at 2024-10-18T14:34:17.798905Z.
 
      [REMEDIATION]
-     DNS validation automatically checks your domain's A and AAAA records against your Google Cloud load balancer's IP address. This process includes an automatic retry mechanism with increasing wait times. If you recently attached cert2 to a target proxy or the target proxy to forwarding rule, validation could take up to 24 hours to complete.
+     DNS validation automatically checks the domain's A and AAAA records against the Google Cloud load balancer's IP address. This process includes an automatic retry mechanism with increasing wait times. If cert2 was recently attached to a target proxy or the target proxy to a forwarding rule, validation could take up to 24 hours to complete.
 
-[END]: Finalizing SSL Certificate diagnostics...
+[END]: Finalize SSL Certificate diagnostics.
 
 
 certificate_name=cert3,project_id=gcpdiag-lb3-aaaa
@@ -239,77 +248,78 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
     - Checks Cloud Logging to determine when the certificate was attached and
     allows sufficient time for propagation.
   
-[START]: Verifies the existence type and status of the SSL certificate.
+[START]: Verify the existence and status of the SSL certificate "cert3".
 [INFO]: name: cert3
 
    - gcpdiag-lb3-aaaa                                                     [FAIL]
      [REASON]
-     We detected that the certificate "cert3" is not in ACTIVE state.
+     The Google-managed SSL certificate "cert3" is not in ACTIVE state.
 
-     [REMEDIATION]
-     Further investigation is required to identify the root cause and apply appropriate fixes
-
-[GATEWAY]: Checks the status of the Google-managed certificate.
+[GATEWAY]: Analyze the status of the Google-managed SSL certificate "cert3".
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert3               [UNCERTAIN]
      [REASON]
-     The certificate cert3 is in the "PROVISIONING" state. Further investigation into the status of each domain is necessary..
+     The Google-managed SSL certificate "cert3" is in the PROVISIONING state. Further investigation into the status of each domain is necessary..
 
-[GATEWAY]: Checks the status of each individual domain associated with the SSL certificate.
-[AUTOMATED STEP]: Analyzes domains in "FAILED_NOT_VISIBLE" state.
+[GATEWAY]: Check the status of each individual domain associated with the SSL certificate "cert3".
+[AUTOMATED STEP]: Analyze domains in FAILED_NOT_VISIBLE state for certificate "cert3".
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert3               [FAIL]
      [REASON]
-     The following domains are in "FAILED_NOT_VISIBLE" state: second.test.org, test.org. This usually means the domain's DNS records aren't correctly pointing to your load balancer.
+     The following domains are in FAILED_NOT_VISIBLE state: second.test.org, test.org for SSL certificate "cert3". This usually means the domain's DNS records are not correctly pointing to the load balancer.
 
-     [REMEDIATION]
-     Further investigation is required. This runbook will proceed with additional checks.
-
-[GATEWAY]: Checks if the SSL certificate is attached to a target proxy.
+[GATEWAY]: Verify the SSL certificate "cert3" is attached to a target proxy.
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert3               [OK]
      [REASON]
-     The SSL certificate cert3 is attached to target proxies (projects/gcpdiag-lb3-aaaa/global/targetSslProxies/ssl-proxy) that are in use by forwarding rules.
+     The SSL certificate "cert3" is attached to target proxies (projects/gcpdiag-lb3-aaaa/global/targetSslProxies/ssl-proxy) that are in use by forwarding rules.
 
-[GATEWAY]: Checks the DNS records for domain "second.test.org" associated with the SSL certificate "cert3".
+[GATEWAY]: Verify the DNS records for domain "second.test.org" associated with the SSL certificate "cert3".
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert3               [FAIL]
      [REASON]
-     DNS records for domain second.test.org resolve to IP addresses: 2600:1901:0:d0d7::, which do not point to any load balancer associated with certificate cert3. This prevents certificate provisioning.
+     DNS records for domain second.test.org currently resolve to the following IP addresses: 2600:1901:0:d0d7::. These IP addresses do not point to any load balancer associated with certificate cert3. Certificate provisioning is therefore blocked.
 
      [REMEDIATION]
-     Configure DNS records for second.test.org to point to the correct load balancer IP address(es) for certificate cert3. See the load balancer configuration for details. Check: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns
+     Configure DNS records for second.test.org to point to the correct load balancer IP address(es) for certificate cert3.
 
-[GATEWAY]: Checks the DNS records for domain "test.org" associated with the SSL certificate "cert3".
+     The following load balancer IP addresses are associated with this certificate:
+
+     - forwarding rule "ssl-rule" in "global": 192.168.3.5
+
+
+     Check: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#update-dns>
+
+[GATEWAY]: Verify the DNS records for domain "test.org" associated with the SSL certificate "cert3".
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert3               [OK]
      [REASON]
      DNS records for domain test.org are correctly configured. All resolved IP addresses (192.168.3.5) point to the load balancer(s) associated with certificate cert3.
 
-[AUTOMATED STEP]: Checks if the load balancer is configured to listen on port 443.
+[AUTOMATED STEP]: Check if the load balancer with certificate "cert3" is configured to listen on port 443.
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert3               [OK]
      [REASON]
-     Certificate cert3 has forwarding rules configured for HTTPS (port 443) on all associated IP addresses.
+     The SSL certificate "cert3" has forwarding rules configured for HTTPS (port 443) on all associated IP addresses.
 
-[AUTOMATED STEP]: Checks for conflicting certificate map set on a target proxy.
+[AUTOMATED STEP]: Check for conflicting certificate map set on a target proxy for certificate "cert3".
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert3               [OK]
      [REASON]
-     All target proxies associated with the certificate cert3 do not have a certificate map.
+     All target proxies associated with the SSL certificate "cert3" do not have a certificate map.
 
-[AUTOMATED STEP]: Checks if the SSL certificate associated resources has been updated recently.
+[AUTOMATED STEP]: Check if the SSL certificate "cert3" associated resources has been updated recently.
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/cert3               [UNCERTAIN]
      [REASON]
-     The certificate cert3 has recently had associated resources modified. This might affect DNS validation. Details are below:
+     The SSL certificate "cert3" has recently had associated resources modified. This might affect DNS validation. Details are below:
      Forwarding rule ssl-rule in scope global has been modified at 2024-10-18T14:34:17.798905Z.
      Target proxy ssl-proxy in scope global has been modified at 2024-10-18T14:34:17.798905Z.
 
      [REMEDIATION]
-     DNS validation automatically checks your domain's A and AAAA records against your Google Cloud load balancer's IP address. This process includes an automatic retry mechanism with increasing wait times. If you recently attached cert3 to a target proxy or the target proxy to forwarding rule, validation could take up to 24 hours to complete.
+     DNS validation automatically checks the domain's A and AAAA records against the Google Cloud load balancer's IP address. This process includes an automatic retry mechanism with increasing wait times. If cert3 was recently attached to a target proxy or the target proxy to a forwarding rule, validation could take up to 24 hours to complete.
 
-[END]: Finalizing SSL Certificate diagnostics...
+[END]: Finalize SSL Certificate diagnostics.
 
 
 certificate_name=unused-cert4,project_id=gcpdiag-lb3-aaaa
@@ -340,41 +350,35 @@ lb/ssl-certificates: This runbook diagnoses and troubleshoots issues with SSL ce
     - Checks Cloud Logging to determine when the certificate was attached and
     allows sufficient time for propagation.
   
-[START]: Verifies the existence type and status of the SSL certificate.
+[START]: Verify the existence and status of the SSL certificate "unused-cert4".
 [INFO]: name: unused-cert4
 
    - gcpdiag-lb3-aaaa                                                     [FAIL]
      [REASON]
-     We detected that the certificate "unused-cert4" is not in ACTIVE state.
+     The Google-managed SSL certificate "unused-cert4" is not in ACTIVE state.
 
-     [REMEDIATION]
-     Further investigation is required to identify the root cause and apply appropriate fixes
-
-[GATEWAY]: Checks the status of the Google-managed certificate.
+[GATEWAY]: Analyze the status of the Google-managed SSL certificate "unused-cert4".
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/unused-cert4        [UNCERTAIN]
      [REASON]
-     The certificate unused-cert4 is in the "PROVISIONING" state. Further investigation into the status of each domain is necessary..
+     The Google-managed SSL certificate "unused-cert4" is in the PROVISIONING state. Further investigation into the status of each domain is necessary..
 
-[GATEWAY]: Checks the status of each individual domain associated with the SSL certificate.
-[AUTOMATED STEP]: Analyzes domains in "FAILED_NOT_VISIBLE" state.
-
-   - projects/gcpdiag-lb3-aaaa/global/sslCertificates/unused-cert4        [FAIL]
-     [REASON]
-     The following domains are in "FAILED_NOT_VISIBLE" state: second.test.org, test.org. This usually means the domain's DNS records aren't correctly pointing to your load balancer.
-
-     [REMEDIATION]
-     Further investigation is required. This runbook will proceed with additional checks.
-
-[GATEWAY]: Checks if the SSL certificate is attached to a target proxy.
+[GATEWAY]: Check the status of each individual domain associated with the SSL certificate "unused-cert4".
+[AUTOMATED STEP]: Analyze domains in FAILED_NOT_VISIBLE state for certificate "unused-cert4".
 
    - projects/gcpdiag-lb3-aaaa/global/sslCertificates/unused-cert4        [FAIL]
      [REASON]
-     The SSL certificate unused-cert4 is not attached to any target proxies. Please attach the certificate to a target proxy and try again.
+     The following domains are in FAILED_NOT_VISIBLE state: second.test.org, test.org for SSL certificate "unused-cert4". This usually means the domain's DNS records are not correctly pointing to the load balancer.
+
+[GATEWAY]: Verify the SSL certificate "unused-cert4" is attached to a target proxy.
+
+   - projects/gcpdiag-lb3-aaaa/global/sslCertificates/unused-cert4        [FAIL]
+     [REASON]
+     The SSL certificate "unused-cert4" is not attached to any target proxies. Attach the certificate to a target proxy.
 
      [REMEDIATION]
-     Please follow the documentation to attach the certificate to a target proxy: https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#load-balancer
+     Follow the documentation to attach the certificate to a target proxy: <https://cloud.google.com/load-balancing/docs/ssl-certificates/google-managed-certs#load-balancer>
 
-[END]: Finalizing SSL Certificate diagnostics...
+[END]: Finalize SSL Certificate diagnostics.
 
 

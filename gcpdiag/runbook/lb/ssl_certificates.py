@@ -70,43 +70,61 @@ class SslCertificates(runbook.DiagnosticTree):
 
   def build_tree(self):
     """Construct the diagnostic tree with appropriate steps."""
+    project_id = op.get(flags.PROJECT_ID)
+    certificate_name = op.get(flags.CERTIFICATE_NAME)
     # Instantiate your step classes
     start = SslCertificatesStart()
+    start.project_id = project_id
+    start.certificate_name = certificate_name
     # add them to your tree
     self.add_start(start)
     # you can create custom steps to define unique logic
     cert_status = AnalyzeCertificateStatus()
+    cert_status.project_id = project_id
+    cert_status.certificate_name = certificate_name
     # Describe the step relationships
     self.add_step(parent=start, child=cert_status)
-    self.add_step(parent=cert_status, child=AnalyzeDomainStatuses())
+
+    analyze_domain_statuses = AnalyzeDomainStatuses()
+    analyze_domain_statuses.project_id = project_id
+    analyze_domain_statuses.certificate_name = certificate_name
+
+    self.add_step(parent=cert_status, child=analyze_domain_statuses)
     # Ending your runbook
     self.add_end(SslCertificatesEnd())
 
 
 class SslCertificatesStart(runbook.StartStep):
-  """Verifies the existence type and status of the SSL certificate."""
+  """Verify the existence type and status of the SSL certificate."""
 
   template = 'ssl_certificates::confirmation'
+  project_id: str
+  certificate_name: str
+
+  @property
+  def name(self):
+    return (f'Verify the existence and status of the SSL certificate'
+            f' "{self.certificate_name}".')
 
   def execute(self):
     """Verifies the existence type and status of the SSL certificate."""
-    proj = crm.get_project(op.get(flags.PROJECT_ID))
+    proj = crm.get_project(self.project_id)
 
-    if not apis.is_enabled(op.context.project_id, 'compute'):
+    if not apis.is_enabled(self.project_id, 'compute'):
       op.add_skipped(proj, reason='Compute API is not enabled')
       return  # Early exit if Compute API is disabled
 
     try:
-      op.info(f'name: {op.get(flags.CERTIFICATE_NAME)}')
-      certificate = lb.get_ssl_certificate(op.context.project_id,
-                                           op.get(flags.CERTIFICATE_NAME))
+      op.info(f'name: {self.certificate_name}')
+      certificate = lb.get_ssl_certificate(self.project_id,
+                                           self.certificate_name)
     except googleapiclient.errors.HttpError:
       op.add_skipped(
           proj,
           reason=op.prep_msg(
               op.SKIPPED_REASON,
-              name=op.get(flags.CERTIFICATE_NAME),
-              project_id=op.get(flags.PROJECT_ID),
+              name=self.certificate_name,
+              project_id=self.project_id,
           ),
       )
       return  # Early exit if certificate doesn't exist
@@ -114,41 +132,43 @@ class SslCertificatesStart(runbook.StartStep):
       op.add_skipped(
           proj,
           reason=op.prep_msg(op.SKIPPED_REASON_ALT1,
-                             name=op.get(flags.CERTIFICATE_NAME)),
+                             name=self.certificate_name),
       )
       return  # Early exit if certificate is not Google-managed
 
     if certificate.status == 'ACTIVE':
       op.add_ok(
           proj,
-          reason=op.prep_msg(op.SUCCESS_REASON,
-                             name=op.get(flags.CERTIFICATE_NAME)),
+          reason=op.prep_msg(op.SUCCESS_REASON, name=self.certificate_name),
       )
     else:
-      op.add_failed(
-          proj,
-          reason=op.prep_msg(op.FAILURE_REASON,
-                             name=op.get(flags.CERTIFICATE_NAME)),
-          remediation=op.prep_msg(op.FAILURE_REMEDIATION),
-      )
+      op.add_failed(proj,
+                    reason=op.prep_msg(op.FAILURE_REASON,
+                                       name=self.certificate_name),
+                    remediation='')
 
 
 class AnalyzeCertificateStatus(runbook.Gateway):
-  """Checks the status of the Google-managed certificate."""
+  """Analyze the status of the Google-managed certificate."""
 
   template = 'ssl_certificates::cert_status'
+  project_id: str
+  certificate_name: str
+
+  @property
+  def name(self):
+    return (f'Analyze the status of the Google-managed SSL certificate'
+            f' "{self.certificate_name}".')
 
   def execute(self):
     """Checks the status of the Google-managed certificate."""
-    certificate = lb.get_ssl_certificate(op.context.project_id,
-                                         op.get(flags.CERTIFICATE_NAME))
+    certificate = lb.get_ssl_certificate(self.project_id, self.certificate_name)
     op.add_metadata('certificateStatus', certificate.status)
 
     if certificate.status == 'PROVISIONING_FAILED_PERMANENTLY':
       op.add_failed(
           certificate,
-          reason=op.prep_msg(op.FAILURE_REASON,
-                             name=op.get(flags.CERTIFICATE_NAME)),
+          reason=op.prep_msg(op.FAILURE_REASON, name=self.certificate_name),
           remediation=op.prep_msg(op.FAILURE_REMEDIATION),
       )
       return
@@ -157,7 +177,7 @@ class AnalyzeCertificateStatus(runbook.Gateway):
           certificate,
           reason=op.prep_msg(
               op.UNCERTAIN_REASON,
-              name=op.get(flags.CERTIFICATE_NAME),
+              name=self.certificate_name,
               status=certificate.status,
               context=('Further investigation into the status of each domain is'
                        ' necessary.'),
@@ -169,7 +189,7 @@ class AnalyzeCertificateStatus(runbook.Gateway):
           certificate,
           reason=op.prep_msg(
               op.UNCERTAIN_REASON,
-              name=op.get(flags.CERTIFICATE_NAME),
+              name=self.certificate_name,
               status=certificate.status,
               context=(
                   'This typically occurs when the load balancer or DNS'
@@ -183,21 +203,28 @@ class AnalyzeCertificateStatus(runbook.Gateway):
         certificate,
         reason=op.prep_msg(
             op.SUCCESS_REASON,
-            name=op.get(flags.CERTIFICATE_NAME),
+            name=self.certificate_name,
             status=certificate.status,
         ),
     )
 
 
 class AnalyzeDomainStatuses(runbook.Gateway):
-  """Checks the status of each individual domain associated with the SSL certificate."""
+  """Check the status of each individual domain associated with the SSL certificate."""
 
   template = 'ssl_certificates::domain_status'
+  project_id: str
+  certificate_name: str
+
+  @property
+  def name(self):
+    return (
+        f'Check the status of each individual domain associated with the SSL'
+        f' certificate "{self.certificate_name}".')
 
   def execute(self):
     """Checks the status of each individual domain associated with the SSL certificate."""
-    certificate = lb.get_ssl_certificate(op.context.project_id,
-                                         op.get(flags.CERTIFICATE_NAME))
+    certificate = lb.get_ssl_certificate(self.project_id, self.certificate_name)
 
     failed_not_visible_domains = []
     failed_caa_domains = []
@@ -215,69 +242,91 @@ class AnalyzeDomainStatuses(runbook.Gateway):
 
     if failed_not_visible_domains:
       step = AnalyzeFailedNotVisibleDomains()
+      step.project_id = self.project_id
       step.domains = failed_not_visible_domains
+      step.certificate_name = self.certificate_name
       self.add_child(step)
     if failed_caa_domains:
       step = AnalyzeFailedCaaCheck()
+      step.project_id = self.project_id
       step.domains = failed_caa_domains
+      step.certificate_name = self.certificate_name
       self.add_child(step)
     if failed_rate_limited_domains:
       step = AnalyzeRateLimitedDomains()
+      step.project_id = self.project_id
       step.domains = failed_rate_limited_domains
+      step.certificate_name = self.certificate_name
       self.add_child(step)
     if provisioning_domains:
       step = AnalyzeProvisioningDomains()
+      step.project_id = self.project_id
       step.domains = provisioning_domains
+      step.certificate_name = self.certificate_name
       self.add_child(step)
     if failed_not_visible_domains or provisioning_domains:
-      self.add_child(CheckCertificateAttachment())
+      step = CheckCertificateAttachment()
+      step.project_id = self.project_id
+      step.certificate_name = self.certificate_name
+      self.add_child(step)
     if (not failed_not_visible_domains and not failed_caa_domains and
         not failed_rate_limited_domains and not provisioning_domains):
       op.add_ok(
           certificate,
-          reason=op.prep_msg(op.SUCCESS_REASON,
-                             name=op.get(flags.CERTIFICATE_NAME)),
+          reason=op.prep_msg(op.SUCCESS_REASON, name=self.certificate_name),
       )
 
 
 class AnalyzeFailedNotVisibleDomains(runbook.Step):
-  """Analyzes domains in "FAILED_NOT_VISIBLE" state."""
+  """Analyze domains in "FAILED_NOT_VISIBLE" state."""
 
   template = 'ssl_certificates::failed_not_visible_domains'
-
+  project_id: str
   domains: List[str]
+  certificate_name: str
+
+  @property
+  def name(self):
+    return (f'Analyze domains in FAILED_NOT_VISIBLE'
+            f' state for certificate "{self.certificate_name}".')
 
   def execute(self):
     """Analyzes domains in "FAILED_NOT_VISIBLE" state."""
-    certificate = lb.get_ssl_certificate(op.context.project_id,
-                                         op.get(flags.CERTIFICATE_NAME))
+    certificate = lb.get_ssl_certificate(self.project_id, self.certificate_name)
     op.add_failed(
         certificate,
         reason=op.prep_msg(
             op.FAILURE_REASON,
             domains=', '.join(self.domains),
+            name=self.certificate_name,
         ),
-        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+        remediation='',
     )
     op.add_metadata('failedNotVisibleDomains', self.domains)
 
 
 class AnalyzeProvisioningDomains(runbook.Step):
-  """Analyzes domains in "PROVISIONING" state."""
+  """Analyze domains in "PROVISIONING" state."""
 
   template = 'ssl_certificates::provisioning_domains'
-
+  project_id: str
   domains: List[str]
+  certificate_name: str
+
+  @property
+  def name(self):
+    return (f'Analyze domains in PROVISIONING state'
+            f' for certificate "{self.certificate_name}".')
 
   def execute(self):
     """Analyzes domains in "PROVISIONING" state."""
-    certificate = lb.get_ssl_certificate(op.context.project_id,
-                                         op.get(flags.CERTIFICATE_NAME))
+    certificate = lb.get_ssl_certificate(self.project_id, self.certificate_name)
     op.add_uncertain(
         certificate,
         reason=op.prep_msg(
             op.UNCERTAIN_REASON,
             domains=', '.join(self.domains),
+            name=self.certificate_name,
         ),
         remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION),
     )
@@ -285,60 +334,82 @@ class AnalyzeProvisioningDomains(runbook.Step):
 
 
 class AnalyzeRateLimitedDomains(runbook.Step):
-  """Analyzes domains in "FAILED_RATE_LIMITED" state."""
+  """Analyze domains in "FAILED_RATE_LIMITED" state."""
 
   template = 'ssl_certificates::failed_rate_limited_domains'
-
+  project_id: str
   domains: List[str]
+  certificate_name: str
+
+  @property
+  def name(self):
+    return (f'Analyze domains in'
+            f' FAILED_RATE_LIMITED state for certificate'
+            f' "{self.certificate_name}".')
 
   def execute(self):
     """Analyzes domains in "FAILED_RATE_LIMITED" state."""
-    certificate = lb.get_ssl_certificate(op.context.project_id,
-                                         op.get(flags.CERTIFICATE_NAME))
+    certificate = lb.get_ssl_certificate(self.project_id, self.certificate_name)
     op.add_failed(
         certificate,
-        reason=op.prep_msg(op.FAILURE_REASON, domains=', '.join(self.domains)),
+        reason=op.prep_msg(op.FAILURE_REASON,
+                           domains=', '.join(self.domains),
+                           name=self.certificate_name),
         remediation=op.prep_msg(op.FAILURE_REMEDIATION),
     )
     op.add_metadata('failedRateLimitedDomains', self.domains)
 
 
 class AnalyzeFailedCaaCheck(runbook.Step):
-  """Analyzes domains in "FAILED_CAA_CHECKING" or "FAILED_CAA_FORBIDDEN" state."""
+  """Analyze domains in "FAILED_CAA_CHECKING" or "FAILED_CAA_FORBIDDEN" state."""
 
   template = 'ssl_certificates::failed_caa_check_domains'
-
+  project_id: str
   domains: List[str]
+  certificate_name: str
+
+  @property
+  def name(self):
+    return (f'Analyze domains in'
+            f' FAILED_CAA_CHECKING or FAILED_CAA_FORBIDDEN state for'
+            f' certificate "{self.certificate_name}".')
 
   def execute(self):
     """Analyzes domains in "FAILED_CAA_CHECKING" or "FAILED_CAA_FORBIDDEN" state."""
-    certificate = lb.get_ssl_certificate(op.context.project_id,
-                                         op.get(flags.CERTIFICATE_NAME))
+    certificate = lb.get_ssl_certificate(self.project_id, self.certificate_name)
     op.add_failed(
         certificate,
-        reason=op.prep_msg(op.FAILURE_REASON, domains=', '.join(self.domains)),
+        reason=op.prep_msg(op.FAILURE_REASON,
+                           domains=', '.join(self.domains),
+                           name=self.certificate_name),
         remediation=op.prep_msg(op.FAILURE_REMEDIATION),
     )
     op.add_metadata('failedCaaCheckDomains', self.domains)
 
 
 class CheckCertificateAttachment(runbook.Gateway):
-  """Checks if the SSL certificate is attached to a target proxy.
+  """Check if the SSL certificate is attached to a target proxy.
 
   This target proxy needs to be in use by a forwarding rule for the provisioning
   to succeed.
   """
 
   template = 'ssl_certificates::check_certificate_attachment'
+  project_id: str
+  certificate_name: str
+
+  @property
+  def name(self):
+    return (f'Verify the SSL certificate "{self.certificate_name}" is attached'
+            f' to a target proxy.')
 
   def execute(self):
     """Checks if the SSL certificate is attached to a target proxy."""
-    certificate = lb.get_ssl_certificate(op.context.project_id,
-                                         op.get(flags.CERTIFICATE_NAME))
+    certificate = lb.get_ssl_certificate(self.project_id, self.certificate_name)
 
     try:
-      target_https_proxies = lb.get_target_https_proxies(op.context.project_id)
-      target_ssl_proxies = lb.get_target_ssl_proxies(op.context.project_id)
+      target_https_proxies = lb.get_target_https_proxies(self.project_id)
+      target_ssl_proxies = lb.get_target_ssl_proxies(self.project_id)
     except googleapiclient.errors.HttpError as e:
       op.add_skipped(
           certificate,
@@ -354,14 +425,13 @@ class CheckCertificateAttachment(runbook.Gateway):
     if not target_proxies_with_certificate:
       op.add_failed(
           certificate,
-          reason=op.prep_msg(op.FAILURE_REASON,
-                             name=op.get(flags.CERTIFICATE_NAME)),
+          reason=op.prep_msg(op.FAILURE_REASON, name=self.certificate_name),
           remediation=op.prep_msg(op.FAILURE_REMEDIATION),
       )
       return
 
     try:
-      forwarding_rules = lb.get_forwarding_rules(op.context.project_id)
+      forwarding_rules = lb.get_forwarding_rules(self.project_id)
     except ValueError as e:
       op.add_skipped(
           certificate,
@@ -384,7 +454,7 @@ class CheckCertificateAttachment(runbook.Gateway):
           certificate,
           reason=
           ('The SSL certificate is attached to target proxies:'
-           f' {", ".join([tp.full_path for tp in target_proxies_with_certificate])} that'
+           f" {', '.join([tp.full_path for tp in target_proxies_with_certificate])} that"
            ' are not in use by any forwarding rules.'),
           remediation='Please attach the target proxies to forwarding rules',
       )
@@ -401,7 +471,7 @@ class CheckCertificateAttachment(runbook.Gateway):
         certificate,
         reason=op.prep_msg(
             op.SUCCESS_REASON,
-            name=op.get(flags.CERTIFICATE_NAME),
+            name=self.certificate_name,
             target_proxies=', '.join(
                 [tp.full_path for tp in used_target_proxies_with_certificate]),
         ),
@@ -410,23 +480,30 @@ class CheckCertificateAttachment(runbook.Gateway):
     for domain in certificate.domain_status.keys():
       if certificate.domain_status[domain] != 'ACTIVE':
         verify_dns_records = VerifyDnsRecords()
+        verify_dns_records.project_id = self.project_id
         verify_dns_records.domain = domain
-        verify_dns_records.certificate_name = op.get(flags.CERTIFICATE_NAME)
+        verify_dns_records.certificate_name = self.certificate_name
         verify_dns_records.forwarding_rules_with_certificate = (
             forwarding_rules_with_certificate)
         self.add_child(verify_dns_records)
 
     verify_forwarding_rules_port = VerifyForwardingRulesPort()
+    verify_forwarding_rules_port.project_id = self.project_id
+    verify_forwarding_rules_port.certificate_name = self.certificate_name
     verify_forwarding_rules_port.forwarding_rules_with_certificate = (
         forwarding_rules_with_certificate)
     self.add_child(verify_forwarding_rules_port)
 
     verify_no_certificate_map_conflict = VerifyNoCertificateMapConflict()
+    verify_no_certificate_map_conflict.project_id = self.project_id
+    verify_no_certificate_map_conflict.certificate_name = self.certificate_name
     verify_no_certificate_map_conflict.target_proxies_with_certificate = (
         target_proxies_with_certificate)
     self.add_child(verify_no_certificate_map_conflict)
 
     check_provisioning_time = CheckProvisioningTime()
+    check_provisioning_time.project_id = self.project_id
+    check_provisioning_time.certificate_name = self.certificate_name
     check_provisioning_time.target_proxies_with_certificate = (
         target_proxies_with_certificate)
     check_provisioning_time.forwarding_rules_with_certificate = (
@@ -435,24 +512,22 @@ class CheckCertificateAttachment(runbook.Gateway):
 
 
 class VerifyDnsRecords(runbook.Gateway):
-  """Checks the DNS records for specific domain associated with the SSL certificate."""
+  """Check the DNS records for specific domain associated with the SSL certificate."""
 
   template = 'ssl_certificates::verify_dns_records'
-
+  project_id: str
   forwarding_rules_with_certificate: List[lb.ForwardingRules]
   domain: str
   certificate_name: str
 
   @property
-  def execution_message(self):
+  def name(self):
     return (
-        f'Checks the DNS records for domain "{self.domain}" associated with the'
+        f'Verify the DNS records for domain "{self.domain}" associated with the'
         f' SSL certificate "{self.certificate_name}".')
 
   def execute(self):
-    certificate_name = op.get(flags.CERTIFICATE_NAME)
-    certificate = lb.get_ssl_certificate(op.context.project_id,
-                                         certificate_name)
+    certificate = lb.get_ssl_certificate(self.project_id, self.certificate_name)
     ip_addresses = dns.find_dns_records(self.domain)
 
     op.add_metadata('domain', self.domain)
@@ -460,8 +535,11 @@ class VerifyDnsRecords(runbook.Gateway):
 
     # Group forwarding rules by IP address
     frs_by_ip = {}
+    fr_ip_message = ''
     for fr in self.forwarding_rules_with_certificate:
       frs_by_ip.setdefault(fr.ip_address, []).append(fr)
+      fr_ip_message += (
+          f'- forwarding rule "{fr.name}" in "{fr.region}": {fr.ip_address}\n')
 
     # Check which IP addresses point to the load balancer
     ip_addresses_pointing_to_lb = []
@@ -479,7 +557,7 @@ class VerifyDnsRecords(runbook.Gateway):
               op.SUCCESS_REASON,
               domain=self.domain,
               ip_addresses=', '.join(ip_addresses_pointing_to_lb),
-              name=op.get(flags.CERTIFICATE_NAME),
+              name=self.certificate_name,
           ),
       )
     elif ip_addresses_pointing_to_lb and unresolved_ip_addresses:
@@ -488,14 +566,15 @@ class VerifyDnsRecords(runbook.Gateway):
           reason=op.prep_msg(
               op.UNCERTAIN_REASON,
               domain=self.domain,
-              name=op.get(flags.CERTIFICATE_NAME),
+              name=self.certificate_name,
               unresolved_ip_addresses=', '.join(unresolved_ip_addresses),
               resolved_ip_addresses=', '.join(ip_addresses_pointing_to_lb),
           ),
           remediation=op.prep_msg(
               op.UNCERTAIN_REMEDIATION,
               domain=self.domain,
-              name=op.get(flags.CERTIFICATE_NAME),
+              fr_ip_message=fr_ip_message,
+              name=self.certificate_name,
           ),
       )
     elif unresolved_ip_addresses:
@@ -505,12 +584,13 @@ class VerifyDnsRecords(runbook.Gateway):
               op.FAILURE_REASON,
               domain=self.domain,
               unresolved_ip_addresses=', '.join(unresolved_ip_addresses),
-              name=op.get(flags.CERTIFICATE_NAME),
+              name=self.certificate_name,
           ),
           remediation=op.prep_msg(
               op.FAILURE_REMEDIATION,
               domain=self.domain,
-              name=op.get(flags.CERTIFICATE_NAME),
+              fr_ip_message=fr_ip_message,
+              name=self.certificate_name,
           ),
       )
     else:
@@ -520,7 +600,8 @@ class VerifyDnsRecords(runbook.Gateway):
           remediation=op.prep_msg(
               op.FAILURE_REMEDIATION,
               domain=self.domain,
-              name=op.get(flags.CERTIFICATE_NAME),
+              fr_ip_message=fr_ip_message,
+              name=self.certificate_name,
           ),
       )
 
@@ -533,13 +614,18 @@ class VerifyForwardingRulesPort(runbook.Step):
   """
 
   template = 'ssl_certificates::verify_forwarding_rules_port'
-
+  project_id: str
   forwarding_rules_with_certificate: List[lb.ForwardingRules]
+  certificate_name: str
+
+  @property
+  def name(self):
+    return (f'Check if the load balancer with certificate'
+            f' "{self.certificate_name}" is configured to listen on port 443.')
 
   def execute(self):
     """Checks if the load balancer is configured to listen on port 443."""
-    certificate = lb.get_ssl_certificate(op.context.project_id,
-                                         op.get(flags.CERTIFICATE_NAME))
+    certificate = lb.get_ssl_certificate(self.project_id, self.certificate_name)
 
     # Group forwarding rules by IP address
     frs_by_ip = {}
@@ -553,7 +639,7 @@ class VerifyForwardingRulesPort(runbook.Step):
         misconfigured_entities.append(
             'The following forwarding rules with certificate'
             f' {certificate.name}: \n'
-            f' {", ".join([fr.full_path for fr in frs])} \n use IP address'
+            f" {', '.join([fr.full_path for fr in frs])} \n use IP address"
             f' {ip_address} but none of them listen on port 443. \n')
 
     if misconfigured_entities:
@@ -564,13 +650,12 @@ class VerifyForwardingRulesPort(runbook.Step):
               misconfigured_entities='\n'.join(misconfigured_entities),
           ),
           remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                  name=op.get(flags.CERTIFICATE_NAME)),
+                                  name=self.certificate_name),
       )
     else:
       op.add_ok(
           certificate,
-          reason=op.prep_msg(op.SUCCESS_REASON,
-                             name=op.get(flags.CERTIFICATE_NAME)),
+          reason=op.prep_msg(op.SUCCESS_REASON, name=self.certificate_name),
       )
 
   def is_port_in_range(self, port: int, port_range: str):
@@ -586,14 +671,19 @@ class VerifyNoCertificateMapConflict(runbook.Step):
   """Checks for conflicting certificate map set on a target proxy."""
 
   template = 'ssl_certificates::verify_no_certificate_map_conflict'
-
+  project_id: str
   target_proxies_with_certificate: List[TargetProxy]
+  certificate_name: str
+
+  @property
+  def name(self):
+    return (f'Check for conflicting certificate map set on a target proxy for'
+            f' certificate "{self.certificate_name}".')
 
   def execute(self):
     """Checks for conflicting certificate map set on a target proxy."""
 
-    certificate = lb.get_ssl_certificate(op.context.project_id,
-                                         op.get(flags.CERTIFICATE_NAME))
+    certificate = lb.get_ssl_certificate(self.project_id, self.certificate_name)
 
     conflicting_target_proxies = []
     for target_proxy in self.target_proxies_with_certificate:
@@ -605,7 +695,7 @@ class VerifyNoCertificateMapConflict(runbook.Step):
       target_proxy_conflicts = [
           f'Target Proxy: {target_proxy.full_path} has certificate map'
           f' {target_proxy.certificate_map} together with classic SSL'
-          f' certificates {", ".join(target_proxy.ssl_certificates)}'
+          f" certificates {', '.join(target_proxy.ssl_certificates)}"
           for target_proxy in conflicting_target_proxies
       ]
       op.add_failed(
@@ -619,8 +709,7 @@ class VerifyNoCertificateMapConflict(runbook.Step):
     else:
       op.add_ok(
           certificate,
-          reason=op.prep_msg(op.SUCCESS_REASON,
-                             name=op.get(flags.CERTIFICATE_NAME)),
+          reason=op.prep_msg(op.SUCCESS_REASON, name=self.certificate_name),
       )
 
 
@@ -628,14 +717,19 @@ class CheckProvisioningTime(runbook.Step):
   """Checks if the SSL certificate associated resources has been updated recently."""
 
   template = 'ssl_certificates::check_provisioning_time'
-
+  project_id: str
   target_proxies_with_certificate: List[TargetProxy]
   forwarding_rules_with_certificate: List[lb.ForwardingRules]
+  certificate_name: str
+
+  @property
+  def name(self):
+    return (f'Check if the SSL certificate "{self.certificate_name}" associated'
+            f' resources has been updated recently.')
 
   def execute(self):
     """Checks if the SSL certificate associated resources has been updated recently."""
-    certificate = lb.get_ssl_certificate(op.context.project_id,
-                                         op.get(flags.CERTIFICATE_NAME))
+    certificate = lb.get_ssl_certificate(self.project_id, self.certificate_name)
 
     recently_changed = []
 
@@ -646,10 +740,10 @@ class CheckProvisioningTime(runbook.Step):
               protoPayload.methodName=~"(forwardingRules|globalForwardingRules).(patch|update|insert)"
               """.format(forwarding_rule.region, forwarding_rule.id)
       serial_log_entries = logs.realtime_query(
-          project_id=op.get(flags.PROJECT_ID),
+          project_id=self.project_id,
           filter_str=filter_str,
-          start_time_utc=datetime.now() - timedelta(days=1),
-          end_time_utc=datetime.now(),
+          start_time=datetime.now() - timedelta(days=1),
+          end_time=datetime.now(),
       )
 
       if serial_log_entries:
@@ -679,10 +773,10 @@ class CheckProvisioningTime(runbook.Step):
         # This should never happen
         raise ValueError(f'Unsupported target proxy type: {type(target_proxy)}')
       serial_log_entries = logs.realtime_query(
-          project_id=op.get(flags.PROJECT_ID),
+          project_id=self.project_id,
           filter_str=filter_str,
-          start_time_utc=datetime.now() - timedelta(days=1),
-          end_time_utc=datetime.now(),
+          start_time=datetime.now() - timedelta(days=1),
+          end_time=datetime.now(),
       )
 
       if serial_log_entries:
@@ -698,17 +792,17 @@ class CheckProvisioningTime(runbook.Step):
           reason=op.prep_msg(
               op.UNCERTAIN_REASON,
               recently_changed='\n'.join(recently_changed),
-              name=op.get(flags.CERTIFICATE_NAME),
+              name=self.certificate_name,
           ),
           remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION,
-                                  name=op.get(flags.CERTIFICATE_NAME)),
+                                  name=self.certificate_name),
       )
     else:
       op.add_ok(
           certificate,
           reason=op.prep_msg(
               op.SUCCESS_REASON,
-              name=op.get(flags.CERTIFICATE_NAME),
+              name=self.certificate_name,
           ),
       )
 
@@ -717,7 +811,7 @@ class SslCertificatesEnd(runbook.EndStep):
   """Concludes the SSL Certificate diagnostics process."""
 
   def execute(self):
-    """Finalizing SSL Certificate diagnostics..."""
+    """Finalize SSL Certificate diagnostics."""
     if not config.get(flags.INTERACTIVE_MODE):
       response = op.prompt(
           kind=op.CONFIRMATION,

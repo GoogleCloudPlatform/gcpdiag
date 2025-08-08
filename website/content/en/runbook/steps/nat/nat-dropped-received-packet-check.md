@@ -30,8 +30,8 @@ This step determines whether the NATGW is dropping packets. NAT gateways could b
    Checking received_packet_drop metrics at the VM level as well. Open a case to GCP Support for confirmation
    of the reason for the drops
    See more on troubleshooting cloud NAT reducing the drops here [1] and [2]:
-   [1] https://cloud.google.com/nat/docs/troubleshooting
-   [2] https://cloud.google.com/knowledge/kb/reduce-received-packets-dropped-count-on-cloud-nat-000006744
+   [1] <https://cloud.google.com/nat/docs/troubleshooting>
+   [2] <https://cloud.google.com/knowledge/kb/reduce-received-packets-dropped-count-on-cloud-nat-000006744>
 
 
 

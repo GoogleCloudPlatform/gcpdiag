@@ -15,16 +15,20 @@
 
 from datetime import datetime
 
+from boltons.iterutils import get_path
+
 from gcpdiag import runbook
 from gcpdiag.queries import apis, crm, gke, logs
 from gcpdiag.runbook import op
 from gcpdiag.runbook.gke import flags
+from gcpdiag.utils import GcpApiError
 
 
-def local_realtime_query(filter_str):
+def local_realtime_query(filter_list):
+  filter_str = '\n'.join(filter_list)
   result = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
-                               start_time_utc=op.get(flags.START_TIME_UTC),
-                               end_time_utc=op.get(flags.END_TIME_UTC),
+                               start_time=op.get(flags.START_TIME),
+                               end_time=op.get(flags.END_TIME),
                                filter_str=filter_str)
   return result
 
@@ -52,16 +56,26 @@ class ImagePull(runbook.DiagnosticTree):
           'type':
               str,
           'help':
-              '(Optional) The name of the GKE cluster, to limit search only for this cluster',
+              'The name of the GKE cluster, to limit search only for this cluster',
+          'deprecated':
+              True,
+          'new_parameter':
+              'gke_cluster_name'
+      },
+      flags.GKE_CLUSTER_NAME: {
+          'type':
+              str,
+          'help':
+              'The name of the GKE cluster, to limit search only for this cluster',
           'required':
-              False
+              True,
       },
       flags.LOCATION: {
           'type': str,
-          'help': '(Optional) The zone or region of the GKE cluster',
-          'required': False
+          'help': 'The zone or region of the GKE cluster',
+          'required': True
       },
-      flags.START_TIME_UTC: {
+      flags.START_TIME: {
           'type':
               datetime,
           'help':
@@ -69,7 +83,7 @@ class ImagePull(runbook.DiagnosticTree):
           'required':
               False
       },
-      flags.END_TIME_UTC: {
+      flags.END_TIME: {
           'type':
               datetime,
           'help':
@@ -78,6 +92,10 @@ class ImagePull(runbook.DiagnosticTree):
               False
       }
   }
+
+  def legacy_parameter_handler(self, parameters):
+    if flags.NAME in parameters:
+      parameters[flags.GKE_CLUSTER_NAME] = parameters.pop(flags.NAME)
 
   def build_tree(self):
     """Construct the diagnostic tree with appropriate steps."""
@@ -91,6 +109,7 @@ class ImagePull(runbook.DiagnosticTree):
     image_connection_timeout_restricted_private = ImageConnectionTimeoutRestrictedPrivate(
     )
     image_connection_timeout = ImageConnectionTimeout()
+    image_not_found_insufficient_scope = ImageNotFoundInsufficientScope()
     # Describe the step relationships
     self.add_step(parent=start, child=image_not_found)
     self.add_step(parent=image_not_found, child=image_forbidden)
@@ -99,6 +118,8 @@ class ImagePull(runbook.DiagnosticTree):
                   child=image_connection_timeout_restricted_private)
     self.add_step(parent=image_connection_timeout_restricted_private,
                   child=image_connection_timeout)
+    self.add_step(parent=image_connection_timeout,
+                  child=image_not_found_insufficient_scope)
     # Ending runbook
     self.add_end(ImagePullEnd())
 
@@ -108,10 +129,7 @@ class ImagePullStart(runbook.StartStep):
 
   Check
   - if logging API is enabled
-  - if there are GKE clusters in the project
-  - if a cluster name is provided, verify if that cluster exists in the project
-  - if a location is provided, verify there are clusters in that location
-  - if both a location and a name are provided, verify that the cluster exists at that location
+  - verify that the cluster exists at that location
   """
 
   def execute(self):
@@ -125,59 +143,23 @@ class ImagePullStart(runbook.StartStep):
                      reason=('Logging disabled in project {}').format(project))
       return
 
-    # check if there are clusters in the project
-    clusters = gke.get_clusters(op.context)
-    if not clusters:
+    # verify if the provided cluster at location is present
+    project = crm.get_project(op.get(flags.PROJECT_ID))
+    try:
+      cluster = gke.get_cluster(op.get(flags.PROJECT_ID),
+                                cluster_id=op.get(flags.GKE_CLUSTER_NAME),
+                                location=op.get(flags.LOCATION))
+    except GcpApiError:
       op.add_skipped(
-          project_path,
-          reason=('No GKE clusters found in project {}').format(project))
-      return
-
-    # following checks are necessary, depending on what input is provided:
-    # - no input, get all clusters available
-    # - just cluster name is provided, check if there's a cluster with that name
-    # - just location is provided, check if there are clusters at that location
-    # - cluster name and location are provided, check if there's that cluster at that location
-    cluster_name = op.get(flags.NAME)
-    cluster_location = op.get(flags.LOCATION)
-    found_cluster = False
-    found_cluster_with_location = False
-    found_clusters_at_location = False
-    if cluster_name and cluster_location:
-      for cluster in clusters.values():
-        if cluster_name == str(cluster).rsplit('/', maxsplit=1)[-1] \
-          and cluster_location == str(cluster).split('/')[-3]:
-          found_cluster_with_location = True
-          break
-    elif cluster_name:
-      for cluster in clusters.values():
-        if cluster_name == str(cluster).rsplit('/', maxsplit=1)[-1]:
-          found_cluster = True
-          break
-    elif cluster_location:
-      for cluster in clusters.values():
-        if cluster_location == str(cluster).split('/')[-3]:
-          found_clusters_at_location = True
-          break
-
-    if not found_cluster_with_location and cluster_location and cluster_name:
-      op.add_skipped(
-          project_path,
-          reason=('Cluster with the name {} in {} does not exist in project {}'
-                 ).format(cluster_name, cluster_location, project))
-    # next check includes found_cluster_with_location because we found a cluster at a particular
-    # location thus we cannot skip these checks
-    elif not found_cluster and not found_cluster_with_location and cluster_name:
-      op.add_skipped(
-          project_path,
-          reason=(
-              'Cluster with the name {} does not exist in project {}').format(
-                  cluster_name, project))
-    elif not found_clusters_at_location and not found_cluster_with_location and cluster_location:
-      op.add_skipped(
-          project_path,
-          reason=('No clusters found at location {} in project {}').format(
-              cluster_location, project))
+          project,
+          reason=('Cluster {} does not exist in {} for project {}').format(
+              op.get(flags.GKE_CLUSTER_NAME), op.get(flags.LOCATION),
+              op.get(flags.PROJECT_ID)))
+    else:
+      op.add_ok(project,
+                reason=('Cluster {} found in {} for project {}').format(
+                    cluster.name, op.get(flags.LOCATION),
+                    op.get(flags.PROJECT_ID)))
 
 
 class ImageNotFound(runbook.Step):
@@ -185,46 +167,38 @@ class ImageNotFound(runbook.Step):
   template = 'imagepull::image_not_found'
 
   def execute(self):
-    """
-    Check for "Failed to pull image.*not found" log entries
-    """
+    """Check for "Failed to pull image.*not found" log entries."""
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
-    cluster_name = op.get(flags.NAME)
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
-    filter_str = [
-        'log_id("events")',
-        'resource.type="k8s_pod"',
-        'jsonPayload.message=~"Failed to pull image.*not found"',
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
+    filter_list = [
+        'log_id("events")', 'resource.type="k8s_pod"',
+        'jsonPayload.message:"Failed to pull image"',
+        'jsonPayload.message:"not found"',
+        f'resource.labels.location="{cluster_location}"',
+        f'resource.labels.cluster_name="{cluster_name}"'
     ]
-    filter_str = '\n'.join(filter_str)
 
-    if cluster_location and cluster_name:
-      filter_str += '\n' + f'resource.labels.location="{cluster_location}" AND \
-      resource.labels.cluster_name="{cluster_name}"'
-
-    log_entries = local_realtime_query(filter_str)
+    log_entries = local_realtime_query(filter_list)
 
     if log_entries:
-      for log_entry in log_entries:
-        sample_log = log_entry
-        sample_log = str(sample_log).replace(', ', '\n')
-        break
+      sample_log = format_log_entries(log_entries)
       op.add_failed(project_path,
                     reason=op.prep_msg(
                         op.FAILURE_REASON,
-                        LOG_ENTRY=sample_log,
-                        START_TIME_UTC=start_time_utc,
-                        END_TIME_UTC=end_time_utc,
+                        log_entry=sample_log,
+                        start_time=start_time,
+                        end_time=end_time,
                     ),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=start_time_utc,
-                                   END_TIME_UTC=end_time_utc))
+                                   start_time=start_time,
+                                   end_time=end_time))
 
 
 class ImageForbidden(runbook.Step):
@@ -232,46 +206,38 @@ class ImageForbidden(runbook.Step):
   template = 'imagepull::image_forbidden'
 
   def execute(self):
-    """
-    Check for "Failed to pull image.*403 Forbidden" log entries
-    """
+    """Check for "Failed to pull image.*403 Forbidden" log entries."""
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
-    cluster_name = op.get(flags.NAME)
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
-    filter_str = [
-        'log_id("events")',
-        'resource.type="k8s_pod"',
-        'jsonPayload.message=~"Failed to pull image.*403 Forbidden"',
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
+    filter_list = [
+        'log_id("events")', 'resource.type="k8s_pod"',
+        'jsonPayload.message:"Failed to pull image"',
+        'jsonPayload.message:"403 Forbidden"',
+        f'resource.labels.location="{cluster_location}"',
+        f'resource.labels.cluster_name="{cluster_name}"'
     ]
-    if cluster_location and cluster_name:
-      filter_str += '\n' + f'resource.labels.location="{cluster_location}" AND \
-      resource.labels.cluster_name="{cluster_name}"'
 
-    filter_str = '\n'.join(filter_str)
-
-    log_entries = local_realtime_query(filter_str)
+    log_entries = local_realtime_query(filter_list)
 
     if log_entries:
-      for log_entry in log_entries:
-        sample_log = log_entry
-        sample_log = str(sample_log).replace(', ', '\n')
-        break
+      sample_log = format_log_entries(log_entries)
       op.add_failed(project_path,
                     reason=op.prep_msg(
                         op.FAILURE_REASON,
-                        LOG_ENTRY=sample_log,
-                        START_TIME_UTC=start_time_utc,
-                        END_TIME_UTC=end_time_utc,
+                        log_entry=sample_log,
+                        start_time=start_time,
+                        end_time=end_time,
                     ),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=start_time_utc,
-                                   END_TIME_UTC=end_time_utc))
+                                   start_time=start_time,
+                                   end_time=end_time))
 
 
 class ImageDnsIssue(runbook.Step):
@@ -279,46 +245,39 @@ class ImageDnsIssue(runbook.Step):
   template = 'imagepull::image_dns_issue'
 
   def execute(self):
-    """
-    Check for "Failed to pull image.*lookup.*server misbehaving" log entries
-    """
+    """Check for "Failed to pull image.*lookup.*server misbehaving" log entries."""
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
-    cluster_name = op.get(flags.NAME)
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
-    filter_str = [
-        'log_id("events")',
-        'resource.type="k8s_pod"',
-        'jsonPayload.message=~"Failed to pull image.*lookup.*server misbehaving"',
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
+    filter_list = [
+        'log_id("events")', 'resource.type="k8s_pod"',
+        'jsonPayload.message:"Failed to pull image"',
+        'jsonPayload.message:"lookup"',
+        'jsonPayload.message:"server misbehaving"',
+        f'resource.labels.location="{cluster_location}"',
+        f'resource.labels.cluster_name="{cluster_name}"'
     ]
-    if cluster_location and cluster_name:
-      filter_str += '\n' + f'resource.labels.location="{cluster_location}" AND \
-      resource.labels.cluster_name="{cluster_name}"'
 
-    filter_str = '\n'.join(filter_str)
-
-    log_entries = local_realtime_query(filter_str)
+    log_entries = local_realtime_query(filter_list)
 
     if log_entries:
-      for log_entry in log_entries:
-        sample_log = log_entry
-        sample_log = str(sample_log).replace(', ', '\n')
-        break
+      sample_log = format_log_entries(log_entries)
       op.add_failed(project_path,
                     reason=op.prep_msg(
                         op.FAILURE_REASON,
-                        LOG_ENTRY=sample_log,
-                        START_TIME_UTC=start_time_utc,
-                        END_TIME_UTC=end_time_utc,
+                        log_entry=sample_log,
+                        start_time=start_time,
+                        end_time=end_time,
                     ),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=start_time_utc,
-                                   END_TIME_UTC=end_time_utc))
+                                   start_time=start_time,
+                                   end_time=end_time))
 
 
 class ImageConnectionTimeoutRestrictedPrivate(runbook.Step):
@@ -332,40 +291,35 @@ class ImageConnectionTimeoutRestrictedPrivate(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
-    cluster_name = op.get(flags.NAME)
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
-    filter_str = [
-        'log_id("events")',
-        'resource.type="k8s_pod"',
-        'jsonPayload.message=~"Failed to pull image.*dial tcp.*199.36.153.\\d:443: i/o timeout"',
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
+    filter_list = [
+        'log_id("events")', 'resource.type="k8s_pod"',
+        'jsonPayload.message:"Failed to pull image"',
+        'jsonPayload.message:"dial tcp"',
+        'jsonPayload.message:"199.36.153.*:443: i/o timeout"',
+        f'resource.labels.location="{cluster_location}"',
+        f'resource.labels.cluster_name="{cluster_name}"'
     ]
-    if cluster_location and cluster_name:
-      filter_str += '\n' + f'resource.labels.location="{cluster_location}" AND \
-      resource.labels.cluster_name="{cluster_name}"'
 
-    filter_str = '\n'.join(filter_str)
-
-    log_entries = local_realtime_query(filter_str)
+    log_entries = local_realtime_query(filter_list)
 
     if log_entries:
-      for log_entry in log_entries:
-        sample_log = log_entry
-        sample_log = str(sample_log).replace(', ', '\n')
-        break
+      sample_log = format_log_entries(log_entries)
       op.add_failed(project_path,
                     reason=op.prep_msg(
                         op.FAILURE_REASON,
-                        LOG_ENTRY=sample_log,
-                        START_TIME_UTC=start_time_utc,
-                        END_TIME_UTC=end_time_utc,
+                        log_entry=sample_log,
+                        start_time=start_time,
+                        end_time=end_time,
                     ),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=start_time_utc,
-                                   END_TIME_UTC=end_time_utc))
+                                   start_time=start_time,
+                                   end_time=end_time))
 
 
 class ImageConnectionTimeout(runbook.Step):
@@ -379,40 +333,74 @@ class ImageConnectionTimeout(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     project_path = crm.get_project(project)
     cluster_location = op.get(flags.LOCATION)
-    cluster_name = op.get(flags.NAME)
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
-    filter_str = [
-        'log_id("events")',
-        'resource.type="k8s_pod"',
-        'jsonPayload.message=~"Failed to pull image.*dial tcp.*i/o timeout"',
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
+    filter_list = [
+        'log_id("events")', 'resource.type="k8s_pod"',
+        'jsonPayload.message:"Failed to pull image"',
+        'jsonPayload.message:"dial tcp"', 'jsonPayload.message:"i/o timeout"',
+        f'resource.labels.location="{cluster_location}"',
+        f'resource.labels.cluster_name="{cluster_name}"'
     ]
-    if cluster_location and cluster_name:
-      filter_str += '\n' + f'resource.labels.location="{cluster_location}" AND \
-      resource.labels.cluster_name="{cluster_name}"'
 
-    filter_str = '\n'.join(filter_str)
-
-    log_entries = local_realtime_query(filter_str)
+    log_entries = local_realtime_query(filter_list)
 
     if log_entries:
-      for log_entry in log_entries:
-        sample_log = log_entry
-        sample_log = str(sample_log).replace(', ', '\n')
-        break
+      sample_log = format_log_entries(log_entries)
       op.add_failed(project_path,
                     reason=op.prep_msg(
                         op.FAILURE_REASON,
-                        LOG_ENTRY=sample_log,
-                        START_TIME_UTC=start_time_utc,
-                        END_TIME_UTC=end_time_utc,
+                        log_entry=sample_log,
+                        start_time=start_time,
+                        end_time=end_time,
                     ),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=start_time_utc,
-                                   END_TIME_UTC=end_time_utc))
+                                   start_time=start_time,
+                                   end_time=end_time))
+
+
+class ImageNotFoundInsufficientScope(runbook.Step):
+  """Check for Image not found log entries with insufficient_scope server message"""
+  template = 'imagepull::image_not_found_insufficient_scope'
+
+  def execute(self):
+    """
+    Check for "Failed to pull image.*insufficient_scope" log entries
+    """
+    project = op.get(flags.PROJECT_ID)
+    project_path = crm.get_project(project)
+    cluster_location = op.get(flags.LOCATION)
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
+    filter_list = [
+        'log_id("events")', 'resource.type="k8s_pod"',
+        'jsonPayload.message:"Failed to pull image"',
+        'jsonPayload.message:"insufficient_scope"',
+        f'resource.labels.location="{cluster_location}"',
+        f'resource.labels.cluster_name="{cluster_name}"'
+    ]
+
+    log_entries = local_realtime_query(filter_list)
+    if log_entries:
+      sample_log = format_log_entries(log_entries)
+      op.add_failed(project_path,
+                    reason=op.prep_msg(
+                        op.FAILURE_REASON,
+                        log_entry=sample_log,
+                        start_time=start_time,
+                        end_time=end_time,
+                    ),
+                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+    else:
+      op.add_ok(project_path,
+                reason=op.prep_msg(op.SUCCESS_REASON,
+                                   start_time=start_time,
+                                   end_time=end_time))
 
 
 class ImagePullEnd(runbook.EndStep):
@@ -426,9 +414,50 @@ class ImagePullEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing `GKE Image Pull runbbok` diagnostics..."""
+    """Finalize `GKE Image Pull runbbok` diagnostics."""
     response = op.prompt(
         kind=op.CONFIRMATION,
         message='Are you satisfied with the `GKE Image Pull runbbok` analysis?')
     if response == op.NO:
       op.info(message=op.END_MESSAGE)
+
+
+def format_log_entries(log_entries):
+  """Formats a list of log entries into a readable string.
+
+  Args:
+    log_entries: A list of log entry dictionaries.
+
+  Returns:
+    A formatted string containing information from all log entries.
+  """
+
+  log_entry = log_entries[-1]
+  formatted_log = []
+
+  labels = get_path(log_entry, ('resource', 'labels'),
+                    default={})  # Provide default empty dict
+  if labels:
+    formatted_log.extend([
+        f"Cluster name: {labels.get('cluster_name', 'N/A')}",
+        f"Location: {labels.get('location', 'N/A')}",
+        f"Namespace Name: {labels.get('namespace_name', 'N/A')}",
+        f"Pod Name: {labels.get('pod_name', 'N/A')}",
+        f"Project ID: {labels.get('project_id', 'N/A')}"
+    ])
+  else:
+    formatted_log.extend([
+        'Cluster name: Not found', 'Location: Not found',
+        'Namespace Name: Not found', 'Pod Name: Not found',
+        'Project ID: Not found'
+    ])
+
+  json_payload = get_path(log_entry, ('jsonPayload',),
+                          default={})  # Provide default empty dict
+  formatted_log.extend([
+      f"Log Message: {json_payload.get('message', 'N/A')}",
+      f"Reporting Instance: {json_payload.get('reportingInstance', 'N/A')}",
+      f"Last Timestamp: {json_payload.get('lastTimestamp', 'N/A')}"
+  ])
+
+  return '\n'.join(formatted_log)

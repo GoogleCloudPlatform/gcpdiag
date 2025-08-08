@@ -49,8 +49,8 @@ class TestBilling:
     assert billing_account.display_name == DUMMY_BILLING_ACCOUNT_NAME
     assert billing_account.is_open() == DUMMY_BILLING_ACCOUNT_IS_OPEN
     assert billing_account.is_master() == DUMMY_BILLING_ACCOUNT_IS_MASTER
-    assert (len(billing_account.list_projects(context)) >
-            0) == DUMMY_BILLING_ACCOUNT_HAS_PROJECTS
+    assert (len(billing_account.list_projects(context))
+            > 0) == DUMMY_BILLING_ACCOUNT_HAS_PROJECTS
 
   def test_get_all_billing_accounts(self):
     context = models.Context(project_id=DUMMY_PROJECT_ID)
@@ -70,8 +70,7 @@ class TestBilling:
 
   def test_get_billing_info(self):
     context = models.Context(project_id=DUMMY_PROJECT_ID)
-    project_billing_info = billing.ProjectBillingInfo(
-        context.project_id, billing.get_billing_info(context.project_id))
+    project_billing_info = billing.get_billing_info(context.project_id)
 
     assert project_billing_info.billing_account_name == DUMMY_PROJECT_BILLING_ACCOUNT_NAME
     assert project_billing_info.name == DUMMY_PROJECT_NAME

@@ -28,8 +28,9 @@ gcpdiag runbook cloudrun/service-deployment \
   -p project_id=value \
   -p region=value \
   -p service_name=value \
-  -p start_time_utc=value \
-  -p end_time_utc=value
+  -p cloudrun_service_name=value \
+  -p start_time=value \
+  -p end_time=value
 ```
 
 #### Parameters
@@ -38,9 +39,10 @@ gcpdiag runbook cloudrun/service-deployment \
 |------|----------|---------|------|------|
 | `project_id` | True | None | str | The Project ID of the resource under investigation |
 | `region` | True | None | str | Region of the service. |
-| `service_name` | True | None | str | Name of the Cloud Run service |
-| `start_time_utc` | False | None | datetime | Start time of the issue |
-| `end_time_utc` | False | None | datetime | End time of the issue |
+| `service_name` | False | None | str | Name of the Cloud Run service |
+| `cloudrun_service_name` | True | None | str | Name of the Cloud Run service |
+| `start_time` | False | None | datetime | Start time of the issue |
+| `end_time` | False | None | datetime | End time of the issue |
 
 Get help on available commands
 

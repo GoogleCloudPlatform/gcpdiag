@@ -26,7 +26,8 @@ from typing import Any, Dict, List, Optional
 from google.auth import exceptions
 
 from gcpdiag import config, hooks, lint, models, utils
-from gcpdiag.lint.output import csv_output, json_output, terminal_output
+from gcpdiag.lint.output import (api_output, csv_output, json_output,
+                                 terminal_output)
 from gcpdiag.queries import apis, crm, gce, kubectl
 
 
@@ -224,6 +225,12 @@ def _init_args_parser():
       help=(
           'Format output as one of [terminal, json, csv] (default: terminal)'))
 
+  parser.add_argument('--interface',
+                      metavar='FORMATTER',
+                      default=config.get('interface'),
+                      type=str,
+                      help='What interface as one of [cli, api] (default: cli)')
+
   parser.add_argument('--reason',
                       type=str,
                       default=config.get('reason'),
@@ -258,8 +265,10 @@ def _load_repository_rules(repo: lint.LintRuleRepository):
         continue
 
 
-def _get_output_constructor(output_parameter_value):
-  if output_parameter_value == 'json':
+def _get_output_constructor(output_parameter_value, interface):
+  if interface == 'api':
+    return api_output.APIOutput
+  elif output_parameter_value == 'json':
     return json_output.JSONOutput
   elif output_parameter_value == 'csv':
     return csv_output.CSVOutput
@@ -268,14 +277,17 @@ def _get_output_constructor(output_parameter_value):
 
 
 def _initialize_output(output_order):
-  constructor = _get_output_constructor(config.get('output'))
+  """Initialize output formatter."""
+  constructor = _get_output_constructor(config.get('output'),
+                                        config.get('interface'))
   kwargs = {
-      'log_info_for_progress_only': (config.get('verbose') == 0),
+      'log_info_for_progress_only': config.get('verbose') == 0,
       'show_ok': not config.get('hide_ok'),
-      'show_skipped': config.get('show_skipped')
+      'show_skipped': config.get('show_skipped'),
   }
-  if config.get('output') == 'terminal':
-    kwargs['output_order'] = output_order
+  if config.get('interface') == 'cli':
+    if config.get('output') == 'terminal':
+      kwargs['output_order'] = output_order
   output = constructor(**kwargs)
   return output
 
@@ -297,8 +309,9 @@ def _parse_args_run_repo(
   if credentials:
     apis.set_credentials(credentials)
 
-  # Allow to change defaults using a hook function.
-  hooks.set_lint_args_hook(args)
+  if args.interface == 'cli':
+    # Allow to change defaults using a hook function.
+    hooks.set_lint_args_hook(args)
   # Initialize configuration
   config.init(vars(args), terminal_output.is_cloud_shell())
   try:
@@ -360,34 +373,52 @@ def _parse_args_run_repo(
     raise ValueError('oauth authentication is no longer supported')
 
   # Start the reporting
-  output.display_banner()
-  output.display_header(context)
+  if args.interface == 'cli':
+    output.display_banner()
+    output.display_header(context)
 
   # Verify that we have access and that the CRM API is enabled
   try:
     apis.verify_access(context.project_id)
-  except (utils.GcpApiError, exceptions.GoogleAuthError) as err:
-    raise err
+  except (utils.GcpApiError, exceptions.GoogleAuthError, ValueError) as err:
+    if args.interface == 'api':
+      logger.error('Access verifications failed for API interface: %s', err)
+      result = repo.result.create_rule_report(
+          lint.LintRule(
+              product='',
+              rule_class=lint.LintRuleClass.ERR,
+              rule_id='',
+              short_desc='Access verification failed',
+              long_desc='Access verification failed',
+              keywords=[],
+          ))
+      result.add_skipped(None, f'API Error: {err}', None)
+      result.finish()
+      return repo
+    else:
+      raise err
 
   # Warn end user to fallback on serial logs buffer if project isn't storing in
   # cloud logging
-  if not gce.is_project_serial_port_logging_enabled(context.project_id) and \
-    not config.get('enable_gce_serial_buffer'):
-    # Only print the warning if GCE is enabled in the first place
-    if apis.is_enabled(context.project_id, 'compute'):
-      logger.warning(
-          '''Serial output to cloud logging maybe disabled for certain GCE instances.
-          Fallback on serial output buffers by using flag --enable-gce-serial-buffer \n'''
-      )
+  if args.interface == 'cli':
+    if not gce.is_project_serial_port_logging_enabled(context.project_id) and \
+      not config.get('enable_gce_serial_buffer'):
+      # Only print the warning if GCE is enabled in the first place
+      if apis.is_enabled(context.project_id, 'compute'):
+        logger.warning(
+            '''Serial output to cloud logging maybe disabled for certain GCE instances.
+            Fallback on serial output buffers by using flag --enable-gce-serial-buffer \n'''
+        )
 
   # Run the tests.
   repo.run_rules(context)
-  output.display_footer(repo.result)
-  hooks.post_lint_hook(repo.result.get_rule_statuses())
-  if credentials:
-    apis.set_credentials(None)
-  # Clean up the kubeconfig file generated for gcpdiag
-  kubectl.clean_up()
+  if args.interface == 'cli':
+    output.display_footer(repo.result)
+    hooks.post_lint_hook(repo.result.get_rule_statuses())
+    if credentials:
+      apis.set_credentials(None)
+    # Clean up the kubeconfig file generated for gcpdiag
+    kubectl.clean_up()
 
   return repo
 

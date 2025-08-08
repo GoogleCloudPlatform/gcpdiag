@@ -29,7 +29,7 @@ lb/latency: This runbook diagnoses and troubleshoots latency issues with Applica
      The forwarding rule has a backend latency of 660138.25 ms. This is higher than the threshold value of 200 ms.
 
      [REMEDIATION]
-     Investigate the increased backend latency. Check the health and performance of your backend instances, including CPU usage, memory usage, and disk I/O.
+     Investigate the increased backend latency. Check the health and performance of the backend instances, examining metrics such as CPU utilization, memory usage, and disk I/O.
 
 [AUTOMATED STEP]: Check request count per second for the specified forwarding rule
 [INFO]: Forwarding rule name: projects/gcpdiag-lb3-aaaa/global/forwardingRules/https-content-rule
@@ -39,7 +39,7 @@ lb/latency: This runbook diagnoses and troubleshoots latency issues with Applica
      The forwarding rule has an average request count of 11002.3 requests/s in the last 15 minutes. This is higher than the threshold value of 150.
 
      [REMEDIATION]
-     The high request count suggests your backend may be overloaded. Consider scaling up your backend by adding more instances or increasing the resources of existing instances.
+     The high request count suggests the backend may be overloaded. Consider scaling up the backend by adding more instances or increasing the resources of existing instances.
 
 [AUTOMATED STEP]: Check the 5xx error rate for the specified forwarding rule
 [INFO]: Forwarding rule name: projects/gcpdiag-lb3-aaaa/global/forwardingRules/https-content-rule
@@ -48,7 +48,7 @@ lb/latency: This runbook diagnoses and troubleshoots latency issues with Applica
      [REASON]
      The forwarding rule has an average error rate of 0% in the last 15 minutes. This is less than the threshold value of 1%.
 
-[END]: Finalizing unhealthy backends diagnostics...
+[END]: Finalize unhealthy backends diagnostics.
 
 
 forwarding_rule_name=https-content-rule-working,project_id=gcpdiag-lb3-aaaa,region=global
@@ -124,6 +124,6 @@ lb/latency: This runbook diagnoses and troubleshoots latency issues with Applica
      [REASON]
      The forwarding rule has an average error rate of 0% in the last 15 minutes. This is less than the threshold value of 50.0%.
 
-[END]: Finalizing unhealthy backends diagnostics...
+[END]: Finalize unhealthy backends diagnostics.
 
 

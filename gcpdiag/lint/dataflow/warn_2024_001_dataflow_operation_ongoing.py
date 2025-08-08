@@ -87,7 +87,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
           project,
           f'{len(failed_jobs)} job(s) contain `Operation ongoing` or'
           ' `Processing Stuck` logs errors:'
-          f' {", ".join(islice(failed_jobs, 20))} {extra_jobs}',
+          f" {', '.join(islice(failed_jobs, 20))} {extra_jobs}",
       )
     else:
       # only irrelevant logs were fetched

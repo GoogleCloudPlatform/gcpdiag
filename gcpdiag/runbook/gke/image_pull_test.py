@@ -24,8 +24,8 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
 
   rule_parameters = [{
       'project_id': 'gcpdiag-gke-cluster-autoscaler-rrrr',
-      'name': 'gcp-cluster',
+      'gke_cluster_name': 'gke-cluster',
       'location': 'europe-west10',
-      'start_time_utc': '2024-08-12T01:00:00Z',
-      'end_time_utc': '2024-08-12T23:00:00Z'
+      'start_time': '2024-08-12T01:00:00Z',
+      'end_time': '2024-08-12T23:00:00Z'
   }]

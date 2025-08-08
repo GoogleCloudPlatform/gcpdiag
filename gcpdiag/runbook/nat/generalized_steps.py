@@ -33,7 +33,7 @@ class NatIpExhaustionCheck(runbook.Step):
 
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+                          instance_name=op.get(flags.INSTANCE_NAME))
 
     region = utils.region_from_zone(op.get(flags.ZONE))
 
@@ -64,7 +64,7 @@ class NatIpExhaustionCheck(runbook.Step):
     else:
       op.add_uncertain(
           vm,
-          f'Cloud not get IP allocation failed metric for NATGW {op.get("nat_gateway_name")}'
+          f"Cloud not get IP allocation failed metric for NATGW {op.get('nat_gateway_name')}"
       )
 
 
@@ -82,7 +82,7 @@ class NatResourceExhaustionCheck(runbook.Step):
 
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+                          instance_name=op.get(flags.INSTANCE_NAME))
 
     region = utils.region_from_zone(op.get(flags.ZONE))
 
@@ -119,7 +119,7 @@ class NatResourceExhaustionCheck(runbook.Step):
     else:
       op.add_uncertain(
           vm,
-          f'Cloud not get dropped sent packets count metric for NATGW {op.get("nat_gateway_name")}'
+          f"Cloud not get dropped sent packets count metric for NATGW {op.get('nat_gateway_name')}"
       )
 
 
@@ -138,7 +138,7 @@ class NatDroppedReceivedPacketCheck(runbook.Step):
 
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+                          instance_name=op.get(flags.INSTANCE_NAME))
 
     region = utils.region_from_zone(op.get(flags.ZONE))
 
@@ -215,4 +215,4 @@ class NatDroppedReceivedPacketCheck(runbook.Step):
     else:
       op.add_uncertain(
           vm, 'Cloud not get dropped_received_packets_count'
-          f'metric for NATGW {op.get("nat_gateway_name")}')
+          f"metric for NATGW {op.get('nat_gateway_name')}")

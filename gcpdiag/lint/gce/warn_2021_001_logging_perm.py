@@ -103,7 +103,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       report.add_failed(
           i,
           SA_NO_LOGS_WRITER % (sa),
-          'The attached Service Acccount of the VM does not have the required'
+          'The attached Service Account of the VM does not have the required'
           ' IAM role: roles/logging.logWriter',
       )
       continue

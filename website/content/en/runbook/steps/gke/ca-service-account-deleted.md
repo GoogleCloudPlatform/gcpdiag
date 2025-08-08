@@ -18,7 +18,8 @@ None
 
 The scaleUp event failed because a service account used by Cluster Autoscaler has been deleted.
 Example log entry that would help identify involved objects:
-{LOG_ENTRY}
+
+{log_entry}
 
 ### Failure Remediation
 
@@ -26,7 +27,7 @@ Engage Google Cloud Support for further investigation.
 
 ### Success Reason
 
-No "scale.up.error.service.account.deleted" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+No "scale.up.error.service.account.deleted" errors found between {start_time} and {end_time}
 
 
 

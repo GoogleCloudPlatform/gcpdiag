@@ -18,16 +18,18 @@ None
 
 The scaleDown event failed because some of the Pods could not be evicted from a node.
 Example log entry that would help identify involved objects:
-{LOG_ENTRY}
+
+{log_entry}
 
 ### Failure Remediation
 
-Review best practices for Pod Disruption Budgets to ensure that the rules allow for eviction of application replicas when acceptable.
-https://cloud.google.com/architecture/best-practices-for-running-cost-effective-kubernetes-applications-on-gke#add-pod_disruption_budget-to-your-application
+Review best practices for Pod Disruption Budgets to ensure that the rules allow for eviction of application replicas
+when acceptable.
+<https://cloud.google.com/architecture/best-practices-for-running-cost-effective-kubernetes-applications-on-gke#add-pod_disruption_budget-to-your-application>
 
 ### Success Reason
 
-No "scale.down.error.failed.to.evict.pods" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+No "scale.down.error.failed.to.evict.pods" errors found between {start_time} and {end_time}
 
 
 

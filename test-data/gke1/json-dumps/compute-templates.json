@@ -1013,7 +1013,7 @@
       "description": "",
       "id": "3070886385521235639",
       "kind": "compute#instanceTemplate",
-      "name": "gke-gke4-default-pool-bcb6be97",
+      "name": "gke-gke4-default-pool-4c934268",
       "properties": {
         "disks": [
           {
@@ -1148,7 +1148,7 @@
           ]
         }
       },
-      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/instanceTemplates/gke-gke4-default-pool-bcb6be97"
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/instanceTemplates/gke-gke4-default-pool-4c934268"
     },
     {
       "creationTimestamp": "2023-05-08T09:00:24.820-07:00",

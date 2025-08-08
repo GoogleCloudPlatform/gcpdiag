@@ -23,17 +23,19 @@ Memory utilization on this VM has reached levels that may compromise its VM appl
 
 ### Failure Remediation
 
-Elevated memory usage can result in slow or unresponsive or termimated applications.
-Consider enhancing the VM's memory capacity by changing to a machine type with more memory.
-Guidance on stopping and changing the machine type can be found here:
-- Changing machine type: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
-For deeper analysis of memory issues:
+Elevated memory usage can result in slow, unresponsive, or terminated applications.
+Enhance the VM's memory capacity by changing to a machine type with more memory.
 
-Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
-https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization
+Consult the following documentation for guidance:
 
-Or connect via the Serial Console if SSH is not available to mitigate the issue.
-https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console
+- Changing machine type:
+  <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
+
+Additionally, analyze Compute Engine observability metrics to pinpoint high-usage processes:
+<https://cloud.google.com/compute/docs/instances/observe-monitor-vms#memory_utilization>
+
+If SSH is unavailable, connect via the serial console to mitigate the issue:
+<https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 
 ### Success Reason
 
@@ -41,7 +43,7 @@ Memory utilization on this VM is within optimal range.
 
 ### Skipped Reason
 
-There are no logs to examine !
+Serial logs are not available for examination.
 
 
 

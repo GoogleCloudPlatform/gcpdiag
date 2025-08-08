@@ -37,3 +37,14 @@ class DiagnosticTreeConstructionError(Exception):
 
   def __init__(self, message: str):
     super().__init__(message)
+
+
+class MissingParameterError(ValueError):
+  """Raised when a required runbook parameter is missing."""
+
+  def __init__(self,
+               message: str,
+               missing_parameters_list: list[str] | None = None):
+    super().__init__(message)
+    self.missing_parameters_list = (missing_parameters_list if
+                                    missing_parameters_list is not None else [])

@@ -32,7 +32,7 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
     Key Investigation Areas:
 
     Boot Issues:
-        - Check for Boot issues happening due to Kernel Panics
+        - Check for Boot issues happening due to Kernel panics
         - Check for GRUB related issues.
         - Check if system failed to find boot disk.
         - Check if Filesystem corruption is causing issues with system boot.
@@ -50,13 +50,13 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
         - Check if there are any time sync related errors.
 
     SSHD checks:
-        - Check if we have logs related to successful startup of SSHD service.
+        - Check if there are logs related to successful startup of SSHD service.
 
     SSHD Auth Failures checks:
         - Check for SSH issues due to bad permissions of files or directories
 
     Google Guest Agent checks:
-        - Check if we have logs related to successful startup of Google Guest Agent.
+        - Check if there are logs related to successful startup of Google Guest Agent.
 
     SSH guard check:
         - Check if SSHGuard is active and may be blocking IP addresses
@@ -72,6 +72,14 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
           'required': True
       },
       flags.NAME: {
+          'type': str,
+          'help':
+              'The name of the VM, for which you want to analyse the Serial logs.'
+              ' Or provide the id i.e -p name=<str>',
+          'deprecated': True,
+          'new_parameter': 'instance_name'
+      },
+      flags.INSTANCE_NAME: {
           'type': str,
           'help':
               'The name of the VM, for which you want to analyse the Serial logs.'
@@ -98,16 +106,20 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
       }
   }
 
+  def legacy_parameter_handler(self, parameters):
+    if flags.NAME in parameters:
+      parameters[flags.INSTANCE_NAME] = parameters.pop(flags.NAME)
+
   def build_tree(self):
     """Building Decision Tree"""
-    start = FetchVmDetails()
+    start = SerialLogAnalyzerStart()
     self.add_start(step=start)
 
     # Checking if all logs available since last boot of the instance
     log_start_point = gce_gs.VmSerialLogsCheck()
     log_start_point.project_id = op.get(flags.PROJECT_ID)
     log_start_point.zone = op.get(flags.ZONE)
-    log_start_point.instance_name = op.get(flags.NAME)
+    log_start_point.instance_name = op.get(flags.INSTANCE_NAME)
     log_start_point.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
     log_start_point.template = 'vm_serial_log::serial_log_start_point'
     log_start_point.positive_pattern = gce_const.SERIAL_LOG_START_POINT
@@ -117,7 +129,7 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
     kernel_panic = gce_gs.VmSerialLogsCheck()
     kernel_panic.project_id = op.get(flags.PROJECT_ID)
     kernel_panic.zone = op.get(flags.ZONE)
-    kernel_panic.instance_name = op.get(flags.NAME)
+    kernel_panic.instance_name = op.get(flags.INSTANCE_NAME)
     kernel_panic.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
     kernel_panic.template = 'vm_serial_log::kernel_panic'
     kernel_panic.negative_pattern = gce_const.KERNEL_PANIC_LOGS
@@ -127,7 +139,7 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
     fs_corruption = gce_gs.VmSerialLogsCheck()
     fs_corruption.project_id = op.get(flags.PROJECT_ID)
     fs_corruption.zone = op.get(flags.ZONE)
-    fs_corruption.instance_name = op.get(flags.NAME)
+    fs_corruption.instance_name = op.get(flags.INSTANCE_NAME)
     fs_corruption.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
     fs_corruption.template = 'vm_serial_log::linux_fs_corruption'
     fs_corruption.negative_pattern = gce_const.FS_CORRUPTION_MSG
@@ -137,7 +149,7 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
     fs_util = gce_gs.VmSerialLogsCheck()
     fs_util.project_id = op.get(flags.PROJECT_ID)
     fs_util.zone = op.get(flags.ZONE)
-    fs_util.instance_name = op.get(flags.NAME)
+    fs_util.instance_name = op.get(flags.INSTANCE_NAME)
     fs_util.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
     fs_util.template = 'vm_performance::high_disk_utilization_error'
     fs_util.negative_pattern = gce_const.DISK_EXHAUSTION_ERRORS
@@ -147,7 +159,7 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
     slow_disk_io = gce_gs.VmSerialLogsCheck()
     slow_disk_io.project_id = op.get(flags.PROJECT_ID)
     slow_disk_io.zone = op.get(flags.ZONE)
-    slow_disk_io.instance_name = op.get(flags.NAME)
+    slow_disk_io.instance_name = op.get(flags.INSTANCE_NAME)
     slow_disk_io.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
     slow_disk_io.template = 'vm_performance::slow_disk_io'
     slow_disk_io.negative_pattern = gce_const.SLOW_DISK_READS
@@ -157,9 +169,9 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
     oom_errors = gce_gs.VmSerialLogsCheck()
     oom_errors.project_id = op.get(flags.PROJECT_ID)
     oom_errors.zone = op.get(flags.ZONE)
-    oom_errors.instance_name = op.get(flags.NAME)
+    oom_errors.instance_name = op.get(flags.INSTANCE_NAME)
     oom_errors.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
-    oom_errors.template = 'vm_performance::memory_error'
+    oom_errors.template = 'vm_performance::high_memory_usage_logs'
     oom_errors.negative_pattern = gce_const.OOM_PATTERNS
     self.add_step(parent=log_start_point, child=oom_errors)
 
@@ -171,7 +183,7 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
     network_issue = gce_gs.VmSerialLogsCheck()
     network_issue.project_id = op.get(flags.PROJECT_ID)
     network_issue.zone = op.get(flags.ZONE)
-    network_issue.instance_name = op.get(flags.NAME)
+    network_issue.instance_name = op.get(flags.INSTANCE_NAME)
     network_issue.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
     network_issue.template = 'vm_serial_log::network_errors'
     network_issue.negative_pattern = gce_const.NETWORK_ERRORS
@@ -181,7 +193,7 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
     timesync_issue = gce_gs.VmSerialLogsCheck()
     timesync_issue.project_id = op.get(flags.PROJECT_ID)
     timesync_issue.zone = op.get(flags.ZONE)
-    timesync_issue.instance_name = op.get(flags.NAME)
+    timesync_issue.instance_name = op.get(flags.INSTANCE_NAME)
     timesync_issue.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
     timesync_issue.template = 'vm_serial_log::time_sync_issue'
     timesync_issue.negative_pattern = gce_const.TIME_SYNC_ERROR
@@ -191,7 +203,7 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
     sshd_check = gce_gs.VmSerialLogsCheck()
     sshd_check.project_id = op.get(flags.PROJECT_ID)
     sshd_check.zone = op.get(flags.ZONE)
-    sshd_check.instance_name = op.get(flags.NAME)
+    sshd_check.instance_name = op.get(flags.INSTANCE_NAME)
     sshd_check.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
     sshd_check.template = 'vm_serial_log::sshd'
     sshd_check.positive_pattern = gce_const.GOOD_SSHD_PATTERNS
@@ -202,7 +214,7 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
     sshd_auth_failure = gce_gs.VmSerialLogsCheck()
     sshd_auth_failure.project_id = op.get(flags.PROJECT_ID)
     sshd_auth_failure.zone = op.get(flags.ZONE)
-    sshd_auth_failure.instance_name = op.get(flags.NAME)
+    sshd_auth_failure.instance_name = op.get(flags.INSTANCE_NAME)
     sshd_auth_failure.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
     sshd_auth_failure.template = 'vm_serial_log::sshd_auth_failure'
     sshd_auth_failure.negative_pattern = gce_const.SSHD_AUTH_FAILURE
@@ -212,7 +224,7 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
     guest_agent_check = gce_gs.VmSerialLogsCheck()
     guest_agent_check.project_id = op.get(flags.PROJECT_ID)
     guest_agent_check.zone = op.get(flags.ZONE)
-    guest_agent_check.instance_name = op.get(flags.NAME)
+    guest_agent_check.instance_name = op.get(flags.INSTANCE_NAME)
     guest_agent_check.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
     guest_agent_check.template = 'vm_serial_log::guest_agent'
     guest_agent_check.positive_pattern = gce_const.GUEST_AGENT_STATUS_MSG
@@ -223,7 +235,7 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
     sshd_guard = gce_gs.VmSerialLogsCheck()
     sshd_guard.project_id = op.get(flags.PROJECT_ID)
     sshd_guard.zone = op.get(flags.ZONE)
-    sshd_guard.instance_name = op.get(flags.NAME)
+    sshd_guard.instance_name = op.get(flags.INSTANCE_NAME)
     sshd_guard.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
     sshd_guard.template = 'vm_serial_log::sshguard'
     sshd_guard.negative_pattern = gce_const.SSHGUARD_PATTERNS
@@ -232,8 +244,8 @@ class SerialLogAnalyzer(runbook.DiagnosticTree):
     self.add_end(AnalysingSerialLogsEnd())
 
 
-class FetchVmDetails(runbook.StartStep):
-  """Fetching VM details ..."""
+class SerialLogAnalyzerStart(runbook.StartStep):
+  """Fetching VM details."""
 
   template = 'vm_attributes::running'
 
@@ -244,26 +256,27 @@ class FetchVmDetails(runbook.StartStep):
     try:
       vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                             zone=op.get(flags.ZONE),
-                            instance_name=op.get(flags.NAME))
+                            instance_name=op.get(flags.INSTANCE_NAME))
     except googleapiclient.errors.HttpError:
       op.add_skipped(
           project,
           reason=('Instance {} does not exist in zone {} or project {}').format(
-              op.get(flags.NAME), op.get(flags.ZONE), op.get(flags.PROJECT_ID)))
+              op.get(flags.INSTANCE_NAME), op.get(flags.ZONE),
+              op.get(flags.PROJECT_ID)))
     else:
       if vm and vm.is_running:
         # Check for instance id and instance name
         if not op.get(flags.ID):
           op.put(flags.ID, vm.id)
-        elif not op.get(flags.NAME):
-          op.put(flags.NAME, vm.name)
+        elif not op.get(flags.INSTANCE_NAME):
+          op.put(flags.INSTANCE_NAME, vm.name)
       else:
         op.add_failed(vm,
                       reason=op.prep_msg(op.FAILURE_REASON,
-                                         vm_name=vm.name,
+                                         full_resource_path=vm.full_path,
                                          status=vm.status),
                       remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                              vm_name=vm.name,
+                                              full_resource_path=vm.full_path,
                                               status=vm.status))
 
     # file sanity checks
@@ -310,13 +323,13 @@ class CloudInitChecks(runbook.CompositeStep):
     licenses = ubuntu_licenses + ubuntu_pro_licenses
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+                          instance_name=op.get(flags.INSTANCE_NAME))
     if vm.check_license(licenses):
       # Checking for Cloud init startup log
       cloud_init_startup_check = gce_gs.VmSerialLogsCheck()
       cloud_init_startup_check.project_id = op.get(flags.PROJECT_ID)
       cloud_init_startup_check.zone = op.get(flags.ZONE)
-      cloud_init_startup_check.instance_name = op.get(flags.NAME)
+      cloud_init_startup_check.instance_name = op.get(flags.INSTANCE_NAME)
       cloud_init_startup_check.serial_console_file = op.get(
           flags.SERIAL_CONSOLE_FILE)
       cloud_init_startup_check.template = 'vm_serial_log::cloud_init_startup_check'
@@ -328,7 +341,7 @@ class CloudInitChecks(runbook.CompositeStep):
       cloud_init_check.template = 'vm_serial_log::cloud_init'
       cloud_init_check.project_id = op.get(flags.PROJECT_ID)
       cloud_init_check.zone = op.get(flags.ZONE)
-      cloud_init_check.instance_name = op.get(flags.NAME)
+      cloud_init_check.instance_name = op.get(flags.INSTANCE_NAME)
       cloud_init_check.serial_console_file = op.get(flags.SERIAL_CONSOLE_FILE)
       cloud_init_check.negative_pattern = gce_const.CLOUD_INIT_NEGATIVE_PATTERN
       cloud_init_check.positive_pattern = gce_const.CLOUD_INIT_POSITIVE_PATTERN
@@ -339,15 +352,15 @@ class CloudInitChecks(runbook.CompositeStep):
 
 
 class AnalysingSerialLogsEnd(runbook.EndStep):
-  """Finalizing Serial console Log Analysis..."""
+  """Finalize Serial console Log Analysis."""
 
   def execute(self):
-    """Finalizing Serial console Log Analysis..."""
+    """Finalize Serial console Log Analysis."""
     if not config.get(flags.INTERACTIVE_MODE):
       response = op.prompt(
           kind=op.CONFIRMATION,
           message=
-          f'Are you able to find issues related to {op.get(flags.NAME)}?',
+          f'Are you able to find issues related to {op.get(flags.INSTANCE_NAME)}?',
           choice_msg='Enter an option: ')
       if response == op.NO:
         op.info(message=op.END_MESSAGE)

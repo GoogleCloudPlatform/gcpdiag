@@ -30,6 +30,8 @@ WEBSITE_RUNBOOK_DIR = 'website/content/en/runbook'
 # update also pyinstaller/hook-gcpdiag.lint.py
 PRODUCTS = get_product_list()
 
+PRODUCTS_EXCEPTIONS = ['gcpdiag', 'gcp']
+
 RULE_CLASSES = get_rule_classes()
 
 
@@ -137,6 +139,26 @@ def gen_dt_rule_and_steps_page(dt, in_scope_steps):
     dt: The diagnostic tree object to process.
     in_scope_steps: A dictionary of steps that are in scope for documentation.
   """
+  if dt.product not in PRODUCTS and dt.product not in PRODUCTS_EXCEPTIONS:
+    print(
+        f'ERROR: Product "{dt.product}" for Diagnostic Tree '
+        f'"{dt.__class__.__name__}" is not defined in the "PRODUCTS" '
+        'dictionary.',
+        file=sys.stderr)
+    print(
+        'To resolve this pre-commit error, you must add the new product to '
+        '"bin/precommit-required-files.py".',
+        file=sys.stderr)
+    print(
+        'Specifically, update the `PRODUCTS` dictionary in the '
+        '`get_product_list()` function.',
+        file=sys.stderr)
+    print(
+        'Example: "your_new_product": "[Your New Product Name]"'
+        '(https://cloud.google.com/your-new-product-url)',
+        file=sys.stderr)
+    sys.exit(1)
+
   # Expand the full diagnostic tree from the AST nodes.
   # Used to draw graphviz images and document the child steps.
   builder = runbook.ExpandTreeFromAst(dt.__class__)
@@ -235,6 +257,26 @@ def gen_step_page(step: runbook.Step):
   Args:
     step (runbook.Step): The diagnostic step instance to generate the page.
   """
+  if step.product not in PRODUCTS and step.product not in PRODUCTS_EXCEPTIONS:
+    print(
+        f'ERROR: Product "{step.product}" for Diagnostic Tree '
+        f'"{step.__class__.__name__}" is not defined in the "PRODUCTS" '
+        f'dictionary.',
+        file=sys.stderr)
+    print(
+        'To resolve this pre-commit error, you must add the new product to '
+        '"bin/precommit-required-files.py".',
+        file=sys.stderr)
+    print(
+        'Specifically, update the `PRODUCTS` dictionary in the '
+        '`get_product_list()` function.',
+        file=sys.stderr)
+    print(
+        'Example: "your_new_product": "[Your New Product Name]"'
+        '(https://cloud.google.com/your-new-product-url)',
+        file=sys.stderr)
+    sys.exit(1)  # Exit with an error to prevent further issues
+
   try:
     steps_dir = pathlib.Path(f'{WEBSITE_RUNBOOK_DIR}/steps')
     steps_dir.mkdir(parents=True)
@@ -296,7 +338,7 @@ def gen_step_page(step: runbook.Step):
   step_page = f'{product_steps_dir}/{step.doc_file_name}.md'
   rendered_content = runbook.util.render_template('bin/templates/',
                                                   'steps.jinja', context)
-  # For some reason there are \n at the end dispite striping new line and block lines
+  # For some reason there are \n at the end despite striping new line and block lines
   # Many strip it if any still exists at the end.
   rendered_content = rendered_content.rstrip('\n')
   md_page_content = ''

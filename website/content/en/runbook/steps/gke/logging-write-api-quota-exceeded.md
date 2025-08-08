@@ -22,11 +22,12 @@ The logging health check failed because your project has exceeded its Cloud Logg
 
 ### Failure Remediation
 
-Review your logging usage and either reduce log volume or request a quota increase. See instructions: https://cloud.google.com/kubernetes-engine/docs/troubleshooting/logging#verify_that_write_api_quotas_have_not_been_reached
+Review logging usage and either reduce log volume or request a quota increase. See instructions:
+<https://cloud.google.com/kubernetes-engine/docs/troubleshooting/logging#verify_that_write_api_quotas_have_not_been_reached>
 
 ### Success Reason
 
-The project is within its Cloud Logging Write API quota between {START_TIME_UTC} and {END_TIME_UTC} UTC.
+The project is within its Cloud Logging Write API quota between {start_time} and {end_time}.
 
 
 

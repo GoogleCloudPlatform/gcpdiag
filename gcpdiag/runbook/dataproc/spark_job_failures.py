@@ -25,6 +25,7 @@ from gcpdiag.runbook.dataproc import constants as dp_const
 from gcpdiag.runbook.dataproc import flags
 from gcpdiag.runbook.dataproc import generalized_steps as dp_gs
 from gcpdiag.runbook.iam import generalized_steps as iam_gs
+from gcpdiag.utils import GcpApiError
 
 
 class SparkJobFailures(runbook.DiagnosticTree):
@@ -61,6 +62,12 @@ class SparkJobFailures(runbook.DiagnosticTree):
       flags.JOB_ID: {
           'type': str,
           'help': 'The Job ID of the resource under investigation',
+          'deprecated': True,
+          'new_parameter': 'dataproc_job_id'
+      },
+      flags.DATAPROC_JOB_ID: {
+          'type': str,
+          'help': 'The Job ID of the resource under investigation',
           'required': True,
       },
       flags.REGION: {
@@ -93,87 +100,21 @@ class SparkJobFailures(runbook.DiagnosticTree):
       },
   }
 
+  def legacy_parameter_handler(self, parameters):
+    if flags.JOB_ID in parameters:
+      parameters[flags.DATAPROC_JOB_ID] = parameters.pop(flags.JOB_ID)
+
   def build_tree(self):
     """Dataproc Spark Job Failures debug tree."""
     # Instantiate your step classes
-    job_exist = JobExists()
+    job_exist = JobStart()
     self.add_start(job_exist)
-    # Check cluster exists
-    cluster_exists = DataProcClusterExists()
-    self.add_step(parent=job_exist, child=cluster_exists)
-    # Check stackdriver enabled
-    stackdriver_setting = CheckStackdriverSetting()
-    self.add_step(parent=cluster_exists, child=stackdriver_setting)
-    # Check cluster version
-    cluster_version = CheckClusterVersion()
-    self.add_step(parent=stackdriver_setting, child=cluster_version)
-    # Check if job failed
-    check_if_job_failed = CheckIfJobFailed()
-    self.add_step(parent=cluster_version, child=check_if_job_failed)
-    # Check if job failed due to task not found
-    check_task_not_found = CheckTaskNotFound()
-    self.add_step(parent=check_if_job_failed, child=check_task_not_found)
-    # Check if permissions meet requirements
-    check_permissions = CheckPermissions()
-    self.add_step(parent=check_task_not_found, child=check_permissions)
-    # Check if Master OOM happened
-    check_master_oom = CheckMasterOOM()
-    self.add_step(parent=check_task_not_found, child=check_master_oom)
-    # Check if worker OOM happened
-    check_worker_oom = CheckWorkerOOM()
-    self.add_step(parent=check_master_oom, child=check_worker_oom)
-    # Check if secodnary worker preemption happened
-    check_sw_preemption = CheckSWPreemption()
-    self.add_step(parent=check_worker_oom, child=check_sw_preemption)
-    # Check if worker disk usage issue happened
-    check_worker_disk_usage_issue = CheckWorkerDiskUsageIssue()
-    self.add_step(parent=check_worker_oom, child=check_worker_disk_usage_issue)
-    # Check cluster network connection
-    check_cluster_network = dp_gs.CheckClusterNetworkConnectivity()
-    self.add_step(parent=check_worker_oom, child=check_cluster_network)
-    # Check if job failed due to port exhaustion
-    check_port_exhaustion = CheckPortExhaustion()
-    self.add_step(parent=check_cluster_network, child=check_port_exhaustion)
-    # Check if killing orphaned application happened
-    check_killing_orphaned_application = CheckKillingOrphanedApplication()
-    self.add_step(parent=check_cluster_network,
-                  child=check_killing_orphaned_application)
-    # Check if python import failure happened
-    check_python_import_failure = CheckPythonImportFailure()
-    self.add_step(
-        parent=check_cluster_network,
-        child=check_python_import_failure,
-    )
-    # Check for logs indicating shuffle failures.
-    check_shuffle_failures = CheckShuffleFailures()
-    self.add_step(parent=check_cluster_network, child=check_shuffle_failures)
-    # Check if fetch job failed with executor is not registered error
-    check_shuffle_service_kill = CheckShuffleServiceKill()
-    self.add_step(parent=check_shuffle_failures,
-                  child=check_shuffle_service_kill)
-    # Check if GC pause happened on the cluster
-    check_if_gc_pause_happened = CheckGCPause()
-    self.add_step(
-        parent=check_shuffle_failures,
-        child=check_if_gc_pause_happened,
-    )
-    # Check YarnRuntimeException
-    check_yarn_runtime = CheckYarnRuntimeException()
-    self.add_step(parent=check_shuffle_failures, child=check_yarn_runtime)
-    # Check Job Throttling messages
-    check_job_throttling = CheckJobThrottling()
-    self.add_step(parent=check_shuffle_failures, child=check_job_throttling)
-    # Check GCS Connector
-    check_gcs_connector = CheckGCSConnector()
-    self.add_step(parent=check_shuffle_failures, child=check_gcs_connector)
-    #Check BQ Connector
-    check_bq_connector = CheckBQConnector()
-    self.add_step(parent=check_shuffle_failures, child=check_bq_connector)
-    # Ending your runbook
+    job_details_gateway = JobDetailsDependencyGateway()
+    self.add_step(parent=job_exist, child=job_details_gateway)
     self.add_end(SparkJobEnd())
 
 
-class JobExists(runbook.StartStep):
+class JobStart(runbook.StartStep):
   """Prepares the parameters required for the dataproc/spark_job_failures runbook.
 
   Ensures both project_id, region and job_id parameters are available.
@@ -182,124 +123,117 @@ class JobExists(runbook.StartStep):
   template = 'job::job_id_exists'
 
   def execute(self):
-    """Verify job exists in Dataproc UI..."""
+    """Verify job exists in customer's project."""
     project = crm.get_project(op.get(flags.PROJECT_ID))
-
-    if not op.get(flags.JOB_ID) or not op.get(flags.REGION):
-      op.add_failed(
-          project,
-          reason=op.prep_msg(
-              op.FAILURE_REASON,
-              project_id=project,
-              job_id=op.get(flags.JOB_ID),
-              cluster_name=op.get(flags.CLUSTER_NAME),
-          ),
-          remediation=op.prep_msg(op.FAILURE_REMEDIATION),
-      )
-      return
 
     # uses the API to get the cluster information from the job id
     try:
       job = dataproc.get_job_by_jobid(project_id=op.get(flags.PROJECT_ID),
                                       region=op.get(flags.REGION),
-                                      job_id=op.get(flags.JOB_ID))
-    except (
-        AttributeError,
-        TypeError,
-        ValueError,
-        IndexError,
-    ) as e:
-      op.put(flags.JOB_EXIST, 'false')
-      op.add_failed(
+                                      job_id=op.get(flags.DATAPROC_JOB_ID))
+    except (AttributeError, GcpApiError, IndexError, TypeError, ValueError):
+      op.add_skipped(
           project,
           reason=op.prep_msg(
-              op.FAILURE_REASON,
+              op.SKIPPED_REASON,
               project_id=project,
-              job_id=op.get(flags.JOB_ID),
-              cluster_name=op.get(flags.CLUSTER_NAME),
-              error=e,
+              job_id=op.get(flags.DATAPROC_JOB_ID),
+              cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
           ),
-          remediation=op.prep_msg(op.FAILURE_REMEDIATION),
       )
       return
 
+    if job.state == 'DONE':
+      op.add_skipped(
+          project,
+          reason=(
+              'Job {} completed successfully.'
+              'If the job experienced slow performance, potential causes'
+              'include data skew, changes in data volume, or network latency.'
+              'If performance issues persist, open a support case and share the'
+              'Spark event log for both the fast and slow job runs.'.format(
+                  op.get(flags.DATAPROC_JOB_ID))))
+      return
+
     # Start date is the date for when the job was running
-    start_time_utc = datetime.strptime(
+    start_time = datetime.strptime(
         job.status_history['RUNNING'],
         '%Y-%m-%dT%H:%M:%S.%fZ').replace(tzinfo=timezone.utc)
 
     # End date is the start date + 7 days
-    end_time_utc = start_time_utc + timedelta(days=7)
+    end_time = start_time + timedelta(days=7)
 
     # Saving cluster parameters
-    op.put(flags.START_TIME_UTC, start_time_utc)
-    op.info(f'Start time utc:{start_time_utc}')
-    op.put(flags.END_TIME_UTC, end_time_utc)
-    op.info(f'End time utc:{end_time_utc}')
+    op.put(flags.START_TIME, start_time)
+    op.info(f'Start time utc:{start_time}')
+    op.put(flags.END_TIME, end_time)
+    op.info(f'End time utc:{end_time}')
     op.put(flags.CLUSTER_UUID, job.cluster_uuid)
-    op.put(flags.CLUSTER_NAME, job.cluster_name)
+    op.put(flags.DATAPROC_CLUSTER_NAME, job.cluster_name)
 
-    if check_datetime_gap(op.get(flags.START_TIME_UTC),
-                          op.get(flags.END_TIME_UTC), 30):
+    if check_datetime_gap(op.get(flags.START_TIME), op.get(flags.END_TIME), 30):
       op.put(flags.JOB_OLDER_THAN_30_DAYS, True)
     else:
       op.put(flags.JOB_OLDER_THAN_30_DAYS, False)
+
+    cluster = dataproc.get_cluster(cluster_name=op.get(
+        flags.DATAPROC_CLUSTER_NAME),
+                                   region=op.get(flags.REGION),
+                                   project=op.get(flags.PROJECT_ID))
+
+    if cluster:
+      op.put('cluster_exists', True)
+      if not op.get(flags.SERVICE_ACCOUNT):
+        #Saving Service Account parameter
+        if cluster.vm_service_account_email:
+          op.put(flags.SERVICE_ACCOUNT, cluster.vm_service_account_email)
 
     op.add_ok(
         project,
         reason=op.prep_msg(
             op.SUCCESS_REASON,
             project_id=project,
-            job_id=op.get(flags.JOB_ID),
-            cluster_name=op.get(flags.CLUSTER_NAME),
+            job_id=op.get(flags.DATAPROC_JOB_ID),
+            cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
         ),
     )
     return
 
 
-class DataProcClusterExists(runbook.Step):
-  """Verify if cluster exists in Dataproc UI."""
+class JobDetailsDependencyGateway(runbook.Gateway):
+  """Decision point for child steps that require cluster details and those that dont.
 
-  template = 'job::cluster_exists'
+  Uses cluster details from the Dataproc API set in the start step to reduce scope of
+  errors from invalid input
+  """
 
   def execute(self):
-    """Verify cluster exists in Dataproc UI..."""
+    """Execute child steps depending on if the required details exist or not"""
 
-    project = crm.get_project(op.get(flags.PROJECT_ID))
+    # add child steps that depend on job details from the API
+    self.add_child(CheckTaskNotFound())
+    self.add_child(CheckMasterOOM())
+    self.add_child(CheckWorkerOOM())
+    self.add_child(CheckSWPreemption())
+    self.add_child(CheckWorkerDiskUsageIssue())
+    self.add_child(CheckPortExhaustion())
+    self.add_child(CheckKillingOrphanedApplication())
+    self.add_child(CheckPythonImportFailure())
+    self.add_child(CheckShuffleServiceKill())
+    self.add_child(CheckGCPause())
+    self.add_child(CheckYarnRuntimeException())
+    self.add_child(CheckJobThrottling())
+    self.add_child(CheckGCSConnector())
+    self.add_child(CheckShuffleFailures())
 
-    if op.get(flags.JOB_EXIST) == 'false':
-      op.add_skipped(project, reason="Job doesn't exist, skipping this step.")
-      return
-
-    cluster = dataproc.get_cluster(cluster_name=op.get(flags.CLUSTER_NAME),
-                                   region=op.get(flags.REGION),
-                                   project=op.get(flags.PROJECT_ID))
-
-    if cluster:
-      op.put(flags.CLUSTER_NAME, cluster.name)
-      if not op.get(flags.SERVICE_ACCOUNT):
-        #Saving Service Account parameter
-        if cluster.vm_service_account_email:
-          op.put(flags.SERVICE_ACCOUNT, cluster.vm_service_account_email)
-
-      op.add_ok(
-          cluster,
-          reason=op.prep_msg(
-              op.SUCCESS_REASON,
-              cluster_name=cluster.name,
-              project_id=project,
-          ),
-      )
-    else:
-      op.add_failed(
-          cluster,
-          reason=op.prep_msg(
-              op.FAILURE_REASON,
-              cluster_name=op.get(flags.CLUSTER_NAME),
-              project_id=project,
-          ),
-          remediation=op.prep_msg(op.FAILURE_REMEDIATION),
-      )
+    cluster_exists = op.get('cluster_exists', False)
+    if cluster_exists:
+      # add child steps that depend on cluster details from the API
+      self.add_child(CheckStackdriverSetting())
+      self.add_child(CheckClusterVersion())
+      self.add_child(CheckPermissions())
+      self.add_child(dp_gs.CheckClusterNetworkConnectivity())
+      self.add_child(CheckBQConnector())
 
 
 class CheckStackdriverSetting(runbook.Step):
@@ -312,9 +246,10 @@ class CheckStackdriverSetting(runbook.Step):
   template = 'dataproc_attributes::stackdriver'
 
   def execute(self):
-    """Checking Stackdriver setting..."""
+    """Checking Stackdriver setting."""
     # taking cluster details
-    cluster = dataproc.get_cluster(cluster_name=op.get(flags.CLUSTER_NAME),
+    cluster = dataproc.get_cluster(cluster_name=op.get(
+        flags.DATAPROC_CLUSTER_NAME),
                                    region=op.get(flags.REGION),
                                    project=op.get(flags.PROJECT_ID))
 
@@ -338,24 +273,13 @@ class CheckClusterVersion(runbook.Step):
   template = 'dataproc_attributes::unspported_image_version'
 
   def execute(self):
-    """Verify cluster version..."""
+    """Verify cluster version."""
 
     supported_versions = dataproc.extract_dataproc_supported_version()
-    cluster = dataproc.get_cluster(cluster_name=op.get(flags.CLUSTER_NAME),
+    cluster = dataproc.get_cluster(cluster_name=op.get(
+        flags.DATAPROC_CLUSTER_NAME),
                                    region=op.get(flags.REGION),
                                    project=op.get(flags.PROJECT_ID))
-
-    # If cluster cannot be found, gather details from flags
-    if cluster is None:
-      image_version = op.get(flags.IMAGE_VERSION)
-      if image_version is None:
-        op.add_skipped(
-            cluster,
-            'The cluster cannot be found, skipping this step. ' +
-            'Please provide image_version as input parameter ' +
-            'if the cluster is deleted or keep the cluster in error state.',
-        )
-      return
 
     image_version = '.'.join(cluster.image_version.split('.')[:2])
     op.put(flags.IMAGE_VERSION, image_version)
@@ -364,42 +288,14 @@ class CheckClusterVersion(runbook.Step):
       op.add_ok(
           cluster,
           reason=op.prep_msg(op.SUCCESS_REASON,
-                             cluster_name=op.get(flags.CLUSTER_NAME)),
+                             cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME)),
       )
     else:
       op.add_failed(
           cluster,
           reason=op.prep_msg(op.FAILURE_REASON,
-                             cluster_name=op.get(flags.CLUSTER_NAME)),
+                             cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME)),
           remediation=op.prep_msg(op.FAILURE_REMEDIATION),
-      )
-
-
-class CheckIfJobFailed(runbook.Step):
-  """Verify if dataproc job failed."""
-
-  template = 'job::job_failed'
-
-  def execute(self):
-    """Verify if job failed..."""
-    project = crm.get_project(op.get(flags.PROJECT_ID))
-    if op.get(flags.JOB_EXIST) == 'false':
-      op.add_skipped(project, reason="Job doesn't exist, skipping this step.")
-      return
-
-    job = dataproc.get_job_by_jobid(op.get(flags.PROJECT_ID),
-                                    op.get(flags.REGION), op.get(flags.JOB_ID))
-
-    if job.state == 'DONE':
-      op.add_failed(
-          job,
-          reason=op.prep_msg(op.FAILURE_REASON, job_id=op.get(flags.JOB_ID)),
-          remediation=op.prep_msg(op.FAILURE_REMEDIATION),
-      )
-    else:
-      op.add_ok(
-          job,
-          reason=op.prep_msg(op.SUCCESS_REASON, job_id=op.get(flags.JOB_ID)),
       )
 
 
@@ -409,31 +305,27 @@ class CheckTaskNotFound(runbook.CompositeStep):
   template = 'job::task_not_found'
 
   def execute(self):
-    """Verify if job didn't failed with 'task not found' error..."""
+    """Verify if job didn't failed with 'task not found' error."""
     project = crm.get_project(op.get(flags.PROJECT_ID))
-
-    if op.get(flags.JOB_EXIST) == 'false':
-      op.add_skipped(project, reason="Job doesn't exist, skipping this step.")
-      return
 
     if op.get(flags.JOB_OLDER_THAN_30_DAYS):
       op.add_skipped(
           project,
-          reason=('Job is older than 30 days, skipping this step. '
-                  'Please create a new job and run the runbook again.'),
+          reason=('Job is older than 30 days'),
       )
       return
 
     job = dataproc.get_job_by_jobid(op.get(flags.PROJECT_ID),
-                                    op.get(flags.REGION), op.get(flags.JOB_ID))
+                                    op.get(flags.REGION),
+                                    op.get(flags.DATAPROC_JOB_ID))
 
     cluster_uuid = job.cluster_uuid
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
 
     additional_message = (
-        f'We are not able to find the cluster deletion log between'
-        f' {start_time_utc} and {end_time_utc}. It could be some other issue.'
+        f'Unable to find the cluster deletion log between'
+        f' {start_time} and {end_time}. It could be some other issue.'
         f'Please raise a support case to investigate further.')
 
     log_search_filter = f"""resource.type="cloud_dataproc_cluster"
@@ -444,8 +336,8 @@ class CheckTaskNotFound(runbook.CompositeStep):
     log_entries = logs.realtime_query(
         project_id=op.get(flags.PROJECT_ID),
         filter_str=log_search_filter,
-        start_time_utc=start_time_utc,
-        end_time_utc=end_time_utc,
+        start_time=start_time,
+        end_time=end_time,
     )
 
     if log_entries:
@@ -458,7 +350,7 @@ class CheckTaskNotFound(runbook.CompositeStep):
           job,
           reason=op.prep_msg(
               op.SUCCESS_REASON,
-              job_id=op.get(flags.JOB_ID),
+              job_id=op.get(flags.DATAPROC_JOB_ID),
               additional_message=additional_message,
           ),
       )
@@ -467,7 +359,7 @@ class CheckTaskNotFound(runbook.CompositeStep):
           job,
           reason=op.prep_msg(
               op.FAILURE_REASON,
-              job_id=op.get(flags.JOB_ID),
+              job_id=op.get(flags.DATAPROC_JOB_ID),
               additional_message=additional_message,
           ),
           remediation=op.prep_msg(op.FAILURE_REMEDIATION),
@@ -481,7 +373,7 @@ class CheckPermissions(runbook.CompositeStep):
   template = 'permissions::permission_check'
 
   def execute(self):
-    """Verify permissions ..."""
+    """Verify permissions ."""
 
     sa_email = op.get(flags.SERVICE_ACCOUNT)
     project = crm.get_project(op.get(flags.PROJECT_ID))
@@ -501,7 +393,7 @@ class CheckPermissions(runbook.CompositeStep):
       op.info(
           'VM Service Account associated with Dataproc cluster was found in the'
           ' same project')
-      op.info('Checking permissions...')
+      op.info('Checking permissions.')
       # Check for Service Account permissions
       sa_permission_check = iam_gs.IamPolicyCheck()
       sa_permission_check.project = op.get(flags.PROJECT_ID)
@@ -514,7 +406,7 @@ class CheckPermissions(runbook.CompositeStep):
       op.info('VM Service Account associated with Dataproc cluster was found in'
               ' cross project')
       # Check if constraint is enforced
-      op.info('Checking constraints on service account project...')
+      op.info('Checking constraints on service account project.')
       orgpolicy_constraint_check = crm_gs.OrgPolicyCheck()
       orgpolicy_constraint_check.project = op.get(flags.CROSS_PROJECT_ID)
       orgpolicy_constraint_check.constraint = (
@@ -523,7 +415,7 @@ class CheckPermissions(runbook.CompositeStep):
       self.add_child(orgpolicy_constraint_check)
 
       # Check Service Account roles
-      op.info('Checking roles in service account project...')
+      op.info('Checking roles in service account project.')
       sa_permission_check = iam_gs.IamPolicyCheck()
       sa_permission_check.project = op.get(flags.CROSS_PROJECT_ID)
       sa_permission_check.principal = (
@@ -537,7 +429,7 @@ class CheckPermissions(runbook.CompositeStep):
 
       # Check Service Agent Service Account roles
       op.info('Checking service agent service account roles on service account'
-              ' project...')
+              ' project.')
       # project = crm.get_project(op.get(flags.PROJECT_ID))
       service_agent_sa = (
           f'service-{project.number}@dataproc-accounts.iam.gserviceaccount.com')
@@ -554,7 +446,7 @@ class CheckPermissions(runbook.CompositeStep):
 
       # Check Compute Agent Service Account
       op.info('Checking compute agent service account roles on service account'
-              ' project...')
+              ' project.')
       compute_agent_sa = (
           f'service-{project.number}@compute-system.iam.gserviceaccount.com')
       compute_agent_permission_check = iam_gs.IamPolicyCheck()
@@ -568,12 +460,12 @@ class CheckPermissions(runbook.CompositeStep):
       self.add_child(child=compute_agent_permission_check)
 
     else:
-      op.add_failed(project,
-                    reason=op.prep_msg(op.FAILURE_REASON,
-                                       service_account=op.get(
-                                           flags.SERVICE_ACCOUNT),
-                                       project_id=op.get(flags.PROJECT_ID)),
-                    remediation=op.prep_msg(op.FAILURE_REMEDIATION))
+      op.add_uncertain(project,
+                       reason=op.prep_msg(op.UNCERTAIN_REASON,
+                                          service_account=op.get(
+                                              flags.SERVICE_ACCOUNT),
+                                          project_id=op.get(flags.PROJECT_ID)),
+                       remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION))
 
 
 class CheckMasterOOM(runbook.Step):
@@ -583,13 +475,13 @@ class CheckMasterOOM(runbook.Step):
   template = 'logs_related::master_oom'
 
   def execute(self):
-    """Verify if OOM has happened on master ..."""
+    """Verify if OOM has happened on master ."""
 
     project = crm.get_project(op.get(flags.PROJECT_ID))
 
-    cluster_name = op.get(flags.CLUSTER_NAME)
+    cluster_name = op.get(flags.DATAPROC_CLUSTER_NAME)
     cluster_uuid = op.get(flags.CLUSTER_UUID)
-    job_id = op.get(flags.JOB_ID)
+    job_id = op.get(flags.DATAPROC_JOB_ID)
     log_message = 'Task Not Acquired'
 
     log_search_filter = f"""resource.type="cloud_dataproc_cluster"
@@ -598,14 +490,14 @@ class CheckMasterOOM(runbook.Step):
     "{job_id}"
     jsonPayload.message=~"{log_message}" """
 
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
 
     log_entries = logs.realtime_query(
         project_id=op.get(flags.PROJECT_ID),
         filter_str=log_search_filter,
-        start_time_utc=start_time_utc,
-        end_time_utc=end_time_utc,
+        start_time=start_time,
+        end_time=end_time,
     )
 
     if log_entries:
@@ -621,8 +513,8 @@ class CheckMasterOOM(runbook.Step):
       log_entries_check_sigterm = logs.realtime_query(
           project_id=op.get(flags.PROJECT_ID),
           filter_str=log_search_filter_check_sigterm,
-          start_time_utc=start_time_utc,
-          end_time_utc=end_time_utc,
+          start_time=start_time,
+          end_time=end_time,
       )
 
       if log_entries_check_sigterm:
@@ -648,8 +540,8 @@ class CheckMasterOOM(runbook.Step):
         log_entries_check_yarn_metrics = logs.realtime_query(
             project_id=op.get(flags.PROJECT_ID),
             filter_str=log_search_filter_check_yarn_metrics,
-            start_time_utc=start_time_utc,
-            end_time_utc=end_time_utc,
+            start_time=start_time,
+            end_time=end_time,
         )
         if log_entries_check_yarn_metrics:
           op.add_failed(
@@ -683,6 +575,7 @@ class CheckWorkerOOM(runbook.Step):
     check_worker_oom.log_message = (
         '(Container exited with a non-zero exit code 143| Container exited with'
         ' a non-zero exit code 137|java.lang.OutOfMemoryError)')
+    self.add_child(child=check_worker_oom)
 
 
 class CheckSWPreemption(runbook.CompositeStep):
@@ -719,13 +612,8 @@ class CheckPortExhaustion(runbook.CompositeStep):
   def execute(self):
     """Verify if the port exhaustion has happened."""
 
-    project = crm.get_project(op.get(flags.PROJECT_ID))
-    if op.get(flags.JOB_EXIST) == 'false':
-      op.add_skipped(project, reason="Job doesn't exist, skipping this step.")
-      return
-
     check_port_exhaustion_log = dp_gs.CheckLogsExist()
-    check_port_exhaustion_log.template = ('logs_related::port_exhaustion')
+    check_port_exhaustion_log.template = 'logs_related::port_exhaustion'
     check_port_exhaustion_log.log_message = dp_const.PORT_EXHAUSTION_LOG
     self.add_child(child=check_port_exhaustion_log)
 
@@ -737,11 +625,6 @@ class CheckKillingOrphanedApplication(runbook.CompositeStep):
 
   def execute(self):
     """Verify if the killing of Orphaned applications has happened."""
-
-    project = crm.get_project(op.get(flags.PROJECT_ID))
-    if op.get(flags.JOB_EXIST) == 'false':
-      op.add_skipped(project, reason="Job doesn't exist, skipping this step.")
-      return
 
     check_kill_orphaned_application = dp_gs.CheckLogsExist()
     check_kill_orphaned_application.template = (
@@ -756,17 +639,13 @@ class CheckPythonImportFailure(runbook.CompositeStep):
   def execute(self):
     """Check Python import failure."""
 
-    project = crm.get_project(op.get(flags.PROJECT_ID))
-    if op.get(flags.JOB_EXIST) == 'false':
-      op.add_skipped(project, reason="Job doesn't exist, skipping this step.")
-      return
-
     check_python_import = dp_gs.CheckLogsExist()
-    check_python_import.template = ('logs_related::check_python_import_failure')
+    check_python_import.template = 'logs_related::check_python_import_failure'
     check_python_import.log_message = dp_const.PYTHON_IMPORT_LOG
     self.add_child(child=check_python_import)
 
-    cluster = dataproc.get_cluster(cluster_name=op.get(flags.CLUSTER_NAME),
+    cluster = dataproc.get_cluster(cluster_name=op.get(
+        flags.DATAPROC_CLUSTER_NAME),
                                    region=op.get(flags.REGION),
                                    project=op.get(flags.PROJECT_ID))
 
@@ -788,13 +667,13 @@ class CheckShuffleFailures(runbook.Step):
 
     project = crm.get_project(op.get(flags.PROJECT_ID))
 
-    cluster_name = op.get(flags.CLUSTER_NAME)
+    cluster_name = op.get(flags.DATAPROC_CLUSTER_NAME)
     cluster_uuid = op.get(flags.CLUSTER_UUID)
 
     log_search_filter = f"""resource.type="cloud_dataproc_cluster"
     resource.labels.cluster_name="{cluster_name}"
     resource.labels.cluster_uuid="{cluster_uuid}"
-    "{op.get(flags.JOB_ID)}"
+    "{op.get(flags.DATAPROC_JOB_ID)}"
     (
       ("ExecutorLostFailure" AND "Unable to create executor" AND "Unable to register with external shuffle server") OR
       ("java.io.IOException" AND "Exception while uploading shuffle data") OR
@@ -804,23 +683,23 @@ class CheckShuffleFailures(runbook.Step):
     if op.get(flags.JOB_OLDER_THAN_30_DAYS):
       op.add_skipped(
           project,
-          reason=('Job is older than 30 days, skipping this step. '
-                  'Please create a new job and run the runbook again.'),
+          reason=('Job is older than 30 days'),
       )
       return
 
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
 
     log_entries = logs.realtime_query(
         project_id=project.id,
         filter_str=log_search_filter,
-        start_time_utc=start_time_utc,
-        end_time_utc=end_time_utc,
+        start_time=start_time,
+        end_time=end_time,
     )
 
     if log_entries:
-      cluster = dataproc.get_cluster(cluster_name=op.get(flags.CLUSTER_NAME),
+      cluster = dataproc.get_cluster(cluster_name=op.get(
+          flags.DATAPROC_CLUSTER_NAME),
                                      region=op.get(flags.REGION),
                                      project=op.get(flags.PROJECT_ID))
 
@@ -897,11 +776,6 @@ class CheckShuffleServiceKill(runbook.CompositeStep):
   def execute(self):
     """Check Shuffle Service Kill logs and autoscaling & preemptibility."""
 
-    project = crm.get_project(op.get(flags.PROJECT_ID))
-    if op.get(flags.JOB_EXIST) == 'false':
-      op.add_skipped(project, reason="Job doesn't exist, skipping this step.")
-      return
-
     check_shuffle_kill = dp_gs.CheckLogsExist()
     check_shuffle_kill.template = 'logs_related::shuffle_service_kill'
     check_shuffle_kill.log_message = dp_const.SHUFFLE_KILL_LOG
@@ -915,11 +789,11 @@ class CheckAutoscalingPolicy(runbook.Step):
   template = 'logs_related::shuffle_service_kill_graceful_decommision_timeout'
 
   def execute(self):
-    """Checking autoscaling policies and graceful decommission timeouts..."""
+    """Checking autoscaling policies and graceful decommission timeouts."""
 
     project = crm.get_project(op.get(flags.PROJECT_ID))
     cluster = dataproc.get_cluster(
-        cluster_name=op.get(flags.CLUSTER_NAME),
+        cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
         region=op.get(flags.REGION),
         project=op.get(flags.PROJECT_ID),
     )
@@ -936,7 +810,8 @@ class CheckAutoscalingPolicy(runbook.Step):
           op.add_failed(
               project,
               reason=op.prep_msg(op.FAILURE_REASON,
-                                 cluster_name=op.get(flags.CLUSTER_NAME)),
+                                 cluster_name=op.get(
+                                     flags.DATAPROC_CLUSTER_NAME)),
               remediation=op.prep_msg(op.FAILURE_REMEDIATION),
           )
         else:
@@ -944,7 +819,7 @@ class CheckAutoscalingPolicy(runbook.Step):
               project,
               reason=op.prep_msg(
                   op.SUCCESS_REASON,
-                  cluster_name=op.get(flags.CLUSTER_NAME),
+                  cluster_name=op.get(flags.DATAPROC_CLUSTER_NAME),
               ),
           )
 
@@ -955,10 +830,11 @@ class CheckPreemptible(runbook.Step):
   template = 'logs_related::shuffle_service_kill_preemptible_workers'
 
   def execute(self):
-    """Checking worker count..."""
+    """Checking worker count."""
 
     project = crm.get_project(op.get(flags.PROJECT_ID))
-    cluster = dataproc.get_cluster(cluster_name=op.get(flags.CLUSTER_NAME),
+    cluster = dataproc.get_cluster(cluster_name=op.get(
+        flags.DATAPROC_CLUSTER_NAME),
                                    region=op.get(flags.REGION),
                                    project=op.get(flags.PROJECT_ID))
 
@@ -975,14 +851,16 @@ class CheckPreemptible(runbook.Step):
         op.add_failed(
             project,
             reason=op.prep_msg(op.FAILURE_REASON,
-                               cluster_name=op.get(flags.CLUSTER_NAME)),
+                               cluster_name=op.get(
+                                   flags.DATAPROC_CLUSTER_NAME)),
             remediation=op.prep_msg(op.FAILURE_REMEDIATION),
         )
       else:
         op.add_ok(
             project,
             reason=op.prep_msg(op.SUCCESS_REASON,
-                               cluster_name=op.get(flags.CLUSTER_NAME)),
+                               cluster_name=op.get(
+                                   flags.DATAPROC_CLUSTER_NAME)),
         )
 
 
@@ -1000,7 +878,7 @@ class CheckGCPause(runbook.CompositeStep):
 
 
 class CheckJobThrottling(runbook.CompositeStep):
-  """Verify the presence of Job Throttling logs..."""
+  """Verify the presence of Job Throttling logs."""
 
   def execute(self):
     """Check for Job Throttling messages in the logs."""
@@ -1043,10 +921,10 @@ class CheckJobThrottling(runbook.CompositeStep):
 
 
 class CheckYarnRuntimeException(runbook.CompositeStep):
-  """Verify presence of CheckYarnRuntimeException logs..."""
+  """Verify presence of CheckYarnRuntimeException logs."""
 
   def execute(self):
-    """Check for CheckYarnRuntimeException logs..."""
+    """Check for CheckYarnRuntimeException logs."""
     yarn_runtime = dp_gs.CheckLogsExist()
     yarn_runtime.template = 'logs_related::yarn_runtime'
     yarn_runtime.log_message = dp_const.YARN_RUNTIME_LOG
@@ -1060,8 +938,9 @@ class CheckGCSConnector(runbook.CompositeStep):
   template = 'dataproc_attributes::gcs_connector'
 
   def execute(self):
-    """Check for non-default GCS connector..."""
-    cluster = dataproc.get_cluster(cluster_name=op.get(flags.CLUSTER_NAME),
+    """Check for non-default GCS connector."""
+    cluster = dataproc.get_cluster(cluster_name=op.get(
+        flags.DATAPROC_CLUSTER_NAME),
                                    region=op.get(flags.REGION),
                                    project=op.get(flags.PROJECT_ID))
 
@@ -1108,13 +987,14 @@ class CheckBQConnector(runbook.CompositeStep):
   template = 'dataproc_attributes::bq_connector'
 
   def execute(self):
-    """Check if non-default BigQuery connector version exists..."""
-    cluster = dataproc.get_cluster(cluster_name=op.get(flags.CLUSTER_NAME),
+    """Check if non-default BigQuery connector version exists."""
+    cluster = dataproc.get_cluster(cluster_name=op.get(
+        flags.DATAPROC_CLUSTER_NAME),
                                    region=op.get(flags.REGION),
                                    project=op.get(flags.PROJECT_ID))
     job = dataproc.get_job_by_jobid(project_id=op.get(flags.PROJECT_ID),
                                     region=op.get(flags.REGION),
-                                    job_id=op.get(flags.JOB_ID))
+                                    job_id=op.get(flags.DATAPROC_JOB_ID))
 
     if cluster is not None:
       if version.parse(op.get(flags.IMAGE_VERSION)) > version.parse('2.0'):

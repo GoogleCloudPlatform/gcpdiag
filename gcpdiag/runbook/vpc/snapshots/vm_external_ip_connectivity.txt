@@ -1,4 +1,4 @@
-dest_ip=151.101.3.5,dest_port=443,name=public-linux-valid,project_id=gcpdiag-
+dest_ip=151.101.3.5,dest_port=443,instance_name=public-linux-valid,project_id=gcpdiag-
 vpc2-runbook,src_nic=nic0,zone=us-central1-a
 
 vpc/vm-external-ip-connectivity: Troubleshooting for common issues which affect VM connectivity to external IP addresses.
@@ -29,28 +29,28 @@ vpc/vm-external-ip-connectivity: Troubleshooting for common issues which affect 
         by a Public NAT Gateway and check there are no issues on the NATGW.
     
 [START]: Starting VM external connectivity diagnostics
-[AUTOMATED STEP]: Verifying Cloud API state...
+[AUTOMATED STEP]: Verify networkmanagement.googleapis.com API is ENABLED in project gcpdiag-vpc2-runbook.
 
    - gcpdiag-vpc2-runbook                                                 [OK]
      [REASON]
      The `networkmanagement.googleapis.com` service is currently in the expected state: `ENABLED`.
 
-[GATEWAY]: Checking if the source NIC has an associated external IP address...
+[GATEWAY]: Checking if the source NIC has an associated external IP address.
 [INFO]: The source NIC nic0 on the VM has an External IP address,checking direct connectivity to external IP 151.101.3.5
 [COMPOSITE STEP]: Checking for connectivity from NIC with external IP address.
-[AUTOMATED STEP]:   Verifying Firewall exists...
+[AUTOMATED STEP]: Verify Firewall exists
 
    - gcpdiag-vpc2-runbook/public-linux-valid                              [OK]
      [REASON]
-       No firewall rule blocking traffic
+     No firewall rule blocking traffic
 
-[AUTOMATED STEP]: Evaluating the VPC routing rules...
+[AUTOMATED STEP]: Evaluating the VPC routing rules.
 
    - gcpdiag-vpc2-runbook/public-linux-valid                              [OK]
      [REASON]
-       Matching VPC route with nexthop gateway found...
+     Matching VPC route with nexthop gateway found
 
-[AUTOMATED STEP]: Running a connectivity test to the external ip address...
+[AUTOMATED STEP]: Running a connectivity test to the external ip address.
 [INFO]: START_FROM_INSTANCE -> Initial state: packet originating from a Compute Engine instance.
 [INFO]: APPLY_EGRESS_FIREWALL_RULE -> Config checking state: verify EGRESS firewall rule.
 [INFO]: APPLY_ROUTE -> Config checking state: verify route.
@@ -59,13 +59,13 @@ vpc/vm-external-ip-connectivity: Troubleshooting for common issues which affect 
 
    - gcpdiag-vpc2-runbook/public-linux-valid                              [OK]
      [REASON]
-       The remote endpoint 151.101.3.5 is REACHABLE.
+     The remote endpoint 151.101.3.5 is REACHABLE.
 
-       CONNECTIVIT TEST RESULT:
+     CONNECTIVITY TEST RESULT:
 
-       {"result": "REACHABLE", "verifyTime": "2024-06-04T00:31:09.450544252Z", "traces": [{"endpointInfo": {"sourceIp": "10.10.0.3", "destinationIp": "151.101.3.5", "protocol": "TCP", "sourcePort": 63951, "destinationPort": 443, "sourceNetworkUri": "projects/gcpdiag-vpc2-runbook/global/networks/default"}, "steps": [{"description": "Initial state: packet originating from a Compute Engine instance.", "state": "START_FROM_INSTANCE", "projectId": "gcpdiag-vpc2-runbook", "instance": {"displayName": "private-linux-valid", "uri": "projects/gcpdiag-vpc2-runbook/zones/us-central1-a/instances/private-linux-valid", "interface": "nic0", "networkUri": "projects/gcpdiag-vpc2-runbook/global/networks/default", "internalIp": "10.10.0.3", "networkTags": ["valid-vpc-instance-private"]}}, {"description": "Config checking state: verify EGRESS firewall rule.", "state": "APPLY_EGRESS_FIREWALL_RULE", "projectId": "gcpdiag-vpc2-runbook", "firewall": {"displayName": "private-linux-egress-allow", "uri": "projects/gcpdiag-vpc2-runbook/global/firewalls/private-linux-egress-allow", "direction": "EGRESS", "action": "ALLOW", "priority": 920, "networkUri": "projects/gcpdiag-vpc2-runbook/global/networks/default", "targetTags": ["valid-vpc-instance-private"], "firewallRuleType": "VPC_FIREWALL_RULE"}}, {"description": "Config checking state: verify route.", "state": "APPLY_ROUTE", "projectId": "gcpdiag-vpc2-runbook", "route": {"displayName": "default-route-733dd203fb86133b", "uri": "projects/gcpdiag-vpc2-runbook/global/routes/default-route-733dd203fb86133b", "destIpRange": "0.0.0.0/0", "nextHop": "internet gateway", "networkUri": "projects/gcpdiag-vpc2-runbook/global/networks/default", "priority": 1000, "routeType": "STATIC", "nextHopType": "NEXT_HOP_INTERNET_GATEWAY", "routeScope": "NETWORK"}}, {"description": "Transition state: packet header translated due to Cloud NAT and NAT IP chosen randomly from [34.123.41.124/32].", "state": "NAT", "projectId": "gcpdiag-vpc2-runbook", "nat": {"type": "CLOUD_NAT", "protocol": "TCP", "networkUri": "projects/gcpdiag-vpc2-runbook/global/networks/default", "oldSourceIp": "10.10.0.3", "newSourceIp": "34.123.41.124", "oldDestinationIp": "151.101.3.5", "newDestinationIp": "151.101.3.5", "oldSourcePort": 63951, "newSourcePort": 49732, "oldDestinationPort": 443, "newDestinationPort": 443, "routerUri": "projects/gcpdiag-vpc2-runbook/regions/us-central1/routers/nat-router", "natGatewayName": "nat-gateway"}}, {"description": "Final state: packet delivered to Internet.", "state": "DELIVER", "deliver": {"target": "INTERNET", "ipAddress": "151.101.3.5"}}], "forwardTraceId": 1}]}
+     {"result": "REACHABLE", "verifyTime": "2024-06-04T00:31:09.450544252Z", "traces": [{"endpointInfo": {"sourceIp": "10.10.0.3", "destinationIp": "151.101.3.5", "protocol": "TCP", "sourcePort": 63951, "destinationPort": 443, "sourceNetworkUri": "projects/gcpdiag-vpc2-runbook/global/networks/default"}, "steps": [{"description": "Initial state: packet originating from a Compute Engine instance.", "state": "START_FROM_INSTANCE", "projectId": "gcpdiag-vpc2-runbook", "instance": {"displayName": "private-linux-valid", "uri": "projects/gcpdiag-vpc2-runbook/zones/us-central1-a/instances/private-linux-valid", "interface": "nic0", "networkUri": "projects/gcpdiag-vpc2-runbook/global/networks/default", "internalIp": "10.10.0.3", "networkTags": ["valid-vpc-instance-private"]}}, {"description": "Config checking state: verify EGRESS firewall rule.", "state": "APPLY_EGRESS_FIREWALL_RULE", "projectId": "gcpdiag-vpc2-runbook", "firewall": {"displayName": "private-linux-egress-allow", "uri": "projects/gcpdiag-vpc2-runbook/global/firewalls/private-linux-egress-allow", "direction": "EGRESS", "action": "ALLOW", "priority": 920, "networkUri": "projects/gcpdiag-vpc2-runbook/global/networks/default", "targetTags": ["valid-vpc-instance-private"], "firewallRuleType": "VPC_FIREWALL_RULE"}}, {"description": "Config checking state: verify route.", "state": "APPLY_ROUTE", "projectId": "gcpdiag-vpc2-runbook", "route": {"displayName": "default-route-733dd203fb86133b", "uri": "projects/gcpdiag-vpc2-runbook/global/routes/default-route-733dd203fb86133b", "destIpRange": "0.0.0.0/0", "nextHop": "internet gateway", "networkUri": "projects/gcpdiag-vpc2-runbook/global/networks/default", "priority": 1000, "routeType": "STATIC", "nextHopType": "NEXT_HOP_INTERNET_GATEWAY", "routeScope": "NETWORK"}}, {"description": "Transition state: packet header translated due to Cloud NAT and NAT IP chosen randomly from [34.123.41.124/32].", "state": "NAT", "projectId": "gcpdiag-vpc2-runbook", "nat": {"type": "CLOUD_NAT", "protocol": "TCP", "networkUri": "projects/gcpdiag-vpc2-runbook/global/networks/default", "oldSourceIp": "10.10.0.3", "newSourceIp": "34.123.41.124", "oldDestinationIp": "151.101.3.5", "newDestinationIp": "151.101.3.5", "oldSourcePort": 63951, "newSourcePort": 49732, "oldDestinationPort": 443, "newDestinationPort": 443, "routerUri": "projects/gcpdiag-vpc2-runbook/regions/us-central1/routers/nat-router", "natGatewayName": "nat-gateway"}}, {"description": "Final state: packet delivered to Internet.", "state": "DELIVER", "deliver": {"target": "INTERNET", "ipAddress": "151.101.3.5"}}], "forwardTraceId": 1}]}
 
-[END]: Finalizing VM external connectivity diagnostics...
+[END]: Finalize VM external connectivity diagnostics.
 
 
 dest_ip=151.101.3.5,dest_port=443,name=public-linux-faulty,project_id=gcpdiag-
@@ -99,35 +99,35 @@ vpc/vm-external-ip-connectivity: Troubleshooting for common issues which affect 
         by a Public NAT Gateway and check there are no issues on the NATGW.
     
 [START]: Starting VM external connectivity diagnostics
-[AUTOMATED STEP]: Verifying Cloud API state...
+[AUTOMATED STEP]: Verify networkmanagement.googleapis.com API is ENABLED in project gcpdiag-vpc2-runbook.
 
    - gcpdiag-vpc2-runbook                                                 [OK]
      [REASON]
      The `networkmanagement.googleapis.com` service is currently in the expected state: `ENABLED`.
 
-[GATEWAY]: Checking if the source NIC has an associated external IP address...
+[GATEWAY]: Checking if the source NIC has an associated external IP address.
 [INFO]: The source NIC nic0 on the VM has an External IP address,checking direct connectivity to external IP 151.101.3.5
 [COMPOSITE STEP]: Checking for connectivity from NIC with external IP address.
-[AUTOMATED STEP]:   Verifying Firewall exists...
+[AUTOMATED STEP]: Verify Firewall exists
 
    - gcpdiag-vpc2-runbook/public-linux-faulty                             [FAIL]
      [REASON]
-       Firewall rule or policy exists which may deny egress traffic.
-       Continue for connectivity test confirmation or apply remediation step and retest
+     A firewall rule or policy potentially denying egress traffic was found.
+     Further steps will attempt to confirm the block via connectivity testing.
 
      [REMEDIATION]
-       Follow [1] to create or update VPC firewall rules.
-       Follow [2] on how to create or modify Firewall policies.
-       [1] https://cloud.google.com/firewall/docs/using-firewalls#creating_firewall_rules
-       [2] https://cloud.google.com/firewall/docs/using-firewall-policies
+     Refer to [1] to create or update VPC firewall rules.
+     Refer to [2] for guidance on creating or modifying Firewall policies.
+     [1] <https://cloud.google.com/firewall/docs/using-firewalls#creating_firewall_rules>
+     [2] <https://cloud.google.com/firewall/docs/using-firewall-policies>
 
-[AUTOMATED STEP]: Evaluating the VPC routing rules...
+[AUTOMATED STEP]: Evaluating the VPC routing rules.
 
    - gcpdiag-vpc2-runbook/public-linux-faulty                             [OK]
      [REASON]
-       Matching VPC route with nexthop gateway found...
+     Matching VPC route with nexthop gateway found
 
-[AUTOMATED STEP]: Running a connectivity test to the external ip address...
+[AUTOMATED STEP]: Running a connectivity test to the external ip address.
 [INFO]: START_FROM_INSTANCE -> Initial state: packet originating from a Compute Engine instance.
 [INFO]: APPLY_EGRESS_FIREWALL_RULE -> Config checking state: verify EGRESS firewall rule.
 [INFO]: APPLY_ROUTE -> Config checking state: verify route.
@@ -136,12 +136,12 @@ vpc/vm-external-ip-connectivity: Troubleshooting for common issues which affect 
 
    - gcpdiag-vpc2-runbook/public-linux-faulty                             [OK]
      [REASON]
-       The remote endpoint 151.101.3.5 is REACHABLE.
+     The remote endpoint 151.101.3.5 is REACHABLE.
 
-       CONNECTIVIT TEST RESULT:
+     CONNECTIVITY TEST RESULT:
 
-       {"result": "REACHABLE", "verifyTime": "2024-06-04T00:31:09.450544252Z", "traces": [{"endpointInfo": {"sourceIp": "10.10.0.3", "destinationIp": "151.101.3.5", "protocol": "TCP", "sourcePort": 63951, "destinationPort": 443, "sourceNetworkUri": "projects/gcpdiag-vpc2-runbook/global/networks/default"}, "steps": [{"description": "Initial state: packet originating from a Compute Engine instance.", "state": "START_FROM_INSTANCE", "projectId": "gcpdiag-vpc2-runbook", "instance": {"displayName": "private-linux-valid", "uri": "projects/gcpdiag-vpc2-runbook/zones/us-central1-a/instances/private-linux-valid", "interface": "nic0", "networkUri": "projects/gcpdiag-vpc2-runbook/global/networks/default", "internalIp": "10.10.0.3", "networkTags": ["valid-vpc-instance-private"]}}, {"description": "Config checking state: verify EGRESS firewall rule.", "state": "APPLY_EGRESS_FIREWALL_RULE", "projectId": "gcpdiag-vpc2-runbook", "firewall": {"displayName": "private-linux-egress-allow", "uri": "projects/gcpdiag-vpc2-runbook/global/firewalls/private-linux-egress-allow", "direction": "EGRESS", "action": "ALLOW", "priority": 920, "networkUri": "projects/gcpdiag-vpc2-runbook/global/networks/default", "targetTags": ["valid-vpc-instance-private"], "firewallRuleType": "VPC_FIREWALL_RULE"}}, {"description": "Config checking state: verify route.", "state": "APPLY_ROUTE", "projectId": "gcpdiag-vpc2-runbook", "route": {"displayName": "default-route-733dd203fb86133b", "uri": "projects/gcpdiag-vpc2-runbook/global/routes/default-route-733dd203fb86133b", "destIpRange": "0.0.0.0/0", "nextHop": "internet gateway", "networkUri": "projects/gcpdiag-vpc2-runbook/global/networks/default", "priority": 1000, "routeType": "STATIC", "nextHopType": "NEXT_HOP_INTERNET_GATEWAY", "routeScope": "NETWORK"}}, {"description": "Transition state: packet header translated due to Cloud NAT and NAT IP chosen randomly from [34.123.41.124/32].", "state": "NAT", "projectId": "gcpdiag-vpc2-runbook", "nat": {"type": "CLOUD_NAT", "protocol": "TCP", "networkUri": "projects/gcpdiag-vpc2-runbook/global/networks/default", "oldSourceIp": "10.10.0.3", "newSourceIp": "34.123.41.124", "oldDestinationIp": "151.101.3.5", "newDestinationIp": "151.101.3.5", "oldSourcePort": 63951, "newSourcePort": 49732, "oldDestinationPort": 443, "newDestinationPort": 443, "routerUri": "projects/gcpdiag-vpc2-runbook/regions/us-central1/routers/nat-router", "natGatewayName": "nat-gateway"}}, {"description": "Final state: packet delivered to Internet.", "state": "DELIVER", "deliver": {"target": "INTERNET", "ipAddress": "151.101.3.5"}}], "forwardTraceId": 1}]}
+     {"result": "REACHABLE", "verifyTime": "2024-06-04T00:31:09.450544252Z", "traces": [{"endpointInfo": {"sourceIp": "10.10.0.3", "destinationIp": "151.101.3.5", "protocol": "TCP", "sourcePort": 63951, "destinationPort": 443, "sourceNetworkUri": "projects/gcpdiag-vpc2-runbook/global/networks/default"}, "steps": [{"description": "Initial state: packet originating from a Compute Engine instance.", "state": "START_FROM_INSTANCE", "projectId": "gcpdiag-vpc2-runbook", "instance": {"displayName": "private-linux-valid", "uri": "projects/gcpdiag-vpc2-runbook/zones/us-central1-a/instances/private-linux-valid", "interface": "nic0", "networkUri": "projects/gcpdiag-vpc2-runbook/global/networks/default", "internalIp": "10.10.0.3", "networkTags": ["valid-vpc-instance-private"]}}, {"description": "Config checking state: verify EGRESS firewall rule.", "state": "APPLY_EGRESS_FIREWALL_RULE", "projectId": "gcpdiag-vpc2-runbook", "firewall": {"displayName": "private-linux-egress-allow", "uri": "projects/gcpdiag-vpc2-runbook/global/firewalls/private-linux-egress-allow", "direction": "EGRESS", "action": "ALLOW", "priority": 920, "networkUri": "projects/gcpdiag-vpc2-runbook/global/networks/default", "targetTags": ["valid-vpc-instance-private"], "firewallRuleType": "VPC_FIREWALL_RULE"}}, {"description": "Config checking state: verify route.", "state": "APPLY_ROUTE", "projectId": "gcpdiag-vpc2-runbook", "route": {"displayName": "default-route-733dd203fb86133b", "uri": "projects/gcpdiag-vpc2-runbook/global/routes/default-route-733dd203fb86133b", "destIpRange": "0.0.0.0/0", "nextHop": "internet gateway", "networkUri": "projects/gcpdiag-vpc2-runbook/global/networks/default", "priority": 1000, "routeType": "STATIC", "nextHopType": "NEXT_HOP_INTERNET_GATEWAY", "routeScope": "NETWORK"}}, {"description": "Transition state: packet header translated due to Cloud NAT and NAT IP chosen randomly from [34.123.41.124/32].", "state": "NAT", "projectId": "gcpdiag-vpc2-runbook", "nat": {"type": "CLOUD_NAT", "protocol": "TCP", "networkUri": "projects/gcpdiag-vpc2-runbook/global/networks/default", "oldSourceIp": "10.10.0.3", "newSourceIp": "34.123.41.124", "oldDestinationIp": "151.101.3.5", "newDestinationIp": "151.101.3.5", "oldSourcePort": 63951, "newSourcePort": 49732, "oldDestinationPort": 443, "newDestinationPort": 443, "routerUri": "projects/gcpdiag-vpc2-runbook/regions/us-central1/routers/nat-router", "natGatewayName": "nat-gateway"}}, {"description": "Final state: packet delivered to Internet.", "state": "DELIVER", "deliver": {"target": "INTERNET", "ipAddress": "151.101.3.5"}}], "forwardTraceId": 1}]}
 
-[END]: Finalizing VM external connectivity diagnostics...
+[END]: Finalize VM external connectivity diagnostics.
 
 

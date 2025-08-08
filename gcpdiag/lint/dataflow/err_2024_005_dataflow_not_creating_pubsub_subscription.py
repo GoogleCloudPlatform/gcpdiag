@@ -27,8 +27,8 @@ from boltons.iterutils import get_path
 from gcpdiag import lint, models
 from gcpdiag.queries import apis, crm, logs
 
-MATCH_STR1 = ('GETTING_PUBSUB_SUBSCRIPTION_FAILED')
-MATCH_STR2 = ('User not authorized to perform this action')
+MATCH_STR1 = 'GETTING_PUBSUB_SUBSCRIPTION_FAILED'
+MATCH_STR2 = 'User not authorized to perform this action'
 
 # Criteria to filter for logs
 LOG_FILTER = [

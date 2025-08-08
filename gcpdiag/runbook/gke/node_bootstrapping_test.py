@@ -25,5 +25,6 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_parameters = [{
       'project_id': 'gcpdiag-gke1-aaaa',
       'nodepool': 'gke-gke1-default-pool-671518f6',
-      'location': 'europe-west4-a'
+      'location': 'europe-west4-a',
+      'gke_cluster_name': 'gke-cluster-name'
   }]

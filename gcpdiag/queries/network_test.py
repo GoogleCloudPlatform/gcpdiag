@@ -17,6 +17,8 @@ import ipaddress
 import re
 from unittest import mock
 
+from boltons.iterutils import get_path
+
 from gcpdiag.queries import apis_stub, network
 
 DUMMY_PROJECT_ID = 'gcpdiag-fw-policy-aaaa'
@@ -415,3 +417,78 @@ class TestNetwork:
 
       if address.name == 'address4':
         assert address.short_path == 'gcpdiag-vpc1-aaaa/address4'
+
+  def test_get_router_by_name(self):
+    router = network.get_router_by_name(project_id='gcpdiag-gke1-aaaa',
+                                        region='europe-west4',
+                                        router_name='gke-default-router')
+    assert router.name == 'gke-default-router'
+
+    router = network.get_router_by_name(project_id='gcpdiag-gke1-aaaa',
+                                        region='us-east4',
+                                        router_name='dummy-router1')
+    assert router.name == 'dummy-router1'
+
+    router = network.get_router_by_name(project_id='gcpdiag-gke1-aaaa',
+                                        region='us-east4',
+                                        router_name='dummy-router2')
+    assert router.name == 'dummy-router2'
+
+    router = network.get_router_by_name(project_id='gcpdiag-gke1-aaaa',
+                                        region='us-east4',
+                                        router_name='dummy-router3')
+    assert router.name == 'dummy-router3'
+
+  def test_bgp_peer_status(self):
+    vlan_router_status = network.nat_router_status('gcpdiag-interconnect1-aaaa',
+                                                   router_name='dummy-router1',
+                                                   region='us-east4')
+    assert get_path(vlan_router_status.bgp_peer_status[0], ('state'),
+                    default=None) == 'Established'
+    assert get_path(vlan_router_status.bgp_peer_status[1], ('state'),
+                    default=None) == 'Established'
+
+    vlan_router_status = network.nat_router_status('gcpdiag-interconnect1-aaaa',
+                                                   router_name='dummy-router2',
+                                                   region='us-east4')
+    assert get_path(vlan_router_status.bgp_peer_status[0], ('state'),
+                    default=None) == 'Established'
+    assert get_path(vlan_router_status.bgp_peer_status[1], ('state'),
+                    default=None) == 'Idle'
+
+  def test_firewall_policy_sorting_same_ip(self):
+    net = network.get_network(project_id=DUMMY_PROJECT_ID,
+                              network_name=DUMMY_DEFAULT_NETWORK)
+    # Check that deny rule is matched before allow rule with same priority and
+    # same src ip range
+    r = net.firewall.check_connectivity_ingress(
+        src_ip=ipaddress.ip_network('10.104.0.1/32'),
+        ip_protocol='tcp',
+        port=80)
+    assert r.action == 'deny'
+    assert r.matched_by_str == (
+        'policy: test-sorting-same-ip-policy, rule: deny rule with priority'
+        ' 1000 and same src ip range')
+
+  def test_firewall_policy_sorting(self):
+    net = network.get_network(project_id=DUMMY_PROJECT_ID,
+                              network_name=DUMMY_DEFAULT_NETWORK)
+    # Check that deny rule is matched before allow rule with same priority
+    r = net.firewall.check_connectivity_ingress(
+        src_ip=ipaddress.ip_network('10.104.0.1/32'),
+        ip_protocol='tcp',
+        port=80)
+    assert r.action == 'deny'
+    expected_matched_str = (
+        'policy: test-sorting-same-ip-policy, rule: deny rule with priority'
+        ' 1000 and same src ip range')
+    assert r.matched_by_str == expected_matched_str
+
+    # Check that allow rule with lower priority is matched before deny rule
+    # with higher priority
+    r = net.firewall.check_connectivity_ingress(
+        src_ip=ipaddress.ip_network('10.101.0.1/32'),
+        ip_protocol='tcp',
+        port=2001)
+    assert r.action == 'allow'
+    assert r.matched_by_str == 'policy: parent-folder-policy'

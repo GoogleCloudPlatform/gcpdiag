@@ -1,4 +1,4 @@
 *  bigquery/ERR/2023_007: Data Transfer Service Agent exists and has the required roles.
    - projects/gcpdiag-cloudsql1-aaaa                                      [SKIP]
-     bigquery api is disabled
+     bigquery data transfer api is disabled
 

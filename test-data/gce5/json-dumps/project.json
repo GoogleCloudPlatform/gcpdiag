@@ -1,0 +1,14 @@
+{
+  "name": "projects/123456012345",
+  "parent": "folders/348077457356",
+  "projectId": "gcpdiag-gce5-aaaa",
+  "state": "ACTIVE",
+  "displayName": "gcpdiag test - VM Termination",
+  "createTime": "2025-03-14T01:23:25.611225Z",
+  "updateTime": "2025-03-14T01:23:25.611225Z",
+  "etag": "W/\"3760d729cfab7713\"",
+  "labels": {
+    "gcpdiag": "test",
+    "goog-terraform-provisioned": "true"
+  }
+}

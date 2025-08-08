@@ -17,6 +17,7 @@
 
 import concurrent.futures
 import re
+import unittest
 from unittest import mock
 
 from gcpdiag import config, models
@@ -27,6 +28,7 @@ DUMMY_REGION = 'europe-west4'
 DUMMY_ZONE = 'europe-west4-a'
 DUMMY_ZONE2 = 'europe-west1-b'
 DUMMY_ZONE3 = 'europe-west4-b'
+DUMMY_PROJECT_NAME2 = 'gcpdiag-gce-vm-performance'
 DUMMY_PROJECT_NAME = 'gcpdiag-gce1-aaaa'
 DUMMY_LICENSE_PROJECT_NAME = 'windows-cloud'
 DUMMY_PROJECT_NR = '12340001'
@@ -38,8 +40,9 @@ DUMMY_INSTANCE1_LABELS = {'foo': 'bar'}
 DUMMY_INSTANCE2_NAME = 'gce2'
 DUMMY_INSTANCE2_PATH = (f'projects/{DUMMY_PROJECT_NAME}/zones/{DUMMY_ZONE}/'
                         f'instances/{DUMMY_INSTANCE2_NAME}')
-DUMMY_INSTANCE3_NAME = 'gke-gke1-default-pool-35923fbc-k05c'
-DUMMY_INSTANCE3_PATH = (f'projects/{DUMMY_PROJECT_NAME}/zones/{DUMMY_ZONE2}/'
+DUMMY_INSTANCE2_LABELS = {'gcpdiag-test': 'mig'}
+DUMMY_INSTANCE3_NAME = 'gke-gke1-default-pool-35923fbc-2xxp'
+DUMMY_INSTANCE3_PATH = (f'projects/{DUMMY_PROJECT_NAME}/zones/{DUMMY_ZONE}/'
                         f'instances/{DUMMY_INSTANCE3_NAME}')
 DUMMY_INSTANCE3_LABELS = {'gcp_doctor_test': 'gke'}
 DUMMY_INSTANCE4_NAME = 'windows-test'
@@ -53,19 +56,19 @@ DUMMY_REGION_MIG_NAME = 'mig-bridge-manager-us-central1'
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
-class TestGce:
+class TestGce(unittest.TestCase):
   """Test code in gce.py"""
 
   def test_get_instances(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     instances = gce.get_instances(context)
-    assert len(instances) == 10
+    assert len(instances) == 6
     instances_by_path = {i.full_path: i for i in instances.values()}
     assert DUMMY_INSTANCE1_PATH in instances_by_path
-    assert instances_by_path[
-        DUMMY_INSTANCE1_PATH].full_path == DUMMY_INSTANCE1_PATH
-    assert instances_by_path[DUMMY_INSTANCE1_PATH].short_path == \
-        f'{DUMMY_PROJECT_NAME}/{DUMMY_INSTANCE1_NAME}'
+    assert (instances_by_path[DUMMY_INSTANCE1_PATH].full_path ==
+            DUMMY_INSTANCE1_PATH)
+    assert (instances_by_path[DUMMY_INSTANCE1_PATH].short_path ==
+            f'{DUMMY_PROJECT_NAME}/{DUMMY_INSTANCE1_NAME}')
     # also verify that the instances dict uses the instance id as key
     assert instances_by_path[DUMMY_INSTANCE1_PATH].id in instances
 
@@ -82,7 +85,7 @@ class TestGce:
     instances = gce.get_instances(context)
     instances_by_path = {i.full_path: i for i in instances.values()}
 
-    assert DUMMY_INSTANCE1_PATH in instances_by_path and len(instances) == 2
+    assert DUMMY_INSTANCE1_PATH in instances_by_path and len(instances) == 1
 
   def test_get_instances_by_other_region_returns_empty_result(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
@@ -117,7 +120,7 @@ class TestGce:
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              labels=DUMMY_INSTANCE3_LABELS)
     instances = gce.get_instances(context)
-    assert len(instances) == 4
+    assert len(instances) == 1
     for n in instances.values():
       assert n.is_gke_node()
 
@@ -126,7 +129,7 @@ class TestGce:
     instances = gce.get_instances(context)
     instances_by_path = {i.full_path: i for i in instances.values()}
     assert instances_by_path[DUMMY_INSTANCE1_PATH].is_windows_machine() is True
-    assert instances_by_path[DUMMY_INSTANCE2_PATH].is_windows_machine() is False
+    assert instances_by_path[DUMMY_INSTANCE2_PATH].is_windows_machine() is True
 
   def test_is_preemptible_vm(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
@@ -136,14 +139,22 @@ class TestGce:
     assert instances_by_path[DUMMY_INSTANCE2_PATH].is_preemptible_vm() is True
     assert instances_by_path[DUMMY_INSTANCE3_PATH].is_preemptible_vm() is False
 
+  def test_min_cpu_platform(self):
+    instance = gce.get_instance(DUMMY_PROJECT_NAME, DUMMY_ZONE,
+                                DUMMY_INSTANCE1_NAME)
+    self.assertEqual(instance.min_cpu_platform(), 'Intel Skylake')
+    instance2 = gce.get_instance(DUMMY_PROJECT_NAME, DUMMY_ZONE,
+                                 DUMMY_INSTANCE2_NAME)
+    self.assertEqual(instance2.min_cpu_platform(), 'None')
+
   def test_network(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     instances = gce.get_instances(context)
     instances_by_path = {i.full_path: i for i in instances.values()}
-    assert instances_by_path[
-        DUMMY_INSTANCE1_PATH].network.name == DUMMY_DEFAULT_NAME
-    assert instances_by_path[
-        DUMMY_INSTANCE2_PATH].network.name == DUMMY_DEFAULT_NAME
+    assert (instances_by_path[DUMMY_INSTANCE1_PATH].network.name ==
+            DUMMY_DEFAULT_NAME)
+    assert (instances_by_path[DUMMY_INSTANCE2_PATH].network.name ==
+            DUMMY_DEFAULT_NAME)
 
   def test_tags(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
@@ -180,6 +191,14 @@ class TestGce:
     assert (instances_by_path[DUMMY_INSTANCE1_PATH].service_account ==
             f'{DUMMY_PROJECT_NR}-compute@developer.gserviceaccount.com')
 
+  def test_get_global_operations(self):
+    """get global operations."""
+    operations = gce.get_global_operations(project=DUMMY_PROJECT_NAME2)
+    assert len(operations) > 0
+
+    for op in operations:
+      assert isinstance(op['id'], str)
+
   def test_get_instance_groups(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              locations=['europe-west4'])
@@ -205,10 +224,10 @@ class TestGce:
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              locations=['europe-west4'])
     migs = gce.get_managed_instance_groups(context)
-    assert len(migs) == 1
-    m = next(iter(migs.values()))
-    assert m.name == 'mig'
-    assert m.is_gke() is False
+    assert len(migs) == 2
+    for n in migs.values():
+      if n.name == 'mig':
+        assert n.is_gke() is False
 
   def test_get_region_managed_instance_groups(self):
     context = models.Context(project_id=DUMMY_REGION_MIG_PROJECT_NAME,
@@ -219,14 +238,14 @@ class TestGce:
     assert m.name == DUMMY_REGION_MIG_NAME
     assert m.template.get_metadata('') == ''
     assert m.template.get_metadata('non-existing') == ''
-    assert m.template.get_metadata(
-        'startup-script-url') == apigee.MIG_STARTUP_SCRIPT_URL
+    assert (m.template.get_metadata('startup-script-url') ==
+            apigee.MIG_STARTUP_SCRIPT_URL)
 
   def test_get_managed_instance_groups_gke(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
-                             locations=['europe-west1'])
+                             locations=['europe-west4'])
     migs = gce.get_managed_instance_groups(context)
-    assert len(migs) == 1
+    assert len(migs) == 2
     m = next(iter(migs.values()))
     assert m.is_gke() is True
 
@@ -253,15 +272,15 @@ class TestGce:
   def test_get_regions_with_instances(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     regions = gce.get_regions_with_instances(context)
-    assert len(regions) == 2
-    assert 'europe-west1' in [r.name for r in regions]
+    assert len(regions) == 1
+    assert 'europe-west4' in [r.name for r in regions]
 
   def test_count_no_action_instances(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              locations=['europe-west4'])
     migs = gce.get_managed_instance_groups(context)
-    #check for number of migs since I am only checking for a single mig in the region
-    assert len(migs) == 1
+    # check for number of migs since I am only checking for a single mig in the region
+    assert len(migs) == 2
 
     for m in migs.values():
       print(m)
@@ -277,7 +296,7 @@ class TestGce:
             'projects/gcpdiag-gce1-aaaa/global/instanceTemplates/gke-gke1-default-pool'
         )
     ]
-    assert len(matched_names) == 1
+    assert len(matched_names) == 2
     t = templates[matched_names[0]]
     assert t.name.startswith('gke-gke1-default-pool')
     # GKE nodes pools have at least one tag called 'gke-CLUSTERNAME-CLUSTERHASH-node'
@@ -286,13 +305,14 @@ class TestGce:
         if tag.startswith('gke-') and tag.endswith('-node')
     ]
     # service_account
-    assert t.service_account == f'{DUMMY_PROJECT_NR}-compute@developer.gserviceaccount.com'
+    assert (t.service_account ==
+            f'{DUMMY_PROJECT_NR}-compute@developer.gserviceaccount.com')
 
   def test_mig_template(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
-                             labels=DUMMY_INSTANCE3_LABELS)
+                             labels=DUMMY_INSTANCE2_LABELS)
     for n in {i.mig for i in gce.get_instances(context).values()}:
-      assert n.template.name.startswith('gke-')
+      assert n.template.name.startswith('mig-')
 
   def test_get_all_disks(self):
     disks = gce.get_all_disks(DUMMY_PROJECT_NAME)
@@ -304,53 +324,69 @@ class TestGce:
         assert d.in_use is True
 
   def test_get_instance(self):
-    instance = gce.get_instance(project_id=DUMMY_PROJECT_NAME,
-                                zone=DUMMY_ZONE,
-                                instance_name=DUMMY_INSTANCE1_NAME)
+    instance = gce.get_instance(
+        project_id=DUMMY_PROJECT_NAME,
+        zone=DUMMY_ZONE,
+        instance_name=DUMMY_INSTANCE1_NAME,
+    )
     assert instance.name == DUMMY_INSTANCE1_NAME
 
   def test_get_instance_interface_effective_firewalls(self):
     # use default network interface as nic0
-    instance = gce.get_instance(project_id=DUMMY_PROJECT_NAME,
-                                zone=DUMMY_ZONE,
-                                instance_name=DUMMY_INSTANCE1_NAME)
+    instance = gce.get_instance(
+        project_id=DUMMY_PROJECT_NAME,
+        zone=DUMMY_ZONE,
+        instance_name=DUMMY_INSTANCE1_NAME,
+    )
     firewalls = gce.get_instance_interface_effective_firewalls(
         instance=instance, nic='nic0')
     assert isinstance(firewalls, gce.InstanceEffectiveFirewalls)
 
   def test_is_public_machine(self):
-    instance = gce.get_instance(project_id=DUMMY_PROJECT_NAME,
-                                zone=DUMMY_ZONE,
-                                instance_name=DUMMY_INSTANCE1_NAME)
+    instance = gce.get_instance(
+        project_id=DUMMY_PROJECT_NAME,
+        zone=DUMMY_ZONE,
+        instance_name=DUMMY_INSTANCE1_NAME,
+    )
     assert instance.is_public_machine() is False
-    instance = gce.get_instance(project_id=DUMMY_PROJECT_NAME,
-                                zone=DUMMY_ZONE,
-                                instance_name=DUMMY_INSTANCE4_NAME)
+    instance = gce.get_instance(
+        project_id=DUMMY_PROJECT_NAME,
+        zone=DUMMY_ZONE,
+        instance_name=DUMMY_INSTANCE4_NAME,
+    )
     assert instance.is_public_machine() is True
 
   def test_check_license(self):
     licenses = gce.get_gce_public_licences(DUMMY_LICENSE_PROJECT_NAME)
     payg_licenses = [x for x in licenses if not x.endswith('-byol')]
-    instance = gce.get_instance(project_id=DUMMY_PROJECT_NAME,
-                                zone=DUMMY_ZONE,
-                                instance_name=DUMMY_INSTANCE1_NAME)
+    instance = gce.get_instance(
+        project_id=DUMMY_PROJECT_NAME,
+        zone=DUMMY_ZONE,
+        instance_name=DUMMY_INSTANCE1_NAME,
+    )
     assert instance.check_license(payg_licenses) is True
-    instance = gce.get_instance(project_id=DUMMY_PROJECT_NAME,
-                                zone=DUMMY_ZONE,
-                                instance_name=DUMMY_INSTANCE4_NAME)
+    instance = gce.get_instance(
+        project_id=DUMMY_PROJECT_NAME,
+        zone=DUMMY_ZONE,
+        instance_name=DUMMY_INSTANCE4_NAME,
+    )
     assert instance.check_license(payg_licenses) is False
 
   def test_get_instance_interface_subnetworks(self):
-    instance = gce.get_instance(project_id=DUMMY_PROJECT_NAME,
-                                zone=DUMMY_ZONE,
-                                instance_name=DUMMY_INSTANCE1_NAME)
+    instance = gce.get_instance(
+        project_id=DUMMY_PROJECT_NAME,
+        zone=DUMMY_ZONE,
+        instance_name=DUMMY_INSTANCE1_NAME,
+    )
     for subnetwork in instance.subnetworks:
       assert isinstance(subnetwork, network.Subnetwork)
 
   def test_get_instance_interface_routes(self):
-    instance = gce.get_instance(project_id=DUMMY_PROJECT_NAME,
-                                zone=DUMMY_ZONE,
-                                instance_name=DUMMY_INSTANCE1_NAME)
+    instance = gce.get_instance(
+        project_id=DUMMY_PROJECT_NAME,
+        zone=DUMMY_ZONE,
+        instance_name=DUMMY_INSTANCE1_NAME,
+    )
     for route in instance.routes:
       assert isinstance(route, network.Route)
 
@@ -394,7 +430,8 @@ class TestGce:
     assert serial_output.contents
 
     first_entry = serial_output.contents[0]
-    assert '01H\u001b[=3h\u001b[2J\u001b[01;01HCSM BBS Table full.' in first_entry
+    assert ('01H\u001b[=3h\u001b[2J\u001b[01;01HCSM BBS Table full.'
+            in first_entry)
     #
     last_entry = serial_output.contents[-1]
     assert '[   20.5] cloud-init[56]: Cloud-init v. 21.4 finished' in last_entry

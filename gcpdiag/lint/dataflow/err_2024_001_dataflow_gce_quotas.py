@@ -11,9 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# Lint as: python3
-# pylint: disable=line-too-long
 """Dataflow job is not facing GCE resource constraints.
 
 The Dataflow job will return these errors when you are hitting GCE resource
@@ -32,6 +29,13 @@ MATCH_STRINGS = [
     'has insufficient quota(s) to execute this workflow',
     'The quota check has failed',
     'Quota exceeded',
+    'Compute Engine API has not fully initialized',
+    'Throttling logger worker',
+    'This workload is drawing too much egress bandwidth from Cloud Storage',
+    'Per-customer shuffle size limit exceeded',
+    'RESOURCE_EXHAUSTED: Exceeds \'AppendRows throughput\' quota',
+    'RESOURCE_EXHAUSTED: Exceeds \'Concurrent connections\'',
+    'RESOURCE_EXHAUSTED: Exceeds \'CreateWriteStream requests\'',
 ]
 LOG_FILTER = [
     'severity>=WARNING',
@@ -88,7 +92,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
           f'{len(failed_jobs)} job(s) are unable to start due to insufficient'
           ' quota(s). Please verify corresponding GCE quotas being exceeded'
           ' and have the customer request an increase.'
-          f' {", ".join(islice(failed_jobs, 20))} {extra_jobs}',
+          f" {', '.join(islice(failed_jobs, 20))} {extra_jobs}",
       )
     else:
       # only irrelevant logs were fetched

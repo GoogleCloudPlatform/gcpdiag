@@ -63,6 +63,16 @@ class VmPerformance(runbook.DiagnosticTree):
               str,
           'help':
               'The name of the VM having performance issues. Or provide the id i.e -p name=<int>',
+          'deprecated':
+              True,
+          'new_parameter':
+              'instance_name',
+      },
+      flags.INSTANCE_NAME: {
+          'type':
+              str,
+          'help':
+              'The name of the VM having performance issues. Or provide the id i.e -p name=<int>',
           'required':
               True
       },
@@ -74,13 +84,13 @@ class VmPerformance(runbook.DiagnosticTree):
           'required':
               True
       },
-      flags.START_TIME_UTC: {
+      flags.START_TIME: {
           'type': datetime,
           'help':
               'The start window(in UTC) to investigate vm performance issues.'
               'Format: YYYY-MM-DDTHH:MM:SSZ'
       },
-      flags.END_TIME_UTC: {
+      flags.END_TIME: {
           'type':
               datetime,
           'help':
@@ -88,27 +98,32 @@ class VmPerformance(runbook.DiagnosticTree):
       }
   }
 
+  def legacy_parameter_handler(self, parameters):
+    if flags.NAME in parameters:
+      parameters[flags.INSTANCE_NAME] = parameters.pop(flags.NAME)
+
   def build_tree(self):
     """Construct the diagnostic tree with appropriate steps."""
 
-    start = FetchVmDetails()
+    start = VmPerformanceStart()
     cpu_check = gce_gs.HighVmCpuUtilization()
     cpu_check.project_id = op.get(flags.PROJECT_ID)
     cpu_check.zone = op.get(flags.ZONE)
-    cpu_check.instance_name = op.get(flags.NAME)
+    cpu_check.instance_name = op.get(flags.INSTANCE_NAME)
     mem_check = gce_gs.HighVmMemoryUtilization()
     mem_check.project_id = op.get(flags.PROJECT_ID)
     mem_check.zone = op.get(flags.ZONE)
-    mem_check.instance_name = op.get(flags.NAME)
+    mem_check.instance_name = op.get(flags.INSTANCE_NAME)
     disk_util_check = gce_gs.HighVmDiskUtilization()
     disk_util_check.project_id = op.get(flags.PROJECT_ID)
     disk_util_check.zone = op.get(flags.ZONE)
-    disk_util_check.instance_name = op.get(flags.NAME)
+    disk_util_check.instance_name = op.get(flags.INSTANCE_NAME)
 
     vm_lifecycle_check = gce_gs.VmLifecycleState()
+    vm_lifecycle_check.expected_lifecycle_status = 'RUNNING'
     vm_lifecycle_check.project_id = op.get(flags.PROJECT_ID)
     vm_lifecycle_check.zone = op.get(flags.ZONE)
-    vm_lifecycle_check.instance_name = op.get(flags.NAME)
+    vm_lifecycle_check.instance_name = op.get(flags.INSTANCE_NAME)
 
     self.add_start(step=start)
     self.add_step(parent=start, child=vm_lifecycle_check)
@@ -123,7 +138,7 @@ class VmPerformance(runbook.DiagnosticTree):
     slow_disk_io = gce_gs.VmSerialLogsCheck()
     slow_disk_io.project_id = op.get(flags.PROJECT_ID)
     slow_disk_io.zone = op.get(flags.ZONE)
-    slow_disk_io.instance_name = op.get(flags.NAME)
+    slow_disk_io.instance_name = op.get(flags.INSTANCE_NAME)
     slow_disk_io.template = 'vm_performance::slow_disk_io'
     slow_disk_io.negative_pattern = gce_const.SLOW_DISK_READS
     self.add_step(parent=disk_util_check, child=slow_disk_io)
@@ -132,7 +147,7 @@ class VmPerformance(runbook.DiagnosticTree):
     fs_corruption = gce_gs.VmSerialLogsCheck()
     fs_corruption.project_id = op.get(flags.PROJECT_ID)
     fs_corruption.zone = op.get(flags.ZONE)
-    fs_corruption.instance_name = op.get(flags.NAME)
+    fs_corruption.instance_name = op.get(flags.INSTANCE_NAME)
     fs_corruption.template = 'vm_serial_log::linux_fs_corruption'
     fs_corruption.negative_pattern = gce_const.FS_CORRUPTION_MSG
     self.add_step(parent=disk_util_check, child=fs_corruption)
@@ -142,8 +157,8 @@ class VmPerformance(runbook.DiagnosticTree):
     self.add_end(step=VmPerformanceEnd())
 
 
-class FetchVmDetails(runbook.StartStep):
-  """Fetching VM details ..."""
+class VmPerformanceStart(runbook.StartStep):
+  """Fetching VM details."""
 
   template = 'vm_attributes::running'
 
@@ -154,26 +169,27 @@ class FetchVmDetails(runbook.StartStep):
     try:
       vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                             zone=op.get(flags.ZONE),
-                            instance_name=op.get(flags.NAME))
+                            instance_name=op.get(flags.INSTANCE_NAME))
     except googleapiclient.errors.HttpError:
       op.add_skipped(
           project,
           reason=('Instance {} does not exist in zone {} or project {}').format(
-              op.get(flags.NAME), op.get(flags.ZONE), op.get(flags.PROJECT_ID)))
+              op.get(flags.INSTANCE_NAME), op.get(flags.ZONE),
+              op.get(flags.PROJECT_ID)))
     else:
       if vm and vm.is_running:
         # Check for instance id and instance name
         if not op.get(flags.ID):
           op.put(flags.ID, vm.id)
-        elif not op.get(flags.NAME):
-          op.put(flags.NAME, vm.name)
+        elif not op.get(flags.INSTANCE_NAME):
+          op.put(flags.INSTANCE_NAME, vm.name)
       else:
         op.add_failed(vm,
                       reason=op.prep_msg(op.FAILURE_REASON,
-                                         vm_name=vm.name,
+                                         full_resource_path=vm.full_path,
                                          status=vm.status),
                       remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                              vm_name=vm.name,
+                                              full_resource_path=vm.full_path,
                                               status=vm.status))
 
 
@@ -187,18 +203,16 @@ class CheckLiveMigrations(runbook.Step):
 
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+                          instance_name=op.get(flags.INSTANCE_NAME))
 
     logging_filter = '''protoPayload.methodName=~"compute.instances.migrateOnHostMaintenance"'''
     log_entries = logs.realtime_query(
         project_id=op.get(flags.PROJECT_ID),
         filter_str=f'{logging_filter}\nresource.labels.instance_id="{vm.id}"',
-        start_time_utc=op.get(flags.START_TIME_UTC),
-        end_time_utc=op.get(flags.END_TIME_UTC))
+        start_time=op.get(flags.START_TIME),
+        end_time=op.get(flags.END_TIME))
 
-    time_frame_list = [
-        op.get(flags.START_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
-    ]
+    time_frame_list = [op.get(flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')]
     if log_entries:
       for log in log_entries:
         start_time_val = datetime.strptime(
@@ -207,7 +221,7 @@ class CheckLiveMigrations(runbook.Step):
         time_frame_list.append(start_time_val)
         op.info(('\n\nLive Migration Detected at {}, Checking further\n\n'
                 ).format(start_time_val))
-      end_time = op.get(flags.END_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+      end_time = op.get(flags.END_TIME).strftime('%Y/%m/%d %H:%M:%S')
       time_frame_list.append(end_time)
       i = 0
       for times in time_frame_list:
@@ -237,12 +251,11 @@ class DiskHealthCheck(runbook.Step):
 
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+                          instance_name=op.get(flags.INSTANCE_NAME))
 
     start_formatted_string = op.get(
-        flags.START_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
-    end_formatted_string = op.get(
-        flags.END_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+        flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')
+    end_formatted_string = op.get(flags.END_TIME).strftime('%Y/%m/%d %H:%M:%S')
     within_str = f'within d\'{start_formatted_string}\', d\'{end_formatted_string}\''
 
     for disk in vm.disks:
@@ -279,14 +292,15 @@ class CpuOvercommitmentCheck(runbook.Step):
     """Checking if CPU is overcommited"""
     cpu_count = 1000
     start_formatted_string = op.get(
-        flags.START_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
-    end_formatted_string = op.get(
-        flags.END_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+        flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')
+    end_formatted_string = op.get(flags.END_TIME).strftime('%Y/%m/%d %H:%M:%S')
     within_str = f'within d\'{start_formatted_string}\', d\'{end_formatted_string}\''
 
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+                          instance_name=op.get(flags.INSTANCE_NAME))
+
+    op.info(f'vm.min_cpu_platform: {vm.min_cpu_platform()}')
 
     if vm.is_sole_tenant_vm or 'e2' in vm.machine_type():
 
@@ -327,7 +341,7 @@ class CpuOvercommitmentCheck(runbook.Step):
         op.add_failed(
             op.get(flags.PROJECT_ID),
             reason=('Not able to pull CPU count for instance {}').format(
-                op.get(flags.NAME)),
+                op.get(flags.INSTANCE_NAME)),
             remediation='')
       else:
         if cpu_count_query:
@@ -378,12 +392,11 @@ class DiskAvgIOLatencyCheck(runbook.Step):
 
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+                          instance_name=op.get(flags.INSTANCE_NAME))
 
     start_formatted_string = op.get(
-        flags.START_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
-    end_formatted_string = op.get(
-        flags.END_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+        flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')
+    end_formatted_string = op.get(flags.END_TIME).strftime('%Y/%m/%d %H:%M:%S')
     within_str = f'within d\'{start_formatted_string}\', d\'{end_formatted_string}\''
 
     # Fetch list of disks for the instance
@@ -446,13 +459,13 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
       self.start_formatted_string = self.start_time
     else:
       self.start_formatted_string = op.get(
-          flags.START_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+          flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')
 
     if hasattr(self, 'end_time'):
       self.end_formatted_string = self.end_time
     else:
       self.end_formatted_string = op.get(
-          flags.END_TIME_UTC).strftime('%Y/%m/%d %H:%M:%S')
+          flags.END_TIME).strftime('%Y/%m/%d %H:%M:%S')
 
     #op.info(('\n\nStart TIme: {}, End time: {}\n\n').format(
     #    self.start_formatted_string, self.end_formatted_string))
@@ -461,7 +474,7 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
 
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+                          instance_name=op.get(flags.INSTANCE_NAME))
 
     start_dt_pst = datetime.strptime(vm.laststarttimestamp(),
                                      '%Y-%m-%dT%H:%M:%S.%f%z')
@@ -499,7 +512,7 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
       op.add_skipped(
           op.get(flags.PROJECT_ID),
           reason=('Not able to pull CPU count for instance {}').format(
-              op.get(flags.NAME)))
+              op.get(flags.INSTANCE_NAME)))
 
     if cpu_count_query:
       cpu_count = int(list(cpu_count_query.values())[0]['values'][0][0])
@@ -1204,9 +1217,9 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
                     '\n\t Max Write-Throughput: {} MB/s\n').format(
                         disktype, int(total_disk_size[disktype]),
                         min(data[1], provisions_iops['pd-extreme']),
-                        min(data[2], data[3]),
+                        max(data[2], data[3]),
                         min(data[5], provisions_iops['pd-extreme']),
-                        min(data[6], data[7])))
+                        max(data[6], data[7])))
 
                 self.actual_usage_comparision(
                     vm, disktype,
@@ -1361,7 +1374,7 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
           project,
           reason=
           ('Not able to fetch monitoring metric {} data for VM {} - Disktype - {}'
-          ).format(metric_name, op.get(flags.NAME), disktype))
+          ).format(metric_name, op.get(flags.INSTANCE_NAME), disktype))
     else:
       if comp:
         for compval in comp.items():
@@ -1372,7 +1385,7 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
                 ('{} usage is reaching beyond optimal limits for disk type {} for this VM'
                 ).format(metric_name, storage_type),
                 remediation=op.prep_msg(op.FAILURE_REMEDIATION,
-                                        vm_name=vm.name,
+                                        full_resource_path=vm.full_path,
                                         status=vm.status))
           else:
             op.add_ok(
@@ -1388,16 +1401,16 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
 
 
 class VmPerformanceEnd(runbook.EndStep):
-  """Finalizing VM performance diagnostics..."""
+  """Finalize VM performance diagnostics."""
 
   def execute(self):
-    """Finalizing VM performance diagnostics..."""
+    """Finalize VM performance diagnostics."""
     response = None
     if not config.get(flags.INTERACTIVE_MODE):
       response = op.prompt(
           kind=op.CONFIRMATION,
           message=
-          f'Are you able to find issues related to {op.get(flags.NAME)} ?',
+          f'Are you able to find issues related to {op.get(flags.INSTANCE_NAME)} ?',
           choice_msg='Enter an option: ')
     if response == op.NO:
       op.info(message=op.END_MESSAGE)

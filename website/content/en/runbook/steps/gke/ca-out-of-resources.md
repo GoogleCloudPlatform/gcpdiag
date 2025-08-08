@@ -18,16 +18,17 @@ None
 
 The scaleUp event failed because some of the MIGs could not be increased due to lack of resources.
 Example log entry that would help identify involved objects:
-{LOG_ENTRY}
+
+{log_entry}
 
 ### Failure Remediation
 
 Follow the documentation:
-https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-vm-creation#resource_availability
+<https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-vm-creation#resource_availability>
 
 ### Success Reason
 
-No "scale.up.error.out.of.resources" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+No "scale.up.error.out.of.resources" errors found between {start_time} and {end_time}
 
 
 

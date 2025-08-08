@@ -36,7 +36,7 @@ class CheckLogsExist(runbook.Step):
   project_id: str = ''
 
   def execute(self):
-    """Check if investigated logs messages exist in the Dataproc cluster..."""
+    """Check if investigated logs messages exist in the Dataproc cluster."""
 
     if not self.project_id:
       project = crm.get_project(op.get(flags.PROJECT_ID))
@@ -58,7 +58,7 @@ class CheckLogsExist(runbook.Step):
     if not (self.cluster_name and self.cluster_uuid):
       job = dataproc.get_job_by_jobid(op.get(flags.PROJECT_ID),
                                       op.get(flags.REGION),
-                                      op.get(flags.JOB_ID))
+                                      op.get(flags.DATAPROC_JOB_ID))
 
       cluster_name = job.cluster_name
       cluster_uuid = job.cluster_uuid
@@ -75,14 +75,14 @@ class CheckLogsExist(runbook.Step):
     "{job_id}"
     jsonPayload.message=~"{log_message}" """
 
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
 
     log_entries = logs.realtime_query(
         project_id=op.get(flags.PROJECT_ID),
         filter_str=log_search_filter,
-        start_time_utc=start_time_utc,
-        end_time_utc=end_time_utc,
+        start_time=start_time,
+        end_time=end_time,
     )
 
     if log_entries:
@@ -117,8 +117,8 @@ class CheckClusterNetworkConnectivity(runbook.Step):
   project_id: str = ''
 
   def execute(self):
-    """Verify network connectivity among nodes in the cluster..."""
-    # Gathering cluster details...
+    """Verify network connectivity among nodes in the cluster."""
+    # Gathering cluster details.
 
     if not self.project_id:
       project_id = op.get(flags.PROJECT_ID)
@@ -126,7 +126,7 @@ class CheckClusterNetworkConnectivity(runbook.Step):
       project_id = self.project_id
 
     if not self.cluster_name:
-      cluster_name = op.get(flags.CLUSTER_NAME)
+      cluster_name = op.get(flags.DATAPROC_CLUSTER_NAME)
     else:
       cluster_name = self.cluster_name
 
@@ -193,9 +193,9 @@ class CheckClusterNetworkConnectivity(runbook.Step):
       is_connectivity_fine = True
 
       # run connectivity tests between master and worker
-      op.info('Running connectivity tests...')
+      op.info('Running connectivity tests.')
       # ICMP
-      op.info('ICMP test...')
+      op.info('ICMP test.')
       connectivity_test_result = networkmanagement.run_connectivity_test(
           project_id=op.get(flags.PROJECT_ID),
           src_ip=str(source_ip)[:-3],
@@ -220,7 +220,7 @@ class CheckClusterNetworkConnectivity(runbook.Step):
             + 'test to verify what is blocking the traffic, ' +
             'in particular Last step and Full list of steps.')
       # TCP
-      op.info('TCP test...')
+      op.info('TCP test.')
       connectivity_test_result = networkmanagement.run_connectivity_test(
           project_id=op.get(flags.PROJECT_ID),
           src_ip=str(source_ip)[:-3],
@@ -245,7 +245,7 @@ class CheckClusterNetworkConnectivity(runbook.Step):
             + 'to verify what is blocking the traffic, ' +
             'in particular Last step and Full list of steps.')
       # UCP
-      op.info('UDP test...')
+      op.info('UDP test.')
       connectivity_test_result = networkmanagement.run_connectivity_test(
           project_id=op.get(flags.PROJECT_ID),
           src_ip=str(source_ip)[:-3],

@@ -19,15 +19,15 @@ This step supports checking for the presence of a concrete log message.
 
 ### Failure Reason
 
-Found logs messages related to "{log}" on the cluster: {cluster_name}.
+Log messages related to "{log}" were found on the cluster: {cluster_name}.
 
 ### Failure Remediation
 
-Please investigate further the job logs by focusing on eliminating the observed message.
+Investigate the job logs further, focusing on eliminating the observed message.
 
 ### Success Reason
 
-Didn't find logs messages related to "{log}" on the cluster: {cluster_name}.
+No log messages related to "{log}" were found on the cluster: {cluster_name}.
 
 
 

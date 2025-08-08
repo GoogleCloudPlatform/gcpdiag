@@ -13,45 +13,94 @@
 # limitations under the License.
 """Contains generalized Cloud logging related Steps """
 import re
+from typing import Optional
 
-from boltons.iterutils import get_path
-
-from gcpdiag import runbook
-from gcpdiag.models import Resource
-from gcpdiag.queries import logs
+from gcpdiag import runbook, utils
+from gcpdiag.queries import crm, logs
 from gcpdiag.runbook import op
 from gcpdiag.runbook.gcp import flags
 
 
-class LogsCheck(runbook.Step):
-  """Assess if a given log query is present or not..
+class CheckIssueLogEntry(runbook.Step):
+  """Checks logs for problematic entry using filter string provided.
 
-  Checks if a log attribute has a bad or good pattern
+  Attributes:
+    project_id(str): Project ID to search for filter
+    filter_str(str): Filter written in log querying language:
+      https://cloud.google.com/logging/docs/view/query-library.
+      This field required because an empty filter matches all log entries.
+    template(str): Custom template for logging issues related to a resource
+      type
+    resource_name (Optional[str]): Resource identifier that will be used in
+      the custom template provided.
   """
-  template = 'logging::default'
-  log_name: str
-  resource_type: str
+
+  project_id: str
   filter_str: str
-  attribute: tuple
-  good_pattern: str
-  bad_pattern: str
-  resource: Resource
+  template: str = 'logging::default'
+  issue_pattern: Optional[list[str]] = []
+  resource_name: Optional[str] = None
 
   def execute(self):
-    """Inspecting cloud logging for good or bad patterns"""
-    fetched_logs = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
-                                       filter_str=self.filter_str,
-                                       start_time_utc=op.get(
-                                           flags.START_TIME_UTC),
-                                       end_time_utc=op.get(flags.END_TIME_UTC))
-    for entry in fetched_logs:
-      actual_value = get_path(entry, self.attribute, None)
+    """Check for log entries matching problematic filter string"""
 
-      if re.match(self.bad_pattern, actual_value, re.IGNORECASE):
-        self.interface.add_failed(self.resource,
-                                  reason=op.prep_msg(op.FAILURE_REASON),
-                                  remediation=op.prep_msg(
-                                      op.FAILURE_REMEDIATION))
-      elif re.match(self.good_pattern, actual_value, re.IGNORECASE):
-        self.interface.add_ok(self.resource,
-                              reason=op.prep_msg(op.SUCCESS_REASON))
+    project = crm.get_project(self.project_id)
+
+    try:
+      fetched_logs = logs.realtime_query(project_id=self.project_id,
+                                         filter_str=self.filter_str,
+                                         start_time=op.get(flags.START_TIME),
+                                         end_time=op.get(flags.END_TIME))
+    except utils.GcpApiError as err:
+      self.template = 'logging::default'
+      op.add_skipped(project,
+                     reason=op.prep_msg(op.SKIPPED_REASON,
+                                        api_err=err,
+                                        query=self.filter_str))
+    else:
+      remediation = None
+      reason = None
+      self.filter_str += (f'timestamp >= "{op.get(flags.START_TIME)}"'
+                          f' AND timestamp <= "{op.get(flags.END_TIME)}"\n')
+      if fetched_logs and _pattern_exists_in_entries(self.issue_pattern,
+                                                     fetched_logs):
+        if self.template != 'logging::default' and self.resource_name:
+          reason = op.prep_msg(op.FAILURE_REASON,
+                               resource_name=self.resource_name,
+                               project_id=self.project_id,
+                               query=self.filter_str)
+          remediation = op.prep_msg(op.FAILURE_REMEDIATION,
+                                    query=self.filter_str,
+                                    resource_name=self.resource_name,
+                                    project_id=self.project_id)
+        else:
+          reason = op.prep_msg(op.FAILURE_REASON, query=self.filter_str)
+          remediation = op.prep_msg(op.FAILURE_REMEDIATION,
+                                    query=self.filter_str)
+
+        op.add_failed(project, reason=reason, remediation=remediation)
+      else:
+        if self.template != 'logging::default' and self.resource_name:
+          reason = op.prep_msg(op.UNCERTAIN_REASON,
+                               resource_name=self.resource_name,
+                               query=self.filter_str,
+                               project_id=self.project_id)
+          remediation = op.prep_msg(op.UNCERTAIN_REMEDIATION,
+                                    query=self.filter_str,
+                                    resource_name=self.resource_name,
+                                    project_id=self.project_id)
+        else:
+          reason = op.prep_msg(op.UNCERTAIN_REASON, query=self.filter_str)
+          remediation = op.prep_msg(op.UNCERTAIN_REMEDIATION,
+                                    query=self.filter_str)
+        op.add_uncertain(project, reason=reason, remediation=remediation)
+
+
+def _pattern_exists_in_entries(issue_pattern, fetched_logs):
+  for log_entry in fetched_logs:
+    message = log_entry.get('protoPayload', {}).get('status', {}).get('message')
+    if message:
+      for pattern_str in issue_pattern:
+        if re.search(pattern_str, message):
+          return True
+  return False

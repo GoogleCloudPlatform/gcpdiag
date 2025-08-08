@@ -4,7 +4,7 @@ linkTitle: "Analyze Domain Statuses"
 weight: 3
 type: docs
 description: >
-  Checks the status of each individual domain associated with the SSL certificate.
+  Check the status of each individual domain associated with the SSL certificate.
 ---
 
 **Product**: [Load balancing](https://cloud.google.com/load-balancing)\
@@ -16,7 +16,7 @@ None
 
 ### Success Reason
 
-All domains associated with the certificate "{name}" are in the "ACTIVE" state. No issues detected with domain provisioning
+All domains associated with the SSL certificate "{name}" are in the ACTIVE state. Domain provisioning appears successful.
 
 
 

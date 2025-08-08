@@ -1,0 +1,10 @@
+*  lb/BP/2025_003: Connection draining timeout is configured for proxy load balancers.
+   - projects/gcpdiag-lb1-aaaa/global/backendServices/web-backend-service [FAIL]
+     Connection draining timeout is not configured (set to 0 seconds).
+
+   Performance best practices recommend configuring connection draining timeout
+   to allow existing requests to complete when instances are removed from a
+   backend service.
+
+   https://gcpdiag.dev/rules/lb/BP/2025_003
+

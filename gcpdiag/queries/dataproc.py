@@ -314,8 +314,9 @@ def get_cluster(cluster_name, region, project) -> Optional[Cluster]:
                                                     region=region)
   try:
     r = request.execute(num_retries=config.API_RETRIES)
-  except googleapiclient.errors.HttpError as err:
-    logging.error(err)
+  except (googleapiclient.errors.HttpError,
+          requests.exceptions.RequestException):
+    #logging.error(err)
     return None
   return Cluster(r['clusterName'], project_id=r['projectId'], resource_data=r)
 
@@ -371,7 +372,7 @@ class AutoScalingPolicy(models.Resource):
 @caching.cached_api_call
 def get_auto_scaling_policy(project_id: str, region: str,
                             policy_id: str) -> AutoScalingPolicy:
-  # logging.info('fetching autoscalingpolicy: %s', project_id)
+  logging.debug('fetching autoscalingpolicy: %s', project_id)
   dataproc = apis.get_api('dataproc', 'v1', project_id)
   name = (
       f'projects/{project_id}/regions/{region}/autoscalingPolicies/{policy_id}')

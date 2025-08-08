@@ -32,6 +32,7 @@ from gcpdiag.queries import apis, crm, gce, network, web
 from gcpdiag.utils import Version
 
 # To avoid name conflict with L342
+# pylint: disable=invalid-name
 IPv4NetOrIPv6Net = network.IPv4NetOrIPv6Net
 
 DEFAULT_MAX_PODS_PER_NODE = 110
@@ -59,6 +60,17 @@ class NodeConfig:
   @property
   def oauth_scopes(self) -> list:
     return self._resource_data['oauthScopes']
+
+  @property
+  def has_serial_port_logging_enabled(self) -> bool:
+    """ Check if serial port logging is enabled in the node config.
+
+    Returns:
+      bool: True if serial port logging is enabled or not explicitly disabled.
+            False if explicitly disabled.
+    """
+    metadata = self._resource_data.get('metadata', {})
+    return metadata.get('serial-port-logging-enable', 'true').lower() == 'true'
 
 
 class NodePool(models.Resource):
@@ -313,9 +325,9 @@ class Cluster(models.Resource):
 
   def has_network_policy_enabled(self) -> bool:
     # Network policy enforcement
-    return not (get_path(self._resource_data,
-                         ('addonsConfig', 'networkPolicyConfig', 'disabled'),
-                         default=False) is True)
+    return get_path(self._resource_data,
+                    ('addonsConfig', 'networkPolicyConfig', 'disabled'),
+                    default=False) is not True
 
   def has_dpv2_enabled(self) -> bool:
     # Checks whether dataplane V2 is enabled in clusters
@@ -396,6 +408,14 @@ class Cluster(models.Resource):
     return self._resource_data['nodePools']
 
   @property
+  def get_network_string(self) -> str:
+    if 'networkConfig' not in self._resource_data:
+      return ''
+    if 'network' not in self._resource_data['networkConfig']:
+      return ''
+    return self._resource_data['networkConfig']['network']
+
+  @property
   def is_private(self) -> bool:
     if not 'privateClusterConfig' in self._resource_data:
       return False
@@ -468,8 +488,8 @@ def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
   if not apis.is_enabled(context.project_id, 'container'):
     return clusters
   container_api = apis.get_api('container', 'v1', context.project_id)
-  logging.info('fetching list of GKE clusters in project %s',
-               context.project_id)
+  logging.debug('fetching list of GKE clusters in project %s',
+                context.project_id)
   query = container_api.projects().locations().clusters().list(
       parent=f'projects/{context.project_id}/locations/-')
   try:
@@ -499,8 +519,8 @@ def get_cluster(project_id, cluster_id, location) -> Union[Cluster, None]:
   if not apis.is_enabled(project_id, 'container'):
     return None
   container_api = apis.get_api('container', 'v1', project_id)
-  logging.info('fetching the GKE cluster %s in project %s', cluster_id,
-               project_id)
+  logging.debug('fetching the GKE cluster %s in project %s', cluster_id,
+                project_id)
   query = container_api.projects().locations().clusters().get(
       name=f'projects/{project_id}/locations/{location}/clusters/{cluster_id}')
   try:
@@ -618,10 +638,10 @@ def get_node_by_instance_id(context: models.Context, instance_id: str) -> Node:
 
 @caching.cached_api_call
 def get_release_schedule() -> Dict:
-  """Extract the release schdule for gke clusters
+  """Extract the release schedule for gke clusters
 
   Returns:
-    A dictionary of release schdule.
+    A dictionary of release schedule.
   """
   page_url = 'https://cloud.google.com/kubernetes-engine/docs/release-schedule'
   release_data = {}

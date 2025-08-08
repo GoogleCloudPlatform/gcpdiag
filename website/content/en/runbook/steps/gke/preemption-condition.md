@@ -16,18 +16,18 @@ None
 
 ### Failure Reason
 
-The node {NODE} was preempted.
+The node {node} was preempted.
 
 ### Failure Remediation
 
 Compute Engine might stop (preempt) preemptible instances if it needs to reclaim the compute capacity for allocation to other VMs.
 
 For more details about preemptible VMs in GKE please consult the documentation:
-https://cloud.google.com/kubernetes-engine/docs/how-to/preemptible-vms
+<https://cloud.google.com/kubernetes-engine/docs/how-to/preemptible-vms>
 
 ### Success Reason
 
-The node {NODE} was unavailable for reasons other than preemption.
+The node {node} was unavailable for reasons other than preemption.
 
 
 

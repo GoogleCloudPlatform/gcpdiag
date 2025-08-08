@@ -154,6 +154,15 @@
       },
       "state": "ENABLED",
       "parent": "projects/12340007"
+    },
+    {
+      "name": "projects/12340007/services/bigquery.googleapis.com",
+      "config": {
+        "name": "bigquery.googleapis.com",
+        "title": "BigQuery API"
+      },
+      "state": "ENABLED",
+      "parent": "projects/12340007"
     }
   ]
 }

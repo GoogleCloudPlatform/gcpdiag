@@ -1,9 +1,8 @@
 *  gce/BP_EXT/2021_003: Secure Boot is enabled
    - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce1       [FAIL]
    - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce2       [FAIL]
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-4h21   [FAIL]
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-7pvl   [FAIL]
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/windows-test [FAIL]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-bzvx   [FAIL]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-l40g   [FAIL]
    - projects/gcpdiag-gce1-aaaa/zones/europe-west4-b/instances/gce1       [FAIL]
 
    Google recommends enabling Secure Boot if you can ensure that it doesn't

@@ -16,6 +16,7 @@ all:	\
 	json-dumps/project.json \
 	json-dumps/services.json \
 	json-dumps/iam-policy.json \
+	json-dumps/org-constraints.json
 
 json-dumps/project.json:
 	$(CURL) -fsS \
@@ -30,6 +31,14 @@ json-dumps/services.json:
 json-dumps/iam-policy.json:
 	$(CURL) -fsS \
 		'https://cloudresourcemanager.googleapis.com/v1/projects/$(PROJECT_ID):getIamPolicy' \
+		-X POST  --header "Content-Type:text/json" \
+		-d "" \
+		| $(JSON_CLEANER) other \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/org-constraints.json:
+	$(CURL) -fsS \
+		'https://cloudresourcemanager.googleapis.com/v1/projects/$(PROJECT_ID):listAvailableOrgPolicyConstraints' \
 		-X POST  --header "Content-Type:text/json" \
 		-d "" \
 		| $(JSON_CLEANER) other \

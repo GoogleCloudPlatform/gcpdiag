@@ -16,18 +16,20 @@ None
 
 ### Failure Reason
 
-Image cannot be pulled by a container on Pod, because there are not enough permissions to pull it from the repository. Verify the node SA has the correct permissions.
+Image cannot be pulled by a container on Pod, because there are not enough permissions to pull it from the repository.
+Verify the node SA has the correct permissions.
 Example log entry that would help identify involved objects:
-{LOG_ENTRY}
+
+{log_entry}
 
 ### Failure Remediation
 
-Follow the documentation:
-https://cloud.google.com/artifact-registry/docs/integrate-gke#permissions
+Ensure the node service account has the necessary permissions to pull the image. Refer to the documentation:
+<https://cloud.google.com/artifact-registry/docs/integrate-gke#permissions>
 
 ### Success Reason
 
-No "Failed to pull image.*403 Forbidden" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+No "Failed to pull image.*403 Forbidden" errors were found for cluster between {start_time} and {end_time}.
 
 
 

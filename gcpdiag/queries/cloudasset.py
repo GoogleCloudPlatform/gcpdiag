@@ -62,7 +62,7 @@ def search_all_resources(
   if not apis.is_enabled(project_id, 'cloudasset'):
     return resources
   cloudasset_api = apis.get_api('cloudasset', 'v1', project_id)
-  logging.info('fetching list of resources in the project %s', project_id)
+  logging.debug('fetching list of resources in the project %s', project_id)
   request = cloudasset_api.v1().searchAllResources(
       scope=f'projects/{project_id}', assetTypes=asset_type, query=query)
   response = request.execute(num_retries=config.API_RETRIES)

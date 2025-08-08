@@ -1,4 +1,4 @@
-VERSION=0.85
+VERSION=0.86
 IMAGE=us-docker.pkg.dev/gcpdiag-dist/common/gcpdiag-pipenv-python-3.12
 
 build:

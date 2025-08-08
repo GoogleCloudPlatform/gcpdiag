@@ -20,6 +20,8 @@ from typing import List
 from gcpdiag import caching, config, models
 from gcpdiag.queries import apis
 
+DEFAULT_MTU = 1440
+
 
 class Interconnect(models.Resource):
   """Represents an Interconnect.
@@ -87,7 +89,7 @@ class Interconnect(models.Resource):
 
 @caching.cached_api_call(in_memory=True)
 def get_interconnect(project_id: str, interconnect_name: str) -> Interconnect:
-  logging.info('fetching interconnect: %s', interconnect_name)
+  logging.debug('fetching interconnect: %s', interconnect_name)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.interconnects().get(project=project_id,
                                         interconnect=interconnect_name)
@@ -110,6 +112,7 @@ def get_links(project_id: str) -> List[Interconnect]:
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.interconnects().list(project=project_id)
   response = request.execute(num_retries=config.API_RETRIES)
+  links = []
   if isinstance(response, dict):
     # Handle the case when 'response' is a dictionary
     links = [
@@ -186,6 +189,17 @@ class VlanAttachment(models.Resource):
     return self._resource_data['region'].split('/')[-1]
 
   @property
+  def mtu(self) -> int:
+    if 'mtu' in self._resource_data:
+      return self._resource_data['mtu']
+    else:
+      return DEFAULT_MTU
+
+  @property
+  def ipv4address(self) -> str:
+    return self._resource_data['cloudRouterIpAddress'].split('/')[0]
+
+  @property
   def ead(self) -> str:
     if not self._ead:
       interconnect_obj = get_interconnect(self.project_id, self.interconnect)
@@ -211,7 +225,7 @@ class VlanAttachment(models.Resource):
 @caching.cached_api_call(in_memory=True)
 def get_vlan_attachment(project_id: str, region: str,
                         vlan_attachment: str) -> VlanAttachment:
-  logging.info('fetching vlan attachment: %s', vlan_attachment)
+  logging.debug('fetching vlan attachment: %s', vlan_attachment)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.interconnectAttachments().get(
       project=project_id, region=region, interconnectAttachment=vlan_attachment)

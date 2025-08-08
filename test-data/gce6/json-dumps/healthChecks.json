@@ -1,0 +1,24 @@
+{
+  "kind": "compute#healthCheckList",
+  "id": "projects/gcpdiag-gce6-aaaa/global/healthChecks/",
+  "items": [
+    {
+      "kind": "compute#healthCheck",
+      "id": "2261671528540911966",
+      "creationTimestamp": "2025-03-27T19:21:37.362-07:00",
+      "name": "apache-health-check",
+      "checkIntervalSec": 10,
+      "timeoutSec": 5,
+      "unhealthyThreshold": 2,
+      "healthyThreshold": 2,
+      "type": "HTTP",
+      "httpHealthCheck": {
+        "port": 80,
+        "requestPath": "/",
+        "proxyHeader": "NONE"
+      },
+      "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/global/healthChecks/apache-health-check"
+    }
+  ],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gce6-aaaa/global/healthChecks/"
+}

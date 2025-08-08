@@ -15,10 +15,11 @@
 
 from boltons.iterutils import get_path
 
-from gcpdiag import runbook
-from gcpdiag.queries import apis, crm, monitoring, pubsub, quotas
+from gcpdiag import runbook, utils
+from gcpdiag.queries import apis, crm, monitoring, pubsub
 from gcpdiag.runbook import op
 from gcpdiag.runbook.pubsub import flags
+from gcpdiag.runbook.pubsub import generalized_steps as pubsub_gs
 
 DELIVERY_RATE = (
     'fetch pubsub_subscription | metric'
@@ -73,7 +74,7 @@ class PullSubscriptionDelivery(runbook.DiagnosticTree):
     start = PullSubscriptionDeliveryStart()
     self.add_start(start)
 
-    quota_check = PubsubQuotas()
+    quota_check = pubsub_gs.PubsubQuotas()
     self.add_step(start, quota_check)
 
     pull_rate = PullRate()
@@ -94,14 +95,19 @@ class PullSubscriptionDeliveryStart(runbook.StartStep):
     if project:
       op.info(f'name: {project.name}, id: {project.id}')
 
-    if not apis.is_enabled(op.context.project_id, 'pubsub'):
-      op.add_skipped(project, reason='Pub/Sub API is not enabled')
+    if not apis.is_enabled(op.get(flags.PROJECT_ID), 'pubsub'):
+      op.add_skipped(
+          project,
+          reason='Pub/Sub API is not enabled, please enable to proceed.')
+      return
 
     subscription_name = op.get(flags.SUBSCRIPTION_NAME)
-    subscription = pubsub.get_subscription(project_id=op.context.project_id,
-                                           subscription_name=subscription_name)
     # check subscription exists and is pull
-    if not subscription or subscription.is_push_subscription():
+    try:
+      subscription = pubsub.get_subscription(
+          project_id=op.get(flags.PROJECT_ID),
+          subscription_name=subscription_name)
+    except utils.GcpApiError:
       op.add_skipped(
           resource=project,
           reason=
@@ -109,35 +115,14 @@ class PullSubscriptionDeliveryStart(runbook.StartStep):
            'if recreated please wait a few minutes before querying the runbook'.
            format(subscription_name=subscription_name)),
       )
-
-
-class PubsubQuotas(runbook.Step):
-  """Has common step to check if any Pub/Sub quotas are being exceeded in the project."""
-
-  template = 'generics::quota_exceeded'
-
-  def execute(self):
-    """Checks if any Pub/Sub quotas are being exceeded."""
-    if self.quota_exceeded_found is True:
-      op.add_failed(
-          resource=crm.get_project(op.get(flags.PROJECT_ID)),
-          reason=op.prep_msg(op.FAILURE_REASON),
-          remediation=op.prep_msg(op.FAILURE_REMEDIATION),
-      )
     else:
-      op.add_ok(
-          resource=crm.get_project(op.get(flags.PROJECT_ID)),
-          reason='Quota usage is within project limits.',
-      )
-
-  def quota_exceeded_found(self) -> bool:
-    quota_exceeded_query = (
-        quotas.QUOTA_EXCEEDED_HOURLY_PER_SERVICE_QUERY_TEMPLATE.format(
-            service_name='pubsub', within_days=1))
-    time_series = monitoring.query(op.context.project_id, quota_exceeded_query)
-    if time_series:
-      return True
-    return False
+      if subscription.is_push_subscription():
+        op.add_skipped(
+            resource=project,
+            reason=
+            ('Skipping execution because provided {subscription_name} is a push subscription. '
+             .format(subscription_name=subscription_name)),
+        )
 
 
 class PullRate(runbook.Gateway):
@@ -145,7 +130,7 @@ class PullRate(runbook.Gateway):
 
   def execute(self):
     """Checks if delivery rate is low i.e. receiving fewer messages than expected."""
-    subscription = pubsub.get_subscription(project_id=op.context.project_id,
+    subscription = pubsub.get_subscription(project_id=op.get(flags.PROJECT_ID),
                                            subscription_name=op.get(
                                                flags.SUBSCRIPTION_NAME))
 
@@ -166,8 +151,10 @@ class PullRate(runbook.Gateway):
   # subscription/sent_message_count
   def delivery_rate(self, subscription_name: str) -> float:
     delivery_rate_query = DELIVERY_RATE.format(
-        project_id=op.context.project_id, subscription_name=subscription_name)
-    time_series = monitoring.query(op.context.project_id, delivery_rate_query)
+        project_id=op.get(flags.PROJECT_ID),
+        subscription_name=subscription_name)
+    time_series = monitoring.query(op.get(flags.PROJECT_ID),
+                                   delivery_rate_query)
     if time_series:
       return float(get_path(list(time_series.values())[0], 'values')[0][-1])
     return 0.0
@@ -175,9 +162,10 @@ class PullRate(runbook.Gateway):
   # subscription/num_undelivered_messages
   def unacked_messages(self, subscription_name: str) -> float:
     unacked_messages_query = UNACKED_MESSAGES.format(
-        project_id=op.context.project_id, subscription_name=subscription_name)
+        project_id=op.get(flags.PROJECT_ID),
+        subscription_name=subscription_name)
 
-    time_series = monitoring.query(op.context.project_id,
+    time_series = monitoring.query(op.get(flags.PROJECT_ID),
                                    unacked_messages_query)
     if time_series:
       return float(get_path(list(time_series.values())[0], 'values')[0][0])
@@ -192,7 +180,7 @@ class ThroughputQualification(runbook.Step):
   def execute(self):
     """Checks if subscription has good health (high qualification)."""
 
-    subscription = pubsub.get_subscription(project_id=op.context.project_id,
+    subscription = pubsub.get_subscription(project_id=op.get(flags.PROJECT_ID),
                                            subscription_name=op.get(
                                                flags.SUBSCRIPTION_NAME))
 
@@ -203,11 +191,12 @@ class ThroughputQualification(runbook.Step):
         ' [value_delivery_latency_health_score_sum:sum(if(value.delivery_latency_health_score,'
         ' 1, 0))] | every 1m | within 10m').format(subscription.name)
 
-    subscription = pubsub.get_subscription(project_id=op.context.project_id,
+    subscription = pubsub.get_subscription(project_id=op.get(flags.PROJECT_ID),
                                            subscription_name=op.get(
                                                flags.SUBSCRIPTION_NAME))
     low_health_metrics = []
-    time_series = monitoring.query(op.context.project_id, qualification_query)
+    time_series = monitoring.query(op.get(flags.PROJECT_ID),
+                                   qualification_query)
     for metric in list(time_series.values()):
       # metric_dict[get_path(metric, ('labels','metric.criteria'))] = metric['values']
       if metric['values'][0][-1] == 0:

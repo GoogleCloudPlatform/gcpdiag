@@ -26,6 +26,15 @@ If there are log entries that contain messages listed in the public documentatio
   The following ScaleDown logs messages are covered:
   - scale.down.error.failed.to.evict.pods
   - no.scale.down.node.node.group.min.size.reached
+  - no.scale.down.node.scale.down.disabled.annotation
+  - no.scale.down.node.minimal.resource.limits.exceeded
+  - no.scale.down.node.no.place.to.move.pods
+  - no.scale.down.node.pod.not.backed.by.controller
+  - no.scale.down.node.pod.not.safe.to.evict.annotation
+  - no.scale.down.node.pod.kube.system.unmovable
+  - no.scale.down.node.pod.not.enough.pdb
+  - no.scale.down.node.pod.controller.not.found
+  - no.scale.down.node.pod.unexpected.error
 
 ### Executing this runbook
 
@@ -33,6 +42,7 @@ If there are log entries that contain messages listed in the public documentatio
 gcpdiag runbook gke/cluster-autoscaler \
   -p project_id=value \
   -p name=value \
+  -p gke_cluster_name=value \
   -p location=value
 ```
 
@@ -41,8 +51,9 @@ gcpdiag runbook gke/cluster-autoscaler \
 | Name | Required | Default | Type | Help |
 |------|----------|---------|------|------|
 | `project_id` | True | None | str | The ID of the project hosting the GKE Cluster |
-| `name` | False | None | str | (Optional) The name of the GKE cluster, to limit search only for this cluster |
-| `location` | False | None | str | The zone or region of the GKE cluster |
+| `name` | False | None | str | The name of the GKE cluster, to limit search only for this cluster |
+| `gke_cluster_name` | True | None | str | The name of the GKE cluster, to limit search only for this cluster |
+| `location` | True | None | str | The zone or region of the GKE cluster |
 
 Get help on available commands
 
@@ -67,6 +78,24 @@ gcpdiag runbook --help
   - [Ca Min Size Reached](/runbook/steps/gke/ca-min-size-reached)
 
   - [Ca Failed To Evict Pods](/runbook/steps/gke/ca-failed-to-evict-pods)
+
+  - [Ca Disabled Annotation](/runbook/steps/gke/ca-disabled-annotation)
+
+  - [Ca Min Resource Limit Exceeded](/runbook/steps/gke/ca-min-resource-limit-exceeded)
+
+  - [Ca No Place To Move Pods](/runbook/steps/gke/ca-no-place-to-move-pods)
+
+  - [Ca Pods Not Backed By Controller](/runbook/steps/gke/ca-pods-not-backed-by-controller)
+
+  - [Ca Not Safe To Evict Annotation](/runbook/steps/gke/ca-not-safe-to-evict-annotation)
+
+  - [Ca Pod Kube System Unmovable](/runbook/steps/gke/ca-pod-kube-system-unmovable)
+
+  - [Ca Pod Not Enough Pdb](/runbook/steps/gke/ca-pod-not-enough-pdb)
+
+  - [Ca Pod Controller Not Found](/runbook/steps/gke/ca-pod-controller-not-found)
+
+  - [Ca Pod Unexpected Error](/runbook/steps/gke/ca-pod-unexpected-error)
 
   - [Cluster Autoscaler End](/runbook/steps/gke/cluster-autoscaler-end)
 

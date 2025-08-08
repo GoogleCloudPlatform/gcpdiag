@@ -14,14 +14,13 @@ description: >
 
 None
 
-### Failure Reason
+### Uncertain Reason
 
 Service Account {service_account} associated with Dataproc cluster was not found in project {project_id} or cross project (if specified).
 
-### Failure Remediation
+### Uncertain Remediation
 
-Provide
-project in which the service account resides by using the cross_project parameter.
+Provide the project where the service account resides using the `cross_project` parameter.
 
 
 

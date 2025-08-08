@@ -18,7 +18,8 @@ all:	\
 	json-dumps/services.json \
 	json-dumps/dataflow-jobs-${REGION}.json \
 	json-dumps/dataflow-jobs-${REGION}-streaming.json \
-	json-dumps/log-exclusions.json
+	json-dumps/log-exclusions.json \
+	json-dumps/dataflow-jobs-aggregated
 
 include ../Makefile.inc
 
@@ -35,4 +36,9 @@ json-dumps/dataflow-jobs-${REGION}-streaming.json:
 json-dumps/log-exclusions.json:
 	$(CURL) -fsS \
 		"https://logging.googleapis.com/v2/projects/${PROJECT_ID}/exclusions" \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/dataflow-jobs-aggregated.json:
+	$(CURL) -fsS \
+		"https://dataflow.googleapis.com/v1b3/projects/${PROJECT_ID}/jobs:aggregated" \
 		| $(SED_SUBST_FAKE) >$@

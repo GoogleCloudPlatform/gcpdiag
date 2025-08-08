@@ -21,8 +21,8 @@ Instead of doing real API calls, we return test JSON data.
 import json
 from typing import Any
 
-import apiclient.errors
 import httplib2
+from googleapiclient import errors
 
 from gcpdiag.queries import apis_stub
 
@@ -139,7 +139,7 @@ class LbApiStub:
       resources = self._get_resources_from_json_items(items, resource_name)
 
       if not resources:
-        raise apiclient.errors.HttpError(
+        raise errors.HttpError(
             httplib2.Response({
                 'status': 404,
                 'reason': 'Not Found'
@@ -151,7 +151,7 @@ class LbApiStub:
           if backend_service['name'] == self.backend_service:
             return backend_service
           else:
-            raise apiclient.errors.HttpError(
+            raise errors.HttpError(
                 httplib2.Response({
                     'status': 404,
                     'reason': 'Not Found'
@@ -164,7 +164,7 @@ class LbApiStub:
           if forwarding_rule['name'] == self.forwarding_rule:
             return forwarding_rule
           else:
-            raise apiclient.errors.HttpError(
+            raise errors.HttpError(
                 httplib2.Response({
                     'status': 404,
                     'reason': 'Not Found'
@@ -206,7 +206,7 @@ class SslCertificateApiStub:
         for ssl_certificate in ssl_certificates:
           if ssl_certificate['name'] == self.ssl_certificate:
             return ssl_certificate
-        raise apiclient.errors.HttpError(
+        raise errors.HttpError(
             httplib2.Response({
                 'status': 404,
                 'reason': 'Not Found'
@@ -272,7 +272,7 @@ class TargetProxyStub:
         for target_proxy in target_proxies:
           if target_proxy['name'] == self.target_proxy:
             return target_proxy
-        raise apiclient.errors.HttpError(
+        raise errors.HttpError(
             httplib2.Response({
                 'status': 404,
                 'reason': 'Not Found'

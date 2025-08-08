@@ -4,11 +4,13 @@
    - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke2 [SKIP]
      no nodepools
    - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2      [FAIL]
-     connections from 10.4.0.0/14 to tcp:53 blocked by vpc firewall rule: gke-gke2-all-test-deny (node pool: default-pool)
-   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke3      [ OK ]
+     connections from 10.4.0.0/14 to tcp:53 blocked by None (node pool: default-pool)
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke3      [FAIL]
+     connections from 10.1.0.0/19 to tcp:53 blocked by None (node pool: default-pool)
    - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke1        [ OK ]
    - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke4        [ OK ]
-   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke6        [ OK ]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke6        [FAIL]
+     connections from 10.12.0.0/14 to tcp:53 blocked by None (node pool: default-pool)
 
    Traffic between all pods on a cluster is required by the Kubernetes
    networking model. Following protocols must be allowed: TCP, UDP, SCTP, ICMP,

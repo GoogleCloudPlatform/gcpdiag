@@ -21,7 +21,7 @@ from typing import Optional
 import googleapiclient.errors
 from boltons.iterutils import get_path
 
-from gcpdiag import config, models, runbook
+from gcpdiag import config, runbook
 from gcpdiag.queries import apis, crm, gce, lb, logs
 from gcpdiag.runbook import op
 from gcpdiag.runbook.gce import generalized_steps as gce_gs
@@ -41,8 +41,13 @@ class UnhealthyBackends(runbook.DiagnosticTree):
       - Verifies if firewall rules are properly configured to allow health check
       traffic.
   - Port Configuration:
-      - Validates if the health check and serving ports are configured
-      correctly, ensuring they are not mismatched.
+      - Checks if health check sends probe requests to the different port than
+      serving port. This may be intentional or a potential configuration error,
+      and the runbook will provide guidance on the implications.
+  - Protocol Configuration:
+      - Checks if health check uses the same protocol as backend service. This
+      may be intentional or a potential configuration error, and the runbook
+      will provide guidance on the implications.
   - Logging:
       - Checks if health check logging is enabled to aid in troubleshooting.
   - Health Check Logs (if enabled):
@@ -59,6 +64,9 @@ class UnhealthyBackends(runbook.DiagnosticTree):
   - Past Health Check Success:
       - Checks if the health check has worked successfully in the past to
       determine if the issue is recent or ongoing.
+  - VM Performance:
+      - Checks if the instances performance is degraded - disks, memory and cpu
+      utilization are being checked.
   """
 
   parameters = {
@@ -86,19 +94,46 @@ class UnhealthyBackends(runbook.DiagnosticTree):
   def build_tree(self):
     """Building Decision Tree"""
 
+    project_id = op.get(flags.PROJECT_ID)
+    backend_service_name = op.get(flags.BACKEND_SERVICE_NAME)
+    region = op.get(flags.REGION, 'global')
+
     start = UnhealthyBackendsStart()
+    start.project_id = project_id
+    start.backend_service_name = backend_service_name
+    start.region = region
+
     self.add_start(start)
 
     logging_check = VerifyHealthCheckLoggingEnabled()
+    logging_check.project_id = project_id
+    logging_check.backend_service_name = backend_service_name
+    logging_check.region = region
     self.add_step(parent=start, child=logging_check)
 
     port_check = ValidateBackendServicePortConfiguration()
+    port_check.project_id = project_id
+    port_check.backend_service_name = backend_service_name
+    port_check.region = region
     self.add_step(parent=start, child=port_check)
 
+    protocol_check = ValidateBackendServiceProtocolConfiguration()
+    protocol_check.project_id = project_id
+    protocol_check.backend_service_name = backend_service_name
+    protocol_check.region = region
+    self.add_step(parent=start, child=protocol_check)
+
     firewall_check = VerifyFirewallRules()
+    firewall_check.project_id = project_id
+    firewall_check.backend_service_name = backend_service_name
+    firewall_check.region = region
     self.add_step(parent=start, child=firewall_check)
 
     vm_performance_check = CheckVmPerformance()
+    vm_performance_check.project_id = project_id
+    vm_performance_check.backend_service_name = backend_service_name
+    vm_performance_check.region = region
+
     self.add_step(parent=start, child=vm_performance_check)
 
     # Ending your runbook
@@ -109,47 +144,54 @@ class UnhealthyBackendsStart(runbook.StartStep):
   """Start step for Unhealthy Backends runbook."""
 
   template = 'unhealthy_backends::confirmation'
+  project_id: str
+  backend_service_name: str
+  region: str
+
+  @property
+  def name(self):
+    return (f'Analyze unhealthy backends for backend service'
+            f' "{self.backend_service_name}" in scope'
+            f' "{self.region}".')
 
   def execute(self):
     """Checks the health of a specified load balancer's backends."""
 
-    proj = crm.get_project(op.get(flags.PROJECT_ID))
+    proj = crm.get_project(self.project_id)
 
-    if not apis.is_enabled(op.context.project_id, 'compute'):
+    if not apis.is_enabled(self.project_id, 'compute'):
       op.add_skipped(proj, reason='Compute API is not enabled')
       return  # Early exit if Compute API is disabled
 
     try:
-      op.info(f'name: {op.get(flags.BACKEND_SERVICE_NAME)}, region:'
-              f' {op.get(flags.REGION, "global")}')
+      op.info(f'name: {self.backend_service_name}, region:'
+              f' {self.region}')
       backend_service = lb.get_backend_service(
-          op.context.project_id,
-          op.get(flags.BACKEND_SERVICE_NAME),
-          op.get(flags.REGION, 'global'),
+          self.project_id,
+          self.backend_service_name,
+          self.region,
       )
     except googleapiclient.errors.HttpError:
       op.add_skipped(
           proj,
-          reason=(
-              f'Backend service {op.get(flags.BACKEND_SERVICE_NAME)} does not'
-              f' exist in scope {op.get(flags.REGION, "global")} or project'
-              f' {op.get(flags.PROJECT_ID)}'),
+          reason=(f'Backend service {self.backend_service_name} does not'
+                  f' exist in scope {self.region} or project'
+                  f' {self.project_id}'),
       )
       return  # Early exit if load balancer doesn't exist
 
     backend_health_statuses = lb.get_backend_service_health(
-        op.context.project_id,
-        op.get(flags.BACKEND_SERVICE_NAME),
-        op.get(flags.REGION),
+        self.project_id,
+        self.backend_service_name,
+        self.region,
     )
 
     if not backend_health_statuses:
       op.add_skipped(
           proj,
-          reason=(
-              f'Backend service {op.get(flags.BACKEND_SERVICE_NAME)} does not'
-              f' have any backends in scope {op.get(flags.REGION, "global")} or'
-              f' project {op.get(flags.PROJECT_ID)}'),
+          reason=(f'Backend service {self.backend_service_name} does not'
+                  f' have any backends in scope {self.region} or'
+                  f' project {self.project_id}'),
       )
       return  # Early exit if load balancer doesn't have any backends
 
@@ -164,6 +206,11 @@ class UnhealthyBackendsStart(runbook.StartStep):
     }
 
     if unhealthy_backends:
+      health_check = gce.get_health_check(
+          self.project_id,
+          backend_service.health_check,
+          backend_service.region,
+      )
       detailed_reason = ''
       for group, backends_in_group in backend_health_statuses_per_group.items():
         unhealthy_count = sum(
@@ -175,19 +222,22 @@ class UnhealthyBackendsStart(runbook.StartStep):
           resource=backend_service,
           reason=op.prep_msg(
               op.FAILURE_REASON,
-              name=op.get(flags.BACKEND_SERVICE_NAME),
-              region=op.get(flags.REGION, 'global'),
+              name=self.backend_service_name,
+              region=self.region,
               detailed_reason=detailed_reason,
+              hc_name=health_check.name,
+              success_criteria=get_health_check_success_criteria(health_check),
+              timing_and_threshold=_get_timing_and_threshold_info(health_check),
           ),
-          remediation=op.prep_msg(op.FAILURE_REMEDIATION,),
+          remediation='',
       )
     else:
-      op.add_skipped(
+      op.add_ok(
           resource=backend_service,
           reason=op.prep_msg(
-              op.SKIPPED_REASON,
-              name=op.get(flags.BACKEND_SERVICE_NAME),
-              region=op.get(flags.REGION, 'global'),
+              op.SUCCESS_REASON,
+              name=self.backend_service_name,
+              region=self.region,
           ),
       )
 
@@ -196,6 +246,15 @@ class CheckVmPerformance(runbook.CompositeStep):
   """Checks if the instances performance is degraded."""
 
   template = 'unhealthy_backends::vm_performance'
+  project_id: str
+  backend_service_name: str
+  region: str
+
+  @property
+  def name(self):
+    return (f'Check VMs performance for unhealthy backends in backend service'
+            f' "{self.backend_service_name}" in scope'
+            f' "{self.region}".')
 
   def execute(self):
     """Checks if the VM performance is degraded.
@@ -204,9 +263,9 @@ class CheckVmPerformance(runbook.CompositeStep):
     memory and cpu utilization are being checked.
     """
     backend_health_statuses = lb.get_backend_service_health(
-        op.get(flags.PROJECT_ID),
-        op.get(flags.BACKEND_SERVICE_NAME),
-        op.get(flags.REGION),
+        self.project_id,
+        self.backend_service_name,
+        self.region,
     )
 
     instances_to_analyze_by_group = {}
@@ -251,26 +310,34 @@ class VerifyFirewallRules(runbook.Step):
   """Checks if firewall rules are configured correctly."""
 
   template = 'unhealthy_backends::firewall_rules'
+  project_id: str
+  backend_service_name: str
+  region: str
+
+  @property
+  def name(self):
+    return (f'Verify firewall rules allow health checks for backend service'
+            f' "{self.backend_service_name}" in scope'
+            f' "{self.region}".')
 
   def execute(self):
     """Checks if firewall rules are configured correctly."""
-    if not apis.is_enabled(op.context.project_id, 'recommender'):
+    if not apis.is_enabled(self.project_id, 'recommender'):
       op.add_skipped(
-          crm.get_project(op.context.project_id),
+          crm.get_project(self.project_id),
           reason=(
               'Checking firewall rules requires Recommender API to be enabled'),
       )
       return  # Early exit if Recommender API is disabled
 
     backend_service = lb.get_backend_service(
-        op.context.project_id,
-        op.get(flags.BACKEND_SERVICE_NAME),
-        op.get(flags.REGION),
+        self.project_id,
+        self.backend_service_name,
+        self.region,
     )
 
     used_by_refs = backend_service.used_by_refs
-    insights = lb.get_lb_insights_for_a_project(op.context.project_id,
-                                                op.get(flags.REGION, 'global'))
+    insights = lb.get_lb_insights_for_a_project(self.project_id, self.region)
     for insight in insights:
       if insight.is_firewall_rule_insight and insight.details.get(
           'loadBalancerUri'):
@@ -300,32 +367,43 @@ class VerifyFirewallRules(runbook.Step):
                 remediation=op.prep_msg(op.FAILURE_REMEDIATION),
             )
             return  # Exit the loop after finding a match
-    op.add_ok(backend_service, reason=op.prep_msg(op.SUCCESS_REASON))
+    op.add_ok(backend_service,
+              reason=op.prep_msg(op.SUCCESS_REASON,
+                                 bs_url=backend_service.full_path))
 
 
 class ValidateBackendServicePortConfiguration(runbook.Step):
   """Checks if health check sends probe requests to the different port than serving port."""
 
   template = 'unhealthy_backends::port_mismatch'
+  project_id: str
+  backend_service_name: str
+  region: str
+
+  @property
+  def name(self):
+    return (f'Validate port configuration for backend service'
+            f' "{self.backend_service_name}" in scope'
+            f' "{self.region}".')
 
   def execute(self):
     """Checks if health check sends probe requests to the different port than serving port."""
-    if not apis.is_enabled(op.context.project_id, 'recommender'):
+    if not apis.is_enabled(self.project_id, 'recommender'):
       op.add_skipped(
-          crm.get_project(op.context.project_id),
+          crm.get_project(self.project_id),
           reason=('Checking port configuration requires Recommender API to be'
                   ' enabled'),
       )
       return  # Early exit if Recommender API is disabled
 
     backend_service = lb.get_backend_service(
-        op.context.project_id,
-        op.get(flags.BACKEND_SERVICE_NAME),
-        op.get(flags.REGION),
+        self.project_id,
+        self.backend_service_name,
+        self.region,
     )
-    igs = gce.get_instance_groups(op.context)
-    insights = lb.get_lb_insights_for_a_project(op.context.project_id,
-                                                op.get(flags.REGION, 'global'))
+    igs = gce.get_instance_groups(
+        op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
+    insights = lb.get_lb_insights_for_a_project(self.project_id, self.region)
     for insight in insights:
       if insight.is_health_check_port_mismatch_insight:
         for info in insight.details.get('backendServiceInfos'):
@@ -343,7 +421,9 @@ class ValidateBackendServicePortConfiguration(runbook.Step):
                     hc_port=info.get('healthCheckPortNumber'),
                     serving_port_name=info.get('servingPortName'),
                     formatted_igs=formatted_igs,
+                    bs_resource=backend_service.full_path,
                 ),
+                remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION),
             )
             return  # Exit the loop after finding a match
     op.add_ok(backend_service, reason=op.prep_msg(op.SUCCESS_REASON))
@@ -372,39 +452,117 @@ class ValidateBackendServicePortConfiguration(runbook.Step):
     ]
 
 
+class ValidateBackendServiceProtocolConfiguration(runbook.Step):
+  """Checks if health check uses the same protocol as backend service for serving traffic."""
+
+  template = 'unhealthy_backends::protocol_mismatch'
+  project_id: str
+  backend_service_name: str
+  region: str
+
+  @property
+  def name(self):
+    return (f'Validate protocol configuration for backend service'
+            f' "{self.backend_service_name}" in scope'
+            f' "{self.region}".')
+
+  def execute(self):
+    """Checks if health check uses the same protocol as backend service for serving traffic."""
+
+    backend_service = lb.get_backend_service(
+        self.project_id,
+        self.backend_service_name,
+        self.region,
+    )
+
+    health_check = gce.get_health_check(
+        self.project_id,
+        backend_service.health_check,
+        backend_service.region,
+    )
+
+    if backend_service.protocol == 'UDP':
+      op.add_skipped(
+          backend_service,
+          reason=(
+              "Load balancer uses UDP protocol which doesn't make sense for"
+              " health checks as it's connectionless and doesn't have built-in"
+              ' features for acknowledging delivery'),
+      )
+      return
+    if health_check.type == backend_service.protocol:
+      op.add_ok(
+          backend_service,
+          reason=op.prep_msg(op.SUCCESS_REASON, hc_protocol=health_check.type),
+      )
+    else:
+      op.add_uncertain(
+          backend_service,
+          reason=op.prep_msg(
+              op.UNCERTAIN_REASON,
+              hc_protocol=health_check.type,
+              serving_protocol=backend_service.protocol,
+              bs_resource=backend_service.full_path,
+          ),
+          remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION,),
+      )
+
+
 class VerifyHealthCheckLoggingEnabled(runbook.Gateway):
   """Check if health check logging is enabled."""
 
   template = 'unhealthy_backends::logging_enabled'
+  project_id: str
+  backend_service_name: str
+  region: str
+
+  @property
+  def name(self):
+    return (f'Verify health check logging enabled for backend service'
+            f' "{self.backend_service_name}" in scope'
+            f' "{self.region}".')
 
   def execute(self):
     """Check if health check logging is enabled."""
     backend_service = lb.get_backend_service(
-        op.context.project_id,
-        op.get(flags.BACKEND_SERVICE_NAME),
-        op.get(flags.REGION),
+        self.project_id,
+        self.backend_service_name,
+        self.region,
     )
     health_check = gce.get_health_check(
-        op.context.project_id,
+        self.project_id,
         backend_service.health_check,
         backend_service.region,
     )
 
     if health_check.is_log_enabled:
-      op.add_ok(health_check, reason=op.prep_msg(op.SUCCESS_REASON))
-      self.add_child(AnalyzeLatestHealthCheckLog())
-      self.add_child(CheckPastHealthCheckSuccess())
+      op.add_ok(
+          health_check,
+          reason=op.prep_msg(op.SUCCESS_REASON, hc_url=health_check.full_path),
+      )
+      analyze_latest_hc_log = AnalyzeLatestHealthCheckLog()
+      analyze_latest_hc_log.project_id = self.project_id
+      analyze_latest_hc_log.backend_service_name = self.backend_service_name
+      analyze_latest_hc_log.region = self.region
+      self.add_child(analyze_latest_hc_log)
+
+      check_past_hc_success = CheckPastHealthCheckSuccess()
+      check_past_hc_success.project_id = self.project_id
+      check_past_hc_success.backend_service_name = self.backend_service_name
+      check_past_hc_success.region = self.region
+      self.add_child(check_past_hc_success)
     else:
       additional_flags = ''
-      if op.get(flags.REGION):
-        additional_flags = f'--region={op.get(flags.REGION)} '
+      if self.region != 'global':
+        additional_flags = f'--region={self.region} '
       op.add_uncertain(
           backend_service,
-          reason=op.prep_msg(op.UNCERTAIN_REASON),
+          reason=op.prep_msg(op.UNCERTAIN_REASON,
+                             hc_url=health_check.full_path),
           remediation=op.prep_msg(
               op.UNCERTAIN_REMEDIATION,
               hc_name=health_check.name,
-              protocol=health_check.type,
+              protocol=health_check.type.lower(),
               additional_flags=additional_flags,
           ),
       )
@@ -414,18 +572,28 @@ class AnalyzeLatestHealthCheckLog(runbook.Gateway):
   """Look for the latest health check logs and based on that decide what to do next."""
 
   template = 'unhealthy_backends::health_check_log'
+  project_id: str
+  backend_service_name: str
+  region: str
+
+  @property
+  def name(self):
+
+    return (f'Analyze latest health check log for backend service'
+            f' "{self.backend_service_name}" in scope'
+            f' "{self.region}".')
 
   def execute(self):
     """Look for the latest health check logs and based on that decide what to do next."""
     backend_service = lb.get_backend_service(
-        op.context.project_id,
-        op.get(flags.BACKEND_SERVICE_NAME),
-        op.get(flags.REGION),
+        self.project_id,
+        self.backend_service_name,
+        self.region,
     )
     health_checks_states = lb.get_backend_service_health(
-        op.context.project_id,
-        op.get(flags.BACKEND_SERVICE_NAME),
-        op.get(flags.REGION),
+        self.project_id,
+        self.backend_service_name,
+        self.region,
     )
 
     # Find all groups that have at least one unhealthy instance
@@ -453,27 +621,26 @@ class AnalyzeLatestHealthCheckLog(runbook.Gateway):
         filter_str = """resource.type="gce_instance_group"
                         log_name="projects/{}/logs/compute.googleapis.com%2Fhealthchecks"
                         resource.labels.instance_group_name="{}"
-                        resource.labels.location={}
+                        resource.labels.location=~"{}"
                         jsonPayload.healthCheckProbeResult.healthState="UNHEALTHY"
-                        """.format(op.get(flags.PROJECT_ID), resource_name,
-                                   location)
+                        """.format(self.project_id, resource_name, location)
       elif resource_type == 'networkEndpointGroups':
         network_endpoint_group = _get_zonal_network_endpoint_group(
-            op.get(flags.PROJECT_ID), location, resource_name)
+            self.project_id, location, resource_name)
         if network_endpoint_group:
           filter_str = """resource.type="gce_network_endpoint_group"
                         log_name="projects/{}/logs/compute.googleapis.com%2Fhealthchecks"
                         resource.labels.network_endpoint_group_id="{}"
                         resource.labels.zone={}
                         jsonPayload.healthCheckProbeResult.healthState="UNHEALTHY"
-                        """.format(op.get(flags.PROJECT_ID),
-                                   network_endpoint_group.id, location)
+                        """.format(self.project_id, network_endpoint_group.id,
+                                   location)
         else:
           op.add_skipped(
               resource=backend_service,
               reason=(
                   f'Network endpoint group {resource_name} in zone {location} '
-                  f'does not exist in project {op.get(flags.PROJECT_ID)}'),
+                  f'does not exist in project {self.project_id}'),
           )
           continue
       else:
@@ -481,15 +648,16 @@ class AnalyzeLatestHealthCheckLog(runbook.Gateway):
             resource=backend_service,
             reason=(f'Unsupported resource type {resource_type} for group'
                     f' {group} in backend service'
-                    f' {op.get(flags.BACKEND_SERVICE_NAME)} in scope'
-                    f' {op.get(flags.REGION, "global")}'),
+                    f' {self.backend_service_name} in scope'
+                    f' {self.region}'),
         )
         continue
       serial_log_entries = logs.realtime_query(
-          project_id=op.get(flags.PROJECT_ID),
+          project_id=self.project_id,
           filter_str=filter_str,
-          start_time_utc=datetime.now() - timedelta(days=14),
-          end_time_utc=datetime.now(),
+          start_time=datetime.now() - timedelta(days=14),
+          end_time=datetime.now(),
+          disable_paging=True,
       )
 
       if serial_log_entries:
@@ -508,14 +676,25 @@ class AnalyzeLatestHealthCheckLog(runbook.Gateway):
 
     if detailed_health_states.get('TIMEOUT'):
       timeout_hc_log_step = AnalyzeTimeoutHealthCheckLog()
+      timeout_hc_log_step.project_id = self.project_id
+      timeout_hc_log_step.backend_service_name = self.backend_service_name
+      timeout_hc_log_step.region = self.region
       timeout_hc_log_step.logs = detailed_health_states.get('TIMEOUT')
       self.add_child(timeout_hc_log_step)
     if detailed_health_states.get('UNHEALTHY'):
       unhealthy_hc_log_step = AnalyzeUnhealthyHealthCheckLog()
+      unhealthy_hc_log_step.project_id = self.project_id
+      unhealthy_hc_log_step.backend_service_name = self.backend_service_name
+      unhealthy_hc_log_step.region = self.region
       unhealthy_hc_log_step.logs = detailed_health_states.get('UNHEALTHY')
       self.add_child(unhealthy_hc_log_step)
     if detailed_health_states.get('UNKNOWN'):
-      self.add_child(AnalyzeUnknownHealthCheckLog())
+      unknown_hc_log_step = AnalyzeUnknownHealthCheckLog()
+      unknown_hc_log_step.project_id = self.project_id
+      unknown_hc_log_step.backend_service_name = self.backend_service_name
+      unknown_hc_log_step.region = self.region
+
+      self.add_child(unknown_hc_log_step)
 
 
 class AnalyzeTimeoutHealthCheckLog(runbook.Step):
@@ -523,13 +702,22 @@ class AnalyzeTimeoutHealthCheckLog(runbook.Step):
 
   logs: list[dict]
   template = 'unhealthy_backends::timeout_hc_state_log'
+  project_id: str
+  backend_service_name: str
+  region: str
+
+  @property
+  def name(self):
+    return (f'Analyze TIMEOUT health check logs for backend service'
+            f' "{self.backend_service_name}" in scope'
+            f' "{self.region}".')
 
   def execute(self):
     """Analyzes logs with the detailed health check state TIMEOUT"""
     backend_service = lb.get_backend_service(
-        op.context.project_id,
-        op.get(flags.BACKEND_SERVICE_NAME),
-        op.get(flags.REGION),
+        self.project_id,
+        self.backend_service_name,
+        self.region,
     )
 
     if not self.logs:
@@ -540,7 +728,7 @@ class AnalyzeTimeoutHealthCheckLog(runbook.Step):
       return
 
     health_check = gce.get_health_check(
-        op.context.project_id,
+        self.project_id,
         backend_service.health_check,
         backend_service.region,
     )
@@ -560,10 +748,11 @@ class AnalyzeTimeoutHealthCheckLog(runbook.Step):
 
     op.add_uncertain(
         backend_service,
-        reason=op.prep_msg(op.UNCERTAIN_REASON,
-                           probe_results_text_str=probe_results_text_str),
+        reason=op.prep_msg(op.FAILURE_REASON,
+                           probe_results_text_str=probe_results_text_str,
+                           bs_url=backend_service.full_path),
         remediation=op.prep_msg(
-            op.UNCERTAIN_REMEDIATION,
+            op.FAILURE_REMEDIATION,
             success_criteria=success_criteria,
             bs_timeout_sec=backend_service.timeout_sec or 30,
             hc_timeout_sec=health_check.timeout_sec,
@@ -576,14 +765,23 @@ class AnalyzeUnhealthyHealthCheckLog(runbook.Step):
 
   template = 'unhealthy_backends::unhealthy_hc_state_log'
   logs: list[dict]
+  project_id: str
+  backend_service_name: str
+  region: str
+
+  @property
+  def name(self):
+    return (f'Analyze UNHEALTHY health check logs for backend service'
+            f' "{self.backend_service_name}" in scope'
+            f' "{self.region}".')
 
   def execute(self):
     """Analyzes logs with detailed health state UNHEALTHY."""
 
     backend_service = lb.get_backend_service(
-        op.context.project_id,
-        op.get(flags.BACKEND_SERVICE_NAME),
-        op.get(flags.REGION),
+        self.project_id,
+        self.backend_service_name,
+        self.region,
     )
 
     if not self.logs:
@@ -594,7 +792,7 @@ class AnalyzeUnhealthyHealthCheckLog(runbook.Step):
       return
 
     health_check = gce.get_health_check(
-        op.context.project_id,
+        self.project_id,
         backend_service.health_check,
         backend_service.region,
     )
@@ -615,9 +813,10 @@ class AnalyzeUnhealthyHealthCheckLog(runbook.Step):
 
     op.add_uncertain(
         backend_service,
-        reason=op.prep_msg(op.UNCERTAIN_REASON,
-                           probe_results_text_str=probe_results_text_str),
-        remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION,
+        reason=op.prep_msg(op.FAILURE_REASON,
+                           probe_results_text_str=probe_results_text_str,
+                           bs_url=backend_service.full_path),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION,
                                 success_criteria=success_criteria),
     )
 
@@ -626,18 +825,27 @@ class AnalyzeUnknownHealthCheckLog(runbook.Step):
   """Analyze logs with detailed health state UNKNOWN."""
 
   template = 'unhealthy_backends::unknown_hc_state_log'
+  project_id: str
+  backend_service_name: str
+  region: str
+
+  @property
+  def name(self):
+    return (f'Analyze UNKNOWN health check logs for backend service'
+            f' "{self.backend_service_name}" in scope'
+            f' "{self.region}".')
 
   def execute(self):
     """Analyze logs with detailed health state UNKNOWN."""
     backend_service = lb.get_backend_service(
-        op.context.project_id,
-        op.get(flags.BACKEND_SERVICE_NAME),
-        op.get(flags.REGION),
+        self.project_id,
+        self.backend_service_name,
+        self.region,
     )
     op.add_uncertain(
         backend_service,
-        reason=op.prep_msg(op.UNCERTAIN_REASON),
-        remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION),
+        reason=op.prep_msg(op.FAILURE_REASON, bs_url=backend_service.full_path),
+        remediation=op.prep_msg(op.FAILURE_REMEDIATION),
     )
 
 
@@ -645,19 +853,28 @@ class CheckPastHealthCheckSuccess(runbook.Step):
   """Checks if the health check has worked successfully in the past."""
 
   template = 'unhealthy_backends::past_hc_success'
+  project_id: str
+  backend_service_name: str
+  region: str
+
+  @property
+  def name(self):
+    return (f'Check past health check success for backend service'
+            f' "{self.backend_service_name}" in scope'
+            f' "{self.region}".')
 
   def execute(self):
     """Checks if the health check has worked successfully in the past."""
     backend_service = lb.get_backend_service(
-        op.get(flags.PROJECT_ID),
-        op.get(flags.BACKEND_SERVICE_NAME),
-        op.get(flags.REGION),
+        self.project_id,
+        self.backend_service_name,
+        self.region,
     )
 
     health_checks_states = lb.get_backend_service_health(
-        op.context.project_id,
-        op.get(flags.BACKEND_SERVICE_NAME),
-        op.get(flags.REGION),
+        self.project_id,
+        self.backend_service_name,
+        self.region,
     )
 
     unhealthy_groups = {
@@ -687,10 +904,10 @@ class CheckPastHealthCheckSuccess(runbook.Step):
                           jsonPayload.healthCheckProbeResult.previousHealthState="HEALTHY"
                           jsonPayload.healthCheckProbeResult.detailedHealthState="TIMEOUT"
                           OR "UNHEALTHY" OR "UNKNOWN" """.format(
-            op.get(flags.PROJECT_ID), resource_name, location)
+            self.project_id, resource_name, location)
       elif resource_type == 'networkEndpointGroups':
         network_endpoint_group = _get_zonal_network_endpoint_group(
-            op.get(flags.PROJECT_ID), location, resource_name)
+            self.project_id, location, resource_name)
         if network_endpoint_group:
           filter_str = """resource.type="gce_network_endpoint_group"
                             log_name="projects/{}/logs/compute.googleapis.com%2Fhealthchecks"
@@ -699,13 +916,13 @@ class CheckPastHealthCheckSuccess(runbook.Step):
                             jsonPayload.healthCheckProbeResult.previousHealthState="HEALTHY"
                             jsonPayload.healthCheckProbeResult.detailedHealthState="TIMEOUT"
                             OR "UNHEALTHY" OR "UNKNOWN" """.format(
-              op.get(flags.PROJECT_ID), network_endpoint_group.id, location)
+              self.project_id, network_endpoint_group.id, location)
         else:
           op.add_skipped(
               resource=group,
               reason=(
                   f'Network endpoint group {resource_name} in zone {location} '
-                  f'does not exist in project {op.get(flags.PROJECT_ID)}'),
+                  f'does not exist in project {self.project_id}'),
           )
           continue
       else:
@@ -713,16 +930,17 @@ class CheckPastHealthCheckSuccess(runbook.Step):
             resource=group,
             reason=(f'Unsupported resource type {resource_type} for group'
                     f' {group} in backend service'
-                    f' {op.get(flags.BACKEND_SERVICE_NAME)} in scope'
-                    f' {op.get(flags.REGION, "global")}'),
+                    f' {self.backend_service_name} in scope'
+                    f' {self.region}'),
         )
         continue
 
       serial_log_entries = logs.realtime_query(
-          project_id=op.get(flags.PROJECT_ID),
+          project_id=self.project_id,
           filter_str=filter_str,
-          start_time_utc=datetime.now() - timedelta(days=14),
-          end_time_utc=datetime.now(),
+          start_time=datetime.now() - timedelta(days=14),
+          end_time=datetime.now(),
+          disable_paging=True,
       )
 
       if serial_log_entries:
@@ -741,12 +959,15 @@ class CheckPastHealthCheckSuccess(runbook.Step):
       op.add_uncertain(
           backend_service,
           reason=message,
-          remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION),
+          remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION,
+                                  bs_url=backend_service.full_path),
       )
     else:
       op.add_skipped(
           backend_service,
-          reason='No past health check success found in the logs',
+          reason=(
+              'No past health check success found in the logs for the backend'
+              f' service {backend_service.full_path}'),
       )
 
 
@@ -758,13 +979,16 @@ class UnhealthyBackendsEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing unhealthy backends diagnostics..."""
+    """Finalize unhealthy backends diagnostics."""
     if not config.get(flags.INTERACTIVE_MODE):
+      region = op.get(flags.REGION, 'global')
+      backend_service_name = op.get(flags.BACKEND_SERVICE_NAME)
       response = op.prompt(
           kind=op.CONFIRMATION,
           message=(
               'Are you still experiencing health check issues on the backend'
-              f' service {op.get(flags.BACKEND_SERVICE_NAME)}'),
+              f' service {backend_service_name} in scope'
+              f' {region}?'),
           choice_msg='Enter an option: ',
       )
       if response == op.NO:
@@ -775,7 +999,7 @@ def get_health_check_success_criteria(health_check: gce.HealthCheck):
   """Constructs a human-readable description of a health check's success criteria."""
 
   success_criteria = (
-      f'Your health check is using {health_check.type} protocol, and ')
+      f'The health check is using {health_check.type} protocol, and ')
 
   port = ('serving port' if health_check.port_specification
           == 'USE_SERVING_PORT' else f'port {health_check.port}')
@@ -811,11 +1035,28 @@ def get_health_check_success_criteria(health_check: gce.HealthCheck):
   return success_criteria
 
 
+def _get_timing_and_threshold_info(health_check: gce.HealthCheck) -> str:
+  """Constructs a human-readable description of a health check's timing and threshold settings."""
+
+  timing_and_threshold = (
+      f'The health check is configured with the following timing and threshold'
+      f' settings:\n- **Check Interval:** A health check is performed every'
+      f' {health_check.check_interval_sec} seconds.\n- **Timeout:** The prober'
+      f' will wait up to {health_check.timeout_sec} seconds for a'
+      f' response.\n- **Healthy Threshold:** It takes'
+      f' {health_check.healthy_threshold} consecutive successes for a backend to'
+      f' be considered healthy.\n- **Unhealthy Threshold:** It takes'
+      f' {health_check.unhealthy_threshold} consecutive failures for a backend'
+      f' to be considered unhealthy.')
+
+  return timing_and_threshold
+
+
 def _get_zonal_network_endpoint_group(
     project: str, zone: str, name: str) -> Optional[gce.NetworkEndpointGroup]:
   """Returns a map of Network Endpoint Groups in the project."""
   groups = gce.get_zonal_network_endpoint_groups(
-      models.Context(project_id=project))
+      op.get_new_context(project_id=project))
   url = f"""projects/{project}/zones/{zone}/networkEndpointGroups/{name}"""
 
   if url in groups:

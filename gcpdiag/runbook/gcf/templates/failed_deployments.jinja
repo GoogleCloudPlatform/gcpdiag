@@ -1,0 +1,68 @@
+{% block agent_permission_failure_reason %}
+The service agent requires the 'cloudfunctions.serviceAgent' role.
+{% endblock agent_permission_failure_reason %}
+
+{% block agent_permission_failure_remediation %}
+Refer to the IAM roles guide for providing the default role to the service agent:
+<https://cloud.google.com/functions/docs/concepts/iam#serviceaccount>
+{% endblock agent_permission_failure_remediation %}
+
+{% block agent_permission_success_reason %}
+Cloud function service agent has the required role permissions
+{% endblock agent_permission_success_reason %}
+
+{% block default_service_account_check_failure_reason %}
+The Cloud Functions service agent or the default runtime service account does not exist or is not enabled:
+<https://cloud.google.com/functions/docs/concepts/iam#access_control_for_service_accounts>
+{% endblock default_service_account_check_failure_reason %}
+
+{% block default_service_account_check_failure_remediation %}
+Refer to the IAM roles guide for providing default roles to the Cloud Run function default service account and the service agent:
+<https://cloud.google.com/functions/docs/concepts/iam#serviceaccount>
+{% endblock default_service_account_check_failure_remediation %}
+
+{% block default_service_account_check_success_reason %}
+The service agent and default service account exist and are enabled.
+{% endblock default_service_account_check_success_reason %}
+
+{% block user_service_account_check_failure_reason %}
+The user principal '{user_principal}' does not have roles/iam.serviceAccountUser role on the runtime Service Account '{runtime_account}'
+{% endblock user_service_account_check_failure_reason %}
+
+{% block user_service_account_check_failure_remediation %}
+Assign the Service Account User role (roles/iam.serviceAccountUser) to the user on the default or non-default runtime service account.
+This role includes the iam.serviceAccounts.actAs permission.
+<https://cloud.google.com/functions/docs/reference/iam/roles#additional-configuration>
+{% endblock user_service_account_check_failure_remediation %}
+
+{% block user_service_account_check_success_reason %}
+The user principal '{user_principal}' has roles/iam.serviceAccountUser role on the runtime Service Account '{runtime_account}'
+{% endblock user_service_account_check_success_reason %}
+
+{% block global_scope_check_failure_reason %}
+A problem with the function code was detected. The deployment pipeline completed the function deployment,
+but failed at the last step- sending a health check to the function. This health check executes the function's global scope,
+which may be throwing an exception, crashing, or timing out.
+{% endblock global_scope_check_failure_reason %}
+
+{% block global_scope_check_failure_remediation %}
+Refer to the following document to address this error:
+<https://cloud.google.com/functions/docs/troubleshooting#global>
+{% endblock global_scope_check_failure_remediation %}
+
+{% block global_scope_check_success_reason %}
+No issues found with function global scope.
+{% endblock global_scope_check_success_reason %}
+
+{% block location_constraint_check_failure_reason %}
+An active resource location constraint policy in the organization restricts function deployment in the regions specified by the policy.
+{% endblock location_constraint_check_failure_reason %}
+
+{% block location_constraint_check_failure_remediation %}
+Refer to the following document to address this error:
+<https://cloud.google.com/functions/docs/troubleshooting#resource-location>
+{% endblock location_constraint_check_failure_remediation %}
+
+{% block location_constraint_check_success_reason %}
+No resource location constraints blocking function deployment.
+{% endblock location_constraint_check_success_reason %}

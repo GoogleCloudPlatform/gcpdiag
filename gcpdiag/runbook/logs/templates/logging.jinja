@@ -1,29 +1,87 @@
-{% block default_success_reason %}
-The expected good value is present within the checked log entry.
-{% endblock default_success_reason %}
-
 {% block default_failure_reason %}
-A known bad value is present within the checked log entry indicating a problem
+Problematic log entries found matching query:
+{query}
 {% endblock default_failure_reason %}
 
 {% block default_failure_remediation %}
-View Cloud logging to get more details of how to what is causing this issue.
-
-Run the following cloud logging query in GCP.
+Run the following Cloud Logging query in the Google Cloud console to find the log entry indicating the problem:
 
 Query:
 {query}
 {% endblock default_failure_remediation %}
 
 {% block default_uncertain_reason %}
-We are not sure of the outcome manually check this cloud logging
+No problematic log entries found in the time range matching the following query:
+
+{query}
 {% endblock default_uncertain_reason %}
 
 {% block default_uncertain_remediation %}
-View Cloud logging to get more details of how to what is causing this issue.
+1. Verify of the time range used in the filter matches that when the issue occurred and adjust it accordingly.
+Query:
+{query}
+2. Verify that logging for the resource has not been disabled due to cost management: <https://cloud.google.com/blog/products/devops-sre/cloud-logging-cost-management-best-practices>
+{% endblock default_uncertain_remediation %}
 
-Run the following cloud logging query in GCP.
+{% block default_skipped_reason %}
+Could not fetch log entries for the following due to {api_err}.
 
 Query:
 {query}
-{% endblock default_uncertain_remediation %}
+{% endblock default_skipped_reason %}
+
+
+{% block dataproc_cluster_quota_uncertain_reason %}
+No issues with insufficient quota identified for cluster {resource_name} in project {project_id} using query:
+{query}.
+{% endblock dataproc_cluster_quota_uncertain_reason %}
+
+{% block dataproc_cluster_quota_uncertain_remediation %}
+1. Verify of the time range used in the filter matches that when the issue occurred and adjust it accordingly.
+Query:
+{query}
+2. Verify that the property `dataproc.logging.stackdriver.enable` has not been set to false for cluster {resource_name} in project {project_id}: <https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/cluster-properties#dataproc_service_properties_table>
+3. Verify that logging for the cluster {resource_name} has not been disabled due to cost management: <https://cloud.google.com/blog/products/devops-sre/cloud-logging-cost-management-best-practices>
+{% endblock dataproc_cluster_quota_uncertain_remediation %}
+
+
+{% block dataproc_cluster_quota_failure_reason %}
+The cluster {resource_name} in project {project_id} could not be created due to insufficient quota identified using query:
+{query}
+{% endblock dataproc_cluster_quota_failure_reason %}
+
+{% block dataproc_cluster_quota_failure_remediation %}
+This issue occurs when the requested Dataproc cluster exceeds the project's available quota for resources such as CPU, disk space, or IP addresses.
+To resolve this issue:
+
+- Request additional quota [1] via the Google Cloud console.
+- Create the cluster in a different project.
+[1] <https://cloud.google.com/docs/quotas/view-manage#managing_your_quota_console>
+{% endblock dataproc_cluster_quota_failure_remediation %}
+
+{% block dataproc_cluster_stockout_uncertain_reason %}
+No issues with stockouts identified for cluster {resource_name} in project {project_id} using query:
+{query}.
+{% endblock dataproc_cluster_stockout_uncertain_reason %}
+
+{% block dataproc_cluster_stockout_uncertain_remediation %}
+1. Verify of the time range used in the filter matches that when the issue occurred and adjust it accordingly.
+Query:
+{query}
+2. Verify that the property `dataproc.logging.stackdriver.enable` has not been set to false for cluster {resource_name} in project {project_id}: <https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/cluster-properties#dataproc_service_properties_table>
+3. Verify that logging for the cluster {resource_name} has not been disabled due to cost management: <https://cloud.google.com/blog/products/devops-sre/cloud-logging-cost-management-best-practices>
+{% endblock dataproc_cluster_stockout_uncertain_remediation %}
+
+{% block dataproc_cluster_stockout_failure_reason %}
+The cluster {resource_name} creation in project {project_id} failed due to insufficient resources in the selected zone/region.
+{% endblock dataproc_cluster_stockout_failure_reason %}
+
+{% block dataproc_cluster_stockout_failure_remediation %}
+A Dataproc cluster creation stockout occurs when the requested resources for cluster creation are currently not available within a specified Google Cloud zone or region.
+
+Resolution Steps:
+
+1. Utilize Dataproc Auto Zone Placement: When creating your Dataproc cluster, avoid explicitly specifying a zone. Instead, leverage Dataproc's Auto Zone placement feature, which automatically selects an available zone with sufficient resources. <https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/auto-zone>
+2. Review Capacity and Quota Management: If you are already employing Auto Zone placement and still encountering stockouts, it may indicate broader capacity or quota limitations. Consult the following resource for comprehensive strategies on managing capacity, quotas, and stockouts in Google Cloud.<https://www.googlecloudcommunity.com/gc/Community-Blogs/Managing-Capacity-Quota-and-Stockouts-in-the-Cloud-Concepts-and/ba-p/464770>
+
+{% endblock dataproc_cluster_stockout_failure_remediation %}

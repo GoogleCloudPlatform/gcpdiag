@@ -16,16 +16,16 @@ None
 
 ### Failure Reason
 
-The node {NODE} was auto-repaired because it was in a NotReady state for more than approximately 10 minutes.
+The node {node} was auto-repaired because it was in a NotReady state for more than approximately 10 minutes.
 
 ### Failure Remediation
 
 The auto-repair should have fixed the detected NotReady state.
-For more details check: https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair
+For more details check: <https://cloud.google.com/kubernetes-engine/docs/how-to/node-auto-repair>
 
 ### Success Reason
 
-The node {NODE} was auto-repaired for reasons other than being in a NotReady state.
+The node {node} was auto-repaired for reasons other than being in a NotReady state.
 
 
 

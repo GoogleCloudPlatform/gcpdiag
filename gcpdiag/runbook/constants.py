@@ -21,7 +21,7 @@ SUCCESS_REASON = 'success_reason'
 UNCERTAIN_REASON = 'uncertain_reason'
 UNCERTAIN_REMEDIATION = 'uncertain_remediation'
 SKIPPED_REASON = 'skipped_reason'
-STEP_MESSAGE = 'step_message'
+STEP_NAME = 'step_name'
 
 FAILURE_REASON_ALT1 = f'{FAILURE_REASON}_a1'
 FAILURE_REMEDIATION_ALT1 = f'{FAILURE_REMEDIATION}_a1'
@@ -29,7 +29,7 @@ SUCCESS_REASON_ALT1 = f'{SUCCESS_REASON}_a1'
 UNCERTAIN_REASON_ALT1 = f'{UNCERTAIN_REASON}_a1'
 UNCERTAIN_REMEDIATION_ALT1 = f'{UNCERTAIN_REMEDIATION}_a1'
 SKIPPED_REASON_ALT1 = f'{SKIPPED_REASON}_a1'
-STEP_MESSAGE_ALT1 = f'{STEP_MESSAGE}_a1'
+STEP_NAME_ALT1 = f'{STEP_NAME}_a1'
 
 FAILURE_REASON_ALT2 = f'{FAILURE_REASON}_a2'
 FAILURE_REMEDIATION_ALT2 = f'{FAILURE_REMEDIATION}_a2'
@@ -37,7 +37,7 @@ SUCCESS_REASON_ALT2 = f'{SUCCESS_REASON}_a2'
 UNCERTAIN_REASON_ALT2 = f'{UNCERTAIN_REASON}_a2'
 UNCERTAIN_REMEDIATION_ALT2 = f'{UNCERTAIN_REMEDIATION}_a2'
 SKIPPED_REASON_ALT2 = f'{SKIPPED_REASON}_a2'
-STEP_MESSAGE_ALT2 = f'{STEP_MESSAGE}_a2'
+STEP_NAME_ALT2 = f'{STEP_NAME}_a2'
 
 FAILURE_REASON_ALT3 = f'{FAILURE_REASON}_a3'
 FAILURE_REMEDIATION_ALT3 = f'{FAILURE_REMEDIATION}_a3'
@@ -45,7 +45,7 @@ SUCCESS_REASON_ALT3 = f'{SUCCESS_REASON}_a3'
 UNCERTAIN_REASON_ALT3 = f'{UNCERTAIN_REASON}_a3'
 UNCERTAIN_REMEDIATION_ALT3 = f'{UNCERTAIN_REMEDIATION}_a3'
 SKIPPED_REASON_ALT3 = f'{SKIPPED_REASON}_a3'
-STEP_MESSAGE_ALT3 = f'{STEP_MESSAGE}_a3'
+STEP_NAME_ALT3 = f'{STEP_NAME}_a3'
 
 INSTRUCTIONS_MESSAGE = 'instructions_message'
 STEP_LABEL = 'label'
@@ -60,16 +60,16 @@ RCA = 'rca'
 StepConstants = {
     STEP_LABEL:
         'The Label used in DT images',
-    STEP_MESSAGE:
+    STEP_NAME:
         'The introduction message displayed to user describing what the step does.',
     FAILURE_REASON:
         'The failure reason for this step.',
     FAILURE_REMEDIATION:
         'How to solve the main failure scenario.',
     SUCCESS_REASON:
-        'The reason why we consider this step to be a success.',
+        'The reason why this step is consider to be a success.',
     UNCERTAIN_REASON:
-        'The reason why we are uncertain of the outcome.',
+        'The reason why this step is uncertain of the outcome.',
     UNCERTAIN_REMEDIATION:
         'How to address uncertainty in the outcome.',
     SKIPPED_REASON:
@@ -136,7 +136,7 @@ class StepType(Enum):
 
 END_MESSAGE = (
     'Before reaching out to Google Cloud Support: \n'
-    '1. We encourage you to thoroughly investigate '
+    '1. Thoroughly investigate '
     'the issue with the most appropriate team within your organization. Many issues can be '
     'resolved internally and fall within the scope of your operational responsibilities:'
     'https://cloud.google.com/architecture/framework/security'
@@ -188,3 +188,9 @@ FINALIZE_INVESTIGATION = 'FINALIZE_INVESTIGATION'
 
 CLI = 'cli'
 API = 'api'
+
+# Restricted attributes that should never be used in observations and tep naming
+RESTRICTED_ATTRIBUTES = {
+    'uuid', 'steps', 'observations', 'product', 'doc_file_name', 'type',
+    'template'
+}

@@ -66,7 +66,14 @@ class VmExternalIpConnectivity(runbook.DiagnosticTree):
       },
       flags.NAME: {
           'type': str,
-          'help': 'The name of the GCE VM',
+          'help': 'The name of the GCE Instance',
+          'group': 'instance',
+          'deprecated': True,
+          'new_parameter': 'instance_name'
+      },
+      flags.INSTANCE_NAME: {
+          'type': str,
+          'help': 'The name of the GCE Instance',
           'group': 'instance',
           'required': True
       },
@@ -92,10 +99,14 @@ class VmExternalIpConnectivity(runbook.DiagnosticTree):
       },
       flags.ZONE: {
           'type': str,
-          'help': 'The zone of the target GCE VM',
+          'help': 'The zone of the target GCE Instance',
           'required': True
       }
   }
+
+  def legacy_parameter_handler(self, parameters):
+    if flags.NAME in parameters:
+      parameters[flags.INSTANCE_NAME] = parameters.pop(flags.NAME)
 
   def build_tree(self):
     """Construct the diagnostic tree with appropriate steps."""
@@ -105,6 +116,7 @@ class VmExternalIpConnectivity(runbook.DiagnosticTree):
     # Check that the networkmanagement api is enabled
     service_api_status_check = gcp_gs.ServiceApiStatusCheck()
     service_api_status_check.api_name = 'networkmanagement'
+    service_api_status_check.project_id = op.get(flags.PROJECT_ID)
     service_api_status_check.expected_state = gcp_gs.constants.APIState.ENABLED
 
     # add to the debugging tree
@@ -125,12 +137,13 @@ class VmExternalIpConnectivityStart(runbook.StartStep):
     try:
       vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                             zone=op.get(flags.ZONE),
-                            instance_name=op.get(flags.NAME))
+                            instance_name=op.get(flags.INSTANCE_NAME))
     except googleapiclient.errors.HttpError:
       op.add_skipped(
           project,
           reason=('Instance {} does not exist in zone {} or project {}').format(
-              op.get(flags.NAME), op.get(flags.ZONE), op.get(flags.PROJECT_ID)))
+              op.get(flags.INSTANCE_NAME), op.get(flags.ZONE),
+              op.get(flags.PROJECT_ID)))
     else:
       if vm:
         # Check for instance id and instance name
@@ -177,11 +190,11 @@ class VmHasExternalIp(runbook.Gateway):
   """
 
   def execute(self):
-    """Checking if the source NIC has an associated external IP address..."""
+    """Checking if the source NIC has an associated external IP address."""
 
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+                          instance_name=op.get(flags.INSTANCE_NAME))
 
     # If this an interface without an external IP address run checks for external interface
     if util.is_external_ip_on_nic(vm.get_network_interfaces,
@@ -207,13 +220,13 @@ class VmExternalIpConnectivityEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing VM external connectivity diagnostics..."""
+    """Finalize VM external connectivity diagnostics."""
     if not config.get(flags.INTERACTIVE_MODE):
       response = op.prompt(kind=op.CONFIRMATION,
                            message="""
           Are you able to connect to external IP from the VM {}:
           after taking the remediation steps outlined.
-          """.format(op.get(flags.NAME)),
+          """.format(op.get(flags.INSTANCE_NAME)),
                            choice_msg='Enter an option: ')
       if response == op.NO:
         op.info(message=op.END_MESSAGE)

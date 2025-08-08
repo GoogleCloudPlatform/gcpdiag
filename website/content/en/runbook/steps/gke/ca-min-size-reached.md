@@ -18,16 +18,17 @@ None
 
 Node cannot be removed because its node group is already at its minimum size.
 Example log entry that would help identify involved objects:
-{LOG_ENTRY}
+
+{log_entry}
 
 ### Failure Remediation
 
 Review and adjust the minimum value set for node pool autoscaling.
-https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-autoscaler#resizing_a_node_pool
+<https://cloud.google.com/kubernetes-engine/docs/how-to/cluster-autoscaler#resizing_a_node_pool>
 
 ### Success Reason
 
-No "no.scale.down.node.node.group.min.size.reached" errors found between {START_TIME_UTC} and {END_TIME_UTC} UTC
+No "no.scale.down.node.node.group.min.size.reached" errors found between {start_time} and {end_time}
 
 
 

@@ -1,0 +1,2606 @@
+{
+  "kind": "compute#instanceAggregatedList",
+  "id": "projects/gcpdiag-gke1-aaaa/aggregated/instances",
+  "items": {
+    "zones/us-central1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-central1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-central1-a"
+          }
+        ]
+      }
+    },
+    "zones/us-central1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-central1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-central1-b"
+          }
+        ]
+      }
+    },
+    "zones/us-central1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-central1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-central1-c"
+          }
+        ]
+      }
+    },
+    "zones/us-central1-f": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-central1-f'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-central1-f"
+          }
+        ]
+      }
+    },
+    "zones/us-central2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-central2-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-central2-b"
+          }
+        ]
+      }
+    },
+    "zones/us-central2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-central2-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-central2-a"
+          }
+        ]
+      }
+    },
+    "zones/us-central2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-central2-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-central2-c"
+          }
+        ]
+      }
+    },
+    "zones/us-central2-d": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-central2-d'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-central2-d"
+          }
+        ]
+      }
+    },
+    "zones/europe-west1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-west1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west1-b"
+          }
+        ]
+      }
+    },
+    "zones/europe-west1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-west1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west1-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-west1-d": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-west1-d'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west1-d"
+          }
+        ]
+      }
+    },
+    "zones/us-west1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-west1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west1-a"
+          }
+        ]
+      }
+    },
+    "zones/us-west1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-west1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west1-b"
+          }
+        ]
+      }
+    },
+    "zones/us-west1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-west1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west1-c"
+          }
+        ]
+      }
+    },
+    "zones/asia-east1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-east1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-east1-a"
+          }
+        ]
+      }
+    },
+    "zones/asia-east1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-east1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-east1-b"
+          }
+        ]
+      }
+    },
+    "zones/asia-east1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-east1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-east1-c"
+          }
+        ]
+      }
+    },
+    "zones/us-east1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-east1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east1-b"
+          }
+        ]
+      }
+    },
+    "zones/us-east1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-east1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east1-c"
+          }
+        ]
+      }
+    },
+    "zones/us-east1-d": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-east1-d'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east1-d"
+          }
+        ]
+      }
+    },
+    "zones/asia-northeast1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-northeast1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast1-a"
+          }
+        ]
+      }
+    },
+    "zones/asia-northeast1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-northeast1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast1-b"
+          }
+        ]
+      }
+    },
+    "zones/asia-northeast1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-northeast1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast1-c"
+          }
+        ]
+      }
+    },
+    "zones/asia-southeast1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-southeast1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-southeast1-a"
+          }
+        ]
+      }
+    },
+    "zones/asia-southeast1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-southeast1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-southeast1-b"
+          }
+        ]
+      }
+    },
+    "zones/asia-southeast1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-southeast1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-southeast1-c"
+          }
+        ]
+      }
+    },
+    "zones/us-east4-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-east4-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east4-a"
+          }
+        ]
+      }
+    },
+    "zones/us-east4-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-east4-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east4-b"
+          }
+        ]
+      }
+    },
+    "zones/us-east4-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-east4-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east4-c"
+          }
+        ]
+      }
+    },
+    "zones/australia-southeast1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/australia-southeast1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/australia-southeast1-c"
+          }
+        ]
+      }
+    },
+    "zones/australia-southeast1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/australia-southeast1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/australia-southeast1-a"
+          }
+        ]
+      }
+    },
+    "zones/australia-southeast1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/australia-southeast1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/australia-southeast1-b"
+          }
+        ]
+      }
+    },
+    "zones/europe-west2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-west2-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west2-a"
+          }
+        ]
+      }
+    },
+    "zones/europe-west2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-west2-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west2-b"
+          }
+        ]
+      }
+    },
+    "zones/europe-west2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-west2-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west2-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-west3-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-west3-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west3-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-west3-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-west3-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west3-a"
+          }
+        ]
+      }
+    },
+    "zones/europe-west3-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-west3-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west3-b"
+          }
+        ]
+      }
+    },
+    "zones/southamerica-east1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/southamerica-east1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/southamerica-east1-a"
+          }
+        ]
+      }
+    },
+    "zones/southamerica-east1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/southamerica-east1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/southamerica-east1-b"
+          }
+        ]
+      }
+    },
+    "zones/southamerica-east1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/southamerica-east1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/southamerica-east1-c"
+          }
+        ]
+      }
+    },
+    "zones/asia-south1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-south1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-south1-b"
+          }
+        ]
+      }
+    },
+    "zones/asia-south1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-south1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-south1-a"
+          }
+        ]
+      }
+    },
+    "zones/asia-south1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-south1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-south1-c"
+          }
+        ]
+      }
+    },
+    "zones/northamerica-northeast1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/northamerica-northeast1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-northeast1-a"
+          }
+        ]
+      }
+    },
+    "zones/northamerica-northeast1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/northamerica-northeast1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-northeast1-b"
+          }
+        ]
+      }
+    },
+    "zones/northamerica-northeast1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/northamerica-northeast1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-northeast1-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-west4-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-west4-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west4-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-west4-b": {
+      "instances": [
+        {
+          "kind": "compute#instance",
+          "id": "4008916034740216135",
+          "creationTimestamp": "2025-02-05T04:55:05.216-08:00",
+          "name": "gce1",
+          "tags": {
+            "items": [
+              "secured-instance"
+            ],
+            "fingerprint": "OcWEGzD6ieA="
+          },
+          "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-b/machineTypes/f1-micro",
+          "status": "TERMINATED",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-b",
+          "canIpForward": false,
+          "networkInterfaces": [
+            {
+              "kind": "compute#networkInterface",
+              "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+              "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks/default",
+              "networkIP": "10.164.0.9",
+              "name": "nic0",
+              "fingerprint": "H5InLKvqNRc=",
+              "stackType": "IPV4_ONLY"
+            }
+          ],
+          "disks": [
+            {
+              "kind": "compute#attachedDisk",
+              "type": "PERSISTENT",
+              "mode": "READ_WRITE",
+              "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-b/disks/gce1",
+              "deviceName": "persistent-disk-0",
+              "index": 0,
+              "boot": true,
+              "autoDelete": true,
+              "licenses": [
+                "https://www.googleapis.com/compute/v1/projects/windows-cloud/global/licenses/windows-server-2019-dc",
+                "https://www.googleapis.com/compute/v1/projects/windows-cloud/global/licenses/windows-server-core"
+              ],
+              "interface": "SCSI",
+              "guestOsFeatures": [
+                {
+                  "type": "MULTI_IP_SUBNET"
+                },
+                {
+                  "type": "UEFI_COMPATIBLE"
+                },
+                {
+                  "type": "VIRTIO_SCSI_MULTIQUEUE"
+                },
+                {
+                  "type": "GVNIC"
+                },
+                {
+                  "type": "WINDOWS"
+                }
+              ],
+              "diskSizeGb": "32",
+              "architecture": "X86_64"
+            }
+          ],
+          "metadata": {
+            "kind": "compute#metadata",
+            "fingerprint": "b5_sNtXJEts="
+          },
+          "serviceAccounts": [
+            {
+              "email": "12340002-compute@developer.gserviceaccount.com",
+              "scopes": [
+                "https://www.googleapis.com/auth/devstorage.read_only",
+                "https://www.googleapis.com/auth/logging.write",
+                "https://www.googleapis.com/auth/monitoring.write",
+                "https://www.googleapis.com/auth/service.management.readonly",
+                "https://www.googleapis.com/auth/servicecontrol"
+              ]
+            }
+          ],
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-b/instances/gce1",
+          "scheduling": {
+            "onHostMaintenance": "TERMINATE",
+            "automaticRestart": false,
+            "preemptible": true
+          },
+          "cpuPlatform": "Unknown CPU Platform",
+          "labels": {
+            "goog-terraform-provisioned": "true"
+          },
+          "labelFingerprint": "vezUS-42LLM=",
+          "startRestricted": false,
+          "deletionProtection": false,
+          "shieldedInstanceConfig": {
+            "enableSecureBoot": false,
+            "enableVtpm": true,
+            "enableIntegrityMonitoring": true
+          },
+          "shieldedInstanceIntegrityPolicy": {
+            "updateAutoLearnPolicy": true
+          },
+          "fingerprint": "fpNWOUBPGaA=",
+          "lastStartTimestamp": "2025-02-05T04:55:18.444-08:00",
+          "lastStopTimestamp": "2025-02-06T04:56:34.303-08:00",
+          "satisfiesPzi": true
+        }
+      ]
+    },
+    "zones/europe-west4-a": {
+      "instances": [
+        {
+          "kind": "compute#instance",
+          "id": "7734413015668154695",
+          "creationTimestamp": "2025-02-05T04:55:04.917-08:00",
+          "name": "gce1",
+          "tags": {
+            "items": [
+              "secured-instance"
+            ],
+            "fingerprint": "OcWEGzD6ieA="
+          },
+          "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/machineTypes/e2-micro",
+          "status": "TERMINATED",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a",
+          "canIpForward": false,
+          "networkInterfaces": [
+            {
+              "kind": "compute#networkInterface",
+              "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+              "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks/default",
+              "networkIP": "10.164.0.7",
+              "name": "nic0",
+              "fingerprint": "b5ArkV8JkXs=",
+              "stackType": "IPV4_ONLY"
+            }
+          ],
+          "disks": [
+            {
+              "kind": "compute#attachedDisk",
+              "type": "PERSISTENT",
+              "mode": "READ_WRITE",
+              "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/disks/gce1",
+              "deviceName": "persistent-disk-0",
+              "index": 0,
+              "boot": true,
+              "autoDelete": true,
+              "licenses": [
+                "https://www.googleapis.com/compute/v1/projects/windows-cloud/global/licenses/windows-server-2019-dc",
+                "https://www.googleapis.com/compute/v1/projects/windows-cloud/global/licenses/windows-server-core"
+              ],
+              "interface": "SCSI",
+              "guestOsFeatures": [
+                {
+                  "type": "MULTI_IP_SUBNET"
+                },
+                {
+                  "type": "UEFI_COMPATIBLE"
+                },
+                {
+                  "type": "VIRTIO_SCSI_MULTIQUEUE"
+                },
+                {
+                  "type": "GVNIC"
+                },
+                {
+                  "type": "WINDOWS"
+                }
+              ],
+              "diskSizeGb": "32",
+              "architecture": "X86_64"
+            }
+          ],
+          "metadata": {
+            "kind": "compute#metadata",
+            "fingerprint": "b5_sNtXJEts="
+          },
+          "serviceAccounts": [
+            {
+              "email": "12340002-compute@developer.gserviceaccount.com",
+              "scopes": [
+                "https://www.googleapis.com/auth/devstorage.read_only",
+                "https://www.googleapis.com/auth/logging.write",
+                "https://www.googleapis.com/auth/monitoring.write",
+                "https://www.googleapis.com/auth/service.management.readonly",
+                "https://www.googleapis.com/auth/servicecontrol"
+              ]
+            }
+          ],
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instances/gce1",
+          "scheduling": {
+            "onHostMaintenance": "TERMINATE",
+            "automaticRestart": false,
+            "preemptible": true
+          },
+          "cpuPlatform": "Unknown CPU Platform",
+          "labels": {
+            "foo": "bar",
+            "goog-terraform-provisioned": "true"
+          },
+          "labelFingerprint": "cLOO6l7pJAo=",
+          "startRestricted": false,
+          "deletionProtection": false,
+          "shieldedInstanceConfig": {
+            "enableSecureBoot": false,
+            "enableVtpm": true,
+            "enableIntegrityMonitoring": true
+          },
+          "shieldedInstanceIntegrityPolicy": {
+            "updateAutoLearnPolicy": true
+          },
+          "fingerprint": "mcHgMmrzi8c=",
+          "lastStartTimestamp": "2025-02-05T04:55:12.951-08:00",
+          "lastStopTimestamp": "2025-02-06T04:58:01.352-08:00",
+          "satisfiesPzi": true
+        },
+        {
+          "cpuPlatform": "Intel Broadwell",
+          "creationTimestamp": "2023-05-09T12:41:30.493-07:00",
+          "deletionProtection": false,
+          "disks": [
+            {
+              "architecture": "X86_64",
+              "autoDelete": true,
+              "boot": true,
+              "deviceName": "persistent-disk-0",
+              "diskSizeGb": "100",
+              "guestOsFeatures": [
+                {
+                  "type": "SEV_SNP_CAPABLE"
+                },
+                {
+                  "type": "GVNIC"
+                },
+                {
+                  "type": "SEV_CAPABLE"
+                },
+                {
+                  "type": "SECURE_BOOT"
+                },
+                {
+                  "type": "VIRTIO_SCSI_MULTIQUEUE"
+                },
+                {
+                  "type": "UEFI_COMPATIBLE"
+                }
+              ],
+              "index": 0,
+              "interface": "SCSI",
+              "kind": "compute#attachedDisk",
+              "licenses": [
+                "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/licenses/gke-node",
+                "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos-pcid",
+                "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos",
+                "https://www.googleapis.com/compute/v1/projects/cos-cloud-shielded/global/licenses/shielded-cos"
+              ],
+              "mode": "READ_WRITE",
+              "shieldedInstanceInitialState": {
+                "dbs": [
+                  {
+                    "content": "REDACTED",
+                    "fileType": "X509"
+                  }
+                ],
+                "dbxs": [
+                  {
+                    "content": "REDACTED",
+                    "fileType": "X509"
+                  },
+                  {
+                    "content": "REDACTED",
+                    "fileType": "X509"
+                  },
+                  {
+                    "content": "REDACTED",
+                    "fileType": "X509"
+                  },
+                  {
+                    "content": "REDACTED",
+                    "fileType": "X509"
+                  }
+                ],
+                "keks": [
+                  {
+                    "content": "REDACTED",
+                    "fileType": "X509"
+                  }
+                ],
+                "pk": {
+                  "content": "REDACTED",
+                  "fileType": "X509"
+                }
+              },
+              "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/disks/gke-gke1-default-pool-671518f6-zsnm",
+              "type": "PERSISTENT"
+            }
+          ],
+          "fingerprint": "REDACTED",
+          "id": "714758298644455174",
+          "kind": "compute#instance",
+          "labelFingerprint": "yaFVeZPybGM=",
+          "labels": {
+            "foo": "bar",
+            "goog-gke-node": ""
+          },
+          "lastStartTimestamp": "2023-05-09T12:41:36.364-07:00",
+          "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/machineTypes/e2-medium",
+          "metadata": {
+            "fingerprint": "REDACTED",
+            "items": [
+              {
+                "key": "instance-template",
+                "value": "projects/12340002/global/instanceTemplates/gke-gke1-default-pool-671518f6"
+              },
+              {
+                "key": "created-by",
+                "value": "projects/12340002/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-671518f6-grp"
+              },
+              {
+                "key": "serial-port-logging-enable",
+                "value": "true"
+              },
+              {
+                "key": "kube-labels",
+                "value": "cloud.google.com/gke-boot-disk=pd-balanced,cloud.google.com/gke-container-runtime=containerd,cloud.google.com/gke-cpu-scaling-level=2,cloud.google.com/gke-logging-variant=DEFAULT,cloud.google.com/gke-max-pods-per-node=110,cloud.google.com/gke-nodepool=default-pool,cloud.google.com/gke-os-distribution=cos,cloud.google.com/gke-provisioning=standard,cloud.google.com/gke-stack-type=IPV4,cloud.google.com/machine-family=e2,cloud.google.com/private-node=false,node.kubernetes.io/masq-agent-ds-ready=true"
+              },
+              {
+                "key": "google-compute-enable-pcid",
+                "value": "true"
+              },
+              {
+                "key": "kubelet-config",
+                "value": "apiVersion: kubelet.config.k8s.io/v1beta1\nauthentication:\n  anonymous:\n    enabled: false\n  webhook:\n    enabled: true\n  x509:\n    clientCAFile: /etc/srv/kubernetes/pki/ca-certificates.crt\nauthorization:\n  mode: Webhook\ncgroupRoot: /\nclusterDNS:\n- 192.168.2.10\nclusterDomain: cluster.local\nenableDebuggingHandlers: true\nevictionHard:\n  memory.available: 100Mi\n  nodefs.available: 10%\n  nodefs.inodesFree: 5%\n  pid.available: 10%\nfeatureGates:\n  CSIMigrationGCE: true\n  DisableKubeletCloudCredentialProviders: false\n  DynamicKubeletConfig: false\n  ExecProbeTimeout: false\n  InTreePluginAWSUnregister: true\n  InTreePluginAzureDiskUnregister: true\n  InTreePluginOpenStackUnregister: true\n  InTreePluginvSphereUnregister: true\n  RotateKubeletServerCertificate: true\nkernelMemcgNotification: true\nkind: KubeletConfiguration\nkubeReserved:\n  cpu: 1060m\n  ephemeral-storage: 41Gi\n  memory: 1019Mi\nreadOnlyPort: 10255\nserverTLSBootstrap: true\nstaticPodPath: /etc/kubernetes/manifests\n"
+              },
+              {
+                "key": "kubeconfig",
+                "value": "apiVersion: v1\nkind: Config\nclusters:\n- cluster:\n    server: https://192.168.0.34\n    certificate-authority: '/etc/srv/kubernetes/pki/ca-certificates.crt'\n  name: default-cluster\ncontexts:\n- context:\n    cluster: default-cluster\n    namespace: default\n    user: exec-plugin-auth\n  name: default-context\ncurrent-context: default-context\nusers:\n- name: exec-plugin-auth\n  user:\n    exec:\n      apiVersion: \"client.authentication.k8s.io/v1beta1\"\n      command: '/home/kubernetes/bin/gke-exec-auth-plugin'\n      args: [\"--cache-dir\", '/var/lib/kubelet/pki/']\n"
+              },
+              {
+                "key": "cluster-name",
+                "value": "gke1"
+              },
+              {
+                "key": "gci-update-strategy",
+                "value": "update_disabled"
+              },
+              {
+                "key": "gci-metrics-enabled",
+                "value": "true"
+              },
+              {
+                "key": "configure-sh",
+                "value": "REDACTED"
+              },
+              {
+                "key": "disable-legacy-endpoints",
+                "value": "true"
+              },
+              {
+                "key": "user-data",
+                "value": "REDACTED"
+              },
+              {
+                "key": "kube-env",
+                "value": "REDACTED"
+              },
+              {
+                "key": "cluster-uid",
+                "value": "c10b95be9dbb48d09af2e5c299c655c01f02e38cc157489eb8ec454d30b7ecb7"
+              },
+              {
+                "key": "cluster-location",
+                "value": "europe-west4-a"
+              }
+            ],
+            "kind": "compute#metadata"
+          },
+          "name": "gke-gke1-default-pool-671518f6-zsnm",
+          "networkInterfaces": [
+            {
+              "accessConfigs": [
+                {
+                  "kind": "compute#accessConfig",
+                  "name": "external-nat",
+                  "natIP": "34.90.1.21",
+                  "networkTier": "PREMIUM",
+                  "type": "ONE_TO_ONE_NAT"
+                }
+              ],
+              "aliasIpRanges": [
+                {
+                  "ipCidrRange": "192.168.1.0/24",
+                  "subnetworkRangeName": "gke1-secondary-range-pod"
+                }
+              ],
+              "fingerprint": "REDACTED",
+              "kind": "compute#networkInterface",
+              "name": "nic0",
+              "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+              "networkIP": "192.168.0.35",
+              "stackType": "IPV4_ONLY",
+              "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks/gke1-subnet"
+            }
+          ],
+          "networkPerformanceConfig": {
+            "totalEgressBandwidthTier": "DEFAULT"
+          },
+          "scheduling": {
+            "automaticRestart": true,
+            "onHostMaintenance": "MIGRATE",
+            "preemptible": false,
+            "provisioningModel": "STANDARD"
+          },
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instances/gke-gke1-default-pool-671518f6-zsnm",
+          "serviceAccounts": [
+            {
+              "email": "12340002-compute@developer.gserviceaccount.com",
+              "scopes": [
+                "https://www.googleapis.com/auth/devstorage.read_only",
+                "https://www.googleapis.com/auth/logging.write",
+                "https://www.googleapis.com/auth/monitoring",
+                "https://www.googleapis.com/auth/service.management.readonly",
+                "https://www.googleapis.com/auth/servicecontrol",
+                "https://www.googleapis.com/auth/trace.append"
+              ]
+            }
+          ],
+          "shieldedInstanceConfig": {
+            "enableIntegrityMonitoring": true,
+            "enableSecureBoot": false,
+            "enableVtpm": true
+          },
+          "shieldedInstanceIntegrityPolicy": {
+            "updateAutoLearnPolicy": true
+          },
+          "startRestricted": false,
+          "status": "RUNNING",
+          "tags": {
+            "fingerprint": "REDACTED",
+            "items": [
+              "gke-gke1-c10b95be-node"
+            ]
+          },
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a"
+        },
+        {
+          "kind": "compute#instance",
+          "id": "3427402889068208455",
+          "creationTimestamp": "2025-02-05T04:55:05.013-08:00",
+          "name": "gce2",
+          "tags": {
+            "items": [
+              "secured-instance"
+            ],
+            "fingerprint": "OcWEGzD6ieA="
+          },
+          "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/machineTypes/e2-micro",
+          "status": "TERMINATED",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a",
+          "canIpForward": false,
+          "networkInterfaces": [
+            {
+              "kind": "compute#networkInterface",
+              "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+              "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks/default",
+              "networkIP": "10.164.0.8",
+              "name": "nic0",
+              "fingerprint": "WAEC9EDWZGs=",
+              "stackType": "IPV4_ONLY"
+            }
+          ],
+          "disks": [
+            {
+              "kind": "compute#attachedDisk",
+              "type": "PERSISTENT",
+              "mode": "READ_WRITE",
+              "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/disks/gce2",
+              "deviceName": "persistent-disk-0",
+              "index": 0,
+              "boot": true,
+              "autoDelete": true,
+              "licenses": [
+                "https://www.googleapis.com/compute/v1/projects/windows-cloud/global/licenses/windows-server-2019-dc",
+                "https://www.googleapis.com/compute/v1/projects/windows-cloud/global/licenses/windows-server-core"
+              ],
+              "interface": "SCSI",
+              "guestOsFeatures": [
+                {
+                  "type": "MULTI_IP_SUBNET"
+                },
+                {
+                  "type": "UEFI_COMPATIBLE"
+                },
+                {
+                  "type": "VIRTIO_SCSI_MULTIQUEUE"
+                },
+                {
+                  "type": "GVNIC"
+                },
+                {
+                  "type": "WINDOWS"
+                }
+              ],
+              "diskSizeGb": "32",
+              "architecture": "X86_64"
+            }
+          ],
+          "metadata": {
+            "kind": "compute#metadata",
+            "fingerprint": "xkTdem40Dus=",
+            "items": [
+              {
+                "key": "serial-port-logging-enable",
+                "value": "false"
+              }
+            ]
+          },
+          "serviceAccounts": [
+            {
+              "email": "12340002-compute@developer.gserviceaccount.com",
+              "scopes": [
+                "https://www.googleapis.com/auth/devstorage.read_only",
+                "https://www.googleapis.com/auth/logging.write",
+                "https://www.googleapis.com/auth/monitoring.write",
+                "https://www.googleapis.com/auth/service.management.readonly",
+                "https://www.googleapis.com/auth/servicecontrol"
+              ]
+            }
+          ],
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instances/gce2",
+          "scheduling": {
+            "onHostMaintenance": "TERMINATE",
+            "automaticRestart": false,
+            "preemptible": true
+          },
+          "cpuPlatform": "Unknown CPU Platform",
+          "labels": {
+            "goog-terraform-provisioned": "true"
+          },
+          "labelFingerprint": "vezUS-42LLM=",
+          "startRestricted": false,
+          "deletionProtection": false,
+          "shieldedInstanceConfig": {
+            "enableSecureBoot": false,
+            "enableVtpm": true,
+            "enableIntegrityMonitoring": true
+          },
+          "shieldedInstanceIntegrityPolicy": {
+            "updateAutoLearnPolicy": true
+          },
+          "fingerprint": "Lqnk1p0Yzf0=",
+          "lastStartTimestamp": "2025-02-05T04:55:16.921-08:00",
+          "lastStopTimestamp": "2025-02-05T07:09:43.379-08:00",
+          "satisfiesPzi": true
+        },
+        {
+          "kind": "compute#instance",
+          "id": "2177354220935146682",
+          "creationTimestamp": "2025-02-06T07:16:37.639-08:00",
+          "name": "gke-gke1-default-pool-dee670f4-b27s",
+          "tags": {
+            "items": [
+              "gke-gke1-848e1694-node"
+            ],
+            "fingerprint": "oapYuKPqeNg="
+          },
+          "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/machineTypes/e2-medium",
+          "status": "RUNNING",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a",
+          "networkInterfaces": [
+            {
+              "kind": "compute#networkInterface",
+              "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+              "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks/gke1-subnet",
+              "networkIP": "192.168.0.3",
+              "name": "nic0",
+              "accessConfigs": [
+                {
+                  "kind": "compute#accessConfig",
+                  "type": "ONE_TO_ONE_NAT",
+                  "name": "external-nat",
+                  "natIP": "34.90.120.22",
+                  "networkTier": "PREMIUM"
+                }
+              ],
+              "aliasIpRanges": [
+                {
+                  "ipCidrRange": "192.168.1.0/24",
+                  "subnetworkRangeName": "gke1-secondary-range-pod"
+                }
+              ],
+              "fingerprint": "BR9LA1osAHE=",
+              "stackType": "IPV4_ONLY"
+            }
+          ],
+          "disks": [
+            {
+              "kind": "compute#attachedDisk",
+              "type": "PERSISTENT",
+              "mode": "READ_WRITE",
+              "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/disks/gke-gke1-default-pool-dee670f4-b27s",
+              "deviceName": "persistent-disk-0",
+              "index": 0,
+              "boot": true,
+              "autoDelete": true,
+              "licenses": [
+                "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos-pcid",
+                "https://www.googleapis.com/compute/v1/projects/cos-cloud-shielded/global/licenses/shielded-cos",
+                "https://www.googleapis.com/compute/v1/projects/gke-node-images/global/licenses/gke-node",
+                "https://www.googleapis.com/compute/v1/projects/cos-cloud/global/licenses/cos"
+              ],
+              "interface": "SCSI",
+              "guestOsFeatures": [
+                {
+                  "type": "SEV_LIVE_MIGRATABLE"
+                },
+                {
+                  "type": "VIRTIO_SCSI_MULTIQUEUE"
+                },
+                {
+                  "type": "SEV_SNP_CAPABLE"
+                },
+                {
+                  "type": "SEV_CAPABLE"
+                },
+                {
+                  "type": "SEV_LIVE_MIGRATABLE_V2"
+                },
+                {
+                  "type": "GVNIC"
+                },
+                {
+                  "type": "UEFI_COMPATIBLE"
+                },
+                {
+                  "type": "IDPF"
+                }
+              ],
+              "diskSizeGb": "100",
+              "shieldedInstanceInitialState": {
+                "pk": {
+                  "content": "MIIEGTCCAwGgAwIBAgIQYB8C9RH--O1hXkpp2FVSXjANBgkqhkiG9w0BAQsFADCBkTELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDU1vdW50YWluIFZpZXcxFDASBgNVBAoTC0dvb2dsZSBMTEMuMR8wHQYDVQQLExZDb250YWluZXIgT3B0aW1pemVkIE9TMR4wHAYDVQQDExVVRUZJIFBsYXRmb3JtIEtleSB2MTAwHhcNMjAwODA2MTk0ODQ0WhcNMzAwODA0MTk0ODQ0WjCBkTELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDU1vdW50YWluIFZpZXcxFDASBgNVBAoTC0dvb2dsZSBMTEMuMR8wHQYDVQQLExZDb250YWluZXIgT3B0aW1pemVkIE9TMR4wHAYDVQQDExVVRUZJIFBsYXRmb3JtIEtleSB2MTAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQClSQ15LUf193eJfM6b5etGgz8auvdI72Cclo3fHvwXBzsm5T1QamwYAqrCTcS7MxauCTkmkXTS9ejM4NNpQWF6KG82nR88vRyKO_MnSNL8ZP-rtRu0p1X_mUYXwi0_nPkyPKLR2QJ9H2EOrw_RChWvwnu281WtfUPCYs2t2SjBCF_mgzZI8o3s8wOtL8y-Dmi9T0bGO1wYX2okz51PKbhgVGQA7KJRmeekIxEkiN7GOb_2VQqcdM9c846OlC-8abwgDvrL3YqKqhw8DnSM2AbNpZIgUTd1Ut3X-PWXVKBj3qdxjAyRez8dPWymXDji-CBoBzLsWEkUW87S1coggOABAgMBAAGjazBpMA8GA1UdEwEB_wQFMAMBAf8wKQYDVR0OBCIEIMk0-K2sxOjtSpl-2pXmBWwwvSMGEIThmdDsSxQk2XZQMCsGA1UdIwQkMCKAIMk0-K2sxOjtSpl-2pXmBWwwvSMGEIThmdDsSxQk2XZQMA0GCSqGSIb3DQEBCwUAA4IBAQA7Pmaixb0FuDtpesNGvaBkTGWWMO7bDtx4rQom7zprEnliFJZung08FS3r73ob1urH0lzZm9022nRp8xqcSGk3wDkE9xQppWhvjhf6SOHdwM9_OxVq6no_BPz1PkRYsg4V07cgYPCtp7Ck7ZBI7m3MbLUyg8EG14_tvjKX9Xh2h0FSGuGg8_jjGYCGDtaSPkXBpAWurZ5mC2o9CzGaBJR4f_51I5C2AfHMG0H5T0Kehuyb_IzX9mAwArGmt62e4T9SxdP7LZUNPMEzOrhW1RzXvsD6Vod4uA9h2n_lbZHiBBExM2PMwuoobb-io-W0ARL4OCN5jah0a7q1ax6UYJK-",
+                  "fileType": "X509"
+                },
+                "keks": [
+                  {
+                    "content": "MIIEIjCCAwqgAwIBAgIRAKxVeWkn5a0pF1C0o_HUM6owDQYJKoZIhvcNAQELBQAwgZUxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtHb29nbGUgTExDLjEfMB0GA1UECxMWQ29udGFpbmVyIE9wdGltaXplZCBPUzEiMCAGA1UEAxMZVUVGSSBLZXkgRXhjaGFuZ2UgS2V5IHYxMDAeFw0yMDA4MDYxOTQ4NTBaFw0zMDA4MDQxOTQ4NTBaMIGVMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNTW91bnRhaW4gVmlldzEUMBIGA1UEChMLR29vZ2xlIExMQy4xHzAdBgNVBAsTFkNvbnRhaW5lciBPcHRpbWl6ZWQgT1MxIjAgBgNVBAMTGVVFRkkgS2V5IEV4Y2hhbmdlIEtleSB2MTAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC6ZCJ4Oldm1z3gwwAjWqiHRMFrXPwq0XmVmLWoaGUBzeL41VwHK76iQTxl11HYhqaAr_0nmVQAM3M6so6cmydd7l1RPYJpZ3Shy3qO4xxgy30kp4zW00m9EVEdkmh9-9zi_G89uutz7wOb34M2Wrybwa7D5U102DmSoJAoq5z2YrvpjZoGLRGqBBP6A1l-_gRGMAgUMqKbhD1HF1VKXZnIGq9UJcpHhRvQxOG3nlVWk6z8dH-Rnp_9YfEPRORAUF5PUnUL5-I3wr5derIIoeYxc7G2ZuTyRWsF9WVyZ7OquYwxAY4l4xkDJpAvSomHkbfNgtCZyTm2pMIkRou0up5lAgMBAAGjazBpMA8GA1UdEwEB_wQFMAMBAf8wKQYDVR0OBCIEINDkWV5HwgIi6aogGQUbZwWC5Es_Vx9SX5kG8i1xiXxKMCsGA1UdIwQkMCKAINDkWV5HwgIi6aogGQUbZwWC5Es_Vx9SX5kG8i1xiXxKMA0GCSqGSIb3DQEBCwUAA4IBAQCOTmuK7QQ4sP_8qYI2-bkvbQg1Vpq0W_aWtm0AQDw2iEVgfIq8JxNHu61ZhkmBiEhsdaaj7bYt_8owpvxfRnmzMPhQ6iB51vkExjWipD9spgSb8tfp0te6MqTT3omyYI9x4L13wn9ufZtlhZXlVgbjUN1QyevHwNt7Kms8Nd9Jbk9JCV9JoOIjkBpUjpCWCDfdGDD-iGIPzGdS-KjrNiA4udnzkdkO83dFMMvu69a1snCRUshNvHBNPbPRwbRYV9lS_QTwfft7EgbNF0455gblZbejvGJgR1Vhyen0jIPouVWxXe0X7AnGK8Mc3DUQBPVGT4ZR0WChbcwiOavh2t2X",
+                    "fileType": "X509"
+                  }
+                ],
+                "dbs": [
+                  {
+                    "content": "MIIEDTCCAvWgAwIBAgIQRtEbux4j2WDjYimBMkIBYjANBgkqhkiG9w0BAQsFADCBizELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDU1vdW50YWluIFZpZXcxFDASBgNVBAoTC0dvb2dsZSBMTEMuMR8wHQYDVQQLExZDb250YWluZXIgT3B0aW1pemVkIE9TMRgwFgYDVQQDEw9VRUZJIERCIEtleSB2MTAwHhcNMjAwODA2MTk0ODU1WhcNMzAwODA0MTk0ODU1WjCBizELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDU1vdW50YWluIFZpZXcxFDASBgNVBAoTC0dvb2dsZSBMTEMuMR8wHQYDVQQLExZDb250YWluZXIgT3B0aW1pemVkIE9TMRgwFgYDVQQDEw9VRUZJIERCIEtleSB2MTAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDQzJHu5A61uBNU6UUUZ5MiXjXwy8Du44BHhisNBpi6cTVHZddJ85iNldE5cPL7hZFJP9n77KyFRCCLxT2CVDNkwMyE2jvJkTz2x2qWvJ-uIuL25Asfgbrv7t1h2Jn790ZLwb9U3qQvqMLvIh_cTtNLat0DaZJsdnJo1MTnFAWrYZZ19KB4j6JJpG_QBnQ-s8XibeSSoa_bMEQTn2OEQFeEcume3CeuZKzXyytMLKkV_z4z-CYddyRwkOFivWUHWq2nVecQQgdyDNWYxGnY4MNsTMYFfv-mhyRzMwhxBFMwMAaEwhTFWsIP6VNwrwIgQaDw3o1fUEuzavTfdNhULaJLAgMBAAGjazBpMA8GA1UdEwEB_wQFMAMBAf8wKQYDVR0OBCIEIEtOsnFY2N1KW7dg9Wd_GEcIwV_a-U2DCn5ZyUsGWickMCsGA1UdIwQkMCKAIEtOsnFY2N1KW7dg9Wd_GEcIwV_a-U2DCn5ZyUsGWickMA0GCSqGSIb3DQEBCwUAA4IBAQCOd9V3WYv589dVov5ZOYo4zSs5PXpts1_8sYvMwvzLBr46LaejfG7KjjIY665Cnik__Zy9N3ZS9-fEeGKrBPE8ClwC06QhLbWDSFIqj2y9qq5FyBW0k1no2UQBnvx4CnLw_BgU3eae0wjv1lpDIbMwxe3E_aucVmzaIX3O83cw2JL9lLm1Psum0L2VHDZSCTP24vzrWoXXo4USHO_tBt_NkYrdkQH5CqGJYtxzKRwHHKEar3vzsiW4DPzlW8kUjRual1eBOKT5YKGbrOA_PJXV9x_7v1f2uAIrqh3HyppDTaGJ7Lux1MDf_hKuwAFI5QJTy9NEojbuUk1tzB4ys_W8",
+                    "fileType": "X509"
+                  }
+                ],
+                "dbxs": [
+                  {
+                    "content": "MIIEaDCCA1CgAwIBAgIJAKqfsrCdjyCoMA0GCSqGSIb3DQEBCwUAMH8xCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtHb29nbGUgTExDLjEUMBIGA1UECxMLQ2hyb21pdW0gT1MxFzAVBgNVBAMTDlVFRkkgREIgS2V5IHYxMB4XDTE4MTIwODAxMTk0MVoXDTI4MTIwNTAxMTk0MVowfzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDU1vdW50YWluIFZpZXcxFDASBgNVBAoTC0dvb2dsZSBMTEMuMRQwEgYDVQQLEwtDaHJvbWl1bSBPUzEXMBUGA1UEAxMOVUVGSSBEQiBLZXkgdjEwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCtZ9U4P5aWlBwiTocmkUjOn2XpvHUlUOnsnhvsm994hAb0MNk2d3fXa8Nz14v9JiBTSf70KU2Zhxb_bSN3KAIv-f7F2AuXte7U9SnzZ02UDmK4TU1bFQW67Y3Gc2hWprCHYEjiRQD4J3WPWhuZnAXqzXQk3uDWVPETi-G9KAM1R-yNxZfoEjfIKhLabDsWqDtnMSovObLoVfwTdnm0WCuYTFtY_CKNxuxeKuzDsC5Su9N3dSFbpGhXJjwUaXPLWY5MFIqIQNBfhmWzDd4PItXaXV3V44IqWTXclE2aSUqkwNrEZ1cRpHG4PYM1aHVmjcO_dWlvthcepTIMIEMAXg2LAgMBAAGjgeYwgeMwHQYDVR0OBBYEFNXbmmdkM0aIsPMyEIv25JRaOPA-MIGzBgNVHSMEgaswgaiAFNXbmmdkM0aIsPMyEIv25JRaOPA-oYGEpIGBMH8xCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlhMRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKEwtHb29nbGUgTExDLjEUMBIGA1UECxMLQ2hyb21pdW0gT1MxFzAVBgNVBAMTDlVFRkkgREIgS2V5IHYxggkAqp-ysJ2PIKgwDAYDVR0TBAUwAwEB_zANBgkqhkiG9w0BAQsFAAOCAQEAJ2vbNymAKTUbRvxnAohHozVUByrKHCq1o8b-bKrgv7Ch0X4itfG8Uwvt0xG7CTpl_Dno92MtpOpFv4ydqox-pP1kTsRcnFNggndXdjpGILIB94KmFiYJvB6RzocJsXsXBa0tULOR24qiB9f93kfITS7Ec60WjFfpgYKEnuEgcV0yBuZzAZbxo1uF4n1hhmVUnKtEI9pX-8geYIIqIYiwwT2jnhFogWw4PeSyg-HMR1CLwwJeH2XDa924LpgHFuR-AbikipAE2vIE0yqJzo0o4tn9-sRuMaQcZ4VQqIzMiniW5H7nGeoQY3ktHX5eq6x-4jFvdLnzzq_D4sS-UWHzOA==",
+                    "fileType": "X509"
+                  },
+                  {
+                    "content": "MIIEiTCCA3GgAwIBAgIJAOzm3xz71Vu6MA0GCSqGSIb3DQEBCwUAMIGJMQswCQYDVQQGEwJVUzETMBEGA1UECBMKQ2FsaWZvcm5pYTEWMBQGA1UEBxMNTW91bnRhaW4gVmlldzEUMBIGA1UEChMLR29vZ2xlIExMQy4xFDASBgNVBAsTC0Nocm9taXVtIE9TMSEwHwYDVQQDExhVRUZJIEtleSBFeGNoYW5nZSBLZXkgdjEwHhcNMTgxMjA4MDExOTQwWhcNMjgxMjA1MDExOTQwWjCBiTELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDU1vdW50YWluIFZpZXcxFDASBgNVBAoTC0dvb2dsZSBMTEMuMRQwEgYDVQQLEwtDaHJvbWl1bSBPUzEhMB8GA1UEAxMYVUVGSSBLZXkgRXhjaGFuZ2UgS2V5IHYxMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwg5hvVH6fJSBNji7ynBl1SQzWceL5P3ul6RcB-1s5wXqzXlIHiyRqBdj4hj2pLzpKJGmXWnerIwJOkdsFg7IwZpA4xHE1F-M8XlpuuUn_Xdfccef36ddZEUH6QLwNm96T89F4ujt0omJ-0GV37vBsxEY-hwR3O8XBgyx8TvvYxNnVyTgi19qQdb2ES8-yWJkebdzgugcmNf9K-55fnEiyxWtrvEQb2sowWIS3-b1I_BP85pW2pldh9yQWfb3OY2NJhGSbQSnLi3J0IhRXROEtAXCU4MLTq2cHOpGX0DtJP_g_jD1pnC1O6CCZgVycK4DgZXeDzOG_2Uimhr0y1rcewIDAQABo4HxMIHuMB0GA1UdDgQWBBQEqlpkrYWCzJe69eMUdF1byztBmzCBvgYDVR0jBIG2MIGzgBQEqlpkrYWCzJe69eMUdF1byztBm6GBj6SBjDCBiTELMAkGA1UEBhMCVVMxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDU1vdW50YWluIFZpZXcxFDASBgNVBAoTC0dvb2dsZSBMTEMuMRQwEgYDVQQLEwtDaHJvbWl1bSBPUzEhMB8GA1UEAxMYVUVGSSBLZXkgRXhjaGFuZ2UgS2V5IHYxggkA7ObfHPvVW7owDAYDVR0TBAUwAwEB_zANBgkqhkiG9w0BAQsFAAOCAQEAWsd3mq0dADTD7Tx2uYcDeJcJHO0x91hO26p2cqUSox4wPgc4_xk5yiteMgDB5CWLwgcuneDAYYMO1PmktpEvLu9a82gCGxGiww-w78OJTOrs68VM1zB0jqA3X5EyVSwVJqi8idgrnnGsJAcSBosnUI8pNi9SDC3MRPE1q1EUjuDNjsE7t_ItBe-MSMWCH2hpG8unZ7uwWCRfAV3Fkdnq_S5HzDy6-kKyGdj-rprhVeDz2xSyMOlNIJig4uuqU166DTfoQA2TxnMG_TuHt69Z4uZcVwx_HwPs2-vUCCYqZDwuuHKNIEm8kIK8sSPSsp22sC8h-7Klb8wj_d0lzShgkg==",
+                    "fileType": "X509"
+                  },
+                  {
+                    "content": "MIID0zCCArugAwIBAgIJANuXsNG_1HHxMA0GCSqGSIb3DQEBCwUAMH8xCzAJBgNVBAYTAlVTMRMwEQYDVQQIDApDYWxpZm9ybmlhMRYwFAYDVQQHDA1Nb3VudGFpbiBWaWV3MRQwEgYDVQQKDAtHb29nbGUgTExDLjEUMBIGA1UECwwLQ2hyb21pdW0gT1MxFzAVBgNVBAMMDlVFRkkgREIgS2V5IHYxMCAXDTE4MDQyNzE1MDYzN1oYDzIyMTgwMzEwMTUwNjM3WjB_MQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTEWMBQGA1UEBwwNTW91bnRhaW4gVmlldzEUMBIGA1UECgwLR29vZ2xlIExMQy4xFDASBgNVBAsMC0Nocm9taXVtIE9TMRcwFQYDVQQDDA5VRUZJIERCIEtleSB2MTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALWzFg8obysKXCjnbBTpAM8dMFC2pHX7GpwESNG-FYQI218Y1Ao1p5BttGqPoU5lGNeYUXxgxIqfN18ALHH10gRCRfqbC54faPU1lMr0e0jvi67GgGztyLl4ltAgK7HHTHmtZwghYNS45pKz_LFGm-TlKg-HPZBFT9GtbjRZe5IS2xdKkWM_sPA8qXwzvqmLN3OQckf0KchSUQmB3-wh4vYFV2TEjz10oR0FZO8LFFOOeooukcRDYy219XrdM21APnfszHmfKhzAFddOcYdwKwOL-w9TKVUwCIM70GL_YOtywA17mQkEm0ON79oyQ0daDlZ0ngDxC8xUIASYsRRPOkkCAwEAAaNQME4wHQYDVR0OBBYEFFO6MYgG9CvYp6qAqn_Jm-MANGpvMB8GA1UdIwQYMBaAFFO6MYgG9CvYp6qAqn_Jm-MANGpvMAwGA1UdEwQFMAMBAf8wDQYJKoZIhvcNAQELBQADggEBAIGyOB_3oFo6f3WoFrdBzimb_weH8hejtCggpcL-8Wdex9VRl5MKi_1GlGbietMDsr1alwdaagam9RafuIQplohTSBnQrU-u-LbtRlCF9C25GDQ70S0QlxAQmt41Sc7kSFTPm6BHauF3b_Raf9AX30MamptoXoAhgMnHAitCn6yCOsRJ_d1t04lqsiqefhf26xItvRnkuxG7-IQnbyGFCGPcjFNAE1thLpL_6y_dprVwTLsvZnsWYj-1Gg1yUkOnCN8Kl3Q3RDVqo98mORUc0bKB-B8_FQsbtmzbb-29nXQJW1FJx0ejqJyDGGBPHAGpwEJTVB3mwWXzBU6Ny7T3dlk=",
+                    "fileType": "X509"
+                  },
+                  {
+                    "content": "MIID6TCCAtGgAwIBAgIJAKgdcZ45rGMDMA0GCSqGSIb3DQEBCwUAMIGJMQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTEWMBQGA1UEBwwNTW91bnRhaW4gVmlldzEUMBIGA1UECgwLR29vZ2xlIExMQy4xFDASBgNVBAsMC0Nocm9taXVtIE9TMSEwHwYDVQQDDBhVRUZJIEtleSBFeGNoYW5nZSBLZXkgdjEwIBcNMTgwNDI3MTUwNjM3WhgPMjIxODAzMTAxNTA2MzdaMIGJMQswCQYDVQQGEwJVUzETMBEGA1UECAwKQ2FsaWZvcm5pYTEWMBQGA1UEBwwNTW91bnRhaW4gVmlldzEUMBIGA1UECgwLR29vZ2xlIExMQy4xFDASBgNVBAsMC0Nocm9taXVtIE9TMSEwHwYDVQQDDBhVRUZJIEtleSBFeGNoYW5nZSBLZXkgdjEwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCbIdHPMQZZU68jI5kz5rmwvo-DQZZJ5amRnAUnBpNllhNQB6TaLUS_D9TIo_0X1e8T21Xk4Pf3D5ckbuQxsJzQ5OVEOb59sJ9AhjVUoxQxuVW-iBzD0mWbxKf2cASy2YRIEcaAAI5QT2SwO8gZy_G8LwAk-vO0vIbynN0WuFLl1Dp2cMQ3CxLSPH-QPSZyGd6o6ewUU9JzboppujXpk43EQH5ZJE_wJb_ujUFWcFzKHb_EkV1hI1TmBJ1-vR2kao4_1hQO6k1zLUR-MyBHY0SRU2OQxBpSez-qt7oItMBc1EanXvq9tqx0ndCTmXQYQplT5wtkPbE9sd5zwbDt8btHAgMBAAGjUDBOMB0GA1UdDgQWBBS5Tmmv3JM8w1mfP9V5xAIdjBhb7TAfBgNVHSMEGDAWgBS5Tmmv3JM8w1mfP9V5xAIdjBhb7TAMBgNVHRMEBTADAQH_MA0GCSqGSIb3DQEBCwUAA4IBAQB9BRTP37ik4jF2BmJJspMA6NHS7mxIckFCYKl-TO8zGFd3mlA6dnEw5WY-tUcBNJpAaHNJV_rzagGPpWMIoy-nAaLSSpnyhEXYTnQvzejYRijN3N0V9tmM0qgViHNBqTxdfcwlst5OUesGHPqgBOt5RRu5OGJ0rkuymWwxHOKIw43hz5FW7vhumbtJ3iy8HSFQIjSYMkr0sOzJhmvnHlpZ4pOoPNyNA9DM6smriH-2-MnJFM9w8bg6zsV5X-6KL464_FuXL_X_IWmAsAbi8Ge8ZMJjEaDrF1qkD4aLvu0MshzEdvrvQO-3Gn3Lmi_RYKR0HKZp7jXTySj76sxt9QK4",
+                    "fileType": "X509"
+                  }
+                ]
+              },
+              "architecture": "X86_64"
+            }
+          ],
+          "metadata": {
+            "kind": "compute#metadata",
+            "fingerprint": "EVspfRhp7rs=",
+            "items": [
+              {
+                "key": "instance-template",
+                "value": "projects/12340002/regions/europe-west4/instanceTemplates/gke-gke1-default-pool-dee670f4"
+              },
+              {
+                "key": "created-by",
+                "value": "projects/12340002/zones/europe-west4-a/instanceGroupManagers/gke-gke1-default-pool-dee670f4-grp"
+              },
+              {
+                "key": "serial-port-logging-enable",
+                "value": "true"
+              },
+              {
+                "key": "kube-labels",
+                "value": "cloud.google.com/gke-boot-disk=pd-balanced,cloud.google.com/gke-container-runtime=containerd,cloud.google.com/gke-cpu-scaling-level=2,cloud.google.com/gke-logging-variant=DEFAULT,cloud.google.com/gke-max-pods-per-node=110,cloud.google.com/gke-memory-gb-scaling-level=4,cloud.google.com/gke-nodepool=default-pool,cloud.google.com/gke-os-distribution=cos,cloud.google.com/gke-provisioning=standard,cloud.google.com/gke-stack-type=IPV4,cloud.google.com/machine-family=e2,cloud.google.com/private-node=false,node.kubernetes.io/masq-agent-ds-ready=true"
+              },
+              {
+                "key": "google-compute-enable-pcid",
+                "value": "true"
+              },
+              {
+                "key": "kubelet-config",
+                "value": "apiVersion: kubelet.config.k8s.io/v1beta1\nauthentication:\n  anonymous:\n    enabled: false\n  webhook:\n    enabled: true\n  x509:\n    clientCAFile: /etc/srv/kubernetes/pki/ca-certificates.crt\nauthorization:\n  mode: Webhook\ncgroupRoot: /\nclusterDNS:\n- 192.168.2.10\nclusterDomain: cluster.local\nenableDebuggingHandlers: true\nevictionHard:\n  memory.available: 100Mi\n  nodefs.available: 10%\n  nodefs.inodesFree: 5%\n  pid.available: 10%\nfeatureGates:\n  DisableKubeletCloudCredentialProviders: true\n  ExecProbeTimeout: false\n  RotateKubeletServerCertificate: true\nkernelMemcgNotification: true\nkind: KubeletConfiguration\nkubeReserved:\n  cpu: 1060m\n  ephemeral-storage: 41Gi\n  memory: 1019Mi\nmaxParallelImagePulls: 3\nreadOnlyPort: 10255\nserializeImagePulls: false\nserverTLSBootstrap: true\nstaticPodPath: /etc/kubernetes/manifests\n"
+              },
+              {
+                "key": "cluster-name",
+                "value": "gke1"
+              },
+              {
+                "key": "kubeconfig",
+                "value": "apiVersion: v1\nkind: Config\nclusters:\n- cluster:\n    server: https://192.168.0.2\n    certificate-authority: 11112222/etc/srv/kubernetes/pki/ca-certificates.crt'\n  name: default-cluster\ncontexts:\n- context:\n    cluster: default-cluster\n    namespace: default\n    user: exec-plugin-auth\n  name: default-context\ncurrent-context: default-context\nusers:\n- name: exec-plugin-auth\n  user:\n    exec:\n      apiVersion: \"client.authentication.k8s.io/v1beta1\"\n      command: '/home/kubernetes/bin/gke-exec-auth-plugin'\n      args: [\"--cache-dir\", '/var/lib/kubelet/pki/']\n"
+              },
+              {
+                "key": "gci-update-strategy",
+                "value": "update_disabled"
+              },
+              {
+                "key": "gci-metrics-enabled",
+                "value": "true"
+              },
+              {
+                "key": "configure-sh",
+                "value": "#!/usr/bin/env bash\n\n# Copyright 2016 The Kubernetes Authors.\n#\n# Licensed under the Apache License, Version 2.0 (the \"License\");\n# you may not use this file except in compliance with the License.\n# You may obtain a copy of the License at\n#\n#     http://www.apache.org/licenses/LICENSE-2.0\n#\n# Unless required by applicable law or agreed to in writing, software\n# distributed under the License is distributed on an \"AS IS\" BASIS,\n# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n# See the License for the specific language governing permissions and\n# limitations under the License.\n\n# Due to the GCE custom metadata size limit, we split the entire script into two\n# files configure.sh and configure-helper.sh. The functionality of downloading\n# kubernetes configuration, manifests, docker images, and binary files are\n# put in configure.sh, which is uploaded via GCE custom metadata.\n\nset -o errexit\nset -o nounset\nset -o pipefail\n\n### Hardcoded constants\n\nDEFAULT_CNI_VERSION=11112222v1.5.0-gke.3'\nDEFAULT_CNI_HASH_LINUX_AMD64='b53474f2a4109e9c54a4f526386a6311622e96b739109abdd77d7f063220c8be04f2b36e23f5c8eba37dc664b833b3a920acbfe04e170667835f30ccdbba0bbf'\nDEFAULT_CNI_HASH_LINUX_ARM64='32c0093c87fe46a4243d382b16184d98cd14411dfb590552baaad10d2ba115682c77e39ed60fffb9e06ed3e9ea666ee6618fd7ecbc81ba9f3b49e700991e5d38'\n\nDEFAULT_NPD_VERSION='v0.8.19-12-g5efc8884-gke.1'\nDEFAULT_NPD_HASH_AMD64='c9d652c18ab2e90f5b0de0384f0af7d9bb0abf14c7120828fdb8f1aad7950178195547cf9be49d4647e86366d2f4a462d2b9d3d7550840c48545a2268f97abd2'\nDEFAULT_NPD_HASH_ARM64='4520a9642525f6f271b76cfcb23a0d6a385860098d247aa63bc68b6b1e5aca198b50fd03c6354c8109e7f816260b47b4658ee70c617460dbb0263b7a7977e5a8'\n\nNPD_CUSTOM_PLUGINS_VERSION=\"v1.0.20\"\nNPD_CUSTOM_PLUGINS_TAR_AMD64_HASH=\"0907d1949013577cb13f90d10274e37f4ff6962fb97d23454b38562966f31d0d50da960278da7353215ecc6ec777b7a87c2972f3244ba7a8c9444282cc5dd84c\"\nNPD_CUSTOM_PLUGINS_TAR_ARM64_HASH=\"773062478605e5bf6d65c7e1374bff6b6cb2a99fc59ea46472c2fe4b15451f8547c740495961f1a9c50077ea67d16e32106733326d7e197dac60a07d8b05a375\"\n\nDEFAULT_CRICTL_VERSION='v1.31.1-gke.0'\nDEFAULT_CRICTL_AMD64_SHA512='7c0ea3355b53c79e00772cfdf0bf67d262a9a0e827fdcf5be956ff68be25b47d7cb5cd6b065e3de251efc7b4534961e37a37b9f0e3f1efa22dfe2b5149702889'\nDEFAULT_CRICTL_ARM64_SHA512='05c8a74117288def73c430aa7f207432c2b0e6f0560bb795f90debb65902a76e1d001e876a319cdf090c78ca4cbafa8021dd1a93e938aa74fd800677020446f6'\nDEFAULT_MOUNTER_ROOTFS_VERSION='v1.0.0'\nDEFAULT_MOUNTER_ROOTFS_TAR_AMD64_SHA512='631330b7fa911d67e400b1d014df65a7763667d4afd4ecefe11a4a89dc9b8be626e5610d53b536c255a3ab488408ab2da8a0699d9fdad280cb3aa24bc2f30ab0'\nDEFAULT_MOUNTER_ROOTFS_TAR_ARM64_SHA512='83cf9ab7961627359654131abd2d4c4b72875d395c50cda9e417149b2eb53b784dfe5c2f744ddbccfe516e36dd64c716d69d161d8bc8b4f42a9207fe676d0bc1'\n\nRIPTIDE_FUSE_VERSION=\"v0.237.1.patch\"\nRIPTIDE_FUSE_ARM64_SHA512='611a54c566cd156ee18f63b4f590cef6f044f4dd3f4ad77164a2f03e2ea00db1902c2253ac03eb760332aee214cf28a852f41075113b0350a478e01fcad641bd'\nRIPTIDE_FUSE_BIN_ARM64_SHA512='bf17276292fb7b9acf76a3b80a4f7023cf1e97f64df6feef23940be3dfdeeecdfacbaf8babc754a9280a9d22f0d1039eee3c0d59fcd0951b7a3228c35a68d4c8'\nRIPTIDE_FUSE_AMD64_SHA512='d28deb2df0ef7d60fe520113f4e59dd4d0238713b2e99d8147a3e101c8c2e91f830296601cdb1044880ac9709bd33f461b7c60fa301254889d733f7a653e569d'\nRIPTIDE_FUSE_BIN_AMD64_SHA512='d62c20fa299c738359b400da2171bafbcf4550b77de74dcfa53cf86b5a6c480b4ae91fe9c2cc564e188e4fb60f7cf3b6448199cd147105c655e37583a93c80e3'\n\nRIPTIDE_SNAPSHOTTER_VERSION=\"v1.31-1\"\nRIPTIDE_SNAPSHOTTER_SHA512='f8ea490a719e4e3dd3177f48f85e066802173e36a8bdcfcc1e5507f05c88ac8296fd9a82e79292e23007c7e574dc054d28ac405427c9f4eb9778270339bf24e8'\nRIPTIDE_SNAPSHOTTER_BIN_ARM64_SHA512='1d7d0dd3ce52f831adba1037142e6b315e2de7919e8fa4ab86892d353e2a642697915011c165a20386b047acf8c7a5764a9674569746f141f0376f0060671b9f'\nRIPTIDE_SNAPSHOTTER_BIN_AMD64_SHA512='1e81cee5ac33bef018029ddd39db307c3f0044bc9ac52621066094e05ea4e87ece75294be19de21875dbd2a65d1a52ce03f7b2fec132d785d6485e25ee90c597'\n\nAUTH_PROVIDER_GCP_VERSION=\"v0.0.2-gke.4\"\nAUTH_PROVIDER_GCP_HASH_LINUX_AMD64=\"156058e5b3994cba91c23831774033e0d505d6d8b80f43541ef6af91b320fd9dfaabe42ec8a8887b51d87104c2b57e1eb895649d681575ffc80dd9aee8e563db\"\nAUTH_PROVIDER_GCP_HASH_LINUX_ARM64=\"1aa3b0bea10a9755231989ffc150cbfa770f1d96932db7535473f7bfeb1108bafdae80202ae738d59495982512e716ff7366d5f414d0e76dd50519f98611f9ab\"\n\n# gke-exec-auth-plugin local version.\n# The URLs below are relative to ${STORAGE_ENDPOINT}/${EXEC_AUTH_PLUGIN_BUCKET}\nEXEC_AUTH_PLUGIN_BUCKET=\"gke-prod-binaries\"\nEXEC_AUTH_PLUGIN_VERSION=\"internal/gke-internal-branch-v1-31/c41916da792183068bb56af4129dbd4718fa1708\"\nEXEC_AUTH_PLUGIN_LINUX_AMD64_HASH=\"026795bdf3e8cb1d384e1f69d7f01ad35221fd57a2dc7e778d9a9847f0b987d3cce38f4fcc20234bba405a6796723687ca40c130837b7e74fafdd99f74566e9c\"\nEXEC_AUTH_PLUGIN_LINUX_ARM64_HASH=\"71aa357a8c3f7d4216a6a58d1a9a0f952df131bb2ba53d83308f2f234fdba7d165501b4842fbeaea9db0e0b3126b084538c44bf4c644733a3a578822b396d5f4\"\n\n###\n\n# Backend endpoints (configurable for TPC).\n# May be overridden when kube-env is sourced.\n#\n# NOTE: Endpoints should behave exactly like a GDU (Google Default Universe)\n# endpoint. E.g., An alternative `STORAGE_ENDPOINT` must have the same buckets\n# and paths as the `storage.googleapis.com` that this script depends on.\nSTORAGE_ENDPOINT=\"${STORAGE_ENDPOINT:-https://storage.googleapis.com}\"\nPGA_ENDPOINT=\"${PGA_ENDPOINT:-private.googleapis.com}\"\nKUBE_DOCKER_REGISTRY=\"${KUBE_DOCKER_REGISTRY:-gke.gcr.io}\"\n\n# Whether to configure private google access or not (defaults to true).\n# May be overridden when kube-env is sourced.\nCONFIGURE_PGA=\"${CONFIGURE_PGA:-true}\"\n\n# Standard curl flags.\nCURL_FLAGS='--fail --silent --show-error --retry 5 --retry-delay 3 --connect-timeout 10 --retry-connrefused'\n\n# This version needs to be the same as in gke/cluster/gce/gci/configure-helper.sh\nGKE_CONTAINERD_INFRA_CONTAINER=\"pause:3.8@sha256:880e63f94b145e46f1b1082bb71b85e21f16b99b180b9996407d61240ceb9830\"\n\n# Set max reboot retry 3 plus the inital boot count\nMAX_BOOT_COUNT=\"${MAX_BOOT_COUNT:-4}\"\n\nfunction set-broken-motd {\n  cat \u003e /etc/motd \u003c\u003cEOF\nBroken (or in progress) Kubernetes node setup! Check the cluster initialization status\nusing the following commands.\n\nMaster instance:\n  - sudo systemctl status kube-master-installation\n  - sudo systemctl status kube-master-configuration\n\nNode instance:\n  - sudo systemctl status kube-node-installation\n  - sudo systemctl status kube-node-configuration\nEOF\n}\n\n# A function that fetches a GCE metadata value and echoes it out.\n# Args:\n#   $1 : URL path after /computeMetadata/v1/ (without heading slash).\n#   $2 : An optional default value to echo out if the fetch fails.\n#\n# NOTE: this function is duplicated in configure-helper.sh, any changes here\n# should be duplicated there as well.\nfunction get-metadata-value {\n  local default=\"${2:-}\"\n\n  local status\n  # shellcheck disable=SC2086\n  curl ${CURL_FLAGS} \\\n    -H 'Metadata-Flavor: Google' \\\n    \"http://metadata/computeMetadata/v1/${1}\" \\\n  || status=\"$?\"\n  status=\"${status:-0}\"\n\n  if [[ \"${status}\" -eq 0 || -z \"${default}\" ]]; then\n    return \"${status}\"\n  else\n    echo \"${default}\"\n  fi\n}\n\n# A function to fetch kube-env from GCE metadata server\n# or using hurl on the master if available\nfunction download-kube-env {\n  (\n    umask 077\n    local kube_env_path=\"/tmp/kube-env.yaml\"\n    if [[ \"${KUBERNETES_MASTER:-}\" == \"true\" ]]; then\n      local kube_env_path=\"${KUBE_HOME}/kube-env.yaml\"\n      download-kube-env-hurl \"${kube_env_path}\"\n    else\n      local meta_path=\"http://metadata.google.internal/computeMetadata/v1/instance/attributes/kube-env\"\n      echo \"Downloading kube-env via GCE metadata from ${meta_path} to ${kube_env_path}\"\n      # shellcheck disable=SC2086\n      retry-forever 10 curl ${CURL_FLAGS} \\\n        -H \"X-Google-Metadata-Request: True\" \\\n        -o \"${kube_env_path}\" \\\n        \"${meta_path}\"\n    fi\n\n    # Convert the yaml format file into a shell-style file.\n    eval \"$(python3 -c '''\nimport pipes,sys,yaml\nitems = yaml.load(sys.stdin, Loader=yaml.BaseLoader).items()\nfor k, v in items:\n    print(\"readonly {var}={value}\".format(var=k, value=pipes.quote(str(v))))\n''' \u003c \"${kube_env_path}\" \u003e \"${KUBE_HOME}/kube-env\")\"\n\n    # Leave kube-env if we are a master\n    if [[ \"${KUBERNETES_MASTER:-}\" != \"true\" ]]; then\n      rm -f \"${kube_env_path}\"\n    fi\n  )\n}\n\n# A function to pull kube-env from HMS using hurl\nfunction download-kube-env-hurl {\n  local -r kube_env_path=\"$1\"\n  local -r endpoint=$(get-metadata-value \"instance/attributes/gke-api-endpoint\")\n  local -r kube_env_hms_path=$(get-metadata-value \"instance/attributes/kube-env-path\")\n\n  echo \"Downloading kube-env via hurl from ${kube_env_hms_path} to ${kube_env_path}\"\n  retry-forever 30 ${KUBE_HOME}/bin/hurl --hms_address $endpoint \\\n    --dst \"${kube_env_path}\" \\\n    \"${kube_env_hms_path}\"\n  chmod 600 \"${kube_env_path}\"\n}\n\nfunction download-kubelet-config {\n  local -r dest=\"$1\"\n  echo \"Downloading Kubelet config file, if it exists\"\n  # Fetch kubelet config file from GCE metadata server.\n  (\n    umask 077\n    local -r tmp_kubelet_config=\"/tmp/kubelet-config.yaml\"\n    # shellcheck disable=SC2086\n    retry-forever 10 curl ${CURL_FLAGS} \\\n      -H \"X-Google-Metadata-Request: True\" \\\n      -o \"${tmp_kubelet_config}\" \\\n      http://metadata.google.internal/computeMetadata/v1/instance/attributes/kubelet-config\n    # only write to the final location if curl succeeds\n    mv \"${tmp_kubelet_config}\" \"${dest}\"\n  )\n}\n\n# A function to pull kube-master-certs from HMS using hurl\nfunction download-kube-master-certs-hurl {\n  local -r endpoint=$(get-metadata-value \"instance/attributes/gke-api-endpoint\")\n  local -r tmp_kube_master_certs_path=\"/tmp/kube-master-certs.yaml\"\n  local -r kube_master_certs_path=\"${KUBE_HOME}/kube-master-certs\"\n  local -r kube_master_certs_hms_path=$(get-metadata-value \"instance/attributes/kube-master-certs-path\")\n\n  echo \"Downloading kube-master-certs via hurl from ${kube_master_certs_hms_path} to ${tmp_kube_master_certs_path}\"\n  retry-forever 30 ${KUBE_HOME}/bin/hurl --hms_address $endpoint \\\n    --dst \"${tmp_kube_master_certs_path}\" \\\n    \"${kube_master_certs_hms_path}\"\n\n  # Convert the yaml format file into a shell-style file.\n  eval \"$(python3 -c '''\nimport pipes,sys,yaml\nitems = yaml.load(sys.stdin, Loader=yaml.BaseLoader).items()\nfor k, v in items:\n    print(\"readonly {var}={value}\".format(var=k, value=pipes.quote(str(v))))\n''' \u003c \"${tmp_kube_master_certs_path}\" \u003e \"${kube_master_certs_path}\")\"\n\n  # Remove the temp certs and strip perms for other users\n  rm -f \"${tmp_kube_master_certs_path}\"\n  chmod 600 \"${kube_master_certs_path}\"\n}\n\nfunction validate-hash {\n  local -r file=\"$1\"\n  local -r expected=\"$2\"\n\n  actual_sha1=$(sha1sum \"${file}\" | awk '{ print $1 }') || true\n  actual_sha512=$(sha512sum \"${file}\" | awk '{ print $1 }') || true\n  if [[ \"${actual_sha1}\" != \"${expected}\" ]] && [[ \"${actual_sha512}\" != \"${expected}\" ]]; then\n    echo \"== ${file} corrupted, sha1 ${actual_sha1}/sha512 ${actual_sha512} doesn't match expected ${expected} ==\"\n    return 1\n  fi\n}\n\n# Get default service account credentials of the VM.\nGCE_METADATA_INTERNAL=\"http://metadata.google.internal/computeMetadata/v1/instance\"\nfunction get-credentials {\n  # shellcheck disable=SC2086\n  curl ${CURL_FLAGS} \\\n    -H \"Metadata-Flavor: Google\" \\\n    \"${GCE_METADATA_INTERNAL}/service-accounts/default/token\" \\\n  | python3 -c 'import sys; import json; print(json.loads(sys.stdin.read())[\"access_token\"])'\n}\n\nfunction valid-storage-scope {\n  # shellcheck disable=SC2086\n  curl ${CURL_FLAGS} \\\n    -H \"Metadata-Flavor: Google\" \\\n    \"${GCE_METADATA_INTERNAL}/service-accounts/default/scopes\" \\\n  | grep -E \"auth/devstorage|auth/cloud-platform\"\n}\n\n# Retry a download until we get it. Takes a hash and a set of URLs.\n#\n# $1 is the sha512/sha1 hash of the URL. Can be \"\" if the sha512/sha1 hash is unknown.\n# $2+ are the URLs to download.\n# env var FORCE_USE_CREDENTIAL indicates whether to force using credential.\nfunction download-or-bust {\n  if [[ \"${ARTIFACT_DOWNLOAD_RESTRICTED:-}\" == \"true\" ]]; then\n    echo \"Cannot download: $* as downloading is restricted, exiting\"\n    exit 1\n  fi\n\n  local -r hash=\"$1\"\n  shift 1\n\n  while true; do\n    for url in \"$@\"; do\n      local file=\"${url##*/}\"\n      rm -f \"${file}\"\n      # if the url belongs to GCS API we should use oauth2_token in the headers if the VM service account has storage scopes\n      local curl_headers=\"\"\n\n      if [[ \"$url\" =~ ^${STORAGE_ENDPOINT}/.* ]] || [[ \"${FORCE_USE_CREDENTIAL:-false}\" == \"true\" ]] ; then\n        local canUseCredentials=0\n\n        echo \"Getting the scope of service account configured for VM.\"\n        if ! valid-storage-scope ; then\n          canUseCredentials=1\n          # this behavior is preserved for backward compatibility. We want to fail fast if SA is not available\n          # and try to download without SA if scope does not exist on SA\n          echo \"No service account or service account without storage scope. Attempt to download without service account token.\"\n        fi\n\n        if [[ \"${canUseCredentials}\" == \"0\" ]] ; then\n          echo \"Getting the service account access token configured for VM.\"\n          local access_token=\"\";\n          if access_token=$(get-credentials); then\n            echo \"Service account access token is received. Downloading ${url} using this token.\"\n          else\n            echo \"Cannot get a service account token. Exiting.\"\n            exit 1\n          fi\n\n          curl_headers=${access_token:+Authorization: Bearer \"${access_token}\"}\n        fi\n      fi\n      if ! curl ${curl_headers:+-H \"${curl_headers}\"} -f --ipv4 -Lo \"${file}\" --connect-timeout 20 --retry 6 --retry-delay 10 --retry-connrefused \"${url}\"; then\n        echo \"== Failed to download ${url}. Retrying. ==\"\n      elif [[ -n \"${hash}\" ]] && ! validate-hash \"${file}\" \"${hash}\"; then\n        echo \"== Hash validation of ${url} failed. Retrying. ==\"\n      else\n        if [[ -n \"${hash}\" ]]; then\n          echo \"== Downloaded ${url} (HASH = ${hash}) ==\"\n        else\n          echo \"== Downloaded ${url} ==\"\n        fi\n        return\n      fi\n    done\n  done\n}\n\nfunction record-preload-info {\n  echo \"$1,$2\" \u003e\u003e \"${KUBE_HOME}/preload_info\"\n  echo \"Recording preload info for ${1} ${2}\"\n}\n\nfunction is-preloaded {\n  local -r key=$1\n  local -r value=$2\n\n  if ! grep -qs \"${key},${value}\" \"${KUBE_HOME}/preload_info\"; then\n    if [[ \"${ARTIFACT_DOWNLOAD_RESTRICTED:-}\" == \"true\" ]]; then\n      echo \"No preload record found for ${key} and ${value} and downloading is restricted, exiting\"\n      exit 1\n    fi\n    if [[ \"${KUBERNETES_MASTER:-}\" == \"true\" ]]; then\n      echo \"No preload record found for ${key} and ${value}\"\n    fi\n    return 1\n  fi\n}\n\nfunction is-ubuntu {\n  [[ -f \"/etc/os-release\" && $(grep ^NAME= /etc/os-release) == 'NAME=\"Ubuntu\"' ]]\n}\n\nfunction split-commas {\n  echo -e \"${1//,/'\\n'}\"\n}\n\nfunction remount-flexvolume-directory {\n  local -r flexvolume_plugin_dir=$1\n  mkdir -p \"$flexvolume_plugin_dir\"\n  mount --bind \"$flexvolume_plugin_dir\" \"$flexvolume_plugin_dir\"\n  mount -o remount,exec \"$flexvolume_plugin_dir\"\n}\n\nfunction install-gci-mounter-tools {\n  CONTAINERIZED_MOUNTER_HOME=\"${KUBE_HOME}/containerized_mounter\"\n  if [[ -n \"${MOUNTER_ROOTFS_VERSION:-}\" ]]; then\n      local -r mounter_rootfs_version=\"${MOUNTER_ROOTFS_VERSION}\"\n      local -r mounter_rootfs_tar_sha=\"${MOUNTER_ROOTFS_TAR_SHA512}\"\n  else\n    local -r mounter_rootfs_version=\"${DEFAULT_MOUNTER_ROOTFS_VERSION}\"\n    case \"${HOST_PLATFORM}/${HOST_ARCH}\" in\n      linux/amd64)\n        local -r mounter_rootfs_tar_sha=\"${DEFAULT_MOUNTER_ROOTFS_TAR_AMD64_SHA512}\"\n        ;;\n      linux/arm64)\n        local -r mounter_rootfs_tar_sha=\"${DEFAULT_MOUNTER_ROOTFS_TAR_ARM64_SHA512}\"\n        ;;\n      *)\n        echo \"Unrecognized version and platform/arch combination:\"\n        echo \"$mounter_rootfs_version $HOST_PLATFORM/$HOST_ARCH\"\n        echo \"Set MOUNTER_ROOTFS_VERSION and MOUNTER_ROOTFS_TAR_SHA512 to overwrite\"\n        exit 1\n        ;;\n    esac\n  fi\n\n  if is-preloaded \"mounter\" \"${mounter_rootfs_tar_sha}\"; then\n    echo \"mounter is preloaded.\"\n    return\n  fi\n\n  echo \"Downloading gci mounter tools.\"\n  mkdir -p \"${CONTAINERIZED_MOUNTER_HOME}\"\n  chmod a+x \"${CONTAINERIZED_MOUNTER_HOME}\"\n\n  # Copy the mounter binary downloaded with the k8s binaries tar file\n  cp \"${KUBE_HOME}/kubernetes/server/bin/mounter\" \"${CONTAINERIZED_MOUNTER_HOME}/mounter\"\n  chmod a+x \"${CONTAINERIZED_MOUNTER_HOME}/mounter\"\n  # Download the debian rootfs required for the mounter container\n  mkdir -p \"${CONTAINERIZED_MOUNTER_HOME}/rootfs\"\n  local -r mounter_rootfs_tar=\"containerized-mounter-${mounter_rootfs_version}_${HOST_PLATFORM}_${HOST_ARCH}.tar.gz\"\n  download-or-bust \"${mounter_rootfs_tar_sha}\" \"${STORAGE_ENDPOINT}/gke-release/containerized-mounter/${mounter_rootfs_version}/${mounter_rootfs_tar}\"\n  mv \"${KUBE_HOME}/${mounter_rootfs_tar}\" \"/tmp/${mounter_rootfs_tar}\"\n  tar xzf \"/tmp/${mounter_rootfs_tar}\" -C \"${CONTAINERIZED_MOUNTER_HOME}/rootfs\"\n  rm \"/tmp/${mounter_rootfs_tar}\"\n  mkdir -p \"${CONTAINERIZED_MOUNTER_HOME}/rootfs/var/lib/kubelet\"\n\n  record-preload-info \"mounter\" \"${mounter_rootfs_tar_sha}\"\n}\n\nfunction docker-installed {\n    if systemctl cat docker.service &\u003e /dev/null ; then\n        return 0\n    else\n        return 1\n    fi\n}\n\nfunction disable_aufs() {\n  # disable aufs module if aufs is loaded\n  if lsmod | grep \"aufs\" &\u003e /dev/null ; then\n    sudo modprobe -r aufs\n  fi\n}\n\nfunction detect_mtu {\n  local MTU=1460\n  if [[ \"${DETECT_MTU:-}\" == \"true\" ]];then\n    local default_nic=$(ip route get 8.8.8.8 | sed -nr \"s/.*dev ([^\\ ]+).*/\\1/p\")\n    if [ -f \"/sys/class/net/$default_nic/mtu\" ]; then\n      MTU=$(cat /sys/class/net/$default_nic/mtu)\n    fi\n  fi\n  echo $MTU\n}\n\n# This function cofigures docker. It has no conditional logic.\n# It will restart docker service so new settings will be picked up.\n# This method cannot be preloaded as the boot disk changes will not be persistet thru the reboots.\nfunction assemble-docker-flags {\n  # log the contents of the /etc/docker/daemon.json if already exists\n  if [ -f /etc/docker/daemon.json ]; then\n    echo \"Contents of the old docker config\"\n    cat /etc/docker/daemon.json\n  fi\n\n  disable_aufs\n\n  # COS and Ubuntu have different docker options configured as command line arguments.\n  # Use systemctl show docker to see the full list of options.\n  # When configuring Docker options you can use daemon.json or command line arguments\n  # The same option cannot be configured by both, even if it is a list option and can be repeated in the command line multiple times.\n  # This is why we are not simply configuring everything in daemon.json.\n\n  local MTU=\"$(detect_mtu)\"\n\n  # options to be set on COS, registry-mirror is pre-configured on COS\n  local os_specific_options=\"\\\"live-restore\\\": true,\\\n   \\\"storage-driver\\\": \\\"overlay2\\\",\\\n   \\\"mtu\\\": ${MTU},\"\n\n  if is-ubuntu; then\n    # Ubuntu already have everthing set\n    os_specific_options=\"\"\n  fi\n\n  # Important setting: set docker0 cidr to private ip address range to avoid conflict with cbr0 cidr range (\"bip\": \"169.254.123.1/24\")\n  cat \u003e /etc/docker/daemon.json \u003c\u003cEOF\n{\n  \"pidfile\": \"/var/run/docker.pid\",\n  \"iptables\": false,\n  \"ip-masq\": false,\n  \"log-level\": \"warn\",\n  \"bip\": \"169.254.123.1/24\",\n  \"log-driver\": \"json-file\",\n  ${os_specific_options}\n  \"log-opts\": {\n      \"max-size\": \"10m\",\n      \"max-file\": \"5\"\n  }\n}\nEOF\n\n  # Do not move to the daemon.json file for backward compatibility.\n  # Command line and config file options cannot be both defined and custoemr customization may break.\n  # insecure-registry setting was inherited from the past, see b/203231428. Keeping for backward compatibility.\n  echo \"DOCKER_OPTS=\\\"--registry-mirror=https://mirror.gcr.io --insecure-registry 10.0.0.0/8\\\"\" \u003e /etc/default/docker\n\n  echo \"Docker command line and configuration are updated. Restart docker to pick it up\"\n  systemctl restart docker\n}\n\n# Install node problem detector binary.\nfunction install-node-problem-detector {\n  if [[ -n \"${NODE_PROBLEM_DETECTOR_VERSION:-}\" ]]; then\n      local -r npd_version=\"${NODE_PROBLEM_DETECTOR_VERSION}\"\n      local -r npd_hash=\"${NODE_PROBLEM_DETECTOR_TAR_HASH}\"\n  else\n      local -r npd_version=\"${DEFAULT_NPD_VERSION}\"\n      case \"${HOST_PLATFORM}/${HOST_ARCH}\" in\n        linux/amd64)\n          local -r npd_hash=\"${DEFAULT_NPD_HASH_AMD64}\"\n          ;;\n        linux/arm64)\n          local -r npd_hash=\"${DEFAULT_NPD_HASH_ARM64}\"\n          ;;\n        # no other architectures are supported currently.\n        # Assumption is that this script only runs on linux,\n        # see cluster/gce/windows/k8s-node-setup.psm1 for windows\n        # https://github.com/kubernetes/node-problem-detector/releases/\n        *)\n          echo \"Unrecognized version and platform/arch combination:\"\n          echo \"$DEFAULT_NPD_VERSION $HOST_PLATFORM/$HOST_ARCH\"\n          echo \"Set NODE_PROBLEM_DETECTOR_VERSION and NODE_PROBLEM_DETECTOR_TAR_HASH to overwrite\"\n          exit 1\n          ;;\n      esac\n  fi\n  local -r npd_tar=\"node-problem-detector-${npd_version}-${HOST_PLATFORM}_${HOST_ARCH}.tar.gz\"\n\n  if is-preloaded \"${npd_tar}\" \"${npd_hash}\"; then\n    echo \"${npd_tar} is preloaded.\"\n    return\n  fi\n\n  echo \"Downloading ${npd_tar}.\"\n  local -r npd_release_path=\"${NODE_PROBLEM_DETECTOR_RELEASE_PATH:-${STORAGE_ENDPOINT}/gke-release}\"\n  download-or-bust \"${npd_hash}\" \"${npd_release_path}/node-problem-detector/${npd_tar}\"\n  local -r npd_dir=\"${KUBE_HOME}/node-problem-detector\"\n  mkdir -p \"${npd_dir}\"\n  tar xzf \"${KUBE_HOME}/${npd_tar}\" -C \"${npd_dir}\" --overwrite\n  mv \"${npd_dir}/bin\"/* \"${KUBE_BIN}\"\n  chmod a+x \"${KUBE_BIN}/node-problem-detector\"\n  rmdir \"${npd_dir}/bin\"\n  rm -f \"${KUBE_HOME}/${npd_tar}\"\n\n  record-preload-info \"${npd_tar}\" \"${npd_hash}\"\n}\n\n# Install node problem detector custom plugins.\nfunction install-npd-custom-plugins {\n  local -r version=\"${NPD_CUSTOM_PLUGINS_VERSION}\"\n  case \"${HOST_PLATFORM}/${HOST_ARCH}\" in\n    linux/amd64)\n      local -r hash=\"${NPD_CUSTOM_PLUGINS_TAR_AMD64_HASH}\"\n      ;;\n    linux/arm64)\n      local -r hash=\"${NPD_CUSTOM_PLUGINS_TAR_ARM64_HASH}\"\n      ;;\n    *)\n      echo \"Unrecognized version and platform/arch combination:\"\n      echo \"$NPD_CUSTOM_PLUGINS_VERSION $HOST_PLATFORM/$HOST_ARCH\"\n      exit 1\n  esac\n  local -r tar=\"npd-custom-plugins-${version}-${HOST_PLATFORM}-${HOST_ARCH}.tar.gz\"\n\n  if is-preloaded \"${tar}\" \"${hash}\"; then\n    echo \"${tar} is preloaded.\"\n    return\n  fi\n\n  echo \"Downloading ${tar}.\"\n  download-or-bust \"${hash}\" \"${STORAGE_ENDPOINT}/gke-release/npd-custom-plugins/${version}/${tar}\"\n  local -r dir=\"${KUBE_HOME}/npd-custom-plugins\"\n  mkdir -p \"${dir}\"\n  tar xzf \"${KUBE_HOME}/${tar}\" -C \"${dir}\" --overwrite\n  local -r kube_bin_dir=\"${KUBE_HOME}/bin\"\n  cp -r \"${dir}/bins\"/* \"${kube_bin_dir}\"\n  rm -f \"${KUBE_HOME}/${tar}\"\n\n  record-preload-info \"${tar}\" \"${hash}\"\n}\n\nfunction install-cni-binaries {\n  local -r cni_version=${CNI_VERSION:-$DEFAULT_CNI_VERSION}\n  if [[ -n \"${CNI_VERSION:-}\" ]]; then\n    local -r cni_hash=\"${CNI_HASH:-}\"\n  else\n    local -r cni_hash_var=\"DEFAULT_CNI_HASH_${HOST_PLATFORM^^}_${HOST_ARCH^^}\"\n    local -r cni_hash=\"${!cni_hash_var}\"\n  fi\n\n  local -r cni_tar=\"cni-plugins-${HOST_PLATFORM}-${HOST_ARCH}-${cni_version}.tgz\"\n  local -r cni_url=\"${STORAGE_ENDPOINT}/gke-release/cni-plugins/${cni_version}/${cni_tar}\"\n\n  if is-preloaded \"${cni_tar}\" \"${cni_hash}\"; then\n    echo \"${cni_tar} is preloaded.\"\n    return\n  fi\n\n  echo \"Downloading cni binaries\"\n  download-or-bust \"${cni_hash}\" \"${cni_url}\"\n  local -r cni_dir=\"${KUBE_HOME}/cni\"\n  mkdir -p \"${cni_dir}/bin\"\n  tar xzf \"${KUBE_HOME}/${cni_tar}\" -C \"${cni_dir}/bin\" --overwrite\n  mv \"${cni_dir}/bin\"/* \"${KUBE_BIN}\"\n  rmdir \"${cni_dir}/bin\"\n  rm -f \"${KUBE_HOME}/${cni_tar}\"\n\n  record-preload-info \"${cni_tar}\" \"${cni_hash}\"\n}\n\n# Install crictl binary.\n# Assumptions: HOST_PLATFORM and HOST_ARCH are specified by calling detect_host_info.\nfunction install-crictl {\n  if [[ -n \"${CRICTL_VERSION:-}\" ]]; then\n    local -r crictl_version=\"${CRICTL_VERSION}\"\n    local -r crictl_hash=\"${CRICTL_TAR_HASH}\"\n  else\n    local -r crictl_version=\"${DEFAULT_CRICTL_VERSION}\"\n    case \"${HOST_PLATFORM}/${HOST_ARCH}\" in\n      linux/amd64)\n        local -r crictl_hash=\"${DEFAULT_CRICTL_AMD64_SHA512}\"\n        ;;\n      linux/arm64)\n        local -r crictl_hash=\"${DEFAULT_CRICTL_ARM64_SHA512}\"\n        ;;\n      *)\n        echo \"Unrecognized version and platform/arch combination:\"\n        echo \"$DEFAULT_CRICTL_VERSION $HOST_PLATFORM/$HOST_ARCH\"\n        echo \"Set CRICTL_VERSION and CRICTL_TAR_HASH to overwrite\"\n        exit 1\n    esac\n  fi\n  local -r crictl=\"crictl-${crictl_version}-${HOST_PLATFORM}-${HOST_ARCH}.tar.gz\"\n\n  # Create crictl config file.\n  cat \u003e /etc/crictl.yaml \u003c\u003cEOF\nruntime-endpoint: ${CONTAINER_RUNTIME_ENDPOINT:-unix:///run/containerd/containerd.sock}\nEOF\n\n  if is-preloaded \"${crictl}\" \"${crictl_hash}\"; then\n    echo \"crictl is preloaded\"\n    return\n  fi\n\n  echo \"Downloading crictl\"\n  local -r crictl_path=\"${STORAGE_ENDPOINT}/gke-release/cri-tools/${crictl_version}\"\n  download-or-bust \"${crictl_hash}\" \"${crictl_path}/${crictl}\"\n  tar xf \"${crictl}\"\n  mv crictl \"${KUBE_BIN}/crictl\"\n  rm -f \"${crictl}\"\n\n  record-preload-info \"${crictl}\" \"${crictl_hash}\"\n}\n\nfunction preload-pause-image {\n  local -r pause_image=\"${KUBE_DOCKER_REGISTRY}/${GKE_CONTAINERD_INFRA_CONTAINER}\"\n  local pause_sha=\"${GKE_CONTAINERD_INFRA_CONTAINER#*@}\"\n  if [ -z \"$pause_sha\" ]; then\n    echo \"found no digest in GKE_CONTAINERD_INFRA_CONTAINER\"\n  else\n    for img in $(ctr -n=k8s.io images list -q | grep \"${pause_sha}\"); do\n      echo \"pause image ${img} of the same version is preloaded, retagging\"\n      if [[ \"${pause_image}\" != \"${img}\" ]]; then\n        ctr -n=k8s.io image tag --force ${img} ${pause_image}\n      fi\n      return\n    done\n  fi\n\n  # preloading pause image. It will be used in preloader and will be\n  # useful for staging builds where access_token is needed to pull the image\n  local access_token=\"\";\n\n  if access_token=$(get-credentials); then\n    ctr -n=k8s.io image pull --user=\"oauth2accesstoken:${access_token}\" \"${pause_image}\"\n  else\n    echo \"No access token. Pulling without it.\"\n    ctr -n=k8s.io image pull \"${pause_image}\"\n  fi\n  pin-docker-image \"pause\"\n}\n\nfunction install-exec-auth-plugin {\n  # We always use the URL/VERSION/HASH\n  # set at the top of this file,\n  # Values from kube-env are ignored in this version.\n  local -r plugin_base_url=\"${STORAGE_ENDPOINT}/${EXEC_AUTH_PLUGIN_BUCKET}/gke-exec-auth-plugin/${EXEC_AUTH_PLUGIN_VERSION}\"\n  case \"${HOST_PLATFORM}_${HOST_ARCH}\" in\n    linux_amd64)\n      local -r plugin_url=\"${plugin_base_url}/${HOST_PLATFORM}_${HOST_ARCH}/gke-exec-auth-plugin\"\n      local -r plugin_hash=\"${EXEC_AUTH_PLUGIN_LINUX_AMD64_HASH}\"\n      ;;\n\n    linux_arm64)\n      local -r plugin_url=\"${plugin_base_url}/${HOST_PLATFORM}_${HOST_ARCH}/gke-exec-auth-plugin\"\n      local -r plugin_hash=\"${EXEC_AUTH_PLUGIN_LINUX_ARM64_HASH}\"\n      ;;\n\n    *)\n      echo \"Unrecognized version and platform/arch combination: ${HOST_PLATFORM}/${HOST_ARCH}\"\n      exit 1\n  esac\n\n  if is-preloaded \"gke-exec-auth-plugin\" \"${plugin_hash}\"; then\n    echo \"gke-exec-auth-plugin is preloaded\"\n    return\n  fi\n\n  echo \"Downloading gke-exec-auth-plugin binary\"\n  download-or-bust \"${plugin_hash}\" \"${plugin_url}\"\n  mv \"${KUBE_HOME}/gke-exec-auth-plugin\" \"${KUBE_BIN}/gke-exec-auth-plugin\"\n  chmod a+x \"${KUBE_BIN}/gke-exec-auth-plugin\"\n\n  local -r license_url=\"${plugin_base_url}/LICENSE\"\n  echo \"Downloading gke-exec-auth-plugin license\"\n  download-or-bust \"\" \"${license_url}\"\n  mv \"${KUBE_HOME}/LICENSE\" \"${KUBE_BIN}/gke-exec-auth-plugin-license\"\n\n  record-preload-info \"gke-exec-auth-plugin\" \"${plugin_hash}\"\n}\n\nfunction install-kube-manifests {\n  # Put kube-system pods manifests in ${KUBE_HOME}/kube-manifests/.\n  local dst_dir=\"${KUBE_HOME}/kube-manifests\"\n  mkdir -p \"${dst_dir}\"\n  local manifests_tar_urls\n  while IFS= read -r url; do\n    manifests_tar_urls+=(\"$url\")\n  done \u003c \u003c(split-commas \"${KUBE_MANIFESTS_TAR_URL}\")\n  local -r manifests_tar=\"${manifests_tar_urls[0]##*/}\"\n  if [ -n \"${KUBE_MANIFESTS_TAR_HASH:-}\" ]; then\n    local -r manifests_tar_hash=\"${KUBE_MANIFESTS_TAR_HASH}\"\n  else\n    echo \"Downloading k8s manifests hash (not found in env)\"\n    download-or-bust \"\" \"${manifests_tar_urls[@]/.tar.gz/.tar.gz.sha512}\"\n    local -r manifests_tar_hash=$(cat \"${manifests_tar}.sha512\")\n  fi\n\n  if is-preloaded \"${manifests_tar}\" \"${manifests_tar_hash}\"; then\n    echo \"${manifests_tar} is preloaded.\"\n    return\n  fi\n\n  echo \"Downloading k8s manifests tar\"\n  download-or-bust \"${manifests_tar_hash}\" \"${manifests_tar_urls[@]}\"\n  tar xzf \"${KUBE_HOME}/${manifests_tar}\" -C \"${dst_dir}\" --overwrite\n  local -r kube_addon_registry=\"${KUBE_ADDON_REGISTRY:-k8s.gcr.io}\"\n  if [[ \"${kube_addon_registry}\" != \"k8s.gcr.io\" ]]; then\n    find \"${dst_dir}\" \\(-name '*.yaml' -or -name '*.yaml.in'\\) -print0 | \\\n      xargs -0 sed -ri \"s@(image:\\s.*)k8s.gcr.io@\\1${kube_addon_registry}@\"\n    find \"${dst_dir}\" \\(-name '*.manifest' -or -name '*.json'\\) -print0 | \\\n      xargs -0 sed -ri \"s@(image\\\":\\s+\\\")k8s.gcr.io@\\1${kube_addon_registry}@\"\n  fi\n  cp \"${dst_dir}/kubernetes/gci-trusty/gci-configure-helper.sh\" \"${KUBE_BIN}/configure-helper.sh\"\n  cp \"${dst_dir}/kubernetes/gci-trusty/configure-kubeapiserver.sh\" \"${KUBE_BIN}/configure-kubeapiserver.sh\"\n  if [[ -e \"${dst_dir}/kubernetes/gci-trusty/gke-internal-configure-helper.sh\" ]]; then\n    cp \"${dst_dir}/kubernetes/gci-trusty/gke-internal-configure-helper.sh\" \"${KUBE_BIN}/\"\n  fi\n  if [[ -e \"${dst_dir}/kubernetes/gci-trusty/node-registration-checker.sh\" ]]; then\n    cp \"${dst_dir}/kubernetes/gci-trusty/node-registration-checker.sh\" \"${KUBE_BIN}/\"\n  fi\n  cp \"${dst_dir}/kubernetes/gci-trusty/health-monitor.sh\" \"${KUBE_BIN}/health-monitor.sh\"\n  cp \"${dst_dir}/kubernetes/gci-trusty/networkd-monitor.sh\" \"${KUBE_BIN}/networkd-monitor.sh\"\n\n  rm -f \"${KUBE_HOME}/${manifests_tar}\"\n  rm -f \"${KUBE_HOME}/${manifests_tar}.sha512\"\n\n  record-preload-info \"${manifests_tar}\" \"${manifests_tar_hash}\"\n}\n\n# Installs hurl to ${KUBE_HOME}/bin/hurl if not already installed.\nfunction install-hurl {\n  cd \"${KUBE_HOME}\"\n\n  local -r hurl_bin=\"hurl\"\n  local -r hurl_gcs_att=\"instance/attributes/hurl-gcs-url\"\n  local -r hurl_gcs_url=${HURL_GCS_URL:-$(get-metadata-value \"${hurl_gcs_att}\")}\n  local -r hurl_hash=${HURL_HASH:-$(get-metadata-value \"instance/attributes/hurl-bin-hash\")}\n\n  ### Fallback to old logic in case hurl_hash is not set\n  # extracting version from url, example:\n  # $ echo \"https://storage.googleapis.com/gke-master-startup/hurl/gke_master_hurl_20230824.00_p0/hurl\" | sed -n 's/.*gke_master_hurl_\\(.*\\)\\/hurl/\\1/p'\n  # 20230824.00_p0\n  local -r hurl_version=$(echo \"${hurl_gcs_url}\" | sed -n 's/.*gke_master_hurl_\\(.*\\)\\/hurl/\\1/p')\n\n  local -r hurl_preload_digest=${hurl_hash:-$hurl_version}\n\n  if is-preloaded \"${hurl_bin}\" \"${hurl_preload_digest}\"; then\n    echo \"install-hurl: hurl already installed\"\n    return\n  fi\n\n  if [[ -z \"${hurl_gcs_url}\" ]]; then\n    # URL not present in GCE Instance Metadata\n    echo \"install-hurl: Unable to find GCE metadata ${hurl_gcs_att}\"\n    return\n  fi\n\n  # Download hurl binary from a GCS bucket.\n  echo \"install-hurl: Installing hurl from ${hurl_gcs_url} ... \"\n  FORCE_USE_CREDENTIAL=true download-or-bust \"${hurl_hash}\" \"${hurl_gcs_url}\"\n  if [[ -f \"${KUBE_HOME}/${hurl_bin}\" ]]; then\n    chmod a+x ${KUBE_HOME}/${hurl_bin}\n    mv \"${KUBE_HOME}/${hurl_bin}\" \"${KUBE_BIN}/${hurl_bin}\"\n    echo \"install-hurl: hurl installed to ${KUBE_BIN}/${hurl_bin}\"\n    record-preload-info \"${hurl_bin}\" \"${hurl_preload_digest}\"\n    return\n  fi\n}\n\nfunction install-k8s-pki {\n    local -r k8s_pki_url=\"${STORAGE_ENDPOINT}/${K8S_PKI_GCS_PATH}\"\n    local -r k8s_pki_hash=\"${K8S_PKI_HASH}\"\n\n    if is-preloaded \"k8s_pki\" \"${k8s_pki_hash}\"; then\n      echo \"k8s_pki is preloaded\"\n      return\n    fi\n\n    echo \"Downloading k8s_pki binary\"\n    download-or-bust \"${k8s_pki_hash}\" \"${k8s_pki_url}\"\n    mv \"${KUBE_HOME}/k8s_pki\" \"${KUBE_BIN}/k8s_pki\"\n    chmod a+x \"${KUBE_BIN}/k8s_pki\"\n\n    echo \"Record k8s_pki preload info\"\n    record-preload-info \"k8s_pki\" \"${k8s_pki_hash}\"\n}\n\n\nfunction install-auger {\n  echo \"Downloading auger binary\"\n  if [[ -f \"${KUBE_HOME}/bin/auger\" ]]; then\n    echo \"auger is already installed\"\n    return\n  fi\n  AUGER_STORE_PATH=\"${AUGER_STORE_PATH:-${STORAGE_ENDPOINT}/gke-release-staging/auger}\"\n  AUGER_VERSION=\"${AUGER_VERSION:-v1.0.0-gke.1}\"\n  download-or-bust \"\" \"${AUGER_STORE_PATH}/${AUGER_VERSION}/auger.sha1\"\n  sha1=\"$(cat auger.sha1)\"\n  readonly sha1 # Declare readonly separately to avoid masking error values.\n  rm -f \"auger.sha1\"\n  download-or-bust \"${sha1}\" \"${AUGER_STORE_PATH}/${AUGER_VERSION}/auger\"\n  mv \"${KUBE_HOME}/auger\" \"${KUBE_HOME}/bin/auger\"\n  chmod a+x \"${KUBE_HOME}/bin/auger\"\n  record-preload-info \"auger\" \"${sha1}\"\n}\n\n# Extract etcdctl binary from etcd image.\nfunction install-etcdctl {\n  echo \"Installing etcdctl binary\"\n  if [[ -f \"${KUBE_HOME}/bin/etcdctl\" ]]; then\n    echo \"etcdctl is already installed\"\n    return\n  fi\n  local -r etcd_image=\"gcr.io/gke-master-images/etcd:${ETCDCTL_VERSION}\"\n  container_id=\"$(docker create \"${etcd_image}\" sh)\"\n  readonly containerId\n  docker cp \"${container_id}:usr/local/bin/etcdctl\" \"${KUBE_HOME}/bin/etcdctl\"\n  chmod a+x \"${KUBE_HOME}/bin/etcdctl\"\n  docker rm \"${container_id}\"\n  docker rmi \"${etcd_image}\"\n}\n\nfunction install-gcfsd {\n  echo \"Downloading Riptide FUSE client\"\n  if is-preloaded \"gcfsd\" \"${RIPTIDE_FUSE_VERSION}\"; then\n    echo \"gcfsd is preloaded.\"\n    return\n  fi\n\n  if [[ \"${HOST_ARCH}\" == \"arm64\" ]]; then\n    RIPTIDE_FUSE_STORE_PATH=\"${STORAGE_ENDPOINT}/gke-release/gcfsd/${RIPTIDE_FUSE_VERSION}/arm64\"\n    TAR_SHA=\"${RIPTIDE_FUSE_ARM64_SHA512}\"\n    BIN_SHA=\"${RIPTIDE_FUSE_BIN_ARM64_SHA512}\"\n  else\n    RIPTIDE_FUSE_STORE_PATH=\"${STORAGE_ENDPOINT}/gke-release/gcfsd/${RIPTIDE_FUSE_VERSION}\"\n    TAR_SHA=\"${RIPTIDE_FUSE_AMD64_SHA512}\"\n    BIN_SHA=\"${RIPTIDE_FUSE_BIN_AMD64_SHA512}\"\n  fi\n\n  echo \"Downloading tarball for gcfsd\"\n  download-or-bust \"${TAR_SHA}\" \"${RIPTIDE_FUSE_STORE_PATH}/gcfsd.tar.gz\"\n\n  download-or-bust \"${BIN_SHA}\" \"${RIPTIDE_FUSE_STORE_PATH}/gcfsd\"\n  mv \"${KUBE_HOME}/gcfsd\" \"${KUBE_HOME}/bin/gcfsd\"\n  chmod a+x \"${KUBE_HOME}/bin/gcfsd\"\n  record-preload-info \"gcfsd\" \"${RIPTIDE_FUSE_VERSION}\"\n}\n\nfunction install-riptide-snapshotter {\n  echo \"Downloading Riptide snapshotter\"\n  if is-preloaded \"containerd-gcfs-grpc\" \"${RIPTIDE_SNAPSHOTTER_VERSION}\"; then\n    echo \"containerd-gcfs-grpc is preloaded.\"\n    return\n  fi\n  RIPTIDE_SNAPSHOTTER_STORE_PATH=\"${STORAGE_ENDPOINT}/gke-release/gcfs-snapshotter/${RIPTIDE_SNAPSHOTTER_VERSION}\"\n\n  echo \"Downloading tarball for riptide-snapshotter\"\n  download-or-bust \"${RIPTIDE_SNAPSHOTTER_SHA512}\" \"${RIPTIDE_SNAPSHOTTER_STORE_PATH}/containerd-gcfs-grpc.tar.gz\"\n\n  if [[ \"${HOST_ARCH}\" == \"arm64\" ]]; then\n    RIPTIDE_SNAPSHOTTER_BINARY=\"containerd-gcfs-grpc-arm64\"\n    RIPTIDE_SNAPSHOTTER_BIN_SHA512=\"${RIPTIDE_SNAPSHOTTER_BIN_ARM64_SHA512}\"\n  else\n    RIPTIDE_SNAPSHOTTER_BINARY=\"containerd-gcfs-grpc\"\n    RIPTIDE_SNAPSHOTTER_BIN_SHA512=\"${RIPTIDE_SNAPSHOTTER_BIN_AMD64_SHA512}\"\n  fi\n\n  download-or-bust \"${RIPTIDE_SNAPSHOTTER_BIN_SHA512}\" \"${RIPTIDE_SNAPSHOTTER_STORE_PATH}/${RIPTIDE_SNAPSHOTTER_BINARY}\"\n  mv \"${KUBE_HOME}/${RIPTIDE_SNAPSHOTTER_BINARY}\" \"${KUBE_HOME}/bin/containerd-gcfs-grpc\"\n  chmod a+x \"${KUBE_HOME}/bin/containerd-gcfs-grpc\"\n  record-preload-info \"containerd-gcfs-grpc\" \"${RIPTIDE_SNAPSHOTTER_VERSION}\"\n}\n\n# Install Riptide FUSE client and Riptide snapshotter\nfunction install-riptide {\n  install-gcfsd\n  install-riptide-snapshotter\n}\n\nfunction prepare-riptide-snapshotter-preloader {\n  source ${KUBE_BIN}/gke-internal-configure-helper.sh\n  log-wrap 'GKESetupContainerd' gke-setup-containerd\n}\n\nfunction install-auth-provider-gcp {\n  case \"${HOST_ARCH}\" in\n    amd64)\n      local -r auth_provider_gcp_hash=\"${AUTH_PROVIDER_GCP_HASH_LINUX_AMD64}\"\n      ;;\n    arm64)\n      local -r auth_provider_gcp_hash=\"${AUTH_PROVIDER_GCP_HASH_LINUX_ARM64}\"\n      ;;\n    *)\n      echo \"Unrecognized version and platform/arch combination: ${HOST_PLATFORM}/${HOST_ARCH}\"\n      exit 1\n  esac\n\n  if is-preloaded \"auth-provider-gcp\" \"${auth_provider_gcp_hash}\"; then\n    echo \"auth-provider-gcp is preloaded.\"\n    return\n  fi\n\n  local -r auth_provider_storage_url=\"${STORAGE_ENDPOINT}/gke-release/auth-provider-gcp/${AUTH_PROVIDER_GCP_VERSION}/${HOST_PLATFORM}_${HOST_ARCH}/auth-provider-gcp\"\n  echo \"Downloading auth-provider-gcp ${auth_provider_storage_url}\" .\n  download-or-bust \"${auth_provider_gcp_hash}\" \"${auth_provider_storage_url}\"\n\n  # Keep in sync with --image-credential-provider-bin-dir in cloud/kubernetes/distro/legacy/kube_env.go\n  mv \"${KUBE_HOME}/auth-provider-gcp\" \"${KUBE_BIN}\"\n  chmod a+x \"${KUBE_BIN}/auth-provider-gcp\"\n\n  record-preload-info \"auth-provider-gcp\" \"${auth_provider_gcp_hash}\"\n}\n\nfunction download-gvisor-installer {\n  local -r installer_image_hash=$1\n  local -r installer_image=\"${KUBE_DOCKER_REGISTRY}/gke-gvisor-installer@sha256:${installer_image_hash}\"\n  if access_token=$(get-credentials); then\n    \"${KUBE_BIN}/crictl\" pull --creds \"oauth2accesstoken:${access_token}\" \"${installer_image}\"\n  else\n    \"${KUBE_BIN}/crictl\" pull \"${installer_image}\"\n  fi\n}\n\nfunction configure-cgroup-mode {\n  if which cgroup_helper \u003e /dev/null 2\u003e&1; then\n    if [[ \"${CGROUP_MODE:-}\" == \"v1\" ]] && cgroup_helper show | grep -q 'unified'; then\n      cgroup_helper set hybrid\n      echo \"set cgroup config to hybrid, now rebooting...\"\n      reboot\n    elif [[ \"${CGROUP_MODE:-}\" == \"v2\" ]] && cgroup_helper show | grep -q 'hybrid'; then\n      cgroup_helper set unified\n      echo \"set cgroup config to unified, now rebooting...\"\n      reboot\n    fi\n  fi\n}\n\n# To improve the shieded VM reliability b/327650100\nfunction check-tpm-file {\n  if [[ -z \"${TPM_BOOTSTRAP_KEY:-}\" ]]; then\n    echo \"TPM_BOOTSTRAP_KEY is empty, thus vTPM is disabled, skip tpm file check\"\n    return 0\n  else\n    echo \"TPM_BOOTSTRAP_KEY is not empty, thus vTPM is enabled, checking tpm file\"\n    if [[ -e \"/dev/tpm0\" ]]; then\n      echo \"/dev/tpm0 exists.\"\n      return 0\n    else\n      echo \"/dev/tpm0 doesn't exist.\"\n      return 1\n    fi\n  fi\n}\n\nfunction detect-reboot-needed {\n  # Exit if it is on the master\n  if [[ \"${KUBERNETES_MASTER:-}\" == \"true\" ]]; then\n    return\n  fi\n\n  if [[ \"${ENABLE_BEST_EFFORT_NODE_REBOOT:-}\" == \"true\" ]]; then\n    if check-tpm-file; then\n      echo \"TPM is present; continuing bootstrap...\"\n      return\n    fi\n\n    echo \"TPM file check doesn't pass!\"\n    if ! REBOOT_HISTORY=$(journalctl --list-boots --quiet | wc -l); then\n      echo \"skip reboot attempt due to the journalctl error\"\n      return\n    fi\n    if [[ $(($REBOOT_HISTORY)) -gt ${MAX_BOOT_COUNT} ]]; then\n      echo \"best effort reboot attempt ${REBOOT_HISTORY} exceed ${MAX_BOOT_COUNT}! stop rebooting!\"\n    else\n      # write to a persistent file after reboot for NPD reporting event\n      # used in npd-custom-plugins/configs/node-reboot-monitor.json\n      mkdir -p /var/lib/gke\n      echo '1' \u003e\u003e /var/lib/gke/best_effort_reboot_marker\n      echo \"best effort reboot attempt ${REBOOT_HISTORY}! rebooting...\"\n      reboot\n    fi\n  fi\n}\n\n# A helper function for loading a docker image. It keeps trying up to 5 times.\n#\n# $1: Full path of the docker image\nfunction try-load-docker-image {\n  local -r img=$1\n  echo \"Try to load docker image file ${img}\"\n  # Temporarily turn off errexit, because we don't want to exit on first failure.\n  set +e\n  local -r max_attempts=5\n  local -i attempt_num=1\n\n  if [[ \"${CONTAINER_RUNTIME_NAME:-}\" == \"containerd\" || \"${CONTAINERD_TEST:-}\"  == \"containerd\" ]]; then\n    load_image_command=${LOAD_IMAGE_COMMAND:-ctr -n=k8s.io images import}\n  else\n    load_image_command=\"${LOAD_IMAGE_COMMAND:-}\"\n  fi\n\n  # Deliberately word split load_image_command\n  # shellcheck disable=SC2086\n  until timeout 30 ${load_image_command} \"${img}\"; do\n    if [[ \"${attempt_num}\" == \"${max_attempts}\" ]]; then\n      echo \"Fail to load docker image file ${img} using ${load_image_command} after ${max_attempts} retries. Exit!!\"\n      exit 1\n    else\n      attempt_num=$((attempt_num+1))\n      sleep 5\n    fi\n  done\n  # Re-enable errexit.\n  set -e\n}\n\n# Loads kube-system docker images. It is better to do it before starting kubelet,\n# as kubelet will restart docker daemon, which may interfere with loading images.\nfunction load-docker-images {\n  echo \"Start loading kube-system docker images\"\n  local -r img_dir=\"${KUBE_HOME}/kube-docker-files\"\n  if [[ \"${KUBERNETES_MASTER:-}\" == \"true\" ]]; then\n    try-load-docker-image \"${img_dir}/kube-apiserver.tar\"\n    try-load-docker-image \"${img_dir}/kube-controller-manager.tar\"\n    try-load-docker-image \"${img_dir}/kube-scheduler.tar\"\n  else\n    try-load-docker-image \"${img_dir}/kube-proxy.tar\"\n  fi\n}\n\n# A helper function for retagging a docker image with new tag and new registry.\n# $1: Image prefix\n# $2: Image tag\n# $3: Destination tag\n# $4: Destination registry\nfunction retag-docker-image {\n  local -r img_prefix=$1\n  local -r img_tag=$2\n  local -r dest_tag=$3\n  local -r dest_registry=$4\n  echo \"Retagging all images with prefix: ${img_prefix} and tag: ${img_tag} with new tag: ${dest_tag} and new registry: ${dest_registry}\"\n  local src_img=\"\"\n  for src_img in $(ctr -n=k8s.io images list -q | grep \"/${img_prefix}\" | grep \":${img_tag}$\"); do\n    dest_img=${src_img/:${img_tag}/:${dest_tag}}\n    dest_img=${dest_registry}/${dest_img##*/}\n    if [[ \"${dest_img}\" != \"${src_img}\" ]]; then\n      cmd=\"ctr -n=k8s.io image tag --force ${src_img} ${dest_img}\"\n      echo \"Retag command: ${cmd}\"\n      ${cmd}\n    fi\n  done\n}\n\n# Retags kube-system docker images with passed in kube-apiserver/kubelet versions.\nfunction retag-docker-images {\n  echo \"Start retagging kube-system docker images\"\n  local src_tag=\"\"\n  local dest_tag=\"\"\n  if [[ \"${KUBERNETES_MASTER:-}\" == \"true\" ]]; then\n    src_tag=$(cat /home/kubernetes/kube-docker-files/kube-apiserver.docker_tag)\n    # Keep the tag the same unless overridden\n    dest_tag=\"${src_tag}\"\n    if [[ -n \"${KUBE_APISERVER_VERSION:-}\" ]]; then\n      # Docker tags cannot contain '+', make CI versions a valid docker tag.\n      dest_tag=${KUBE_APISERVER_VERSION/+/_}\n    fi\n    retag-docker-image \"kube-apiserver\" \"${src_tag}\" \"${dest_tag}\" \"${KUBE_DOCKER_REGISTRY}\"\n    retag-docker-image \"kube-controller-manager\" \"${src_tag}\" \"${dest_tag}\" \"${KUBE_DOCKER_REGISTRY}\"\n    retag-docker-image \"kube-scheduler\" \"${src_tag}\" \"${dest_tag}\" \"${KUBE_DOCKER_REGISTRY}\"\n  else\n    src_tag=$(cat /home/kubernetes/kube-docker-files/kube-proxy.docker_tag)\n    # Keep the tag the same unless overridden\n    dest_tag=\"${src_tag}\"\n    if [[ -n \"${KUBELET_VERSION:-}\" ]]; then\n      # Docker tags cannot contain '+', make CI versions a valid docker tag.\n      dest_tag=${KUBELET_VERSION/+/_}\n    fi\n    retag-docker-image \"kube-proxy\" \"${src_tag}\" \"${dest_tag}\" \"${KUBE_DOCKER_REGISTRY}\"\n  fi\n}\n\nfunction ensure-container-runtime {\n  if [[ \"${CONTAINER_RUNTIME}\" == \"docker\" ]]; then\n    echo \"Dockershim is not supported. Container runtime must be set to containerd\"\n    exit 2\n  fi\n}\n\nfunction pin-docker-image {\n  local -r img_prefix=$1\n  echo \"Pinning: ${img_prefix}\"\n  for img in $(ctr -n=k8s.io images list -q | grep \"/${img_prefix}\"); do\n    cmd=\"ctr -n k8s.io images label ${img} io.cri-containerd.pinned=pinned\"\n    ${cmd}\n  done\n}\n\nfunction pin-docker-images {\n  if [[ \"${KUBERNETES_MASTER:-}\" == \"true\" ]]; then\n    pin-docker-image \"kube-apiserver\"\n    pin-docker-image \"kube-controller-manager\"\n    pin-docker-image \"kube-scheduler\"\n  else\n    pin-docker-image \"kube-proxy\"\n  fi\n}\n\n# Downloads kubernetes binaries and kube-system manifest tarball, unpacks them,\n# and places them into suitable directories. Files are placed in /home/kubernetes.\nfunction install-kube-binary-config {\n  cd \"${KUBE_HOME}\"\n  local server_binary_tar_urls\n  while IFS= read -r url; do\n    server_binary_tar_urls+=(\"$url\")\n  done \u003c \u003c(split-commas \"${SERVER_BINARY_TAR_URL}\")\n  local -r server_binary_tar=\"${server_binary_tar_urls[0]##*/}\"\n  if [[ -n \"${SERVER_BINARY_TAR_HASH:-}\" ]]; then\n    local -r server_binary_tar_hash=\"${SERVER_BINARY_TAR_HASH}\"\n  else\n    echo \"Downloading binary release sha512 (not found in env)\"\n    download-or-bust \"\" \"${server_binary_tar_urls[@]/.tar.gz/.tar.gz.sha512}\"\n    local -r server_binary_tar_hash=$(cat \"${server_binary_tar}.sha512\")\n  fi\n\n  if is-preloaded \"${server_binary_tar}\" \"${server_binary_tar_hash}\"; then\n    echo \"${server_binary_tar} is preloaded.\"\n  else\n    echo \"Downloading binary release tar\"\n    download-or-bust \"${server_binary_tar_hash}\" \"${server_binary_tar_urls[@]}\"\n    tar xzf \"${KUBE_HOME}/${server_binary_tar}\" -C \"${KUBE_HOME}\" --overwrite\n    # Copy docker_tag and image files to ${KUBE_HOME}/kube-docker-files.\n    local -r src_dir=\"${KUBE_HOME}/kubernetes/server/bin\"\n    local dst_dir=\"${KUBE_HOME}/kube-docker-files\"\n    mkdir -p \"${dst_dir}\"\n    cp \"${src_dir}/\"*.docker_tag \"${dst_dir}\"\n    if [[ \"${KUBERNETES_MASTER:-}\" == \"false\" ]]; then\n      cp \"${src_dir}/kube-proxy.tar\" \"${dst_dir}\"\n    else\n      cp \"${src_dir}/kube-apiserver.tar\" \"${dst_dir}\"\n      cp \"${src_dir}/kube-controller-manager.tar\" \"${dst_dir}\"\n      cp \"${src_dir}/kube-scheduler.tar\" \"${dst_dir}\"\n      cp -r \"${KUBE_HOME}/kubernetes/addons\" \"${dst_dir}\"\n    fi\n    load-docker-images\n    mv \"${src_dir}/kubelet\" \"${KUBE_BIN}\"\n    mv \"${src_dir}/kubectl\" \"${KUBE_BIN}\"\n\n    # Some older images have LICENSES baked-in as a file. Presumably they will\n    # have the directory baked-in eventually.\n    rm -rf \"${KUBE_HOME}\"/LICENSES\n    mv \"${KUBE_HOME}/kubernetes/LICENSES\" \"${KUBE_HOME}\"\n    mv \"${KUBE_HOME}/kubernetes/kubernetes-src.tar.gz\" \"${KUBE_HOME}\"\n\n    # Pin docker images to avoid GC\n    pin-docker-images\n\n    record-preload-info \"${server_binary_tar}\" \"${server_binary_tar_hash}\"\n  fi\n\n  retag-docker-images\n\n  if [[ \"${NETWORK_PROVIDER:-}\" == \"kubenet\" ]] || \\\n     [[ \"${NETWORK_PROVIDER:-}\" == \"cni\" ]]; then\n    install-cni-binaries\n  fi\n\n  # Put kube-system pods manifests in ${KUBE_HOME}/kube-manifests/.\n  install-kube-manifests\n  chmod -R 755 \"${KUBE_BIN}\"\n\n  # Install gci mounter related artifacts to allow mounting storage volumes in GCI\n  install-gci-mounter-tools\n\n  # Remount the Flexvolume directory with the \"exec\" option, if needed.\n  if [[ \"${REMOUNT_VOLUME_PLUGIN_DIR:-}\" == \"true\" && -n \"${VOLUME_PLUGIN_DIR:-}\" ]]; then\n    remount-flexvolume-directory \"${VOLUME_PLUGIN_DIR}\"\n  fi\n\n  # Install crictl on each node.\n  install-crictl\n\n  # Preload pause image\n  preload-pause-image\n\n  # Copy health check binaries to a tmpfs mount to reduce block IO usage.\n  setup-shm-healthcheck-binaries\n\n  # TODO(awly): include the binary and license in the OS image.\n  install-exec-auth-plugin\n\n  if [[ \"${KUBERNETES_MASTER:-}\" == \"false\" ]] && \\\n     [[ \"${ENABLE_NODE_PROBLEM_DETECTOR:-}\" == \"standalone\" ]]; then\n    install-node-problem-detector\n    install-npd-custom-plugins\n  fi\n\n  # Clean up.\n  rm -rf \"${KUBE_HOME}/kubernetes\"\n  rm -f \"${KUBE_HOME}/${server_binary_tar}\"\n  rm -f \"${KUBE_HOME}/${server_binary_tar}.sha512\"\n}\n\nfunction setup-shm-healthcheck-binaries() {\n  if [[ \"${KUBERNETES_MASTER:-}\" == \"true\" ]]; then\n    return\n  fi\n  if [[ \"${ENABLE_SHM_HEALTHCHECK_BINARIES:-}\" != \"true\" ]];then\n    return\n  fi\n\n  local -r shm_dir=\"${HEALTHCHECK_SHM_DIR:-/dev/kube_shm}\"\n  local -r shm_bin_dir=\"${shm_dir}/bin\"\n\n  mkdir -p \"$shm_dir\"\n  mount -t tmpfs -o exec none \"$shm_dir\"\n  mkdir \"${shm_bin_dir}\"\n\n  cp -f \"${KUBE_BIN}/crictl\" \"${shm_bin_dir}/crictl\"\n  cp -f \"$(which curl)\" \"${shm_bin_dir}/curl\"\n}\n\nfunction configure-pga-if-needed() {\n  echo \"Detecting connectivity to ${STORAGE_ENDPOINT}...\"\n  local status=0\n  curl --ipv4 -L --connect-timeout 10 --retry 3  --retry-connrefused ${STORAGE_ENDPOINT} || status=\"$?\"\n  # connection is refused(7) or timeout(28).\n  if [[ \"${status}\" == \"7\" || \"${status}\" == \"28\" ]]; then\n    status=0\n    local pga_ip\n    pga_ip=`curl ${PGA_ENDPOINT} -w '%{remote_ip}' --connect-timeout 10 -s -o /dev/null` || status=\"$?\"\n    registry_domain=\"$(echo \"${KUBE_DOCKER_REGISTRY}\" | cut -d '/' -f 1)\"\n    if [[ \"${status}\" == \"0\" ]]; then\n      echo \"Configure /etc/hosts to use private google access\"\n      echo \"$pga_ip ${STORAGE_ENDPOINT#https://}\" \u003e\u003e /etc/hosts\n      echo \"$pga_ip ${registry_domain}\" \u003e\u003e /etc/hosts\n      # continue pga support for domain gke.gcr.io\n      echo \"$pga_ip gke.gcr.io\" \u003e\u003e /etc/hosts\n    fi\n  fi\n}\n\n# This function detects the platform/arch of the machine where the script runs,\n# and sets the HOST_PLATFORM and HOST_ARCH environment variables accordingly.\n# Callers can specify HOST_PLATFORM_OVERRIDE and HOST_ARCH_OVERRIDE to skip the detection.\n# This function is adapted from the detect_client_info function in cluster/get-kube-binaries.sh\n# and kube::util::host_os, kube::util::host_arch functions in hack/lib/util.sh\n# This function should be synced with detect_host_info in ./configure-helper.sh\nfunction detect_host_info() {\n  HOST_PLATFORM=${HOST_PLATFORM_OVERRIDE:-\"$(uname -s)\"}\n  case \"${HOST_PLATFORM}\" in\n    Linux|linux)\n      HOST_PLATFORM=\"linux\"\n      ;;\n    *)\n      echo \"Unknown, unsupported platform: ${HOST_PLATFORM}.\" \u003e&2\n      echo \"Supported platform(s): linux.\" \u003e&2\n      echo \"Bailing out.\" \u003e&2\n      exit 2\n  esac\n\n  HOST_ARCH=${HOST_ARCH_OVERRIDE:-\"$(uname -m)\"}\n  case \"${HOST_ARCH}\" in\n    x86_64*|i?86_64*|amd64*)\n      HOST_ARCH=\"amd64\"\n      ;;\n    aHOST_arch64*|aarch64*|arm64*)\n      HOST_ARCH=\"arm64\"\n      ;;\n    *)\n      echo \"Unknown, unsupported architecture (${HOST_ARCH}).\" \u003e&2\n      echo \"Supported architecture(s): amd64 and arm64.\" \u003e&2\n      echo \"Bailing out.\" \u003e&2\n      exit 2\n      ;;\n  esac\n}\n\n# Retries a command forever with a delay between retries.\n# Args:\n#  $1    : delay between retries, in seconds.\n#  $2... : the command to run.\nfunction retry-forever {\n  local -r delay=\"$1\"\n  shift 1\n\n  until \"$@\"; do\n    echo \"== $* failed, retrying after ${delay}s\"\n    sleep \"${delay}\"\n  done\n}\n\n# Initializes variables used by the log-* functions.\n#\n# get-metadata-value must be defined before calling this function.\n#\n# NOTE: this function is duplicated in configure-helper.sh, any changes here\n# should be duplicated there as well.\nfunction log-init {\n  # Used by log-* functions.\n  LOG_CLUSTER_ID=${LOG_CLUSTER_ID:-$(get-metadata-value 'instance/attributes/cluster-uid' 'get-metadata-value-error')}\n  LOG_INSTANCE_NAME=$(hostname || echo 'hostname-error')\n  LOG_BOOT_ID=$(journalctl --list-boots | grep -E '^ *0' | awk '{print $2}' || echo 'journalctl-error')\n  declare -Ag LOG_START_TIMES\n  declare -ag LOG_TRAP_STACK\n\n  LOG_STATUS_STARTED='STARTED'\n  LOG_STATUS_COMPLETED='COMPLETED'\n  LOG_STATUS_ERROR='ERROR'\n}\n\n# Sets an EXIT trap.\n# Args:\n#   $1:... : the trap command.\n#\n# NOTE: this function is duplicated in configure-helper.sh, any changes here\n# should be duplicated there as well.\nfunction log-trap-push {\n  local t=\"${*:1}\"\n  LOG_TRAP_STACK+=(\"${t}\")\n  # shellcheck disable=2064\n  trap \"${t}\" EXIT\n}\n\n# Removes and restores an EXIT trap.\n#\n# NOTE: this function is duplicated in configure-helper.sh, any changes here\n# should be duplicated there as well.\nfunction log-trap-pop {\n  # Remove current trap.\n  unset 'LOG_TRAP_STACK[-1]'\n\n  # Restore previous trap.\n  if [ ${#LOG_TRAP_STACK[@]} -ne 0 ]; then\n    local t=\"${LOG_TRAP_STACK[-1]}\"\n    # shellcheck disable=2064\n    trap \"${t}\" EXIT\n  else\n    # If no traps in stack, clear.\n    trap EXIT\n  fi\n}\n\n# Logs the end of a bootstrap step that errored.\n# Args:\n#  $1 : bootstrap step name.\n#\n# NOTE: this function is duplicated in configure-helper.sh, any changes here\n# should be duplicated there as well.\nfunction log-error {\n  local bootstep=\"$1\"\n\n  log-proto \"${bootstep}\" \"${LOG_STATUS_ERROR}\" \"encountered non-zero exit code\"\n}\n\n# Wraps a command with bootstrap logging.\n# Args:\n#   $1    : bootstrap step name.\n#   $2... : the command to run.\n#\n# NOTE: this function is duplicated in configure-helper.sh, any changes here\n# should be duplicated there as well.\nfunction log-wrap {\n  local bootstep=\"$1\"\n  local command=\"${*:2}\"\n\n  log-trap-push \"log-error ${bootstep}\"\n  log-proto \"${bootstep}\" \"${LOG_STATUS_STARTED}\"\n  $command\n  log-proto \"${bootstep}\" \"${LOG_STATUS_COMPLETED}\"\n  log-trap-pop\n}\n\n# Logs a bootstrap step start. Prefer log-wrap.\n# Args:\n#   $1 : bootstrap step name.\n#\n# NOTE: this function is duplicated in configure-helper.sh, any changes here\n# should be duplicated there as well.\nfunction log-start {\n  local bootstep=\"$1\"\n\n  log-trap-push \"log-error ${bootstep}\"\n  log-proto \"${bootstep}\" \"${LOG_STATUS_STARTED}\"\n}\n\n# Logs a bootstrap step end. Prefer log-wrap.\n# Args:\n#   $1 : bootstrap step name.\n#\n# NOTE: this function is duplicated in configure-helper.sh, any changes here\n# should be duplicated there as well.\nfunction log-end {\n  local bootstep=\"$1\"\n\n  log-proto \"${bootstep}\" \"${LOG_STATUS_COMPLETED}\"\n  log-trap-pop\n}\n\n# Writes a log proto to stdout.\n# Args:\n#   $1: bootstrap step name.\n#   $2: status. Either 'STARTED', 'COMPLETED', or 'ERROR'.\n#   $3: optional status reason.\n#\n# NOTE: this function is duplicated in configure-helper.sh, any changes here\n# should be duplicated there as well.\nfunction log-proto {\n  local bootstep=\"$1\"\n  local status=\"$2\"\n  local status_reason=\"${3:-}\"\n\n  # Get current time.\n  local current_time\n  current_time=\"$(date --utc '+%s.%N')\"\n  # ...formatted as UTC RFC 3339.\n  local timestamp\n  timestamp=\"$(date --utc --date=\"@${current_time}\" '+%FT%T.%NZ')\"\n\n  # Calculate latency.\n  local latency='null'\n  if [ \"${status}\" == \"${LOG_STATUS_STARTED}\" ]; then\n    LOG_START_TIMES[\"${bootstep}\"]=\"${current_time}\"\n  else\n    local start_time=\"${LOG_START_TIMES[\"${bootstep}\"]}\"\n    unset 'LOG_START_TIMES['\"${bootstep}\"']'\n\n    # Bash cannot do non-integer math, shell out to awk.\n    latency=\"$(echo \"${current_time} ${start_time}\" | awk '{print $1 - $2}')s\"\n\n    # The default latency is null which cannot be wrapped as a string so we must\n    # do it here instead of the printf.\n    latency=\"\\\"${latency}\\\"\"\n  fi\n\n  printf '[cloud.kubernetes.monitoring.proto.SerialportLog] {\"cluster_hash\":\"%s\",\"vm_instance_name\":\"%s\",\"boot_id\":\"%s\",\"timestamp\":\"%s\",\"bootstrap_status\":{\"step_name\":\"%s\",\"status\":\"%s\",\"status_reason\":\"%s\",\"latency\":%s}}\\n' \\\n  \"${LOG_CLUSTER_ID}\" \"${LOG_INSTANCE_NAME}\" \"${LOG_BOOT_ID}\" \"${timestamp}\" \"${bootstep}\" \"${status}\" \"${status_reason}\" \"${latency}\"\n}\n\n# Prelaod components for both - preloader and runtime\n# Variables needed for this function to work will be set by the preloader\nfunction preload {\n  cd \"${KUBE_HOME}\"\n  if [[ \"${ENABLE_AUTH_PROVIDER_GCP:-\"\"}\" == \"true\" ]]; then\n    log-wrap 'InstallExternalCredentialProvider' install-auth-provider-gcp\n  fi\n\n  if [[ \"${KUBERNETES_MASTER:-}\" == \"true\" ]]; then\n    log-wrap 'InstallHurl' install-hurl\n  fi\n\n  if [[ \"${KUBERNETES_MASTER:-}\" == \"true\" && -n \"${K8S_PKI_GCS_PATH:-}\" ]]; then\n    log-wrap \"InstallK8sPki\" install-k8s-pki\n  fi\n\n  if [[ \"${KUBERNETES_MASTER:-}\" != \"true\" && -n \"${GVISOR_INSTALLER_IMAGE_HASH:-}\" ]]; then\n    log-wrap 'DownloadGvisorInstaller' download-gvisor-installer \"${GVISOR_INSTALLER_IMAGE_HASH}\"\n  fi\n}\n\n######### Main Function ##########\nlog-init\ndetect_host_info\n\n# Preloader will source this script, and skip the main function. The preloader\n# will choose what to preload by calling install-X functions directly.\n# When configure.sh is sourced by the preload script, $0 and $BASH_SOURCE are\n# different. $BASH_SOURCE still contains the path of configure.sh, while $0 is\n# the path of the preload script.\nif [[ \"$0\" != \"$BASH_SOURCE\" && \"${IS_PRELOADER:-\"false\"}\" == \"true\" ]]; then\n  # preload common components\n  preload\n  echo \"Running in preloader instead of VM bootsrapping. Skipping installation steps as preloader script will source configure.sh and call all non-common functions.\"\n  return\nfi\n\nlog-start 'ConfigureMain'\necho \"Start to install kubernetes files\"\n\n# if install fails, message-of-the-day (motd) will warn at login shell\nlog-wrap 'SetBrokenMotd' set-broken-motd\n\nKUBE_HOME=\"/home/kubernetes\"\nKUBE_BIN=\"${KUBE_HOME}/bin\"\n\nif [[ \"${KUBERNETES_MASTER:-}\" == \"true\" ]]; then\n  if [[ \"${IS_PRELOADER:-}\" != \"true\" ]] &&\\\n     grep -qs \"PRELOADED,\" \"${KUBE_HOME}/preload_info\" &&\\\n     [[ $(get-metadata-value \"instance/attributes/fail-on-artifact-mismatch\" \"false\") == \"true\" ]]; then\n       # Disallow artifact downloads when:\n       # - running on master VMs\n       # - && not in preloader (running in bootstrap)\n       # - && VM image is preloaded\n       # - && failure on artifact mismatch feature is enabled\n       ARTIFACT_DOWNLOAD_RESTRICTED=\"true\"\n  fi\n\n  log-wrap 'InstallHurl' install-hurl\nfi\n\n# download and source kube-env\nlog-wrap 'DownloadKubeEnv' download-kube-env\nlog-wrap 'SourceKubeEnv' source \"${KUBE_HOME}/kube-env\"\n\nif [[ \"${CONFIGURE_PGA}\" == \"true\" ]]; then\n  configure-pga-if-needed\nfi\n\nlog-wrap 'ConfigureCgroupMode' configure-cgroup-mode\n\nlog-wrap 'BestEffortRebootDetection' detect-reboot-needed\n\nlog-wrap 'DownloadKubeletConfig' download-kubelet-config \"${KUBE_HOME}/kubelet-config.yaml\"\n\nif [[ \"${KUBERNETES_MASTER:-}\" == \"true\" ]]; then\n  log-wrap 'DownloadKubeMasterCerts' download-kube-master-certs-hurl\nfi\n\nif docker-installed; then\n  # We still need to configure docker so it wouldn't reserver the 172.17.0/16 subnet\n  # And if somebody will start docker to build or pull something, logging will also be set up\n  log-wrap 'AssembleDockerFlags' assemble-docker-flags\nfi\n\n# preload common components\npreload\n\n# ensure chosen container runtime is present\nlog-wrap 'EnsureContainerRuntime' ensure-container-runtime\n\n# binaries and kube-system manifests\nlog-wrap 'InstallKubeBinaryConfig' install-kube-binary-config\n\n# install Riptide components on non-Ubuntu nodes\nif ! is-ubuntu && [[ \"${KUBERNETES_MASTER:-}\" != \"true\" ]]; then\n  log-wrap 'InstallRiptide' install-riptide\nfi\n\necho \"Done for installing kubernetes files\"\nlog-end 'ConfigureMain'\n"
+              },
+              {
+                "key": "disable-legacy-endpoints",
+                "value": "true"
+              },
+              {
+                "key": "user-data",
+                "value": "#cloud-config\n\nusers:\n  - name: kube-bootstrap-logs-forwarder\n    gecos: User the kube-bootstrap-logs-forwarder.service runs as.\n    system: true\n    shell: /sbin/nologin\n\nwrite_files:\n  - path: /etc/systemd/system/kube-bootstrap-logs-forwarder.service\n    permissions: 111122220644'\n    owner: root\n    content: |\n      [Unit]\n      Description=Forwards Kubernetes bootstrap logs to serial port.\n      Before=setup-kubernetes-dir.service\n\n      [Service]\n      User=kube-bootstrap-logs-forwarder\n      Group=systemd-journal\n      SupplementaryGroups=serial\n      ExecStart=journalctl --no-tail --no-pager --follow --utc --output short-iso --unit setup-kubernetes-dir --unit placeholders-presuspend-setup --unit kube-node-installation --unit kube-node-configuration --unit kubelet\n      StandardOutput=tty\n      TTYPath=/dev/ttyS2\n\n      [Install]\n      WantedBy=kubernetes.target\n\n  - path: /etc/systemd/system/setup-kubernetes-dir.service\n    permissions: 0644\n    owner: root\n    content: |\n      [Unit]\n      Description=Sets up required directories and mounts.\n      After=network-online.target\n\n      [Service]\n      Type=oneshot\n      RemainAfterExit=yes\n      ExecStart=/bin/mkdir -p /home/kubernetes/bin\n      ExecStart=/bin/mount --bind /home/kubernetes/bin /home/kubernetes/bin\n      ExecStart=/bin/mount -o remount,exec /home/kubernetes/bin\n\n      [Install]\n      WantedBy=kubernetes.target\n\n  - path: /etc/systemd/system/placeholders-presuspend-setup.service\n    permissions: 0644\n    owner: root\n    content: |\n      [Unit]\n      Description=Perform required presuspend logic for Placeholders VM, skip for Non-Placeholders VMs.\n      After=setup-kubernetes-dir.service\n\n      [Service]\n      Type=oneshot\n      RemainAfterExit=yes\n      ExecCondition=/usr/bin/curl --fail --retry 5 --retry-delay 3 --silent --show-error -H \"X-Google-Metadata-Request: True\" -o /home/kubernetes/bin/placeholders-presuspend.sh http://metadata.google.internal/computeMetadata/v1/instance/attributes/placeholders-presuspend-sh\n      ExecStartPre=/bin/chmod 544 /home/kubernetes/bin/placeholders-presuspend.sh\n      ExecStart=/home/kubernetes/bin/placeholders-presuspend.sh\n\n      [Install]\n      WantedBy=kubernetes.target\n\n\n  - path: /etc/systemd/system/kube-node-installation.service\n    permissions: '0644'\n    owner: root\n    content: |\n      [Unit]\n      Description=Download and install k8s binaries and configurations\n      After=placeholders-presuspend-setup.service\n\n      [Service]\n      Environment=KUBERNETES_MASTER=false\n      Type=oneshot\n      RemainAfterExit=yes\n      ExecStartPre=/usr/bin/curl --fail --retry 5 --retry-delay 3 --silent --show-error -H \"X-Google-Metadata-Request: True\" -o /home/kubernetes/bin/configure.sh http://metadata.google.internal/computeMetadata/v1/instance/attributes/configure-sh\n      ExecStartPre=/bin/chmod 544 /home/kubernetes/bin/configure.sh\n      ExecStart=/home/kubernetes/bin/configure.sh\n\n      [Install]\n      WantedBy=kubernetes.target\n\n  - path: /etc/systemd/system/kube-node-configuration.service\n    permissions: '0644'\n    owner: root\n    content: |\n      [Unit]\n      Description=Configure kubernetes node\n      After=kube-node-installation.service\n\n      [Service]\n      Type=oneshot\n      RemainAfterExit=yes\n      ExecStartPre=/bin/chmod 544 /home/kubernetes/bin/configure-helper.sh\n      ExecStart=/home/kubernetes/bin/configure-helper.sh\n      ExecStartPost=systemctl stop kube-bootstrap-logs-forwarder.service\n\n      [Install]\n      WantedBy=kubernetes.target\n\n  - path: /etc/systemd/system/kube-container-runtime-monitor.service\n    permissions: '0644'\n    owner: root\n    content: |\n      [Unit]\n      Description=Kubernetes health monitoring for container runtime\n      After=kube-node-configuration.service\n\n      [Service]\n      Restart=always\n      RestartSec=10\n      RemainAfterExit=yes\n      RemainAfterExit=yes\n      ExecStartPre=/bin/chmod 544 /home/kubernetes/bin/health-monitor.sh\n      ExecStart=/home/kubernetes/bin/health-monitor.sh container-runtime\n\n      [Install]\n      WantedBy=kubernetes.target\n\n  - path: /etc/systemd/system/kubelet-monitor.service\n    permissions: '0644'\n    owner: root\n    content: |\n      [Unit]\n      Description=Kubernetes health monitoring for kubelet\n      After=kube-node-configuration.service\n\n      [Service]\n      Restart=always\n      RestartSec=10\n      RemainAfterExit=yes\n      RemainAfterExit=yes\n      ExecStartPre=/bin/chmod 544 /home/kubernetes/bin/health-monitor.sh\n      ExecStart=/home/kubernetes/bin/health-monitor.sh kubelet\n\n      [Install]\n      WantedBy=kubernetes.target\n\n  - path: /etc/systemd/system/kube-logrotate.timer\n    permissions: '0644'\n    owner: root\n    content: |\n      [Unit]\n      Description=Hourly kube-logrotate invocation\n\n      [Timer]\n      OnCalendar=hourly\n\n      [Install]\n      WantedBy=kubernetes.target\n\n  - path: /etc/systemd/system/kube-logrotate.service\n    permissions: '0644'\n    owner: root\n    content: |\n      [Unit]\n      Description=Kubernetes log rotation\n      After=kube-node-configuration.service\n\n      [Service]\n      Type=oneshot\n      # The relative path is being used as the path is different between image types - for example between Ubuntu and COS. See ExecSearchPath for allowed paths.\n      ExecSearchPath=/usr/bin:/usr/sbin\n      ExecStart=logrotate /etc/logrotate.conf\n\n      [Install]\n      WantedBy=kubernetes.target\n\n  - path: /etc/systemd/system/kubernetes.target\n    permissions: '0644'\n    owner: root\n    content: |\n      [Unit]\n      Description=Kubernetes\n\n      [Install]\n      WantedBy=multi-user.target\n\n  - path: /etc/modprobe.d/sunrpc.conf\n    permissions: '0644'\n    owner: root\n    # The GKE metadata server uses ports 987-989, so the sunrpc range should be restricted to be below.\n    content: |\n      options sunrpc max_resvport=986\n\nruncmd:\n  - systemctl enable\n      kube-bootstrap-logs-forwarder.service\n      setup-kubernetes-dir.service\n      placeholders-presuspend-setup.service\n      kube-node-installation.service\n      kube-node-configuration.service\n      kubelet-monitor.service\n      kube-logrotate.timer\n      kube-logrotate.service\n      kubernetes.target\n  - systemctl start kubernetes.target\n"
+              },
+              {
+                "key": "kube-env",
+                "value": "ALLOCATE_NODE_CIDRS: \"true\"\nAPI_SERVER_TEST_LOG_LEVEL: --v=3\nAUTOSCALER_ENV_VARS: kube_reserved=cpu=1060m,memory=1019Mi,ephemeral-storage=41Gi;node_labels=cloud.google.com/gke-boot-disk=pd-balanced,cloud.google.com/gke-container-runtime=containerd,cloud.google.com/gke-cpu-scaling-level=2,cloud.google.com/gke-logging-variant=DEFAULT,cloud.google.com/gke-max-pods-per-node=110,cloud.google.com/gke-memory-gb-scaling-level=4,cloud.google.com/gke-nodepool=default-pool,cloud.google.com/gke-os-distribution=cos,cloud.google.com/gke-provisioning=standard,cloud.google.com/gke-stack-type=IPV4,cloud.google.com/machine-family=e2,cloud.google.com/private-node=false,node.kubernetes.io/masq-agent-ds-ready=true;arch=amd64;os=linux;os_distribution=cos;evictionHard=memory.available=100Mi,nodefs.available=10%,nodefs.inodesFree=5%,pid.available=10%\nCA_CERT: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVMVENDQXBXZ0F3SUJBZ0lSQVB6WFg4K0ZYWXFHcCthdmYwU09vdkl3RFFZSktvWklodmNOQVFFTEJRQXcKTHpFdE1Dc0dBMVVFQXhNa05tUmxNbVpsTUdFdFlUTXlNUzAwTjJOaExUZ3lPR0l0Wm1GaU9UUTBaV05sWkdJMgpNQ0FYRFRJMU1ESXdOakUwTVRVeU4xb1lEekl3TlRVd01UTXdNVFV4TlRJM1dqQXZNUzB3S3dZRFZRUURFeVEyClpHVXlabVV3WVMxaE16SXhMVFEzWTJFdE9ESTRZaTFtWVdJNU5EUmxZMlZrWWpZd2dnR2lNQTBHQ1NxR1NJYjMKRFFFQkFRVUFBNElCandBd2dnR0tBb0lCZ1FDNjRvdHdhMW0yb0JHSTcvb1ZKQVJlRWgrY3JoY1hTTzZIT3N6SApvY0ZNUXpPS3RsNXhiNDdwT1JFbTFQM2FiRmg2UGxmVmp5NzVIVEM3UXJGb0NvQ1pnNjdoTzBIKzdCRVN4NzcyCnora3BLRDZ6aEZUSUtkdnVmZUZBcDZqaG10WlhpVlhpbjFaU3ltM29jczJwZVY4RHNEaUpCakFwUkRYZmc5bFkKN1ZIWFFXYmtxQml0ZnpMeEE0UmlSSDU1NWwwNnJwUGlacDhnRFFMMGc3KzkrMlQ4RkJNSnp3bEdqOVhMNHMyTwo1WWd1THlIMUJVVG4vTmR3blVZRForNFBxbTNjbmRlcE9TUnFGYXIrOSs1aUJmQXgyZjBETnFrZCtTN09kcDJ2CkpuZlNEeVpJc0JGTXdHRm0xYkc4SGJLWHJtdVMzTWxHL3VMWTFVTSswYUNQQ05vKzhtcDN6MjBkbW5rNUxzZHUKNkdwM1c1UEJYOWJrUDBZWVBraHRyT25kWDBGOTkxbjIzTDk5QkNkeGRYUmI3ZHRlbHFRbTh2Z1RBd2RvMDVMRgpDYUVRNFU2Ym9QQTBIR3dyRk4xOWQ2SEFZOC9EOUQ3TVZ2aUZLTjZTTjA4dktYQUptT3o5ZHFyTFBCVWVsNlRUCkpZamFnV0d0b2l4WlZpTllNUlF6QUJqc1hiVUNBd0VBQWFOQ01FQXdEZ1lEVlIwUEFRSC9CQVFEQWdJRU1BOEcKQTFVZEV3RUIvd1FGTUFNQkFmOHdIUVlEVlIwT0JCWUVGT1dwL2R3LzJuejdRZ1ZKSkR2VTFpcHZlWHNWTUEwRwpDU3FHU0liM0RRRUJDd1VBQTRJQmdRQlowOGZpdkRwZ0R6ZXhPMEozekt4bHpJWWpZWHlkeVdsd3hSbzdwbGJSCkMvNmphelBBLzlYUG43amZ1cTQyREJFUVE0Y21EcXRxQ3pSdkhRREMxM1lFR3o0Y2JIbGowVThqOVVMNkwyd0kKQmRmMUw4endSRy9LYXNQQzhjWHZMM1VHSmZ3amtBQ3lwS0FVbHNIVEVneG51QVdiOFV1MEZwMGplaXUxUGhSeQpweW54bXo0eVBSR3lmeFJsRzZGVGVIQmVDZkpkQmpiU1lvMkoyb2NrU2hUOXdPczBIUzZjSDJzTk5aUmdQOUpaClFKN1EzZjI0SHhRMmN5c2Nqc3drZkNOTTRPcGQ5VGlHc3NHeS9iM201SEw4OGFoZUpuSXZlUzZadGZKZVB5eU0KYnIvTEgrNjNPQVB2eWZ5b0JtZWZZYUNzbnZWRUZpWmhTNXNUWnlKeG9QTDlSakpEN3puM2N5bUgxMTBoSWZvawowT0EzcVhBaHR4UGlwNnZiTU5ScmVVL3NYc3ZzTHFvK0R5NkMvWmhXSkx0MjdieSt0WDhpTXY2dDNteGhNTUozCmNoRXgvZlJkeGJDNGpLUDVyQWEwQ1p3MGFPM2lUMXUxZDVMaVkrWnFGam1WTmo5S05XSkR6Z2xwTXlCZDBFN2IKL2pibk45OHZ5Y2xoWC9JUkRmSGtDWGM9Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K\nCLOUD_MONARCH_ENDPOINT: https://monitoring.googleapis.com/\nCLUSTER_IP_RANGE: 192.168.1.0/24\nCLUSTER_NAME: gke1\nCONFIGURE_PGA: \"true\"\nCONTAINER_RUNTIME: containerd\nCONTAINER_RUNTIME_ENDPOINT: unix:///run/containerd/containerd.sock\nCONTAINER_RUNTIME_NAME: containerd\nCONTAINERD_DEPRECATION_CHECKER: \"true\"\nCONTAINERD_MAX_CONTAINER_LOG_LINE: \"262144\"\nCREATE_BOOTSTRAP_KUBECONFIG: \"false\"\nDETECT_LOCAL_MODE: NodeCIDR\nDETECT_MTU: \"true\"\nDNS_DOMAIN: cluster.local\nDNS_SERVER_IP: 192.168.2.10\nDOCKER_REGISTRY_MIRROR_URL: https://mirror.gcr.io\nELASTICSEARCH_LOGGING_REPLICAS: \"1\"\nENABLE_AUTH_PROVIDER_GCP: \"true\"\nENABLE_CLUSTER_DNS: \"true\"\nENABLE_CLUSTER_LOGGING: \"false\"\nENABLE_CLUSTER_MONITORING: none\nENABLE_CLUSTER_REGISTRY: \"false\"\nENABLE_CLUSTER_UI: \"true\"\nENABLE_CONNTRACK_EXEMPT_HC: \"true\"\nENABLE_CONTAINERD_METRICS: \"true\"\nENABLE_L7_LOADBALANCING: none\nENABLE_LATEST_NPD: \"true\"\nENABLE_METADATA_AGENT: \"\"\nENABLE_METRICS_SERVER: \"true\"\nENABLE_NODE_BFQ_IO_SCHEDULER: \"true\"\nENABLE_NODE_LOGGING: \"false\"\nENABLE_NODE_PROBLEM_DETECTOR: standalone\nENABLE_NODE_REGISTRATION_CHECKER: \"true\"\nENABLE_NODELOCAL_DNS: \"false\"\nENABLE_SHM_HEALTHCHECK_BINARIES: \"true\"\nENABLE_SYSCTL_TUNING: \"true\"\nENV_TIMESTAMP: \"2025-02-06T15:15:26+00:00\"\nEXTRA_DOCKER_OPTS: --insecure-registry 10.0.0.0/8\nEXTRA_POD_SYSCTLS: net.ipv6.conf.all.disable_ipv6=1,net.ipv6.conf.default.disable_ipv6=1\nFEATURE_GATES: DisableKubeletCloudCredentialProviders=true,RotateKubeletServerCertificate=true,ExecProbeTimeout=false\nFLUENTD_CONTAINER_RUNTIME_SERVICE: containerd\nGVISOR_HOST_SETTINGS: enforce\nGVISOR_METRIC_SERVER: 127.0.0.1:9115\nHEAPSTER_USE_NEW_STACKDRIVER_RESOURCES: \"true\"\nHEAPSTER_USE_OLD_STACKDRIVER_RESOURCES: \"false\"\nHPA_USE_REST_CLIENTS: \"true\"\nINSTANCE_PREFIX: gke-gke1-848e1694\nKUBE_ADDON_REGISTRY: k8s.gcr.io\nKUBE_CLUSTER_DNS: 192.168.2.10\nKUBE_DOCKER_REGISTRY: europe-west4-artifactregistry.gcr.io/gke-release/gke-release\nKUBE_MANIFESTS_TAR_HASH: 66cbfb77203dd732d322d524697a80e11bb553bd7f06c667f4afcf8336929c274bc17da4c6e7f1f4dd28dd3d997cb2c1cf5da7b359bbdd22b6b03aa8b8ab2b50\nKUBE_MANIFESTS_TAR_URL: https://storage.googleapis.com/gke-release-eu/kubernetes/release/v1.31.4-gke.1256000/kubernetes-manifests.tar.gz,https://storage.googleapis.com/gke-release/kubernetes/release/v1.31.4-gke.1256000/kubernetes-manifests.tar.gz,https://storage.googleapis.com/gke-release-asia/kubernetes/release/v1.31.4-gke.1256000/kubernetes-manifests.tar.gz\nKUBE_PROXY_TOKEN: pbgJw-P-A4TUHflfzyyNiGp78ssesaTcXsgvbaePicQ=\nKUBELET_ARGS: --v=2 --cloud-provider=external --experimental-mounter-path=/home/kubernetes/containerized_mounter/mounter\n  --cert-dir=/var/lib/kubelet/pki/ --kubeconfig=/var/lib/kubelet/kubeconfig --image-credential-provider-config=/etc/srv/kubernetes/cri_auth_config.yaml\n  --image-credential-provider-bin-dir=/home/kubernetes/bin --max-pods=110 --node-labels=cloud.google.com/gke-boot-disk=pd-balanced,cloud.google.com/gke-container-runtime=containerd,cloud.google.com/gke-cpu-scaling-level=2,cloud.google.com/gke-logging-variant=DEFAULT,cloud.google.com/gke-max-pods-per-node=110,cloud.google.com/gke-memory-gb-scaling-level=4,cloud.google.com/gke-nodepool=default-pool,cloud.google.com/gke-os-distribution=cos,cloud.google.com/gke-provisioning=standard,cloud.google.com/gke-stack-type=IPV4,cloud.google.com/machine-family=e2,cloud.google.com/private-node=false,node.kubernetes.io/masq-agent-ds-ready=true\n  --volume-plugin-dir=/home/kubernetes/flexvolume --node-status-max-images=25 --container-runtime-endpoint=unix:///run/containerd/containerd.sock\n  --runtime-cgroups=/system.slice/containerd.service --registry-qps=10 --registry-burst=20\nKUBELET_HTTP2_PING_TIMEOUT_SECONDS: \"5\"\nKUBELET_HTTP2_READ_IDLE_TIMEOUT_SECONDS: \"10\"\nKUBELET_VERSION: v1.31.4-gke.1256000\nKUBERNETES_MASTER: \"false\"\nKUBERNETES_MASTER_NAME: 192.168.0.2\nLOAD_IMAGE_COMMAND: ctr -n=k8s.io images import\nLOGGING_DESTINATION: \"\"\nLOGGING_STACKDRIVER_RESOURCE_TYPES: \"\"\nMONITORING_FLAG_SET: \"true\"\nNETWORK_PROVIDER: kubenet\nNODE_BFQ_IO_SCHEDULER_IO_WEIGHT: \"1200\"\nNODE_LOCAL_SSDS_EXT: \"\"\nNON_MASQUERADE_CIDR: 0.0.0.0/0\nREMOUNT_VOLUME_PLUGIN_DIR: \"true\"\nREQUIRE_METADATA_KUBELET_CONFIG_FILE: \"true\"\nSALT_TAR_HASH: \"\"\nSALT_TAR_URL: https://storage.googleapis.com/gke-release-eu/kubernetes/release/v1.31.4-gke.1256000/kubernetes-salt.tar.gz,https://storage.googleapis.com/gke-release/kubernetes/release/v1.31.4-gke.1256000/kubernetes-salt.tar.gz,https://storage.googleapis.com/gke-release-asia/kubernetes/release/v1.31.4-gke.1256000/kubernetes-salt.tar.gz\nSERVER_BINARY_TAR_HASH: 39ba60c7d1d3bd252782428e14294e0433864f8317cabbd88c3d34832f5a0a9ce23c4a570ae310a370074b7bc2cc156012d7a2d53cea34b73cf2198eae17df81\nSERVER_BINARY_TAR_URL: https://storage.googleapis.com/gke-release-eu/kubernetes/release/v1.31.4-gke.1256000/kubernetes-server-linux-amd64.tar.gz,https://storage.googleapis.com/gke-release/kubernetes/release/v1.31.4-gke.1256000/kubernetes-server-linux-amd64.tar.gz,https://storage.googleapis.com/gke-release-asia/kubernetes/release/v1.31.4-gke.1256000/kubernetes-server-linux-amd64.tar.gz\nSERVICE_CLUSTER_IP_RANGE: 192.168.2.0/24\nSTACKDRIVER_ENDPOINT: https://logging.googleapis.com\nSTORAGE_ENDPOINT: https://storage.googleapis.com\nSYSCTL_OVERRIDES: \"\"\nTPM_BOOTSTRAP_CERT: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURyRENDQWhTZ0F3SUJBZ0lSQVBucnY5dlJWck5nbVVaRDIzeCtDWEV3RFFZSktvWklodmNOQVFFTEJRQXcKTHpFdE1Dc0dBMVVFQXhNa05tUmxNbVpsTUdFdFlUTXlNUzAwTjJOaExUZ3lPR0l0Wm1GaU9UUTBaV05sWkdJMgpNQjRYRFRJMU1ESXdOakUxTVRNeU4xb1hEVE13TURJd05URTFNVFV5TjFvd0hERWFNQmdHQTFVRUF4TVJhM1ZpClpXeGxkQzFpYjI5MGMzUnlZWEF3Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLQW9JQkFRREUKZ1BzbmRkN2h2bE0rVjBKQ2NuSGlEOGxLVVowcGpuMi8ycmRvOFlEVElSam9SU0RlbFhIQWZpeEVwUk1vclMzbwp6b05YN3VmbHQ5ZlNsTjByaWRPZmpJTFI4UFpBdFB5dUtyZzUvS1FSU2pGRVdyY0prcW1uRE13Uzc1c251ZjhPCjY1YWJDMDRiVlVlUlJMZWRrTEgyWGRCdFNzdklrdmsyUFdhdzRCUHY2bUF0OHpXNVhlZHM3d1F3ODRQcUNvT28KamVwdHdCdGFTTzVqbUU1NVFDdjBjNmEwM29ERXMzVFFEVjJ0YnFPUmlWNDk5UFpDNlRBd1RCTkFiUHhLRUtKWgpROUNFNEhqenQ1NVJJT0huMDRhWnMvUjFoK1NYN1lMcDJyTXFaeEsrbVVUOHkvVTZJdGphYThJV2NrV216eWVRCmlidWpxN1o2WVBBSXptTkVyUTJIQWdNQkFBR2pWakJVTUE0R0ExVWREd0VCL3dRRUF3SUZvREFUQmdOVkhTVUUKRERBS0JnZ3JCZ0VGQlFjREFqQU1CZ05WSFJNQkFmOEVBakFBTUI4R0ExVWRJd1FZTUJhQUZPV3AvZHcvMm56NwpRZ1ZKSkR2VTFpcHZlWHNWTUEwR0NTcUdTSWIzRFFFQkN3VUFBNElCZ1FDYXRyYm9iaXJmZ3ZGZnU0VGZkSURrCkxPZndsQlBZUDlWUUFLamEyeHhrZ0pQQXJ4V1N1MHYwQ2ozS2taRnMrZGtOdHlEVGMraHp5dnBiSXVka0tNZTcKbnQ1M09GSzlDRnREc0dpWEpGdmkzVUgvNHE5UTQ5aTVWNzNrTkpkYlhtdkZSUGhDUDJPMytyOHlIWEhhcGplbAptUHMrNks4MVpwNSt4L3BCTzc3VEhoSmFHU09xNDJRUm00aDlBelVldFVObXJNWCtjdUc3VGM1S3g0YmMrRm1JClpNUGlIQks0TzdZbjB5eHJYZkJuVlpZZ3lwdkJNb2lVeHlBa1ZZQkJqcTdBSEdHMW0vZ2xWL05BbkNmTlFTcnkKYVZ2Q25yZXU3VWhGVFpuT04ra3NRbFdLdDJieC8yOFdHQndaRG1OZFpqMDk2ZVNDOXFoU3JqMzluWVp6YmpPcApBNVFDMlkvRzdqUlRpRnZRaGNlTTFZRnVsbGtYanNSL25uaHdDVWc0a0FHYlBBeE9maWJVVEpxSEc1UXF4dk1FCkRqYWx0Wk1ZMGtVdElIa2JIcEZsRFJFcWRCei8rZm5CZFhEcTZaRG1aVVJaaFNJVkNFMmhkODdla2EzMXAxNm8KRUh3ZURCRjIxQ2Vrc0l3M0tibWVPeUUzbjVMYlRJKy9FdEtVQy9sT2h2ST0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=\nTPM_BOOTSTRAP_KEY: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcEFJQkFBS0NBUUVBeElEN0ozWGU0YjVUUGxkQ1FuSng0Zy9KU2xHZEtZNTl2OXEzYVBHQTB5RVk2RVVnCjNwVnh3SDRzUktVVEtLMHQ2TTZEVis3bjViZlgwcFRkSzRuVG40eUMwZkQyUUxUOHJpcTRPZnlrRVVveFJGcTMKQ1pLcHB3ek1FdStiSjduL0R1dVdtd3RPRzFWSGtVUzNuWkN4OWwzUWJVckx5Skw1TmoxbXNPQVQ3K3BnTGZNMQp1VjNuYk84RU1QT0Q2Z3FEcUkzcWJjQWJXa2p1WTVoT2VVQXI5SE9tdE42QXhMTjAwQTFkclc2amtZbGVQZlQyClF1a3dNRXdUUUd6OFNoQ2lXVVBRaE9CNDg3ZWVVU0RoNTlPR21iUDBkWWZrbCsyQzZkcXpLbWNTdnBsRS9NdjEKT2lMWTJtdkNGbkpGcHM4bmtJbTdvNnUyZW1Ed0NNNWpSSzBOaHdJREFRQUJBb0lCQUZsWmlwbmhRMFNqUFllcAp0cU92RlRCazNES3lWSU9LV294cm41MFV2dTZCYktsa2tYTVVRZUowbkoxajhBZTlZeFFxSHRmVGRsZGlWanpXCjJwQksvZEpjMmprcTExWUoxYUUrSklHZGFsN0FQUkduSy9ZcTNZQnJWYm5BZ0d5NmFvcjJ2WWJuUjQ4dklqa2cKSlZ0OGFTY3NkakxUNFVCazcvTmxUUFhkRmNPdklad1Z1VTFreG5ZVVhKQ1NuNWxFZWVBT2ZvSUxzc1lJK0RyRwpIS3FjRjJzR2w3SWNnS2ErOG9QYkpOSXlrdngxdTNuUzFrMHlVMlV5SStYdFh6QzVHYkZWUDROQlZ2QXNkZXpzCksweUYrL05RbFBMbVc4c3djdmtTUWFuNnJKUkFZN2FDOGIzRDZENXhybDZBdFNlZDVBcXVVakNTQzNoN2VYWUkKY2ZLZ0VtRUNnWUVBL2ZQLzFMTUNjcVJjNkQ2SWVEOTlrOEV4WjA4d25UU2g0OUozcWFoT09WaERWbXlGZ3RZUAp1RWM4YitRcE1aMW54UWwzY0FzdXFPRkh5U0w4emI5azFUaE5JTTBMc0I0S3NoZGJWUjRKazdUUzIwQUFnMmtEClQ2azRqWEVOM3UyNXRYb1FOTzFjNWpEcllvZGo1cFpIZ2VZQyszYzlUbHNiVnRQbXdQckx6R2NDZ1lFQXhoWngKT0xkTjlRS2V0TTE5UENsejBpTHp4TmpMRkdvWTRqT0FxdHVkN1BjSktlVzdrN3hLN0U0VFZYVFl1a1pKZC9yVwo1SXhRKzFrV3ozT1ArOWFaRWVQQ1pEeEdxV3duKy8vUlUzS1lPY3l0eXRHVTJBMlRqRmpSbEVOeEd3eW0rM015CkdGdUpBREdlUXhpWS83ZWxNcXlPRWpRSU5ma3l1WjZXeVZ6dUFlRUNnWUVBcFJEQ0N4akgwSWh4TXl2aVBIYlkKUXYvaUFzcUFTTTU3SThBYnM1VUlNMUhoZ3YxSzByNGN2YVRmN2NLWjIvdjZCU0tnRlozUEdFcEdCTURQSFZUNApUM2NtK3RrTWJjODVHSVVDQXBOaG1qYUFqNjVNSng1TTNxeVphNlkrWTlhVlRSWW9EcDd5TVZVK3ltNUNTeEVICkxiRzU0b1dndlp1T2E2T1VhMzhZbEtVQ2dZQUtVYVQ0UldSRVBTeXpVbmtScHo4blZUYkpyRmwzNk1iL0VadkUKU3NpQlRhVW1qNWNqN1EwaUhqY1hub3lqdDRHZ1JHcnBZUDNlK2hjY0czTUd0WGtuMjJ1RytUVGRJb3M2cjJyaQpJL2dXR3JsNjlVd0JyVU5nYmtnTXB5Ni9ML3VLNGNkY1NYaHJrQ29rYUtXZnZKdFlkbkM0TmdtdmRoblVYWlNSClRNd0JRUUtCZ1FEQVl3SG5OZGJhM2F3WnhLM1hCdTdXbzlUd1RRQ3VpZHB3NCtNMlhxM3YvYXlNTU9iQUl4YjAKVEF5enk0elJIYXBLSko5YUNZRUZLZ3FyNnowWGZ4ejIxeVdhRE5wdlpHNlhXRW1PUGROZ1dpN2hUTmtTajNXbgpyWmNMbi9Rd24wYVFZMUEzQUtiZHlHSVdnbVNYWHJJRHdvek9aUk90VFZ2Y2dkL29meU1SWUE9PQotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo=\nVOLUME_PLUGIN_DIR: /home/kubernetes/flexvolume\nZONE: europe-west4-a\n"
+              },
+              {
+                "key": "cluster-uid",
+                "value": "848e1694ad01483185c46c3f8e1fdea4db9d86e7b2d5451ebc2536bf7f049693"
+              },
+              {
+                "key": "cluster-location",
+                "value": "europe-west4-a"
+              }
+            ]
+          },
+          "serviceAccounts": [
+            {
+              "email": "12340002-compute@developer.gserviceaccount.com",
+              "scopes": [
+                "https://www.googleapis.com/auth/devstorage.read_only",
+                "https://www.googleapis.com/auth/logging.write",
+                "https://www.googleapis.com/auth/monitoring",
+                "https://www.googleapis.com/auth/service.management.readonly",
+                "https://www.googleapis.com/auth/servicecontrol",
+                "https://www.googleapis.com/auth/trace.append"
+              ]
+            }
+          ],
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instances/gke-gke1-default-pool-dee670f4-b27s",
+          "scheduling": {
+            "onHostMaintenance": "MIGRATE",
+            "automaticRestart": true,
+            "preemptible": false,
+            "provisioningModel": "STANDARD"
+          },
+          "cpuPlatform": "Intel Broadwell",
+          "labels": {
+            "foo": "bar",
+            "goog-gke-cluster-id-base32": "qshbnffnafeddboenq7y4h66utnz3bxhwlkukhv4eu3l67yes2jq",
+            "goog-gke-node": "",
+            "goog-k8s-cluster-location": "europe-west4-a",
+            "goog-k8s-cluster-name": "gke1",
+            "goog-k8s-node-pool-name": "default-pool",
+            "goog-terraform-provisioned": "true"
+          },
+          "labelFingerprint": "YRhvLFslxOM=",
+          "startRestricted": false,
+          "deletionProtection": false,
+          "shieldedInstanceConfig": {
+            "enableSecureBoot": false,
+            "enableVtpm": true,
+            "enableIntegrityMonitoring": true
+          },
+          "shieldedInstanceIntegrityPolicy": {
+            "updateAutoLearnPolicy": true
+          },
+          "fingerprint": "9DZfLBNLpIc=",
+          "lastStartTimestamp": "2025-02-06T07:16:48.126-08:00",
+          "satisfiesPzi": true,
+          "networkPerformanceConfig": {
+            "totalEgressBandwidthTier": "DEFAULT"
+          }
+        },
+        {
+          "kind": "compute#instance",
+          "id": "7382059078434873685",
+          "creationTimestamp": "2025-02-05T04:55:23.067-08:00",
+          "name": "mig-lpq6",
+          "tags": {
+            "fingerprint": "42WmSpB8rSM="
+          },
+          "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/machineTypes/e2-micro",
+          "status": "RUNNING",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a",
+          "networkInterfaces": [
+            {
+              "kind": "compute#networkInterface",
+              "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+              "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks/default",
+              "networkIP": "10.164.0.10",
+              "name": "nic0",
+              "fingerprint": "YE4urDTfRbo=",
+              "stackType": "IPV4_ONLY"
+            }
+          ],
+          "disks": [
+            {
+              "kind": "compute#attachedDisk",
+              "type": "PERSISTENT",
+              "mode": "READ_WRITE",
+              "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/disks/mig-lpq6",
+              "deviceName": "persistent-disk-0",
+              "index": 0,
+              "boot": true,
+              "autoDelete": true,
+              "licenses": [
+                "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-11-bullseye"
+              ],
+              "interface": "SCSI",
+              "guestOsFeatures": [
+                {
+                  "type": "UEFI_COMPATIBLE"
+                },
+                {
+                  "type": "VIRTIO_SCSI_MULTIQUEUE"
+                },
+                {
+                  "type": "GVNIC"
+                }
+              ],
+              "diskSizeGb": "10",
+              "architecture": "X86_64"
+            }
+          ],
+          "metadata": {
+            "kind": "compute#metadata",
+            "fingerprint": "QiZsHXut0E8=",
+            "items": [
+              {
+                "key": "instance-template",
+                "value": "projects/12340002/global/instanceTemplates/mig-template"
+              },
+              {
+                "key": "created-by",
+                "value": "projects/12340002/zones/europe-west4-a/instanceGroupManagers/mig"
+              }
+            ]
+          },
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instances/mig-lpq6",
+          "scheduling": {
+            "onHostMaintenance": "MIGRATE",
+            "automaticRestart": true,
+            "preemptible": false,
+            "provisioningModel": "STANDARD"
+          },
+          "cpuPlatform": "Intel Broadwell",
+          "labels": {
+            "goog-terraform-provisioned": "true"
+          },
+          "labelFingerprint": "vezUS-42LLM=",
+          "startRestricted": false,
+          "deletionProtection": false,
+          "shieldedInstanceConfig": {
+            "enableSecureBoot": false,
+            "enableVtpm": true,
+            "enableIntegrityMonitoring": true
+          },
+          "shieldedInstanceIntegrityPolicy": {
+            "updateAutoLearnPolicy": true
+          },
+          "fingerprint": "odPKCHpc7DM=",
+          "lastStartTimestamp": "2025-02-05T04:55:32.781-08:00",
+          "satisfiesPzi": true
+        },
+        {
+          "kind": "compute#instance",
+          "id": "7593829016559083860",
+          "creationTimestamp": "2025-02-05T04:55:23.272-08:00",
+          "name": "mig-mv82",
+          "tags": {
+            "fingerprint": "42WmSpB8rSM="
+          },
+          "machineType": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/machineTypes/e2-micro",
+          "status": "RUNNING",
+          "zone": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a",
+          "networkInterfaces": [
+            {
+              "kind": "compute#networkInterface",
+              "network": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/global/networks/default",
+              "subnetwork": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/regions/europe-west4/subnetworks/default",
+              "networkIP": "10.164.0.11",
+              "name": "nic0",
+              "fingerprint": "gtxiVRuJigg=",
+              "stackType": "IPV4_ONLY"
+            }
+          ],
+          "disks": [
+            {
+              "kind": "compute#attachedDisk",
+              "type": "PERSISTENT",
+              "mode": "READ_WRITE",
+              "source": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/disks/mig-mv82",
+              "deviceName": "persistent-disk-0",
+              "index": 0,
+              "boot": true,
+              "autoDelete": true,
+              "licenses": [
+                "https://www.googleapis.com/compute/v1/projects/debian-cloud/global/licenses/debian-11-bullseye"
+              ],
+              "interface": "SCSI",
+              "guestOsFeatures": [
+                {
+                  "type": "UEFI_COMPATIBLE"
+                },
+                {
+                  "type": "VIRTIO_SCSI_MULTIQUEUE"
+                },
+                {
+                  "type": "GVNIC"
+                }
+              ],
+              "diskSizeGb": "10",
+              "architecture": "X86_64"
+            }
+          ],
+          "metadata": {
+            "kind": "compute#metadata",
+            "fingerprint": "QiZsHXut0E8=",
+            "items": [
+              {
+                "key": "instance-template",
+                "value": "projects/12340002/global/instanceTemplates/mig-template"
+              },
+              {
+                "key": "created-by",
+                "value": "projects/12340002/zones/europe-west4-a/instanceGroupManagers/mig"
+              }
+            ]
+          },
+          "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/instances/mig-mv82",
+          "scheduling": {
+            "onHostMaintenance": "MIGRATE",
+            "automaticRestart": true,
+            "preemptible": false,
+            "provisioningModel": "STANDARD"
+          },
+          "cpuPlatform": "Intel Broadwell",
+          "labels": {
+            "goog-terraform-provisioned": "true"
+          },
+          "labelFingerprint": "vezUS-42LLM=",
+          "startRestricted": false,
+          "deletionProtection": false,
+          "shieldedInstanceConfig": {
+            "enableSecureBoot": false,
+            "enableVtpm": true,
+            "enableIntegrityMonitoring": true
+          },
+          "shieldedInstanceIntegrityPolicy": {
+            "updateAutoLearnPolicy": true
+          },
+          "fingerprint": "6WMPctzA2pQ=",
+          "lastStartTimestamp": "2025-02-05T04:55:32.069-08:00",
+          "satisfiesPzi": true
+        }
+      ]
+    },
+    "zones/europe-north1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-north1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-north1-b"
+          }
+        ]
+      }
+    },
+    "zones/europe-north1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-north1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-north1-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-north1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-north1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-north1-a"
+          }
+        ]
+      }
+    },
+    "zones/us-west2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-west2-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west2-c"
+          }
+        ]
+      }
+    },
+    "zones/us-west2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-west2-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west2-b"
+          }
+        ]
+      }
+    },
+    "zones/us-west2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-west2-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west2-a"
+          }
+        ]
+      }
+    },
+    "zones/asia-east2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-east2-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-east2-c"
+          }
+        ]
+      }
+    },
+    "zones/asia-east2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-east2-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-east2-b"
+          }
+        ]
+      }
+    },
+    "zones/asia-east2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-east2-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-east2-a"
+          }
+        ]
+      }
+    },
+    "zones/europe-west6-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-west6-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west6-b"
+          }
+        ]
+      }
+    },
+    "zones/europe-west6-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-west6-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west6-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-west6-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-west6-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west6-a"
+          }
+        ]
+      }
+    },
+    "zones/asia-northeast2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-northeast2-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast2-b"
+          }
+        ]
+      }
+    },
+    "zones/asia-northeast2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-northeast2-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast2-c"
+          }
+        ]
+      }
+    },
+    "zones/asia-northeast2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-northeast2-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast2-a"
+          }
+        ]
+      }
+    },
+    "zones/asia-northeast3-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-northeast3-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast3-a"
+          }
+        ]
+      }
+    },
+    "zones/asia-northeast3-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-northeast3-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast3-c"
+          }
+        ]
+      }
+    },
+    "zones/asia-northeast3-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-northeast3-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-northeast3-b"
+          }
+        ]
+      }
+    },
+    "zones/us-west3-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-west3-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west3-a"
+          }
+        ]
+      }
+    },
+    "zones/us-west3-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-west3-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west3-b"
+          }
+        ]
+      }
+    },
+    "zones/us-west3-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-west3-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west3-c"
+          }
+        ]
+      }
+    },
+    "zones/us-west4-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-west4-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west4-c"
+          }
+        ]
+      }
+    },
+    "zones/us-west4-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-west4-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west4-a"
+          }
+        ]
+      }
+    },
+    "zones/us-west4-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-west4-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west4-b"
+          }
+        ]
+      }
+    },
+    "zones/asia-southeast2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-southeast2-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-southeast2-a"
+          }
+        ]
+      }
+    },
+    "zones/asia-southeast2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-southeast2-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-southeast2-c"
+          }
+        ]
+      }
+    },
+    "zones/asia-southeast2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-southeast2-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-southeast2-b"
+          }
+        ]
+      }
+    },
+    "zones/europe-central2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-central2-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-central2-b"
+          }
+        ]
+      }
+    },
+    "zones/europe-central2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-central2-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-central2-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-central2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-central2-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-central2-a"
+          }
+        ]
+      }
+    },
+    "zones/northamerica-northeast2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/northamerica-northeast2-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-northeast2-b"
+          }
+        ]
+      }
+    },
+    "zones/northamerica-northeast2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/northamerica-northeast2-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-northeast2-a"
+          }
+        ]
+      }
+    },
+    "zones/northamerica-northeast2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/northamerica-northeast2-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-northeast2-c"
+          }
+        ]
+      }
+    },
+    "zones/asia-south2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-south2-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-south2-a"
+          }
+        ]
+      }
+    },
+    "zones/asia-south2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-south2-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-south2-c"
+          }
+        ]
+      }
+    },
+    "zones/asia-south2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/asia-south2-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/asia-south2-b"
+          }
+        ]
+      }
+    },
+    "zones/australia-southeast2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/australia-southeast2-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/australia-southeast2-a"
+          }
+        ]
+      }
+    },
+    "zones/australia-southeast2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/australia-southeast2-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/australia-southeast2-c"
+          }
+        ]
+      }
+    },
+    "zones/australia-southeast2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/australia-southeast2-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/australia-southeast2-b"
+          }
+        ]
+      }
+    },
+    "zones/southamerica-west1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/southamerica-west1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/southamerica-west1-a"
+          }
+        ]
+      }
+    },
+    "zones/southamerica-west1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/southamerica-west1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/southamerica-west1-b"
+          }
+        ]
+      }
+    },
+    "zones/southamerica-west1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/southamerica-west1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/southamerica-west1-c"
+          }
+        ]
+      }
+    },
+    "zones/us-east7-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-east7-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east7-a"
+          }
+        ]
+      }
+    },
+    "zones/us-east7-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-east7-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east7-b"
+          }
+        ]
+      }
+    },
+    "zones/us-east7-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-east7-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east7-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-west8-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-west8-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west8-a"
+          }
+        ]
+      }
+    },
+    "zones/europe-west8-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-west8-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west8-b"
+          }
+        ]
+      }
+    },
+    "zones/europe-west8-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-west8-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west8-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-west9-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-west9-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west9-b"
+          }
+        ]
+      }
+    },
+    "zones/europe-west9-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-west9-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west9-a"
+          }
+        ]
+      }
+    },
+    "zones/europe-west9-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-west9-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west9-c"
+          }
+        ]
+      }
+    },
+    "zones/us-east5-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-east5-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east5-c"
+          }
+        ]
+      }
+    },
+    "zones/us-east5-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-east5-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east5-b"
+          }
+        ]
+      }
+    },
+    "zones/us-east5-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-east5-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-east5-a"
+          }
+        ]
+      }
+    },
+    "zones/europe-southwest1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-southwest1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-southwest1-b"
+          }
+        ]
+      }
+    },
+    "zones/europe-southwest1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-southwest1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-southwest1-a"
+          }
+        ]
+      }
+    },
+    "zones/europe-southwest1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-southwest1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-southwest1-c"
+          }
+        ]
+      }
+    },
+    "zones/us-south1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-south1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-south1-c"
+          }
+        ]
+      }
+    },
+    "zones/us-south1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-south1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-south1-a"
+          }
+        ]
+      }
+    },
+    "zones/us-south1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-south1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-south1-b"
+          }
+        ]
+      }
+    },
+    "zones/me-west1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/me-west1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-west1-b"
+          }
+        ]
+      }
+    },
+    "zones/me-west1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/me-west1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-west1-a"
+          }
+        ]
+      }
+    },
+    "zones/me-west1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/me-west1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-west1-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-west12-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-west12-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west12-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-west12-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-west12-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west12-a"
+          }
+        ]
+      }
+    },
+    "zones/europe-west12-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-west12-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west12-b"
+          }
+        ]
+      }
+    },
+    "zones/me-central1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/me-central1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-central1-a"
+          }
+        ]
+      }
+    },
+    "zones/me-central1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/me-central1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-central1-b"
+          }
+        ]
+      }
+    },
+    "zones/me-central1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/me-central1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-central1-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-west10-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-west10-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west10-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-west10-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-west10-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west10-a"
+          }
+        ]
+      }
+    },
+    "zones/europe-west10-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-west10-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-west10-b"
+          }
+        ]
+      }
+    },
+    "zones/me-central2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/me-central2-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-central2-c"
+          }
+        ]
+      }
+    },
+    "zones/me-central2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/me-central2-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-central2-a"
+          }
+        ]
+      }
+    },
+    "zones/me-central2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/me-central2-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/me-central2-b"
+          }
+        ]
+      }
+    },
+    "zones/africa-south1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/africa-south1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/africa-south1-b"
+          }
+        ]
+      }
+    },
+    "zones/africa-south1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/africa-south1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/africa-south1-a"
+          }
+        ]
+      }
+    },
+    "zones/africa-south1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/africa-south1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/africa-south1-c"
+          }
+        ]
+      }
+    },
+    "zones/us-west8-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-west8-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west8-c"
+          }
+        ]
+      }
+    },
+    "zones/us-west8-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-west8-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west8-a"
+          }
+        ]
+      }
+    },
+    "zones/us-west8-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/us-west8-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/us-west8-b"
+          }
+        ]
+      }
+    },
+    "zones/northamerica-south1-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/northamerica-south1-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-south1-b"
+          }
+        ]
+      }
+    },
+    "zones/northamerica-south1-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/northamerica-south1-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-south1-a"
+          }
+        ]
+      }
+    },
+    "zones/northamerica-south1-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/northamerica-south1-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/northamerica-south1-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-north2-c": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-north2-c'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-north2-c"
+          }
+        ]
+      }
+    },
+    "zones/europe-north2-a": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-north2-a'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-north2-a"
+          }
+        ]
+      }
+    },
+    "zones/europe-north2-b": {
+      "warning": {
+        "code": "NO_RESULTS_ON_PAGE",
+        "message": "No results for the scope 11112222zones/europe-north2-b'.",
+        "data": [
+          {
+            "key": "scope",
+            "value": "zones/europe-north2-b"
+          }
+        ]
+      }
+    }
+  },
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-gke1-aaaa/aggregated/instances"
+}

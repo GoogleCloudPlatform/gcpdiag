@@ -20,7 +20,7 @@ The forwarding rule has an average request count of {average_request_count} requ
 
 ### Failure Remediation
 
-The high request count suggests your backend may be overloaded. Consider scaling up your backend by adding more instances or increasing the resources of existing instances.
+The high request count suggests the backend may be overloaded. Consider scaling up the backend by adding more instances or increasing the resources of existing instances.
 
 ### Success Reason
 

@@ -42,7 +42,7 @@ class HumanTask(runbook.Step):
     super().__init__(step_type=step_type, uuid=uuid, parent=parent)
 
   def execute(self):
-    """Human task: Follow the guide below and confirm if issue is occuring or not."""
+    """Human task: Follow the guide below and confirm if issue is occurring or not."""
 
     instructions = self.instructions or op.prep_msg(op.INSTRUCTIONS_MESSAGE)
     options = self.options or op.DEFAULT_INSTRUCTIONS_OPTIONS
@@ -99,7 +99,7 @@ class ResourceAttributeCheck(runbook.Step):
       status_check.query_kwargs = {
           'project_id': op.get(flags.PROJECT_ID),
           'zone': op.get(flags.ZONE),
-          'instance_name': op.get(flags.NAME)
+          'instance_name': op.get(flags.INSTANCE_NAME)
       }
       status_check.attribute = ('status',)
       status_check.expected_value = 'RUNNING'
@@ -125,7 +125,7 @@ class ResourceAttributeCheck(runbook.Step):
   resource: Resource
 
   def execute(self):
-    """Verifying resource has expected value..."""
+    """Verify resource has expected value."""
     try:
       self.resource = self.resource_query(**self.query_kwargs)
       # TODO: change this.
@@ -187,12 +187,13 @@ class ServiceApiStatusCheck(runbook.Step):
   api_name: str
   expected_state: constants.APIState
   template: str = 'api::default'
+  project_id: str
 
   def execute(self):
-    """Verifying Cloud API state..."""
-    project = crm.get_project(op.get(flags.PROJECT_ID))
-    is_enabled = apis.is_enabled(op.get(flags.PROJECT_ID), self.api_name)
-    service_name = f'{self.api_name}.{config.get("universe_domain")}'
+    """Verify {api_name}.{universe_domain} API is {expected_state} in project {project_id}."""
+    project = crm.get_project(self.project_id)
+    is_enabled = apis.is_enabled(self.project_id, self.api_name)
+    service_name = f"{self.api_name}.{config.get('universe_domain')}"
     actual_state = constants.APIState.ENABLED if is_enabled else constants.APIState.DISABLED
     if self.expected_state == actual_state:
       op.add_ok(
@@ -201,6 +202,7 @@ class ServiceApiStatusCheck(runbook.Step):
                       service_name=service_name,
                       expected_state=self.expected_state.value))
     else:
+      remediation = ''
       if self.expected_state == constants.APIState.ENABLED:
         remediation = op.prep_msg(op.FAILURE_REMEDIATION,
                                   service_name=service_name,

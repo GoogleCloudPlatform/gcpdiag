@@ -31,7 +31,7 @@ sample_bundle = """
     name: "test-vm"
   steps:
     - gcpdiag.runbook.gce.generalized_steps.VmLifecycleState
-    - gcpdiag.runbook.gce.ssh.PoxisUserHasValidSshKeyCheck
+    - gcpdiag.runbook.gce.ssh.PosixUserHasValidSshKeyCheck
 - bundle:
   parameter:
     project_id: "test-project"

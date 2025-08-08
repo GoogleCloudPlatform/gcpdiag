@@ -26,16 +26,18 @@ potentially affecting application performance.
 
 To mitigate high disk usage, consider expanding the VM's boot disk capacity.
 This action can help avoid performance issues and ensure smoother SSH connections.
-Follow the guide to increase disk size:
-https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk
+
+Consult the following guide to increase disk size:
+<https://cloud.google.com/compute/docs/disks/resize-persistent-disk#increase_the_size_of_a_disk>
 
 ### Success Reason
 
-The VM's disk space usage is within optimal levels.
+The boot disk space usage for the Compute Engine VM {full_resource_path}, is within optimal levels.
 
 ### Skipped Reason
 
-There are no logs to examine !
+No Google Cloud Ops Agent installed on the VM, making it difficult to retrieve disk utilization data via metrics.
+Falling back to checking for filesystem utilization-related messages in the serial logs.
 
 
 

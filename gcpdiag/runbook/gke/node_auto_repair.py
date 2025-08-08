@@ -13,7 +13,7 @@
 # limitations under the License.
 """GKE Node Auto Repair runbook"""
 
-from gcpdiag import models, runbook
+from gcpdiag import runbook
 from gcpdiag.queries import crm, gke, logs
 from gcpdiag.runbook import op
 from gcpdiag.runbook.gke import flags
@@ -21,8 +21,8 @@ from gcpdiag.runbook.gke import flags
 
 def local_realtime_query(filter_str):
   result = logs.realtime_query(project_id=op.get(flags.PROJECT_ID),
-                               start_time_utc=op.get(flags.START_TIME_UTC),
-                               end_time_utc=op.get(flags.END_TIME_UTC),
+                               start_time=op.get(flags.START_TIME),
+                               end_time=op.get(flags.END_TIME),
                                filter_str=filter_str)
   return result
 
@@ -48,6 +48,10 @@ def unallocatable_gpu_tpu(node, location=None, name=None, gpu=False, tpu=False):
   filter_str = '\n'.join(filter_str)
 
   log_entries_event = local_realtime_query(filter_str)
+
+  # If there are no "NodeNotSchedulable" events, no need to check for other logs.
+  if not log_entries_event:
+    return False
 
   filter_str = [
       'log_id("kubelet")', f'resource.labels.node_name="{node}"',
@@ -129,6 +133,18 @@ class NodeAutoRepair(runbook.DiagnosticTree):
           'help':
               'The name of the GKE cluster, to limit search only for this cluster',
           'required':
+              False,
+          'deprecated':
+              True,
+          'new_parameter':
+              'gke_cluster_name'
+      },
+      flags.GKE_CLUSTER_NAME: {
+          'type':
+              str,
+          'help':
+              'The name of the GKE cluster, to limit search only for this cluster',
+          'required':
               False
       },
       flags.NODE: {
@@ -138,10 +154,14 @@ class NodeAutoRepair(runbook.DiagnosticTree):
       },
       flags.LOCATION: {
           'type': str,
-          'help': 'The zone of the GKE node',
+          'help': 'The zone or region of the GKE cluster',
           'required': False
       }
   }
+
+  def legacy_parameter_handler(self, parameters):
+    if flags.NAME in parameters:
+      parameters[flags.NAME] = parameters.pop(flags.GKE_CLUSTER_NAME)
 
   def build_tree(self):
     """Construct the diagnostic tree with appropriate steps."""
@@ -167,25 +187,26 @@ class NodeAutoRepairStart(runbook.StartStep):
     project = op.get(flags.PROJECT_ID)
     location = op.get(flags.LOCATION)
     node = op.get(flags.NODE)
-    name = op.get(flags.NAME)
+    name = op.get(flags.GKE_CLUSTER_NAME)
     project_path = crm.get_project(project)
-    start_time_utc = op.get(flags.START_TIME_UTC)
-    end_time_utc = op.get(flags.END_TIME_UTC)
+    start_time = op.get(flags.START_TIME)
+    end_time = op.get(flags.END_TIME)
 
     # check if there are clusters in the project
     if name:
       clusters = gke.get_clusters(
-          models.Context(project_id=project, resources=[name]))
+          op.get_new_context(project_id=project, resources=[name]))
       if not clusters:
         op.add_skipped(
             project_path,
-            reason=(f'No {name} GKE cluster found in project {project}'))
+            reason=f'No {name} GKE cluster found in project {project}')
         return
     else:
-      clusters = gke.get_clusters(op.context)
+      clusters = gke.get_clusters(
+          op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
       if not clusters:
         op.add_skipped(project_path,
-                       reason=(f'No GKE clusters found in project {project}'))
+                       reason=f'No GKE clusters found in project {project}')
         return
 
     # check if there were any repair operations for provided node
@@ -210,7 +231,7 @@ class NodeAutoRepairStart(runbook.StartStep):
         reason += f' in cluster {name}'
       if location:
         reason += f' in location {location}'
-      reason += f' in the provided time range {start_time_utc} - {end_time_utc}.'
+      reason += f' in the provided time range {start_time} - {end_time}.'
       op.add_skipped(project_path, reason=reason)
       return
 
@@ -225,7 +246,7 @@ class NodeNotReady(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     location = op.get(flags.LOCATION)
     node = op.get(flags.NODE)
-    name = op.get(flags.NAME)
+    name = op.get(flags.GKE_CLUSTER_NAME)
     project_path = crm.get_project(project)
 
     if check_node_unhealthy(node,
@@ -233,10 +254,10 @@ class NodeNotReady(runbook.Step):
                             name,
                             unhealthy_status='NodeNotReady'):
       op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, NODE=node),
+                    reason=op.prep_msg(op.FAILURE_REASON, node=node),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
-      op.add_ok(project_path, reason=op.prep_msg(op.SUCCESS_REASON, NODE=node))
+      op.add_ok(project_path, reason=op.prep_msg(op.SUCCESS_REASON, node=node))
 
 
 class NodeDiskFull(runbook.Step):
@@ -249,7 +270,7 @@ class NodeDiskFull(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     location = op.get(flags.LOCATION)
     node = op.get(flags.NODE)
-    name = op.get(flags.NAME)
+    name = op.get(flags.GKE_CLUSTER_NAME)
     project_path = crm.get_project(project)
 
     if check_node_unhealthy(node,
@@ -257,10 +278,10 @@ class NodeDiskFull(runbook.Step):
                             name,
                             unhealthy_status='NodeHasDiskPressure'):
       op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, NODE=node),
+                    reason=op.prep_msg(op.FAILURE_REASON, node=node),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
-      op.add_ok(project_path, reason=op.prep_msg(op.SUCCESS_REASON, NODE=node))
+      op.add_ok(project_path, reason=op.prep_msg(op.SUCCESS_REASON, node=node))
 
 
 class UnallocatableGpu(runbook.Step):
@@ -273,15 +294,15 @@ class UnallocatableGpu(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     location = op.get(flags.LOCATION)
     node = op.get(flags.NODE)
-    name = op.get(flags.NAME)
+    name = op.get(flags.GKE_CLUSTER_NAME)
     project_path = crm.get_project(project)
 
     if unallocatable_gpu_tpu(node, location, name, tpu=False, gpu=True):
       op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, NODE=node),
+                    reason=op.prep_msg(op.FAILURE_REASON, node=node),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
-      op.add_ok(project_path, reason=op.prep_msg(op.SUCCESS_REASON, NODE=node))
+      op.add_ok(project_path, reason=op.prep_msg(op.SUCCESS_REASON, node=node))
 
 
 class UnallocatableTpu(runbook.Step):
@@ -294,15 +315,15 @@ class UnallocatableTpu(runbook.Step):
     project = op.get(flags.PROJECT_ID)
     location = op.get(flags.LOCATION)
     node = op.get(flags.NODE)
-    name = op.get(flags.NAME)
+    name = op.get(flags.GKE_CLUSTER_NAME)
     project_path = crm.get_project(project)
 
     if unallocatable_gpu_tpu(node, location, name, tpu=True, gpu=False):
       op.add_failed(project_path,
-                    reason=op.prep_msg(op.FAILURE_REASON, NODE=node),
+                    reason=op.prep_msg(op.FAILURE_REASON, node=node),
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION))
     else:
-      op.add_ok(project_path, reason=op.prep_msg(op.SUCCESS_REASON, NODE=node))
+      op.add_ok(project_path, reason=op.prep_msg(op.SUCCESS_REASON, node=node))
 
 
 class NodeAutoRepairEnd(runbook.EndStep):
@@ -316,7 +337,7 @@ class NodeAutoRepairEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing `Node AutoRepair` diagnostics..."""
+    """Finalize `Node AutoRepair` diagnostics."""
     response = op.prompt(
         kind=op.CONFIRMATION,
         message='Are you satisfied with the `GKE Node AutoRepair` RCA performed?'

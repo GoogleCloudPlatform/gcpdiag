@@ -1,7 +1,5 @@
 {% block starts_correctly_failure_remediation %}
-The container failed to start. Please check
-https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start
-for the next steps.
+The container failed to start. Refer to <https://cloud.google.com/run/docs/troubleshooting#container-failed-to-start> for guidance.
 {% endblock %}
 
 {% block starts_correctly_failure_reason %}
@@ -9,8 +7,7 @@ Container failed to start in service {name}.
 {% endblock %}
 
 {% block image_exists_failure_remediation %}
-The provided image does not exist. Make sure that it is correct. Try following
-quickstart guide and see how to correctly specify image names. https://cloud.google.com/run/docs/quickstarts
+The provided image does not exist. Verify that the image name is correct. Refer to <https://cloud.google.com/run/docs/quickstarts> for guidance on specifying image names.
 {% endblock %}
 
 {% block image_exists_failure_reason %}
@@ -18,9 +15,7 @@ Provided image {image} does not exist.
 {% endblock %}
 
 {% block has_permission_for_image_failure_remediation %}
-Please make sure that {sa} has roles/storage.objectViewer role if the image is stored in Container
-Registry or roles/artifactregistry.reader if in Artifact Registry. Please note that the role needs to be granted in the
-project where the image is stored.
+Grant {sa} the roles/storage.objectViewer role if the image is stored in Container Registry or the roles/artifactregistry.reader role if in Artifact Registry. Note that the role must be granted in the project where the image is stored.
 {% endblock %}
 
 {% block has_permission_for_image_failure_reason %}

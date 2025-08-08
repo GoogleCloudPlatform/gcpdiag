@@ -16,10 +16,10 @@ jobs:
       id: setup-python
       uses: actions/setup-python@v5
       with:
-        python-version: 3.9
+        python-version: 3.12
 
     - name: Install pipenv
-      run: python -m pip install --upgrade pipenv==2021.5.29 wheel
+      run: python -m pip install --upgrade pipenv==2024.4.0 wheel
 
     - name: Restore pipenv cache
       id: cache-pipenv
@@ -34,3 +34,13 @@ jobs:
 
     - name: Run make test
       run: pipenv run make test
+
+    # The gcpdiag.dev website is no longer on github pages, but it's still good to build it in an action to find errors.
+    - name: Hugo build
+      uses: docker://us-docker.pkg.dev/gcpdiag-dist/common/gcpdiag-hugo:0.1
+      with:
+        args: >
+          /bin/sh -e -c "
+          cp bin/gcpdiag-dockerized website/static/gcpdiag.sh;
+          cd website;
+          hugo build --themesDir=/themes --baseUrl=https://gcpdiag.dev/ --minify --enableGitInfo"

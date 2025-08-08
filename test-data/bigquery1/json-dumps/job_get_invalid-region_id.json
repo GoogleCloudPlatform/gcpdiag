@@ -1,0 +1,5 @@
+{
+  "id": "gcpdiag-bigquery1-aaaa:invalid-region.any_id",
+  "status": { "state": "DONE", "errorResult": { "reason": "invalid", "message": "Invalid value for location: invalid-region is not a valid value" } },
+  "jobReference": { "projectId": "gcpdiag-bigquery1-aaaa", "jobId": "any_id", "location": "invalid-region" }
+}

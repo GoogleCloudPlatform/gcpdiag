@@ -134,3 +134,16 @@ class TestInterconnect:
     for link in links:
       if link.name == 'dummy-interconnect5':
         assert link.under_maintenance is True
+
+  def test_ipv4address(self):
+    attachments = interconnect.get_vlan_attachments(
+        'gcpdiag-interconnect1-aaaa')
+    for vlan in attachments:
+      if vlan.name == 'dummy-attachment1':
+        assert vlan.ipv4address == '169.254.1.1'
+      if vlan.name == 'dummy-attachment2':
+        assert vlan.ipv4address == '169.254.2.1'
+      if vlan.name == 'dummy-attachment3':
+        assert vlan.ipv4address == '169.254.3.1'
+      if vlan.name == 'dummy-attachment4':
+        assert vlan.ipv4address == '169.254.4.1'

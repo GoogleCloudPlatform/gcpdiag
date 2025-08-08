@@ -1,4 +1,5 @@
-location=europe-west10,name=gcp-cluster,project_id=gcpdiag-gke-cluster-autoscaler-rrrr
+gke_cluster_name=gcp-cluster,location=europe-west10,name=gcp-cluster,project_id=gcpdiag-gke-cluster-
+autoscaler-rrrr
 
 gke/logs: Provides a methodical approach to troubleshooting GKE logging issues.
 
@@ -43,9 +44,7 @@ gke/logs: Provides a methodical approach to troubleshooting GKE logging issues.
    - gcpdiag-gke-cluster-autoscaler-rrrr/europe-west10/gcp-cluster/default-pool [OK]
      [REASON]
      The node pool projects/gcpdiag-gke-cluster-autoscaler-rrrr/locations/europe-west10/clusters/gcp-cluster/nodePools/default-pool has the correct Cloud Logging access scope.
-[AUTOMATED STEP]: 
-    Verifies the node pool's service account has a role with the correct logging IAM permissions
-    
+[AUTOMATED STEP]: Verifies the node pool's service account has a role with the correct logging IAM permissions
 
    - gcpdiag-gke-cluster-autoscaler-rrrr/europe-west10/gcp-cluster/default-pool [OK]
      [REASON]
@@ -57,6 +56,6 @@ gke/logs: Provides a methodical approach to troubleshooting GKE logging issues.
      Project gcpdiag-gke-cluster-autoscaler-rrrr has recently exceeded the following quotas: WriteRequestsPerMinutePerProject.
      [REMEDIATION]
      Please check the project gcpdiag-gke-cluster-autoscaler-rrrr for the Cloud Logging API quotas WriteRequestsPerMinutePerProject which have been reached
-[END]: Finalizing `GKE logs` diagnostics...
+[END]: Finalize `GKE logs` diagnostics.
 
 

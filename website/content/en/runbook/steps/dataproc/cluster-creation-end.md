@@ -4,7 +4,7 @@ linkTitle: "Cluster Creation End"
 weight: 3
 type: docs
 description: >
-  The end step of the runbook
+  The end step of the runbook.
 ---
 
 **Product**: [Cloud Dataproc](https://cloud.google.com/dataproc)\
@@ -12,7 +12,7 @@ description: >
 
 ### Description
 
-Points out all the failed steps to the user.
+It points out all the failed steps to the user.
 
 
 

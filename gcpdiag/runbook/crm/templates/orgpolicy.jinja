@@ -3,17 +3,17 @@ The {constraint} is {actual_state}.
 {% endblock default_success_reason %}
 
 {% block default_failure_reason %}
-The {constraint} policy is {actual_state} however should be {expected_state}.
+The organization policy {constraint} is set to {actual_state}, but it should be {expected_state}.
 {% endblock default_failure_reason %}
 
 {% block default_failure_remediation %}
 Follow Guide [1] to correct the constraint. Search for the constraint in [2] to better understand
 how it works.
 
-Note: You may want to doublecheck with your organization admins of the best approach here.
+Note: Consider checking with organization administrators for the recommended approach.
 
-[1] https://cloud.google.com/resource-manager/docs/organization-policy/using-constraints
-[2] https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints
+[1] <https://cloud.google.com/resource-manager/docs/organization-policy/using-constraints>
+[2] <https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints>
 {% endblock default_failure_remediation %}
 
 {% block serial_logging_enforced_success_reason %}
@@ -21,15 +21,15 @@ The {constraint} is {enforced_or_not}.
 {% endblock serial_logging_enforced_success_reason %}
 
 {% block serial_logging_enforced_failure_reason %}
-The {constraint} is {enforced_or_not} however the opposite is expected.
+The organization policy {constraint} is {enforced_or_not}, but the opposite state is expected.
 {% endblock serial_logging_enforced_failure_reason %}
 
 {% block serial_logging_enforced_failure_remediation %}
 Follow Guide [1] to correct the constraint. Search for the constraint in [2] to better understand
 how it works.
 
-Note: You may want to doublecheck with your organization admins of the best approach here.
+Note: Consider checking with organization administrators for the recommended approach.
 
-[1] https://cloud.google.com/resource-manager/docs/organization-policy/using-constraints
-[2] https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints
+[1] <https://cloud.google.com/resource-manager/docs/organization-policy/using-constraints>
+[2] <https://cloud.google.com/resource-manager/docs/organization-policy/org-policy-constraints>
 {% endblock serial_logging_enforced_failure_remediation %}

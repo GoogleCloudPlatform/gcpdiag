@@ -16,28 +16,25 @@ None
 
 ### Success Reason
 
-You are using image version {image_version} that preinstalls BigQuery connector
-and not providing any conflicting BigQuery jars on your end. There should be no dependency version conflict on the BigQuery side.
+The cluster uses image version {image_version} which preinstalls the BigQuery connector, and no conflicting BigQuery JARs were provided. Dependency version conflicts on the BigQuery side are not expected.
 
-Visit Dataproc Version page to find out each component version preinstalled on your cluster:
-https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-version-clusters
+Refer to the Dataproc Version page to find out each component version preinstalled on your cluster:
+<https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-version-clusters>
 
 ### Uncertain Reason
 
-You are using image version {image_version} that preinstalls BigQuery connector
-and you are installing on the cluster or job level a different version of the BigQuery connector.
-This might cause dependency version conflicts and fail your jobs.
+The cluster uses image version {image_version} which preinstalls the BigQuery connector, and a different version of the BigQuery connector is being installed at the cluster or job level. This might cause dependency version conflicts and lead to job failures.
 
 ### Uncertain Remediation
 
-Try one of the following:
-- (if you provide BQ jar on the cluster) Create Dataproc cluster without any BigQuery jar
-- (if you provide BQ jar on the job) Run the job without any BigQuery jar
-- (if you need to install BQ jar) Match the version of the BQ jar to the version preinstalled on the cluster.
-For image version {image_version}, it is {bq_version}.
+Resolve potential BigQuery connector version conflicts using one of the following approaches:
 
-Visit Dataproc Version page to find out each component version preinstalled on your cluster:
-https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-version-clusters
+- If providing the BigQuery JAR at the cluster level: Create the Dataproc cluster without specifying any BigQuery JAR.
+- If providing the BigQuery JAR at the job level: Run the job without specifying any BigQuery JAR.
+- If installing a BigQuery JAR is necessary: Match the version of the BigQuery JAR to the version preinstalled on the cluster (version {bq_version} for image {image_version}).
+
+Refer to the Dataproc Version page to find out each component version preinstalled on your cluster:
+<https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-version-clusters>
 
 
 

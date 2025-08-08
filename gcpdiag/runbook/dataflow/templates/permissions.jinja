@@ -1,55 +1,55 @@
 {% block dataflow_service_account_success_reason %}
-{principal} has expected {permissions_or_roles} in IAM.
-{present_permissions_or_roles}.
+The principal `{principal}` has the expected {permissions_or_roles} in the IAM policy.
+Present {permissions_or_roles}: {present_permissions_or_roles}.
 {% endblock  dataflow_service_account_success_reason %}
 
 {% block  dataflow_service_account_failure_reason %}
-{principal} doesn't have at least one of the expected {permissions_or_roles}:
-{missing_permissions_or_roles}.
+The principal `{principal}` is missing at least one of the expected {permissions_or_roles} in the IAM policy:
+Missing {permissions_or_roles}: {missing_permissions_or_roles}.
 {% endblock  dataflow_service_account_failure_reason %}
 
 {% block  dataflow_service_account_failure_remediation %}
-Follow Guide [1] to grant a role which has the correct permissions.
+Grant a role that contains the required permissions. Refer to the guide [1] for details.
 
-[1] https://cloud.google.com/dataflow/docs/concepts/security-and-permissions#df-service-account
+[1] <https://cloud.google.com/dataflow/docs/concepts/security-and-permissions#df-service-account>
 {% endblock  dataflow_service_account_failure_remediation %}
 
 {% block dataflow_worker_service_account_success_reason %}
-{principal} has expected {permissions_or_roles} in IAM.
-{present_permissions_or_roles}.
+The principal `{principal}` has the expected {permissions_or_roles} in the IAM policy.
+Present {permissions_or_roles}: {present_permissions_or_roles}.
 {% endblock  dataflow_worker_service_account_success_reason %}
 
 {% block  dataflow_worker_service_account_failure_reason %}
-{principal} doesn't have at least one of the expected {permissions_or_roles}:
-{missing_permissions_or_roles}.
+The principal `{principal}` is missing at least one of the expected {permissions_or_roles} in the IAM policy:
+Missing {permissions_or_roles}: {missing_permissions_or_roles}.
 {% endblock  dataflow_worker_service_account_failure_reason %}
 
 {% block  dataflow_worker_service_account_failure_remediation %}
-Follow Guide [1] to grant a role which has the correct permissions.
+Grant a role that contains the required permissions. Refer to the guide [1] for details.
 
-[1] https://cloud.google.com/dataflow/docs/concepts/security-and-permissions#add-roles
+[1] <https://cloud.google.com/dataflow/docs/concepts/security-and-permissions#add-roles>
 {% endblock dataflow_worker_service_account_failure_remediation %}
 
 {% block dataflow_cross_project_worker_service_account_success_reason %}
-{principal} has expected {permissions_or_roles} in IAM.
-{present_permissions_or_roles}.
+The principal `{principal}` has the expected {permissions_or_roles} in the IAM policy.
+Present {permissions_or_roles}: {present_permissions_or_roles}.
 {% endblock  dataflow_cross_project_worker_service_account_success_reason %}
 
 {% block  dataflow_cross_project_worker_service_account_failure_reason %}
-{principal} doesn't have at least one of the expected {permissions_or_roles}:
-{missing_permissions_or_roles}.
+The principal `{principal}` is missing at least one of the expected {permissions_or_roles} in the IAM policy:
+Missing {permissions_or_roles}: {missing_permissions_or_roles}.
 {% endblock  dataflow_cross_project_worker_service_account_failure_reason %}
 
 {% block  dataflow_cross_project_worker_service_account_failure_remediation %}
-Follow Guide [1] to grant a role which has the correct permissions.
+Grant a role that contains the required permissions. Refer to the guide [1] for details.
 
-[1] https://cloud.google.com/dataflow/docs/concepts/security-and-permissions#user-managed
+[1] <https://cloud.google.com/dataflow/docs/concepts/security-and-permissions#user-managed>
 {% endblock dataflow_cross_project_worker_service_account_failure_remediation %}
 
 {% block projectcheck_failure_reason %}
-Service Account {service_account} associated with Dataflow Job was not found in project {project_id} or cross project (if specified).
+Service Account `{service_account}` associated with the Dataflow job was not found in project `{project_id}` or the specified cross-project.
 {% endblock projectcheck_failure_reason %}
 
 {% block projectcheck_failure_remediation %}
-Provide the project in which the service account resides by using the cross_project/project parameter.
+Specify the project where the service account resides using the `cross_project_project` parameter.
 {% endblock projectcheck_failure_remediation %}

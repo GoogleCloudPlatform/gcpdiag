@@ -42,6 +42,12 @@ class FailedStreamingPipeline(runbook.DiagnosticTree):
       flags.JOB_ID: {
           'type': str,
           'help': 'The Job ID returned when the launch command is submitted',
+          'deprecated': True,
+          'new_parameter': 'dataflow_job_id',
+      },
+      flags.DATAFLOW_JOB_ID: {
+          'type': str,
+          'help': 'The Job ID returned when the launch command is submitted',
           'required': True,
       },
       flags.JOB_REGION: {
@@ -50,6 +56,10 @@ class FailedStreamingPipeline(runbook.DiagnosticTree):
           'required': True,
       },
   }
+
+  def legacy_parameter_handler(self, parameters):
+    if flags.JOB_ID in parameters:
+      parameters[flags.DATAFLOW_JOB_ID] = parameters.pop(flags.JOB_ID)
 
   def build_tree(self):
     """Construct the diagnostic tree with appropriate steps."""
@@ -85,14 +95,14 @@ class FailedStreamingPipelineStart(runbook.StartStep):
   def execute(self):
     """Start Step for failed streaming pipelines runbook."""
     project = crm.get_project(op.get(flags.PROJECT_ID))
-    job_id = op.get(flags.JOB_ID)
+    job_id = op.get(flags.DATAFLOW_JOB_ID)
     job_region = op.get(flags.JOB_REGION)
 
     if project:
       op.info(f'name: {project.name}: id: {project.id}')
     product = self.__module__.split('.')[-2]
 
-    if not apis.is_enabled(op.context.project_id, 'dataflow'):
+    if not apis.is_enabled(op.get(flags.PROJECT_ID), 'dataflow'):
       op.add_skipped(project, reason='Dataflow API is not enabled')
 
     job = dataflow.get_job(op.get(flags.PROJECT_ID), job_id, job_region)
@@ -116,8 +126,11 @@ class JobIsStreaming(runbook.Step):
   def execute(self):
     """Checks if a Dataflow job is indeed a streaming job by field JobType."""
 
-    job = dataflow.get_job(op.get(flags.PROJECT_ID), op.get(flags.JOB_ID),
-                           op.get(flags.JOB_REGION))
+    job = dataflow.get_job(
+        op.get(flags.PROJECT_ID),
+        op.get(flags.DATAFLOW_JOB_ID),
+        op.get(flags.JOB_REGION),
+    )
     if job.job_type == 'JOB_TYPE_STREAMING':
       op.add_ok(resource=job, reason='Job is of type streaming')
     else:
@@ -138,8 +151,11 @@ class JobState(runbook.Step):
 
   def execute(self):
     """Checks that the Dataflow job's state."""
-    job = dataflow.get_job(op.get(flags.PROJECT_ID), op.get(flags.JOB_ID),
-                           op.get(flags.JOB_REGION))
+    job = dataflow.get_job(
+        op.get(flags.PROJECT_ID),
+        op.get(flags.DATAFLOW_JOB_ID),
+        op.get(flags.JOB_REGION),
+    )
 
     if job.state == 'JOB_STATE_FAILED':
       log_filter = ['severity=WARNING']
@@ -156,12 +172,11 @@ class JobState(runbook.Step):
 
       for log_entry in project_logs[project_id].entries:
         if log_entry['severity'] >= 'ERROR':
-          op.info(
-              message=
-              f'Error logs found in job logs for the project {job.full_path}')
+          op.info(message=('Error logs found in job logs for the project'
+                           f' {job.full_path}'))
 
       failure_reason = op.prep_msg(op.FAILURE_REASON,
-                                   job_id=op.get(flags.JOB_ID))
+                                   job_id=op.get(flags.DATAFLOW_JOB_ID))
       failure_remediation = op.prep_msg(op.FAILURE_REMEDIATION)
 
       op.add_failed(
@@ -199,8 +214,11 @@ class JobGraphIsConstructed(runbook.Gateway):
 
   def execute(self):
     """Checks if a Dataflow job graph is successfully constructed."""
-    job = dataflow.get_job(op.get(flags.PROJECT_ID), op.get(flags.JOB_ID),
-                           op.get(flags.JOB_REGION))
+    job = dataflow.get_job(
+        op.get(flags.PROJECT_ID),
+        op.get(flags.DATAFLOW_JOB_ID),
+        op.get(flags.JOB_REGION),
+    )
     message = (
         'Does the job experience any graph or pipeline construction errors'
         ' e.g.wording like %s')

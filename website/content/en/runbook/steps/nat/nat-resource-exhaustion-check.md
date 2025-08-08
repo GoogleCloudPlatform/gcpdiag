@@ -21,7 +21,7 @@ This step determines whether Cloud NAT has run into resource issues.
 ### Failure Remediation
 
    Resource exhaustion issues can be remediated by taking the following steps in [1]:
-   [1] https://cloud.google.com/knowledge/kb/cloud-nat-is-dropping-or-limiting-egress-connectivity-000004263#:~:text=If%20the%20metric%20indicates%20that,on%20the%20Port%20reservation%20procedure
+   [1] <https://cloud.google.com/knowledge/kb/cloud-nat-is-dropping-or-limiting-egress-connectivity-000004263#:~:text=If%20the%20metric%20indicates%20that,on%20the%20Port%20reservation%20procedure>
 
 ### Success Reason
 

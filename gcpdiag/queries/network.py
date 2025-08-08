@@ -23,9 +23,12 @@ from typing import Any, Dict, FrozenSet, Iterable, List, Optional, Union
 from gcpdiag import caching, config, models
 from gcpdiag.queries import apis, apis_utils, iam
 
+#pylint: disable=invalid-name
 IPv4AddrOrIPv6Addr = Union[ipaddress.IPv4Address, ipaddress.IPv6Address]
 IPv4NetOrIPv6Net = Union[ipaddress.IPv4Network, ipaddress.IPv6Network]
 IPAddrOrNet = Union[IPv4AddrOrIPv6Addr, IPv4NetOrIPv6Net]
+
+DEFAULT_MTU = 1460
 
 
 class Subnetwork(models.Resource):
@@ -267,6 +270,16 @@ class Router(models.Resource):
     return self._resource_data.get('selfLink', '')
 
   @property
+  def network(self) -> str:
+    return self._resource_data['network']
+
+  def get_network_name(self) -> str:
+    logging.info('inside get_network_name function')
+    if self._resource_data['network']:
+      return self._resource_data['network'].split('/')[-1]
+    return ''
+
+  @property
   def nats(self):
     return self._resource_data.get('nats', [])
 
@@ -336,6 +349,12 @@ class RouterStatus(models.Resource):
   def num_vms_with_nat_mappings(self) -> str:
     nat_status = self._resource_data.get('result', {}).get('natStatus', {})
     return nat_status[0].get('numVmEndpointsWithNatMappings', None)
+
+  @property
+  def bgp_peer_status(self) -> str:
+    bgp_peer_status = self._resource_data.get('result',
+                                              {}).get('bgpPeerStatus', {})
+    return bgp_peer_status
 
 
 class RouterNatIpInfo(models.Resource):
@@ -424,6 +443,12 @@ class Network(models.Resource):
   @property
   def firewall(self) -> 'EffectiveFirewalls':
     return _get_effective_firewalls(self)
+
+  @property
+  def mtu(self) -> int:
+    if 'mtu' in self._resource_data:
+      return self._resource_data['mtu']
+    return DEFAULT_MTU
 
   @property
   def subnetworks(self) -> Dict[str, Subnetwork]:
@@ -621,8 +646,13 @@ class _FirewallPolicy:
         'INGRESS': [],
         'EGRESS': [],
     }
-    for rule in sorted(resource_data['rules'],
-                       key=lambda r: int(r['priority'])):
+    # sort by priority, and then by action (deny before allow)
+    action_priority = {'deny': 1, 'allow': 2, 'goto_next': 3}
+    for rule in sorted(
+        resource_data['rules'],
+        key=lambda r: (int(r.get('priority', 65535)),
+                       action_priority.get(r.get('action'), 99)),
+    ):
       rule_decoded = copy.deepcopy(rule)
       if 'match' in rule:
         # decode network ranges
@@ -738,7 +768,10 @@ class _VpcFirewall:
         'INGRESS': [],
         'EGRESS': [],
     }
-    for r in sorted(rules_list, key=lambda r: int(r['priority'])):
+    # sort by primary key and then by deny action
+    for r in sorted(rules_list,
+                    key=lambda r: (int(r['priority']), 1
+                                   if r.get('denied') else 2)):
       r_decoded = copy.deepcopy(r)
       # decode network ranges
       if 'sourceRanges' in r:
@@ -1096,7 +1129,8 @@ class EffectiveFirewalls:
 class VPCEffectiveFirewalls(EffectiveFirewalls):
   """Effective firewall rules for a VPC network.
 
-  Includes org/folder firewall policies)."""
+  Includes org/folder firewall policies).
+  """
   _network: Network
 
   def __init__(self, network, resource_data):
@@ -1115,7 +1149,7 @@ def _get_effective_firewalls(network: Network):
 
 @caching.cached_api_call(in_memory=True)
 def get_network(project_id: str, network_name: str) -> Network:
-  logging.info('fetching network: %s/%s', project_id, network_name)
+  logging.debug('fetching network: %s/%s', project_id, network_name)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.networks().get(project=project_id, network=network_name)
   response = request.execute(num_retries=config.API_RETRIES)
@@ -1144,7 +1178,7 @@ def get_network_from_url(url: str) -> Network:
 
 @caching.cached_api_call(in_memory=True)
 def get_networks(project_id: str) -> List[Network]:
-  logging.info('fetching network: %s', project_id)
+  logging.debug('fetching network: %s', project_id)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.networks().list(project=project_id)
   response = request.execute(num_retries=config.API_RETRIES)
@@ -1154,7 +1188,7 @@ def get_networks(project_id: str) -> List[Network]:
 @caching.cached_api_call(in_memory=True)
 def get_subnetwork(project_id: str, region: str,
                    subnetwork_name: str) -> Subnetwork:
-  logging.info('fetching network: %s/%s', project_id, subnetwork_name)
+  logging.debug('fetching network: %s/%s', project_id, subnetwork_name)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.subnetworks().get(project=project_id,
                                       region=region,
@@ -1191,7 +1225,7 @@ def _batch_get_subnetworks(
 
 @caching.cached_api_call(in_memory=True)
 def get_routes(project_id: str) -> List[Route]:
-  logging.info('fetching routes: %s', project_id)
+  logging.debug('fetching routes: %s', project_id)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.routes().list(project=project_id)
   response = request.execute(num_retries=config.API_RETRIES)
@@ -1200,7 +1234,7 @@ def get_routes(project_id: str) -> List[Route]:
 
 @caching.cached_api_call(in_memory=True)
 def get_zones(project_id: str) -> List[ManagedZone]:
-  logging.info('fetching DNS zones: %s', project_id)
+  logging.debug('fetching DNS zones: %s', project_id)
   dns = apis.get_api('dns', 'v1beta2', project_id)
   request = dns.managedZones().list(project=project_id)
   response = request.execute(num_retries=config.API_RETRIES)
@@ -1215,7 +1249,7 @@ def get_zones(project_id: str) -> List[ManagedZone]:
 
 @caching.cached_api_call(in_memory=True)
 def get_routers(project_id: str, region: str, network) -> List[Router]:
-  logging.info('fetching routers: %s/%s', project_id, region)
+  logging.debug('fetching routers: %s/%s', project_id, region)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.routers().list(project=project_id,
                                    region=region,
@@ -1226,7 +1260,7 @@ def get_routers(project_id: str, region: str, network) -> List[Router]:
 
 @caching.cached_api_call(in_memory=True)
 def get_router(project_id: str, region: str, network) -> Router:
-  logging.info('fetching routers: %s/%s', project_id, region)
+  logging.debug('fetching routers: %s/%s', project_id, region)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.routers().list(project=project_id,
                                    region=region,
@@ -1236,10 +1270,24 @@ def get_router(project_id: str, region: str, network) -> Router:
 
 
 @caching.cached_api_call(in_memory=True)
+def get_router_by_name(project_id: str, region: str,
+                       router_name: str) -> Router:
+  logging.debug('fetching router list: %s/%s in region %s', project_id,
+                router_name, region)
+  compute = apis.get_api('compute', 'v1', project_id)
+  request = compute.routers().list(project=project_id, region=region)
+  response = request.execute(num_retries=config.API_RETRIES)
+  return next(
+      Router(project_id, item)
+      for item in response.get('items', [])
+      if item['name'] == router_name)
+
+
+@caching.cached_api_call(in_memory=True)
 def nat_router_status(project_id: str, router_name: str,
                       region: str) -> RouterStatus:
-  logging.info('fetching router status: %s/%s in region %s', project_id,
-               router_name, region)
+  logging.debug('fetching router status: %s/%s in region %s', project_id,
+                router_name, region)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.routers().getRouterStatus(project=project_id,
                                               router=router_name,
@@ -1248,16 +1296,16 @@ def nat_router_status(project_id: str, router_name: str,
   if 'result' in str(response):
     return RouterStatus(project_id, response)
   else:
-    logging.info('unable to fetch router status: %s/%s in region %s',
-                 project_id, router_name, region)
+    logging.debug('unable to fetch router status: %s/%s in region %s',
+                  project_id, router_name, region)
     return RouterStatus(project_id, {})
 
 
 @caching.cached_api_call(in_memory=True)
 def get_nat_ip_info(project_id: str, router_name: str,
                     region: str) -> RouterNatIpInfo:
-  logging.info('fetching NAT IP info for router: %s/%s in region %s',
-               project_id, router_name, region)
+  logging.debug('fetching NAT IP info for router: %s/%s in region %s',
+                project_id, router_name, region)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.routers().getNatIpInfo(project=project_id,
                                            router=router_name,
@@ -1266,8 +1314,8 @@ def get_nat_ip_info(project_id: str, router_name: str,
   if 'result' in str(response):
     return RouterNatIpInfo(project_id, response)
   else:
-    logging.info('unable to fetch Nat IP Info for router: %s/%s in region %s',
-                 project_id, router_name, region)
+    logging.debug('unable to fetch Nat IP Info for router: %s/%s in region %s',
+                  project_id, router_name, region)
     return RouterNatIpInfo(project_id, {})
 
 
@@ -1333,7 +1381,7 @@ class Address(models.Resource):
 
 @caching.cached_api_call(in_memory=True)
 def get_addresses(project_id: str) -> List[Address]:
-  logging.info('fetching addresses list: %s', project_id)
+  logging.debug('fetching addresses list: %s', project_id)
   compute = apis.get_api('compute', 'v1', project_id)
   addresses = []
   request = compute.addresses().aggregatedList(project=project_id)

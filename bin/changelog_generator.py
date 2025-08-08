@@ -53,6 +53,7 @@ def find_queries(file, commit):
         function_name = ''
         if match:
           function_name = match.group(1)
+          message = ''
           for node in ast.walk(tree):
             if isinstance(node, ast.FunctionDef) and node.name == function_name:
               message = ast.get_docstring(node) or 'No Message found'
@@ -61,7 +62,7 @@ def find_queries(file, commit):
           if final:
             return final
           else:
-            return file + ': No funcation implemented'
+            return file + ': No function implemented'
   else:
     return file + ': No file found'
 

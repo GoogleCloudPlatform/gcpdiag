@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# pylint: disable=cyclic-import
 """Stub API calls used in apis.py for testing."""
 
 import json
@@ -18,11 +19,10 @@ import pathlib
 import re
 from typing import Optional
 
-import googleapiclient.errors
+import googleapiclient
 import httplib2
 
 # pylint: disable=unused-argument
-
 JSON_PROJECT_DIR = {
     'gcpdiag-apigee1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/apigee1/json-dumps',
@@ -58,6 +58,10 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/datafusion1/json-dumps',
     'gcpdiag-dataproc1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/dataproc1/json-dumps',
+    'gcpdiag-dataproc2-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/dataproc2/json-dumps',
+    'gcpdiag-dataproc3-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/dataproc3/json-dumps',
     'gcpdiag-composer1-aaaa':
         pathlib.Path(__file__).parents[2] / 'test-data/composer1/json-dumps',
     'gcpdiag-cloudsql1-aaaa':
@@ -126,6 +130,9 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/gce3/json-dumps',
     'gcpdiag-gke3-gggg':
         pathlib.Path(__file__).parents[2] / 'test-data/gke3/json-dumps',
+    'gcpdiag-interconnect1-aaaa':
+        pathlib.Path(__file__).parents[2] /
+        'test-data/interconnect1/json-dumps',
     '12340032':
         pathlib.Path(__file__).parents[2] / 'test-data/gke3/json-dumps',
     'gcpdiag-gke4-runbook':
@@ -179,6 +186,16 @@ JSON_PROJECT_DIR = {
     'windows-sql-cloud':
         pathlib.Path(__file__).parents[2] /
         'test-data/gce-image-license/json-dumps',
+    'gcpdiag-gce5-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/gce5/json-dumps',
+    '123456012345':
+        pathlib.Path(__file__).parents[2] / 'test-data/gce5/json-dumps',
+    'gcpdiag-looker1-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/looker1/json-dumps',
+    'gcpdiag-gce6-aaaa':
+        pathlib.Path(__file__).parents[2] / 'test-data/gce6/json-dumps',
+    '1234560123456':
+        pathlib.Path(__file__).parents[2] / 'test-data/gce6/json-dumps',
 }
 
 # set to a value higher than 0 to emulate API temp. failure
@@ -407,6 +424,9 @@ def get_api_stub(service_name: str,
   elif service_name == 'dataflow':
     from gcpdiag.queries import dataflow_stub
     return dataflow_stub.DataflowApiStub()
+  elif service_name == 'bigquery':
+    from gcpdiag.queries import bigquery_stub
+    return bigquery_stub.BigQueryApiStub()
   elif 'aiplatform' in service_name:
     from gcpdiag.queries import vertex_stub
     return vertex_stub.VertexApiStub()
@@ -425,5 +445,8 @@ def get_api_stub(service_name: str,
   elif service_name == 'cloudasset':
     from gcpdiag.queries import cloudasset_stub
     return cloudasset_stub.CloudAssetApiStub()
+  elif service_name == 'looker':
+    from gcpdiag.queries import looker_stub
+    return looker_stub.LookerApiStub()
   else:
     raise ValueError('unsupported service: %s' % service_name)

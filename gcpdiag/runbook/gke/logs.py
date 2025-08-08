@@ -61,9 +61,16 @@ class Logs(runbook.DiagnosticTree):
           'type':
               str,
           'help':
-              '(Optional) The name of the GKE cluster, to limit search only for this cluster',
-          'required':
-              True
+              'The name of the GKE cluster, to limit search only for this cluster',
+          'deprecated':
+              True,
+          'new_parameter':
+              'gke_cluster_name',
+      },
+      flags.GKE_CLUSTER_NAME: {
+          'type': str,
+          'help': 'The name of the GKE cluster',
+          'required': True
       },
       flags.LOCATION: {
           'type': str,
@@ -71,6 +78,10 @@ class Logs(runbook.DiagnosticTree):
           'required': True
       }
   }
+
+  def legacy_parameter_handler(self, parameters):
+    if flags.NAME in parameters:
+      parameters[flags.GKE_CLUSTER_NAME] = parameters.pop(flags.NAME)
 
   def build_tree(self):
     """Construct the diagnostic tree with appropriate steps."""
@@ -112,7 +123,8 @@ class LogsStart(runbook.StartStep):
     project_path = crm.get_project(project)
 
     # Checks if there are clusters in the project
-    clusters = gke.get_clusters(op.context)
+    clusters = gke.get_clusters(
+        op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
     if not clusters:
       op.add_skipped(
           project_path,
@@ -122,7 +134,7 @@ class LogsStart(runbook.StartStep):
     # The following checks adjust based on the input provided:
     # - Both cluster name and location: Verify if that specific cluster exists at that location.
 
-    cluster_name = op.get(flags.NAME)
+    cluster_name = op.get(flags.GKE_CLUSTER_NAME)
     cluster_location = op.get(flags.LOCATION)
     found_cluster = False
     found_cluster_with_location = False
@@ -192,8 +204,9 @@ class ClusterLevelLoggingEnabled(runbook.Step):
 
   def execute(self):
     """Checks if GKE level logging is disabled"""
-    clusters = gke.get_clusters(op.context)
-    partial_path = f'{op.get(flags.LOCATION)}/clusters/{op.get(flags.NAME)}'
+    clusters = gke.get_clusters(
+        op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
+    partial_path = f'{op.get(flags.LOCATION)}/clusters/{op.get(flags.GKE_CLUSTER_NAME)}'
     cluster_obj = util.get_cluster_object(clusters, partial_path)
 
     if not cluster_obj.is_autopilot:
@@ -238,8 +251,9 @@ class NodePoolCloudLoggingAccessScope(runbook.Step):
         'https://www.googleapis.com/auth/logging.admin'
     ]
 
-    clusters = gke.get_clusters(op.context)
-    partial_path = f'{op.get(flags.LOCATION)}/clusters/{op.get(flags.NAME)}'
+    clusters = gke.get_clusters(
+        op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
+    partial_path = f'{op.get(flags.LOCATION)}/clusters/{op.get(flags.GKE_CLUSTER_NAME)}'
     cluster_obj = util.get_cluster_object(clusters, partial_path)
 
     for nodepool in cluster_obj.nodepools:
@@ -276,17 +290,18 @@ class ServiceAccountLoggingPermission(runbook.Step):
     """
     Verifies the node pool's service account has a role with the correct logging IAM permissions
     """
-    clusters = gke.get_clusters(op.context)
-    partial_path = f'{op.get(flags.LOCATION)}/clusters/{op.get(flags.NAME)}'
+    clusters = gke.get_clusters(
+        op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
+    partial_path = f'{op.get(flags.LOCATION)}/clusters/{op.get(flags.GKE_CLUSTER_NAME)}'
     cluster_obj = util.get_cluster_object(clusters, partial_path)
-    iam_policy = iam.get_project_policy(op.context.project_id)
+    iam_policy = iam.get_project_policy(op.get(flags.PROJECT_ID))
 
     logging_role = 'roles/logging.logWriter'
 
     # Verifies service-account permissions for every nodepool.
     for np in cluster_obj.nodepools:
       sa = np.service_account
-      if not iam.is_service_account_enabled(sa, op.context.project_id):
+      if not iam.is_service_account_enabled(sa, op.get(flags.PROJECT_ID)):
         op.add_failed(
             np,
             reason=f'The service account {sa} is disabled or deleted.',
@@ -323,14 +338,14 @@ class LoggingWriteApiQuotaExceeded(runbook.Step):
 
     params = {
         'start_time':
-            op.get(flags.START_TIME_UTC).strftime("d\'%Y/%m/%d-%H:%M:%S'"),
+            op.get(flags.START_TIME).strftime("d\'%Y/%m/%d-%H:%M:%S'"),
         'end_time':
-            op.get(flags.END_TIME_UTC).strftime("d\'%Y/%m/%d-%H:%M:%S'")
+            op.get(flags.END_TIME).strftime("d\'%Y/%m/%d-%H:%M:%S'")
     }
 
-    query_results_per_project_id[op.context.project_id] = \
+    query_results_per_project_id[op.get(flags.PROJECT_ID)] = \
         monitoring.query(
-            op.context.project_id,
+            op.get(flags.PROJECT_ID),
             quotas.QUOTA_EXCEEDED_QUERY_WINDOW_TEMPLATE.format_map(params))
 
     project = op.get(flags.PROJECT_ID)
@@ -339,8 +354,8 @@ class LoggingWriteApiQuotaExceeded(runbook.Step):
     if len(query_results_per_project_id[project]) == 0:
       op.add_ok(project_path,
                 reason=op.prep_msg(op.SUCCESS_REASON,
-                                   START_TIME_UTC=op.get(flags.START_TIME_UTC),
-                                   END_TIME_UTC=op.get(flags.END_TIME_UTC)))
+                                   start_time=op.get(flags.START_TIME),
+                                   end_time=op.get(flags.END_TIME)))
     else:
       exceeded_quotas = []
       for i in query_results_per_project_id[project].values():
@@ -372,7 +387,7 @@ class LogsEnd(runbook.EndStep):
   """
 
   def execute(self):
-    """Finalizing `GKE logs` diagnostics..."""
+    """Finalize `GKE logs` diagnostics."""
     response = op.prompt(
         kind=op.CONFIRMATION,
         message='Are you satisfied with the `GKE logs` RCA performed?')

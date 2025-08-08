@@ -199,12 +199,11 @@ def _init_runbook_args_parser():
       ('Specifies the full path to the directory where reports '
        'will be saved (default: /tmp/gcpdiag or in Cloud Shell $HOME/tmp/gcpdiag)'
       ))
-  parser.add_argument(
-      '--interface',
-      metavar='FORMATTER',
-      default=config.get('interface'),
-      type=str,
-      help=('What interface as one of [cli, api] (default: cli)'))
+  parser.add_argument('--interface',
+                      metavar='FORMATTER',
+                      default=config.get('interface'),
+                      type=str,
+                      help='What interface as one of [cli, api] (default: cli)')
 
   parser.add_argument('--universe-domain',
                       type=str,
@@ -221,8 +220,7 @@ def _init_runbook_args_parser():
 
 def _load_runbook_rules(package: str):
   """Recursively import all submodules under a package, including subpackages."""
-  if isinstance(package, str):
-    pkg = importlib.import_module(package)
+  pkg = importlib.import_module(package)
   for _, name, is_pkg in pkgutil.walk_packages(
       pkg.__path__,  # type: ignore
       pkg.__name__ + '.'):
@@ -249,7 +247,7 @@ def _load_bundles_spec(file_path):
       steps:
         - gcpdiag.runbook.gce.generalized_steps.VmLifecycleState
         - gcpdiag.runbook.gce.ops_agent.VmHasAServiceAccount
-        - gcpdiag.runbook.gce.ssh.PoxisUserHasValidSshKeyCheck
+        - gcpdiag.runbook.gce.ssh.PosixUserHasValidSshKeyCheck
     - bundle:
       ...
   """
@@ -333,7 +331,7 @@ def run_and_get_report(argv=None, credentials: str = None) -> dict:
   # ^^^ If you add gcpdiag/runbook/[NEW-PRODUCT] directory, update also
   # pyinstaller/hook-gcpdiag.runbook.py and bin/precommit-required-files
 
-  # Initialize proper output formater
+  # Initialize proper output formatter
   output_ = _initialize_output(args.interface)
   dt_engine.interface.output = output_
   # Logging setup.
@@ -378,7 +376,7 @@ def run(argv) -> None:
   # Enable Caching
   try:
     report = run_and_get_report(argv)
-  except DiagnosticTreeNotFound as e:
+  except (DiagnosticTreeNotFound, AttributeError, ValueError, KeyError) as e:
     logging.error(e)
     logging.debug('%s', ''.join(traceback.format_tb(e.__traceback__)))
   else:

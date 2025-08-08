@@ -4,7 +4,7 @@ linkTitle: "gce/vm-termination"
 weight: 3
 type: docs
 description: >
-  GCE VM shutdowns and reboots Root Cause Analysis (RCA)
+  GCE Instance unexpected shutdowns and reboots diagnostics
 ---
 
 **Product**: [Compute Engine](https://cloud.google.com/compute)
@@ -12,46 +12,40 @@ description: >
 
 ### Description
 
-This runbook is designed to assist you in investigating and understanding the underlying reasons
-  behind the unexpected termination or reboot of your GCE Virtual Machines (VMs) within Google
-  Cloud Platform.
+This runbook assists in investigating and understanding the reasons behind unexpected
+  terminations or reboots of GCE Virtual Machines (VMs).
 
-  Key Investigation Areas:
+  Areas investigated:
 
-  System Event-Triggered Shutdowns/Reboots: Identifies terminations initiated by internal Google
-  Cloud systems due to system maintenance events, normal hardware failures,
-  resource constraints.
+  - System event-triggered shutdowns and reboots: Identifies terminations initiated by Google Cloud
+    systems due to maintenance events, hardware failures, or resource constraints.
 
-  System Admin Activities-Triggered Shutdowns/Reboots: Investigates terminations caused by
-  direct actions, such as API calls made by users or service accounts. These actions
-  may include manual shutdowns, restarts, or automated processes impacting VM states.
-
-  RCA Text Generation: Provides a detailed Root Cause Analysis text, outlining the identified
-  cause of termination, the involved systems or activities, and recommendations
-  to prevent future occurrences where applicable.
+  - Admin activities-triggered shutdown/reboot: Investigates terminations caused by direct actions,
+    such as API calls made by users or service accounts, including manual shutdowns, restarts, or
+    automated processes impacting VM states.
 
 ### Executing this runbook
 
 ```shell
 gcpdiag runbook gce/vm-termination \
   -p project_id=value \
-  -p name=value \
-  -p id=value \
+  -p instance_name=value \
+  -p instance_id=value \
   -p zone=value \
-  -p start_time_utc=value \
-  -p end_time_utc=value
+  -p start_time=value \
+  -p end_time=value
 ```
 
 #### Parameters
 
 | Name | Required | Default | Type | Help |
 |------|----------|---------|------|------|
-| `project_id` | True | None | str | The Project ID associated with the terminated VM.For investigations covering multiple VMs, provide only the Project ID. |
-| `name` | True | None | str | The name of the terminated VM. Or provide the id i.e -p id=<int> |
-| `id` | False | None | int | The instance ID of the terminated VM. Or provide name instead i.e -p name=<str> |
+| `project_id` | True | None | str | The Project ID hosting the terminated VM. |
+| `instance_name` | True | None | str | The name of the terminated VM. Or provide the id i.e -p id=<int> |
+| `instance_id` | False | None | int | The instance ID of the terminated VM. Or provide name instead i.e -p name=<str> |
 | `zone` | True | None | str | The Google Cloud zone where the terminated VM is located. |
-| `start_time_utc` | False | None | datetime | The start window to investigate vm termination. Format: YYYY-MM-DDTHH:MM:SSZ |
-| `end_time_utc` | False | None | datetime | The end window for the investigation. Format: YYYY-MM-DDTHH:MM:SSZ |
+| `start_time` | False | None | datetime | The start window to investigate vm termination. Format: YYYY-MM-DDTHH:MM:SSZ |
+| `end_time` | False | None | datetime | The end window for the investigation. Format: YYYY-MM-DDTHH:MM:SSZ |
 
 Get help on available commands
 
@@ -63,11 +57,19 @@ gcpdiag runbook --help
 
   - [Vm Termination Start](/runbook/steps/gce/vm-termination-start)
 
-  - [Number Of Terminations](/runbook/steps/gce/number-of-terminations)
+  - [Termination Operation Type](/runbook/steps/gce/termination-operation-type)
 
-  - [Single Termination Check](/runbook/steps/gce/single-termination-check)
+  - [Managed Instance Group Recreation](/runbook/steps/gce/managed-instance-group-recreation)
 
-  - [Multiple Termination Check](/runbook/steps/gce/multiple-termination-check)
+  - [Preemptible Instance](/runbook/steps/gce/preemptible-instance)
+
+  - [Host Error](/runbook/steps/gce/host-error)
+
+  - [Guest Os Issued Shutdown](/runbook/steps/gce/guest-os-issued-shutdown)
+
+  - [Terminate On Host Maintenance](/runbook/steps/gce/terminate-on-host-maintenance)
+
+  - [Stop Operation Gateway](/runbook/steps/gce/stop-operation-gateway)
 
   - [Vm Termination End](/runbook/steps/gce/vm-termination-end)
 

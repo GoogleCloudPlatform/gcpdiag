@@ -18,14 +18,14 @@ NAT IP allocation is configured as AUTO_ONLY, either:
 
 ### Failure Reason
 
-   The NAT Gateway {nat_gateway_name} is configured for automatic IP allocation...
+The NAT Gateway {nat_gateway_name} is configured for automatic IP allocation
 
 ### Failure Remediation
 
-   To resolve this issue, consider implementing the following options:
+To resolve this issue, consider implementing the following options:
 
-        1. Add one more NAT gateway in the same network and region.
-        2. Switch to Manual NAT IP assignment.
+1. Add one more NAT gateway in the same network and region.
+2. Switch to Manual NAT IP assignment.
 
 
 

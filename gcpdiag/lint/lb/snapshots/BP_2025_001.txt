@@ -1,0 +1,3 @@
+*  lb/BP/2025_001: HTTP/2 between load balancer and backend may increase TCP connections.
+   - projects/gcpdiag-lb1-aaaa/global/backendServices/web-backend-service [ OK ]
+

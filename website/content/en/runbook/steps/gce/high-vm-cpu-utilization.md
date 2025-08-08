@@ -24,21 +24,27 @@ which may affect its performance and SSH connectivity.
 
 ### Failure Remediation
 
-Excessive CPU usage can lead to performance bottlenecks. Consider resizing the VM to a more
-powerful machine type with higher CPU capabilities.
-Detailed instructions for resizing and restarting VMs are available here:
-- Stopping a VM: https://cloud.google.com/compute/docs/instances/stop-start-instance
-- Resizing a VM: https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud
-Additionally, use the Compute Engine observability metrics for an in-depth analysis to pinpoint high-usage processes:
-https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics
-https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization
+Excessive CPU usage can lead to performance bottlenecks. Resizing the VM to a machine type with higher CPU capabilities may resolve the issue.
 
-Alternatively, you can connect via serial console if SSH is unvailable to stop offending processes
-https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console.
+Consult the following documentation for guidance:
+
+- Stopping a VM: <https://cloud.google.com/compute/docs/instances/stop-start-instance>
+- Resizing a VM: <https://cloud.google.com/compute/docs/instances/changing-machine-type-of-stopped-instance#gcloud>
+
+Additionally, analyze Compute Engine observability metrics to pinpoint high-usage processes:
+
+- Accessing VM observability metrics:
+  <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#access_vm_observability_metrics>
+- Analyzing process utilization:
+  <https://cloud.google.com/compute/docs/instances/observe-monitor-vms#process_utilization>
+
+If SSH is unavailable, connect via the serial console to stop offending processes:
+<https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-using-serial-console>
 
 ### Success Reason
 
-This VM currently has CPU utilization within the optimal range, indicating healthy performance.
+The Compute Engine VM {full_resource_path},
+has CPU utilization within the optimal range.
 
 
 

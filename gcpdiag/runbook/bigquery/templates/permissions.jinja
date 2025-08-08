@@ -1,0 +1,7 @@
+{% block mandatory_failure_reason %}
+Execution halted. The principal {principal} is missing the following mandatory IAM permission(s) required to run this runbook: {permissions}.
+{% endblock mandatory_failure_reason %}
+
+{% block mandatory_failure_remediation %}
+Grant the principal {principal} the missing permission(s) on the project to proceed.
+{% endblock mandatory_failure_remediation %}

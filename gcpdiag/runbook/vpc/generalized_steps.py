@@ -22,18 +22,18 @@ from gcpdiag.runbook.vpc import flags, util
 
 
 class VpcFirewallCheck(runbook.Step):
-  """Checks whether ingress or egress traffic is allowed to a GCE VM from a specified source IP.
+  """Checks if ingress or egress traffic is allowed to a GCE Instance from a specified source IP.
 
-  Evaluates VPC firewall rules to verify if a GCE VM permits ingress or egress traffic from a
+  Evaluates VPC firewall rules to verify if a GCE Instance permits ingress or egress traffic from a
   designated source IP through a specified port and protocol.
   """
   traffic = None
 
   def execute(self):
-    """Evaluating VPC network firewall rules..."""
+    """Evaluating VPC network firewall rules."""
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+                          instance_name=op.get(flags.INSTANCE_NAME))
 
     result = None
     if self.traffic == 'ingress':
@@ -80,10 +80,10 @@ class VpcRouteCheck(runbook.Step):
   """
 
   def execute(self):
-    """Evaluating the VPC routing rules..."""
+    """Evaluating the VPC routing rules."""
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+                          instance_name=op.get(flags.INSTANCE_NAME))
     # get project, network info from nic
     nic_info = util.get_nic_info(vm.get_network_interfaces,
                                  op.get(flags.SRC_NIC))
@@ -122,10 +122,10 @@ class VmExternalIpConnectivityTest(runbook.Step):
   Evaluates the connectivity test for any issues and reports to the user."""
 
   def execute(self):
-    """Running a connectivity test to the external ip address..."""
+    """Running a connectivity test to the external ip address."""
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.NAME))
+                          instance_name=op.get(flags.INSTANCE_NAME))
 
     dest_ip = op.get(flags.DEST_IP)
     dest_ip = dest_ip.exploded
@@ -152,10 +152,10 @@ class VmExternalIpConnectivityTest(runbook.Step):
                          reason="""
           A NAT gateway is not found in the external traffic path for the VM: {},
           connecting to the external IP address {}.
-          """.format(op.get(flags.NAME), dest_ip),
+          """.format(op.get(flags.INSTANCE_NAME), dest_ip),
                          remediation="""
           If a VM instance or custom NAT is being used as a NAT Gateway, check that
-          it is configured and functioning correctly. Otherwise, enusre that a public
+          it is configured and functioning correctly. Otherwise, ensure that a public
           Cloud NAT is configured for the VPC Network [1]:
 
           Check that the destination IP is a Google Service IP address and
@@ -172,7 +172,7 @@ class VmExternalIpConnectivityTest(runbook.Step):
           'returned. Do you want to rerun the connectivity test?',
           choice_msg='Enter an option: ')
       if response == op.STOP:
-        op.add_skipped(vm, reason='Skipping the connectivity test...')
+        op.add_skipped(vm, reason='Skipping the connectivity test.')
 
     # Report the connectivity test result
     result_status = result.get('reachabilityDetails', {}).get('result')

@@ -11,8 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# Lint as: python3
 """Dataflow job does not fail during execution due to IP space exhaustion
 
 A dataflow job runs successfully if subnet has enough ip space for all workers in job,

@@ -32,7 +32,7 @@ class TimeSeriesCheck(runbook.Step):
   resource: Resource
 
   def execute(self):
-    """Verifying if expected metrics value is present or not"""
+    """Verify if expected metrics value is present or not"""
     metrics = None
     metrics = monitoring.query(op.get(flags.PROJECT_ID),
                                self.query.format(self.query_kwargs))

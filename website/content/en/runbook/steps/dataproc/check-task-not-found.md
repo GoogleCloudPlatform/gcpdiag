@@ -16,16 +16,16 @@ None
 
 ### Failure Reason
 
-Job {job_id} was failed due to 'task not found' error. {additional_message}
+Job `{job_id}` failed due to a 'task not found' error. {additional_message}
 
 ### Failure Remediation
 
-This typically indicates the associated cluster was terminated prior to job completion.
-Please review your automation workflows to ensure clusters remain active until all jobs are finalized.
+This error typically indicates the associated cluster was terminated before job completion.
+Review automation workflows to ensure clusters remain active until all jobs are finalized.
 
 ### Success Reason
 
-Job {job_id} didn't failed due to 'task not found' error. {additional_message}
+Job `{job_id}` did not fail due to a 'task not found' error. {additional_message}
 
 
 

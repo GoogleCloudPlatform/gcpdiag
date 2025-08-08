@@ -1,5 +1,5 @@
 {% block failed_streaming_pipeline_job_found_success_reason %}
-  Successful found job {job_id} in region {region}
+  Successfully found job {job_id} in region {region}
 {% endblock failed_streaming_pipeline_job_found_success_reason %}
 
 {% block failed_streaming_pipeline_job_found_failure_reason %}
@@ -7,16 +7,16 @@
 {% endblock failed_streaming_pipeline_job_found_failure_reason %}
 
 {% block failed_streaming_pipeline_check_common_errors_success_reason %}
-   Job State is successfully {state}
+   The Dataflow job state is {state}.
 {% endblock failed_streaming_pipeline_check_common_errors_success_reason %}
 
 {% block failed_streaming_pipeline_check_common_errors_failure_reason %}
-  Job State for job {job_id} is Failed.
+  Job state for job {job_id} is Failed.
 {% endblock failed_streaming_pipeline_check_common_errors_failure_reason %}
 
 {% block failed_streaming_pipeline_check_common_errors_failure_remediation %}
-  Check Dataflow Monitoring Interface for the specific error, and find the error among
-  common errors here[1] to resolve the job errors.
+  Refer to the Dataflow Monitoring Interface for the specific error.
+  Refer to the common errors documentation [1] to resolve the job errors.
 
-  [1] https://cloud.google.com/dataflow/docs/guides/common-errors#pipeline_errors
+  [1] <https://cloud.google.com/dataflow/docs/guides/common-errors#pipeline_errors>
 {% endblock failed_streaming_pipeline_check_common_errors_failure_remediation %}

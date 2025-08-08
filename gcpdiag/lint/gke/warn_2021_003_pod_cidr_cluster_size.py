@@ -96,7 +96,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
           summary += (
               f'{pod_range}({round(used_ips/total_ip_addresses*100)}% IPs used): '
-              f'{",".join(nodepools[:MAX_NODEPOOLS_TO_REPORT])}')
+              f"{','.join(nodepools[:MAX_NODEPOOLS_TO_REPORT])}")
 
           if len(nodepools) > MAX_NODEPOOLS_TO_REPORT:
             summary += f' ({len(nodepools) - MAX_NODEPOOLS_TO_REPORT} more node pool(s))'
@@ -115,7 +115,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       total_ip_addresses = pod_range.num_addresses - 4096
 
       #256 because each node is assigned /24 from the pod CIDR range
-      used_ips = (size * 256)
+      used_ips = size * 256
 
       threshold_ips_used = (total_ip_addresses) * FAIL_THRESHOLD_RATIO
 

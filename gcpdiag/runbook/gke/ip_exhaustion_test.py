@@ -24,8 +24,8 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
 
   rule_parameters = [{
       'project_id': 'gcpdiag-gke3-gggg',
-      'name': 'cluster-1',
+      'gke_cluster_name': 'cluster-1',
       'location': 'us-central1-c',
-      'start_time_utc': '2024-06-30T01:00:00Z',
-      'end_time_utc': '2024-06-30T23:00:00Z'
+      'start_time': '2024-06-30T01:00:00Z',
+      'end_time': '2024-06-30T23:00:00Z'
   }]

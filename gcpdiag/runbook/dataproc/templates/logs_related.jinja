@@ -1,35 +1,3 @@
-{% block cluster_quota_success_reason %}
-No issues with unsufficient quota in project {project_id} has been identified for the ivestigated cluster {cluster_name}, please double-check if you have provided
-the right cluster_name parameter if the cluster you are trying to create doesn't appear in Dataproc UI.
-{% endblock cluster_quota_success_reason %}
-
-{% block cluster_quota_failure_reason %}
-The cluster {cluster_name} in project {project_id} could not be created due to insufficient quota in the project.
-{% endblock cluster_quota_failure_reason %}
-
-{% block cluster_quota_failure_remediation %}
-This issue occurs when the requested Dataproc cluster exceeds the project's available quota for resources such as CPU, disk space, or IP addresses.
-Solution: Request additional quota [1] from the Google Cloud console or use another project.
-[1] https://cloud.google.com/docs/quotas/view-manage#managing_your_quota_console
-{% endblock cluster_quota_failure_remediation %}
-
-{% block cluster_stockout_success_reason %}
-No issues with stockouts and insufficient resources in project {project_id} has been identified for {cluster_name}, please double-check if you have provided
-the right cluster_name parameter if the cluster you are trying to create doesn't appear in Dataproc UI.
-{% endblock cluster_stockout_success_reason %}
-
-{% block cluster_stockout_failure_reason %}
-The cluster {cluster_name} creation in project {project_id} failed due to insufficient resources in the selected zone/region.
-{% endblock cluster_stockout_failure_reason %}
-
-{% block cluster_stockout_failure_remediation %}
-Dataproc cluster stockout occurs when there are insufficient resources available in a specific zone or region to create your requested cluster.
-Solutions to resolve the issue include:
-- Create the cluster in a different zone or region.
-- Use the Dataproc Auto Zone placement feature by not specifying the zone [1].
-[1] https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/auto-zone
-{% endblock cluster_stockout_failure_remediation %}
-
 {% block cluster_init_success_reason %}
 The initialization actions for cluster {cluster_name} in project {project_id} completed successfully without errors.
 {% endblock cluster_init_success_reason %}
@@ -39,58 +7,60 @@ The cluster {cluster_name} creation failed because the initialization script enc
 {% endblock cluster_init_failure_reason %}
 
 {% block cluster_init_failure_remediation %}
-A Dataproc cluster init script failure means that a script intended to run during the cluster's initial setup did not complete successfully.
-Solution:
-See initialization actions considerations and guidelines [1].
-Examine the output logs. The error message should provide a link to the logs in Cloud Storage.
-[1]https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/init-actions#important_considerations_and_guidelines
+A Dataproc cluster initialization script failure means that a script intended to run during the cluster's setup did not complete successfully.
+To resolve this issue:
+
+- Review initialization actions considerations and guidelines [1].
+- Examine the output logs. The error message should provide a link to the logs in Cloud Storage.
+[1]<https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/init-actions#important_considerations_and_guidelines>
 {% endblock cluster_init_failure_remediation %}
 
 {% block port_exhaustion_success_reason %}
-Didn't find logs messages related to "{log}" on the cluster: {cluster_name}.
+No log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock port_exhaustion_success_reason %}
 
 {% block port_exhaustion_failure_reason %}
-Found logs messages related to "{log}" on the cluster: {cluster_name}.
+Log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock port_exhaustion_failure_reason %}
 
 {% block port_exhaustion_failure_remediation %}
-This issue occurs when Spark Jobs was not able to find available port after 1000 retries.
-COLSE_WAIT connections are possible cause of this issue.
-To identify any CLOSE_WAIT connections, please analyze the netstat output.
-1. netstat plant >> open_connections.txt
-2. cat open_connections.txt | grep “CLOSE_WAIT”
+This issue occurs when Spark jobs cannot find an available port after 1000 retries.
+CLOSE_WAIT connections are a possible cause.
+To identify CLOSE_WAIT connections, analyze the netstat output:
 
-If the blocked connections are due to a specific application, restarting that application is recommended.
-Alternatively, restarting the master node will also release the affected connections.
+1. Run `netstat -plant >> open_connections.txt`.
+2. Run `cat open_connections.txt | grep "CLOSE_WAIT"`.
+
+If blocked connections are due to a specific application, restart that application.
+Alternatively, restart the master node to release the affected connections.
 {% endblock port_exhaustion_failure_remediation %}
 
 {% block kill_orphaned_application_success_reason %}
-Didn't find logs messages related to "{log}" on the cluster: {cluster_name}.
+No log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock kill_orphaned_application_success_reason %}
 
 {% block kill_orphaned_application_failure_reason %}
-Found logs messages related to "{log}" on the cluster: {cluster_name}.
+Log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock kill_orphaned_application_failure_reason %}
 
 {% block kill_orphaned_application_failure_remediation %}
-Please set dataproc:dataproc.yarn.orphaned-app-termination.enable to false if you don't want to kill orphaned yarn application.
-You can find more details in the documentation [1].
-[1] https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/cluster-properties
+To prevent orphaned YARN applications from being killed, set the cluster property `dataproc:dataproc.yarn.orphaned-app-termination.enable` to `false`.
+More details are available in the documentation [1].
+[1] <https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/cluster-properties>
 {% endblock kill_orphaned_application_failure_remediation %}
 
 {% block gcs_access_deny_success_reason %}
-Didn't find logs messages related to "{log}" on the cluster: {cluster_name}.
+No log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock gcs_access_deny_success_reason %}
 
 {% block gcs_access_deny_failure_reason %}
-Found logs messages related to "{log}" on the cluster: {cluster_name}.
+Log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock gcs_access_deny_failure_reason %}
 
 {% block gcs_access_deny_failure_remediation %}
-GCS access deny issue found in cloud logging.
-Please confirm the service account has the right permission to get objects from the GCS bucket.
-You can search "com.google.cloud.hadoop.repackaged.gcs.com.google.api.client.googleapis.json.GoogleJsonResponseException: 403 Forbidden" in the cloud logging to find more details.
+GCS access denied errors were found in Cloud Logging.
+Verify that the service account has the necessary permissions to get objects from the GCS bucket.
+Search Cloud Logging for "com.google.cloud.hadoop.repackaged.gcs.com.google.api.client.googleapis.json.GoogleJsonResponseException: 403 Forbidden" for more details.
 {% endblock gcs_access_deny_failure_remediation %}
 
 {% block master_oom_success_reason %}
@@ -102,9 +72,9 @@ Found logs messages related to Master OOM on the cluster: {cluster_name}.
 {% endblock master_oom_failure_reason %}
 
 {% block master_oom_failure_remediation %}
-Please follow the troubleshooting guide [1] to adjust the driver memory used for the job.
+Follow the troubleshooting guide [1] to adjust the driver memory used for the job.
 
-[1] https://cloud.google.com/dataproc/docs/support/troubleshoot-oom-errors#oom_solutions
+[1] <https://cloud.google.com/dataproc/docs/support/troubleshoot-oom-errors#oom_solutions>
 {% endblock master_oom_failure_remediation %}
 
 {% block worker_oom_success_reason %}
@@ -115,14 +85,16 @@ Didn't find logs messages related to Worker OOM on the cluster: {cluster_name}.
 Found logs messages related to Worker OOM on the cluster: {cluster_name}.
 {% endblock worker_oom_failure_reason %}
 
-
 {% block worker_oom_failure_remediation %}
-The log indicates that worker OOM (out-of-memory) errors may have occurred on your cluster.
-You can try using a high-memory machine type for your worker nodes or repartition your data to avoid data skew.
+The logs indicate that worker OOM (out-of-memory) errors may have occurred on the cluster.
+To resolve this issue:
 
-You can find more details in the troubleshooting guide [1].
-If it still not work, please contact Google Cloud Support.
-[1] https://cloud.google.com/dataproc/docs/support/troubleshoot-oom-errors#oom_solutions
+- Use a high-memory machine type for the worker nodes.
+- Repartition the data to avoid data skew.
+
+Refer to the troubleshooting guide [1] for more details.
+If the issue persists, contact Google Cloud Support.
+[1] <https://cloud.google.com/dataproc/docs/support/troubleshoot-oom-errors#oom_solutions>
 {% endblock worker_oom_failure_remediation %}
 
 {% block sw_preemption_success_reason %}
@@ -134,179 +106,191 @@ Found logs messages related to secondary worker preemption on the cluster: {clus
 {% endblock sw_preemption_failure_reason %}
 
 {% block sw_preemption_failure_remediation %}
-This error occurs when secondary nodes are preempted.
-Please confirm if you are using secondary workers with preemptible instances. (The default Dataproc secondary worker type is a standard preemptible VM.)
+This error occurs when secondary worker nodes are preempted. By default, Dataproc secondary workers are preemptible VMs.
+To resolve this issue:
 
-You can recreate a cluster configured with non-preemptible secondary workers to ensure the secondary workers are not preemptible.
-[1] https://cloud.google.com/dataproc/docs/concepts/compute/secondary-vms#non-preemptible_workers
+- Verify if the cluster uses secondary workers with preemptible instances.
+- Recreate the cluster configured with non-preemptible secondary workers to ensure secondary workers are not preempted [1].
+[1] <https://cloud.google.com/dataproc/docs/concepts/compute/secondary-vms#non-preemptible_workers>
 {% endblock sw_preemption_failure_remediation %}
 
 {% block worker_disk_usage_success_reason %}
-Didn't find logs messages related to "{log}" on the cluster: {cluster_name}.
+No log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock worker_disk_usage_success_reason %}
 
 {% block worker_disk_usage_failure_reason %}
-Found logs messages related to "{log}" on the cluster: {cluster_name}.
+Log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock worker_disk_usage_failure_reason %}
 
 {% block worker_disk_usage_failure_remediation %}
-A short-term fix to recover the existing node manager is to free up related local disk space in the node to reduce disk utilization below 90%.
-You can find the folder name in the Cloud Logging by querying "{log}".
+To recover the existing node manager:
 
-The long-term fix is to recreate the cluster using a larger worker disk size.
+- Free up related local disk space in the node to reduce disk utilization below 90%. Find the relevant folder name by querying Cloud Logging for "{log}".
+
+For a long-term fix:
+
+- Recreate the cluster using a larger worker disk size.
 {% endblock worker_disk_usage_failure_remediation %}
 
 {% block gc_pause_success_reason %}
-Didn't find logs messages related to "{log}" on the cluster: {cluster_name}.
+No log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock gc_pause_success_reason %}
 
 {% block gc_pause_failure_reason %}
-Found logs messages related to "{log}" on the cluster: {cluster_name}.
+Log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock gc_pause_failure_reason %}
 
 {% block gc_pause_failure_remediation %}
-If allocated memory appears insufficient, consider increasing the spark.executor.memory configuration to allocate additional memory.[1]
-If memory allocation seems adequate, investigate potential garbage collection optimization. The Apache Spark documentation provides a comprehensive guide on Garbage Collection Tuning.[2]
-Additionally, there is some guidance that tuning spark.memory.fraction can be effective, particularly for workloads that heavily rely on RDD caching. See Memory Management Overview for more discussion of this configuration property.
-Additionally, tuning the spark.memory.fraction can be effective, particularly for workloads that rely heavily on RDD caching. Refer to the Memory Management Overview for a detailed discussion of this configuration property.
+To address potential GC pause issues:
 
-[1] https://spark.apache.org/docs/latest/configuration.html
-[2] https://spark.apache.org/docs/latest/tuning.html#garbage-collection-tuning
-[3] https://spark.apache.org/docs/latest/tuning.html#memory-management-overview
+- Increase the `spark.executor.memory` configuration to allocate additional memory if allocated memory appears insufficient [1].
+- If memory allocation seems adequate, investigate potential garbage collection optimization. Refer to the Apache Spark documentation for a comprehensive guide on Garbage Collection Tuning [2].
+- Additionally, tuning the `spark.memory.fraction` property can be effective, particularly for workloads that rely heavily on RDD caching. Refer to the Memory Management Overview [3] for a detailed discussion of this configuration property.
+
+[1] <https://spark.apache.org/docs/latest/configuration.html>
+[2] <https://spark.apache.org/docs/latest/tuning.html#garbage-collection-tuning>
+[3] <https://spark.apache.org/docs/latest/tuning.html#memory-management-overview>
 {% endblock gc_pause_failure_remediation %}
 
 {% block default_success_reason %}
-Didn't find logs messages related to "{log}" on the cluster: {cluster_name}.
+No log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock default_success_reason %}
 
 {% block default_failure_reason %}
-Found logs messages related to "{log}" on the cluster: {cluster_name}.
+Log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock default_failure_reason %}
 
 {% block default_failure_remediation %}
-Please investigate further the job logs by focusing on eliminating the observed message.
+Investigate the job logs further, focusing on eliminating the observed message.
 {% endblock default_failure_remediation %}
 
 {% block too_many_jobs_success_reason %}
-Didn't find logs messages related to "{log}" on the cluster: {cluster_name}.
+No log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock too_many_jobs_success_reason %}
 
 {% block too_many_jobs_failure_reason %}
-Found logs messages related to "{log}" on the cluster: {cluster_name}.
+Log messages related to "{log}" were found on the cluster: {cluster_name}.
 If the Dataproc agent is already running more jobs than allowed, it will reject the new job.
 {% endblock too_many_jobs_failure_reason %}
 
 {% block too_many_jobs_failure_remediation %}
-The maximum number of concurrent jobs can be set by the cluster property:
-dataproc:dataproc.scheduler.max-concurrent-jobs which is specified at cluster creation time.
+The maximum number of concurrent jobs can be set at cluster creation time using the property `dataproc:dataproc.scheduler.max-concurrent-jobs`.
+Alternatively, set the property `dataproc:dataproc.scheduler.driver-size-mb`.
 
-Alternatively, you can set the property dataproc:dataproc.scheduler.driver-size-mb.
+If neither property is set manually, Dataproc calculates `max-concurrent-jobs` as:
+`(Physical memory of master (in MB) - 3584) / dataproc:dataproc.scheduler.driver-size-mb`.
 
-If neither properties are set manually, the Dataproc cluster is calculating the
-max-concurrent-jobs as:
-(Physical memory of master (in MB) - 3584) / dataproc:dataproc.scheduler.driver-size-mb.
+The Dataproc cluster size might be too small to run the desired number of concurrent jobs.
 
-The Dataproc cluster size might be too small to run as many concurrent jobs.
-
-By default the job has a retry mechanism of 4 times and may had run at next check.
+Note: The job has a default retry mechanism (4 times) and might succeed on a subsequent attempt.
 {% endblock too_many_jobs_failure_remediation %}
 
 {% block not_enough_memory_success_reason %}
-Didn't find logs messages related to "{log}" on the cluster: {cluster_name}.
+No log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock not_enough_memory_success_reason %}
 
 {% block not_enough_memory_failure_reason %}
-Found logs messages related to "{log}" on the cluster: {cluster_name}.
-If no more amount of memory is available on the master VM, the job is rejected.
+The cluster "{cluster_name}" reported log messages concerning "{log}". These messages indicate the job was rejected because the master VM did not have enough available memory.
 {% endblock not_enough_memory_failure_reason %}
 
 {% block not_enough_memory_failure_remediation %}
-Investigate used memory of your master node and worker nodes. Access Dataproc UI Monitoring view and charts "YARN Memory" and "YARN Pending Memory".
+Investigate memory usage on the master and worker nodes:
 
-Access the master VM through GCE UI and navigate to "Observability" to access a deep dive monitoring of just that VM.
-As mitigation, you may increase the machine type.
+- Access the Dataproc UI Monitoring view and examine the "YARN Memory" and "YARN Pending Memory" charts.
+- Access the master VM through the GCE UI and navigate to "Observability" for detailed monitoring of that specific VM.
+
+As a mitigation step, increase the machine type.
 {% endblock not_enough_memory_failure_remediation %}
 
 {% block system_memory_success_reason %}
-Didn't find logs messages related to "{log}" on the cluster: {cluster_name}.
+No log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock system_memory_success_reason %}
 
 {% block system_memory_failure_reason %}
-Found logs messages related to "{log}" on the cluster: {cluster_name}.
+Log messages related to "{log}" were found on the cluster: {cluster_name}.
 The Dataproc agent checked if the master's memory usage is above a certain threshold (default value is 0.9), if it is it will reject the job, as the master is overloaded.
 {% endblock system_memory_failure_reason %}
 
 {% block system_memory_failure_remediation %}
-Investigate used memory of your master node and worker nodes. Access Dataproc UI Monitoring view and charts "YARN Memory" and "YARN Pending Memory".
+Investigate memory usage on the master and worker nodes:
 
-Access the master VM through GCE UI and navigate to "Observability" to access a deep dive monitoring of just that VM.
-As mitigation, you may increase the machine type.
+- Access the Dataproc UI Monitoring view and examine the "YARN Memory" and "YARN Pending Memory" charts.
+- Access the master VM through the GCE UI and navigate to "Observability" for detailed monitoring of that specific VM.
+
+As a mitigation step, increase the machine type.
 {% endblock system_memory_failure_remediation %}
 
 {% block rate_limit_success_reason %}
-Didn't find logs messages related to "{log}" on the cluster: {cluster_name}.
+No log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock rate_limit_success_reason %}
 
 {% block rate_limit_failure_reason %}
-Found logs messages related to "{log}" on the cluster: {cluster_name}.
+Log messages related to "{log}" were found on the cluster: {cluster_name}.
 Job submission rate has been reached with QPS as the unit (default is 1.0). Job has been rejected by the Dataproc agent.
 {% endblock rate_limit_failure_reason %}
 
 {% block rate_limit_failure_remediation %}
-Submit the jobs in longer intervals. By default the job has a retry mechanism of 4 times and may had run at next check.
+Submit jobs at longer intervals.
+
+Note: The job has a default retry mechanism (4 times) and might succeed on a subsequent attempt.
 {% endblock rate_limit_failure_remediation %}
 
 {% block not_enough_disk_success_reason %}
-Didn't find logs messages related to "{log}" on the cluster: {cluster_name}.
+No log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock not_enough_disk_success_reason %}
 
 {% block not_enough_disk_failure_reason %}
-Found logs messages related to "{log}" on the cluster: {cluster_name}.
+Log messages related to "{log}" were found on the cluster: {cluster_name}.
 Job has been rejected due to low disk capacity.
 {% endblock not_enough_disk_failure_reason %}
 
 {% block not_enough_disk_failure_remediation %}
-Increase the disk size for master node and worker node, by default we recommend minimum disk size of 250GB for low workloads. For high workloads use 1TB.
-By default the job has a retry mechanism of 4 times and may had run at next check.
+Increase the disk size for the master and worker nodes. A minimum disk size of 250GB is recommended for low workloads, and 1TB for high workloads.
+
+Note: The job has a default retry mechanism (4 times) and might succeed on a subsequent attempt.
 {% endblock not_enough_disk_failure_remediation %}
 
 {% block yarn_runtime_success_reason %}
-Didn't find logs messages related to "{log}" on the cluster: {cluster_name}.
+No log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock yarn_runtime_success_reason %}
 
 {% block yarn_runtime_failure_reason %}
-Found logs messages related to "{log}" on the cluster: {cluster_name}.
+Log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock yarn_runtime_failure_reason %}
 
 {% block yarn_runtime_failure_remediation %}
-The issue could have happened due to possible 2 Dataproc clusters running the same mapreduce.jobhistory.intermediate-done-dir value.
-This is not recommended as intermediate-done-dir is scanned periodically looking for directories that have updated timestamps.
+This issue might occur if multiple Dataproc clusters use the same `mapreduce.jobhistory.intermediate-done-dir` value.
+This configuration is not recommended, as each Job History Server scans the intermediate-done-dir periodically.
+If multiple clusters use the same directory, each Job History Server will attempt to move files from the same intermediate-done-dir to the done-dir.
 
-If you have multiple clusters, each Job History Server will be looking for files to move from the same intermediate-done-dir to the done-dir.
+To resolve this:
 
-To resolve this configure separate mapreduce.jobhistory.intermediate-done-dir locations for each running cluster.
+- Configure separate `mapreduce.jobhistory.intermediate-done-dir` locations for each running cluster.
 {% endblock yarn_runtime_failure_remediation %}
 
 {% block check_python_import_failure_success_reason %}
-Didn't find logs messages related to "{log}" on the cluster: {cluster_name}.
+No log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock check_python_import_failure_success_reason %}
 
 {% block check_python_import_failure_failure_reason %}
-Found logs messages related to "{log}" on the cluster: {cluster_name}.
+Log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock check_python_import_failure_failure_reason %}
 
 {% block check_python_import_failure_failure_remediation %}
-The job failed due to python import failure. {additional_message}
+The job failed due to a Python import failure. {additional_message}
+Ensure the necessary Python packages are installed on the cluster nodes or included in the job dependencies.
 {% endblock check_python_import_failure_failure_remediation %}
-
 
 {% block shuffle_service_kill_preemptible_workers_failure_reason %}
 Cluster {cluster.name} uses preemptible workers and their count exceeds 50% of the total worker count leading to shuffle fetch failures.
 {% endblock shuffle_service_kill_preemptible_workers_failure_reason %}
 
 {% block shuffle_service_kill_preemptible_workers_failure_remediation %}
-Consider reducing the number of preemptible workers or using non-preemptible workers for better stability.
-You may also explore Enhanced Flexibility Mode (EFM) for better control over preemptible instances.
+To improve stability:
+
+- Reduce the number of preemptible workers.
+- Use non-preemptible workers.
+- Explore Enhanced Flexibility Mode (EFM) for better control over preemptible instances.
 {% endblock shuffle_service_kill_preemptible_workers_failure_remediation %}
 
 {% block shuffle_service_kill_preemptible_workers_success_reason %}
@@ -338,86 +322,85 @@ Cluster {cluster_name} experienced shuffle failures. Potential root causes: {roo
 {% endblock shuffle_failures_failure_reason %}
 
 {% block shuffle_failures_remediation %}
-Refer to the Dataproc documentation for troubleshooting shuffle failures. Potential remediations: {remediation}
+Refer to the Dataproc documentation for troubleshooting shuffle failures. Potential remediations include: {remediation}
 {% endblock shuffle_failures_remediation %}
 
 {% block gcs_429_gce_success_reason %}
-Didn't find logs messages related to "{log}" on the cluster: {cluster_name}.
+No log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock gcs_429_gce_success_reason %}
 
 {% block gcs_429_gce_failure_reason %}
-Found logs messages related to "{log}" on the cluster: {cluster_name}.
-This means that the limit for number of requests from Compute Engine to metadata server exceeded.
-The metadata server can serve 10 requests/s. This limit is not restricted to a project.
+Found logs messages related to "{log}" on cluster {cluster_name}.
+This indicates that the limit for requests per second from Compute Engine to the metadata server (10 requests/s) was exceeded. This limit applies across projects.
 {% endblock gcs_429_gce_failure_reason %}
 
 {% block gcs_429_gce_failure_remediation %}
-There are several recommendations to address the issue:
-1. If this is a Spark job and the number of shuffle partition is high,
-try setting the offset value to a more comfortable number in the offset file and restart the application.
-2. It is advised to run the applications on spark cluster mode to avoid stress on driver node.
-3. If possible, you can modify your workload to reduce the frequent authentication requests.
-If this is not possible try to move to file based authentication mechanism:
-https://github.com/GoogleCloudDataproc/hadoop-connectors/blob/master/gcs/CONFIGURATION.md#authentication
+Recommended actions to address the issue:
+
+1. If this is a Spark job with a high number of shuffle partitions, adjust the offset value in the offset file and restart the application.
+2. Run applications in Spark cluster mode to avoid stressing the driver node.
+3. If possible, modify the workload to reduce frequent authentication requests. If modification is not feasible, move to a file-based authentication mechanism [1].
+
+[1] <https://github.com/GoogleCloudDataproc/hadoop-connectors/blob/master/gcs/CONFIGURATION.md#authentication>
 {% endblock gcs_429_gce_failure_remediation %}
 
 {% block gcs_429_driveroutput_success_reason %}
-Didn't find logs messages related to "{log}" on the cluster: {cluster_name}.
+No log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock gcs_429_driveroutput_success_reason %}
 
 {% block gcs_429_driveroutput_failure_reason %}
-Found logs messages related to "{log}" on the cluster: {cluster_name}.
-This means that the limit for number of requests from Dataproc to write to the driveroutput in Cloud Storage exceeded.
-There are too many writes to the driver output file and logs are not written, failing the job.
+Found logs messages related to "{log}" on cluster {cluster_name}.
+This indicates that the limit for requests from Dataproc to write to the driveroutput file in Cloud Storage was exceeded.
+Too many writes to the driver output file occurred, preventing logs from being written and causing the job to fail.
 {% endblock gcs_429_driveroutput_failure_reason %}
 
 {% block gcs_429_driveroutput_failure_remediation %}
-Our recommendation is to use the "core:fs.gs.outputstream.sync.min.interval" property to control the sync time (in minutes):
-https://github.com/GoogleCloudDataproc/hadoop-connectors/blob/master/gcs/CONFIGURATION.md
-https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/cluster-properties#file-prefixed_properties_table
+Use the `core:fs.gs.outputstream.sync.min.interval` property to control the sync time (in minutes) [1][2].
+
+[1] <https://github.com/GoogleCloudDataproc/hadoop-connectors/blob/master/gcs/CONFIGURATION.md>
+[2] <https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/cluster-properties#file-prefixed_properties_table>
 {% endblock gcs_429_driveroutput_failure_remediation %}
 
 {% block gcs_412_success_reason %}
-Didn't find logs messages related to "{log}" on the cluster: {cluster_name}.
+No log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock gcs_412_success_reason %}
 
 {% block gcs_412_failure_reason %}
-Found logs messages related to "{log}" on the cluster: {cluster_name}.
-This error message is occuring, when multiple applications/jobs write to same output directory.
-GCS Hadoop File Committer doesn't have support for concurrent writes to a GCS bucket.
+Found logs messages related to "{log}" on cluster {cluster_name}.
+This error occurs when multiple applications/jobs attempt to write to the same output directory simultaneously.
+The GCS Hadoop File Committer does not support concurrent writes to a GCS bucket.
 {% endblock gcs_412_failure_reason %}
 
 {% block gcs_412_failure_remediation %}
-Use the DataprocFileOutputCommitter that allows concurrent writes from Spark jobs:
-https://cloud.google.com/dataproc/docs/guides/dataproc-fileoutput-committer
+Use the DataprocFileOutputCommitter, which allows concurrent writes from Spark jobs [1].
+
+[1] <https://cloud.google.com/dataproc/docs/guides/dataproc-fileoutput-committer>
 {% endblock gcs_412_failure_remediation %}
 
 {% block bq_resource_success_reason %}
-Didn't find logs messages related to "{log}" on the cluster: {cluster_name}.
+No log messages related to "{log}" were found on the cluster: {cluster_name}.
 {% endblock bq_resource_success_reason %}
 
 {% block bq_resource_failure_reason %}
-Found logs messages related to "{log}" on the cluster: {cluster_name}.
+Found logs messages related to "{log}" on cluster {cluster_name}.
 
-When the job was streaming writing to BigQuery, a quota was hit resulting in a RESOURCE_EXHAUSTED error.
-The error message can be of type:
+A RESOURCE_EXHAUSTED error occurred while streaming writes to BigQuery, indicating a quota was hit.
+Potential error types include:
+
 - Concurrent stream usage exceeded
 - Exceeds 'AppendRows throughput' quota
 - CreateWriteStream requests quota
 
-This could have happened because of implementation of the direct write mode in the connector
-that leverages Bigquery Storage Write API.
+This can happen due to the implementation of the direct write mode in the connector, which leverages the BigQuery Storage Write API.
 {% endblock bq_resource_failure_reason %}
 
 {% block bq_resource_failure_remediation %}
-Try one of the following:
-- For a permanent solution: Use the INDIRECT write method, which doesn't leverage the BQ Streaming Write API
-and doesn't need quotas:
-https://github.com/GoogleCloudDataproc/spark-bigquery-connector#indirect-write
+Consider the following options:
 
-- For the "CreateWriteStream" enable property "writeAtLeastOnce".
-This solves the issue but introduces at-least-once behavior into the pipeline so we do not guarantee that records won't be duplicated.
-https://github.com/GoogleCloudDataproc/spark-bigquery-connector#properties
+- Permanent solution: Use the INDIRECT write method, which does not leverage the BigQuery Storage Write API and avoids quota issues [1].
+- For "CreateWriteStream" errors: Enable the `writeAtLeastOnce` property [2]. Note: This introduces at-least-once behavior, meaning records might be duplicated.
+- Contact Google Cloud Support to request a quota increase for the project. Provide the BigQuery connector jar version and the driver output of the failed job.
 
-- Contact the Support team to increase the Quota for the project. Provide your BigQuery jar installed and driver output of the failed job.
+[1] <https://github.com/GoogleCloudDataproc/spark-bigquery-connector#indirect-write>
+[2] <https://github.com/GoogleCloudDataproc/spark-bigquery-connector#properties>
 {% endblock bq_resource_failure_remediation %}

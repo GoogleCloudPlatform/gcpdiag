@@ -113,7 +113,7 @@ def get_bucket_iam_policy(project_id: str, bucket: str) -> BucketIAMPolicy:
 @caching.cached_api_call(in_memory=True)
 def get_bucket(context: models.Context, bucket: str) -> Bucket:
   gcs_api = apis.get_api('storage', 'v1', context.project_id)
-  logging.info('fetching GCS bucket %s', bucket)
+  logging.debug('fetching GCS bucket %s', bucket)
   query = gcs_api.buckets().get(bucket=bucket)
   try:
     response = query.execute(num_retries=config.API_RETRIES)
@@ -132,7 +132,8 @@ def get_buckets(context: models.Context) -> Mapping[str, Bucket]:
   if not apis.is_enabled(context.project_id, 'storage'):
     return buckets
   gcs_api = apis.get_api('storage', 'v1', context.project_id)
-  logging.info('fetching list of GCS buckets in project %s', context.project_id)
+  logging.debug('fetching list of GCS buckets in project %s',
+                context.project_id)
   query = gcs_api.buckets().list(project=context.project_id)
   try:
     resp = query.execute(num_retries=config.API_RETRIES)

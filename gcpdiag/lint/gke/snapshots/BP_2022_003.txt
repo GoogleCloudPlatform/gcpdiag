@@ -4,15 +4,11 @@
    - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke2 [SKIP]
      release channel: REGULAR
    - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2      [FAIL]
-     GKE version 1.24
-
-         scheduled end of life: already reached EOL
+     GKE version 1.24 scheduled end of life: already reached EOL
    - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke3      [SKIP]
      release channel: REGULAR
    - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke1        [FAIL]
-     GKE version 1.25
-
-         scheduled end of life: 2024-02-06 (estimation)
+     GKE version 1.25 scheduled end of life: 2024-02-06 (estimation)
    - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke4        [SKIP]
      release channel: REGULAR
    - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke6        [SKIP]

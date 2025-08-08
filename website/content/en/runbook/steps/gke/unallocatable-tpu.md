@@ -16,16 +16,16 @@ None
 
 ### Failure Reason
 
-The node {NODE} was auto-repaired because it had unallocatable TPU(s) for more than 10 minutes.
+The node {node} was auto-repaired because it had unallocatable TPU(s) for more than 10 minutes.
 
 ### Failure Remediation
 
 The auto-repair should have fixed the detected unallocatable TPU(s).
-For more details check: https://cloud.google.com/kubernetes-engine/docs/how-to/tpus#node-auto-repair
+For more details check: <https://cloud.google.com/kubernetes-engine/docs/how-to/tpus#node-auto-repair>
 
 ### Success Reason
 
-The node {NODE} was auto-repaired for reasons other than unallocatable TPU(s).
+The node {node} was auto-repaired for reasons other than unallocatable TPU(s).
 
 
 

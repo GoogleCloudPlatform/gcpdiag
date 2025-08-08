@@ -4,7 +4,7 @@ linkTitle: "Vm Termination End"
 weight: 3
 type: docs
 description: >
-  Finalizes the diagnostics process for VM terminations.
+  Finalize the diagnostics process for VM terminations
 ---
 
 **Product**: [Compute Engine](https://cloud.google.com/compute)\
@@ -12,11 +12,9 @@ description: >
 
 ### Description
 
-This step prompts the user to confirm
-  satisfaction with the Root Cause Analysis (RCA) performed for VM terminations.
-
-  Depending on the user's response, it may conclude the runbook execution or trigger additional
-  steps, such as generating a report of the findings.
+This step prompts the user to confirm satisfaction with the Root Cause Analysis (RCA) performed
+  for VM terminations. Depending on the user's response, it may conclude the runbook execution
+  or trigger additional steps, such as generating a report of the findings.
 
 
 

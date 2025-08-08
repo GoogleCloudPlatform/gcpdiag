@@ -169,7 +169,7 @@ def query(project_id: str, query_str: str) -> TimeSeriesCollection:
                                                     project_id,
                                                     body={'query': query_str})
 
-    logging.info('executing monitoring query (project: %s)', project_id)
+    logging.debug('executing monitoring query (project: %s)', project_id)
     logging.debug('query: %s', query_str)
     pages = 0
     start_time = datetime.datetime.now()
@@ -180,8 +180,8 @@ def query(project_id: str, query_str: str) -> TimeSeriesCollection:
       request = mon_api.projects().timeSeries().query_next(
           previous_request=request, previous_response=response)
       if request:
-        logging.info('still executing monitoring query (project: %s)',
-                     project_id)
+        logging.debug('still executing monitoring query (project: %s)',
+                      project_id)
     end_time = datetime.datetime.now()
     logging.debug('query run time: %s, pages: %d', end_time - start_time, pages)
   except googleapiclient.errors.HttpError as err:

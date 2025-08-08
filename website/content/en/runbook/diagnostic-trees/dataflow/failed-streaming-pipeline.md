@@ -25,6 +25,7 @@ Provides a DiagnosticTree to check for issues related to failed streaming
 gcpdiag runbook dataflow/failed-streaming-pipeline \
   -p project_id=value \
   -p job_id=value \
+  -p dataflow_job_id=value \
   -p job_region=value
 ```
 
@@ -33,7 +34,8 @@ gcpdiag runbook dataflow/failed-streaming-pipeline \
 | Name | Required | Default | Type | Help |
 |------|----------|---------|------|------|
 | `project_id` | True | None | str | The Project ID of the resource under investigation |
-| `job_id` | True | None | str | The Job ID returned when the launch command is submitted |
+| `job_id` | False | None | str | The Job ID returned when the launch command is submitted |
+| `dataflow_job_id` | True | None | str | The Job ID returned when the launch command is submitted |
 | `job_region` | True | None | str | The region configured for the job |
 
 Get help on available commands

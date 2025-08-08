@@ -24,7 +24,7 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
 
   rule_parameters = [{
       'project_id': 'gcpdiag-gke4-runbook',
-      'name': 'gke1',
+      'gke_cluster_name': 'gke1',
       'dest_ip': '8.8.8.8',
       'src_ip': '0.0.0.0'
   }]

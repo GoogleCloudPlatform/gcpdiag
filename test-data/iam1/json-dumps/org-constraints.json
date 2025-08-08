@@ -1,0 +1,53 @@
+{
+  "constraints": [
+    {
+      "booleanConstraint": {},
+      "constraintDefault": "ALLOW",
+      "description": "This boolean constraint disables serial port access to Compute Engine VMs belonging to the organization, project, or folder where this constraint is set to True. By default, customers can enable serial port access for Compute Engine VMs on a per-VM or per-project basis using metadata attributes. Enforcing this constraint will disable serial port access for Compute Engine VMs, regardless of the metadata attributes.",
+      "displayName": "Disable VM serial port access",
+      "name": "constraints/compute.disableSerialPortAccess"
+    },
+    {
+      "booleanConstraint": {},
+      "constraintDefault": "ALLOW",
+      "description": "This boolean constraint disables serial port logging to Stackdriver from Compute Engine VMs belonging to the organization, project, or folder where this constraint is being enforced. By default, serial port logging for Compute Engine VMs is disabled, and can be selectively enabled on a per-VM or per-project basis using metadata attributes. When enforced, this constraint disables serial port logging for new Compute Engine VMs whenever a new VM is created, as well as preventing users from changing the metadata attribute of any VMs (old or new) to True. Disabling serial port logging can cause certain services that rely on it, such as Google Kubernetes Engine clusters, to not function correctly. Before you enforce this constraint, verify that the products in your project do not rely on serial port logging.",
+      "displayName": "Disable VM serial port logging to Stackdriver",
+      "name": "constraints/compute.disableSerialPortLogging"
+    },
+    {
+      "booleanConstraint": {},
+      "constraintDefault": "ALLOW",
+      "description": "This boolean constraint disables the SSH-in-browser tool in the Cloud Console for VMs that use OS Login and App Engine flexible environment VMs. When enforced, the SSH-in-browser button is disabled. By default, using the SSH-in-browser tool is allowed.",
+      "displayName": "Disable SSH-in-browser",
+      "name": "constraints/compute.disableSshInBrowser"
+    },
+    {
+      "booleanConstraint": {},
+      "constraintDefault": "ALLOW",
+      "description": "This boolean constraint, when set to true, enables OS Login on all newly created Projects. All VM instances created in new projects will have OS Login enabled. On new and existing projects, this constraint prevents metadata updates that disable OS Login at the project or instance level. By default, the OS Login feature is disabled on Compute Engine projects.GKE instances in private clusters running node pool versions 1.20.5-gke.2000 and later support OS Login. GKE instances in public clusters do not currently support OS Login. If this constraint is applied to a Project running public clusters, GKE instances running in that Project may not function properly.",
+      "displayName": "Require OS Login",
+      "name": "constraints/compute.requireOsLogin"
+    },
+    {
+      "booleanConstraint": {},
+      "constraintDefault": "ALLOW",
+      "description": "This boolean constraint, when set to True, requires that all new Compute Engine VM instances use Shielded disk images with Secure Boot, vTPM, and Integrity Monitoring options enabled. Secure Boot can be disabled after creation, if desired. Existing running instances will continue to work as usual. By default, Shielded VM features do not need to be enabled in order to create Compute Engine VM instances. Shielded VM features add verifiable integrity and exfiltration resistance to your VMs.",
+      "displayName": "Shielded VMs",
+      "name": "constraints/compute.requireShieldedVm"
+    },
+    {
+      "booleanConstraint": {},
+      "constraintDefault": "ALLOW",
+      "description": "This boolean constraint, when enforced, prevents the default App Engine and Compute Engine service accounts that are created in your projects from being automatically granted any IAM role on the project when the accounts are created. By default, these service accounts automatically receive the Editor role when they are created. To learn about default service accounts, see https://cloud.google.com/iam/help/service-accounts/default. To learn which roles to grant instead of the Editor role, see https://cloud.google.com/iam/help/service-accounts/troubleshoot-roles-default.",
+      "displayName": "Disable Automatic IAM Grants for Default Service Accounts",
+      "name": "constraints/iam.automaticIamGrantsForDefaultServiceAccounts"
+    },
+    {
+      "booleanConstraint": {},
+      "constraintDefault": "DENY",
+      "description": "When enforced, service accounts can only be deployed (using ServiceAccountUser role) to jobs (vms, functions, etc) running in the same project as the service account.",
+      "displayName": "Disable Cross-Project Service Account Usage",
+      "name": "constraints/iam.disableCrossProjectServiceAccountUsage"
+    }
+  ]
+}

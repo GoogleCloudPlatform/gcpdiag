@@ -20,7 +20,7 @@ from typing import Dict, List, Literal, Optional
 
 import googleapiclient
 
-from gcpdiag import caching, config, models
+from gcpdiag import caching, config, models, utils
 from gcpdiag.queries import apis, apis_utils
 
 
@@ -183,6 +183,11 @@ class BackendServices(models.Resource):
     return self._resource_data.get('enableCDN', False)
 
   @property
+  def draining_timeout_sec(self) -> int:
+    return self._resource_data.get('connectionDraining',
+                                   {}).get('drainingTimeoutSec', 0)
+
+  @property
   def load_balancing_scheme(self) -> str:
     return self._resource_data.get('loadBalancingScheme', None)
 
@@ -243,7 +248,7 @@ class BackendServices(models.Resource):
 
 @caching.cached_api_call(in_memory=True)
 def get_backend_services(project_id: str) -> List[BackendServices]:
-  logging.info('fetching Backend Services: %s', project_id)
+  logging.debug('fetching Backend Services: %s', project_id)
   compute = apis.get_api('compute', 'v1', project_id)
   backend_services = []
   request = compute.backendServices().aggregatedList(project=project_id)
@@ -265,15 +270,20 @@ def get_backend_service(project_id: str,
                         region: str = None) -> BackendServices:
   """Returns instance object matching backend service name and region"""
   compute = apis.get_api('compute', 'v1', project_id)
-  if not region or region == 'global':
-    request = compute.backendServices().get(project=project_id,
-                                            backendService=backend_service_name)
-  else:
-    request = compute.regionBackendServices().get(
-        project=project_id, region=region, backendService=backend_service_name)
+  try:
+    if not region or region == 'global':
+      request = compute.backendServices().get(
+          project=project_id, backendService=backend_service_name)
+    else:
+      request = compute.regionBackendServices().get(
+          project=project_id,
+          region=region,
+          backendService=backend_service_name)
 
-  response = request.execute(num_retries=config.API_RETRIES)
-  return BackendServices(project_id, resource_data=response)
+    response = request.execute(num_retries=config.API_RETRIES)
+    return BackendServices(project_id, resource_data=response)
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
 
 
 def get_backend_service_by_self_link(
@@ -330,26 +340,26 @@ def get_backend_service_health(
   for backend in backend_service.backends:
     group = backend['group']
     if not backend_service.region:
-      response = compute.backendServices().getHealth(
+      response = (compute.backendServices().getHealth(
           project=project_id,
           backendService=backend_service.name,
           body={
               'group': group
           },
-      ).execute(num_retries=config.API_RETRIES)
+      ).execute(num_retries=config.API_RETRIES))
       # None is returned when backend type doesn't support health check
       if response is not None:
         for health_status in response.get('healthStatus', []):
           backend_heath_statuses.append(BackendHealth(health_status, group))
     else:
-      response = compute.regionBackendServices().getHealth(
+      response = (compute.regionBackendServices().getHealth(
           project=project_id,
           region=backend_service.region,
           backendService=backend_service.name,
           body={
               'group': group
           },
-      ).execute(num_retries=config.API_RETRIES)
+      ).execute(num_retries=config.API_RETRIES))
       if response is not None:
         for health_status in response.get('healthStatus', []):
           backend_heath_statuses.append(BackendHealth(health_status, group))
@@ -614,7 +624,7 @@ def get_target_proxy_reference(target_proxy_self_link: str) -> str:
 
 @caching.cached_api_call(in_memory=True)
 def get_forwarding_rules(project_id: str) -> List[ForwardingRules]:
-  logging.info('fetching Forwarding Rules: %s', project_id)
+  logging.debug('fetching Forwarding Rules: %s', project_id)
   compute = apis.get_api('compute', 'v1', project_id)
   forwarding_rules = []
   request = compute.forwardingRules().aggregatedList(project=project_id)
@@ -703,7 +713,7 @@ class TargetHttpsProxy(models.Resource):
 
 @caching.cached_api_call(in_memory=True)
 def get_target_https_proxies(project_id: str) -> List[TargetHttpsProxy]:
-  logging.info('fetching Target HTTPS Proxies: %s', project_id)
+  logging.debug('fetching Target HTTPS Proxies: %s', project_id)
   compute = apis.get_api('compute', 'v1', project_id)
   target_https_proxies = []
   request = compute.targetHttpsProxies().aggregatedList(project=project_id)
@@ -777,7 +787,7 @@ class TargetSslProxy(models.Resource):
 
 @caching.cached_api_call(in_memory=True)
 def get_target_ssl_proxies(project_id: str) -> List[TargetSslProxy]:
-  logging.info('fetching Target SSL Proxies: %s', project_id)
+  logging.debug('fetching Target SSL Proxies: %s', project_id)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.targetSslProxies().list(project=project_id)
   response = request.execute(num_retries=config.API_RETRIES)

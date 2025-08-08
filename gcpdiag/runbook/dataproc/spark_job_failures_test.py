@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Test class for dataproc/SparkJob"""
+"""Test class for dataproc/SparkJob."""
 
 from gcpdiag import config
 from gcpdiag.runbook import dataproc, snapshot_test_base
@@ -28,13 +28,13 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
   rule_parameters = [
       {
           'project_id': project_id,
-          'cluster_name': 'job_failed',
+          'dataproc_cluster_name': 'job_failed',
           'region': 'us-central1',
           'job_id': failed_job_id,
       },
       {
           'project_id': project_id,
-          'cluster_name': 'job-not-failed',
+          'dataproc_cluster_name': 'job-not-failed',
           'region': 'us-central1',
           'job_id': success_job_id,
       },

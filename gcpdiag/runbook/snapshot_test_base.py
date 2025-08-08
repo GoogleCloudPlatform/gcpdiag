@@ -23,6 +23,8 @@ from gcpdiag.queries import apis_stub, dns_stub, kubectl_stub
 from gcpdiag.runbook import command, util
 
 
+@mock.patch('gcpdiag.queries.apis.get_user_email',
+            new=lambda: 'fake-user@google.com')
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
 @mock.patch('gcpdiag.queries.kubectl.verify_auth', new=kubectl_stub.verify_auth)
 @mock.patch('gcpdiag.queries.kubectl.check_gke_ingress',
@@ -34,10 +36,7 @@ class RulesSnapshotTestBase:
 
   def test_all_rules(self, snapshot):
     self.de = runbook.DiagnosticEngine()
-    tree = runbook.RunbookRegistry.get(self.runbook_name)
-    if not tree:
-      print(f'Runbook: {self.runbook_name} does not exist!', file=sys.stderr)
-      return
+    tree = self.de.load_tree(self.runbook_name)
     snapshot.snapshot_dir = path.join(path.dirname(self.rule_pkg.__file__),
                                       'snapshots')
     output_stream = io.StringIO()

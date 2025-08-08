@@ -16,18 +16,18 @@ None
 
 ### Failure Reason
 
-Live migration check failed for node {NODE}.
+Live migration check failed for node {node}.
 
 ### Failure Remediation
 
-There was a live migration event for the node {NODE}.
+There was a live migration event for the node {node}.
 
 For more details about Live migration process during maintenance events, please consult the documentation:
-https://cloud.google.com/compute/docs/instances/live-migration-process
+<https://cloud.google.com/compute/docs/instances/live-migration-process>
 
 ### Success Reason
 
-The node {NODE} was unavailable for reasons other than live migration.
+The node {node} was unavailable for reasons other than live migration.
 
 
 

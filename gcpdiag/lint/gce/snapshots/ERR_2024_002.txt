@@ -15,23 +15,17 @@
      Memory utilization is exceeding optimal levels(95%), potentially impacting performance of the instance.
    - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce2       [FAIL]
      Disk utilization is exceeding optimal levels(95%), potentially impacting performance of the instance.
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-4h21   [FAIL]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-bzvx   [FAIL]
      CPU utilization is exceeding optimal levels, potentially impacting performance of the instance.
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-4h21   [FAIL]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-bzvx   [FAIL]
      Memory utilization is exceeding optimal levels(95%), potentially impacting performance of the instance.
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-4h21   [FAIL]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-bzvx   [FAIL]
      Disk utilization is exceeding optimal levels(95%), potentially impacting performance of the instance.
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-7pvl   [FAIL]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-l40g   [FAIL]
      CPU utilization is exceeding optimal levels, potentially impacting performance of the instance.
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-7pvl   [FAIL]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-l40g   [FAIL]
      Memory utilization is exceeding optimal levels(95%), potentially impacting performance of the instance.
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-7pvl   [FAIL]
-     Disk utilization is exceeding optimal levels(95%), potentially impacting performance of the instance.
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/windows-test [FAIL]
-     CPU utilization is exceeding optimal levels, potentially impacting performance of the instance.
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/windows-test [FAIL]
-     Memory utilization is exceeding optimal levels(95%), potentially impacting performance of the instance.
-   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/windows-test [FAIL]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-l40g   [FAIL]
      Disk utilization is exceeding optimal levels(95%), potentially impacting performance of the instance.
    - projects/gcpdiag-gce1-aaaa/zones/europe-west4-b/instances/gce1       [FAIL]
      CPU utilization is exceeding optimal levels, potentially impacting performance of the instance.

@@ -59,8 +59,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       if not match:
         report.add_skipped(instance, 'No indication of NTP Service time sync')
       elif not any(server in match.text for server in RECOMMENDED_NTP_SERVERS):
-        report.add_failed(instance, (f'''{match.text.split("]:")[1][:-4]}
-                                     is not a GCP recommended NTP server'''))
+        report.add_failed(instance, (f"{match.text.split(']:')[1][:-4]}"
+                                     'is not a GCP recommended NTP server'))
       else:
         report.add_ok(instance)
   else:

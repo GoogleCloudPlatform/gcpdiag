@@ -21,13 +21,15 @@ The cluster {cluster_name} in project {project_id} could not be created due to i
 ### Failure Remediation
 
 This issue occurs when the requested Dataproc cluster exceeds the project's available quota for resources such as CPU, disk space, or IP addresses.
-Solution: Request additional quota [1] from the Google Cloud console or use another project.
-[1] https://cloud.google.com/docs/quotas/view-manage#managing_your_quota_console
+To resolve this issue:
+
+- Request additional quota [1] via the Google Cloud console.
+- Create the cluster in a different project.
+[1] <https://cloud.google.com/docs/quotas/view-manage#managing_your_quota_console>
 
 ### Success Reason
 
-No issues with unsufficient quota in project {project_id} has been identified for the ivestigated cluster {cluster_name}, please double-check if you have provided
-the right cluster_name parameter if the cluster you are trying to create doesn't appear in Dataproc UI.
+No issues with insufficient quota identified for cluster {cluster_name} in project {project_id}. If the intended cluster does not appear in the Dataproc UI, verify the provided cluster_name parameter.
 
 
 

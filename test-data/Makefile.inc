@@ -164,6 +164,20 @@ json-dumps/compute-zones.json:
 		'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/zones' \
 		| $(SED_SUBST_FAKE) >$@
 
+json-dumps/compute-instances-aggregated.json:
+	$(CURL) -fsS \
+	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/aggregated/instances' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-igs-aggregated.json:
+	$(CURL) -fsS \
+	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/aggregated/instanceGroups' \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/compute-migs-aggregated.json:
+	$(CURL) -fsS \
+	        'https://compute.googleapis.com/compute/v1/projects/$(PROJECT_ID)/aggregated/instanceGroupManagers' \
+		| $(SED_SUBST_FAKE) >$@
 
 # cloudresourcemanager.googleapis.com
 
@@ -188,6 +202,21 @@ json-dumps/project.json:
 		'https://cloudresourcemanager.googleapis.com/v3/projects/$(PROJECT_ID)' \
 		| $(SED_SUBST_FAKE) >$@
 
+json-dumps/org-policies.json:
+	$(CURL) -fsS \
+		'https://cloudresourcemanager.googleapis.com/v1/projects/$(PROJECT_ID):listOrgPolicies' \
+		-X POST  --header "Content-Type:text/json" \
+		-d "" \
+		| $(JSON_CLEANER) other \
+		| $(SED_SUBST_FAKE) >$@
+
+json-dumps/org-constraints.json:
+	$(CURL) -fsS \
+		'https://cloudresourcemanager.googleapis.com/v1/projects/$(PROJECT_ID):listAvailableOrgPolicyConstraints' \
+		-X POST  --header "Content-Type:text/json" \
+		-d "" \
+		| $(JSON_CLEANER) other \
+		| $(SED_SUBST_FAKE) >$@
 
 # iam.googleapis.com
 

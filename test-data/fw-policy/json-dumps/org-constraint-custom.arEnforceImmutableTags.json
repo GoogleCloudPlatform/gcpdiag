@@ -1,0 +1,4 @@
+{
+  "constraint": "customConstraints/custom.arEnforceImmutableTags",
+  "booleanPolicy": {}
+}

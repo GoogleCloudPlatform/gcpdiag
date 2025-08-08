@@ -45,7 +45,7 @@ This step enables the flexible verification of attributes within any JSON-viewab
       status_check.query_kwargs = {
           'project_id': op.get(flags.PROJECT_ID),
           'zone': op.get(flags.ZONE),
-          'instance_name': op.get(flags.NAME)
+          'instance_name': op.get(flags.INSTANCE_NAME)
       }
       status_check.attribute = ('status',)
       status_check.expected_value = 'RUNNING'
@@ -68,7 +68,7 @@ Update the resource to have the expected value
 
 ### Success Reason
 
-Resrouce has the expected value
+Resource has the expected value
 
 
 

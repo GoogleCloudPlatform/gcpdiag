@@ -20,11 +20,12 @@ The cluster {cluster_name} creation failed because the initialization script enc
 
 ### Failure Remediation
 
-A Dataproc cluster init script failure means that a script intended to run during the cluster's initial setup did not complete successfully.
-Solution:
-See initialization actions considerations and guidelines [1].
-Examine the output logs. The error message should provide a link to the logs in Cloud Storage.
-[1]https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/init-actions#important_considerations_and_guidelines
+A Dataproc cluster initialization script failure means that a script intended to run during the cluster's setup did not complete successfully.
+To resolve this issue:
+
+- Review initialization actions considerations and guidelines [1].
+- Examine the output logs. The error message should provide a link to the logs in Cloud Storage.
+[1]<https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/init-actions#important_considerations_and_guidelines>
 
 ### Success Reason
 

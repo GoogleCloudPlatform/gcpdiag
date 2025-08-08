@@ -27,9 +27,10 @@ This runbook investigates the gke cluster for Image pull failures and recommends
 gcpdiag runbook gke/image-pull \
   -p project_id=value \
   -p name=value \
+  -p gke_cluster_name=value \
   -p location=value \
-  -p start_time_utc=value \
-  -p end_time_utc=value
+  -p start_time=value \
+  -p end_time=value
 ```
 
 #### Parameters
@@ -37,10 +38,11 @@ gcpdiag runbook gke/image-pull \
 | Name | Required | Default | Type | Help |
 |------|----------|---------|------|------|
 | `project_id` | True | None | str | The Project ID of the resource under investigation |
-| `name` | False | None | str | (Optional) The name of the GKE cluster, to limit search only for this cluster |
-| `location` | False | None | str | (Optional) The zone or region of the GKE cluster |
-| `start_time_utc` | False | None | datetime | (Optional) The start window to query the logs. Format: YYYY-MM-DDTHH:MM:SSZ |
-| `end_time_utc` | False | None | datetime | (Optional) The end window for the logs. Format: YYYY-MM-DDTHH:MM:SSZ |
+| `name` | False | None | str | The name of the GKE cluster, to limit search only for this cluster |
+| `gke_cluster_name` | True | None | str | The name of the GKE cluster, to limit search only for this cluster |
+| `location` | True | None | str | The zone or region of the GKE cluster |
+| `start_time` | False | None | datetime | (Optional) The start window to query the logs. Format: YYYY-MM-DDTHH:MM:SSZ |
+| `end_time` | False | None | datetime | (Optional) The end window for the logs. Format: YYYY-MM-DDTHH:MM:SSZ |
 
 Get help on available commands
 
@@ -61,6 +63,8 @@ gcpdiag runbook --help
   - [Image Connection Timeout Restricted Private](/runbook/steps/gke/image-connection-timeout-restricted-private)
 
   - [Image Connection Timeout](/runbook/steps/gke/image-connection-timeout)
+
+  - [Image Not Found Insufficient Scope](/runbook/steps/gke/image-not-found-insufficient-scope)
 
   - [Image Pull End](/runbook/steps/gke/image-pull-end)
 

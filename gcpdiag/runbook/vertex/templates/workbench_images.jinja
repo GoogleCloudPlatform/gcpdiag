@@ -1,6 +1,6 @@
-{% block official_step_message %}
-Checking if Workbench Instance Compute Engine VM's boot disk image is part of the official family of images...
-{% endblock official_step_message %}
+{% block official_step_name %}
+Verify Workbench Instance Compute Engine VM's boot disk image is part of the official family of images
+{% endblock official_step_name %}
 
 {% block official_success_reason %}
 OK! Workbench Instance {instance_name} is using an official '{image_family}' image: {image}
@@ -9,7 +9,7 @@ OK! Workbench Instance {instance_name} is using an official '{image_family}' ima
 {% block official_uncertain_reason %}
 image: {image}
 '{images_family}' images might work with Workbench Instances, but are unsupported [1]
-[1] https://cloud.google.com/vertex-ai/docs/workbench/instances/introduction#limitations
+[1] <https://cloud.google.com/vertex-ai/docs/workbench/instances/introduction#limitations>
 {% endblock official_uncertain_reason %}
 
 {% block official_uncertain_remediation %}
@@ -20,7 +20,7 @@ Vertex AI Workbench UI > Instances > Create form > Advanced > Environment > Prev
 {% block official_failure_reason %}
 image: {image}
 images without '{images_family}' text in the image name are not supported but might work with Workbench Instances [1]
-[1] https://cloud.google.com/vertex-ai/docs/workbench/instances/introduction#limitations
+[1] <https://cloud.google.com/vertex-ai/docs/workbench/instances/introduction#limitations>
 {% endblock official_failure_reason %}
 
 {% block official_failure_remediation %}
@@ -29,5 +29,5 @@ Create a Workbench Instance with the official '{images_family}' family of images
 Officially supported images are found in the Google Cloud Console:
 Vertex AI Workbench UI > Instances > Create form > Advanced > Environment > Previous versions dropdown.
 You may also follow the documentation [1] to use Custom Containers
-[1] https://cloud.google.com/vertex-ai/docs/workbench/instances/create-custom-container
+[1] <https://cloud.google.com/vertex-ai/docs/workbench/instances/create-custom-container>
 {% endblock official_failure_remediation %}

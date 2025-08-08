@@ -20,8 +20,7 @@ Provided image {image} does not exist.
 
 ### Failure Remediation
 
-The provided image does not exist. Make sure that it is correct. Try following
-quickstart guide and see how to correctly specify image names. https://cloud.google.com/run/docs/quickstarts
+The provided image does not exist. Verify that the image name is correct. Refer to <https://cloud.google.com/run/docs/quickstarts> for guidance on specifying image names.
 
 
 

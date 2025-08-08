@@ -1,32 +1,15 @@
-{% block cluster_name_exists_success_reason %}
-Cluster {cluster_name} exists in project {project_id}
-{% endblock cluster_name_exists_success_reason %}
-
-{% block cluster_name_exists_failure_reason %}
-Cluster {cluster_name} does not exists in project {project_id}
-{% endblock cluster_name_exists_failure_reason %}
-
-{% block cluster_name_exists_failure_remediation %}
-Either create again the cluster and keep it in ERROR state in Dataproc UI or manually provide additional parameters using command:
-
-`gcpdiag runbook dataproc/cluster-creation -p cluster_name=CLUSTER_NAME -p cluster_uuid=CLUSTER_UUID -p network=NETWORK_URI -p subnetwork=SUBNETWORK_URI -p service_account=SERVICE_ACCOUNT -p internal_ip_only=True/False --project=PROJECT_ID`
-
-Please visit https://gcpdiag.dev/runbook/diagnostic-trees/dataproc/ for any additional parameters you would like to specify.
-{% endblock cluster_name_exists_failure_remediation %}
-
 {% block stackdriver_success_reason %}
 Stackdriver: Enabled
 {% endblock stackdriver_success_reason %}
 
 {% block stackdriver_uncertain_reason %}
-Unable to find sufficient information if stackdriver.logging property is enabled. This may be due to the fact that the
-cluster is deleted. The runbook will assume that it is enabled, however if not, it might affect some of the runbooks steps.
+Could not determine if the `dataproc:dataproc.logging.stackdriver.enable` property is enabled for cluster, possibly because the cluster was deleted. Subsequent checks requiring Cloud logging might be affected.
 {% endblock stackdriver_uncertain_reason %}
 
 {% block stackdriver_uncertain_remediation %}
-Consider enabling it by creating a cluster with property dataproc:dataproc.logging.stackdriver.enable = true
-Review our guide for more details:
-https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/cluster-properties
+Enable Cloud logging by creating a cluster with property dataproc:dataproc.logging.stackdriver.enable = true.
+Refer to the guide for more details:
+<https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/cluster-properties>
 {% endblock stackdriver_uncertain_remediation %}
 
 {% block unspported_image_version_success_reason %}
@@ -34,51 +17,47 @@ The cluster {cluster_name} is using a supported Dataproc image version.
 {% endblock unspported_image_version_success_reason %}
 
 {% block unspported_image_version_failure_reason %}
-The cluster {cluster_name} is using an unsupported Dataproc image version. Please try to run the job on a supported image version.
+The cluster {cluster_name} is using an unsupported Dataproc image version. Run the job on a supported image version.
 {% endblock unspported_image_version_failure_reason %}
 
 {% block unspported_image_version_failure_remediation %}
-Please find supported Dataproc image versions from this document[1].
-[1] https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-version-clusters
+Find supported Dataproc image versions in this document[1].
+[1] <https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-version-clusters>
 {% endblock unspported_image_version_failure_remediation %}
 
 {% block gcs_connector_success_reason %}
-Didn't identify any user specified Cloud Storage connector version. The cluster is using the default version.
+No user-specified Cloud Storage connector version was identified. The cluster is using the default version.
 {% endblock gcs_connector_success_reason %}
 
 {% block gcs_connector_uncertain_reason %}
-Identified a user specified Cloud Storage connector version. Please have in mind that all Dataproc clusters have pre-installed GCS connector.
-If your application doesn't depend on a non-default connector version we would recommend to not specify one.
-https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-version-clusters#supported-dataproc-image-versions
+A user-specified Cloud Storage connector version was identified for cluster. Using a non-default connector version can lead to issues if not required by the application, as Dataproc clusters include a default pre-installed GCS connector.
+<https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-version-clusters#supported-dataproc-image-versions>
 {% endblock gcs_connector_uncertain_reason %}
 
 {% block gcs_connector_uncertain_remediation %}
-If you would like to use the non-default connector make sure that the setup has been done correctly following:
-https://cloud.google.com/dataproc/docs/concepts/connectors/cloud-storage#non-default_connector_versions
-https://cloud.google.com/dataproc/docs/concepts/connectors/cloud-storage#service_account_permissions
+Verify the setup is correct if using a non-default Cloud Storage connector by following:
+<https://cloud.google.com/dataproc/docs/concepts/connectors/cloud-storage#non-default_connector_versions>
+<https://cloud.google.com/dataproc/docs/concepts/connectors/cloud-storage#service_account_permissions>
 {% endblock gcs_connector_uncertain_remediation %}
 
 {% block bq_connector_success_reason %}
-You are using image version {image_version} that preinstalls BigQuery connector
-and not providing any conflicting BigQuery jars on your end. There should be no dependency version conflict on the BigQuery side.
+The cluster uses image version {image_version} which preinstalls the BigQuery connector, and no conflicting BigQuery JARs were provided. Dependency version conflicts on the BigQuery side are not expected.
 
-Visit Dataproc Version page to find out each component version preinstalled on your cluster:
-https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-version-clusters
+Refer to the Dataproc Version page to find out each component version preinstalled on your cluster:
+<https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-version-clusters>
 {% endblock bq_connector_success_reason %}
 
 {% block bq_connector_uncertain_reason %}
-You are using image version {image_version} that preinstalls BigQuery connector
-and you are installing on the cluster or job level a different version of the BigQuery connector.
-This might cause dependency version conflicts and fail your jobs.
+The cluster uses image version {image_version} which preinstalls the BigQuery connector, and a different version of the BigQuery connector is being installed at the cluster or job level. This might cause dependency version conflicts and lead to job failures.
 {% endblock bq_connector_uncertain_reason %}
 
 {% block bq_connector_uncertain_remediation %}
-Try one of the following:
-- (if you provide BQ jar on the cluster) Create Dataproc cluster without any BigQuery jar
-- (if you provide BQ jar on the job) Run the job without any BigQuery jar
-- (if you need to install BQ jar) Match the version of the BQ jar to the version preinstalled on the cluster.
-For image version {image_version}, it is {bq_version}.
+Resolve potential BigQuery connector version conflicts using one of the following approaches:
 
-Visit Dataproc Version page to find out each component version preinstalled on your cluster:
-https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-version-clusters
+- If providing the BigQuery JAR at the cluster level: Create the Dataproc cluster without specifying any BigQuery JAR.
+- If providing the BigQuery JAR at the job level: Run the job without specifying any BigQuery JAR.
+- If installing a BigQuery JAR is necessary: Match the version of the BigQuery JAR to the version preinstalled on the cluster (version {bq_version} for image {image_version}).
+
+Refer to the Dataproc Version page to find out each component version preinstalled on your cluster:
+<https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-version-clusters>
 {% endblock bq_connector_uncertain_remediation %}

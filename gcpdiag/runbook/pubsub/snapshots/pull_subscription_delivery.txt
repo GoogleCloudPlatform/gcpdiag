@@ -26,7 +26,7 @@ pubsub/pull-subscription-delivery: Diagnostic checks for Cloud Pub/Sub pull deli
    - gcpdiag-pubsub1-aaaa/gcpdiag-pubsub1subscription-9pm6hng1            [OK]
      [REASON]
      Subcription has good health
-[END]: End step. 
+[END]: End step.
 [INFO]: No more checks to perform.
 
 

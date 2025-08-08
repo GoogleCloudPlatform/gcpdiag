@@ -25,14 +25,14 @@ to resolve this as quickly as possible.
 To better understand the situation with your Compute Engine or Persistent Disks,
 could you please take a look at the Google Cloud Status page:
 
-https://status.cloud.google.com
+<https://status.cloud.google.com>
 
 This page provides real-time updates on the health of Google Cloud services.
 
 Additionally, it may be helpful to check the Service Health dashboard in your
 Google Cloud Console for any reported incidents:
 
-https://console.cloud.google.com/servicehealth/incidents
+<https://console.cloud.google.com/servicehealth/incidents>
 
 If you don't find any information about an ongoing issue related to your concern,
 please don't hesitate to reach out to Google Cloud Support by creating a support case.

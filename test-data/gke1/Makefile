@@ -47,7 +47,11 @@ all:	\
 	json-dumps/iam-service-account-policy.json \
 	json-dumps/logging-entries-1.json \
 	json-dumps/project.json \
-	json-dumps/services.json
+	json-dumps/services.json \
+	json-dumps/compute-instances-aggregated.json \
+	json-dumps/compute-migs-aggregated.json \
+	json-dumps/org-constraints.json \
+	json-dumps/org-constraint-custom.arEnforceImmutableTags.json
 
 include ../Makefile.inc
 
@@ -135,6 +139,7 @@ json-dumps/compute-disks-%.json:
 json-dumps/compute-disks-empty.json: json-dumps/compute-disks-$(ZONE_EMPTY).json
 	ln -sf $(notdir $<) $@
 
+
 # cloudresourcemanager.googleapis.com
 
 json-dumps/project.json:
@@ -170,10 +175,16 @@ json-dumps/iam-roles-custom.json:
 		| $(SED_SUBST_FAKE) >$@
 
 json-dumps/iam-roles-get.json:
+ 	$(CURL) -fsS \
+ 		'https://iam.googleapis.com/v1/roles/container.nodeServiceAgent' \
+ 		| $(SED_SUBST_FAKE) \
+		| jq '{"roles": [.]}' >$@.tmp
 	$(CURL) -fsS \
-		'https://iam.googleapis.com/v1/roles/container.nodeServiceAgent' \
+		'https://iam.googleapis.com/v1/roles/container.defaultNodeServiceAccount' \
 		| $(SED_SUBST_FAKE) \
-		| jq '{"roles": [.]}' >$@
+		| jq '{"roles": [.]}' >>$@.tmp
+	jq -s '. | {"roles": map(.)}' $@.tmp > $@
+	rm $@.tmp
 
 json-dumps/iam-service-accounts.json:
 	$(CURL) -fsS \

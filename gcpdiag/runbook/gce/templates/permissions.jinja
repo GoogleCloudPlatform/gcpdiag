@@ -1,18 +1,28 @@
+{% block instances_get_step_name %}
+Verify that the {principal} has "compute.instance.get" permission.
+{% endblock instances_get_step_name %}
+
 {% block instances_get_failure_reason %}
-The authenticated user {principal} does not have the permissions needed to manage instances.
+{principal} does not have the permissions needed to manage instances.
 The following permissions are required: {permissions_or_roles}.
 {% endblock instances_get_failure_reason %}
 
 {% block instances_get_failure_remediation %}
-To remedy this, ensure the user {principal} is granted a role encompassing the necessary permissions:
+Ensure {principal} is granted a role encompassing the necessary permissions:
+
 - Permissions needed: {missing_permissions_or_roles}
+
 For guidance on assigning instance admin roles, consult:
-https://cloud.google.com/compute/docs/access/iam#connectinginstanceadmin
+<https://cloud.google.com/compute/docs/access/iam#connectinginstanceadmin>
 {% endblock instances_get_failure_remediation %}
 
 {% block instances_get_success_reason %}
-The user {principal} possesses the appropriate {permissions_or_roles} to fetch instance details.
+{principal} possesses the appropriate {permissions_or_roles} to fetch instance details.
 {% endblock instances_get_success_reason %}
+
+{% block has_os_login_step_name %}
+Verify whether {principal} has at least one valid OS login role.
+{% endblock has_os_login_step_name %}
 
 {% block has_os_login_success_reason %}
 "{principal}" possesses at least one of the required OS Login roles:
@@ -25,22 +35,29 @@ The user {principal} possesses the appropriate {permissions_or_roles} to fetch i
 {% endblock has_os_login_failure_reason %}
 
 {% block has_os_login_failure_remediation %}
-Assign the principal one of the role required to have OS Login privileges.
-For more information:
-https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
-https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
+Assign the principal one of the roles required for OS Login privileges.
+Consult the following resources for more information:
+
+<https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users>
+
+<https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role>
 {% endblock has_os_login_failure_remediation %}
 
+{% block sa_user_role_step_name %}
+Verify that the {principal} has "roles/iam.serviceAccountUser" role.
+{% endblock sa_user_role_step_name %}
+
 {% block sa_user_role_failure_reason %}
-"{principal}" does not have the "{missing_permissions_or_roles}" role or custom roles which has the
-constituent permissions required to be able to impersonate the attached service account.
+"{principal}" lacks the "{missing_permissions_or_roles}" role or a custom role with the necessary permissions to impersonate the attached service account.
 {% endblock sa_user_role_failure_reason %}
 
 {% block sa_user_role_failure_remediation %}
 Assign the "roles/iam.serviceAccountUser" role to "{principal}".
-Guidelines:
-https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
-https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
+Consult the following guidelines:
+
+<https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users>
+
+<https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role>
 {% endblock sa_user_role_failure_remediation %}
 
 {% block sa_user_role_success_reason %}
@@ -48,34 +65,49 @@ https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-ro
 required to impersonate the attached service account.
 {% endblock sa_user_role_success_reason %}
 
+{% block iap_role_step_name %}
+Verify that the {principal} has "roles/iap.tunnelResourceAccessor" role.
+{% endblock iap_role_step_name %}
+
 {% block iap_role_failure_reason %}
-"{principal}" lacks the "{missing_permissions_or_roles}" role necessary to Tunnel through IAP for access.
+{principal} does not have the "{missing_permissions_or_roles}" role necessary to Tunnel through IAP for access.
 {% endblock iap_role_failure_reason %}
 
 {% block iap_role_failure_remediation %}
-Ensure "{principal}" is granted the "roles/iap.tunnelResourceAccessor" role.
-Resource guide:
-https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users
-https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role
+Ensure that "{principal}" is assigned the "roles/iap.tunnelResourceAccessor" role to enable the required access.
+
+For detailed guidance, refer to the following resources:
+
+- [Setting up OS Login](https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#configure_users)
+- [Managing access to service
+accounts](https://cloud.google.com/iam/docs/manage-access-service-accounts#grant-single-role)
 {% endblock iap_role_failure_remediation %}
 
 {% block iap_role_success_reason %}
 "{principal}" has the requisite "{present_permissions_or_roles}" role to tunnel through IAP.
 {% endblock iap_role_success_reason %}
 
+{% block console_view_permission_step_name %}
+Verify whether the {principal} has the "compute.projects.get" permission required to view the console.
+{% endblock console_view_permission_step_name %}
+
 {% block console_view_permission_failure_reason %}
-To access Compute Engine via the Google Cloud console (i.e. SSH-in-browser),
-the user must have "compute.projects.get" permission.
+The "compute.projects.get" permission is required to access GCE Instances via the Google Cloud console, including SSH-in-browser functionality.
 {% endblock console_view_permission_failure_reason %}
 
 {% block console_view_permission_failure_remediation %}
-Review the permissions guide for accessing Compute Engine resources:
-https://cloud.google.com/compute/docs/access/iam#console_permission
+Refer to the [permissions guide](https://cloud.google.com/compute/docs/access/iam#console_permission)
+for detailed steps on granting the necessary permissions to enable access to Compute Engine resources.
 {% endblock console_view_permission_failure_remediation %}
 
 {% block console_view_permission_success_reason %}
-The user is authorized to view the Google Cloud console which will allow SSH-in-browser use case
+{principal} has the necessary {present_permissions_or_roles}, including the "compute.projects.get"
+permission, required to access and use the Google Cloud.
 {% endblock console_view_permission_success_reason %}
+
+{% block can_set_metadata_step_name %}
+Verify that the {principal} has permission to set instance metadata or common project metadata.
+{% endblock can_set_metadata_step_name %}
 
 {% block can_set_metadata_success_reason %}
 {principal} is authorized to update instance or project metadata, including SSH keys.
@@ -84,19 +116,19 @@ personal SSH keys if needed.
 {% endblock can_set_metadata_success_reason %}
 
 {% block can_set_metadata_failure_reason %}
-The current user does not have the necessary permissions to modify metadata,
-essential for managing SSH keys. Missing permissions include one of the following:
-{{" or ".join(metadata_permissions)}}.
+{principal} lacks the necessary permissions to modify metadata, essential for managing SSH keys. Missing permissions include one of the following: {{" or ".join(metadata_permissions)}}.
 {% endblock can_set_metadata_failure_reason %}
 
 {% block can_set_metadata_failure_remediation %}
-To grant the required permissions for managing SSH keys within the VM's metadata, follow these guides:
+Grant the required permissions for managing SSH keys within the VM's metadata by following these guides:
+
 - For project-level SSH key management, assign roles that include the
-'compute.projects.setCommonInstanceMetadata' permission. More details can be found here:
-https://cloud.google.com/compute/docs/connect/add-ssh-keys#expandable-2
-- For instance-level SSH key management, ensure roles include 'compute.instances.setMetadata'
-permission. Step-by-step instructions are available here:
-https://cloud.google.com/compute/docs/connect/add-ssh-keys#expandable-3
-Adjusting these permissions will allow for the proper management of SSH keys and, by extension,
-SSH access to the VM especially if using gcloud / cloud console.
+'compute.projects.setCommonInstanceMetadata' permission. Consult the following documentation for details:
+<https://cloud.google.com/compute/docs/connect/add-ssh-keys#expandable-2>
+- For instance-level SSH key management, ensure roles include the 'compute.instances.setMetadata'
+permission. Consult the following documentation for step-by-step instructions:
+<https://cloud.google.com/compute/docs/connect/add-ssh-keys#expandable-3>
+
+Granting these permissions enables proper management of SSH keys, which is necessary for
+SSH access to the VM, especially when using gcloud or the Cloud Console.
 {% endblock can_set_metadata_failure_remediation %}

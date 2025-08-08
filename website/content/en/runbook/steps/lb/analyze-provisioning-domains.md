@@ -4,7 +4,7 @@ linkTitle: "Analyze Provisioning Domains"
 weight: 3
 type: docs
 description: >
-  Analyzes domains in "PROVISIONING" state.
+  Analyze domains in "PROVISIONING" state.
 ---
 
 **Product**: [Load balancing](https://cloud.google.com/load-balancing)\
@@ -16,11 +16,11 @@ None
 
 ### Uncertain Reason
 
-The following domains are in "PROVISIONING" state: {domains}.
+The following domains are in PROVISIONING state: {domains} for SSL certificate "{name}".
 
 ### Uncertain Remediation
 
-The provisioning process can take some time.  The runbook will proactively check other potential issues while the domains are provisioning.
+The provisioning process can take some time. The diagnostic process will continue checking other potential issues while the domains are provisioning.
 
 
 

@@ -24,7 +24,7 @@ Checks is a Cloud API service is enabled or not. Guides the user to enable
 
 ### Failure Reason
 
-The `{service_name}` service is not in the exptected state `{expected_state}`
+The `{service_name}` service is not in the expected state `{expected_state}`
 
 ### Failure Remediation
 
@@ -34,7 +34,7 @@ Execute the command below to enable {service_name} in {project_id}
 gcloud services enable {service_name} --project={project_id}
 
 Resources
-https://cloud.google.com/service-usage/docs/enable-disable#enabling
+<https://cloud.google.com/service-usage/docs/enable-disable#enabling>
 
 ### Success Reason
 

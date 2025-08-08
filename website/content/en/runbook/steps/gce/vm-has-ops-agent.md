@@ -4,7 +4,7 @@ linkTitle: "Vm Has Ops Agent"
 weight: 3
 type: docs
 description: >
-  Verifies that a GCE VM has at ops agent installed and
+  Verifies that a GCE Instance has at ops agent installed and
 ---
 
 **Product**: [Compute Engine](https://cloud.google.com/compute)\
@@ -20,16 +20,17 @@ You can check for sub agents for logging and metrics
 
 ### Failure Reason
 
-GCE VM "{vm_name}" does not have {subagent} agent installed and the subagent is not exporting data
+GCE Instance "{full_resource_path}" does not have {subagent} agent installed and is not exporting data.
 
 ### Failure Remediation
 
-GCE VM "{vm_name}" does not have {subagent} agent installed and the subagent is not exporting data
-https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/troubleshoot-run-ingest
+Install the {subagent} agent on GCE Instance "{full_resource_path}".
+Consult the following documentation for troubleshooting assistance:
+<https://cloud.google.com/stackdriver/docs/solutions/agents/ops-agent/troubleshoot-run-ingest>
 
 ### Success Reason
 
-GCE VM "{vm_name}" has {subagent} agent installed and currently exporting data
+GCE Instance "{full_resource_path}" has {subagent} agent installed and is exporting data.
 
 
 

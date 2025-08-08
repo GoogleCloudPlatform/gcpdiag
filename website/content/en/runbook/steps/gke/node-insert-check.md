@@ -16,19 +16,21 @@ None
 
 ### Failure Reason
 
-There were {NR_ERRORS} errors found for instances.insert method for nodepool {NODEPOOL} in the cluster {NAME} in location {LOCATION} between {START_TIME_UTC} and {END_TIME_UTC}.
+There were {NR_ERRORS} errors found for instances.insert method for nodepool {NODEPOOL} in the cluster {NAME} in
+location {location} between {start_time} and {end_time}.
 Below is the latest log entry found that can help you identify the issue and involved objects:
 
-{LOG_ENTRY}
+{log_entry}
 
 ### Failure Remediation
 
 Please refer to the troubleshooting steps to learn how to resolve the errors:
-https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-vm-creation
+<https://cloud.google.com/compute/docs/troubleshooting/troubleshooting-vm-creation>
 
 ### Success Reason
 
-No errors found for instances.insert method for nodepool {NODEPOOL} in the cluster {NAME} in location {LOCATION} between {START_TIME_UTC} and {END_TIME_UTC}.
+No errors found for instances.insert method for nodepool {NODEPOOL} in the cluster {NAME} in location {location} between
+{start_time} and {end_time}.
 
 
 

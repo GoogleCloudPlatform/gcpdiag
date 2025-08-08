@@ -24,11 +24,11 @@ If certificate map is set on a target proxy, the classic SSL certificates are ig
 
 ### Failure Remediation
 
-If this is not intended, please detach the certificate map from the target proxies.
+If this configuration is unintended, detach the certificate map from the target proxies.
 
 ### Success Reason
 
-All target proxies associated with the certificate {name} do not have a certificate map.
+All target proxies associated with the SSL certificate "{name}" do not have a certificate map.
 
 
 

@@ -14,18 +14,19 @@ description: >
 
 None
 
-### Uncertain Reason
+### Failure Reason
 
-In the health check logs, we found logs with the detailed health state UNHEALTHY, which means the endpoint is reachable but does not conform to the requirements defined by the health check.
-The following responses were received from your backends: {probe_results_text_str}
+Health check logs for backend service {bs_url} indicate a detailed health state of UNHEALTHY. The backend instances are reachable but are not passing the health check requirements.
 
-### Uncertain Remediation
+Responses received from backends: {probe_results_text_str}
+
+### Failure Remediation
 
 {success_criteria}
 
-Please investigate the configuration of your application to ensure it aligns with these health check expectations.
+Investigate the configuration of the application to ensure it aligns with these health check expectations.
 
-If you intend to check a different endpoint or expect a different response, adjust the health check settings accordingly.
+If a different endpoint should be checked or a different response is expected, adjust the health check settings accordingly.
 
 
 

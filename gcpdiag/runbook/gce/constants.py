@@ -169,3 +169,11 @@ CLOUD_INIT_NEGATIVE_PATTERN = [r'ci-info: [|].*[|]\sFalse\s[|]']
 CLOUD_INIT_STARTUP_PATTERN = [
     r"cloud-init\[(\d+)\]: Cloud-init v\. (.*?) running '(.*)'"
 ]
+
+# GCE Operation types
+IG_INSTANCE_REPAIR_METHOD = 'compute.instances.repair.recreateInstance'
+INSTANCE_PREMPTION_METHOD = 'compute.instances.preempted'
+HOST_ERROR_METHOD = 'compute.instances.hostError'
+STOP_METHOD = 'compute.instances.stop'
+TERMINATE_ON_HOST_MAINTENANCE_METHOD = 'compute.instances.terminateOnHostMaintenance'
+GUEST_TERMINATE_METHOD = 'compute.instances.guestTerminate'

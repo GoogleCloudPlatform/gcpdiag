@@ -87,7 +87,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       report.add_failed(
           project,
           f'{len(failed_jobs)} job(s) failed due to OOM'
-          f' errors: {", ".join(islice(failed_jobs, MAX_JOBS_TO_DISPLAY))} {extra_jobs}',
+          f" errors: {', '.join(islice(failed_jobs, MAX_JOBS_TO_DISPLAY))} {extra_jobs}",
       )
     else:
       # only irrelevant logs were fetched

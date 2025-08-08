@@ -28,9 +28,9 @@ from typing import Any, Dict, List, Optional
 from gcpdiag import config, models
 from gcpdiag.runbook import constants, util
 from gcpdiag.runbook.flags import INTERACTIVE_MODE
+from gcpdiag.runbook.output import terminal_output
 from gcpdiag.runbook.output.api_output import ApiOutput
 from gcpdiag.runbook.output.base_output import BaseOutput
-from gcpdiag.runbook.output.terminal_output import TerminalOutput
 
 
 @dataclasses.dataclass
@@ -127,7 +127,7 @@ class Report:
   """Report for a runbook or bundle"""
   # Same as the runbook or bundle run_id
   run_id: str
-  runbook_name: str
+  runbook_name: Optional[str] = None
   run_start_time: str
   run_end_time: str
   execution_mode: str
@@ -172,15 +172,16 @@ class ReportManager:
   def add_step_eval(self, run_id, execution_id, evaluation: ResourceEvaluation):
     self.reports[run_id].results[execution_id].results.append(evaluation)
 
+  def add_step_prompt_response(self, run_id, execution_id, prompt_response):
+    self.reports[run_id].results[execution_id].prompt_response = prompt_response
+
   def serialize_report(self, report: Report):
 
-    def remove_line_breaks(text):
+    def improve_formatting(text):
       if text is None:
         return None
-      # First, replace escaped line breaks like \n, \r, etc.
-      text = re.sub(r'\\n|\\r|\\t|\\r\\n|\\x0b|\\x0c', ' ', text)
-      # Then, replace any remaining literal newline characters
-      text = re.sub(r'\n|\r', ' ', text)
+      # Decode escaped sequences like \\n, \\r, \\t to their actual characters
+      text = text.encode('utf-8').decode('unicode_escape')
       # Remove extra spaces at start / end of string
       text = text.strip()
       return text
@@ -192,9 +193,10 @@ class ReportManager:
           'status':
               r.status,
           'reason':
-              remove_line_breaks(str(r.reason)) if r.reason else '-',
+              improve_formatting(str(r.reason)),
           'remediation':
-              remove_line_breaks(r.remediation) if r.remediation else '-',
+              improve_formatting(r.remediation)
+              if r.remediation else 'No remediation needed',
           'remediation_skipped':
               False if config.get('auto') else r.remediation_skipped
       } for r in eval_list]
@@ -203,8 +205,9 @@ class ReportManager:
       return {
           'execution_id': entry.step.execution_id,
           'totals_by_status': entry.totals_by_status,
-          'description': remove_line_breaks(entry.step.__doc__),
-          'execution_message': remove_line_breaks(entry.step.execution_message),
+          'description': improve_formatting(entry.step.__doc__),
+          'name': improve_formatting(entry.step.name) or '',
+          'execution_message': improve_formatting(entry.step.name) or '',
           'overall_status': entry.overall_status,
           'start_time': entry.start_time,
           'end_time': entry.end_time,
@@ -271,18 +274,21 @@ class ReportManager:
     return reports_metrics
 
   def add_step_metadata(self, run_id, key, value, step_execution_id):
+    step_result = None
     if step_execution_id:
       step_result = self.reports[run_id].results[step_execution_id]
     if step_result:
       step_result.metadata[key] = value
 
   def add_step_info_metadata(self, run_id, value, step_execution_id):
+    step_result = None
     if step_execution_id:
       step_result = self.reports[run_id].results[step_execution_id]
     if step_result:
       step_result.info.append(value)
 
   def get_step_metadata(self, run_id, key, step_execution_id):
+    step_result = None
     if step_execution_id:
       step_result = self.reports[run_id].results[step_execution_id]
     if step_result:
@@ -290,6 +296,7 @@ class ReportManager:
     return None
 
   def get_all_step_metadata(self, run_id, step_execution_id) -> dict:
+    step_result = None
     if step_execution_id:
       step_result = self.reports[run_id].results[step_execution_id]
     if step_result:
@@ -357,7 +364,7 @@ class InteractionInterface:
   def __init__(self, kind) -> None:
     if kind == constants.CLI:
       self.rm = TerminalReportManager()
-      self.output = TerminalOutput()
+      self.output = terminal_output.TerminalOutput()
     elif kind == constants.API:
       self.rm = ApiReportManager()
       self.output = ApiOutput()
@@ -451,8 +458,11 @@ class InteractionInterface:
     # assign a human task to be completed
     choice = self.output.prompt(kind=constants.HUMAN_TASK,
                                 message=human_task_msg)
+
     if not config.get(INTERACTIVE_MODE):
-      result.prompt_response = choice
+      self.rm.add_step_prompt_response(run_id=run_id,
+                                       execution_id=step_execution_id,
+                                       prompt_response=choice)
 
       if choice is constants.CONTINUE or choice is constants.STOP:
         result.remediation_skipped = True
@@ -479,7 +489,9 @@ class InteractionInterface:
                                 message=human_task_msg)
 
     if not config.get(INTERACTIVE_MODE):
-      result.prompt_response = choice
+      self.rm.add_step_prompt_response(run_id=run_id,
+                                       execution_id=step_execution_id,
+                                       prompt_response=choice)
       if choice is constants.CONTINUE or choice is constants.STOP:
         result.remediation_skipped = True
       return choice
