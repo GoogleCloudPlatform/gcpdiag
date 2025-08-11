@@ -1,12 +1,18 @@
 baseURL = "/"
 title = "gcpdiag"
 enableRobotsTXT = true
-theme = ["docsy"]
 contentDir = "content/en"
 defaultContentLanguage = "en"
 defaultContentLanguageInSubdir = false
 enableMissingTranslationPlaceholders = true
 disablePathToLower = true
+
+[module]
+  [[module.imports]]
+    path = "github.com/google/docsy"
+    version = "v0.12.0"
+  [[module.imports]]
+    path = "github.com/google/docsy/dependencies"
 
 # disable taxonomies
 disableKinds = ["taxonomy", "taxonomyTerm"]
@@ -69,9 +75,8 @@ images = ["images/website-preview.jpg"]
 navbar_logo = false
 breadcrumb_disable = true
 sidebar_search_disable = true
-#sidebar_menu_compact = true
+# sidebar_menu_compact = true
 sidebar_menu_foldable = true
-sidebar_menu_truncate = 100
 ul_show = 1
 
 [params.ui.feedback]
