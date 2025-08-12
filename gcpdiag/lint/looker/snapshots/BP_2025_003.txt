@@ -1,0 +1,6 @@
+*  looker/BP/2025_003: This module contains linting rules to confirm all Looker
+   - projects/gcpdiag-looker1-aaaa/locations/us-central1/operations/operation-1 [ OK ] 
+  Location: us-central1
+  Instance: gcpdiag-test-01
+    - Activity: update | Action: Started: 2025-08-11 13:00:00 | Status: Completed.
+
