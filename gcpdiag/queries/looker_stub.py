@@ -15,6 +15,7 @@
 
 import json
 import re
+from datetime import datetime, timezone
 
 import googleapiclient.errors
 import httplib2
@@ -24,7 +25,6 @@ from gcpdiag.queries import apis_stub
 DUMMY_PROJECT_NAME_FOR_STUB = 'gcpdiag-looker1-aaaa'
 DUMMY_OP_LOCATION = 'us-central1'
 DUMMY_OP_ID = 'operation-1'
-DUMMY_TIMESTAMP = '2025-08-11T13:00:00Z'
 
 
 class LookerApiStub(apis_stub.ApiStub):
@@ -77,6 +77,9 @@ class LookerApiStub(apis_stub.ApiStub):
       return apis_stub.RestCallStub(self.project_id, f'instance-{m.group(3)}')
     return self._HttpRequest(self, self._resource_type, 'get', kwargs)
 
+  def get_operations(self, **kwargs):
+    return self._HttpRequest(self, 'operations', 'get', kwargs)
+
 
 # pylint: disable=useless-return
 
@@ -121,13 +124,14 @@ class LookerApiStub(apis_stub.ApiStub):
         op_path = (
             f'projects/{project_id}/locations/{DUMMY_OP_LOCATION}/operations/{DUMMY_OP_ID}'
         )
-        target_path = (
-            f'projects/{project_id}/locations/{DUMMY_OP_LOCATION}/instances/gcpdiag-test-01'
-        )
+        target_path = (f'projects/{project_id}/locations/'
+                       f'{DUMMY_OP_LOCATION}/instances/'
+                       f'gcpdiag-test-01/databases/'
+                       f'my-db')
         return {
             'name': op_path,
             'metadata': {
-                'createTime': DUMMY_TIMESTAMP,
+                'createTime': datetime.now(timezone.utc).isoformat(),
                 'target': target_path,
                 'verb': 'update'
             },

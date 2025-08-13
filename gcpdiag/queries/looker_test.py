@@ -26,7 +26,7 @@ DUMMY_OP_LOCATION = ['us-central1']
 DUMMY_OP_ID = 'operation-1'
 
 # This FAKE_NOW must correspond to the DUMMY_TIMESTAMP in the stub
-FAKE_NOW = datetime.datetime(2025, 8, 11, 13, 0, 0, tzinfo=timezone.utc)
+FAKE_NOW = datetime.datetime.now(timezone.utc)
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)

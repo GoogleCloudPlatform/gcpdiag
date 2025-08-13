@@ -11,18 +11,14 @@ from gcpdiag.queries import looker
 
 def format_operation_message(operation):
   """Helper function to format the operation message."""
-  create_time_str = operation.create_time.strftime(
-      '%Y-%m-%d %H:%M:%S') if operation.create_time else 'N/A'
-
   if operation.status == 'In Progress':
     action_message = (
-        f'Activity: {operation.operation_type}'
-        f'Started: {create_time_str} | Status: {operation.status}.')
+        f'Activity: {operation.operation_type} | Status: {operation.status}.')
 
   else:
     action_message = (
-        f'Activity: {operation.operation_type} | Action: {operation.action}'
-        f'Started: {create_time_str} | Status: {operation.status}.')
+        f'Activity: {operation.operation_type} | Action: {operation.action} | '
+        f'Status: {operation.status}.')
 
   return (f'\n  Location: {operation.location_id}\n'
           f'  Instance: {operation.instance_name}\n'
