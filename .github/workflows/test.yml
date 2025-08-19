@@ -37,10 +37,9 @@ jobs:
 
     # The gcpdiag.dev website is no longer on github pages, but it's still good to build it in an action to find errors.
     - name: Hugo build
-      uses: docker://us-docker.pkg.dev/gcpdiag-dist/common/gcpdiag-hugo:0.3
-      with:
-        args: >
-          /bin/sh -e -c "
-          cp bin/gcpdiag-dockerized website/static/gcpdiag.sh;
-          cd website;
-          hugo build  --minify --enableGitInfo"
+      run: |
+        docker run --rm \
+          -v "${{ github.workspace }}/website:/src" \
+          -w /src \
+          us-docker.pkg.dev/gcpdiag-dist/common/gcpdiag-hugo:0.3 \
+          build
