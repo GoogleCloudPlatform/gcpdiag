@@ -1,6 +1,6 @@
 ---
 title: "Interconnect"
-linkTitle: "interconnet"
+linkTitle: "interconnect"
 type: docs
 description: Interconnect
 ---
