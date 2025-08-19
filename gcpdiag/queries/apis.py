@@ -70,7 +70,7 @@ def _get_credentials_adc():
 
 def _get_credentials_key():
   filename = config.get('auth_key')
-  logging.debug('auth: using service account key %s', filename)
+  logging.debug('auth: using service account key')
 
   global _credentials
   if not _credentials:

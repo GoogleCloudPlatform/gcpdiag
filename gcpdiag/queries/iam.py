@@ -670,12 +670,8 @@ def _batch_fetch_service_accounts(emails: List[str], billing_project_id: str):
           # Retrieving service account details may fail due to various conditions.
           if sa_project_id != billing_project_id:
             logging.warning(
-                "can't retrieve service account %s belonging to project %s but"
-                ' used in project: %s',
-                email,
-                sa_project_id,
-                billing_project_id,
-            )
+                "Can't retrieve service account associated with one project but"
+                ' used in another project')
             _service_account_cache_is_not_found[email] = True
             continue
 

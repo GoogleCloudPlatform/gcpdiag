@@ -2,6 +2,10 @@ name: Code analysis
 on:
   pull_request:
   push:
+
+# Declare default permissions as Read only.
+permissions: read-all
+
 env:
   PIPENV_VENV_IN_PROJECT: enabled
 jobs:
@@ -9,7 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
-        contents: read
+      contents: read
+      # Required for actions/cache to save and restore caches
+      actions: write
     steps:
     - name: Install Graphviz
       run: sudo apt-get install -y graphviz
