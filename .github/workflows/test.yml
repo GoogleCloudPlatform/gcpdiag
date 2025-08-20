@@ -39,6 +39,7 @@ jobs:
     - name: Hugo build
       run: |
         docker run --rm \
+          --user "$(id -u):$(id -g)" \
           -v "${{ github.workspace }}/website:/src" \
           -w /src \
           us-docker.pkg.dev/gcpdiag-dist/common/gcpdiag-hugo:0.3 \
