@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Python 3.12
-FROM ubuntu:24.04
+FROM ubuntu:24.04@sha256:a08e551cb33850e4740772b38217fc1796a66da2506d312abe51acda354ff061
 
 # Update apt-get and install required packages.
 # binutils is for pyinstaller

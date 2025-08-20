@@ -8,22 +8,24 @@ jobs:
   make-test:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: read
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 #v4
 
     - name: Set up Python
       id: setup-python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 #v5
       with:
         python-version: 3.12
 
     - name: Install pipenv
-      run: python -m pip install --upgrade pipenv==2024.4.0 wheel
+      run: python -m pip install --upgrade pipenv==2024.4.0 --hash=sha256:282ac23b4a2c60cefe22bf1b747f49d55d87719d538b631e9212276920a36f68 wheel
 
     - name: Restore pipenv cache
       id: cache-pipenv
-      uses: actions/cache@v4
+      uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 #v4
       with:
         path: ./.venv
         key: test-${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-pipenv-${{ hashFiles('Pipfile.lock') }}

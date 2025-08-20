@@ -8,6 +8,8 @@ jobs:
   pre-commit:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+        contents: read
     steps:
     - name: Install Graphviz
       run: sudo apt-get install -y graphviz
@@ -17,17 +19,16 @@ jobs:
         sudo apt-get install -y ruby
 
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 #v4
 
     - name: Set up Python
       id: setup-python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 #v5
       with:
         python-version: 3.12
 
     - name: Set up Terraform
-      uses: hashicorp/setup-terraform@v3
-      # v1.3.2
+      uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
       with:
         terraform_version: 1.0.6
 
@@ -36,7 +37,7 @@ jobs:
 
     - name: Restore pipenv cache
       id: cache-pipenv
-      uses: actions/cache@v4
+      uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 #v4
       with:
         path: ./.venv
         key: codeanaysis-${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-pipenv-${{ hashFiles('Pipfile.lock') }}
@@ -46,4 +47,4 @@ jobs:
       run: pipenv install --deploy --dev
 
     - name: Run pre-commit
-      uses: pre-commit/action@v3.0.1
+      uses: pre-commit/action@2c7b3805fd2a0fd8c1884dcaebf91fc102a13ecd # v3.0.1
