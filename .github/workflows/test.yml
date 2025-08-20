@@ -44,3 +44,4 @@ jobs:
           -v "${{ github.workspace }}/website:/src" \
           -w /src \
           us-docker.pkg.dev/gcpdiag-dist/common/gcpdiag-hugo:0.3 \
+          build
