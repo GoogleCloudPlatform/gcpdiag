@@ -1,0 +1,15 @@
+
+[project]
+name = "mcpgcpdiag"
+version = "0.1.0"
+description = "GcpDiag"
+requires-python = ">=3.8"
+
+[tool.pytest.ini_options]
+pythonpath = ["gcpdiag"]
+
+[tool.uv]
+package = false
+
+[tool.setuptools]
+packages = ["gcpdiag"]
