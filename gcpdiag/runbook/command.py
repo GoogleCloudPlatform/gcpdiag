@@ -384,16 +384,12 @@ def run(argv) -> None:
       sys.exit(0)
 
 
-def execute_runbook(runbook_id: str,
-                    runbook_class: str,
-                    parameters: dict,
-                    credentials: str = None) -> dict:
+def execute_runbook(runbook_id: str, parameters: dict) -> dict:
   """Executes a runbook and returns a report.
 
   Args:
     runbook_id: The ID of the runbook to execute (e.g. "gce/ssh").
     parameters: A dictionary of parameters to pass to the runbook.
-    credentials: The credentials to use for authentication.
 
   Returns:
     A dictionary containing the report.
@@ -416,9 +412,6 @@ def execute_runbook(runbook_id: str,
                             interface='api',
                             universe_domain=config.get('universe_domain'),
                             reason=None)
-
-  if credentials:
-    apis.set_credentials(credentials)
 
   # Allow to change defaults using a hook function.
   hooks.set_runbook_args_hook(args)
