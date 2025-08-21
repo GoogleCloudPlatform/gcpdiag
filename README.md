@@ -78,6 +78,7 @@ optional arguments:
   --logging-fetch-max-time-seconds S
                         Configure timeout for logging queries (default: 120 seconds)
   --output FORMATTER    Format output as one of [terminal, json, csv] (default: terminal)
+  --test-release        Runs the latest gcpdiag test release. (e.g.: --test-release=staging)
 ```
 
 #### RUNBOOK
@@ -97,6 +98,7 @@ optional arguments:
   --billing-project P                     Project used for billing/quota of API calls done by
                                           gcpdiag (default is the inspected project, requires 'serviceusage.services.use' permission)
   -v                                      Increase log verbosity
+  --test-release                          Runs the latest gcpdiag test release. (e.g.: --test-release=staging)
 
   Descriptions for Logging Options logging-related options:
   --logging-ratelimit-requests R`:        rate limit for API requests.
