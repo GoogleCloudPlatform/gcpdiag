@@ -29,6 +29,7 @@ async-timeout = "*"
 bs4 = "*"
 
 [dev-packages]
+absl-py = "*"
 astunparse = "*"
 bump2version = "*"
 coverage = "*"

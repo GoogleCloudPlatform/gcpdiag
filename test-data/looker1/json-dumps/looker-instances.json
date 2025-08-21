@@ -1,0 +1,18 @@
+{
+  "instances": [
+    {
+      "name": "projects/gcpdiag-looker1-aaaa/locations/us-central1/instances/gcpdiag-test-01",
+      "createTime": "2024-12-29T10:28:38.159901429Z",
+      "updateTime": "2025-03-05T11:15:21.229549612Z",
+      "state": "ACTIVE",
+      "platformEdition": "LOOKER_CORE_STANDARD_ANNUAL",
+      "lookerVersion": "25.2.11",
+      "egressPublicIp": "57.57.57.57",
+      "ingressPublicIp": "34.34.34.34",
+      "lookerUri": "https://testinstance.looker.app",
+      "publicIpEnabled": true,
+      "satisfiesPzs": false,
+      "satisfiesPzi": false
+    }
+  ]
+}

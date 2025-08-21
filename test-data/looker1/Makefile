@@ -32,7 +32,7 @@ define LOGGING_ENTRIES_BODY
 	"orderBy": "timestamp desc",
 	"filter": "
 		timestamp > \"2024-12-01:00:00+00:00\" AND
-		timestamp < \"2024-12-31:00:00+00:00\" AND
+		timestamp < \"2025-07-30:00:00+00:00\" AND
 		resource.type=\"bigquery_resource\" AND
 		log_id(\"cloudaudit.googleapis.com/data_access\")
 	"

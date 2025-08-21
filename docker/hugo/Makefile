@@ -1,4 +1,4 @@
-VERSION=0.1
+VERSION=0.3
 IMAGE=us-docker.pkg.dev/gcpdiag-dist/common/gcpdiag-hugo
 
 build:

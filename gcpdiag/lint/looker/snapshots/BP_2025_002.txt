@@ -1,0 +1,8 @@
+*  looker/BP/2025_002: Number of expensive Looker Studio bigquery job.
+   - projects/gcpdiag-looker1-ijtqsckn                                    [FAIL]
+     The user user@google.com ran 2 BigQuery jobs in LSP billed over 1 GB
+
+
+
+   https://gcpdiag.dev/rules/looker/BP/2025_002
+

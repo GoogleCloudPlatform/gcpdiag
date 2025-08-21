@@ -99,7 +99,7 @@ class TestGenerateUUID(unittest.TestCase):
     """Test with default length and separator."""
     result = util.generate_uuid()
 
-    self.assertEqual(len(result), 8 + result.count('.'))  # Check length
+    self.assertEqual(len(result), 10 + result.count('.'))  # Check length
     self.assertTrue('.' in result)  # Check for separator
 
   def test_custom_length(self):
@@ -116,7 +116,7 @@ class TestGenerateUUID(unittest.TestCase):
     """Test with a custom separator interval."""
     result = util.generate_uuid(separator_interval=3)
     separator_count = result.count('.')
-    self.assertEqual(separator_count, 2)
+    self.assertEqual(separator_count, 3)
 
   def test_truncate(self):
     """Test truncation when length is shorter than UUID."""

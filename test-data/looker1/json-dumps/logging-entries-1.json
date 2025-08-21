@@ -1,0 +1,172 @@
+{
+  "entries": [
+    {
+      "protoPayload": {
+        "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+        "status": {},
+        "authenticationInfo": {
+          "principalEmail": "user@google.com"
+        },
+        "requestMetadata": {
+          "callerIp": "2a00:79e0:2400:9:2c1f:be9b:5903:2daa",
+          "requestAttributes": {},
+          "destinationAttributes": {}
+        },
+        "serviceName": "bigquery.googleapis.com",
+        "methodName": "jobservice.jobcompleted",
+        "resourceName": "projects/looker-dcl-testground/jobs/job_NlDHCW9OeGk4ctnmdUp_g2JTTLrz",
+        "serviceData": {
+          "@type": "type.googleapis.com/google.cloud.bigquery.logging.v1.AuditData",
+          "jobCompletedEvent": {
+            "eventName": "query_job_completed",
+            "job": {
+              "jobName": {
+                "projectId": "looker-dcl-testground",
+                "jobId": "job_NlDHCW9OeGk4ctnmdUp_g2JTTLrz",
+                "location": "US"
+              },
+              "jobConfiguration": {
+                "labels": {
+                  "requestor": "looker_studio",
+                  "looker_studio_datasource_id": "05d6f0b3-1255-44cf-a964-0b79d812cfe6",
+                  "looker_studio_report_id": "272a0671-8f81-42ac-9fb8-6fcb45034fe6"
+                },
+                "query": {
+                  "query": "SELECT clmn0_, COUNT(1) AS t0_qt_q0pgewysud FROM (\nSELECT t0.description AS clmn0_ FROM `looker-dcl-testground.brazil_real_estate_listings.properties_sell_201802` AS t0\n) GROUP BY clmn0_ ORDER BY t0_qt_q0pgewysud DESC LIMIT 2000001;",
+                  "destinationTable": {
+                    "projectId": "looker-dcl-testground",
+                    "datasetId": "_11f6c267f2e8fe4e2dcb42472fe71e58979a72cb",
+                    "tableId": "anon6be941ca4a4cb2c9935607206a7d6a0b44cf8011a17545e5a665c120fb316cd4"
+                  },
+                  "createDisposition": "CREATE_IF_NEEDED",
+                  "writeDisposition": "WRITE_TRUNCATE",
+                  "defaultDataset": {},
+                  "queryPriority": "QUERY_INTERACTIVE",
+                  "statementType": "SELECT"
+                }
+              },
+              "jobStatus": {
+                "state": "DONE",
+                "error": {}
+              },
+              "jobStatistics": {
+                "createTime": "2025-07-29T10:04:21.161Z",
+                "startTime": "2025-07-29T10:04:21.230Z",
+                "endTime": "2025-07-29T10:04:30.078Z",
+                "totalProcessedBytes": "200126736",
+                "totalBilledBytes": "200278016",
+                "billingTier": 1,
+                "totalSlotMs": "23009",
+                "referencedTables": [
+                  {
+                    "projectId": "looker-dcl-testground",
+                    "datasetId": "brazil_real_estate_listings",
+                    "tableId": "properties_sell_201802"
+                  }
+                ],
+                "totalTablesProcessed": 1,
+                "queryOutputRowCount": "318039",
+                "reservation": "unreserved"
+              }
+            }
+          }
+        }
+      },
+      "insertId": "mhx03dek1dwo",
+      "resource": {
+        "type": "bigquery_resource",
+        "labels": {
+          "project_id": "looker-dcl-testground"
+        }
+      },
+      "timestamp": "2025-07-29T10:04:30.122558Z",
+      "severity": "INFO",
+      "logName": "projects/looker-dcl-testground/logs/cloudaudit.googleapis.com%2Fdata_access",
+      "receiveTimestamp": "2025-07-29T10:04:30.366020604Z"
+    },
+    {
+      "protoPayload": {
+        "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+        "status": {},
+        "authenticationInfo": {
+          "principalEmail": "user@google.com"
+        },
+        "requestMetadata": {
+          "callerIp": "2401:4900:93b9:2241:59a9:48e3:4930:d28e",
+          "requestAttributes": {},
+          "destinationAttributes": {}
+        },
+        "serviceName": "bigquery.googleapis.com",
+        "methodName": "jobservice.jobcompleted",
+        "resourceName": "projects/looker-dcl-testground/jobs/job_irMeL-Hzt8C5jtysvPUeONQLIK6L",
+        "serviceData": {
+          "@type": "type.googleapis.com/google.cloud.bigquery.logging.v1.AuditData",
+          "jobCompletedEvent": {
+            "eventName": "query_job_completed",
+            "job": {
+              "jobName": {
+                "projectId": "looker-dcl-testground",
+                "jobId": "job_irMeL-Hzt8C5jtysvPUeONQLIK6L",
+                "location": "US"
+              },
+              "jobConfiguration": {
+                "labels": {
+                  "requestor": "looker_studio",
+                  "looker_studio_datasource_id": "a3628b15-fc88-4ace-b2a0-3899cd9863cf",
+                  "looker_studio_report_id": "422b3505-820b-42d6-95b9-e0529828a4ea"
+                },
+                "query": {
+                  "query": "SELECT clmn0_, SUM(clmn1_) AS t0_qt_at32jpysud FROM (\nSELECT t0.properati_url AS clmn0_, t0.rooms AS clmn1_ FROM `looker-dcl-testground.brazil_real_estate_listings.properties_sell_201802` AS t0\n) GROUP BY clmn0_ ORDER BY t0_qt_at32jpysud DESC LIMIT 2000001;",
+                  "destinationTable": {
+                    "projectId": "looker-dcl-testground",
+                    "datasetId": "_11f6c267f2e8fe4e2dcb42472fe71e58979a72cb",
+                    "tableId": "anonba504651a02bf3825090e3ea9eed73b1e6a714e6f2a38aa87a5f27ccab692776"
+                  },
+                  "createDisposition": "CREATE_IF_NEEDED",
+                  "writeDisposition": "WRITE_TRUNCATE",
+                  "defaultDataset": {},
+                  "queryPriority": "QUERY_INTERACTIVE",
+                  "statementType": "SELECT"
+                }
+              },
+              "jobStatus": {
+                "state": "DONE",
+                "error": {}
+              },
+              "jobStatistics": {
+                "createTime": "2025-07-30T14:55:31.322Z",
+                "startTime": "2025-07-30T14:55:31.422Z",
+                "endTime": "2025-07-30T14:55:35.913Z",
+                "totalProcessedBytes": "44716215",
+                "totalBilledBytes": "45088768",
+                "billingTier": 1,
+                "totalSlotMs": "8661",
+                "referencedTables": [
+                  {
+                    "projectId": "looker-dcl-testground",
+                    "datasetId": "brazil_real_estate_listings",
+                    "tableId": "properties_sell_201802"
+                  }
+                ],
+                "totalTablesProcessed": 1,
+                "queryOutputRowCount": "418113",
+                "reservation": "unreserved"
+              }
+            }
+          }
+        }
+      },
+      "insertId": "64q3rxe57m3a",
+      "resource": {
+        "type": "bigquery_resource",
+        "labels": {
+          "project_id": "looker-dcl-testground"
+        }
+      },
+      "timestamp": "2025-07-30T14:55:35.972330Z",
+      "severity": "INFO",
+      "logName": "projects/looker-dcl-testground/logs/cloudaudit.googleapis.com%2Fdata_access",
+      "receiveTimestamp": "2025-07-30T14:55:36.855356797Z"
+    }
+  ]
+}

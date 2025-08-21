@@ -32,7 +32,7 @@ env = Environment(trim_blocks=True,
 step_outcomes = constants.StepConstants.keys()
 
 
-def generate_uuid(length: int = 8,
+def generate_uuid(length: int = 10,
                   separator_interval: int = 4,
                   separator: str = '.'):
   """
