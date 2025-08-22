@@ -27,8 +27,8 @@ jobs:
         python-version: 3.12
 
     - name: Install pipenv
-      run: python -m pip install --upgrade pipenv==2024.4.0 --hash=sha256:282ac23b4a2c60cefe22bf1b747f49d55d87719d538b631e9212276920a36f68 wheel
-
+      run: python -m pip install --upgrade pipenv==2024.4.0 wheel
+      
     - name: Restore pipenv cache
       id: cache-pipenv
       uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 #v4
