@@ -793,7 +793,8 @@ def get_service_account_list(project_id: str) -> List[ServiceAccount]:
 
   iam_api = apis.get_api('iam', 'v1', project_id)
   project_name = f'projects/{project_id}'
-  request = iam_api.projects().serviceAccounts().list(name=project_name)
+  request = iam_api.projects().serviceAccounts().list(name=project_name,
+                                                      pageSize=100)
   try:
     response = request.execute(num_retries=config.API_RETRIES)
   except googleapiclient.errors.HttpError as err:
