@@ -40,7 +40,6 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
       utilization are being checked.
   
 [START]: Analyze unhealthy backends for backend service "web-backend-service" in scope "global".
-[INFO]: name: web-backend-service, region: global
 
    - gcpdiag-lb2-aaaa/web-backend-service                                 [FAIL]
      [REASON]
@@ -277,7 +276,6 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
       utilization are being checked.
   
 [START]: Analyze unhealthy backends for backend service "backend-service-2" in scope "europe-west4".
-[INFO]: name: backend-service-2, region: europe-west4
 
    - gcpdiag-lb2-aaaa/backend-service-2                                   [FAIL]
      [REASON]

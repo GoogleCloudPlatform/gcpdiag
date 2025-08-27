@@ -16,7 +16,7 @@
 import logging
 import math
 from datetime import datetime
-from typing import Any, List, Set
+from typing import Any, List, Optional, Set
 
 from boltons.iterutils import get_path
 
@@ -38,9 +38,10 @@ class HighVmMemoryUtilization(runbook.Step):
   """
   template = 'vm_performance::high_memory_utilization'
 
-  project_id: str
-  zone: str
-  instance_name: str
+  project_id: Optional[str] = None
+  zone: Optional[str] = None
+  instance_name: Optional[str] = None
+  vm: Optional[gce.Instance] = None
   serial_console_file = None
 
   # Typical Memory exhaustion logs in serial console.
@@ -48,18 +49,32 @@ class HighVmMemoryUtilization(runbook.Step):
   def execute(self):
     """Verify VM memory utilization is within optimal levels."""
 
+    if self.vm:
+      vm = self.vm
+      self.project_id = vm.project_id
+      self.zone = vm.zone
+      self.instance_name = vm.name
+    else:
+      vm = gce.get_instance(
+          project_id=self.project_id,
+          zone=self.zone,
+          instance_name=self.instance_name,
+      )
+
+    if not vm:
+      op.add_skipped(
+          None,
+          reason=(f'VM instance {self.instance_name} not found in project'
+                  f' {self.project_id} zone {self.zone}'),
+      )
+      return
+
     start_formatted_string = op.get(
         flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')
     end_formatted_string = op.get(flags.END_TIME).strftime('%Y/%m/%d %H:%M:%S')
     within_str = f'within d\'{start_formatted_string}\', d\'{end_formatted_string}\''
 
     mark_no_ops_agent = False
-
-    vm = gce.get_instance(
-        project_id=self.project_id,
-        zone=self.zone,
-        instance_name=self.instance_name,
-    )
 
     mem_usage_metrics = None
 
@@ -108,9 +123,7 @@ class HighVmMemoryUtilization(runbook.Step):
 
     # Checking for OOM related errors
     oom_errors = VmSerialLogsCheck()
-    oom_errors.project_id = self.project_id
-    oom_errors.zone = self.zone
-    oom_errors.instance_name = self.instance_name
+    oom_errors.vm = vm
     oom_errors.serial_console_file = self.serial_console_file
     oom_errors.template = 'vm_performance::high_memory_usage_logs'
     oom_errors.negative_pattern = constants.OOM_PATTERNS
@@ -127,26 +140,42 @@ class HighVmDiskUtilization(runbook.Step):
   """
   template = 'vm_performance::high_disk_utilization'
 
-  project_id: str
-  zone: str
-  instance_name: str
+  project_id: Optional[str] = None
+  zone: Optional[str] = None
+  instance_name: Optional[str] = None
+  vm: Optional[gce.Instance] = None
   serial_console_file: str = ''
 
   def execute(self):
     """Verify VM's Boot disk space utilization is within optimal levels."""
 
+    if self.vm:
+      vm = self.vm
+      self.project_id = vm.project_id
+      self.zone = vm.zone
+      self.instance_name = vm.name
+    else:
+      vm = gce.get_instance(
+          project_id=self.project_id,
+          zone=self.zone,
+          instance_name=self.instance_name,
+      )
+
+    if not vm:
+      op.add_skipped(
+          None,
+          reason=(f'VM instance {self.instance_name} not found in project'
+                  f' {self.project_id} zone {self.zone}'),
+      )
+      return
+
     start_formatted_string = op.get(
         flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')
     end_formatted_string = op.get(flags.END_TIME).strftime('%Y/%m/%d %H:%M:%S')
-    within_str = f'within d\'{start_formatted_string}\', d\'{end_formatted_string}\''
+    within_str = (
+        f"within d'{start_formatted_string}', d'{end_formatted_string}'")
 
     mark_no_ops_agent = False
-
-    vm = gce.get_instance(
-        project_id=self.project_id,
-        zone=self.zone,
-        instance_name=self.instance_name,
-    )
 
     disk_usage_metrics = None
 
@@ -176,9 +205,7 @@ class HighVmDiskUtilization(runbook.Step):
                                         full_resource_path=vm.full_path))
       # Fallback to check for filesystem utilization related messages in Serial logs
       fs_util = VmSerialLogsCheck()
-      fs_util.project_id = self.project_id
-      fs_util.zone = self.zone
-      fs_util.instance_name = self.instance_name
+      fs_util.vm = vm
       fs_util.serial_console_file = self.serial_console_file
       fs_util.template = 'vm_performance::high_disk_utilization_error'
       fs_util.negative_pattern = constants.DISK_EXHAUSTION_ERRORS
@@ -200,23 +227,39 @@ class HighVmCpuUtilization(runbook.Step):
 
   template = 'vm_performance::high_cpu_utilization'
 
-  project_id: str
-  zone: str
-  instance_name: str
+  project_id: Optional[str] = None
+  zone: Optional[str] = None
+  instance_name: Optional[str] = None
+  vm: Optional[gce.Instance] = None
 
   def execute(self):
     """Verify VM CPU utilization is within optimal levels"""
+    if self.vm:
+      vm = self.vm
+      self.project_id = vm.project_id
+      self.zone = vm.zone
+      self.instance_name = vm.name
+    else:
+      vm = gce.get_instance(
+          project_id=self.project_id,
+          zone=self.zone,
+          instance_name=self.instance_name,
+      )
+
+    if not vm:
+      op.add_skipped(
+          None,
+          reason=(f'VM instance {self.instance_name} not found in project'
+                  f' {self.project_id} zone {self.zone}'),
+      )
+      return
 
     start_formatted_string = op.get(
         flags.START_TIME).strftime('%Y/%m/%d %H:%M:%S')
     end_formatted_string = op.get(flags.END_TIME).strftime('%Y/%m/%d %H:%M:%S')
-    within_str = f'within d\'{start_formatted_string}\', d\'{end_formatted_string}\''
+    within_str = (
+        f"within d'{start_formatted_string}', d'{end_formatted_string}'")
 
-    vm = gce.get_instance(
-        project_id=self.project_id,
-        zone=self.zone,
-        instance_name=self.instance_name,
-    )
     cpu_usage_metrics = None
 
     if util.ops_agent_installed(self.project_id, vm.id):
@@ -256,26 +299,34 @@ class HighVmCpuUtilization(runbook.Step):
 class VmLifecycleState(runbook.Step):
   """Validates that a specified VM is in the 'RUNNING' state.
 
-  This step is crucial for confirming the VM's availability and operational readiness.
-  It checks the VM's lifecycle state and reports success if the VM is running or fails the
-  check if the VM is in any other state, providing detailed status information for
-  troubleshooting.
+  This step is crucial for confirming the VM's availability and operational
+  readiness. It checks the VM's lifecycle state and reports success if the VM
+  is running or fails the check if the VM is in any other state, providing
+  detailed status information for troubleshooting.
   """
 
   template = 'vm_attributes::running'
 
-  project_id: str
-  zone: str
-  instance_name: str
+  project_id: Optional[str] = None
+  zone: Optional[str] = None
+  instance_name: Optional[str] = None
+  vm: Optional[gce.Instance] = None
   expected_lifecycle_status: str
 
   def execute(self):
     """Verify GCE Instance is in the {expected_lifecycle_status} state."""
-    vm = gce.get_instance(project_id=self.project_id,
-                          zone=self.zone,
-                          instance_name=self.instance_name)
+    if self.vm:
+      vm = self.vm
+    else:
+      vm = gce.get_instance(project_id=self.project_id,
+                            zone=self.zone,
+                            instance_name=self.instance_name)
     if not vm:
-      op.add_skipped(None, reason=op.prep_msg(op.SKIPPED_REASON))
+      op.add_skipped(
+          None,
+          reason=(f'VM instance {self.instance_name} not found in project'
+                  f' {self.project_id} zone {self.zone}'),
+      )
       return
 
     if vm.status == self.expected_lifecycle_status:
@@ -301,9 +352,10 @@ class VmSerialLogsCheck(runbook.Step):
   patterns, the step categorizes the VM's status as 'OK', 'Failed', or 'Uncertain'.
   """
 
-  project_id: str
-  zone: str
-  instance_name: str
+  project_id: Optional[str] = None
+  zone: Optional[str] = None
+  instance_name: Optional[str] = None
+  vm: Optional[gce.Instance] = None
   serial_console_file = None
 
   template = 'vm_serial_log::default'
@@ -316,16 +368,31 @@ class VmSerialLogsCheck(runbook.Step):
 
   def execute(self):
     """Analyzing serial logs for predefined patterns."""
+    if self.vm:
+      vm = self.vm
+      self.project_id = vm.project_id
+      self.zone = vm.zone
+      self.instance_name = vm.name
+    else:
+      vm = gce.get_instance(
+          project_id=self.project_id,
+          zone=self.zone,
+          instance_name=self.instance_name,
+      )
+
+    if not vm:
+      op.add_skipped(
+          None,
+          reason=(f'VM instance {self.instance_name} not found in project'
+                  f' {self.project_id} zone {self.zone}'),
+      )
+      return
+
     # All kernel failures.
     good_pattern_detected = False
     bad_pattern_detected = False
     serial_log_file_content = []
     instance_serial_logs = None
-    vm = gce.get_instance(
-        project_id=self.project_id,
-        zone=self.zone,
-        instance_name=self.instance_name,
-    )
 
     if self.serial_console_file:
       for files in self.serial_console_file.split(','):
@@ -429,9 +496,10 @@ class VmMetadataCheck(runbook.Step):
 
   template: str = 'vm_metadata::default'
 
-  project_id: str
-  zone: str
-  instance_name: str
+  project_id: Optional[str] = None
+  zone: Optional[str] = None
+  instance_name: Optional[str] = None
+  vm: Optional[gce.Instance] = None
   # key to inspect
   metadata_key: str
   # desired value.
@@ -475,9 +543,19 @@ class VmMetadataCheck(runbook.Step):
 
   def execute(self):
     """Verify VM metadata value."""
-    vm = gce.get_instance(project_id=self.project_id,
-                          zone=self.zone,
-                          instance_name=self.instance_name)
+    if self.vm:
+      vm = self.vm
+    else:
+      vm = gce.get_instance(project_id=self.project_id,
+                            zone=self.zone,
+                            instance_name=self.instance_name)
+    if not vm:
+      op.add_skipped(
+          None,
+          reason=(f'VM instance {self.instance_name} not found in project'
+                  f' {self.project_id} zone {self.zone}'),
+      )
+      return
 
     if self.is_expected_md_value(vm.get_metadata(self.metadata_key)):
       op.add_ok(
@@ -505,9 +583,10 @@ class GceVpcConnectivityCheck(runbook.Step):
   Evaluates VPC firewall rules to verify if a GCE Instance permits ingress or egress traffic from a
   designated source IP through a specified port and protocol.
   """
-  project_id: str
-  zone: str
-  instance_name: str
+  project_id: Optional[str] = None
+  zone: Optional[str] = None
+  instance_name: Optional[str] = None
+  vm: Optional[gce.Instance] = None
   src_ip: str
   protocol_type: str
   port: int
@@ -516,9 +595,22 @@ class GceVpcConnectivityCheck(runbook.Step):
 
   def execute(self):
     """Evaluating VPC network traffic rules."""
-    vm = gce.get_instance(project_id=self.project_id,
-                          zone=self.zone,
-                          instance_name=self.instance_name)
+    if self.vm:
+      vm = self.vm
+    else:
+      vm = gce.get_instance(
+          project_id=self.project_id,
+          zone=self.zone,
+          instance_name=self.instance_name,
+      )
+    if not vm:
+      op.add_skipped(
+          None,
+          reason=(f'VM instance {self.instance_name} not found in project'
+                  f' {self.project_id} zone {self.zone}'),
+      )
+      return
+
     result = None
     if self.traffic == 'ingress':
       result = vm.network.firewall.check_connectivity_ingress(
@@ -569,15 +661,29 @@ class VmScope(runbook.Step):
   template = 'vm_attributes::access_scope'
   access_scopes: Set = set()
   require_all = False
-  project_id: str
-  zone: str
-  instance_name: str
+  project_id: Optional[str] = None
+  zone: Optional[str] = None
+  instance_name: Optional[str] = None
+  vm: Optional[gce.Instance] = None
 
   def execute(self):
     """Verify GCE Instance access scope"""
-    instance = gce.get_instance(project_id=self.project_id,
-                                zone=self.zone,
-                                instance_name=self.instance_name)
+    if self.vm:
+      instance = self.vm
+    else:
+      instance = gce.get_instance(
+          project_id=self.project_id,
+          zone=self.zone,
+          instance_name=self.instance_name,
+      )
+    if not instance:
+      op.add_skipped(
+          None,
+          reason=(f'VM instance {self.instance_name} not found in project'
+                  f' {self.project_id} zone {self.zone}'),
+      )
+      return
+
     present_access_scopes = set()
     missing_access_scopes = set()
     has_item = False
@@ -632,10 +738,11 @@ class VmHasOpsAgent(runbook.Step):
   check_logging: bool = True
   check_metrics: bool = True
 
-  project_id: str
-  zone: str
-  instance_name: str
-  instance_id: str
+  project_id: Optional[str] = None
+  zone: Optional[str] = None
+  instance_name: Optional[str] = None
+  instance_id: Optional[str] = None
+  vm: Optional[gce.Instance] = None
   start_time: datetime
   end_time: datetime
 
@@ -662,13 +769,31 @@ class VmHasOpsAgent(runbook.Step):
 
   def execute(self):
     """Verify GCE Instance's has ops agent installed and currently active"""
+    if self.vm:
+      instance = self.vm
+      self.project_id = instance.project_id
+      self.zone = instance.zone
+      self.instance_name = instance.name
+      self.instance_id = instance.id
+    else:
+      instance = gce.get_instance(
+          project_id=self.project_id,
+          zone=self.zone,
+          instance_name=self.instance_name or self.instance_id,
+      )
+    if not instance:
+      op.add_skipped(
+          None,
+          reason=(
+              f'VM instance {self.instance_name or self.instance_id} not found'
+              f' in project {self.project_id} zone {self.zone}'),
+      )
+      return
+
     self.end_time = getattr(self, 'end_time', None) or op.get(self.end_time)
     self.start_time = getattr(self, 'start_time', None) or op.get(
         self.start_time)
-    instance = gce.get_instance(project_id=self.project_id,
-                                zone=self.zone,
-                                instance_name=self.instance_name or
-                                self.instance_id)
+
     if self.check_logging:
       serial_log_entries = logs.realtime_query(
           project_id=self.project_id,

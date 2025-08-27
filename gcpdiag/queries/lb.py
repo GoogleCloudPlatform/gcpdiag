@@ -192,14 +192,16 @@ class BackendServices(models.Resource):
     return self._resource_data.get('loadBalancingScheme', None)
 
   @property
-  def health_check(self) -> str:
+  def health_check(self):
+    if 'healthChecks' not in self._resource_data:
+      return None
     health_check_url = self._resource_data['healthChecks'][0]
     matches = re.search(r'/([^/]+)$', health_check_url)
     if matches:
       healthcheck_name = matches.group(1)
       return healthcheck_name
     else:
-      return ''
+      return None
 
   @property
   def backends(self) -> List[dict]:
