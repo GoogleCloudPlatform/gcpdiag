@@ -305,10 +305,10 @@ class EndStep(Step):
   def execute(self):
     """Finalize runbook investigations."""
     if not config.get(flags.INTERACTIVE_MODE):
-      response = op.operator.interface.prompt(kind=op.CONFIRMATION,
-                                              message='Is your issue resolved?')
+      response = op.prompt(kind=op.CONFIRMATION,
+                           message='Is your issue resolved?')
       if response == op.NO:
-        op.operator.interface.info(message=constants.END_MESSAGE)
+        op.info(message=constants.END_MESSAGE)
 
 
 class Gateway(Step):
