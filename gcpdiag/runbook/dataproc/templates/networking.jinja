@@ -1,0 +1,78 @@
+{#
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#}
+
+{% block pga_ok -%}
+Private Google Access is correctly enabled on the cluster's subnet: {{short_path(result.resource)}}
+{%- endblock %}
+
+{% block pga_failed -%}
+Private Google Access is not enabled on the cluster's subnet: {{short_path(result.resource)}}
+{%- endblock %}
+
+{% block pga_failed_remediation -%}
+Dataproc clusters with internal IP addresses require Private Google Access (PGA) to reach Google APIs and services. To fix this, enable PGA on the subnet.
+You can do this by running:
+`gcloud compute networks subnets update {{result.resource.name}} --region={{result.resource.region}} --enable-private-ip-google-access`
+{%- endblock %}
+
+
+{% block cloud_nat_ok -%}
+Cloud NAT is correctly configured for the cluster's subnet: {{short_path(result.resource)}}
+{%- endblock %}
+
+{% block cloud_nat_failed -%}
+Cloud NAT is not configured for the cluster's subnet: {{short_path(result.resource)}}
+{%- endblock %}
+
+{% block cloud_nat_failed_remediation -%}
+Dataproc clusters with internal IP addresses require a Cloud NAT gateway to reach non-Google internet resources (e.g., package repositories). To fix this, create a Cloud Router in the same region and VPC as your cluster, and then configure a Cloud NAT gateway on that router to serve your subnet.
+{%- endblock %}
+
+
+{% block firewall_ok -%}
+No overly restrictive deny-all egress firewall rules were found.
+{%- endblock %}
+
+{% block firewall_failed -%}
+A restrictive firewall rule may be blocking all egress traffic from the cluster's network.
+{%- endblock %}
+
+{% block firewall_failed_remediation -%}
+A firewall rule was found in your VPC that denies all egress traffic to the internet (0.0.0.0/0). This can prevent your Dataproc cluster from reaching necessary services. Please review your firewall rules and ensure that there are higher-priority rules that allow necessary egress traffic from your Dataproc cluster.
+{%- endblock %}
+
+
+{% block iam_ok -%}
+The cluster's service account has the "Dataproc Worker" role.
+{%- endblock %}
+
+{% block iam_failed -%}
+The cluster's service account ({{result.resource.service_account}}) is missing the "Dataproc Worker" role.
+{%- endblock %}
+
+{% block iam_failed_remediation -%}
+The `roles/dataproc.worker` IAM role is mandatory and allows the Dataproc service to manage cluster resources on your behalf. To fix this, grant the role to the service account.
+You can do this by running:
+`gcloud projects add-iam-policy-binding {{result.resource.project_id}} --member="serviceAccount:{{result.resource.service_account}}" --role="roles/dataproc.worker"`
+{%- endblock %}
+
+{% block cluster_existence_ok -%}
+The cluster {{result.resource}} was found.
+{%- endblock %}
+
+{% block cluster_existence_failed -%}
+The cluster {{result.resource}} could not be found.
+{%- endblock %}
