@@ -2,10 +2,10 @@
 <nav class="js-navbar-scroll navbar navbar-expand navbar-light {{ if not $cover }} nav-shadow {{ end }}flex-column flex-md-row td-navbar">
 
 	<a id="gcpdiag-top" {{ if $cover }} style="display: none;" {{end}} class="navbar-brand" href="{{ .Site.Home.RelPermalink }}">
-          <img src="{{ "/images/stethoscope.png" | relURL }}" height="30"><span class="font-weight-bold">&nbsp;{{ .Site.Title }}</span>
+          <img src="{{ "/images/stethoscope.png" | relURL }}" height="30"><span class="fw-normal">&nbsp;{{ .Site.Title }}</span>
 	</a>
 
-	<div class="td-navbar-nav-scroll ml-md-auto" id="main_navbar">
+	<div class="td-navbar-nav-scroll ms-md-auto me-5" id="main_navbar">
 		<ul class="navbar-nav mt-2 mt-lg-0">
 			{{ $p := . }}
 			{{ range .Site.Menus.main }}
@@ -24,5 +24,5 @@
 			{{ end }}
 		</ul>
 	</div>
-	<div class="navbar-nav mx-lg-2 d-none d-lg-block">{{ partial "search-input.html" . }}</div>
+	<div class="navbar-nav me-lg-5 d-none d-lg-block">{{ partial "search-input.html" . }}</div>
 </nav>
