@@ -18,7 +18,8 @@ from datetime import datetime, timedelta, timezone
 from unittest.mock import ANY, Mock, call, patch
 
 from gcpdiag import models, runbook
-from gcpdiag.runbook import constants, exceptions
+from gcpdiag.runbook import (Bundle, DiagnosticEngine, Step, constants,
+                             exceptions)
 from gcpdiag.runbook.gcp import flags
 from gcpdiag.runbook.op import Operator
 
@@ -273,7 +274,7 @@ class TestDiagnosticEngine(unittest.TestCase):
         step.execute(operator)
 
     mock_run_step.side_effect = run_step_side_effect
-    self.de.run_bundle(bundle=bundle)
+    self.de.run_bundles(bundles=[bundle])
 
     # Assert that the gateway and the dynamically added child were executed
     mock_gateway_execute.assert_called_once()
@@ -281,7 +282,7 @@ class TestDiagnosticEngine(unittest.TestCase):
     mock_op_instance.add_ok.assert_called_once_with(
         resource=ANY, reason='Child step executed')
 
-  @patch('gcpdiag.runbook.DiagnosticEngine.run_bundle')
+  @patch('gcpdiag.runbook.DiagnosticEngine.run_bundles')
   @patch('gcpdiag.runbook.DiagnosticEngine.run_diagnostic_tree')
   def test_run_operation(self, mock_run_bundle, mock_run_diagnostic_tree):
 
@@ -299,7 +300,7 @@ class TestDiagnosticEngine(unittest.TestCase):
     }
     bundle.parameter = models.Parameter(param)
     bundle.steps.append(runbook.Step)
-    self.de.run_bundle(bundle=bundle)
+    self.de.run_bundles(bundles=[bundle])
     _, kwargs = mock_run_step.call_args
     assert mock_run_step.called
     assert isinstance(kwargs['step'], runbook.Step)
@@ -324,6 +325,33 @@ class TestDiagnosticEngine(unittest.TestCase):
         'does not implement legacy_parameter_handler(). Implement this method to handle '
         'backward compatibility for deprecated parameters.'),
                   str(context.exception))
+
+  @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
+  def test_run_multiple_bundles_consolidated_report(self, mock_run_step):  # pylint: disable=unused-argument
+    # Setup engine and bundles
+    engine = DiagnosticEngine()
+
+    bundle1 = Bundle()
+    bundle1.parameter = models.Parameter({})
+    step1 = Mock(spec=Step)
+    step1.parameters = {}
+    step1.return_value.steps = []
+    bundle1.steps.append(step1)
+
+    bundle2 = Bundle()
+    bundle2.parameter = models.Parameter({})
+    step2 = Mock(spec=Step)
+    step2.parameters = {}
+    step2.return_value.steps = []
+    bundle2.steps.append(step2)
+
+    # Add tasks and run
+    engine.add_task((bundle1, bundle1.parameter))
+    engine.add_task((bundle2, bundle2.parameter))
+    engine.run()
+
+    # Verify that only one report is created
+    self.assertEqual(len(engine.interface.rm.reports), 1)
 
 
 class TestSetDefaultParameters(unittest.TestCase):

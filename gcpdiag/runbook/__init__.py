@@ -785,13 +785,18 @@ class DiagnosticEngine:
       logging.error('No tasks to execute. Did you call add_task()?')
       return
 
-    for task in self.task_queue:
-      if isinstance(task[0], Bundle):
-        self.run_bundle(task[0])
-        continue
+    bundles = [
+        task[0] for task in self.task_queue if isinstance(task[0], Bundle)
+    ]
+    diagnostic_trees = [
+        task for task in self.task_queue if isinstance(task[0], DiagnosticTree)
+    ]
 
-      if isinstance(task[0], DiagnosticTree):
-        self.run_diagnostic_tree(tree=task[0], parameter=task[1])
+    if bundles:
+      self.run_bundles(bundles)
+
+    for task in diagnostic_trees:
+      self.run_diagnostic_tree(tree=task[0], parameter=task[1])
 
   def run_diagnostic_tree(self, tree: DiagnosticTree,
                           parameter: models.Parameter) -> None:
@@ -1002,34 +1007,46 @@ class DiagnosticEngine:
     return self.interface.rm.reports[operator.run_id].results[
         step.execution_id].prompt_response
 
-  def run_bundle(self, bundle: Bundle) -> None:
-    """Executes a list of steps present in a bundle
+  def run_bundles(self, bundles: List[Bundle]) -> None:
+    """Executes a list of bundles under a single report.
 
     Args:
-      bundle: bundle to be executed
+      bundles: list of bundles to be executed
     """
     with registry_lock:
+      # Use a new run_id for the consolidated report
+      run_id = util.generate_uuid()
       operator = op.Operator(interface=self.interface)
-      operator.set_parameters(bundle.parameter)
-      operator.set_run_id(bundle.run_id)
+      operator.set_run_id(run_id)
+
+      # Collect all parameters from all bundles for the report header.
+      all_parameters: models.Parameter = models.Parameter({})
+      for i, bundle in enumerate(bundles):
+        all_parameters[f'bundle_{i+1}'] = bundle.parameter
       with report_lock:
-        self.interface.rm.reports[bundle.run_id] = report.Report(
-            run_id=bundle.run_id, parameters=bundle.parameter)
-        self.interface.rm.reports[bundle.run_id].run_start_time = datetime.now(
+        self.interface.rm.reports[run_id] = report.Report(
+            run_id=run_id, parameters=all_parameters)
+        self.interface.rm.reports[run_id].run_start_time = datetime.now(
             timezone.utc).isoformat()
       with op.operator_context(operator):
-        # Create a root step for the bundle execution
-        root_step = StartStep()
-        for step_class in bundle.steps:
-          # Instantiate each step with the provided parameters
-          step_obj = step_class(**bundle.parameter)
-          root_step.add_child(step_obj)
+        for bundle in bundles:
+          operator.set_parameters(bundle.parameter)
+          # Create a root step for the bundle execution
+          root_step = StartStep()
+          for step_class in bundle.steps:
+            self.parse_parameters(parameter_def=step_class.parameters,
+                                  caller_args=bundle.parameter)
+            self._check_required_paramaters(parameter_def=step_class.parameters,
+                                            caller_args=bundle.parameter)
+            # Instantiate each step with the provided parameters
+            step_obj = step_class(**bundle.parameter)
+            root_step.add_child(step_obj)
 
-        # Use find_path_dfs to traverse and execute the steps
-        self.find_path_dfs(step=root_step,
-                           operator=operator,
-                           executed_steps=set())
-    self.interface.rm.reports[bundle.run_id].run_end_time = datetime.now(
+          # Use find_path_dfs to traverse and execute the steps
+          self.find_path_dfs(step=root_step,
+                             operator=operator,
+                             executed_steps=set())
+    self.interface.rm.reports[run_id].run_end_time = datetime.now(
         timezone.utc).isoformat()
 
 
