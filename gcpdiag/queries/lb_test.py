@@ -51,6 +51,8 @@ class TestURLMap:
     assert obj.locality_lb_policy == 'ROUND_ROBIN'
     assert obj.protocol == 'HTTP'
     assert obj.load_balancer_type == lb.LoadBalancerType.CLASSIC_APPLICATION_LB
+    assert obj.health_check == 'http-basic-check'
+    assert not obj.health_check_region
 
   def test_get_backend_service_regional(self):
     context = models.Context(project_id=DUMMY_PROJECT2_ID)
@@ -63,6 +65,8 @@ class TestURLMap:
     assert obj.locality_lb_policy == 'ROUND_ROBIN'
     assert obj.protocol == 'TCP'
     assert obj.load_balancer_type == lb.LoadBalancerType.EXTERNAL_PASSTHROUGH_LB
+    assert obj.health_check == 'tcp-basic-check-2'
+    assert obj.health_check_region == 'europe-west4'
 
   def test_get_backend_service_health_implicit_global(self):
     context = models.Context(project_id=DUMMY_PROJECT2_ID)

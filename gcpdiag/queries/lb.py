@@ -204,6 +204,17 @@ class BackendServices(models.Resource):
       return None
 
   @property
+  def health_check_region(self):
+    if 'healthChecks' not in self._resource_data:
+      return None
+    health_check_url = self._resource_data['healthChecks'][0]
+    m = re.search(r'/regions/([^/]+)', health_check_url)
+    if m:
+      return m.group(1)
+    else:
+      return None
+
+  @property
   def backends(self) -> List[dict]:
     return self._resource_data.get('backends', [])
 

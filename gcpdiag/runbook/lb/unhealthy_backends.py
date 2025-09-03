@@ -142,7 +142,7 @@ class UnhealthyBackends(runbook.DiagnosticTree):
 
     health_check = gce.get_health_check(project_id,
                                         backend_service.health_check,
-                                        backend_service.region)
+                                        backend_service.health_check_region)
     start.health_check = health_check
 
     backend_health_statuses = lb.get_backend_service_health(

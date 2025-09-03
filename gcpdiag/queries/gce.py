@@ -1435,9 +1435,8 @@ class HealthCheck(models.Resource):
 def get_health_check(project_id: str,
                      health_check: str,
                      region: str = None) -> object:
-  logging.debug('fetching health check: %s', health_check)
   compute = apis.get_api('compute', 'v1', project_id)
-  if not region:
+  if not region or region == 'global':
     request = compute.healthChecks().get(project=project_id,
                                          healthCheck=health_check)
   else:
