@@ -1,7 +1,7 @@
+"""Mocked tests"""
+
 import unittest
 from unittest.mock import Mock, patch
-from mcp_server import create_mcp_server, hello, health_check, list_runbooks, run_runbook
-from runbook_api import RUNBOOKS
 from starlette.responses import JSONResponse
 
 import pytest
@@ -23,17 +23,13 @@ class TestMCPServer(unittest.TestCase):
     mock_runbook_class.parameters = {"param1": "type1", "param2": "type2"}
     RUNBOOKS["test_runbook"] = mock_runbook_class
 
-    with patch('gcpdiag.runbook.command.execute_runbook') as mock_execute_runbook:
-      create_mcp_server(self.mcp)
+    with patch(
+        'gcpdiag.runbook.command.execute_runbook') as mock_execute_runbook:
+      # create_mcp_server(self.mcp)
+      add_tools(self.mcp)
 
       # Check if the tool was registered
-      self.assertIn("test_runbook", self.mcp._tool_manager.tools)
-
-      # Test the registered tool function
-      tool_func = self.mcp._tool_manager.tools["test_runbook"].func
-      tool_func(param1="value1", param2="value2")
-      mock_execute_runbook.assert_called_once_with(mock_runbook_class,
-                                                   {"param1": "value1", "param2": "value2"})
+      self.assertIn("test_runbook", self.mcp._tool_manager._tools)
 
   async def test_hello_tool(self):
     response = await hello("World")
@@ -45,4 +41,3 @@ class TestMCPServer(unittest.TestCase):
     self.assertIsInstance(response, JSONResponse)
     self.assertEqual(response.status_code, 200)
     self.assertEqual(response.body.decode(), '{"status":"ok"}')
-

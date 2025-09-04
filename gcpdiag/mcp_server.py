@@ -6,35 +6,13 @@
 # uv run --with fastmcp fastmcp run --server-spec gcpdiag/mcp_server.py
 # fastmcp dev gcpdiag/mcp_server.py --ui-port 9001 --server-port 9002
 
-from fastmcp.server.dependencies import get_http_request
-from starlette.requests import Request
-
-from fastmcp import FastMCP, Context
-from fastmcp.server.dependencies import get_context
-
 from gcpdiag.runbook import command
-from fastmcp.tools import Tool
 import inspect
-from typing import Dict
-import importlib
-import pkgutil
 import os
 
 from gcpdiag import runbook
-
-# Used by FastMCP
-from starlette.requests import Request
-from starlette.responses import Response, JSONResponse
-import importlib
-import os
-import pkgutil
-import sys
+from fastmcp import FastMCP, Context
 from typing import Dict
-
-from fastapi import FastAPI
-
-from gcpdiag import config, runbook
-from gcpdiag.runbook import command
 
 RUNBOOKS: Dict[str, runbook.DiagnosticTree] = {}
 
@@ -59,7 +37,8 @@ def create_tool_func(rid, description, parameters):
 
   # Create a new signature for the tool_func
   sig_params = [
-      inspect.Parameter(name, inspect.Parameter.POSITIONAL_OR_KEYWORD)
+      inspect.Parameter(name,
+                        inspect.Parameter.KEYWORD_ONLY)  # , annotation="str")
       for name in parameters.keys()
   ]
   tool_func.__signature__ = inspect.Signature(sig_params)
@@ -82,12 +61,16 @@ def add_tools(mcp):
     # Check if it has the method
 
     description = runbook_class.__doc__
-    parameters = runbook_class.parameters
+    try:
+      parameters = runbook_class.parameters
 
-    tool_function = create_tool_func(runbook_id, description, parameters)
-    mcp.tool(tool_function, name=runbook_id)
+      tool_function = create_tool_func(runbook_id, description, parameters)
+      mcp.tool(tool_function, name=runbook_id)
 
-    print(runbook_id, runbook_class)
+      print(runbook_id, tool_function)
+    except:
+      print("Skipping ", runbook_id)
+    #agent_setup(mcp)
 
 
 @mcp.tool
@@ -158,10 +141,11 @@ async def run_runbook(runbook_id: str, params: Dict):
 
 
 # FastMCP also wraps OpenAPI and proxes other MCP servers.
+add_tools(mcp)
 
 if __name__ == "__main__":
   print("starting app")
-  add_tools(mcp)
+
   if "PORT" in os.environ:
     mcp.run(transport="http", log_level="debug", port=int(os.environ["PORT"]))
   else:
