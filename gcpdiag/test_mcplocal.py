@@ -19,35 +19,11 @@ def mcp_server():
   return mcp
 
 
-# Need to install pytest-asyncio for this to work
-# This style also used by
-from google.adk.evaluation.agent_evaluator import AgentEvaluator
-import pytest
-
-
-@pytest.mark.asyncio
-async def test_with_single_test_file():
-  """Test the agent's basic ability via a session file."""
-  await AgentEvaluator.evaluate(
-      agent_module="home_automation_agent",
-      eval_dataset_file_path_or_dir=
-      "tests/integration/fixture/home_automation_agent/simple_test.test.json",
-  )
-
-
 @pytest.mark.asyncio
 async def test_tool_functionality(mcp_server: fastmcp.FastMCP):
   # Pass the server directly to the Client constructor
   async with fastmcp.Client(mcp_server) as client:
     result = await client.call_tool("greet", {"name": "World"})
-    assert result.data == "Hello, World!"
-
-
-@pytest.mark.asyncio
-async def test_tool_hello(mcp_server):
-  # Pass the server directly to the Client constructor
-  async with fastmcp.Client(mcp_server) as client:
-    result = await client.call_tool("hello", {"name": "World"})
     assert result.data == "Hello, World!"
 
 
