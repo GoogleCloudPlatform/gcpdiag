@@ -24,7 +24,7 @@ import yaml
 
 # gcpdiag version (not configurable, but useful to have here)
 #
-VERSION = '0.80-test'
+VERSION = '0.81-test'
 """
 Configuration properties are divided into 3 main categories:
 - static (class properties) which values cannot be changed or provided
