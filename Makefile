@@ -2,8 +2,24 @@ VERSION=$(shell sed -n 's/^current_version\s*=\s*//p' <.bumpversion.cfg)
 DIST_NAME=gcpdiag-$(VERSION)
 SHELL=/bin/bash
 
-test:
-	pytest -o log_level=DEBUG --cov-config=.coveragerc --cov=gcpdiag --forked
+.PHONY: test coverage-report version build bump-version tarfile release runbook-docs runbook-starter-code spelling
+
+# Comprehensive environment check.
+check-environment:
+	@command -v pipenv >/dev/null 2>&1 || { echo >&2 "ERROR: pipenv is not installed. Please run 'pip install pipenv' and try again."; exit 1; }
+	@if [ -z "$$(pipenv --venv)" ]; then \
+		echo "Pipenv environment not created. Please run 'pipenv install --dev'."; \
+		exit 1; \
+	fi
+	@pipenv check || { \
+		REQUIRED_PYTHON_VERSION=$$(sed -n 's/^python_version\s*=\s*"\(.*\)"/\\1/p' < Pipfile); \
+		echo >&2 "ERROR: Pipenv check failed. Your Python version might be incorrect."; \
+		echo >&2 "Please run 'pipenv --rm && pipenv --python $$REQUIRED_PYTHON_VERSION install --dev' to fix this."; \
+		exit 1; \
+	}
+
+test: check-environment
+	pipenv run pytest -o log_level=DEBUG --cov-config=.coveragerc --cov=gcpdiag --forked
 
 test_async_api:
 	python -m unittest gcpdiag.async_queries.api.api_slowtest
@@ -90,5 +106,3 @@ runbook-starter-code:
 	fi;\
 	echo "Using Python at $$PYTHON"; \
 	$$PYTHON bin/runbook-starter-code-generator py_path=$$PYTHON name=$(name) prepenv=$(prepenv)
-
-.PHONY: test coverage-report version build bump-version tarfile release runbook-docs runbook-starter-code spelling

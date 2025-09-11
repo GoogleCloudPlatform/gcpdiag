@@ -60,7 +60,8 @@ class MetaStep(type):
     """Register all steps into StepRegistry excluding base classes"""
     new_class = super().__new__(mcs, name, bases, namespace)
     if name not in ('Step', 'Gateway', 'LintWrapper', 'StartStep', 'EndStep',
-                    'CompositeStep') and bases[0] in (Step, Gateway):
+                    'CompositeStep') and bases[0] in (Step, Gateway,
+                                                      CompositeStep):
       StepRegistry[new_class.id] = new_class
     return new_class
 
@@ -291,8 +292,8 @@ class StartStep(Step):
 class CompositeStep(Step):
   """Composite Events of a Diagnostic tree"""
 
-  def __init__(self):
-    super().__init__(step_type=constants.StepType.COMPOSITE)
+  def __init__(self, **parameters):
+    super().__init__(**parameters, step_type=constants.StepType.COMPOSITE)
 
 
 class EndStep(Step):
@@ -304,10 +305,10 @@ class EndStep(Step):
   def execute(self):
     """Finalize runbook investigations."""
     if not config.get(flags.INTERACTIVE_MODE):
-      response = op.operator.interface.prompt(kind=op.CONFIRMATION,
-                                              message='Is your issue resolved?')
+      response = op.prompt(kind=op.CONFIRMATION,
+                           message='Is your issue resolved?')
       if response == op.NO:
-        op.operator.interface.info(message=constants.END_MESSAGE)
+        op.info(message=constants.END_MESSAGE)
 
 
 class Gateway(Step):

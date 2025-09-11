@@ -466,6 +466,14 @@ class TestMetaStepRegistry(unittest.TestCase):
     self.assertIn(MyGateway.id, runbook.StepRegistry)
     self.assertIs(runbook.StepRegistry[MyGateway.id], MyGateway)
 
+  def test_register_composite_step_subclass(self):
+
+    class MyCompositeStep(runbook.CompositeStep):
+      pass
+
+    self.assertIn(MyCompositeStep.id, runbook.StepRegistry)
+    self.assertIs(runbook.StepRegistry[MyCompositeStep.id], MyCompositeStep)
+
   def test_dont_register_base_classes(self):
     self.assertNotIn(runbook.Step.id, runbook.StepRegistry)
     self.assertNotIn(runbook.Gateway.id, runbook.StepRegistry)

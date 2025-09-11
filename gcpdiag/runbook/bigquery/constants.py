@@ -955,4 +955,42 @@ ERROR_MAP: Dict[
              ' Cloud Support to troubleshoot the issue from the BigQuery side,'
             ),
     },
+    (
+        'access denied',
+        'user does not have',
+        'permission',
+    ): {
+        'cause':
+            'There are three main reasons why this error might occur:'
+            '\n - Running a query without the bigquery.jobs.create permission on the '
+            'project from which you are running the query.'
+            '\n - Missing the bigquery.tables.getData permission on all tables and views '
+            'that the query references.'
+            '\n - Table does not exist in the queried region',
+        'remediation': (
+            '\n1. Make sure the table exists in the queried region. Check if you '
+            'are explicitly setting an incorrect region for query processing.\n'
+            '2. Make sure that the service account, user, or group running this query'
+            'has the bigquery.jobs.create permission on the project where the query '
+            'is running.\nAlso make sure that they have the bigquery.tables.getData '
+            'permission on all tables and views that are referenced by the query'
+        ),
+    },
+    ('user does not have permission',): {
+        'cause':
+            'There are three main reasons why this error might occur:'
+            '\n - Running a query without the bigquery.jobs.create permission on the '
+            'project from which you are running the query.'
+            '\n - Missing the bigquery.tables.getData permission on all tables and views '
+            'that the query references.'
+            '\n - Table does not exist in the queried region',
+        'remediation': (
+            '\n1. Make sure the table exists in the queried region. Check if you '
+            'are explicitly setting an incorrect region for query processing.\n'
+            '2. Make sure that the service account, user, or group running this query'
+            'has the bigquery.jobs.create permission on the project where the query '
+            'is running.\nAlso make sure that they have the bigquery.tables.getData '
+            'permission on all tables and views that are referenced by the query'
+        ),
+    },
 }

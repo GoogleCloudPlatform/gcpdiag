@@ -1,0 +1,13 @@
+<div class="col-md-4 mb-4 text-center">
+  {{ with .Get "icon" }}
+    <div class="mb-3 text-primary">
+        <i class="{{ . }} fa-2x"></i>
+    </div>
+  {{ end }}
+  <h3 class="fw-normal">{{ .Get "title" }}</h3>
+  <p>{{ .Inner }}</p>
+
+  {{ with .Get "url" }}
+    <a href="{{ . }}" class="text-decoration-none">Read more...</a>
+  {{ end }}
+</div>

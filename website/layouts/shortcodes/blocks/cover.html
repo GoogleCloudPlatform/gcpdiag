@@ -2,14 +2,16 @@
 {{/* Height can be one of: auto, min, med, max, full. */}}
 {{ $height := .Get "height" | default "max"  }}
 <section class="row td-cover-block td-cover-block--height-{{ $height }} js-td-cover td-overlay td-overlay--light -bg-{{ $col_id }}">
-  <div class="container td-overlay__inner">
-    <div class="row align-items-end">
+  <div class="container td-overlay__inner text-center">
+    <div class="row align-items-end justify-content-center">
       <div class="col-lg-6">
-          <h1 class="display-1 mt-0 pb-4">
-            <img alt="gcpdiag logo" width="80" src="images/stethoscope.png" />
+        <div class="d-inline-block text-start">
+          <h1 class="fw-normal display-3 mt-0 pb-4">
+            <img alt="gcpdiag logo" width="80" src="images/stethoscope.png" class="me-3" />
               gcpdiag
           </h1>
-          <p class="display-2 mb-0 pb-3">Diagnostics for<br>Google Cloud Platform</p>
+          <p class="display-4 mb-0 pb-3">Diagnostics for<br>Google Cloud Platform</p>
+        </div>
       </div>
       <div class="col-lg-6 mt-5 mt-lg-3 d-sm-block" style="display: none">
           <img alt="gcpdiag demo" id="gcpdiag-demo-cover" src="images/gcpdiag-demo-cover.gif" />
