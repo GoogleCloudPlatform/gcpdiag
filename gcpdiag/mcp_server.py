@@ -13,17 +13,11 @@ import os
 from gcpdiag import runbook
 from fastmcp import FastMCP, Context
 from typing import Dict
-
-RUNBOOKS: Dict[str, runbook.DiagnosticTree] = {}
-
-# Using uvicorn
-mcp: FastMCP = FastMCP(
-    name="gcpdiag Runbooks",
-    instructions="Exposes gcpdiag runbooks as MCP tools.",
-)
+from google.adk.agents import LlmAgent
+import json
 
 
-def create_tool_func(rid, description, parameters):
+def create_mcp_func(rid, description, parameters):
   """
   Return a function with the signature and doc based on the GCPDiag runbook,
   which invokes the runbook. A more direct approach would be to find the
@@ -37,13 +31,16 @@ def create_tool_func(rid, description, parameters):
 
   # Create a new signature for the tool_func
   sig_params = [
-      inspect.Parameter(name,
-                        inspect.Parameter.KEYWORD_ONLY)  # , annotation="str")
+      inspect.Parameter(name, inspect.Parameter.KEYWORD_ONLY, annotation=str)
       for name in parameters.keys()
   ]
+  annotations = {}
+  for name in parameters.keys():
+    annotations[name] = str
   tool_func.__signature__ = inspect.Signature(sig_params)
   tool_func.__doc__ = description
-  tool_func.__name__ = rid
+  tool_func.__name__ = rid.replace("/", "_")
+  tool_func.__annotations__ = annotations
 
   return tool_func
 
@@ -54,6 +51,7 @@ def add_tools(mcp):
   """
   repo = runbook.DiagnosticEngine()
   command._load_runbook_rules(repo.__module__)
+  RUNBOOKS: Dict[str, runbook.DiagnosticTree] = {}
   for name in runbook.RunbookRegistry:
     RUNBOOKS[name] = runbook.RunbookRegistry[name]
 
@@ -64,14 +62,17 @@ def add_tools(mcp):
     try:
       parameters = runbook_class.parameters
 
-      tool_function = create_tool_func(runbook_id, description, parameters)
-      mcp.tool(tool_function, name=runbook_id)
+      tool_function = create_mcp_func(runbook_id, description, parameters)
+      mcp.tool(tool_function, name=runbook_id.replace("/", "_"))
+    except Exception as e:
+      print("Skipping ", runbook_id, e)
 
-      print(runbook_id, tool_function)
-    except:
-      print("Skipping ", runbook_id)
-    #agent_setup(mcp)
 
+# This is a holder for the '@mcp' functions.
+mcp: FastMCP = FastMCP(
+    name="gcpdiag Runbooks",
+    instructions="Exposes gcpdiag runbooks as MCP tools.",
+)
 
 @mcp.tool
 async def hello(name: str, ctx: Context) -> str:
@@ -124,29 +125,27 @@ async def health_check(request):
   return JSONResponse({"status": "ok"})
 
 
-@mcp.custom_route("/runbooks", methods=["GET"])
-async def list_runbooks(request):
-  """List all available runbooks."""
-  return JSONResponse({"runbooks": list(RUNBOOKS.keys())})
-
-
 @mcp.custom_route("/runbooks/{runbook_id}", methods=["POST"])
 async def run_runbook(runbook_id: str, params: Dict):
   """Execute a specific runbook and return the report."""
-  if runbook_id not in RUNBOOKS:
-    return {"error": "Runbook not found"}
 
-  report = command.execute_runbook(runbook_id, params or {})
-  return report
+  try:
+    report = command.execute_runbook(runbook_id, params or {})
+    return report
+  except Exception as e:
+    print(runbook_id, e)
+    return ""
 
-
-# FastMCP also wraps OpenAPI and proxes other MCP servers.
 add_tools(mcp)
 
-if __name__ == "__main__":
-  print("starting app")
 
+def main():
+  # Using uvicorn
   if "PORT" in os.environ:
     mcp.run(transport="http", log_level="debug", port=int(os.environ["PORT"]))
   else:
+    print("Starting stdio gcpidag MCP")
     mcp.run()
+
+if __name__ == "__main__":
+  main()

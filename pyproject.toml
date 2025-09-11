@@ -1,7 +1,7 @@
 
 [project]
 name = "gcpdiag"
-version = "0.1.0"
+version = "0.1.1"
 description = "GcpDiag"
 requires-python = ">=3.10"
 dependencies = [
@@ -103,5 +103,8 @@ pythonpath = ["gcpdiag"]
 [tool.uv]
 package = false
 
-[tool.setuptools]
-packages = ["gcpdiag"]
+[tool.setuptools.packages.find]
+where = ["."]
+
+[project.scripts]
+gcpdiagmcp = "gcpdiag.mcp_server:main"
