@@ -107,4 +107,6 @@ package = false
 where = ["."]
 
 [project.scripts]
+gcpdiag = "gcpdiag.mcp_server:main"
 gcpdiagmcp = "gcpdiag.mcp_server:main"
+gcpdiagadk = "adk:main"
