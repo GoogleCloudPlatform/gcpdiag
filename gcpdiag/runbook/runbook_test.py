@@ -15,7 +15,7 @@
 
 import unittest
 from datetime import datetime, timedelta, timezone
-from unittest.mock import Mock, call, patch
+from unittest.mock import ANY, Mock, call, patch
 
 from gcpdiag import models, runbook
 from gcpdiag.runbook import constants, exceptions
@@ -229,15 +229,57 @@ class TestDiagnosticEngine(unittest.TestCase):
     self.assertIn(last_step, visited)
     self.assertEqual(mock_run_step.call_count, 3)
 
+  @patch('gcpdiag.runbook.op.Operator')
   @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
-  def test_run_bundle_operation(self, mock_run_step):
-    bundle = Mock(run_id='1', runbook_name='test')
-    bundle.parameter = {}
-    step = Mock()
-    step.parameters = {}
-    bundle.steps = [step]
+  def test_gateway_step_in_bundle(self, mock_run_step, mock_operator_class):
+    """Dedicated test to ensure gateway steps in bundles execute child steps and report results."""
+    self.de.interface = Mock()
+    self.de.interface.rm = self.mock_report_manager
+    mock_op_instance = Mock()
+    mock_operator_class.return_value = mock_op_instance
+
+    # Create mock steps to track execution
+    mock_child_execute = Mock()
+    mock_gateway_execute = Mock()
+
+    class MockChildStep(runbook.Step):
+      template = 'mock_child'
+
+      def execute(self, op):
+        """Executes mock child step."""
+        mock_child_execute()
+        op.add_ok(resource=Mock(spec=models.Resource),
+                  reason='Child step executed')
+
+    class MockGatewayStep(runbook.Gateway):
+      template = 'mock_gateway'
+
+      def execute(self, op):  # pylint: disable=unused-argument
+        """Executes mock gateway step."""
+        mock_gateway_execute()
+        self.add_child(MockChildStep())
+
+    bundle = runbook.Bundle()
+    bundle.run_id = 'test_bundle_run'
+    bundle.parameter = models.Parameter({})
+    bundle.steps = [MockGatewayStep]
+
+    def run_step_side_effect(step, operator):
+      # StartStep is an internal step and its execute method doesn't take any
+      # arguments. The real run_step handles this, so our mock should too.
+      if isinstance(step, runbook.StartStep):
+        step.execute()
+      else:
+        step.execute(operator)
+
+    mock_run_step.side_effect = run_step_side_effect
     self.de.run_bundle(bundle=bundle)
-    assert mock_run_step.called
+
+    # Assert that the gateway and the dynamically added child were executed
+    mock_gateway_execute.assert_called_once()
+    mock_child_execute.assert_called_once()
+    mock_op_instance.add_ok.assert_called_once_with(
+        resource=ANY, reason='Child step executed')
 
   @patch('gcpdiag.runbook.DiagnosticEngine.run_bundle')
   @patch('gcpdiag.runbook.DiagnosticEngine.run_diagnostic_tree')

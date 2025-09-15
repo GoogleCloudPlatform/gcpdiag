@@ -32,7 +32,7 @@ from enum import Enum
 from functools import cached_property
 from string import Formatter
 from typing import (Callable, Deque, Dict, List, Mapping, Optional, Set, Tuple,
-                    final)
+                    Type, final)
 
 import googleapiclient.errors
 from jinja2 import TemplateNotFound
@@ -42,7 +42,7 @@ from gcpdiag.queries import crm
 from gcpdiag.runbook import constants, exceptions, flags, op, report, util
 
 RunbookRegistry: Dict[str, 'DiagnosticTree'] = {}
-StepRegistry: Dict[str, 'Step'] = {}
+StepRegistry: Dict[str, Type['Step']] = {}
 
 registry_lock = threading.Lock()
 report_lock = threading.Lock()
@@ -522,7 +522,7 @@ class DiagnosticTree(metaclass=RunbookRule):
 
 class Bundle:
   run_id: str
-  steps: List[Step]
+  steps: List[Type['Step']]
   parameter: models.Parameter
 
   def __init__(self) -> None:
@@ -1018,15 +1018,17 @@ class DiagnosticEngine:
         self.interface.rm.reports[bundle.run_id].run_start_time = datetime.now(
             timezone.utc).isoformat()
       with op.operator_context(operator):
-        for step in bundle.steps:
-          self._check_required_paramaters(parameter_def=step.parameters,
-                                          caller_args=bundle.parameter)
-          self.parse_parameters(parameter_def=step.parameters,
-                                caller_args=bundle.parameter)
-          if callable(step):
-            step_obj = step(**bundle.parameter)
-            operator.set_step(step_obj)
-            self.run_step(step=step_obj, operator=operator)
+        # Create a root step for the bundle execution
+        root_step = StartStep()
+        for step_class in bundle.steps:
+          # Instantiate each step with the provided parameters
+          step_obj = step_class(**bundle.parameter)
+          root_step.add_child(step_obj)
+
+        # Use find_path_dfs to traverse and execute the steps
+        self.find_path_dfs(step=root_step,
+                           operator=operator,
+                           executed_steps=set())
     self.interface.rm.reports[bundle.run_id].run_end_time = datetime.now(
         timezone.utc).isoformat()
 
