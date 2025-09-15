@@ -16,23 +16,27 @@ Check if any BGP flap events, report error flaps with duration over 60 seconds.
 
 ### Failure Reason
 
-    `BGP` flaps lasting longer than 60 seconds detected in project `{project_id}`.
+    Abnormal long BGP flaps:  crId:{router_id}, ip:{local_ip}, peerIp:{remote_ip}, crName:{router_name}, vlan:{attachment}, proj:{project_id}, details:{flap_details}
 
 ### Failure Remediation
 
-    BGP flaps lasting longer than 60 seconds have been observed. These are unlikely to be caused by Cloud Router or Interconnect maintenance events. Analyze Cloud Router logs to identify the root cause. Refer to the Cloud Router log messages documentation for guidance.<https://cloud.google.com/network-connectivity/docs/router/support/troubleshoot-log-messages>
+    BGP flaps lasting longer than `{timer}` seconds are unlikely to be caused by Cloud Router maintenance events. Analyze Cloud Router logs to identify the root cause. Check the public documentation for guidance.<https://cloud.google.com/network-connectivity/docs/router/support/troubleshoot-log-messages> or contact GCP support.Logging query example {example_query}
 
 ### Success Reason
 
-    No `BGP` flaps are found.
+    No BGP flaps are found in region `{region}` in project `{project_id}`.
 
 ### Uncertain Reason
 
-    `BGP` flaps lasting less than 60 seconds detected.
+    Short duration BGP flaps: crId:{router_id}, ip:{local_ip}, peerIp:{remote_ip}, crName:{router_name}, vlan:{attachment}, proj:{project_id}, details:{flap_details}
 
 ### Uncertain Remediation
 
-    Check for `cloud router maintenance` events.
+    Continue runbook to check if there are `cloud router maintenance` events align with BGP flaps.
+
+### Skipped Reason
+
+    Unable to fetch any vlan attachments to check BGP flap in any region in project `{project_id}`.
 
 
 

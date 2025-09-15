@@ -1,7 +1,7 @@
 {
   "entries": [
     {
-      "textPayload": "BGP Event: BGP peering with 169.254.1.1 went down with reason: BGP_PROCESS_STOPPED",
+      "textPayload": "BGP Event: BGP peering with 169.254.1.2 went down with reason: BGP_PROCESS_STOPPED",
       "insertId": "13v7syqfr0affx",
       "resource": {
         "type": "gce_router",
@@ -17,7 +17,23 @@
       "receiveTimestamp": "2025-03-20T16:45:55.967883881Z"
     },
     {
-      "textPayload": "BGP Event: BGP peering with 169.254.1.1 came up 0 seconds ago, hold time is 60 seconds, graceful restart timer is 60 seconds",
+      "textPayload": "Maintenance of router task: BGP sessions will restart. Routes are preserved for the duration of the configured timers. These are normal events, and no data loss is expected to occur.",
+      "insertId": "5kryxkf281spq",
+      "resource": {
+        "type": "gce_router",
+        "labels": {
+          "region": "us-east4",
+          "project_id": "gcpdiag-interconnect1-aaaa",
+          "router_id": "6988249776642123456"
+        }
+      },
+      "timestamp": "2025-03-20T16:45:56.035612313Z",
+      "severity": "INFO",
+      "logName": "projects/gcpdiag-interconnect1-aaaa/logs/compute.googleapis.com%2Frouter_events",
+      "receiveTimestamp": "2025-03-20T16:46:56.287489651Z"
+    },
+    {
+      "textPayload": "BGP Event: BGP peering with 169.254.1.2 came up 0 seconds ago, hold time is 60 seconds, graceful restart timer is 120 seconds",
       "insertId": "e688gpfsdnayp",
       "resource": {
         "type": "gce_router",
@@ -33,12 +49,12 @@
       "receiveTimestamp": "2025-03-20T16:45:58.287489651Z"
     },
     {
-      "textPayload": "BGP Event: BGP peering with 169.254.2.1 went down with reason: BGP_PROCESS_STOPPED",
+      "textPayload": "BGP Event: BGP peering with 169.254.2.2 went down with reason: BGP_PROCESS_STOPPED",
       "insertId": "lxwe2jf1e2pij",
       "resource": {
         "type": "gce_router",
         "labels": {
-          "region": "us-east1",
+          "region": "us-east4",
           "project_id": "gcpdiag-interconnect1-aaaa",
           "router_id": "6988249776642123456"
         }
@@ -49,7 +65,7 @@
       "receiveTimestamp": "2025-03-27T23:32:19.414761410Z"
     },
     {
-      "textPayload": "BGP Event: BGP peering with 169.254.2.1 came up 0 seconds ago, hold time is 60 seconds, graceful restart timer is 60 seconds",
+      "textPayload": "BGP Event: BGP peering with 169.254.2.2 came up 0 seconds ago, hold time is 60 seconds, graceful restart timer is 60 seconds",
       "insertId": "h977eqf1i9jpn",
       "resource": {
         "type": "gce_router",
@@ -63,6 +79,38 @@
       "severity": "NOTICE",
       "logName": "projects/gcpdiag-interconnect1-aaaa/logs/compute.googleapis.com%2Frouter_events",
       "receiveTimestamp": "2025-03-27T23:34:39.928464648Z"
+    },
+    {
+      "textPayload": "BGP Event: BGP peering with 169.254.6.2 went down with reason: BGP_PROCESS_STOPPED",
+      "insertId": "leee2jf1e2pij",
+      "resource": {
+        "type": "gce_router",
+        "labels": {
+          "region": "us-west2",
+          "project_id": "gcpdiag-interconnect1-aaaa",
+          "router_id": "666666875024123457"
+        }
+      },
+      "timestamp": "2025-03-27T23:32:19.397757310Z",
+      "severity": "NOTICE",
+      "logName": "projects/gcpdiag-interconnect1-aaaa/logs/compute.googleapis.com%2Frouter_events",
+      "receiveTimestamp": "2025-03-27T23:32:19.414761410Z"
+    },
+    {
+      "textPayload": "BGP Event: BGP peering with 169.254.6.2 came up 0 seconds ago, hold time is 60 seconds, graceful restart timer is 60 seconds",
+      "insertId": "heeeeqf1i9jpn",
+      "resource": {
+        "type": "gce_router",
+        "labels": {
+          "router_id": "666666875024123457",
+          "project_id": "gcpdiag-interconnect1-aaaa",
+          "region": "us-west2"
+        }
+      },
+      "timestamp": "2025-03-27T23:33:39.923120483Z",
+      "severity": "NOTICE",
+      "logName": "projects/gcpdiag-interconnect1-aaaa/logs/compute.googleapis.com%2Frouter_events",
+      "receiveTimestamp": "2025-03-27T23:33:39.928464648Z"
     }
   ]
 }

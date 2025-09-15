@@ -4,77 +4,101 @@
 
 #############################################################
   {% block start_success_reason %}
-    `VLAN attachments` found in project.
+    Total `{total_num}` vlan attachments found in `{region}` in project `{project_id}`.
   {% endblock start_success_reason %}
 
   {% block start_skipped_reason%}
-    Unable to fetch the `vlan attachments` in `{project_id}`.
+    Unable to fetch any vlan attachments in any region in project `{project_id}`.
   {% endblock start_skipped_reason %}
 
   {% block start_skipped_reason_a1%}
-    Unable to fetch `vlan attachments` in region `{region}` in project `{project_id}`.
+    Unable to fetch `{err_names}` in region `{region}` in project `{project_id}`.
   {% endblock start_skipped_reason_a1 %}
 
   {% block bgpdown_success_reason %}
-    No `VLAN attachments` have `BGP` down.
+    No VLAN attachments have BGP down in region `{region}` in project `{project_id}`.
   {% endblock bgpdown_success_reason %}
 
   {% block bgpdown_failure_reason %}
-    The interconnect `{interconnect_name}` attachment `{attachment_name}` has `BGP` down.
+    Attachment:{attachment_name}, Interconnect:{interconnect_name}, Cloud_Router_Name:{router_name}
   {% endblock bgpdown_failure_reason %}
 
   {% block bgpdown_failure_reason_a1 %}
-    `BGP` down events found.
+    Some interconnects have BGP down status. See details {reason}
   {% endblock bgpdown_failure_reason_a1 %}
 
   {% block bgpdown_failure_remediation %}
-     Check if interconnects with BGP down are in maintenance state. Analyze Cloud Router logs to identify the root cause. Refer to the Cloud Router log messages documentation for guidance. <https://cloud.google.com/network-connectivity/docs/interconnect/support/infrastructure-maintenance-events>
+     For any interconnects in BGP down state, continue runbook check if the interconnect is in maintenance state. Check the public documentation for guidance. <https://cloud.google.com/network-connectivity/docs/interconnect/support/infrastructure-maintenance-events>
   {% endblock bgpdown_failure_remediation %}
 
+  {% block interconnect_maintenance_skipped_reason %}
+    No interconnects have BGP down status, skip interconnect mainteance check in in region `{region}` in project `{project_id}`.
+  {% endblock interconnect_maintenance_skipped_reason %}
+
   {% block interconnect_maintenance_success_reason %}
-    `BGP` down events coincide with planned interconnect maintenance.
+    The interconnects with BGP down status align with the planned interconnect maintenance events.
   {% endblock interconnect_maintenance_success_reason %}
 
   {% block interconnect_maintenance_failure_reason%}
-    The interconnect `{interconnect_name}` with `BGP` down has no planned maintenance.
+    The interconnect `{interconnect_name}` with BGP down status has no planned maintenance.
   {% endblock interconnect_maintenance_failure_reason %}
 
   {% block interconnect_maintenance_failure_reason_a1 %}
-    The Interconnects with `BGP` down have no planned maintenance.
+    There are interconnects with BGP down status have no planned maintenance. See details {reason}
   {% endblock interconnect_maintenance_failure_reason_a1 %}
 
   {% block interconnect_maintenance_failure_remediation %}
-    Analyze Cloud Router logs to identify the root cause. Refer to the Cloud Router log messages documentation for guidance. <https://cloud.google.com/network-connectivity/docs/router/support/troubleshoot-log-messages>
+    Interconnect BGP down can be caused by various reasons. Suggested remediation: {remediation}
   {% endblock interconnect_maintenance_failure_remediation %}
 
+  {% block bgpflap_skipped_reason%}
+    Unable to fetch any vlan attachments to check BGP flap in any region in project `{project_id}`.
+  {% endblock bgpflap_skipped_reason %}
+
   {% block bgpflap_success_reason %}
-    No `BGP` flaps are found.
+    No BGP flaps are found in region `{region}` in project `{project_id}`.
   {% endblock bgpflap_success_reason %}
 
   {% block bgpflap_failure_reason%}
-    `BGP` flaps lasting longer than 60 seconds detected in project `{project_id}`.
+    Abnormal long BGP flaps:  crId:{router_id}, ip:{local_ip}, peerIp:{remote_ip}, crName:{router_name}, vlan:{attachment}, proj:{project_id}, details:{flap_details}
   {% endblock bgpflap_failure_reason %}
 
+  {% block bgpflap_failure_reason_a1%}
+    BGP flaps lasting longer than `{timer}` seconds detected in project `{project_id}`. See details {reason}
+  {% endblock bgpflap_failure_reason_a1 %}
+
   {% block bgpflap_failure_remediation %}
-    BGP flaps lasting longer than 60 seconds have been observed. These are unlikely to be caused by Cloud Router or Interconnect maintenance events. Analyze Cloud Router logs to identify the root cause. Refer to the Cloud Router log messages documentation for guidance.<https://cloud.google.com/network-connectivity/docs/router/support/troubleshoot-log-messages>
+    BGP flaps lasting longer than `{timer}` seconds are unlikely to be caused by Cloud Router maintenance events. Analyze Cloud Router logs to identify the root cause. Check the public documentation for guidance.<https://cloud.google.com/network-connectivity/docs/router/support/troubleshoot-log-messages> or contact GCP support.Logging query example {example_query}
   {% endblock bgpflap_failure_remediation %}
 
   {% block bgpflap_uncertain_reason%}
-    `BGP` flaps lasting less than 60 seconds detected.
+    Short duration BGP flaps: crId:{router_id}, ip:{local_ip}, peerIp:{remote_ip}, crName:{router_name}, vlan:{attachment}, proj:{project_id}, details:{flap_details}
   {% endblock bgpflap_uncertain_reason %}
 
+  {% block bgpflap_uncertain_reason_a1%}
+    BGP flaps lasting less than `{timer}` seconds detected. They are normal if there are cloud router maintenance events. See details {reason}
+  {% endblock bgpflap_uncertain_reason_a1 %}
+
   {% block bgpflap_uncertain_remediation %}
-    Check for `cloud router maintenance` events.
+    Continue runbook to check if there are `cloud router maintenance` events align with BGP flaps.
   {% endblock bgpflap_uncertain_remediation %}
 
+  {% block cloud_router_maintenance_skipped_reason %}
+    No BGP flaps, skip cloud router mainteance check in in region `{region}` in project `{project_id}`.
+  {% endblock cloud_router_maintenance_skipped_reason %}
+
   {% block cloud_router_maintenance_success_reason%}
-    `BGP` flaps (duration < 60s) coincide with `Cloud Router maintenance` events.
+    BGP flaps less than {timer} seconds are all caused by Cloud Router maintenance events.
   {% endblock cloud_router_maintenance_success_reason %}
 
   {% block cloud_router_maintenance_failure_reason%}
-    `BGP` flaps (duration < 60s) detected that do not coincide with `Cloud Router maintenance` events.
+    Error BGP : crId:{router_id}, ip:{local_ip}, peerIp:{remote_ip}, crName:{router_name}, vlan:{attachment}, proj:{project_id}, details:{flap_details}
   {% endblock cloud_router_maintenance_failure_reason %}
 
+  {% block cloud_router_maintenance_failure_reason_a1%}
+    There are BGP flaps less than {timer} seconds without Cloud Router maintenance events. See details {reason}
+  {% endblock cloud_router_maintenance_failure_reason_a1 %}
+
   {% block cloud_router_maintenance_failure_remediation %}
-    BGP flaps lasting less than 60 seconds have been observed. No associated Cloud Router or Interconnect maintenance events could be found. Analyze Cloud Router logs to identify the root cause. Refer to the Cloud Router log messages documentation for guidance. <https://cloud.google.com/network-connectivity/docs/router/support/troubleshoot-log-messages>
+    BGP flaps lasting less than {timer} seconds have been observed without Cloud Router maintenance. Analyze Cloud Router logs to identify the root cause. Check the public documentation for guidance.Logging query example <https://cloud.google.com/network-connectivity/docs/router/support/troubleshoot-log-messages> or contact GCP support.{example_query}
   {% endblock cloud_router_maintenance_failure_remediation %}

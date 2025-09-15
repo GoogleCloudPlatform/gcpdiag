@@ -200,6 +200,10 @@ class VlanAttachment(models.Resource):
     return self._resource_data['cloudRouterIpAddress'].split('/')[0]
 
   @property
+  def remoteip(self) -> str:
+    return self._resource_data['customerRouterIpAddress'].split('/')[0]
+
+  @property
   def ead(self) -> str:
     if not self._ead:
       interconnect_obj = get_interconnect(self.project_id, self.interconnect)

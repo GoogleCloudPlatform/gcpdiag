@@ -21,11 +21,11 @@ This step starts the BGP issue debugging process by
 
 ### Success Reason
 
-    `VLAN attachments` found in project.
+    Total `{total_num}` vlan attachments found in `{region}` in project `{project_id}`.
 
 ### Skipped Reason
 
-    Unable to fetch the `vlan attachments` in `{project_id}`.
+    Unable to fetch any vlan attachments in any region in project `{project_id}`.
 
 
 

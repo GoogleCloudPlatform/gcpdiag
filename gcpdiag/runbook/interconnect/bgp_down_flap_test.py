@@ -25,6 +25,21 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
 
   rule_parameters = [{
       'project_id': 'gcpdiag-interconnect1-aaaa',
-      'region': 'us-east4',
-      'custom_flag': 'interconnect'
+      'region': 'us-central1',
+      'custom_flag': 'interconnect',
+      'attachment_name': 'dummy-attachment11'
+  }, {
+      'project_id':
+          'gcpdiag-interconnect1-aaaa',
+      'region':
+          'us-east4',
+      'custom_flag':
+          'interconnect',
+      'attachment_name':
+          'dummy-attachment1,dummy-attachment2,dummy-attachment3,dummy-attachment4'
+  }, {
+      'project_id': 'gcpdiag-interconnect1-aaaa',
+      'region': 'us-west2',
+      'custom_flag': 'interconnect',
+      'attachment_name': 'dummy-attachment5,dummy-attachment6'
   }]

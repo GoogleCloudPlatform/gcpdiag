@@ -27,6 +27,7 @@ The following steps are executed:
 gcpdiag runbook interconnect/bgp-down-flap \
   -p project_id=value \
   -p region=value \
+  -p attachment_name=value \
   -p start_time=value \
   -p end_time=value
 ```
@@ -37,6 +38,7 @@ gcpdiag runbook interconnect/bgp-down-flap \
 |------|----------|---------|------|------|
 | `project_id` | True | None | str | The Project ID of the resource under investigation |
 | `region` | True | None | str | The region where the vlan attachment is located |
+| `attachment_name` | True | None | str | The attachment name(s) as comma-separated values or a regular expression. eg: vlan1,vlan2 or vlan.* or .* for all attachments |
 | `start_time` | False | None | datetime | The start window to investigate BGP flap. Format: YYYY-MM-DDTHH:MM:SSZ |
 | `end_time` | False | None | datetime | The end window for the investigation. Format: YYYY-MM-DDTHH:MM:SSZ |
 

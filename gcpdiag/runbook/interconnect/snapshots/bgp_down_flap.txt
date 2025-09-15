@@ -1,4 +1,5 @@
-custom_flag=interconnect,project_id=gcpdiag-interconnect1-aaaa,region=us-east4
+attachment_name=dummy-attachment11,custom_flag=interconnect,project_id=gcpdiag-
+interconnect1-aaaa,region=us-central1
 
 interconnect/bgp-down-flap: This runbook analyzes BGP down and BGP flap events for a GCP project in a clolud region.
 
@@ -16,48 +17,189 @@ interconnect/bgp-down-flap: This runbook analyzes BGP down and BGP flap events f
 
    - gcpdiag-interconnect1-aaaa                                           [OK]
      [REASON]
-         `VLAN attachments` found in project.
+         Total `1` vlan attachments found in `us-central1` in project `gcpdiag-interconnect1-aaaa`.
 
 [AUTOMATED STEP]: Check if there is vlan attachment has BGP down.
-[INFO]:     The interconnect `dummy-interconnect2` attachment `dummy-attachment4` has `BGP` down.
 
-
-   - gcpdiag-interconnect1-aaaa                                           [FAIL]
+   - gcpdiag-interconnect1-aaaa                                           [OK]
      [REASON]
-         `BGP` down events found.
-
-     [REMEDIATION]
-          Check if interconnects with BGP down are in maintenance state. Analyze Cloud Router logs to identify the root cause. Refer to the Cloud Router log messages documentation for guidance. <https://cloud.google.com/network-connectivity/docs/interconnect/support/infrastructure-maintenance-events>
+         No VLAN attachments have BGP down in region `us-central1` in project `gcpdiag-interconnect1-aaaa`.
 
 [AUTOMATED STEP]: Check if any BGP down interconnects are in maintenance state.
-[INFO]:     The interconnect `dummy-interconnect2` with `BGP` down has no planned maintenance.
 
-
-   - gcpdiag-interconnect1-aaaa                                           [FAIL]
+   - gcpdiag-interconnect1-aaaa                                           [SKIP]
      [REASON]
-         The Interconnects with `BGP` down have no planned maintenance.
-
-     [REMEDIATION]
-         Analyze Cloud Router logs to identify the root cause. Refer to the Cloud Router log messages documentation for guidance. <https://cloud.google.com/network-connectivity/docs/router/support/troubleshoot-log-messages>
+         No interconnects have BGP down status, skip interconnect mainteance check in in region `us-central1` in project `gcpdiag-interconnect1-aaaa`.
 
 [AUTOMATED STEP]: Check if there are BGP flap events.
-[INFO]: 
-[INFO]: There are Cloud Router BGP flaps over 60s: 
-[INFO]: ['6988249776642123456', '169.254.2.1', 'went down', '2025-03-27T23:32:19.397757310Z']
-[INFO]: ['6988249776642123456', '169.254.2.1', 'came up', '2025-03-27T23:34:39.923120483Z', '140.0']
+
+   - gcpdiag-interconnect1-aaaa                                           [OK]
+     [REASON]
+         No BGP flaps are found in region `us-central1` in project `gcpdiag-interconnect1-aaaa`.
+
+[AUTOMATED STEP]: Check if the Cloud Router had maintenance event.
+
+   - gcpdiag-interconnect1-aaaa                                           [SKIP]
+     [REASON]
+         No BGP flaps, skip cloud router mainteance check in in region `us-central1` in project `gcpdiag-interconnect1-aaaa`.
+
+[END]: Finalizing connectivity diagnostics.
+[INFO]: If any further debugging is needed, consider please contact GCP support for further troubleshooting
+
+
+attachment_name=dummy-attachment1,dummy-attachment2,dummy-attachment3,dummy-
+attachment4,custom_flag=interconnect,project_id=gcpdiag-interconnect1-aaaa,region=us-east4
+
+interconnect/bgp-down-flap: This runbook analyzes BGP down and BGP flap events for a GCP project in a clolud region.
+
+  The following steps are executed:
+
+  - Check BGP down status: Check if any vlan attachment has BGP down state.
+  - Check Interconnect maintenance: Check if there are interconnect maintenance events
+           are associated with the BGP down vlan attachments.
+  - Check BGP flap status: Check if any BGP flaps happened.
+  - Check Cloud Router maintenance: Check if there were Cloud Router maintenance events
+           are associated with the BGP flaps.
+
+  
+[START]: Check provided parameters.
+
+   - gcpdiag-interconnect1-aaaa                                           [OK]
+     [REASON]
+         Total `4` vlan attachments found in `us-east4` in project `gcpdiag-interconnect1-aaaa`.
+
+[AUTOMATED STEP]: Check if there is vlan attachment has BGP down.
 
    - gcpdiag-interconnect1-aaaa                                           [FAIL]
      [REASON]
-         `BGP` flaps lasting longer than 60 seconds detected in project `gcpdiag-interconnect1-aaaa`.
+         Some interconnects have BGP down status. See details 
+     	 Attachments with BGP down status:
+         Attachment:dummy-attachment4, Interconnect:dummy-interconnect2, Cloud_Router_Name:dummy-router2
+
 
      [REMEDIATION]
-         BGP flaps lasting longer than 60 seconds have been observed. These are unlikely to be caused by Cloud Router or Interconnect maintenance events. Analyze Cloud Router logs to identify the root cause. Refer to the Cloud Router log messages documentation for guidance.<https://cloud.google.com/network-connectivity/docs/router/support/troubleshoot-log-messages>
+          For any interconnects in BGP down state, continue runbook check if the interconnect is in maintenance state. Check the public documentation for guidance. <https://cloud.google.com/network-connectivity/docs/interconnect/support/infrastructure-maintenance-events>
+
+[AUTOMATED STEP]: Check if any BGP down interconnects are in maintenance state.
+
+   - gcpdiag-interconnect1-aaaa                                           [FAIL]
+     [REASON]
+         There are interconnects with BGP down status have no planned maintenance. See details 
+     	 BGP down details:
+         The interconnect `dummy-interconnect2` with BGP down status has no planned maintenance.
+
+
+     [REMEDIATION]
+         Interconnect BGP down can be caused by various reasons. Suggested remediation:  
+     	 Suggested Remediations:
+                    *   Check on-prem PF interface status towards on-prem router
+                    *   Check RX/TX light level
+                    *   Check cloud console interconnect details or cloud logging
+                    *   Check other potential issues, or Contact Google Cloud Support.
+
+[AUTOMATED STEP]: Check if there are BGP flap events.
+
+   - gcpdiag-interconnect1-aaaa                                           [FAIL]
+     [REASON]
+         BGP flaps lasting longer than `120` seconds detected in project `gcpdiag-interconnect1-aaaa`. See details 
+         Abnormal long BGP flaps:  crId:6988249776642123456, ip:169.254.2.1, peerIp:169.254.2.2, crName:dummy-router1, vlan:dummy-attachment2, proj:gcpdiag-interconnect1-aaaa, details:
+     		BGP flap details:
+     		went down,2025-03-27T23:32:19.397757310Z,came up,2025-03-27T23:34:39.923120483Z,140.53,Error
+
+
+
+     [REMEDIATION]
+         BGP flaps lasting longer than `120` seconds are unlikely to be caused by Cloud Router maintenance events. Analyze Cloud Router logs to identify the root cause. Check the public documentation for guidance.<https://cloud.google.com/network-connectivity/docs/router/support/troubleshoot-log-messages> or contact GCP support.Logging query example  
+
+     Example query:
+                 resource.type="gce_router"
+                 "Maintenance of router task" OR ("came up" OR "went down")
+                 resource.labels.region="<region>"
+                 r.esource.labels.router_id="<router_id>"
+            
 
 [AUTOMATED STEP]: Check if the Cloud Router had maintenance event.
 
    - gcpdiag-interconnect1-aaaa                                           [OK]
      [REASON]
-         `BGP` flaps (duration < 60s) coincide with `Cloud Router maintenance` events.
+         BGP flaps less than 120 seconds are all caused by Cloud Router maintenance events.
+
+[END]: Finalizing connectivity diagnostics.
+[INFO]: If any further debugging is needed, consider please contact GCP support for further troubleshooting
+
+
+attachment_name=dummy-attachment5,dummy-attachment6,custom_flag=interconnect,project_id=gcpdiag-
+interconnect1-aaaa,region=us-west2
+
+interconnect/bgp-down-flap: This runbook analyzes BGP down and BGP flap events for a GCP project in a clolud region.
+
+  The following steps are executed:
+
+  - Check BGP down status: Check if any vlan attachment has BGP down state.
+  - Check Interconnect maintenance: Check if there are interconnect maintenance events
+           are associated with the BGP down vlan attachments.
+  - Check BGP flap status: Check if any BGP flaps happened.
+  - Check Cloud Router maintenance: Check if there were Cloud Router maintenance events
+           are associated with the BGP flaps.
+
+  
+[START]: Check provided parameters.
+
+   - gcpdiag-interconnect1-aaaa                                           [OK]
+     [REASON]
+         Total `2` vlan attachments found in `us-west2` in project `gcpdiag-interconnect1-aaaa`.
+
+[AUTOMATED STEP]: Check if there is vlan attachment has BGP down.
+
+   - gcpdiag-interconnect1-aaaa                                           [FAIL]
+     [REASON]
+         Some interconnects have BGP down status. See details 
+     	 Attachments with BGP down status:
+         Attachment:dummy-attachment5, Interconnect:dummy-interconnect3, Cloud_Router_Name:dummy-router3
+
+
+     [REMEDIATION]
+          For any interconnects in BGP down state, continue runbook check if the interconnect is in maintenance state. Check the public documentation for guidance. <https://cloud.google.com/network-connectivity/docs/interconnect/support/infrastructure-maintenance-events>
+
+[AUTOMATED STEP]: Check if any BGP down interconnects are in maintenance state.
+
+   - gcpdiag-interconnect1-aaaa                                           [OK]
+     [REASON]
+         The interconnects with BGP down status align with the planned interconnect maintenance events.
+
+[AUTOMATED STEP]: Check if there are BGP flap events.
+
+   - gcpdiag-interconnect1-aaaa                                           [UNCERTAIN]
+     [REASON]
+         BGP flaps lasting less than `120` seconds detected. They are normal if there are cloud router maintenance events. See details 
+         Short duration BGP flaps: crId:666666875024123457, ip:169.254.6.1, peerIp:169.254.6.2, crName:dummy-router3, vlan:dummy-attachment6, proj:gcpdiag-interconnect1-aaaa, details:
+     		BGP flap details:
+     		went down,2025-03-27T23:32:19.397757310Z,came up,2025-03-27T23:33:39.923120483Z,80.53,Uncertain
+
+
+
+     [REMEDIATION]
+         Continue runbook to check if there are `cloud router maintenance` events align with BGP flaps.
+
+[AUTOMATED STEP]: Check if the Cloud Router had maintenance event.
+
+   - gcpdiag-interconnect1-aaaa                                           [FAIL]
+     [REASON]
+         There are BGP flaps less than 120 seconds without Cloud Router maintenance events. See details 
+         Error BGP : crId:666666875024123457, ip:169.254.6.1, peerIp:169.254.6.2, crName:dummy-router3, vlan:dummy-attachment6, proj:gcpdiag-interconnect1-aaaa, details:
+     		BGP flap details:
+     		went down,2025-03-27T23:32:19.397757310Z,came up,2025-03-27T23:33:39.923120483Z,80.53,Uncertain
+
+
+
+     [REMEDIATION]
+         BGP flaps lasting less than 120 seconds have been observed without Cloud Router maintenance. Analyze Cloud Router logs to identify the root cause. Check the public documentation for guidance.Logging query example <https://cloud.google.com/network-connectivity/docs/router/support/troubleshoot-log-messages> or contact GCP support. 
+     Example query:
+                 resource.type="gce_router"
+                 "Maintenance of router task" OR ("came up" OR "went down")
+                 resource.labels.region="<region>"
+                 r.esource.labels.router_id="<router_id>"
+            
 
 [END]: Finalizing connectivity diagnostics.
 [INFO]: If any further debugging is needed, consider please contact GCP support for further troubleshooting

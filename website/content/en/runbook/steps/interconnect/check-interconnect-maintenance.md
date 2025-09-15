@@ -16,15 +16,19 @@ Check if any interconnects with BGP down are in maintenance state.
 
 ### Failure Reason
 
-    The interconnect `{interconnect_name}` with `BGP` down has no planned maintenance.
+    The interconnect `{interconnect_name}` with BGP down status has no planned maintenance.
 
 ### Failure Remediation
 
-    Analyze Cloud Router logs to identify the root cause. Refer to the Cloud Router log messages documentation for guidance. <https://cloud.google.com/network-connectivity/docs/router/support/troubleshoot-log-messages>
+    Interconnect BGP down can be caused by various reasons. Suggested remediation: {remediation}
 
 ### Success Reason
 
-    `BGP` down events coincide with planned interconnect maintenance.
+    The interconnects with BGP down status align with the planned interconnect maintenance events.
+
+### Skipped Reason
+
+    No interconnects have BGP down status, skip interconnect mainteance check in in region `{region}` in project `{project_id}`.
 
 
 

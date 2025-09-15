@@ -15,10 +15,10 @@ description: >
 The following are considered error and need further debugging:
 
   1> BGP down events found without interconnect maintenance
-  2> BGP flaps with duration over 60 seconds
-  3> BGP flaps with duration less than 60 seconds but no Cloud Router maintenance event
+  2> BGP flaps with duration over graceful restart timer
+  3> BGP flaps with duration less than graceful restart timer but no Cloud Router maintenance event
 
-  Please contact GCP support for further debugging
+  Please contact GCP support for further debugging.
 
 
 
