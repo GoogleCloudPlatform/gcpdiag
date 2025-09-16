@@ -591,3 +591,10 @@ yarl==1.20.1
     #   aiohttp
 zipp==3.23.0
     # via importlib-metadata
+google-adk
+wikipedia
+openmeteo-requests
+google-adk[eval]
+prettyprinter
+jmespath
+
