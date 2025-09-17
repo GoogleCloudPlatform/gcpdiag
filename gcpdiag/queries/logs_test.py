@@ -20,6 +20,7 @@ import re
 import time
 from unittest import mock
 
+from gcpdiag import models
 from gcpdiag.queries import apis_stub, logs, logs_stub
 
 DUMMY_PROJECT_ID = 'gcpdiag-gke1-aaaa'
@@ -31,13 +32,16 @@ class TestLogs:
   """Test logs.py functions."""
 
   def test_single_query(self):
-    query = logs.query(project_id=DUMMY_PROJECT_ID,
-                       resource_type='gce_instance',
-                       log_name='fake.log',
-                       filter_str='filter1')
+    context = models.Context(project_id=DUMMY_PROJECT_ID)
+    query = logs.query(
+        project_id=context.project_id,
+        resource_type='gce_instance',
+        log_name='fake.log',
+        filter_str='filter1',
+    )
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
-      logs.execute_queries(executor)
+      logs.execute_queries(executor, context)
       # verify the number of entries
       all_entries = list(query.entries)
       assert len(all_entries) > 0
@@ -47,16 +51,17 @@ class TestLogs:
 
   def test_aggregated_query(self):
     """Verify that multiple queries get aggregated into one."""
-    logs.query(project_id=DUMMY_PROJECT_ID,
+    context = models.Context(project_id=DUMMY_PROJECT_ID)
+    logs.query(project_id=context.project_id,
                resource_type='gce_instance',
                log_name='fake.log',
                filter_str='filter1')
-    logs.query(project_id=DUMMY_PROJECT_ID,
+    logs.query(project_id=context.project_id,
                resource_type='gce_instance',
                log_name='fake.log',
                filter_str='filter2')
     with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
-      logs.execute_queries(executor)
+      logs.execute_queries(executor, context)
     # verify the filter that is used
     assert re.match(
         r'timestamp>"\d\d\d\d-\d\d-\d\dT\d\d:\d\d:\d\d\+00:00"\n'

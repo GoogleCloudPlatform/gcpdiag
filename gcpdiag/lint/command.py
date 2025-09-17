@@ -25,7 +25,9 @@ from typing import Any, Dict, List, Optional
 
 from google.auth import exceptions
 
-from gcpdiag import config, hooks, lint, models, utils
+from gcpdiag import config
+from gcpdiag import context as gcpdiag_context
+from gcpdiag import hooks, lint, models, utils
 from gcpdiag.lint.output import (api_output, csv_output, json_output,
                                  terminal_output)
 from gcpdiag.queries import apis, crm, gce, kubectl
@@ -294,11 +296,14 @@ def _initialize_output(output_order):
 
 def _parse_args_run_repo(
     argv: Optional[List[str]] = None,
-    credentials: Optional[str] = None) -> lint.LintRuleRepository:
+    credentials: Optional[str] = None,
+    context_provider: Optional[gcpdiag_context.ContextProvider] = None,
+) -> lint.LintRuleRepository:
   """Parse the sys.argv command line arguments and execute the lint rules.
 
   Args: argv: [str]   argument list sys.argv
         credentials: str json repr of ADC credentials
+        context_provider: Optional context provider
 
   Returns: lint.LintRuleRepository with repo results
   """
@@ -328,7 +333,8 @@ def _parse_args_run_repo(
     context = models.Context(project_id=project.id,
                              locations=args.location,
                              resources=args.name,
-                             labels=args.label)
+                             labels=args.label,
+                             context_provider=context_provider)
 
   # Rules name patterns that shall be included or excluded
   include_patterns = _parse_rule_patterns(config.get('include'))
@@ -442,12 +448,14 @@ def run(argv) -> int:
 def run_and_get_results(
     argv: List[str],
     credentials: str = None,
+    context_provider: Optional[gcpdiag_context.ContextProvider] = None,
 ) -> Dict[str, Any]:
   """Run gcpdiag lint as the command line and return a dict with API results.
 
   Args:
     argv: [str]  list of arguments like sys.argv,
     credentials: str, default credentials in json
+    context_provider: Optional context provider
 
   Returns: dict
     {'version': str, 'summary': {'ok': int, 'skipped': int, 'failed': int'},
@@ -455,7 +463,9 @@ def run_and_get_results(
                  'short_info': str, 'doc_url': str}, ...]
      }
   """
-  repo = _parse_args_run_repo(argv, credentials=credentials)
+  repo = _parse_args_run_repo(argv,
+                              credentials=credentials,
+                              context_provider=context_provider)
   results = []
   for r in repo.result.get_rule_reports():
     rule = r.rule

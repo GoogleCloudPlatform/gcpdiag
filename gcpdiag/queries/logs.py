@@ -49,7 +49,7 @@ import ratelimit
 from boltons.iterutils import get_path
 from googleapiclient import errors
 
-from gcpdiag import caching, config, models, utils
+from gcpdiag import caching, config, executor, models, utils
 from gcpdiag.queries import apis
 
 
@@ -171,7 +171,7 @@ def _ratelimited_execute(req):
     raise utils.GcpApiError(err) from err
 
 
-def _execute_query_job(job: _LogsQueryJob):
+def _execute_query_job(job: _LogsQueryJob, context: models.Context):  ##  pylint: disable=unused-argument
   thread = threading.current_thread()
   thread.name = f'log_query:{job.log_name}'
   logging_api = apis.get_api('logging', 'v2', job.project_id)
@@ -283,38 +283,50 @@ def realtime_query(project_id,
     # Verify that we aren't above limits, exit otherwise.
     if fetched_entries_count > config.get('logging_fetch_max_entries'):
       logging.warning(
-          'maximum number of log entries (%d) reached (project: %s, query: %s).',
-          config.get('logging_fetch_max_entries'), project_id,
-          filter_str.replace('\n', ' AND '))
+          'maximum number of log entries (%d) reached (project: %s, query:'
+          ' %s).',
+          config.get('logging_fetch_max_entries'),
+          project_id,
+          filter_str.replace('\n', ' AND '),
+      )
       return deque
     run_time = (datetime.datetime.now() - query_start_time).total_seconds()
     if run_time >= config.get('logging_fetch_max_time_seconds'):
       logging.warning(
-          'maximum query runtime for log query reached (project: %s, query: %s).',
-          project_id, filter_str.replace('\n', ' AND '))
+          'maximum query runtime for log query reached (project: %s, query:'
+          ' %s).',
+          project_id,
+          filter_str.replace('\n', ' AND '),
+      )
       return deque
     if disable_paging:
       break
     req = logging_api.entries().list_next(req, res)
     if req is not None:
-      logging.debug('still fetching logs (project: %s, max wait: %ds)',
-                    project_id,
-                    config.get('logging_fetch_max_time_seconds') - run_time)
+      logging.debug(
+          'still fetching logs (project: %s, max wait: %ds)',
+          project_id,
+          config.get('logging_fetch_max_time_seconds') - run_time,
+      )
 
   query_end_time = datetime.datetime.now()
-  logging.debug('logging query run time: %s, pages: %d, query: %s',
-                query_end_time - query_start_time, query_pages,
-                filter_str.replace('\n', ' AND '))
+  logging.debug(
+      'logging query run time: %s, pages: %d, query: %s',
+      query_end_time - query_start_time,
+      query_pages,
+      filter_str.replace('\n', ' AND '),
+  )
 
   return deque
 
 
-def execute_queries(executor: concurrent.futures.Executor):
+def execute_queries(query_executor: executor.ContextAwareExecutor,
+                    context: models.Context):
   global jobs_todo
   jobs_executing = jobs_todo
   jobs_todo = {}
   for job in jobs_executing.values():
-    job.future = executor.submit(_execute_query_job, job)
+    job.future = query_executor.submit(_execute_query_job, job, context)
 
 
 def log_entry_timestamp(log_entry: Mapping[str, Any]) -> datetime.datetime:

@@ -572,10 +572,10 @@ class SyncExecutionStrategy:
         rule.prepare_rule_f(context)
 
     # Start multiple threads for logs fetching and prefetch functions.
-    executor = get_executor()
+    executor = get_executor(context)
     # Start fetching any logs queries that were defined in prepare_rule
     # functions.
-    logs.execute_queries(executor)
+    logs.execute_queries(executor, context)
     # Start fetching any serial output logs if serial output to cloud logging
     # is not enabled on the project/ instance
     if config.get('enable_gce_serial_buffer'):

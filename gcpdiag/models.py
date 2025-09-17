@@ -21,6 +21,7 @@ import re
 from types import MappingProxyType
 from typing import Any, Generic, Iterable, List, Mapping, Optional, TypeVar
 
+from gcpdiag import context as gcpdiag_context
 from gcpdiag import utils
 
 
@@ -91,6 +92,8 @@ class Context:
   labels: Optional[Mapping[str, str]]
   # list of "runbook parameters sets" that must match.
   parameters: Parameter[str, Any]
+  # Optional provider for context-specific operations (e.g., thread setup)
+  context_provider: Optional[gcpdiag_context.ContextProvider] = None
 
   # the selected resources are the intersection of project_id, locations,
   # and labels(i.e. all must match), but each value in locations, and
@@ -99,25 +102,30 @@ class Context:
   # (region1 OR region2) AND
   # ({label1=value1,label2=value2} OR {label3=value3})
 
-  def __init__(self,
-               project_id: str,
-               locations: Optional[Iterable[str]] = None,
-               labels: Optional[Mapping[str, str]] = None,
-               parameters: Optional[Parameter[str, str]] = None,
-               resources: Optional[Iterable[str]] = None):
+  def __init__(
+      self,
+      project_id: str,
+      locations: Optional[Iterable[str]] = None,
+      labels: Optional[Mapping[str, str]] = None,
+      parameters: Optional[Parameter[str, str]] = None,
+      resources: Optional[Iterable[str]] = None,
+      context_provider: Optional[gcpdiag_context.ContextProvider] = None,
+  ):
     """Args:
 
-      project: project_id of project that should be inspected.
-      locations: only include resources in these GCP locations.
-      labels: only include resources with these labels. Expected
-        is a dict, is a set of key=value pairs that must match.
+    project: project_id of project that should be inspected.
+    locations: only include resources in these GCP locations.
+    labels: only include resources with these labels. Expected
+      is a dict, is a set of key=value pairs that must match.
 
-        Example: `{'key1'='bla', 'key2'='baz'}`. This
-        will match resources that either have key1=bla or key2=baz.
-      resources: only include sub project resources with this name attribute.
+      Example: `{'key1'='bla', 'key2'='baz'}`. This
+      will match resources that either have key1=bla or key2=baz.
+    resources: only include sub project resources with this name attribute.
+    context_provider: Optional provider for context-specific operations.
     """
 
     self.project_id = project_id
+    self.context_provider = context_provider
 
     if locations:
       if not isinstance(locations, List):

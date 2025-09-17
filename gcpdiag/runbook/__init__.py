@@ -37,7 +37,9 @@ from typing import (Callable, Deque, Dict, List, Mapping, Optional, Set, Tuple,
 import googleapiclient.errors
 from jinja2 import TemplateNotFound
 
-from gcpdiag import caching, config, models, utils
+from gcpdiag import caching, config
+from gcpdiag import context as gcpdiag_context
+from gcpdiag import models, utils
 from gcpdiag.queries import crm
 from gcpdiag.runbook import constants, exceptions, flags, op, report, util
 
@@ -542,12 +544,15 @@ class DiagnosticEngine:
     _dt: Optional[DiagnosticTree] The current diagnostic tree being executed.
   """
 
-  def __init__(self) -> None:
+  def __init__(self,
+               context_provider: Optional[
+                   gcpdiag_context.ContextProvider] = None):
     """Initializes the DiagnosticEngine with required managers."""
     self.interface = report.InteractionInterface(kind=config.get('interface'))
     self.finalize = False
     # tuple in the format (DiagnosticTree/Bundle, user_provided_parameter)
     self.task_queue: Deque = Deque()
+    self.context_provider = context_provider
 
   def add_task(self, new_task: Tuple):
     with registry_lock:

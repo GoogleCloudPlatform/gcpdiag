@@ -26,7 +26,7 @@ from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Set
 import googleapiclient.errors
 from boltons.iterutils import get_path
 
-from gcpdiag import caching, config, models, utils
+from gcpdiag import caching, config, executor, models, utils
 from gcpdiag.queries import apis, apis_utils, crm
 from gcpdiag.queries import network as network_q
 
@@ -1305,7 +1305,8 @@ class SerialOutputQuery:
 jobs_todo: Dict[models.Context, _SerialOutputJob] = {}
 
 
-def execute_fetch_serial_port_outputs(executor: concurrent.futures.Executor):
+def execute_fetch_serial_port_outputs(
+    query_executor: executor.ContextAwareExecutor):
   # start a thread to fetch serial log; processing logs can be large
   # depending on he number of instances in the project which aren't
   # logging to cloud logging. currently expects only one job but
@@ -1313,8 +1314,10 @@ def execute_fetch_serial_port_outputs(executor: concurrent.futures.Executor):
   global jobs_todo
   jobs_executing = jobs_todo
   jobs_todo = {}
+  # query_executor = get_executor(context)
   for job in jobs_executing.values():
-    job.future = executor.submit(get_instances_serial_port_output, job.context)
+    job.future = query_executor.submit(get_instances_serial_port_output,
+                                       job.context)
 
 
 def fetch_serial_port_outputs(context: models.Context) -> SerialOutputQuery:

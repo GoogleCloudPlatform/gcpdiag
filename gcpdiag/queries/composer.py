@@ -159,9 +159,9 @@ def _query_region_envs(region, api, project_id):
   return resp.get('environments', [])
 
 
-def _query_regions_envs(regions, api, project_id):
+def _query_regions_envs(regions, api, project_id, context: models.Context):
   result: List[Environment] = []
-  executor = get_executor()
+  executor = get_executor(context)
   for descriptions in executor.map(
       lambda r: _query_region_envs(r, api, project_id), regions):
     result += descriptions
@@ -173,9 +173,10 @@ def get_environments(context: models.Context) -> Iterable[Environment]:
   environments: List[Environment] = []
   if not apis.is_enabled(context.project_id, 'composer'):
     return environments
-  api = apis.get_api('composer', 'v1', context.project_id)
+  api = apis.get_api('composer', 'v1', context)
 
-  for env in _query_regions_envs(COMPOSER_REGIONS, api, context.project_id):
+  for env in _query_regions_envs(COMPOSER_REGIONS, api, context.project_id,
+                                 context):
     # projects/{projectId}/locations/{locationId}/environments/{environmentId}.
     result = re.match(r'projects/[^/]+/locations/([^/]+)/environments/([^/]+)',
                       env['name'])

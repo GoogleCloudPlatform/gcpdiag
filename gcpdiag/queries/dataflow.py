@@ -7,7 +7,7 @@ from typing import List, Optional, Union
 import googleapiclient.errors
 
 from gcpdiag import caching, config, models, utils
-from gcpdiag.lint import get_executor
+from gcpdiag.executor import get_executor
 from gcpdiag.queries import apis, apis_utils, logs
 
 DATAFLOW_REGIONS = [
@@ -111,7 +111,7 @@ def get_all_dataflow_jobs(context: models.Context) -> List[Job]:
     return []
 
   result: List[Job] = []
-  executor = get_executor()
+  executor = get_executor(context)
   for jobs in executor.map(lambda r: get_region_dataflow_jobs(api, context, r),
                            DATAFLOW_REGIONS):
     result += jobs

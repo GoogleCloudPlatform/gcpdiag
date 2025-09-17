@@ -21,7 +21,7 @@ import googleapiclient.errors
 import requests
 
 from gcpdiag import caching, config, models, utils
-from gcpdiag.lint import get_executor
+from gcpdiag.executor import get_executor
 from gcpdiag.queries import apis, crm, gce, network, web
 
 
@@ -299,7 +299,7 @@ def get_clusters(context: models.Context) -> Iterable[Cluster]:
   dataproc = Dataproc(context.project_id)
   if not dataproc.is_api_enabled():
     return r
-  executor = get_executor()
+  executor = get_executor(context)
   for clusters in executor.map(lambda r: r.get_clusters(context),
                                dataproc.get_regions()):
     r += clusters

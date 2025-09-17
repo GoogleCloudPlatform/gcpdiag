@@ -17,6 +17,7 @@ import threading
 from contextlib import contextmanager
 from typing import Any, Optional, Tuple
 
+from gcpdiag import context as gcpdiag_context
 from gcpdiag import models
 from gcpdiag.runbook.constants import *  # pylint: disable=unused-wildcard-import, wildcard-import
 from gcpdiag.runbook.report import InteractionInterface
@@ -34,9 +35,15 @@ class Operator:
   run_id: str
   _step = None
   _tree = None
+  context_provider: Optional[gcpdiag_context.ContextProvider]
 
-  def __init__(self, interface: InteractionInterface):
+  def __init__(
+      self,
+      interface: InteractionInterface,
+      context_provider: Optional[gcpdiag_context.ContextProvider] = None,
+  ):
     self.interface = interface
+    self.context_provider = context_provider
 
   def set_run_id(self, run_id):
     self.run_id = run_id
@@ -54,7 +61,8 @@ class Operator:
                                   locations=locations,
                                   labels=labels,
                                   parameters=parameters,
-                                  resources=resources)
+                                  resources=resources,
+                                  context_provider=self.context_provider)
 
   def set_messages(self, m):
     self.messages = m

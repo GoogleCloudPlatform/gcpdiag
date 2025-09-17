@@ -414,6 +414,7 @@ class TestGce(unittest.TestCase):
 
     with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
       gce.execute_fetch_serial_port_outputs(executor)
+
       # verify that at least one instance serial log (gce2) is present
       all_entries = list(query.entries)
 

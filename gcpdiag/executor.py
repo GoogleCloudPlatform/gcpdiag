@@ -14,16 +14,75 @@
 """ThreadPoolExecutor instance that can be used to run tasks in parallel"""
 
 import concurrent.futures
-from typing import Optional
+from typing import Any, Callable, Iterable, Optional
 
-from gcpdiag import config
+from gcpdiag import config, models
 
-_executor: Optional[concurrent.futures.Executor] = None
+_real_executor: Optional[concurrent.futures.ThreadPoolExecutor] = None
 
 
-def get_executor() -> concurrent.futures.Executor:
-  global _executor
-  if _executor is None:
-    _executor = concurrent.futures.ThreadPoolExecutor(
+def _get_real_executor() -> concurrent.futures.ThreadPoolExecutor:
+  global _real_executor
+  if _real_executor is None:
+    _real_executor = concurrent.futures.ThreadPoolExecutor(
         max_workers=config.MAX_WORKERS)
-  return _executor
+  return _real_executor
+
+
+def _context_wrapper(fn, context: models.Context):
+
+  def wrapped(*args, **kwargs):
+    provider = context.context_provider
+    if provider:
+      provider.setup_thread_context()
+    try:
+      return fn(*args, **kwargs)
+    finally:
+      if provider:
+        provider.teardown_thread_context()
+
+  return wrapped
+
+
+class ContextAwareExecutor:
+  """A ThreadPoolExecutor wrapper that propagates the gcpdiag context.
+
+  This executor ensures that the thread-local context (e.g., for API clients)
+  is properly set up and torn down for each task executed in the thread pool.
+  """
+
+  def __init__(self, context: models.Context):
+    self._context = context
+    self._executor = _get_real_executor()
+
+  def submit(self, fn: Callable[..., Any], *args: Any,
+             **kwargs: Any) -> concurrent.futures.Future[Any]:
+    wrapped_fn = _context_wrapper(fn, self._context)
+    return self._executor.submit(wrapped_fn, *args, **kwargs)
+
+  def map(
+      self,
+      fn: Callable[..., Any],
+      *iterables: Iterable[Any],
+      timeout: Optional[float] = None,
+      chunksize: int = 1,
+  ):
+    wrapped_fn = _context_wrapper(fn, self._context)
+    return self._executor.map(wrapped_fn,
+                              *iterables,
+                              timeout=timeout,
+                              chunksize=chunksize)
+
+  def shutdown(self, wait: bool = True):
+    # We don't shut down the underlying global executor here
+    pass
+
+  def __enter__(self):
+    return self
+
+  def __exit__(self, exc_type, exc_val, exc_tb):
+    self.shutdown(wait=True)
+
+
+def get_executor(context: models.Context) -> ContextAwareExecutor:
+  return ContextAwareExecutor(context)
