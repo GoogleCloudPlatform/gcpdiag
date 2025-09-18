@@ -117,13 +117,28 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
      This configuration can be problematic unless the load balancer has been configured to use a different port for health checks purposefully.
 
      [REMEDIATION]
-     Verify that the health check port is correctly configured to match the port used by the application if the health check is intended to check the serving port.
+     1.  **Verify Intent:** Confirm if the health check port `88` is *meant* to be different from the serving port defined by "http" on the backends.
+
+     2.  **Test Port on Backend VMs:** Check if port `88` is listening on an instance from the affected groups. Run this command from your local machine/Cloud Shell:
+
+         ```bash
+         gcloud compute ssh [INSTANCE_NAME] --zone [ZONE] --project gcpdiag-lb2-aaaa --command="sudo ss -tlnp | grep ':88'"
+         ```
+         *   Output showing `LISTEN` indicates the port is open and your application is likely listening.
+         *   No output suggests the port is not in a listening state on that VM.
+
+     3.  **Adjust Configuration:**
+         *   **If Mismatch is Unintentional:** Align the load balancer's health check port in the backend service `projects/gcpdiag-lb2-aaaa/global/backendServices/web-backend-service` to match the actual port number used by "http" in the instance groups.
+         *   **If Mismatch is Intentional:** Ensure your application on the VMs is correctly configured to listen on port `88`.
+         *   **If Port Not Listening:** Troubleshoot your application on the VM to ensure it's running and bound to port `88`. Check the VM's local firewall as well.
+
+     If the health check port `88` is meant to be different from the serving port (e.g., a dedicated management/health endpoint), confirm that your application is correctly configured to listen on the health check port.
 
 [AUTOMATED STEP]: Validate protocol configuration for backend service "web-backend-service" in scope "global".
 
    - gcpdiag-lb2-aaaa/web-backend-service                                 [OK]
      [REASON]
-     The load balancer is performing health checks using the same protocol (HTTP) used for serving traffic. This is the standard configuration.
+     The load balancer is performing health checks using the same protocol (HTTP) used for serving traffic on backend service projects/gcpdiag-lb2-aaaa/global/backendServices/web-backend-service. This is the standard configuration.
 
 [AUTOMATED STEP]: Verify firewall rules allow health checks for backend service "web-backend-service" in scope "global".
 
@@ -350,7 +365,7 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 
    - gcpdiag-lb2-aaaa/backend-service-2                                   [OK]
      [REASON]
-     The load balancer is performing health checks using the same protocol (TCP) used for serving traffic. This is the standard configuration.
+     The load balancer is performing health checks using the same protocol (TCP) used for serving traffic on backend service projects/gcpdiag-lb2-aaaa/regions/europe-west4/backendServices/backend-service-2. This is the standard configuration.
 
 [AUTOMATED STEP]: Verify firewall rules allow health checks for backend service "backend-service-2" in scope "europe-west4".
 

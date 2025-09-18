@@ -446,7 +446,13 @@ class ValidateBackendServicePortConfiguration(runbook.Step):
                     formatted_igs=formatted_igs,
                     bs_resource=self.backend_service.full_path,
                 ),
-                remediation=op.prep_msg(op.UNCERTAIN_REMEDIATION),
+                remediation=op.prep_msg(
+                    op.UNCERTAIN_REMEDIATION,
+                    hc_port=info.get('healthCheckPortNumber'),
+                    serving_port_name=info.get('servingPortName'),
+                    bs_resource=self.backend_service.full_path,
+                    project_id=self.project_id,
+                ),
             )
             return
     op.add_ok(self.backend_service, reason=op.prep_msg(op.SUCCESS_REASON))
@@ -502,11 +508,20 @@ class ValidateBackendServiceProtocolConfiguration(runbook.Step):
               ' features for acknowledging delivery'),
       )
       return
+
     if self.health_check.type == self.backend_service.protocol:
       op.add_ok(
           self.backend_service,
           reason=op.prep_msg(op.SUCCESS_REASON,
+                             bs_resource=self.backend_service.full_path,
                              hc_protocol=self.health_check.type),
+      )
+    elif self.health_check.type == 'TCP':
+      op.add_ok(
+          self.backend_service,
+          reason=op.prep_msg(op.SUCCESS_REASON_ALT1,
+                             bs_resource=self.backend_service.full_path,
+                             serving_protocol=self.backend_service.protocol),
       )
     else:
       op.add_uncertain(

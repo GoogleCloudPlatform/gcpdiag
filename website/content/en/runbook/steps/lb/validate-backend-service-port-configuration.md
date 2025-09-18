@@ -30,7 +30,22 @@ This configuration can be problematic unless the load balancer has been configur
 
 ### Uncertain Remediation
 
-Verify that the health check port is correctly configured to match the port used by the application if the health check is intended to check the serving port.
+1.  **Verify Intent:** Confirm if the health check port `{hc_port}` is *meant* to be different from the serving port defined by "{serving_port_name}" on the backends.
+
+2.  **Test Port on Backend VMs:** Check if port `{hc_port}` is listening on an instance from the affected groups. Run this command from your local machine/Cloud Shell:
+
+    ```bash
+    gcloud compute ssh [INSTANCE_NAME] --zone [ZONE] --project {project_id} --command="sudo ss -tlnp | grep ':{hc_port}'"
+    ```
+    *   Output showing `LISTEN` indicates the port is open and your application is likely listening.
+    *   No output suggests the port is not in a listening state on that VM.
+
+3.  **Adjust Configuration:**
+    *   **If Mismatch is Unintentional:** Align the load balancer's health check port in the backend service `{bs_resource}` to match the actual port number used by "{serving_port_name}" in the instance groups.
+    *   **If Mismatch is Intentional:** Ensure your application on the VMs is correctly configured to listen on port `{hc_port}`.
+    *   **If Port Not Listening:** Troubleshoot your application on the VM to ensure it's running and bound to port `{hc_port}`. Check the VM's local firewall as well.
+
+If the health check port `{hc_port}` is meant to be different from the serving port (e.g., a dedicated management/health endpoint), confirm that your application is correctly configured to listen on the health check port.
 
 
 
