@@ -20,3 +20,6 @@ gcpdiag/testpsa.py
 .vscode/launch.json
 **/.DS_STORE
 venv/
+node_modules
+.env
+agent/.env

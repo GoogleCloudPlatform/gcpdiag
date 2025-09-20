@@ -71,6 +71,8 @@ class ParseBundleSpec(argparse.Action):
 
 def expand_and_validate_path(arg) -> str:
   # Expand the path and check if it exists
+  if arg == "stdout":
+    return arg
   expanded_path = os.path.abspath(os.path.expanduser(arg))
   home_path = os.path.expanduser('~')
   # Cloud Shell only allows report downloads from paths in user's home
@@ -380,3 +382,74 @@ def run(argv) -> None:
   else:
     if report:
       sys.exit(0)
+
+
+def execute_runbook(runbook_id: str, parameters: dict) -> dict:
+  """Executes a runbook and returns a report.
+
+  Args:
+    runbook_id: The ID of the runbook to execute (e.g. "gce/ssh").
+    parameters: A dictionary of parameters to pass to the runbook.
+
+  Returns:
+    A dictionary containing the report.
+  """
+  # Create a dummy args object
+  args = argparse.Namespace(runbook=runbook_id,
+                            parameter=models.Parameter(parameters),
+                            auth_adc=True,
+                            auth_key=None,
+                            billing_project=None,
+                            verbose=0,
+                            logging_ratelimit_requests=None,
+                            logging_ratelimit_period_seconds=None,
+                            logging_page_size=None,
+                            logging_fetch_max_entries=None,
+                            logging_fetch_max_time_seconds=None,
+                            bundle_spec=[],
+                            auto=False,
+                            report_dir=config.get('report_dir'),
+                            interface='api',
+                            universe_domain=config.get('universe_domain'),
+                            reason=None)
+
+  # Allow to change defaults using a hook function.
+  hooks.set_runbook_args_hook(args)
+
+  # Initialize configuration
+  _init_config(args)
+
+  # Initialize Repository, and Tests.
+
+  dt_engine = runbook.DiagnosticEngine()
+  _load_runbook_rules(runbook.__name__)
+
+  # ^^^ If you add gcpdiag/runbook/[NEW-PRODUCT] directory, update also
+  # pyinstaller/hook-gcpdiag.runbook.py and bin/precommit-required-files
+
+  # Initialize proper output formater
+  output_ = _initialize_output(args.interface)
+  dt_engine.interface.output = output_
+  # Logging setup.
+  logging_handler = output_.get_logging_handler()
+  setup_logging(logging_handler)
+
+  # Run the runbook or step connections.
+  #runbook_name = args.runbook.lower()
+  tree = dt_engine.load_tree(runbook_id)
+  if callable(tree):
+    dt_engine.add_task((tree(), args.parameter))
+
+  dt_engine.run()
+
+  # Only collected for internal googler users
+  report = {}
+  report['version'] = config.VERSION
+  report['reports'] = dt_engine.interface.rm.generate_reports()
+
+  # for r in dt_engine.interface.rm.reports.values():
+  #   metrics = dt_engine.interface.rm.generate__report_metrics(report=r)
+  #   hooks.post_runbook_hook(metrics)
+
+  # return success if we get to this point and the report..
+  return report
