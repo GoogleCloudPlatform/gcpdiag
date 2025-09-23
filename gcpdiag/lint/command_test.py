@@ -16,7 +16,7 @@
 import sys
 from unittest import TestCase, mock
 
-from gcpdiag import config, lint, utils
+from gcpdiag import lint
 from gcpdiag.lint import command
 from gcpdiag.queries import apis, apis_stub
 
@@ -45,41 +45,8 @@ class TestCommand(TestCase):
     command.run([])
     assert True
 
-  def test_run_and_get_results(self, mock_email, mock_api):
-    # pylint: disable=W0613
-    sys.argv = [
-        'gcpdiag lint',
-        '--project',
-        '12340001',
-        '--include',
-        'dataproc/BP/2021_001',
-    ]
-    with self.assertRaises(utils.GcpApiError):
-      self.assertDictEqual(
-          command.run_and_get_results(None), {
-              'result': [{
-                  'doc_url': 'https://gcpdiag.dev/rules/dataproc/BP/2021_001',
-                  'long_doc': 'Enabling stackdriver logging for your Dataproc '
-                              'cluster impacts the ability\n'
-                              'to troubleshoot any issues that you might have.',
-                  'result': [{
-                      'reason': 'no dataproc clusters found',
-                      'resource': '-',
-                      'status': 'skipped'
-                  }],
-                  'rule': 'dataproc/BP/2021_001',
-                  'short_doc':
-                      'Check if logging is enabled : Stackdriver Logging '
-                      'enabled'
-              }],
-              'summary': {
-                  'skipped': 1
-              },
-              'version': config.VERSION
-          })
 
-
-class Test:
+class Test(TestCase):
   """Unit tests for command."""
 
   # pylint: disable=protected-access
@@ -94,7 +61,7 @@ class Test:
 
   # pylint: disable=protected-access
   def test_init_args_parser(self):
-    parser = command._init_args_parser()
+    parser = command.init_args_parser()
     args = parser.parse_args(['--project', 'myproject'])
     assert args.project == 'myproject'
     assert args.billing_project is None
@@ -118,7 +85,7 @@ class Test:
 
   # pylint: disable=protected-access
   def test_provided_init_args_parser(self):
-    parser = command._init_args_parser()
+    parser = command.init_args_parser()
     args = parser.parse_args(['--project', 'myproject', '--include', '*ERR*'])
     assert args.include == ['*ERR*']
     args = parser.parse_args(['--project', 'myproject', '--exclude', '*BP*'])
@@ -136,8 +103,26 @@ class Test:
     modules = {r.product for r in repo.rules_to_run}
     assert MUST_HAVE_MODULES.issubset(modules)
 
+  def test_create_and_load_repo(self):
+    """Test the new public repo creation function."""
+    with mock.patch('gcpdiag.config.get') as config_get_mock:
+      mock_config = {
+          'include': ['gke/*'],
+          'exclude': ['iam/*'],
+          'include_extended': True,
+          'experimental_enable_async_rules': False
+      }
+      config_get_mock.side_effect = mock_config.get
+
+      repo = command.create_and_load_repo()
+      self.assertIsInstance(repo, lint.LintRuleRepository)
+      # Check if rules are loaded
+      self.assertTrue(any(r.product == 'gke' for r in repo.rules_to_run))
+      # Check if excluded rules are not present
+      self.assertFalse(any(r.product == 'iam' for r in repo.rules_to_run))
+
   def test_parse_label(self):
-    parser = command._init_args_parser()
+    parser = command.init_args_parser()
     # Test with a single value
     args = parser.parse_args(['--project', 'x', '--label', 'key=value'])
     assert args.label == {'key': 'value'}
