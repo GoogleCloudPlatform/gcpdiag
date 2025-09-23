@@ -15,7 +15,7 @@ from gcpdiag.queries import crm, network
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   project = crm.get_project(context.project_id)
-  networks = network.get_networks(context.project_id)
+  networks = network.get_networks(context)
   misconfigured_networks = ''
   if not networks:
     report.add_skipped(None, 'rule networks found')

@@ -39,7 +39,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
     vlan_network_name = vlan_router.get_network_name()
     vlan_network = network.get_network(project_id=context.project_id,
-                                       network_name=vlan_network_name)
+                                       network_name=vlan_network_name,
+                                       context=context)
     if not vlan_network:
       report.add_skipped(vlan, 'no vlan network found')
 

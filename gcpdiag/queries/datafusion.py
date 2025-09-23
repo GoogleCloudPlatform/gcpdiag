@@ -158,11 +158,23 @@ class Instance(models.Resource):
       match = re.match(r'projects/([^/]+)/global/networks/([^/]+)$',
                        network_string)
       if match:
-        return network.get_network(match.group(1), match.group(2))
+        return network.get_network(
+            match.group(1),
+            match.group(2),
+            context=models.Context(project_id=match.group(1)),
+        )
       else:
-        return network.get_network(self.project_id, network_string)
+        return network.get_network(
+            self.project_id,
+            network_string,
+            context=models.Context(project_id=self.project_id),
+        )
 
-    return network.get_network(self.project_id, 'default')
+    return network.get_network(
+        self.project_id,
+        'default',
+        context=models.Context(project_id=self.project_id),
+    )
 
   @property
   def tp_ipv4_cidr(self) -> Optional[IPv4NetOrIPv6Net]:

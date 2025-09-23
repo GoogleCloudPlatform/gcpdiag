@@ -13,15 +13,55 @@
 # limitations under the License.
 """GCP API-related utility functions."""
 
+import concurrent.futures
 import logging
 import random
 import time
-from typing import Any, Callable, Iterator, List, Optional, Tuple
+import uuid
+from typing import Any, Callable, Dict, Iterator, List, Optional, Tuple
 
 import googleapiclient.errors
 import httplib2
 
-from gcpdiag import config, utils
+from gcpdiag import config, executor, models, utils
+
+
+def _execute_single_request_wrapper(
+    request_id: str,
+    request: Any) -> Tuple[str, Optional[Any], Optional[Exception]]:
+  response, exception = execute_single_request(request)
+  return (request_id, response, exception)
+
+
+def execute_concurrently(
+    api: Any, requests: List[Any], context: models.Context
+) -> Iterator[Tuple[Optional[str], Optional[Any], Optional[Exception]]]:
+  """
+  Executes a list of API requests concurrently.
+  Uses ThreadPoolExecutor in API server context, batch_execute_all in CLI context.
+  Yields: (request_id, response, exception)
+  """
+  if not requests:
+    return
+
+  if context.context_provider:
+    # API Server context: Use ThreadPoolExecutor
+    exec_ = executor.get_executor(context)
+    request_dict: Dict[str, Any] = {str(uuid.uuid4()): req for req in requests}
+    futures = {
+        exec_.submit(_execute_single_request_wrapper, req_id, request): req_id
+        for req_id, request in request_dict.items()
+    }
+
+    for future in concurrent.futures.as_completed(futures):
+      try:
+        yield future.result()
+      except googleapiclient.errors.HttpError as e:
+        req_id = futures[future]
+        yield (req_id, None, e)
+  else:
+    # CLI context: Use original batch_execute_all
+    yield from batch_execute_all(api, requests)
 
 
 def list_all(request,
@@ -195,3 +235,13 @@ def batch_execute_all(api, requests: list):
                   retry_count + 1)
     time.sleep(sleep_time)
     retry_count += 1
+
+
+def execute_single_request(
+    request: Any) -> Tuple[Optional[Any], Optional[Exception]]:
+  """Executes a single API request and returns the response and exception."""
+  try:
+    response = request.execute(num_retries=config.API_RETRIES)
+    return response, None
+  except googleapiclient.errors.HttpError as e:
+    return None, e

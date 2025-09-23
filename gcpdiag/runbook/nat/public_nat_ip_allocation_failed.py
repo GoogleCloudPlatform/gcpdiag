@@ -15,7 +15,7 @@
 
 import googleapiclient.errors
 
-from gcpdiag import config, runbook
+from gcpdiag import config, models, runbook
 from gcpdiag.queries import crm, monitoring, network
 from gcpdiag.runbook import op
 from gcpdiag.runbook.nat import flags
@@ -112,11 +112,13 @@ class NatIpAllocationFailedStart(runbook.StartStep):
   def execute(self):
     """Starting Nat IP Allocation Failed diagnostics"""
     project = crm.get_project(op.get(flags.PROJECT_ID))
+    context = models.Context(project_id=op.get(flags.PROJECT_ID))
     # try to fetch the network for the NATGW
     try:
       vpc_network = network.get_network(
-          project_id=op.get(flags.PROJECT_ID),
+          project_id=context.project_id,
           network_name=op.get(flags.NAT_NETWORK),
+          context=context,
       )
     except googleapiclient.errors.HttpError:
       op.add_skipped(
@@ -264,11 +266,13 @@ class NatIpAllocationMethodCheck(runbook.Gateway):
     """Checking the NATGW configuration."""
 
     project = crm.get_project(op.get(flags.PROJECT_ID))
+    context = models.Context(project_id=op.get(flags.PROJECT_ID))
 
     # try to fetch the network for the NATGW
     try:
-      vpc_network = network.get_network(project_id=op.get(flags.PROJECT_ID),
-                                        network_name=op.get(flags.NAT_NETWORK))
+      vpc_network = network.get_network(project_id=context.project_id,
+                                        network_name=op.get(flags.NAT_NETWORK),
+                                        context=context)
     except googleapiclient.errors.HttpError:
       op.add_skipped(
           project,
@@ -342,6 +346,7 @@ class NatIpAllocationManualOnly(runbook.Step):
     Running diagnostic for NAT Gateway configured as MANUAL_ONLY only
     """
     project = crm.get_project(op.get(flags.PROJECT_ID))
+    context = models.Context(project_id=op.get(flags.PROJECT_ID))
     enable_dynamic_port_allocation = None
     nat_gw_ips_in_use = None
     min_extra_ips_needed = None
@@ -349,8 +354,9 @@ class NatIpAllocationManualOnly(runbook.Step):
 
     # try to fetch the network for the NATGW
     try:
-      vpc_network = network.get_network(project_id=op.get(flags.PROJECT_ID),
-                                        network_name=op.get(flags.NAT_NETWORK))
+      vpc_network = network.get_network(project_id=context.project_id,
+                                        network_name=op.get(flags.NAT_NETWORK),
+                                        context=context)
     except googleapiclient.errors.HttpError:
       op.add_skipped(
           project,

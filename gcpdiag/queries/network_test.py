@@ -19,6 +19,7 @@ from unittest import mock
 
 from boltons.iterutils import get_path
 
+from gcpdiag import models
 from gcpdiag.queries import apis_stub, network
 
 DUMMY_PROJECT_ID = 'gcpdiag-fw-policy-aaaa'
@@ -37,8 +38,10 @@ class TestNetwork:
   """Test network.Network."""
 
   def test_get_network(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_PROJECT_ID))
     assert net.name == DUMMY_DEFAULT_NETWORK
     assert net.full_path == 'projects/gcpdiag-fw-policy-aaaa/global/networks/default'
     assert net.short_path == f'{DUMMY_PROJECT_ID}/default'
@@ -46,8 +49,10 @@ class TestNetwork:
         f'https://www.googleapis.com/compute/v1/projects/{DUMMY_PROJECT_ID}/global/networks/default'
 
   def test_subnetworks(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_PROJECT_ID))
     expected_subnet_url = (
         f'https://www.googleapis.com/compute/v1/projects/{DUMMY_PROJECT_ID}/'
         'regions/europe-west4/subnetworks/default')
@@ -72,8 +77,10 @@ class TestNetwork:
         f'serviceAccount:{DUMMY_SERVICE_ACCOUNT}', 'roles/compute.networkAdmin')
 
   def test_get_routers(self):
-    net = network.get_network(project_id=DUMMY_GKE_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_GKE_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_GKE_PROJECT_ID))
     sub1 = network.get_subnetwork(project_id=DUMMY_GKE_PROJECT_ID,
                                   region=DUMMY_GKE_REGION,
                                   subnetwork_name=DUMMY_GKE_SUBNET)
@@ -88,8 +95,10 @@ class TestNetwork:
     assert router.subnet_has_nat(sub2) is True
 
   def test_ingress_deny(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_PROJECT_ID))
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_address('10.0.0.1'),  #
         ip_protocol='tcp',
@@ -102,8 +111,10 @@ class TestNetwork:
     assert r.action == 'deny'
 
   def test_ingress_deny_2(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_PROJECT_ID))
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.100.0.16/29'),  #
         ip_protocol='tcp',
@@ -112,8 +123,10 @@ class TestNetwork:
     assert r.matched_by_str == 'vpc firewall rule: fw-test-800'
 
   def test_ingress_deny_3(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_PROJECT_ID))
     # a supernet of src_ip for a deny rule should also match
     # (because we want to catch when a fw rule partially blocks
     # a connection).
@@ -125,8 +138,10 @@ class TestNetwork:
     assert r.matched_by_str == 'vpc firewall rule: fw-test-800'
 
   def test_ingress_allow_src_ip(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_PROJECT_ID))
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.100.0.16/29'),  #
         ip_protocol='tcp',
@@ -135,8 +150,10 @@ class TestNetwork:
     assert r.matched_by_str == 'vpc firewall rule: fw-test-900'
 
   def test_ingress_allow_src_ip_subnet(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_PROJECT_ID))
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.100.0.16/30'),  #
         ip_protocol='tcp',
@@ -145,8 +162,10 @@ class TestNetwork:
     assert r.matched_by_str == 'vpc firewall rule: fw-test-900'
 
   def test_ingress_allow_source_tags(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_PROJECT_ID))
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.200.0.16/29'),  #
         source_tags=['foo'],
@@ -156,8 +175,10 @@ class TestNetwork:
     assert r.matched_by_str == 'vpc firewall rule: fw-test-900'
 
   def test_ingress_allow_target_tags(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_PROJECT_ID))
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_address('192.168.1.1'),  #
         target_tags=['bar'],
@@ -167,8 +188,10 @@ class TestNetwork:
     assert r.matched_by_str == 'vpc firewall rule: fw-test-903'
 
   def test_ingress_allow_source_sa(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_PROJECT_ID))
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.200.0.16/29'),  #
         source_service_account=
@@ -179,8 +202,10 @@ class TestNetwork:
     assert r.matched_by_str == 'vpc firewall rule: fw-test-901'
 
   def test_ingress_allow_target_sa(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_PROJECT_ID))
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.200.0.16/29'),  #
         target_tags=['foo'],
@@ -189,8 +214,10 @@ class TestNetwork:
     assert r.action == 'allow'
 
   def test_ingress_parent_policy_allow(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_PROJECT_ID))
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.101.0.1/32'),  #
         ip_protocol='tcp',
@@ -199,8 +226,10 @@ class TestNetwork:
     assert r.matched_by_str == 'policy: parent-folder-policy'
 
   def test_ingress_sub_policy_allow(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_PROJECT_ID))
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.101.0.1/32'),  #
         ip_protocol='tcp',
@@ -209,8 +238,10 @@ class TestNetwork:
     assert r.matched_by_str == 'policy: sub-folder-policy'
 
   def test_ingress_sub_policy_allow_target_sa(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_PROJECT_ID))
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.102.0.1/32'),  #
         ip_protocol='tcp',
@@ -221,8 +252,10 @@ class TestNetwork:
     assert r.matched_by_str == 'policy: sub-folder-policy'
 
   def test_ingress_sub_policy_deny_wrong_target_sa(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_PROJECT_ID))
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.102.0.1/32'),  #
         ip_protocol='tcp',
@@ -231,8 +264,10 @@ class TestNetwork:
     assert r.action == 'deny'
 
   def test_get_ingress_rules(self):
-    net = network.get_network(project_id=DUMMY_GKE_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_GKE_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_GKE_PROJECT_ID))
     pattern = re.compile(r'k8s-fw-l7-.*')
     rules = net.firewall.get_vpc_ingress_rules(
         name_pattern=pattern, target_tags=['gke-gke4-3520a9df-node'])
@@ -255,8 +290,10 @@ class TestNetwork:
     assert 'gke-gke3-b46b134d-ssh' not in [r.name for r in rules]
 
   def test_egress_deny(self):
-    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_GCE_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_GCE_PROJECT_ID))
     r = net.firewall.check_connectivity_egress(
         src_ip=ipaddress.ip_address('10.0.0.1'),  #
         ip_protocol='tcp',
@@ -269,8 +306,10 @@ class TestNetwork:
     assert r.action == 'deny'
 
   def test_egress_deny_2(self):
-    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_GCE_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_GCE_PROJECT_ID))
     r = net.firewall.check_connectivity_egress(
         src_ip=ipaddress.ip_network('142.250.125.95/32'),  #
         ip_protocol='tcp',
@@ -279,8 +318,10 @@ class TestNetwork:
     assert r.matched_by_str == 'vpc firewall rule: fw-test-925'
 
   def test_egress_deny_3(self):
-    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_GCE_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_GCE_PROJECT_ID))
     r = net.firewall.check_connectivity_egress(
         src_ip=ipaddress.ip_network('10.0.0.0/8'),  #
         ip_protocol='tcp',
@@ -289,8 +330,10 @@ class TestNetwork:
     assert r.matched_by_str == 'vpc firewall rule: fw-test-950'
 
   def test_egress_allow_src_ip(self):
-    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_GCE_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_GCE_PROJECT_ID))
     r = net.firewall.check_connectivity_egress(
         src_ip=ipaddress.ip_network('35.190.247.13/32'),  #
         ip_protocol='tcp',
@@ -299,8 +342,10 @@ class TestNetwork:
     assert r.matched_by_str == 'vpc firewall rule: fw-test-1000'
 
   def test_egress_allow_src_ip_subnet(self):
-    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_GCE_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_GCE_PROJECT_ID))
     r = net.firewall.check_connectivity_egress(
         src_ip=ipaddress.ip_network('10.100.0.16/30'),  #
         ip_protocol='tcp',
@@ -309,8 +354,10 @@ class TestNetwork:
     assert r.matched_by_str == 'vpc firewall rule: fw-test-950'
 
   def test_egress_allow_source_tags(self):
-    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_GCE_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_GCE_PROJECT_ID))
     r = net.firewall.check_connectivity_egress(
         src_ip=ipaddress.ip_network('45.100.0.0/24'),  #
         source_tags=['foo'],
@@ -320,8 +367,10 @@ class TestNetwork:
     assert r.matched_by_str == 'vpc firewall rule: fw-test-1050'
 
   def test_egress_allow_target_tags(self):
-    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_GCE_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_GCE_PROJECT_ID))
     r = net.firewall.check_connectivity_egress(
         src_ip=ipaddress.ip_address('192.168.1.1'),  #
         target_tags=['bar'],
@@ -331,8 +380,10 @@ class TestNetwork:
     assert r.matched_by_str == 'vpc firewall rule: fw-test-1025'
 
   def test_egress_allow_source_sa(self):
-    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_GCE_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_GCE_PROJECT_ID))
     r = net.firewall.check_connectivity_egress(
         src_ip=ipaddress.ip_network('10.200.0.16/29'),  #
         source_service_account=
@@ -343,8 +394,10 @@ class TestNetwork:
     assert r.matched_by_str == 'vpc firewall rule: fw-test-1075'
 
   def test_egress_parent_policy_allow(self):
-    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_GCE_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_GCE_PROJECT_ID))
     r = net.firewall.check_connectivity_egress(
         src_ip=ipaddress.ip_network('10.101.0.1/32'),  #
         ip_protocol='tcp',
@@ -353,8 +406,10 @@ class TestNetwork:
     assert r.matched_by_str == 'policy: parent-folder-policy'
 
   def test_egress_sub_policy_allow(self):
-    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_GCE_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_GCE_PROJECT_ID))
     r = net.firewall.check_connectivity_egress(
         src_ip=ipaddress.ip_network('10.102.0.1/32'),  #
         ip_protocol='tcp',
@@ -363,8 +418,10 @@ class TestNetwork:
     assert r.matched_by_str == 'policy: sub-folder-policy'
 
   def test_egress_sub_policy_allow_target_sa(self):
-    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_GCE_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_GCE_PROJECT_ID))
     r = net.firewall.check_connectivity_egress(
         src_ip=ipaddress.ip_network('10.102.0.1/32'),  #
         ip_protocol='tcp',
@@ -375,8 +432,10 @@ class TestNetwork:
     assert r.matched_by_str == 'policy: sub-folder-policy'
 
   def test_egress_sub_policy_deny_wrong_target_sa(self):
-    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_GCE_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_GCE_PROJECT_ID))
     r = net.firewall.check_connectivity_egress(
         src_ip=ipaddress.ip_network('10.102.0.1/32'),  #
         ip_protocol='tcp',
@@ -385,8 +444,10 @@ class TestNetwork:
     assert r.action == 'deny'
 
   def test_get_egress_rules(self):
-    net = network.get_network(project_id=DUMMY_GCE_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_GCE_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_GCE_PROJECT_ID))
     pattern = re.compile(r'default-allow-.*')
     rules = net.firewall.get_vpc_egress_rules(name_pattern=pattern)
     assert 'default-allow-rdp' in [r.name for r in rules]
@@ -457,8 +518,10 @@ class TestNetwork:
                     default=None) == 'Idle'
 
   def test_firewall_policy_sorting_same_ip(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_PROJECT_ID))
     # Check that deny rule is matched before allow rule with same priority and
     # same src ip range
     r = net.firewall.check_connectivity_ingress(
@@ -471,8 +534,10 @@ class TestNetwork:
         ' 1000 and same src ip range')
 
   def test_firewall_policy_sorting(self):
-    net = network.get_network(project_id=DUMMY_PROJECT_ID,
-                              network_name=DUMMY_DEFAULT_NETWORK)
+    net = network.get_network(
+        project_id=DUMMY_PROJECT_ID,
+        network_name=DUMMY_DEFAULT_NETWORK,
+        context=models.Context(project_id=DUMMY_PROJECT_ID))
     # Check that deny rule is matched before allow rule with same priority
     r = net.firewall.check_connectivity_ingress(
         src_ip=ipaddress.ip_network('10.104.0.1/32'),

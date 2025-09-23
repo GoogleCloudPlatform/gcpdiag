@@ -478,7 +478,9 @@ class Instance(models.Resource):
                  network_string)
     if not m:
       raise RuntimeError("can't parse network string: %s" % network_string)
-    return network_q.get_network(m.group(1), m.group(2))
+    return network_q.get_network(m.group(1),
+                                 m.group(2),
+                                 context=models.Context(project_id=m.group(1)))
 
   @property
   def network_ips(self) -> List[network_q.IPv4AddrOrIPv6Addr]:
@@ -1023,8 +1025,8 @@ def get_instances_serial_port_output(context: models.Context):
   batch_size = 1000
   for i in range(0, len(requests), batch_size):
     batch_requests = requests[i:i + batch_size]
-    for _, response, exception in apis_utils.batch_execute_all(
-        api=gce_api, requests=batch_requests):
+    for _, response, exception in apis_utils.execute_concurrently(
+        api=gce_api, requests=batch_requests, context=context):
       if exception:
         if isinstance(exception, googleapiclient.errors.HttpError):
           raise utils.GcpApiError(exception) from exception

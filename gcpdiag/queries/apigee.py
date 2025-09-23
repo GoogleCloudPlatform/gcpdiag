@@ -105,12 +105,15 @@ class ApigeeOrganization(models.Resource):
       # A shared VPC network is using following format:
       # `projects/{host-project-id}/{region}/networks/{network-name}`
       if match:
-        return network.get_network(match.group('project'),
-                                   match.group('network'))
+        return network.get_network(
+            match.group('project'), match.group('network'),
+            models.Context(project_id=match.group('project')))
       else:
-        return network.get_network(self.project_id, self.authorized_network)
+        return network.get_network(self.project_id, self.authorized_network,
+                                   models.Context(project_id=self.project_id))
 
-    return network.get_network(self.project_id, 'default')
+    return network.get_network(self.project_id, 'default',
+                               models.Context(project_id=self.project_id))
 
 
 class EnvironmentGroup(models.Resource):

@@ -13,9 +13,13 @@
 # limitations under the License.
 """Test code in apis_utils.py."""
 
+import concurrent.futures
+import unittest
 from unittest import mock
 
-from gcpdiag import config, utils
+import googleapiclient.errors
+
+from gcpdiag import config, models, utils
 from gcpdiag.queries import apis_stub, apis_utils
 
 
@@ -60,7 +64,7 @@ def mock_sleep(sleep_time: float):
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
 @mock.patch('time.sleep', new=mock_sleep)
-class Test:
+class Test(unittest.TestCase):
 
   def test_list_all(self):
     results = list(apis_utils.list_all(RequestMock(1), next_function_mock))
@@ -146,3 +150,59 @@ class Test:
     assert [x[0].n for x in results] == [1, 3]
     # responses
     assert [x[1] for x in results] == [{'items': ['a', 'b']}, {'items': ['e']}]
+
+  @mock.patch('gcpdiag.queries.apis_utils.execute_single_request')
+  @mock.patch('gcpdiag.executor.get_executor')
+  def test_execute_concurrently_api_server(self, mock_get_executor,
+                                           mock_execute_single_request):
+    api = apis_stub.get_api_stub('compute', 'v1')
+    context = models.Context(project_id='test-project')
+    context.context_provider = mock.Mock()
+    mock_executor = mock.Mock()
+    mock_get_executor.return_value = mock_executor
+    mock_execute_single_request.side_effect = [
+        ({
+            'items': ['a', 'b']
+        }, None),
+        ({
+            'items': ['e']
+        }, None),
+    ]
+
+    # Mock the submit method to return a Future object
+    def mock_submit(fn, *args, **kwargs):
+      future = concurrent.futures.Future()
+      try:
+        result = fn(*args, **kwargs)
+        future.set_result(result)
+      except googleapiclient.errors.HttpError as e:
+        future.set_exception(e)
+      return future
+
+    mock_executor.submit.side_effect = mock_submit
+
+    requests = [RequestMock(1), RequestMock(3)]
+    results = list(apis_utils.execute_concurrently(api, requests, context))
+
+    mock_get_executor.assert_called_once_with(context)
+    assert mock_executor.submit.call_count == 2
+    assert len(results) == 2
+
+  @mock.patch('gcpdiag.queries.apis_utils.batch_execute_all')
+  def test_execute_concurrently_cli(self, mock_batch_execute_all):
+    api = apis_stub.get_api_stub('compute', 'v1')
+    context = models.Context(project_id='test-project')
+    mock_batch_execute_all.return_value = iter([
+        (RequestMock(1), {
+            'items': ['a', 'b']
+        }, None),
+        (RequestMock(3), {
+            'items': ['e']
+        }, None),
+    ])
+
+    requests = [RequestMock(1), RequestMock(3)]
+    results = list(apis_utils.execute_concurrently(api, requests, context))
+
+    mock_batch_execute_all.assert_called_once_with(api, requests)
+    assert len(results) == 2

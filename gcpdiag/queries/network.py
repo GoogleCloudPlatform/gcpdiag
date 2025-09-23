@@ -35,10 +35,12 @@ class Subnetwork(models.Resource):
   """A VPC subnetwork."""
 
   _resource_data: dict
+  _context: models.Context
 
-  def __init__(self, project_id, resource_data):
+  def __init__(self, project_id, resource_data, context: models.Context):
     super().__init__(project_id=project_id)
     self._resource_data = resource_data
+    self._context = context
 
   @property
   def full_path(self) -> str:
@@ -412,11 +414,13 @@ class Network(models.Resource):
   """A VPC network."""
   _resource_data: dict
   _subnetworks: Optional[Dict[str, Subnetwork]]
+  _context: models.Context
 
-  def __init__(self, project_id, resource_data):
+  def __init__(self, project_id, resource_data, context: models.Context):
     super().__init__(project_id=project_id)
     self._resource_data = resource_data
     self._subnetworks = None
+    self._context = context
 
   @property
   def full_path(self) -> str:
@@ -453,7 +457,8 @@ class Network(models.Resource):
   @property
   def subnetworks(self) -> Dict[str, Subnetwork]:
     return _batch_get_subnetworks(
-        self._project_id, frozenset(self._resource_data.get('subnetworks', [])))
+        self._project_id, frozenset(self._resource_data.get('subnetworks', [])),
+        self._context)
 
   @property
   def peerings(self) -> List[Peering]:
@@ -1148,12 +1153,13 @@ def _get_effective_firewalls(network: Network):
 
 
 @caching.cached_api_call(in_memory=True)
-def get_network(project_id: str, network_name: str) -> Network:
+def get_network(project_id: str, network_name: str,
+                context: models.Context) -> Network:
   logging.debug('fetching network: %s/%s', project_id, network_name)
   compute = apis.get_api('compute', 'v1', project_id)
   request = compute.networks().get(project=project_id, network=network_name)
   response = request.execute(num_retries=config.API_RETRIES)
-  return Network(project_id, response)
+  return Network(project_id, response, context)
 
 
 def get_subnetwork_from_url(url: str) -> Subnetwork:
@@ -1173,16 +1179,20 @@ def get_network_from_url(url: str) -> Network:
   if not m:
     raise ValueError(f"can't parse network url: {url}")
   (project_id, network_name) = (m.group(1), m.group(2))
-  return get_network(project_id, network_name)
+  return get_network(project_id, network_name,
+                     models.Context(project_id=project_id))
 
 
 @caching.cached_api_call(in_memory=True)
-def get_networks(project_id: str) -> List[Network]:
-  logging.debug('fetching network: %s', project_id)
-  compute = apis.get_api('compute', 'v1', project_id)
-  request = compute.networks().list(project=project_id)
+def get_networks(context: models.Context) -> List[Network]:
+  logging.debug('fetching network: %s', context.project_id)
+  compute = apis.get_api('compute', 'v1', context.project_id)
+  request = compute.networks().list(project=context.project_id)
   response = request.execute(num_retries=config.API_RETRIES)
-  return [Network(project_id, item) for item in response.get('items', [])]
+  return [
+      Network(context.project_id, item, context)
+      for item in response.get('items', [])
+  ]
 
 
 @caching.cached_api_call(in_memory=True)
@@ -1194,12 +1204,17 @@ def get_subnetwork(project_id: str, region: str,
                                       region=region,
                                       subnetwork=subnetwork_name)
   response = request.execute(num_retries=config.API_RETRIES)
-  return Subnetwork(project_id, response)
+  if response is None:
+    raise RuntimeError(
+        f'failed to fetch subnetwork: {project_id}/{region}/{subnetwork_name}')
+  return Subnetwork(project_id,
+                    response,
+                    context=models.Context(project_id=project_id))
 
 
 @caching.cached_api_call(in_memory=True)
-def _batch_get_subnetworks(
-    project_id, subnetworks_urls: FrozenSet[str]) -> Dict[str, Subnetwork]:
+def _batch_get_subnetworks(project_id, subnetworks_urls: FrozenSet[str],
+                           context: models.Context) -> Dict[str, Subnetwork]:
   compute = apis.get_api('compute', 'v1', project_id)
   requests = []
   for subnet_url in subnetworks_urls:
@@ -1215,11 +1230,17 @@ def _batch_get_subnetworks(
   subnets = {}
   if not requests:
     return {}
-  for (_, resp, exception) in apis_utils.batch_execute_all(compute, requests):
+  for (_, resp, exception) in apis_utils.execute_concurrently(api=compute,
+                                                              requests=requests,
+                                                              context=context):
     if exception:
       logging.warning(exception)
       continue
-    subnets[resp['selfLink']] = Subnetwork(project_id, resp)
+    if resp and isinstance(resp, dict) and 'selfLink' in resp:
+      subnets[resp['selfLink']] = Subnetwork(project_id, resp, context)
+    else:
+      logging.warning('Invalid response item in _batch_get_subnetworks: %s',
+                      resp)
   return subnets
 
 

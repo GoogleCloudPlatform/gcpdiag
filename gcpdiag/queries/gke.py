@@ -223,12 +223,15 @@ class Cluster(models.Resource):
   """
   _resource_data: dict
   master_version: Version
+  _context: models.Context
+  _nodepools: Optional[List[NodePool]]
 
-  def __init__(self, project_id, resource_data):
+  def __init__(self, project_id, resource_data, context: models.Context):
     super().__init__(project_id=project_id)
     self._resource_data = resource_data
     self.master_version = Version(self._resource_data['currentMasterVersion'])
     self._nodepools = None
+    self._context = context
 
   @property
   def full_path(self) -> str:
@@ -366,7 +369,7 @@ class Cluster(models.Resource):
     return False
 
   @property
-  def nodepools(self) -> Iterable[NodePool]:
+  def nodepools(self) -> List[NodePool]:
     if self._nodepools is None:
       self._nodepools = []
       for n in self._resource_data.get('nodePools', []):
@@ -380,7 +383,7 @@ class Cluster(models.Resource):
     m = re.match(r'projects/([^/]+)/global/networks/([^/]+)$', network_string)
     if not m:
       raise RuntimeError("can't parse network string: %s" % network_string)
-    return network.get_network(m.group(1), m.group(2))
+    return network.get_network(m.group(1), m.group(2), self._context)
 
   @property
   def subnetwork(self) -> Optional[models.Resource]:
@@ -506,7 +509,9 @@ def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
                                                 'resourceLabels', {}),
                                             resource=resp_c.get('name', '')):
         continue
-      c = Cluster(project_id=context.project_id, resource_data=resp_c)
+      c = Cluster(project_id=context.project_id,
+                  resource_data=resp_c,
+                  context=context)
       clusters[c.full_path] = c
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
@@ -514,7 +519,11 @@ def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
 
 
 @caching.cached_api_call
-def get_cluster(project_id, cluster_id, location) -> Union[Cluster, None]:
+def get_cluster(
+    project_id,
+    cluster_id,
+    location,
+) -> Union[Cluster, None]:
   """Get a Cluster from project_id of a context."""
   if not apis.is_enabled(project_id, 'container'):
     return None
@@ -530,7 +539,9 @@ def get_cluster(project_id, cluster_id, location) -> Union[Cluster, None]:
           'missing data in projects.locations.clusters.list response')
   except googleapiclient.errors.HttpError as err:
     raise utils.GcpApiError(err) from err
-  return Cluster(project_id=project_id, resource_data=resp)
+  return Cluster(project_id=project_id,
+                 resource_data=resp,
+                 context=models.Context(project_id=project_id))
 
 
 @caching.cached_api_call

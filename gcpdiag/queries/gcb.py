@@ -200,18 +200,21 @@ def get_builds(context: models.Context) -> Mapping[str, Build]:
         parent=f'projects/{context.project_id}/locations/{location}',
         filter=f'create_time>"{start_time.isoformat()}"')
     batch.append(query)
-  for request, response, exception in apis_utils.batch_execute_all(
-      build_api, batch):
+  for request, response, exception in apis_utils.execute_concurrently(
+      api=build_api, requests=batch, context=context):
     if exception:
       if isinstance(exception, googleapiclient.errors.HttpError):
         raise utils.GcpApiError(exception) from exception
       else:
         raise exception
+    if request is None or not hasattr(request, 'uri'):
+      logging.warning('Skipping request in batch, invalid request: %s', request)
+      continue
     match = re.search(r'projects/([^/]+)/locations/([^/]+)', request.uri)
     assert match, 'Bug: request uri does not match respected format'
     project_id = match.group(1)
     location = match.group(2)
-    if 'builds' not in response:
+    if response is None or 'builds' not in response:
       continue
     for build in response['builds']:
       # verify that we have some minimal data that we expect

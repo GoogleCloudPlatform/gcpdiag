@@ -26,7 +26,7 @@ from gcpdiag.queries import interconnect, network
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-  networks = network.get_networks(context.project_id)
+  networks = network.get_networks(context)
 
   if not networks:
     report.add_skipped(None, 'no networks found')

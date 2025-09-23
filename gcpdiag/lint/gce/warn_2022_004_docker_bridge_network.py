@@ -43,7 +43,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   cloudsql_peered_networks = {}
 
-  for vpc in network.get_networks(context.project_id):
+  for vpc in network.get_networks(context):
     if any(utils.is_cloudsql_peer_network(peer.url) for peer in vpc.peerings):
       cloudsql_peered_networks[vpc.self_link] = vpc
 
