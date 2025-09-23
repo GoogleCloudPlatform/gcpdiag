@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # Python 3.12
-FROM ubuntu:24.04@sha256:a08e551cb33850e4740772b38217fc1796a66da2506d312abe51acda354ff061
+FROM ubuntu:24.04@sha256:353675e2a41babd526e2b837d7ec780c2a05bca0164f7ea5dbbd433d21d166fc
 
 # Update apt-get and install required packages.
 # binutils is for pyinstaller
@@ -39,9 +39,9 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 
 # terraform
 RUN curl https://releases.hashicorp.com/terraform/1.9.6/terraform_1.9.6_linux_386.zip -O \
-       && unzip -o *.zip -d /usr/bin/ terraform \
-       && chmod +x /usr/bin/terraform \
-       && rm *.zip
+	&& unzip -o *.zip -d /usr/bin/ terraform \
+	&& chmod +x /usr/bin/terraform \
+	&& rm *.zip
 
 # gcloud CLI https://cloud.google.com/sdk/docs/install#installation_instructions
 # We need the gcloud CLI to use this image as devcontainer, see: ../../.devcontainer/README.md
@@ -50,5 +50,5 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.c
 # Add an entrypoint to create a user in /etc/passwd and /etc/group.
 COPY entrypoint.sh /usr/bin/entrypoint.sh
 RUN chmod 755 /usr/bin/entrypoint.sh; \
-    chmod 666 /etc/passwd /etc/group
+	chmod 666 /etc/passwd /etc/group
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]
