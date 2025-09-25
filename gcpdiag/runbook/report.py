@@ -321,6 +321,9 @@ class TerminalReportManager(ReportManager):
   """ Class representing results of runbook """
 
   def get_report_path(self, run_id):
+    if os.getenv('MODE') == 'server':
+        return "/dev/stdout"
+    print("get_report_path " + config + "\n" + config.get('report_dir'))
     date = datetime.now(timezone.utc).strftime('%Y_%m_%d_%H_%M_%S_%Z')
     report_name = f"gcpdiag_runbook_report_{re.sub(r'[.]', '_', run_id)}_{date}.json"
     return os.path.join(config.get('report_dir'), report_name)
