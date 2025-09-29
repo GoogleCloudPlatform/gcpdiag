@@ -121,6 +121,20 @@ class Test(TestCase):
       # Check if excluded rules are not present
       self.assertFalse(any(r.product == 'iam' for r in repo.rules_to_run))
 
+  # new test case to be added
+  # def test_create_and_load_repos(self):
+  #   """Test the public repo creation function."""
+  #   repo = command.create_and_load_repos(
+  #       include=['gke/*'],
+  #       exclude=['iam/*'],
+  #       load_extended=True,
+  #   )
+  #   self.assertIsInstance(repo, lint.LintRuleRepository)
+  #   # Check if rules are loaded
+  #   self.assertTrue(any(r.product == 'gke' for r in repo.rules_to_run))
+  #   # Check if excluded rules are not present
+  #   self.assertFalse(any(r.product == 'iam' for r in repo.rules_to_run))
+
   def test_parse_label(self):
     parser = command.init_args_parser()
     # Test with a single value
