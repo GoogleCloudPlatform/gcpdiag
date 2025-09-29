@@ -542,7 +542,7 @@ class CheckBgpFlap(runbook.Step):
     # run query once to get logging for all attachments
     ipstr = ''
     for item in vlan_ipv4_list:
-      ipstr = '"' + item + '"' + ' OR '
+      ipstr += '"' + item + '"' + ' OR '
     ipstr = ipstr[:-3]
 
     # Minor Concern: The filter string for Cloud Logging, created by joining IP
