@@ -103,8 +103,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
         return
 
       # Fetch list of disks for the instance
-      disk_list = gce.get_all_disks_of_instance(context.project_id, vm.zone,
-                                                vm.name)
+      disk_list = gce.get_all_disks_of_instance(context, vm.zone, vm.name)
 
       # Load limits per GB data from json file
       limits_per_gb_file = 'gcpdiag/runbook/gce/disk_performance_benchmark/limits_per_gb.json'

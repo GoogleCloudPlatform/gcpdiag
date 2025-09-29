@@ -30,8 +30,9 @@ COMPUTE_NETWORK_USER_ROLE = 'roles/compute.networkUser'
 COMPUTE_NETWORK_VIEWER_ROLE = 'roles/compute.networkViewer'
 
 
-def validate_iam_roles(service_account: str, service_account_name: str,
-                       host_project: str, host_iam_policy: iam.BaseIAMPolicy,
+def validate_iam_roles(context: models.Context, service_account: str,
+                       service_account_name: str, host_project: str,
+                       host_iam_policy: iam.BaseIAMPolicy,
                        instance: datafusion.Instance,
                        report: lint.LintReportRuleInterface) -> bool:
 
@@ -47,7 +48,7 @@ def validate_iam_roles(service_account: str, service_account_name: str,
     for subnet in instance.network.subnetworks.values():
       if subnet.region == instance.location:
         subnet_iam_policy = network.get_subnetwork_iam_policy(
-            host_project, instance.location, subnet.name)
+            context, instance.location, subnet.name)
 
         sa_has_net_user = subnet_iam_policy.has_role_permissions(
             f'serviceAccount:{service_account}', COMPUTE_NETWORK_USER_ROLE)
@@ -93,15 +94,28 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     if instance.uses_shared_vpc and not instance.is_deleting:
 
       host_project = instance.network.project_id
-      host_iam_policy = iam.get_project_policy(host_project)
+      host_project_context = context.copy_with(project_id=host_project)
+      host_iam_policy = iam.get_project_policy(host_project_context)
 
       datafusion_sa_is_valid = validate_iam_roles(
-          datafusion_service_agent, 'Cloud Data Fusion API Service Agent',
-          host_project, host_iam_policy, instance, report)
+          host_project_context,
+          datafusion_service_agent,
+          'Cloud Data Fusion API Service Agent',
+          host_project,
+          host_iam_policy,
+          instance,
+          report,
+      )
 
       dataproc_sa_is_valid = validate_iam_roles(
-          dataproc_service_agent, 'Dataproc Service Agent service account',
-          host_project, host_iam_policy, instance, report)
+          host_project_context,
+          dataproc_service_agent,
+          'Dataproc Service Agent service account',
+          host_project,
+          host_iam_policy,
+          instance,
+          report,
+      )
 
       if datafusion_sa_is_valid and dataproc_sa_is_valid:
         report.add_ok(instance)

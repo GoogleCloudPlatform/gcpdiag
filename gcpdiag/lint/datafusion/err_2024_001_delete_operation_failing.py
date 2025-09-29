@@ -94,7 +94,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if (logs_by_project.get(context.project_id) and \
      logs_by_project[context.project_id].entries) or deleting_instance_flag:
 
-    iam_policy = iam.get_project_policy(context.project_id)
+    iam_policy = iam.get_project_policy(context)
     datafusion_sa = (
         f'serviceAccount:service-{project.number}@gcp-sa-datafusion.iam.gserviceaccount.com'
     )

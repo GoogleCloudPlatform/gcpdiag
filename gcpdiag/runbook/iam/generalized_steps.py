@@ -44,6 +44,7 @@ class VmHasAnActiveServiceAccount(runbook.Step):
   def execute(self):
     """Verify if the specified service account is active."""
     sa = self.service_account or op.get(flags.SERVICE_ACCOUNT)
+    context = op.get_context()
     project_id = self.project_id or op.get(flags.PROJECT_ID)
 
     if sa and project_id:
@@ -51,19 +52,19 @@ class VmHasAnActiveServiceAccount(runbook.Step):
           filter(lambda r: r.email == sa,
                  iam.get_service_account_list(project_id)), None)
       # Verify service account exists
-      if not iam.is_service_account_existing(sa, project_id):
+      if not iam.is_service_account_existing(sa, context):
         op.add_failed(sa_resource,
                       reason=op.prep_msg(op.FAILURE_REASON,
                                          sa=sa_resource.full_path),
                       remediation=op.prep_msg(op.FAILURE_REMEDIATION))
       # Verify service account exists
-      elif not iam.is_service_account_enabled(sa, project_id):
+      elif not iam.is_service_account_enabled(sa, context):
         op.add_failed(resource=sa_resource,
                       reason=op.prep_msg(op.FAILURE_REASON),
                       remediation=op.prep_msg(op.FAILURE_REMEDIATION_ALT1,
                                               sa=sa_resource.full_path))
-      elif (iam.is_service_account_existing(sa, project_id) and
-            iam.is_service_account_enabled(sa, project_id)):
+      elif (iam.is_service_account_existing(sa, context) and
+            iam.is_service_account_enabled(sa, context)):
         op.add_ok(sa_resource,
                   op.prep_msg(op.SUCCESS_REASON, sa=sa_resource.full_path))
       else:
@@ -103,8 +104,8 @@ class IamPolicyCheck(runbook.Step):
 
   def execute(self):
     """Verify that {principal} has required permissions/roles in project/{project}."""
-    project_id = self.project or op.get(flags.PROJECT_ID)
-    iam_policy = iam.get_project_policy(project_id)
+
+    iam_policy = iam.get_project_policy(op.get_context())
     principal = self.principal or op.get(flags.PRINCIPAL)
     present_permissions_or_roles = set()
     missing_permissions_or_roles = set()

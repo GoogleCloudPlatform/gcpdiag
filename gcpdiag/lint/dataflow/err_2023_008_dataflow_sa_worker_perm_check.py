@@ -42,7 +42,7 @@ OWNER_ROLE = 'roles/owner'
 
 def prefetch_rule(context: models.Context):
   # Make sure that we have the IAM policy in cache.
-  iam.get_project_policy(context.project_id)
+  iam.get_project_policy(context)
 
 
 def prepare_rule(context: models.Context):
@@ -58,8 +58,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   has_role = True
 
   project = crm.get_project(context.project_id)
-  policies_by_project[context.project_id] = iam.get_project_policy(
-      context.project_id)
+  policies_by_project[context.project_id] = iam.get_project_policy(context)
 
   # skip entire rule if logging is disabled
   if not apis.is_enabled(context.project_id, 'logging'):

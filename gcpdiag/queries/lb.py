@@ -339,49 +339,61 @@ class BackendHealth:
 
 @caching.cached_api_call(in_memory=True)
 def get_backend_service_health(
-    project_id: str,
+    context: models.Context,
     backend_service_name: str,
     backend_service_region: str = None,
 ) -> List[BackendHealth]:
-  """Returns health data for backend service."""
+  """Returns health data for backend service.
+
+  Args:
+    context: The project context.
+    backend_service_name: The name of the backend service.
+    backend_service_region: The region of the backend service.
+
+  Returns:
+    A list of BackendHealth objects.
+  """
+  project_id = context.project_id
   try:
     backend_service = get_backend_service(project_id, backend_service_name,
                                           backend_service_region)
   except googleapiclient.errors.HttpError:
     return []
 
-  backend_heath_statuses: List[BackendHealth] = []
-
+  backend_health_statuses: List[BackendHealth] = []
   compute = apis.get_api('compute', 'v1', project_id)
+  request_map = {}
 
   for backend in backend_service.backends:
     group = backend['group']
     if not backend_service.region:
-      response = (compute.backendServices().getHealth(
+      request = compute.backendServices().getHealth(
           project=project_id,
           backendService=backend_service.name,
-          body={
-              'group': group
-          },
-      ).execute(num_retries=config.API_RETRIES))
-      # None is returned when backend type doesn't support health check
-      if response is not None:
-        for health_status in response.get('healthStatus', []):
-          backend_heath_statuses.append(BackendHealth(health_status, group))
+          body={'group': group})
     else:
-      response = (compute.regionBackendServices().getHealth(
+      request = compute.regionBackendServices().getHealth(
           project=project_id,
           region=backend_service.region,
           backendService=backend_service.name,
-          body={
-              'group': group
-          },
-      ).execute(num_retries=config.API_RETRIES))
-      if response is not None:
-        for health_status in response.get('healthStatus', []):
-          backend_heath_statuses.append(BackendHealth(health_status, group))
+          body={'group': group})
+    request_map[request] = group
 
-  return backend_heath_statuses
+  for i, response, exception in apis_utils.execute_concurrently(
+      api=compute, requests=list(request_map.keys()), context=context):
+    group = request_map[i]
+    if exception:
+      logging.warning(
+          'getHealth API call failed for backend service %s, group %s: %s',
+          backend_service_name, group, exception)
+      continue
+
+    # None is returned when backend type doesn't support health check
+    if response is not None:
+      for health_status in response.get('healthStatus', []):
+        backend_health_statuses.append(BackendHealth(health_status, group))
+
+  return backend_health_statuses
 
 
 class SslCertificate(models.Resource):

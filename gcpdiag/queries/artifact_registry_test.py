@@ -17,6 +17,7 @@
 
 from unittest import mock
 
+from gcpdiag import models
 from gcpdiag.queries import apis_stub, artifact_registry
 
 DUMMY_PROJECT_NAME = 'gcpdiag-gcb1-aaaa'
@@ -30,7 +31,8 @@ class TestArtifactRegistry:
   """Test Artifact Registry."""
 
   def test_get_bucket_iam_policy(self):
-    policy = artifact_registry.get_registry_iam_policy(DUMMY_PROJECT_NAME,
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    policy = artifact_registry.get_registry_iam_policy(context,
                                                        DUMMY_REGISTRY_LOCATION,
                                                        DUMMY_REGISTRY_ID)
     assert set(policy.get_members()) == {DUMMY_POLICY_MEMBER}

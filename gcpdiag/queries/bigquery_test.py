@@ -4,7 +4,7 @@ from unittest import mock
 
 import pytest
 
-from gcpdiag import caching
+from gcpdiag import caching, models
 from gcpdiag.queries import apis, apis_stub, bigquery
 from gcpdiag.queries.bigquery import C_NOT_AVAILABLE, BigQueryJob
 from gcpdiag.runbook.op_test import with_operator_context
@@ -41,8 +41,8 @@ class TestBigQueryQueries:
     # properties.
     del mock_api_is_enabled
     del mock_get_user_email
-    job = bigquery.get_bigquery_job(DUMMY_PROJECT_ID, DUMMY_REGION.upper(),
-                                    DUMMY_JOB_ID)
+    context = models.Context(project_id=DUMMY_PROJECT_ID)
+    job = bigquery.get_bigquery_job(context, DUMMY_REGION.upper(), DUMMY_JOB_ID)
     assert isinstance(job, BigQueryJob)
     assert job.project_id == DUMMY_PROJECT_ID
     assert job.id == DUMMY_JOB_FULL_ID
@@ -116,7 +116,8 @@ class TestBigQueryQueries:
     # Test creating BigQueryJob object successfully for job2.
     del mock_api_is_enabled
     del mock_get_user_email
-    job = bigquery.get_bigquery_job(DUMMY_PROJECT_ID, DUMMY_REGION.upper(),
+    context = models.Context(project_id=DUMMY_PROJECT_ID)
+    job = bigquery.get_bigquery_job(context, DUMMY_REGION.upper(),
                                     DUMMY_JOB_ID_2)
     assert isinstance(job, BigQueryJob)
     assert job.project_id == DUMMY_PROJECT_ID
@@ -130,7 +131,8 @@ class TestBigQueryQueries:
 
   def test_get_bigquery_job_returns_none_on_api_fail(self):
     """Test get_bigquery_job returns None if the underlying jobs.get call fails."""
-    job = bigquery.get_bigquery_job(DUMMY_PROJECT_ID, DUMMY_REGION.upper(),
+    context = models.Context(project_id=DUMMY_PROJECT_ID)
+    job = bigquery.get_bigquery_job(context, DUMMY_REGION.upper(),
                                     DUMMY_JOB_ID_FAIL)
     assert job is None
 
@@ -141,8 +143,9 @@ class TestBigQueryQueries:
   def test_get_info_schema_not_found_returns_none(self, mock_get_user_email):
     """Verify get_information_schema_job_metadata returns None when query finds no match."""
     del mock_get_user_email
+    context = models.Context(project_id=DUMMY_PROJECT_ID)
     result = bigquery.get_information_schema_job_metadata(
-        DUMMY_PROJECT_ID, DUMMY_REGION.upper(), DUMMY_JOB_ID_FAIL)
+        context, DUMMY_PROJECT_ID, DUMMY_REGION.upper(), DUMMY_JOB_ID_FAIL)
     assert result is None
 
   @with_operator_context
@@ -155,8 +158,9 @@ class TestBigQueryQueries:
     """Test jobs.query returning None when API is disabled."""
     del mock_get_user_email
     del mock_api_is_enabled
+    context = models.Context(project_id=DUMMY_PROJECT_ID)
     result = bigquery.get_information_schema_job_metadata(
-        DUMMY_PROJECT_ID, DUMMY_REGION.upper(), DUMMY_JOB_ID)
+        context, DUMMY_PROJECT_ID, DUMMY_REGION.upper(), DUMMY_JOB_ID)
     assert result is None
 
   @with_operator_context
@@ -172,7 +176,8 @@ class TestBigQueryQueries:
     del mock_get_user_email
     del mock_api_is_enabled
     with caching.bypass_cache():
-      job = bigquery.get_bigquery_job(DUMMY_PROJECT_ID, DUMMY_REGION.upper(),
+      context = models.Context(project_id=DUMMY_PROJECT_ID)
+      job = bigquery.get_bigquery_job(context, DUMMY_REGION.upper(),
                                       DUMMY_JOB_ID)
     assert isinstance(job, BigQueryJob)
     assert job.id == DUMMY_JOB_FULL_ID
@@ -209,7 +214,8 @@ class TestBigQueryQueries:
     del mock_api_is_enabled
     del mock_get_user_email
     with caching.bypass_cache():
-      job = bigquery.get_bigquery_job(DUMMY_PROJECT_ID, DUMMY_REGION.upper(),
+      context = models.Context(project_id=DUMMY_PROJECT_ID)
+      job = bigquery.get_bigquery_job(context, DUMMY_REGION.upper(),
                                       DUMMY_JOB_ID)
     assert isinstance(job, BigQueryJob)
     assert job.id == DUMMY_JOB_FULL_ID

@@ -38,8 +38,7 @@ def prefetch_rule(context: models.Context):
   environments_by_project[context.project_id] = composer.get_environments(
       context)
 
-  policy_by_project[context.project_id] = iam.get_project_policy(
-      context.project_id)
+  policy_by_project[context.project_id] = iam.get_project_policy(context)
   for environment in environments_by_project[context.project_id]:
     # Service account policy is needed for private IP envs only
     if not environment.is_private_ip():
@@ -50,7 +49,7 @@ def prefetch_rule(context: models.Context):
 
     policy_by_service_account[
         environment.service_account] = iam.get_service_account_iam_policy(
-            context.project_id, environment.service_account)
+            context, environment.service_account)
 
 
 def run_rule(context: models.Context,

@@ -33,8 +33,7 @@ projects = {}
 
 def prefetch_rule(context: models.Context):
   projects[context.project_id] = crm.get_project(context.project_id)
-  policy_by_project[context.project_id] = iam.get_project_policy(
-      context.project_id)
+  policy_by_project[context.project_id] = iam.get_project_policy(context)
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):

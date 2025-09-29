@@ -152,10 +152,14 @@ class DataflowWorkerServiceAccountPermissions(runbook.Gateway):
     project = crm.get_project(op.get(flags.PROJECT_ID))
     op.info(op.get(flags.WORKER_SERVICE_ACCOUNT))
     sa_exists = iam.is_service_account_existing(email=sa_email,
-                                                billing_project_id=op.get(
-                                                    flags.PROJECT_ID))
-    sa_exists_cross_project = iam.is_service_account_existing(
-        email=sa_email, billing_project_id=op.get(flags.CROSS_PROJECT_ID))
+                                                context=op.get_context())
+    cross_project_id = op.get(flags.CROSS_PROJECT_ID)
+    sa_exists_cross_project = False
+    if cross_project_id:
+      cross_project_context = op.get_context().copy_with(
+          project_id=cross_project_id)
+      sa_exists_cross_project = iam.is_service_account_existing(
+          email=sa_email, context=cross_project_context)
     if sa_exists and op.get(flags.CROSS_PROJECT_ID) is None:
       op.info('Service Account associated with Dataflow Job was found in the'
               ' same project')

@@ -146,7 +146,7 @@ class UnhealthyBackends(runbook.DiagnosticTree):
     start.health_check = health_check
 
     backend_health_statuses = lb.get_backend_service_health(
-        project_id, backend_service_name, region)
+        op.get_context(), backend_service_name, region)
     start.backend_health_statuses = backend_health_statuses
 
     if not backend_health_statuses:

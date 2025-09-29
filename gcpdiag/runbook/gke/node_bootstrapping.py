@@ -414,7 +414,7 @@ class NodeRegistrationSuccess(runbook.Step):
 
       if node_vm:
         # check node service account has logging write permissions
-        iam_policy = iam.get_project_policy(project)
+        iam_policy = iam.get_project_policy(op.get_context())
         if not iam_policy.has_role_permissions(
             f'serviceAccount:{node_vm.service_account}',
             'roles/logging.logWriter'):

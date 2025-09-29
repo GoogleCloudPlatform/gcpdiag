@@ -75,7 +75,8 @@ def get_crypto_key(key_name: str) -> CryptoKey:
 
 
 @caching.cached_api_call
-def get_crypto_key_iam_policy(key_name: str) -> KMSCryptoKeyIAMPolicy:
+def get_crypto_key_iam_policy(context: models.Context,
+                              key_name: str) -> KMSCryptoKeyIAMPolicy:
 
   project_id = utils.get_project_by_res_name(key_name)
   kms_api = apis.get_api('cloudkms', 'v1', project_id)
@@ -83,4 +84,4 @@ def get_crypto_key_iam_policy(key_name: str) -> KMSCryptoKeyIAMPolicy:
   query = kms_api.projects().locations().keyRings().cryptoKeys().getIamPolicy(
       resource=key_name)
   return iam.fetch_iam_policy(query, KMSCryptoKeyIAMPolicy, project_id,
-                              key_name)
+                              key_name, context)

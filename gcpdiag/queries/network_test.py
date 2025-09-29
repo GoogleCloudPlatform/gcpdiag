@@ -68,7 +68,8 @@ class TestNetwork:
     assert subnet.ip_network == ipaddress.ip_network('192.168.0.0/24')
 
   def test_cluster_subnetwork_iam_policy(self):
-    policy = network.get_subnetwork_iam_policy(project_id=DUMMY_GKE_PROJECT_ID,
+    context = models.Context(project_id=DUMMY_GKE_PROJECT_ID)
+    policy = network.get_subnetwork_iam_policy(context=context,
                                                region=DUMMY_GKE_REGION,
                                                subnetwork_name=DUMMY_GKE_SUBNET)
     assert policy.has_role_permissions(

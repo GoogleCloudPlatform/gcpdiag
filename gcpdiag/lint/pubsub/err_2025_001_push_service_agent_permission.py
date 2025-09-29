@@ -44,7 +44,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   pubsub_service_agent = (
       f'serviceAccount:service-{project_number}@gcp-sa-pubsub.iam.gserviceaccount.com'
   )
-  project_iam_policy = iam.get_project_policy(context.project_id)
+  project_iam_policy = iam.get_project_policy(context)
 
   for sub in project_subscriptions.values():
     if not sub.is_push_subscription() or 'oidcToken' not in sub.push_config:
@@ -53,7 +53,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
     service_account_email = sub.push_config['oidcToken']['serviceAccountEmail']
     sa_iam_policy = iam.get_service_account_iam_policy(
-        project_id=context.project_id, service_account=service_account_email)
+        context=context, service_account=service_account_email)
 
     has_permission = sa_iam_policy.has_role_permissions(
         pubsub_service_agent,

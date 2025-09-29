@@ -45,7 +45,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
                        f'no Cloud Data Fusion instances were found {context}')
     return
 
-  iam_policy = iam.get_project_policy(context.project_id)
+  iam_policy = iam.get_project_policy(context)
   constructed_datafusion_sa = ('serviceAccount:service-{project_number}'
                                '@gcp-sa-datafusion.iam.gserviceaccount.com')
   project_iam_policy_result = iam_policy.has_role_permissions(
@@ -59,7 +59,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
           'does not have DataProc Service Account')
       continue
     service_account_iam_policy = iam.get_service_account_iam_policy(
-        context.project_id, dataproc_service_account)
+        context, dataproc_service_account)
     p4sa = datafusion_instance.api_service_agent
     datafusion_sa = 'serviceAccount:' + p4sa
     sa_iam_policy_result = service_account_iam_policy.has_role_permissions(

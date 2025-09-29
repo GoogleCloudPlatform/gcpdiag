@@ -1347,8 +1347,9 @@ class VPCSubnetworkIAMPolicy(iam.BaseIAMPolicy):
 
 
 @caching.cached_api_call(in_memory=True)
-def get_subnetwork_iam_policy(project_id: str, region: str,
+def get_subnetwork_iam_policy(context: models.Context, region: str,
                               subnetwork_name: str) -> VPCSubnetworkIAMPolicy:
+  project_id = context.project_id
   resource_name = (f'projects/{project_id}/regions/{region}/'
                    f'subnetworks/{subnetwork_name}')
 
@@ -1358,7 +1359,7 @@ def get_subnetwork_iam_policy(project_id: str, region: str,
                                                resource=subnetwork_name)
 
   return iam.fetch_iam_policy(request, VPCSubnetworkIAMPolicy, project_id,
-                              resource_name)
+                              resource_name, context)
 
 
 class Address(models.Resource):

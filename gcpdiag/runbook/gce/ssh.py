@@ -308,7 +308,7 @@ class SshStart(runbook.StartStep):
         email_only = len(op.get(flags.PRINCIPAL).split(':')) == 1
         if email_only:
           # Get the type
-          p_policy = iam.get_project_policy(vm.project_id)
+          p_policy = iam.get_project_policy(op.get_context())
           p_type = p_policy.get_member_type(op.get(flags.PRINCIPAL))
           op.put(flags.PRINCIPAL, f'{p_type}:{op.get(flags.PRINCIPAL)}')
           if p_type:

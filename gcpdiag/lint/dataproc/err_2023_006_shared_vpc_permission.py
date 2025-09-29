@@ -33,6 +33,7 @@ COMPUTE_NETWORK_VIEWER_ROLE = 'roles/compute.networkViewer'
 
 
 def validate_iam_roles(
+    context: models.Context,
     service_account: str,
     service_account_name: str,
     host_project: str,
@@ -50,7 +51,7 @@ def validate_iam_roles(
     for subnet in master_vm.subnetworks:
       if subnet.region == cluster.region:
         subnet_iam_policy = network.get_subnetwork_iam_policy(
-            host_project, subnet.region, subnet.name)
+            context, subnet.region, subnet.name)
         sa_has_net_user = subnet_iam_policy.has_role_permissions(
             f'serviceAccount:{service_account}',
             COMPUTE_NETWORK_USER_ROLE,
@@ -93,7 +94,6 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
       no_shared_vpc = shared_vpc_check(host_project, context.project_id)
       if not no_shared_vpc:
-        host_iam_policy = iam.get_project_policy(host_project)
         try:
           if cluster.is_ha_cluster:
             master_vm = gce.get_instance(
@@ -112,7 +112,10 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
               cluster, 'Master VM is not running. Not able to check Network')
           continue
 
+        host_project_context = context.copy_with(project_id=host_project)
+        host_iam_policy = iam.get_project_policy(host_project_context)
         dataproc_sa_is_valid = validate_iam_roles(
+            host_project_context,
             dataproc_service_agent,
             'Dataproc Service Agent service account',
             host_project,

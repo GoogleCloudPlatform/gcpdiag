@@ -33,8 +33,7 @@ ROLE_OBJECT_CREATOR = 'roles/storage.objectCreator'
 
 def prefetch_rule(context: models.Context):
   """Collect project & unique bucket policies."""
-  policies['projects'][context.project_id] = iam.get_project_policy(
-      context.project_id)
+  policies['projects'][context.project_id] = iam.get_project_policy(context)
 
   gcs_subscription_buckets = set()
   subscriptions = pubsub.get_subscriptions(context)
@@ -46,8 +45,7 @@ def prefetch_rule(context: models.Context):
 
   if gcs_subscription_buckets:
     for bucket in gcs_subscription_buckets:
-      policies['buckets'][bucket] = gcs.get_bucket_iam_policy(
-          context.project_id, bucket)
+      policies['buckets'][bucket] = gcs.get_bucket_iam_policy(context, bucket)
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):

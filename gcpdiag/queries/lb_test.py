@@ -15,6 +15,7 @@
 # Lint as: python3
 """Test code in lb.py."""
 
+import unittest
 from unittest import mock
 
 from gcpdiag import models
@@ -30,7 +31,7 @@ DUMMY_TARGET_NAME = 'http-lb-proxy'
 
 
 @mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub)
-class TestURLMap:
+class TestURLMap(unittest.TestCase):
   """Test lb.URLMap."""
 
   def test_get_backend_services(self):
@@ -70,24 +71,22 @@ class TestURLMap:
 
   def test_get_backend_service_health_implicit_global(self):
     context = models.Context(project_id=DUMMY_PROJECT2_ID)
-    states_list = lb.get_backend_service_health(context.project_id,
-                                                'web-backend-service')
+    states_list = lb.get_backend_service_health(context, 'web-backend-service')
 
     assert len(states_list) == 2
     assert states_list[0].health_state == 'UNHEALTHY'
 
   def test_get_backend_service_health_explicit_global(self):
     context = models.Context(project_id=DUMMY_PROJECT2_ID)
-    states_list = lb.get_backend_service_health(context.project_id,
-                                                'web-backend-service', 'global')
+    states_list = lb.get_backend_service_health(context, 'web-backend-service',
+                                                'global')
 
     assert len(states_list) == 2
     assert states_list[0].health_state == 'UNHEALTHY'
 
   def test_get_backend_service_health_regional(self):
     context = models.Context(project_id=DUMMY_PROJECT2_ID)
-    states_list = lb.get_backend_service_health(context.project_id,
-                                                'backend-service-2',
+    states_list = lb.get_backend_service_health(context, 'backend-service-2',
                                                 'europe-west4')
 
     assert len(states_list) == 1

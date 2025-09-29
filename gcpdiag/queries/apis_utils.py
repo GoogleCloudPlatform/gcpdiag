@@ -17,29 +17,22 @@ import concurrent.futures
 import logging
 import random
 import time
-import uuid
-from typing import Any, Callable, Dict, Iterator, List, Optional, Tuple
+from typing import Any, Callable, Iterator, List, Optional, Tuple
 
+import apiclient
 import googleapiclient.errors
 import httplib2
 
 from gcpdiag import config, executor, models, utils
 
 
-def _execute_single_request_wrapper(
-    request_id: str,
-    request: Any) -> Tuple[str, Optional[Any], Optional[Exception]]:
-  response, exception = execute_single_request(request)
-  return (request_id, response, exception)
-
-
 def execute_concurrently(
     api: Any, requests: List[Any], context: models.Context
-) -> Iterator[Tuple[Optional[str], Optional[Any], Optional[Exception]]]:
+) -> Iterator[Tuple[Any, Optional[Any], Optional[Exception]]]:
   """
   Executes a list of API requests concurrently.
   Uses ThreadPoolExecutor in API server context, batch_execute_all in CLI context.
-  Yields: (request_id, response, exception)
+  Yields: (request, response, exception)
   """
   if not requests:
     return
@@ -47,21 +40,77 @@ def execute_concurrently(
   if context.context_provider:
     # API Server context: Use ThreadPoolExecutor
     exec_ = executor.get_executor(context)
-    request_dict: Dict[str, Any] = {str(uuid.uuid4()): req for req in requests}
-    futures = {
-        exec_.submit(_execute_single_request_wrapper, req_id, request): req_id
-        for req_id, request in request_dict.items()
+    future_to_request = {
+        exec_.submit(execute_single_request, req): req for req in requests
     }
 
-    for future in concurrent.futures.as_completed(futures):
+    for future in concurrent.futures.as_completed(future_to_request):
+      request = future_to_request[future]
       try:
-        yield future.result()
+        response, exception = future.result()
+        yield (request, response, exception)
       except googleapiclient.errors.HttpError as e:
-        req_id = futures[future]
-        yield (req_id, None, e)
+        yield (request, None, e)
   else:
     # CLI context: Use original batch_execute_all
     yield from batch_execute_all(api, requests)
+
+
+def _execute_with_pagination_in_api_context(
+    api: Any,
+    requests: List[Any],
+    next_function: Callable,
+    context: models.Context,
+    response_keyword: str = 'items') -> Iterator[Any]:
+  """
+  Executes and paginates a list of API 'list' requests concurrently in an API context.
+  """
+  pending_requests = list(requests)
+  while pending_requests:
+    next_page_requests = []
+    results_iterator = execute_concurrently(api=api,
+                                            requests=pending_requests,
+                                            context=context)
+
+    for request, response, exception in results_iterator:
+      if exception:
+        if (isinstance(exception, apiclient.errors.HttpError) and
+            exception.resp.status == 404):
+          continue
+        raise utils.GcpApiError(exception) from exception
+
+      if not response:
+        continue
+
+      yield from response.get(response_keyword, [])
+
+      if 'nextPageToken' in response:
+        next_req = next_function(previous_request=request,
+                                 previous_response=response)
+        if next_req:
+          next_page_requests.append(next_req)
+
+    pending_requests = next_page_requests
+
+
+def execute_concurrently_with_pagination(
+    api: Any,
+    requests: List[Any],
+    next_function: Callable,
+    context: models.Context,
+    log_text: Optional[str] = None,
+    response_keyword: str = 'items') -> Iterator[Any]:
+  """
+  Executes and paginates a list of API 'list' requests concurrently.
+  """
+  if not context.context_provider:
+    yield from batch_list_all(api, requests, next_function, log_text,
+                              response_keyword)
+    return
+
+  yield from _execute_with_pagination_in_api_context(api, requests,
+                                                     next_function, context,
+                                                     response_keyword)
 
 
 def list_all(request,
@@ -98,7 +147,7 @@ def multi_list_all(
 def batch_list_all(api,
                    requests: list,
                    next_function: Callable,
-                   log_text: str,
+                   log_text: Optional[str] = None,
                    response_keyword='items'):
   """Similar to list_all but using batch API except in TPC environment."""
 
@@ -115,7 +164,7 @@ def batch_list_all(api,
 def _original_batch(api,
                     requests: list,
                     next_function: Callable,
-                    log_text: str,
+                    log_text: Optional[str] = None,
                     response_keyword='items'):
   """Similar to list_all but using batch API."""
   pending_requests = requests
@@ -124,10 +173,11 @@ def _original_batch(api,
   while pending_requests:
     next_requests = pending_requests
     pending_requests = []
-    if page == 1:
-      logging.info(log_text)
-    else:
-      logging.info('%s (page: %d)', log_text, page)
+    if log_text:
+      if page == 1:
+        logging.info(log_text)
+      else:
+        logging.info('%s (page: %d)', log_text, page)
     for (request, response, exception) in batch_execute_all(api, next_requests):
       if exception:
         logging.info('Exception requesting %s: %s', request.uri,

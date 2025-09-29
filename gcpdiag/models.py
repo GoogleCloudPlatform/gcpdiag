@@ -95,6 +95,10 @@ class Context:
   # Optional provider for context-specific operations (e.g., thread setup)
   context_provider: Optional[gcpdiag_context.ContextProvider] = None
 
+  def copy_with(self, **changes) -> 'Context':
+    """Returns a new Context instance with the specified attributes changed."""
+    return dataclasses.replace(self, **changes)
+
   # the selected resources are the intersection of project_id, locations,
   # and labels(i.e. all must match), but each value in locations, and
   # labels is a OR, so it means:
@@ -110,6 +114,7 @@ class Context:
       parameters: Optional[Parameter[str, str]] = None,
       resources: Optional[Iterable[str]] = None,
       context_provider: Optional[gcpdiag_context.ContextProvider] = None,
+      **kwargs,
   ):
     """Args:
 
@@ -127,7 +132,9 @@ class Context:
     self.project_id = project_id
     self.context_provider = context_provider
 
-    if locations:
+    if 'locations_pattern' in kwargs:
+      self.locations_pattern = kwargs['locations_pattern']
+    elif locations:
       if not isinstance(locations, List):
         raise ValueError(
             str(locations) + ' did not supply full list of locations')
@@ -147,7 +154,9 @@ class Context:
     else:
       self.labels = None
 
-    if resources:
+    if 'resources_pattern' in kwargs:
+      self.resources_pattern = kwargs['resources_pattern']
+    elif resources:
       if not isinstance(resources, List):
         raise ValueError(
             str(resources) + ' did not supply full list of resources')

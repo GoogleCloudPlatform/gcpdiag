@@ -90,7 +90,7 @@ class RunPermissionChecks(runbook.Gateway):
         )
         self.add_child(bq_queries.BigQueryEnd())
         return
-    project_id = project.id
+
     if skip_permission_check:
       necessary_permission_string = ''
       for item in RUNBOOK_PERMISSION_MAP[self.runbook_id]['mandatory_project']:
@@ -114,13 +114,15 @@ class RunPermissionChecks(runbook.Gateway):
 
     principal = self._get_principal()
 
-    project_policy = bq_queries.get_project_policy(project_id)
+    project_policy = bq_queries.get_project_policy(op.get_context())
     organization_policy = None
     if self.runbook_id != 'Failed Query Runbook':
       if organization_id:
         try:
+          host_project_context = op.get_context().copy_with(
+              project_id=organization_id)
           organization_policy = bq_queries.get_organization_policy(
-              organization_id)
+              host_project_context, organization_id)
         except GcpApiError as err:
           if 'doesn\'t have access to' in err.message or 'denied on resource' in err.message:
             op.info(

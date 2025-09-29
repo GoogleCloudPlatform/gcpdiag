@@ -290,14 +290,14 @@ class ServiceAccountLoggingPermission(runbook.Step):
     clusters = gke.get_clusters(op.get_context())
     partial_path = f'{op.get(flags.LOCATION)}/clusters/{op.get(flags.GKE_CLUSTER_NAME)}'
     cluster_obj = util.get_cluster_object(clusters, partial_path)
-    iam_policy = iam.get_project_policy(op.get(flags.PROJECT_ID))
+    iam_policy = iam.get_project_policy(op.get_context())
 
     logging_role = 'roles/logging.logWriter'
 
     # Verifies service-account permissions for every nodepool.
     for np in cluster_obj.nodepools:
       sa = np.service_account
-      if not iam.is_service_account_enabled(sa, op.get(flags.PROJECT_ID)):
+      if not iam.is_service_account_enabled(sa, op.get_context()):
         op.add_failed(
             np,
             reason=f'The service account {sa} is disabled or deleted.',

@@ -72,7 +72,8 @@ class TestGcs:
     assert DUMMY_BUCKET_NAME in buckets
 
   def test_get_bucket_iam_policy(self):
-    policy = gcs.get_bucket_iam_policy(DUMMY_PROJECT_NAME, DUMMY_BUCKET_PATH)
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    policy = gcs.get_bucket_iam_policy(context, DUMMY_BUCKET_PATH)
     assert DUMMY_BUCKET_PERM in policy.get_members()
 
   def test_bucket_labels(self):

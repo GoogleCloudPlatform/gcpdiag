@@ -32,10 +32,10 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not services:
     report.add_skipped(None, f'no services found {context}')
     return
-  project_id = context.project_id
+
   project = crm.get_project(context.project_id)
   sa_email = f'service-{project.number}@serverless-robot-prod.iam.gserviceaccount.com'
-  iam_policy = iam.get_project_policy(project_id)
+  iam_policy = iam.get_project_policy(context)
   if not iam_policy.has_role_permissions(f'serviceAccount:{sa_email}', ROLE):
     report.add_failed(project,
                       f'service account: {sa_email}\nmissing role: {ROLE}')

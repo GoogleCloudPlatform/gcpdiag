@@ -49,7 +49,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     sa = (f'serviceAccount:service-{project.number}'
           '@container-engine-robot.iam.gserviceaccount.com')
     # get iam policy
-    iam_policy = iam.get_project_policy(p)
+    iam_policy = iam.get_project_policy(context.copy_with(project_id=p))
     failed = False
     missing = []
     for permission in PERMISSIONS:

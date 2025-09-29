@@ -101,13 +101,14 @@ class TopicIAMPolicy(iam.BaseIAMPolicy):
 
 
 @caching.cached_api_call(in_memory=True)
-def get_topic_iam_policy(name: str) -> TopicIAMPolicy:
+def get_topic_iam_policy(context: models.Context, name: str) -> TopicIAMPolicy:
   project_id = utils.get_project_by_res_name(name)
 
   pubsub_api = apis.get_api('pubsub', 'v1', project_id)
   request = pubsub_api.projects().topics().getIamPolicy(resource=name)
 
-  return iam.fetch_iam_policy(request, TopicIAMPolicy, project_id, name)
+  return iam.fetch_iam_policy(request, TopicIAMPolicy, project_id, name,
+                              context)
 
 
 class Subscription(models.Resource):
@@ -275,10 +276,12 @@ class SubscriptionIAMPolicy(iam.BaseIAMPolicy):
 
 
 @caching.cached_api_call(in_memory=True)
-def get_subscription_iam_policy(name: str) -> SubscriptionIAMPolicy:
+def get_subscription_iam_policy(context: models.Context,
+                                name: str) -> SubscriptionIAMPolicy:
   project_id = utils.get_project_by_res_name(name)
 
   pubsub_api = apis.get_api('pubsub', 'v1', project_id)
   request = pubsub_api.projects().subscriptions().getIamPolicy(resource=name)
 
-  return iam.fetch_iam_policy(request, SubscriptionIAMPolicy, project_id, name)
+  return iam.fetch_iam_policy(request, SubscriptionIAMPolicy, project_id, name,
+                              context)

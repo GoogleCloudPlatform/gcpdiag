@@ -62,14 +62,14 @@ C_NOT_AVAILABLE = 'N/A'
 PolicyObject = Union[iam.ProjectPolicy, iam.OrganizationPolicy]
 
 
-def get_project_policy(project_id: str):
+def get_project_policy(context: models.Context):
   """Fetches the IAM policy object for a project."""
   root_logger = logging.getLogger()
   original_level = root_logger.level
 
   try:
     root_logger.setLevel(logging.ERROR)
-    policy = iam.get_project_policy(project_id, raise_error_if_fails=False)
+    policy = iam.get_project_policy(context, raise_error_if_fails=False)
     return policy
   except utils.GcpApiError:
     return None
@@ -77,14 +77,15 @@ def get_project_policy(project_id: str):
     root_logger.setLevel(original_level)
 
 
-def get_organization_policy(organization_id: str):
+def get_organization_policy(context: models.Context, organization_id: str):
   """Fetches the IAM policy object for an organization."""
   root_logger = logging.getLogger()
   original_level = root_logger.level
 
   try:
     root_logger.setLevel(logging.ERROR)
-    policy = iam.get_organization_policy(organization_id,
+    policy = iam.get_organization_policy(context,
+                                         organization_id,
                                          raise_error_if_fails=False)
     return policy
   except utils.GcpApiError as err:
@@ -754,6 +755,7 @@ def get_bigquery_job_api_resource_data(
 
 @caching.cached_api_call
 def get_information_schema_job_metadata(
+    context: models.Context,
     project_id: str,
     region: str,
     job_id: str,
@@ -775,7 +777,7 @@ def get_information_schema_job_metadata(
   user = 'user:' + user_email
   if not skip_permission_check:
     try:
-      policy = iam.get_project_policy(project_id)
+      policy = iam.get_project_policy(context)
       if (not policy.has_permission(user, 'bigquery.jobs.create')) or (
           not policy.has_permission(user, 'bigquery.jobs.listAll')):
         op.info(
@@ -837,11 +839,14 @@ def get_information_schema_job_metadata(
 
 
 def get_bigquery_job(
-    project_id: str,
+    context: models.Context,
     region: str,
     job_id: str,
     skip_permission_check: bool = False) -> Union[BigQueryJob, None]:
   """Fetch a BigQuery job, combining API and INFORMATION_SCHEMA data."""
+  project_id = context.project_id
+  if not project_id:
+    return None
   try:
     job_api_resource_data = get_bigquery_job_api_resource_data(
         project_id, region, job_id)
@@ -883,7 +888,8 @@ def get_bigquery_job(
     except (ValueError, TypeError):
       pass
   information_schema_job_metadata = get_information_schema_job_metadata(
-      project_id, region, job_id, job_creation_millis, skip_permission_check)
+      context, project_id, region, job_id, job_creation_millis,
+      skip_permission_check)
   return BigQueryJob(
       project_id=project_id,
       job_api_resource_data=job_api_resource_data,

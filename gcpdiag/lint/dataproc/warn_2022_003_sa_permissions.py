@@ -29,8 +29,7 @@ policies_by_project = {}
 
 def prefetch_rule(context: models.Context):
   clusters_by_project[context.project_id] = dataproc.get_clusters(context)
-  policies_by_project[context.project_id] = iam.get_project_policy(
-      context.project_id)
+  policies_by_project[context.project_id] = iam.get_project_policy(context)
 
 
 def run_rule(context: models.Context,
@@ -42,8 +41,7 @@ def run_rule(context: models.Context,
 
   for cluster in clusters:
     sa_email = cluster.vm_service_account_email
-    sa_exists = iam.is_service_account_existing(
-        email=sa_email, billing_project_id=context.project_id)
+    sa_exists = iam.is_service_account_existing(email=sa_email, context=context)
     if not sa_exists:
       # Non-existent SA is also a non-normal situation, however our intent was to
       # have a separate rule for that, so that one rule has more-or-less one

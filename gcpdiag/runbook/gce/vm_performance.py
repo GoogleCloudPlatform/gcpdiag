@@ -400,7 +400,7 @@ class DiskAvgIOLatencyCheck(runbook.Step):
     within_str = f'within d\'{start_formatted_string}\', d\'{end_formatted_string}\''
 
     # Fetch list of disks for the instance
-    disk_list = gce.get_all_disks_of_instance(op.get(flags.PROJECT_ID), vm.zone,
+    disk_list = gce.get_all_disks_of_instance(op.get_context(), vm.zone,
                                               vm.name)
     disk: gce.Disk
     for disks in disk_list.items():
@@ -527,7 +527,7 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
       return
 
     # Fetch list of disks for the instance
-    disk_list = gce.get_all_disks_of_instance(op.get(flags.PROJECT_ID), vm.zone,
+    disk_list = gce.get_all_disks_of_instance(op.get_context(), vm.zone,
                                               vm.name)
 
     # Load limits per GB data from json file

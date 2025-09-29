@@ -18,7 +18,7 @@
 """
 import dataclasses
 
-from gcpdiag import caching, config
+from gcpdiag import caching, config, models
 from gcpdiag.queries import apis, iam
 
 
@@ -34,15 +34,16 @@ class ProjectSettings:
 
 
 @caching.cached_api_call(in_memory=True)
-def get_registry_iam_policy(project_id: str, location: str,
+def get_registry_iam_policy(context: models.Context, location: str,
                             registry_name: str) -> ArtifactRegistryIAMPolicy:
+  project_id = context.project_id
   ar_api = apis.get_api('artifactregistry', 'v1', project_id)
   registry_id = 'projects/{}/locations/{}/repositories/{}'.format(
       project_id, location, registry_name)
   request = ar_api.projects().locations().repositories().getIamPolicy(
       resource=registry_id)
   return iam.fetch_iam_policy(request, ArtifactRegistryIAMPolicy, project_id,
-                              registry_id)
+                              registry_id, context)
 
 
 @caching.cached_api_call(in_memory=True)

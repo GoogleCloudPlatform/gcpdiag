@@ -174,8 +174,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
         disk_errors = disk_search.get_last_match(i.id)
 
       # Checking Disk IO latency for the instance -
-      disk_list = gce.get_all_disks_of_instance(context.project_id, i.zone,
-                                                i.name)
+      disk_list = gce.get_all_disks_of_instance(context, i.zone, i.name)
       disk: gce.Disk
       for disks in disk_list.items():
         disk = disks[1]

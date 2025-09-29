@@ -25,7 +25,7 @@ ROLE = 'roles/apigee.serviceAgent'
 
 
 def prefetch_rule(context: models.Context):
-  iam.get_project_policy(context.project_id)
+  iam.get_project_policy(context)
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -37,7 +37,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   project = crm.get_project(context.project_id)
   service_account = SA.format(project_number=project.number)
 
-  iam_policy = iam.get_project_policy(context.project_id)
+  iam_policy = iam.get_project_policy(context)
   if not iam_policy.has_role_permissions(f'serviceAccount:{service_account}',
                                          ROLE):
     report.add_failed(project, (f'service account: {service_account}\n'

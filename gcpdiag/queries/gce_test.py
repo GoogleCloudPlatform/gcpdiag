@@ -387,7 +387,7 @@ class TestGce(unittest.TestCase):
       assert n.template.name.startswith('mig-')
 
   def test_get_all_disks(self):
-    disks = gce.get_all_disks(DUMMY_PROJECT_NAME)
+    disks = gce.get_all_disks(models.Context(project_id=DUMMY_PROJECT_NAME))
     for d in disks:
       assert d.bootable is True
       if 'unattached-disk' == d.name:

@@ -43,6 +43,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   project = crm.get_project(context.project_id)
   found = list(
       find_builds_without_image_upload_permission(
+          context,
           builds.values(),
           default_sa=f'{project.number}@cloudbuild.gserviceaccount.com',
       ))
@@ -66,7 +67,8 @@ class FailedBuildStatus:
 class Repository(abc.ABC):
 
   @abc.abstractmethod
-  def can_read_registry(self, service_account_email: str) -> bool:
+  def can_read_registry(self, context: models.Context,
+                        service_account_email: str) -> bool:
     pass
 
   @abc.abstractmethod
@@ -81,15 +83,15 @@ class GcrRepository(Repository):
     self.project_id = project_id
     self.repository = repository
 
-  def can_read_registry(self, service_account_email: str) -> bool:
+  def can_read_registry(self, context: models.Context,
+                        service_account_email: str) -> bool:
     if not artifact_registry.get_project_settings(
         self.project_id).legacy_redirect:
       # In case of failure to upload to gcr.io cloud build provides useful information.
       return True
     location = GCR_LOCATION_MAP[self.repository]
-    return ArtifactRepository(
-        self.project_id, location,
-        self.repository).can_read_registry(service_account_email)
+    return ArtifactRepository(self.project_id, location, self.repository) \
+        .can_read_registry(context, service_account_email)
 
   def format_message(self) -> str:
     return f'{self.repository} registry in {self.project_id} project.'
@@ -103,20 +105,23 @@ class ArtifactRepository(Repository):
     self.location = location
     self.repository = repository
 
-  def can_read_registry(self, service_account_email: str) -> bool:
-    project_policy = iam.get_project_policy(self.project_id)
+  def can_read_registry(self, context: models.Context,
+                        service_account_email: str) -> bool:
+    project_policy = iam.get_project_policy(context)
     member = f'serviceAccount:{service_account_email}'
     if project_policy.has_permission(member, PERMISSION):
       return True
     registry_policy = artifact_registry.get_registry_iam_policy(
-        self.project_id, self.location, self.repository)
+        context, self.location, self.repository)
     return registry_policy.has_permission(member, PERMISSION)
 
   def format_message(self) -> str:
-    return f'{self.repository} registry in {self.location} in {self.project_id} project.'
+    return (f'{self.repository} registry in {self.location} in'
+            f' {self.project_id} project.')
 
 
 def find_builds_without_image_upload_permission(
+    context: models.Context,
     builds: Iterable[gcb.Build],
     default_sa: str,
 ) -> Iterable[FailedBuildStatus]:
@@ -125,7 +130,7 @@ def find_builds_without_image_upload_permission(
     if build.status != 'FAILURE':
       continue
     for repository in get_used_registries(build.images):
-      if not repository.can_read_registry(sa):
+      if not repository.can_read_registry(context, sa):
         yield FailedBuildStatus(build, sa, repository)
 
 

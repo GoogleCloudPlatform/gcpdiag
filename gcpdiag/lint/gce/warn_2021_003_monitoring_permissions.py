@@ -54,7 +54,7 @@ def prefetch_rule(context: models.Context):
   # Make sure that we have the IAM policy in cache.
   project_ids = {i.project_id for i in gce.get_instances(context).values()}
   for pid in project_ids:
-    iam.get_project_policy(pid)
+    iam.get_project_policy(context.copy_with(project_id=pid))
   crm.get_project(context.project_id)
 
 
@@ -94,7 +94,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       )
       continue
 
-    iam_policy = iam.get_project_policy(i.project_id)
+    iam_policy = iam.get_project_policy(
+        context.copy_with(project_id=i.project_id))
     if not iam_policy.has_role_permissions(f'serviceAccount:{sa}', ROLE):
       report.add_failed(
           i,

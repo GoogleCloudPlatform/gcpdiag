@@ -24,7 +24,7 @@ from gcpdiag.queries import crm, iam
 
 def prefetch_rule(context: models.Context):
   # Make sure that we have the IAM policy in cache.
-  iam.get_project_policy(context.project_id)
+  iam.get_project_policy(context)
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -32,7 +32,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   role = 'roles/dataflow.serviceAgent'
 
   project = crm.get_project(context.project_id)
-  iam_policy = iam.get_project_policy(context.project_id)
+  iam_policy = iam.get_project_policy(context)
 
   project_nr = crm.get_project(context.project_id).number
 

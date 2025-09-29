@@ -17,6 +17,7 @@
 
 from unittest import mock
 
+from gcpdiag import models
 from gcpdiag.queries import apis_stub, kms
 
 DUMMY_PROJECT_NAME = 'gcpdiag-gke1-aaaa'
@@ -53,6 +54,8 @@ class TestCryptoKey:
     assert not crypto_key.is_enabled()
 
   def test_get_crypto_key_iam_policy(self):
-    policy = kms.get_crypto_key_iam_policy(DUMMY_IAM_POLICY_CRYPTO_KEY_NAME)
+    context = models.Context(project_id=DUMMY_IAM_POLICY_PROJECT_NAME)
+    policy = kms.get_crypto_key_iam_policy(context,
+                                           DUMMY_IAM_POLICY_CRYPTO_KEY_NAME)
     assert policy.has_role_permissions(DUMMY_IAM_POLICY_MEMBER,
                                        DUMMY_IAM_POLICY_ROLE)

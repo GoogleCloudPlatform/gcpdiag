@@ -114,9 +114,9 @@ class DefaultServiceAccountCheck(runbook.Step):
         '{}-compute@developer.gserviceaccount.com').format(project_num)
     project = crm.get_project(op.get(flags.PROJECT_ID))
     try:
-      if iam.is_service_account_existing(service_agent, op.get(
-          flags.PROJECT_ID)) and iam.is_service_account_enabled(
-              service_agent, op.get(flags.PROJECT_ID)):
+      if iam.is_service_account_existing(
+          service_agent, op.get_context()) and iam.is_service_account_enabled(
+              service_agent, op.get_context()):
         console_permission = iam_gs.IamPolicyCheck()
         console_permission.template = 'gcpdiag.runbook.gcf::failed_deployments::agent_permission'
         console_permission.principal = f'serviceAccount:{service_agent}'
@@ -135,9 +135,9 @@ class DefaultServiceAccountCheck(runbook.Step):
             reason=('Service agent {} is not enabled on project {}').format(
                 service_agent, op.get(flags.PROJECT_ID)))
 
-    if iam.is_service_account_existing(default_sa, op.get(
-        flags.PROJECT_ID)) and iam.is_service_account_enabled(
-            default_sa, op.get(flags.PROJECT_ID)):
+    if iam.is_service_account_existing(
+        default_sa, op.get_context()) and iam.is_service_account_enabled(
+            default_sa, op.get_context()):
       op.add_ok(project, reason=op.prep_msg(op.SUCCESS_REASON))
     else:
       op.add_failed(project,
@@ -175,7 +175,7 @@ class UserServiceAccountCheck(runbook.Step):
           default='')
 
       runtime_account = f'{project_num}-compute@developer.gserviceaccount.com'
-      policy_list = iam.get_service_account_iam_policy(op.get(flags.PROJECT_ID),
+      policy_list = iam.get_service_account_iam_policy(op.get_context(),
                                                        runtime_account)
 
       #Check if User account/Service account has 'roles/iam.serviceAccountUser'

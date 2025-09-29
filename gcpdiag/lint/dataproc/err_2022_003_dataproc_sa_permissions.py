@@ -32,11 +32,11 @@ def run_rule(context: models.Context,
     report.add_skipped(project, 'no dataproc clusters found')
     return
 
-  policy = iam.get_project_policy(context.project_id)
+  policy = iam.get_project_policy(context)
   dp_sa = f'service-{project.number}@dataproc-accounts.iam.gserviceaccount.com'
   alt_sa = f'{project.number}@cloudservices.gserviceaccount.com'
 
-  if iam.is_service_account_existing(dp_sa, context.project_id):
+  if iam.is_service_account_existing(dp_sa, context):
     if policy.has_role_permissions(f'serviceAccount:{dp_sa}', ROLE):
       report.add_ok(project)
     else:

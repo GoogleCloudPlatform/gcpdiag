@@ -251,7 +251,7 @@ class BaseIAMPolicy(models.Resource):
       m = re.match(r'serviceAccount:([^/]+)$', member)
       if m:
         sa_emails.add(m.group(1))
-    _batch_fetch_service_accounts(list(sa_emails), self.project_id)
+    _batch_fetch_service_accounts(list(sa_emails), self.context)
 
     return policy_by_member
 
@@ -291,16 +291,17 @@ class BaseIAMPolicy(models.Resource):
     # https://cloud.google.com/anthos/multicluster-management/fleets/workload-identity
     m = re.match(r'serviceAccount:([^/]+)$', member)
     if m:
-      if not is_service_account_enabled(m.group(1), self.project_id):
+      if not is_service_account_enabled(m.group(1), self.context):
         logging.info('service account %s is disabled', m.group(1))
         return False
 
     return True
 
   def __init__(self, project_id: Optional[str], name: str,
-               resource_data: Dict[str, Any]):
+               resource_data: Dict[str, Any], context: models.Context):
     super().__init__(project_id)
     self._name = name
+    self.context = context
     self._policy_by_member = self._expand_policy(resource_data)
 
   def get_member_permissions(self, member: str) -> List[str]:
@@ -417,6 +418,7 @@ def fetch_iam_policy(
     resource_class: Type[BaseIAMPolicy],
     project_id: Optional[str],
     name: str,
+    context: models.Context,
     raise_error_if_fails=True,
 ):
   """Executes `getIamPolicy` request and converts into a resource class
@@ -444,7 +446,7 @@ def fetch_iam_policy(
       raise utils.GcpApiError(err) from err
     else:
       return
-  return resource_class(project_id, name, response)
+  return resource_class(project_id, name, response, context)
 
 
 class ProjectPolicy(BaseIAMPolicy):
@@ -470,17 +472,16 @@ class ProjectPolicy(BaseIAMPolicy):
 
 
 @caching.cached_api_call(in_memory=True)
-def get_project_policy(project_id: str,
+def get_project_policy(context: models.Context,
                        raise_error_if_fails=True) -> ProjectPolicy:
   """Return the ProjectPolicy object for a project, caching the result."""
-
+  project_id = context.project_id
   resource_name = f'projects/{project_id}'
 
   crm_api = apis.get_api('cloudresourcemanager', 'v3', project_id)
   request = crm_api.projects().getIamPolicy(resource='projects/' + project_id)
-
   return fetch_iam_policy(request, ProjectPolicy, project_id, resource_name,
-                          raise_error_if_fails)
+                          context, raise_error_if_fails)
 
 
 class OrganizationPolicy(BaseIAMPolicy):
@@ -500,7 +501,8 @@ class OrganizationPolicy(BaseIAMPolicy):
 
 
 @caching.cached_api_call(in_memory=True)
-def get_organization_policy(organization_id: str,
+def get_organization_policy(context: models.Context,
+                            organization_id: str,
                             raise_error_if_fails=True) -> OrganizationPolicy:
   """Return the OrganizationPolicy object for an organization, caching the result."""
 
@@ -508,9 +510,8 @@ def get_organization_policy(organization_id: str,
 
   crm_api = apis.get_api('cloudresourcemanager', 'v1')
   request = crm_api.organizations().getIamPolicy(resource=resource_name)
-
   return fetch_iam_policy(request, OrganizationPolicy, None, resource_name,
-                          raise_error_if_fails)
+                          context, raise_error_if_fails)
 
 
 class ServiceAccount(models.Resource):
@@ -610,7 +611,7 @@ _service_account_cache_fetched: Dict[str, bool] = {}
 _service_account_cache_is_not_found: Dict[str, bool] = {}
 
 
-def _batch_fetch_service_accounts(emails: List[str], billing_project_id: str):
+def _batch_fetch_service_accounts(emails: List[str], context: models.Context):
   """Retrieve a list of service accounts.
 
   This function is used when inspecting a project, to retrieve all service
@@ -623,7 +624,7 @@ def _batch_fetch_service_accounts(emails: List[str], billing_project_id: str):
   `project_id` is used primarily as the default billing project. Service
   accounts from other projects in `emails` will be also retrieved.
   """
-
+  billing_project_id = context.project_id
   iam_api = apis.get_api('iam', 'v1', billing_project_id)
   service_accounts_api = iam_api.projects().serviceAccounts()
 
@@ -636,56 +637,72 @@ def _batch_fetch_service_accounts(emails: List[str], billing_project_id: str):
   for email in emails:
     _service_account_cache_fetched[email] = True
 
-  for request in requests:
-    try:
-      response = request.execute(num_retries=config.API_RETRIES)
+  if not requests:
+    return
+
+  results_iterator = apis_utils.execute_concurrently(api=iam_api,
+                                                     requests=requests,
+                                                     context=context)
+
+  for request, response, exception in results_iterator:
+
+    if response:
       sa = ServiceAccount(response['projectId'], response)
       _service_account_cache[sa.email] = sa
-    except googleapiclient.errors.HttpError as err:
-      exception = utils.GcpApiError(err)
-      if exception:
-        # Extract the requested service account and its associated project ID
-        # from the URI. This is especially useful when dealing with scenarios
-        #  involving cross-project service accounts within a project.
-        m = re.search(r'/projects/([^/]+)/[^/]+/([^?]+@[^?]+)', request.uri)
-        if not m:
-          logging.warning("BUG: can't determine SA email from request URI: %s",
-                          request.uri)
-          continue
-        sa_project_id = m.group(1)
-        email = m.group(2)
+      continue
 
-        # 403 or 404 is expected for Google-managed service agents.
-        if email.partition('@')[2] in SERVICE_AGENT_DOMAINS or email.partition(
-            '@')[2].startswith('gcp-sa-'):
-          # Too noisy even for debug-level
-          # logging.debug(
-          #     'ignoring error retrieving google-managed service agent %s: %s', email, exception)
-          pass
-        elif (isinstance(exception, utils.GcpApiError) and
-              exception.status == 404):
-          _service_account_cache_is_not_found[email] = True
-        else:
-          # Determine if the failing service account belongs to a different project.
-          # Retrieving service account details may fail due to various conditions.
-          if sa_project_id != billing_project_id:
-            logging.warning(
-                "Can't retrieve service account associated with one project but"
-                ' used in another project')
-            _service_account_cache_is_not_found[email] = True
-            continue
+    if not exception:
+      logging.warning('BUG: no response and no exception for SA')
+      continue
 
-          project_nr = crm.get_project(sa_project_id).number
-          if ((sa_project_id == billing_project_id) and
-              re.match(rf'{project_nr}-\w+@', email) or
-              email.endswith(f'@{billing_project_id}.iam.gserviceaccount.com')):
-            # if retrieving service accounts from the project being inspected fails,
-            # we need to fail hard because many rules won't work correctly.
-            raise utils.GcpApiError(err) from err
+    if isinstance(exception, utils.GcpApiError):
+      status = exception.status
+    elif isinstance(exception, googleapiclient.errors.HttpError):
+      status = exception.resp.status
+    else:
+      raise exception
 
-          else:
-            logging.warning("can't get service account %s: %s", email,
-                            exception)
+    # Extract the requested service account and its associated project ID
+    # from the URI. This is especially useful when dealing with scenarios
+    #  involving cross-project service accounts within a project.
+    m = re.search(r'/projects/([^/]+)/[^/]+/([^?]+@[^?]+)', request.uri)
+    if not m:
+      logging.warning("BUG: can't determine SA email from request URI: %s",
+                      request.uri)
+      continue
+
+    sa_project_id = m.group(1)
+    email = m.group(2)
+
+    # 403 or 404 is expected for Google-managed service agents.
+    if email.partition('@')[2] in SERVICE_AGENT_DOMAINS or email.partition(
+        '@')[2].startswith('gcp-sa-'):
+      # Too noisy even for debug-level
+      # logging.debug(
+      # 'ignoring error retrieving google-managed service agent %s: %s', email,
+      # exception)
+      pass
+    elif status == 404:
+      _service_account_cache_is_not_found[email] = True
+    else:
+      # Determine if the failing service account belongs to a different project.
+      # Retrieving service account details may fail due to various conditions.
+      if sa_project_id != billing_project_id:
+        logging.warning(
+            "Can't retrieve service account associated with one project but"
+            ' used in another project')
+        _service_account_cache_is_not_found[email] = True
+        continue
+
+      project_nr = crm.get_project(sa_project_id).number
+      if ((sa_project_id == billing_project_id) and
+          re.match(rf'{project_nr}-\w+@', email) or
+          email.endswith(f'@{billing_project_id}.iam.gserviceaccount.com')):
+        # if retrieving service accounts from the project being inspected fails,
+        # we need to fail hard because many rules won't work correctly.
+        raise utils.GcpApiError(exception) from exception
+      else:
+        logging.warning("can't get service account %s: %s", email, exception)
 
 
 def _extract_project_id(email: str):
@@ -739,7 +756,7 @@ def _extract_project_id(email: str):
     return '-'
 
 
-def is_service_account_existing(email: str, billing_project_id: str) -> bool:
+def is_service_account_existing(email: str, context: models.Context) -> bool:
   """Verify that a service account exists.
 
   If we get a non-404 API error when retrieving the service account, we will
@@ -749,18 +766,18 @@ def is_service_account_existing(email: str, billing_project_id: str) -> bool:
   """
   # Make sure that the service account is fetched (this is also
   # called by get_project_policy).
-  _batch_fetch_service_accounts([email], billing_project_id)
+  _batch_fetch_service_accounts([email], context)
   return email not in _service_account_cache_is_not_found
 
 
-def is_service_account_enabled(email: str, billing_project_id: str) -> bool:
+def is_service_account_enabled(email: str, context: models.Context) -> bool:
   """Verify that a service account exists and is enabled.
 
   If we get an API error when retrieving the service account, we will assume
   that the service account is enabled, not to throw false positives (but
   a warning will be printed out).
   """
-  _batch_fetch_service_accounts([email], billing_project_id)
+  _batch_fetch_service_accounts([email], context)
   return (email not in _service_account_cache_is_not_found
          ) and not (email in _service_account_cache and
                     _service_account_cache[email].disabled)
@@ -774,17 +791,16 @@ class ServiceAccountIAMPolicy(BaseIAMPolicy):
 
 @caching.cached_api_call(in_memory=True)
 def get_service_account_iam_policy(
-    project_id: str, service_account: str) -> ServiceAccountIAMPolicy:
+    context: models.Context, service_account: str) -> ServiceAccountIAMPolicy:
   """Returns an IAM policy for a service account"""
-
+  project_id = context.project_id
   resource_name = f'projects/{project_id}/serviceAccounts/{service_account}'
 
   iam_api = apis.get_api('iam', 'v1', project_id)
   request = (iam_api.projects().serviceAccounts().getIamPolicy(
       resource=resource_name))
-
   return fetch_iam_policy(request, ServiceAccountIAMPolicy, project_id,
-                          resource_name)
+                          resource_name, context)
 
 
 @caching.cached_api_call(in_memory=True)

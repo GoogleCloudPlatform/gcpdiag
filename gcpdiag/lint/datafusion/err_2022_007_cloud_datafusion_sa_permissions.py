@@ -42,10 +42,10 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   if not datafusion_instances:
     report.add_skipped(None, 'Cloud Data Fusion instances were not found')
     return
-  project_id = context.project_id
+
   for _, datafusion_instance in sorted(datafusion_instances.items()):
-    iam_policy = iam.get_project_policy(project_id)
-    project_id = context.project_id
+    iam_policy = iam.get_project_policy(context)
+
     p4sa = datafusion_instance.api_service_agent
     if not p4sa:
       report.add_skipped(

@@ -31,7 +31,7 @@ def prefetch_rule(context: models.Context):
   # Make sure that we have the IAM policy in cache.
   project_ids = {i.project_id for i in gce.get_instances(context).values()}
   for pid in project_ids:
-    iam.get_project_policy(pid)
+    iam.get_project_policy(context.copy_with(project_id=pid))
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
@@ -46,7 +46,8 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       osconfig_service_account = 'service-{}@gcp-sa-osconfig.iam.gserviceaccount.com'.format(
           crm.get_project(i.project_id).number)
       instances_count += 1
-      iam_policy = iam.get_project_policy(i.project_id)
+      iam_policy = iam.get_project_policy(
+          context.copy_with(project_id=i.project_id))
       sa = i.service_account
       if not sa:
         # if an SA is not attached to the vm check if the service agent has the correct role

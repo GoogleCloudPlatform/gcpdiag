@@ -33,7 +33,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   #Fetching the list of instances and declaring an IAM policy object
   instances = gce.get_instances(context)
-  iam_policy = iam.get_project_policy(context.project_id)
+  iam_policy = iam.get_project_policy(context)
   project_number = crm.get_project(context.project_id).number
   cloud_platform_scope = "https://www.googleapis.com/auth/cloud-platform"
 

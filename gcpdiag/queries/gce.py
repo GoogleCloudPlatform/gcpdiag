@@ -1091,9 +1091,13 @@ def get_region_managed_instance_groups(
       'listing regional managed instance groups of project %s',
       context.project_id,
   )
-  items = apis_utils.multi_list_all(
+  items = apis_utils.execute_concurrently_with_pagination(
+      api=gce_api,
       requests=requests,
       next_function=gce_api.regionInstanceGroupManagers().list_next,
+      context=context,
+      log_text=
+      f'listing regional managed instance groups of project {context.project_id}'
   )
   for i in items:
     result = re.match(
@@ -1343,7 +1347,16 @@ def get_regions_with_instances(context: models.Context) -> Iterable[Region]:
 
 
 @caching.cached_api_call
-def get_all_disks(project_id: str) -> Iterable[Disk]:
+def get_all_disks(context: models.Context) -> Iterable[Disk]:
+  """Get all disks in a project, matching the context.
+
+  Args:
+    context: The project context.
+
+  Returns:
+    An iterable of Disk objects.
+  """
+  project_id = context.project_id
   # Fetching only Zonal Disks(Regional disks exempted)
   try:
     gce_api = apis.get_api('compute', 'v1', project_id)
@@ -1351,11 +1364,15 @@ def get_all_disks(project_id: str) -> Iterable[Disk]:
         gce_api.disks().list(project=project_id, zone=zone)
         for zone in get_gce_zones(project_id)
     ]
+
     logging.debug('listing gce disks of project %s', project_id)
-    items = apis_utils.multi_list_all(
+
+    items = apis_utils.execute_concurrently_with_pagination(
+        api=gce_api,
         requests=requests,
         next_function=gce_api.disks().list_next,
-    )
+        context=context,
+        log_text=f'listing GCE disks of project {project_id}')
 
     return {Disk(project_id, item) for item in items}
 
@@ -1364,8 +1381,19 @@ def get_all_disks(project_id: str) -> Iterable[Disk]:
 
 
 @caching.cached_api_call
-def get_all_disks_of_instance(project_id: str, zone: str,
+def get_all_disks_of_instance(context: models.Context, zone: str,
                               instance_name: str) -> dict:
+  """Get all disks of a given instance.
+
+  Args:
+    context: The project context.
+    zone: The zone of the instance.
+    instance_name: The name of the instance.
+
+  Returns:
+    A dict of Disk objects keyed by disk name.
+  """
+  project_id = context.project_id
   # Fetching only Zonal Disks(Regional disks exempted) attached to an instance
   try:
     gce_api = apis.get_api('compute', 'v1', project_id)
@@ -1375,9 +1403,14 @@ def get_all_disks_of_instance(project_id: str, zone: str,
         instance_name,
         project_id,
     )
-    items = apis_utils.multi_list_all(
+
+    items = apis_utils.execute_concurrently_with_pagination(
+        api=gce_api,
         requests=requests,
         next_function=gce_api.disks().list_next,
+        context=context,
+        log_text=
+        f'listing gce disks attached to instance {instance_name} in project {project_id}'
     )
     all_disk_list = {Disk(project_id, item) for item in items}
     disk_list = {}
@@ -1668,9 +1701,13 @@ def get_zonal_network_endpoint_groups(
   ]
   logging.debug('listing gce networkEndpointGroups of project %s',
                 context.project_id)
-  items = apis_utils.multi_list_all(
+  items = apis_utils.execute_concurrently_with_pagination(
+      api=gce_api,
       requests=requests,
       next_function=gce_api.networkEndpointGroups().list_next,
+      context=context,
+      log_text=(
+          f'listing gce networkEndpointGroups of project {context.project_id}'),
   )
 
   for i in items:

@@ -28,12 +28,14 @@ RUNTIME_DATABASE_ENCRYPTION_KEY_STRING = 'runtime database encryption key'
 DISK_ENCRYPTION_KEY_STRING = 'disk encryption key'
 
 
-def _run_rule_kms_key(report: lint.LintReportRuleInterface, kms_key_name: str,
+def _run_rule_kms_key(context: models.Context,
+                      report: lint.LintReportRuleInterface, kms_key_name: str,
                       kms_key_mode: str, service_account: str):
   if kms_key_name:
     kms_key = kms.get_crypto_key(kms_key_name)
     if _is_valid_kms_key(kms_key):
-      if not _apigee_sa_has_role_permissions(kms_key_name, service_account):
+      if not _apigee_sa_has_role_permissions(context, kms_key_name,
+                                             service_account):
         report.add_failed(
             kms_key,
             (f'service account: {service_account}\n'
@@ -62,7 +64,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
 
   # Verify permissions on runtime database encryption key
   kms_key_name = apigee_org.runtime_database_encryption_key_name
-  _run_rule_kms_key(report, kms_key_name,
+  _run_rule_kms_key(context, report, kms_key_name,
                     RUNTIME_DATABASE_ENCRYPTION_KEY_STRING, service_account)
 
   # Verify permissions on disk encryption key
@@ -70,7 +72,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   for instance in sorted(instances_list.values(),
                          key=lambda instance: instance.name):
     kms_key_name = instance.disk_encryption_key_name
-    _run_rule_kms_key(report, kms_key_name, DISK_ENCRYPTION_KEY_STRING,
+    _run_rule_kms_key(context, report, kms_key_name, DISK_ENCRYPTION_KEY_STRING,
                       service_account)
 
 
@@ -78,7 +80,8 @@ def _is_valid_kms_key(kms_key):
   return not kms_key.is_destroyed() and kms_key.is_enabled()
 
 
-def _apigee_sa_has_role_permissions(kms_key_name, service_account):
-  iam_policy = kms.get_crypto_key_iam_policy(kms_key_name)
+def _apigee_sa_has_role_permissions(context: models.Context, kms_key_name,
+                                    service_account):
+  iam_policy = kms.get_crypto_key_iam_policy(context, kms_key_name)
   return iam_policy.has_role_permissions(f'serviceAccount:{service_account}',
                                          ROLE)

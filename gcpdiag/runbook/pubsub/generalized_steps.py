@@ -178,7 +178,7 @@ class DeadLetterTopicPermissions(runbook.Step):
 
     role_publisher = 'roles/pubsub.publisher'
     role_subscriber = 'roles/pubsub.subscriber'
-    policy = iam.get_project_policy(project_id=project_id)
+    policy = iam.get_project_policy(op.get_context())
     service_account_re = re.compile('serviceAccount:service-' +
                                     str(project.number) +
                                     '@gcp-sa-pubsub.iam.gserviceaccount.com')
@@ -206,8 +206,9 @@ class DeadLetterTopicPermissions(runbook.Step):
 
     # check at the resource level
     subscription_policy = pubsub.get_subscription_iam_policy(
-        subscription.full_path)
-    topic_policy = pubsub.get_topic_iam_policy(subscription.dead_letter_topic())
+        op.get_context(), subscription.full_path)
+    topic_policy = pubsub.get_topic_iam_policy(op.get_context(),
+                                               subscription.dead_letter_topic())
 
     # log uncertain in case of fine grained access restrictions
     if not subscription_policy.has_role_permissions(

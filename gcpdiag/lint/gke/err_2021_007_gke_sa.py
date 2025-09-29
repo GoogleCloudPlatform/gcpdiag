@@ -33,7 +33,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
   project = crm.get_project(context.project_id)
   sa = 'service-{}@container-engine-robot.iam.gserviceaccount.com'.format(
       project.number)
-  iam_policy = iam.get_project_policy(context.project_id)
+  iam_policy = iam.get_project_policy(context)
   if iam_policy.has_role_permissions(f'serviceAccount:{sa}', ROLE):
     report.add_ok(project)
   else:

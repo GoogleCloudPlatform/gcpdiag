@@ -381,10 +381,14 @@ class CheckPermissions(runbook.CompositeStep):
 
     if sa_email:
       sa_exists = iam.is_service_account_existing(email=sa_email,
-                                                  billing_project_id=op.get(
-                                                      flags.PROJECT_ID))
-      sa_exists_cross_project = iam.is_service_account_existing(
-          email=sa_email, billing_project_id=op.get(flags.CROSS_PROJECT_ID))
+                                                  context=op.get_context())
+      cross_project_id = op.get(flags.CROSS_PROJECT_ID)
+      sa_exists_cross_project = False
+      if cross_project_id:
+        cross_project_context = op.get_context().copy_with(
+            project_id=cross_project_id)
+        sa_exists_cross_project = iam.is_service_account_existing(
+            email=sa_email, context=cross_project_context)
     else:
       sa_exists = False
       sa_exists_cross_project = False

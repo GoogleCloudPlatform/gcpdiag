@@ -22,7 +22,7 @@ from gcpdiag.queries import crm, gce
 
 
 def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
-  disks = gce.get_all_disks(context.project_id)
+  disks = gce.get_all_disks(context)
 
   if not disks:
     report.add_skipped(None, 'no disks found')

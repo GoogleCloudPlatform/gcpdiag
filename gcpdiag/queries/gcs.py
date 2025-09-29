@@ -103,11 +103,14 @@ class BucketIAMPolicy(iam.BaseIAMPolicy):
 
 
 @caching.cached_api_call(in_memory=True)
-def get_bucket_iam_policy(project_id: str, bucket: str) -> BucketIAMPolicy:
+def get_bucket_iam_policy(context: models.Context,
+                          bucket: str) -> BucketIAMPolicy:
+  project_id = context.project_id
   gcs_api = apis.get_api('storage', 'v1', project_id)
   request = gcs_api.buckets().getIamPolicy(bucket=bucket)
 
-  return iam.fetch_iam_policy(request, BucketIAMPolicy, project_id, bucket)
+  return iam.fetch_iam_policy(request, BucketIAMPolicy, project_id, bucket,
+                              context)
 
 
 @caching.cached_api_call(in_memory=True)

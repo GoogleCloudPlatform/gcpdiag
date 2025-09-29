@@ -18,6 +18,7 @@ import unittest
 from unittest import mock
 
 import googleapiclient.errors
+import httplib2
 
 from gcpdiag import config, models, utils
 from gcpdiag.queries import apis_stub, apis_utils
@@ -185,8 +186,12 @@ class Test(unittest.TestCase):
     results = list(apis_utils.execute_concurrently(api, requests, context))
 
     mock_get_executor.assert_called_once_with(context)
-    assert mock_executor.submit.call_count == 2
-    assert len(results) == 2
+    self.assertEqual(mock_executor.submit.call_count, 2)
+    self.assertEqual(len(results), 2)
+    # Check that first result element is request
+    self.assertIsInstance(results[0][0], RequestMock)
+    self.assertIsInstance(results[1][0], RequestMock)
+    self.assertEqual(sorted(r[0].n for r in results), [1, 3])
 
   @mock.patch('gcpdiag.queries.apis_utils.batch_execute_all')
   def test_execute_concurrently_cli(self, mock_batch_execute_all):
@@ -206,3 +211,141 @@ class Test(unittest.TestCase):
 
     mock_batch_execute_all.assert_called_once_with(api, requests)
     assert len(results) == 2
+
+
+class ExecuteConcurrentlyWithPaginationTest(unittest.TestCase):
+  """Tests for execute_concurrently_with_pagination."""
+
+  def setUp(self):
+    super().setUp()
+    self.mock_api = mock.Mock()
+    self.request_1 = mock.Mock()
+    self.request_1.uri = 'request/1'
+    self.request_2 = mock.Mock()
+    self.request_2.uri = 'request/2'
+
+  @mock.patch('gcpdiag.queries.apis_utils.batch_list_all')
+  def test_cli_context_uses_batch_list_all(self, mock_batch_list_all):
+    """Verify that batch_list_all is called in CLI context."""
+    context = models.Context(project_id='test-project')
+    requests = [self.request_1]
+    mock_batch_list_all.return_value = iter(['item1', 'item2'])
+
+    results = list(
+        apis_utils.execute_concurrently_with_pagination(
+            self.mock_api,
+            requests,
+            next_function_mock,
+            context,
+            log_text='testing',
+            response_keyword='items'))
+
+    self.assertEqual(results, ['item1', 'item2'])
+    mock_batch_list_all.assert_called_once_with(self.mock_api, requests,
+                                                next_function_mock, 'testing',
+                                                'items')
+
+  @mock.patch('gcpdiag.queries.apis_utils.execute_concurrently')
+  def test_api_context_single_page(self, mock_execute_concurrently):
+    """Test API context with a single page of results."""
+    context = models.Context(project_id='test-project', context_provider='api')
+    requests = [self.request_1]
+    # execute_concurrently yields: (request, response, exception)
+    mock_execute_concurrently.return_value = iter([
+        (self.request_1, {
+            'items': ['item1']
+        }, None),
+    ])
+
+    results = list(
+        apis_utils.execute_concurrently_with_pagination(
+            self.mock_api,
+            requests,
+            mock.Mock(),
+            context,
+            log_text='testing',
+            response_keyword='items'))
+
+    self.assertEqual(results, ['item1'])
+    mock_execute_concurrently.assert_called_once()
+
+  @mock.patch('gcpdiag.queries.apis_utils.execute_concurrently')
+  def test_api_context_multi_page(self, mock_execute_concurrently):
+    """Test API context with multiple pages of results."""
+    context = models.Context(project_id='test-project', context_provider='api')
+    req1, resp1 = mock.Mock(uri='uri1'), {
+        'items': ['item1'],
+        'nextPageToken': 'page2'
+    }
+    req2, resp2 = mock.Mock(uri='uri2'), {'items': ['item2']}
+
+    def side_effect_func(*args, **kwargs):  # pylint: disable=unused-argument
+      if req1 in kwargs['requests']:
+        return iter([(req1, resp1, None)])
+      elif req2 in kwargs['requests']:
+        return iter([(req2, resp2, None)])
+      return iter([])
+
+    mock_execute_concurrently.side_effect = side_effect_func
+
+    def next_func(previous_request, previous_response):  # pylint: disable=unused-argument
+      if previous_response.get('nextPageToken') == 'page2':
+        return req2
+      return None
+
+    results = list(
+        apis_utils.execute_concurrently_with_pagination(
+            self.mock_api, [req1],
+            next_func,
+            context,
+            log_text='testing',
+            response_keyword='items'))
+
+    self.assertEqual(results, ['item1', 'item2'])
+    self.assertEqual(mock_execute_concurrently.call_count, 2)
+
+  @mock.patch('gcpdiag.queries.apis_utils.execute_concurrently')
+  def test_api_context_skips_404(self, mock_execute_concurrently):
+    """Test that 404 errors are skipped in API context."""
+    context = models.Context(project_id='test-project', context_provider='api')
+    requests = [self.request_1]
+    http_error_404 = googleapiclient.errors.HttpError(resp=httplib2.Response(
+        {'status': 404}),
+                                                      content=b'Not Found')
+    mock_execute_concurrently.return_value = iter([
+        (self.request_1, None, http_error_404),
+    ])
+
+    results = list(
+        apis_utils.execute_concurrently_with_pagination(
+            self.mock_api,
+            requests,
+            mock.Mock(),
+            context,
+            log_text='testing',
+            response_keyword='items'))
+
+    self.assertEqual(results, [])
+    mock_execute_concurrently.assert_called_once()
+
+  @mock.patch('gcpdiag.queries.apis_utils.execute_concurrently')
+  def test_api_context_raises_other_error(self, mock_execute_concurrently):
+    """Test that non-404 errors raise GcpApiError in API context."""
+    context = models.Context(project_id='test-project', context_provider='api')
+    requests = [self.request_1]
+    http_error_500 = googleapiclient.errors.HttpError(resp=httplib2.Response(
+        {'status': 500}),
+                                                      content=b'Server Error')
+    mock_execute_concurrently.return_value = iter([
+        (self.request_1, None, http_error_500),
+    ])
+
+    with self.assertRaises(utils.GcpApiError):
+      list(
+          apis_utils.execute_concurrently_with_pagination(
+              self.mock_api,
+              requests,
+              mock.Mock(),
+              context,
+              log_text='testing',
+              response_keyword='items'))
