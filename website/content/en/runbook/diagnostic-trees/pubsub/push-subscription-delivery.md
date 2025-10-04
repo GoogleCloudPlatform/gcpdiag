@@ -1,10 +1,10 @@
 ---
-title: "pubsub/Pull Subscription Delivery"
-linkTitle: "pubsub/pull-subscription-delivery"
+title: "pubsub/Push Subscription Delivery"
+linkTitle: "pubsub/push-subscription-delivery"
 weight: 3
 type: docs
 description: >
-  Diagnostic checks for Cloud Pub/Sub pull delivery issues.
+  Diagnostic checks for Cloud Pub/Sub push delivery issues.
 ---
 
 **Product**: [Cloud Pub/Sub](https://cloud.google.com/pubsub/)
@@ -14,18 +14,20 @@ description: >
 
 Provides a DiagnosticTree to check for issues related to delivery issues
   for subscriptions in Cloud Pub/Sub. Particularly this runbook focuses on common issues
-  experienced while using Pub/Sub pull subscriptions.
+  experienced while using Pub/Sub push subscriptions, including BQ & GCS subscriptions.
 
   - Areas:
-    - delivery latency
+    - subscription status
     - quotas
-    - pull rate
+    - push responses
     - throughput rate
+    - dead letter topic attachment and permissions
+    - vpcsc enablement
 
 ### Executing this runbook
 
 ```shell
-gcpdiag runbook pubsub/pull-subscription-delivery \
+gcpdiag runbook pubsub/push-subscription-delivery \
   -p project_id=value \
   -p subscription_name=value
 ```
@@ -45,15 +47,23 @@ gcpdiag runbook --help
 
 ### Potential Steps
 
-  - [Pull Subscription Delivery Start](/runbook/steps/pubsub/pull-subscription-delivery-start)
+  - [Push Subscription Delivery Start](/runbook/steps/pubsub/push-subscription-delivery-start)
+
+  - [Active Subscription](/runbook/steps/pubsub/active-subscription)
 
   - [Pubsub Quotas](/runbook/steps/pubsub/pubsub-quotas)
 
-  - [Pull Rate](/runbook/steps/pubsub/pull-rate)
+  - [Response Code Step](/runbook/steps/pubsub/response-code-step)
 
   - [Throughput Qualification](/runbook/steps/pubsub/throughput-qualification)
 
-  - [Pull Subscription Delivery End](/runbook/steps/pubsub/pull-subscription-delivery-end)
+  - [Dead Letter Topic](/runbook/steps/pubsub/dead-letter-topic)
+
+  - [Dead Letter Topic Permissions](/runbook/steps/pubsub/dead-letter-topic-permissions)
+
+  - [Vpc Sc Step](/runbook/steps/pubsub/vpc-sc-step)
+
+  - [Push Subscription Delivery End](/runbook/steps/pubsub/push-subscription-delivery-end)
 
 
 <!--

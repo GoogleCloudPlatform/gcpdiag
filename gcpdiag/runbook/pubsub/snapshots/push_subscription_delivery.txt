@@ -1,0 +1,54 @@
+project_id=gcpdiag-pubsub1-aaaa,subscription_name=gcpdiag-pubsub1subscription2-9pm6hng1
+
+pubsub/push-subscription-delivery: Diagnostic checks for Cloud Pub/Sub push delivery issues.
+
+  Provides a DiagnosticTree to check for issues related to delivery issues
+  for subscriptions in Cloud Pub/Sub. Particularly this runbook focuses on common issues
+  experienced while using Pub/Sub push subscriptions, including BQ & GCS subscriptions.
+
+  - Areas:
+    - subscription status
+    - quotas
+    - push responses
+    - throughput rate
+    - dead letter topic attachment and permissions
+    - vpcsc enablement
+
+  
+[START]: Start step
+[INFO]: name: gcpdiag test - pubsub1, id: gcpdiag-pubsub1-aaaa
+[AUTOMATED STEP]: Checks subscription activity status.
+
+   - gcpdiag-pubsub1-aaaa/gcpdiag-pubsub1subscription2-9pm6hng1           [OK]
+     [REASON]
+     Subscription is active
+[AUTOMATED STEP]: Checks if any Pub/Sub quotas are being exceeded.
+
+   - gcpdiag-pubsub1-aaaa                                                 [OK]
+     [REASON]
+     Quota usage is within project limits.
+[AUTOMATED STEP]: Check push request responses from the endpoint
+
+   - gcpdiag-pubsub1-aaaa                                                 [SKIP]
+     [REASON]
+     Skipping as no traffic delivery to the endpoint has been detected
+[AUTOMATED STEP]: Checks if subscription has good health (high qualification).
+
+   - gcpdiag-pubsub1-aaaa/gcpdiag-pubsub1subscription2-9pm6hng1           [OK]
+     [REASON]
+     Subcription has good health
+[AUTOMATED STEP]: Checks for dead letter topic presence.
+
+   - gcpdiag-pubsub1-aaaa/gcpdiag-pubsub1subscription2-9pm6hng1           [OK]
+     [REASON]
+     Dead letter topic already attached
+[AUTOMATED STEP]: Checks for dead letter topic permissions.
+
+   - gcpdiag-pubsub1-aaaa                                                 [OK]
+     [REASON]
+     Dead Letter permissions assigned at the project level
+[AUTOMATED STEP]: Check if push subscription project has a VPCSC perimeter
+[END]: End Step for push subscription
+[INFO]: No more checks to perform.
+
+

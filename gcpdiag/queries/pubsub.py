@@ -183,11 +183,22 @@ class Subscription(models.Resource):
       return True
     return False
 
+  def is_active(self) -> bool:
+    """Return Boolean value if subscription is active."""
+    return self._resource_data['state'] == 'ACTIVE'
+
   def has_dead_letter_topic(self) -> bool:
     """Return Truthy value if subscription has a dead-letter topic."""
     if 'deadLetterPolicy' in self._resource_data:
       return bool(self._resource_data['deadLetterPolicy']['deadLetterTopic'])
     return False
+
+  def dead_letter_topic(self) -> str:
+    """Return the dead-letter topic."""
+    if self.has_dead_letter_topic():
+      return self._resource_data.get('deadLetterPolicy',
+                                     {}).get('deadLetterTopic', '')
+    return ''
 
   def gcs_subscription_bucket(self) -> str:
     """Return the name of the bucket attached to GCS subscription."""

@@ -28,3 +28,61 @@
 
   [1] <https://cloud.google.com/pubsub/docs/monitoring#delivery_latency_health>.
 {% endblock throughput_qualification_failure_remediation %}
+
+{% block subscription_state_failure_remediation %}
+  Increase subscription throughput to keep it active, or amend the persistence configuration. [1].
+
+  [1] <https://cloud.google.com/pubsub/docs/subscription-overview#lifecycle>.
+{% endblock subscription_state_failure_remediation %}
+
+{% block endpoint_response_failure_reason %}
+  Non-OK responses from the endpoint detected [1].
+
+  [1] <https://cloud.google.com/pubsub/docs/push#receive_push>
+{% endblock endpoint_response_failure_reason %}
+
+{% block endpoint_response_failure_remediation %}
+  Resolve the endpoint errors processing messages to enable successful delivery.
+
+  Common errors codes:
+  - 431: payload exceeds allowed header limits. Disable write metadata [1]
+  - 401/403: if enabled, ensure the push subscription authentication abides by the requirements. [2] Otherwise check permission errors at the endpoint.
+  - 400: investigate the correctness of the message attributes & the http endpoint.
+
+  [1] <https://cloud.google.com/pubsub/docs/payload-unwrapping#how_payload_unwrapping_works>.
+  [2] <https://cloud.google.com/pubsub/docs/authenticate-push-subscriptions#configure_for_push_authentication>.
+{% endblock endpoint_response_failure_remediation %}
+
+{% block dead_letter_topic_failure_reason %}
+  No dead letter topic attached. [1]
+
+  [1] <https://cloud.google.com/pubsub/docs/handling-failures#dead_letter_topic>
+{% endblock dead_letter_topic_failure_reason %}
+
+{% block dead_letter_topic_failure_remediation %}
+  Add dead letter topic to deliver to the topic any messages whose delivery retries has exceeded the threshold.
+  Be aware that this is on best effort [1] and ensure the proper permissions are assigned [2].
+  Monitor dead-lettered message count[3] and pull from the subscription attached to the dead letter topic to investigate the message processing failures [4].
+
+  [1] <https://cloud.google.com/pubsub/docs/handling-failures#how_dead_letter_topics_work>
+  [2] <https://cloud.google.com/pubsub/docs/handling-failures#grant_forwarding_permissions>
+  [3] <https://cloud.google.com/pubsub/docs/handling-failures#monitor_forwarded_messages>
+  [4] <https://cloud.google.com/pubsub/docs/handling-failures#track-delivery-attempts>
+{% endblock dead_letter_topic_failure_remediation %}
+
+{% block dead_letter_topic_permissions_failure_remediation %}
+  Please ensure both the publisher role to the dead letter topic/project
+  level and the subscriber role at the subscription/project level to the
+  pubsub agent {} are assigned
+
+{% endblock dead_letter_topic_permissions_failure_remediation %}
+
+{% block vpcsc_api_failure_remediation %}
+  Beware of limitations when using push subscriptions with VPCSC [1] such as:
+  - You can't update existing push subscriptions, they continue to function but aren't protected by VPC Service Controls
+  - Custom domains don't work, you can only create new push subscriptions for which the push endpoint is set to a Cloud Run service
+  - You can only create new push subscriptions through Eventarc for Eventarc workflows
+  - Use the fully qualified name of the topic if terraform/deployment manager is used to attach dead letter topics
+
+  [1] <https://cloud.google.com/pubsub/docs/create-push-subscription#vpc-service-control>
+{% endblock vpcsc_api_failure_remediation %}

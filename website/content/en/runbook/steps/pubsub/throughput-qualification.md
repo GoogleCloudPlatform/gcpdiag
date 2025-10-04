@@ -12,7 +12,7 @@ description: >
 
 ### Description
 
-None
+This step checks if the throughput qualification is in a good state.
 
 ### Failure Reason
 

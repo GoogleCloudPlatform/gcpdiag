@@ -45,7 +45,7 @@ class PullSubscriptionDelivery(runbook.DiagnosticTree):
   """Diagnostic checks for Cloud Pub/Sub pull delivery issues.
 
   Provides a DiagnosticTree to check for issues related to delivery issues
-  for resources in Cloud Pub/Sub. Particularly this runbook focuses on common issues
+  for subscriptions in Cloud Pub/Sub. Particularly this runbook focuses on common issues
   experienced while using Pub/Sub pull subscriptions.
 
   - Areas:
@@ -146,7 +146,7 @@ class PullRate(runbook.Gateway):
     ).format(delivery_rate=delivery_rate, unacked_messages=unacked_messages))
 
     # analyze qualification
-    self.add_child(child=ThroughputQualification())
+    self.add_child(child=pubsub_gs.ThroughputQualification())
 
   # subscription/sent_message_count
   def delivery_rate(self, subscription_name: str) -> float:
@@ -170,48 +170,6 @@ class PullRate(runbook.Gateway):
     if time_series:
       return float(get_path(list(time_series.values())[0], 'values')[0][0])
     return 0.0
-
-
-class ThroughputQualification(runbook.Step):
-  """Has common step to validate subscription qualification attributes."""
-
-  template = 'generics::throughput_qualification'
-
-  def execute(self):
-    """Checks if subscription has good health (high qualification)."""
-
-    subscription = pubsub.get_subscription(project_id=op.get(flags.PROJECT_ID),
-                                           subscription_name=op.get(
-                                               flags.SUBSCRIPTION_NAME))
-
-    qualification_query = (
-        'fetch pubsub_subscription | metric'
-        ' "pubsub.googleapis.com/subscription/delivery_latency_health_score" |'
-        ' filter (resource.subscription_id =="{}") | group_by 1m,'
-        ' [value_delivery_latency_health_score_sum:sum(if(value.delivery_latency_health_score,'
-        ' 1, 0))] | every 1m | within 10m').format(subscription.name)
-
-    subscription = pubsub.get_subscription(project_id=op.get(flags.PROJECT_ID),
-                                           subscription_name=op.get(
-                                               flags.SUBSCRIPTION_NAME))
-    low_health_metrics = []
-    time_series = monitoring.query(op.get(flags.PROJECT_ID),
-                                   qualification_query)
-    for metric in list(time_series.values()):
-      # metric_dict[get_path(metric, ('labels','metric.criteria'))] = metric['values']
-      if metric['values'][0][-1] == 0:
-        low_health_metrics.append(
-            get_path(metric, ('labels', 'metric.criteria')))
-
-    if low_health_metrics:
-      op.add_failed(
-          resource=subscription,
-          reason=op.prep_msg(op.FAILURE_REASON,
-                             low_health_metrics=low_health_metrics),
-          remediation=op.prep_msg(op.FAILURE_REMEDIATION),
-      )
-    else:
-      op.add_ok(resource=subscription, reason='Subcription has good health')
 
 
 class PullSubscriptionDeliveryEnd(runbook.EndStep):
