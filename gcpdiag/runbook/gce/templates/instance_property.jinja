@@ -1,0 +1,11 @@
+{% block default_success_reason %}
+Instance {{instance_name}} property '{property_path}' with value '{actual_value}' meets condition: {operator} '{expected_value}'.
+{% endblock %}
+
+{% block default_failure_reason %}
+Instance {instance_name} property '{property_path}' with value '{actual_value}' does not meet condition: {operator} '{expected_value}'.
+{% endblock %}
+
+{% block default_failure_remediation %}
+Ensure that property '{property_path}' for instance {instance_name} is configured to meet the condition: {operator} '{expected_value}'.
+{% endblock %}

@@ -23,6 +23,12 @@ OSLOGIN_ROLE = 'roles/compute.osLogin'
 OSLOGIN_ADMIN_ROLE = 'roles/compute.osAdminLogin'
 # Users from a different organization than the VM they're connecting to
 OSLOGIN_EXTERNAL_USER_ROLE = 'roles/compute.osLoginExternalUser'
+OS_LOGIN_ROLES = [
+    OSLOGIN_ROLE, OSLOGIN_ADMIN_ROLE, 'roles/iam.serviceAccountUser',
+    OSLOGIN_EXTERNAL_USER_ROLE
+]
+ENABLE_OSLOGIN = 'enable-oslogin'
+ENABLE_OSLOGIN_2FA = 'enable-oslogin-2fa'
 # INSTANCE ADMIN
 INSTANCE_ADMIN_ROLE = 'roles/compute.instanceAdmin.v1'
 
@@ -170,6 +176,9 @@ CLOUD_INIT_STARTUP_PATTERN = [
     r"cloud-init\[(\d+)\]: Cloud-init v\. (.*?) running '(.*)'"
 ]
 
+# OS Config
+ENABLE_OSCONFIG = 'enable-osconfig'
+
 # GCE Operation types
 IG_INSTANCE_REPAIR_METHOD = 'compute.instances.repair.recreateInstance'
 INSTANCE_PREMPTION_METHOD = 'compute.instances.preempted'
@@ -177,3 +186,84 @@ HOST_ERROR_METHOD = 'compute.instances.hostError'
 STOP_METHOD = 'compute.instances.stop'
 TERMINATE_ON_HOST_MAINTENANCE_METHOD = 'compute.instances.terminateOnHostMaintenance'
 GUEST_TERMINATE_METHOD = 'compute.instances.guestTerminate'
+
+GCE_ACTIVITY_LOG_FILTER = ('logName:"cloudaudit.googleapis.com%2Factivity" '
+                           'protoPayload.serviceName:"compute.googleapis.com"')
+
+# MIG
+AUTOSCALING_MODE_ON = 'ON'
+AUTOSCALING_MODE_OFF = 'OFF'
+MIG_LIMIT_EXCEEDED_LOGS = ["Exceeded limit 'MAX_INSTANCES_IN_INSTANCE_GROUP'"]
+MIG_NOT_FOUND_LOGS = ['instanceGroupManagers.*was not found']
+MIG_IN_USE_LOGS = ['is already being used by']
+MIG_MANAGER_RESOURCE_TYPE_FILTER = 'resource.type="gce_instance_group_manager"'
+MIG_RESOURCE_TYPE_FILTER = 'resource.type="gce_instance_group_manager"'
+
+# OS Checks
+RHEL_PATTERN = 'rhel'
+ROCKY_PATTERN = 'rocky'
+SLES_PATTERN = 'sles'
+WINDOWS_FEATURE = 'WINDOWS'
+BYOS_PATTERN = 'byos'
+PROP_BOOT_DISK_LICENSES = 'boot_disk_licenses'
+PROP_GUEST_OS_FEATURES = 'guest_os_features'
+PROP_NETWORK_INTERFACE_COUNT = 'network_interface_count'
+PROP_IS_PREEMPTIBLE_VM = 'is_preemptible_vm'
+PROP_CREATED_BY_MIG = 'created_by_mig'
+
+# Reservation errors
+RESERVATION_RESIZE_COUNT_TOO_LOW = [
+    'The resize instance count cannot be lower than the in use count for a specific reservation.'
+]
+RESERVATION_POLICY_IN_USE = [
+    r'The resource_policy resource \'projects/.+/regions/.+/resourcePolicies/.+\' '
+    r'is already being used by \'projects/.+/zones/.+/reservations/.+\'.'
+]
+RESERVATION_MACHINE_TYPE_DISALLOWED = [
+    r'The machine type .+ provided in instance properties is disallowed for '
+    'reservations with ANY reservation affinity'
+]
+RESERVATION_SHARED_NO_ORG = [
+    'Cannot create Shared Reservations in a project that does not belong to an organization.'
+]
+RESERVATION_INVALID_DISK_SIZE = [
+    r'Disk .+ provided in the instance template has invalid size: 0 GB.'
+]
+RESERVATION_OUTSIDE_ZONE_REGION = [
+    'Reservation cannot be created outside the zone/region of source resource.'
+]
+RESERVATION_INVALID_SOURCE_RESOURCE = [
+    'Source resource reference provided invalid.'
+]
+RESERVATION_ALREADY_EXISTS = [
+    r'The resource \'projects/.+/zones/.+/.+/.+\' already exists'
+]
+RESERVATION_NOT_FOUND = ['notFound', 'does not exist in zone']
+RESERVATION_CANNOT_OVERRIDE_PROPERTIES = [
+    'Reservation cannot override properties populated by source resource.'
+]
+RESERVATION_CROSS_PROJECT_REFERENCE_NOT_ALLOWED = [
+    'Cross project referencing is not allowed for this resource.'
+]
+RESERVATION_SHARED_LIMIT_EXCEEDED = [
+    'Cannot support more than 100 shared reservations of the same shape under an organization.'
+]
+RESERVATION_INVALID_SPECIFIC_RESERVATION_COUNT = [
+    'Invalid value for field \'resource.specificReservation.count\''
+]
+RESERVATION_SHARED_OWNER_PROJECTS_CONSTRAINT = [
+    'Constraint constraints/compute.sharedReservationsOwnerProjects violated for '
+    'project'
+]
+RESERVATION_PROJECT_NOT_FOUND_OR_ORG = [
+    r'Project .+ doesn\'t exist or doesn\'t belong to the same organization of '
+    'the current project.'
+]
+
+# Reservation filters
+RESERVATION_CREATE_SUCCESS_FILTER = (
+    'protoPayload.methodName=\'compute.reservations.create\' AND '
+    'protoPayload.status.code=200')
+RESERVATION_UPDATE_SUCCESS_FILTER = (
+    'protoPayload.methodName=\'compute.reservations.update\' AND '
+    'protoPayload.status.code=200')

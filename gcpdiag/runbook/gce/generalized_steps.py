@@ -15,17 +15,93 @@
 
 import logging
 import math
+import operator as operator_mod
+import re
 from datetime import datetime
 from typing import Any, List, Optional, Set
 
+import apiclient.errors
 from boltons.iterutils import get_path
 
-from gcpdiag import runbook
+from gcpdiag import runbook, utils
 from gcpdiag.queries import gce, logs, monitoring
+from gcpdiag.runbook import exceptions as runbook_exceptions
 from gcpdiag.runbook import op
-from gcpdiag.runbook.gce import constants, flags, util
+from gcpdiag.runbook import util as runbook_util
+from gcpdiag.runbook.gce import constants, util
+from gcpdiag.runbook.gcp import flags
+from gcpdiag.runbook.iam import flags as iam_flags
+from gcpdiag.runbook.iam import generalized_steps as iam_gs
+from gcpdiag.runbook.logs import generalized_steps as logs_gs
 
 UTILIZATION_THRESHOLD = 0.95
+
+
+def _get_operator_fn(op_str: str):
+  """Maps an operator string to a function from the operator module."""
+  operators = {
+      'eq': operator_mod.eq,
+      'ne': operator_mod.ne,
+      'lt': operator_mod.lt,
+      'le': operator_mod.le,
+      'gt': operator_mod.gt,
+      'ge': operator_mod.ge,
+  }
+  if op_str not in operators:
+    raise ValueError(
+        f"Unsupported operator: '{op_str}'. Supported operators are: "
+        f"{list(operators.keys()) + ['contains', 'matches']}")
+  return operators[op_str]
+
+
+def _resolve_expected_value(value_str: str) -> Any:
+  """Resolves expected value, handling 'ref:' prefix."""
+  if value_str.startswith('ref:'):
+    const_name = value_str[4:]
+    resolved_value = getattr(constants, const_name, None)
+    if resolved_value is None:
+      raise ValueError(f"Could not resolve constant reference: '{value_str}'. "
+                       f"Ensure '{const_name}' is defined in gce/constants.py.")
+    return resolved_value
+  return value_str
+
+
+def _check_condition(actual_value: Any, expected_value: Any,
+                     op_str: str) -> bool:
+  """Compares actual and expected values using the specified operator."""
+  # Handle collection/regex operators first
+  if op_str == 'contains':
+    if hasattr(actual_value, '__contains__'):
+      return expected_value in actual_value
+    else:
+      return False
+  if op_str == 'matches':
+    try:
+      if isinstance(actual_value, (list, set, tuple)):
+        return any(
+            re.search(str(expected_value), str(item)) for item in actual_value)
+      else:
+        return bool(re.search(str(expected_value), str(actual_value)))
+    except re.error as e:
+      raise ValueError(
+          f"Invalid regex pattern provided in expected_value: '{expected_value}'"
+      ) from e
+
+  op_fn = _get_operator_fn(op_str)
+  try:
+    # Attempt to convert to bool if expected is bool
+    if isinstance(expected_value, bool):
+      actual_value = op.BOOL_VALUES.get(str(actual_value).lower())
+    # Attempt to convert to numeric if expected is numeric
+    elif isinstance(expected_value, (int, float)):
+      try:
+        actual_value = type(expected_value)(actual_value)
+      except (ValueError, TypeError):
+        pass  # If conversion fails, compare as is
+    return op_fn(actual_value, expected_value)
+  except TypeError:
+    # If types are incompatible for comparison, consider it a mismatch
+    return False
 
 
 class HighVmMemoryUtilization(runbook.Step):
@@ -368,6 +444,17 @@ class VmSerialLogsCheck(runbook.Step):
 
   def execute(self):
     """Analyzing serial logs for predefined patterns."""
+
+    # check for parameter overrides for patterns and template
+    if op.get('template'):
+      self.template = op.get('template')
+    if op.get('positive_patterns'):
+      self.positive_pattern = runbook_util.resolve_patterns(
+          op.get('positive_patterns'), constants)
+    if op.get('negative_patterns'):
+      self.negative_pattern = runbook_util.resolve_patterns(
+          op.get('negative_patterns'), constants)
+
     if self.vm:
       vm = self.vm
       self.project_id = vm.project_id
@@ -527,9 +614,6 @@ class VmMetadataCheck(runbook.Step):
     elif isinstance(self.expected_value, str):
       # Directly compare string values
       return actual_value == self.expected_value
-    elif isinstance(self.expected_value, str):
-      # Directly compare string values
-      return actual_value == self.expected_value
     elif isinstance(self.expected_value, (int, float)):
       # use isclose math to compare int and float
       return math.isclose(actual_value, self.expected_value)
@@ -543,12 +627,58 @@ class VmMetadataCheck(runbook.Step):
 
   def execute(self):
     """Verify VM metadata value."""
+    self.project_id = op.get(flags.PROJECT_ID) or self.project_id
+    self.instance_name = op.get(flags.INSTANCE_NAME) or self.instance_name
+    self.zone = op.get(flags.ZONE) or self.zone
+    metadata_key_str = op.get('metadata_key') or getattr(
+        self, 'metadata_key', None)
+    expected_value_str = op.get('expected_value') or getattr(
+        self, 'expected_value', None)
+
+    if not self.instance_name or not self.zone:
+      raise runbook_exceptions.MissingParameterError(
+          'instance_name and zone must be provided.')
+    if not metadata_key_str:
+      raise runbook_exceptions.MissingParameterError(
+          "'metadata_key' is required for this step.")
+    if expected_value_str is None:
+      raise runbook_exceptions.MissingParameterError(
+          "'expected_value' is required for this step.")
+
+    if metadata_key_str.startswith('ref:'):
+      self.metadata_key = getattr(constants, metadata_key_str[4:])
+    else:
+      self.metadata_key = metadata_key_str
+
+    try:
+      resolved_expected_value = _resolve_expected_value(str(expected_value_str))
+      # convert to bool if it looks like one.
+      if str(resolved_expected_value).lower() in op.BOOL_VALUES:
+        self.expected_value = op.BOOL_VALUES[str(
+            resolved_expected_value).lower()]
+      else:
+        self.expected_value = resolved_expected_value
+      self.expected_value_type = type(self.expected_value)
+    except ValueError as e:
+      raise runbook_exceptions.InvalidParameterError(str(e)) from e
+
     if self.vm:
       vm = self.vm
     else:
-      vm = gce.get_instance(project_id=self.project_id,
-                            zone=self.zone,
-                            instance_name=self.instance_name)
+      try:
+        vm = gce.get_instance(project_id=self.project_id,
+                              zone=self.zone,
+                              instance_name=self.instance_name)
+      except apiclient.errors.HttpError as err:
+        if err.resp.status == 404:
+          op.add_skipped(
+              None,
+              reason=(f'VM instance {self.instance_name} not found in project'
+                      f' {self.project_id} zone {self.zone}'),
+          )
+          return
+        else:
+          raise utils.GcpApiError(err) from err
     if not vm:
       op.add_skipped(
           None,
@@ -801,7 +931,7 @@ class VmHasOpsAgent(runbook.Step):
                           log_name="projects/{}/logs/ops-agent-health"
                           resource.labels.instance_id="{}"
                           "LogPingOpsAgent"'''.format(self.project_id,
-                                                      self.instance_id),
+                                                      instance.id),
           start_time=self.start_time,
           end_time=self.end_time)
       if serial_log_entries:
@@ -829,7 +959,7 @@ class VmHasOpsAgent(runbook.Step):
                 | every 1m
                 | group_by [resource.instance_id, metric.version],
                     [value_uptime_aggregate: aggregate(value.uptime)]
-              """.format(self.instance_id))
+              """.format(instance.id))
       subagents = self._has_ops_agent_subagent(ops_agent_uptime)
       if subagents['metrics_subagent_installed']:
         op.add_ok(resource=instance,
@@ -845,3 +975,401 @@ class VmHasOpsAgent(runbook.Step):
                           op.FAILURE_REMEDIATION,
                           full_resource_path=instance.full_path,
                           subagent='metrics'))
+
+
+class MigAutoscalingPolicyCheck(runbook.Step):
+  """Checks MIG autoscaling policy attributes.
+
+  This step performs checks on attributes within a Managed Instance Group (MIG)'s
+  autoscaling policy. It requires both 'property_path' and 'expected_value' to be
+  specified.
+
+  The MIG can be identified either by providing 'instance_name' and 'zone' (the
+  step will find the MIG associated with the instance) or by providing 'mig_name'
+  and 'location' (zone or region).
+
+  Parameters:
+  - property_path: The nested path of the property to check within the MIG or
+    autoscaler resource (e.g., 'autoscalingPolicy.mode'). If the path starts
+    with 'autoscalingPolicy', the autoscaler resource is queried.
+  - expected_value: The value to compare against. Supports 'ref:' prefix to
+    resolve constants from gce/constants.py (e.g., 'ref:AUTOSCALING_MODE_ON').
+  - operator: The comparison operator to use. Supported: 'eq' (default), 'ne',
+    'lt', 'le', 'gt', 'ge'.
+  """
+
+  template = 'mig_autoscaling::policy_check'
+  project_id: Optional[str] = None
+  location: Optional[str] = None  # zone or region
+  mig_name: Optional[str] = None
+  instance_name: Optional[str] = None
+  zone: Optional[str] = None
+
+  def execute(self):
+    """Check MIG Autoscaling Policy."""
+    # Get parameters
+    self.project_id = op.get(flags.PROJECT_ID) or self.project_id
+    self.location = op.get(flags.LOCATION) or self.location
+    self.mig_name = op.get(flags.MIG_NAME) or self.mig_name
+    self.instance_name = op.get(flags.INSTANCE_NAME) or self.instance_name
+    self.zone = op.get(flags.ZONE) or self.zone
+
+    property_path: Optional[str] = op.get('property_path')
+    expected_value_str: Optional[str] = op.get('expected_value')
+    operator: str = op.get('operator', 'eq')
+
+    try:
+      # If instance details are provided, find MIG from instance
+      if self.instance_name and self.zone:
+        instance = gce.get_instance(self.project_id, self.zone,
+                                    self.instance_name)
+        if instance.created_by_mig:
+          mig = instance.mig
+          self.location = mig.zone or mig.region
+          if not self.location:
+            op.add_skipped(
+                instance,
+                reason=
+                f'Could not determine location for MIG of instance {self.instance_name}.',
+            )
+            return
+        else:
+          op.add_skipped(
+              instance,
+              reason=
+              f'Instance {self.instance_name} is not part of any Managed Instance Group.',
+          )
+          return
+      # If MIG details are provided, fetch MIG directly
+      elif self.mig_name and self.location:
+        if self.location.count('-') == 2:  # zone
+          mig = gce.get_instance_group_manager(self.project_id, self.location,
+                                               self.mig_name)
+        elif self.location.count('-') == 1:  # region
+          mig = gce.get_region_instance_group_manager(self.project_id,
+                                                      self.location,
+                                                      self.mig_name)
+        else:
+          raise runbook_exceptions.InvalidParameterError(
+              f"Cannot determine if location '{self.location}' is a zone or region."
+          )
+      else:
+        raise runbook_exceptions.MissingParameterError(
+            'Either instance_name and zone, or mig_name and location must be provided.'
+        )
+    except apiclient.errors.HttpError as err:
+      if err.resp.status == 404:
+        resource = self.instance_name or self.mig_name
+        op.add_skipped(
+            None,
+            reason=
+            f'Resource {resource} not found in project {self.project_id}.',
+        )
+        return
+      else:
+        raise utils.GcpApiError(err) from err
+    except AttributeError:
+      op.add_skipped(
+          None,
+          reason=f'Could not determine MIG for instance {self.instance_name}.',
+      )
+      return
+
+    if not mig:
+      op.add_skipped(None, reason='Could not find MIG to analyze.')
+      return
+
+    # Generic check if property_path is provided
+    if not property_path:
+      raise runbook_exceptions.MissingParameterError(
+          "'property_path' is required for this step.")
+    if expected_value_str is None:
+      raise runbook_exceptions.MissingParameterError(
+          "'expected_value' is required for this step.")
+
+    try:
+      expected_value = _resolve_expected_value(expected_value_str)
+    except ValueError as e:
+      raise runbook_exceptions.InvalidParameterError(str(e)) from e
+
+    if property_path and property_path.startswith('autoscalingPolicy'):
+      try:
+        if mig.zone:  # zonal
+          autoscaler = gce.get_autoscaler(self.project_id, mig.zone, mig.name)
+          actual_value = autoscaler.get(property_path, default=None)
+        else:  # regional
+          autoscaler = gce.get_region_autoscaler(self.project_id, mig.region,
+                                                 mig.name)
+          actual_value = autoscaler.get(property_path, default=None)
+      except apiclient.errors.HttpError as err:
+        if err.resp.status == 404:
+          # No autoscaler linked, policy doesn't exist.
+          actual_value = None
+        else:
+          raise utils.GcpApiError(err) from err
+    else:
+      actual_value = mig.get(property_path, default=None)
+
+    op.add_metadata('mig_name', mig.name)
+    op.add_metadata('property_path', property_path)
+    op.add_metadata('expected_value', str(expected_value))
+    op.add_metadata('operator', operator)
+    op.add_metadata('actual_value', str(actual_value))
+
+    if _check_condition(actual_value, expected_value, operator):
+      op.add_ok(
+          mig,
+          reason=op.prep_msg(
+              op.SUCCESS_REASON,
+              mig_name=mig.name,
+              property_path=property_path,
+              expected_value=expected_value,
+              operator=operator,
+              actual_value=actual_value,
+          ),
+      )
+    else:
+      op.add_failed(
+          mig,
+          reason=op.prep_msg(
+              op.FAILURE_REASON,
+              mig_name=mig.name,
+              property_path=property_path,
+              expected_value=expected_value,
+              operator=operator,
+              actual_value=actual_value,
+          ),
+          remediation=op.prep_msg(op.FAILURE_REMEDIATION, mig_name=mig.name),
+      )
+
+
+class InstancePropertyCheck(runbook.Step):
+  """Checks that a Instance property meets a given condition.
+
+  This step fetches a VM instance and checks if a specified property
+  meets the condition defined by an expected value and an operator.
+  It supports nested properties via getattr and various operators including
+  'eq', 'ne', 'lt', 'le', 'gt', 'ge', 'contains', and 'matches'.
+
+  Parameters:
+  - property_path: The path of the property to check on the Instance object
+    (e.g., 'status', 'boot_disk_licenses').
+  - expected_value: The value to compare against. Supports 'ref:' prefix to
+    resolve constants from gce/constants.py (e.g., 'ref:RHEL_PATTERN').
+  - operator: The comparison operator to use. Supported: 'eq', 'ne',
+    'lt', 'le', 'gt', 'ge', 'contains', 'matches'. Default is 'eq'.
+
+  Operator Notes:
+  - `contains`: Checks for exact membership in lists (e.g., 'item' in ['item'])
+    or substring in strings.
+  - `matches`: Treats `expected_value` as a regex and checks if the pattern is
+    found in the string or in *any* element of a list. Useful for partial
+    matches (e.g., pattern 'sles' matching license 'sles-12-sap').
+  """
+
+  template = 'instance_property::default'
+  project_id: Optional[str] = None
+  instance_name: Optional[str] = None
+  zone: Optional[str] = None
+
+  def execute(self):
+    """Check VM property."""
+    self.project_id = op.get(flags.PROJECT_ID) or self.project_id
+    self.instance_name = op.get(flags.INSTANCE_NAME) or self.instance_name
+    self.zone = op.get(flags.ZONE) or self.zone
+
+    property_path: Optional[str] = op.get('property_path')
+    expected_value_str: Optional[str] = op.get('expected_value')
+    operator: str = op.get('operator', 'eq')
+
+    if not self.instance_name or not self.zone:
+      raise runbook_exceptions.MissingParameterError(
+          'instance_name and zone must be provided.')
+    if not property_path:
+      raise runbook_exceptions.MissingParameterError(
+          "'property_path' is required for this step.")
+    if property_path.startswith('ref:'):
+      property_path = getattr(constants, property_path[4:])
+    if expected_value_str is None:
+      raise runbook_exceptions.MissingParameterError(
+          "'expected_value' is required for this step.")
+
+    try:
+      vm = gce.get_instance(self.project_id, self.zone, self.instance_name)
+    except apiclient.errors.HttpError as err:
+      if err.resp.status == 404:
+        op.add_skipped(
+            None,
+            reason=(f'VM instance {self.instance_name} not found in project'
+                    f' {self.project_id} zone {self.zone}'),
+        )
+        return
+      else:
+        raise utils.GcpApiError(err) from err
+
+    try:
+      resolved_expected_value = _resolve_expected_value(expected_value_str)
+      if str(resolved_expected_value).lower() in op.BOOL_VALUES:
+        expected_value = op.BOOL_VALUES[str(resolved_expected_value).lower()]
+      else:
+        expected_value = resolved_expected_value
+    except ValueError as e:
+      raise ValueError(str(e)) from e
+
+    try:
+      actual_value = getattr(vm, property_path)
+    except (AttributeError, KeyError) as e:
+      raise ValueError(
+          f"Could not access property_path '{property_path}' on VM instance {self.instance_name}"
+      ) from e
+
+    op.add_metadata('instance_name', vm.name)
+    op.add_metadata('property_path', property_path)
+    op.add_metadata('expected_value', str(expected_value))
+    op.add_metadata('operator', operator)
+    op.add_metadata('actual_value', str(actual_value))
+
+    if _check_condition(actual_value, expected_value, operator):
+      op.add_ok(
+          vm,
+          reason=op.prep_msg(
+              op.SUCCESS_REASON,
+              instance_name=vm.name,
+              property_path=property_path,
+              expected_value=expected_value,
+              operator=operator,
+              actual_value=actual_value,
+          ),
+      )
+    else:
+      op.add_failed(
+          vm,
+          reason=op.prep_msg(
+              op.FAILURE_REASON,
+              instance_name=vm.name,
+              property_path=property_path,
+              expected_value=expected_value,
+              operator=operator,
+              actual_value=actual_value,
+          ),
+          remediation=op.prep_msg(
+              op.FAILURE_REMEDIATION,
+              instance_name=vm.name,
+              property_path=property_path,
+              expected_value=expected_value,
+              operator=operator,
+          ),
+      )
+
+
+class GceLogCheck(runbook.Step):
+  """Executes a Cloud Logging query and checks results against optional patterns.
+
+  This step queries Cloud Logging using the provided filter string by calling
+  logs.generalized_steps.CheckIssueLogEntry.
+  See CheckIssueLogEntry for logic on FAILED/UNCERTAIN status.
+
+  Parameters retrieved via `op.get()`:
+    project_id(str): Project ID to search for filter.
+    filter_str(str): Filter in Cloud Logging query language:
+      https://cloud.google.com/logging/docs/view/query-library.
+    issue_pattern(Optional[str]): Semicolon-separated ';;' list of regex
+      patterns to search for in `protoPayload.status.message`. If prefixed
+      with 'ref:', it resolves to a list in `gce/constants.py`.
+      If provided, logs matching pattern will result in FAILED status.
+    resource_name(Optional[str]): Resource identifier for template messages.
+    template(Optional[str]): Template name, defaults to
+      'logging::gce_log'.
+  """
+
+  def execute(self):
+    """Check for log entries by calling CheckIssueLogEntry."""
+    project_id = op.get(flags.PROJECT_ID)
+    filter_str = op.get('filter_str')
+    issue_pattern_str = op.get('issue_pattern')
+    resource_name = op.get('resource_name', 'resource NA')
+    template = op.get('template') or 'logging::gce_log'
+
+    if not project_id:
+      raise runbook_exceptions.MissingParameterError(
+          "'project_id' is required for this step.")
+    if not filter_str:
+      raise runbook_exceptions.MissingParameterError(
+          "'filter_str' is required for this step.")
+
+    # Resolve filter_str if it is a reference
+    if filter_str.startswith('ref:'):
+      const_name = filter_str[4:]
+      resolved_filter = getattr(constants, const_name, None)
+      if resolved_filter is None:
+        raise runbook_exceptions.InvalidParameterError(
+            f"Could not resolve constant reference: '{filter_str}'. "
+            f"Ensure '{const_name}' is defined in gce/constants.py.")
+      filter_str = resolved_filter
+
+    issue_patterns = []
+    if issue_pattern_str:
+      issue_patterns = runbook_util.resolve_patterns(issue_pattern_str,
+                                                     constants)
+
+    log_check_step = logs_gs.CheckIssueLogEntry(project_id=project_id,
+                                                filter_str=filter_str,
+                                                issue_pattern=issue_patterns,
+                                                template=template,
+                                                resource_name=resource_name)
+    self.add_child(log_check_step)
+
+
+class GceIamPolicyCheck(runbook.Step):
+  """Checks IAM policies by calling IamPolicyCheck with support for gce/constants.py.
+
+  This step is a wrapper around iam.generalized_steps.IamPolicyCheck that adds
+  support for resolving 'roles' or 'permissions' parameters from gce/constants.py
+  if they are prefixed with 'ref:'. It also supports ';;' delimited strings for
+  roles or permissions lists.
+
+  Parameters retrieved via `op.get()`:
+    project_id(str): Project ID to check policy against.
+    principal(str): The principal to check (e.g., user:x@y.com,
+      serviceAccount:a@b.com).
+    roles(Optional[str]): ';;' separated list of roles or 'ref:CONSTANT' to check.
+    permissions(Optional[str]): ';;' separated list of permissions or
+      'ref:CONSTANT' to check.
+    require_all(bool): If True, all roles/permissions must be present.
+      If False (default), at least one must be present.
+  """
+
+  def execute(self):
+    """Check IAM policies by calling IamPolicyCheck."""
+    project_id = op.get(flags.PROJECT_ID)
+    principal = op.get(iam_flags.PRINCIPAL)
+    roles_str = op.get('roles')
+    permissions_str = op.get('permissions')
+    require_all = op.BOOL_VALUES.get(
+        str(op.get('require_all', False)).lower(), False)
+
+    if not project_id:
+      raise runbook_exceptions.MissingParameterError(
+          "'project_id' is required for this step.")
+    if not principal:
+      raise runbook_exceptions.MissingParameterError(
+          "'principal' is required for this step.")
+    if not roles_str and not permissions_str:
+      raise runbook_exceptions.MissingParameterError(
+          "Either 'roles' or 'permissions' must be provided.")
+
+    roles_set = None
+    if roles_str:
+      roles_set = set(runbook_util.resolve_patterns(roles_str, constants))
+
+    permissions_set = None
+    if permissions_str:
+      permissions_set = set(
+          runbook_util.resolve_patterns(permissions_str, constants))
+
+    iam_check_step = iam_gs.IamPolicyCheck(project=project_id,
+                                           principal=principal,
+                                           roles=roles_set,
+                                           permissions=permissions_set,
+                                           require_all=require_all)
+    self.add_child(iam_check_step)

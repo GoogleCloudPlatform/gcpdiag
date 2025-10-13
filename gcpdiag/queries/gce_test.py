@@ -135,9 +135,9 @@ class TestGce(unittest.TestCase):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     instances = gce.get_instances(context)
     instances_by_path = {i.full_path: i for i in instances.values()}
-    assert instances_by_path[DUMMY_INSTANCE1_PATH].is_preemptible_vm() is True
-    assert instances_by_path[DUMMY_INSTANCE2_PATH].is_preemptible_vm() is True
-    assert instances_by_path[DUMMY_INSTANCE3_PATH].is_preemptible_vm() is False
+    assert instances_by_path[DUMMY_INSTANCE1_PATH].is_preemptible_vm is True
+    assert instances_by_path[DUMMY_INSTANCE2_PATH].is_preemptible_vm is True
+    assert instances_by_path[DUMMY_INSTANCE3_PATH].is_preemptible_vm is False
 
   def test_min_cpu_platform(self):
     instance = gce.get_instance(DUMMY_PROJECT_NAME, DUMMY_ZONE,

@@ -42,6 +42,7 @@ No problematic log entries found in the time range matching the following query:
 
 ### Uncertain Remediation
 
+
 1. Verify of the time range used in the filter matches that when the issue occurred and adjust it accordingly.
 Query:
 {query}

@@ -215,6 +215,16 @@ class ManagedInstanceGroup(models.Resource):
             " aren't set!")
     return self._region
 
+  @property
+  def zone(self) -> Optional[str]:
+    if 'zone' in self._resource_data:
+      m = re.search(r'/zones/([^/]+)$', self._resource_data['zone'])
+      if not m:
+        raise RuntimeError("can't determine zone of mig %s (%s)" %
+                           (self.name, self._resource_data['zone']))
+      return m.group(1)
+    return None
+
   def count_no_action_instances(self) -> int:
     """number of instances in the mig that are running and have no scheduled actions."""
     return self._resource_data['currentActions']['none']
@@ -250,6 +260,45 @@ class ManagedInstanceGroup(models.Resource):
   def version_target_reached(self) -> bool:
     return get_path(self._resource_data,
                     ('status', 'versionTarget', 'isReached'))
+
+  def get(self, path: str, default: Any = None) -> Any:
+    """Gets a value from resource_data using a dot-separated path."""
+    return get_path(self._resource_data,
+                    tuple(path.split('.')),
+                    default=default)
+
+
+class Autoscaler(models.Resource):
+  """Represents a GCE Autoscaler."""
+
+  _resource_data: dict
+
+  def __init__(self, project_id, resource_data):
+    super().__init__(project_id=project_id)
+    self._resource_data = resource_data
+
+  @property
+  def self_link(self) -> str:
+    return self._resource_data['selfLink']
+
+  @property
+  def full_path(self) -> str:
+    result = re.match(r'https://www.googleapis.com/compute/v1/(.*)',
+                      self.self_link)
+    if result:
+      return result.group(1)
+    else:
+      return f'>> {self.self_link}'
+
+  @property
+  def name(self) -> str:
+    return self._resource_data['name']
+
+  def get(self, path: str, default: Any = None) -> Any:
+    """Gets a value from resource_data using a dot-separated path."""
+    return get_path(self._resource_data,
+                    tuple(path.split('.')),
+                    default=default)
 
 
 class SerialPortOutput:
@@ -352,6 +401,25 @@ class Instance(models.Resource):
     return []
 
   @property
+  def boot_disk_licenses(self) -> List[str]:
+    """Returns license names associated with boot disk."""
+    for disk in self.disks:
+      if disk.get('boot'):
+        return [
+            l.partition('/global/licenses/')[2]
+            for l in disk.get('licenses', [])
+        ]
+    return []
+
+  @property
+  def guest_os_features(self) -> List[str]:
+    """Returns guestOsFeatures types associated with boot disk."""
+    for disk in self.disks:
+      if disk.get('boot'):
+        return [f['type'] for f in disk.get('guestOsFeatures', [])]
+    return []
+
+  @property
   def startrestricted(self) -> bool:
     return self._resource_data['startRestricted']
 
@@ -385,6 +453,7 @@ class Instance(models.Resource):
   def is_gke_node(self) -> bool:
     return self.has_label(GKE_LABEL)
 
+  @property
   def is_preemptible_vm(self) -> bool:
     return ('scheduling' in self._resource_data and
             'preemptible' in self._resource_data['scheduling'] and
@@ -572,6 +641,11 @@ class Instance(models.Resource):
     """VM Status is indicated as running."""
     return self._resource_data.get('status', False) == 'RUNNING'
 
+  @property
+  def network_interface_count(self) -> int:
+    """Returns the number of network interfaces attached to the instance."""
+    return len(self._resource_data.get('networkInterfaces', []))
+
   @property  # type: ignore
   @caching.cached_api_call(in_memory=True)
   def mig(self) -> ManagedInstanceGroup:
@@ -601,12 +675,16 @@ class Instance(models.Resource):
                      f'projects/{project.id}/{created_by_match.group(2)}')
 
     # Try to find a matching mig.
-    for mig in get_managed_instance_groups(
-        models.Context(project_id=self.project_id)).values():
+    context = models.Context(project_id=self.project_id)
+    all_migs = list(get_managed_instance_groups(context).values()) + list(
+        get_region_managed_instance_groups(context).values())
+
+    for mig in all_migs:
       if mig.self_link == mig_self_link:
         return mig
 
-    raise AttributeError(f'instance {self.id} is not managed by a mig')
+    raise AttributeError(f'MIG not found for instance {self.id}. '
+                         f'Created by: {created_by}')
 
   @property
   def labels(self) -> dict:
@@ -778,6 +856,91 @@ def get_disk(project_id: str, zone: str, disk_name: str) -> Disk:
   request = compute.disks().get(project=project_id, zone=zone, disk=disk_name)
   response = request.execute(num_retries=config.API_RETRIES)
   return Disk(project_id, resource_data=response)
+
+
+def get_instance_group_manager(
+    project_id: str, zone: str,
+    instance_group_manager_name: str) -> ManagedInstanceGroup:
+  """Get a zonal ManagedInstanceGroup object by name and zone.
+
+  Args:
+    project_id: The project ID of the instance group manager.
+    zone: The zone of the instance group manager.
+    instance_group_manager_name: The name of the instance group manager.
+
+  Returns:
+    A ManagedInstanceGroup object.
+
+  Raises:
+    utils.GcpApiError: If the API call fails.
+  """
+  compute = apis.get_api('compute', 'v1', project_id)
+  request = compute.instanceGroupManagers().get(
+      project=project_id,
+      zone=zone,
+      instanceGroupManager=instance_group_manager_name)
+  try:
+    response = request.execute(num_retries=config.API_RETRIES)
+    return ManagedInstanceGroup(project_id, resource_data=response)
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
+
+
+def get_region_instance_group_manager(
+    project_id: str, region: str,
+    instance_group_manager_name: str) -> ManagedInstanceGroup:
+  """Get a regional ManagedInstanceGroup object by name and region.
+
+  Args:
+    project_id: The project ID of the instance group manager.
+    region: The region of the instance group manager.
+    instance_group_manager_name: The name of the instance group manager.
+
+  Returns:
+    A ManagedInstanceGroup object.
+
+  Raises:
+    utils.GcpApiError: If the API call fails.
+  """
+  compute = apis.get_api('compute', 'v1', project_id)
+  request = compute.regionInstanceGroupManagers().get(
+      project=project_id,
+      region=region,
+      instanceGroupManager=instance_group_manager_name,
+  )
+  try:
+    response = request.execute(num_retries=config.API_RETRIES)
+    return ManagedInstanceGroup(project_id, resource_data=response)
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
+
+
+def get_autoscaler(project_id: str, zone: str,
+                   autoscaler_name: str) -> Autoscaler:
+  """Get a zonal Autoscaler object by name and zone."""
+  compute = apis.get_api('compute', 'v1', project_id)
+  request = compute.autoscalers().get(project=project_id,
+                                      zone=zone,
+                                      autoscaler=autoscaler_name)
+  try:
+    response = request.execute(num_retries=config.API_RETRIES)
+    return Autoscaler(project_id, resource_data=response)
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
+
+
+def get_region_autoscaler(project_id: str, region: str,
+                          autoscaler_name: str) -> Autoscaler:
+  """Get a regional Autoscaler object by name and region."""
+  compute = apis.get_api('compute', 'v1', project_id)
+  request = compute.regionAutoscalers().get(project=project_id,
+                                            region=region,
+                                            autoscaler=autoscaler_name)
+  try:
+    response = request.execute(num_retries=config.API_RETRIES)
+    return Autoscaler(project_id, resource_data=response)
+  except googleapiclient.errors.HttpError as err:
+    raise utils.GcpApiError(err) from err
 
 
 @caching.cached_api_call(in_memory=True)

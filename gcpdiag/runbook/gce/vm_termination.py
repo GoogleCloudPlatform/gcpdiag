@@ -22,6 +22,7 @@ from dateutil import parser
 
 from gcpdiag import runbook, utils
 from gcpdiag.queries import crm, gce, logs
+from gcpdiag.runbook import exceptions as runbook_exceptions
 from gcpdiag.runbook import op
 from gcpdiag.runbook.gce import constants, flags
 
@@ -88,6 +89,12 @@ class VmTermination(runbook.DiagnosticTree):
               datetime,
           'help':
               'The end window for the investigation. Format: YYYY-MM-DDTHH:MM:SSZ'
+      },
+      flags.OPERATION_TYPE: {
+          'type':
+              str,
+          'help':
+              'The type of operation to investigate. eg. "compute.instances.hostError"',
       }
   }
 
@@ -142,13 +149,40 @@ class TerminationOperationType(runbook.Gateway):
   def execute(self):
     """Investigate VM termination reason."""
     project = crm.get_project(op.get(flags.PROJECT_ID))
-    res = gce.get_global_operations(
-        project=op.get(flags.PROJECT_ID),
-        filter_str=TERMINATION_OPERATION_FILTER.format(
-            INSTANCE_ID=op.get(flags.INSTANCE_ID)),
-        service_project_number=project.number,
-        order_by='creationTimestamp desc',
-        max_results=5)
+    instance_id = op.get(flags.INSTANCE_ID)
+    instance_name = op.get(flags.INSTANCE_NAME)
+    zone = op.get(flags.ZONE)
+
+    if not instance_id:
+      if instance_name and zone:
+        try:
+          vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
+                                zone=zone,
+                                instance_name=instance_name)
+          instance_id = vm.id
+          op.put(flags.INSTANCE_ID, instance_id)
+        except googleapiclient.errors.HttpError:
+          op.add_skipped(
+              project,
+              reason=(
+                  'Instance {} does not exist in zone {} or project {}').format(
+                      instance_name, zone, op.get(flags.PROJECT_ID)))
+          return
+      else:
+        raise runbook_exceptions.MissingParameterError(
+            'instance_id or instance_name/zone must be provided.')
+
+    operation_type = op.get(flags.OPERATION_TYPE)
+    filter_str = (
+        f'(targetId = "{instance_id}") AND (operationType = "{operation_type}")'
+        if operation_type else TERMINATION_OPERATION_FILTER.format(
+            INSTANCE_ID=instance_id))
+
+    res = gce.get_global_operations(project=op.get(flags.PROJECT_ID),
+                                    filter_str=filter_str,
+                                    service_project_number=project.number,
+                                    order_by='creationTimestamp desc',
+                                    max_results=5)
 
     start = op.get(flags.START_TIME)
     end = op.get(flags.END_TIME)

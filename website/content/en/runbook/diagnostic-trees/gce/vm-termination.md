@@ -33,7 +33,8 @@ gcpdiag runbook gce/vm-termination \
   -p instance_id=value \
   -p zone=value \
   -p start_time=value \
-  -p end_time=value
+  -p end_time=value \
+  -p operation_type=value
 ```
 
 #### Parameters
@@ -46,6 +47,7 @@ gcpdiag runbook gce/vm-termination \
 | `zone` | True | None | str | The Google Cloud zone where the terminated VM is located. |
 | `start_time` | False | None | datetime | The start window to investigate vm termination. Format: YYYY-MM-DDTHH:MM:SSZ |
 | `end_time` | False | None | datetime | The end window for the investigation. Format: YYYY-MM-DDTHH:MM:SSZ |
+| `operation_type` | False | None | str | The type of operation to investigate. eg. "compute.instances.hostError" |
 
 Get help on available commands
 

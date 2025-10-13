@@ -17,8 +17,6 @@ gce/vm-termination: GCE Instance unexpected shutdowns and reboots diagnostics
   
 [START]: Validate the provided parameters to investigate VM terminations.
 [GATEWAY]: Investigate VM termination reason.
-[GATEWAY]: Decision point to investigate various stop operation types
-[AUTOMATED STEP]: Investigate the scheduled stop policy
 [END]: Finalize VM terminations diagnostics.
 
 
@@ -41,8 +39,6 @@ gce/vm-termination: GCE Instance unexpected shutdowns and reboots diagnostics
   
 [START]: Validate the provided parameters to investigate VM terminations.
 [GATEWAY]: Investigate VM termination reason.
-[GATEWAY]: Decision point to investigate various stop operation types
-[AUTOMATED STEP]: Investigate the scheduled stop policy
 [END]: Finalize VM terminations diagnostics.
 
 

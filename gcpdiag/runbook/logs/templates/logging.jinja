@@ -17,6 +17,7 @@ No problematic log entries found in the time range matching the following query:
 {% endblock default_uncertain_reason %}
 
 {% block default_uncertain_remediation %}
+
 1. Verify of the time range used in the filter matches that when the issue occurred and adjust it accordingly.
 Query:
 {query}
@@ -30,20 +31,19 @@ Query:
 {query}
 {% endblock default_skipped_reason %}
 
-
 {% block dataproc_cluster_quota_uncertain_reason %}
 No issues with insufficient quota identified for cluster {resource_name} in project {project_id} using query:
 {query}.
 {% endblock dataproc_cluster_quota_uncertain_reason %}
 
 {% block dataproc_cluster_quota_uncertain_remediation %}
+
 1. Verify of the time range used in the filter matches that when the issue occurred and adjust it accordingly.
 Query:
 {query}
 2. Verify that the property `dataproc.logging.stackdriver.enable` has not been set to false for cluster {resource_name} in project {project_id}: <https://cloud.google.com/dataproc/docs/concepts/configuring-clusters/cluster-properties#dataproc_service_properties_table>
 3. Verify that logging for the cluster {resource_name} has not been disabled due to cost management: <https://cloud.google.com/blog/products/devops-sre/cloud-logging-cost-management-best-practices>
 {% endblock dataproc_cluster_quota_uncertain_remediation %}
-
 
 {% block dataproc_cluster_quota_failure_reason %}
 The cluster {resource_name} in project {project_id} could not be created due to insufficient quota identified using query:
@@ -65,6 +65,7 @@ No issues with stockouts identified for cluster {resource_name} in project {proj
 {% endblock dataproc_cluster_stockout_uncertain_reason %}
 
 {% block dataproc_cluster_stockout_uncertain_remediation %}
+
 1. Verify of the time range used in the filter matches that when the issue occurred and adjust it accordingly.
 Query:
 {query}
@@ -85,3 +86,32 @@ Resolution Steps:
 2. Review Capacity and Quota Management: If you are already employing Auto Zone placement and still encountering stockouts, it may indicate broader capacity or quota limitations. Consult the following resource for comprehensive strategies on managing capacity, quotas, and stockouts in Google Cloud.<https://www.googlecloudcommunity.com/gc/Community-Blogs/Managing-Capacity-Quota-and-Stockouts-in-the-Cloud-Concepts-and/ba-p/464770>
 
 {% endblock dataproc_cluster_stockout_failure_remediation %}
+
+{% block gce_log_failure_reason %}
+Log entries found matching query:
+{query}
+{% endblock gce_log_failure_reason %}
+
+{% block gce_log_failure_remediation %}
+Review the log entries in Cloud Logging for details.
+Query:
+{query}
+{% endblock gce_log_failure_remediation %}
+
+{% block gce_log_uncertain_reason %}
+No log entries matching issue patterns found in project {project_id} for resource {resource_name} with query: {query}
+{% endblock gce_log_uncertain_reason %}
+
+{% block gce_log_uncertain_remediation %}
+
+1. Verify of the time range used in the filter matches that when the issue occurred and adjust it accordingly.
+Query:
+{query}
+2. Verify that logging for the resource has not been disabled due to cost management: <https://cloud.google.com/blog/products/devops-sre/cloud-logging-cost-management-best-practices>
+{% endblock gce_log_uncertain_remediation %}
+
+{% block gce_log_skipped_reason %}c
+Could not fetch log entries for query due to: {api_err}.
+Query:
+{query}
+{% endblock gce_log_skipped_reason %}

@@ -200,3 +200,41 @@ def parse_time_input(time_str):
   # Not an ISO 8601 / RFC 3339 formatted date
   # If none of the formats matched, raise an exception
   raise ValueError(f'Date format not recognized: {time_str}')
+
+
+def resolve_patterns(patterns_str: str, constants_module) -> list[str]:
+  """Resolves a ';;' separated string of patterns, handling 'ref:' prefix."""
+  patterns = []
+  for pattern in patterns_str.split(';;'):
+    pattern = pattern.strip()
+    if pattern.startswith('ref:'):
+      const_name = pattern[4:]
+      resolved_value = getattr(constants_module, const_name, None)
+      if resolved_value is None:
+        raise ValueError(
+            f"Could not resolve constant reference: '{pattern}'. "
+            f"Ensure '{const_name}' is defined in {constants_module.__name__}.")
+      if isinstance(resolved_value, list):
+        patterns.extend(resolved_value)
+      else:
+        patterns.append(resolved_value)
+    else:
+      patterns.append(pattern)
+  return patterns
+
+
+def get_operator_fn(op_str: str):
+  """Maps an operator string to a function from the operator module."""
+  operators = {
+      'eq': re.match,
+      'ne': re.match,
+      'lt': re.match,
+      'le': re.match,
+      'gt': re.match,
+      'ge': re.match,
+  }
+  if op_str not in operators:
+    raise ValueError(
+        f"Unsupported operator: '{op_str}'. Supported operators are: {list(operators.keys())}"
+    )
+  return operators[op_str]

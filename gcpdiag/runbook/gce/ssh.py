@@ -520,26 +520,27 @@ class OsLoginStatusCheck(runbook.Gateway):
       sa_user_role_check.require_all = False
       self.add_child(sa_user_role_check)
 
-      if op.get(flags.ACCESS_METHOD) == SSH_KEY_IN_METADATA:
-        metadata_perm_check = iam_gs.IamPolicyCheck()
-        metadata_perm_check.project = op.get(flags.PROJECT_ID)
-        metadata_perm_check.principal = op.get(flags.PRINCIPAL)
-        metadata_perm_check.template = 'gcpdiag.runbook.gce::permissions::can_set_metadata'
-        metadata_perm_check.permissions = [
-            'compute.instances.setMetadata',
-            'compute.projects.setCommonInstanceMetadata'
-        ]
-        metadata_perm_check.require_all = False
-        self.add_child(metadata_perm_check)
-        os_login_check = gce_gs.VmMetadataCheck()
-        os_login_check.project_id = op.get(flags.PROJECT_ID)
-        os_login_check.zone = op.get(flags.ZONE)
-        os_login_check.instance_name = op.get(flags.INSTANCE_NAME)
-        os_login_check.template = 'vm_metadata::no_os_login'
-        os_login_check.metadata_key = 'enable_oslogin'
-        os_login_check.expected_value = False
-        self.add_child(os_login_check)
-        self.add_child(PosixUserHasValidSshKeyCheck())
+    elif op.get(flags.ACCESS_METHOD) == SSH_KEY_IN_METADATA:
+      metadata_perm_check = iam_gs.IamPolicyCheck()
+      metadata_perm_check.project = op.get(flags.PROJECT_ID)
+      metadata_perm_check.principal = op.get(flags.PRINCIPAL)
+      metadata_perm_check.template = 'gcpdiag.runbook.gce::permissions::can_set_metadata'
+      metadata_perm_check.permissions = [
+          'compute.instances.setMetadata',
+          'compute.projects.setCommonInstanceMetadata'
+      ]
+      metadata_perm_check.require_all = False
+      self.add_child(metadata_perm_check)
+      os_login_check = gce_gs.VmMetadataCheck()
+      os_login_check.project_id = op.get(flags.PROJECT_ID)
+      os_login_check.zone = op.get(flags.ZONE)
+      os_login_check.instance_name = op.get(flags.INSTANCE_NAME)
+      os_login_check.template = 'vm_metadata::no_os_login'
+      os_login_check.metadata_key = 'enable_oslogin'
+      os_login_check.expected_value = False
+      self.add_child(os_login_check)
+      self.add_child(PosixUserHasValidSshKeyCheck())
+      self.add_child(VmDuplicateSshKeysCheck())
 
 
 class PosixUserHasValidSshKeyCheck(runbook.Step):
@@ -578,6 +579,63 @@ class PosixUserHasValidSshKeyCheck(runbook.Step):
                     remediation=op.prep_msg(op.FAILURE_REMEDIATION,
                                             local_user=op.get(
                                                 flags.POSIX_USER)))
+
+
+class VmDuplicateSshKeysCheck(runbook.Step):
+  """Check if there are duplicate ssh keys in VM metadata."""
+
+  template = 'vm_metadata::duplicate_ssh_keys'
+
+  def execute(self):
+    """Check for duplicate SSH keys."""
+    vm = gce.get_instance(
+        project_id=op.get(flags.PROJECT_ID),
+        zone=op.get(flags.ZONE),
+        instance_name=op.get(flags.INSTANCE_NAME),
+    )
+    ssh_keys_str = vm.get_metadata('ssh-keys')
+    if not ssh_keys_str:
+      op.add_ok(vm, reason='No SSH keys found in metadata.')
+      return
+
+    key_blobs = []
+    for line in ssh_keys_str.splitlines():
+      line = line.strip()
+      if not line:
+        continue
+
+      # remove username prefix if present
+      line_parts = line.split(':', 1)
+      if len(line_parts) == 2 and ' ' not in line_parts[0]:
+        line_without_user = line_parts[1]
+      else:
+        line_without_user = line
+
+      parts = line_without_user.strip().split()
+      if len(parts) >= 2:
+        # parts[0] is key type, parts[1] is key blob
+        key_blobs.append(parts[1])
+
+    seen = set()
+    duplicates = []
+    for blob in key_blobs:
+      if blob in seen and blob not in duplicates:
+        duplicates.append(blob)
+      else:
+        seen.add(blob)
+
+    if duplicates:
+      op.add_failed(
+          vm,
+          reason=op.prep_msg(op.FAILURE_REASON,
+                             instance_name=vm.name,
+                             count=len(duplicates),
+                             keys=','.join(duplicates)),
+          remediation=op.prep_msg(op.FAILURE_REMEDIATION),
+      )
+    else:
+      op.add_ok(vm,
+                reason=op.prep_msg(op.SUCCESS_REASON, instance_name=vm.name))
 
 
 class GceFirewallAllowsSsh(runbook.Gateway):

@@ -253,6 +253,7 @@ dataproc/cluster-creation: Provides a comprehensive analysis of common issues wh
      .
 
      [REMEDIATION]
+
      1. Verify of the time range used in the filter matches that when the issue occurred and adjust it accordingly.
      Query:
 
@@ -324,6 +325,7 @@ dataproc/cluster-creation: Provides a comprehensive analysis of common issues wh
      .
 
      [REMEDIATION]
+
      1. Verify of the time range used in the filter matches that when the issue occurred and adjust it accordingly.
      Query:
 
