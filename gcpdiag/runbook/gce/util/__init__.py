@@ -14,12 +14,43 @@
 
 # Lint as: python3
 """Runbook utility."""
+
 import re
 from typing import List
 
-from gcpdiag.queries import monitoring
+import googleapiclient
+
+from gcpdiag.queries import gce, monitoring
+from gcpdiag.runbook import exceptions as runbook_exceptions
 from gcpdiag.runbook import op
 from gcpdiag.runbook.gce import flags
+
+
+def ensure_instance_resolved():
+  """Check if instance id and name are in context, try to resolve if not."""
+  instance_id = op.get(flags.INSTANCE_ID)
+  instance_name = op.get(flags.INSTANCE_NAME)
+  if instance_id and instance_name:
+    return
+  project_id = op.get(flags.PROJECT_ID)
+  zone = op.get(flags.ZONE)
+  name_or_id = instance_name or instance_id
+  if not name_or_id:
+    raise runbook_exceptions.MissingParameterError(
+        'instance not resolved and instance_name or instance_id not in context')
+  try:
+    instance = gce.get_instance(project_id=project_id,
+                                zone=zone,
+                                instance_name=str(name_or_id))
+    op.put(flags.INSTANCE_NAME, instance.name)
+    op.put(flags.INSTANCE_ID, instance.id)
+  except googleapiclient.errors.HttpError as err:
+    if err.resp.status == 404:
+      raise runbook_exceptions.FailedStepError(
+          f'Instance {name_or_id} not found in project {project_id} '
+          f'zone {zone}.') from err
+    else:
+      raise runbook_exceptions.GcpApiError(err) from err
 
 
 def search_pattern_in_serial_logs(patterns: List,

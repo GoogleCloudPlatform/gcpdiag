@@ -22,9 +22,9 @@ from dateutil import parser
 
 from gcpdiag import runbook, utils
 from gcpdiag.queries import crm, gce, logs
-from gcpdiag.runbook import exceptions as runbook_exceptions
 from gcpdiag.runbook import op
 from gcpdiag.runbook.gce import constants, flags
+from gcpdiag.runbook.gce import util as gce_util
 
 TERMINATION_OPERATION_FILTER = '''(targetId = "{INSTANCE_ID}") AND
     (operationType = "compute.instances.repair.recreateInstance") OR
@@ -149,28 +149,16 @@ class TerminationOperationType(runbook.Gateway):
   def execute(self):
     """Investigate VM termination reason."""
     project = crm.get_project(op.get(flags.PROJECT_ID))
+    try:
+      gce_util.ensure_instance_resolved()
+    except runbook.FailedStep:
+      op.add_skipped(
+          project,
+          reason=('Instance {} does not exist in zone {} or project {}').format(
+              op.get(flags.INSTANCE_NAME) or op.get(flags.INSTANCE_ID),
+              op.get(flags.ZONE), op.get(flags.PROJECT_ID)))
+      return
     instance_id = op.get(flags.INSTANCE_ID)
-    instance_name = op.get(flags.INSTANCE_NAME)
-    zone = op.get(flags.ZONE)
-
-    if not instance_id:
-      if instance_name and zone:
-        try:
-          vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
-                                zone=zone,
-                                instance_name=instance_name)
-          instance_id = vm.id
-          op.put(flags.INSTANCE_ID, instance_id)
-        except googleapiclient.errors.HttpError:
-          op.add_skipped(
-              project,
-              reason=(
-                  'Instance {} does not exist in zone {} or project {}').format(
-                      instance_name, zone, op.get(flags.PROJECT_ID)))
-          return
-      else:
-        raise runbook_exceptions.MissingParameterError(
-            'instance_id or instance_name/zone must be provided.')
 
     operation_type = op.get(flags.OPERATION_TYPE)
     filter_str = (

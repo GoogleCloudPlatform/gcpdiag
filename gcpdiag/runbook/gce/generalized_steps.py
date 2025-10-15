@@ -20,7 +20,7 @@ import re
 from datetime import datetime
 from typing import Any, List, Optional, Set
 
-import apiclient.errors
+import googleapiclient.errors
 from boltons.iterutils import get_path
 
 from gcpdiag import runbook, utils
@@ -131,6 +131,11 @@ class HighVmMemoryUtilization(runbook.Step):
       self.zone = vm.zone
       self.instance_name = vm.name
     else:
+      util.ensure_instance_resolved()
+      self.project_id = op.get(flags.PROJECT_ID)
+      self.zone = op.get(flags.ZONE)
+      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
+          flags.INSTANCE_ID)
       vm = gce.get_instance(
           project_id=self.project_id,
           zone=self.zone,
@@ -231,6 +236,11 @@ class HighVmDiskUtilization(runbook.Step):
       self.zone = vm.zone
       self.instance_name = vm.name
     else:
+      util.ensure_instance_resolved()
+      self.project_id = op.get(flags.PROJECT_ID)
+      self.zone = op.get(flags.ZONE)
+      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
+          flags.INSTANCE_ID)
       vm = gce.get_instance(
           project_id=self.project_id,
           zone=self.zone,
@@ -316,6 +326,11 @@ class HighVmCpuUtilization(runbook.Step):
       self.zone = vm.zone
       self.instance_name = vm.name
     else:
+      util.ensure_instance_resolved()
+      self.project_id = op.get(flags.PROJECT_ID)
+      self.zone = op.get(flags.ZONE)
+      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
+          flags.INSTANCE_ID)
       vm = gce.get_instance(
           project_id=self.project_id,
           zone=self.zone,
@@ -394,6 +409,11 @@ class VmLifecycleState(runbook.Step):
     if self.vm:
       vm = self.vm
     else:
+      util.ensure_instance_resolved()
+      self.project_id = op.get(flags.PROJECT_ID)
+      self.zone = op.get(flags.ZONE)
+      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
+          flags.INSTANCE_ID)
       vm = gce.get_instance(project_id=self.project_id,
                             zone=self.zone,
                             instance_name=self.instance_name)
@@ -461,6 +481,11 @@ class VmSerialLogsCheck(runbook.Step):
       self.zone = vm.zone
       self.instance_name = vm.name
     else:
+      util.ensure_instance_resolved()
+      self.project_id = op.get(flags.PROJECT_ID)
+      self.zone = op.get(flags.ZONE)
+      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
+          flags.INSTANCE_ID)
       vm = gce.get_instance(
           project_id=self.project_id,
           zone=self.zone,
@@ -627,17 +652,11 @@ class VmMetadataCheck(runbook.Step):
 
   def execute(self):
     """Verify VM metadata value."""
-    self.project_id = op.get(flags.PROJECT_ID) or self.project_id
-    self.instance_name = op.get(flags.INSTANCE_NAME) or self.instance_name
-    self.zone = op.get(flags.ZONE) or self.zone
     metadata_key_str = op.get('metadata_key') or getattr(
         self, 'metadata_key', None)
     expected_value_str = op.get('expected_value') or getattr(
         self, 'expected_value', None)
 
-    if not self.instance_name or not self.zone:
-      raise runbook_exceptions.MissingParameterError(
-          'instance_name and zone must be provided.')
     if not metadata_key_str:
       raise runbook_exceptions.MissingParameterError(
           "'metadata_key' is required for this step.")
@@ -664,12 +683,20 @@ class VmMetadataCheck(runbook.Step):
 
     if self.vm:
       vm = self.vm
+      self.project_id = vm.project_id
+      self.zone = vm.zone
+      self.instance_name = vm.name
     else:
+      util.ensure_instance_resolved()
+      self.project_id = op.get(flags.PROJECT_ID)
+      self.zone = op.get(flags.ZONE)
+      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
+          flags.INSTANCE_ID)
       try:
         vm = gce.get_instance(project_id=self.project_id,
                               zone=self.zone,
                               instance_name=self.instance_name)
-      except apiclient.errors.HttpError as err:
+      except googleapiclient.errors.HttpError as err:
         if err.resp.status == 404:
           op.add_skipped(
               None,
@@ -728,6 +755,11 @@ class GceVpcConnectivityCheck(runbook.Step):
     if self.vm:
       vm = self.vm
     else:
+      util.ensure_instance_resolved()
+      self.project_id = op.get(flags.PROJECT_ID)
+      self.zone = op.get(flags.ZONE)
+      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
+          flags.INSTANCE_ID)
       vm = gce.get_instance(
           project_id=self.project_id,
           zone=self.zone,
@@ -801,6 +833,11 @@ class VmScope(runbook.Step):
     if self.vm:
       instance = self.vm
     else:
+      util.ensure_instance_resolved()
+      self.project_id = op.get(flags.PROJECT_ID)
+      self.zone = op.get(flags.ZONE)
+      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
+          flags.INSTANCE_ID)
       instance = gce.get_instance(
           project_id=self.project_id,
           zone=self.zone,
@@ -906,6 +943,11 @@ class VmHasOpsAgent(runbook.Step):
       self.instance_name = instance.name
       self.instance_id = instance.id
     else:
+      util.ensure_instance_resolved()
+      self.project_id = op.get(flags.PROJECT_ID)
+      self.zone = op.get(flags.ZONE)
+      self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
+          flags.INSTANCE_ID)
       instance = gce.get_instance(
           project_id=self.project_id,
           zone=self.zone,
@@ -1057,7 +1099,7 @@ class MigAutoscalingPolicyCheck(runbook.Step):
         raise runbook_exceptions.MissingParameterError(
             'Either instance_name and zone, or mig_name and location must be provided.'
         )
-    except apiclient.errors.HttpError as err:
+    except googleapiclient.errors.HttpError as err:
       if err.resp.status == 404:
         resource = self.instance_name or self.mig_name
         op.add_skipped(
@@ -1101,7 +1143,7 @@ class MigAutoscalingPolicyCheck(runbook.Step):
           autoscaler = gce.get_region_autoscaler(self.project_id, mig.region,
                                                  mig.name)
           actual_value = autoscaler.get(property_path, default=None)
-      except apiclient.errors.HttpError as err:
+      except googleapiclient.errors.HttpError as err:
         if err.resp.status == 404:
           # No autoscaler linked, policy doesn't exist.
           actual_value = None
@@ -1174,6 +1216,7 @@ class InstancePropertyCheck(runbook.Step):
 
   def execute(self):
     """Check VM property."""
+    util.ensure_instance_resolved()
     self.project_id = op.get(flags.PROJECT_ID) or self.project_id
     self.instance_name = op.get(flags.INSTANCE_NAME) or self.instance_name
     self.zone = op.get(flags.ZONE) or self.zone
@@ -1196,7 +1239,7 @@ class InstancePropertyCheck(runbook.Step):
 
     try:
       vm = gce.get_instance(self.project_id, self.zone, self.instance_name)
-    except apiclient.errors.HttpError as err:
+    except googleapiclient.errors.HttpError as err:
       if err.resp.status == 404:
         op.add_skipped(
             None,

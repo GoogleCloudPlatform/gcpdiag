@@ -14,10 +14,8 @@
 """Module containing SSH diagnostic tree and custom steps."""
 from ipaddress import IPv4Address
 
-import googleapiclient.errors
-
 from gcpdiag import config, runbook
-from gcpdiag.queries import crm, gce, iam
+from gcpdiag.queries import gce, iam
 from gcpdiag.runbook import op
 from gcpdiag.runbook.crm import generalized_steps as crm_gs
 from gcpdiag.runbook.gce import constants as gce_const
@@ -291,93 +289,78 @@ class SshStart(runbook.StartStep):
 
   def execute(self):
     """Starting SSH diagnostics"""
-
-    project = crm.get_project(op.get(flags.PROJECT_ID))
-    try:
-      vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
-                            zone=op.get(flags.ZONE),
-                            instance_name=op.get(flags.INSTANCE_NAME))
-    except googleapiclient.errors.HttpError:
-      op.add_skipped(
-          project,
-          reason=('Instance {} does not exist in zone {} or project {}').format(
-              op.get(flags.INSTANCE_NAME), op.get(flags.ZONE),
-              op.get(flags.PROJECT_ID)))
-    else:
-      if vm:
-        # Check for instance id and instance name
-        if not op.get(flags.ID):
-          op.put(flags.ID, vm.id)
-        elif not op.get(flags.INSTANCE_NAME):
-          op.put(flags.INSTANCE_NAME, vm.name)
-        # Align with the user on parameters to be investigated
-        # prep authenticated principal
-        if op.get(flags.PRINCIPAL):
-          email_only = len(op.get(flags.PRINCIPAL).split(':')) == 1
-          if email_only:
-            # Get the type
-            p_policy = iam.get_project_policy(vm.project_id)
-            p_type = p_policy.get_member_type(op.get(flags.PRINCIPAL))
-            op.put(flags.PRINCIPAL, f'{p_type}:{op.get(flags.PRINCIPAL)}')
-            if p_type:
-              op.info(
-                  f'GCP permissions related to SSH will be verified for: {op.get(flags.PRINCIPAL)}'
-              )
-        if not op.get(flags.SRC_IP) and not op.get(
-            flags.PROXY) and vm.is_public_machine():
-          op.put(flags.SRC_IP, gce_const.UNSPECIFIED_ADDRESS)
-          op.info(
-              f'No proxy specified. Setting source IP range to: {gce_const.UNSPECIFIED_ADDRESS}'
-          )
-        if op.get(flags.PROXY) == IAP:
-          # set IAP VIP as the source to the VM
-          op.put(flags.SRC_IP, gce_const.IAP_FW_VIP)
-          op.info(
-              f'Source IP to be used for SSH connectivity test: {op.get(flags.SRC_IP)}'
-          )
-        elif op.get(flags.PROXY) == JUMPHOST:
-          op.info(
-              f'Source IP to be used for SSH connectivity test: {op.get(flags.SRC_IP)}'
-          )
-
+    util.ensure_instance_resolved()
+    vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
+                          zone=op.get(flags.ZONE),
+                          instance_name=op.get(flags.INSTANCE_NAME))
+    if vm:
+      # Align with the user on parameters to be investigated
+      # prep authenticated principal
+      if op.get(flags.PRINCIPAL):
+        email_only = len(op.get(flags.PRINCIPAL).split(':')) == 1
+        if email_only:
+          # Get the type
+          p_policy = iam.get_project_policy(vm.project_id)
+          p_type = p_policy.get_member_type(op.get(flags.PRINCIPAL))
+          op.put(flags.PRINCIPAL, f'{p_type}:{op.get(flags.PRINCIPAL)}')
+          if p_type:
+            op.info(
+                f'GCP permissions related to SSH will be verified for: {op.get(flags.PRINCIPAL)}'
+            )
+      if not op.get(flags.SRC_IP) and not op.get(
+          flags.PROXY) and vm.is_public_machine():
+        op.put(flags.SRC_IP, gce_const.UNSPECIFIED_ADDRESS)
         op.info(
-            f'Port {op.get(flags.PORT)} and ip {op.get(flags.SRC_IP)} as the source IP'
+            f'No proxy specified. Setting source IP range to: {gce_const.UNSPECIFIED_ADDRESS}'
+        )
+      if op.get(flags.PROXY) == IAP:
+        # set IAP VIP as the source to the VM
+        op.put(flags.SRC_IP, gce_const.IAP_FW_VIP)
+        op.info(
+            f'Source IP to be used for SSH connectivity test: {op.get(flags.SRC_IP)}'
+        )
+      elif op.get(flags.PROXY) == JUMPHOST:
+        op.info(
+            f'Source IP to be used for SSH connectivity test: {op.get(flags.SRC_IP)}'
         )
 
-        if not op.get(flags.PORT):
-          op.info(f'SSH port to investigate: {op.get(flags.PORT)}')
+      op.info(
+          f'Port {op.get(flags.PORT)} and ip {op.get(flags.SRC_IP)} as the source IP'
+      )
 
-        if op.get(flags.ACCESS_METHOD) == OSLOGIN:
-          op.info(
-              'Access method to investigate: OS login https://cloud.google.com/compute/docs/oslogin'
-          )
-        elif op.get(flags.ACCESS_METHOD) == SSH_KEY_IN_METADATA:
-          op.info(
-              'Access method to investigate: SSH keys in metadata '
-              'https://cloud.google.com/compute/docs/instances/access-overview#ssh-access'
-          )
+      if not op.get(flags.PORT):
+        op.info(f'SSH port to investigate: {op.get(flags.PORT)}')
 
-        if op.get(flags.POSIX_USER):
-          op.info(
-              f'Guest OS Posix User to be investigated: {op.get(flags.POSIX_USER)}'
-          )
-        if op.get(CLIENT) == SSH_IN_BROWSER:
-          op.info('SSH Client to be investigated: SSH in Browser')
-        if op.get(CLIENT) == GCLOUD:
-          op.info('Investigating components required to use gcloud compute ssh')
-        if op.get(CLIENT) in (IAP_DESKTOP, PUTTY, OPENSSH):
-          op.info(
-              'IAP Desktop, Putty and vanilla openssh investigations are not supported yet'
-          )
-        if op.get(MFA) == OSLOGIN_2FA:
-          op.info(
-              'Multifactor authentication to investigate: OS Login 2FA '
-              'https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#byb'
-          )
-        if op.get(MFA) == SECURITY_KEY:
-          op.info(
-              'Multifactor authentication to investigate: Security keys with OS Login  '
-              'https://cloud.google.com/compute/docs/oslogin/security-keys')
+      if op.get(flags.ACCESS_METHOD) == OSLOGIN:
+        op.info(
+            'Access method to investigate: OS login https://cloud.google.com/compute/docs/oslogin'
+        )
+      elif op.get(flags.ACCESS_METHOD) == SSH_KEY_IN_METADATA:
+        op.info(
+            'Access method to investigate: SSH keys in metadata '
+            'https://cloud.google.com/compute/docs/instances/access-overview#ssh-access'
+        )
+
+      if op.get(flags.POSIX_USER):
+        op.info(
+            f'Guest OS Posix User to be investigated: {op.get(flags.POSIX_USER)}'
+        )
+      if op.get(CLIENT) == SSH_IN_BROWSER:
+        op.info('SSH Client to be investigated: SSH in Browser')
+      if op.get(CLIENT) == GCLOUD:
+        op.info('Investigating components required to use gcloud compute ssh')
+      if op.get(CLIENT) in (IAP_DESKTOP, PUTTY, OPENSSH):
+        op.info(
+            'IAP Desktop, Putty and vanilla openssh investigations are not supported yet'
+        )
+      if op.get(MFA) == OSLOGIN_2FA:
+        op.info(
+            'Multifactor authentication to investigate: OS Login 2FA '
+            'https://cloud.google.com/compute/docs/oslogin/set-up-oslogin#byb')
+      if op.get(MFA) == SECURITY_KEY:
+        op.info(
+            'Multifactor authentication to investigate: Security keys with OS Login  '
+            'https://cloud.google.com/compute/docs/oslogin/security-keys')
 
 
 class VmGuestOsType(runbook.Gateway):
@@ -389,6 +372,7 @@ class VmGuestOsType(runbook.Gateway):
 
   def execute(self):
     """Identify Guest OS type."""
+    util.ensure_instance_resolved()
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
                           instance_name=op.get(flags.INSTANCE_NAME))
