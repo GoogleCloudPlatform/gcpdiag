@@ -167,6 +167,7 @@ class UnhealthyBackends(runbook.DiagnosticTree):
     port_check.region = region
     port_check.backend_service_name = backend_service_name
     port_check.backend_service = backend_service
+    port_check.health_check = health_check
 
     protocol_check.project_id = project_id
     protocol_check.region = region
@@ -406,6 +407,7 @@ class ValidateBackendServicePortConfiguration(runbook.Step):
   backend_service_name: str
   region: str
   backend_service: lb.BackendServices
+  health_check: gce.HealthCheck
 
   @property
   def name(self):
@@ -415,6 +417,24 @@ class ValidateBackendServicePortConfiguration(runbook.Step):
 
   def execute(self):
     """Checks if health check sends probe requests to the different port than serving port."""
+    lb_scheme = self.backend_service.load_balancing_scheme
+    if self.region != 'global' and lb_scheme in ['INTERNAL', 'EXTERNAL']:
+      op.add_uncertain(
+          self.backend_service,
+          reason=op.prep_msg(
+              op.UNCERTAIN_REASON_ALT1,
+              backend_service_name=self.backend_service_name,
+              lb_scheme=lb_scheme.lower(),
+              hc_name=self.health_check.name,
+              hc_port=self.health_check.port,
+          ),
+          remediation=op.prep_msg(
+              op.UNCERTAIN_REMEDIATION_ALT1,
+              hc_port=self.health_check.port,
+          ),
+      )
+      return
+
     if not apis.is_enabled(self.project_id, 'recommender'):
       op.add_skipped(
           crm.get_project(self.project_id),
@@ -455,10 +475,58 @@ class ValidateBackendServicePortConfiguration(runbook.Step):
                 ),
             )
             return
-    op.add_ok(self.backend_service, reason=op.prep_msg(op.SUCCESS_REASON))
+    port_name = self.backend_service.port_name
+    has_negs = any('/networkEndpointGroups/' in backend.get('group')
+                   for backend in self.backend_service.backends)
+
+    if has_negs:
+      port_mapping = (
+          'Backend service uses Network Endpoint Groups (NEGs), portName'
+          ' parameter is not applicable.')
+      op.add_ok(
+          self.backend_service,
+          reason=op.prep_msg(op.SUCCESS_REASON, port_mapping=port_mapping),
+      )
+    else:
+      port_mapping_details = []
+      for backend in self.backend_service.backends:
+        ig = igs.get(self._normalize_url(backend.get('group')))
+        if ig:
+          port_numbers = self._get_port_numbers_by_name(ig, port_name)
+          if port_numbers:
+            port_numbers_str = ', '.join(sorted(port_numbers))
+            port_mapping_details.append(
+                f'  {ig.full_path}: portName "{port_name}" -> port(s)'
+                f' {port_numbers_str}')
+          else:
+            port_mapping_details.append(
+                f'  {ig.full_path}: portName "{port_name}" not defined')
+
+      if port_mapping_details:
+        port_mapping = ('  Health check port specification:'
+                        f' {self.health_check.port_specification}')
+        if self.health_check.port_specification == 'USE_FIXED_PORT':
+          port_mapping += f'\n  Health check port: {self.health_check.port}'
+        port_mapping += ('\n  Backend service serving port name:'
+                         f' "{port_name}"\n  Port mapping details:\n' +
+                         '\n'.join(port_mapping_details))
+      else:
+        port_mapping = (
+            f'portName "{port_name}" is not used in any instance group for this'
+            ' backend service.')
+
+      op.add_ok(
+          self.backend_service,
+          reason=op.prep_msg(op.SUCCESS_REASON, port_mapping=port_mapping),
+      )
 
   def _normalize_url(self, url):
-    return url.split('//compute.googleapis.com/')[1]
+    if url and url.startswith('//compute.googleapis.com/'):
+      return url.split('//compute.googleapis.com/')[1]
+
+    if url and url.startswith('https://www.googleapis.com/compute/v1/'):
+      return url.split('https://www.googleapis.com/compute/v1/')[1]
+    return url
 
   def _format_affected_instance_groups(self, impacted_instance_groups,
                                        serving_port_name):

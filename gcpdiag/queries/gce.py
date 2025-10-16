@@ -1565,7 +1565,7 @@ class HealthCheck(models.Resource):
 
   @property
   def port_specification(self) -> str:
-    return self.get_health_check_property('portSpecification')
+    return self.get_health_check_property('portSpecification', 'USE_FIXED_PORT')
 
   @property
   def timeout_sec(self) -> int:

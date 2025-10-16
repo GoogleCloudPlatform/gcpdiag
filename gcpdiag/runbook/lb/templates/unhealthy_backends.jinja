@@ -60,8 +60,18 @@ This configuration can be problematic unless the load balancer has been configur
 If the health check port `{hc_port}` is meant to be different from the serving port (e.g., a dedicated management/health endpoint), confirm that your application is correctly configured to listen on the health check port.
 {% endblock port_mismatch_uncertain_remediation %}
 
+{% block port_mismatch_uncertain_reason_a1 %}
+Backend service "{backend_service_name}" is a {lb_scheme} Passthrough Load Balancer. These load balancers forward traffic to backends without changing the destination port, so there isn't a single "serving port" on the load balancer itself. The health check probes are sent to the port defined directly in the HealthCheck resource. The associated health check "{hc_name}" is configured to use port {hc_port}.
+{% endblock port_mismatch_uncertain_reason_a1 %}
+
+{% block port_mismatch_uncertain_remediation_a1 %}
+Please ensure that the backend instances (VMs or endpoints) are configured to accept and respond to health check probes specifically on port {hc_port}. The application running on the backends must be actively listening on this port ({hc_port}) for the health checks to succeed, regardless of the ports used for actual application traffic.
+{% endblock port_mismatch_uncertain_remediation_a1 %}
+
 {% block port_mismatch_success_reason %}
 The load balancer is performing health checks on the same port used for serving traffic. This is the standard configuration.
+
+{port_mapping}
 {% endblock port_mismatch_success_reason %}
 
 {% block protocol_mismatch_uncertain_reason %}

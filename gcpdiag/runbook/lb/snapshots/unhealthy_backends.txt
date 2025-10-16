@@ -357,9 +357,12 @@ lb/unhealthy-backends: Load Balancer Unhealthy Backends Analyzer.
 
 [AUTOMATED STEP]: Validate port configuration for backend service "backend-service-2" in scope "europe-west4".
 
-   - gcpdiag-lb2-aaaa/backend-service-2                                   [OK]
+   - gcpdiag-lb2-aaaa/backend-service-2                                   [UNCERTAIN]
      [REASON]
-     The load balancer is performing health checks on the same port used for serving traffic. This is the standard configuration.
+     Backend service "backend-service-2" is a external Passthrough Load Balancer. These load balancers forward traffic to backends without changing the destination port, so there isn't a single "serving port" on the load balancer itself. The health check probes are sent to the port defined directly in the HealthCheck resource. The associated health check "tcp-basic-check-2" is configured to use port 80.
+
+     [REMEDIATION]
+     Please ensure that the backend instances (VMs or endpoints) are configured to accept and respond to health check probes specifically on port 80. The application running on the backends must be actively listening on this port (80) for the health checks to succeed, regardless of the ports used for actual application traffic.
 
 [AUTOMATED STEP]: Validate protocol configuration for backend service "backend-service-2" in scope "europe-west4".
 

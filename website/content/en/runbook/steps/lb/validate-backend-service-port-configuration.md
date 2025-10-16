@@ -18,6 +18,8 @@ None
 
 The load balancer is performing health checks on the same port used for serving traffic. This is the standard configuration.
 
+{port_mapping}
+
 ### Uncertain Reason
 
 The load balancer is conducting health checks on port {hc_port} for the backend service {bs_resource}. However, this health check port differs from the port used by the load balancer for serving traffic on some backend instance groups. The backend service is configured to use the "{serving_port_name}" port, which is then translated to a specific port number based on the "{serving_port_name}" port mapping within each backend instance group.

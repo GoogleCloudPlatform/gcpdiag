@@ -237,6 +237,10 @@ class BackendServices(models.Resource):
     return self._resource_data.get('protocol', None)
 
   @property
+  def port_name(self) -> str:
+    return self._resource_data.get('portName', None)
+
+  @property
   def used_by_refs(self) -> List[str]:
     used_by = []
     for x in self._resource_data.get('usedBy', []):
