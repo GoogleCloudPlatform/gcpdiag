@@ -173,7 +173,7 @@ def get_environments(context: models.Context) -> Iterable[Environment]:
   environments: List[Environment] = []
   if not apis.is_enabled(context.project_id, 'composer'):
     return environments
-  api = apis.get_api('composer', 'v1', context)
+  api = apis.get_api('composer', 'v1', context.project_id)
 
   for env in _query_regions_envs(COMPOSER_REGIONS, api, context.project_id,
                                  context):
