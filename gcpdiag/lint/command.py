@@ -238,21 +238,6 @@ def init_args_parser():
   return parser
 
 
-# old function
-def _parse_rule_patterns(patterns):
-  if patterns:
-    rules = []
-    for arg in _flatten_multi_arg(patterns):
-      try:
-        rules.append(lint.LintRulesPattern(arg))
-      except ValueError as e:
-        print(f"ERROR: can't parse rule pattern: {arg}", file=sys.stderr)
-        raise e from None
-    return rules
-  return None
-
-
-# new function
 def _parse_rule_pattern(
     patterns: Optional[List[str]],) -> Optional[List[lint.LintRulesPattern]]:
   if patterns:
@@ -308,7 +293,6 @@ def _initialize_output(output_order):
   return output
 
 
-# new function
 def create_and_load_repos(
     include: Optional[List[str]],
     exclude: Optional[List[str]],
@@ -320,22 +304,6 @@ def create_and_load_repos(
 
   repo = lint.LintRuleRepository(
       load_extended=load_extended,
-      run_async=config.get('experimental_enable_async_rules'),
-      exclude=exclude_patterns,
-      include=include_patterns,
-  )
-  _load_repository_rules(repo)
-  return repo
-
-
-# old function
-def create_and_load_repo() -> lint.LintRuleRepository:
-  """Helper function to initialize the repository and load rules."""
-  include_patterns = _parse_rule_patterns(config.get('include'))
-  exclude_patterns = _parse_rule_patterns(config.get('exclude'))
-
-  repo = lint.LintRuleRepository(
-      load_extended=config.get('include_extended'),
       run_async=config.get('experimental_enable_async_rules'),
       exclude=exclude_patterns,
       include=include_patterns,
@@ -388,14 +356,11 @@ def run(argv) -> int:
     )
 
     # 4. Create and load the rule repository
-    repo = create_and_load_repo()
-
-    # new function
-    # repo = create_and_load_repos(
-    #    include=config.get('include'),
-    #    exclude=config.get('exclude'),
-    #    load_extended=config.get('include_extended'),
-    #  )
+    repo = create_and_load_repos(
+        include=config.get('include'),
+        exclude=config.get('exclude'),
+        load_extended=config.get('include_extended'),
+    )
 
     # 5. Set up logging and output for the terminal
     output_order = sorted(str(r) for r in repo.rules_to_run)

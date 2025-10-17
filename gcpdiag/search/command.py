@@ -75,7 +75,7 @@ def _init_search_args_parser() -> argparse.ArgumentParser:
 def _load_lint_rules(args) -> Iterable[LintRule]:
   """Load and return all lint rules from the repository."""
   #pylint:disable=protected-access
-  product_patterns = lint_command._parse_rule_patterns(args.product)
+  product_patterns = lint_command._parse_rule_pattern(args.product)
   repo = lint.LintRuleRepository(load_extended=True, include=product_patterns)
   #pylint:disable=protected-access
   lint_command._load_repository_rules(repo)

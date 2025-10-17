@@ -103,37 +103,18 @@ class Test(TestCase):
     modules = {r.product for r in repo.rules_to_run}
     assert MUST_HAVE_MODULES.issubset(modules)
 
-  def test_create_and_load_repo(self):
-    """Test the new public repo creation function."""
-    with mock.patch('gcpdiag.config.get') as config_get_mock:
-      mock_config = {
-          'include': ['gke/*'],
-          'exclude': ['iam/*'],
-          'include_extended': True,
-          'experimental_enable_async_rules': False
-      }
-      config_get_mock.side_effect = mock_config.get
-
-      repo = command.create_and_load_repo()
-      self.assertIsInstance(repo, lint.LintRuleRepository)
-      # Check if rules are loaded
-      self.assertTrue(any(r.product == 'gke' for r in repo.rules_to_run))
-      # Check if excluded rules are not present
-      self.assertFalse(any(r.product == 'iam' for r in repo.rules_to_run))
-
-  # new test case to be added
-  # def test_create_and_load_repos(self):
-  #   """Test the public repo creation function."""
-  #   repo = command.create_and_load_repos(
-  #       include=['gke/*'],
-  #       exclude=['iam/*'],
-  #       load_extended=True,
-  #   )
-  #   self.assertIsInstance(repo, lint.LintRuleRepository)
-  #   # Check if rules are loaded
-  #   self.assertTrue(any(r.product == 'gke' for r in repo.rules_to_run))
-  #   # Check if excluded rules are not present
-  #   self.assertFalse(any(r.product == 'iam' for r in repo.rules_to_run))
+  def test_create_and_load_repos(self):
+    """Test the public repo creation function."""
+    repo = command.create_and_load_repos(
+        include=['gke/*'],
+        exclude=['iam/*'],
+        load_extended=True,
+    )
+    self.assertIsInstance(repo, lint.LintRuleRepository)
+    # Check if rules are loaded
+    self.assertTrue(any(r.product == 'gke' for r in repo.rules_to_run))
+    # Check if excluded rules are not present
+    self.assertFalse(any(r.product == 'iam' for r in repo.rules_to_run))
 
   def test_parse_label(self):
     parser = command.init_args_parser()
