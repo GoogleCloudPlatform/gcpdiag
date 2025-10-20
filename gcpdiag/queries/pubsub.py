@@ -158,6 +158,15 @@ class Subscription(models.Resource):
           f'Topic {topic_name} for Subscription {self.name} not found')
     return topics[topic_name]
 
+  @property
+  def push_config(self) -> dict:
+    return self._resource_data.get('pushConfig', {})
+
+  @property
+  def push_oidc_service_account_email(self) -> str:
+    """Return the OIDC service account email for a push subscription."""
+    return self.push_config.get('oidcToken', {}).get('serviceAccountEmail', '')
+
   def is_detached(self) -> bool:
     """Return if subscription is detached."""
     if 'detached' in self._resource_data:

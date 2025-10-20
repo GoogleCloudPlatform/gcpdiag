@@ -114,7 +114,7 @@ def get_project(project_id: str) -> Project:
       print(
           f'[ERROR]:Authenticated account doesn\'t have access to project details of {project_id}.'
           f'\nExecute:\ngcloud projects add-iam-policy-binding {project_id} --role=roles/viewer'
-          '--member="user|group|serviceAccount:EMAIL_ACCOUNT" ',
+          '--member="user|group|serviceAccount:EMAIL_ACCOUNT"',
           file=sys.stderr)
     else:
       print(f'[ERROR]:can\'t access project {project_id}: {error.message}.',
@@ -135,8 +135,9 @@ def get_all_projects_in_parent(project_id: str) -> List[ProjectBillingInfo]:
   if (not project_id) or (not apis.is_enabled(project_id, 'cloudbilling')):
     return projects
   project = get_project(project_id)
-  p_filter = 'parent.type:'+project.parent.split('/')[0][:-1]\
-    +' parent.id:'+project.parent.split('/')[1] if project.parent else ''
+  p_filter = ('parent.type:' + project.parent.split('/')[0][:-1] +
+              ' parent.id:' +
+              project.parent.split('/')[1] if project.parent else '')
 
   api = apis.get_api('cloudresourcemanager', 'v3')
   for p in apis_utils.list_all(request=api.projects().search(query=p_filter),

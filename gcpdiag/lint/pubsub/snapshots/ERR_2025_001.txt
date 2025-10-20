@@ -1,0 +1,6 @@
+*  pubsub/ERR/2025_001: Pub/Sub push subscription service agent has the Service Account Token Creator Role.
+   - projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-pubsub1subscription3gcs-9pm6hng1 [ OK ]
+   - projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-pubsub1subscription2-9pm6hng1 [ OK ]
+   - projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-pubsub1subscription-9pm6hng1 [ OK ]
+   - projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-bqdlqsubscription-9pm6hng1 [ OK ]
+
