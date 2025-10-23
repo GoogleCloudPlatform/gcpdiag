@@ -20,6 +20,7 @@ from typing import List
 
 import googleapiclient
 
+from gcpdiag import utils
 from gcpdiag.queries import gce, monitoring
 from gcpdiag.runbook import exceptions as runbook_exceptions
 from gcpdiag.runbook import op
@@ -50,7 +51,7 @@ def ensure_instance_resolved():
           f'Instance {name_or_id} not found in project {project_id} '
           f'zone {zone}.') from err
     else:
-      raise runbook_exceptions.GcpApiError(err) from err
+      raise utils.GcpApiError(err) from err
 
 
 def search_pattern_in_serial_logs(patterns: List,

@@ -48,3 +48,8 @@ class MissingParameterError(ValueError):
     super().__init__(message)
     self.missing_parameters_list = (missing_parameters_list if
                                     missing_parameters_list is not None else [])
+
+
+class FailedStepError(Exception):
+  """Exception raised for a failed step."""
+  pass

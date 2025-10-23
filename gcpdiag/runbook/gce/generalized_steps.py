@@ -24,7 +24,7 @@ import googleapiclient.errors
 from boltons.iterutils import get_path
 
 from gcpdiag import runbook, utils
-from gcpdiag.queries import gce, logs, monitoring
+from gcpdiag.queries import crm, gce, logs, monitoring
 from gcpdiag.runbook import exceptions as runbook_exceptions
 from gcpdiag.runbook import op
 from gcpdiag.runbook import util as runbook_util
@@ -131,7 +131,15 @@ class HighVmMemoryUtilization(runbook.Step):
       self.zone = vm.zone
       self.instance_name = vm.name
     else:
-      util.ensure_instance_resolved()
+      try:
+        util.ensure_instance_resolved()
+      except (
+          runbook_exceptions.FailedStepError,
+          runbook_exceptions.MissingParameterError,
+      ) as e:
+        project = crm.get_project(op.get(flags.PROJECT_ID))
+        op.add_skipped(project, reason=str(e))
+        return
       self.project_id = op.get(flags.PROJECT_ID)
       self.zone = op.get(flags.ZONE)
       self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
@@ -236,7 +244,15 @@ class HighVmDiskUtilization(runbook.Step):
       self.zone = vm.zone
       self.instance_name = vm.name
     else:
-      util.ensure_instance_resolved()
+      try:
+        util.ensure_instance_resolved()
+      except (
+          runbook_exceptions.FailedStepError,
+          runbook_exceptions.MissingParameterError,
+      ) as e:
+        project = crm.get_project(op.get(flags.PROJECT_ID))
+        op.add_skipped(project, reason=str(e))
+        return
       self.project_id = op.get(flags.PROJECT_ID)
       self.zone = op.get(flags.ZONE)
       self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
@@ -326,7 +342,15 @@ class HighVmCpuUtilization(runbook.Step):
       self.zone = vm.zone
       self.instance_name = vm.name
     else:
-      util.ensure_instance_resolved()
+      try:
+        util.ensure_instance_resolved()
+      except (
+          runbook_exceptions.FailedStepError,
+          runbook_exceptions.MissingParameterError,
+      ) as e:
+        project = crm.get_project(op.get(flags.PROJECT_ID))
+        op.add_skipped(project, reason=str(e))
+        return
       self.project_id = op.get(flags.PROJECT_ID)
       self.zone = op.get(flags.ZONE)
       self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
@@ -409,7 +433,15 @@ class VmLifecycleState(runbook.Step):
     if self.vm:
       vm = self.vm
     else:
-      util.ensure_instance_resolved()
+      try:
+        util.ensure_instance_resolved()
+      except (
+          runbook_exceptions.FailedStepError,
+          runbook_exceptions.MissingParameterError,
+      ) as e:
+        project = crm.get_project(op.get(flags.PROJECT_ID))
+        op.add_skipped(project, reason=str(e))
+        return
       self.project_id = op.get(flags.PROJECT_ID)
       self.zone = op.get(flags.ZONE)
       self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
@@ -481,7 +513,15 @@ class VmSerialLogsCheck(runbook.Step):
       self.zone = vm.zone
       self.instance_name = vm.name
     else:
-      util.ensure_instance_resolved()
+      try:
+        util.ensure_instance_resolved()
+      except (
+          runbook_exceptions.FailedStepError,
+          runbook_exceptions.MissingParameterError,
+      ) as e:
+        project = crm.get_project(op.get(flags.PROJECT_ID))
+        op.add_skipped(project, reason=str(e))
+        return
       self.project_id = op.get(flags.PROJECT_ID)
       self.zone = op.get(flags.ZONE)
       self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
@@ -687,7 +727,15 @@ class VmMetadataCheck(runbook.Step):
       self.zone = vm.zone
       self.instance_name = vm.name
     else:
-      util.ensure_instance_resolved()
+      try:
+        util.ensure_instance_resolved()
+      except (
+          runbook_exceptions.FailedStepError,
+          runbook_exceptions.MissingParameterError,
+      ) as e:
+        project = crm.get_project(op.get(flags.PROJECT_ID))
+        op.add_skipped(project, reason=str(e))
+        return
       self.project_id = op.get(flags.PROJECT_ID)
       self.zone = op.get(flags.ZONE)
       self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
@@ -755,7 +803,15 @@ class GceVpcConnectivityCheck(runbook.Step):
     if self.vm:
       vm = self.vm
     else:
-      util.ensure_instance_resolved()
+      try:
+        util.ensure_instance_resolved()
+      except (
+          runbook_exceptions.FailedStepError,
+          runbook_exceptions.MissingParameterError,
+      ) as e:
+        project = crm.get_project(op.get(flags.PROJECT_ID))
+        op.add_skipped(project, reason=str(e))
+        return
       self.project_id = op.get(flags.PROJECT_ID)
       self.zone = op.get(flags.ZONE)
       self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
@@ -833,7 +889,15 @@ class VmScope(runbook.Step):
     if self.vm:
       instance = self.vm
     else:
-      util.ensure_instance_resolved()
+      try:
+        util.ensure_instance_resolved()
+      except (
+          runbook_exceptions.FailedStepError,
+          runbook_exceptions.MissingParameterError,
+      ) as e:
+        project = crm.get_project(op.get(flags.PROJECT_ID))
+        op.add_skipped(project, reason=str(e))
+        return
       self.project_id = op.get(flags.PROJECT_ID)
       self.zone = op.get(flags.ZONE)
       self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
@@ -943,7 +1007,15 @@ class VmHasOpsAgent(runbook.Step):
       self.instance_name = instance.name
       self.instance_id = instance.id
     else:
-      util.ensure_instance_resolved()
+      try:
+        util.ensure_instance_resolved()
+      except (
+          runbook_exceptions.FailedStepError,
+          runbook_exceptions.MissingParameterError,
+      ) as e:
+        project = crm.get_project(op.get(flags.PROJECT_ID))
+        op.add_skipped(project, reason=str(e))
+        return
       self.project_id = op.get(flags.PROJECT_ID)
       self.zone = op.get(flags.ZONE)
       self.instance_name = op.get(flags.INSTANCE_NAME) or op.get(
@@ -1216,7 +1288,15 @@ class InstancePropertyCheck(runbook.Step):
 
   def execute(self):
     """Check VM property."""
-    util.ensure_instance_resolved()
+    try:
+      util.ensure_instance_resolved()
+    except (
+        runbook_exceptions.FailedStepError,
+        runbook_exceptions.MissingParameterError,
+    ) as e:
+      project = crm.get_project(op.get(flags.PROJECT_ID))
+      op.add_skipped(project, reason=str(e))
+      return
     self.project_id = op.get(flags.PROJECT_ID) or self.project_id
     self.instance_name = op.get(flags.INSTANCE_NAME) or self.instance_name
     self.zone = op.get(flags.ZONE) or self.zone

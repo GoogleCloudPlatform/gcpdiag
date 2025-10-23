@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Module containing SSH diagnostic tree and custom steps."""
+
 from ipaddress import IPv4Address
 
 from gcpdiag import config, runbook
-from gcpdiag.queries import gce, iam
+from gcpdiag.queries import crm, gce, iam
+from gcpdiag.runbook import exceptions as runbook_exceptions
 from gcpdiag.runbook import op
 from gcpdiag.runbook.crm import generalized_steps as crm_gs
 from gcpdiag.runbook.gce import constants as gce_const
@@ -289,7 +291,13 @@ class SshStart(runbook.StartStep):
 
   def execute(self):
     """Starting SSH diagnostics"""
-    util.ensure_instance_resolved()
+    project = crm.get_project(op.get(flags.PROJECT_ID))
+    try:
+      util.ensure_instance_resolved()
+    except (runbook_exceptions.FailedStepError,
+            runbook_exceptions.MissingParameterError) as e:
+      op.add_skipped(project, reason=str(e))
+      return
     vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
                           zone=op.get(flags.ZONE),
                           instance_name=op.get(flags.INSTANCE_NAME))
@@ -372,19 +380,28 @@ class VmGuestOsType(runbook.Gateway):
 
   def execute(self):
     """Identify Guest OS type."""
-    util.ensure_instance_resolved()
-    vm = gce.get_instance(project_id=op.get(flags.PROJECT_ID),
-                          zone=op.get(flags.ZONE),
-                          instance_name=op.get(flags.INSTANCE_NAME))
+    project = crm.get_project(op.get(flags.PROJECT_ID))
+    try:
+      util.ensure_instance_resolved()
+    except (
+        runbook_exceptions.FailedStepError,
+        runbook_exceptions.MissingParameterError,
+    ) as e:
+      op.add_skipped(project, reason=str(e))
+      return
+    vm = gce.get_instance(
+        project_id=op.get(flags.PROJECT_ID),
+        zone=op.get(flags.ZONE),
+        instance_name=op.get(flags.INSTANCE_NAME),
+    )
     if not vm.is_windows_machine():
-      op.info(
-          'Linux Guest OS detected. Proceeding with diagnostics specific to Linux systems.'
-      )
+      op.info('Linux Guest OS detected. Proceeding with diagnostics specific to'
+              ' Linux systems.')
       self.add_child(LinuxGuestOsChecks())
     else:
       op.info(
-          'Windows Guest OS detected. Proceeding with diagnostics specific to Windows systems.'
-      )
+          'Windows Guest OS detected. Proceeding with diagnostics specific to'
+          ' Windows systems.')
       self.add_child(WindowsGuestOsChecks())
 
 

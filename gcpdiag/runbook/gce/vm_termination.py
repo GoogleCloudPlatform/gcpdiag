@@ -22,6 +22,7 @@ from dateutil import parser
 
 from gcpdiag import runbook, utils
 from gcpdiag.queries import crm, gce, logs
+from gcpdiag.runbook import exceptions as runbook_exceptions
 from gcpdiag.runbook import op
 from gcpdiag.runbook.gce import constants, flags
 from gcpdiag.runbook.gce import util as gce_util
@@ -151,26 +152,25 @@ class TerminationOperationType(runbook.Gateway):
     project = crm.get_project(op.get(flags.PROJECT_ID))
     try:
       gce_util.ensure_instance_resolved()
-    except runbook.FailedStep:
-      op.add_skipped(
-          project,
-          reason=('Instance {} does not exist in zone {} or project {}').format(
-              op.get(flags.INSTANCE_NAME) or op.get(flags.INSTANCE_ID),
-              op.get(flags.ZONE), op.get(flags.PROJECT_ID)))
+    except (runbook_exceptions.FailedStepError,
+            runbook_exceptions.MissingParameterError) as e:
+      op.add_skipped(project, reason=str(e))
       return
-    instance_id = op.get(flags.INSTANCE_ID)
 
+    instance_id = op.get(flags.INSTANCE_ID)
     operation_type = op.get(flags.OPERATION_TYPE)
     filter_str = (
         f'(targetId = "{instance_id}") AND (operationType = "{operation_type}")'
         if operation_type else TERMINATION_OPERATION_FILTER.format(
             INSTANCE_ID=instance_id))
 
-    res = gce.get_global_operations(project=op.get(flags.PROJECT_ID),
-                                    filter_str=filter_str,
-                                    service_project_number=project.number,
-                                    order_by='creationTimestamp desc',
-                                    max_results=5)
+    res = gce.get_global_operations(
+        project=op.get(flags.PROJECT_ID),
+        filter_str=filter_str,
+        service_project_number=project.number,
+        order_by='creationTimestamp desc',
+        max_results=5,
+    )
 
     start = op.get(flags.START_TIME)
     end = op.get(flags.END_TIME)
