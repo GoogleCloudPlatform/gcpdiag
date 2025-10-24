@@ -470,3 +470,10 @@ class TestGce(unittest.TestCase):
     assert len(negs) == 1
     negs_by_path = {i.full_path: i for i in negs.values()}
     assert DUMMY_NEG1_PATH in negs_by_path
+
+  def test_get_instances_by_id(self):
+    context = models.Context(project_id=DUMMY_PROJECT_NAME,
+                             resources=['1010101011'])
+    instances = gce.get_instances(context)
+    self.assertEqual(len(instances), 1)
+    self.assertEqual(list(instances.values())[0].name, 'gce2')

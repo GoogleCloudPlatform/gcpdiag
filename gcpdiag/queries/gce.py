@@ -974,9 +974,10 @@ def get_instances(context: models.Context) -> Mapping[str, Instance]:
           continue
         zone = result.group(1)
         labels = instance.get('labels', {})
-        resource = instance.get('name', '')
         if not context.match_project_resource(
-            location=zone, labels=labels, resource=resource):
+            resource=instance.get('name'), location=zone,
+            labels=labels) and not context.match_project_resource(
+                resource=instance.get('id'), location=zone, labels=labels):
           continue
         instances.update({
             instance['id']:
