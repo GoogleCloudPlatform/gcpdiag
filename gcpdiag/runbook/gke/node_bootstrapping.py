@@ -225,7 +225,7 @@ class NodeBootstrappingStart(runbook.StartStep):
     # check if there are clusters in the project
     if name:
       clusters = gke.get_clusters(
-          op.get_new_context(project_id=project, resources=[name]))
+          op.get_context(project_id=project, resources=[name]))
       if not clusters:
         op.add_skipped(
             project_path,
@@ -233,7 +233,7 @@ class NodeBootstrappingStart(runbook.StartStep):
         return
     else:
       clusters = gke.get_clusters(
-          op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
+          op.get_context(project_id=op.get(flags.PROJECT_ID)))
       if not clusters:
         op.add_skipped(
             project_path,

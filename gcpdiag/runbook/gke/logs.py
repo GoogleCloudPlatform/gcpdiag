@@ -123,8 +123,7 @@ class LogsStart(runbook.StartStep):
     project_path = crm.get_project(project)
 
     # Checks if there are clusters in the project
-    clusters = gke.get_clusters(
-        op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
+    clusters = gke.get_clusters(op.get_context())
     if not clusters:
       op.add_skipped(
           project_path,
@@ -204,8 +203,7 @@ class ClusterLevelLoggingEnabled(runbook.Step):
 
   def execute(self):
     """Checks if GKE level logging is disabled"""
-    clusters = gke.get_clusters(
-        op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
+    clusters = gke.get_clusters(op.get_context())
     partial_path = f'{op.get(flags.LOCATION)}/clusters/{op.get(flags.GKE_CLUSTER_NAME)}'
     cluster_obj = util.get_cluster_object(clusters, partial_path)
 
@@ -251,8 +249,7 @@ class NodePoolCloudLoggingAccessScope(runbook.Step):
         'https://www.googleapis.com/auth/logging.admin'
     ]
 
-    clusters = gke.get_clusters(
-        op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
+    clusters = gke.get_clusters(op.get_context())
     partial_path = f'{op.get(flags.LOCATION)}/clusters/{op.get(flags.GKE_CLUSTER_NAME)}'
     cluster_obj = util.get_cluster_object(clusters, partial_path)
 
@@ -290,8 +287,7 @@ class ServiceAccountLoggingPermission(runbook.Step):
     """
     Verifies the node pool's service account has a role with the correct logging IAM permissions
     """
-    clusters = gke.get_clusters(
-        op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
+    clusters = gke.get_clusters(op.get_context())
     partial_path = f'{op.get(flags.LOCATION)}/clusters/{op.get(flags.GKE_CLUSTER_NAME)}'
     cluster_obj = util.get_cluster_object(clusters, partial_path)
     iam_policy = iam.get_project_policy(op.get(flags.PROJECT_ID))

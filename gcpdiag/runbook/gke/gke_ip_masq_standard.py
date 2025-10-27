@@ -135,8 +135,7 @@ class GkeIpMasqStandardStart(runbook.StartStep):
     project_path = crm.get_project(project)
 
     # check if there are clusters in the project
-    clusters = gke.get_clusters(
-        op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
+    clusters = gke.get_clusters(op.get_context())
 
     # following checks are necessary, depending on what input is provided:
     # - no input, get all clusters available

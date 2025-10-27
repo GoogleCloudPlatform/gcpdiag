@@ -443,8 +443,7 @@ class ValidateBackendServicePortConfiguration(runbook.Step):
       )
       return
 
-    igs = gce.get_instance_groups(
-        op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
+    igs = gce.get_instance_groups(op.get_context())
     insights = lb.get_lb_insights_for_a_project(self.project_id, self.region)
     for insight in insights:
       if insight.is_health_check_port_mismatch_insight:
@@ -1109,8 +1108,7 @@ def _get_timing_and_threshold_info(health_check: gce.HealthCheck) -> str:
 def _get_zonal_network_endpoint_group(
     project: str, zone: str, name: str) -> Optional[gce.NetworkEndpointGroup]:
   """Returns a map of Network Endpoint Groups in the project."""
-  groups = gce.get_zonal_network_endpoint_groups(
-      op.get_new_context(project_id=project))
+  groups = gce.get_zonal_network_endpoint_groups(op.get_context())
   url = f"""projects/{project}/zones/{zone}/networkEndpointGroups/{name}"""
 
   if url in groups:

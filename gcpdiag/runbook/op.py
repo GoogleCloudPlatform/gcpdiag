@@ -355,32 +355,31 @@ def get_all_metadata(step_execution_id=None):
         run_id=operator.run_id, step_execution_id=step_execution_id)
 
 
-def get_new_context(project_id,
-                    locations=None,
-                    labels=None,
-                    parameters=None,
-                    resources=None) -> models.Context:
-  """
-  Creates a new context for the given project.
+def get_context(**kwargs) -> models.Context:
+  """Returns the current execution context.
 
-  This function initializes a new context using the provided project ID and optional parameters
-  such as locations, labels, parameters, and resources. It retrieves the current operator from
-  thread-local storage and uses it to create the context.
+  If keyword arguments are provided, a new context is created using these
+  arguments. If context is not initialized, it will be created using
+  parameters from operator.
 
-  Args:
-      project_id (str): The ID of the project for which the context is being created.
-      locations (Optional[list], optional): A list of locations associated with the context.
-      labels (Optional[dict], optional): A dictionary of labels associated with the context.
-      parameters (Optional[dict], optional): A dictionary of parameters associated with the context.
-      resources (Optional[list], optional): A list of resources associated with the context.
+  This function retrieves the current operator from thread-local storage and
+  returns
+  its context, which includes execution parameters such as project ID,
+  locations, labels, and user-defined flags.
 
   Returns:
-      models.Context: The newly created context object.
+      models.Context: The current context object.
   """
   operator = _get_operator()
-  operator.create_context(project_id,
-                          locations=locations,
-                          labels=labels,
-                          parameters=parameters,
-                          resources=resources)
+  if kwargs:
+    operator.create_context(**kwargs)
+    return operator.context
+
+  if not hasattr(operator, 'context'):
+    p = operator.parameters
+    operator.create_context(project_id=p.get('project_id'),
+                            locations=p.get('locations'),
+                            labels=p.get('labels'),
+                            parameters=p.get('parameters'),
+                            resources=p.get('resources'))
   return operator.context

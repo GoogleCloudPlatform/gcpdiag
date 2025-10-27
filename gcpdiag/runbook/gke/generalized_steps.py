@@ -60,8 +60,7 @@ class NodePoolScope(runbook.Step):
   def execute(self):
     """Verify node-pool OAuth scopes include one of the required scopes."""
     # fetch all clusters
-    clusters = gke.get_clusters(
-        op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
+    clusters = gke.get_clusters(op.get_context())
     # find target cluster by name and location
     partial = f"{op.get(flags.LOCATION)}/clusters/{op.get(flags.GKE_CLUSTER_NAME)}"
     cluster_obj = util.get_cluster_object(clusters, partial)
@@ -99,8 +98,7 @@ class ServiceAccountPermission(runbook.Step):
     """Verifies the node pool's service account has a role with the correct
     required service IAM permissions."""
 
-    clusters = gke.get_clusters(
-        op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
+    clusters = gke.get_clusters(op.get_context())
     partial_path = f'{op.get(flags.LOCATION)}/clusters/{op.get(flags.GKE_CLUSTER_NAME)}'
     cluster_obj = util.get_cluster_object(clusters, partial_path)
     iam_policy = iam.get_project_policy(op.get(flags.PROJECT_ID))

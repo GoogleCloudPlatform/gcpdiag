@@ -111,8 +111,7 @@ class MonitoringConfigurationStart(runbook.StartStep):
     project_path = crm.get_project(project)
 
     # Checks if there are clusters in the project
-    clusters = gke.get_clusters(
-        op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
+    clusters = gke.get_clusters(op.get_context())
     if not clusters:
       op.add_skipped(
           project_path,
@@ -190,8 +189,7 @@ class ClusterLevelMonitoringConfigurationEnabled(runbook.Step):
 
   def execute(self):
     """Checks if GKE level Monitoring is disabled."""
-    clusters = gke.get_clusters(
-        op.get_new_context(project_id=op.get(flags.PROJECT_ID)))
+    clusters = gke.get_clusters(op.get_context())
     partial_path = f'{op.get(flags.LOCATION)}/clusters/{op.get(flags.GKE_CLUSTER_NAME)}'
     cluster_obj = util.get_cluster_object(clusters, partial_path)
 

@@ -147,3 +147,20 @@ class OperatorTest(unittest.TestCase):
     step_report = self.test_operator.interface.rm.reports[
         self.test_operator.run_id].results.get(ok_step.execution_id)
     self.assertEqual(info, step_report.info)
+
+  @with_operator_context
+  def test_get_context_with_create(self):
+    self.test_operator.create_context('test-project')
+    context = op.get_context()
+    self.assertEqual(context.project_id, 'test-project')
+
+  @with_operator_context
+  def test_get_context_lazy_init(self):
+    self.test_operator.parameters = {'project_id': 'test-project-lazy'}
+    context = op.get_context()
+    self.assertEqual(context.project_id, 'test-project-lazy')
+
+  @with_operator_context
+  def test_get_context_with_kwargs(self):
+    context = op.get_context(project_id='kwargs-project', resources=['myres'])
+    self.assertEqual(context.project_id, 'kwargs-project')
