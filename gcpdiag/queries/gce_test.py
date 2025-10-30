@@ -203,22 +203,12 @@ class TestGce(unittest.TestCase):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              locations=['europe-west4'])
     groups = gce.get_instance_groups(context)
-    assert (groups[
-        'projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroups/instance-group-1']
-            .has_named_ports() is True)
-    assert (groups[
-        'projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroups/mig'].
-            has_named_ports() is False)
-    assert 'http' in [
-        p['name'] for p in groups[
-            'projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroups/instance-group-1']
-        .named_ports
-    ]
-    assert 'https' not in [
-        p['name'] for p in groups[
-            'projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroups/instance-group-1']
-        .named_ports
-    ]
+    ig1_path = 'projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroups/instance-group-1'
+    mig_path = 'projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instanceGroups/mig'
+    assert groups[ig1_path].has_named_ports() is True
+    assert groups[mig_path].has_named_ports() is False
+    assert 'http' in [p['name'] for p in groups[ig1_path].named_ports]
+    assert 'https' not in [p['name'] for p in groups[ig1_path].named_ports]
 
   def test_get_managed_instance_groups(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
@@ -255,11 +245,97 @@ class TestGce(unittest.TestCase):
     migs = gce.get_managed_instance_groups(context)
     assert len(migs) == 0
 
+  def test_managed_instance_group_zone(self):
+    # zonal mig
+    mig1 = gce.ManagedInstanceGroup(
+        'p1', {
+            'name':
+                'mig1',
+            'zone':
+                'https://www.googleapis.com/compute/v1/projects/p1/zones/us-central1-a',
+            'selfLink':
+                '...'
+        })
+    self.assertEqual(mig1.zone, 'us-central1-a')
+    # regional mig
+    mig2 = gce.ManagedInstanceGroup(
+        'p1', {
+            'name':
+                'mig2',
+            'region':
+                'https://www.googleapis.com/compute/v1/projects/p1/regions/us-central1',
+            'selfLink':
+                '...'
+        })
+    self.assertIsNone(mig2.zone)
+    # malformed zone
+    mig3 = gce.ManagedInstanceGroup(
+        'p1', {
+            'name': 'mig3',
+            'zone': 'https://www.googleapis.com/compute/v1/projects/p1/zones/',
+            'selfLink': '...'
+        })
+    with self.assertRaises(RuntimeError):
+      _ = mig3.zone
+
+  def test_managed_instance_group_get_method(self):
+    mig = gce.ManagedInstanceGroup(
+        'p1', {
+            'name':
+                'mig1',
+            'zone':
+                'https://www.googleapis.com/compute/v1/projects/p1/zones/us-central1-a',
+            'selfLink':
+                '...',
+            'status': {
+                'versionTarget': {
+                    'isReached': True
+                }
+            }
+        })
+    self.assertEqual(mig.get('status.versionTarget.isReached'), True)
+    self.assertEqual(mig.get('name'), 'mig1')
+    self.assertIsNone(mig.get('foo.bar'))
+    self.assertEqual(mig.get('foo.bar', 'default'), 'default')
+
+  def test_autoscaler_get_method(self):
+    autoscaler = gce.Autoscaler(
+        'p1', {
+            'name': 'autoscaler1',
+            'selfLink':
+                'https://www.googleapis.com/compute/v1/projects/p1/zones/us-central1-a/'
+                'autoscalers/autoscaler1',
+            'autoscalingPolicy': {
+                'mode': 'ON'
+            }
+        })
+    self.assertEqual(autoscaler.name, 'autoscaler1')
+    self.assertEqual(
+        autoscaler.self_link,
+        'https://www.googleapis.com/compute/v1/projects/p1/zones/'
+        'us-central1-a/autoscalers/autoscaler1')
+    self.assertEqual(autoscaler.full_path,
+                     'projects/p1/zones/us-central1-a/autoscalers/autoscaler1')
+    self.assertEqual(autoscaler.get('autoscalingPolicy.mode'), 'ON')
+    self.assertIsNone(autoscaler.get('foo.bar'))
+    self.assertEqual(autoscaler.get('foo.bar', 'default'), 'default')
+
   def test_mig_property(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME,
                              labels=DUMMY_INSTANCE3_LABELS)
     for n in gce.get_instances(context).values():
       assert re.match(r'gke-gke1-default-pool-\w+-grp', n.mig.name)
+
+  def test_mig_property_instance_not_in_mig(self):
+    instance = gce.get_instance(DUMMY_PROJECT_NAME, DUMMY_ZONE,
+                                DUMMY_INSTANCE1_NAME)
+    with self.assertRaises(AttributeError):
+      _ = instance.mig
+
+  def test_get_instance_group_manager(self):
+    mig = gce.get_instance_group_manager(DUMMY_PROJECT_NAME, DUMMY_ZONE, 'mig')
+    self.assertEqual(mig.name, 'mig')
+    self.assertEqual(mig.zone, DUMMY_ZONE)
 
   def test_get_all_regions(self):
     regions = gce.get_all_regions(DUMMY_PROJECT_NAME)
@@ -291,19 +367,15 @@ class TestGce(unittest.TestCase):
   def test_get_instance_templates(self):
     templates = gce.get_instance_templates(DUMMY_PROJECT_NAME)
     # find the GKE node pool template
-    matched_names = [
-        t for t in templates if t.startswith(
-            'projects/gcpdiag-gce1-aaaa/global/instanceTemplates/gke-gke1-default-pool'
-        )
-    ]
+    prefix = ('projects/gcpdiag-gce1-aaaa/global/instanceTemplates/'
+              'gke-gke1-default-pool')
+    matched_names = [t for t in templates if t.startswith(prefix)]
     assert len(matched_names) == 2
     t = templates[matched_names[0]]
     assert t.name.startswith('gke-gke1-default-pool')
     # GKE nodes pools have at least one tag called 'gke-CLUSTERNAME-CLUSTERHASH-node'
-    assert [
-        True for tag in t.tags
-        if tag.startswith('gke-') and tag.endswith('-node')
-    ]
+    assert any(
+        tag.startswith('gke-') and tag.endswith('-node') for tag in t.tags)
     # service_account
     assert (t.service_account ==
             f'{DUMMY_PROJECT_NR}-compute@developer.gserviceaccount.com')
@@ -399,6 +471,14 @@ class TestGce(unittest.TestCase):
         assert i.is_running
       else:
         assert not i.is_running
+
+  def test_network_interface_count(self):
+    instance = gce.get_instance(
+        project_id=DUMMY_PROJECT_NAME,
+        zone=DUMMY_ZONE,
+        instance_name=DUMMY_INSTANCE1_NAME,
+    )
+    self.assertEqual(instance.network_interface_count, 1)
 
   def test_get_serial_port_outputs(self):
     context = models.Context(project_id=DUMMY_PROJECT_NAME)

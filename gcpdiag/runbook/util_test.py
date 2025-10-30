@@ -128,3 +128,37 @@ class TestGenerateUUID(unittest.TestCase):
     result = util.generate_uuid(length=40)
     self.assertEqual(len(result), 40 + result.count('.'))
     self.assertTrue(result.endswith('0'))
+
+
+class MockConstantsModule:
+  SINGLE_PATTERN = 'single_pattern'
+  LIST_PATTERN = ['list_pattern1', 'list_pattern2']
+
+
+class TestResolvePatterns(unittest.TestCase):
+  """Test resolve_patterns function."""
+
+  def test_no_references(self):
+    patterns = util.resolve_patterns('pattern1;;pattern2', MockConstantsModule)
+    self.assertEqual(patterns, ['pattern1', 'pattern2'])
+
+  def test_single_string_reference(self):
+    patterns = util.resolve_patterns('ref:SINGLE_PATTERN', MockConstantsModule)
+    self.assertEqual(patterns, ['single_pattern'])
+
+  def test_list_reference(self):
+    patterns = util.resolve_patterns('ref:LIST_PATTERN', MockConstantsModule)
+    self.assertEqual(patterns, ['list_pattern1', 'list_pattern2'])
+
+  def test_mixed_patterns_and_references(self):
+    patterns = util.resolve_patterns(
+        'pattern1;;ref:SINGLE_PATTERN;;pattern2;;ref:LIST_PATTERN',
+        MockConstantsModule)
+    self.assertEqual(patterns, [
+        'pattern1', 'single_pattern', 'pattern2', 'list_pattern1',
+        'list_pattern2'
+    ])
+
+  def test_invalid_reference(self):
+    with self.assertRaises(ValueError):
+      util.resolve_patterns('ref:INVALID_PATTERN', MockConstantsModule)

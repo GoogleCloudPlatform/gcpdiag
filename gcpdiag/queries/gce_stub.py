@@ -68,7 +68,7 @@ class ComputeEngineApiStub(apis_stub.ApiStub):
     elif self.mock_state in ['licenses']:
       return apis_stub.RestCallStub(project, f'{project}-licenses')
     else:
-      raise RuntimeError(f"can't list for mock state {self.mock_state}")
+      raise RuntimeError(f'can\'t list for mock state {self.mock_state}')
 
   def aggregatedList(
       self,
@@ -288,6 +288,37 @@ class InstanceGroupManagersApiStub(ComputeEngineApiStub):
       )
     else:
       return None
+
+  def get(self, project, zone=None, instanceGroupManager=None):
+    if instanceGroupManager:
+      self.instance_group_manager = instanceGroupManager
+      self.project = project
+      self.zone = zone
+      return self
+    else:
+      raise ValueError('missing instanceGroupManager')
+
+  def execute(self, num_retries=0):
+    json_dir = apis_stub.get_json_dir(self.project)
+    with open(json_dir / f'compute-migs-{self.zone}.json',
+              encoding='utf-8') as json_file:
+      migs = json.load(json_file)
+      if 'items' in migs:
+        for mig in migs['items']:
+          if mig['name'] == self.instance_group_manager:
+            return mig
+    # fallback to aggregated list
+    with open(json_dir / 'compute-migs-aggregated.json',
+              encoding='utf-8') as json_file:
+      migs_by_zone = json.load(json_file)['items']
+      for zone_migs in migs_by_zone.values():
+        if 'instanceGroupManagers' not in zone_migs:
+          continue
+        for mig in zone_migs['instanceGroupManagers']:
+          if mig['name'] == self.instance_group_manager:
+            return mig
+    raise ValueError(
+        f'instanceGroupManager {self.instance_group_manager} not found')
 
 
 class RegionInstanceGroupManagersApiStub(ComputeEngineApiStub):

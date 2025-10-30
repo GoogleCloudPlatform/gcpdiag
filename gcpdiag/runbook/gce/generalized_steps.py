@@ -1034,9 +1034,9 @@ class VmHasOpsAgent(runbook.Step):
       )
       return
 
-    self.end_time = getattr(self, 'end_time', None) or op.get(self.end_time)
+    self.end_time = getattr(self, 'end_time', None) or op.get(flags.END_TIME)
     self.start_time = getattr(self, 'start_time', None) or op.get(
-        self.start_time)
+        flags.START_TIME)
 
     if self.check_logging:
       serial_log_entries = logs.realtime_query(
