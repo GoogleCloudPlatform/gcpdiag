@@ -14,6 +14,7 @@
 """Module containing steps to analyze Health Check issues."""
 
 import re
+import urllib.parse
 from datetime import datetime, timedelta
 from itertools import groupby
 from typing import List, Optional
@@ -520,12 +521,28 @@ class ValidateBackendServicePortConfiguration(runbook.Step):
       )
 
   def _normalize_url(self, url):
-    if url and url.startswith('//compute.googleapis.com/'):
-      return url.split('//compute.googleapis.com/')[1]
+    if not url:
+      return url
+    try:
+      # Add // prefix if scheme is missing for urlparse to work correctly
+      if (not url.startswith('http://') and not url.startswith('https://') and
+          not url.startswith('//')):
+        temp_url = '//' + url
+      else:
+        temp_url = url
 
-    if url and url.startswith('https://www.googleapis.com/compute/v1/'):
-      return url.split('https://www.googleapis.com/compute/v1/')[1]
-    return url
+      parsed_url = urllib.parse.urlparse(temp_url)
+
+      if parsed_url.hostname == 'compute.googleapis.com':
+        return parsed_url.path.lstrip('/')
+      elif (parsed_url.hostname == 'www.googleapis.com' and
+            parsed_url.path.startswith('/compute/v1/')):
+        return parsed_url.path.replace('/compute/v1/', '', 1)
+      else:
+        return url
+    except ValueError:
+      # Handle potential parsing errors
+      return url
 
   def _format_affected_instance_groups(self, impacted_instance_groups,
                                        serving_port_name):

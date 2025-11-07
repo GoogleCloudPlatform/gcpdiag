@@ -16,6 +16,7 @@
 """Test code in lb.py."""
 
 import unittest
+import urllib.parse
 from unittest import mock
 
 from gcpdiag import models
@@ -137,8 +138,14 @@ class TestURLMap(unittest.TestCase):
                                  certificate_name='cert1')
     assert obj.name == 'cert1'
     assert obj.type == 'MANAGED'
-    assert 'natka123.com' in obj.domains
-    assert 'second.natka123.com' in obj.domains
+    self.assertTrue(
+        any(
+            urllib.parse.urlparse('//' + d).hostname == 'natka123.com'
+            for d in obj.domains))
+    self.assertTrue(
+        any(
+            urllib.parse.urlparse('//' + d).hostname == 'second.natka123.com'
+            for d in obj.domains))
 
   def test_get_target_https_proxies(self):
     """get_target_https_proxy returns the list of target https proxies."""
