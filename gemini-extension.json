@@ -1,0 +1,16 @@
+{
+  "name": "gcpdiag",
+  "version": "0.1.1",
+  "description": "GCPDiag troubleshooting tools.",
+  "contextFileName": "GEMINI.md",
+  "mcpServers": {
+    "gcpdiag": {
+      "command": "uvx",
+      "args": [
+        "--from",
+	"git+https://github.com/costinm/gcpdiag",
+        "gcpdiagmcp"
+      ]
+    }
+  }
+}

@@ -39,7 +39,13 @@ def _init_search_args_parser() -> argparse.ArgumentParser:
       'search',
       metavar='SEARCH_TERMS',
       type=str,
-      nargs='+',
+      nargs='*',
+      help='Search terms to discover gcpdiag rules related to them')
+
+  parser.add_argument('-q',
+      '--search',
+      metavar='SEARCH_TERMS',
+      type=str,
       help='Search terms to discover gcpdiag rules related to them')
 
   parser.add_argument('-l',
@@ -128,10 +134,15 @@ def _rank_runbook_rules(rules: Dict,
     description_count = sum(description.count(keyword) for keyword in keywords)
     score = (kw_count * 3) + (name_count * 2) + description_count
 
-    if score > 0:
+    if score > 0 or args.limit_per_type == 0:
       # Use negative score to achieve a max-heap
       heapq.heappush(ranked_rules, (-score, name, rule))
 
+  if args.limit_per_type == 0:
+      return [
+          heapq.heappop(ranked_rules)
+          for _ in range(len(ranked_rules))
+      ]
   return [
       heapq.heappop(ranked_rules)
       for _ in range(min(len(ranked_rules), args.limit_per_type))
@@ -145,6 +156,7 @@ def _rank_lint_rules(rules: Iterable[LintRule],
   """
   ranked_rules: List[Tuple[int, str, LintRule]] = []
   keywords = args.search
+  print("Searching for ", keywords)
   keywords = [kw.lower() for kw in keywords]
 
   for rule in rules:
@@ -157,13 +169,19 @@ def _rank_lint_rules(rules: Iterable[LintRule],
     long_desc_count = sum(long_desc.count(keyword) for keyword in keywords)
     score = (kw_count * 3) + (short_desc_count + long_desc_count) * 2
 
-    if score > 0:
-      # Use negative score to achieve a max-heap
-      heapq.heappush(ranked_rules, (-score, name, rule))
+    if score > 0 or args.limit_per_type == 0:
+        # Use negative score to achieve a max-heap
+        heapq.heappush(ranked_rules, (-score, name, rule))
 
+  if args.limit_per_type == 0:
+      return [
+          heapq.heappop(ranked_rules)
+          for _ in range(len(ranked_rules))
+      ]
   return [
       heapq.heappop(ranked_rules)
       for _ in range(min(len(ranked_rules), args.limit_per_type))
+
   ]
 
 
