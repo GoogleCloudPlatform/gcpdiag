@@ -14,8 +14,11 @@
 
 FROM python:3.7-slim@sha256:b53f496ca43e5af6994f8e316cf03af31050bf7944e0e4a308ad86c001cf028b
 
-# Add pipenv.
-RUN pip install pipenv
+# Copy the pinned requirements file from the root directory
+COPY requirements.txt /tmp/requirements.txt
+
+# Install from the file, ensuring all hashes match
+RUN pip install --require-hashes -r /tmp/requirements.txt
 
 # Debian packages.
 # binutils is for pyinstaller

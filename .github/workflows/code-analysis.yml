@@ -39,7 +39,7 @@ jobs:
         terraform_version: 1.0.6
 
     - name: Install pipenv
-      run: python -m pip install --upgrade pipenv wheel
+      run: python -m pip install --require-hashes -r requirements.txt
 
     - name: Restore pipenv cache
       id: cache-pipenv
