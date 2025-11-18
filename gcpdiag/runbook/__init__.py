@@ -813,7 +813,8 @@ class DiagnosticEngine:
     self.interface.output.display_runbook_description(tree)
 
     try:
-      operator = op.Operator(interface=self.interface)
+      operator = op.Operator(interface=self.interface,
+                             context_provider=self.context_provider)
       operator.set_tree(tree)
       operator.set_parameters(parameter)
       operator.set_run_id(tree.run_id)
@@ -1021,7 +1022,8 @@ class DiagnosticEngine:
     with registry_lock:
       # Use a new run_id for the consolidated report
       run_id = util.generate_uuid()
-      operator = op.Operator(interface=self.interface)
+      operator = op.Operator(interface=self.interface,
+                             context_provider=self.context_provider)
       operator.set_run_id(run_id)
 
       # Collect all parameters from all bundles for the report header.
