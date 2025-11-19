@@ -226,8 +226,8 @@ def cached_api_call(expire=None, in_memory=False):
           api_cache.set(key, result, expire=expire)
         else:
           api_cache.set(key, result, tag='tmp')
-        if isinstance(result, Exception):
-          raise result
+      if isinstance(result, Exception):
+        raise result
       return result
 
     return _cached_api_call_wrapper

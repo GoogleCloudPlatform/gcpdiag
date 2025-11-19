@@ -17,6 +17,9 @@ import secrets
 import string
 import threading
 import unittest
+from unittest import mock
+
+from googleapiclient import errors
 
 from gcpdiag import caching
 
@@ -113,3 +116,15 @@ class UseCacheTests(unittest.TestCase):
     disk_result = cached_on_disk('same-arg-but-different-result')
     next_disk_result = cached_on_disk('same-arg-but-different-result')
     self.assertNotEqual(disk_result, next_disk_result)
+
+  def test_exception_raised_when_cache_disabled(self):
+    caching.configure_global_cache(enabled=False)
+
+    @caching.cached_api_call()
+    def failing_function():
+      resp = mock.Mock()
+      resp.status = 403
+      raise errors.HttpError(resp, b'Forbidden')
+
+    with self.assertRaises(errors.HttpError):
+      failing_function()
