@@ -1,3 +1,8 @@
 *  gce/WARN/2021_006: Serial logs don't contain "Kernel panic" messages
-   (serial port output is unavailable)                                    [SKIP]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce1       [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-b/instances/gce1       [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gce2       [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/gke-gke1-default-pool-35923fbc-2xxp [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-bzvx   [ OK ]
+   - projects/gcpdiag-gce1-aaaa/zones/europe-west4-a/instances/mig-l40g   [ OK ]
 

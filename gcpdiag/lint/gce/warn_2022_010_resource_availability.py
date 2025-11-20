@@ -31,13 +31,12 @@ METHOD_NAME_MATCH = 'compute.instances.'
 STOCKOUT_MESSAGE = 'ZONE_RESOURCE_POOL_EXHAUSTED'
 RESOURCE_EXHAUSTED = 'resource pool exhausted'
 INSUFFICIENT_RESOURCES = 'does not have enough resources available'
-LOG_FILTER = f'''
-protoPayload.methodName=~("compute.instances.*insert" OR "compute.instances.resume")
-protoPayload.status.message=~("{STOCKOUT_MESSAGE}" OR
-"{INSUFFICIENT_RESOURCES}" OR
-"{RESOURCE_EXHAUSTED}")
-severity=ERROR
-'''
+LOG_FILTER = (
+    '(protoPayload.methodName =~ "compute.instances.*insert" OR'
+    ' protoPayload.methodName = "compute.instances.resume") AND'
+    f' (protoPayload.status.message:"{STOCKOUT_MESSAGE}" OR'
+    f' protoPayload.status.message:"{INSUFFICIENT_RESOURCES}" OR'
+    f' protoPayload.status.message:"{RESOURCE_EXHAUSTED}") AND severity=ERROR')
 
 logs_by_project = {}
 
@@ -71,15 +70,16 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
       msg = get_path(entry, ('protoPayload', 'status', 'message'), default='')
       method = get_path(entry, ('protoPayload', 'methodName'), default='')
 
-      if (entry['severity'] == 'ERROR' and METHOD_NAME_MATCH in method) and \
-         (STOCKOUT_MESSAGE in msg) or (INSUFFICIENT_RESOURCES in msg) or \
-             (RESOURCE_EXHAUSTED in msg):
+      if (entry['severity'] == 'ERROR' and
+          METHOD_NAME_MATCH in method) and (STOCKOUT_MESSAGE in msg or
+                                            INSUFFICIENT_RESOURCES in msg or
+                                            RESOURCE_EXHAUSTED in msg):
         zone = get_path(entry, ('resource', 'labels', 'zone'), default='')
         if zone:
           stockout_zones.add(zone)
 
-    if stockout_zones:
-      report.add_failed(project, \
-          f'Resource exhaustion in zones: {stockout_zones}')
-    else:
-      report.add_ok(project)
+  if stockout_zones:
+    report.add_failed(project,
+                      f'Resource exhaustion in zones: {stockout_zones}')
+  else:
+    report.add_ok(project)
