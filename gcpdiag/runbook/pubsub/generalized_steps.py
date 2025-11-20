@@ -161,6 +161,12 @@ class DeadLetterTopicPermissions(runbook.Step):
         project_id=project_id,
         subscription_name=op.get(flags.SUBSCRIPTION_NAME),
     )
+
+    if not subscription.has_dead_letter_topic():
+      op.add_skipped(
+          subscription,
+          'Subscription does not have a dead letter topic configured.')
+      return
     # dead letter topic is in another project that the user may not be allowed
     if subscription.has_dead_letter_topic() and subscription.dead_letter_topic(
     ).split('/')[1] != project_id:

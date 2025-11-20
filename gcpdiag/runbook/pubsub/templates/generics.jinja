@@ -86,3 +86,58 @@
 
   [1] <https://cloud.google.com/pubsub/docs/create-push-subscription#vpc-service-control>
 {% endblock vpcsc_api_failure_remediation %}
+
+
+
+{% block invalid_failure_reason %}
+  Message failures detected.
+
+  [1] <https://docs.cloud.google.com/pubsub/docs/reference/error-codes>
+{% endblock %}
+
+{% block invalid_failure_remediation %}
+  Handle message failures
+
+  When a Pub/Sub message cannot be written to BigQuery, the message cannot be acknowledged.
+  The Pub/Sub message forwarded to the dead-letter topic contains an attribute CloudPubSubDeadLetterSourceDeliveryErrorMessage that has the reason that the Pub/Sub message couldn't be written to BigQuery.
+
+  [1] <https://docs.cloud.google.com/pubsub/docs/bigquery#handle_message_failures>.
+{% endblock %}
+
+{%- block start_failure_reason -%}
+Project '{project_id}' not found or no permission to access it.
+{%- endblock -%}
+
+{%- block start_failure_remediation -%}
+Please check the project ID and your permissions.
+{%- endblock -%}
+
+{%- block subscription_existence_failure_reason -%}
+Pub/Sub subscription '{subscription_name}' not found.
+{%- endblock -%}
+
+{%- block subscription_existence_failure_remediation -%}
+Please check the subscription ID and your permissions.
+{%- endblock -%}
+
+{%- block bq_table_existence_failure_reason -%}
+BigQuery table {table_full_id} not found.
+{%- endblock -%}
+
+{%- block bq_table_existence_failure_remediation -%}
+Please ensure the BigQuery table exists.
+{%- endblock -%}
+
+{%- block permission_check_failure_reason -%}
+The Pub/Sub service account '{service_account}' does not have required BigQuery permissionson project '{project_id}'
+{%- endblock -%}
+
+{%- block permission_check_failure_remediation -%}
+Grant the "BigQuery Data Editor" role (roles/bigquery.dataEditor) to the Pub/Sub service account:
+'{service_account}'
+{%- endblock -%}
+
+{%- block subscription_status_failure_remediation -%}
+The topic schema and the BigQuery table schema might be incompatible.
+Please check the schemas and ensure they are compatible.
+{%- endblock -%}

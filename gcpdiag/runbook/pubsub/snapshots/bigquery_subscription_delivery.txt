@@ -1,0 +1,54 @@
+project_id=gcpdiag-pubsub1-aaaa,subscription_name=gcpdiag-
+pubsub1subscription2-9pm6hng1,table_id=test_dataset.test_table
+
+pubsub/bigquery-subscription-delivery: Troubleshoot BigQuery Subscription Errors
+
+A diagnostic guide to help you resolve common issues
+causing message delivery failures from Pub/Sub to BigQuery.
+  
+[START]: Check that the project exists and Pub/Sub API is enabled.
+
+   - gcpdiag-pubsub1-aaaa                                                 [OK]
+     [REASON]
+     Project 'gcpdiag-pubsub1-aaaa' found.
+[AUTOMATED STEP]: Check that the Pub/Sub subscription exists.
+
+   - gcpdiag-pubsub1-aaaa/gcpdiag-pubsub1subscription2-9pm6hng1           [OK]
+     [REASON]
+     Pub/Sub subscription 'gcpdiag-pubsub1subscription2-9pm6hng1' found.
+[AUTOMATED STEP]: Check that the BigQuery table exists.
+[AUTOMATED STEP]: Check that the Pub/Sub service agent has writer permissions.
+[AUTOMATED STEP]: Check the BigQuery subscription status and look for common issues.
+
+   - gcpdiag-pubsub1-aaaa/gcpdiag-pubsub1subscription2-9pm6hng1           [OK]
+     [REASON]
+     The subscription projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-pubsub1subscription2-9pm6hng1 state is ACTIVE.
+[AUTOMATED STEP]: Checks if any Pub/Sub quotas are being exceeded.
+
+   - gcpdiag-pubsub1-aaaa                                                 [OK]
+     [REASON]
+     Quota usage is within project limits.
+[AUTOMATED STEP]: Check push request responses from BigQuery for issues.
+
+   - gcpdiag-pubsub1-aaaa                                                 [SKIP]
+     [REASON]
+     Skipping as no traffic delivery to the BigQuery has been detected
+[AUTOMATED STEP]: Checks if subscription has good health (high qualification).
+
+   - gcpdiag-pubsub1-aaaa/gcpdiag-pubsub1subscription2-9pm6hng1           [OK]
+     [REASON]
+     Subcription has good health
+[AUTOMATED STEP]: Checks for dead letter topic presence.
+
+   - gcpdiag-pubsub1-aaaa/gcpdiag-pubsub1subscription2-9pm6hng1           [OK]
+     [REASON]
+     Dead letter topic already attached
+[AUTOMATED STEP]: Checks for dead letter topic permissions.
+
+   - gcpdiag-pubsub1-aaaa                                                 [OK]
+     [REASON]
+     Dead Letter permissions assigned at the project level
+[END]: Finalizing the runbook.
+[INFO]: Finished troubleshooting BigQuery subscriptions.
+
+

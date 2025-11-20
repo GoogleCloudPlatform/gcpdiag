@@ -642,7 +642,7 @@ class BigQueryJob(models.Resource):
               'rejectedReason': rejected_reason,
               'tableReference': table_ref_obj,
           })
-    return {'materializedView': materialized_view}
+    return {'materialView': materialized_view}
 
   @property
   def metadata_cache_statistics(self) -> dict[str, Any]:
@@ -1143,3 +1143,29 @@ def get_bigquery_project(project_id: str) -> crm.Project:
     raise error from e
   else:
     return crm.Project(resource_data=response)
+
+
+@caching.cached_api_call
+def get_table(project_id: str, dataset_id: str,
+              table_id: str) -> Optional[Dict[str, Any]]:
+  """Retrieves a BigQuery table resource if it exists.
+
+  Args:
+    project_id: The project ID.
+    dataset_id: The dataset ID.
+    table_id: The table ID.
+
+  Returns:
+    A dictionary representing the table resource, or None if not found.
+  """
+  try:
+    api = apis.get_api('bigquery', 'v2', project_id)
+    request = api.tables().get(projectId=project_id,
+                               datasetId=dataset_id,
+                               tableId=table_id)
+    response = request.execute(num_retries=config.API_RETRIES)
+    return response
+  except errors.HttpError as err:
+    if err.resp.status == 404:
+      return None
+    raise utils.GcpApiError(err) from err
