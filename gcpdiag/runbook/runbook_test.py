@@ -104,6 +104,10 @@ class TestDiagnosticEngine(unittest.TestCase):
     self.de._check_required_paramaters(parameter_def=dt.parameters,
                                        caller_args=user_supplied_param)
 
+  def test_load_steps_missing_step(self):
+    with self.assertRaisesRegex(ValueError, 'Step "MissingStep" not found'):
+      self.de.load_steps({}, ['MissingStep'])
+
   @patch('gcpdiag.runbook.DiagnosticEngine.run_step')
   def test_find_path_dfs_normal_operation(self, mock_run_step):
     op = Operator(interface=None)

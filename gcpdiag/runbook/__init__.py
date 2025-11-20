@@ -622,8 +622,7 @@ class DiagnosticEngine:
       for id_ in steps_to_run:
         step_def = StepRegistry.get(id_)
         if not step_def:
-          logging.error('skipping step "%s": no step definition found', id_)
-          continue
+          raise ValueError(f'Step "{id_}" not found in registry')
         bundle.steps.append(step_def)
       return bundle
 
