@@ -758,6 +758,9 @@
     },
     {
       "addonsConfig": {
+        "dnsCacheConfig": {
+          "enabled": true
+        },
         "gcePersistentDiskCsiDriverConfig": {
           "enabled": true
         },

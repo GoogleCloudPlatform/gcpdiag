@@ -1,0 +1,38 @@
+*  gke/BP/2025_001: GKE clusters should have NodeLocal DNSCache enabled.
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke1 [SKIP]
+     NodeLocal DNSCache is default in Autopilot
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/autopilot-gke2 [SKIP]
+     NodeLocal DNSCache is default in Autopilot
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke2      [FAIL]
+     NodeLocal DNSCache is not enabled.
+     Enable it to improve DNS performance and reliability.
+     You can enable it with the command:
+       gcloud container clusters update gke2 --location=europe-west4 --update-addons=NodeLocalDNS=ENABLED
+     See also: https://cloud.google.com/kubernetes-engine/docs/how-to/nodelocal-dns-cache
+   - projects/gcpdiag-gke1-aaaa/locations/europe-west4/clusters/gke3      [FAIL]
+     NodeLocal DNSCache is not enabled.
+     Enable it to improve DNS performance and reliability.
+     You can enable it with the command:
+       gcloud container clusters update gke3 --location=europe-west4 --update-addons=NodeLocalDNS=ENABLED
+     See also: https://cloud.google.com/kubernetes-engine/docs/how-to/nodelocal-dns-cache
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke1        [ OK ]
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke4        [FAIL]
+     NodeLocal DNSCache is not enabled.
+     Enable it to improve DNS performance and reliability.
+     You can enable it with the command:
+       gcloud container clusters update gke4 --location=europe-west4-a --update-addons=NodeLocalDNS=ENABLED
+     See also: https://cloud.google.com/kubernetes-engine/docs/how-to/nodelocal-dns-cache
+   - projects/gcpdiag-gke1-aaaa/zones/europe-west4-a/clusters/gke6        [FAIL]
+     NodeLocal DNSCache is not enabled.
+     Enable it to improve DNS performance and reliability.
+     You can enable it with the command:
+       gcloud container clusters update gke6 --location=europe-west4-a --update-addons=NodeLocalDNS=ENABLED
+     See also: https://cloud.google.com/kubernetes-engine/docs/how-to/nodelocal-dns-cache
+
+   NodeLocal DNSCache improves DNS reliability and performance within the
+   cluster by running a local DNS cache on each node. This reduces latency and
+   load on kube-dns. It is a recommended best practice for most Standard
+   clusters. Autopilot clusters have this enabled by default.
+
+   https://gcpdiag.dev/rules/gke/BP/2025_001
+

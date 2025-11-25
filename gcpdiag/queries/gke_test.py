@@ -387,6 +387,20 @@ class TestCluster(unittest.TestCase):
     c2 = clusters[DUMMY_AUTOPILOT_CLUSTER1_NAME]
     assert c2.has_dpv2_enabled()
 
+  def test_is_nodelocal_dnscache_enabled(self):
+    """Test the is_nodelocal_dnscache_enabled property."""
+    context = models.Context(project_id=DUMMY_PROJECT_NAME)
+    clusters = gke.get_clusters(context)
+
+    c1 = clusters[DUMMY_CLUSTER1_NAME]
+    assert c1.is_nodelocal_dnscache_enabled
+
+    c2 = clusters[DUMMY_CLUSTER2_NAME]
+    assert not c2.is_nodelocal_dnscache_enabled
+
+    c_autopilot = clusters[DUMMY_AUTOPILOT_CLUSTER1_NAME]
+    assert c_autopilot.is_nodelocal_dnscache_enabled
+
 
 class TestVersion:
   """ Test GKE Version class """

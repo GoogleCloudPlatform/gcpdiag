@@ -483,6 +483,13 @@ class Cluster(models.Resource):
       return self._resource_data['id'][:8]
     raise UndefinedClusterPropertyError('no id')
 
+  @property
+  def is_nodelocal_dnscache_enabled(self) -> bool:
+    """Returns True if NodeLocal DNSCache is enabled for the cluster."""
+    addons_config = self._resource_data.get('addonsConfig', {})
+    dns_cache_config = addons_config.get('dnsCacheConfig', {})
+    return dns_cache_config.get('enabled', False)
+
 
 @caching.cached_api_call
 def get_clusters(context: models.Context) -> Mapping[str, Cluster]:
