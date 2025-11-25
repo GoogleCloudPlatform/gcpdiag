@@ -19,3 +19,4 @@
 pipenv
 wheel
 setuptools
+safety
