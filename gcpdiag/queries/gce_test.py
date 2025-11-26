@@ -557,3 +557,13 @@ class TestGce(unittest.TestCase):
     instances = gce.get_instances(context)
     self.assertEqual(len(instances), 1)
     self.assertEqual(list(instances.values())[0].name, 'gce2')
+
+  def test_get_instance_by_id(self):
+    instance = gce.get_instance_by_id(DUMMY_PROJECT_NAME, '1010101011')
+    self.assertIsNotNone(instance)
+    self.assertEqual(instance.name, 'gce2')
+    self.assertEqual(instance.zone, DUMMY_ZONE)
+
+  def test_get_instance_by_id_not_found(self):
+    instance = gce.get_instance_by_id(DUMMY_PROJECT_NAME, 'non-existent-id')
+    self.assertIsNone(instance)

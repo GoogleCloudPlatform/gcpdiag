@@ -15,6 +15,7 @@
 # Lint as: python3
 """Runbook utility."""
 
+import logging
 import re
 from typing import List
 
@@ -36,6 +37,20 @@ def ensure_instance_resolved():
   project_id = op.get(flags.PROJECT_ID)
   zone = op.get(flags.ZONE)
   name_or_id = instance_name or instance_id
+
+  # Try to resolve zone from Instance ID if zone is missing
+  if not zone and instance_id:
+    try:
+      instance = gce.get_instance_by_id(project_id, instance_id)
+      if instance:
+        op.put(flags.ZONE, instance.zone)
+        op.put(flags.INSTANCE_NAME, instance.name)
+        return
+    except utils.GcpApiError as e:
+      logging.debug('Failed to resolve instance by ID: %s', e)
+      # Fallback to standard flow if resolution fails or API errors occur
+      pass
+
   if not name_or_id:
     raise runbook_exceptions.MissingParameterError(
         'instance not resolved and instance_name or instance_id not in context')

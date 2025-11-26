@@ -817,6 +817,39 @@ def get_instance(project_id: str, zone: str, instance_name: str) -> Instance:
 
 
 @caching.cached_api_call(in_memory=True)
+def get_instance_by_id(project_id: str, instance_id: str) -> Optional[Instance]:
+  """Returns instance object matching instance id in the project.
+
+  Searches all zones.
+
+  Args:
+    project_id: The ID of the GCP project.
+    instance_id: The unique ID of the GCE instance.
+  """
+  if not apis.is_enabled(project_id, 'compute'):
+    return None
+  gce_api = apis.get_api('compute', 'v1', project_id)
+  # Use aggregatedList with filter to efficiently find the instance by ID.
+  request = gce_api.instances().aggregatedList(project=project_id,
+                                               filter=f'id eq {instance_id}',
+                                               returnPartialSuccess=True)
+
+  while request:
+    response = request.execute(num_retries=config.API_RETRIES)
+    items = response.get('items', {})
+    for _, data in items.items():
+      if 'instances' in data:
+        for instance_data in data['instances']:
+          if str(instance_data.get('id')) == str(instance_id):
+            return Instance(project_id, instance_data)
+
+    request = gce_api.instances().aggregatedList_next(
+        previous_request=request, previous_response=response)
+
+  return None
+
+
+@caching.cached_api_call(in_memory=True)
 def get_global_operations(
     project: str,
     filter_str: Optional[str] = None,
