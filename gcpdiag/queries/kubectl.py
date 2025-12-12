@@ -88,9 +88,13 @@ class KubectlExecutor:
     self.kubecontext = kubecontext
 
     config_text = yaml.dump(cfg, default_flow_style=False)
-    with open(get_config_path(), 'w', encoding='UTF-8') as config_file:
+    # Create/overwrite the config file with strict permissions (0600)
+    config_path = get_config_path()
+    fd = os.open(config_path, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(fd, 'w', encoding='UTF-8') as config_file:
       config_file.write(config_text)
-      config_file.close()
+    # Ensure permissions are restricted even if the file already existed
+    os.chmod(config_path, 0o600)
 
     return True
 
