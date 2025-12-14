@@ -88,9 +88,14 @@ class KubectlExecutor:
     self.kubecontext = kubecontext
 
     config_text = yaml.dump(cfg, default_flow_style=False)
-    with open(get_config_path(), 'w', encoding='UTF-8') as config_file:
+    # The gcpdiag-config file contains credentials, so we must make sure that
+    # it is readable only by us.
+    if os.path.isfile(get_config_path()):
+      os.remove(get_config_path())
+
+    fd = os.open(get_config_path(), os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(fd, 'w', encoding='UTF-8') as config_file:
       config_file.write(config_text)
-      config_file.close()
 
     return True
 
