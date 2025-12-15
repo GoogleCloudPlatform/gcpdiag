@@ -153,6 +153,20 @@ In this example, two bundles are defined:
 gcpdiag runbook --bundle-spec  test.yaml
 ```
 
+## Development
+
+### Coverage Report
+
+To generate a coverage report, run:
+
+```
+make coverage-report
+```
+
+This will run tests and generate an HTML coverage report. At the end of
+the execution, it will give you instructions on how to view the report in your
+browser.
+
 ## Further Information
 
 See <http://gcpdiag.dev> for more information:

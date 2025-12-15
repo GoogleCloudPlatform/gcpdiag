@@ -21,6 +21,13 @@ check-environment:
 test: check-environment
 	pipenv run pytest -o log_level=DEBUG --cov-config=.coveragerc --cov=gcpdiag --forked
 
+coverage-report:
+	pipenv run pytest --cov-config=.coveragerc --cov=gcpdiag --forked --cov-report html --cov-report term-missing
+	@echo ""
+	@echo "To view the report, run the following command in your terminal:"
+	@echo "python3 -m http.server 8080"
+	@echo "Then open http://localhost:8080/htmlcov/ in your browser."
+
 test_async_api:
 	python -m unittest gcpdiag.async_queries.api.api_slowtest
 
