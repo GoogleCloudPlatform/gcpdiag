@@ -1,4 +1,3 @@
 [run]
 omit =
-    *_test.py
     *_stub.py
