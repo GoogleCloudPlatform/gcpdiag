@@ -18,7 +18,7 @@ build:
 	rm -rf dist
 	mkdir dist
 	cd dist && tar -xf ../../../dist/gcpdiag-$(VERSION).tar.gz --strip 1
-	cd dist && gsutil cp gs://check-gke-ingress-push/kubectl-check_gke_ingress ./ && chmod +x kubectl-check_gke_ingress
+	cd dist && gcloud storage cp gs://check-gke-ingress-push/kubectl-check_gke_ingress ./ && chmod +x kubectl-check_gke_ingress
 	chmod -R a+rX dist
 	docker build --pull -t $(IMAGE):$(VERSION) .
 	rm -rf dist
@@ -30,4 +30,4 @@ push:
 # much faster than running 'docker pull' every time (and also avoids the bad
 # practice of using generic docker image tags like 'default')
 update-default:
-	echo -e "DOCKER_IMAGE=$(IMAGE)\nDOCKER_IMAGE_VERSION=$(VERSION)\nWRAPPER_VERSION=$(WRAPPER_VERSION)" | gsutil -h "Content-Type: text/plain" -h "Cache-Control: max-age=300" cp - "gs://$(RELEASE_BUCKET_NAME)/$(OBJECT_NAME_RELEASE_VERSION)"
+	echo -e "DOCKER_IMAGE=$(IMAGE)\nDOCKER_IMAGE_VERSION=$(VERSION)\nWRAPPER_VERSION=$(WRAPPER_VERSION)" | gcloud storage cp --content-type="text/plain" --cache-control="max-age=300" - "gs://$(RELEASE_BUCKET_NAME)/$(OBJECT_NAME_RELEASE_VERSION)"
