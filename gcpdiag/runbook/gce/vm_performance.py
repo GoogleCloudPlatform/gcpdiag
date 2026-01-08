@@ -494,6 +494,7 @@ class DiskIopsThroughputUtilisationChecks(runbook.Step):
     else:
       within_str = f'within d\'{self.start_formatted_string}\', d\'{self.end_formatted_string}\''
 
+    cpu_count_query = None
     try:
       cpu_count_query = monitoring.query(
           op.get(flags.PROJECT_ID), """
