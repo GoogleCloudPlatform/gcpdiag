@@ -15,6 +15,7 @@
 
 import unittest
 from functools import wraps
+from unittest import mock
 
 from gcpdiag.runbook import Step, op, report
 
@@ -72,8 +73,8 @@ uncertain_step.results.append(uncertain_step_eval)
 skipped_step = report.StepResult(step=Step(uuid='skipped.step'))
 skipped_step.results.append(skipped_step_eval)
 
-# This global operator is only used for creating step results and should not interfere with
-# thread-local tests.
+# This global operator is only used for creating step results and should not
+# interfere with thread-local tests.
 operator = op.Operator(interface=report.InteractionInterface(kind='cli'))
 operator.set_run_id('test')
 operator.interface.rm = report.TerminalReportManager()
@@ -141,26 +142,114 @@ class OperatorTest(unittest.TestCase):
 
   @with_operator_context
   def test_add_info_metadata(self):
-    info = ['info1', 'info2', 'info3']
-    for i in info:
+    info_msgs = ['info1', 'info2', 'info3']
+    for i in info_msgs:
       op.info(i)
     step_report = self.test_operator.interface.rm.reports[
         self.test_operator.run_id].results.get(ok_step.execution_id)
-    self.assertEqual(info, step_report.info)
+    self.assertEqual(info_msgs, step_report.info)
 
   @with_operator_context
   def test_get_context_with_create(self):
-    self.test_operator.create_context('test-project')
+    self.test_operator.create_context('test-project', labels={'env': 'prod'})
     context = op.get_context()
     self.assertEqual(context.project_id, 'test-project')
+    self.assertEqual(context.labels, {'env': 'prod'})
 
   @with_operator_context
   def test_get_context_lazy_init(self):
-    self.test_operator.parameters = {'project_id': 'test-project-lazy'}
+    self.test_operator.parameters = {
+        'project_id': 'test-project-lazy',
+        'labels': {
+            'l': 'v'
+        }
+    }
     context = op.get_context()
     self.assertEqual(context.project_id, 'test-project-lazy')
+    self.assertEqual(context.labels, {'l': 'v'})
 
   @with_operator_context
   def test_get_context_with_kwargs(self):
     context = op.get_context(project_id='kwargs-project', resources=['myres'])
     self.assertEqual(context.project_id, 'kwargs-project')
+    # Context converts resources list to resources_pattern
+    self.assertEqual(context.resources_pattern.pattern, 'myres')
+
+  @with_operator_context
+  def test_operator_properties(self):
+    self.test_operator.set_run_id('new_run_id')
+    self.assertEqual(self.test_operator.run_id, 'new_run_id')
+    self.test_operator.set_messages({'msg': 'content'})
+    self.assertEqual(self.test_operator.messages, {'msg': 'content'})
+    self.test_operator.set_tree('tree_obj')
+    self.assertEqual(self.test_operator.tree, 'tree_obj')
+    self.test_operator.set_step('step_obj')
+    self.assertEqual(self.test_operator.step, 'step_obj')
+    self.test_operator.set_parameters({'p': 'v'})
+    self.assertEqual(self.test_operator.parameters, {'p': 'v'})
+
+  def test_get_operator_no_context_error(self):
+    with self.assertRaisesRegex(RuntimeError, 'No operator found'):
+      op.get('test_key')
+
+  @with_operator_context
+  def test_prep_msg(self):
+    self.test_operator.messages = mock.MagicMock()
+    self.test_operator.parameters = {
+        'start_time': '2024-01-01',
+        'end_time': '2024-01-02'
+    }
+    op.prep_msg('test_key', custom_var='val')
+    self.test_operator.messages.get_msg.assert_called_with(
+        'test_key',
+        start_time='2024-01-01',
+        end_time='2024-01-02',
+        custom_var='val')
+
+  @with_operator_context
+  def test_prompt(self):
+    self.test_operator.interface.prompt = mock.MagicMock(
+        return_value='user_choice')
+    result = op.prompt(message='Check?', kind='CONFIRMATION')
+    self.assertEqual(result, 'user_choice')
+    self.test_operator.interface.prompt.assert_called_once_with(
+        message='Check?', kind='CONFIRMATION', options=None, choice_msg='')
+
+  @with_operator_context
+  def test_prep_rca(self):
+    self.test_operator.interface.prepare_rca = mock.MagicMock()
+    op.prep_rca(resource=None,
+                template='tpl::prefix',
+                suffix='sfx',
+                kwarg={'k': 'v'})
+    self.test_operator.interface.prepare_rca.assert_called_once_with(
+        run_id=self.test_operator.run_id,
+        resource=None,
+        template='tpl::prefix',
+        suffix='sfx',
+        step=self.test_operator.step,
+        context={'k': 'v'})
+
+  @with_operator_context
+  def test_reporting_actions(self):
+    self.test_operator.interface.add_skipped = mock.MagicMock()
+    self.test_operator.interface.add_ok = mock.MagicMock()
+    self.test_operator.interface.add_failed = mock.MagicMock()
+    self.test_operator.interface.add_uncertain = mock.MagicMock()
+
+    res = mock.MagicMock()
+    op.add_skipped(res, 'skip_reason')
+    self.test_operator.interface.add_skipped.assert_called_once()
+
+    op.add_ok(res, 'ok_reason')
+    self.test_operator.interface.add_ok.assert_called_once()
+
+    op.add_failed(res, 'fail_reason', 'remediation')
+    self.test_operator.interface.add_failed.assert_called_once()
+
+    op.add_uncertain(res, 'uncertain_reason', 'remediation', 'human_task')
+    self.test_operator.interface.add_uncertain.assert_called_once()
+
+
+if __name__ == '__main__':
+  unittest.main()
