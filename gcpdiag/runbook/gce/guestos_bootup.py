@@ -165,7 +165,7 @@ class GuestosBootupStart(runbook.StartStep):
         # Check for instance id and instance name
         if not op.get(flags.INSTANCE_ID):
           op.put(flags.INSTANCE_ID, vm.id)
-        elif not op.get(flags.INSTANCE_NAME):
+        if not op.get(flags.INSTANCE_NAME):
           op.put(flags.INSTANCE_NAME, vm.name)
       else:
         op.add_failed(vm,

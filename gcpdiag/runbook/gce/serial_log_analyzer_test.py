@@ -85,33 +85,37 @@ class SerialLogAnalyzerStartTest(GceStepTestBase):
     """Test successful VM detail fetching and ID assignment (Lines 255-270)."""
     self.mock_instance.is_running = True
     self.mock_instance.id = '12345'
-    step = serial_log_analyzer.SerialLogAnalyzerStart()
-    step.execute()
-    self.mock_op_put.assert_any_call(flags.ID, '12345')
+    with op.operator_context(self.operator):
+      step = serial_log_analyzer.SerialLogAnalyzerStart()
+      self.operator.set_step(step)
+      step.execute()
+    self.assertEqual(self.operator.parameters[flags.ID], '12345')
 
   def test_start_updates_missing_instance_name(self):
     """Test updating missing instance name from VM metadata."""
     self.mock_instance.is_running = True
     self.mock_instance.name = 'metadata-name'
     # Simulate ID present but instance_name missing in op context
-    op_values = {
-        flags.ID: '123',
-        flags.PROJECT_ID: 'test-project',
-    }
-    with mock.patch.object(serial_log_analyzer.op,
-                           'get',
-                           side_effect=op_values.get):
+    self.params[flags.ID] = '123'
+    self.params[flags.PROJECT_ID] = 'test-project'
+    self.params[flags.INSTANCE_NAME] = None
+    self.operator.parameters = self.params
+    with op.operator_context(self.operator):
       step = serial_log_analyzer.SerialLogAnalyzerStart()
+      self.operator.set_step(step)
       step.execute()
-      self.mock_op_put.assert_any_call(flags.INSTANCE_NAME, 'metadata-name')
+    self.assertEqual(self.operator.parameters[flags.INSTANCE_NAME],
+                     'metadata-name')
 
   def test_instance_not_found_error_handling(self):
     """Test handling of API errors."""
     self.mock_gce_get_instance.side_effect = apiclient.errors.HttpError(
         mock.Mock(status=404), b'not found')
-    step = serial_log_analyzer.SerialLogAnalyzerStart()
-    step.execute()
-    self.mock_op_add_skipped.assert_called_once()
+    with op.operator_context(self.operator):
+      step = serial_log_analyzer.SerialLogAnalyzerStart()
+      self.operator.set_step(step)
+      step.execute()
+    self.mock_interface.add_skipped.assert_called_once()
 
   @mock.patch('builtins.open',
               new_callable=mock.mock_open,
@@ -122,8 +126,10 @@ class SerialLogAnalyzerStartTest(GceStepTestBase):
     self.mock_instance.is_running = True
     self.params[flags.SERIAL_CONSOLE_FILE] = 'test_logs.txt'
     mock_guess.return_value = ('text/plain', None)
-    step = serial_log_analyzer.SerialLogAnalyzerStart()
-    step.execute()
+    with op.operator_context(self.operator):
+      step = serial_log_analyzer.SerialLogAnalyzerStart()
+      self.operator.set_step(step)
+      step.execute()
     mock_open.assert_called_with('test_logs.txt', 'rb')
 
   @mock.patch('builtins.open',
@@ -135,11 +141,15 @@ class SerialLogAnalyzerStartTest(GceStepTestBase):
     self.mock_instance.is_running = True
     self.params[flags.SERIAL_CONSOLE_FILE] = 'logs.gz'
     mock_guess.return_value = ('application/gzip', None)
-    step = serial_log_analyzer.SerialLogAnalyzerStart()
-    step.execute()
-    self.mock_op_add_skipped.assert_called_with(
-        mock.ANY,
-        reason='File logs.gz appears to be compressed, not plain text.')
+    with op.operator_context(self.operator):
+      step = serial_log_analyzer.SerialLogAnalyzerStart()
+      self.operator.set_step(step)
+      step.execute()
+    self.mock_interface.add_skipped.assert_called_with(
+        run_id='test-run',
+        resource=mock.ANY,
+        reason='File logs.gz appears to be compressed, not plain text.',
+        step_execution_id=mock.ANY)
 
   @mock.patch('builtins.open',
               new_callable=mock.mock_open,
@@ -150,10 +160,15 @@ class SerialLogAnalyzerStartTest(GceStepTestBase):
     self.mock_instance.is_running = True
     self.params[flags.SERIAL_CONSOLE_FILE] = 'binary.bin'
     mock_guess.return_value = ('application/octet-stream', None)
-    step = serial_log_analyzer.SerialLogAnalyzerStart()
-    step.execute()
-    self.mock_op_add_skipped.assert_called_with(
-        mock.ANY, reason='File binary.bin does not appear to be plain text.')
+    with op.operator_context(self.operator):
+      step = serial_log_analyzer.SerialLogAnalyzerStart()
+      self.operator.set_step(step)
+      step.execute()
+    self.mock_interface.add_skipped.assert_called_with(
+        run_id='test-run',
+        resource=mock.ANY,
+        reason='File binary.bin does not appear to be plain text.',
+        step_execution_id=mock.ANY)
 
 
 class CloudInitChecksTest(GceStepTestBase):
@@ -169,8 +184,10 @@ class CloudInitChecksTest(GceStepTestBase):
   def test_ubuntu_triggers_child_steps(self):
     """Test child steps are added for Ubuntu instances."""
     self.mock_instance.check_license.return_value = True
-    step = serial_log_analyzer.CloudInitChecks()
-    step.execute()
+    with op.operator_context(self.operator):
+      step = serial_log_analyzer.CloudInitChecks()
+      self.operator.set_step(step)
+      step.execute()
 
     self.assertEqual(len(self.mock_add_child.call_args_list), 2)
 
@@ -183,9 +200,11 @@ class CloudInitChecksTest(GceStepTestBase):
   def test_non_ubuntu_skips_checks(self):
     """Test skipping checks for non-Ubuntu OS."""
     self.mock_instance.check_license.return_value = False
-    step = serial_log_analyzer.CloudInitChecks()
-    step.execute()
-    self.mock_op_add_skipped.assert_called_once()
+    with op.operator_context(self.operator):
+      step = serial_log_analyzer.CloudInitChecks()
+      self.operator.set_step(step)
+      step.execute()
+    self.mock_interface.add_skipped.assert_called_once()
 
 
 class AnalysingSerialLogsEndTest(GceStepTestBase):
@@ -199,8 +218,10 @@ class AnalysingSerialLogsEndTest(GceStepTestBase):
         mock.patch.object(serial_log_analyzer.op, 'prompt', return_value=op.NO),
         mock.patch.object(serial_log_analyzer.op, 'info') as mock_info,
     ):
-      step = serial_log_analyzer.AnalysingSerialLogsEnd()
-      step.execute()
+      with op.operator_context(self.operator):
+        step = serial_log_analyzer.AnalysingSerialLogsEnd()
+        self.operator.set_step(step)
+        step.execute()
       mock_info.assert_called_with(message=op.END_MESSAGE)
 
   def test_end_step_output_interactive_mode(self):
@@ -210,7 +231,9 @@ class AnalysingSerialLogsEndTest(GceStepTestBase):
         mock.patch.object(serial_log_analyzer.op, 'prompt') as mock_prompt,
         mock.patch.object(serial_log_analyzer.op, 'info') as mock_info,
     ):
-      step = serial_log_analyzer.AnalysingSerialLogsEnd()
-      step.execute()
+      with op.operator_context(self.operator):
+        step = serial_log_analyzer.AnalysingSerialLogsEnd()
+        self.operator.set_step(step)
+        step.execute()
       mock_prompt.assert_not_called()
       mock_info.assert_not_called()

@@ -50,6 +50,10 @@ class MissingParameterError(ValueError):
                                     missing_parameters_list is not None else [])
 
 
+class InvalidParameterError(ValueError):
+  """Raised when a runbook parameter is provided but has an invalid value."""
+
+
 class FailedStepError(Exception):
   """Exception raised for a failed step."""
   pass

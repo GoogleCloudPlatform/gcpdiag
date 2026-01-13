@@ -16,12 +16,14 @@
 import datetime
 import json
 import unittest
+from datetime import timezone
 from unittest import mock
 
+import apiclient
 import googleapiclient.errors
 
 from gcpdiag import config
-from gcpdiag.queries import crm, gce
+from gcpdiag.queries import apis_stub, crm, gce
 from gcpdiag.runbook import gce as gce_runbook
 from gcpdiag.runbook import op, snapshot_test_base
 from gcpdiag.runbook.gce import flags, vm_performance
@@ -72,18 +74,29 @@ class VmPerformanceStepTestBase(unittest.TestCase):
 
   def setUp(self):
     super().setUp()
-    # enterContext will automatically clean up the patch
-    self.mock_op_get = self.enterContext(mock.patch('gcpdiag.runbook.op.get'))
-    self.mock_op_put = self.enterContext(mock.patch('gcpdiag.runbook.op.put'))
-    self.mock_op_info = self.enterContext(mock.patch('gcpdiag.runbook.op.info'))
-    self.mock_op_add_ok = self.enterContext(
-        mock.patch('gcpdiag.runbook.op.add_ok'))
-    self.mock_op_add_failed = self.enterContext(
-        mock.patch('gcpdiag.runbook.op.add_failed'))
-    self.mock_op_add_skipped = self.enterContext(
-        mock.patch('gcpdiag.runbook.op.add_skipped'))
-    self.mock_op_add_metadata = self.enterContext(
-        mock.patch('gcpdiag.runbook.op.add_metadata'))
+    self.enterContext(
+        mock.patch('gcpdiag.queries.apis.get_api', new=apis_stub.get_api_stub))
+    self.mock_interface = mock.create_autospec(op.InteractionInterface,
+                                               instance=True)
+    self.mock_interface.rm = mock.Mock()
+    self.operator = op.Operator(self.mock_interface)
+    self.operator.run_id = 'test-run'
+    self.operator.messages = MockMessage()
+
+    self.params = {
+        flags.PROJECT_ID:
+            'test-project',
+        flags.ZONE:
+            'us-central1-a',
+        flags.INSTANCE_NAME:
+            'test-instance',
+        flags.START_TIME:
+            datetime.datetime(2025, 10, 27, tzinfo=datetime.timezone.utc),
+        flags.END_TIME:
+            datetime.datetime(2025, 10, 28, tzinfo=datetime.timezone.utc),
+    }
+    self.operator.parameters = self.params
+
     self.mock_gce_get_instance = self.enterContext(
         mock.patch('gcpdiag.queries.gce.get_instance'))
     self.mock_crm_get_project = self.enterContext(
@@ -113,67 +126,53 @@ class VmPerformanceStepTestBase(unittest.TestCase):
     self.mock_project.id = 'test-project'
     self.mock_crm_get_project.return_value = self.mock_project
 
-    # Default side effect for op.get
-    self.params = {
-        flags.PROJECT_ID:
-            'test-project',
-        flags.ZONE:
-            'us-central1-a',
-        flags.INSTANCE_NAME:
-            'test-instance',
-        flags.START_TIME:
-            datetime.datetime(2025, 10, 27, tzinfo=datetime.timezone.utc),
-        flags.END_TIME:
-            datetime.datetime(2025, 10, 28, tzinfo=datetime.timezone.utc),
-    }
-    self.mock_op_get.side_effect = lambda key, default=None: self.params.get(
-        key, default)
-
-    # Setup operator context
-    mock_interface = mock.Mock()
-    operator = op.Operator(mock_interface)
-    operator.messages = MockMessage()
-    operator.parameters = self.params
-    self.enterContext(op.operator_context(operator))
-
 
 class VmPerformanceStartTest(VmPerformanceStepTestBase):
   """Test VmPerformanceStart step."""
 
   def test_instance_running(self):
     step = vm_performance.VmPerformanceStart()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.mock_gce_get_instance.assert_called_once_with(
         project_id='test-project',
         zone='us-central1-a',
         instance_name='test-instance',
     )
-    self.mock_op_put.assert_called_with(flags.ID, '12345')
-    self.mock_op_add_failed.assert_not_called()
-    self.mock_op_add_skipped.assert_not_called()
+    self.assertEqual(self.operator.parameters[flags.ID], '12345')
+    self.mock_interface.add_failed.assert_not_called()
+    self.mock_interface.add_skipped.assert_not_called()
 
   def test_instance_not_running(self):
     self.mock_instance.is_running = False
     self.mock_instance.status = 'TERMINATED'
     step = vm_performance.VmPerformanceStart()
-    step.execute()
-    self.mock_op_add_failed.assert_called_once()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
+    self.mock_interface.add_failed.assert_called_once()
 
   def test_instance_not_found(self):
     self.mock_gce_get_instance.side_effect = googleapiclient.errors.HttpError(
         mock.Mock(status=404), b'not found')
     step = vm_performance.VmPerformanceStart()
-    step.execute()
-    self.mock_op_add_skipped.assert_called_once()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
+    self.mock_interface.add_skipped.assert_called_once()
 
   def test_instance_name_missing_id_provided(self):
     self.params[flags.ID] = '12345'
     self.params[flags.INSTANCE_NAME] = None
     step = vm_performance.VmPerformanceStart()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.mock_gce_get_instance.assert_called_once_with(
         project_id='test-project', zone='us-central1-a', instance_name=None)
-    self.mock_op_put.assert_called_with(flags.INSTANCE_NAME, 'test-instance')
+    self.assertEqual(self.operator.parameters[flags.INSTANCE_NAME],
+                     'test-instance')
 
 
 class DiskHealthCheckTest(VmPerformanceStepTestBase):
@@ -182,18 +181,22 @@ class DiskHealthCheckTest(VmPerformanceStepTestBase):
   def test_healthy_disk(self):
     self.mock_monitoring_query.return_value = []
     step = vm_performance.DiskHealthCheck()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.mock_monitoring_query.assert_called_once()
-    self.mock_op_add_ok.assert_called_once()
-    self.mock_op_add_failed.assert_not_called()
+    self.mock_interface.add_ok.assert_called_once()
+    self.mock_interface.add_failed.assert_not_called()
 
   def test_unhealthy_disk(self):
     self.mock_monitoring_query.return_value = [{'metric': 'data'}]
     step = vm_performance.DiskHealthCheck()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.mock_monitoring_query.assert_called_once()
-    self.mock_op_add_failed.assert_called_once()
-    self.mock_op_add_ok.assert_not_called()
+    self.mock_interface.add_failed.assert_called_once()
+    self.mock_interface.add_ok.assert_not_called()
 
 
 class CpuOvercommitmentCheckTest(VmPerformanceStepTestBase):
@@ -217,10 +220,12 @@ class CpuOvercommitmentCheckTest(VmPerformanceStepTestBase):
         [],
     ]
     step = vm_performance.CpuOvercommitmentCheck()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.assertEqual(self.mock_monitoring_query.call_count, 2)
-    self.mock_op_add_ok.assert_called_once()
-    self.mock_op_add_failed.assert_not_called()
+    self.mock_interface.add_ok.assert_called_once()
+    self.mock_interface.add_failed.assert_not_called()
 
   def test_e2_cpu_overcommitted(self):
     self.mock_monitoring_query.side_effect = [
@@ -236,10 +241,12 @@ class CpuOvercommitmentCheckTest(VmPerformanceStepTestBase):
         }],
     ]
     step = vm_performance.CpuOvercommitmentCheck()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.assertEqual(self.mock_monitoring_query.call_count, 2)
-    self.mock_op_add_failed.assert_called_once()
-    self.mock_op_add_ok.assert_not_called()
+    self.mock_interface.add_failed.assert_called_once()
+    self.mock_interface.add_ok.assert_not_called()
 
   def test_sole_tenant_cpu_not_overcommitted(self):
     self.mock_instance.is_sole_tenant_vm = True
@@ -253,26 +260,32 @@ class CpuOvercommitmentCheckTest(VmPerformanceStepTestBase):
         [],
     ]
     step = vm_performance.CpuOvercommitmentCheck()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.assertEqual(self.mock_monitoring_query.call_count, 2)
-    self.mock_op_add_ok.assert_called_once()
+    self.mock_interface.add_ok.assert_called_once()
 
   def test_not_e2_or_sole_tenant_skipped(self):
     self.mock_instance.machine_type.return_value = 'n1-standard-1'
     step = vm_performance.CpuOvercommitmentCheck()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.mock_monitoring_query.assert_not_called()
-    self.mock_op_add_skipped.assert_called_once()
+    self.mock_interface.add_skipped.assert_called_once()
 
   def test_no_cpu_count_info(self):
     self.mock_monitoring_query.return_value = []
     step = vm_performance.CpuOvercommitmentCheck()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.mock_monitoring_query.assert_called_once()
-    self.mock_op_add_failed.assert_not_called()
-    self.mock_op_add_ok.assert_not_called()
-    self.mock_op_add_skipped.assert_not_called()
-    self.mock_op_info.assert_called()
+    self.mock_interface.add_failed.assert_not_called()
+    self.mock_interface.add_ok.assert_not_called()
+    self.mock_interface.add_skipped.assert_not_called()
+    self.mock_interface.info.assert_called()
 
   @mock.patch('gcpdiag.runbook.gce.vm_performance.datetime')
   def test_instance_just_started_within_window(self, mock_datetime):
@@ -289,7 +302,8 @@ class CpuOvercommitmentCheckTest(VmPerformanceStepTestBase):
     mock_datetime.timedelta = datetime.timedelta
 
     self.mock_instance.is_running = False
-    self.mock_instance.laststoptimestamp.return_value = '2025-10-27T09:55:00.000000+00:00'
+    self.mock_instance.laststoptimestamp.return_value = (
+        '2025-10-27T09:55:00.000000+00:00')
     self.mock_monitoring_query.side_effect = [
         {
             'some_id': {
@@ -299,7 +313,9 @@ class CpuOvercommitmentCheckTest(VmPerformanceStepTestBase):
         [],
     ]
     step = vm_performance.CpuOvercommitmentCheck()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.assertEqual(self.mock_monitoring_query.call_count, 2)
     query_string = self.mock_monitoring_query.call_args_list[0][0][1]
     self.assertIn("within 9h, d'2025/10/27 09:55:00'", query_string)
@@ -320,25 +336,31 @@ class DiskAvgIOLatencyCheckTest(VmPerformanceStepTestBase):
   def test_latency_ok(self):
     self.mock_monitoring_query.return_value = []
     step = vm_performance.DiskAvgIOLatencyCheck()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.mock_monitoring_query.assert_called_once()
-    self.mock_op_add_ok.assert_called_once()
-    self.mock_op_add_failed.assert_not_called()
+    self.mock_interface.add_ok.assert_called_once()
+    self.mock_interface.add_failed.assert_not_called()
 
   def test_latency_high(self):
     self.mock_monitoring_query.return_value = [{'metric': 'data'}]
     step = vm_performance.DiskAvgIOLatencyCheck()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.mock_monitoring_query.assert_called_once()
-    self.mock_op_add_failed.assert_called_once()
-    self.mock_op_add_ok.assert_not_called()
+    self.mock_interface.add_failed.assert_called_once()
+    self.mock_interface.add_ok.assert_not_called()
 
   def test_unsupported_disk_type(self):
     self.mock_disk.type = 'local-ssd'
     step = vm_performance.DiskAvgIOLatencyCheck()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.mock_monitoring_query.assert_not_called()
-    self.mock_op_add_skipped.assert_called_once()
+    self.mock_interface.add_skipped.assert_called_once()
 
 
 class CheckLiveMigrationsTest(VmPerformanceStepTestBase):
@@ -353,9 +375,11 @@ class CheckLiveMigrationsTest(VmPerformanceStepTestBase):
   def test_no_live_migrations(self):
     self.mock_logs_realtime_query.return_value = []
     step = vm_performance.CheckLiveMigrations()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.mock_logs_realtime_query.assert_called_once()
-    self.mock_op_add_ok.assert_called_once()
+    self.mock_interface.add_ok.assert_called_once()
     self.add_child_patch.assert_called_once()
     self.assertIsInstance(
         self.add_child_patch.call_args[0][0],
@@ -367,11 +391,11 @@ class CheckLiveMigrationsTest(VmPerformanceStepTestBase):
         'timestamp': '2025-10-27T11:00:00.000000Z'
     }]
     step = vm_performance.CheckLiveMigrations()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.mock_logs_realtime_query.assert_called_once()
-    self.mock_op_add_ok.assert_not_called()
-    # add_child is called twice because one log means start_time,
-    # log_time, end_time -> 3 entries -> 2 intervals
+    self.mock_interface.add_ok.assert_not_called()
     self.assertEqual(self.add_child_patch.call_count, 2)
     self.assertIsInstance(
         self.add_child_patch.call_args_list[0][0][0],
@@ -506,11 +530,12 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
         json.loads(n_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.assertEqual(mock_json_load.call_count, 2)
     self.assertEqual(self.mock_monitoring_query.call_count, 5)
-    # 1 call for cpu count, 4 for usage comparison
-    self.assertEqual(self.mock_op_add_ok.call_count, 4)
+    self.assertEqual(self.mock_interface.add_ok.call_count, 4)
 
   @mock.patch('builtins.open', mock.mock_open())
   @mock.patch('json.load')
@@ -530,11 +555,12 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
         json.loads(c_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.assertEqual(mock_json_load.call_count, 2)
     self.assertEqual(self.mock_monitoring_query.call_count, 5)
-    # 1 call for cpu count, 4 for usage comparison
-    self.assertEqual(self.mock_op_add_ok.call_count, 4)
+    self.assertEqual(self.mock_interface.add_ok.call_count, 4)
 
   @mock.patch('builtins.open', mock.mock_open())
   @mock.patch('json.load')
@@ -546,21 +572,17 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
                 'values': [[1]]
             }
         },
-        # actual_usage_comparison query 1 (read iops) -> high usage
         {
             'some_id': {
                 'values': [['val1'], ['val2'], ['val3']]
             }
         },
-        # actual_usage_comparison query 2 (read throughput) -> ok
         {},
-        # actual_usage_comparison query 3 (write iops) -> high usage
         {
             'some_id': {
                 'values': [['val1'], ['val2'], ['val3']]
             }
         },
-        # actual_usage_comparison query 4 (write throughput) -> ok
         {},
     ]
     mock_json_load.side_effect = [
@@ -568,11 +590,13 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
         json.loads(n_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.assertEqual(mock_json_load.call_count, 2)
     self.assertEqual(self.mock_monitoring_query.call_count, 5)
-    self.assertEqual(self.mock_op_add_failed.call_count, 2)
-    self.assertEqual(self.mock_op_add_ok.call_count, 2)
+    self.assertEqual(self.mock_interface.add_failed.call_count, 2)
+    self.assertEqual(self.mock_interface.add_ok.call_count, 2)
 
   @mock.patch('builtins.open', mock.mock_open())
   @mock.patch('json.load')
@@ -595,10 +619,12 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
         json.loads(t_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.assertEqual(mock_json_load.call_count, 2)
     self.assertEqual(self.mock_monitoring_query.call_count, 5)
-    self.assertEqual(self.mock_op_add_ok.call_count, 4)
+    self.assertEqual(self.mock_interface.add_ok.call_count, 4)
 
   @mock.patch('builtins.open', mock.mock_open())
   @mock.patch('json.load')
@@ -621,10 +647,12 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
         json.loads(e_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.assertEqual(mock_json_load.call_count, 2)
     self.assertEqual(self.mock_monitoring_query.call_count, 5)
-    self.assertEqual(self.mock_op_add_ok.call_count, 4)
+    self.assertEqual(self.mock_interface.add_ok.call_count, 4)
 
   @mock.patch('builtins.open', mock.mock_open())
   @mock.patch('json.load')
@@ -650,24 +678,27 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
         json.loads(n_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.assertEqual(mock_json_load.call_count, 2)
     self.assertEqual(self.mock_monitoring_query.call_count, 5)
-    self.assertEqual(self.mock_op_add_ok.call_count, 4)
+    self.assertEqual(self.mock_interface.add_ok.call_count, 4)
 
   @mock.patch('builtins.open', mock.mock_open())
   @mock.patch('json.load')
   def test_unsupported_machine_type(self, mock_json_load):
     self.mock_instance.machine_type.return_value = 'x1-standard-1'
-    # we need to mock the cpu count query
     self.mock_monitoring_query.side_effect = [{'1': {'values': [[1]]}}]
     mock_json_load.side_effect = [
         json.loads(limits_per_gb_data),
         json.loads(n_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
-    step.execute()
-    self.mock_op_add_failed.assert_called_once()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
+    self.mock_interface.add_failed.assert_called_once()
     self.assertEqual(mock_json_load.call_count, 2)
 
   @mock.patch('builtins.open', mock.mock_open())
@@ -685,8 +716,10 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
         json.loads(n_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
-    step.execute()
-    self.assertEqual(self.mock_op_add_ok.call_count, 4)
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
+    self.assertEqual(self.mock_interface.add_ok.call_count, 4)
 
   @mock.patch('builtins.open', mock.mock_open())
   @mock.patch('json.load')
@@ -698,8 +731,10 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
         json.loads(a_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
-    step.execute()
-    self.mock_op_add_failed.assert_called_once()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
+    self.mock_interface.add_failed.assert_called_once()
 
   @mock.patch('builtins.open', mock.mock_open())
   @mock.patch('json.load')
@@ -711,7 +746,6 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
         }
     }, [], [], [], []]
     self.mock_disk.type = 'pd-balanced'
-    # Adjust mock to return a valid structure for e2-medium
     e_family_data_medium = json.loads(e_family_data)
     e_family_data_medium['E2 VMs']['pd-balanced'] = [{
         'VM vCPU count': 'e2-medium*',
@@ -725,8 +759,10 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
         e_family_data_medium,
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
-    step.execute()
-    self.assertEqual(self.mock_op_add_ok.call_count, 4)
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
+    self.assertEqual(self.mock_interface.add_ok.call_count, 4)
 
   @mock.patch('gcpdiag.runbook.gce.vm_performance.datetime')
   @mock.patch('builtins.open', mock.mock_open())
@@ -752,7 +788,9 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
         json.loads(n_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.assertEqual(self.mock_monitoring_query.call_count, 5)
     query_string = self.mock_monitoring_query.call_args_list[0][0][1]
     self.assertIn("within 9h, d'2025/10/27 09:55:00'", query_string)
@@ -781,8 +819,10 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
                                          b'internal error'),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
-    step.execute()
-    self.assertEqual(self.mock_op_add_skipped.call_count, 4)
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
+    self.assertEqual(self.mock_interface.add_skipped.call_count, 4)
 
   @mock.patch('builtins.open', mock.mock_open())
   @mock.patch('json.load')
@@ -806,10 +846,12 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
         json.loads(t_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.assertEqual(mock_json_load.call_count, 2)
     self.assertEqual(self.mock_monitoring_query.call_count, 5)
-    self.assertEqual(self.mock_op_add_ok.call_count, 4)
+    self.assertEqual(self.mock_interface.add_ok.call_count, 4)
 
   @mock.patch('builtins.open', mock.mock_open())
   @mock.patch('json.load')
@@ -833,10 +875,12 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
         json.loads(a_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.assertEqual(mock_json_load.call_count, 2)
     self.assertEqual(self.mock_monitoring_query.call_count, 5)
-    self.assertEqual(self.mock_op_add_ok.call_count, 4)
+    self.assertEqual(self.mock_interface.add_ok.call_count, 4)
 
   @mock.patch('builtins.open', mock.mock_open())
   @mock.patch('json.load')
@@ -855,10 +899,12 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
         json.loads(c_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.assertEqual(mock_json_load.call_count, 2)
     self.assertEqual(self.mock_monitoring_query.call_count, 5)
-    self.assertEqual(self.mock_op_add_ok.call_count, 4)
+    self.assertEqual(self.mock_interface.add_ok.call_count, 4)
 
   @mock.patch('builtins.open', mock.mock_open())
   @mock.patch('json.load')
@@ -882,10 +928,12 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
         json.loads(n_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.assertEqual(mock_json_load.call_count, 2)
     self.assertEqual(self.mock_monitoring_query.call_count, 5)
-    self.assertEqual(self.mock_op_add_ok.call_count, 4)
+    self.assertEqual(self.mock_interface.add_ok.call_count, 4)
 
   @mock.patch('builtins.open', mock.mock_open())
   @mock.patch('json.load')
@@ -910,10 +958,12 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
         json.loads(e_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.assertEqual(mock_json_load.call_count, 2)
     self.assertEqual(self.mock_monitoring_query.call_count, 5)
-    self.assertEqual(self.mock_op_add_ok.call_count, 4)
+    self.assertEqual(self.mock_interface.add_ok.call_count, 4)
 
   @mock.patch('builtins.open', mock.mock_open())
   @mock.patch('json.load')
@@ -926,7 +976,6 @@ class DiskIopsThroughputUtilisationChecksTest(VmPerformanceStepTestBase):
         json.loads(n_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
-    # Directly test limit_calculator
     limits_data_loaded = json.loads(limits_per_gb_data)
     mach_fam_json_data_loaded = json.loads(n_family_data)
     results = step.limit_calculator(
@@ -955,22 +1004,28 @@ class VmPerformanceEndTest(VmPerformanceStepTestBase):
     self.mock_config_get.return_value = False
     self.mock_op_prompt.return_value = op.NO
     step = vm_performance.VmPerformanceEnd()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.mock_op_prompt.assert_called_once()
-    self.mock_op_info.assert_called_once()
+    self.mock_interface.info.assert_called_once()
 
   def test_end_step_no_interactive_mode_yes_answer(self):
     self.mock_config_get.return_value = False
     self.mock_op_prompt.return_value = op.YES
     step = vm_performance.VmPerformanceEnd()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.mock_op_prompt.assert_called_once()
-    self.mock_op_info.assert_not_called()
+    self.mock_interface.info.assert_not_called()
 
   def test_end_step_interactive_mode(self):
     self.mock_config_get.return_value = True
     step = vm_performance.VmPerformanceEnd()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.mock_op_prompt.assert_not_called()
 
 
@@ -990,7 +1045,6 @@ class VmPerformanceBuildTreeTest(unittest.TestCase):
     self.assertIsInstance(mock_add_start.call_args[1]['step'],
                           vm_performance.VmPerformanceStart)
 
-    # Verify that all expected steps are added
     step_instances = [call[1]['child'] for call in mock_add_step.call_args_list]
     self.assertTrue(
         any(
@@ -1035,7 +1089,6 @@ class VmPerformanceCoverageTest(VmPerformanceStepTestBase):
 
   def setUp(self):
     super().setUp()
-    # Mock CPU count to be generic
     self.mock_monitoring_query.return_value = {
         '1': {
             'values': [[4]]
@@ -1057,13 +1110,11 @@ class VmPerformanceCoverageTest(VmPerformanceStepTestBase):
     self.mock_disk.size = 50  # < 100GB trigger
     self.mock_instance.machine_type.return_value = 'n1-standard-4'
 
-    # Mock JSON return
     mock_json_load.side_effect = [
         json.loads(limits_per_gb_data),
         json.loads(n_family_data)
     ]
 
-    # Mock monitoring query chain
     self.mock_monitoring_query.side_effect = [
         {
             '1': {
@@ -1081,10 +1132,12 @@ class VmPerformanceCoverageTest(VmPerformanceStepTestBase):
     ]
 
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
 
-    self.mock_op_add_failed.assert_called_once()
-    self.assertEqual(self.mock_op_add_ok.call_count, 3)
+    self.mock_interface.add_failed.assert_called_once()
+    self.assertEqual(self.mock_interface.add_ok.call_count, 3)
 
   @mock.patch('builtins.open', mock.mock_open())
   @mock.patch('json.load')
@@ -1112,8 +1165,10 @@ class VmPerformanceCoverageTest(VmPerformanceStepTestBase):
     ]
 
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
-    step.execute()
-    self.assertEqual(self.mock_op_add_ok.call_count, 4)
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
+    self.assertEqual(self.mock_interface.add_ok.call_count, 4)
 
   @mock.patch('builtins.open', mock.mock_open())
   @mock.patch('json.load')
@@ -1128,8 +1183,10 @@ class VmPerformanceCoverageTest(VmPerformanceStepTestBase):
     ]
 
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
-    step.execute()
-    self.mock_op_add_skipped.assert_called_once()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
+    self.mock_interface.add_skipped.assert_called_once()
 
   @mock.patch('builtins.open', mock.mock_open())
   @mock.patch('json.load')
@@ -1153,10 +1210,12 @@ class VmPerformanceCoverageTest(VmPerformanceStepTestBase):
         json.loads(a_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.assertEqual(mock_json_load.call_count, 2)
     self.assertEqual(self.mock_monitoring_query.call_count, 5)
-    self.assertEqual(self.mock_op_add_ok.call_count, 4)
+    self.assertEqual(self.mock_interface.add_ok.call_count, 4)
 
   @mock.patch('builtins.open', mock.mock_open())
   @mock.patch('json.load')
@@ -1180,10 +1239,36 @@ class VmPerformanceCoverageTest(VmPerformanceStepTestBase):
         json.loads(a_family_data),
     ]
     step = vm_performance.DiskIopsThroughputUtilisationChecks()
-    step.execute()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
     self.assertEqual(mock_json_load.call_count, 2)
     self.assertEqual(self.mock_monitoring_query.call_count, 5)
-    self.assertEqual(self.mock_op_add_ok.call_count, 4)
+    self.assertEqual(self.mock_interface.add_ok.call_count, 4)
+
+  def test_disk_iops_utilisation_unbound_local(self):
+    """Reproduces UnboundLocalError when monitoring.query raises HttpError."""
+    self.params[flags.START_TIME] = datetime.datetime(2024,
+                                                      1,
+                                                      1,
+                                                      tzinfo=timezone.utc)
+    self.params[flags.END_TIME] = datetime.datetime(2024,
+                                                    1,
+                                                    1,
+                                                    1,
+                                                    tzinfo=timezone.utc)
+
+    self.mock_instance.laststarttimestamp.return_value = (
+        '2024-01-01T00:00:00.000000+00:00')
+    self.mock_instance.is_running = True
+
+    self.mock_monitoring_query.side_effect = apiclient.errors.HttpError(
+        resp=mock.Mock(status=403), content=b'Forbidden')
+
+    step = vm_performance.DiskIopsThroughputUtilisationChecks()
+    with op.operator_context(self.operator):
+      self.operator.set_step(step)
+      step.execute()
 
 
 if __name__ == '__main__':
