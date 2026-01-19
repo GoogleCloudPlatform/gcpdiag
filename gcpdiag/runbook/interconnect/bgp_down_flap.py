@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""This runbook will analyze BGP down or flap issue"""
+"""This runbook will analyze BGP down or flap issue."""
 
 import json
 import re
@@ -161,6 +161,7 @@ class BgpDownFlapStart(runbook.StartStep):
       op.add_skipped(proj,
                      reason=op.prep_msg(op.SKIPPED_REASON,
                                         project_id=project_id))
+      return
     else:
       for vlan in attachments:
         if vlan.region == op.get(flags.REGION):
@@ -505,6 +506,7 @@ class CheckBgpFlap(runbook.Step):
       op.add_skipped(project,
                      reason=op.prep_msg(op.SKIPPED_REASON,
                                         project_id=project.id))
+      return
 
     for vlan in attachments:
       if vlan.region == op.get(flags.REGION):
