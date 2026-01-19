@@ -6,7 +6,7 @@ resource "google_cloudbuild_trigger" "trigger" {
   }
   build {
     step {
-      name = "gcr.io/cloud-builders/gsutil"
+      name = "gcr.io/cloud-builders/gcloud"
     }
   }
   depends_on = [google_project_service.cloudbuild]
