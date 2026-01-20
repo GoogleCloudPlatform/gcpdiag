@@ -147,6 +147,7 @@ class NatIpAllocationFailedStart(runbook.StartStep):
               project_id=op.get(flags.PROJECT_ID),
           ),
       )
+      return
     if routers:
       # Check that the cloud router name passed is valid.
       router = [r for r in routers if r.name == op.get(flags.CLOUD_ROUTER_NAME)]
@@ -160,6 +161,7 @@ class NatIpAllocationFailedStart(runbook.StartStep):
                 project_id=op.get(flags.PROJECT_ID),
             ),
         )
+        return
       # Check that the natgateway name passed is served by the cloud router.
       nat_router = router[0]
       if not [
@@ -196,6 +198,8 @@ class NatAllocationFailedCheck(runbook.Step):
 
     gw_name = op.get(flags.NAT_GATEWAY_NAME)
     region = op.get(flags.REGION)
+    min_extra_ips_needed = 0
+    vms_with_nat_mappings = 0
     # check the nat router status
     router_status = network.nat_router_status(
         project_id=op.get(flags.PROJECT_ID),
@@ -291,7 +295,7 @@ class NatIpAllocationMethodCheck(runbook.Gateway):
                   does not exist in region {} of project {}""").format(
                          op.get(flags.NAT_NETWORK), op.get(flags.REGION),
                          op.get(flags.PROJECT_ID)))
-
+      return
     if routers:
       # filter routers for the cloud router name specified for the gateway.
       router = [r for r in routers if r.name == op.get(flags.CLOUD_ROUTER_NAME)]
@@ -349,8 +353,8 @@ class NatIpAllocationManualOnly(runbook.Step):
     context = models.Context(project_id=op.get(flags.PROJECT_ID))
     enable_dynamic_port_allocation = None
     nat_gw_ips_in_use = None
-    min_extra_ips_needed = None
-    vms_with_nat_mappings = None
+    min_extra_ips_needed = 0
+    vms_with_nat_mappings = 0
 
     # try to fetch the network for the NATGW
     try:
@@ -375,6 +379,7 @@ class NatIpAllocationManualOnly(runbook.Step):
                   does not exist in region {} of project {}""").format(
                          op.get(flags.NAT_NETWORK), op.get(flags.REGION),
                          op.get(flags.PROJECT_ID)))
+      return
     if routers:
       # filter for the cloud router name specified.
       router = [r for r in routers if r.name == op.get(flags.CLOUD_ROUTER_NAME)]
@@ -387,6 +392,7 @@ class NatIpAllocationManualOnly(runbook.Step):
                      reason=("""
           No Cloud router with the name: {} found.
           """).format(op.get(flags.CLOUD_ROUTER_NAME)))
+      return
 
     # Check the nat router status for number of additional NAT IP addresses needed
     router_status = network.nat_router_status(
