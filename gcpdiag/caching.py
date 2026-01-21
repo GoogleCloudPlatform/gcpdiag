@@ -135,8 +135,8 @@ def get_tmp_deque(prefix='tmp-deque-') -> diskcache.Deque:
 def _make_key(func, args, kwargs):
   h = hashlib.sha256()
   func_name = bytes(func.__module__ + '.' + func.__name__ + ':', 'utf-8')
-  h.update(pickle.dumps(args))
-  h.update(pickle.dumps(kwargs))
+  # Optimize: single pickle dump and highest protocol
+  h.update(pickle.dumps((args, kwargs), protocol=pickle.HIGHEST_PROTOCOL))
   # we don't hash the function name so that it's easier to debug
   key = func_name + h.digest()
   return key
