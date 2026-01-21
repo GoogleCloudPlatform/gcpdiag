@@ -2160,11 +2160,12 @@
         },
         "marshmallow": {
             "hashes": [
-                "sha256:550aa14b619072f0a8d8184911b3f1021c5c32587fb27318ddf81ce0d0029c9d",
-                "sha256:9038db4cceb849ce2b8676ccf3d8e5b5e634ac499e291397efa260aa796c385a"
+                "sha256:083f250643d2e75fd363f256aeb6b1af369a7513ad37647ce4a601f6966e3ba5",
+                "sha256:a8cfa18bd8d0e5f7339e734edf84815fe8db1bdb57358c7ccc05472b746eeadc"
             ],
+            "index": "pypi",
             "markers": "python_version >= '3.10'",
-            "version": "==4.1.1"
+            "version": "==4.1.2"
         },
         "mccabe": {
             "hashes": [
