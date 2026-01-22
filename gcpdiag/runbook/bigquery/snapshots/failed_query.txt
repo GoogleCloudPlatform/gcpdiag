@@ -26,13 +26,37 @@ bigquery/failed-query: Diagnoses issues with a failed BigQuery query job.
      [REASON]
      All permission checks are complete.
 [GATEWAY]: Verify that the BigQuery Job exists
+[INFO]: WARNING: Unable to run INFORMATION_SCHEMA view analysis due to missing permissions.            
+Make sure to grant fake-user@google.com "bigquery.jobs.create" and "bigquery.jobs.listAll".            
+Continuing the investigation with the BigQuery job metadata obtained from the API.
 
-   - gcpdiag-cloudsql1-aaaa                                               [FAIL]
+   - gcpdiag-bigquery1-aaaa:us.test_csv_error                             [OK]
      [REASON]
-     Job gcpdiag-bigquery1-aaaa:us.test_csv_error does not exist.
+     Job gcpdiag-bigquery1-aaaa:us.test_csv_error was successfully located.
+
+[GATEWAY]: Confirm the BigQuery job has finished execution
+
+   - gcpdiag-bigquery1-aaaa:us.test_csv_error                             [OK]
+     [REASON]
+     Job gcpdiag-bigquery1-aaaa:us.test_csv_error has finished execution.
+
+[GATEWAY]: Verify the BigQuery job failed
+
+   - gcpdiag-bigquery1-aaaa:us.test_csv_error                             [OK]
+     [REASON]
+     Job finished execution with an error. Continuing the investigation.
+
+[AUTOMATED STEP]: Analyze BigQuery job errors for known mitigations
+
+   - gcpdiag-bigquery1-aaaa:us.test_csv_error                             [FAIL]
+     [REASON]
+     Job failed with error: Not found: table gcpdiag-bigquery1-aaaa:dataset.table
+
+     Job failure cause:  The query references a table that does not exist or could not be located in the specified region and project.
 
      [REMEDIATION]
-     Please check the corresponding job Region and make sure to provide the correct Job and Project identifiers.
+     Suggested mitigation:  Make sure the table exists in the specified dataset and the table identifier provided is correct.
+     After that confirm that the query is executed in the correct region (where the dataset is located).
 
 [END]: End step.
 [INFO]: No more checks to perform.
@@ -233,37 +257,13 @@ bigquery/failed-query: Diagnoses issues with a failed BigQuery query job.
      [REASON]
      All permission checks are complete.
 [GATEWAY]: Verify that the BigQuery Job exists
-[INFO]: WARNING: Unable to run INFORMATION_SCHEMA view analysis due to missing permissions.            
-Make sure to grant fake-user@google.com "bigquery.jobs.create" and "bigquery.jobs.listAll".            
-Continuing the investigation with the BigQuery job metadata obtained from the API.
 
-   - gcpdiag-bigquery1-aaaa:us.test_notfound                              [OK]
+   - gcpdiag-cloudsql1-aaaa                                               [FAIL]
      [REASON]
-     Job gcpdiag-bigquery1-aaaa:us.test_notfound was successfully located.
-
-[GATEWAY]: Confirm the BigQuery job has finished execution
-
-   - gcpdiag-bigquery1-aaaa:us.test_notfound                              [OK]
-     [REASON]
-     Job gcpdiag-bigquery1-aaaa:us.test_notfound has finished execution.
-
-[GATEWAY]: Verify the BigQuery job failed
-
-   - gcpdiag-bigquery1-aaaa:us.test_notfound                              [OK]
-     [REASON]
-     Job finished execution with an error. Continuing the investigation.
-
-[AUTOMATED STEP]: Analyze BigQuery job errors for known mitigations
-
-   - gcpdiag-bigquery1-aaaa:us.test_notfound                              [UNCERTAIN]
-     [REASON]
-     Job gcpdiag-bigquery1-aaaa:us.test_notfound failed with an error that does not have a publicly documented mitigation and root cause.
-     Full error message(s) reported:
-     "Not found: Job gcpdiag-bigquery1-aaaa:us.test_notfound"
+     Job gcpdiag-bigquery1-aaaa:us.test_notfound does not exist.
 
      [REMEDIATION]
-     Please retry the job to confirm whether the error is transient and can be mitigated through a retry with exponential backoff. See <https://cloud.google.com/bigquery/docs/error-messages>.
-     If the issue persists, contact Google Cloud Support at <https://cloud.google.com/support> and provide this report with the full BigQuery Job Id.
+     Please check the corresponding job Region and make sure to provide the correct Job and Project identifiers.
 
 [END]: End step.
 [INFO]: No more checks to perform.

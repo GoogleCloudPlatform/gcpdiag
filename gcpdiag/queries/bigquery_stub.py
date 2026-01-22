@@ -21,6 +21,7 @@ class GetJobRequest(apis_stub.ApiStub):
   def __init__(self, project_id: str, location: str, job_id: str):
     super().__init__()
     self.project_id = project_id
+    self.job_id = job_id
     # Handle potential None location passed from get()
     self.location = location.lower() if location else 'us'
     self.short_job_id = job_id.split('.')[-1].split('_')[
@@ -30,6 +31,8 @@ class GetJobRequest(apis_stub.ApiStub):
 
   def execute(self, num_retries=0):
     self._maybe_raise_api_exception()
+    if self.job_id == 'test_notfound':
+      raise HttpError(httplib2.Response({'status': 404}), b'Not Found')
     file_path = None
     try:
       json_dir = apis_stub.get_json_dir(self.project_id)

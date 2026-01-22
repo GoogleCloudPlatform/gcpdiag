@@ -97,7 +97,7 @@ class BigQueryFailedQueryStart(runbook.StartStep):
     try:
       user_email = apis.get_user_email()
     except (RuntimeError, exceptions.DefaultCredentialsError):
-      op.add_info(
+      op.info(
           'Unable to fetch user email. Please make sure to authenticate properly before '
           'executing the investigation. Attempting to run the investigation.')
     except AttributeError as err:
@@ -227,7 +227,7 @@ class BigQueryJobExists(runbook.Gateway):
         try:
           user_email = apis.get_user_email()
         except (RuntimeError, exceptions.DefaultCredentialsError):
-          op.warning(
+          op.info(
               message=
               'Unable to fetch user email. Please make sure to authenticate properly'
               ' before executing the investigation.')
