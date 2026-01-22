@@ -32,6 +32,8 @@ JSON_PROJECT_DIR = {
         pathlib.Path(__file__).parents[2] / 'test-data/gce1/json-dumps',
     '12340001':
         pathlib.Path(__file__).parents[2] / 'test-data/gce1/json-dumps',
+    'test-project':
+        pathlib.Path(__file__).parents[2] / 'test-data/gce1/json-dumps',
     'gcpdiag-gce-faultyssh-runbook':
         pathlib.Path(__file__).parents[2] / 'test-data/gce2/json-dumps',
     '12345601':
