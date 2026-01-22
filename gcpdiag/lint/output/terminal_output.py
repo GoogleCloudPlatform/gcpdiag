@@ -220,12 +220,14 @@ class TerminalOutput(base_output.BaseOutput):
     if resource:
       self.terminal_print_line('   - ' +
                                resource.full_path.ljust(OUTPUT_WIDTH) +
-                               ' [SKIP]' + short_info)
+                               ' [' + self.term.yellow('SKIP') + ']' +
+                               short_info)
       self.terminal_print_line(textwrap.indent(reason, '     '))
     else:
       self.terminal_print_line('   ' +
                                ('(' + reason + ')').ljust(OUTPUT_WIDTH + 2) +
-                               ' [SKIP]' + short_info)
+                               ' [' + self.term.yellow('SKIP') + ']' +
+                               short_info)
 
   def _print_ok(self, resource: Optional[models.Resource],
                 short_info: Optional[str]) -> None:
