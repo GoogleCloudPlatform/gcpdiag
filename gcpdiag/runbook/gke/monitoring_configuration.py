@@ -201,58 +201,63 @@ class ClusterLevelMonitoringConfigurationEnabled(runbook.Step):
     #'APISERVER', 'CONTROLLER_MANAGER, 'SCHEDULER' => ControlPlane components
     # monitoring are not enabled by default due to which skipping its check
 
-    if not cluster_obj.is_autopilot:
-      disabled = []
+    if cluster_obj.is_autopilot:
+      op.add_ok(
+          cluster_obj,
+          reason=
+          'GKE Autopilot clusters have Cloud Monitoring enabled by default.')
+      return
 
-      if cluster_obj.has_monitoring_enabled():
+    disabled = []
 
-        # Enabled metrics on the provided cluster
-        cluster_enabled_monitoring_metrics = cluster_obj.enabled_monitoring_components(
-        )
+    if cluster_obj.has_monitoring_enabled():
 
-        # Check if the cluster has GPU based Nodepool
-        # Find any GPU node pools by taint
-        for np in cluster_obj.nodepools:  #Iterate our all available NodePool
-          # pylint: disable=protected-access
-          config_data = np._resource_data.get('config', {})
-          taints = config_data.get('taints', [])
+      # Enabled metrics on the provided cluster
+      cluster_enabled_monitoring_metrics = cluster_obj.enabled_monitoring_components(
+      )
 
-          for t in taints:  #Iterate our the taints on the Nodepool
-            if (t.get('key') == 'nvidia.com/gpu' and
-                t.get('value') == 'present' and
-                t.get('effect') == 'NO_SCHEDULE'):
+      # Check if the cluster has GPU based Nodepool
+      # Find any GPU node pools by taint
+      for np in cluster_obj.nodepools:  #Iterate our all available NodePool
+        # pylint: disable=protected-access
+        config_data = np._resource_data.get('config', {})
+        taints = config_data.get('taints', [])
 
-              gke_monitoring_components.add('DCGM')
+        for t in taints:  #Iterate our the taints on the Nodepool
+          if (t.get('key') == 'nvidia.com/gpu' and
+              t.get('value') == 'present' and t.get('effect') == 'NO_SCHEDULE'):
 
-              break  #if found first occurrence then break
+            gke_monitoring_components.add('DCGM')
 
-        # Check missing metrics
-        not_enabled_cluster_metrics = gke_monitoring_components - set(
-            cluster_enabled_monitoring_metrics)
+            break  #if found first occurrence then break
 
-        if not_enabled_cluster_metrics:
-          not_enabled_cluster_metrics_string = ', '.join(
-              sorted(not_enabled_cluster_metrics))
-          disabled.append(
-              f'Missing metrics: {not_enabled_cluster_metrics_string}')
-      else:
-        disabled.append('Monitoring entirely disabled')
+      # Check missing metrics
+      not_enabled_cluster_metrics = gke_monitoring_components - set(
+          cluster_enabled_monitoring_metrics)
 
-      if not disabled:
-        op.add_ok(
-            cluster_obj,
-            reason=
-            f'GKE level monitoring is fully enabled for the cluster {cluster_obj}.'
-        )
-      else:
-        disabled_components_metrics = ', '.join(disabled)
-        op.add_failed(
-            cluster_obj,
-            reason=
-            f'GKE level monitoring is not fully enabled for the cluster {cluster_obj}.',
-            remediation=(
-                f'Issues detected:\n    {disabled_components_metrics}.\n'
-                f'Please enable missing components or full GKE monitoring.'))
+      if not_enabled_cluster_metrics:
+        not_enabled_cluster_metrics_string = ', '.join(
+            sorted(not_enabled_cluster_metrics))
+        disabled.append(
+            f'Missing metrics: {not_enabled_cluster_metrics_string}')
+    else:
+      disabled.append('Monitoring entirely disabled')
+
+    if not disabled:
+      op.add_ok(
+          cluster_obj,
+          reason=
+          f'GKE level monitoring is fully enabled for the cluster {cluster_obj}.'
+      )
+    else:
+      disabled_components_metrics = ', '.join(disabled)
+      op.add_failed(
+          cluster_obj,
+          reason=
+          f'GKE level monitoring is not fully enabled for the cluster {cluster_obj}.',
+          remediation=(
+              f'Issues detected:\n    {disabled_components_metrics}.\n'
+              f'Please enable missing components or full GKE monitoring.'))
 
 
 class NodePoolCloudMonitoringAccessScopeConfiguration(gke_gs.NodePoolScope):

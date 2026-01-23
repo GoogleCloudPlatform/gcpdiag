@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""GKE Node Auto Repair runbook"""
+"""GKE Node Auto Repair runbook."""
 
 from gcpdiag import runbook
 from gcpdiag.queries import crm, gke, logs
@@ -161,7 +161,7 @@ class NodeAutoRepair(runbook.DiagnosticTree):
 
   def legacy_parameter_handler(self, parameters):
     if flags.NAME in parameters:
-      parameters[flags.NAME] = parameters.pop(flags.GKE_CLUSTER_NAME)
+      parameters[flags.GKE_CLUSTER_NAME] = parameters.pop(flags.NAME)
 
   def build_tree(self):
     """Construct the diagnostic tree with appropriate steps."""
