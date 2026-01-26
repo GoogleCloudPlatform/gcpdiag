@@ -267,14 +267,117 @@ class UnhealthyBackendsStart(runbook.StartStep):
           remediation='',
       )
     else:
-      op.add_ok(
-          resource=self.backend_service,
-          reason=op.prep_msg(
-              op.SUCCESS_REASON,
-              name=self.backend_service_name,
-              region=self.region,
-          ),
-      )
+      if not self.health_check.is_log_enabled:
+        op.add_uncertain(
+            resource=self.backend_service,
+            reason=op.prep_msg(
+                op.UNCERTAIN_REASON,
+                name=self.backend_service_name,
+                region=self.region,
+            ),
+        )
+        return
+
+      # Check for past unhealthy logs
+      all_groups = {status.group for status in self.backend_health_statuses}
+      group_filters = []
+      group_metadata = {}
+      detailed_reason = ''
+      past_issue_found = False
+
+      for group in all_groups:
+        m = re.search(r'/(?:regions|zones)/([^/?]+)/([^/?]+)/([^/?]+)', group)
+        if not m:
+          continue
+
+        location = m.group(1)
+        resource_type = m.group(2)
+        resource_name = m.group(3)
+
+        if resource_type == 'instanceGroups':
+          # Construct individual filter part and store metadata for mapping logs back to group URL
+          filter_part = (
+              f'(resource.type="gce_instance_group" AND '
+              f'resource.labels.instance_group_name="{resource_name}" AND '
+              f'resource.labels.location=~"{location}")')
+          group_filters.append(filter_part)
+          group_metadata[('gce_instance_group', resource_name,
+                          location)] = group
+        elif resource_type == 'networkEndpointGroups':
+          neg = _get_zonal_network_endpoint_group(self.project_id, location,
+                                                  resource_name)
+          if neg:
+            filter_part = (
+                f'(resource.type="gce_network_endpoint_group" AND '
+                f'resource.labels.network_endpoint_group_id="{neg.id}" AND '
+                f'resource.labels.zone="{location}")')
+            group_filters.append(filter_part)
+            group_metadata[('gce_network_endpoint_group', neg.id,
+                            location)] = group
+
+      if group_filters:
+        # Aggregate filters into a single query
+        aggregated_filter = """log_name="projects/{}/logs/compute.googleapis.com%2Fhealthchecks"
+                            (jsonPayload.healthCheckProbeResult.healthState="UNHEALTHY" OR
+                             jsonPayload.healthCheckProbeResult.previousHealthState="UNHEALTHY")
+                            AND ({})
+                            """.format(self.project_id,
+                                       ' OR '.join(group_filters))
+
+        log_entries = logs.realtime_query(
+            project_id=self.project_id,
+            filter_str=aggregated_filter,
+            start_time=datetime.now() - timedelta(minutes=10),
+            end_time=datetime.now(),
+            disable_paging=True,
+        )
+
+        if log_entries:
+          past_issue_found = True
+          affected_groups = set()
+          for entry in log_entries:
+            rtype = get_path(entry, ('resource', 'type'))
+            labels = get_path(entry, ('resource', 'labels'), {})
+            # Normalize location and name for metadata mapping
+            loc = labels.get('location') or labels.get('zone')
+            name = labels.get('instance_group_name') or labels.get(
+                'network_endpoint_group_id')
+            group_url = group_metadata.get((rtype, name, loc))
+            # Fallback for regional MIGs where logs report the zone
+            if not group_url and loc:
+              parts = loc.rsplit('-', 1)
+              if len(parts) == 2:
+                region = parts[0]
+                group_url = group_metadata.get((rtype, name, region))
+
+            if group_url:
+              affected_groups.add(group_url)
+
+          detailed_reason = ''.join([
+              f'Group {g} had unhealthy backends in the last 10 minutes.\n'
+              for g in sorted(affected_groups)
+          ])
+
+      if past_issue_found:
+        op.add_failed(
+            resource=self.backend_service,
+            reason=op.prep_msg(
+                op.FAILURE_REASON_ALT1,
+                name=self.backend_service_name,
+                region=self.region,
+                detailed_reason=detailed_reason,
+            ),
+            remediation='',
+        )
+      else:
+        op.add_ok(
+            resource=self.backend_service,
+            reason=op.prep_msg(
+                op.SUCCESS_REASON,
+                name=self.backend_service_name,
+                region=self.region,
+            ),
+        )
 
 
 class CheckVmPerformance(runbook.CompositeStep):
@@ -704,6 +807,11 @@ class AnalyzeLatestHealthCheckLog(runbook.Gateway):
         if state.health_state == 'UNHEALTHY'
     }
 
+    check_window = timedelta(days=14)
+    if not unhealthy_groups:
+      unhealthy_groups = {state.group for state in self.backend_health_statuses}
+      check_window = timedelta(minutes=10)
+
     detailed_health_states = {}
 
     # Add support for NEGs
@@ -756,7 +864,7 @@ class AnalyzeLatestHealthCheckLog(runbook.Gateway):
       serial_log_entries = logs.realtime_query(
           project_id=self.project_id,
           filter_str=filter_str,
-          start_time=datetime.now() - timedelta(days=14),
+          start_time=datetime.now() - check_window,
           end_time=datetime.now(),
           disable_paging=True,
       )
