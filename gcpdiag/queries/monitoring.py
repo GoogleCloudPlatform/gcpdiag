@@ -193,3 +193,42 @@ def query(project_id: str, query_str: str) -> TimeSeriesCollection:
     else:
       raise utils.GcpApiError(err) from err
   return time_series
+
+
+def queryrange(project_id: str, query_str: str, start_time: datetime.datetime,
+               end_time: datetime.datetime):
+  """
+  Do a monitoring query during specific timeframe in the specified project.
+
+  Note that the project can be either the project where the monitored resources
+  are, or a workspace host project, in which case you will get results for all
+  associated monitored projects.
+
+  """
+
+  mon_api = apis.get_api('monitoring', 'v1', project_id)
+
+  try:
+    step = '1m'
+    start_time_str = start_time.isoformat(timespec='seconds').replace(
+        '+00:00', 'Z')
+    end_time_str = end_time.isoformat(timespec='seconds').replace('+00:00', 'Z')
+    request = mon_api.projects().location().prometheus().api().v1().query_range(
+        name=f'projects/{project_id}',
+        location='global',
+        body={
+            'query': query_str,
+            'start': start_time_str,
+            'end': end_time_str,
+            'step': step
+        })
+    response = request.execute(num_retries=config.API_RETRIES)
+  except googleapiclient.errors.HttpError as err:
+    gcp_err = utils.GcpApiError(err)
+    # Ignore 502 because we get that when the monitoring query times out.
+    if gcp_err.status in [502]:
+      logging.warning('error executing monitoring query: %s',
+                      str(gcp_err.message))
+    else:
+      raise utils.GcpApiError(err) from err
+  return response

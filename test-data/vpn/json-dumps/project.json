@@ -1,0 +1,13 @@
+{
+  "name": "projects/12340001",
+  "parent": "organizations/11112222",
+  "projectId": "gcpdiag-vpn1-aaaa",
+  "state": "ACTIVE",
+  "displayName": "gcpdiag test - gce1",
+  "createTime": "2022-04-26T15:18:57.559Z",
+  "updateTime": "2022-04-26T15:18:59.029Z",
+  "etag": "MQV1kuwMB6N2UKQqCiihhA==",
+  "labels": {
+    "gcpdiag": "test"
+  }
+}

@@ -1,0 +1,86 @@
+custom_flag=vpn,name=vpn-tunnel-1,project_id=gcpdiag-vpn1-aaaa,region=europe-west4-a
+
+vpn/vpn-tunnel-check: Runbook for diagnosing issues with a Cloud VPN Tunnel.
+
+This runbook performs several checks on a specified Cloud VPN tunnel:
+-   **VPN Tunnel Status Check**: Verifies if the VPN tunnel is in an
+    'ESTABLISHED' state.
+-   **Tunnel Down Status Reason**: If the tunnel is not established, it queries
+    Cloud Logging for specific error messages and provide remediations .
+-   **Tunnel Packet Drop Check**: If the tunnel is established, it examines
+    monitoring metrics for various types of packet drops (e.g., due to MTU,
+    invalid SA, throttling) and provides remediation based on the drop reason.
+-   **Tunnel Packet Utilization Check**: Analyzes packet rates to identify if
+    the tunnel is hitting max packet per second limits.
+
+[START]: Start the tunnel status api call
+[INFO]: name: gcpdiag test - gce1, id: gcpdiag-vpn1-aaaa, number: 12340001
+
+   - gcpdiag-vpn1-aaaa/vpn-tunnel-1                                       [OK]
+     [REASON]
+     VPN tunnel 'projects/gcpdiag-vpn1-aaaa/regions/europe-west4-a/vpnTunnels/vpn-tunnel-1' in project 'gcpdiag-vpn1-aaaa' is in status 'ESTABLISHED'.
+
+[AUTOMATED STEP]: Check VPN tunnel logs and status.
+
+   - gcpdiag-vpn1-aaaa/vpn-tunnel-1                                       [OK]
+     [REASON]
+     VPN tunnel 'projects/gcpdiag-vpn1-aaaa/regions/europe-west4-a/vpnTunnels/vpn-tunnel-1' in project 'gcpdiag-vpn1-aaaa' is in status 'ESTABLISHED': No relevant logs found during the chosen TimeFrame
+
+[AUTOMATED STEP]: Start the tunnel Packet drop api call
+
+   - gcpdiag-vpn1-aaaa/vpn-tunnel-1                                       [OK]
+     [REASON]
+     VPN tunnel 'projects/gcpdiag-vpn1-aaaa/regions/europe-west4-a/vpnTunnels/vpn-tunnel-1' in project 'gcpdiag-vpn1-aaaa' is in status 'ESTABLISHED': No Packet drop during the chosen TimeFrame
+
+[AUTOMATED STEP]: Start the tunnel Packet api call
+
+   - gcpdiag-vpn1-aaaa/vpn-tunnel-1                                       [OK]
+     [REASON]
+     VPN tunnel 'projects/gcpdiag-vpn1-aaaa/regions/europe-west4-a/vpnTunnels/vpn-tunnel-1' in project 'gcpdiag-vpn1-aaaa' is in status 'ESTABLISHED': Packet did not reach max value during the chosen TimeFrame
+
+[END]: Finalizing connectivity diagnostics.
+[INFO]: If any further debugging is needed, consider please contact GCP support for further troubleshooting
+
+
+custom_flag=vpn,name=vpn-tunnel-down,project_id=gcpdiag-vpn1-aaaa,region=europe-west4-a
+
+vpn/vpn-tunnel-check: Runbook for diagnosing issues with a Cloud VPN Tunnel.
+
+This runbook performs several checks on a specified Cloud VPN tunnel:
+-   **VPN Tunnel Status Check**: Verifies if the VPN tunnel is in an
+    'ESTABLISHED' state.
+-   **Tunnel Down Status Reason**: If the tunnel is not established, it queries
+    Cloud Logging for specific error messages and provide remediations .
+-   **Tunnel Packet Drop Check**: If the tunnel is established, it examines
+    monitoring metrics for various types of packet drops (e.g., due to MTU,
+    invalid SA, throttling) and provides remediation based on the drop reason.
+-   **Tunnel Packet Utilization Check**: Analyzes packet rates to identify if
+    the tunnel is hitting max packet per second limits.
+
+[START]: Start the tunnel status api call
+[INFO]: name: gcpdiag test - gce1, id: gcpdiag-vpn1-aaaa, number: 12340001
+[AUTOMATED STEP]: Check VPN tunnel logs and status.
+
+   - gcpdiag-vpn1-aaaa/vpn-tunnel-down                                    [FAIL]
+     [REASON]
+     VPN tunnel 'projects/gcpdiag-vpn1-aaaa/regions/europe-west4-a/vpnTunnels/vpn-tunnel-down' in project 'gcpdiag-vpn1-aaaa' is in status 'FIRST_HANDSHAKE': Tunnel is not established, but no specific error logs were found.
+
+     [REMEDIATION]
+     Try broadening the timeframe or checking the peer device logs.
+
+[AUTOMATED STEP]: Start the tunnel Packet drop api call
+
+   - gcpdiag-vpn1-aaaa/vpn-tunnel-down                                    [SKIP]
+     [REASON]
+     Check Skipped: Tunnel not Established
+
+[AUTOMATED STEP]: Start the tunnel Packet api call
+
+   - gcpdiag-vpn1-aaaa/vpn-tunnel-down                                    [SKIP]
+     [REASON]
+     Tunnel not Established
+
+[END]: Finalizing connectivity diagnostics.
+[INFO]: If any further debugging is needed, consider please contact GCP support for further troubleshooting
+
+

@@ -1,0 +1,10 @@
+{
+  "name": "vpn-tunnel-1",
+  "id": "123456789",
+  "status": "ESTABLISHED",
+  "peerIp": "1.1.1.1",
+  "router": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpn1-aaaa/regions/europe-west4/routers/r1",
+  "localTrafficSelector": ["0.0.0.0/0"],
+  "remoteTrafficSelector": ["0.0.0.0/0"],
+  "selfLink": "https://www.googleapis.com/compute/v1/projects/gcpdiag-vpn1-aaaa/regions/europe-west4-a/vpnTunnels/vpn-tunnel-1"
+}

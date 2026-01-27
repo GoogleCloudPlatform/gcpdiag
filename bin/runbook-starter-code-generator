@@ -13,7 +13,7 @@ SUPPORTED_PRODUCTS = {
     'apigee', 'billing', 'bigquery', 'cdn', 'cloudrun', 'crm', 'composer',
     'datafusion', 'dataflow', 'dataproc', 'kms', 'gar', 'gke', 'gcb', 'gcf',
     'gae', 'gce', 'iam', 'interconnect', 'gcs', 'lb', 'logs', 'tpu', 'pubsub',
-    'sql', 'vertex', 'vpc', 'nat', 'monitoring'
+    'sql', 'vertex', 'vpc', 'nat', 'monitoring', 'vpn'
 }
 
 

@@ -15,6 +15,7 @@
 # Lint as: python3
 """Test code in monitoring.py."""
 
+from datetime import datetime, timedelta
 from unittest import mock
 
 from gcpdiag.queries import apis_stub, monitoring
@@ -54,3 +55,17 @@ class Test:
     assert isinstance(value['values'][1][0], float)
     assert isinstance(value['values'][0][1], int)
     assert isinstance(value['values'][1][1], int)
+
+  def test_queryrange(self):
+    end_time = datetime.now()
+    start_time = end_time - timedelta(minutes=30)
+    vpn_query = 'cloud_monitoring_vpn_gateway_network_googleapis_com_vpn_gateway_tunnel_is_up'
+    response = monitoring.queryrange(project_id=DUMMY_PROJECT_NAME,
+                                     query_str=vpn_query,
+                                     start_time=start_time,
+                                     end_time=end_time)
+    assert response['status'] == 'success'
+    results = response['data']['result']
+    if len(results) > 0:
+      metric_labels = results[0]['metric']
+      assert 'project_id' in metric_labels

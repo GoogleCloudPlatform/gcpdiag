@@ -62,5 +62,7 @@ def get_product_list() -> Dict:
       'vertex':
           '[Vertex AI](https://cloud.google.com/vertex-ai)',
       'vpc':
-          '[Virtual Private Cloud](https://cloud.google.com/vpc)'
+          '[Virtual Private Cloud](https://cloud.google.com/vpc)',
+      'vpn':
+          '[Vpn](https://cloud.google.com/hybrid-connectivity)',
   }
