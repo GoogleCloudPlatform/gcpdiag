@@ -36,4 +36,5 @@ hiddenimports = \
  collect_submodules('gcpdiag.runbook.pubsub') + \
  collect_submodules('gcpdiag.runbook.vertex') + \
  collect_submodules('gcpdiag.runbook.vpc') + \
- collect_submodules('gcpdiag.runbook.interconnect')
+ collect_submodules('gcpdiag.runbook.interconnect') + \
+ collect_submodules('gcpdiag.runbook.vpn')
