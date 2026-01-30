@@ -238,7 +238,7 @@ class ManagedInstanceGroup(models.Resource):
   @property
   def template(self) -> InstanceTemplate:
     if 'instanceTemplate' not in self._resource_data:
-      raise RuntimeError('instanceTemplate not set for MIG {self.name}')
+      raise RuntimeError(f'instanceTemplate not set for MIG {self.name}')
 
     m = re.match(
         r'https://www.googleapis.com/compute/v1/(.*)',
