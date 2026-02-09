@@ -3073,6 +3073,7 @@
                 "sha256:575a8d6b124ef88f6f51d56d656132389f961062a9177016a50e4f507bbcc19f",
                 "sha256:8befb5c81842c641f8ee658481e42641c68b5eab3521d8e092d18320902466ba"
             ],
+            "index": "pypi",
             "markers": "python_version >= '3.8'",
             "version": "==20.36.1"
         },
