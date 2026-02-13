@@ -1,8 +1,8 @@
 {{ $cover := .HasShortcode "blocks/cover" }}
-<nav class="js-navbar-scroll navbar navbar-expand navbar-light {{ if not $cover }} nav-shadow {{ end }}flex-column flex-md-row td-navbar">
+<nav aria-label="Main navigation" class="js-navbar-scroll navbar navbar-expand navbar-light {{ if not $cover }} nav-shadow {{ end }}flex-column flex-md-row td-navbar">
 
 	<a id="gcpdiag-top" {{ if $cover }} style="display: none;" {{end}} class="navbar-brand" href="{{ .Site.Home.RelPermalink }}">
-          <img src="{{ "/images/stethoscope.png" | relURL }}" height="30"><span class="fw-normal">&nbsp;{{ .Site.Title }}</span>
+          <img src="{{ "/images/stethoscope.png" | relURL }}" height="30" alt="" aria-hidden="true"><span class="fw-normal">&nbsp;{{ .Site.Title }}</span>
 	</a>
 
 	<div class="td-navbar-nav-scroll ms-md-auto me-5" id="main_navbar">
