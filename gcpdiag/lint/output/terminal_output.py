@@ -201,6 +201,29 @@ class TerminalOutput(base_output.BaseOutput):
         self.term.yellow(f'{rule.product}/{rule.rule_class}/{rule.rule_id}') +
         ': ' + f'{rule.short_desc}')
 
+  def display_footer(self, result: 'lint.LintResults') -> None:
+    totals = result.get_totals_by_status()
+    # skipped
+    skipped_count = totals.get('skipped', 0)
+    skipped_str = f'{skipped_count} skipped'
+    if skipped_count > 0:
+      skipped_str = self.term.yellow(skipped_str)
+
+    # ok
+    ok_count = totals.get('ok', 0)
+    ok_str = f'{ok_count} ok'
+    if ok_count > 0:
+      ok_str = self.term.green(ok_str)
+
+    # failed
+    failed_count = totals.get('failed', 0)
+    failed_str = f'{failed_count} failed'
+    if failed_count > 0:
+      failed_str = self.term.red(failed_str)
+
+    state_strs = [skipped_str, ok_str, failed_str]
+    self.terminal_print_line(f"Rules summary: {', '.join(state_strs)}")
+
   def _print_long_desc(self, rule: 'lint.LintRule') -> None:
     self.terminal_print_line()
     long_desc = rule.long_desc or ''
@@ -220,12 +243,14 @@ class TerminalOutput(base_output.BaseOutput):
     if resource:
       self.terminal_print_line('   - ' +
                                resource.full_path.ljust(OUTPUT_WIDTH) +
-                               ' [SKIP]' + short_info)
+                               ' [' + self.term.yellow('SKIP') + ']' +
+                               short_info)
       self.terminal_print_line(textwrap.indent(reason, '     '))
     else:
       self.terminal_print_line('   ' +
                                ('(' + reason + ')').ljust(OUTPUT_WIDTH + 2) +
-                               ' [SKIP]' + short_info)
+                               ' [' + self.term.yellow('SKIP') + ']' +
+                               short_info)
 
   def _print_ok(self, resource: Optional[models.Resource],
                 short_info: Optional[str]) -> None:
