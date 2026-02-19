@@ -836,6 +836,15 @@ def get_information_schema_job_metadata(
         err,
     )
     return None
+  except utils.GcpApiError as err:
+    logging.error('GcpApiError during BigQuery query execution for job %s: %s',
+                  job_id, err)
+    # Raise specific GcpApiError if needed for upstream handling
+    if 'permission' in err.message.lower():
+      logging.debug('permissions issue FOUND HERE : %s', err.message.lower())
+      return None
+    else:
+      return None
 
 
 def get_bigquery_job(
