@@ -35,30 +35,41 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
     all_skipped = False
     explicit_routes = ['199.36.153.8/30', '199.36.153.4/30']
     default_internet_gateway = 'default-internet-gateway'
-
-    # Check the routes for the PGA networks
     routes = network.get_routes(context.project_id)
+    best_routes: dict[tuple[str, str], network.Route] = {}
     for route in routes:
+      if route.dest_range != '0.0.0.0/0' and route.dest_range not in explicit_routes:
+        continue
+
       current_network = route.network.split('/')[-1]
-      if (route.dest_range == '0.0.0.0/0' and current_network in pga_networks):
-        try:
-          if route.next_hop_gateway.find(default_internet_gateway) != -1:
+      key = (current_network, route.dest_range)
+
+      if key not in best_routes or route.priority < best_routes[key].priority:
+        best_routes[key] = route
+
+    for route in best_routes.values():
+      current_network = route.network.split('/')[-1]
+
+      if current_network not in pga_networks:
+        continue
+
+      if route.dest_range in explicit_routes:
+        if route.next_hop_gateway and default_internet_gateway in route.next_hop_gateway:
+          if pga_networks[current_network] != 'misconfig':
             pga_networks[current_network] = 'ok'
-            continue  # OK: Next Hop for 0.0.0.0/0 is default-internet-gateway
-        except KeyError:
+          continue  # OK: Next Hop for PGA routes is default-internet-gateway
+        else:
+          pga_networks[current_network] = 'misconfig'
+          continue
+      elif route.dest_range == '0.0.0.0/0':
+        if route.next_hop_gateway and default_internet_gateway in route.next_hop_gateway:
+          if pga_networks[current_network] != 'misconfig':
+            pga_networks[current_network] = 'ok'
+          continue  # OK: Next Hop for 0.0.0.0/0 is default-internet-gateway
+        else:
           if pga_networks[current_network] != 'misconfig':
             pga_networks[current_network] = 'modified'
-          # WARN:  Next Hop for 0.0.0.0/0 is NOT default-internet-gateway
           continue
-      elif ((route.dest_range in explicit_routes) and
-            (current_network in pga_networks)):
-        try:
-          if route.next_hop_gateway.find(default_internet_gateway) != -1:
-            pga_networks[current_network] = 'ok'
-            continue  # OK: Next Hop for PGA routes is default-internet-gateway
-        except KeyError:
-          # FAILED: Explicit routes not pointing to default gateway
-          pga_networks[current_network] = 'misconfig'
 
     # Dump all the networks and their status
     for p_net, status in pga_networks.items():
@@ -71,7 +82,7 @@ def run_rule(context: models.Context, report: lint.LintReportRuleInterface):
         explicit_text = 'explicit routes not pointing to Default Internet \
 Gateway'
 
-        misconfigured_networks += f' - Network: {current_network} -> \
+        misconfigured_networks += f' - Network: {p_net} -> \
 {explicit_text} \n'
 
       elif status == 'missing':
