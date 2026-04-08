@@ -16,7 +16,7 @@
 from gcpdiag.lint import cloudsql, snapshot_test_base
 
 
-class Test(snapshot_test_base.RulesSnapshotTestBase):
+class TestCloudSql1(snapshot_test_base.RulesSnapshotTestBase):
   rule_pkg = cloudsql
   project_id = 'gcpdiag-cloudsql1-aaaa'
 
@@ -29,6 +29,7 @@ class Test(snapshot_test_base.RulesSnapshotTestBase):
       not in (
         'BP_2023_002',
         'BP_2026_003',
+        'BP_2026_001',
       )
     ]
 
@@ -48,3 +49,12 @@ class TestCloudsql2(snapshot_test_base.RulesSnapshotTestBase):
         'BP_2026_003',
       )
     ]
+
+
+class TestCloudSql3(snapshot_test_base.RulesSnapshotTestBase):
+  rule_pkg = cloudsql
+  project_id = 'gcpdiag-cloudsql3-aaaa'
+
+  def _list_rules(self):
+    rules = super()._list_rules()
+    return [r for r in rules if f'{r.rule_class}_{r.rule_id}' in ('BP_2026_001',)]

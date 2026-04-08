@@ -1,0 +1,13 @@
+*  cloudsql/BP/2026_001: Cloud SQL instance is not using a shared-core machine type
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql3-aaaa/instances/sql1 [FAIL]
+     Instance is using a shared-core tier (db-f1-micro), which is under-provisioned for production.
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql3-aaaa/instances/sql2 [FAIL]
+     Instance is using a shared-core tier (db-g1-small), which is under-provisioned for production.
+   - https://sqladmin.googleapis.com/v1/projects/gcpdiag-cloudsql3-aaaa/instances/sql3 [ OK ]
+
+   Shared-core instances (db-f1-micro and db-g1-small) are designed for low-cost
+   test and development only. They do not have an SLA and are under-provisioned
+   for production workloads. Don't use them for production instances.
+
+   https://gcpdiag.dev/rules/cloudsql/BP/2026_001
+

@@ -46,6 +46,7 @@ JSON_PROJECT_DIR = {
   'gcpdiag-composer1-aaaa': pathlib.Path(__file__).parents[2] / 'test-data/composer1/json-dumps',
   'gcpdiag-cloudsql1-aaaa': pathlib.Path(__file__).parents[2] / 'test-data/cloudsql1/json-dumps',
   'gcpdiag-cloudsql2-aaaa': pathlib.Path(__file__).parents[2] / 'test-data/cloudsql2/json-dumps',
+  'gcpdiag-cloudsql3-aaaa': pathlib.Path(__file__).parents[2] / 'test-data/cloudsql3/json-dumps',
   'gcpdiag-cloudasset1-aaaa': pathlib.Path(__file__).parents[2]
   / 'test-data/cloudasset1/json-dumps',
   '12340071': pathlib.Path(__file__).parents[2] / 'test-data/cloudasset1/json-dumps',

@@ -111,7 +111,11 @@ class Instance(models.Resource):
   @property
   def is_shared_core(self) -> bool:
     shared_core_tiers = ['db-g1-small', 'db-f1-micro']
-    return get_path(self._resource_data, ('settings', 'tier')) in shared_core_tiers
+    return self.tier in shared_core_tiers
+
+  @property
+  def tier(self) -> str:
+    return get_path(self._resource_data, ('settings', 'tier'), default='')
 
   @property
   def is_high_available(self) -> bool:

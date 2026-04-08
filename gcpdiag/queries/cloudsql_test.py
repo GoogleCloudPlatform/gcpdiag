@@ -36,3 +36,8 @@ class TestCloudSQL:
     context = models.Context(project_id=DUMMY_PROJECT_NAME)
     instances = cloudsql.get_instances(context)
     assert INSTANCE_IP in instances[0].ip_addresses
+
+  def test_get_instances_cloudsql3(self):
+    context = models.Context(project_id='gcpdiag-cloudsql3-aaaa')
+    instances = cloudsql.get_instances(context)
+    assert len(instances) == 3
