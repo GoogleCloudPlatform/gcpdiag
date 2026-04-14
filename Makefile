@@ -2,7 +2,7 @@ VERSION=$(shell sed -n 's/^current_version\s*=\s*//p' <.bumpversion.cfg)
 DIST_NAME=gcpdiag-$(VERSION)
 SHELL=/bin/bash
 
-.PHONY: test coverage-report version build bump-version tarfile release runbook-docs runbook-starter-code spelling
+.PHONY: test coverage-report version build bump-my-version tarfile release runbook-docs runbook-starter-code spelling
 
 # Comprehensive environment check.
 check-environment:
@@ -54,8 +54,8 @@ build:
 	rm -f dist/gcpdiag
 	pyinstaller --workpath=.pyinstaller.build pyinstaller.spec
 
-bump-version:
-	bumpversion --commit minor
+bump-my-version:
+	bump-my-version bump --commit minor
 
 new-rule:
 	python cookiecutter-gcpdiag-rule/cookiecutter_runner.py
@@ -83,7 +83,8 @@ release:
 	# Remove '-test' in the version.
 	# Note: this will fail if we have already a release tag, in which case
 	# you should first increase the minor version with a code review.
-	bumpversion --commit --tag --tag-message "Release v{new_version}" release
+	bump-my-version bump --commit --tag --tag-message "Release v{new_version}" release
+
 	# Push to the release branch and tag the release.
 	# Note: We want ff-only because otherwise the commit ids will be different
 	# between master and release, and that causes problems with tags
@@ -97,7 +98,7 @@ release:
 	git push origin HEAD:release
 	git push --tags
 	# increment the version (and add back '-test')
-	bumpversion --commit minor
+	bump-my-version bump --commit minor
 	git push origin HEAD:refs/for/master
 
 runbook-docs:
