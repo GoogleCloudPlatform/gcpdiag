@@ -39,7 +39,7 @@ class Operator:
 
   def __init__(
       self,
-      interface: InteractionInterface,
+      interface: InteractionInterface,  # pylint: disable=redefined-outer-name
       context_provider: Optional[gcpdiag_context.ContextProvider] = None,
   ):
     self.interface = interface

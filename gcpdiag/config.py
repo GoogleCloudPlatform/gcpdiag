@@ -19,7 +19,7 @@ import os
 import sys
 from typing import Any, Dict
 
-import appdirs
+import platformdirs
 import yaml
 
 # gcpdiag version (not configurable, but useful to have here)
@@ -66,7 +66,7 @@ API_RETRIES = 3
 API_RETRY_SLEEP_MULTIPLIER = 1.4
 API_RETRY_SLEEP_RANDOMNESS_PCT = 0.2
 
-_cache_dir = appdirs.user_cache_dir('gcpdiag')
+_cache_dir = platformdirs.user_cache_dir('gcpdiag')
 
 
 def set_cache_dir(path: str):

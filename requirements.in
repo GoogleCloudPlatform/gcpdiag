@@ -12,7 +12,7 @@
 # Edit Source: If adding a new package, add it to requirements.in.
 #
 # Compile & Generate Hashes: Run the following command in the project root. This will resolve dependencies, fetch the latest hashes from PyPI, and update requirements.txt:
-# command: pip-compile --generate-hashes --allow-unsafe requirements.in
+# command: pip-compile --generate-hashes --allow-unsafe --index-url=https://pypi.org/simple requirements.in
 # flag --allow-unsafe flag tells pip-tools to treat "unsafe" packages (like setuptools) as normal packages that must be pinned.
 #
 # Commit: Commit both requirements.in and the updated requirements.txt.
