@@ -3,4 +3,5 @@
    - projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-pubsub1subscription2-9pm6hng1 [ OK ]
    - projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-pubsub1subscription-9pm6hng1 [ OK ]
    - projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-bqdlqsubscription-9pm6hng1 [ OK ]
+   - projects/gcpdiag-pubsub1-aaaa/subscriptions/gcpdiag-gcsdlqsubscription-9pm6hng1 [ OK ]
 

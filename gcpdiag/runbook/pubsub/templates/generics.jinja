@@ -128,6 +128,14 @@ BigQuery table {table_full_id} not found.
 Please ensure the BigQuery table exists.
 {%- endblock -%}
 
+{%- block gcs_bucket_existence_failure_reason -%}
+Bucket not found.
+{%- endblock -%}
+
+{%- block gcs_bucket_existence_failure_remediation -%}
+Please ensure the Bucket exists.
+{%- endblock -%}
+
 {%- block permission_check_failure_reason -%}
 The Pub/Sub service account '{service_account}' does not have required BigQuery permissionson project '{project_id}'
 {%- endblock -%}
@@ -135,6 +143,14 @@ The Pub/Sub service account '{service_account}' does not have required BigQuery 
 {%- block permission_check_failure_remediation -%}
 Grant the "BigQuery Data Editor" role (roles/bigquery.dataEditor) to the Pub/Sub service account:
 '{service_account}'
+{%- endblock -%}
+
+{%- block gcs_permission_check_failure_reason -%}
+Pub/Sub service account '{service_account}' is MISSING permission on bucket '{bucket_name}'
+{%- endblock -%}
+
+{%- block gcs_permission_check_failure_remediation -%}
+Grant the Pub/Sub service account '{service_account}' at least the storage.objects.create and storage.buckets.get permissions on the bucket '{bucket_name}'.
 {%- endblock -%}
 
 {%- block subscription_status_failure_remediation -%}
