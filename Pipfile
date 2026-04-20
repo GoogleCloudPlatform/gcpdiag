@@ -29,13 +29,11 @@ typing-extensions = "*"
 exceptiongroup = "*"
 beautifulsoup4 = "*"
 async-timeout = "*"
-bs4 = "*"
 
 [dev-packages]
 absl-py = "*"
 bump2version = "*"
 coverage = "*"
-dnspython = "*"
 importlib-metadata = "*"
 isort = "==5.12.0"
 mypy = "*"
